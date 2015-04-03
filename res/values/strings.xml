@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">Applications Info</string>
+    <string name="loading_apps">Loading applications</string>
+    <string name="is_system_app">System app</string>
+    <string name="uninstall">Uninstall</string>
+    <string name="app_info">App info</string>
+    <string name="permissions">Uses permissions</string>
+    <string name="require_no_permission">No permission required</string>
+    <string name="activities">Activities</string>
+    <string name="launch">Launch</string>
+    <string name="refresh">Refresh</string>
+    <string name="no_activities">No activities</string>
+    <string name="receivers">Receivers</string>
+    <string name="no_receivers">No receivers</string>
+    <string name="providers">Providers</string>
+    <string name="no_providers">No providers</string>
+    <string name="launch_mode">Launch mode</string>
+    <string name="taskAffinity">Task affinity</string>
+    <string name="installation">Installation</string>
+    <string name="update">Update</string>
+    <string name="authority">Authority</string>
+    <string name="service">Services</string>
+    <string name="no_service">No services</string>
+    <string name="orientation">Orientation</string>
+    <string name="softInput">Soft input mode</string>
+    <string name="flags">Flags</string>
+    <string name="grant_uri_permission">Grant URI permissions</string>
+    <string name="path_permissions">Path permissions</string>
+    <string name="read">Read</string>
+    <string name="write">Write</string>
+    <string name="patterns_allowed">Patterns allowed</string>
+    <string name="file_size">File size</string>
+    <string name="declared_premission">Permissions</string>
+    <string name="group">Group</string>
+    <string name="protection_level">Protection level</string>
+    <string name="uses_feature">Uses features</string>
+    <string name="gles_ver">Req. Gles ver.</string>
+    <string name="no_feature">No features</string>
+    <string name="shared_user_id">Shared user id</string>
+    <string name="signatures">Signatures</string>
+    <string name="no_signatures">No signatures</string>
+    <string name="configurations">Configurations</string>
+    <string name="no_configurations">No configurations</string>
+    <string name="input_features">Input features</string>
+
+    <string name="app_not_installed">Application not installed</string>
+
+    <string name="system">System</string>
+    <string name="user">User</string>
+
+    <string-array name="sort_spinner_items">
+        <item>Name</item>
+        <item>Package</item>
+        <item>System/User</item>
+        <item>@string/installation</item>
+    </string-array>
+
+    <array name="group_titles">
+        <item>@string/activities</item>
+        <item>@string/service</item>
+        <item>@string/receivers</item>
+        <item>@string/providers</item>
+        <item>@string/permissions</item>
+        <item>@string/declared_premission</item>
+        <item>@string/uses_feature</item>
+        <item>@string/configurations</item>
+        <item>@string/signatures</item>
+    </array>
+</resources>
