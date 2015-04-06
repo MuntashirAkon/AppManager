@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
@@ -13,7 +14,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_centerVertical="true"
-            android:layout_margin="2dp"/>
+            android:layout_margin="2dp" />
 
         <TextView
             android:id="@+id/packageName"
@@ -28,77 +29,67 @@
             android:layout_below="@id/packageName"
             android:layout_toRightOf="@+id/icon" />
 
-        <TextView android:id="@+id/path"
+        <TextView
+            android:id="@+id/path"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/icon"
-            android:layout_below="@id/version"/>
+            android:layout_below="@id/version" />
 
 
-        <LinearLayout android:id="@+id/isSystem_container"
+        <LinearLayout
+            android:id="@+id/isSystem_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/path"
             android:layout_toRightOf="@+id/icon"
-            android:orientation="horizontal">
-            <TextView
-                android:id="@+id/isSystem"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-            <TextView android:id="@+id/size"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/isSystem"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"/>
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/uninstall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/uninstall"
+                    android:layout_weight="1" />
 
-
-        <LinearLayout android:id="@+id/buttons_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/isSystem_container"
-            android:layout_toRightOf="@+id/icon"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/uninstall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/uninstall"
-                android:layout_weight="1" />
-
-            <Button
-                android:id="@+id/appInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/app_info"
-                android:layout_weight="1" />
 
         </LinearLayout>
 
     </RelativeLayout>
 
-    <LinearLayout android:id="@+id/date_container"
+    <include layout="@layout/size_table" />
+
+    <LinearLayout
+        android:id="@+id/date_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/installed_date"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
-        <TextView android:id="@+id/update_date"
+        <TextView
+            android:id="@+id/update_date"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
-        <TextView android:id="@+id/sharedUserId"
+        <TextView
+            android:id="@+id/sharedUserId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
     </LinearLayout>
 

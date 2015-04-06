@@ -29,7 +29,6 @@
     <string name="read">Read</string>
     <string name="write">Write</string>
     <string name="patterns_allowed">Patterns allowed</string>
-    <string name="file_size">File size</string>
     <string name="declared_premission">Permissions</string>
     <string name="group">Group</string>
     <string name="protection_level">Protection level</string>
@@ -42,6 +41,15 @@
     <string name="configurations">Configurations</string>
     <string name="no_configurations">No configurations</string>
     <string name="input_features">Input features</string>
+
+    <string name="size">Size (Mb)</string>
+    <string name="internal">Internal</string>
+    <string name="external">External</string>
+    <string name="code_size">Code</string>
+    <string name="data_size">Data</string>
+    <string name="cache_size">Cache</string>
+    <string name="obb_size">Obb</string>
+    <string name="media_size">Media</string>
 
     <string name="app_not_installed">Application not installed</string>
 
