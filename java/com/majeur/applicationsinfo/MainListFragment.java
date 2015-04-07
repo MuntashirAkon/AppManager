@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -26,6 +25,8 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import com.majeur.applicationsinfo.utils.Utils;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,6 +43,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     private LayoutInflater mLayoutInflater;
     private MainCallbacks mCallbacks;
     private Context mContext;
+    private Async mAsyncLoader;
 
     private SimpleDateFormat mSimpleDateFormat;
 
@@ -115,7 +117,15 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     }
 
     public void loadList() {
-        new Async().execute();
+        mAsyncLoader = new Async();
+        mAsyncLoader.execute();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAsyncLoader != null)
+            mAsyncLoader.cancel(true);
     }
 
     @Override
@@ -253,7 +263,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
         @Override
         public int getPositionForSection(int section) {
-            for (int i = 0 ; i < this.getCount(); i++) {
+            for (int i = 0; i < this.getCount(); i++) {
                 String item = mItemList.get(i).label;
                 if (item.charAt(0) == sections.charAt(section))
                     return i;
@@ -269,7 +279,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         @Override
         public Object[] getSections() {
             String[] sectionsArr = new String[sections.length()];
-            for (int i=0; i < sections.length(); i++)
+            for (int i = 0; i < sections.length(); i++)
                 sectionsArr[i] = "" + sections.charAt(i);
 
             return sectionsArr;
@@ -334,6 +344,8 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             List<Item> itemList = new ArrayList<Item>(applicationInfos.size());
 
             for (ApplicationInfo applicationInfo : applicationInfos) {
+                if (isCancelled())
+                    break;
                 Item item = new Item();
                 item.applicationInfo = applicationInfo;
                 String label = applicationInfo.loadLabel(mPackageManager).toString();

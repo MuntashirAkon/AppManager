@@ -3,7 +3,7 @@
     <string name="loading_apps">Loading applications</string>
     <string name="is_system_app">System app</string>
     <string name="uninstall">Uninstall</string>
-    <string name="app_info">App info</string>
+    <string name="view_in_settings">View in settings</string>
     <string name="permissions">Uses permissions</string>
     <string name="require_no_permission">No permission required</string>
     <string name="activities">Activities</string>
@@ -41,11 +41,13 @@
     <string name="configurations">Configurations</string>
     <string name="no_configurations">No configurations</string>
     <string name="input_features">Input features</string>
+    <string name="view_manifest">View Manifest file</string>
+    <string name="loading">Loading</string>
 
-    <string name="size">Size (Mb)</string>
+    <string name="size">Size details</string>
     <string name="internal">Internal</string>
     <string name="external">External</string>
-    <string name="code_size">Code</string>
+    <string name="code_size">Code (apk file)</string>
     <string name="data_size">Data</string>
     <string name="cache_size">Cache</string>
     <string name="obb_size">Obb</string>

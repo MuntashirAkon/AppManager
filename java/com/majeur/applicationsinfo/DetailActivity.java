@@ -20,7 +20,7 @@ public class DetailActivity extends Activity {
 
         getFragmentManager()
                 .beginTransaction()
-                .add(LAYOUT_ID, DetailFragment.getInstance(packageName))
+                .replace(LAYOUT_ID, DetailFragment.getInstance(packageName))
                 .commit();
     }
 

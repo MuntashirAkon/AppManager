@@ -1,6 +1,5 @@
 package com.majeur.applicationsinfo;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -16,7 +15,6 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.content.res.TypedArray;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.PatternMatcher;
 import android.os.RemoteException;
@@ -27,9 +25,12 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.majeur.applicationsinfo.utils.Utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -57,6 +58,7 @@ public class DetailFragment extends Fragment {
     private LayoutInflater mLayoutInflater;
     private PackageInfo mPackageInfo;
     private PackageStats mPackageStats;
+    private DetailOverflowMenu mDetailOverflowMenu;
 
     int mColorGrey1;
     int mColorGrey2;
@@ -73,11 +75,11 @@ public class DetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
         mPackageManager = getActivity().getPackageManager();
         mPackageName = getArguments().getString(EXTRA_PACKAGE_NAME);
         mColorGrey1 = getResources().getColor(R.color.grey_1);
         mColorGrey2 = getResources().getColor(R.color.grey_2);
+        mDetailOverflowMenu = new DetailOverflowMenu(getActivity(), mPackageName);
 
         mGroupTitleIds = getResources().obtainTypedArray(R.array.group_titles);
 
@@ -100,6 +102,12 @@ public class DetailFragment extends Fragment {
         return listView;
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mDetailOverflowMenu = null;
+    }
+
     private PackageInfo getPackageInfo(String packageName) {
         try {
             return mPackageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
@@ -116,33 +124,36 @@ public class DetailFragment extends Fragment {
             return;
 
         TextView sizeCodeView = (TextView) headerView.findViewById(R.id.size_code);
-        sizeCodeView.setText(getStringSizeMb(mPackageStats.codeSize));
+        sizeCodeView.setText(getReadeableSize(mPackageStats.codeSize));
 
         TextView sizeCacheView = (TextView) headerView.findViewById(R.id.size_cache);
-        sizeCacheView.setText(getStringSizeMb(mPackageStats.cacheSize));
+        sizeCacheView.setText(getReadeableSize(mPackageStats.cacheSize));
 
         TextView sizeDataView = (TextView) headerView.findViewById(R.id.size_data);
-        sizeDataView.setText(getStringSizeMb(mPackageStats.dataSize));
+        sizeDataView.setText(getReadeableSize(mPackageStats.dataSize));
 
         TextView sizeExtCodeView = (TextView) headerView.findViewById(R.id.size_ext_code);
-        sizeExtCodeView.setText(getStringSizeMb(mPackageStats.externalCodeSize));
+        sizeExtCodeView.setText(getReadeableSize(mPackageStats.externalCodeSize));
 
         TextView sizeExtCacheView = (TextView) headerView.findViewById(R.id.size_ext_cache);
-        sizeExtCacheView.setText(getStringSizeMb(mPackageStats.externalCacheSize));
+        sizeExtCacheView.setText(getReadeableSize(mPackageStats.externalCacheSize));
 
         TextView sizeExtDataView = (TextView) headerView.findViewById(R.id.size_ext_data);
-        sizeExtDataView.setText(getStringSizeMb(mPackageStats.externalDataSize));
+        sizeExtDataView.setText(getReadeableSize(mPackageStats.externalDataSize));
 
         TextView sizeObb = (TextView) headerView.findViewById(R.id.size_ext_obb);
-        sizeObb.setText(getStringSizeMb(mPackageStats.externalObbSize));
+        sizeObb.setText(getReadeableSize(mPackageStats.externalObbSize));
 
         TextView sizeMedia = (TextView) headerView.findViewById(R.id.size_ext_media);
-        sizeMedia.setText(getStringSizeMb(mPackageStats.externalMediaSize));
+        sizeMedia.setText(getReadeableSize(mPackageStats.externalMediaSize));
     }
 
-    private String getStringSizeMb(long size) {
-        float sizeMb = size / 1048576f;
-        return String.format("%.2f", sizeMb);
+    private String getReadeableSize(long size) {
+        float sizeKb = size / 1024f;
+        if (sizeKb < 1000)
+            return String.valueOf(sizeKb) + " Kb";
+        else
+            return String.format("%.2f", sizeKb / 1024) + " Mb";
     }
 
     private void getPackageSizeInfo(final View view) {
@@ -218,29 +229,9 @@ public class DetailFragment extends Fragment {
         Date updateDate = new Date(mPackageInfo.lastUpdateTime);
         updateDateView.setText(getString(R.string.update) + ": " + updateDate.toString());
 
-        Button uninstallButton = (Button) headerView.findViewById(R.id.uninstall);
-        uninstallButton.setEnabled(!isSystemApp && !mPackageName.equals(getActivity().getPackageName()));
-        uninstallButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_DELETE);
-                intent.setData(Uri.parse("package:" + mPackageName));
-                startActivity(intent);
-            }
-        });
+        ImageButton overflowButton = (ImageButton) headerView.findViewById(R.id.uninstall);
+        mDetailOverflowMenu.setView(overflowButton);
 
-        /*
-        Button appInfoButton = (Button) headerView.findViewById(R.id.appInfo);
-        appInfoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                intent.addCategory(Intent.CATEGORY_DEFAULT);
-                intent.setData(Uri.parse("package:" + mPackageName));
-                startActivity(intent);
-            }
-        });
-*/
         TextView sharedUserId = (TextView) headerView.findViewById(R.id.sharedUserId);
         sharedUserId.setText(getString(R.string.shared_user_id) + ": " + mPackageInfo.sharedUserId);
 
@@ -263,7 +254,7 @@ public class DetailFragment extends Fragment {
         }
 
         /**
-         * {@link Utils} method is used to prevent {@link java.lang.NullPointerException} when arrays are null.
+         * {@link com.majeur.applicationsinfo.utils.Utils} method is used to prevent {@link java.lang.NullPointerException} when arrays are null.
          * In this case, we make sure that returned length is zero.
          */
         @Override
@@ -757,7 +748,9 @@ public class DetailFragment extends Fragment {
             return convertView != null && convertView.getTag() != null && ((ViewHolder) convertView.getTag()).currentViewType == requestedGroup;
         }
 
-        /** Unused methods */
+        /**
+         * Unused methods
+         */
 
         @Override
         public Object getGroup(int i) {

@@ -1,4 +1,4 @@
-package com.majeur.applicationsinfo;
+package com.majeur.applicationsinfo.utils;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -20,10 +20,10 @@ public class Utils {
     }
 
     public static int compareBooleans(boolean b1, boolean b2) {
-        if( b1 && ! b2 ) {
+        if (b1 && !b2) {
             return +1;
         }
-        if( ! b1 && b2 ) {
+        if (!b1 && b2) {
             return -1;
         }
         return 0;
@@ -141,13 +141,13 @@ public class Utils {
                 protLevel = "signatureOrSystem";
                 break;
         }
-        if ((level&PermissionInfo.PROTECTION_FLAG_SYSTEM) != 0) {
+        if ((level & PermissionInfo.PROTECTION_FLAG_SYSTEM) != 0) {
             protLevel += "|system";
         }
-        if ((level&PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0) {
+        if ((level & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0) {
             protLevel += "|development";
         }
-        if ((level&PermissionInfo.PROTECTION_FLAG_APPOP) != 0) {
+        if ((level & PermissionInfo.PROTECTION_FLAG_APPOP) != 0) {
             protLevel += "|appop";
         }
         return protLevel;

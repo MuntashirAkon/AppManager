@@ -53,19 +53,29 @@
                     android:layout_weight="1"
                     android:gravity="center"/>
 
-                <Button
+                <ImageButton
                     android:id="@+id/uninstall"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/uninstall"
-                    android:layout_weight="1" />
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_action_overflow"
+                    android:background="?android:selectableItemBackground" />
 
 
         </LinearLayout>
 
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="?android:attr/listDivider"/>
+
     <include layout="@layout/size_table" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="?android:attr/listDivider"/>
 
     <LinearLayout
         android:id="@+id/date_container"
