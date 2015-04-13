@@ -229,7 +229,7 @@ public class DetailFragment extends Fragment {
         Date updateDate = new Date(mPackageInfo.lastUpdateTime);
         updateDateView.setText(getString(R.string.update) + ": " + updateDate.toString());
 
-        ImageButton overflowButton = (ImageButton) headerView.findViewById(R.id.uninstall);
+        ImageButton overflowButton = (ImageButton) headerView.findViewById(R.id.detail_overflow);
         mDetailOverflowMenu.setView(overflowButton);
 
         TextView sharedUserId = (TextView) headerView.findViewById(R.id.sharedUserId);

@@ -54,7 +54,7 @@
                     android:gravity="center"/>
 
                 <ImageButton
-                    android:id="@+id/uninstall"
+                    android:id="@+id/detail_overflow"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:src="@drawable/ic_action_overflow"
