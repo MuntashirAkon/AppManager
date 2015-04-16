@@ -822,7 +822,7 @@ public class AXmlResourceParser implements XmlResourceParser {
             /*chunkSize*/
             m_reader.skipInt();
             int lineNumber = m_reader.readInt();
-			/*0xFFFFFFFF*/
+            /*0xFFFFFFFF*/
             m_reader.skipInt();
 
             if (chunkType == CHUNK_XML_START_NAMESPACE ||

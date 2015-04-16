@@ -41,17 +41,16 @@ public class DetailFragment extends Fragment {
     static final String FRAGMENT_TAG = "fragment_detail";
     static final String EXTRA_PACKAGE_NAME = "pkg";
 
-    private final int HEADER = 0;
-    private final int ACTIVITIES = 1;
-    private final int SERVICES = 2;
-    private final int RECEIVERS = 3;
-    private final int PROVIDERS = 4;
-    private final int USES_PERMISSIONS = 5;
-    private final int PERMISSIONS = 6;
-    private final int FEATURES = 7;
-    private final int CONFIGURATION = 8;
-    private final int SIGNATURES = 9;
-
+    private static final int HEADER = 0;
+    private static final int ACTIVITIES = 1;
+    private static final int SERVICES = 2;
+    private static final int RECEIVERS = 3;
+    private static final int PROVIDERS = 4;
+    private static final int USES_PERMISSIONS = 5;
+    private static final int PERMISSIONS = 6;
+    private static final int FEATURES = 7;
+    private static final int CONFIGURATION = 8;
+    private static final int SIGNATURES = 9;
 
     private PackageManager mPackageManager;
     private String mPackageName;
@@ -60,15 +59,16 @@ public class DetailFragment extends Fragment {
     private PackageStats mPackageStats;
     private DetailOverflowMenu mDetailOverflowMenu;
 
-    int mColorGrey1;
-    int mColorGrey2;
-    TypedArray mGroupTitleIds;
+    private int mColorGrey1;
+    private int mColorGrey2;
+    private TypedArray mGroupTitleIds;
 
     public static DetailFragment getInstance(String packageName) {
         DetailFragment detailFragment = new DetailFragment();
         Bundle args = new Bundle();
         args.putString(DetailFragment.EXTRA_PACKAGE_NAME, packageName);
         detailFragment.setArguments(args);
+
         return detailFragment;
     }
 
@@ -219,7 +219,7 @@ public class DetailFragment extends Fragment {
 
         TextView isSystemAppView = (TextView) headerView.findViewById(R.id.isSystem);
         boolean isSystemApp = (mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-        isSystemAppView.setText(isSystemApp ? "System" : "User");
+        isSystemAppView.setText(isSystemApp ? R.string.system : R.string.user);
 
         TextView installDateView = (TextView) headerView.findViewById(R.id.installed_date);
         Date installDate = new Date(mPackageInfo.firstInstallTime);

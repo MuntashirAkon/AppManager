@@ -42,7 +42,8 @@
     <string name="no_configurations">No configurations</string>
     <string name="input_features">Input features</string>
     <string name="view_manifest">View Manifest file</string>
-    <string name="loading">Loading</string>
+    <string name="manifest">Manifest</string>
+    <string name="loading">Loading &#8230;</string> <!-- &#8230; = ... -->
 
     <string name="size">Size details</string>
     <string name="internal">Internal</string>
