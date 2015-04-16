@@ -60,8 +60,8 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         Long date;
     }
 
-    int colorGrey1;
-    int colorGrey2;
+    private int mColorGrey1;
+    private int mColorGrey2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,8 +76,8 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
         mPackageManager = mContext.getPackageManager();
         mSimpleDateFormat = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss");
-        colorGrey1 = getResources().getColor(R.color.grey_1);
-        colorGrey2 = getResources().getColor(R.color.grey_2);
+        mColorGrey1 = getResources().getColor(R.color.grey_1);
+        mColorGrey2 = getResources().getColor(R.color.grey_2);
     }
 
     private void onTaskEnded(List<Item> list) {
@@ -152,7 +152,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.activity_main, menu);
+        inflater.inflate(R.menu.fragment_main_list, menu);
         Spinner spinner = (Spinner) menu.findItem(R.id.spinner).getActionView();
         SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(getActivity().getActionBar().getThemedContext(),
                 R.array.sort_spinner_items, android.R.layout.simple_spinner_dropdown_item);
@@ -235,7 +235,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                 holder.iconLoader.cancel();
             }
 
-            view.setBackgroundColor(i % 2 == 0 ? colorGrey2 : colorGrey1);
+            view.setBackgroundColor(i % 2 == 0 ? mColorGrey2 : mColorGrey1);
 
             ApplicationInfo info = mItemList.get(i).applicationInfo;
 
@@ -382,6 +382,12 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             super.onPostExecute(list);
             mProgressDialog.hide();
             onTaskEnded(list);
+        }
+
+        @Override
+        protected void onCancelled(List<Item> list) {
+            super.onCancelled(list);
+            mProgressDialog.hide();
         }
     }
 

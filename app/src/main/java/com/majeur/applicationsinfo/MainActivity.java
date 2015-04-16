@@ -1,11 +1,14 @@
 package com.majeur.applicationsinfo;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -50,6 +53,21 @@ public class MainActivity extends Activity implements MainCallbacks {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_about) {
+            showAboutDialog();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         registerReceiver(receiver, getIntentFilter());
@@ -59,6 +77,14 @@ public class MainActivity extends Activity implements MainCallbacks {
     protected void onStop() {
         super.onStop();
         unregisterReceiver(receiver);
+    }
+
+    private void showAboutDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.about)
+                .setView(getLayoutInflater().inflate(R.layout.about_dialog_message, null))
+                .setNegativeButton(android.R.string.ok, null)
+                .show();
     }
 
     /**

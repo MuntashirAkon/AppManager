@@ -44,6 +44,8 @@
     <string name="view_manifest">View Manifest file</string>
     <string name="manifest">Manifest</string>
     <string name="loading">Loading &#8230;</string> <!-- &#8230; = ... -->
+    <string name="about">About</string>
+    <string name="about_message">Developed by Majeur.\n\nSource code: <a>https://github.com/MajeurAndroid/Applications-Info</a></string>
 
     <string name="size">Size details</string>
     <string name="internal">Internal</string>
