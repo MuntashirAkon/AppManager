@@ -1,5 +1,6 @@
 package com.majeur.applicationsinfo;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.app.ProgressDialog;
@@ -78,6 +79,19 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         mSimpleDateFormat = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss");
         mColorGrey1 = getResources().getColor(R.color.grey_1);
         mColorGrey2 = getResources().getColor(R.color.grey_2);
+
+        ActionBar actionBar = getActivity().getActionBar();
+        actionBar.setDisplayShowCustomEnabled(true);
+
+        Spinner spinner = new Spinner(actionBar.getThemedContext());
+        SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(actionBar.getThemedContext(),
+                R.array.sort_spinner_items, android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setOnItemSelectedListener(this);
+
+        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        actionBar.setCustomView(spinner, layoutParams);
     }
 
     private void onTaskEnded(List<Item> list) {
@@ -122,13 +136,6 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        if (mAsyncLoader != null)
-            mAsyncLoader.cancel(true);
-    }
-
-    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mCallbacks = (MainCallbacks) activity;
@@ -139,6 +146,8 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     @Override
     public void onDetach() {
         super.onDetach();
+        if (mAsyncLoader != null)
+            mAsyncLoader.cancel(true);
         mCallbacks = null;
         mContext = null;
         mLayoutInflater = null;
@@ -153,11 +162,6 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_main_list, menu);
-        Spinner spinner = (Spinner) menu.findItem(R.id.spinner).getActionView();
-        SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(getActivity().getActionBar().getThemedContext(),
-                R.array.sort_spinner_items, android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(mSpinnerAdapter);
-        spinner.setOnItemSelectedListener(this);
     }
 
     @Override

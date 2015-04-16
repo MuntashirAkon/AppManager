@@ -43,6 +43,7 @@
     <string name="input_features">Input features</string>
     <string name="view_manifest">View Manifest file</string>
     <string name="manifest">Manifest</string>
+    <string name="error">Error</string>
     <string name="loading">Loading &#8230;</string> <!-- &#8230; = ... -->
     <string name="about">About</string>
     <string name="about_message">Developed by Majeur.\n\nSource code: <a>https://github.com/MajeurAndroid/Applications-Info</a></string>

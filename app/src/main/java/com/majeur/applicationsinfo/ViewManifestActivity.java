@@ -98,6 +98,11 @@ public class ViewManifestActivity extends Activity {
         mWebView.loadUrl(Uri.fromFile(new File(mPath)).toString());
     }
 
+    private void handleError() {
+        Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
+        finish();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -124,7 +129,7 @@ public class ViewManifestActivity extends Activity {
     /**
      * This AsyncTask takes manifest file path as argument
      */
-    private class AsyncManifestLoader extends AsyncTask<String, Integer, Void> {
+    private class AsyncManifestLoader extends AsyncTask<String, Integer, Boolean> {
 
         @Override
         protected void onPreExecute() {
@@ -133,9 +138,11 @@ public class ViewManifestActivity extends Activity {
         }
 
         @Override
-        protected Void doInBackground(String... strings) {
+        protected Boolean doInBackground(String... strings) {
             String filePath = strings[0];
             String code = getProperXml(AXMLPrinter.getManifestXMLFromAPK(filePath));
+
+            if (code == null) return false;
 
             try {
                 File file = new File(mPath);
@@ -150,7 +157,7 @@ public class ViewManifestActivity extends Activity {
                 e.printStackTrace();
             }
 
-            return null;
+            return true;
         }
 
         /**
@@ -194,9 +201,12 @@ public class ViewManifestActivity extends Activity {
          * Do not hide progressDialog here, WebView will hide it when content will be displayed
          */
         @Override
-        protected void onPostExecute(Void v) {
-            super.onPostExecute(v);
-            displayContent();
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            if (result)
+                displayContent();
+            else
+                handleError();
         }
     }
 }
