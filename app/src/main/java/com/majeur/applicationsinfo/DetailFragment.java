@@ -34,6 +34,7 @@ import com.majeur.applicationsinfo.utils.Utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DetailFragment extends Fragment {
@@ -62,6 +63,8 @@ public class DetailFragment extends Fragment {
     private int mColorGrey1;
     private int mColorGrey2;
     private TypedArray mGroupTitleIds;
+
+    private SimpleDateFormat mDateFormatter = new SimpleDateFormat("EE LLL dd yyyy kk:mm:ss");
 
     public static DetailFragment getInstance(String packageName) {
         DetailFragment detailFragment = new DetailFragment();
@@ -124,37 +127,31 @@ public class DetailFragment extends Fragment {
             return;
 
         TextView sizeCodeView = (TextView) headerView.findViewById(R.id.size_code);
-        sizeCodeView.setText(getReadeableSize(mPackageStats.codeSize));
+        sizeCodeView.setText(Utils.getReadableSize(mPackageStats.codeSize));
 
         TextView sizeCacheView = (TextView) headerView.findViewById(R.id.size_cache);
-        sizeCacheView.setText(getReadeableSize(mPackageStats.cacheSize));
+        sizeCacheView.setText(Utils.getReadableSize(mPackageStats.cacheSize));
 
         TextView sizeDataView = (TextView) headerView.findViewById(R.id.size_data);
-        sizeDataView.setText(getReadeableSize(mPackageStats.dataSize));
+        sizeDataView.setText(Utils.getReadableSize(mPackageStats.dataSize));
 
         TextView sizeExtCodeView = (TextView) headerView.findViewById(R.id.size_ext_code);
-        sizeExtCodeView.setText(getReadeableSize(mPackageStats.externalCodeSize));
+        sizeExtCodeView.setText(Utils.getReadableSize(mPackageStats.externalCodeSize));
 
         TextView sizeExtCacheView = (TextView) headerView.findViewById(R.id.size_ext_cache);
-        sizeExtCacheView.setText(getReadeableSize(mPackageStats.externalCacheSize));
+        sizeExtCacheView.setText(Utils.getReadableSize(mPackageStats.externalCacheSize));
 
         TextView sizeExtDataView = (TextView) headerView.findViewById(R.id.size_ext_data);
-        sizeExtDataView.setText(getReadeableSize(mPackageStats.externalDataSize));
+        sizeExtDataView.setText(Utils.getReadableSize(mPackageStats.externalDataSize));
 
         TextView sizeObb = (TextView) headerView.findViewById(R.id.size_ext_obb);
-        sizeObb.setText(getReadeableSize(mPackageStats.externalObbSize));
+        sizeObb.setText(Utils.getReadableSize(mPackageStats.externalObbSize));
 
         TextView sizeMedia = (TextView) headerView.findViewById(R.id.size_ext_media);
-        sizeMedia.setText(getReadeableSize(mPackageStats.externalMediaSize));
+        sizeMedia.setText(Utils.getReadableSize(mPackageStats.externalMediaSize));
     }
 
-    private String getReadeableSize(long size) {
-        float sizeKb = size / 1024f;
-        if (sizeKb < 1000)
-            return String.valueOf(sizeKb) + " Kb";
-        else
-            return String.format("%.2f", sizeKb / 1024) + " Mb";
-    }
+    
 
     private void getPackageSizeInfo(final View view) {
         try {
@@ -203,7 +200,17 @@ public class DetailFragment extends Fragment {
 
         ApplicationInfo applicationInfo = mPackageInfo.applicationInfo;
 
-        getActivity().setTitle(applicationInfo.loadLabel(mPackageManager));
+        TextView labelView = (TextView) headerView.findViewById(R.id.label);
+        CharSequence label = applicationInfo.loadLabel(mPackageManager);
+        if (getActivity() instanceof DetailActivity) {
+            //Application is not in multi-pane mode, use ActionBar for label
+            getActivity().setTitle(label);
+            labelView.setVisibility(View.GONE);
+        } else {
+            //Application is in multi-pane mode, ActionBar is already used, use field in header
+            //to display label
+            labelView.setText(label);
+        }
 
         TextView packageNameView = (TextView) headerView.findViewById(R.id.packageName);
         packageNameView.setText(mPackageName);
@@ -222,12 +229,10 @@ public class DetailFragment extends Fragment {
         isSystemAppView.setText(isSystemApp ? R.string.system : R.string.user);
 
         TextView installDateView = (TextView) headerView.findViewById(R.id.installed_date);
-        Date installDate = new Date(mPackageInfo.firstInstallTime);
-        installDateView.setText(getString(R.string.installation) + ": " + installDate.toString());
+        installDateView.setText(getString(R.string.installation) + ": " + getTime(mPackageInfo.firstInstallTime));
 
         TextView updateDateView = (TextView) headerView.findViewById(R.id.update_date);
-        Date updateDate = new Date(mPackageInfo.lastUpdateTime);
-        updateDateView.setText(getString(R.string.update) + ": " + updateDate.toString());
+        updateDateView.setText(getString(R.string.update) + ": " + getTime(mPackageInfo.lastUpdateTime));
 
         ImageButton overflowButton = (ImageButton) headerView.findViewById(R.id.detail_overflow);
         mDetailOverflowMenu.setView(overflowButton);
@@ -241,6 +246,11 @@ public class DetailFragment extends Fragment {
             onPackageStatsLoaded(headerView);
 
         return headerView;
+    }
+
+    public String getTime(long time) {
+        Date date = new Date(time);
+        return mDateFormatter.format(date);
     }
 
     private class Adapter extends BaseExpandableListAdapter {

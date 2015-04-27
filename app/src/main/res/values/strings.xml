@@ -45,10 +45,15 @@
     <string name="manifest">Manifest</string>
     <string name="error">Error</string>
     <string name="loading">Loading &#8230;</string> <!-- &#8230; = ... -->
+    <string name="name">Name</string>
+    <string name="package_string">Package</string>
+    <string name="system_user">System/User</string>
+    <string name="size">Size</string>
+
     <string name="about">About</string>
     <string name="about_message">Developed by Majeur.\n\nSource code: <a>https://github.com/MajeurAndroid/Applications-Info</a></string>
 
-    <string name="size">Size details</string>
+    <string name="size_details">Size details</string>
     <string name="internal">Internal</string>
     <string name="external">External</string>
     <string name="code_size">Code (apk file)</string>
@@ -61,13 +66,6 @@
 
     <string name="system">System</string>
     <string name="user">User</string>
-
-    <string-array name="sort_spinner_items">
-        <item>Name</item>
-        <item>Package</item>
-        <item>System/User</item>
-        <item>@string/installation</item>
-    </string-array>
 
     <array name="group_titles">
         <item>@string/activities</item>

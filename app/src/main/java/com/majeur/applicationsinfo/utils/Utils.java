@@ -29,6 +29,16 @@ public class Utils {
         return 0;
     }
 
+    public static String getReadableSize(long size) {
+        if (size == -1)
+            return "Error";
+        float sizeKb = size / 1024f;
+        if (sizeKb < 1000)
+            return String.valueOf(sizeKb) + " Kb";
+        else
+            return String.format("%.2f", sizeKb / 1024) + " Mb";
+    }
+
     public static String getLaunchMode(int mode) {
         switch (mode) {
             case ActivityInfo.LAUNCH_MULTIPLE:

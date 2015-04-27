@@ -6,11 +6,14 @@ import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageStats;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,16 +21,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.majeur.applicationsinfo.utils.Utils;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,28 +40,34 @@ import java.util.List;
 
 public class MainListFragment extends ListFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener {
 
+    private static final int SORT_NAME = 0;
+    private static final int SORT_PKG = 1;
+    private static final int SORT_DOMAIN = 2;
+    private static final int SORT_INSTALLATION = 3;
+    private static final int SORT_SIZE = 4;
+    private static final String INSTANCE_STATE_SORT_BY = "sort_by";
+
     private Adapter mAdapter;
     private List<Item> mItemList = new ArrayList<Item>();
+    private int mOnSizeFinishedItemCount;
     private PackageManager mPackageManager;
     private ProgressDialog mProgressDialog;
     private LayoutInflater mLayoutInflater;
     private MainCallbacks mCallbacks;
     private Context mContext;
     private Async mAsyncLoader;
+    private Spinner mSpinner;
+    private boolean mSpinnerListenerAuthorized;
 
     private SimpleDateFormat mSimpleDateFormat;
 
     private int mSortBy = 0;
 
-    private final int SORT_NAME = 0;
-    private final int SORT_PKG = 1;
-    private final int SORT_DOMAIN = 2;
-    private final int SORT_INSTALLATION = 3;
-
     class Item {
         ApplicationInfo applicationInfo;
         String label;
         Long date;
+        Long size = -1L;
     }
 
     private int mColorGrey1;
@@ -76,22 +85,38 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         mProgressDialog.setMessage("");
 
         mPackageManager = mContext.getPackageManager();
-        mSimpleDateFormat = new SimpleDateFormat("dd/mm/yyyy hh:mm:ss");
+        mSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         mColorGrey1 = getResources().getColor(R.color.grey_1);
         mColorGrey2 = getResources().getColor(R.color.grey_2);
 
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
 
-        Spinner spinner = new Spinner(actionBar.getThemedContext());
-        SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(actionBar.getThemedContext(),
-                R.array.sort_spinner_items, android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(spinnerAdapter);
-        spinner.setOnItemSelectedListener(this);
+        mSpinner = new Spinner(actionBar.getThemedContext());
+        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(actionBar.getThemedContext(),
+                R.array.sort_spinner_items, android.R.layout.simple_list_item_1);
+        mSpinner.setAdapter(spinnerAdapter);
+        mSpinnerListenerAuthorized = false;
+        mSpinner.setOnItemSelectedListener(this);
 
         ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        actionBar.setCustomView(spinner, layoutParams);
+        actionBar.setCustomView(mSpinner, layoutParams);
+
+        if (savedInstanceState != null)
+            setSortBy(savedInstanceState.getInt(INSTANCE_STATE_SORT_BY, -1), false);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mSpinner.setSelection(mSortBy);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(INSTANCE_STATE_SORT_BY, mSortBy);
     }
 
     private void onTaskEnded(List<Item> list) {
@@ -124,9 +149,14 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                     .commit();
         }
 
-        if (retainedFragment.getList() != null)
+        if (retainedFragment.getList() != null) {
             onTaskEnded(retainedFragment.getList());
-        else
+
+            mOnSizeFinishedItemCount = mItemList.size();
+            //Notify spinner that size sort is available
+            SpinnerAdapter adapter = (SpinnerAdapter) mSpinner.getAdapter();
+            adapter.notifyDataSetChanged();
+        } else
             loadList();
     }
 
@@ -176,11 +206,29 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        mSortBy = i;
-        checkFastScroll();
+        if (mSpinnerListenerAuthorized)
+            setSortBy(i, true);
 
-        sortApplicationList(mItemList, mSortBy);
-        mAdapter.notifyDataSetChanged();
+        mSpinnerListenerAuthorized = true;
+    }
+
+    /**
+     * Sort main list if provided value is valid.
+     * @param sort Must be one of SORT_*
+     * @param checkViews Set if views have to be updated, eg. when restoring state, views aren't
+     *                   created yet, so value must be false
+     */
+    public void setSortBy(int sort, boolean checkViews) {
+        if (sort >= SORT_NAME && sort <= SORT_SIZE) {
+            mSortBy = sort;
+
+            if (checkViews) {
+                checkFastScroll();
+
+                sortApplicationList(mItemList, mSortBy);
+                mAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     @Override
@@ -192,6 +240,51 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         getListView().setFastScrollEnabled(mSortBy == SORT_NAME);
     }
 
+    public void sortApplicationList(List<Item> list, final int sortBy) {
+        Collections.sort(list, new Comparator<Item>() {
+            @Override
+            public int compare(Item item1, Item item2) {
+                switch (sortBy) {
+                    case SORT_NAME:
+                        return item1.label.compareTo(item2.label);
+                    case SORT_PKG:
+                        return item1.applicationInfo.packageName.compareTo(item2.applicationInfo.packageName);
+                    case SORT_DOMAIN:
+                        boolean isSystem1 = (item1.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+                        boolean isSystem2 = (item2.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+                        return Utils.compareBooleans(isSystem1, isSystem2);
+                    case SORT_INSTALLATION:
+                        //Sort in decreasing order
+                        return -item1.date.compareTo(item2.date);
+                    case SORT_SIZE:
+                        return -item1.size.compareTo(item2.size);
+                    default:
+                        return 0;
+                }
+            }
+        });
+    }
+
+    /**
+     * This method is called by each item when it has finished retrieving its size
+     * When all items have finished, we set size sort available in spinner, and invalidate
+     * main list to display sizes in UI.
+     */
+    private void onItemFinishedSizeProcess() {
+        mOnSizeFinishedItemCount ++;
+
+        if (mOnSizeFinishedItemCount == mItemList.size()) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    SpinnerAdapter adapter = (SpinnerAdapter) mSpinner.getAdapter();
+                    adapter.notifyDataSetChanged();
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+    }
+
     class Adapter extends BaseAdapter implements SectionIndexer {
 
         class ViewHolder {
@@ -201,6 +294,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             TextView version;
             TextView isSystemApp;
             TextView date;
+            TextView size;
             IconAsyncTask iconLoader;
         }
 
@@ -233,6 +327,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                 holder.version = (TextView) view.findViewById(R.id.version);
                 holder.isSystemApp = (TextView) view.findViewById(R.id.isSystem);
                 holder.date = (TextView) view.findViewById(R.id.date);
+                holder.size = (TextView) view.findViewById(R.id.size);
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder) view.getTag();
@@ -241,7 +336,8 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
             view.setBackgroundColor(i % 2 == 0 ? mColorGrey2 : mColorGrey1);
 
-            ApplicationInfo info = mItemList.get(i).applicationInfo;
+            Item item = mItemList.get(i);
+            ApplicationInfo info = item.applicationInfo;
 
             try {
                 PackageInfo packageInfo = mPackageManager.getPackageInfo(info.packageName, 0);
@@ -261,6 +357,9 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
             boolean isSystemApp = (info.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
             holder.isSystemApp.setText(isSystemApp ? getString(R.string.system) : getString(R.string.user));
+
+            if (item.size != -1L)
+                holder.size.setText(Utils.getReadableSize(item.size));
 
             return view;
         }
@@ -326,6 +425,53 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         }
     }
 
+    class SpinnerAdapter extends BaseAdapter {
+
+        private Context mContext;
+        private int mLayoutResId;
+        private String[] mItems;
+
+        public SpinnerAdapter(Context themedContext, int arrayResId, int layoutResId) {
+            mContext = themedContext;
+            mItems = themedContext.getResources().getStringArray(arrayResId);
+            mLayoutResId = layoutResId;
+        }
+
+        @Override
+        public int getCount() {
+            return mItems.length;
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        //It make no sense to implement recycled view system because there is only 5 items in list
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            view = View.inflate(mContext, mLayoutResId, null);
+
+            if (view instanceof TextView)
+                ((TextView) view).setText(mItems[i]);
+
+            return view;
+        }
+
+        /**
+         * Set sort_by_size item disabled if all items haven't retrieved them size.
+         */
+        @Override
+        public boolean isEnabled(int position) {
+            return position != SORT_SIZE || mItemList != null && mOnSizeFinishedItemCount == mItemList.size();
+        }
+    }
+
     class Async extends AsyncTask<Void, Async.Progress, List<Item>> {
 
         class Progress {
@@ -346,6 +492,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             progress.totalSize = applicationInfos.size();
 
             List<Item> itemList = new ArrayList<Item>(applicationInfos.size());
+            mOnSizeFinishedItemCount = 0;
 
             for (ApplicationInfo applicationInfo : applicationInfos) {
                 if (isCancelled())
@@ -361,6 +508,8 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                 }
                 itemList.add(item);
 
+                getItemSize(item);
+
                 progress.label = label;
                 publishProgress(progress);
             }
@@ -368,6 +517,37 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             sortApplicationList(itemList, mSortBy);
 
             return itemList;
+        }
+
+        private void getItemSize(final Item item) {
+            try {
+                Method getPackageSizeInfo = mPackageManager.getClass().getMethod(
+                        "getPackageSizeInfo", String.class, IPackageStatsObserver.class);
+
+                getPackageSizeInfo.invoke(mPackageManager, item.applicationInfo.packageName, new IPackageStatsObserver.Stub() {
+                    @Override
+                    public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded)
+                            throws RemoteException {
+                        if (succeeded)
+                            item.size = pStats.codeSize + pStats.cacheSize + pStats.dataSize
+                                    + pStats.externalCodeSize + pStats.externalCacheSize + pStats.externalDataSize
+                                    + pStats.externalMediaSize + pStats.externalObbSize;
+                        else
+                            item.size = -1L;
+
+                        onItemFinishedSizeProcess();
+                    }
+                });
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+                onItemFinishedSizeProcess();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                onItemFinishedSizeProcess();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+                onItemFinishedSizeProcess();
+            }
         }
 
         @Override
@@ -393,29 +573,5 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             super.onCancelled(list);
             mProgressDialog.hide();
         }
-    }
-
-
-    public void sortApplicationList(List<Item> list, final int sortBy) {
-        Collections.sort(list, new Comparator<Item>() {
-            @Override
-            public int compare(Item item1, Item item2) {
-                switch (sortBy) {
-                    case SORT_NAME:
-                        return item1.label.compareTo(item2.label);
-                    case SORT_PKG:
-                        return item1.applicationInfo.packageName.compareTo(item2.applicationInfo.packageName);
-                    case SORT_DOMAIN:
-                        boolean isSystem1 = (item1.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                        boolean isSystem2 = (item2.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                        return Utils.compareBooleans(isSystem1, isSystem2);
-                    case SORT_INSTALLATION:
-                        //Sort in decreasing order
-                        return -item1.date.compareTo(item2.date);
-                    default:
-                        return 0;
-                }
-            }
-        });
     }
 }
