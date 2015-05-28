@@ -1,5 +1,7 @@
 # ApplicationsInfo
 
+## (Pull request are welcomed, don't hesitate to improve the app !)
+
 Simple android application that shows all information available about all installed apps.
 It can be a good source of inspiration for all beginners. It deals with activities, multi pane, fragments, async tasks ... 
 
