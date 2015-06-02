@@ -8,6 +8,7 @@
     <string name="require_no_permission">No permission required</string>
     <string name="activities">Activities</string>
     <string name="launch">Launch</string>
+    <string name="unsupported">Unsupported</string>
     <string name="refresh">Refresh</string>
     <string name="no_activities">No activities</string>
     <string name="receivers">Receivers</string>
@@ -49,6 +50,9 @@
     <string name="package_string">Package</string>
     <string name="system_user">System/User</string>
     <string name="size">Size</string>
+    <string name="netstats_received">Data received</string>
+    <string name="netstats_transmitted">Data transmitted</string>
+    <string name="netstats_msg">* Data transmitted since last device boot</string>
 
     <string name="about">About</string>
     <string name="about_message">Developed by Majeur.\n\nSource code: <a>https://github.com/MajeurAndroid/Applications-Info</a></string>

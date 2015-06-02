@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -331,7 +332,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder) view.getTag();
-                holder.iconLoader.cancel();
+                holder.iconLoader.cancel(true);
             }
 
             view.setBackgroundColor(i % 2 == 0 ? mColorGrey2 : mColorGrey1);
@@ -345,7 +346,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                 Date date = new Date(packageInfo.firstInstallTime);
                 holder.date.setText(mSimpleDateFormat.format(date));
             } catch (PackageManager.NameNotFoundException e) {
-
+                //Do nothing
             }
 
             holder.iconLoader = new IconAsyncTask(holder.icon, info);
@@ -359,7 +360,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             holder.isSystemApp.setText(isSystemApp ? getString(R.string.system) : getString(R.string.user));
 
             if (item.size != -1L)
-                holder.size.setText(Utils.getReadableSize(item.size));
+                holder.size.setText(Formatter.formatFileSize(getActivity(), item.size));
 
             return view;
         }
@@ -392,15 +393,10 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
             ImageView imageView;
             ApplicationInfo info;
-            boolean cancel = false;
 
             IconAsyncTask(ImageView imageView, ApplicationInfo info) {
                 this.imageView = imageView;
                 this.info = info;
-            }
-
-            public void cancel() {
-                cancel = true;
             }
 
             @Override
@@ -411,7 +407,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
             @Override
             protected Drawable doInBackground(Void... voids) {
-                if (!cancel)
+                if (!isCancelled())
                     return info.loadIcon(mPackageManager);
                 return null;
             }

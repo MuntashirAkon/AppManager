@@ -6,8 +6,14 @@ import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ServiceInfo;
+import android.os.Build;
 import android.util.TypedValue;
 import android.view.WindowManager;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class Utils {
 
@@ -29,14 +35,23 @@ public class Utils {
         return 0;
     }
 
-    public static String getReadableSize(long size) {
-        if (size == -1)
-            return "Error";
-        float sizeKb = size / 1024f;
-        if (sizeKb < 1000)
-            return String.valueOf(sizeKb) + " Kb";
-        else
-            return String.format("%.2f", sizeKb / 1024) + " Mb";
+    public static String getFileContent(File file) {
+        if (file.isDirectory())
+            return null;
+
+        try {
+            Scanner scanner = new Scanner(file);
+            String result = "";
+            while (scanner.hasNext())
+                result += scanner.next();
+            return result;
+        } catch (FileNotFoundException e) {
+            return null;
+        }
+    }
+
+    public static boolean isApi20() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH;
     }
 
     public static String getLaunchMode(int mode) {

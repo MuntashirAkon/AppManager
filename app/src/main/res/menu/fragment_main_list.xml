@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:title="@string/refresh"
-        android:icon="@android:drawable/ic_popup_sync"
+        android:icon="@drawable/ic_refresh"
         android:id="@+id/action_refresh"
         android:showAsAction="ifRoom"/>
 

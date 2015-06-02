@@ -8,12 +8,12 @@ android {
         applicationId "com.majeur.applicationsinfo"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 5
-        versionName "1.4"
+        versionCode 6
+        versionName "1.5"
     }
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

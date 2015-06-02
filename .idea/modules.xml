@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$APPLICATION_HOME_DIR$/workspace/ApplicationsInfo/app/app.iml" filepath="$APPLICATION_HOME_DIR$/workspace/ApplicationsInfo/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ApplicationsInfo.iml" filepath="$PROJECT_DIR$/ApplicationsInfo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
 </project>

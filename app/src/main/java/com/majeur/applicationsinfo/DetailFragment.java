@@ -1,5 +1,6 @@
 package com.majeur.applicationsinfo;
 
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -15,9 +16,12 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.content.res.TypedArray;
+import android.net.TrafficStats;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PatternMatcher;
 import android.os.RemoteException;
+import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,8 +34,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.majeur.applicationsinfo.utils.Tuple;
 import com.majeur.applicationsinfo.utils.Utils;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -41,6 +47,9 @@ public class DetailFragment extends Fragment {
 
     static final String FRAGMENT_TAG = "fragment_detail";
     static final String EXTRA_PACKAGE_NAME = "pkg";
+    private static final String UID_STATS_PATH = "/proc/uid_stat/";
+    private static final String UID_STATS_TR = "tcp_rcv";
+    private static final String UID_STATS_RC = "tcp_snd";
 
     private static final int HEADER = 0;
     private static final int ACTIVITIES = 1;
@@ -122,37 +131,118 @@ public class DetailFragment extends Fragment {
         }
     }
 
-    private void onPackageStatsLoaded(View headerView) {
-        if (mPackageStats == null)
-            return;
-
-        TextView sizeCodeView = (TextView) headerView.findViewById(R.id.size_code);
-        sizeCodeView.setText(Utils.getReadableSize(mPackageStats.codeSize));
-
-        TextView sizeCacheView = (TextView) headerView.findViewById(R.id.size_cache);
-        sizeCacheView.setText(Utils.getReadableSize(mPackageStats.cacheSize));
-
-        TextView sizeDataView = (TextView) headerView.findViewById(R.id.size_data);
-        sizeDataView.setText(Utils.getReadableSize(mPackageStats.dataSize));
-
-        TextView sizeExtCodeView = (TextView) headerView.findViewById(R.id.size_ext_code);
-        sizeExtCodeView.setText(Utils.getReadableSize(mPackageStats.externalCodeSize));
-
-        TextView sizeExtCacheView = (TextView) headerView.findViewById(R.id.size_ext_cache);
-        sizeExtCacheView.setText(Utils.getReadableSize(mPackageStats.externalCacheSize));
-
-        TextView sizeExtDataView = (TextView) headerView.findViewById(R.id.size_ext_data);
-        sizeExtDataView.setText(Utils.getReadableSize(mPackageStats.externalDataSize));
-
-        TextView sizeObb = (TextView) headerView.findViewById(R.id.size_ext_obb);
-        sizeObb.setText(Utils.getReadableSize(mPackageStats.externalObbSize));
-
-        TextView sizeMedia = (TextView) headerView.findViewById(R.id.size_ext_media);
-        sizeMedia.setText(Utils.getReadableSize(mPackageStats.externalMediaSize));
+    /**
+     * Used to finish when user clicks on {@link android.app.ActionBar} arrow
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            //onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
-    
+    /**
+     * Create and populate header view
+     */
+    @TargetApi(Build.VERSION_CODES.KITKAT_WATCH)
+    private View getHeaderView() {
+        View headerView = mLayoutInflater.inflate(R.layout.detail_header, null);
 
+        ApplicationInfo applicationInfo = mPackageInfo.applicationInfo;
+
+        TextView labelView = (TextView) headerView.findViewById(R.id.label);
+        CharSequence label = applicationInfo.loadLabel(mPackageManager);
+        if (getActivity() instanceof DetailActivity) {
+            //Application is not in multi-pane mode, use ActionBar for label
+            getActivity().setTitle(label);
+            labelView.setVisibility(View.GONE);
+        } else {
+            //Application is in multi-pane mode, ActionBar is already used, use field in header
+            //to display label
+            labelView.setText(label);
+        }
+
+        TextView packageNameView = (TextView) headerView.findViewById(R.id.packageName);
+        packageNameView.setText(mPackageName);
+
+        ImageView iconView = (ImageView) headerView.findViewById(R.id.icon);
+        iconView.setImageDrawable(applicationInfo.loadIcon(mPackageManager));
+
+        if (Utils.isApi20()) {
+            ImageView bannerView = (ImageView) headerView.findViewById(R.id.banner);
+            bannerView.setImageDrawable(applicationInfo.loadBanner(mPackageManager));
+        }
+
+        TextView versionView = (TextView) headerView.findViewById(R.id.version);
+        versionView.setText(mPackageInfo.versionName + " (" + mPackageInfo.versionCode + ")");
+
+        TextView pathView = (TextView) headerView.findViewById(R.id.path);
+        pathView.setText(applicationInfo.sourceDir);
+
+        TextView isSystemAppView = (TextView) headerView.findViewById(R.id.isSystem);
+        boolean isSystemApp = (mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+        isSystemAppView.setText(isSystemApp ? R.string.system : R.string.user);
+
+        TextView installDateView = (TextView) headerView.findViewById(R.id.installed_date);
+        installDateView.setText(getString(R.string.installation) + ": " + getTime(mPackageInfo.firstInstallTime));
+
+        TextView updateDateView = (TextView) headerView.findViewById(R.id.update_date);
+        updateDateView.setText(getString(R.string.update) + ": " + getTime(mPackageInfo.lastUpdateTime));
+
+        ImageButton overflowButton = (ImageButton) headerView.findViewById(R.id.detail_overflow);
+        mDetailOverflowMenu.setView(overflowButton);
+
+        TextView sharedUserId = (TextView) headerView.findViewById(R.id.sharedUserId);
+        sharedUserId.setText(getString(R.string.shared_user_id) + ": " + mPackageInfo.sharedUserId);
+
+        Tuple<String, String> uidNetStats = getNetStats(applicationInfo.uid);
+
+        TextView netStatsTransmittedView = (TextView) headerView.findViewById(R.id.netstats_transmitted);
+        netStatsTransmittedView.setText(getString(R.string.netstats_transmitted) + ": "
+                + uidNetStats.getFirst());
+
+        TextView netStatsReceivedView = (TextView) headerView.findViewById(R.id.netstats_received);
+        netStatsReceivedView.setText(getString(R.string.netstats_received) + ": "
+                + uidNetStats.getSecond());
+
+        if (mPackageStats == null)
+            getPackageSizeInfo(headerView);
+        else
+            onPackageStatsLoaded(headerView);
+
+        return headerView;
+    }
+
+    private String getReadableSize(long size) {
+        return Formatter.formatFileSize(getActivity(), size);
+    }
+
+    private Tuple<String, String> getNetStats(int uid) {
+        Tuple<String, String> tuple = new Tuple<>(getReadableSize(0), getReadableSize(0));
+        File uidStatsDir = new File(UID_STATS_PATH + uid);
+
+        if (uidStatsDir.exists() && uidStatsDir.isDirectory()) {
+            for (File child : uidStatsDir.listFiles()) {
+                if (child.getName().equals(UID_STATS_TR))
+                    tuple.setFirst(getReadableSize(Long.parseLong(Utils.getFileContent(child))));
+                else if (child.getName().equals(UID_STATS_RC))
+                    tuple.setSecond(getReadableSize(Long.parseLong(Utils.getFileContent(child))));
+            }
+        }
+        return tuple;
+    }
+
+    public String getTime(long time) {
+        Date date = new Date(time);
+        return mDateFormatter.format(date);
+    }
+
+    /**
+     * Load package sizes and update views if success
+     * @param view
+     */
     private void getPackageSizeInfo(final View view) {
         try {
             Method getPackageSizeInfo = mPackageManager.getClass().getMethod(
@@ -181,76 +271,36 @@ public class DetailFragment extends Fragment {
     }
 
     /**
-     * Used to finish when user clicks on {@link android.app.ActionBar} arrow
+     * Update size views
+     * @param headerView
      */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            //onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Create and populate header view
-     */
-    private View getHeaderView() {
-        View headerView = mLayoutInflater.inflate(R.layout.detail_header, null);
-
-        ApplicationInfo applicationInfo = mPackageInfo.applicationInfo;
-
-        TextView labelView = (TextView) headerView.findViewById(R.id.label);
-        CharSequence label = applicationInfo.loadLabel(mPackageManager);
-        if (getActivity() instanceof DetailActivity) {
-            //Application is not in multi-pane mode, use ActionBar for label
-            getActivity().setTitle(label);
-            labelView.setVisibility(View.GONE);
-        } else {
-            //Application is in multi-pane mode, ActionBar is already used, use field in header
-            //to display label
-            labelView.setText(label);
-        }
-
-        TextView packageNameView = (TextView) headerView.findViewById(R.id.packageName);
-        packageNameView.setText(mPackageName);
-
-        ImageView iconView = (ImageView) headerView.findViewById(R.id.icon);
-        iconView.setImageDrawable(applicationInfo.loadIcon(mPackageManager));
-
-        TextView versionView = (TextView) headerView.findViewById(R.id.version);
-        versionView.setText(mPackageInfo.versionName + " (" + mPackageInfo.versionCode + ")");
-
-        TextView pathView = (TextView) headerView.findViewById(R.id.path);
-        pathView.setText(applicationInfo.sourceDir);
-
-        TextView isSystemAppView = (TextView) headerView.findViewById(R.id.isSystem);
-        boolean isSystemApp = (mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-        isSystemAppView.setText(isSystemApp ? R.string.system : R.string.user);
-
-        TextView installDateView = (TextView) headerView.findViewById(R.id.installed_date);
-        installDateView.setText(getString(R.string.installation) + ": " + getTime(mPackageInfo.firstInstallTime));
-
-        TextView updateDateView = (TextView) headerView.findViewById(R.id.update_date);
-        updateDateView.setText(getString(R.string.update) + ": " + getTime(mPackageInfo.lastUpdateTime));
-
-        ImageButton overflowButton = (ImageButton) headerView.findViewById(R.id.detail_overflow);
-        mDetailOverflowMenu.setView(overflowButton);
-
-        TextView sharedUserId = (TextView) headerView.findViewById(R.id.sharedUserId);
-        sharedUserId.setText(getString(R.string.shared_user_id) + ": " + mPackageInfo.sharedUserId);
-
+    private void onPackageStatsLoaded(View headerView) {
         if (mPackageStats == null)
-            getPackageSizeInfo(headerView);
-        else
-            onPackageStatsLoaded(headerView);
+            return;
 
-        return headerView;
-    }
+        TextView sizeCodeView = (TextView) headerView.findViewById(R.id.size_code);
+        sizeCodeView.setText(getReadableSize(mPackageStats.codeSize));
 
-    public String getTime(long time) {
-        Date date = new Date(time);
-        return mDateFormatter.format(date);
+        TextView sizeCacheView = (TextView) headerView.findViewById(R.id.size_cache);
+        sizeCacheView.setText(getReadableSize(mPackageStats.cacheSize));
+
+        TextView sizeDataView = (TextView) headerView.findViewById(R.id.size_data);
+        sizeDataView.setText(getReadableSize(mPackageStats.dataSize));
+
+        TextView sizeExtCodeView = (TextView) headerView.findViewById(R.id.size_ext_code);
+        sizeExtCodeView.setText(getReadableSize(mPackageStats.externalCodeSize));
+
+        TextView sizeExtCacheView = (TextView) headerView.findViewById(R.id.size_ext_cache);
+        sizeExtCacheView.setText(getReadableSize(mPackageStats.externalCacheSize));
+
+        TextView sizeExtDataView = (TextView) headerView.findViewById(R.id.size_ext_data);
+        sizeExtDataView.setText(getReadableSize(mPackageStats.externalDataSize));
+
+        TextView sizeObb = (TextView) headerView.findViewById(R.id.size_ext_obb);
+        sizeObb.setText(getReadableSize(mPackageStats.externalObbSize));
+
+        TextView sizeMedia = (TextView) headerView.findViewById(R.id.size_ext_media);
+        sizeMedia.setText(getReadableSize(mPackageStats.externalMediaSize));
     }
 
     private class Adapter extends BaseExpandableListAdapter {
@@ -622,7 +672,8 @@ public class DetailFragment extends Fragment {
             TextView textView = (TextView) convertView;
             textView.setText(mPackageInfo.requestedPermissions[index]);
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            textView.setPadding(Utils.dpToPx(getActivity(), 15), 0, 0, 0);
+            int size = getActivity().getResources().getDimensionPixelSize(R.dimen.header_text_margin);
+            textView.setPadding(size, 0, size, 0);
 
             return convertView;
         }
@@ -746,6 +797,9 @@ public class DetailFragment extends Fragment {
             TextView textView = (TextView) convertView;
             textView.setText(mPackageInfo.signatures[index].toCharsString());
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            textView.setTextIsSelectable(true);
+            int size = getActivity().getResources().getDimensionPixelSize(R.dimen.header_text_margin);
+            textView.setPadding(size, 0, size, 0);
 
             return convertView;
         }
