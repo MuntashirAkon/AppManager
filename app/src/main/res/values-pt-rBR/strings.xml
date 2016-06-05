@@ -1,0 +1,73 @@
+<resources>
+    <string name="app_name">Applications Info</string>
+    <string name="loading_apps">Carregando aplicativos</string>
+    <string name="is_system_app">Aplicativo do sitema</string>
+    <string name="uninstall">Desinstalar</string>
+    <string name="view_in_settings">Ver em configurações</string>
+    <string name="permissions">Permissões de uso</string>
+    <string name="require_no_permission">Não requer permissões</string>
+    <string name="activities">Atividades</string>
+    <string name="launch">Lançamento</string>
+    <string name="unsupported">Não suportado</string>
+    <string name="refresh">Regarregar</string>
+    <string name="no_activities">Sem atividades</string>
+    <string name="receivers">Receptores</string>
+    <string name="no_receivers">Sem receptores</string>
+    <string name="providers">Provedores</string>
+    <string name="no_providers">Sem provedores</string>
+    <string name="launch_mode">Modo de lançamento</string>
+    <string name="taskAffinity">Afinidade da tarefa</string>
+    <string name="installation">Instalação</string>
+    <string name="update">Atualização</string>
+    <string name="authority">Autoridade</string>
+    <string name="service">Serviços</string>
+    <string name="no_service">Sem serviços</string>
+    <string name="orientation">Orientação</string>
+    <string name="softInput">Soft input mode</string>
+    <string name="flags">Flags</string>
+    <string name="grant_uri_permission">Concede permissões URI</string>
+    <string name="path_permissions">Permissões de caminho</string>
+    <string name="read">Ler</string>
+    <string name="write">Escrever</string>
+    <string name="patterns_allowed">Padrões permitidos</string>
+    <string name="declared_permission">Permissões</string>
+    <string name="group">Grupo</string>
+    <string name="protection_level">Nível de proteção</string>
+    <string name="uses_feature">Uses features</string>
+    <string name="gles_ver">Req. Gles ver.</string>
+    <string name="no_feature">No features</string>
+    <string name="shared_user_id">Id de usuário compartilhado</string>
+    <string name="signatures">Assinaturas</string>
+    <string name="no_signatures">Sem assinaturas</string>
+    <string name="configurations">Configurações</string>
+    <string name="no_configurations">Sem configurações</string>
+    <string name="input_features">Input features</string>
+    <string name="view_manifest">Ver arquivo Manifesto</string>
+    <string name="manifest">Manifesto</string>
+    <string name="error">Erro</string>
+    <string name="loading">Carregando &#8230;</string> <!-- &#8230; = ... -->
+    <string name="name">Nome</string>
+    <string name="package_string">Pacote</string>
+    <string name="system_user">Sistema/Usuário</string>
+    <string name="size">Tamanho</string>
+    <string name="netstats_received">Dados recebidos</string>
+    <string name="netstats_transmitted">Dados transmitidos</string>
+    <string name="netstats_msg">* Dados transmitidos desde a última inicialização do dispositivo</string>
+
+    <string name="about">Sobre</string>
+    <string name="about_message">Desenvolvido por Majeur.\n\nCódigo fonte: <a>https://github.com/MajeurAndroid/Applications-Info</a></string>
+
+    <string name="size_details">Detalhes de tamanho</string>
+    <string name="internal">Interno</string>
+    <string name="external">Externo</string>
+    <string name="code_size">Código (arquivo apk)</string>
+    <string name="data_size">Dados</string>
+    <string name="cache_size">Cache</string>
+    <string name="obb_size">Obb</string>
+    <string name="media_size">Mídia</string>
+
+    <string name="app_not_installed">Aplicativo não instalado</string>
+
+    <string name="system">Sistema</string>
+    <string name="user">Usuário</string>
+</resources>
