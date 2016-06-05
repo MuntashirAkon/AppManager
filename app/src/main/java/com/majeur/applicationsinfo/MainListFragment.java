@@ -471,8 +471,10 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         public int getPositionForSection(int section) {
             for (int i = 0; i < this.getCount(); i++) {
                 String item = mAdapterList.get(i).label;
-                if (item.charAt(0) == sections.charAt(section))
-                    return i;
+                if (item.length() > 0) {
+                    if (item.charAt(0) == sections.charAt(section))
+                        return i;
+                }
             }
             return 0;
         }
