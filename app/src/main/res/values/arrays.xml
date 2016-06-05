@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="sort_spinner_items">
-        <item>@string/name</item>
-        <item>@string/package_string</item>
-        <item>@string/system_user</item>
-        <item>@string/installation</item>
-        <item>@string/size</item>
-    </string-array>
+    <array name="group_titles">
+        <item>@string/activities</item>
+        <item>@string/service</item>
+        <item>@string/receivers</item>
+        <item>@string/providers</item>
+        <item>@string/permissions</item>
+        <item>@string/declared_premission</item>
+        <item>@string/uses_feature</item>
+        <item>@string/configurations</item>
+        <item>@string/signatures</item>
+    </array>
 </resources>

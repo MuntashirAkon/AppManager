@@ -16,7 +16,6 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.content.res.TypedArray;
-import android.net.TrafficStats;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PatternMatcher;
@@ -147,8 +146,8 @@ public class DetailFragment extends Fragment {
      * Create and populate header view
      */
     @TargetApi(Build.VERSION_CODES.KITKAT_WATCH)
-    private View getHeaderView() {
-        View headerView = mLayoutInflater.inflate(R.layout.detail_header, null);
+    private View getHeaderView(ViewGroup viewGroup) {
+        View headerView = mLayoutInflater.inflate(R.layout.detail_header, viewGroup, false);
 
         ApplicationInfo applicationInfo = mPackageInfo.applicationInfo;
 
@@ -241,11 +240,12 @@ public class DetailFragment extends Fragment {
 
     /**
      * Load package sizes and update views if success
+     *
      * @param view
      */
     private void getPackageSizeInfo(final View view) {
         try {
-            Method getPackageSizeInfo = mPackageManager.getClass().getMethod(
+            Method getPackageSizeInfo = PackageManager.class.getMethod(
                     "getPackageSizeInfo", String.class, IPackageStatsObserver.class);
 
             getPackageSizeInfo.invoke(mPackageManager, mPackageName, new IPackageStatsObserver.Stub() {
@@ -272,6 +272,7 @@ public class DetailFragment extends Fragment {
 
     /**
      * Update size views
+     *
      * @param headerView
      */
     private void onPackageStatsLoaded(View headerView) {
@@ -359,7 +360,7 @@ public class DetailFragment extends Fragment {
         @Override
         public View getGroupView(int groupIndex, boolean b, View view, ViewGroup viewGroup) {
             if (groupIndex == HEADER)
-                return getHeaderView();
+                return getHeaderView(viewGroup);
 
             TextView textView;
             if (view instanceof TextView)
@@ -402,21 +403,21 @@ public class DetailFragment extends Fragment {
         public View getChildView(int groupIndex, int childIndex, boolean b, View view, ViewGroup viewGroup) {
             switch (groupIndex) {
                 case ACTIVITIES:
-                    return getActivityView(view, childIndex);
+                    return getActivityView(viewGroup, view, childIndex);
                 case SERVICES:
-                    return getServicesView(view, childIndex);
+                    return getServicesView(viewGroup, view, childIndex);
                 case RECEIVERS:
-                    return getReceiverView(view, childIndex);
+                    return getReceiverView(viewGroup, view, childIndex);
                 case PROVIDERS:
-                    return getProviderView(view, childIndex);
+                    return getProviderView(viewGroup, view, childIndex);
                 case USES_PERMISSIONS:
                     return getUsesPermissionsView(view, childIndex);
                 case PERMISSIONS:
-                    return getPermissionsView(view, childIndex);
+                    return getPermissionsView(viewGroup, view, childIndex);
                 case FEATURES:
-                    return getFeaturesView(view, childIndex);
+                    return getFeaturesView(viewGroup, view, childIndex);
                 case CONFIGURATION:
-                    return getConfigurationView(view, childIndex);
+                    return getConfigurationView(viewGroup, view, childIndex);
                 case SIGNATURES:
                     return getSignatureView(view, childIndex);
                 default:
@@ -428,10 +429,10 @@ public class DetailFragment extends Fragment {
          * See below checkIfConvertViewMatch method.
          * Bored view inflation / creation.
          */
-        private View getActivityView(View convertView, int index) {
+        private View getActivityView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
             if (!checkIfConvertViewMatch(convertView, ACTIVITIES)) {
-                convertView = mLayoutInflater.inflate(R.layout.detail_activities, null);
+                convertView = mLayoutInflater.inflate(R.layout.detail_activities, viewGroup, false);
 
                 viewHolder = new ViewHolder();
                 viewHolder.currentViewType = ACTIVITIES;
@@ -497,10 +498,10 @@ public class DetailFragment extends Fragment {
         /**
          * Boring view inflation / creation
          */
-        private View getServicesView(View convertView, int index) {
+        private View getServicesView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
             if (!checkIfConvertViewMatch(convertView, SERVICES)) {
-                convertView = mLayoutInflater.inflate(R.layout.detail_activities, null);
+                convertView = mLayoutInflater.inflate(R.layout.detail_activities, viewGroup, false);
 
                 viewHolder = new ViewHolder();
                 viewHolder.currentViewType = SERVICES;
@@ -537,10 +538,10 @@ public class DetailFragment extends Fragment {
         /**
          * Boring view inflation / creation
          */
-        private View getReceiverView(View convertView, int index) {
+        private View getReceiverView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
             if (!checkIfConvertViewMatch(convertView, RECEIVERS)) {
-                convertView = mLayoutInflater.inflate(R.layout.detail_activities, null);
+                convertView = mLayoutInflater.inflate(R.layout.detail_activities, viewGroup, false);
 
                 viewHolder = new ViewHolder();
                 viewHolder.currentViewType = RECEIVERS;
@@ -587,10 +588,10 @@ public class DetailFragment extends Fragment {
         /**
          * Boring view inflation / creation
          */
-        private View getProviderView(View convertView, int index) {
+        private View getProviderView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
             if (!checkIfConvertViewMatch(convertView, PROVIDERS)) {
-                convertView = mLayoutInflater.inflate(R.layout.detail_activities, null);
+                convertView = mLayoutInflater.inflate(R.layout.detail_activities, viewGroup, false);
 
                 viewHolder = new ViewHolder();
                 viewHolder.currentViewType = PROVIDERS;
@@ -670,6 +671,7 @@ public class DetailFragment extends Fragment {
             }
 
             TextView textView = (TextView) convertView;
+            textView.setTextIsSelectable(true);
             textView.setText(mPackageInfo.requestedPermissions[index]);
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             int size = getActivity().getResources().getDimensionPixelSize(R.dimen.header_text_margin);
@@ -681,10 +683,10 @@ public class DetailFragment extends Fragment {
         /**
          * Boring view inflation / creation
          */
-        private View getPermissionsView(View convertView, int index) {
+        private View getPermissionsView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
             if (!checkIfConvertViewMatch(convertView, PERMISSIONS)) {
-                convertView = mLayoutInflater.inflate(R.layout.detail_activities, null);
+                convertView = mLayoutInflater.inflate(R.layout.detail_activities, viewGroup, false);
 
                 viewHolder = new ViewHolder();
                 viewHolder.currentViewType = PERMISSIONS;
@@ -727,10 +729,10 @@ public class DetailFragment extends Fragment {
         /**
          * Boring view inflation / creation
          */
-        private View getFeaturesView(View convertView, int index) {
+        private View getFeaturesView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
             if (!checkIfConvertViewMatch(convertView, FEATURES)) {
-                convertView = mLayoutInflater.inflate(R.layout.detail_features, null);
+                convertView = mLayoutInflater.inflate(R.layout.detail_features, viewGroup, false);
 
                 viewHolder = new ViewHolder();
                 viewHolder.currentViewType = FEATURES;
@@ -759,10 +761,10 @@ public class DetailFragment extends Fragment {
         /**
          * Boring view inflation / creation
          */
-        private View getConfigurationView(View convertView, int index) {
+        private View getConfigurationView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
             if (!checkIfConvertViewMatch(convertView, CONFIGURATION)) {
-                convertView = mLayoutInflater.inflate(R.layout.detail_features, null);
+                convertView = mLayoutInflater.inflate(R.layout.detail_features, viewGroup);
 
                 viewHolder = new ViewHolder();
                 viewHolder.currentViewType = CONFIGURATION;

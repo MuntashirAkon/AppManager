@@ -52,7 +52,7 @@
     <string name="size">Size</string>
     <string name="netstats_received">Data received</string>
     <string name="netstats_transmitted">Data transmitted</string>
-    <string name="netstats_msg">* Data transmitted since last device boot</string>
+    <string name="netstats_msg">* Data transmitted since last boot</string>
 
     <string name="about">About</string>
     <string name="about_message">Developed by Majeur.\n\nSource code: <a>https://github.com/MajeurAndroid/Applications-Info</a></string>
@@ -70,16 +70,5 @@
 
     <string name="system">System</string>
     <string name="user">User</string>
-
-    <array name="group_titles">
-        <item>@string/activities</item>
-        <item>@string/service</item>
-        <item>@string/receivers</item>
-        <item>@string/providers</item>
-        <item>@string/permissions</item>
-        <item>@string/declared_premission</item>
-        <item>@string/uses_feature</item>
-        <item>@string/configurations</item>
-        <item>@string/signatures</item>
-    </array>
+    <string name="sort">Sort</string>
 </resources>

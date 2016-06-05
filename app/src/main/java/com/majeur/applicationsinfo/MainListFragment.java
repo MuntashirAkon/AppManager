@@ -3,8 +3,9 @@ package com.majeur.applicationsinfo;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ListFragment;
+import android.app.LoaderManager;
 import android.app.ProgressDialog;
-import android.content.Context;
+import android.content.Loader;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageInfo;
@@ -14,7 +15,10 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.text.Spannable;
 import android.text.format.Formatter;
+import android.text.style.BackgroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,15 +27,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.SectionIndexer;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.majeur.applicationsinfo.utils.Utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.Collator;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +47,14 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class MainListFragment extends ListFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener {
+public class MainListFragment extends ListFragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener,
+        LoaderManager.LoaderCallbacks<List<ApplicationItem>> {
+
+    private static Collator sCollator = Collator.getInstance();
+
+    private static final int[] sSortMenuItemIdsMap = {R.id.action_sort_name,
+            R.id.action_sort_pkg, R.id.action_sort_domain,
+            R.id.action_sort_installation, R.id.action_sort_size};
 
     private static final int SORT_NAME = 0;
     private static final int SORT_PKG = 1;
@@ -49,69 +64,37 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     private static final String INSTANCE_STATE_SORT_BY = "sort_by";
 
     private Adapter mAdapter;
-    private List<Item> mItemList = new ArrayList<Item>();
-    private int mOnSizeFinishedItemCount;
-    private PackageManager mPackageManager;
+    private List<ApplicationItem> mItemList = new ArrayList<>();
+    private int mItemSizeRetrievedCount;
     private ProgressDialog mProgressDialog;
-    private LayoutInflater mLayoutInflater;
     private MainCallbacks mCallbacks;
-    private Context mContext;
-    private Async mAsyncLoader;
-    private Spinner mSpinner;
-    private boolean mSpinnerListenerAuthorized;
+    private Activity mActivity;
 
-    private SimpleDateFormat mSimpleDateFormat;
-
-    private int mSortBy = 0;
-
-    class Item {
-        ApplicationInfo applicationInfo;
-        String label;
-        Long date;
-        Long size = -1L;
-    }
-
-    private int mColorGrey1;
-    private int mColorGrey2;
+    private int mSortBy = SORT_NAME;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mProgressDialog = new ProgressDialog(mContext);
+        mProgressDialog = new ProgressDialog(mActivity);
         mProgressDialog.setTitle(R.string.loading_apps);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mProgressDialog.setCancelable(false);
-        //Used to prevent message not showing later
-        mProgressDialog.setMessage("");
-
-        mPackageManager = mContext.getPackageManager();
-        mSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-        mColorGrey1 = getResources().getColor(R.color.grey_1);
-        mColorGrey2 = getResources().getColor(R.color.grey_2);
 
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
 
-        mSpinner = new Spinner(actionBar.getThemedContext());
-        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(actionBar.getThemedContext(),
-                R.array.sort_spinner_items, android.R.layout.simple_list_item_1);
-        mSpinner.setAdapter(spinnerAdapter);
-        mSpinnerListenerAuthorized = false;
-        mSpinner.setOnItemSelectedListener(this);
+        SearchView searchView = new SearchView(actionBar.getThemedContext());
+        searchView.setOnQueryTextListener(this);
 
         ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        actionBar.setCustomView(mSpinner, layoutParams);
+        actionBar.setCustomView(searchView, layoutParams);
 
-        if (savedInstanceState != null)
-            setSortBy(savedInstanceState.getInt(INSTANCE_STATE_SORT_BY, -1), false);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mSpinner.setSelection(mSortBy);
+        if (savedInstanceState != null) {
+            int sortBy = savedInstanceState.getInt(INSTANCE_STATE_SORT_BY, -1);
+            if (sortBy != -1)
+                setSortBy(sortBy);
+        }
     }
 
     @Override
@@ -120,74 +103,61 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         outState.putInt(INSTANCE_STATE_SORT_BY, mSortBy);
     }
 
-    private void onTaskEnded(List<Item> list) {
-        RetainedFragment retainedFragment = (RetainedFragment) getFragmentManager().findFragmentByTag(RetainedFragment.FRAGMENT_TAG);
-        retainedFragment.setList(list);
-
-        mItemList = list;
-        mAdapter.notifyDataSetChanged();
-
-        if (getListView().getAdapter() == null)
-            setListAdapter(mAdapter);
-    }
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getListView().setOnItemClickListener(this);
         getListView().setFastScrollEnabled(true);
 
-        mAdapter = new Adapter();
+        mAdapter = new Adapter(mActivity);
+        setListAdapter(mAdapter);
 
-        RetainedFragment retainedFragment = (RetainedFragment) getFragmentManager()
-                .findFragmentByTag(RetainedFragment.FRAGMENT_TAG);
-
-        if (retainedFragment == null) {
-            retainedFragment = new RetainedFragment();
-            getFragmentManager()
-                    .beginTransaction()
-                    .add(retainedFragment, RetainedFragment.FRAGMENT_TAG)
-                    .commit();
-        }
-
-        if (retainedFragment.getList() != null) {
-            onTaskEnded(retainedFragment.getList());
-
-            mOnSizeFinishedItemCount = mItemList.size();
-            //Notify spinner that size sort is available
-            SpinnerAdapter adapter = (SpinnerAdapter) mSpinner.getAdapter();
-            adapter.notifyDataSetChanged();
-        } else
-            loadList();
+        getLoaderManager().initLoader(0, null, this);
     }
 
-    public void loadList() {
-        mAsyncLoader = new Async();
-        mAsyncLoader.execute();
+    @Override
+    public Loader<List<ApplicationItem>> onCreateLoader(int i, Bundle bundle) {
+        mProgressDialog.show();
+        return new MainLoader(mActivity);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<ApplicationItem>> loader, List<ApplicationItem> applicationItems) {
+        mItemList = applicationItems;
+        sortApplicationList();
+        mAdapter.setDefaultList(mItemList);
+
+        startRetrievingPackagesSize();
+
+        mProgressDialog.dismiss();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<ApplicationItem>> loader) {
+        mItemList = null;
+        mAdapter.setDefaultList(null);
+
+        mProgressDialog.dismiss();
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mCallbacks = (MainCallbacks) activity;
-        mContext = activity;
-        mLayoutInflater = activity.getLayoutInflater();
+        mActivity = activity;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        if (mAsyncLoader != null)
-            mAsyncLoader.cancel(true);
         mCallbacks = null;
-        mContext = null;
-        mLayoutInflater = null;
+        mActivity = null;
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         if (mCallbacks != null)
-            mCallbacks.onItemSelected(mItemList.get(i).applicationInfo.packageName);
+            mCallbacks.onItemSelected(mAdapter.getItem(i).applicationInfo.packageName);
     }
 
     @Override
@@ -196,58 +166,69 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_refresh:
-                loadList();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(sSortMenuItemIdsMap[mSortBy]).setChecked(true);
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        if (mSpinnerListenerAuthorized)
-            setSortBy(i, true);
-
-        mSpinnerListenerAuthorized = true;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        final int id = item.getItemId();
+        switch (id) {
+            case R.id.action_refresh:
+                getLoaderManager().restartLoader(0, null, this);
+                return true;
+            case R.id.action_sort_name:
+                setSortBy(SORT_NAME);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_pkg:
+                setSortBy(SORT_PKG);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_domain:
+                setSortBy(SORT_DOMAIN);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_installation:
+                setSortBy(SORT_INSTALLATION);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_size:
+                setSortBy(SORT_SIZE);
+                item.setChecked(true);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
      * Sort main list if provided value is valid.
+     *
      * @param sort Must be one of SORT_*
-     * @param checkViews Set if views have to be updated, eg. when restoring state, views aren't
-     *                   created yet, so value must be false
      */
-    public void setSortBy(int sort, boolean checkViews) {
-        if (sort >= SORT_NAME && sort <= SORT_SIZE) {
-            mSortBy = sort;
+    private void setSortBy(int sort) {
+        mSortBy = sort;
+        sortApplicationList();
 
-            if (checkViews) {
-                checkFastScroll();
+        if (mAdapter != null)
+            mAdapter.notifyDataSetChanged();
 
-                sortApplicationList(mItemList, mSortBy);
-                mAdapter.notifyDataSetChanged();
-            }
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
+        if (getListView() != null)
+            checkFastScroll();
     }
 
     private void checkFastScroll() {
         getListView().setFastScrollEnabled(mSortBy == SORT_NAME);
     }
 
-    public void sortApplicationList(List<Item> list, final int sortBy) {
-        Collections.sort(list, new Comparator<Item>() {
+    public void sortApplicationList() {
+        Collections.sort(mItemList, new Comparator<ApplicationItem>() {
             @Override
-            public int compare(Item item1, Item item2) {
-                switch (sortBy) {
+            public int compare(ApplicationItem item1, ApplicationItem item2) {
+                switch (mSortBy) {
                     case SORT_NAME:
-                        return item1.label.compareTo(item2.label);
+                        return sCollator.compare(item1.label, item2.label);
                     case SORT_PKG:
                         return item1.applicationInfo.packageName.compareTo(item2.applicationInfo.packageName);
                     case SORT_DOMAIN:
@@ -266,29 +247,72 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         });
     }
 
-    /**
-     * This method is called by each item when it has finished retrieving its size
-     * When all items have finished, we set size sort available in spinner, and invalidate
-     * main list to display sizes in UI.
-     */
-    private void onItemFinishedSizeProcess() {
-        mOnSizeFinishedItemCount ++;
+    @Override
+    public boolean onQueryTextChange(String s) {
+        mAdapter.getFilter().filter(s);
+        return true;
+    }
 
-        if (mOnSizeFinishedItemCount == mItemList.size()) {
-            getActivity().runOnUiThread(new Runnable() {
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        return false;
+    }
+
+    private void startRetrievingPackagesSize() {
+        for (ApplicationItem item : mItemList)
+            getItemSize(item);
+    }
+
+    private void getItemSize(final ApplicationItem item) {
+        try {
+            Method getPackageSizeInfo = PackageManager.class.getMethod(
+                    "getPackageSizeInfo", String.class, IPackageStatsObserver.class);
+
+            getPackageSizeInfo.invoke(mActivity.getPackageManager(), item.applicationInfo.packageName, new IPackageStatsObserver.Stub() {
                 @Override
-                public void run() {
-                    SpinnerAdapter adapter = (SpinnerAdapter) mSpinner.getAdapter();
-                    adapter.notifyDataSetChanged();
-                    mAdapter.notifyDataSetChanged();
+                public void onGetStatsCompleted(final PackageStats pStats, final boolean succeeded)
+                        throws RemoteException {
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (succeeded)
+                                item.size = pStats.codeSize + pStats.cacheSize + pStats.dataSize
+                                        + pStats.externalCodeSize + pStats.externalCacheSize + pStats.externalDataSize
+                                        + pStats.externalMediaSize + pStats.externalObbSize;
+                            else
+                                item.size = -1L;
+
+                            incrementItemSizeRetrievedCount();
+                        }
+                    });
                 }
             });
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            incrementItemSizeRetrievedCount();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            incrementItemSizeRetrievedCount();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+            incrementItemSizeRetrievedCount();
         }
     }
 
-    class Adapter extends BaseAdapter implements SectionIndexer {
+    private void incrementItemSizeRetrievedCount() {
+        mItemSizeRetrievedCount++;
 
-        class ViewHolder {
+        if (mItemSizeRetrievedCount == mItemList.size())
+            mAdapter.notifyDataSetChanged();
+    }
+
+    static class Adapter extends BaseAdapter implements SectionIndexer, Filterable {
+
+        static final String sections = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        static final DateFormat sSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+        static final Spannable.Factory sSpannableFactory = Spannable.Factory.getInstance();
+
+        static class ViewHolder {
             ImageView icon;
             TextView label;
             TextView packageName;
@@ -299,16 +323,80 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             IconAsyncTask iconLoader;
         }
 
-        String sections = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private Activity mActivity;
+        private LayoutInflater mLayoutInflater;
+        private PackageManager mPackageManager;
+        private Filter mFilter;
+        private String mConstraint;
+        private List<ApplicationItem> mDefaultList;
+        private List<ApplicationItem> mAdapterList;
 
-        @Override
-        public int getCount() {
-            return mItemList.size();
+        private int mColorGrey1;
+        private int mColorGrey2;
+
+        Adapter(Activity activity) {
+            mActivity = activity;
+            mLayoutInflater = activity.getLayoutInflater();
+            mPackageManager = activity.getPackageManager();
+
+            mColorGrey1 = activity.getResources().getColor(R.color.grey_1);
+            mColorGrey2 = activity.getResources().getColor(R.color.grey_2);
+        }
+
+        void setDefaultList(List<ApplicationItem> list) {
+            mDefaultList = list;
+            mAdapterList = list;
+            notifyDataSetChanged();
         }
 
         @Override
-        public Object getItem(int i) {
-            return mItemList.get(i);
+        public Filter getFilter() {
+            if (mFilter == null)
+                mFilter = new Filter() {
+                    @Override
+                    protected FilterResults performFiltering(CharSequence charSequence) {
+                        String constraint = charSequence.toString().toLowerCase();
+                        mConstraint = constraint;
+                        FilterResults filterResults = new FilterResults();
+                        if (constraint.length() == 0) {
+                            filterResults.count = 0;
+                            filterResults.values = null;
+                            return filterResults;
+                        }
+
+                        List<ApplicationItem> list = new ArrayList<>(mDefaultList.size());
+                        for (ApplicationItem item : mDefaultList) {
+                            if (item.label.toLowerCase().contains(constraint) ||
+                                    item.applicationInfo.packageName.contains(constraint))
+                                list.add(item);
+                        }
+
+                        filterResults.count = list.size();
+                        filterResults.values = list;
+                        return filterResults;
+                    }
+
+                    @Override
+                    protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                        if (filterResults.values == null)
+                            mAdapterList = mDefaultList;
+                        else
+                            mAdapterList = (List<ApplicationItem>) filterResults.values;
+
+                        notifyDataSetChanged();
+                    }
+                };
+            return mFilter;
+        }
+
+        @Override
+        public int getCount() {
+            return mAdapterList == null ? 0 : mAdapterList.size();
+        }
+
+        @Override
+        public ApplicationItem getItem(int i) {
+            return mAdapterList.get(i);
         }
 
         @Override
@@ -320,7 +408,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         public View getView(int i, View view, ViewGroup viewGroup) {
             ViewHolder holder;
             if (view == null) {
-                view = mLayoutInflater.inflate(R.layout.main_list_item, null);
+                view = mLayoutInflater.inflate(R.layout.main_list_item, viewGroup, false);
                 holder = new ViewHolder();
                 holder.icon = (ImageView) view.findViewById(R.id.icon);
                 holder.label = (TextView) view.findViewById(R.id.label);
@@ -337,14 +425,14 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
             view.setBackgroundColor(i % 2 == 0 ? mColorGrey2 : mColorGrey1);
 
-            Item item = mItemList.get(i);
+            ApplicationItem item = mAdapterList.get(i);
             ApplicationInfo info = item.applicationInfo;
 
             try {
                 PackageInfo packageInfo = mPackageManager.getPackageInfo(info.packageName, 0);
                 holder.version.setText(packageInfo.versionName);
                 Date date = new Date(packageInfo.firstInstallTime);
-                holder.date.setText(mSimpleDateFormat.format(date));
+                holder.date.setText(sSimpleDateFormat.format(date));
             } catch (PackageManager.NameNotFoundException e) {
                 //Do nothing
             }
@@ -352,23 +440,37 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             holder.iconLoader = new IconAsyncTask(holder.icon, info);
             holder.iconLoader.execute();
 
-            holder.label.setText(info.loadLabel(mPackageManager));
+            if (mConstraint != null && item.label.toLowerCase().contains(mConstraint))
+                holder.label.setText(getHighlightedText(item.label));
+            else
+                holder.label.setText(item.label);
 
-            holder.packageName.setText(info.packageName);
+            if (mConstraint != null && info.packageName.contains(mConstraint))
+                holder.packageName.setText(getHighlightedText(info.packageName));
+            else
+                holder.packageName.setText(info.packageName);
 
             boolean isSystemApp = (info.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-            holder.isSystemApp.setText(isSystemApp ? getString(R.string.system) : getString(R.string.user));
+            holder.isSystemApp.setText(isSystemApp ? mActivity.getString(R.string.system) : mActivity.getString(R.string.user));
 
             if (item.size != -1L)
-                holder.size.setText(Formatter.formatFileSize(getActivity(), item.size));
+                holder.size.setText(Formatter.formatFileSize(mActivity, item.size));
 
             return view;
+        }
+
+        Spannable getHighlightedText(String s) {
+            Spannable spannable = sSpannableFactory.newSpannable(s);
+            int start = s.toLowerCase().indexOf(mConstraint);
+            int end = start + mConstraint.length();
+            spannable.setSpan(new BackgroundColorSpan(0xFFB7B7B7), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return spannable;
         }
 
         @Override
         public int getPositionForSection(int section) {
             for (int i = 0; i < this.getCount(); i++) {
-                String item = mItemList.get(i).label;
+                String item = mAdapterList.get(i).label;
                 if (item.charAt(0) == sections.charAt(section))
                     return i;
             }
@@ -418,156 +520,6 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                 imageView.setImageDrawable(drawable);
                 imageView.setVisibility(View.VISIBLE);
             }
-        }
-    }
-
-    class SpinnerAdapter extends BaseAdapter {
-
-        private Context mContext;
-        private int mLayoutResId;
-        private String[] mItems;
-
-        public SpinnerAdapter(Context themedContext, int arrayResId, int layoutResId) {
-            mContext = themedContext;
-            mItems = themedContext.getResources().getStringArray(arrayResId);
-            mLayoutResId = layoutResId;
-        }
-
-        @Override
-        public int getCount() {
-            return mItems.length;
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        //It make no sense to implement recycled view system because there is only 5 items in list
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            view = View.inflate(mContext, mLayoutResId, null);
-
-            if (view instanceof TextView)
-                ((TextView) view).setText(mItems[i]);
-
-            return view;
-        }
-
-        /**
-         * Set sort_by_size item disabled if all items haven't retrieved them size.
-         */
-        @Override
-        public boolean isEnabled(int position) {
-            return position != SORT_SIZE || mItemList != null && mOnSizeFinishedItemCount == mItemList.size();
-        }
-    }
-
-    class Async extends AsyncTask<Void, Async.Progress, List<Item>> {
-
-        class Progress {
-            String label;
-            int totalSize;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mProgressDialog.show();
-        }
-
-        @Override
-        protected List<Item> doInBackground(Void... voids) {
-            List<ApplicationInfo> applicationInfos = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-            Progress progress = new Progress();
-            progress.totalSize = applicationInfos.size();
-
-            List<Item> itemList = new ArrayList<Item>(applicationInfos.size());
-            mOnSizeFinishedItemCount = 0;
-
-            for (ApplicationInfo applicationInfo : applicationInfos) {
-                if (isCancelled())
-                    break;
-                Item item = new Item();
-                item.applicationInfo = applicationInfo;
-                String label = applicationInfo.loadLabel(mPackageManager).toString();
-                item.label = label;
-                try {
-                    item.date = mPackageManager.getPackageInfo(applicationInfo.packageName, 0).firstInstallTime;
-                } catch (PackageManager.NameNotFoundException e) {
-                    item.date = 0L;
-                }
-                itemList.add(item);
-
-                getItemSize(item);
-
-                progress.label = label;
-                publishProgress(progress);
-            }
-
-            sortApplicationList(itemList, mSortBy);
-
-            return itemList;
-        }
-
-        private void getItemSize(final Item item) {
-            try {
-                Method getPackageSizeInfo = mPackageManager.getClass().getMethod(
-                        "getPackageSizeInfo", String.class, IPackageStatsObserver.class);
-
-                getPackageSizeInfo.invoke(mPackageManager, item.applicationInfo.packageName, new IPackageStatsObserver.Stub() {
-                    @Override
-                    public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded)
-                            throws RemoteException {
-                        if (succeeded)
-                            item.size = pStats.codeSize + pStats.cacheSize + pStats.dataSize
-                                    + pStats.externalCodeSize + pStats.externalCacheSize + pStats.externalDataSize
-                                    + pStats.externalMediaSize + pStats.externalObbSize;
-                        else
-                            item.size = -1L;
-
-                        onItemFinishedSizeProcess();
-                    }
-                });
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-                onItemFinishedSizeProcess();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                onItemFinishedSizeProcess();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-                onItemFinishedSizeProcess();
-            }
-        }
-
-        @Override
-        protected void onProgressUpdate(Progress... values) {
-            super.onProgressUpdate(values);
-            Progress progress = values[0];
-
-            mProgressDialog.setMessage(progress.label);
-            if (mProgressDialog.getMax() == 100)
-                mProgressDialog.setMax(progress.totalSize);
-            mProgressDialog.incrementProgressBy(1);
-        }
-
-        @Override
-        protected void onPostExecute(List<Item> list) {
-            super.onPostExecute(list);
-            mProgressDialog.hide();
-            onTaskEnded(list);
-        }
-
-        @Override
-        protected void onCancelled(List<Item> list) {
-            super.onCancelled(list);
-            mProgressDialog.hide();
         }
     }
 }

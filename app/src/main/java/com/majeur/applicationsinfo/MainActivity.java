@@ -2,10 +2,7 @@ package com.majeur.applicationsinfo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,18 +64,6 @@ public class MainActivity extends Activity implements MainCallbacks {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        registerReceiver(receiver, getIntentFilter());
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        unregisterReceiver(receiver);
-    }
-
     private void showAboutDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.about)
@@ -86,26 +71,4 @@ public class MainActivity extends Activity implements MainCallbacks {
                 .setNegativeButton(android.R.string.ok, null)
                 .show();
     }
-
-    /**
-     * Used to update the list if a package is added or removed.
-     */
-    private IntentFilter getIntentFilter() {
-        IntentFilter filter = new IntentFilter();
-        filter.addDataScheme("package");
-        filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
-        filter.addAction(Intent.ACTION_PACKAGE_REPLACED);
-        filter.addAction(Intent.ACTION_PACKAGE_FULLY_REMOVED);
-        filter.addAction(Intent.ACTION_PACKAGE_ADDED);
-        return filter;
-    }
-
-    BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            MainListFragment mainListFragment = (MainListFragment) getFragmentManager().findFragmentById(R.id.item_list);
-            if (mainListFragment != null)
-                mainListFragment.loadList();
-        }
-    };
 }

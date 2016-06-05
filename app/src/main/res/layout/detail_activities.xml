@@ -26,27 +26,33 @@
             <TextView android:id="@+id/label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:textIsSelectable="true"/>
 
             <TextView android:id="@+id/name"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                      android:textIsSelectable="true" />
 
             <TextView android:id="@+id/taskAffinity"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                      android:textIsSelectable="true" />
 
             <TextView android:id="@+id/launchMode"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                      android:textIsSelectable="true" />
 
             <TextView android:id="@+id/orientation"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                      android:textIsSelectable="true" />
 
             <TextView android:id="@+id/softInput"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                      android:textIsSelectable="true" />
 
         </LinearLayout>
 
