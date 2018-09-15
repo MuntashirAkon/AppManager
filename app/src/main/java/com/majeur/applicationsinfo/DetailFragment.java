@@ -60,6 +60,7 @@ public class DetailFragment extends Fragment {
     private static final int FEATURES = 7;
     private static final int CONFIGURATION = 8;
     private static final int SIGNATURES = 9;
+    private static final int SHARED_LIBRARY_FILES = 10;
 
     private PackageManager mPackageManager;
     private String mPackageName;
@@ -124,7 +125,7 @@ public class DetailFragment extends Fragment {
             return mPackageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
                     | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                     | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
-                    | PackageManager.GET_SIGNATURES | PackageManager.GET_CONFIGURATIONS);
+                    | PackageManager.GET_SIGNATURES | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
         } catch (PackageManager.NameNotFoundException e) {
             return null;
         }
@@ -348,6 +349,8 @@ public class DetailFragment extends Fragment {
                     return mPackageInfo.configPreferences;
                 case SIGNATURES:
                     return mPackageInfo.signatures;
+                case SHARED_LIBRARY_FILES:
+                    return mPackageInfo.applicationInfo.sharedLibraryFiles;
                 default:
                     return null;
             }
@@ -420,6 +423,8 @@ public class DetailFragment extends Fragment {
                     return getConfigurationView(viewGroup, view, childIndex);
                 case SIGNATURES:
                     return getSignatureView(view, childIndex);
+                case SHARED_LIBRARY_FILES:
+                    return getSharedLibsView(view, childIndex);
                 default:
                     return null;
             }
@@ -679,6 +684,22 @@ public class DetailFragment extends Fragment {
 
             return convertView;
         }
+
+        private View getSharedLibsView(View convertView, int index) {
+            if (!(convertView instanceof TextView)) {
+                convertView = new TextView(getActivity());
+            }
+
+            TextView textView = (TextView) convertView;
+            textView.setTextIsSelectable(true);
+            textView.setText(mPackageInfo.applicationInfo.sharedLibraryFiles[index]);
+            textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            int size = getActivity().getResources().getDimensionPixelSize(R.dimen.header_text_margin);
+            textView.setPadding(size, 0, size, 0);
+
+            return convertView;
+        }
+
 
         /**
          * Boring view inflation / creation

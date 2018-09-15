@@ -10,5 +10,6 @@
         <item>@string/uses_feature</item>
         <item>@string/configurations</item>
         <item>@string/signatures</item>
+        <item>@string/shared_libs</item>
     </array>
 </resources>

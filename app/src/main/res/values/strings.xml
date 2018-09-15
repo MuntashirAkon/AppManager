@@ -31,6 +31,7 @@
     <string name="write">Write</string>
     <string name="patterns_allowed">Patterns allowed</string>
     <string name="declared_premission">Permissions</string>
+    <string name="shared_libs">Shared libs</string>
     <string name="group">Group</string>
     <string name="protection_level">Protection level</string>
     <string name="uses_feature">Uses features</string>
