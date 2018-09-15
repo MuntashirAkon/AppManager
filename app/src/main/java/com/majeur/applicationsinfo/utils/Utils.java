@@ -36,7 +36,7 @@ public class Utils {
 
     public static String getFileContent(File file) {
         if (file.isDirectory())
-            return null;
+            return "-1";
 
         try {
             Scanner scanner = new Scanner(file);
@@ -45,7 +45,7 @@ public class Utils {
                 result += scanner.next();
             return result;
         } catch (FileNotFoundException e) {
-            return null;
+            return "-1";
         }
     }
 

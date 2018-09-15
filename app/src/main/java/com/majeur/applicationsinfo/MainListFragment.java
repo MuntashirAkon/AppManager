@@ -61,7 +61,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     private static final int SORT_DOMAIN = 2;
     private static final int SORT_INSTALLATION = 3;
     private static final int SORT_SIZE = 4;
-    private static final String INSTANCE_STATE_SORT_BY = "sort_by";
+    public static final String INSTANCE_STATE_SORT_BY = "sort_by";
 
     private Adapter mAdapter;
     private List<ApplicationItem> mItemList = new ArrayList<>();
@@ -91,16 +91,14 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         actionBar.setCustomView(searchView, layoutParams);
 
         if (savedInstanceState != null) {
-            int sortBy = savedInstanceState.getInt(INSTANCE_STATE_SORT_BY, -1);
-            if (sortBy != -1)
-                setSortBy(sortBy);
+            mSortBy = savedInstanceState.getInt(INSTANCE_STATE_SORT_BY);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putInt(INSTANCE_STATE_SORT_BY, mSortBy);
+        super.onSaveInstanceState(outState);
     }
 
     @Override

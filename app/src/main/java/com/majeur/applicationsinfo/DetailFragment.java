@@ -764,13 +764,14 @@ public class DetailFragment extends Fragment {
         private View getConfigurationView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
             if (!checkIfConvertViewMatch(convertView, CONFIGURATION)) {
-                convertView = mLayoutInflater.inflate(R.layout.detail_features, viewGroup);
-
+                convertView = mLayoutInflater.inflate(R.layout.detail_configurations, viewGroup, false);
                 viewHolder = new ViewHolder();
                 viewHolder.currentViewType = CONFIGURATION;
-                viewHolder.textView1 = (TextView) convertView.findViewById(R.id.name);
-                viewHolder.textView2 = (TextView) convertView.findViewById(R.id.flags);
-                convertView.findViewById(R.id.gles_ver).setVisibility(View.GONE);
+                viewHolder.textView1 = (TextView) convertView.findViewById(R.id.reqgles);
+                viewHolder.textView2 = (TextView) convertView.findViewById(R.id.reqfea);
+                viewHolder.textView3 = (TextView) convertView.findViewById(R.id.reqkey);
+                viewHolder.textView4 = (TextView) convertView.findViewById(R.id.reqnav);
+                viewHolder.textView5 = (TextView) convertView.findViewById(R.id.reqtouch);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
@@ -781,9 +782,15 @@ public class DetailFragment extends Fragment {
             //GLES ver
             viewHolder.textView1.setText(getString(R.string.gles_ver) + ": " + configurationInfo.reqGlEsVersion);
 
-            //Falg
-            viewHolder.textView2.setText(getString(R.string.input_features) + ": " +
-                    Utils.getInputFeaturesString(configurationInfo.reqInputFeatures));
+            //Falg & others
+            viewHolder.textView2.setText(getString(R.string.input_features) + ": " +configurationInfo.reqInputFeatures);
+
+            viewHolder.textView3.setText("KeyboardType" + ": " +configurationInfo.reqKeyboardType);
+
+            viewHolder.textView4.setText("Navigation" + ": " +configurationInfo.reqNavigation);
+
+            viewHolder.textView5.setText("Touchscreen" + ": " +configurationInfo.reqTouchScreen);
+
 
             return convertView;
         }
