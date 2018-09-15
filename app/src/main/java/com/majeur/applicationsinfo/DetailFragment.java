@@ -194,7 +194,7 @@ public class DetailFragment extends Fragment {
         mDetailOverflowMenu.setView(overflowButton);
 
         TextView sharedUserId = (TextView) headerView.findViewById(R.id.sharedUserId);
-        sharedUserId.setText(getString(R.string.shared_user_id) + ": " + mPackageInfo.sharedUserId);
+        sharedUserId.setText("uid"+applicationInfo.uid +"_"+ getString(R.string.shared_user_id) + ": " + mPackageInfo.sharedUserId);
 
         Tuple<String, String> uidNetStats = getNetStats(applicationInfo.uid);
 
