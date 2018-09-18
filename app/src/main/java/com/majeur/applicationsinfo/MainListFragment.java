@@ -11,6 +11,7 @@ import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -447,9 +448,27 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                 holder.packageName.setText(getHighlightedText(info.packageName));
             else
                 holder.packageName.setText(info.packageName);
+            if ((info.flags & ApplicationInfo.FLAG_STOPPED) != 0) holder.packageName.setTextColor(Color.BLUE);
+            else holder.packageName.setTextColor(Color.GRAY);
 
-            boolean isSystemApp = (info.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-            holder.isSystemApp.setText(isSystemApp ? mActivity.getString(R.string.system) : mActivity.getString(R.string.user));
+            if ((info.flags & ApplicationInfo.FLAG_HARDWARE_ACCELERATED) == 0) holder.version.setText("_"+holder.version.getText());
+            if ((info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0) holder.version.setText("debug"+holder.version.getText());
+            if ((info.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0) holder.version.setText("~"+holder.version.getText());
+
+
+            if ((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) holder.isSystemApp.setText(mActivity.getString(R.string.system));
+            else holder.isSystemApp.setText(mActivity.getString(R.string.user));
+            //holder.isSystemApp.setText(holder.isSystemApp.getText()+ getCategory(info.category, (char) 'c'));
+            if ((info.flags & ApplicationInfo.FLAG_PERSISTENT) != 0) holder.isSystemApp.setTextColor(Color.MAGENTA);
+            else holder.isSystemApp.setTextColor(Color.DKGRAY);
+            if ((info.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0) holder.isSystemApp.setText(holder.isSystemApp.getText()+"#");
+            if ((info.flags & ApplicationInfo.FLAG_ALLOW_CLEAR_USER_DATA) == 0) holder.label.setTextColor(Color.RED);
+            else holder.label.setTextColor(Color.BLACK);
+            if ((info.flags & ApplicationInfo.FLAG_SUSPENDED) != 0) holder.isSystemApp.setText(holder.isSystemApp.getText()+"°");
+            if ((info.flags & ApplicationInfo.FLAG_MULTIARCH) != 0) holder.isSystemApp.setText(holder.isSystemApp.getText()+"X");
+            if ((info.flags & ApplicationInfo.FLAG_HAS_CODE) == 0) holder.isSystemApp.setText(holder.isSystemApp.getText()+"0");
+            if ((info.flags & ApplicationInfo.FLAG_VM_SAFE_MODE) != 0) holder.isSystemApp.setText(holder.isSystemApp.getText()+"?");
+            //if ((info.flags & ApplicationInfo.FLAG_EXTRACT_NATIVE_LIBS) == 0) holder.isSystemApp.setText(holder.isSystemApp.getText()+"0");
 
             if (item.size != -1L)
                 holder.size.setText(Formatter.formatFileSize(mActivity, item.size));

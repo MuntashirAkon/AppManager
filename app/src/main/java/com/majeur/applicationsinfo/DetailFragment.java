@@ -16,6 +16,7 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PatternMatcher;
@@ -71,6 +72,7 @@ public class DetailFragment extends Fragment {
 
     private int mColorGrey1;
     private int mColorGrey2;
+    private int mOrange1;
     private TypedArray mGroupTitleIds;
 
     private SimpleDateFormat mDateFormatter = new SimpleDateFormat("EE LLL dd yyyy kk:mm:ss");
@@ -91,6 +93,7 @@ public class DetailFragment extends Fragment {
         mPackageName = getArguments().getString(EXTRA_PACKAGE_NAME);
         mColorGrey1 = getResources().getColor(R.color.grey_1);
         mColorGrey2 = getResources().getColor(R.color.grey_2);
+        mOrange1 = getResources().getColor(R.color.orange_1);
         mDetailOverflowMenu = new DetailOverflowMenu(getActivity(), mPackageName);
 
         mGroupTitleIds = getResources().obtainTypedArray(R.array.group_titles);
@@ -182,8 +185,19 @@ public class DetailFragment extends Fragment {
         pathView.setText(applicationInfo.sourceDir);
 
         TextView isSystemAppView = (TextView) headerView.findViewById(R.id.isSystem);
-        boolean isSystemApp = (mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-        isSystemAppView.setText(isSystemApp ? R.string.system : R.string.user);
+        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0){
+            if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) isSystemAppView.setText(R.string.system_u);
+            else isSystemAppView.setText(R.string.system);
+        } else isSystemAppView.setText(R.string.user);
+        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) == 0)isSystemAppView.setText(isSystemAppView.getText()+" +0code");
+        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)isSystemAppView.setText(isSystemAppView.getText()+" +XLdalvik");
+
+        TextView techDetails = (TextView) headerView.findViewById(R.id.techDetails);
+        techDetails.setText("sdk"+applicationInfo.targetSdkVersion);// + getCategory(applicationInfo.category,'*'));//+" "+Integer.toString(applicationInfo.minSdkVersion));
+        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)techDetails.setText(techDetails.getText()+" DEBUG!ABLE");
+        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)techDetails.setText(techDetails.getText()+" +TestOnly");
+        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_MULTIARCH) != 0)techDetails.setText("Xarch "+techDetails.getText());
+        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_HARDWARE_ACCELERATED) == 0)techDetails.setText(techDetails.getText()+" 0/accelerated");
 
         TextView installDateView = (TextView) headerView.findViewById(R.id.installed_date);
         installDateView.setText(getString(R.string.installation) + ": " + getTime(mPackageInfo.firstInstallTime));
@@ -196,6 +210,8 @@ public class DetailFragment extends Fragment {
 
         TextView sharedUserId = (TextView) headerView.findViewById(R.id.sharedUserId);
         sharedUserId.setText("uid"+applicationInfo.uid +"_"+ getString(R.string.shared_user_id) + ": " + mPackageInfo.sharedUserId);
+        if ((applicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0) sharedUserId.setTextColor(mOrange1);
+            else sharedUserId.setTextColor(Color.DKGRAY);
 
         Tuple<String, String> uidNetStats = getNetStats(applicationInfo.uid);
 
