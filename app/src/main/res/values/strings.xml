@@ -56,7 +56,7 @@
     <string name="netstats_msg">* Data transmitted since last boot</string>
 
     <string name="about">About</string>
-    <string name="about_message">red:noAllowClearUserData\nmagenta:Persistent\nblue:Stopped\nUIDorange#:dalvikLargeHeap\nX:Multiarch\n0:noHasCode\n_:phantom\n°:Suspended\n~:TestOnly\ncode: <a>https://bitbucket.org/oF2pks/android-applications-info</a>\nprim-origin: <a>https://github.com/MajeurAndroid/Applications-Info</a></string>
+    <string name="about_message">red:noAllowClearUserData\nmagenta:Persistent\nblue:Stopped\nDATEorange:READ_LOGS\n#(UIDorange):dalvikLargeHeap\nX:Multiarch\n0:noHasCode\n_:phantom\n°:Suspended\n~:TestOnly\ncode: <a>https://bitbucket.org/oF2pks/android-applications-info</a>\nprim-origin: <a>https://github.com/MajeurAndroid/Applications-Info</a></string>
 
     <string name="size_details">Size details</string>
     <string name="internal">Internal</string>

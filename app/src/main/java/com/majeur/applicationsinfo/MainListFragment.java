@@ -1,5 +1,6 @@
 package com.majeur.applicationsinfo;
 
+import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ListFragment;
@@ -332,6 +333,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
         private int mColorGrey1;
         private int mColorGrey2;
+        private int mOrange1;
 
         Adapter(Activity activity) {
             mActivity = activity;
@@ -340,6 +342,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
             mColorGrey1 = activity.getResources().getColor(R.color.grey_1);
             mColorGrey2 = activity.getResources().getColor(R.color.grey_2);
+            mOrange1 = activity.getResources().getColor(R.color.orange_1);
         }
 
         void setDefaultList(List<ApplicationItem> list) {
@@ -469,6 +472,8 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             if ((info.flags & ApplicationInfo.FLAG_HAS_CODE) == 0) holder.isSystemApp.setText(holder.isSystemApp.getText()+"0");
             if ((info.flags & ApplicationInfo.FLAG_VM_SAFE_MODE) != 0) holder.isSystemApp.setText(holder.isSystemApp.getText()+"?");
             //if ((info.flags & ApplicationInfo.FLAG_EXTRACT_NATIVE_LIBS) == 0) holder.isSystemApp.setText(holder.isSystemApp.getText()+"0");
+            if (mPackageManager.checkPermission(Manifest.permission.READ_LOGS,info.packageName)== PackageManager.PERMISSION_GRANTED) holder.date.setTextColor(mOrange1);
+            else holder.date.setTextColor(Color.GRAY);
 
             if (item.size != -1L)
                 holder.size.setText(Formatter.formatFileSize(mActivity, item.size));
