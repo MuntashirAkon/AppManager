@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.app.ProgressDialog;
+import android.app.usage.UsageStatsManager;
 import android.content.Loader;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageStatsObserver;
@@ -15,6 +16,7 @@ import android.content.pm.PackageStats;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.Spannable;
@@ -461,6 +463,13 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
             if ((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) holder.isSystemApp.setText(mActivity.getString(R.string.system));
             else holder.isSystemApp.setText(mActivity.getString(R.string.user));
+            if (Build.VERSION.SDK_INT >= 23) {
+                UsageStatsManager mUsageStats;
+                mUsageStats = mActivity.getSystemService(UsageStatsManager.class);
+                if (mUsageStats.isAppInactive(info.packageName))holder.version.setTextColor(Color.GREEN);
+                else holder.version.setTextColor(Color.GRAY);
+            }
+
             //holder.isSystemApp.setText(holder.isSystemApp.getText()+ getCategory(info.category, (char) 'c'));
             if ((info.flags & ApplicationInfo.FLAG_PERSISTENT) != 0) holder.isSystemApp.setTextColor(Color.MAGENTA);
             else holder.isSystemApp.setTextColor(Color.DKGRAY);
