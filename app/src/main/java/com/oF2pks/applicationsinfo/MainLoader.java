@@ -1,4 +1,4 @@
-package com.majeur.applicationsinfo;
+package com.oF2pks.applicationsinfo;
 
 import android.content.AsyncTaskLoader;
 import android.content.BroadcastReceiver;

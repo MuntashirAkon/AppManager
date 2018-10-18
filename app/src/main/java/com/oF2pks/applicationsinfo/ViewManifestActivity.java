@@ -1,4 +1,4 @@
-package com.majeur.applicationsinfo;
+package com.oF2pks.applicationsinfo;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -12,7 +12,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-import com.majeur.xmlapkparser.AXMLPrinter;
+import com.oF2pks.xmlapkparser.AXMLPrinter;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -37,7 +37,7 @@ import javax.xml.xpath.XPathFactory;
 
 /**
  * Activity that shows AndroidManifest.xml of any apps. Application package name must be passed as extra.
- * To correctly display returned xml file, we show it in a {@link android.webkit.WebView}. The way we do that
+ * To correctly display returned xml file, we show it in a {@link WebView}. The way we do that
  * is not very natural, but it's the simplest way to do that.
  * So, asynchronously, we get raw xml string and save it to a file. Then we ask to WebView to display this file,
  * by this way, WebView auto detect xml and display it nicely.

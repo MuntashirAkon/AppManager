@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Applications Info</string>
+    <string name="app_name">apps_Packages Info</string>
     <string name="loading_apps">Loading applications</string>
     <string name="is_system_app">System app</string>
     <string name="uninstall">Uninstall</string>
@@ -56,7 +56,7 @@
     <string name="netstats_msg">* Data transmitted since last boot</string>
 
     <string name="about">About</string>
-    <string name="about_message">red:noAllowClearUserData\nmagenta:Persistent\nblue:Stopped\norange:READ_LOGS\ngreen:Inactive\nX:Multiarch\n0:noHasCode\n_:phantom\n°:Suspended\n~:TestOnly\n#(UIDorange):dalvikLargeHeap\ncode: <a>https://bitbucket.org/oF2pks/android-applications-info</a>\nprim-origin: <a>https://github.com/MajeurAndroid/Applications-Info</a></string>
+    <string name="about_message">red:noAllowClearUserData\nmagenta:Persistent\nblue:Stopped\norange:READ_LOGS\ngreen:Inactive\nX:Multiarch\n0:noHasCode\n_:phantom\n°:Suspended\n~:TestOnly\n#(UIDorange):dalvikLargeHeap\ncode: <a>https://bitbucket.org/oF2pks/fdroid-applications-info</a>\nprim-origin: <a>https://github.com/MajeurAndroid/Applications-Info</a></string>
 
     <string name="size_details">Size details</string>
     <string name="internal">Internal</string>

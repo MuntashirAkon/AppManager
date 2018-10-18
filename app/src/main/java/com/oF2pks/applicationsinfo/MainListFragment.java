@@ -1,4 +1,4 @@
-package com.majeur.applicationsinfo;
+package com.oF2pks.applicationsinfo;
 
 import android.Manifest;
 import android.app.ActionBar;
@@ -22,7 +22,6 @@ import android.os.RemoteException;
 import android.text.Spannable;
 import android.text.format.Formatter;
 import android.text.style.BackgroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,7 +37,7 @@ import android.widget.SearchView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import com.majeur.applicationsinfo.utils.Utils;
+import com.oF2pks.applicationsinfo.utils.Utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

@@ -1,4 +1,4 @@
-package com.majeur.applicationsinfo;
+package com.oF2pks.applicationsinfo;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
@@ -34,8 +34,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.majeur.applicationsinfo.utils.Tuple;
-import com.majeur.applicationsinfo.utils.Utils;
+import com.oF2pks.applicationsinfo.utils.Tuple;
+import com.oF2pks.applicationsinfo.utils.Utils;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -332,7 +332,7 @@ public class DetailFragment extends Fragment {
         }
 
         /**
-         * {@link com.majeur.applicationsinfo.utils.Utils} method is used to prevent {@link java.lang.NullPointerException} when arrays are null.
+         * {@link Utils} method is used to prevent {@link NullPointerException} when arrays are null.
          * In this case, we make sure that returned length is zero.
          */
         @Override
@@ -373,8 +373,8 @@ public class DetailFragment extends Fragment {
         }
 
         /**
-         * For HEADER value we return header view. In other case, we return simple {@link android.widget.TextView} with group title,
-         * note that index in {@link android.content.res.TypedArray} is shifted to adapter implementation.
+         * For HEADER value we return header view. In other case, we return simple {@link TextView} with group title,
+         * note that index in {@link TypedArray} is shifted to adapter implementation.
          */
         @Override
         public View getGroupView(int groupIndex, boolean b, View view, ViewGroup viewGroup) {

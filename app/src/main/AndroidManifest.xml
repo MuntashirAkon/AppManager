@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.majeur.applicationsinfo">
+    package="com.oF2pks.applicationsinfo">
 
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"/>
 

@@ -1,4 +1,4 @@
-package com.majeur.applicationsinfo;
+package com.oF2pks.applicationsinfo;
 
 public interface MainCallbacks {
 

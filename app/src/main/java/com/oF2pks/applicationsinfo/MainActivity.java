@@ -1,4 +1,4 @@
-package com.majeur.applicationsinfo;
+package com.oF2pks.applicationsinfo;
 
 import android.app.Activity;
 import android.app.AlertDialog;

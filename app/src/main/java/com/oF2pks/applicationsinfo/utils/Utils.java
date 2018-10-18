@@ -1,4 +1,4 @@
-package com.majeur.applicationsinfo.utils;
+package com.oF2pks.applicationsinfo.utils;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
