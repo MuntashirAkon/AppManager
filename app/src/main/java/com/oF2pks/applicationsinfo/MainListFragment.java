@@ -430,6 +430,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
             ApplicationItem item = mAdapterList.get(i);
             ApplicationInfo info = item.applicationInfo;
+            if (!info.enabled) view.setBackgroundColor(Color.LTGRAY);//holder.icon.setImageAlpha(50);//view.setBackgroundColor(Color.LTGRAY);
 
             try {
                 PackageInfo packageInfo = mPackageManager.getPackageInfo(info.packageName, 0);
