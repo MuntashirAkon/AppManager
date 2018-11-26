@@ -127,8 +127,10 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         mItemList = applicationItems;
         sortApplicationList();
         mAdapter.setDefaultList(mItemList);
-
-        startRetrievingPackagesSize();
+        if (Build.VERSION.SDK_INT <26) startRetrievingPackagesSize();
+        else {
+            for (ApplicationItem item : mItemList) item.size = (long) -1*item.applicationInfo.targetSdkVersion;
+            }
 
         mProgressDialog.dismiss();
     }
@@ -484,7 +486,8 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             if (mPackageManager.checkPermission(Manifest.permission.READ_LOGS,info.packageName)== PackageManager.PERMISSION_GRANTED) holder.date.setTextColor(mOrange1);
             else holder.date.setTextColor(Color.GRAY);
 
-            if (item.size != -1L)
+            if (Build.VERSION.SDK_INT >=26)  holder.size.setText(item.size+"sdk");
+            else if (item.size != -1L)
                 holder.size.setText(Formatter.formatFileSize(mActivity, item.size));
 
             return view;

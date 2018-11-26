@@ -7,7 +7,11 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.PopupMenu;
+import android.widget.Toast;
+
+import java.io.File;
 
 
 public class DetailOverflowMenu implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
@@ -55,6 +59,31 @@ public class DetailOverflowMenu implements View.OnClickListener, PopupMenu.OnMen
                 Intent viewManifestIntent = new Intent(mContext, ViewManifestActivity.class);
                 viewManifestIntent.putExtra(ViewManifestActivity.EXTRA_PACKAGE_NAME, mPackageName);
                 mContext.startActivity(viewManifestIntent);
+                return true;
+            case R.id.action_view_exodus:
+                PackageManager pm = mContext.getPackageManager();
+                MimeTypeMap myMime = MimeTypeMap.getSingleton();
+                String mimeType = myMime.getMimeTypeFromExtension("apk");
+                Intent intent = new Intent();
+                intent.setClassName("com.oF2pks.classyshark3xodus","com.google.classysharkandroid.activities.ClassesListActivity");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                try {
+
+                    File file = new File(pm.getPackageInfo(mPackageName, 0).applicationInfo.publicSourceDir);
+                    if (null != intent) {
+                        intent.setDataAndType(Uri.fromFile(file), mimeType);
+                        intent.putExtra("APP_NAME", mPackageName);
+                        try {
+                            mContext.startActivity(intent);
+                        } catch (Exception e) {
+                            Toast.makeText(mContext, e.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
                 return true;
         }
         return false;

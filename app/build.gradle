@@ -8,8 +8,8 @@ android {
         applicationId "com.oF2pks.applicationsinfo"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 8
-        versionName "1.7-8"
+        versionCode 9
+        versionName "1.7-9"
     }
     buildTypes {
         release {

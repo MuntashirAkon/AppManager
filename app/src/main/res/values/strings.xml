@@ -44,6 +44,7 @@
     <string name="no_configurations">No configurations</string>
     <string name="input_features">Input features</string>
     <string name="view_manifest">View Manifest file</string>
+    <string name="view_exodus">ClassyShark3xodus ?</string>
     <string name="manifest">Manifest</string>
     <string name="error">Error</string>
     <string name="loading">Loading &#8230;</string> <!-- &#8230; = ... -->
@@ -51,6 +52,7 @@
     <string name="package_string">Package</string>
     <string name="system_user">System/User</string>
     <string name="size">Size</string>
+    <string name="sdk">Sdk</string>
     <string name="netstats_received">Data received</string>
     <string name="netstats_transmitted">Data transmitted</string>
     <string name="netstats_msg">* Data transmitted since last boot</string>

@@ -223,7 +223,8 @@ public class DetailFragment extends Fragment {
         netStatsReceivedView.setText(getString(R.string.netstats_received) + ": "
                 + uidNetStats.getSecond());
 
-        if (mPackageStats == null)
+        if (Build.VERSION.SDK_INT >25);
+        else if (mPackageStats == null)
             getPackageSizeInfo(headerView);
         else
             onPackageStatsLoaded(headerView);
