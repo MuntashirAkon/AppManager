@@ -37,6 +37,7 @@
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
             android:layout_below="@+id/label"
+            android:textStyle="bold|italic"
             android:layout_toRightOf="@+id/icon" />
 
         <TextView
@@ -53,6 +54,7 @@
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
             android:layout_toRightOf="@+id/icon"
+            android:textSize="9dp"
             android:layout_below="@id/version" />
 
         <TextView
@@ -76,6 +78,7 @@
                     android:id="@+id/techDetails"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textSize="11dp"
                     android:layout_weight="1"
                     android:gravity="center"/>
 
@@ -130,6 +133,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
+            android:textSize="11dp"
             android:layout_weight="1"
             android:layout_marginLeft="@dimen/header_text_margin"/>
 

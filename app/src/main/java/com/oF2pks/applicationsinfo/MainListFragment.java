@@ -57,13 +57,15 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
     private static final int[] sSortMenuItemIdsMap = {R.id.action_sort_name,
             R.id.action_sort_pkg, R.id.action_sort_domain,
-            R.id.action_sort_installation, R.id.action_sort_size};
+            R.id.action_sort_installation,
+            R.id.action_sort_sharedid, R.id.action_sort_size};
 
     private static final int SORT_NAME = 0;
     private static final int SORT_PKG = 1;
     private static final int SORT_DOMAIN = 2;
     private static final int SORT_INSTALLATION = 3;
-    private static final int SORT_SIZE = 4;
+    private static final int SORT_SHAREDID =4;
+    private static final int SORT_SIZE = 5;
     public static final String INSTANCE_STATE_SORT_BY = "sort_by";
 
     private Adapter mAdapter;
@@ -197,6 +199,10 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                 setSortBy(SORT_INSTALLATION);
                 item.setChecked(true);
                 return true;
+            case R.id.action_sort_sharedid:
+                setSortBy(SORT_SHAREDID);
+                item.setChecked(true);
+                return true;
             case R.id.action_sort_size:
                 setSortBy(SORT_SIZE);
                 item.setChecked(true);
@@ -243,6 +249,8 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                         return -item1.date.compareTo(item2.date);
                     case SORT_SIZE:
                         return -item1.size.compareTo(item2.size);
+                    case SORT_SHAREDID:
+                        return item2.applicationInfo.uid - item1.applicationInfo.uid;
                     default:
                         return 0;
                 }
@@ -323,6 +331,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             TextView isSystemApp;
             TextView date;
             TextView size;
+            TextView sharedid;
             IconAsyncTask iconLoader;
         }
 
@@ -422,6 +431,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                 holder.isSystemApp = (TextView) view.findViewById(R.id.isSystem);
                 holder.date = (TextView) view.findViewById(R.id.date);
                 holder.size = (TextView) view.findViewById(R.id.size);
+                holder.sharedid=(TextView) view.findViewById(R.id.shareid);
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder) view.getTag();
@@ -434,11 +444,14 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             ApplicationInfo info = item.applicationInfo;
             if (!info.enabled) view.setBackgroundColor(Color.LTGRAY);//holder.icon.setImageAlpha(50);//view.setBackgroundColor(Color.LTGRAY);
 
+            holder.sharedid.setText(Integer.toString(info.uid));
             try {
                 PackageInfo packageInfo = mPackageManager.getPackageInfo(info.packageName, 0);
                 holder.version.setText(packageInfo.versionName);
                 Date date = new Date(packageInfo.firstInstallTime);
                 holder.date.setText(sSimpleDateFormat.format(date));
+                if (packageInfo.sharedUserId != null) holder.sharedid.setTextColor(mOrange1);
+                else holder.sharedid.setTextColor(Color.GRAY);
             } catch (PackageManager.NameNotFoundException e) {
                 //Do nothing
             }

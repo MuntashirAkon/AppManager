@@ -35,7 +35,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/packageName"
+            android:textSize="12dp"
             android:layout_alignLeft="@id/label"
+            android:singleLine="true"/>
+
+        <TextView android:id="@+id/shareid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/packageName"
+            android:layout_toRightOf="@id/date"
+            android:textSize="10dp"
+            android:gravity="center_horizontal"
             android:singleLine="true"/>
 
     </RelativeLayout>
@@ -48,6 +58,7 @@
 
         <TextView android:id="@+id/version"
             android:layout_width="wrap_content"
+            android:textSize="12dp"
             android:layout_height="wrap_content"
             android:singleLine="true"/>
 

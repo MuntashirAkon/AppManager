@@ -21,6 +21,9 @@
                 <item android:id="@+id/action_sort_installation"
                     android:title="@string/installation"/>
 
+                <item android:id="@+id/action_sort_sharedid"
+                    android:title="@string/shared_user_id"/>
+
                 <item android:id="@+id/action_sort_size"
                     android:title="@string/sdk"/>
 
