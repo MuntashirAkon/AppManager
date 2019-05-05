@@ -41,6 +41,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 public class DetailFragment extends Fragment {
@@ -67,6 +68,7 @@ public class DetailFragment extends Fragment {
     private String mPackageName;
     private LayoutInflater mLayoutInflater;
     private PackageInfo mPackageInfo;
+    private String[] aPermissionsUse ;
     private PackageStats mPackageStats;
     private DetailOverflowMenu mDetailOverflowMenu;
 
@@ -99,6 +101,17 @@ public class DetailFragment extends Fragment {
         mGroupTitleIds = getResources().obtainTypedArray(R.array.group_titles);
 
         mPackageInfo = getPackageInfo(mPackageName);
+        if (mPackageInfo.requestedPermissions == null) aPermissionsUse = null;
+        else {
+            aPermissionsUse= new String[mPackageInfo.requestedPermissions.length];
+            for (int i=0;i < mPackageInfo.requestedPermissions.length;i++){
+                aPermissionsUse[i]=(mPackageInfo.requestedPermissions[i]+"  "//+mPackageInfo.requestedPermissionsFlags[i]
+                        +((mPackageInfo.requestedPermissionsFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0 ? "\u2714":""));//"\u2691":"\u2690"));☑
+
+            }
+            Arrays.sort(aPermissionsUse);
+        }
+
     }
 
     @Override
@@ -357,7 +370,8 @@ public class DetailFragment extends Fragment {
                 case PROVIDERS:
                     return mPackageInfo.providers;
                 case USES_PERMISSIONS:
-                    return mPackageInfo.requestedPermissions;
+                    return aPermissionsUse;
+                    //return mPackageInfo.requestedPermissions;
                 case PERMISSIONS:
                     return mPackageInfo.permissions;
                 case FEATURES:
@@ -694,7 +708,9 @@ public class DetailFragment extends Fragment {
 
             TextView textView = (TextView) convertView;
             textView.setTextIsSelectable(true);
-            textView.setText(mPackageInfo.requestedPermissions[index]);
+            textView.setText(aPermissionsUse[index]);
+            if (aPermissionsUse[index].contains("\u2714")) textView.setTextColor(Color.BLACK);
+            else textView.setTextColor(Color.GRAY);
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             int size = getActivity().getResources().getDimensionPixelSize(R.dimen.header_text_margin);
             textView.setPadding(size, 0, size, 0);

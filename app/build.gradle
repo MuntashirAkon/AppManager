@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "com.oF2pks.applicationsinfo"
         minSdkVersion 16
-        targetSdkVersion 26
-        versionCode 10
-        versionName "1.7-10"
+        targetSdkVersion 28
+        versionCode 11
+        versionName "1.7-11"
     }
     buildTypes {
         release {

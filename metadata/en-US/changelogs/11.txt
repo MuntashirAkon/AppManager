@@ -1,0 +1,3 @@
+Uses permission sorted with granted flag.
+
+3dots option to ClassyShark for all classes.

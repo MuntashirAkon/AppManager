@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Applications Info</string>
+    <string name="app_name">apps_Packages Info</string>
     <string name="loading_apps">Carregando aplicativos</string>
     <string name="is_system_app">Aplicativo do sitema</string>
     <string name="uninstall">Desinstalar</string>
@@ -30,7 +30,7 @@
     <string name="read">Ler</string>
     <string name="write">Escrever</string>
     <string name="patterns_allowed">Padrões permitidos</string>
-    <string name="declared_permission">Permissões</string>
+    <string name="declared_premission">Permissões</string>
     <string name="group">Grupo</string>
     <string name="protection_level">Nível de proteção</string>
     <string name="uses_feature">Uses features</string>
@@ -43,6 +43,7 @@
     <string name="no_configurations">Sem configurações</string>
     <string name="input_features">Input features</string>
     <string name="view_manifest">Ver arquivo Manifesto</string>
+    <string name="view_exodus">ClassyShark3xodus ?</string>
     <string name="manifest">Manifesto</string>
     <string name="error">Erro</string>
     <string name="loading">Carregando &#8230;</string> <!-- &#8230; = ... -->
@@ -55,7 +56,6 @@
     <string name="netstats_msg">* Dados transmitidos desde a última inicialização do dispositivo</string>
 
     <string name="about">Sobre</string>
-    <string name="about_message">Desenvolvido por Majeur.\n\nCódigo fonte: <a>https://github.com/MajeurAndroid/Applications-Info</a></string>
 
     <string name="size_details">Detalhes de tamanho</string>
     <string name="internal">Interno</string>
