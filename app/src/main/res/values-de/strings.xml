@@ -4,7 +4,7 @@
     <string name="is_system_app">Systemapp</string>
     <string name="uninstall">Deinstallieren</string>
     <string name="view_in_settings">In Einstellungen ansehen</string>
-    <string name="permissions">Berechtigungen</string>
+    <string name="permissions">Benötigte Berechtigungen</string>
     <string name="require_no_permission">Keine besonderen Berechtigungen</string>
     <string name="activities">Aktivitäten</string>
     <string name="launch">Öffnen</string>
@@ -30,7 +30,7 @@
     <string name="read">Lesen</string>
     <string name="write">Schreiben</string>
     <string name="patterns_allowed">Erlaubte Muster</string>
-    <string name="declared_premission">Berechtigungen</string>
+    <string name="declared_premission">Erteilte Berechtigungen</string>
     <string name="shared_libs">Geteilte Bibliotheken</string>
     <string name="group">Gruppe</string>
     <string name="protection_level">Schutzgrad</string>
