@@ -18,8 +18,8 @@
 
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
             android:layout_centerVertical="true"
             android:layout_margin="2dp" />
 
@@ -126,6 +126,7 @@
             android:layout_height="match_parent"
             android:textIsSelectable="true"
             android:layout_weight="1"
+            android:textSize="9dp"
             android:layout_marginLeft="@dimen/header_text_margin"/>
 
         <TextView

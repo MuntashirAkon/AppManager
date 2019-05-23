@@ -216,7 +216,8 @@ public class DetailFragment extends Fragment {
         installDateView.setText(getString(R.string.installation) + ": " + getTime(mPackageInfo.firstInstallTime));
 
         TextView updateDateView = (TextView) headerView.findViewById(R.id.update_date);
-        updateDateView.setText(getString(R.string.update) + ": " + getTime(mPackageInfo.lastUpdateTime));
+        updateDateView.setText(getString(R.string.update) + ": " + getTime(mPackageInfo.lastUpdateTime)
+            +" \u3004 "+mPackageManager.getInstallerPackageName(mPackageName));
 
         ImageButton overflowButton = (ImageButton) headerView.findViewById(R.id.detail_overflow);
         mDetailOverflowMenu.setView(overflowButton);
@@ -544,9 +545,10 @@ public class DetailFragment extends Fragment {
                 viewHolder.imageView = (ImageView) convertView.findViewById(R.id.icon);
                 viewHolder.textView1 = (TextView) convertView.findViewById(R.id.label);
                 viewHolder.textView2 = (TextView) convertView.findViewById(R.id.name);
-                viewHolder.textView3 = (TextView) convertView.findViewById(R.id.launchMode);
+                viewHolder.textView3 = (TextView) convertView.findViewById(R.id.orientation);
+                //convertView.findViewById(R.id.icon).setVisibility(View.GONE);
                 convertView.findViewById(R.id.taskAffinity).setVisibility(View.GONE);
-                convertView.findViewById(R.id.orientation).setVisibility(View.GONE);
+                convertView.findViewById(R.id.launchMode).setVisibility(View.GONE);
                 convertView.findViewById(R.id.softInput).setVisibility(View.GONE);
                 convertView.findViewById(R.id.launch).setVisibility(View.GONE);
             } else {
@@ -565,8 +567,9 @@ public class DetailFragment extends Fragment {
             //Icon
             viewHolder.imageView.setImageDrawable(serviceInfo.loadIcon(mPackageManager));
 
-            //Flags
-            viewHolder.textView3.setText(getString(R.string.flags) + ": " + Utils.getServiceFlagsString(serviceInfo.flags));
+            //Flags and 1Permission
+            viewHolder.textView3.setText(Utils.getServiceFlagsString(serviceInfo.flags)
+                    +(serviceInfo.permission!=null ? "\n"+serviceInfo.permission:"\n"));
 
             return convertView;
         }
@@ -748,8 +751,8 @@ public class DetailFragment extends Fragment {
                 viewHolder.textView1 = (TextView) convertView.findViewById(R.id.label);
                 viewHolder.textView2 = (TextView) convertView.findViewById(R.id.name);
                 viewHolder.textView3 = (TextView) convertView.findViewById(R.id.taskAffinity);
-                viewHolder.textView4 = (TextView) convertView.findViewById(R.id.launchMode);
-                viewHolder.textView5 = (TextView) convertView.findViewById(R.id.orientation);
+                viewHolder.textView4 = (TextView) convertView.findViewById(R.id.orientation);
+                viewHolder.textView5 = (TextView) convertView.findViewById(R.id.launchMode);
                 convertView.findViewById(R.id.softInput).setVisibility(View.GONE);
                 convertView.findViewById(R.id.launch).setVisibility(View.GONE);
             } else {

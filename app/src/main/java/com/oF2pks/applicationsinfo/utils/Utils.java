@@ -139,14 +139,27 @@ public class Utils {
         StringBuilder builder = new StringBuilder();
         if ((flag & ServiceInfo.FLAG_STOP_WITH_TASK) != 0)
             builder.append("Stop with task, ");
-        if ((flag & ServiceInfo.FLAG_SINGLE_USER) != 0)
-            builder.append("Single user, ");
         if ((flag & ServiceInfo.FLAG_ISOLATED_PROCESS) != 0)
             builder.append("Isolated process, ");
 
+        if (Build.VERSION.SDK_INT >= 17) {
+            if ((flag & ServiceInfo.FLAG_SINGLE_USER) != 0)
+                builder.append("Single user, ");
+
+            if (Build.VERSION.SDK_INT >= 24){
+                if ((flag & ServiceInfo.FLAG_EXTERNAL_SERVICE)!= 0)
+                builder.append("External service, ");
+
+                /*if (Build.VERSION.SDK_INT >= 29){
+                    if (flag & ServiceInfo.FLAG_USE_APP_ZYGOTE) != 0)
+                        builder.append("Use app zygote, ");
+                }*/
+            }
+        }
+
         checkStringBuilderEnd(builder);
         String result = builder.toString();
-        return result.equals("") ? "null" : result;
+        return result.equals("") ? "\u2690" : "\u2691 "+result;
     }
 
     public static String getProtectionLevelString(int level) {
