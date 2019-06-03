@@ -42,6 +42,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 public class DetailFragment extends Fragment {
@@ -69,6 +71,7 @@ public class DetailFragment extends Fragment {
     private LayoutInflater mLayoutInflater;
     private PackageInfo mPackageInfo;
     private String[] aPermissionsUse ;
+    private String mMainActivity = "";
     private PackageStats mPackageStats;
     private DetailOverflowMenu mDetailOverflowMenu;
 
@@ -109,7 +112,76 @@ public class DetailFragment extends Fragment {
                         +((mPackageInfo.requestedPermissionsFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0 ? "\u2714":""));//"\u2691":"\u2690"));☑
 
             }
-            Arrays.sort(aPermissionsUse);
+            try {
+                Arrays.sort(aPermissionsUse);
+            } catch (NullPointerException e){
+            }
+        }
+        if (mPackageInfo.permissions != null) {
+            try {
+                Collections.sort(Arrays.asList(mPackageInfo.permissions), new Comparator<PermissionInfo>() {
+                    public int compare(PermissionInfo o1, PermissionInfo o2) {
+                        return o1.name.compareToIgnoreCase(o2.name);
+                    }
+                });
+            } catch (NullPointerException e){
+
+            }
+        }
+        if (mPackageInfo.activities != null) {
+            mMainActivity = mPackageInfo.activities[0].name;
+            try {
+                Collections.sort(Arrays.asList(mPackageInfo.activities), new Comparator<ActivityInfo>() {
+                    public int compare(ActivityInfo o1, ActivityInfo o2) {
+                        return o1.name.compareToIgnoreCase(o2.name);
+                    }
+                });
+            } catch (NullPointerException e){
+
+            }
+        }
+        if (mPackageInfo.services != null) {
+            try {
+                Collections.sort(Arrays.asList(mPackageInfo.services), new Comparator<ServiceInfo>() {
+                    public int compare(ServiceInfo o1, ServiceInfo o2) {
+                        return o1.name.compareToIgnoreCase(o2.name);
+                    }
+                });
+            } catch (NullPointerException e){
+
+            }
+        }
+        if (mPackageInfo.receivers != null) {
+            try {
+                Collections.sort(Arrays.asList(mPackageInfo.receivers), new Comparator<ActivityInfo>() {
+                    public int compare(ActivityInfo o1, ActivityInfo o2) {
+                        return o1.name.compareToIgnoreCase(o2.name);
+                    }
+                });
+            } catch (NullPointerException e){
+
+            }
+        }
+        if (mPackageInfo.reqFeatures != null) {
+            try {
+                Collections.sort(Arrays.asList(mPackageInfo.reqFeatures), new Comparator<FeatureInfo>() {
+                    public int compare(FeatureInfo o1, FeatureInfo o2) {
+                        return o1.name.compareToIgnoreCase(o2.name);
+                    }
+                });
+            } catch (NullPointerException e){
+
+            }
+        }
+        if (mPackageInfo.providers != null) {
+            try {
+                Collections.sort(Arrays.asList(mPackageInfo.providers), new Comparator<ProviderInfo>() {
+                    public int compare(ProviderInfo o1, ProviderInfo o2) {
+                        return o1.name.compareToIgnoreCase(o2.name);
+                    }
+                });
+            } catch (NullPointerException e){
+            }
         }
 
     }
@@ -232,10 +304,15 @@ public class DetailFragment extends Fragment {
         TextView netStatsTransmittedView = (TextView) headerView.findViewById(R.id.netstats_transmitted);
         netStatsTransmittedView.setText(getString(R.string.netstats_transmitted) + ": "
                 + uidNetStats.getFirst());
+        netStatsTransmittedView.setBackgroundColor(Color.WHITE);
 
         TextView netStatsReceivedView = (TextView) headerView.findViewById(R.id.netstats_received);
         netStatsReceivedView.setText(getString(R.string.netstats_received) + ": "
                 + uidNetStats.getSecond());
+        netStatsReceivedView.setBackgroundColor(Color.WHITE);
+
+        TextView mainActivity = (TextView) headerView.findViewById(R.id.main_activity);
+        mainActivity.setText("("+getString(R.string.activities)+"#1:"+mMainActivity+")");
 
         if (Build.VERSION.SDK_INT >25);
         else if (mPackageStats == null)
@@ -493,7 +570,9 @@ public class DetailFragment extends Fragment {
             viewHolder.textView1.setText(activityInfo.loadLabel(mPackageManager));
 
             //Name
-            viewHolder.textView2.setText(activityInfo.name.replaceFirst(mPackageName, ""));
+            viewHolder.textView2.setText(activityInfo.name.startsWith(mPackageName) ?
+                    "."+activityInfo.name.replaceFirst(mPackageName, "")
+                    :activityInfo.name);
 
             //Icon
             viewHolder.imageView.setImageDrawable(activityInfo.loadIcon(mPackageManager));
@@ -502,13 +581,15 @@ public class DetailFragment extends Fragment {
             viewHolder.textView3.setText(getString(R.string.taskAffinity) + ": " + activityInfo.taskAffinity);
 
             //LaunchMode
-            viewHolder.textView4.setText(getString(R.string.launch_mode) + ": " + Utils.getLaunchMode(activityInfo.launchMode));
+            viewHolder.textView4.setText(getString(R.string.launch_mode) + ": " + Utils.getLaunchMode(activityInfo.launchMode)
+                    +" | "+getString(R.string.orientation) + ": " + Utils.getOrientationString(activityInfo.screenOrientation));
 
             //Orientation
-            viewHolder.textView5.setText(getString(R.string.orientation) + ": " + Utils.getOrientationString(activityInfo.screenOrientation));
+            viewHolder.textView5.setText(Utils.getActivitiesFlagsString(activityInfo.flags));
 
-            //SoftInput
-            viewHolder.textView6.setText(getString(R.string.softInput) + ": " + Utils.getSoftInputString(activityInfo.softInputMode));
+            //SoftInput //(Build.VERSION.SDK_INT >= 21 ? activityInfo.persistableMode :"")+
+            viewHolder.textView6.setText(getString(R.string.softInput) + ": " + Utils.getSoftInputString(activityInfo.softInputMode)
+                    + " | " +(activityInfo.permission==null ? getString(R.string.require_no_permission):activityInfo.permission));
 
 
             Button launch = viewHolder.button;
@@ -562,7 +643,9 @@ public class DetailFragment extends Fragment {
             viewHolder.textView1.setText(serviceInfo.loadLabel(mPackageManager));
 
             //Name
-            viewHolder.textView2.setText(serviceInfo.name.replaceFirst(mPackageName, ""));
+            viewHolder.textView2.setText(serviceInfo.name.startsWith(mPackageName) ?
+                    "."+serviceInfo.name.replaceFirst(mPackageName, "")
+                    :serviceInfo.name);
 
             //Icon
             viewHolder.imageView.setImageDrawable(serviceInfo.loadIcon(mPackageManager));
@@ -604,7 +687,9 @@ public class DetailFragment extends Fragment {
             viewHolder.textView1.setText(activityInfo.loadLabel(mPackageManager));
 
             //Name
-            viewHolder.textView2.setText(activityInfo.name.replaceFirst(mPackageName, ""));
+            viewHolder.textView2.setText(activityInfo.name.startsWith(mPackageName) ?
+                    "."+activityInfo.name.replaceFirst(mPackageName, "")
+                    :activityInfo.name);
 
             //Icon
             viewHolder.imageView.setImageDrawable(activityInfo.loadIcon(mPackageManager));
@@ -613,12 +698,13 @@ public class DetailFragment extends Fragment {
             viewHolder.textView3.setText(getString(R.string.taskAffinity) + ": " + activityInfo.taskAffinity);
 
             //LaunchMode
-            viewHolder.textView4.setText(getString(R.string.launch_mode) + ": " + Utils.getLaunchMode(activityInfo.launchMode));
+            viewHolder.textView4.setText(getString(R.string.launch_mode) + ": " + Utils.getLaunchMode(activityInfo.launchMode)
+                    +" | "+getString(R.string.orientation) + ": " + Utils.getOrientationString(activityInfo.screenOrientation));
 
             //Orientation
-            viewHolder.textView5.setText(getString(R.string.orientation) + ": " + Utils.getOrientationString(activityInfo.screenOrientation));
+            viewHolder.textView5.setText(activityInfo.permission==null ? getString(R.string.require_no_permission):activityInfo.permission);
 
-            //SoftInput
+            //SoftInput //(Build.VERSION.SDK_INT >= 21 ? activityInfo.persistableMode :"")+
             viewHolder.textView6.setText(getString(R.string.softInput) + ": " + Utils.getSoftInputString(activityInfo.softInputMode));
 
             return convertView;
@@ -653,7 +739,9 @@ public class DetailFragment extends Fragment {
             viewHolder.textView1.setText(providerInfo.loadLabel(mPackageManager));
 
             //Name
-            viewHolder.textView2.setText(providerInfo.name.replaceFirst(mPackageName, ""));
+            viewHolder.textView2.setText(providerInfo.name.startsWith(mPackageName) ?
+                    "."+providerInfo.name.replaceFirst(mPackageName, "")
+                    :providerInfo.name);
 
             //Icon
             viewHolder.imageView.setImageDrawable(providerInfo.loadIcon(mPackageManager));
@@ -766,7 +854,9 @@ public class DetailFragment extends Fragment {
             viewHolder.textView1.setText(permissionInfo.loadLabel(mPackageManager));
 
             //Name
-            viewHolder.textView2.setText(permissionInfo.name.replaceFirst(mPackageName, ""));
+            viewHolder.textView2.setText(permissionInfo.name.startsWith(mPackageName) ?
+                    "."+permissionInfo.name.replaceFirst(mPackageName, "")
+                    :permissionInfo.name);
 
             //Icon
             viewHolder.imageView.setImageDrawable(permissionInfo.loadIcon(mPackageManager));
@@ -804,13 +894,14 @@ public class DetailFragment extends Fragment {
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
 
             //Name
-            viewHolder.textView1.setText(featureInfo.name);
+            viewHolder.textView1.setText(featureInfo.name==null ? getString(R.string.no_feature): featureInfo.name);
 
             //Falgs
-            viewHolder.textView2.setText(getString(R.string.flags) + ": " + Utils.getFeatureFlagsString(featureInfo.flags));
+            viewHolder.textView2.setText(getString(R.string.flags) + ": " + Utils.getFeatureFlagsString(featureInfo.flags)
+                    +(Build.VERSION.SDK_INT >= 24 && featureInfo.version !=0 ? " | minV%:"+featureInfo.version : ""));
 
             //GLES ver
-            viewHolder.textView3.setText(getString(R.string.gles_ver) + ": " + featureInfo.reqGlEsVersion);
+            viewHolder.textView3.setText(getString(R.string.gles_ver) + ": " + Utils.getOpenGL(featureInfo.reqGlEsVersion));
 
             return convertView;
         }
@@ -837,7 +928,7 @@ public class DetailFragment extends Fragment {
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
 
             //GLES ver
-            viewHolder.textView1.setText(getString(R.string.gles_ver) + ": " + configurationInfo.reqGlEsVersion);
+            viewHolder.textView1.setText(getString(R.string.gles_ver) + ": " + Utils.getOpenGL(configurationInfo.reqGlEsVersion));
 
             //Falg & others
             viewHolder.textView2.setText(getString(R.string.input_features) + ": " +configurationInfo.reqInputFeatures);
