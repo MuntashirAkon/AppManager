@@ -793,18 +793,36 @@ public class DetailFragment extends Fragment {
          * We do not need complex views, Use recycled view if possible
          */
         private View getUsesPermissionsView(View convertView, int index) {
+            final String s = aPermissionsUse[index].split(" ")[0];
             if (!(convertView instanceof TextView)) {
                 convertView = new TextView(getActivity());
             }
 
             TextView textView = (TextView) convertView;
             textView.setTextIsSelectable(true);
-            textView.setText(aPermissionsUse[index]);
+            textView.setText("\u23e9"+aPermissionsUse[index]);
             if (aPermissionsUse[index].contains("\u2714")) textView.setTextColor(Color.BLACK);
             else textView.setTextColor(Color.GRAY);
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             int size = getActivity().getResources().getDimensionPixelSize(R.dimen.header_text_margin);
             textView.setPadding(size, 0, size, 0);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        Toast.makeText(getActivity(),
+                                s+"\n"+mPackageManager.getPermissionInfo(s,PackageManager.GET_META_DATA).loadDescription(mPackageManager)
+                                        +"\n\n#"+Utils.getProtectionLevelString(mPackageManager.getPermissionInfo(s,PackageManager.GET_META_DATA).protectionLevel)
+                                        +"\n"+mPackageManager.getPermissionInfo(s,PackageManager.GET_META_DATA).packageName
+                                        +"\n"+mPackageManager.getPermissionInfo(s,PackageManager.GET_META_DATA).group
+                                ,Toast.LENGTH_LONG).show();
+
+                    }catch (PackageManager.NameNotFoundException e){
+
+                    }
+
+                }
+            });
 
             return convertView;
         }
