@@ -806,6 +806,7 @@ public class DetailFragment extends Fragment {
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             int size = getActivity().getResources().getDimensionPixelSize(R.dimen.header_text_margin);
             textView.setPadding(size, 0, size, 0);
+            textView.setTextSize(11);
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -837,6 +838,7 @@ public class DetailFragment extends Fragment {
             textView.setText(mPackageInfo.applicationInfo.sharedLibraryFiles[index]);
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             int size = getActivity().getResources().getDimensionPixelSize(R.dimen.header_text_margin);
+            textView.setTextSize(12);
             textView.setPadding(size, 0, size, 0);
 
             return convertView;
@@ -970,10 +972,12 @@ public class DetailFragment extends Fragment {
             }
 
             TextView textView = (TextView) convertView;
-            textView.setText(mPackageInfo.signatures[index].toCharsString());
+            textView.setText(Utils.signCert(mPackageInfo.signatures[index])+"\n"+
+                    mPackageInfo.signatures[index].toCharsString());
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             textView.setTextIsSelectable(true);
             int size = getActivity().getResources().getDimensionPixelSize(R.dimen.header_text_margin);
+            textView.setTextSize(12);
             textView.setPadding(size, 0, size, 0);
 
             return convertView;

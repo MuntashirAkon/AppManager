@@ -48,6 +48,13 @@
             android:gravity="center_horizontal"
             android:singleLine="true"/>
 
+        <TextView android:id="@+id/issuer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/date"
+            android:layout_alignLeft="@id/label"
+            android:textSize="9dp"
+            android:singleLine="true"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -64,11 +71,18 @@
 
         <TextView android:id="@+id/isSystem"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:singleLine="true"/>
 
         <TextView android:id="@+id/size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:singleLine="true"/>
+
+        <TextView android:id="@+id/sha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="9dp"
             android:singleLine="true"/>
 
     </LinearLayout>

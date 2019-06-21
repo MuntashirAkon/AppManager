@@ -4,14 +4,23 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ServiceInfo;
+import android.content.pm.Signature;
 import android.os.Build;
 import android.util.TypedValue;
 import android.view.WindowManager;
 
+
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.Scanner;
 
 public class Utils {
@@ -287,5 +296,60 @@ public class Utils {
             } else {
                 return "1"; // Lack of property means OpenGL ES version 1
             }
+    }
+    public static String convertToHex(byte[] data) {//https://stackoverflow.com/questions/5980658/how-to-sha1-hash-a-string-in-android
+        StringBuilder buf = new StringBuilder();
+        for (byte b : data) {
+            int halfbyte = (b >>> 4) & 0x0F;
+            int two_halfs = 0;
+            do {
+                buf.append((0 <= halfbyte) && (halfbyte <= 9) ? (char) ('0' + halfbyte) : (char) ('a' + (halfbyte - 10)));
+                halfbyte = b & 0x0F;
+            } while (two_halfs++ < 1);
+        }
+        return buf.toString();
+    }
+
+    public static String signCert(Signature sign){
+        String s= "";
+        try {
+            X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X.509")
+                    .generateCertificate(new ByteArrayInputStream(sign.toByteArray()));
+
+            s="\n"+cert.getIssuerX500Principal().getName()
+                    +"\nCertificate fingerprints:"
+                    +"\n"+"md5: "+Utils.convertToHex(MessageDigest.getInstance("md5").digest(sign.toByteArray()))
+                    +"\n"+"sha1: "+Utils.convertToHex(MessageDigest.getInstance("sha1").digest(sign.toByteArray()))
+                    +"\n"+"sha256: "+Utils.convertToHex(MessageDigest.getInstance("sha256").digest(sign.toByteArray()))
+                    +"\n"+cert.toString()
+                    +"\n"+(cert.getPublicKey().getAlgorithm())
+                    +"---"+cert.getSigAlgName()+"---"+cert.getSigAlgOID()
+                    +"\n"+(cert.getPublicKey())
+                    +"\n";
+        }catch (NoSuchAlgorithmException |CertificateException e) {
+            return e.toString()+s;
+        }
+        return s;
+    }
+
+    public static Tuple apkPro(PackageInfo p){
+        Signature[] z= p.signatures;
+        String s="";
+        X509Certificate c;
+        Tuple t= new Tuple("","");
+        try {
+            for (Signature sg:z){
+                c=(X509Certificate) CertificateFactory.getInstance("X.509")
+                        .generateCertificate(new ByteArrayInputStream(sg.toByteArray()));
+                s=c.getIssuerX500Principal().getName();
+                if (!s.equals("")) t.setFirst(s);
+                s=c.getSigAlgName();
+                if (!s.equals("")) t.setSecond(s+": "+Utils.convertToHex(MessageDigest.getInstance("sha256").digest(sg.toByteArray())));
+            }
+
+        }catch (NoSuchAlgorithmException | CertificateException e) {
+
+        }
+        return t;
     }
 }

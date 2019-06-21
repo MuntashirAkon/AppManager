@@ -25,4 +25,11 @@ public class Tuple<T, K> {
     public void setSecond(K k) {
         mObjectTwo = k;
     }
+
+    public int compareTo(Tuple tt) {
+        int i = mObjectOne.toString().toLowerCase().compareTo(tt.getFirst().toString().toLowerCase());
+        if (i==0) return mObjectTwo.toString().toLowerCase().compareTo(tt.getSecond().toString().toLowerCase());
+        else if (i<0) return-1;
+        else return 1;
+    }
 }

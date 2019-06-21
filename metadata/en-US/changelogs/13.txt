@@ -1,0 +1,6 @@
+# Signature cert
+ * sort option (sha256 cert)
+ * complete cert
+
+# old
+ * Uses-permission info 2-clicks

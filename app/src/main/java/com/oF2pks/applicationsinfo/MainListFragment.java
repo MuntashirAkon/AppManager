@@ -50,6 +50,9 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import static android.content.pm.PackageManager.GET_SIGNATURES;
+
+
 public class MainListFragment extends ListFragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener,
         LoaderManager.LoaderCallbacks<List<ApplicationItem>> {
 
@@ -58,7 +61,8 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     private static final int[] sSortMenuItemIdsMap = {R.id.action_sort_name,
             R.id.action_sort_pkg, R.id.action_sort_domain,
             R.id.action_sort_installation,
-            R.id.action_sort_sharedid, R.id.action_sort_size};
+            R.id.action_sort_sharedid, R.id.action_sort_sha,
+            R.id.action_sort_size};
 
     private static final int SORT_NAME = 0;
     private static final int SORT_PKG = 1;
@@ -66,6 +70,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     private static final int SORT_INSTALLATION = 3;
     private static final int SORT_SHAREDID =4;
     private static final int SORT_SIZE = 5;
+    private static final int SORT_SHA = 6;
     public static final String INSTANCE_STATE_SORT_BY = "sort_by";
 
     private Adapter mAdapter;
@@ -131,8 +136,14 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         mAdapter.setDefaultList(mItemList);
         if (Build.VERSION.SDK_INT <26) startRetrievingPackagesSize();
         else {
-            for (ApplicationItem item : mItemList) item.size = (long) -1*item.applicationInfo.targetSdkVersion;
+            for (ApplicationItem item : mItemList) {
+                item.size = (long) -1 * item.applicationInfo.targetSdkVersion;
+                try {
+                    item.sha = Utils.apkPro(getContext().getPackageManager().getPackageInfo(item.applicationInfo.packageName, GET_SIGNATURES));
+                } catch (PackageManager.NameNotFoundException e) {
+                }
             }
+        }
 
         mProgressDialog.dismiss();
     }
@@ -203,9 +214,14 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                 setSortBy(SORT_SHAREDID);
                 item.setChecked(true);
                 return true;
+            case R.id.action_sort_sha:
+                setSortBy(SORT_SHA);
+                item.setChecked(true);
+                return true;
             case R.id.action_sort_size:
                 setSortBy(SORT_SIZE);
                 item.setChecked(true);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -251,6 +267,12 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                         return -item1.size.compareTo(item2.size);
                     case SORT_SHAREDID:
                         return item2.applicationInfo.uid - item1.applicationInfo.uid;
+                    case SORT_SHA:
+                        try {
+                            return item1.sha.compareTo(item2.sha);
+                        } catch (NullPointerException e) {
+
+                        }
                     default:
                         return 0;
                 }
@@ -292,6 +314,10 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                                         + pStats.externalMediaSize + pStats.externalObbSize;
                             else
                                 item.size = -1L;
+                            try {
+                                item.sha = Utils.apkPro(getActivity().getPackageManager().getPackageInfo(item.applicationInfo.packageName, GET_SIGNATURES));
+                            } catch (PackageManager.NameNotFoundException e) {
+                            }
 
                             incrementItemSizeRetrievedCount();
                         }
@@ -332,6 +358,8 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             TextView date;
             TextView size;
             TextView sharedid;
+            TextView issuer;
+            TextView sha;
             IconAsyncTask iconLoader;
         }
 
@@ -432,6 +460,8 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                 holder.date = (TextView) view.findViewById(R.id.date);
                 holder.size = (TextView) view.findViewById(R.id.size);
                 holder.sharedid=(TextView) view.findViewById(R.id.shareid);
+                holder.issuer=(TextView) view.findViewById(R.id.issuer);
+                holder.sha=(TextView) view.findViewById(R.id.sha);
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder) view.getTag();
@@ -452,7 +482,9 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                 holder.date.setText(sSimpleDateFormat.format(date));
                 if (packageInfo.sharedUserId != null) holder.sharedid.setTextColor(mOrange1);
                 else holder.sharedid.setTextColor(Color.GRAY);
-            } catch (PackageManager.NameNotFoundException e) {
+                holder.issuer.setText((String)item.sha.getFirst());
+                holder.sha.setText((String)item.sha.getSecond());
+            } catch (PackageManager.NameNotFoundException | NullPointerException e) {
                 //Do nothing
             }
 
