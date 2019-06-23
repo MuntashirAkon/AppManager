@@ -74,7 +74,9 @@ public class DetailFragment extends Fragment {
     private String mMainActivity = "";
     private PackageStats mPackageStats;
     private DetailOverflowMenu mDetailOverflowMenu;
+    private boolean bFi;
 
+    private int mColorGrey0;
     private int mColorGrey1;
     private int mColorGrey2;
     private int mOrange1;
@@ -98,6 +100,7 @@ public class DetailFragment extends Fragment {
         mPackageName = getArguments().getString(EXTRA_PACKAGE_NAME);
         mColorGrey1 = getResources().getColor(R.color.grey_1);
         mColorGrey2 = getResources().getColor(R.color.grey_2);
+        mColorGrey0 = getResources().getColor(R.color.grey_0);
         mOrange1 = getResources().getColor(R.color.orange_1);
         mDetailOverflowMenu = new DetailOverflowMenu(getActivity(), mPackageName);
 
@@ -108,8 +111,17 @@ public class DetailFragment extends Fragment {
         else {
             aPermissionsUse= new String[mPackageInfo.requestedPermissions.length];
             for (int i=0;i < mPackageInfo.requestedPermissions.length;i++){
-                aPermissionsUse[i]=(mPackageInfo.requestedPermissions[i]+"  "//+mPackageInfo.requestedPermissionsFlags[i]
-                        +((mPackageInfo.requestedPermissionsFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0 ? "\u2714":""));//"\u2691":"\u2690"));☑
+                aPermissionsUse[i]=mPackageInfo.requestedPermissions[i]+" ";
+                try {
+                    if (Utils.getProtectionLevelString(mPackageManager.getPermissionInfo(mPackageInfo.requestedPermissions[i],PackageManager.GET_META_DATA).protectionLevel)
+                            .contains("dangerous")) aPermissionsUse[i]+="*";
+
+                } catch (PackageManager.NameNotFoundException e){
+
+                }
+                if ((mPackageInfo.requestedPermissionsFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0)
+                    aPermissionsUse[i]+="\u2714";
+
 
             }
             try {
@@ -170,7 +182,15 @@ public class DetailFragment extends Fragment {
                     }
                 });
             } catch (NullPointerException e){
-
+                for(FeatureInfo fi:mPackageInfo.reqFeatures){
+                    if (fi.name==null) fi.name="_MAJOR";
+                    bFi=true;
+                }
+                Collections.sort(Arrays.asList(mPackageInfo.reqFeatures), new Comparator<FeatureInfo>() {
+                    public int compare(FeatureInfo o1, FeatureInfo o2) {
+                        return o1.name.compareToIgnoreCase(o2.name);
+                    }
+                });
             }
         }
         if (mPackageInfo.providers != null) {
@@ -267,7 +287,7 @@ public class DetailFragment extends Fragment {
         versionView.setText(mPackageInfo.versionName + " (" + mPackageInfo.versionCode + ")");
 
         TextView pathView = (TextView) headerView.findViewById(R.id.path);
-        pathView.setText(applicationInfo.sourceDir);
+        pathView.setText(applicationInfo.sourceDir+"\n"+applicationInfo.dataDir);
 
         TextView isSystemAppView = (TextView) headerView.findViewById(R.id.isSystem);
         if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0){
@@ -278,7 +298,8 @@ public class DetailFragment extends Fragment {
         if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)isSystemAppView.setText(isSystemAppView.getText()+" +XLdalvik");
 
         TextView techDetails = (TextView) headerView.findViewById(R.id.techDetails);
-        techDetails.setText("sdk"+applicationInfo.targetSdkVersion);// + getCategory(applicationInfo.category,'*'));//+" "+Integer.toString(applicationInfo.minSdkVersion));
+        techDetails.setText("sdk"+applicationInfo.targetSdkVersion
+                +(Build.VERSION.SDK_INT >23 ?"/min"+applicationInfo.minSdkVersion:"")+".");
         if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)techDetails.setText(techDetails.getText()+" DEBUG!ABLE");
         if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)techDetails.setText(techDetails.getText()+" +TestOnly");
         if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_MULTIARCH) != 0)techDetails.setText("Xarch "+techDetails.getText());
@@ -304,12 +325,10 @@ public class DetailFragment extends Fragment {
         TextView netStatsTransmittedView = (TextView) headerView.findViewById(R.id.netstats_transmitted);
         netStatsTransmittedView.setText(getString(R.string.netstats_transmitted) + ": "
                 + uidNetStats.getFirst());
-        netStatsTransmittedView.setBackgroundColor(Color.WHITE);
 
         TextView netStatsReceivedView = (TextView) headerView.findViewById(R.id.netstats_received);
         netStatsReceivedView.setText(getString(R.string.netstats_received) + ": "
                 + uidNetStats.getSecond());
-        netStatsReceivedView.setBackgroundColor(Color.WHITE);
 
         TextView mainActivity = (TextView) headerView.findViewById(R.id.main_activity);
         mainActivity.setText("("+getString(R.string.activities)+"#1:"+mMainActivity+")");
@@ -481,6 +500,8 @@ public class DetailFragment extends Fragment {
                 textView = (TextView) mLayoutInflater.inflate(R.layout.group_title_view, null);
 
             textView.setText(mGroupTitleIds.getString(groupIndex - 1) + " (" + getChildrenCount(groupIndex) + ")");
+            textView.setBackgroundColor(mColorGrey0);
+            textView.setTextColor(Color.BLACK);
             return textView;
         }
 
@@ -735,56 +756,61 @@ public class DetailFragment extends Fragment {
             final ProviderInfo providerInfo = mPackageInfo.providers[index];
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
 
-            //Label
-            viewHolder.textView1.setText(providerInfo.loadLabel(mPackageManager));
+            try {
+                //Label
+                viewHolder.textView1.setText(providerInfo.loadLabel(mPackageManager));
 
-            //Name
-            viewHolder.textView2.setText(providerInfo.name.startsWith(mPackageName) ?
-                    "."+providerInfo.name.replaceFirst(mPackageName, "")
-                    :providerInfo.name);
+                //Name
+                viewHolder.textView2.setText(providerInfo.name.startsWith(mPackageName) ?
+                        "."+providerInfo.name.replaceFirst(mPackageName, "")
+                        :providerInfo.name);
 
-            //Icon
-            viewHolder.imageView.setImageDrawable(providerInfo.loadIcon(mPackageManager));
+                //Icon
+                viewHolder.imageView.setImageDrawable(providerInfo.loadIcon(mPackageManager));
 
-            //Uri permission
-            viewHolder.textView3.setText(getString(R.string.grant_uri_permission) + ": " + providerInfo.grantUriPermissions);
+                //Uri permission
+                viewHolder.textView3.setText(getString(R.string.grant_uri_permission) + ": " + providerInfo.grantUriPermissions);
 
-            //Path permissions
-            PathPermission[] pathPermissions = providerInfo.pathPermissions;
-            String finalString;
-            if (pathPermissions != null) {
-                StringBuilder builder = new StringBuilder();
-                String read = getString(R.string.read);
-                String write = getString(R.string.write);
-                for (PathPermission permission : pathPermissions) {
-                    builder.append(read + ": " + permission.getReadPermission());
-                    builder.append("/");
-                    builder.append(write + ": " + permission.getWritePermission());
-                    builder.append(", ");
-                }
-                Utils.checkStringBuilderEnd(builder);
-                finalString = builder.toString();
-            } else
-                finalString = "null";
-            viewHolder.textView4.setText(getString(R.string.path_permissions) + ": " + finalString);
+                //Path permissions
+                PathPermission[] pathPermissions = providerInfo.pathPermissions;
+                String finalString;
+                if (pathPermissions != null) {
+                    StringBuilder builder = new StringBuilder();
+                    String read = getString(R.string.read);
+                    String write = getString(R.string.write);
+                    for (PathPermission permission : pathPermissions) {
+                        builder.append(read + ": " + permission.getReadPermission());
+                        builder.append("/");
+                        builder.append(write + ": " + permission.getWritePermission());
+                        builder.append(", ");
+                    }
+                    Utils.checkStringBuilderEnd(builder);
+                    finalString = builder.toString();
+                } else
+                    finalString = "null";
+                viewHolder.textView4.setText(getString(R.string.path_permissions) + ": " + finalString);//+"\n"+providerInfo.readPermission +"\n"+providerInfo.writePermission);
 
-            //Pattern matchers
-            PatternMatcher[] patternMatchers = providerInfo.uriPermissionPatterns;
-            String finalString1;
-            if (patternMatchers != null) {
-                StringBuilder builder = new StringBuilder();
-                for (PatternMatcher patternMatcher : patternMatchers) {
-                    builder.append(patternMatcher.toString());
-                    builder.append(", ");
-                }
-                Utils.checkStringBuilderEnd(builder);
-                finalString1 = builder.toString();
-            } else
-                finalString1 = "null";
-            viewHolder.textView5.setText(getString(R.string.patterns_allowed) + ": " + finalString1);
+                //Pattern matchers
+                PatternMatcher[] patternMatchers = providerInfo.uriPermissionPatterns;
+                String finalString1;
+                if (patternMatchers != null) {
+                    StringBuilder builder = new StringBuilder();
+                    for (PatternMatcher patternMatcher : patternMatchers) {
+                        builder.append(patternMatcher.toString());
+                        builder.append(", ");
+                    }
+                    Utils.checkStringBuilderEnd(builder);
+                    finalString1 = builder.toString();
+                } else
+                    finalString1 = "null";
+                viewHolder.textView5.setText(getString(R.string.patterns_allowed) + ": " + finalString1);
 
-            //Authority
-            viewHolder.textView6.setText(getString(R.string.authority) + ": " + providerInfo.authority);
+                //Authority
+                viewHolder.textView6.setText(getString(R.string.authority) + ": " + providerInfo.authority);
+
+            }catch (NullPointerException e){
+                viewHolder.textView1.setText("ERROR retrieving: try uninstall re-install apk");
+            }
 
             return convertView;
         }
@@ -800,13 +826,29 @@ public class DetailFragment extends Fragment {
 
             TextView textView = (TextView) convertView;
             textView.setTextIsSelectable(true);
-            textView.setText("\u23e9"+aPermissionsUse[index]);
-            if (aPermissionsUse[index].contains("\u2714")) textView.setTextColor(Color.BLACK);
-            else textView.setTextColor(Color.GRAY);
-            textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            if (aPermissionsUse[index].startsWith("android.permission"))
+                textView.setText("\u23e9. "+aPermissionsUse[index].substring(18));
+            else textView.setText("\u23e9"+aPermissionsUse[index]);
+            if (aPermissionsUse[index].endsWith("*\u2714")) {
+                textView.setTextColor(Color.BLACK);
+                textView.setBackgroundColor(mColorGrey2);
+            }
+            else if (aPermissionsUse[index].endsWith("\u2714")){
+                textView.setTextColor(Color.DKGRAY);
+                textView.setBackgroundColor(mColorGrey1);
+            }
+            else if (aPermissionsUse[index].endsWith("*")){
+                textView.setTextColor(Color.GRAY);
+                textView.setBackgroundColor(mColorGrey2);
+            }
+            else {
+                textView.setTextColor(Color.GRAY);
+                textView.setBackgroundColor(mColorGrey1);
+            }
+
             int size = getActivity().getResources().getDimensionPixelSize(R.dimen.header_text_margin);
             textView.setPadding(size, 0, size, 0);
-            textView.setTextSize(11);
+            textView.setTextSize(12);
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -837,6 +879,7 @@ public class DetailFragment extends Fragment {
             textView.setTextIsSelectable(true);
             textView.setText(mPackageInfo.applicationInfo.sharedLibraryFiles[index]);
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            textView.setTextColor(Color.BLACK);
             int size = getActivity().getResources().getDimensionPixelSize(R.dimen.header_text_margin);
             textView.setTextSize(12);
             textView.setPadding(size, 0, size, 0);
@@ -914,14 +957,14 @@ public class DetailFragment extends Fragment {
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
 
             //Name
-            viewHolder.textView1.setText(featureInfo.name==null ? getString(R.string.no_feature): featureInfo.name);
+            viewHolder.textView1.setText(featureInfo.name);
 
             //Falgs
             viewHolder.textView2.setText(getString(R.string.flags) + ": " + Utils.getFeatureFlagsString(featureInfo.flags)
                     +(Build.VERSION.SDK_INT >= 24 && featureInfo.version !=0 ? " | minV%:"+featureInfo.version : ""));
 
             //GLES ver
-            viewHolder.textView3.setText(getString(R.string.gles_ver) + ": " + Utils.getOpenGL(featureInfo.reqGlEsVersion));
+            viewHolder.textView3.setText(getString(R.string.gles_ver) + ": " + (bFi && !featureInfo.name.equals("_MAJOR") ? "_":Utils.getOpenGL(featureInfo.reqGlEsVersion)));
 
             return convertView;
         }
@@ -976,6 +1019,7 @@ public class DetailFragment extends Fragment {
                     mPackageInfo.signatures[index].toCharsString());
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             textView.setTextIsSelectable(true);
+            textView.setTextColor(Color.BLACK);
             int size = getActivity().getResources().getDimensionPixelSize(R.dimen.header_text_margin);
             textView.setTextSize(12);
             textView.setPadding(size, 0, size, 0);

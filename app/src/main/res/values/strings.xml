@@ -59,7 +59,7 @@
     <string name="netstats_msg">* Data transmitted since last boot</string>
 
     <string name="about">About</string>
-    <string name="about_message">red:noAllowClearUserData\nmagenta:Persistent\nblue:Stopped\norangeDate:READ_LOGS\norangeUid:shared\ngreen:Inactive\n\nX:Multiarch\n0:noHasCode\n_:noHardwareAccelerated\n°:Suspended\n~:TestOnly\n\n#(2ndScreen Shared_uid orange):dalvikLargeHeap\n\n2-clicks on UsesPermissions >> toastInfo\n\ncode: <a>https://bitbucket.org/oF2pks/fdroid-applications-info</a>\nprim-origin: <a>https://github.com/MajeurAndroid/Applications-Info</a></string>
+    <string name="about_message">red:noAllowClearUserData\nmagenta:Persistent\nblue:Stopped\norangeDate:READ_LOGS\norangeUid:shared\ngreen:Inactive\n(+Oreo>orangeSdk:usesCleartextTraffic)\n\nX:Multiarch\n0:noHasCode\n_:noHardwareAccelerated\n°:Suspended\n~:TestOnly\n\n#(2ndScreen Shared_uid orange):dalvikLargeHeap\n\n2-clicks on UsesPermissions >> toastInfo\n\ncode: <a>https://bitbucket.org/oF2pks/fdroid-applications-info</a>\nprim-origin: <a>https://github.com/MajeurAndroid/Applications-Info</a></string>
 
     <string name="size_details">Size details</string>
     <string name="internal">Internal</string>

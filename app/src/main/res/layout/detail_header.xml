@@ -58,10 +58,11 @@
             android:layout_below="@id/version" />
 
         <TextView
-            android:id="@+id/isSystem"
+            android:id="@+id/techDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
+            android:textSize="10dp"
             android:layout_toRightOf="@+id/icon"
             android:layout_below="@id/path" />
 
@@ -75,10 +76,9 @@
             android:gravity="center_vertical">
 
                 <TextView
-                    android:id="@+id/techDetails"
+                    android:id="@+id/isSystem"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="11dp"
                     android:layout_weight="1"
                     android:gravity="center"/>
 
@@ -86,8 +86,8 @@
                     android:id="@+id/detail_overflow"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/ic_action_overflow"
-                    android:background="?android:selectableItemBackground" />
+                    android:background="@color/grey_0"
+                    android:src="@drawable/ic_action_overflow"/>
 
 
         </LinearLayout>
@@ -118,6 +118,7 @@
             android:layout_height="match_parent"
             android:textIsSelectable="true"
             android:layout_weight="1"
+            android:background="@android:color/white"
             android:layout_marginLeft="@dimen/header_text_margin"/>
 
         <TextView
@@ -136,6 +137,7 @@
             android:textIsSelectable="true"
             android:textSize="11dp"
             android:layout_weight="1"
+            android:background="@android:color/white"
             android:layout_marginLeft="@dimen/header_text_margin"/>
 
         <TextView
@@ -171,6 +173,7 @@
                 android:layout_height="match_parent"
                 android:textIsSelectable="true"
                 android:layout_weight="1"
+                android:background="@android:color/white"
                 android:layout_marginLeft="@dimen/header_text_margin"/>
 
             <TextView
@@ -179,6 +182,7 @@
                 android:layout_height="match_parent"
                 android:textIsSelectable="true"
                 android:layout_weight="1"
+                android:background="@android:color/white"
                 android:layout_marginLeft="@dimen/header_text_margin"/>
 
         </LinearLayout>
@@ -188,6 +192,7 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:text="@string/netstats_msg"
+            android:background="@color/grey_2"
             android:textStyle="italic"/>
 
     </LinearLayout>

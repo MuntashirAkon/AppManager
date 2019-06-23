@@ -58,15 +58,14 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
     private static Collator sCollator = Collator.getInstance();
 
-    private static final int[] sSortMenuItemIdsMap = {R.id.action_sort_name,
-            R.id.action_sort_pkg, R.id.action_sort_domain,
-            R.id.action_sort_installation,
-            R.id.action_sort_sharedid, R.id.action_sort_sha,
-            R.id.action_sort_size};
+    private static final int[] sSortMenuItemIdsMap = {R.id.action_sort_domain,
+            R.id.action_sort_name,R.id.action_sort_pkg,
+            R.id.action_sort_installation,R.id.action_sort_sharedid,
+            R.id.action_sort_size,R.id.action_sort_sha};
 
-    private static final int SORT_NAME = 0;
-    private static final int SORT_PKG = 1;
-    private static final int SORT_DOMAIN = 2;
+    private static final int SORT_DOMAIN = 0;
+    private static final int SORT_NAME = 1;
+    private static final int SORT_PKG = 2;
     private static final int SORT_INSTALLATION = 3;
     private static final int SORT_SHAREDID =4;
     private static final int SORT_SIZE = 5;
@@ -80,7 +79,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     private MainCallbacks mCallbacks;
     private Activity mActivity;
 
-    private int mSortBy = SORT_NAME;
+    private int mSortBy;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,7 +101,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
         if (savedInstanceState != null) {
             mSortBy = savedInstanceState.getInt(INSTANCE_STATE_SORT_BY);
-        }
+        }else mSortBy=SORT_NAME;
     }
 
     @Override
@@ -531,7 +530,11 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             if (mPackageManager.checkPermission(Manifest.permission.READ_LOGS,info.packageName)== PackageManager.PERMISSION_GRANTED) holder.date.setTextColor(mOrange1);
             else holder.date.setTextColor(Color.GRAY);
 
-            if (Build.VERSION.SDK_INT >=26)  holder.size.setText(item.size+"sdk");
+            if (Build.VERSION.SDK_INT >=26)  {
+                holder.size.setText(item.size+"sdk");
+                if ((info.flags & ApplicationInfo.FLAG_USES_CLEARTEXT_TRAFFIC) !=0) holder.size.setTextColor(mOrange1);
+                else holder.size.setTextColor(Color.BLACK);
+            }
             else if (item.size != -1L)
                 holder.size.setText(Formatter.formatFileSize(mActivity, item.size));
 
