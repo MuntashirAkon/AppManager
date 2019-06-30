@@ -3,7 +3,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/grey_2"
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -35,6 +37,7 @@
             android:id="@+id/packageName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="start"
             android:textIsSelectable="true"
             android:layout_below="@+id/label"
             android:textStyle="bold|italic"
@@ -45,6 +48,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
+            android:gravity="start"
+            android:background="@android:color/white"
             android:layout_below="@id/packageName"
             android:layout_toRightOf="@+id/icon" />
 
@@ -52,6 +57,7 @@
             android:id="@+id/path"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="start"
             android:textIsSelectable="true"
             android:layout_toRightOf="@+id/icon"
             android:textSize="9dp"
@@ -172,7 +178,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textIsSelectable="true"
-                android:layout_weight="1"
                 android:background="@android:color/white"
                 android:layout_marginLeft="@dimen/header_text_margin"/>
 
@@ -181,7 +186,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textIsSelectable="true"
-                android:layout_weight="1"
                 android:background="@android:color/white"
                 android:layout_marginLeft="@dimen/header_text_margin"/>
 

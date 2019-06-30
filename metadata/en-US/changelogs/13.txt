@@ -8,4 +8,4 @@
 
 # Marshmallow minSDK
 
-# (Uses-permission info via 2xTap)
+# (Uses-permission INFOs via 2xTap)

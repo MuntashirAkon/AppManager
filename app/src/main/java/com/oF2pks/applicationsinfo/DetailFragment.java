@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PatternMatcher;
 import android.os.RemoteException;
+import android.text.Layout;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -500,8 +501,7 @@ public class DetailFragment extends Fragment {
                 textView = (TextView) mLayoutInflater.inflate(R.layout.group_title_view, null);
 
             textView.setText(mGroupTitleIds.getString(groupIndex - 1) + " (" + getChildrenCount(groupIndex) + ")");
-            textView.setBackgroundColor(mColorGrey0);
-            textView.setTextColor(Color.BLACK);
+            textView.setShadowLayer(0.01f, 1, 1,  Color.DKGRAY);
             return textView;
         }
 
@@ -587,9 +587,6 @@ public class DetailFragment extends Fragment {
             final ActivityInfo activityInfo = mPackageInfo.activities[index];
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
 
-            //Label
-            viewHolder.textView1.setText(activityInfo.loadLabel(mPackageManager));
-
             //Name
             viewHolder.textView2.setText(activityInfo.name.startsWith(mPackageName) ?
                     "."+activityInfo.name.replaceFirst(mPackageName, "")
@@ -612,11 +609,15 @@ public class DetailFragment extends Fragment {
             viewHolder.textView6.setText(getString(R.string.softInput) + ": " + Utils.getSoftInputString(activityInfo.softInputMode)
                     + " | " +(activityInfo.permission==null ? getString(R.string.require_no_permission):activityInfo.permission));
 
-
+            viewHolder.textView1.setText(getString(R.string.launch));
+            //label
             Button launch = viewHolder.button;
+            launch.setText(activityInfo.loadLabel(mPackageManager));
             boolean isExported = activityInfo.exported;
             launch.setEnabled(isExported);
             if (isExported) {
+                viewHolder.textView1.setTextColor(Color.BLACK);
+                launch.setTextColor(Color.DKGRAY);
                 launch.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -630,7 +631,11 @@ public class DetailFragment extends Fragment {
                         }
                     }
                 });
+            }else {
+                viewHolder.textView1.setTextColor(Color.LTGRAY);
+                launch.setTextColor(Color.GRAY);
             }
+
             return convertView;
         }
 
@@ -826,6 +831,10 @@ public class DetailFragment extends Fragment {
 
             TextView textView = (TextView) convertView;
             textView.setTextIsSelectable(true);
+            if (Build.VERSION.SDK_INT >22){
+                textView.setBreakStrategy(Layout.BREAK_STRATEGY_SIMPLE);
+                textView.setHyphenationFrequency(Layout.HYPHENATION_FREQUENCY_NONE);
+            }
             if (aPermissionsUse[index].startsWith("android.permission"))
                 textView.setText("\u23e9. "+aPermissionsUse[index].substring(18));
             else textView.setText("\u23e9"+aPermissionsUse[index]);

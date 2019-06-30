@@ -28,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/label"
+            android:textStyle="italic"
             android:layout_alignLeft="@id/label"
             android:singleLine="true"/>
 

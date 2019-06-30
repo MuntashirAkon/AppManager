@@ -518,7 +518,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
             //holder.isSystemApp.setText(holder.isSystemApp.getText()+ getCategory(info.category, (char) 'c'));
             if ((info.flags & ApplicationInfo.FLAG_PERSISTENT) != 0) holder.isSystemApp.setTextColor(Color.MAGENTA);
-            else holder.isSystemApp.setTextColor(Color.DKGRAY);
+            else holder.isSystemApp.setTextColor(Color.BLACK);
             if ((info.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0) holder.isSystemApp.setText(holder.isSystemApp.getText()+"#");
             if ((info.flags & ApplicationInfo.FLAG_ALLOW_CLEAR_USER_DATA) == 0) holder.label.setTextColor(Color.RED);
             else holder.label.setTextColor(Color.BLACK);
@@ -533,7 +533,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             if (Build.VERSION.SDK_INT >=26)  {
                 holder.size.setText(item.size+"sdk");
                 if ((info.flags & ApplicationInfo.FLAG_USES_CLEARTEXT_TRAFFIC) !=0) holder.size.setTextColor(mOrange1);
-                else holder.size.setTextColor(Color.BLACK);
+                else holder.size.setTextColor(Color.GRAY);
             }
             else if (item.size != -1L)
                 holder.size.setText(Formatter.formatFileSize(mActivity, item.size));

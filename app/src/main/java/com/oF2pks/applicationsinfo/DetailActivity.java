@@ -1,6 +1,7 @@
 package com.oF2pks.applicationsinfo;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -15,6 +16,7 @@ public class DetailActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         FrameLayout frameLayout = new FrameLayout(this);
         frameLayout.setId(LAYOUT_ID);
+        frameLayout.setBackgroundColor(getResources().getColor(R.color.grey_0));
         setContentView(frameLayout);
         String packageName = getIntent().getStringExtra(DetailFragment.EXTRA_PACKAGE_NAME);
 

@@ -344,7 +344,7 @@ public class Utils {
                 s=c.getIssuerX500Principal().getName();
                 if (!s.equals("")) t.setFirst(s);
                 s=c.getSigAlgName();
-                if (!s.equals("")) t.setSecond(s+": "+Utils.convertToHex(MessageDigest.getInstance("sha256").digest(sg.toByteArray())));
+                if (!s.equals("")) t.setSecond(s+"| "+Utils.convertToHex(MessageDigest.getInstance("sha256").digest(sg.toByteArray())));
             }
 
         }catch (NoSuchAlgorithmException | CertificateException e) {
