@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.ref.WeakReference;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -51,7 +52,7 @@ public class ViewManifestActivity extends Activity {
     private WebView mWebView;
     private ProgressDialog mProgressDialog;
 
-    private String mPath;
+    private static String mPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +79,7 @@ public class ViewManifestActivity extends Activity {
         }
 
         setTitle(getString(R.string.manifest) + ": " + applicationLabel);
-        new AsyncManifestLoader().execute(filePath);
+        new AsyncManifestLoader(ViewManifestActivity.this).execute(filePath);
     }
 
     @Override
@@ -129,12 +130,20 @@ public class ViewManifestActivity extends Activity {
     /**
      * This AsyncTask takes manifest file path as argument
      */
-    private class AsyncManifestLoader extends AsyncTask<String, Integer, Boolean> {
+    private static class AsyncManifestLoader extends AsyncTask<String, Integer, Boolean> {
+        private WeakReference<ViewManifestActivity> mActivity = null;
+        public AsyncManifestLoader (ViewManifestActivity pActivity) {
+            link(pActivity);
+        }
+
+        public void link (ViewManifestActivity pActivity) {
+            mActivity = new WeakReference<ViewManifestActivity>(pActivity);
+        }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showProgressBar(true);
+            if(mActivity.get() != null) mActivity.get().showProgressBar(true);
         }
 
         @Override
@@ -203,10 +212,12 @@ public class ViewManifestActivity extends Activity {
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
-            if (result)
-                displayContent();
-            else
-                handleError();
+            if (mActivity.get() != null) {
+                if (result)
+                    mActivity.get().displayContent();
+                else
+                    mActivity.get().handleError();
+            }
         }
     }
 }
