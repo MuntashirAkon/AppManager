@@ -132,11 +132,11 @@ public class ViewManifestActivity extends Activity {
      */
     private static class AsyncManifestLoader extends AsyncTask<String, Integer, Boolean> {
         private WeakReference<ViewManifestActivity> mActivity = null;
-        public AsyncManifestLoader (ViewManifestActivity pActivity) {
+        private AsyncManifestLoader (ViewManifestActivity pActivity) {
             link(pActivity);
         }
 
-        public void link (ViewManifestActivity pActivity) {
+        private void link (ViewManifestActivity pActivity) {
             mActivity = new WeakReference<ViewManifestActivity>(pActivity);
         }
 

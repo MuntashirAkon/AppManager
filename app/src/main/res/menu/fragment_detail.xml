@@ -10,4 +10,7 @@
     <item android:title="@string/view_manifest"
         android:id="@+id/action_view_manifest" />
 
+    <item android:title="@string/view_fdroid"
+        android:id="@+id/action_view_fdroid" />
+
 </menu>

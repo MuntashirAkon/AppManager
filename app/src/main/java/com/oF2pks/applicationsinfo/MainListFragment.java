@@ -350,6 +350,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
         static class ViewHolder {
             ImageView icon;
+            ImageView favorite_icon;
             TextView label;
             TextView packageName;
             TextView version;
@@ -452,6 +453,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                 view = mLayoutInflater.inflate(R.layout.main_list_item, viewGroup, false);
                 holder = new ViewHolder();
                 holder.icon = (ImageView) view.findViewById(R.id.icon);
+                holder.favorite_icon = (ImageView) view.findViewById(R.id.favorite_icon);
                 holder.label = (TextView) view.findViewById(R.id.label);
                 holder.packageName = (TextView) view.findViewById(R.id.packageName);
                 holder.version = (TextView) view.findViewById(R.id.version);
@@ -472,6 +474,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             ApplicationItem item = mAdapterList.get(i);
             ApplicationInfo info = item.applicationInfo;
             if (!info.enabled) view.setBackgroundColor(Color.LTGRAY);//holder.icon.setImageAlpha(50);//view.setBackgroundColor(Color.LTGRAY);
+            holder.favorite_icon.setVisibility(item.star ? View.VISIBLE : View.INVISIBLE);
 
             holder.sharedid.setText(Integer.toString(info.uid));
             try {
@@ -509,6 +512,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
             if ((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) holder.isSystemApp.setText(mActivity.getString(R.string.system));
             else holder.isSystemApp.setText(mActivity.getString(R.string.user));
+
             if (Build.VERSION.SDK_INT >= 23) {
                 UsageStatsManager mUsageStats;
                 mUsageStats = mActivity.getSystemService(UsageStatsManager.class);

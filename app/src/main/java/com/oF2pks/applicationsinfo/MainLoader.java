@@ -25,24 +25,51 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
 
     @Override
     public List<ApplicationItem> loadInBackground() {
-        List<ApplicationInfo> applicationInfos = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+        List<ApplicationItem> itemList = new ArrayList<>();
+        String pName;
 
-        List<ApplicationItem> itemList = new ArrayList<>(applicationInfos.size());
+        if (MainActivity.packageList !=null){
+            //ApplicationInfo aI;
+            String[] aList=MainActivity.packageList.split("[\\r\\n]+");
+            for (int i=0;i<aList.length;i++){
 
-        for (ApplicationInfo applicationInfo : applicationInfos) {
+                ApplicationItem item = new ApplicationItem();
+                if (aList[i].endsWith("*")) {
+                    item.star = true;
+                    pName = aList[i].substring(0, aList[i].length() - 1);
+                }else pName=aList[i];
+                try{
+                    ApplicationInfo aI=mPackageManager.getApplicationInfo(pName,PackageManager.GET_META_DATA);
+                    item.applicationInfo = aI;
+                    item.label = aI.loadLabel(mPackageManager).toString();
+                    item.date = mPackageManager.getPackageInfo(aI.packageName, 0).firstInstallTime;
+                    itemList.add(item);
+                }catch (PackageManager.NameNotFoundException e){
 
-            ApplicationItem item = new ApplicationItem();
-            item.applicationInfo = applicationInfo;
-            item.label = applicationInfo.loadLabel(mPackageManager).toString();
-            try {
-                item.date = mPackageManager.getPackageInfo(applicationInfo.packageName, 0).firstInstallTime;
-            } catch (PackageManager.NameNotFoundException e) {
-                item.date = 0L;
+                }
             }
-            itemList.add(item);
-        }
+            return itemList;
+        }else {
 
-        return itemList;
+            List<ApplicationInfo> applicationInfos = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+
+
+            for (ApplicationInfo applicationInfo : applicationInfos) {
+
+                ApplicationItem item = new ApplicationItem();
+                item.applicationInfo = applicationInfo;
+                item.star = ((applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0);
+                item.label = applicationInfo.loadLabel(mPackageManager).toString();
+                try {
+                    item.date = mPackageManager.getPackageInfo(applicationInfo.packageName, 0).firstInstallTime;
+                } catch (PackageManager.NameNotFoundException e) {
+                    item.date = 0L;
+                }
+                itemList.add(item);
+            }
+
+            return itemList;
+        }
     }
 
     /**

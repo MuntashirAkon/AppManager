@@ -63,14 +63,23 @@ public class DetailOverflowMenu implements View.OnClickListener, PopupMenu.OnMen
             case R.id.action_view_exodus:
                 scan3("");
                 return true;
-            case R.id.action_view_exodus2:
-                scan3("longClick");
+            case R.id.action_view_fdroid:
+                Intent intent2 = new Intent();
+                intent2.setClassName("org.fdroid.fdroid","org.fdroid.fdroid.views.AppDetailsActivity");
+                intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent2.putExtra("appid", mPackageName);
+
+                try {
+                    mContext.startActivity(intent2);
+                } catch (Exception e) {
+                    Toast.makeText(mContext, e.toString(), Toast.LENGTH_LONG).show();
+                }
                 return true;
         }
         return false;
     }
 
-    public boolean isSystemApp() {
+    private boolean isSystemApp() {
         try {
             return (mContext.getPackageManager().getApplicationInfo(mPackageName, 0).flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         } catch (PackageManager.NameNotFoundException e) {
@@ -88,16 +97,14 @@ public class DetailOverflowMenu implements View.OnClickListener, PopupMenu.OnMen
         try {
 
             File file = new File(pm2.getPackageInfo(mPackageName, 0).applicationInfo.publicSourceDir);
-            if (null != intent2) {
-                intent2.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-                intent2.putExtra("APP_NAME", mPackageName);
-                intent2.putExtra("CLICK_PRESS", sClick);
+            intent2.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+            intent2.putExtra("APP_NAME", mPackageName);
+            intent2.putExtra("CLICK_PRESS", sClick);
 
-                try {
-                    mContext.startActivity(intent2);
-                } catch (Exception e) {
-                    Toast.makeText(mContext, e.toString(), Toast.LENGTH_LONG).show();
-                }
+            try {
+                mContext.startActivity(intent2);
+            } catch (Exception e) {
+                Toast.makeText(mContext, e.toString(), Toast.LENGTH_LONG).show();
             }
 
         } catch (PackageManager.NameNotFoundException e) {

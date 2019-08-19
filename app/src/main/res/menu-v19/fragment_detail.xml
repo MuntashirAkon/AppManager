@@ -13,7 +13,7 @@
     <item android:title="@string/view_exodus"
         android:id="@+id/action_view_exodus" />
 
-    <item android:title="@string/view_exodus2"
-        android:id="@+id/action_view_exodus2" />
+    <item android:title="@string/view_fdroid"
+        android:id="@+id/action_view_fdroid" />
 
 </menu>

@@ -7,6 +7,7 @@ import com.oF2pks.applicationsinfo.utils.Tuple;
 public class ApplicationItem {
     ApplicationInfo applicationInfo;
     String label;
+    boolean star;
     Long date;
     Long size = -1L;
     Tuple sha;

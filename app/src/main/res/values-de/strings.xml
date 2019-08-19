@@ -44,8 +44,6 @@
     <string name="no_configurations">Keine Konfigurationen</string>
     <string name="input_features">Eingabefunktionen</string>
     <string name="view_manifest">Manifest ansehen</string>
-    <string name="view_exodus">ClassyShark3xodus ?</string>
-    <string name="view_exodus2">ClassyShark unleashed ?</string>
     <string name="manifest">Manifest</string>
     <string name="error">Fehler</string>
     <string name="loading">Lade &#8230;</string> <!-- &#8230; = ... -->

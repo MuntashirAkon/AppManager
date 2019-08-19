@@ -13,11 +13,15 @@ public class MainActivity extends Activity implements MainCallbacks {
 
     private boolean mIsDualPane;
     private boolean mIsArtShowed = false;
+    public static final String EXTRA_PACKAGE_NAME = "package_name";
+    public static String packageList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        packageList=getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
+
         mIsDualPane = findViewById(R.id.item_detail_container) != null;
 
         //Show an art when no fragment is showed, we make sure no detail fragment is present.

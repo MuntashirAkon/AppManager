@@ -1,6 +1,7 @@
 package com.oF2pks.applicationsinfo;
 
 import android.annotation.TargetApi;
+import android.app.AppOpsManager;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -867,6 +868,7 @@ public class DetailFragment extends Fragment {
                                         +"\n\n#"+Utils.getProtectionLevelString(mPackageManager.getPermissionInfo(s,PackageManager.GET_META_DATA).protectionLevel)
                                         +"\n"+mPackageManager.getPermissionInfo(s,PackageManager.GET_META_DATA).packageName
                                         +"\n"+mPackageManager.getPermissionInfo(s,PackageManager.GET_META_DATA).group
+                                        +permAppOp(s)
                                 ,Toast.LENGTH_LONG).show();
 
                     }catch (PackageManager.NameNotFoundException e){
@@ -937,7 +939,8 @@ public class DetailFragment extends Fragment {
             viewHolder.textView3.setText(permissionInfo.loadDescription(mPackageManager));
 
             //LaunchMode
-            viewHolder.textView4.setText(getString(R.string.group) + ": " + permissionInfo.group);
+            viewHolder.textView4.setText(getString(R.string.group) + ": " + permissionInfo.group
+                    +permAppOp(permissionInfo.name));
 
             //Protection level
             viewHolder.textView5.setText(getString(R.string.protection_level) + ": " + Utils.getProtectionLevelString(permissionInfo.protectionLevel));
@@ -1072,5 +1075,13 @@ public class DetailFragment extends Fragment {
         public boolean hasStableIds() {
             return false;
         }
+    }
+    private String permAppOp (String s){
+        if (Build.VERSION.SDK_INT >= 23 && AppOpsManager.permissionToOp(s) != null) {
+            return "\nAppOP> " + AppOpsManager.permissionToOp(s);
+        }else {
+            return "";
+        }
+
     }
 }
