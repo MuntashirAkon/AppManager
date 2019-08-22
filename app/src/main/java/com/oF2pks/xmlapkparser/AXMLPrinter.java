@@ -149,7 +149,11 @@ public class AXMLPrinter {
         if (type >= TypedValue.TYPE_FIRST_INT && type <= TypedValue.TYPE_LAST_INT) {
             return String.valueOf(data);
         }
-        return String.format("<0x%X, type 0x%02X>", data, type);
+        if (type == 7) {
+            return String.format("@dref/0x%08X", data);
+        }
+
+        return String.format("{0x%X, typeAttribute 0x%02X}", data, type);
     }
 
     private static String getPackage(int id) {
