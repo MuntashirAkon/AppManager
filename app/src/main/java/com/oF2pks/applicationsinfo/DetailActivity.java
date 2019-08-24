@@ -8,7 +8,7 @@ import android.widget.FrameLayout;
 
 public class DetailActivity extends Activity {
 
-    private final int LAYOUT_ID = 0x8898;
+    private static final int LAYOUT_ID = 0x8898;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

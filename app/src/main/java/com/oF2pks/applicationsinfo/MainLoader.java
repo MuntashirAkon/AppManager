@@ -17,7 +17,7 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
     private PackageIntentReceiver mPackageObserver;
     private PackageManager mPackageManager;
 
-    public MainLoader(Context context) {
+    MainLoader(Context context) {
         super(context);
 
         mPackageManager = getContext().getPackageManager();

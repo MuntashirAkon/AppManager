@@ -19,7 +19,7 @@ public class DetailOverflowMenu implements View.OnClickListener, PopupMenu.OnMen
     private Context mContext;
     private String mPackageName;
 
-    public DetailOverflowMenu(Context context, String packageName) {
+    DetailOverflowMenu(Context context, String packageName) {
         mContext = context;
         mPackageName = packageName;
     }

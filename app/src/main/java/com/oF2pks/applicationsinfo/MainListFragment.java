@@ -39,6 +39,7 @@ import android.widget.TextView;
 
 import com.oF2pks.applicationsinfo.utils.Utils;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.Collator;
@@ -365,7 +366,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
         private Activity mActivity;
         private LayoutInflater mLayoutInflater;
-        private PackageManager mPackageManager;
+        private static PackageManager mPackageManager;
         private Filter mFilter;
         private String mConstraint;
         private List<ApplicationItem> mDefaultList;
@@ -492,6 +493,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
             holder.iconLoader = new IconAsyncTask(holder.icon, info);
             holder.iconLoader.execute();
+            //KISS:? holder.icon.setImageDrawable(info.loadIcon(mPackageManager));
 
             if (mConstraint != null && item.label.toLowerCase().contains(mConstraint))
                 holder.label.setText(getHighlightedText(item.label));
@@ -579,20 +581,25 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             return sectionsArr;
         }
 
-        class IconAsyncTask extends AsyncTask<Void, Integer, Drawable> {
-
-            ImageView imageView;
+        private static class IconAsyncTask extends AsyncTask<Void, Integer, Drawable> {
+            private WeakReference<ImageView> imageView = null;
             ApplicationInfo info;
 
-            IconAsyncTask(ImageView imageView, ApplicationInfo info) {
-                this.imageView = imageView;
+            private IconAsyncTask (ImageView pImageViewWeakReference,ApplicationInfo info) {
+                link(pImageViewWeakReference);
                 this.info = info;
             }
+
+            private void link (ImageView pImageViewWeakReference) {
+                imageView = new WeakReference<ImageView>(pImageViewWeakReference);
+                    }
+
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                imageView.setVisibility(View.INVISIBLE);
+                if (imageView.get()!=null)
+                    imageView.get().setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -605,8 +612,11 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             @Override
             protected void onPostExecute(Drawable drawable) {
                 super.onPostExecute(drawable);
-                imageView.setImageDrawable(drawable);
-                imageView.setVisibility(View.VISIBLE);
+                if (imageView.get()!=null){
+                    imageView.get().setImageDrawable(drawable);
+                    imageView.get().setVisibility(View.VISIBLE);
+
+                }
             }
         }
     }
