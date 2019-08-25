@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
+    android:baselineAligned="false"
     android:paddingLeft="5dp"
     android:paddingRight="5dp">
 
@@ -14,6 +15,7 @@
             android:id="@+id/favorite_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:src="@drawable/item_favorite" />
 
@@ -27,6 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/icon"
+            android:layout_toEndOf="@id/icon"
             android:singleLine="true"
             android:textStyle="bold"/>
 
@@ -36,6 +39,7 @@
             android:layout_below="@id/label"
             android:textStyle="italic"
             android:layout_alignLeft="@id/label"
+            android:layout_alignStart="@id/label"
             android:singleLine="true"/>
 
         <TextView android:id="@+id/date"
@@ -44,6 +48,7 @@
             android:layout_below="@id/packageName"
             android:textSize="12dp"
             android:layout_alignLeft="@id/label"
+            android:layout_alignStart="@id/label"
             android:singleLine="true"/>
 
         <TextView android:id="@+id/shareid"
@@ -51,6 +56,7 @@
             android:layout_height="match_parent"
             android:layout_below="@id/packageName"
             android:layout_toRightOf="@id/date"
+            android:layout_toEndOf="@id/date"
             android:textSize="10dp"
             android:gravity="center_horizontal"
             android:singleLine="true"/>
@@ -60,6 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/date"
             android:layout_alignLeft="@id/label"
+            android:layout_alignStart="@id/label"
             android:textSize="9dp"
             android:singleLine="true"/>
     </RelativeLayout>

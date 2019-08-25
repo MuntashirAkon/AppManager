@@ -6,6 +6,7 @@
     android:gravity="center_vertical"
     android:textSize="17sp"
     android:drawableLeft="@drawable/ic_arrow_right"
+    android:drawableStart="@drawable/ic_arrow_right"
     android:drawablePadding="3dp"
     android:background="@android:color/white"
     android:textColor="@android:color/darker_gray"

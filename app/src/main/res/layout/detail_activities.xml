@@ -49,6 +49,7 @@
         android:layout_height="match_parent">
 
         <ImageView android:id="@+id/icon"
+            android:contentDescription="@string/app_name"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_margin="2dp"

@@ -3,8 +3,8 @@ package com.oF2pks.applicationsinfo;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.webkit.WebChromeClient;
@@ -20,11 +20,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.ref.WeakReference;
+import java.net.URLEncoder;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -52,7 +50,7 @@ public class ViewManifestActivity extends Activity {
     private WebView mWebView;
     private ProgressDialog mProgressDialog;
 
-    private static String mPath;
+    private static String code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +63,6 @@ public class ViewManifestActivity extends Activity {
         mProgressDialog.setCancelable(false);
         mProgressDialog.setMessage(getString(R.string.loading));
 
-        mPath = getFilesDir() + "/data.xml";
         String packageName = getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
 
         String filePath = null, applicationLabel = null;
@@ -96,20 +93,13 @@ public class ViewManifestActivity extends Activity {
         settings.setBuiltInZoomControls(true);
         settings.setUseWideViewPort(true);
         mWebView.setWebChromeClient(new MyWebChromeClient());
-        mWebView.loadUrl(Uri.fromFile(new File(mPath)).toString());
+        if (Build.VERSION.SDK_INT >18) mWebView.loadData(code,"text/xml","UTF-8");
+        else mWebView.loadData(URLEncoder.encode(code).replaceAll("\\+"," "),"text/plain","UTF-8");
     }
 
     private void handleError() {
         Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
         finish();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        File file = new File(mPath);
-        file.delete();
     }
 
     final class MyWebChromeClient extends WebChromeClient {
@@ -149,24 +139,8 @@ public class ViewManifestActivity extends Activity {
         @Override
         protected Boolean doInBackground(String... strings) {
             String filePath = strings[0];
-            String code = getProperXml(AXMLPrinter.getManifestXMLFromAPK(filePath));
-
-            if (code == null) return false;
-
-            try {
-                File file = new File(mPath);
-                if (!file.exists())
-                    file.createNewFile();
-
-                FileOutputStream output = new FileOutputStream(file);
-                output.write(code.getBytes());
-                output.flush();
-                output.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return true;
+            code = getProperXml(AXMLPrinter.getManifestXMLFromAPK(filePath));
+            return (code != null);
         }
 
         /**

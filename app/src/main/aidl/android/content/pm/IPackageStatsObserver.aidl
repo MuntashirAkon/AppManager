@@ -24,7 +24,7 @@ import android.content.pm.PackageStats;
  * statistics related to code, data, cache usage(TODO)
  * {@hide}
  */
-oneway interface IPackageStatsObserver {
+interface IPackageStatsObserver {
     
-    void onGetStatsCompleted(in PackageStats pStats, boolean succeeded);
+    oneway void onGetStatsCompleted(in PackageStats pStats, boolean succeeded);
 }

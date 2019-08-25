@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
             android:layout_toRightOf="@+id/icon"
+            android:layout_toEndOf="@+id/icon"
             android:textStyle="bold"
             android:textSize="16sp"/>
 
@@ -41,6 +42,7 @@
             android:textIsSelectable="true"
             android:layout_below="@+id/label"
             android:textStyle="bold|italic"
+            android:layout_toEndOf="@+id/icon"
             android:layout_toRightOf="@+id/icon" />
 
         <TextView
@@ -51,6 +53,7 @@
             android:gravity="start"
             android:background="@android:color/white"
             android:layout_below="@id/packageName"
+            android:layout_toEndOf="@+id/icon"
             android:layout_toRightOf="@+id/icon" />
 
         <TextView
@@ -59,6 +62,7 @@
             android:layout_height="wrap_content"
             android:gravity="start"
             android:textIsSelectable="true"
+            android:layout_toEndOf="@+id/icon"
             android:layout_toRightOf="@+id/icon"
             android:textSize="9dp"
             android:layout_below="@id/version" />
@@ -69,6 +73,7 @@
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
             android:textSize="10dp"
+            android:layout_toEndOf="@+id/icon"
             android:layout_toRightOf="@+id/icon"
             android:layout_below="@id/path" />
 
@@ -77,6 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/path"
+            android:layout_toEndOf="@+id/icon"
             android:layout_toRightOf="@+id/icon"
             android:orientation="horizontal"
             android:gravity="center_vertical">
@@ -90,6 +96,7 @@
 
                 <ImageButton
                     android:id="@+id/detail_overflow"
+                    android:contentDescription="@string/loading"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@color/grey_0"
