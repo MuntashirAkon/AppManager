@@ -12,7 +12,6 @@ import android.widget.ImageView;
 public class MainActivity extends Activity implements MainCallbacks {
 
     private boolean mIsDualPane;
-    private boolean mIsArtShowed = false;
     public static final String EXTRA_PACKAGE_NAME = "package_name";
     public static String packageList;
 
@@ -30,7 +29,6 @@ public class MainActivity extends Activity implements MainCallbacks {
             imageView.setImageResource(R.drawable.icon_art);
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             ((FrameLayout) findViewById(R.id.item_detail_container)).addView(imageView);
-            mIsArtShowed = true;
         }
     }
 
@@ -38,10 +36,7 @@ public class MainActivity extends Activity implements MainCallbacks {
     public void onItemSelected(String packageName) {
         if (mIsDualPane) {
             //Hide art when a fragment is showed.
-            if (mIsArtShowed) {
-                ((FrameLayout) findViewById(R.id.item_detail_container)).removeAllViews();
-                mIsArtShowed = false;
-            }
+            ((FrameLayout) findViewById(R.id.item_detail_container)).removeAllViews();
             getFragmentManager()
                     .beginTransaction()
                     .replace(R.id.item_detail_container, DetailFragment.getInstance(packageName), DetailFragment.FRAGMENT_TAG)
@@ -62,17 +57,13 @@ public class MainActivity extends Activity implements MainCallbacks {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_about) {
-            showAboutDialog();
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.about)
+                    .setView(getLayoutInflater().inflate(R.layout.about_dialog_message, null))
+                    .setNegativeButton(android.R.string.ok, null)
+                    .show();
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void showAboutDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.about)
-                .setView(getLayoutInflater().inflate(R.layout.about_dialog_message, null))
-                .setNegativeButton(android.R.string.ok, null)
-                .show();
     }
 }

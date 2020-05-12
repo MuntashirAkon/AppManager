@@ -1,8 +1,10 @@
 package com.oF2pks.applicationsinfo;
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.AppOpsManager;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
@@ -25,12 +27,15 @@ import android.os.RemoteException;
 import android.text.Layout;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -109,103 +114,117 @@ public class DetailFragment extends Fragment {
         mGroupTitleIds = getResources().obtainTypedArray(R.array.group_titles);
 
         mPackageInfo = getPackageInfo(mPackageName);
-        if (mPackageInfo.requestedPermissions == null) aPermissionsUse = null;
-        else {
-            aPermissionsUse= new String[mPackageInfo.requestedPermissions.length];
-            for (int i=0;i < mPackageInfo.requestedPermissions.length;i++){
-                aPermissionsUse[i]=mPackageInfo.requestedPermissions[i]+" ";
+        //if (mPackageInfo ==null) getActivity().getFragmentManager().popBackStack();//mPackageInfo = mPackageManager.getPackageArchiveInfo()
+        try {
+            if (mPackageInfo.requestedPermissions == null) aPermissionsUse = null;
+            else {
+                aPermissionsUse= new String[mPackageInfo.requestedPermissions.length];
+                for (int i=0;i < mPackageInfo.requestedPermissions.length;i++){
+                    aPermissionsUse[i]=mPackageInfo.requestedPermissions[i]+" ";
+                    try {
+                        if (Utils.getProtectionLevelString(mPackageManager.getPermissionInfo(mPackageInfo.requestedPermissions[i],PackageManager.GET_META_DATA).protectionLevel)
+                                .contains("dangerous")) aPermissionsUse[i]+="*";
+
+                    } catch (PackageManager.NameNotFoundException e){
+
+                    }
+                    if ((mPackageInfo.requestedPermissionsFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0)
+                        aPermissionsUse[i]+="\u2714";
+
+
+                }
                 try {
-                    if (Utils.getProtectionLevelString(mPackageManager.getPermissionInfo(mPackageInfo.requestedPermissions[i],PackageManager.GET_META_DATA).protectionLevel)
-                            .contains("dangerous")) aPermissionsUse[i]+="*";
-
-                } catch (PackageManager.NameNotFoundException e){
+                    Arrays.sort(aPermissionsUse);
+                } catch (NullPointerException e){
+                }
+            }
+            if (mPackageInfo.permissions != null) {
+                try {
+                    Collections.sort(Arrays.asList(mPackageInfo.permissions), new Comparator<PermissionInfo>() {
+                        public int compare(PermissionInfo o1, PermissionInfo o2) {
+                            return o1.name.compareToIgnoreCase(o2.name);
+                        }
+                    });
+                } catch (NullPointerException e){
 
                 }
-                if ((mPackageInfo.requestedPermissionsFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0)
-                    aPermissionsUse[i]+="\u2714";
-
-
             }
-            try {
-                Arrays.sort(aPermissionsUse);
-            } catch (NullPointerException e){
-            }
-        }
-        if (mPackageInfo.permissions != null) {
-            try {
-                Collections.sort(Arrays.asList(mPackageInfo.permissions), new Comparator<PermissionInfo>() {
-                    public int compare(PermissionInfo o1, PermissionInfo o2) {
-                        return o1.name.compareToIgnoreCase(o2.name);
-                    }
-                });
-            } catch (NullPointerException e){
+            if (mPackageInfo.activities != null) {
+                mMainActivity = mPackageInfo.activities[0].name;
+                try {
+                    Collections.sort(Arrays.asList(mPackageInfo.activities), new Comparator<ActivityInfo>() {
+                        public int compare(ActivityInfo o1, ActivityInfo o2) {
+                            return o1.name.compareToIgnoreCase(o2.name);
+                        }
+                    });
+                } catch (NullPointerException e){
 
-            }
-        }
-        if (mPackageInfo.activities != null) {
-            mMainActivity = mPackageInfo.activities[0].name;
-            try {
-                Collections.sort(Arrays.asList(mPackageInfo.activities), new Comparator<ActivityInfo>() {
-                    public int compare(ActivityInfo o1, ActivityInfo o2) {
-                        return o1.name.compareToIgnoreCase(o2.name);
-                    }
-                });
-            } catch (NullPointerException e){
-
-            }
-        }
-        if (mPackageInfo.services != null) {
-            try {
-                Collections.sort(Arrays.asList(mPackageInfo.services), new Comparator<ServiceInfo>() {
-                    public int compare(ServiceInfo o1, ServiceInfo o2) {
-                        return o1.name.compareToIgnoreCase(o2.name);
-                    }
-                });
-            } catch (NullPointerException e){
-
-            }
-        }
-        if (mPackageInfo.receivers != null) {
-            try {
-                Collections.sort(Arrays.asList(mPackageInfo.receivers), new Comparator<ActivityInfo>() {
-                    public int compare(ActivityInfo o1, ActivityInfo o2) {
-                        return o1.name.compareToIgnoreCase(o2.name);
-                    }
-                });
-            } catch (NullPointerException e){
-
-            }
-        }
-        if (mPackageInfo.reqFeatures != null) {
-            try {
-                Collections.sort(Arrays.asList(mPackageInfo.reqFeatures), new Comparator<FeatureInfo>() {
-                    public int compare(FeatureInfo o1, FeatureInfo o2) {
-                        return o1.name.compareToIgnoreCase(o2.name);
-                    }
-                });
-            } catch (NullPointerException e){
-                for(FeatureInfo fi:mPackageInfo.reqFeatures){
-                    if (fi.name==null) fi.name="_MAJOR";
-                    bFi=true;
                 }
-                Collections.sort(Arrays.asList(mPackageInfo.reqFeatures), new Comparator<FeatureInfo>() {
-                    public int compare(FeatureInfo o1, FeatureInfo o2) {
-                        return o1.name.compareToIgnoreCase(o2.name);
-                    }
-                });
             }
-        }
-        if (mPackageInfo.providers != null) {
-            try {
-                Collections.sort(Arrays.asList(mPackageInfo.providers), new Comparator<ProviderInfo>() {
-                    public int compare(ProviderInfo o1, ProviderInfo o2) {
-                        return o1.name.compareToIgnoreCase(o2.name);
-                    }
-                });
-            } catch (NullPointerException e){
-            }
-        }
+            if (mPackageInfo.services != null) {
+                try {
+                    Collections.sort(Arrays.asList(mPackageInfo.services), new Comparator<ServiceInfo>() {
+                        public int compare(ServiceInfo o1, ServiceInfo o2) {
+                            return o1.name.compareToIgnoreCase(o2.name);
+                        }
+                    });
+                } catch (NullPointerException e){
 
+                }
+            }
+            if (mPackageInfo.receivers != null) {
+                try {
+                    Collections.sort(Arrays.asList(mPackageInfo.receivers), new Comparator<ActivityInfo>() {
+                        public int compare(ActivityInfo o1, ActivityInfo o2) {
+                            return o1.name.compareToIgnoreCase(o2.name);
+                        }
+                    });
+                } catch (NullPointerException e){
+
+                }
+            }
+            if (mPackageInfo.reqFeatures != null) {
+                try {
+                    Collections.sort(Arrays.asList(mPackageInfo.reqFeatures), new Comparator<FeatureInfo>() {
+                        public int compare(FeatureInfo o1, FeatureInfo o2) {
+                            return o1.name.compareToIgnoreCase(o2.name);
+                        }
+                    });
+                } catch (NullPointerException e){
+                    for(FeatureInfo fi:mPackageInfo.reqFeatures){
+                        if (fi.name==null) fi.name="_MAJOR";
+                        bFi=true;
+                    }
+                    Collections.sort(Arrays.asList(mPackageInfo.reqFeatures), new Comparator<FeatureInfo>() {
+                        public int compare(FeatureInfo o1, FeatureInfo o2) {
+                            return o1.name.compareToIgnoreCase(o2.name);
+                        }
+                    });
+                }
+            }
+            if (mPackageInfo.providers != null) {
+                try {
+                    Collections.sort(Arrays.asList(mPackageInfo.providers), new Comparator<ProviderInfo>() {
+                        public int compare(ProviderInfo o1, ProviderInfo o2) {
+                            return o1.name.compareToIgnoreCase(o2.name);
+                        }
+                    });
+                } catch (NullPointerException e){
+                }
+            }
+
+        } catch (NullPointerException eZZZ) {
+            getActivity().getFragmentManager().popBackStack();
+            try {
+                ImageView imageView = new ImageView(getActivity());
+                imageView.setImageResource(R.drawable.icon_art);
+                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                ((FrameLayout) getActivity().findViewById(R.id.item_detail_container)).addView(imageView);
+            } catch (NullPointerException e) {
+                getActivity().onBackPressed();
+            }
+
+        }
     }
 
     @Override
@@ -216,7 +235,7 @@ public class DetailFragment extends Fragment {
         listView.setGroupIndicator(null);
 
         if (mPackageInfo == null) {
-            Toast.makeText(getActivity(), R.string.app_not_installed, Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), mPackageName + ": " + getString(R.string.app_not_installed), Toast.LENGTH_LONG).show();
         } else {
             listView.setAdapter(new Adapter());
         }
@@ -241,13 +260,29 @@ public class DetailFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_detail_bar, menu);
+    }
+
     /**
      * Used to finish when user clicks on {@link android.app.ActionBar} arrow
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+        final int id = item.getItemId();
+        if (id == android.R.id.home) {
             //onBackPressed();
+            return true;
+        } else if (id == R.id.action_refresh_detail) {
+            Toast.makeText(getActivity(), getString(R.string.refresh), Toast.LENGTH_SHORT).show();
+            onCreate(null);
+            //Fragment frg = getFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            if (Build.VERSION.SDK_INT >= 26) {
+                ft.setReorderingAllowed(false);
+            }
+            ft.detach(this).attach(this).commit();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -266,8 +301,15 @@ public class DetailFragment extends Fragment {
         CharSequence label = applicationInfo.loadLabel(mPackageManager);
         if (getActivity() instanceof DetailActivity) {
             //Application is not in multi-pane mode, use ActionBar for label
-            getActivity().setTitle(label);
+            ActionBar actionBar = getActivity().getActionBar();
+            actionBar.setDisplayShowCustomEnabled(true);
+            setHasOptionsMenu(true);
+
+
+            actionBar.setTitle(label);
             labelView.setVisibility(View.GONE);
+            //Inflater.inflate(R.menu.fragment_detail_bar, Menu);
+
         } else {
             //Application is in multi-pane mode, ActionBar is already used, use field in header
             //to display label
@@ -311,8 +353,12 @@ public class DetailFragment extends Fragment {
         installDateView.setText(getString(R.string.installation) + ": " + getTime(mPackageInfo.firstInstallTime));
 
         TextView updateDateView = (TextView) headerView.findViewById(R.id.update_date);
-        updateDateView.setText(getString(R.string.update) + ": " + getTime(mPackageInfo.lastUpdateTime)
-            +" \u3004 "+mPackageManager.getInstallerPackageName(mPackageName));
+        try {
+            updateDateView.setText(getString(R.string.update) + ": " + getTime(mPackageInfo.lastUpdateTime)
+                    +" \u3004 "+mPackageManager.getInstallerPackageName(mPackageName));
+        } catch (Exception e) {
+            updateDateView.setText("### " + getString(R.string.app_not_installed).toUpperCase() + " !! ###");
+        }
 
         ImageButton overflowButton = (ImageButton) headerView.findViewById(R.id.detail_overflow);
         mDetailOverflowMenu.setView(overflowButton);

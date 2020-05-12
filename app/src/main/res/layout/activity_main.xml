@@ -4,5 +4,5 @@
     android:name="com.oF2pks.applicationsinfo.MainListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ItemListActivity"
+    tools:context=".MainActivity"
     tools:layout="@android:layout/list_content" />

@@ -1,0 +1,2 @@
+# Dynamic androidManifest via LongClick
+# Refresh button now active for detailView

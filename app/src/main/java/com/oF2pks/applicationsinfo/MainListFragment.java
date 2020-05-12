@@ -7,6 +7,7 @@ import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.app.usage.UsageStatsManager;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageStatsObserver;
@@ -81,6 +82,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     private Activity mActivity;
 
     private int mSortBy;
+    private String mLastClick;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -117,6 +119,24 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         getListView().setOnItemClickListener(this);
         getListView().setFastScrollEnabled(true);
 
+        // Longclick : replace by any ...
+        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (mAdapter.getItem(i).applicationInfo.packageName.equals("android")
+                        || mAdapter.getItem(i).applicationInfo.packageName.equals(mActivity.getPackageName())){
+                    Intent viewManifestIntent = new Intent(getActivity(), ViewManifestActivity.class);
+                    viewManifestIntent.putExtra(ViewManifestActivity.EXTRA_PACKAGE_NAME, mAdapter.getItem(i).applicationInfo.packageName);
+                    getActivity().startActivity(viewManifestIntent);
+                }else {
+                    Intent viewManifestIntent = new Intent(getActivity(), View2ManifestActivity.class);
+                    viewManifestIntent.putExtra(View2ManifestActivity.EXTRA_PACKAGE_NAME, mAdapter.getItem(i).applicationInfo.packageName);
+                    getActivity().startActivity(viewManifestIntent);
+                }
+                return true;
+            }
+        });
         mAdapter = new Adapter(mActivity);
         setListAdapter(mAdapter);
 
@@ -172,8 +192,10 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if (mCallbacks != null)
-            mCallbacks.onItemSelected(mAdapter.getItem(i).applicationInfo.packageName);
+        if (mCallbacks != null) {
+            mLastClick = mAdapter.getItem(i).applicationInfo.packageName;
+            mCallbacks.onItemSelected(mLastClick);
+        }
     }
 
     @Override
@@ -190,41 +212,43 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         final int id = item.getItemId();
-        switch (id) {
-            case R.id.action_refresh:
-                getLoaderManager().restartLoader(0, null, this);
+        if (id == R.id.action_refresh) {
+            getLoaderManager().restartLoader(0, null, this);
+            if (mCallbacks != null && mLastClick != null && getActivity().findViewById(R.id.item_detail_container) != null){
+                // && mItemList..contains(mLastClick))
+                mCallbacks.onItemSelected(mLastClick);
                 return true;
-            case R.id.action_sort_name:
-                setSortBy(SORT_NAME);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_pkg:
-                setSortBy(SORT_PKG);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_domain:
-                setSortBy(SORT_DOMAIN);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_installation:
-                setSortBy(SORT_INSTALLATION);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_sharedid:
-                setSortBy(SORT_SHAREDID);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_sha:
-                setSortBy(SORT_SHA);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_size:
-                setSortBy(SORT_SIZE);
-                item.setChecked(true);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            }
+        } else if (id == R.id.action_sort_name) {
+            setSortBy(SORT_NAME);
+            item.setChecked(true);
+            return true;
+        } else if (id == R.id.action_sort_pkg) {
+            setSortBy(SORT_PKG);
+            item.setChecked(true);
+            return true;
+        } else if (id == R.id.action_sort_domain) {
+            setSortBy(SORT_DOMAIN);
+            item.setChecked(true);
+            return true;
+        } else if (id == R.id.action_sort_installation) {
+            setSortBy(SORT_INSTALLATION);
+            item.setChecked(true);
+            return true;
+        } else if (id == R.id.action_sort_sharedid) {
+            setSortBy(SORT_SHAREDID);
+            item.setChecked(true);
+            return true;
+        } else if (id == R.id.action_sort_sha) {
+            setSortBy(SORT_SHA);
+            item.setChecked(true);
+            return true;
+        } else if (id == R.id.action_sort_size) {
+            setSortBy(SORT_SIZE);
+            item.setChecked(true);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
