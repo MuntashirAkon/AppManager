@@ -10,8 +10,9 @@ It can be a good source of inspiration for all beginners. It deals with activiti
 ## Changelog: apps_Packages Info
 
  * 1.7.15:
+     * Date: _installation replaced with _lastUpdate + days since first install
      * Dynamic androidManifest via LongClick
-     * Refresh button now active for detailView
+     * Refresh: bug fix with button now active for detailView
  * 1.7.14:
      * MainScreen: apps starred for debug builds
      * Marshmallow: _permissions for both Used/Declared with AppOp association 

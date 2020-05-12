@@ -1,2 +1,5 @@
+Still lightweight update before AppCompat/androidX/androidTV upgrade (+2.5Mo).
+
+# Date: _installation replaced with _lastUpdate + days since first install
 # Dynamic androidManifest via LongClick
-# Refresh button now active for detailView
+# Refresh: bug fix with button now active for detailView

@@ -57,10 +57,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import javax.xml.datatype.Duration;
-
-import static android.content.pm.PackageManager.GET_SIGNATURES;
-
 
 public class MainListFragment extends ListFragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener,
         LoaderManager.LoaderCallbacks<List<ApplicationItem>> {
