@@ -31,7 +31,7 @@ public class DetailOverflowMenu implements View.OnClickListener, PopupMenu.OnMen
     @Override
     public void onClick(View view) {
         PopupMenu popupMenu = new PopupMenu(mContext, view);
-        popupMenu.inflate(R.menu.fragment_detail);
+        popupMenu.inflate(R.menu.appinfos_fragment_detail);
 
         //Disable uninstall option for system apps.
         popupMenu.getMenu().findItem(R.id.action_uninstall).setEnabled(!isSystemApp());
@@ -43,38 +43,38 @@ public class DetailOverflowMenu implements View.OnClickListener, PopupMenu.OnMen
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.action_uninstall:
-                Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
-                uninstallIntent.setData(Uri.parse("package:" + mPackageName));
-                mContext.startActivity(uninstallIntent);
-                return true;
-            case R.id.action_view_in_settings:
-                Intent infoIntent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                infoIntent.addCategory(Intent.CATEGORY_DEFAULT);
-                infoIntent.setData(Uri.parse("package:" + mPackageName));
-                mContext.startActivity(infoIntent);
-                return true;
-            case R.id.action_view_manifest:
-                Intent viewManifestIntent = new Intent(mContext, ViewManifestActivity.class);
-                viewManifestIntent.putExtra(ViewManifestActivity.EXTRA_PACKAGE_NAME, mPackageName);
-                mContext.startActivity(viewManifestIntent);
-                return true;
-            case R.id.action_view_exodus:
-                scan3("");
-                return true;
-            case R.id.action_view_fdroid:
-                Intent intent2 = new Intent();
-                intent2.setClassName("org.fdroid.fdroid","org.fdroid.fdroid.views.AppDetailsActivity");
-                intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent2.putExtra("appid", mPackageName);
+        int itemId = menuItem.getItemId();
+        if (itemId == R.id.action_uninstall) {
+            Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
+            uninstallIntent.setData(Uri.parse("package:" + mPackageName));
+            mContext.startActivity(uninstallIntent);
+            return true;
+        } else if (itemId == R.id.action_view_in_settings) {
+            Intent infoIntent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            infoIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            infoIntent.setData(Uri.parse("package:" + mPackageName));
+            mContext.startActivity(infoIntent);
+            return true;
+        } else if (itemId == R.id.action_view_manifest) {
+            Intent viewManifestIntent = new Intent(mContext, ViewManifestActivity.class);
+            viewManifestIntent.putExtra(ViewManifestActivity.EXTRA_PACKAGE_NAME, mPackageName);
+            mContext.startActivity(viewManifestIntent);
+            return true;
+        } else if (itemId == R.id.action_view_exodus) {
+            scan3("");
+            return true;
+        } else if (itemId == R.id.action_view_fdroid) {
+            Intent intent2 = new Intent();
+            intent2.setClassName("org.fdroid.fdroid", "org.fdroid.fdroid.views.AppDetailsActivity");
+            intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent2.putExtra("appid", mPackageName);
 
-                try {
-                    mContext.startActivity(intent2);
-                } catch (Exception e) {
-                    Toast.makeText(mContext, e.toString(), Toast.LENGTH_LONG).show();
-                }
-                return true;
+            try {
+                mContext.startActivity(intent2);
+            } catch (Exception e) {
+                Toast.makeText(mContext, e.toString(), Toast.LENGTH_LONG).show();
+            }
+            return true;
         }
         return false;
     }

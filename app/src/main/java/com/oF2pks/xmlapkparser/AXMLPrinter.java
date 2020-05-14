@@ -15,7 +15,7 @@
  *
  * State Changes:
  * _getAttributeValue added missing typeAttr 7
- *
+ * https://bitbucket.org/oF2pks/fdroid-applications-info/commits/7c3203a112703c9a1538116373893fa92cae3bab
  */
 package com.oF2pks.xmlapkparser;
 
@@ -37,21 +37,22 @@ public class AXMLPrinter {
 
     public static void main(String[] arguments) {
         if (arguments.length < 1) {
-            System.out.println("Usage: AXMLPrinter <APK FILE PATH>");
+            System.out.println("Usage: AXMLPrinter <APK FILE PATH> <APK sub .XML file>");
             return;
         }
 //		String apkPath = "E:/apk_file/201008300227127991.apk";
         String apkPath = arguments[0];
-        System.out.println(getManifestXMLFromAPK(apkPath));
+        String fileXML = arguments[1];
+        System.out.println(getManifestXMLFromAPK(apkPath, fileXML));
     }
 
-    public static String getManifestXMLFromAPK(String apkPath) {
+    public static String getManifestXMLFromAPK(String apkPath, String fileXML) {
         ZipFile file = null;
         StringBuilder xmlSb = new StringBuilder(100);
         try {
             File apkFile = new File(apkPath);
             file = new ZipFile(apkFile, ZipFile.OPEN_READ);
-            ZipEntry entry = file.getEntry(DEFAULT_XML);
+            ZipEntry entry = file.getEntry(fileXML);//DEFAULT_XML
 
             AXmlResourceParser parser = new AXmlResourceParser();
             parser.open(file.getInputStream(entry));

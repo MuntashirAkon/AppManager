@@ -6,5 +6,5 @@
     For more on layout aliases, see:
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     -->
-    <item type="layout" name="activity_main">@layout/activity_main_twopane</item>
+    <item type="layout" name="appinfos_activity_main">@layout/appinfos_activity_main_twopane</item>
 </resources>

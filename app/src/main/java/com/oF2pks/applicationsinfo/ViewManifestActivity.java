@@ -122,7 +122,7 @@ public class ViewManifestActivity extends Activity {
         @Override
         protected Boolean doInBackground(String... strings) {
             String filePath = strings[0];
-            code = com.oF2pks.applicationsinfo.utils.Utils.getProperXml(AXMLPrinter.getManifestXMLFromAPK(filePath));
+            code = com.oF2pks.applicationsinfo.utils.Utils.getProperXml(AXMLPrinter.getManifestXMLFromAPK(filePath, "AndroidManifest.xml"));
             return (code != null);
         }
 

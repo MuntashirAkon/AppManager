@@ -94,12 +94,13 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
         ActionBar actionBar = getActivity().getActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setTitle(getString(R.string.loading));
 
         SearchView searchView = new SearchView(actionBar.getThemedContext());
         searchView.setOnQueryTextListener(this);
 
-        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
+        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         actionBar.setCustomView(searchView, layoutParams);
 
         if (savedInstanceState != null) {
@@ -154,6 +155,9 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         mItemList = applicationItems;
         sortApplicationList();
         mAdapter.setDefaultList(mItemList);
+        getActivity().getActionBar().setTitle(MainActivity.permName.substring(0,MainActivity.permName.lastIndexOf(".")));
+        getActivity().getActionBar().setSubtitle(
+                MainActivity.permName.substring(MainActivity.permName.lastIndexOf(".")+1).toLowerCase());
         if (Build.VERSION.SDK_INT <26) startRetrievingPackagesSize();
         else {
             for (ApplicationItem item : mItemList) {
@@ -200,7 +204,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_main_list, menu);
+        inflater.inflate(R.menu.appinfos_fragment_main_list, menu);
     }
 
     @Override
@@ -340,7 +344,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                                 item.size = -1L;
                             try {
                                 item.sha = Utils.apkPro(getActivity().getPackageManager().getPackageInfo(item.applicationInfo.packageName, GET_SIGNATURES));
-                            } catch (PackageManager.NameNotFoundException e) {
+                            } catch (Exception e) {
                             }
 
                             incrementItemSizeRetrievedCount();
@@ -475,7 +479,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         public View getView(int i, View view, ViewGroup viewGroup) {
             ViewHolder holder;
             if (view == null) {
-                view = mLayoutInflater.inflate(R.layout.main_list_item, viewGroup, false);
+                view = mLayoutInflater.inflate(R.layout.appinfos_main_list_item, viewGroup, false);
                 holder = new ViewHolder();
                 holder.icon = (ImageView) view.findViewById(R.id.icon);
                 holder.favorite_icon = (ImageView) view.findViewById(R.id.favorite_icon);

@@ -55,8 +55,8 @@ import java.util.Date;
 
 public class DetailFragment extends Fragment {
 
-    static final String FRAGMENT_TAG = "fragment_detail";
-    static final String EXTRA_PACKAGE_NAME = "pkg";
+    public static final String FRAGMENT_TAG = "fragment_detail";
+    public static final String EXTRA_PACKAGE_NAME = "pkg";
     private static final String UID_STATS_PATH = "/proc/uid_stat/";
     private static final String UID_STATS_TR = "tcp_rcv";
     private static final String UID_STATS_RC = "tcp_snd";
@@ -217,7 +217,7 @@ public class DetailFragment extends Fragment {
             getActivity().getFragmentManager().popBackStack();
             try {
                 ImageView imageView = new ImageView(getActivity());
-                imageView.setImageResource(R.drawable.icon_art);
+                imageView.setImageResource(R.drawable.icon_art_appinfos);
                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 ((FrameLayout) getActivity().findViewById(R.id.item_detail_container)).addView(imageView);
             } catch (NullPointerException e) {
@@ -262,7 +262,7 @@ public class DetailFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_detail_bar, menu);
+        inflater.inflate(R.menu.appinfos_fragment_detail_bar, menu);
     }
 
     /**
@@ -293,7 +293,7 @@ public class DetailFragment extends Fragment {
      */
     @TargetApi(Build.VERSION_CODES.KITKAT_WATCH)
     private View getHeaderView(ViewGroup viewGroup) {
-        View headerView = mLayoutInflater.inflate(R.layout.detail_header, viewGroup, false);
+        View headerView = mLayoutInflater.inflate(R.layout.appinfos_detail_header, viewGroup, false);
 
         ApplicationInfo applicationInfo = mPackageInfo.applicationInfo;
 
@@ -545,7 +545,7 @@ public class DetailFragment extends Fragment {
             if (view instanceof TextView)
                 textView = (TextView) view;
             else
-                textView = (TextView) mLayoutInflater.inflate(R.layout.group_title_view, null);
+                textView = (TextView) mLayoutInflater.inflate(R.layout.appinfos_group_title_view, null);
 
             textView.setText(mGroupTitleIds.getString(groupIndex - 1) + " (" + getChildrenCount(groupIndex) + ")");
             textView.setShadowLayer(0.01f, 1, 1,  Color.DKGRAY);
@@ -614,7 +614,7 @@ public class DetailFragment extends Fragment {
         private View getActivityView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
             if (!checkIfConvertViewMatch(convertView, ACTIVITIES)) {
-                convertView = mLayoutInflater.inflate(R.layout.detail_activities, viewGroup, false);
+                convertView = mLayoutInflater.inflate(R.layout.appinfos_detail_activities, viewGroup, false);
 
                 viewHolder = new ViewHolder();
                 viewHolder.currentViewType = ACTIVITIES;
@@ -692,7 +692,7 @@ public class DetailFragment extends Fragment {
         private View getServicesView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
             if (!checkIfConvertViewMatch(convertView, SERVICES)) {
-                convertView = mLayoutInflater.inflate(R.layout.detail_activities, viewGroup, false);
+                convertView = mLayoutInflater.inflate(R.layout.appinfos_detail_activities, viewGroup, false);
 
                 viewHolder = new ViewHolder();
                 viewHolder.currentViewType = SERVICES;
@@ -736,7 +736,7 @@ public class DetailFragment extends Fragment {
         private View getReceiverView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
             if (!checkIfConvertViewMatch(convertView, RECEIVERS)) {
-                convertView = mLayoutInflater.inflate(R.layout.detail_activities, viewGroup, false);
+                convertView = mLayoutInflater.inflate(R.layout.appinfos_detail_activities, viewGroup, false);
 
                 viewHolder = new ViewHolder();
                 viewHolder.currentViewType = RECEIVERS;
@@ -789,7 +789,7 @@ public class DetailFragment extends Fragment {
         private View getProviderView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
             if (!checkIfConvertViewMatch(convertView, PROVIDERS)) {
-                convertView = mLayoutInflater.inflate(R.layout.detail_activities, viewGroup, false);
+                convertView = mLayoutInflater.inflate(R.layout.appinfos_detail_activities, viewGroup, false);
 
                 viewHolder = new ViewHolder();
                 viewHolder.currentViewType = PROVIDERS;
@@ -951,7 +951,7 @@ public class DetailFragment extends Fragment {
         private View getPermissionsView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
             if (!checkIfConvertViewMatch(convertView, PERMISSIONS)) {
-                convertView = mLayoutInflater.inflate(R.layout.detail_activities, viewGroup, false);
+                convertView = mLayoutInflater.inflate(R.layout.appinfos_detail_activities, viewGroup, false);
 
                 viewHolder = new ViewHolder();
                 viewHolder.currentViewType = PERMISSIONS;
@@ -1000,7 +1000,7 @@ public class DetailFragment extends Fragment {
         private View getFeaturesView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
             if (!checkIfConvertViewMatch(convertView, FEATURES)) {
-                convertView = mLayoutInflater.inflate(R.layout.detail_features, viewGroup, false);
+                convertView = mLayoutInflater.inflate(R.layout.appinfos_detail_features, viewGroup, false);
 
                 viewHolder = new ViewHolder();
                 viewHolder.currentViewType = FEATURES;
@@ -1033,7 +1033,7 @@ public class DetailFragment extends Fragment {
         private View getConfigurationView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
             if (!checkIfConvertViewMatch(convertView, CONFIGURATION)) {
-                convertView = mLayoutInflater.inflate(R.layout.detail_configurations, viewGroup, false);
+                convertView = mLayoutInflater.inflate(R.layout.appinfos_detail_configurations, viewGroup, false);
                 viewHolder = new ViewHolder();
                 viewHolder.currentViewType = CONFIGURATION;
                 viewHolder.textView1 = (TextView) convertView.findViewById(R.id.reqgles);

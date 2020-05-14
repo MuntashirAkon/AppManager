@@ -14,19 +14,22 @@ public class MainActivity extends Activity implements MainCallbacks {
     private boolean mIsDualPane;
     public static final String EXTRA_PACKAGE_NAME = "package_name";
     public static String packageList;
+    public static String permName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.appinfos_activity_main);
         packageList=getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
+        permName=getIntent().getStringExtra("perm_name");
+        if  (permName==null) permName="Onboard.packages";
 
         mIsDualPane = findViewById(R.id.item_detail_container) != null;
 
         //Show an art when no fragment is showed, we make sure no detail fragment is present.
         if (mIsDualPane && getFragmentManager().findFragmentByTag(DetailFragment.FRAGMENT_TAG) == null) {
             ImageView imageView = new ImageView(this);
-            imageView.setImageResource(R.drawable.icon_art);
+            imageView.setImageResource(R.drawable.icon_art_appinfos);
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             ((FrameLayout) findViewById(R.id.item_detail_container)).addView(imageView);
         }
@@ -50,7 +53,7 @@ public class MainActivity extends Activity implements MainCallbacks {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
+        getMenuInflater().inflate(R.menu.appinfos_activity_main, menu);
         return true;
     }
 
@@ -59,8 +62,9 @@ public class MainActivity extends Activity implements MainCallbacks {
         if (item.getItemId() == R.id.action_about) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.about)
-                    .setView(getLayoutInflater().inflate(R.layout.about_dialog_message, null))
+                    .setView(getLayoutInflater().inflate(R.layout.appinfos_about_dialog_message, null))
                     .setNegativeButton(android.R.string.ok, null)
+                    .setIcon(R.drawable.ic_launcher_appinfos)
                     .show();
             return true;
         }

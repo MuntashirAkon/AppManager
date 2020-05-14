@@ -16,6 +16,7 @@
  * State Changes (May 26, 2019):
  * androidManifest bug: https://github.com/WindySha/Xpatch/commit/a5680fd61ce8574b63c9adc75aa560fc28ee534f (Apache 2.0)
  * _java.lang.ArrayIndexOutOfBoundsException in StringBlock.getShort
+ * https://bitbucket.org/oF2pks/fdroid-applications-info/commits/7c3203a112703c9a1538116373893fa92cae3bab
  */
 package com.oF2pks.xmlapkparser;
 

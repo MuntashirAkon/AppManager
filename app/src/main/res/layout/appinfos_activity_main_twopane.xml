@@ -6,7 +6,7 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context=".MainActivity">
+    tools:context="com.oF2pks.applicationsinfo.MainActivity">
 
     <fragment
         android:id="@+id/item_list"
