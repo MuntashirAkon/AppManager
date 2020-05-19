@@ -7,9 +7,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
+
+import com.oF2pks.applicationsinfo.utils.Tuple;
+import com.oF2pks.applicationsinfo.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.pm.PackageManager.GET_SIGNATURES;
 
 public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
 
@@ -31,8 +37,8 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
         if (MainActivity.packageList !=null){
             //ApplicationInfo aI;
             String[] aList=MainActivity.packageList.split("[\\r\\n]+");
-            for (int i=0;i<aList.length;i++){
 
+            for (int i=0;i<aList.length;i++){
                 ApplicationItem item = new ApplicationItem();
                 if (aList[i].endsWith("*")) {
                     item.star = true;
@@ -42,32 +48,37 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
                     ApplicationInfo aI=mPackageManager.getApplicationInfo(pName,PackageManager.GET_META_DATA);
                     item.applicationInfo = aI;
                     item.label = aI.loadLabel(mPackageManager).toString();
-                    item.date = mPackageManager.getPackageInfo(aI.packageName, 0).firstInstallTime;
+                    item.date = mPackageManager.getPackageInfo(aI.packageName, 0).lastUpdateTime;//firstInstallTime;
+                    item.sha = Utils.apkPro(getContext().getPackageManager().getPackageInfo(aI.packageName, GET_SIGNATURES));
+                    if (Build.VERSION.SDK_INT >=26) {
+                        item.size = (long) -1 * aI.targetSdkVersion;
+                    }
                     itemList.add(item);
                 }catch (PackageManager.NameNotFoundException e){
-
                 }
             }
             return itemList;
-        }else {
 
+        }else {
             List<ApplicationInfo> applicationInfos = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
 
-
             for (ApplicationInfo applicationInfo : applicationInfos) {
-
                 ApplicationItem item = new ApplicationItem();
                 item.applicationInfo = applicationInfo;
                 item.star = ((applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0);
                 item.label = applicationInfo.loadLabel(mPackageManager).toString();
+                if (Build.VERSION.SDK_INT >=26) {
+                    item.size = (long) -1 * applicationInfo.targetSdkVersion;
+                }
                 try {
-                    item.date = mPackageManager.getPackageInfo(applicationInfo.packageName, 0).firstInstallTime;
+                    item.sha = Utils.apkPro(getContext().getPackageManager().getPackageInfo(applicationInfo.packageName, GET_SIGNATURES));
+                    item.date = mPackageManager.getPackageInfo(applicationInfo.packageName, 0).lastUpdateTime;//firstInstallTime;
                 } catch (PackageManager.NameNotFoundException e) {
                     item.date = 0L;
+                    item.sha = new Tuple("?","?");
                 }
                 itemList.add(item);
             }
-
             return itemList;
         }
     }

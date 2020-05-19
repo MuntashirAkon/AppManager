@@ -19,7 +19,7 @@
                     android:title="@string/package_string"/>
 
                 <item android:id="@+id/action_sort_installation"
-                    android:title="@string/installation"/>
+                    android:title="@string/update"/>
 
                 <item android:id="@+id/action_sort_sharedid"
                     android:title="@string/shared_user_id"/>

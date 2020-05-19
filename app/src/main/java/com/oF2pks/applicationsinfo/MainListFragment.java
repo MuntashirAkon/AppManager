@@ -21,8 +21,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.format.Formatter;
 import android.text.style.BackgroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,6 +40,7 @@ import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.oF2pks.applicationsinfo.utils.Utils;
 
@@ -51,6 +55,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import javax.xml.datatype.Duration;
 
 import static android.content.pm.PackageManager.GET_SIGNATURES;
 
@@ -158,15 +165,8 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         getActivity().getActionBar().setTitle(MainActivity.permName.substring(0,MainActivity.permName.lastIndexOf(".")));
         getActivity().getActionBar().setSubtitle(
                 MainActivity.permName.substring(MainActivity.permName.lastIndexOf(".")+1).toLowerCase());
-        if (Build.VERSION.SDK_INT <26) startRetrievingPackagesSize();
-        else {
-            for (ApplicationItem item : mItemList) {
-                item.size = (long) -1 * item.applicationInfo.targetSdkVersion;
-                try {
-                    item.sha = Utils.apkPro(getContext().getPackageManager().getPackageInfo(item.applicationInfo.packageName, GET_SIGNATURES));
-                } catch (PackageManager.NameNotFoundException e) {
-                }
-            }
+        if (Build.VERSION.SDK_INT <26) {
+            startRetrievingPackagesSize();
         }
 
         mProgressDialog.dismiss();
@@ -217,6 +217,16 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     public boolean onOptionsItemSelected(MenuItem item) {
         final int id = item.getItemId();
         if (id == R.id.action_refresh) {
+            if (mSortBy == SORT_SIZE && Build.VERSION.SDK_INT <= 26) {
+                Toast t = Toast.makeText(getActivity(), getString(R.string.refresh)
+                                + " & " + getString(R.string.sort)
+                                + "/" + getString(R.string.size)
+                                + "\n" + getString(R.string.unsupported)
+                        , Toast.LENGTH_LONG);
+                t.setGravity(Gravity.CENTER , Gravity.CENTER, Gravity.CENTER);
+                t.show();
+                return true;
+            }
             getLoaderManager().restartLoader(0, null, this);
             if (mCallbacks != null && mLastClick != null && getActivity().findViewById(R.id.item_detail_container) != null){
                 // && mItemList..contains(mLastClick))
@@ -342,10 +352,6 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                                         + pStats.externalMediaSize + pStats.externalObbSize;
                             else
                                 item.size = -1L;
-                            try {
-                                item.sha = Utils.apkPro(getActivity().getPackageManager().getPackageInfo(item.applicationInfo.packageName, GET_SIGNATURES));
-                            } catch (Exception e) {
-                            }
 
                             incrementItemSizeRetrievedCount();
                         }
@@ -374,7 +380,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     static class Adapter extends BaseAdapter implements SectionIndexer, Filterable {
 
         static final String sections = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        static final DateFormat sSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+        static final DateFormat sSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");// hh:mm:ss");
         static final Spannable.Factory sSpannableFactory = Spannable.Factory.getInstance();
 
         static class ViewHolder {
@@ -509,8 +515,13 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             try {
                 PackageInfo packageInfo = mPackageManager.getPackageInfo(info.packageName, 0);
                 holder.version.setText(packageInfo.versionName);
-                Date date = new Date(packageInfo.firstInstallTime);
-                holder.date.setText(sSimpleDateFormat.format(date));
+                String sDate = sSimpleDateFormat.format(new Date(packageInfo.lastUpdateTime));
+                if (packageInfo.firstInstallTime == packageInfo.lastUpdateTime) holder.date.setText(sDate);
+                else {
+                    SpannableString ssDate = new SpannableString(sDate + "-" + TimeUnit.DAYS.convert(packageInfo.lastUpdateTime-packageInfo.firstInstallTime,TimeUnit.MILLISECONDS));
+                    ssDate.setSpan(new RelativeSizeSpan(.8f), 10, ssDate.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    holder.date.setText(ssDate);
+                }
                 if (packageInfo.sharedUserId != null) holder.sharedid.setTextColor(mOrange1);
                 else holder.sharedid.setTextColor(Color.GRAY);
                 holder.issuer.setText((String)item.sha.getFirst());

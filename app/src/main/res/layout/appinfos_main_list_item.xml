@@ -58,7 +58,8 @@
             android:layout_toRightOf="@id/date"
             android:layout_toEndOf="@id/date"
             android:textSize="10dp"
-            android:gravity="center_horizontal"
+            android:paddingRight="25sp"
+            android:gravity="right"
             android:singleLine="true"/>
 
         <TextView android:id="@+id/issuer"
