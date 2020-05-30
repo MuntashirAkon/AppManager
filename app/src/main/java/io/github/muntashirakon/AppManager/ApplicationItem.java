@@ -4,7 +4,7 @@ import android.content.pm.ApplicationInfo;
 
 import io.github.muntashirakon.AppManager.utils.Tuple;
 
- class ApplicationItem {
+class ApplicationItem {
     ApplicationInfo applicationInfo;
     String label;
     boolean star;

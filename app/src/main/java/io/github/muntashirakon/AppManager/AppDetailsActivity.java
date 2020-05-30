@@ -9,8 +9,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -36,7 +38,10 @@ public class AppDetailsActivity extends AppCompatActivity {
             finish();
             return;
         }
-
+        // Set title
+        try {
+            setTitle(getPackageManager().getApplicationInfo(mPackageName, 0).loadLabel(getPackageManager()).toString());
+        } catch (PackageManager.NameNotFoundException ignored) {}
         // Initialize tabs
         mTabTitleIds = getResources().obtainTypedArray(R.array.group_titles);
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -87,7 +92,7 @@ public class AppDetailsActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            return new ActivitiesFragment(position);
+            return new AppDetailsFragment(position);
         }
 
         @Override

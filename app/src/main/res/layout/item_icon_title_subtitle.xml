@@ -38,7 +38,7 @@
 
             <TextView
                 android:id="@+id/item_title"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/title_font"
                 tools:text="@tools:sample/lorem" />

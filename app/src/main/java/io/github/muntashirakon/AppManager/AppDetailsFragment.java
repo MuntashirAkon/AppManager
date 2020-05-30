@@ -3,6 +3,7 @@ package io.github.muntashirakon.AppManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AppOpsManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
@@ -28,6 +29,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.DialogFragment;
+import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import java.util.Arrays;
@@ -39,7 +42,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
-public class ActivitiesFragment extends Fragment {
+public class AppDetailsFragment extends Fragment {
+    private static final String NEEDED_PROPERTY_INT = "neededProperty";
+
     private static final int ACTIVITIES = 0;
     private static final int SERVICES = 1;
     private static final int RECEIVERS = 2;
@@ -65,27 +70,27 @@ public class ActivitiesFragment extends Fragment {
     private int mColorGrey1;
     private int mColorGrey2;
 
+    // Load from saved instance if empty constructor is called.
     private boolean isEmptyFragmentConstructCalled = false;
-    public ActivitiesFragment() {
+    public AppDetailsFragment() {
         isEmptyFragmentConstructCalled = true;
     }
 
-    ActivitiesFragment(int neededProperty) {
-        super();
+    AppDetailsFragment(int neededProperty) {
         this.neededProperty = neededProperty;
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("neededProperty", neededProperty);
+        outState.putSerializable(NEEDED_PROPERTY_INT, neededProperty);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (isEmptyFragmentConstructCalled && savedInstanceState != null){
-            neededProperty = savedInstanceState.getInt("neededProperty");
+            neededProperty = savedInstanceState.getInt(NEEDED_PROPERTY_INT);
         }
         try {
             mPackageName = Objects.requireNonNull(getActivity()).getIntent().getStringExtra(AppInfoActivity.EXTRA_PACKAGE_NAME);
@@ -275,7 +280,9 @@ public class ActivitiesFragment extends Fragment {
             TextView textView5;
             TextView textView6;
             ImageView imageView;
-            Button button;
+            Button launchBtn;
+            Button createBtn;
+            Button editBtn;
         }
 
         @NonNull
@@ -325,7 +332,9 @@ public class ActivitiesFragment extends Fragment {
                 viewHolder.textView4 = convertView.findViewById(R.id.launchMode);
                 viewHolder.textView5 = convertView.findViewById(R.id.orientation);
                 viewHolder.textView6 = convertView.findViewById(R.id.softInput);
-                viewHolder.button = convertView.findViewById(R.id.launch);
+                viewHolder.launchBtn = convertView.findViewById(R.id.launch);
+                viewHolder.createBtn = convertView.findViewById(R.id.create_shortcut_btn);
+                viewHolder.editBtn = convertView.findViewById(R.id.edit_shortcut_btn);
                 convertView.findViewById(R.id.label).setVisibility(View.GONE);
                 convertView.setTag(viewHolder);
             } else {
@@ -333,12 +342,13 @@ public class ActivitiesFragment extends Fragment {
             }
 
             final ActivityInfo activityInfo = mPackageInfo.activities[index];
+            final String activityName = activityInfo.name;
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
 
             // Name
-            viewHolder.textView2.setText(activityInfo.name.startsWith(mPackageName) ?
-                    activityInfo.name.replaceFirst(mPackageName, "")
-                    : activityInfo.name);
+            viewHolder.textView2.setText(activityName.startsWith(mPackageName) ?
+                    activityName.replaceFirst(mPackageName, "")
+                    : activityName);
 
             // Icon
             viewHolder.imageView.setImageDrawable(activityInfo.loadIcon(mPackageManager));
@@ -358,7 +368,7 @@ public class ActivitiesFragment extends Fragment {
                     + " | " + (activityInfo.permission == null ? getString(R.string.require_no_permission) : activityInfo.permission));
 
             // Label
-            Button launch = viewHolder.button;
+            Button launch = viewHolder.launchBtn;
             launch.setText(activityInfo.loadLabel(mPackageManager));
             boolean isExported = activityInfo.exported;
             launch.setEnabled(isExported);
@@ -367,15 +377,49 @@ public class ActivitiesFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent();
-                        intent.setClassName(mPackageName, activityInfo.name);
+                        intent.setClassName(mPackageName, activityName);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         try {
                             startActivity(intent);
                         } catch (Exception e) {
+                            getActivity().recreate();
                             Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
+                viewHolder.createBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String iconResourceName = null;
+                        try {
+                            ComponentName activity = new ComponentName(activityInfo.packageName, activityName);
+                            iconResourceName = mPackageManager.getResourcesForActivity(activity)
+                                    .getResourceName(activityInfo.getIconResource());
+                        } catch (PackageManager.NameNotFoundException e) {
+                            Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
+                        }
+                        LauncherIconCreator.createLauncherIcon(getActivity(), activityInfo,
+                                (String) activityInfo.loadLabel(mPackageManager),
+                                activityInfo.loadIcon(mPackageManager), iconResourceName);
+                    }
+                });
+                viewHolder.editBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (getFragmentManager() != null) {
+                            DialogFragment dialog = new EditShortcutDialogFragment();
+                            Bundle args = new Bundle();
+                            args.putParcelable(EditShortcutDialogFragment.ARG_ACTIVITY_INFO, activityInfo);
+                            dialog.setArguments(args);
+                            dialog.show(getFragmentManager(), EditShortcutDialogFragment.TAG);
+                        }
+                    }
+                });
+                viewHolder.createBtn.setVisibility(View.VISIBLE);
+                viewHolder.editBtn.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.createBtn.setVisibility(View.GONE);
+                viewHolder.editBtn.setVisibility(View.GONE);
             }
 
             return convertView;
@@ -401,6 +445,8 @@ public class ActivitiesFragment extends Fragment {
                 convertView.findViewById(R.id.launchMode).setVisibility(View.GONE);
                 convertView.findViewById(R.id.softInput).setVisibility(View.GONE);
                 convertView.findViewById(R.id.launch).setVisibility(View.GONE);
+                convertView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
+                convertView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
@@ -445,6 +491,8 @@ public class ActivitiesFragment extends Fragment {
                 viewHolder.textView5 = convertView.findViewById(R.id.orientation);
                 viewHolder.textView6 = convertView.findViewById(R.id.softInput);
                 convertView.findViewById(R.id.launch).setVisibility(View.GONE);
+                convertView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
+                convertView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -499,6 +547,8 @@ public class ActivitiesFragment extends Fragment {
                 viewHolder.textView5 = convertView.findViewById(R.id.softInput);
                 viewHolder.textView6 = convertView.findViewById(R.id.taskAffinity);
                 convertView.findViewById(R.id.launch).setVisibility(View.GONE);
+                convertView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
+                convertView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
@@ -657,6 +707,8 @@ public class ActivitiesFragment extends Fragment {
                 viewHolder.textView5 = convertView.findViewById(R.id.launchMode);
                 convertView.findViewById(R.id.softInput).setVisibility(View.GONE);
                 convertView.findViewById(R.id.launch).setVisibility(View.GONE);
+                convertView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
+                convertView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }

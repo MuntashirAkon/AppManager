@@ -1,0 +1,87 @@
+// This is a modified version of IconPickerDialogFragment.java taken
+// from https://github.com/butzist/ActivityLauncher/commit/dfb7fe271dae9379b5453bbb6e88f30a1adc94a9
+// and was authored by Adam M. Szalkowski with ISC License.
+// All derivative works are licensed under GPLv3.0.
+
+package io.github.muntashirakon.AppManager;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+
+public class IconPickerDialogFragment extends DialogFragment implements IconListAsyncProvider.Listener<IconListAdapter> {
+    static final String TAG = "IconPickerDialogFragment";
+
+    private GridView grid;
+    private IconPickerListener listener = null;
+
+    @Override
+    public void onAttach(@NonNull Context activity) {
+        super.onAttach(activity);
+        IconListAsyncProvider provider = new IconListAsyncProvider(this.getActivity(), this);
+        provider.execute();
+    }
+
+    void attachIconPickerListener(IconPickerListener listener) {
+        this.listener = listener;
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        if (getActivity() == null) return builder.create();
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        if (inflater == null) return builder.create();
+        grid = (GridView) inflater.inflate(R.layout.dialog_icon_picker, null);
+
+        grid.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> view, View item, int index,
+                                    long id) {
+                if (listener != null) {
+                    listener.iconPicked(view.getAdapter().getItem(index).toString());
+                    if (getDialog() != null) getDialog().dismiss();
+                }
+            }
+        });
+
+        builder.setTitle(R.string.icon_picker)
+                .setView(grid)
+                .setNegativeButton(android.R.string.cancel, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (getDialog() != null) getDialog().cancel();
+                    }
+                });
+
+        return builder.create();
+    }
+
+    @Override
+    public void onProviderFinished(AsyncProvider<IconListAdapter> task, IconListAdapter value) {
+        try {
+            this.grid.setAdapter(value);
+        } catch (Exception e) {
+            Toast.makeText(this.getActivity(), R.string.error_loading_icons, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public interface IconPickerListener {
+        void iconPicked(String icon);
+    }
+}

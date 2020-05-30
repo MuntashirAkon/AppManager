@@ -216,11 +216,6 @@
 
             <include layout="@layout/app_info_size" />
 
-            <ExpandableListView
-                android:id="@+id/list_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:layout_editor_absoluteY="272dp" />
         </LinearLayout>
     </ScrollView>
 

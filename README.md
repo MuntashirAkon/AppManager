@@ -6,6 +6,13 @@ I started by forking [Apps_packages Info](https://bitbucket.org/oF2pks/fdroid-ap
 
 I've plan to merge this project with other app managers such as Watt, Activity Launcher and ClassyShark3xodus (it's really a pain to keep four apps installed!).
 
+### Status
+
+- [x] [Apps_packages Info](https://bitbucket.org/oF2pks/fdroid-applications-info/src)
+- [x] [Activity Launcher](https://github.com/butzist/ActivityLauncher)
+- [ ] Watt
+- [ ] ClassyShark3xodus
+
 ### Screenshots
 
 #### Light

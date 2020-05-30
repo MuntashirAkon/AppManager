@@ -9,25 +9,18 @@
     android:paddingEnd="@dimen/padding_medium"
     android:paddingBottom="@dimen/padding_very_small">
 
-    <LinearLayout
+    <Button
+        android:id="@+id/launch"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/launch"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:singleLine="true"
-            android:text="@string/launch"
-            android:textStyle="bold" />
-
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:singleLine="true"
+        android:text="@string/launch"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -97,11 +90,37 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:breakStrategy="simple"
-        android:hyphenationFrequency="none"
         android:textIsSelectable="true"
         android:textStyle="italic"
         tools:text="@tools:sample/lorem" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/create_shortcut_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:singleLine="true"
+            android:text="@string/create_shortcut" />
+
+        <Button
+            android:id="@+id/edit_shortcut_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:singleLine="true"
+            android:text="@string/edit_shortcut" />
+    </LinearLayout>
 
 
 </LinearLayout>

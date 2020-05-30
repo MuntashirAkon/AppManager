@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical|center_horizontal"
+    android:columnWidth="50dp"
+    android:horizontalSpacing="8dp"
+    android:numColumns="auto_fit"
+    android:paddingStart="@dimen/padding_medium"
+    android:paddingTop="@dimen/padding_medium"
+    android:paddingEnd="@dimen/padding_medium"
+    android:paddingBottom="@dimen/padding_medium"
+    android:stretchMode="spacingWidthUniform"
+    android:verticalSpacing="8dp">
+
+</GridView>

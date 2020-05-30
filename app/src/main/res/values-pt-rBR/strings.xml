@@ -43,7 +43,6 @@
     <string name="no_configurations">Sem configurações</string>
     <string name="input_features">Input features</string>
     <string name="view_manifest">Ver arquivo Manifesto</string>
-    <string name="view_exodus">ClassyShark3xodus ?</string>
     <string name="manifest">Manifesto</string>
     <string name="error">Erro</string>
     <string name="loading">Carregando &#8230;</string> <!-- &#8230; = ... -->

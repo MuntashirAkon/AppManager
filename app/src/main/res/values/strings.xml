@@ -55,48 +55,41 @@
     <string name="netstats_received">Data received</string>
     <string name="netstats_transmitted">Data transmitted</string>
     <string name="netstats_msg">Data Usage Since Last Boot</string>
-
     <string name="about">About</string>
-    <string name="about_message">
-        In the “Main” window:
+    <string name="about_message"><b>Main window</b>
         \n- Click will open “App Info” window
         \n- Long click will open ”App Details” window
         \n
-        \n“Main” window color codes:
-        \nRed: Doesn\'t allow clearing data storage
-        \nMagenta: Persistent app
-        \nBlue: Stopped / Forced closed
-        \nOrange Date: Can read logs
-        \nOrange UID: Shared app
-        \nOrange API: Uses cleartext traffic
-        \nGreen: Inactive app
-        \nYellow Star: App in debug mode
+        \n<b>Main window</b> color codes:
+        \n<u>Red</u>: Doesn\'t allow clearing data storage
+        \n<u>Magenta</u>: Persistent app
+        \n<u>Blue</u>: Stopped / Forced closed
+        \n<u>Orange</u> <i>Date</i>: Can read logs
+        \n<u>Orange</u> <i>UID</i>: Shared app
+        \n<u>Orange</u> <i>API</i>: Uses cleartext traffic
+        \n<u>Green</u>: Inactive app
+        \n<u>Yellow Star</u>: App in debug mode
         \n
-        \nApp can be “User” or ”System” with following codes:
-        \nX: Multi architecture
-        \n0: App doesn\'t have code with it
-        \n°: App package in suspended state
-        \n#: The app has requested a large heap
-        \n?: Whether requested VM in safe mode
+        \nApp can be <b>User</b> or <b>System</b> with following codes:
+        \n<i>X</i>: Multi architecture
+        \n<i>0</i>: App doesn\'t have code with it
+        \n<i>°</i>: App package in suspended state
+        \n<i>#</i>: The app has requested a large heap
+        \n<i>?</i>: Whether requested VM in safe mode
         \n
-        \nVersion can have following:
-        \n_: No hardware acceleration
-        \n~: TestOnly mode
-        \ndebug: Debuggable app
+        \nVersion can have following prefixes:
+        \n<i>_</i>: No hardware acceleration
+        \n<i>~</i>: TestOnly mode
+        \n<i>debug</i>: Debuggable app
         \n
-        \nIn the “App Info” window, app that requested large heap have their
-        “User ID” colored red.
-        \n\nIn the “App Details” window, double clicking on “Uses Permissions”
-        will display a toast containing information about the permission.
+        \nIn the <b>App Info</b> window, app that requested large heap have their <b>User ID</b>
+        colored red.
         \n
-        \nLicense: GPLv3.0.
-        \nOriginal code was licensed under Apache 2.0. But most of the code has since changed.
-        \n
-        \nThird-party libraries and icons:
-        \n- <a href="https://github.com/material-components/material-components-android">Material Components</a> (Apache 2.0)
-        \n- <a href="https://github.com/google/material-design-icons">Material Design Icons</a> (Apache 2.0)
-        \n- <a href="https://github.com/dkanada/frost">Frost</a> Icons (GPLv3.0)
-        \n- <a href="https://code.google.com/p/xml-apk-parser">XmlApkParser</a> (Apache 2.0)
+        \n<b>App Details Window</b>
+        \n- Double clicking on any permission in the <b>Uses Permissions</b> tab will display a toast
+        containing information about the permission.
+        \n- Available activities can be launched from the <b>Activities</b> tab. Also, customizable
+        shortcuts can be made.
     </string>
     <string name="size_details">Size details</string>
     <string name="internal">Internal</string>
@@ -106,9 +99,7 @@
     <string name="cache_size">Cache</string>
     <string name="obb_size">Obb</string>
     <string name="media_size">Media</string>
-
     <string name="app_not_installed">Application not installed</string>
-
     <string name="system">System</string>
     <string name="system_u">System UPDATED</string>
     <string name="user">User</string>
@@ -135,4 +126,36 @@
     <string name="show_details">Show Details</string>
     <string name="empty_package_name">Empty package name</string>
     <string name="instructions">Instructions</string>
+    <string name="error_creating_shortcut">Error creating shortcut</string>
+    <string name="error_verbose_pin_shortcut">Current launcher does not support PinShortcut. Unable to create shortcut.</string>
+    <string name="creating_application_shortcut">Creating application shortcut for %s</string>
+    <string name="starting_activity">Starting activity: %s</string>
+    <string name="create_shortcut">Create Shortcut</string>
+    <string name="edit_shortcut">Edit Shortcut</string>
+    <string name="shortcut_name">Shortcut Name</string>
+    <string name="package_name">Package Name</string>
+    <string name="class_name">Class Name</string>
+    <string name="insert_icon">Insert Icon</string>
+    <string name="error_invalid_icon_resource">Invalid icon resource</string>
+    <string name="error_invalid_icon_format">Invalid icon format</string>
+    <string name="icon_picker">Icon Picker</string>
+    <string name="error_loading_icons">Error loading icons</string>
+    <string name="license">License</string>
+    <string name="license_message"><a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General
+        Public License v3.0</a></string>
+    <string name="third_party">Third-party Libraries and Icons</string>
+    <string name="third_party_message">-
+        <a href="https://github.com/material-components/material-components-android">Material
+        Components</a> (Apache 2.0)
+        \n- <a href="https://github.com/google/material-design-icons">Material Design Icons</a>
+        (Apache 2.0)
+        \n- <a href="https://github.com/dkanada/frost">Frost</a> Icons (GPLv3.0)
+        \n- <a href="https://code.google.com/p/xml-apk-parser">XmlApkParser</a> (Apache 2.0)
+    </string>
+    <string name="credits">Credits</string>
+    <string name="credits_message">Authors of
+        <a href="https://bitbucket.org/oF2pks/fdroid-applications-info/src">Apps_packages Info</a>
+        and <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>.
+        They have done most of the <i>logical</i> works upon which this app is built.
+    </string>
 </resources>

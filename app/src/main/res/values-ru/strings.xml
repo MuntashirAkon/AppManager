@@ -43,7 +43,6 @@
     <string name="no_configurations">Нет конфигураций</string>
     <string name="input_features">Input features</string>
     <string name="view_manifest">Открыть файл Manifest</string>
-    <string name="view_exodus">ClassyShark3xodus ?</string>
     <string name="manifest">Manifest</string>
     <string name="error">Ошибка</string>
     <string name="loading">Загрузка…</string> <!-- &#8230; = ... -->

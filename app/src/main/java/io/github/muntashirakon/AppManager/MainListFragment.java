@@ -76,7 +76,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     private static final int SORT_NAME = 1;
     private static final int SORT_PKG = 2;
     private static final int SORT_INSTALLATION = 3;
-    private static final int SORT_SHAREDID =4;
+    private static final int SORT_SHARED_ID = 4;
     private static final int SORT_SIZE = 5;
     private static final int SORT_SHA = 6;
     public static final String INSTANCE_STATE_SORT_BY = "sort_by";
@@ -242,7 +242,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             item.setChecked(true);
             return true;
         } else if (id == R.id.action_sort_sharedid) {
-            setSortBy(SORT_SHAREDID);
+            setSortBy(SORT_SHARED_ID);
             item.setChecked(true);
             return true;
         } else if (id == R.id.action_sort_sha) {
@@ -295,7 +295,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                         return -item1.date.compareTo(item2.date);
                     case SORT_SIZE:
                         return -item1.size.compareTo(item2.size);
-                    case SORT_SHAREDID:
+                    case SORT_SHARED_ID:
                         return item2.applicationInfo.uid - item1.applicationInfo.uid;
                     case SORT_SHA:
                         try {
@@ -619,14 +619,14 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             private WeakReference<ImageView> imageView = null;
             ApplicationInfo info;
 
-            private IconAsyncTask (ImageView pImageViewWeakReference,ApplicationInfo info) {
+            private IconAsyncTask(ImageView pImageViewWeakReference,ApplicationInfo info) {
                 link(pImageViewWeakReference);
                 this.info = info;
             }
 
-            private void link (ImageView pImageViewWeakReference) {
-                imageView = new WeakReference<ImageView>(pImageViewWeakReference);
-                    }
+            private void link(ImageView pImageViewWeakReference) {
+                imageView = new WeakReference<>(pImageViewWeakReference);
+            }
 
 
             @Override
