@@ -53,7 +53,7 @@
     <string name="size">Размер</string>
     <string name="netstats_received">Загружено</string>
     <string name="netstats_transmitted">Передано</string>
-    <string name="netstats_msg">* Трафик, использованный с момента последнего запуска</string>
+    <string name="netstats_msg">Трафик, использованный с момента последнего запуска</string>
 
     <string name="about">О программе</string>
     <string name="size_details">Размер</string>

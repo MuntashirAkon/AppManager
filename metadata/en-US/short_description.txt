@@ -1,1 +1,0 @@
-Updated ApplicationsInfos with colors, mini-tags & Exodus (+ basic fixes)

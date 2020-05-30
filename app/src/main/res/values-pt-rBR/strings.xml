@@ -53,7 +53,7 @@
     <string name="size">Tamanho</string>
     <string name="netstats_received">Dados recebidos</string>
     <string name="netstats_transmitted">Dados transmitidos</string>
-    <string name="netstats_msg">* Dados transmitidos desde a última inicialização do dispositivo</string>
+    <string name="netstats_msg">Dados transmitidos desde a última inicialização do dispositivo</string>
 
     <string name="about">Sobre</string>
 

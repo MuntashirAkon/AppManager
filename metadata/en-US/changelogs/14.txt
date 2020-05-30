@@ -1,9 +1,0 @@
-# MainScreen: apps starred for debug builds
-
-# Marshmallow: _permissions for both Used/Declared with AppOp association 
-
-# F-Droid option replaces: unleashed ClassyShark3xodus (now included via ToggleList)
-
-# manifestAndroid bugs: JellyBean, view leak fixed & errorPatch
-
-# (Uses-permission INFOs via 2xTap)
