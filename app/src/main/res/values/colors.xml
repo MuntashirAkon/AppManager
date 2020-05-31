@@ -3,5 +3,8 @@
     <color name="grey_0">#ffe0e0e0</color>
     <color name="grey_1">#00000000</color>
     <color name="grey_2">#10000000</color>
-    <color name="orange_1">#ff9702</color>
+    <color name="orange">#ffff9702</color>
+    <color name="dark_orange">#ff8017</color>
+    <color name="pink">#7D1B7E</color>
+    <color name="ocean_blue">#2B65EC</color>
 </resources>

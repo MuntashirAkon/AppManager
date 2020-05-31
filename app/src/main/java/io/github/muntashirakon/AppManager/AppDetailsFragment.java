@@ -321,7 +321,7 @@ public class AppDetailsFragment extends Fragment {
         @SuppressLint("SetTextI18n")
         private View getActivityView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
-            if (!checkIfConvertViewMatch(convertView, ACTIVITIES)) {
+            if (checkIfConvertViewMatch(convertView, ACTIVITIES)) {
                 convertView = mLayoutInflater.inflate(R.layout.item_app_details_primary, viewGroup, false);
 
                 viewHolder = new ViewHolder();
@@ -382,7 +382,8 @@ public class AppDetailsFragment extends Fragment {
                         try {
                             startActivity(intent);
                         } catch (Exception e) {
-                            getActivity().recreate();
+                            if (getActivity() != null)
+                                getActivity().recreate();
                             Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
                         }
                     }
@@ -431,7 +432,7 @@ public class AppDetailsFragment extends Fragment {
         @SuppressLint("SetTextI18n")
         private View getServicesView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
-            if (!checkIfConvertViewMatch(convertView, SERVICES)) {
+            if (checkIfConvertViewMatch(convertView, SERVICES)) {
                 convertView = mLayoutInflater.inflate(R.layout.item_app_details_primary, viewGroup, false);
 
                 viewHolder = new ViewHolder();
@@ -478,7 +479,7 @@ public class AppDetailsFragment extends Fragment {
         @SuppressLint("SetTextI18n")
         private View getReceiverView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
-            if (!checkIfConvertViewMatch(convertView, RECEIVERS)) {
+            if (checkIfConvertViewMatch(convertView, RECEIVERS)) {
                 convertView = mLayoutInflater.inflate(R.layout.item_app_details_primary, viewGroup, false);
 
                 viewHolder = new ViewHolder();
@@ -534,7 +535,7 @@ public class AppDetailsFragment extends Fragment {
         @SuppressLint("SetTextI18n")
         private View getProviderView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
-            if (!checkIfConvertViewMatch(convertView, PROVIDERS)) {
+            if (checkIfConvertViewMatch(convertView, PROVIDERS)) {
                 convertView = mLayoutInflater.inflate(R.layout.item_app_details_primary, viewGroup, false);
 
                 viewHolder = new ViewHolder();
@@ -694,7 +695,7 @@ public class AppDetailsFragment extends Fragment {
         @SuppressLint("SetTextI18n")
         private View getPermissionsView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
-            if (!checkIfConvertViewMatch(convertView, PERMISSIONS)) {
+            if (checkIfConvertViewMatch(convertView, PERMISSIONS)) {
                 convertView = mLayoutInflater.inflate(R.layout.item_app_details_primary, viewGroup, false);
 
                 viewHolder = new ViewHolder();
@@ -746,7 +747,7 @@ public class AppDetailsFragment extends Fragment {
         @SuppressLint("SetTextI18n")
         private View getFeaturesView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
-            if (!checkIfConvertViewMatch(convertView, FEATURES)) {
+            if (checkIfConvertViewMatch(convertView, FEATURES)) {
                 convertView = mLayoutInflater.inflate(R.layout.item_app_details_secondary, viewGroup, false);
 
                 viewHolder = new ViewHolder();
@@ -780,7 +781,7 @@ public class AppDetailsFragment extends Fragment {
         @SuppressLint("SetTextI18n")
         private View getConfigurationView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
-            if (!checkIfConvertViewMatch(convertView, CONFIGURATION)) {
+            if (checkIfConvertViewMatch(convertView, CONFIGURATION)) {
                 convertView = mLayoutInflater.inflate(R.layout.item_app_details_tertiary, viewGroup, false);
                 viewHolder = new ViewHolder();
                 viewHolder.currentViewType = CONFIGURATION;
@@ -839,7 +840,7 @@ public class AppDetailsFragment extends Fragment {
          * groups that doesn't implement {@link ViewHolder}, such as groups that use only a simple text view.
          */
         private boolean checkIfConvertViewMatch(View convertView, int requestedGroup) {
-            return convertView != null && convertView.getTag() != null && ((ViewHolder) convertView.getTag()).currentViewType == requestedGroup;
+            return convertView == null || convertView.getTag() == null || ((ViewHolder) convertView.getTag()).currentViewType != requestedGroup;
         }
     }
 

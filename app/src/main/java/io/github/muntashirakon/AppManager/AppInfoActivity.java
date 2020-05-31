@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.text.format.Formatter;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,10 +20,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import io.github.muntashirakon.AppManager.utils.MenuItemCreator;
-import io.github.muntashirakon.AppManager.utils.Tuple;
-import io.github.muntashirakon.AppManager.utils.Utils;
-
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -33,6 +28,9 @@ import java.util.Date;
 import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatActivity;
+import io.github.muntashirakon.AppManager.utils.MenuItemCreator;
+import io.github.muntashirakon.AppManager.utils.Tuple;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class AppInfoActivity extends AppCompatActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
@@ -220,13 +218,13 @@ public class AppInfoActivity extends AppCompatActivity {
      */
     private void getPackageSizeInfo() {
         try {
+            @SuppressWarnings("JavaReflectionMemberAccess")
             Method getPackageSizeInfo = PackageManager.class.getMethod(
                     "getPackageSizeInfo", String.class, IPackageStatsObserver.class);
 
             getPackageSizeInfo.invoke(mPackageManager, mPackageName, new IPackageStatsObserver.Stub() {
                 @Override
-                public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded)
-                        throws RemoteException {
+                public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded) {
                     mActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -292,9 +290,12 @@ public class AppInfoActivity extends AppCompatActivity {
         findViewById(R.id.details_manifest).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent viewManifestIntent = new Intent(mActivity, ViewManifestActivity.class);
-                viewManifestIntent.putExtra(ViewManifestActivity.EXTRA_PACKAGE_NAME, mPackageName);
-                startActivity(viewManifestIntent);
+                Intent intent = new Intent(mActivity, ManifestViewerActivity.class);
+                intent.putExtra(ManifestViewerActivity.EXTRA_PACKAGE_NAME, mPackageName);
+                startActivity(intent);
+//                Intent intent = new Intent(mActivity, View2ManifestActivity.class);
+//                intent.putExtra(View2ManifestActivity.EXTRA_PACKAGE_NAME, mPackageName);
+//                startActivity(intent);
             }
         });
         findViewById(R.id.details_exodus).setOnClickListener(new View.OnClickListener() {

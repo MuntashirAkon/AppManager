@@ -61,34 +61,34 @@
         \n- Long click will open ”App Details” window
         \n
         \n<b>Main window</b> color codes:
-        \n<u>Red</u>: Doesn\'t allow clearing data storage
-        \n<u>Magenta</u>: Persistent app
-        \n<u>Blue</u>: Stopped / Forced closed
-        \n<u>Orange</u> <i>Date</i>: Can read logs
-        \n<u>Orange</u> <i>UID</i>: Shared app
-        \n<u>Orange</u> <i>API</i>: Uses cleartext traffic
-        \n<u>Green</u>: Inactive app
-        \n<u>Yellow Star</u>: App in debug mode
+        \n<b>User</b>: Doesn\'t allow clearing data storage
+        \n<b>System</b>: Persistent app
+        \n<b>App Info</b>: Stopped / Forced closed
+        \n<b>User ID</b> <b>App Details Window</b>: Can read logs
+        \n<b>Uses Permissions</b> <b>Activities</b>: Shared app
+        \n<i>Date</i> <i>UID</i>: Uses cleartext traffic
+        \n<i>API</i>: Inactive app
+        \n<i>X</i>: App in debug mode
         \n
-        \nApp can be <b>User</b> or <b>System</b> with following codes:
-        \n<i>X</i>: Multi architecture
-        \n<i>0</i>: App doesn\'t have code with it
-        \n<i>°</i>: App package in suspended state
-        \n<i>#</i>: The app has requested a large heap
-        \n<i>?</i>: Whether requested VM in safe mode
+        \nApp can be <i>0</i> or <i>°</i> with following codes:
+        \n<i>#</i>: Multi architecture
+        \n<i>?</i>: App doesn\'t have code with it
+        \n<i>_</i>: App package in suspended state
+        \n<i>~</i>: The app has requested a large heap
+        \n<i>debug</i>: Whether requested VM in safe mode
         \n
         \nVersion can have following prefixes:
-        \n<i>_</i>: No hardware acceleration
-        \n<i>~</i>: TestOnly mode
-        \n<i>debug</i>: Debuggable app
+        \n<u>Red</u>: No hardware acceleration
+        \n<u>Magenta</u>: TestOnly mode
+        \n<u>Blue</u>: Debuggable app
         \n
-        \nIn the <b>App Info</b> window, app that requested large heap have their <b>User ID</b>
+        \nIn the <u>Orange</u> window, app that requested large heap have their <u>Orange</u>
         colored red.
         \n
-        \n<b>App Details Window</b>
-        \n- Double clicking on any permission in the <b>Uses Permissions</b> tab will display a toast
+        \n<u>Orange</u>
+        \n- Double clicking on any permission in the <u>Green</u> tab will display a toast
         containing information about the permission.
-        \n- Available activities can be launched from the <b>Activities</b> tab. Also, customizable
+        \n- Available activities can be launched from the <u>Yellow Star</u> tab. Also, customizable
         shortcuts can be made.
     </string>
     <string name="size_details">Size details</string>
@@ -158,4 +158,5 @@
         and <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>.
         They have done most of the <i>logical</i> works upon which this app is built.
     </string>
+    <string name="word_wrap">Toggle word wrap</string>
 </resources>

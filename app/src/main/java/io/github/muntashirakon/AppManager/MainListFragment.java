@@ -401,7 +401,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
             mColorGrey1 = activity.getResources().getColor(R.color.grey_1);
             mColorGrey2 = activity.getResources().getColor(R.color.grey_2);
-            mOrange1 = activity.getResources().getColor(R.color.orange_1);
+            mOrange1 = activity.getResources().getColor(R.color.orange);
         }
 
         void setDefaultList(List<ApplicationItem> list) {

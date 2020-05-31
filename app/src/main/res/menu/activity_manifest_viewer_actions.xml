@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_wrap"
+        android:icon="@drawable/ic_wrap_text_black_24dp"
+        android:title="@string/word_wrap"
+        app:showAsAction="always" />
+</menu>

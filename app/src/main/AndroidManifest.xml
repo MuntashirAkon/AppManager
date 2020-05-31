@@ -2,10 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="io.github.muntashirakon.AppManager">
-
-    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" android:maxSdkVersion="25" />
-
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher_app_manager"
@@ -27,17 +25,12 @@
         <activity
             android:name=".AppInfoActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_info"
-            />
+            android:label="@string/app_info" />
         <activity
             android:name=".AppDetailsActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            />
-        <activity
-            android:name=".ViewManifestActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
-            android:name=".View2ManifestActivity"
+            android:name=".ManifestViewerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
     </application>
 </manifest>
