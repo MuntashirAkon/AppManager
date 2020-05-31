@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:icon="@drawable/ic_launcher_app_manager"
             tools:replace="android:icon">
@@ -23,14 +23,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AppInfoActivity"
+            android:name=".activities.AppInfoActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_info" />
         <activity
-            android:name=".AppDetailsActivity"
+            android:name=".activities.AppDetailsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
-            android:name=".ManifestViewerActivity"
+            android:name=".activities.ManifestViewerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
     </application>
 </manifest>

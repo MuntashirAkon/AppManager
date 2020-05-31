@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager;
+package io.github.muntashirakon.AppManager.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -30,6 +30,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -76,7 +78,7 @@ public class AppDetailsFragment extends Fragment {
         isEmptyFragmentConstructCalled = true;
     }
 
-    AppDetailsFragment(int neededProperty) {
+    public AppDetailsFragment(int neededProperty) {
         this.neededProperty = neededProperty;
     }
 

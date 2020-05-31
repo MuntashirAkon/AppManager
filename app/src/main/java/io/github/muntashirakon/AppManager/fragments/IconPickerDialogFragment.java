@@ -3,8 +3,9 @@
 // and was authored by Adam M. Szalkowski with ISC License.
 // All derivative works are licensed under GPLv3.0.
 
-package io.github.muntashirakon.AppManager;
+package io.github.muntashirakon.AppManager.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -20,8 +21,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+import io.github.muntashirakon.AppManager.AsyncProvider;
+import io.github.muntashirakon.AppManager.IconListAdapter;
+import io.github.muntashirakon.AppManager.IconListAsyncProvider;
+import io.github.muntashirakon.AppManager.R;
 
-public class IconPickerDialogFragment extends DialogFragment implements IconListAsyncProvider.Listener<IconListAdapter> {
+public class IconPickerDialogFragment extends DialogFragment implements AsyncProvider.Listener<IconListAdapter> {
     static final String TAG = "IconPickerDialogFragment";
 
     private GridView grid;
@@ -38,6 +43,7 @@ public class IconPickerDialogFragment extends DialogFragment implements IconList
         this.listener = listener;
     }
 
+    @SuppressLint("InflateParams")
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

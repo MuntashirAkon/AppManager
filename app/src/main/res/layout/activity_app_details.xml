@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="io.github.muntashirakon.AppManager.AppDetailsActivity">
+    tools:context="io.github.muntashirakon.AppManager.activities.AppDetailsActivity">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"

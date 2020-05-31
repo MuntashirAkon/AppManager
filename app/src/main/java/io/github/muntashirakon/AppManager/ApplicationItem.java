@@ -4,11 +4,11 @@ import android.content.pm.ApplicationInfo;
 
 import io.github.muntashirakon.AppManager.utils.Tuple;
 
-class ApplicationItem {
-    ApplicationInfo applicationInfo;
-    String label;
-    boolean star;
-    Long date;
-    Long size = -1L;
-    Tuple sha;
+public class ApplicationItem {
+    public ApplicationInfo applicationInfo;
+    public String label;
+    public boolean star;
+    public Long date;
+    public Long size = -1L;
+    public Tuple sha;
 }

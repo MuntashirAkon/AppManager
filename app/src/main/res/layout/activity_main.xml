@@ -6,13 +6,13 @@
 
     <fragment
         android:id="@+id/item_list"
-        android:name="io.github.muntashirakon.AppManager.MainListFragment"
+        android:name="io.github.muntashirakon.AppManager.fragments.MainListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:context="io.github.muntashirakon.AppManager.MainActivity"
+        tools:context="io.github.muntashirakon.AppManager.activities.MainActivity"
         tools:layout="@android:layout/list_content" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

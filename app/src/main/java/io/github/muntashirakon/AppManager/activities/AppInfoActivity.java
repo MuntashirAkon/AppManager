@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager;
+package io.github.muntashirakon.AppManager.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatActivity;
+import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.MenuItemCreator;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;

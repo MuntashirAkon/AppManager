@@ -30,7 +30,7 @@ public class IconListAdapter extends BaseAdapter {
         this.pm = context.getPackageManager();
     }
 
-    static Drawable getIcon(String icon_resource_string, PackageManager pm) {
+    private static Drawable getIcon(String icon_resource_string, PackageManager pm) {
         try {
             String pack = icon_resource_string.substring(0, icon_resource_string.indexOf(':'));
             String type = icon_resource_string.substring(icon_resource_string.indexOf(':') + 1, icon_resource_string.indexOf('/'));

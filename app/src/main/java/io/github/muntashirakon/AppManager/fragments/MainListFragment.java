@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager;
+package io.github.muntashirakon.AppManager.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -43,6 +43,12 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import io.github.muntashirakon.AppManager.ApplicationItem;
+import io.github.muntashirakon.AppManager.MainCallbacks;
+import io.github.muntashirakon.AppManager.MainLoader;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
+import io.github.muntashirakon.AppManager.activities.MainActivity;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import java.lang.ref.WeakReference;

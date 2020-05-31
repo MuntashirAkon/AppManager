@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager;
+package io.github.muntashirakon.AppManager.activities;
 
 // NOTE: Commented lines were taken from View2ManifestActivity.java
 
@@ -17,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import androidx.appcompat.app.AppCompatActivity;
+import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.xmlapkparser.AXMLPrinter;
 
 public class ManifestViewerActivity extends AppCompatActivity {

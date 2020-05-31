@@ -7,10 +7,10 @@ package io.github.muntashirakon.AppManager;
 
 import android.content.Context;
 
-class IconListAsyncProvider extends AsyncProvider<IconListAdapter> {
+public class IconListAsyncProvider extends AsyncProvider<IconListAdapter> {
     private IconListAdapter adapter;
 
-    IconListAsyncProvider(Context context, Listener<IconListAdapter> listener) {
+    public IconListAsyncProvider(Context context, Listener<IconListAdapter> listener) {
         super(context, listener, false);
         this.adapter = new IconListAdapter(context);
     }

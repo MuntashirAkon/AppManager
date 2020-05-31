@@ -9,6 +9,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
+import io.github.muntashirakon.AppManager.activities.MainActivity;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -23,7 +24,7 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
     private PackageIntentReceiver mPackageObserver;
     private PackageManager mPackageManager;
 
-    MainLoader(Context context) {
+    public MainLoader(Context context) {
         super(context);
 
         mPackageManager = getContext().getPackageManager();

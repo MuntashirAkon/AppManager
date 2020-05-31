@@ -3,7 +3,7 @@
 // and was authored by Adam M. Szalkowski with ISC License.
 // All derivative works are licensed under GPLv3.0.
 
-package io.github.muntashirakon.AppManager;
+package io.github.muntashirakon.AppManager.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -21,13 +21,13 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
 
 public class EditShortcutDialogFragment extends DialogFragment {

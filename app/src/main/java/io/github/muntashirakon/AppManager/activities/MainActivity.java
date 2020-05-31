@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager;
+package io.github.muntashirakon.AppManager.activities;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -8,6 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import io.github.muntashirakon.AppManager.MainCallbacks;
+import io.github.muntashirakon.AppManager.fragments.MainListFragment;
+import io.github.muntashirakon.AppManager.R;
 
 public class MainActivity extends AppCompatActivity implements MainCallbacks {
     public static final String EXTRA_PACKAGE_NAME = "package_name";
