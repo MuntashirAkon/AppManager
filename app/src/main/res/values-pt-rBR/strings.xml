@@ -3,7 +3,6 @@
     <string name="loading_apps">Carregando aplicativos</string>
     <string name="is_system_app">Aplicativo do sitema</string>
     <string name="uninstall">Desinstalar</string>
-    <string name="view_in_settings">Ver em configurações</string>
     <string name="permissions">Permissões de uso</string>
     <string name="require_no_permission">Não requer permissões</string>
     <string name="activities">Atividades</string>
@@ -17,7 +16,6 @@
     <string name="no_providers">Sem provedores</string>
     <string name="launch_mode">Modo de lançamento</string>
     <string name="taskAffinity">Afinidade da tarefa</string>
-    <string name="installation">Instalação</string>
     <string name="update">Atualização</string>
     <string name="authority">Autoridade</string>
     <string name="service">Serviços</string>

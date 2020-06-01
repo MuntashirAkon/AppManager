@@ -3,7 +3,6 @@
     <string name="loading_apps">Получаем приложения</string>
     <string name="is_system_app">Системное приложение</string>
     <string name="uninstall">Удалить</string>
-    <string name="view_in_settings">Просмотреть в настройках</string>
     <string name="permissions">Используемые разрешения</string>
     <string name="require_no_permission">Разрешения не требуются</string>
     <string name="activities">Операции</string>
@@ -17,7 +16,6 @@
     <string name="no_providers">Нет провайдеров</string>
     <string name="launch_mode">Режим запуска</string>
     <string name="taskAffinity">Task affinity</string>
-    <string name="installation">Установлено</string>
     <string name="update">Обновить</string>
     <string name="authority">Authority</string>
     <string name="service">Службы</string>

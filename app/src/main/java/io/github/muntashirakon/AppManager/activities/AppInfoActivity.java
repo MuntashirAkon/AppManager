@@ -1,6 +1,7 @@
 package io.github.muntashirakon.AppManager.activities;
 
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageStatsObserver;
@@ -294,15 +295,21 @@ public class AppInfoActivity extends AppCompatActivity {
                 Intent intent = new Intent(mActivity, ManifestViewerActivity.class);
                 intent.putExtra(ManifestViewerActivity.EXTRA_PACKAGE_NAME, mPackageName);
                 startActivity(intent);
-//                Intent intent = new Intent(mActivity, View2ManifestActivity.class);
-//                intent.putExtra(View2ManifestActivity.EXTRA_PACKAGE_NAME, mPackageName);
-//                startActivity(intent);
             }
         });
         findViewById(R.id.details_exodus).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scanPackageInExodus();
+                try {
+                    Intent newIntent = new Intent(AppInfoActivity.this, ClassListingActivity.class);
+                    File file = new File(mPackageManager.getPackageInfo(mPackageName, 0).applicationInfo.publicSourceDir);
+                    newIntent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+                    newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    newIntent.putExtra(ClassListingActivity.EXTRA_PACKAGE_NAME, mPackageName);
+                    startActivity(newIntent);
+                } catch (ActivityNotFoundException | PackageManager.NameNotFoundException e) {
+                    Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
+                }
             }
         });
         findViewById(R.id.details_fdroid).setOnClickListener(new View.OnClickListener() {
@@ -320,28 +327,6 @@ public class AppInfoActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    private void scanPackageInExodus(){
-        Intent intent = new Intent();
-        intent.setClassName("com.oF2pks.classyshark3xodus","com.google.classysharkandroid.activities.ClassesListActivity");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        try {
-            File file = new File(mPackageManager.getPackageInfo(mPackageName, 0).applicationInfo.publicSourceDir);
-            intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-            intent.putExtra("APP_NAME", mPackageName);
-            intent.putExtra("CLICK_PRESS", "");
-
-            try {
-                startActivity(intent);
-            } catch (Exception e) {
-                Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
-            }
-
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     /**

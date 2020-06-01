@@ -44,9 +44,9 @@ public class ManifestViewerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getIntent().getBooleanExtra(EXTRA_IS_WRAPPED, false))
-            setContentView(R.layout.activity_manifest_viewer_wrapped);
+            setContentView(R.layout.activity_any_viewer_wrapped);
         else
-            setContentView(R.layout.activity_manifest_viewer);
+            setContentView(R.layout.activity_any_viewer);
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -75,7 +75,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_manifest_viewer_actions, menu);
+        getMenuInflater().inflate(R.menu.activity_any_viewer_actions, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -94,8 +94,8 @@ public class ManifestViewerActivity extends AppCompatActivity {
     }
 
     private void displayContent() {
-        TextView textView = findViewById(R.id.manifest_view);
-        textView.setText(code);
+        TextView textView = findViewById(R.id.any_view);
+        textView.setTextColor(getResources().getColor(R.color.dark_orange));
         Matcher matcher;
         StringBuffer sb = new StringBuffer();
         String textFormat = "<font color='#%06X'>%s</font>";

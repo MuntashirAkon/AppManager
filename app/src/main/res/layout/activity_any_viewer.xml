@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    tools:context=".activities.ManifestViewerActivity">
+    android:fillViewport="true">
 
     <HorizontalScrollView
         android:layout_width="match_parent"
@@ -12,13 +11,12 @@
         android:fillViewport="true">
 
         <TextView
-            android:id="@+id/manifest_view"
+            android:id="@+id/any_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
             android:gravity="top"
             android:padding="@dimen/padding_small"
-            android:textColor="@color/dark_orange"
             android:textIsSelectable="true"
             tools:text="@tools:sample/lorem/random" />
 

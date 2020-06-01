@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.apisolutions.classysharkandroid.activities.MainActivity">
+    <group android:menuCategory="container">
+
+        <item
+            android:id="@+id/action_view_trackers"
+            android:title="@string/view_trackers"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/action_view_summary"
+            android:title="@string/view_summary"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/action_toggle_class_listing"
+            android:title="@string/toggle_class_listing"
+            app:showAsAction="never" />
+
+    </group>
+</menu>

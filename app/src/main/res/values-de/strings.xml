@@ -3,7 +3,6 @@
     <string name="loading_apps">Lade Apps</string>
     <string name="is_system_app">Systemapp</string>
     <string name="uninstall">Deinstallieren</string>
-    <string name="view_in_settings">In Einstellungen ansehen</string>
     <string name="permissions">Benötigte Berechtigungen</string>
     <string name="require_no_permission">Keine besonderen Berechtigungen</string>
     <string name="activities">Aktivitäten</string>
@@ -17,7 +16,6 @@
     <string name="no_providers">Keine Provider</string>
     <string name="launch_mode">Startmodus</string>
     <string name="taskAffinity">taskAffinity</string>
-    <string name="installation">Installation</string>
     <string name="update">Update</string>
     <string name="authority">Authority</string>
     <string name="service">Services</string>
