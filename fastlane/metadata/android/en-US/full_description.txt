@@ -1,0 +1,17 @@
+Yet another android package manager and viewer. It merged the features of App_packages Info (formerly Application Info), ClassyShark3xodus and Activity Launcher into a single app with material design and dark mode to give a modern look and feel.
+
+Features:
+- View applications' status dynamically in the main activity
+- View basic info (apk path, data path, installer, date installed, date updated, etc.) of an application by clicking on it
+- View advance info (activities, services, receivers, providers, permissions, signatures, etc.) of an application by clicking and holding (aka long clicking) on it
+- Launch any activity or make customisable shortcuts from the activities tab
+- View list of trackers and classes of any (odexed) application in the basic info (by clicking on the exodus button)
+- Ability to view class dump (with syntax highlighting)
+- Ability to view dynamic application manifest (with syntax highlighting)
+- Uninstall an application
+- Open application info in device settings
+- Open app on F-Droid
+- Material design with light and dark theme (changes with system settings)
+
+
+See the about section within the app for more information on how to use the app.
