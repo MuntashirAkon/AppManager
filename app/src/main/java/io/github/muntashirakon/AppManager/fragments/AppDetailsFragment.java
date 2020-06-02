@@ -22,18 +22,12 @@ import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.fragment.app.DialogFragment;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
-import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
-import io.github.muntashirakon.AppManager.utils.Utils;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -41,10 +35,16 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
+import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 
-public class AppDetailsFragment extends Fragment {
+public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private static final String NEEDED_PROPERTY_INT = "neededProperty";
 
     private static final int ACTIVITIES = 0;
@@ -65,6 +65,8 @@ public class AppDetailsFragment extends Fragment {
     private PackageManager mPackageManager;
     private PackageInfo mPackageInfo;
     private Activity mActivity;
+    private ActivitiesListAdapter mAdapter;
+    private SwipeRefreshLayout mSwipeRefresh;
 
     private String[] aPermissionsUse;
     private boolean bFi;
@@ -100,173 +102,202 @@ public class AppDetailsFragment extends Fragment {
             return;
         }
         mPackageManager = getActivity().getPackageManager();
-        mPackageInfo = getPackageInfo(mPackageName);
-        if (mPackageInfo == null) {
-            return;
-        }
         mLayoutInflater = getLayoutInflater();
         mActivity = getActivity();
         if (mActivity != null) {
-            mColorGrey1 = mActivity.getResources().getColor(R.color.grey_1);
-            mColorGrey2 = mActivity.getResources().getColor(R.color.grey_2);
+            mColorGrey1 = Color.TRANSPARENT;
+            mColorGrey2 = mActivity.getResources().getColor(R.color.SEMI_TRANSPARENT);
         }
-
-        // Requested Permissions
-        if (mPackageInfo.requestedPermissions == null) aPermissionsUse = null;
-        else {
-            aPermissionsUse = new String[mPackageInfo.requestedPermissions.length];
-            for (int i = 0; i < mPackageInfo.requestedPermissions.length; ++i) {
-                aPermissionsUse[i] = mPackageInfo.requestedPermissions[i] + " ";
-                try {
-                    if (Utils.getProtectionLevelString(
-                            mPackageManager.getPermissionInfo(
-                                    mPackageInfo.requestedPermissions[i],
-                                    PackageManager.GET_META_DATA).protectionLevel)
-                            .contains("dangerous")) {
-                        aPermissionsUse[i] += "*";
-                    }
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.getStackTrace();
-                }
-                if ((mPackageInfo.requestedPermissionsFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
-                    aPermissionsUse[i] += "\u2714";
-                }
-            }
-            Arrays.sort(aPermissionsUse);
-        }
-
-        // Permissions
-        if (mPackageInfo.permissions != null) {
-            Arrays.sort(mPackageInfo.permissions, new Comparator<PermissionInfo>() {
-                public int compare(PermissionInfo o1, PermissionInfo o2) {
-                    return o1.name.compareToIgnoreCase(o2.name);
-                }
-            });
-        }
-
-        // Activities
-        if (mPackageInfo.activities != null) {
-            Arrays.sort(mPackageInfo.activities, new Comparator<ActivityInfo>() {
-                public int compare(ActivityInfo o1, ActivityInfo o2) {
-                    return o1.name.compareToIgnoreCase(o2.name);
-                }
-            });
-        }
-
-        // Services
-        if (mPackageInfo.services != null) {
-            Arrays.sort(mPackageInfo.services, new Comparator<ServiceInfo>() {
-                public int compare(ServiceInfo o1, ServiceInfo o2) {
-                    return o1.name.compareToIgnoreCase(o2.name);
-                }
-            });
-        }
-
-        // Receivers
-        if (mPackageInfo.receivers != null) {
-            Arrays.sort(mPackageInfo.receivers, new Comparator<ActivityInfo>() {
-                public int compare(ActivityInfo o1, ActivityInfo o2) {
-                    return o1.name.compareToIgnoreCase(o2.name);
-                }
-            });
-        }
-
-        // Requested Features
-        if (mPackageInfo.reqFeatures != null) {
-            try {
-                Arrays.sort(mPackageInfo.reqFeatures, new Comparator<FeatureInfo>() {
-                    public int compare(FeatureInfo o1, FeatureInfo o2) {
-                        return o1.name.compareToIgnoreCase(o2.name);
-                    }
-                });
-            } catch (NullPointerException e) {
-                for (FeatureInfo fi : mPackageInfo.reqFeatures) {
-                    if (fi.name == null) fi.name = "_MAJOR";
-                    bFi = true;
-                }
-                Arrays.sort(mPackageInfo.reqFeatures, new Comparator<FeatureInfo>() {
-                    public int compare(FeatureInfo o1, FeatureInfo o2) {
-                        return o1.name.compareToIgnoreCase(o2.name);
-                    }
-                });
-            }
-        }
-
-        // Providers
-        if (mPackageInfo.providers != null) {
-            Arrays.sort(mPackageInfo.providers, new Comparator<ProviderInfo>() {
-                public int compare(ProviderInfo o1, ProviderInfo o2) {
-                    return o1.name.compareToIgnoreCase(o2.name);
-                }
-            });
-        }
+        getPackageInfo(mPackageName);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.pager_app_details, container, false);
-        Object[] arrayOfThings = getNeededArray(neededProperty);
-        if (arrayOfThings != null) {
-            ActivitiesListAdapter adapter = new ActivitiesListAdapter(getActivity(), arrayOfThings);
-            ListView listView = view.findViewById(R.id.pager_list_view);
-            listView.setAdapter(adapter);
-        }
+        mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
+        mSwipeRefresh.setOnRefreshListener(this);
+        ListView listView = view.findViewById(android.R.id.list);
+        TextView textView = view.findViewById(R.id.internalEmpty);
+        textView.setText(getNeededString(neededProperty));
+        mAdapter = new ActivitiesListAdapter();
+        listView.setAdapter(mAdapter);
+        if (mAdapter.count == 0) listView.setVisibility(View.GONE);
         return view;
+    }
+
+    @Override
+    public void onRefresh() {
+        if (mAdapter != null){
+            getPackageInfo(mPackageName);
+            mAdapter.notifyDataSetChanged();
+        }
+        mSwipeRefresh.setRefreshing(false);
     }
 
     /**
      * Get package info.
      *
      * @param packageName Package name (e.g. com.android.wallpaper)
-     * @return Null or PackageInfo
      */
     @SuppressLint("PackageManagerGetSignatures")
-    private PackageInfo getPackageInfo(String packageName) {
+    private void getPackageInfo(String packageName) {
         try {
-            return mPackageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
+            mPackageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
                     | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                     | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
                     | PackageManager.GET_SIGNATURES | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
-        } catch (PackageManager.NameNotFoundException e) {
-            return null;
+
+            if (mPackageInfo == null) return;
+
+            switch (neededProperty){
+                case SERVICES:
+                    if (mPackageInfo.services != null) {
+                        Arrays.sort(mPackageInfo.services, new Comparator<ServiceInfo>() {
+                            public int compare(ServiceInfo o1, ServiceInfo o2) {
+                                return o1.name.compareToIgnoreCase(o2.name);
+                            }
+                        });
+                    }
+                    break;
+                case RECEIVERS:
+                    if (mPackageInfo.receivers != null) {
+                        Arrays.sort(mPackageInfo.receivers, new Comparator<ActivityInfo>() {
+                            public int compare(ActivityInfo o1, ActivityInfo o2) {
+                                return o1.name.compareToIgnoreCase(o2.name);
+                            }
+                        });
+                    }
+                    break;
+                case PROVIDERS:
+                    if (mPackageInfo.providers != null) {
+                        Arrays.sort(mPackageInfo.providers, new Comparator<ProviderInfo>() {
+                            public int compare(ProviderInfo o1, ProviderInfo o2) {
+                                return o1.name.compareToIgnoreCase(o2.name);
+                            }
+                        });
+                    }
+                    break;
+                case USES_PERMISSIONS:  // Requested Permissions
+                    if (mPackageInfo.requestedPermissions == null) aPermissionsUse = null;
+                    else {
+                        aPermissionsUse = new String[mPackageInfo.requestedPermissions.length];
+                        for (int i = 0; i < mPackageInfo.requestedPermissions.length; ++i) {
+                            aPermissionsUse[i] = mPackageInfo.requestedPermissions[i] + " ";
+                            try {
+                                if (Utils.getProtectionLevelString(
+                                        mPackageManager.getPermissionInfo(
+                                                mPackageInfo.requestedPermissions[i],
+                                                PackageManager.GET_META_DATA).protectionLevel)
+                                        .contains("dangerous")) {
+                                    aPermissionsUse[i] += "*";
+                                }
+                            } catch (PackageManager.NameNotFoundException e) {
+                                e.getStackTrace();
+                            }
+                            if ((mPackageInfo.requestedPermissionsFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
+                                aPermissionsUse[i] += "\u2714";
+                            }
+                        }
+                        Arrays.sort(aPermissionsUse);
+                    }
+                    break;
+                case PERMISSIONS:
+                    if (mPackageInfo.permissions != null) {
+                        Arrays.sort(mPackageInfo.permissions, new Comparator<PermissionInfo>() {
+                            public int compare(PermissionInfo o1, PermissionInfo o2) {
+                                return o1.name.compareToIgnoreCase(o2.name);
+                            }
+                        });
+                    }
+                    break;
+                case FEATURES:  // Requested Features
+                    if (mPackageInfo.reqFeatures != null) {
+                        try {
+                            Arrays.sort(mPackageInfo.reqFeatures, new Comparator<FeatureInfo>() {
+                                public int compare(FeatureInfo o1, FeatureInfo o2) {
+                                    return o1.name.compareToIgnoreCase(o2.name);
+                                }
+                            });
+                        } catch (NullPointerException e) {
+                            for (FeatureInfo fi : mPackageInfo.reqFeatures) {
+                                if (fi.name == null) fi.name = "_MAJOR";
+                                bFi = true;
+                            }
+                            Arrays.sort(mPackageInfo.reqFeatures, new Comparator<FeatureInfo>() {
+                                public int compare(FeatureInfo o1, FeatureInfo o2) {
+                                    return o1.name.compareToIgnoreCase(o2.name);
+                                }
+                            });
+                        }
+                    }
+                    break;
+                case CONFIGURATION:
+                case SIGNATURES:
+                case SHARED_LIBRARY_FILES:
+                    break;
+                case ACTIVITIES:
+                default:
+                    if (mPackageInfo.activities != null) {
+                        Arrays.sort(mPackageInfo.activities, new Comparator<ActivityInfo>() {
+                            public int compare(ActivityInfo o1, ActivityInfo o2) {
+                                return o1.name.compareToIgnoreCase(o2.name);
+                            }
+                        });
+                    }
+            }
+        } catch (PackageManager.NameNotFoundException ignored) {
+            mActivity.finish();
         }
     }
 
     /**
      * Return corresponding section's array
      */
-    private Object[] getNeededArray(int index) {
+    private @Nullable Object[] getNeededArray(int index) {
         switch (index) {
-            case SERVICES:
-                return mPackageInfo.services;
-            case RECEIVERS:
-                return mPackageInfo.receivers;
-            case PROVIDERS:
-                return mPackageInfo.providers;
-            case USES_PERMISSIONS:
-                return aPermissionsUse;
-//                    return mPackageInfo.requestedPermissions;
-            case PERMISSIONS:
-                return mPackageInfo.permissions;
-            case FEATURES:
-                return mPackageInfo.reqFeatures;
-            case CONFIGURATION:
-                return mPackageInfo.configPreferences;
-            case SIGNATURES:
-                return mPackageInfo.signatures;
-            case SHARED_LIBRARY_FILES:
-                return mPackageInfo.applicationInfo.sharedLibraryFiles;
+            case SERVICES: return mPackageInfo.services;
+            case RECEIVERS: return mPackageInfo.receivers;
+            case PROVIDERS: return mPackageInfo.providers;
+            case USES_PERMISSIONS: return aPermissionsUse;
+            case PERMISSIONS: return mPackageInfo.permissions;
+            case FEATURES: return mPackageInfo.reqFeatures;
+            case CONFIGURATION: return mPackageInfo.configPreferences;
+            case SIGNATURES: return mPackageInfo.signatures;
+            case SHARED_LIBRARY_FILES: return mPackageInfo.applicationInfo.sharedLibraryFiles;
             case ACTIVITIES:
-            default:
-                return mPackageInfo.activities;
+            default: return mPackageInfo.activities;
         }
     }
 
-    private class ActivitiesListAdapter extends ArrayAdapter<Object> {
+    /**
+     * Return corresponding section's array
+     */
+    private int getNeededString(int index) {
+        switch (index) {
+            case SERVICES: return R.string.no_service;
+            case RECEIVERS: return R.string.no_receivers;
+            case PROVIDERS: return R.string.no_providers;
+            case USES_PERMISSIONS:
+            case PERMISSIONS: return R.string.require_no_permission;
+            case FEATURES: return R.string.no_feature;
+            case CONFIGURATION: return R.string.no_configurations;
+            case SIGNATURES: return R.string.no_signatures;
+            case SHARED_LIBRARY_FILES: return R.string.no_shared_libs;
+            case ACTIVITIES:
+            default: return R.string.no_activities;
+        }
+    }
 
-        ActivitiesListAdapter(Activity context, Object[] arrayOfThings) {
-            super(context, R.layout.item_app_details_primary, arrayOfThings);
+
+    private class ActivitiesListAdapter extends BaseAdapter {
+        private int count;
+        private Object[] arrayOfThings;
+
+        ActivitiesListAdapter() {
+            arrayOfThings = getNeededArray(neededProperty);
+            if (arrayOfThings == null) count = 0;
+            else count = arrayOfThings.length;
         }
 
         /**
@@ -285,6 +316,21 @@ public class AppDetailsFragment extends Fragment {
             Button launchBtn;
             Button createBtn;
             Button editBtn;
+        }
+
+        @Override
+        public int getCount() {
+            return count;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return arrayOfThings[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
         }
 
         @NonNull
@@ -314,7 +360,6 @@ public class AppDetailsFragment extends Fragment {
                     return getActivityView(parent, convertView, position);
             }
         }
-
 
         /**
          * See below checkIfConvertViewMatch method.

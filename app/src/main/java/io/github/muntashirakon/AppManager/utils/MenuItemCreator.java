@@ -40,6 +40,19 @@ public class MenuItemCreator {
         mActivity = activity;
     }
 
+    /**
+     * Constructor.
+     *
+     * @param activity Caller activity
+     * @param resIdMenuContainer Resource ID where menu items will be added
+     */
+    public MenuItemCreator(Activity activity, int resIdMenuContainer, boolean removeAllChildren) {
+        mMenuContainer = activity.findViewById(resIdMenuContainer);
+        if(removeAllChildren) mMenuContainer.removeAllViews();
+        mLayoutInflater = activity.getLayoutInflater();
+        mActivity = activity;
+    }
+
     public View addDivider() {
         View divider = mLayoutInflater.inflate(R.layout.item_divider_horizontal, mMenuContainer, false);
         mMenuContainer.addView(divider);

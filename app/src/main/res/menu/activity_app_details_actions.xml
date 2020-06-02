@@ -3,13 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/action_refresh_details"
-        android:icon="@drawable/ic_refresh_black_24dp"
-        android:title="@string/refresh"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/action_app_info"
         android:icon="@drawable/ic_info_outline_black_24dp"
         android:title="@string/app_info"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_refresh_details"
+        android:icon="@drawable/ic_refresh_black_24dp"
+        android:title="@string/refresh"
+        app:showAsAction="never" />
+
 </menu>

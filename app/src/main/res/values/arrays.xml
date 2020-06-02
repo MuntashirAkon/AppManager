@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="group_titles">
+    <array name="TAB_TITLES">
         <item>@string/activities</item>
         <item>@string/service</item>
         <item>@string/receivers</item>

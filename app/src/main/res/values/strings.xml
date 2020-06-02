@@ -67,6 +67,7 @@
         \n<u>Orange</u> <i>API</i>: Uses cleartext traffic
         \n<u>Green</u>: Inactive app
         \n<u>Yellow Star</u>: App in debug mode
+        \n<u>Ocean blue background</u>: Disabled app
         \n
         \nApp can be <b>User</b> or <b>System</b> with following codes:
         \n<i>X</i>: Multi architecture
@@ -176,4 +177,6 @@
     <string name="tracker_details">Tracker details</string>
     <string name="tracker_classes">Tracker classes</string>
     <string name="all_classes">All classes</string>
+    <string name="main_list_date_days">%s %d days</string>
+    <string name="no_shared_libs">No shared libraries</string>
 </resources>

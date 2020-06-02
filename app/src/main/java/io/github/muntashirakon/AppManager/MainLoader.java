@@ -1,5 +1,6 @@
 package io.github.muntashirakon.AppManager;
 
+import android.annotation.SuppressLint;
 import android.content.AsyncTaskLoader;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -26,44 +27,41 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
 
     public MainLoader(Context context) {
         super(context);
-
         mPackageManager = getContext().getPackageManager();
     }
 
+    @SuppressLint("PackageManagerGetSignatures")
     @Override
     public List<ApplicationItem> loadInBackground() {
         List<ApplicationItem> itemList = new ArrayList<>();
         String pName;
 
-        if (MainActivity.packageList !=null){
-            //ApplicationInfo aI;
-            String[] aList=MainActivity.packageList.split("[\\r\\n]+");
+        if (MainActivity.packageList != null) {
+            String[] aList = MainActivity.packageList.split("[\\r\\n]+");
 
-            for (int i=0;i<aList.length;i++){
+            for (String s : aList) {
                 ApplicationItem item = new ApplicationItem();
-                if (aList[i].endsWith("*")) {
+                if (s.endsWith("*")) {
                     item.star = true;
-                    pName = aList[i].substring(0, aList[i].length() - 1);
-                }else pName=aList[i];
-                try{
-                    ApplicationInfo aI=mPackageManager.getApplicationInfo(pName,PackageManager.GET_META_DATA);
-                    item.applicationInfo = aI;
-                    item.label = aI.loadLabel(mPackageManager).toString();
-                    item.date = mPackageManager.getPackageInfo(aI.packageName, 0).lastUpdateTime;//firstInstallTime;
-                    item.sha = Utils.apkPro(getContext().getPackageManager().getPackageInfo(aI.packageName, GET_SIGNATURES));
-                    if (Build.VERSION.SDK_INT >=26) {
-                        item.size = (long) -1 * aI.targetSdkVersion;
+                    pName = s.substring(0, s.length() - 1);
+                } else pName = s;
+                try {
+                    ApplicationInfo applicationInfo = mPackageManager.getApplicationInfo(pName, PackageManager.GET_META_DATA);
+                    item.applicationInfo = applicationInfo;
+                    item.label = applicationInfo.loadLabel(mPackageManager).toString();
+                    item.date = mPackageManager.getPackageInfo(applicationInfo.packageName, 0).lastUpdateTime;//firstInstallTime;
+                    item.sha = Utils.apkPro(getContext().getPackageManager().getPackageInfo(applicationInfo.packageName, GET_SIGNATURES));
+                    if (Build.VERSION.SDK_INT >= 26) {
+                        item.size = (long) -1 * applicationInfo.targetSdkVersion;
                     }
                     itemList.add(item);
-                }catch (PackageManager.NameNotFoundException e){
-                }
+                } catch (PackageManager.NameNotFoundException ignored) {}
             }
             return itemList;
+        } else {
+            List<ApplicationInfo> applicationInfoList = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
 
-        }else {
-            List<ApplicationInfo> applicationInfos = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-
-            for (ApplicationInfo applicationInfo : applicationInfos) {
+            for (ApplicationInfo applicationInfo : applicationInfoList) {
                 ApplicationItem item = new ApplicationItem();
                 item.applicationInfo = applicationInfo;
                 item.star = ((applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0);
@@ -73,10 +71,10 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
                 }
                 try {
                     item.sha = Utils.apkPro(getContext().getPackageManager().getPackageInfo(applicationInfo.packageName, GET_SIGNATURES));
-                    item.date = mPackageManager.getPackageInfo(applicationInfo.packageName, 0).lastUpdateTime;//firstInstallTime;
+                    item.date = mPackageManager.getPackageInfo(applicationInfo.packageName, 0).lastUpdateTime; // .firstInstallTime;
                 } catch (PackageManager.NameNotFoundException e) {
                     item.date = 0L;
-                    item.sha = new Tuple("?","?");
+                    item.sha = new Tuple<>("?", "?");
                 }
                 itemList.add(item);
             }
@@ -187,7 +185,8 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
      * Helper function to take care of releasing resources associated
      * with an actively loaded data set.
      */
-    protected void onReleaseResources(List<ApplicationItem> data) {
+    @SuppressWarnings("unused")
+    private void onReleaseResources(List<ApplicationItem> data) {
         // For a simple List<> there is nothing to do.  For something
         // like a Cursor, we would close it here.
     }

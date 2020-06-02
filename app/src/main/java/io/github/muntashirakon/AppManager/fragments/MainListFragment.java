@@ -20,7 +20,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.format.Formatter;
@@ -43,14 +42,6 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import io.github.muntashirakon.AppManager.ApplicationItem;
-import io.github.muntashirakon.AppManager.MainCallbacks;
-import io.github.muntashirakon.AppManager.MainLoader;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
-import io.github.muntashirakon.AppManager.activities.MainActivity;
-import io.github.muntashirakon.AppManager.utils.Utils;
-
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -62,10 +53,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import io.github.muntashirakon.AppManager.ApplicationItem;
+import io.github.muntashirakon.AppManager.MainCallbacks;
+import io.github.muntashirakon.AppManager.MainLoader;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
+import io.github.muntashirakon.AppManager.activities.MainActivity;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 
 public class MainListFragment extends ListFragment implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener,
@@ -96,7 +95,6 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     private Activity mActivity;
 
     private int mSortBy;
-    private String mLastClick;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -164,9 +162,13 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         mAdapter.setDefaultList(mItemList);
         // Set title and subtitle
         if (sActivity != null) {
-            sActivity.getSupportActionBar().setTitle(MainActivity.permName.substring(0, MainActivity.permName.lastIndexOf(".")));
-            sActivity.getSupportActionBar().setSubtitle(
-                    MainActivity.permName.substring(MainActivity.permName.lastIndexOf(".")+1).toLowerCase());
+            ActionBar actionBar = sActivity.getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setTitle(MainActivity.permName.substring(0,
+                        MainActivity.permName.lastIndexOf(".")));
+                actionBar.setSubtitle(MainActivity.permName.substring(
+                        MainActivity.permName.lastIndexOf(".") + 1).toLowerCase());
+            }
         }
         if (Build.VERSION.SDK_INT <26) {
             startRetrievingPackagesSize();
@@ -179,7 +181,6 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     public void onLoaderReset(Loader<List<ApplicationItem>> loader) {
         mItemList = null;
         mAdapter.setDefaultList(null);
-
         mProgressDialog.dismiss();
     }
 
@@ -200,8 +201,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         if (mCallbacks != null) {
-            mLastClick = mAdapter.getItem(i).applicationInfo.packageName;
-            mCallbacks.onItemSelected(mLastClick);
+            mCallbacks.onItemSelected(mAdapter.getItem(i).applicationInfo.packageName);
         }
     }
 
@@ -332,13 +332,13 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
     private void getItemSize(final ApplicationItem item) {
         try {
+            @SuppressWarnings("JavaReflectionMemberAccess")
             Method getPackageSizeInfo = PackageManager.class.getMethod(
                     "getPackageSizeInfo", String.class, IPackageStatsObserver.class);
 
             getPackageSizeInfo.invoke(mActivity.getPackageManager(), item.applicationInfo.packageName, new IPackageStatsObserver.Stub() {
                 @Override
-                public void onGetStatsCompleted(final PackageStats pStats, final boolean succeeded)
-                        throws RemoteException {
+                public void onGetStatsCompleted(final PackageStats pStats, final boolean succeeded) {
                     mActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -370,6 +370,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
     static class Adapter extends BaseAdapter implements SectionIndexer, Filterable {
 
         static final String sections = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        @SuppressLint("SimpleDateFormat")
         static final DateFormat sSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");// hh:mm:ss");
         static final Spannable.Factory sSpannableFactory = Spannable.Factory.getInstance();
 
@@ -382,7 +383,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             TextView isSystemApp;
             TextView date;
             TextView size;
-            TextView sharedid;
+            TextView shared_id;
             TextView issuer;
             TextView sha;
             IconAsyncTask iconLoader;
@@ -394,20 +395,20 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
         private Filter mFilter;
         private String mConstraint;
         private List<ApplicationItem> mDefaultList;
-        private List<ApplicationItem> mAdapterList;
+        private List mAdapterList;
 
-        private int mColorGrey1;
-        private int mColorGrey2;
-        private int mOrange1;
+        private int mColorTransparent;
+        private int mColorSemiTransparent;
+        private int mColorOrange;
 
         Adapter(Activity activity) {
             mActivity = activity;
             mLayoutInflater = activity.getLayoutInflater();
             mPackageManager = activity.getPackageManager();
 
-            mColorGrey1 = activity.getResources().getColor(R.color.grey_1);
-            mColorGrey2 = activity.getResources().getColor(R.color.grey_2);
-            mOrange1 = activity.getResources().getColor(R.color.orange);
+            mColorTransparent = Color.TRANSPARENT;
+            mColorSemiTransparent = activity.getResources().getColor(R.color.SEMI_TRANSPARENT);
+            mColorOrange = activity.getResources().getColor(R.color.orange);
         }
 
         void setDefaultList(List<ApplicationItem> list) {
@@ -445,10 +446,11 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
                     @Override
                     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                        if (filterResults.values == null)
+                        if (filterResults.values == null) {
                             mAdapterList = mDefaultList;
-                        else
-                            mAdapterList = (List<ApplicationItem>) filterResults.values;
+                        } else {
+                            mAdapterList = (List) filterResults.values;
+                        }
 
                         notifyDataSetChanged();
                     }
@@ -463,7 +465,7 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
 
         @Override
         public ApplicationItem getItem(int i) {
-            return mAdapterList.get(i);
+            return (ApplicationItem) mAdapterList.get(i);
         }
 
         @Override
@@ -471,7 +473,6 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             return i;
         }
 
-        @SuppressLint("DefaultLocale")
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             ViewHolder holder;
@@ -486,37 +487,58 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                 holder.isSystemApp = view.findViewById(R.id.isSystem);
                 holder.date = view.findViewById(R.id.date);
                 holder.size = view.findViewById(R.id.size);
-                holder.sharedid= view.findViewById(R.id.shareid);
-                holder.issuer= view.findViewById(R.id.issuer);
-                holder.sha= view.findViewById(R.id.sha);
+                holder.shared_id = view.findViewById(R.id.shareid);
+                holder.issuer = view.findViewById(R.id.issuer);
+                holder.sha = view.findViewById(R.id.sha);
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder) view.getTag();
                 holder.iconLoader.cancel(true);
             }
 
-            view.setBackgroundColor(i % 2 == 0 ? mColorGrey2 : mColorGrey1);
+            // Alternate background colors
+            view.setBackgroundColor(i % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
             // Hacky method to set DayNight compatible color to dynamic contents
-            ColorStateList colorStateList = holder.date.getTextColors();
+            ColorStateList colorStateList = holder.sha.getTextColors();
 
-            ApplicationItem item = mAdapterList.get(i);
+            ApplicationItem item = (ApplicationItem) mAdapterList.get(i);
             ApplicationInfo info = item.applicationInfo;
-            if (!info.enabled) view.setBackgroundColor(Color.LTGRAY);//holder.icon.setImageAlpha(50);//view.setBackgroundColor(Color.LTGRAY);
-            holder.favorite_icon.setVisibility(item.star ? View.VISIBLE : View.INVISIBLE);
 
-            holder.sharedid.setText(String.format("%d", info.uid));
+            // If the app is disabled, add an ocean blue background
+            if (!info.enabled) {
+                view.setBackgroundColor(mActivity.getResources().getColor(R.color.ocean_blue));
+            }
+            // Add yellow star if the app is in debug mode
+            holder.favorite_icon.setVisibility(item.star ? View.VISIBLE : View.INVISIBLE);
             try {
                 PackageInfo packageInfo = mPackageManager.getPackageInfo(info.packageName, 0);
+                // Set version name
                 holder.version.setText(packageInfo.versionName);
-                String sDate = sSimpleDateFormat.format(new Date(packageInfo.lastUpdateTime));
-                if (packageInfo.firstInstallTime == packageInfo.lastUpdateTime) holder.date.setText(sDate);
+                // Set date and (if available,) days
+                String lastUpdateDate = sSimpleDateFormat.format(new Date(packageInfo.lastUpdateTime));
+                if (packageInfo.firstInstallTime == packageInfo.lastUpdateTime)
+                    holder.date.setText(lastUpdateDate);
                 else {
-                    SpannableString ssDate = new SpannableString(sDate + " " + TimeUnit.DAYS.convert(packageInfo.lastUpdateTime-packageInfo.firstInstallTime,TimeUnit.MILLISECONDS) + " days");
-                    ssDate.setSpan(new RelativeSizeSpan(.8f), 10, ssDate.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    long days = TimeUnit.DAYS.convert(packageInfo.lastUpdateTime
+                                    - packageInfo.firstInstallTime, TimeUnit.MILLISECONDS);
+                    SpannableString ssDate = new SpannableString(
+                            String.format(mActivity.getString(R.string.main_list_date_days),
+                                    lastUpdateDate, days));
+                    ssDate.setSpan(new RelativeSizeSpan(.8f), 10, ssDate.length(),
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     holder.date.setText(ssDate);
                 }
-                if (packageInfo.sharedUserId != null) holder.sharedid.setTextColor(mOrange1);
-                else holder.sharedid.setTextColor(colorStateList);
+                // Set date color to orange if app can read logs (and accepted)
+                if (mPackageManager.checkPermission(Manifest.permission.READ_LOGS,info.packageName)
+                        == PackageManager.PERMISSION_GRANTED)
+                    holder.date.setTextColor(mColorOrange);
+                else holder.date.setTextColor(colorStateList);
+                // Set kernel user ID
+                holder.shared_id.setText(String.format(Locale.getDefault(),"%d", info.uid));
+                // Set kernel user ID text color to orange if the package is shared
+                if (packageInfo.sharedUserId != null) holder.shared_id.setTextColor(mColorOrange);
+                else holder.shared_id.setTextColor(colorStateList);
+                // Set issuer
                 String issuer;
                 try {
                     issuer = "CN=" + ((String)item.sha.getFirst()).split("CN=", 2)[1];
@@ -524,65 +546,73 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                     issuer = (String)item.sha.getFirst();
                 }
                 holder.issuer.setText(issuer);
+                // Set signature type
                 String sha = ((String)item.sha.getSecond()).split("\\|", 2)[0];
                 holder.sha.setText(sha);
             } catch (PackageManager.NameNotFoundException | NullPointerException ignored) {}
-
+            // Load app icon
             holder.iconLoader = new IconAsyncTask(holder.icon, info);
             holder.iconLoader.execute();
-            //KISS:? holder.icon.setImageDrawable(info.loadIcon(mPackageManager));
-
-            if (mConstraint != null && item.label.toLowerCase().contains(mConstraint))
+            // Set app label
+            if (mConstraint != null && item.label.toLowerCase().contains(mConstraint)) {
+                // Highlight searched query
                 holder.label.setText(getHighlightedText(item.label));
-            else
+            } else {
                 holder.label.setText(item.label);
-
-            if (mConstraint != null && info.packageName.contains(mConstraint))
+            }
+            // Set app label color to red if clearing user data not allowed
+            if ((info.flags & ApplicationInfo.FLAG_ALLOW_CLEAR_USER_DATA) == 0)
+                holder.label.setTextColor(Color.RED);
+            else holder.label.setTextColor(colorStateList);
+            // Set package name
+            if (mConstraint != null && info.packageName.contains(mConstraint)) {
+                // Highlight searched query
                 holder.packageName.setText(getHighlightedText(info.packageName));
-            else
+            } else {
                 holder.packageName.setText(info.packageName);
+            }
+            // Set package name color to blue if the app is in stopped/force closed state
             if ((info.flags & ApplicationInfo.FLAG_STOPPED) != 0) holder.packageName.setTextColor(Color.BLUE);
             else holder.packageName.setTextColor(colorStateList);
-
+            // Set version (along with HW accelerated, debug and test only flags)
             CharSequence version = holder.version.getText();
             if ((info.flags & ApplicationInfo.FLAG_HARDWARE_ACCELERATED) == 0) version = "_" + version;
             if ((info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0) version = "debug" + version;
             if ((info.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0) version = "~" + version;
             holder.version.setText(version);
-
-            String isSystemApp;
-            if ((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) isSystemApp = mActivity.getString(R.string.system_app);
-            else isSystemApp = mActivity.getString(R.string.user_app);
-
+            // Set version color to green if the app is inactive
             if (Build.VERSION.SDK_INT >= 23) {
                 UsageStatsManager mUsageStats;
                 mUsageStats = mActivity.getSystemService(UsageStatsManager.class);
-                if (mUsageStats.isAppInactive(info.packageName)) holder.version.setTextColor(Color.GREEN);
+                if (mUsageStats != null && mUsageStats.isAppInactive(info.packageName))
+                    holder.version.setTextColor(Color.GREEN);
                 else holder.version.setTextColor(colorStateList);
             }
-
-            //holder.isSystemApp.setText(holder.isSystemApp.getText()+ getCategory(info.category, (char) 'c'));
-            if ((info.flags & ApplicationInfo.FLAG_PERSISTENT) != 0) holder.isSystemApp.setTextColor(Color.MAGENTA);
-            else holder.isSystemApp.setTextColor(colorStateList);
+            // Set app type: system or user app (along with large heap, suspended, multi-arch,
+            // has code, vm safe mode)
+            String isSystemApp;
+            if ((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) isSystemApp = mActivity.getString(R.string.system);
+            else isSystemApp = mActivity.getString(R.string.user);
             if ((info.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0) isSystemApp += "#";
-            if ((info.flags & ApplicationInfo.FLAG_ALLOW_CLEAR_USER_DATA) == 0) holder.label.setTextColor(Color.RED);
-            else holder.label.setTextColor(colorStateList);
             if ((info.flags & ApplicationInfo.FLAG_SUSPENDED) != 0) isSystemApp += "°";
             if ((info.flags & ApplicationInfo.FLAG_MULTIARCH) != 0) isSystemApp += "X";
             if ((info.flags & ApplicationInfo.FLAG_HAS_CODE) == 0) isSystemApp += "0";
             if ((info.flags & ApplicationInfo.FLAG_VM_SAFE_MODE) != 0) isSystemApp += "?";
-            //if ((info.flags & ApplicationInfo.FLAG_EXTRACT_NATIVE_LIBS) == 0) isSystemApp += "0";
             holder.isSystemApp.setText(isSystemApp);
-
-            if (mPackageManager.checkPermission(Manifest.permission.READ_LOGS,info.packageName)== PackageManager.PERMISSION_GRANTED) holder.date.setTextColor(mOrange1);
-            else holder.date.setTextColor(colorStateList);
-
-            if (Build.VERSION.SDK_INT >=26)  {
-                holder.size.setText(String.format("API %d", -item.size));
-                if ((info.flags & ApplicationInfo.FLAG_USES_CLEARTEXT_TRAFFIC) !=0) holder.size.setTextColor(mOrange1);
-                else holder.size.setTextColor(colorStateList);
-            } else if (item.size != -1L)
+            // Set app type text color to magenta if the app is persistent
+            if ((info.flags & ApplicationInfo.FLAG_PERSISTENT) != 0)
+                holder.isSystemApp.setTextColor(Color.MAGENTA);
+            else holder.isSystemApp.setTextColor(colorStateList);
+            // Set SDK
+            if (Build.VERSION.SDK_INT >= 26) {
+                holder.size.setText(String.format(Locale.getDefault(), "SDK %d", -item.size));
+            } else if (item.size != -1L) {
                 holder.size.setText(Formatter.formatFileSize(mActivity, item.size));
+            }
+            // Set SDK color to orange if the app is using cleartext (e.g. HTTP) traffic
+            if ((info.flags & ApplicationInfo.FLAG_USES_CLEARTEXT_TRAFFIC) !=0)
+                holder.size.setTextColor(mColorOrange);
+            else holder.size.setTextColor(colorStateList);
 
             return view;
         }
@@ -591,14 +621,15 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
             Spannable spannable = sSpannableFactory.newSpannable(s);
             int start = s.toLowerCase().indexOf(mConstraint);
             int end = start + mConstraint.length();
-            spannable.setSpan(new BackgroundColorSpan(0xFFB7B7B7), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new BackgroundColorSpan(0xFFB7B7B7), start, end,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             return spannable;
         }
 
         @Override
         public int getPositionForSection(int section) {
             for (int i = 0; i < this.getCount(); i++) {
-                String item = mAdapterList.get(i).label;
+                String item = ((ApplicationItem) mAdapterList.get(i)).label;
                 if (item.length() > 0) {
                     if (item.charAt(0) == sections.charAt(section))
                         return i;

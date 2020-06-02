@@ -1,15 +1,5 @@
 package io.github.muntashirakon.AppManager.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Lifecycle;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
-import io.github.muntashirakon.AppManager.fragments.AppDetailsFragment;
-import io.github.muntashirakon.AppManager.R;
-
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
@@ -21,11 +11,23 @@ import android.widget.Toast;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.fragments.AppDetailsFragment;
+
 public class AppDetailsActivity extends AppCompatActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
 
     private String mPackageName;
     private TypedArray mTabTitleIds;
+    AppDetailsFragmentStateAdapter appDetailsFragmentStateAdapter;
+    ViewPager2 viewPager2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +44,15 @@ public class AppDetailsActivity extends AppCompatActivity {
         // Set title
         try {
             setTitle(getPackageManager().getApplicationInfo(mPackageName, 0).loadLabel(getPackageManager()).toString());
-        } catch (PackageManager.NameNotFoundException ignored) {}
+        } catch (PackageManager.NameNotFoundException ignored) {
+            finish();
+            return;
+        }
         // Initialize tabs
-        mTabTitleIds = getResources().obtainTypedArray(R.array.group_titles);
+        mTabTitleIds = getResources().obtainTypedArray(R.array.TAB_TITLES);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        AppDetailsFragmentStateAdapter appDetailsFragmentStateAdapter = new AppDetailsFragmentStateAdapter(fragmentManager, getLifecycle());
-        ViewPager2 viewPager2 = findViewById(R.id.pager);
+        appDetailsFragmentStateAdapter = new AppDetailsFragmentStateAdapter(fragmentManager, getLifecycle());
+        viewPager2 = findViewById(R.id.pager);
         viewPager2.setAdapter(appDetailsFragmentStateAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);

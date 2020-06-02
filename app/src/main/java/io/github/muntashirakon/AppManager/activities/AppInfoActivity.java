@@ -29,12 +29,13 @@ import java.util.Date;
 import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.MenuItemCreator;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-public class AppInfoActivity extends AppCompatActivity {
+public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
 
     private static final String UID_STATS_PATH = "/proc/uid_stat/";
@@ -51,6 +52,7 @@ public class AppInfoActivity extends AppCompatActivity {
     @SuppressLint("SimpleDateFormat")
     private SimpleDateFormat mDateFormatter = new SimpleDateFormat("EE LLL dd yyyy kk:mm:ss");
     private MenuItemCreator mMenu;
+    private SwipeRefreshLayout mSwipeRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,27 +66,10 @@ public class AppInfoActivity extends AppCompatActivity {
             finish();
             return;
         }
-
+        mSwipeRefresh = findViewById(R.id.swipe_refresh);
+        mSwipeRefresh.setOnRefreshListener(this);
         mPackageManager = getPackageManager();
-        mPackageInfo = getPackageInfo(mPackageName);
-        if (mPackageInfo == null) {
-            Toast.makeText(this, mPackageName + ": " + getString(R.string.app_not_installed), Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-
-        if (mPackageInfo.activities != null) {
-            mMainActivity = mPackageInfo.activities[0].name;
-        }
-
-        // MenuItemCreator instance
-        mMenu = new MenuItemCreator(this, R.id.details_container);
-        // Load headers
-        setHeaderView();
-        // Load package size info
-        getPackageSizeInfo();
-        // FIXME: Set click events by generating layouts dynamically
-        setClickEvents();
+        getPackageInfoOrFinish(mPackageName);
     }
 
     @Override
@@ -95,7 +80,7 @@ public class AppInfoActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_refresh_detail) {
             Toast.makeText(this, getString(R.string.refresh), Toast.LENGTH_SHORT).show();
-            this.recreate();
+            getPackageInfoOrFinish(mPackageName);
             return true;
         } else if (id == R.id.action_show_details) {
             Intent appDetailsIntent = new Intent(this, AppDetailsActivity.class);
@@ -109,6 +94,12 @@ public class AppInfoActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_app_info_actions, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onRefresh() {
+        getPackageInfoOrFinish(mPackageName);
+        mSwipeRefresh.setRefreshing(false);
     }
 
     /**
@@ -332,17 +323,35 @@ public class AppInfoActivity extends AppCompatActivity {
     /**
      * Get package info.
      * @param packageName Package name (e.g. com.android.wallpaper)
-     * @return Null or PackageInfo
      */
     @SuppressLint("PackageManagerGetSignatures")
-    private PackageInfo getPackageInfo(String packageName) {
+    private void getPackageInfoOrFinish(String packageName) {
         try {
-            return mPackageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
+            mPackageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
                     | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                     | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
                     | PackageManager.GET_SIGNATURES | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
+            if (mPackageInfo == null) {
+                Toast.makeText(this, mPackageName + ": " + getString(R.string.app_not_installed), Toast.LENGTH_LONG).show();
+                finish();
+                return;
+            }
+
+            if (mPackageInfo.activities != null) {
+                mMainActivity = mPackageInfo.activities[0].name;
+            }
+
+            // MenuItemCreator instance
+            mMenu = new MenuItemCreator(this, R.id.details_container, true);
+            // Load headers
+            setHeaderView();
+            // Load package size info
+            getPackageSizeInfo();
+            // FIXME: Set click events by generating layouts dynamically
+            setClickEvents();
+
         } catch (PackageManager.NameNotFoundException e) {
-            return null;
+            finish();
         }
     }
 

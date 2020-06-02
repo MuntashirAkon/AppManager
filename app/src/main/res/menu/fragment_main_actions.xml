@@ -5,7 +5,7 @@
     <item
         android:icon="@drawable/ic_sort_black_24dp"
         android:title="@string/sort"
-        app:showAsAction="always">
+        app:showAsAction="never">
         <menu>
             <group
                 android:checkableBehavior="single"
@@ -47,6 +47,6 @@
         android:id="@+id/action_refresh"
         android:icon="@drawable/ic_refresh_black_24dp"
         android:title="@string/refresh"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
 </menu>

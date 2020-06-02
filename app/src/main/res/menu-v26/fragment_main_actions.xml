@@ -3,7 +3,7 @@
 
     <item
         android:icon="@drawable/ic_sort_black_24dp"
-        android:showAsAction="always"
+        android:showAsAction="never"
         android:title="@string/sort">
         <menu>
             <group
