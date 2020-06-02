@@ -7,9 +7,11 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import io.github.muntashirakon.AppManager.R;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -55,6 +57,7 @@ public class ClassViewerActivity extends AppCompatActivity {
             ("\\b[A-Z][A-Za-z0-9_]+\\b", Pattern.MULTILINE);
 
     private String classDump;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,10 @@ public class ClassViewerActivity extends AppCompatActivity {
             setContentView(R.layout.activity_any_viewer_wrapped);
         else
             setContentView(R.layout.activity_any_viewer);
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setMessage(getString(R.string.loading));
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -82,7 +89,8 @@ public class ClassViewerActivity extends AppCompatActivity {
     }
 
     private void displayContent() {
-        TextView textView = findViewById(R.id.any_view);
+        showProgressBar(true);
+        final TextView textView = findViewById(R.id.any_view);
         Matcher matcher;
         // Take precautions
         classDump = classDump.trim().replaceAll("<", "&lt;")
@@ -94,7 +102,21 @@ public class ClassViewerActivity extends AppCompatActivity {
         matcher = TYPES.matcher(highlightText(CLASS.matcher(classDump), getResources().getColor(R.color.ocean_blue)));
         matcher = KEYWORDS.matcher(highlightText(matcher, darkOrange));
         matcher = CC_COMMENT.matcher(highlightText(matcher, darkOrange));
-        textView.setText(Html.fromHtml(highlightText(matcher, Color.GREEN)));
+        final String final_data = highlightText(matcher, Color.GREEN);
+        final ClassViewerActivity activity = this;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final Spanned spanned = Html.fromHtml(final_data);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        textView.setText(spanned);
+                        activity.showProgressBar(false);
+                    }
+                });
+            }
+        }).start();
     }
 
     private String highlightText(Matcher matcher, int color) {
@@ -106,6 +128,13 @@ public class ClassViewerActivity extends AppCompatActivity {
         }
         matcher.appendTail(sb);
         return sb.toString();
+    }
+
+    private void showProgressBar(boolean show) {
+        if (show)
+            mProgressDialog.show();
+        else
+            mProgressDialog.dismiss();
     }
 
     @Override

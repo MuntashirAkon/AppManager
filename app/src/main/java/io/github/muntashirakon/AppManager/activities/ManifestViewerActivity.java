@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Spanned;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -29,12 +31,13 @@ public class ManifestViewerActivity extends AppCompatActivity {
 
     public final static Pattern QUOTATIONS = Pattern.compile("\"([^\"]*)\"", Pattern.MULTILINE);
 
-    public final static Pattern HTML_TAGS = Pattern.compile
+    public final static Pattern MANIFEST_TAGS = Pattern.compile
             ("(&lt;/?(manifest|application|compatible-screens|instrumentation|permission" +
                             "(-group|-tree)?|supports-(gl-texture|screens)|uses-(configuration|" +
                             "feature|permission(-sdk-23)?|sdk)|activity(-alias)?|meta-data|service|" +
-                            "receiver|provider|uses-library|intent-filter|layout|" +
-                            "grant-uri-permissions|path-permission|action|category|data)\\b|/?&#62;)",
+                            "receiver|provider|uses-library|intent-filter|layout|eat-comment|" +
+                            "grant-uri-permissions|path-permission|action|category|data|protected-" +
+                            "broadcast|overlay|library|original-package|restrict-update)\\b|/?&#62;)",
                     Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 
     private static String code;
@@ -94,10 +97,10 @@ public class ManifestViewerActivity extends AppCompatActivity {
     }
 
     private void displayContent() {
-        TextView textView = findViewById(R.id.any_view);
+        final TextView textView = findViewById(R.id.any_view);
         textView.setTextColor(getResources().getColor(R.color.dark_orange));
         Matcher matcher;
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
         String textFormat = "<font color='#%06X'>%s</font>";
         // Take precautions
         code = code.trim().replaceAll("<", "&lt;")
@@ -106,7 +109,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
                 .replaceAll("\n", "<br/>");
 
         int tagColor = getResources().getColor(R.color.pink);
-        matcher = HTML_TAGS.matcher(code);
+        matcher = MANIFEST_TAGS.matcher(code);
         while (matcher.find()) {
             String formattedText = String.format(textFormat, (0xFFFFFF & tagColor), matcher.group());
             matcher.appendReplacement(sb, formattedText);
@@ -121,16 +124,21 @@ public class ManifestViewerActivity extends AppCompatActivity {
             matcher.appendReplacement(sb, formattedText);
         }
         matcher.appendTail(sb);
-        textView.setText(Html.fromHtml(sb.toString()));
+        final ManifestViewerActivity activity = this;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final Spanned spanned = Html.fromHtml(sb.toString());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        textView.setText(spanned);
+                        activity.showProgressBar(false);
+                    }
+                });
+            }
+        }).start();
     }
-
-//    final class MyWebChromeClient extends WebChromeClient {
-//        @Override
-//        public void onProgressChanged(WebView view, int progress) {
-//            if (progress == 100)
-//                showProgressBar(false);
-//        }
-//    }
 
     private void handleError() {
         Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
@@ -174,7 +182,6 @@ public class ManifestViewerActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             if (mActivity.get() != null) {
-                mActivity.get().showProgressBar(false);
                 if (result)
                     mActivity.get().displayContent();
                 else
