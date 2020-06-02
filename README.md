@@ -11,7 +11,7 @@ I've plan to merge this project with other app managers such as Watt, Activity L
 - [x] [Apps_packages Info](https://bitbucket.org/oF2pks/fdroid-applications-info/src)
 - [x] [Activity Launcher](https://github.com/butzist/ActivityLauncher)
 - [ ] [Watt](https://github.com/tuyafeng/Watt)
-- [x ] [ClassyShark3xodus](https://bitbucket.org/oF2pks/fdroid-classyshark3xodus/src)
+- [x] [ClassyShark3xodus](https://bitbucket.org/oF2pks/fdroid-classyshark3xodus/src)
 
 ### Screenshots
 
