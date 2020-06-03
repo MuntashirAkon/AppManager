@@ -59,6 +59,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
     private static final int CONFIGURATION = 7;
     private static final int SIGNATURES = 8;
     private static final int SHARED_LIBRARY_FILES = 9;
+    private static final int NOT_FOUND = 10;
 
     private int neededProperty;
 
@@ -120,11 +121,8 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setOnRefreshListener(this);
         ListView listView = view.findViewById(android.R.id.list);
-        TextView textView = view.findViewById(R.id.internalEmpty);
-        textView.setText(getNeededString(neededProperty));
         mAdapter = new ActivitiesListAdapter();
         listView.setAdapter(mAdapter);
-        if (mAdapter.count == 0) listView.setVisibility(View.GONE);
         return view;
     }
 
@@ -132,6 +130,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
     public void onRefresh() {
         if (mAdapter != null){
             getPackageInfo(mPackageName);
+            mAdapter.reset();
             mAdapter.notifyDataSetChanged();
         }
         mSwipeRefresh.setRefreshing(false);
@@ -276,6 +275,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                     return signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
                             : signingInfo.getSigningCertificateHistory();
                 } else {
+                    //noinspection deprecation
                     return mPackageInfo.signatures;
                 }
             case SHARED_LIBRARY_FILES: return mPackageInfo.applicationInfo.sharedLibraryFiles;
@@ -307,11 +307,19 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
     private class ActivitiesListAdapter extends BaseAdapter {
         private int count;
         private Object[] arrayOfThings;
+        private int requestedProperty;
 
         ActivitiesListAdapter() {
-            arrayOfThings = getNeededArray(neededProperty);
-            if (arrayOfThings == null) count = 0;
-            else count = arrayOfThings.length;
+            reset();
+        }
+
+        void reset() {
+            requestedProperty = neededProperty;
+            arrayOfThings = getNeededArray(requestedProperty);
+            if (arrayOfThings == null){
+                count = 1; // to produce not found
+                requestedProperty = NOT_FOUND;
+            } else count = arrayOfThings.length;
         }
 
         /**
@@ -350,7 +358,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            switch (neededProperty) {
+            switch (requestedProperty) {
                 case SERVICES:
                     return getServicesView(parent, convertView, position);
                 case RECEIVERS:
@@ -369,6 +377,10 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                     return getSignatureView(convertView, position);
                 case SHARED_LIBRARY_FILES:
                     return getSharedLibsView(convertView, position);
+                case NOT_FOUND:
+                    convertView = mLayoutInflater.inflate(R.layout.item_app_details_not_found, parent, false);
+                    ((TextView) convertView).setText(getNeededString(neededProperty));
+                    return convertView;
                 case ACTIVITIES:
                 default:
                     return getActivityView(parent, convertView, position);

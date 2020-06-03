@@ -4,21 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout android:id="@+id/listContainer"
+    <ListView
+        android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ListView android:id="@android:id/list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TextView android:id="@+id/internalEmpty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    </LinearLayout>
+        android:layout_height="match_parent" />
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
