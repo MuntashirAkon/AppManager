@@ -123,7 +123,7 @@ public class Reflector {
         }
 
         for (Constructor constructor : constructors) {
-            Class cx[] = constructor.getParameterTypes();
+            Class[] cx = constructor.getParameterTypes();
             if (cx.length > 0) {
                 for (Class aClass : cx) {
                     x = ClassTypeAlgorithm.TypeName(aClass.getName(), classRef);

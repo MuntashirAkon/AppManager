@@ -416,7 +416,7 @@ class OGArrayAdapter<T> extends BaseAdapter implements Filterable {
                 text = (TextView) view;
             } else {
                 //  Otherwise, find the TextView field within the layout
-                text = (TextView) view.findViewById(mFieldId);
+                text = view.findViewById(mFieldId);
             }
         } catch (ClassCastException e) {
             Log.e("ArrayAdapter", "You must supply a resource ID for a TextView");

@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="io.github.muntashirakon.AppManager"
     xmlns:dist="http://schemas.android.com/apk/distribution">
-
     <dist:module dist:instant="true" />
+    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" android:maxSdkVersion="25" />
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher_app_manager"
@@ -37,10 +38,4 @@
             android:name=".activities.ManifestViewerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
     </application>
-    <uses-permission
-        android:name="android.permission.GET_PACKAGE_SIZE"
-        android:maxSdkVersion="25" />
-
-    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
-
 </manifest>

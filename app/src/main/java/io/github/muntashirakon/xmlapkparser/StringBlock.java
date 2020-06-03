@@ -25,6 +25,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Dmitry Skiba
@@ -44,8 +45,8 @@ public class StringBlock {
     private static final int CHUNK_TYPE = 0x001C0001;
     private static final int UTF8_FLAG = 0x00000100;
 
-    private final CharsetDecoder UTF8_DECODER = Charset.forName("UTF-8").newDecoder();
-    private final CharsetDecoder UTF16LE_DECODER = Charset.forName("UTF-16LE").newDecoder();
+    private final CharsetDecoder UTF8_DECODER = StandardCharsets.UTF_8.newDecoder();
+    private final CharsetDecoder UTF16LE_DECODER = StandardCharsets.UTF_16LE.newDecoder();
 
     /**
      * Reads whole (including chunk type) string block from stream.
@@ -271,7 +272,7 @@ public class StringBlock {
             return null;
         }
         int offset = m_styleOffsets[index] / 4;
-        int style[];
+        int[] style;
         {
             int count = 0;
             for (int i = offset; i < m_styles.length; ++i) {

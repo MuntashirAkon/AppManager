@@ -141,11 +141,11 @@ public class AXMLPrinter {
             return data != 0 ? "true" : "false";
         }
         if (type == TypedValue.TYPE_DIMENSION) {
-            return Float.toString(complexToFloat(data)) +
+            return complexToFloat(data) +
                     DIMENSION_UNITS[data & TypedValue.COMPLEX_UNIT_MASK];
         }
         if (type == TypedValue.TYPE_FRACTION) {
-            return Float.toString(complexToFloat(data)) +
+            return complexToFloat(data) +
                     FRACTION_UNITS[data & TypedValue.COMPLEX_UNIT_MASK];
         }
         if (type >= TypedValue.TYPE_FIRST_COLOR_INT && type <= TypedValue.TYPE_LAST_COLOR_INT) {
@@ -186,13 +186,13 @@ public class AXMLPrinter {
         return (float) (complex & 0xFFFFFF00) * RADIX_MULTS[(complex >> 4) & 3];
     }
 
-    private static final float RADIX_MULTS[] = {
+    private static final float[] RADIX_MULTS = {
             0.00390625F, 3.051758E-005F, 1.192093E-007F, 4.656613E-010F
     };
-    private static final String DIMENSION_UNITS[] = {
+    private static final String[] DIMENSION_UNITS = {
             "px", "dip", "sp", "pt", "in", "mm", "", ""
     };
-    private static final String FRACTION_UNITS[] = {
+    private static final String[] FRACTION_UNITS = {
             "%", "%p", "", "", "", "", "", ""
     };
 }

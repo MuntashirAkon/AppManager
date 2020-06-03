@@ -14,19 +14,18 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 
 public class PackageUtils {
     public static String apkCert(PackageInfo p){
         Signature[] signatures;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            SigningInfo signingInfo = p.signingInfo;
-            signatures = signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
-                    : signingInfo.getSigningCertificateHistory();
-        } else {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+//            SigningInfo signingInfo = p.signingInfo;
+//            signatures = signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
+//                    : signingInfo.getSigningCertificateHistory();
+//        } else {
             signatures = p.signatures;
-        }
+//        }
         String s = "";
         X509Certificate c;
         try {
