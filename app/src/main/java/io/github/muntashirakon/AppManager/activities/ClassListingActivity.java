@@ -1,6 +1,5 @@
 package io.github.muntashirakon.AppManager.activities;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -10,13 +9,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,13 +27,10 @@ import com.google.classysharkandroid.reflector.Reflector;
 import com.google.classysharkandroid.utils.IOUtils;
 import com.google.classysharkandroid.utils.UriUtils;
 
-import java.io.EOFException;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Enumeration;
 
 import androidx.annotation.NonNull;
@@ -57,7 +53,6 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     private ClassesNamesList classesList;
     private ClassesNamesList classesListAll;
     private ListView mListView;
-    private ProgressDialog mProgressDialog;
     private int totalTrackersFound = 0;
     private int totalClassesScanned = 0;
     private String foundTrackerList = "";
@@ -67,10 +62,11 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     private String[] Names;
     private boolean trackerClassesOnly;
     private int totalTimeTaken = 0;
-    private StableArrayAdapter adapter;
+    private StableArrayAdapter mAdapter;
     private String packageInfo = "";
-    private CharSequence appName;
-    private ActionBar actionBar;
+    private CharSequence mAppName;
+    private ActionBar mActionBar;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onDestroy() {
@@ -103,28 +99,28 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class_listing);
-        actionBar = getSupportActionBar();
-        if (actionBar != null) {
+        mActionBar = getSupportActionBar();
+        if (mActionBar != null) {
             String packageName = getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
             PackageManager pm = getPackageManager();
             try {
                 assert packageName != null;
-                appName = pm.getApplicationInfo(packageName, 0).loadLabel(pm);
-                actionBar.setTitle(appName);
-                actionBar.setSubtitle(getString(R.string.tracker_classes));
+                mAppName = pm.getApplicationInfo(packageName, 0).loadLabel(pm);
+                mActionBar.setTitle(mAppName);
+                mActionBar.setSubtitle(getString(R.string.tracker_classes));
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
                 Toast.makeText(this, R.string.app_not_installed, Toast.LENGTH_LONG).show();
                 finish();
             }
-            actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
+            mActionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
 
-            SearchView searchView = new SearchView(actionBar.getThemedContext());
+            SearchView searchView = new SearchView(mActionBar.getThemedContext());
             searchView.setOnQueryTextListener(this);
 
             ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            actionBar.setCustomView(searchView, layoutParams);
+            mActionBar.setCustomView(searchView, layoutParams);
         }
 
         inIntent = getIntent();
@@ -133,6 +129,8 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
 
         mListView = findViewById(R.id.listView);
         mListView.setTextFilterEnabled(true);
+
+        mProgressBar = findViewById(R.id.progress_horizontal);
 
         final Uri uriFromIntent = inIntent.getData();
         classesList = new ClassesNamesList();
@@ -143,22 +141,11 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                     + inIntent.getData().toString() + "\n";
         else packageInfo = "";
 
-        mProgressDialog = new ProgressDialog(ClassListingActivity.this);
-        mProgressDialog.setIcon(R.drawable.ic_frost_classysharkexodus_black_24dp);
-        mProgressDialog.setTitle("¸.·´¯`·.´¯`·.¸¸.·´¯`·.¸><(((º>");
-        mProgressDialog.setMessage(Html.fromHtml(packageInfo));
-        mProgressDialog.setIndeterminate(false);
-        mProgressDialog.show();
-
         Names = getResources().getStringArray(R.array.tracker_names);
         InputStream uriStream;
         try {
             uriStream = UriUtils.getStreamFromUri(ClassListingActivity.this, uriFromIntent);
-            long s, e;
-            s = System.currentTimeMillis();
             final byte[] bytes = readFully(uriStream, -1, true);
-            e = System.currentTimeMillis();
-            Log.d("Speed test", "Time: " + (e-s));
             new Thread(new Runnable() {
                 public void run() {
                     try {
@@ -166,8 +153,6 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                                 + "\n<b>SHA1sum:</b> " + convertS(MessageDigest.getInstance("sha1").digest(bytes))
                                 + "\n<b>SHA256sum:</b> " + convertS(MessageDigest.getInstance("sha256").digest(bytes));
                     } catch (NoSuchAlgorithmException ignored) {}
-
-                    runOnUiThread(changeText);
 
                     PackageManager pm = getApplicationContext().getPackageManager();
                     PackageInfo mPackageInfo = null;
@@ -182,28 +167,22 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                             String archiveFilePath = UriUtils.pathUriCache(getApplicationContext(),
                                     uriFromIntent, "cache.apk");
                             if (archiveFilePath != null) {
-                                mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, signingCertFlag);
+                                mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, PackageManager.GET_SIGNATURES);
                             }
                         }
-                    }else {
+                    } else {
                         if (uriFromIntent != null) {
                             String archiveFilePath = uriFromIntent.getPath();
                             if (archiveFilePath != null) {
-                                mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, signingCertFlag);
+                                mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, PackageManager.GET_SIGNATURES);
                             }
                         }
                     }
-
-                    runOnUiThread(changeText);
 
                     if (mPackageInfo != null) packageInfo += apkCert(mPackageInfo);
                     else packageInfo += "\n<i><b>FAILED to retrieve PackageInfo!</b></i>";
                 }
             }).start();
-
-            mProgressDialog.setMessage(Html.fromHtml(packageInfo));
-            mProgressDialog.setIndeterminate(false);
-            mProgressDialog.show();
 
             new FillClassesNamesThread(bytes).start();
             new StartDexLoaderThread(bytes).start();
@@ -249,16 +228,9 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        adapter.getFilter().filter(newText);
+        mAdapter.getFilter().filter(newText);
         return true;
     }
-
-    private Runnable changeText = new Runnable() {
-        @Override
-        public void run() {
-            mProgressDialog.setMessage(packageInfo);
-        }
-    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -267,7 +239,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
@@ -291,11 +263,11 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                         .setMessage(statsMsg.toString()).show();
                 return true;
             case R.id.action_toggle_class_listing:
-                adapter = new StableArrayAdapter(ClassListingActivity.this,
+                mAdapter = new StableArrayAdapter(ClassListingActivity.this,
                         android.R.layout.simple_list_item_1, (trackerClassesOnly ? classesList : classesListAll).getClassNames());
-                actionBar.setSubtitle(getString((trackerClassesOnly ? R.string.tracker_classes : R.string.all_classes)));
+                mActionBar.setSubtitle(getString((trackerClassesOnly ? R.string.tracker_classes : R.string.all_classes)));
                 trackerClassesOnly = !trackerClassesOnly;
-                mListView.setAdapter(adapter);
+                mListView.setAdapter(mAdapter);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -345,11 +317,11 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         public void run() {
             try {
                 Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-                File incomeFile = File.createTempFile("classes" + Thread.currentThread().getId(), ".dex", getCacheDir());
+                long threadId = Thread.currentThread().getId();
+                File incomeFile = File.createTempFile("classes" + threadId, ".dex", getCacheDir());
                 IOUtils.bytesToFile(bytes, incomeFile);
-                File optimizedFile = File.createTempFile("opt" + Thread.currentThread().getId(), ".dex", getCacheDir());
-                DexFile dx = DexFile.loadDex(incomeFile.getPath(),
-                        optimizedFile.getPath(), 0);
+                File optimizedFile = File.createTempFile("opt" + threadId, ".dex", getCacheDir());
+                DexFile dx = DexFile.loadDex(incomeFile.getPath(), optimizedFile.getPath(), 0);
 
                 StringBuilder found = new StringBuilder();
                 signatures = getResources().getStringArray(R.array.tracker_signatures);
@@ -360,9 +332,9 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                     classesListAll.add(className);
                     totalClassesScanned++;
                     if (className.length()>8) {
-                        if (className.contains(".")){
+                        if (className.contains(".")) {
                             for (int i = 0; i < signatures.length; i++) {
-                                totalTimeTaken++;// TESTING only
+                                totalTimeTaken++; // Total enumerations
                                 if (className.contains(signatures[i])) {
                                     classesList.add(className);
                                     signatureCount[i]++;
@@ -381,7 +353,9 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                     foundTrackerList = getString(R.string.found_trackers) + "\n" + found;
 
                 ClassListingActivity.this.deleteFile("*");
+                //noinspection ResultOfMethodCallIgnored
                 incomeFile.delete();
+                //noinspection ResultOfMethodCallIgnored
                 optimizedFile.delete();
             } catch (Exception e) {
                 // ODEX, need to see how to handle
@@ -391,24 +365,22 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
             ClassListingActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if(!trackerClassesOnly) {
-                        adapter = new StableArrayAdapter(ClassListingActivity.this,
+                    if (!trackerClassesOnly) {
+                        mAdapter = new StableArrayAdapter(ClassListingActivity.this,
                                 android.R.layout.simple_list_item_1, classesList.getClassNames());
-                        actionBar.setSubtitle(getString(R.string.tracker_classes));
+                        mActionBar.setSubtitle(getString(R.string.tracker_classes));
                     } else {
-                        adapter = new StableArrayAdapter(ClassListingActivity.this,
+                        mAdapter = new StableArrayAdapter(ClassListingActivity.this,
                                 android.R.layout.simple_list_item_1, classesListAll.getClassNames());
-                        actionBar.setSubtitle(getString(R.string.all_classes));
+                        mActionBar.setSubtitle(getString(R.string.all_classes));
                     }
-                    mListView.setAdapter(adapter);
-                    mProgressDialog.dismiss();
-                    if(classesList.getClassNames().isEmpty() && totalClassesScanned ==0) {
+                    mListView.setAdapter(mAdapter);
+                    mProgressBar.setVisibility(View.GONE);
+                    if (classesList.getClassNames().isEmpty() && totalClassesScanned ==0) {
                         Toast.makeText(ClassListingActivity.this,
                                 "Sorry don't support /system ODEX", Toast.LENGTH_LONG).show();
-                    }else {
-                        if(trackerClassesOnly) {
-                            Toast.makeText(ClassListingActivity.this, "LONG_click --> All Classes", Toast.LENGTH_LONG).show();
-                        } viewScanSummary();
+                    } else {
+                        viewScanSummary();
                     }
                 }
             });
@@ -439,8 +411,9 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                                                     int position, long id) {
                                 Class<?> loadClass;
                                 try {
-                                    loadClass = loader.loadClass((!trackerClassesOnly ? classesList : classesListAll).getClassName(
-                                            (int) (parent.getAdapter()).getItemId(position)));
+                                    loadClass = loader.loadClass((!trackerClassesOnly ? classesList
+                                            : classesListAll).getClassName((int) (parent
+                                            .getAdapter()).getItemId(position)));
 
                                     Reflector reflector = new Reflector(loadClass);
 
@@ -454,11 +427,12 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                                                     .getClassName((int) (parent.getAdapter())
                                                             .getItemId(position)));
                                     intent.putExtra(ClassViewerActivity.EXTRA_CLASS_DUMP, reflector.toString());
-                                    intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, appName);
+                                    intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, mAppName);
                                     startActivity(intent);
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    Toast.makeText(ClassListingActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(ClassListingActivity.this, e.toString(),
+                                            Toast.LENGTH_LONG).show();
                                 }
                             }
                         });

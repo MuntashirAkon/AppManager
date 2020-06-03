@@ -7,6 +7,14 @@
     android:orientation="vertical"
     tools:context=".activities.ClassListingActivity">
 
+    <ProgressBar
+        android:id="@+id/progress_horizontal"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:paddingStart="@dimen/padding_medium"
+        android:paddingEnd="@dimen/padding_medium" />
 
     <ListView
         android:id="@+id/listView"

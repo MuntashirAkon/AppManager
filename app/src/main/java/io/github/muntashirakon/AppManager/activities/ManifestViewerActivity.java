@@ -2,15 +2,15 @@ package io.github.muntashirakon.AppManager.activities;
 
 // NOTE: Commented lines were taken from View2ManifestActivity.java
 
-import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +41,8 @@ public class ManifestViewerActivity extends AppCompatActivity {
                     Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 
     private static String code;
-    private ProgressDialog mProgressDialog;
+    private ProgressBar mProgressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +55,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.setMessage(getString(R.string.loading));
+        mProgressBar = findViewById(R.id.progress_horizontal);
 
         String packageName = getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
         String filePath = null, applicationLabel = null;
@@ -146,10 +145,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
     }
 
     private void showProgressBar(boolean show) {
-        if (show)
-            mProgressDialog.show();
-        else
-            mProgressDialog.dismiss();
+        mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     /**

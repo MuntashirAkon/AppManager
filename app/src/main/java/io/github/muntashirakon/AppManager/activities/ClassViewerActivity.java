@@ -7,13 +7,14 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import io.github.muntashirakon.AppManager.R;
 
-import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.regex.Matcher;
@@ -57,7 +58,7 @@ public class ClassViewerActivity extends AppCompatActivity {
             ("\\b[A-Z][A-Za-z0-9_]+\\b", Pattern.MULTILINE);
 
     private String classDump;
-    private ProgressDialog mProgressDialog;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +68,7 @@ public class ClassViewerActivity extends AppCompatActivity {
         else
             setContentView(R.layout.activity_any_viewer);
 
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.setMessage(getString(R.string.loading));
+        mProgressBar = findViewById(R.id.progress_horizontal);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -131,10 +130,7 @@ public class ClassViewerActivity extends AppCompatActivity {
     }
 
     private void showProgressBar(boolean show) {
-        if (show)
-            mProgressDialog.show();
-        else
-            mProgressDialog.dismiss();
+        mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     @Override
