@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
@@ -126,7 +127,11 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
         // Set App Version
         TextView versionView = findViewById(R.id.version);
-        versionView.setText(getString(R.string.version) + " " + mPackageInfo.versionName + " (" + mPackageInfo.versionCode + ")");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            versionView.setText(getString(R.string.version) + " " + mPackageInfo.versionName + " (" + mPackageInfo.getLongVersionCode() + ")");
+        } else {
+            versionView.setText(getString(R.string.version) + " " + mPackageInfo.versionName + " (" + mPackageInfo.versionCode + ")");
+        }
 
         // Set App Type: User or System, if System find out whether it's updated
         TextView isSystemAppView = findViewById(R.id.isSystem);
@@ -210,25 +215,27 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
      * Load package sizes and update views if success.
      */
     private void getPackageSizeInfo() {
-        try {
-            @SuppressWarnings("JavaReflectionMemberAccess")
-            Method getPackageSizeInfo = PackageManager.class.getMethod(
-                    "getPackageSizeInfo", String.class, IPackageStatsObserver.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            try {
+                @SuppressWarnings("JavaReflectionMemberAccess")
+                Method getPackageSizeInfo = PackageManager.class.getMethod(
+                        "getPackageSizeInfo", String.class, IPackageStatsObserver.class);
 
-            getPackageSizeInfo.invoke(mPackageManager, mPackageName, new IPackageStatsObserver.Stub() {
-                @Override
-                public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded) {
-                    mActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mPackageStats = pStats;
-                            onPackageStatsLoaded();
-                        }
-                    });
-                }
-            });
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+                getPackageSizeInfo.invoke(mPackageManager, mPackageName, new IPackageStatsObserver.Stub() {
+                    @Override
+                    public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded) {
+                        mActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mPackageStats = pStats;
+                                onPackageStatsLoaded();
+                            }
+                        });
+                    }
+                });
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
         }
     }
 
