@@ -12,11 +12,16 @@
         android:paddingStart="@dimen/padding_medium"
         android:paddingEnd="@dimen/padding_medium" />
 
-    <ListView
-        android:id="@+id/item_list"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content">
 
-<!--    tools:layout="@android:layout/list_content"-->
+        <ListView
+            android:id="@+id/item_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

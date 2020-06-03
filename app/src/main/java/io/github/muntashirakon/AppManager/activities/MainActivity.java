@@ -60,6 +60,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.ApplicationItem;
 import io.github.muntashirakon.AppManager.MainLoader;
 import io.github.muntashirakon.AppManager.R;
@@ -67,8 +68,9 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static androidx.appcompat.app.ActionBar.LayoutParams;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener,
-        LoaderManager.LoaderCallbacks<List<ApplicationItem>> {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
+        SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<List<ApplicationItem>>,
+        SwipeRefreshLayout.OnRefreshListener {
     public static final String EXTRA_PACKAGE_NAME = "package_name";
     public static String packageList;
     public static String permName;
@@ -95,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private ListView mListView;
     private ProgressBar mProgressBar;
     private LoaderManager mLoaderManager;
+    private SwipeRefreshLayout mSwipeRefresh;
 
     private int mSortBy;
 
@@ -105,8 +108,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         packageList = getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
         permName = getIntent().getStringExtra("perm_name");
         if (permName == null) permName = "Onboard.packages";
+
         mProgressBar = findViewById(R.id.progress_horizontal);
         mListView = findViewById(R.id.item_list);
+        mSwipeRefresh = findViewById(R.id.swipe_refresh);
+        mSwipeRefresh.setOnRefreshListener(this);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -177,12 +183,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         .show();
                 return true;
             case R.id.action_refresh:
-                if (mSortBy == SORT_SIZE && Build.VERSION.SDK_INT <= 26) {
-                    Toast t = Toast.makeText(this, getString(R.string.refresh)
-                                    + " & " + getString(R.string.sort)
-                                    + "/" + getString(R.string.size)
-                                    + "\n" + getString(R.string.unsupported)
-                            , Toast.LENGTH_LONG);
+                if (mSortBy == SORT_SIZE && Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
+                    Toast t = Toast.makeText(this, getString(R.string.refresh) + " & " + getString(R.string.sort) + "/" + getString(R.string.size)
+                            + "\n" + getString(R.string.unsupported), Toast.LENGTH_LONG);
                     t.setGravity(Gravity.CENTER , Gravity.CENTER, Gravity.CENTER);
                     t.show();
                     return true;
@@ -260,6 +263,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Intent intent = new Intent(this, AppInfoActivity.class);
         intent.putExtra(AppInfoActivity.EXTRA_PACKAGE_NAME, mAdapter.getItem(i).applicationInfo.packageName);
         startActivity(intent);
+    }
+
+    @Override
+    public void onRefresh() {
+        if (mSortBy == SORT_SIZE && Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
+            Toast t = Toast.makeText(this, getString(R.string.refresh) + " & " + getString(R.string.sort) + "/" + getString(R.string.size)
+                    + "\n" + getString(R.string.unsupported), Toast.LENGTH_LONG);
+            t.setGravity(Gravity.CENTER , Gravity.CENTER, Gravity.CENTER);
+            t.show();
+        } else {
+            mLoaderManager.restartLoader(0, null, this);
+        }
+        mSwipeRefresh.setRefreshing(false);
     }
 
     private void showProgressBar(boolean show) {
