@@ -1,7 +1,6 @@
 package io.github.muntashirakon.AppManager;
 
 import android.annotation.SuppressLint;
-import android.content.AsyncTaskLoader;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +9,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
+import androidx.loader.content.AsyncTaskLoader;
 import io.github.muntashirakon.AppManager.activities.MainActivity;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
-
     private List<ApplicationItem> mData;
     private PackageIntentReceiver mPackageObserver;
     private PackageManager mPackageManager;
