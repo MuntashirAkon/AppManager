@@ -31,5 +31,5 @@ public class ApplicationItem {
     /**
      * Issuer and signature
      */
-    public Tuple sha;
+    public Tuple<String, String> sha;
 }

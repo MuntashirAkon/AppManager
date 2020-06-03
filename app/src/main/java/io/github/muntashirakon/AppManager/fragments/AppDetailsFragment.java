@@ -14,6 +14,8 @@ import android.content.pm.PathPermission;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
+import android.content.pm.Signature;
+import android.content.pm.SigningInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -140,13 +142,18 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
      *
      * @param packageName Package name (e.g. com.android.wallpaper)
      */
-    @SuppressLint("PackageManagerGetSignatures")
     private void getPackageInfo(String packageName) {
         try {
+            final int signingCertFlag;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                signingCertFlag = PackageManager.GET_SIGNING_CERTIFICATES;
+            } else {
+                signingCertFlag = PackageManager.GET_SIGNATURES;
+            }
             mPackageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
                     | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                     | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
-                    | PackageManager.GET_SIGNATURES | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
+                    | signingCertFlag | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
 
             if (mPackageInfo == null) return;
 
@@ -263,7 +270,14 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             case PERMISSIONS: return mPackageInfo.permissions;
             case FEATURES: return mPackageInfo.reqFeatures;
             case CONFIGURATION: return mPackageInfo.configPreferences;
-            case SIGNATURES: return mPackageInfo.signatures;
+            case SIGNATURES:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    SigningInfo signingInfo = mPackageInfo.signingInfo;
+                    return signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
+                            : signingInfo.getSigningCertificateHistory();
+                } else {
+                    return mPackageInfo.signatures;
+                }
             case SHARED_LIBRARY_FILES: return mPackageInfo.applicationInfo.sharedLibraryFiles;
             case ACTIVITIES:
             default: return mPackageInfo.activities;
@@ -870,8 +884,8 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             }
 
             TextView textView = (TextView) convertView;
-            textView.setText(Utils.signCert(mPackageInfo.signatures[index]) + "\n" +
-                    mPackageInfo.signatures[index].toCharsString());
+            textView.setText(Utils.signCert((Signature) arrayOfThings[index]) + "\n" +
+                    ((Signature) arrayOfThings[index]).toCharsString());
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             textView.setTextIsSelectable(true);
             int medium_size = mActivity.getResources().getDimensionPixelSize(R.dimen.padding_medium);

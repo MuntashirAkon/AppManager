@@ -17,8 +17,6 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.pm.PackageManager.GET_SIGNATURES;
-
 public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
 
     private List<ApplicationItem> mData;
@@ -49,8 +47,12 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
                     ApplicationInfo applicationInfo = mPackageManager.getApplicationInfo(pName, PackageManager.GET_META_DATA);
                     item.applicationInfo = applicationInfo;
                     item.label = applicationInfo.loadLabel(mPackageManager).toString();
-                    item.date = mPackageManager.getPackageInfo(applicationInfo.packageName, 0).lastUpdateTime;//firstInstallTime;
-                    item.sha = Utils.apkPro(getContext().getPackageManager().getPackageInfo(applicationInfo.packageName, GET_SIGNATURES));
+                    item.date = mPackageManager.getPackageInfo(applicationInfo.packageName, 0).lastUpdateTime; // .firstInstallTime;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        item.sha = Utils.apkPro(mPackageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNING_CERTIFICATES));
+                    } else {
+                        item.sha = Utils.apkPro(mPackageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNATURES));
+                    }
                     if (Build.VERSION.SDK_INT >= 26) {
                         item.size = (long) -1 * applicationInfo.targetSdkVersion;
                     }
@@ -66,11 +68,15 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
                 item.applicationInfo = applicationInfo;
                 item.star = ((applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0);
                 item.label = applicationInfo.loadLabel(mPackageManager).toString();
-                if (Build.VERSION.SDK_INT >=26) {
+                if (Build.VERSION.SDK_INT >= 26) {
                     item.size = (long) -1 * applicationInfo.targetSdkVersion;
                 }
                 try {
-                    item.sha = Utils.apkPro(getContext().getPackageManager().getPackageInfo(applicationInfo.packageName, GET_SIGNATURES));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        item.sha = Utils.apkPro(mPackageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNING_CERTIFICATES));
+                    } else {
+                        item.sha = Utils.apkPro(mPackageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNATURES));
+                    }
                     item.date = mPackageManager.getPackageInfo(applicationInfo.packageName, 0).lastUpdateTime; // .firstInstallTime;
                 } catch (PackageManager.NameNotFoundException e) {
                     item.date = 0L;

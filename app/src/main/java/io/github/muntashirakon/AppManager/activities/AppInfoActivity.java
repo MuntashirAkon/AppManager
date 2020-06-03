@@ -327,10 +327,17 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     @SuppressLint("PackageManagerGetSignatures")
     private void getPackageInfoOrFinish(String packageName) {
         try {
+            final int signingCertFlag;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                signingCertFlag = PackageManager.GET_SIGNING_CERTIFICATES;
+            } else {
+                signingCertFlag = PackageManager.GET_SIGNATURES;
+            }
             mPackageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
                     | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                     | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
-                    | PackageManager.GET_SIGNATURES | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
+                    | signingCertFlag | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
+
             if (mPackageInfo == null) {
                 Toast.makeText(this, mPackageName + ": " + getString(R.string.app_not_installed), Toast.LENGTH_LONG).show();
                 finish();

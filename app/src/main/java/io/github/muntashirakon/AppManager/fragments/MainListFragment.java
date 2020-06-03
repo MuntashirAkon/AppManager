@@ -541,14 +541,13 @@ public class MainListFragment extends ListFragment implements AdapterView.OnItem
                 // Set issuer
                 String issuer;
                 try {
-                    issuer = "CN=" + ((String)item.sha.getFirst()).split("CN=", 2)[1];
+                    issuer = "CN=" + (item.sha.getFirst()).split("CN=", 2)[1];
                 } catch (ArrayIndexOutOfBoundsException e){
-                    issuer = (String)item.sha.getFirst();
+                    issuer = item.sha.getFirst();
                 }
                 holder.issuer.setText(issuer);
                 // Set signature type
-                String sha = ((String)item.sha.getSecond()).split("\\|", 2)[0];
-                holder.sha.setText(sha);
+                holder.sha.setText(item.sha.getSecond());
             } catch (PackageManager.NameNotFoundException | NullPointerException ignored) {}
             // Load app icon
             holder.iconLoader = new IconAsyncTask(holder.icon, info);

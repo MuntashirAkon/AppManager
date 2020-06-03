@@ -8,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
+import android.content.pm.SigningInfo;
 import android.os.Build;
 import android.util.TypedValue;
 import android.view.WindowManager;
@@ -342,24 +343,25 @@ public class Utils {
         return s;
     }
 
-    public static Tuple apkPro(PackageInfo p){
-        Signature[] z= p.signatures;
-        String s="";
-        X509Certificate c;
-        Tuple t= new Tuple("","");
-        try {
-            for (Signature sg:z){
-                c=(X509Certificate) CertificateFactory.getInstance("X.509")
-                        .generateCertificate(new ByteArrayInputStream(sg.toByteArray()));
-                s=c.getIssuerX500Principal().getName();
-                if (!s.equals("")) t.setFirst(s);
-                s=c.getSigAlgName();
-                if (!s.equals("")) t.setSecond(s+"| "+Utils.convertToHex(MessageDigest.getInstance("sha256").digest(sg.toByteArray())));
-            }
-
-        }catch (NoSuchAlgorithmException | CertificateException e) {
-
+    public static Tuple<String, String> apkPro(PackageInfo p){
+        Signature[] signatures;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            SigningInfo signingInfo = p.signingInfo;
+            signatures = signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
+                    : signingInfo.getSigningCertificateHistory();
+        } else {
+            signatures = p.signatures;
         }
+        X509Certificate c;
+        Tuple<String, String> t= new Tuple<>("", "");
+        try {
+            for (Signature sg: signatures) {
+                c = (X509Certificate) CertificateFactory.getInstance("X.509")
+                        .generateCertificate(new ByteArrayInputStream(sg.toByteArray()));
+                t.setFirst(c.getIssuerX500Principal().getName());
+                t.setSecond(c.getSigAlgName());
+            }
+        } catch (CertificateException ignored) {}
         return t;
     }
 
