@@ -179,4 +179,5 @@
     <string name="all_classes">All classes</string>
     <string name="main_list_date_days">%s %d days</string>
     <string name="no_shared_libs">No shared libraries</string>
+    <string name="no_tracking_class">No tracking class</string>
 </resources>

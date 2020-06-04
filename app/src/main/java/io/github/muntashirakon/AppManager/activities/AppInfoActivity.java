@@ -28,7 +28,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
@@ -215,7 +214,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
      * Load package sizes and update views if success.
      */
     private void getPackageSizeInfo() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             try {
                 @SuppressWarnings("JavaReflectionMemberAccess")
                 Method getPackageSizeInfo = PackageManager.class.getMethod(

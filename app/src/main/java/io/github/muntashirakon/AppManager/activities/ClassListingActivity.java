@@ -1,26 +1,33 @@
 package io.github.muntashirakon.AppManager.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Spannable;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.BackgroundColorSpan;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.classysharkandroid.adapters.StableArrayAdapter;
 import com.google.classysharkandroid.dex.DexLoaderBuilder;
 import com.google.classysharkandroid.reflector.ClassesNamesList;
 import com.google.classysharkandroid.reflector.Reflector;
@@ -31,7 +38,9 @@ import java.io.File;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -62,7 +71,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     private String[] Names;
     private boolean trackerClassesOnly;
     private int totalTimeTaken = 0;
-    private StableArrayAdapter mAdapter;
+    private ClassListingAdapter mClassListingAdapter;
     private String packageInfo = "";
     private CharSequence mAppName;
     private ActionBar mActionBar;
@@ -228,7 +237,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mAdapter.getFilter().filter(newText);
+        mClassListingAdapter.getFilter().filter(newText);
         return true;
     }
 
@@ -263,11 +272,10 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                         .setMessage(statsMsg.toString()).show();
                 return true;
             case R.id.action_toggle_class_listing:
-                mAdapter = new StableArrayAdapter(ClassListingActivity.this,
-                        android.R.layout.simple_list_item_1, (trackerClassesOnly ? classesList : classesListAll).getClassNames());
+                mClassListingAdapter.setDefaultList((trackerClassesOnly ? classesList : classesListAll).getClassNames());
                 mActionBar.setSubtitle(getString((trackerClassesOnly ? R.string.tracker_classes : R.string.all_classes)));
                 trackerClassesOnly = !trackerClassesOnly;
-                mListView.setAdapter(mAdapter);
+                mListView.setAdapter(mClassListingAdapter);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -331,7 +339,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                     String className = classNames.nextElement();
                     classesListAll.add(className);
                     totalClassesScanned++;
-                    if (className.length()>8) {
+                    if (className.length() > 8) {
                         if (className.contains(".")) {
                             for (int i = 0; i < signatures.length; i++) {
                                 totalTimeTaken++; // Total enumerations
@@ -365,18 +373,18 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
             ClassListingActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    mClassListingAdapter = new ClassListingAdapter(ClassListingActivity.this);
                     if (!trackerClassesOnly) {
-                        mAdapter = new StableArrayAdapter(ClassListingActivity.this,
-                                android.R.layout.simple_list_item_1, classesList.getClassNames());
+                        mClassListingAdapter.setDefaultList(classesList.getClassNames());
                         mActionBar.setSubtitle(getString(R.string.tracker_classes));
                     } else {
-                        mAdapter = new StableArrayAdapter(ClassListingActivity.this,
-                                android.R.layout.simple_list_item_1, classesListAll.getClassNames());
+                        mClassListingAdapter.setDefaultList(classesListAll.getClassNames());
                         mActionBar.setSubtitle(getString(R.string.all_classes));
                     }
-                    mListView.setAdapter(mAdapter);
+//                    mListView.setAdapter(mAdapter);
+                    mListView.setAdapter(mClassListingAdapter);
                     mProgressBar.setVisibility(View.GONE);
-                    if (classesList.getClassNames().isEmpty() && totalClassesScanned ==0) {
+                    if (classesList.getClassNames().isEmpty() && totalClassesScanned == 0) {
                         Toast.makeText(ClassListingActivity.this,
                                 "Sorry don't support /system ODEX", Toast.LENGTH_LONG).show();
                     } else {
@@ -441,6 +449,112 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    static class ClassListingAdapter extends BaseAdapter implements Filterable {
+        static final Spannable.Factory sSpannableFactory = Spannable.Factory.getInstance();
+
+        private LayoutInflater mLayoutInflater;
+        private Filter mFilter;
+        private String mConstraint;
+        private List<String> mDefaultList;
+        private List mAdapterList;
+
+        private int mColorTransparent;
+        private int mColorSemiTransparent;
+
+        ClassListingAdapter(@NonNull Activity activity) {
+            mLayoutInflater = activity.getLayoutInflater();
+
+            mColorTransparent = Color.TRANSPARENT;
+            mColorSemiTransparent = activity.getResources().getColor(R.color.SEMI_TRANSPARENT);
+        }
+
+        void setDefaultList(List<String> list) {
+            mDefaultList = list;
+            mAdapterList = list;
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getCount() {
+            return mAdapterList == null ? 0 : mAdapterList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mAdapterList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = mLayoutInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+            }
+            String className = (String) mAdapterList.get(position);
+            TextView textView = (TextView) convertView;
+            if (mConstraint != null && className.toLowerCase().contains(mConstraint)) {
+                // Highlight searched query
+                textView.setText(getHighlightedText(className));
+            } else {
+                textView.setText(className);
+            }
+            convertView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
+            return convertView;
+        }
+
+        Spannable getHighlightedText(String s) {
+            Spannable spannable = sSpannableFactory.newSpannable(s);
+            int start = s.toLowerCase().indexOf(mConstraint);
+            int end = start + mConstraint.length();
+            spannable.setSpan(new BackgroundColorSpan(0xFFB7B7B7), start, end,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return spannable;
+        }
+
+        @Override
+        public Filter getFilter() {
+            if (mFilter == null)
+                mFilter = new Filter() {
+                    @Override
+                    protected FilterResults performFiltering(CharSequence charSequence) {
+                        String constraint = charSequence.toString().toLowerCase();
+                        mConstraint = constraint;
+                        FilterResults filterResults = new FilterResults();
+                        if (constraint.length() == 0) {
+                            filterResults.count = 0;
+                            filterResults.values = null;
+                            return filterResults;
+                        }
+
+                        List<String> list = new ArrayList<>(mDefaultList.size());
+                        for (String item : mDefaultList) {
+                            if (item.toLowerCase().contains(constraint))
+                                list.add(item);
+                        }
+
+                        filterResults.count = list.size();
+                        filterResults.values = list;
+                        return filterResults;
+                    }
+
+                    @Override
+                    protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                        if (filterResults.values == null) {
+                            mAdapterList = mDefaultList;
+                        } else {
+                            mAdapterList = (List) filterResults.values;
+                        }
+                        notifyDataSetChanged();
+                    }
+                };
+            return mFilter;
         }
     }
 }
