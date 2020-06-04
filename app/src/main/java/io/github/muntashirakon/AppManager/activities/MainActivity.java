@@ -220,6 +220,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 setSortBy(SORT_SIZE);
                 item.setChecked(true);
                 return true;
+            case R.id.action_app_usage:
+                Intent intent = new Intent(this, AppUsageActivity.class);
+                startActivity(intent);
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -1,0 +1,4 @@
+- Added app usage statistics (optional, requires Usage Access permission)
+- Replaced many deprecated features with alternatives
+- Added swipe to refresh
+- Improved class and manifest viewers

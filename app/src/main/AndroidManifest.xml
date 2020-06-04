@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="io.github.muntashirakon.AppManager"
-    xmlns:dist="http://schemas.android.com/apk/distribution">
-    <dist:module dist:instant="true" />
-    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" android:maxSdkVersion="25" />
+    package="io.github.muntashirakon.AppManager">
+    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"
+        android:maxSdkVersion="25" />
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher_app_manager"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:icon"
-        android:largeHeap="true">
+        tools:replace="android:icon">
+        <activity
+            android:name=".activities.AppUsageActivity"
+            android:permission="android.permission.PACKAGE_USAGE_STATS" />
         <activity android:name=".activities.ClassViewerActivity" />
         <activity android:name=".activities.ClassListingActivity" />
         <activity
