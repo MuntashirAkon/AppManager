@@ -18,18 +18,16 @@ I've plan to merge this project with other app managers such as Watt, Activity L
 #### Light
 
 ![](fastlane/metadata/android/en-US/images/phoneScreenshots/1.png)
-
 ![](fastlane/metadata/android/en-US/images/phoneScreenshots/3.png)
-
 ![](fastlane/metadata/android/en-US/images/phoneScreenshots/5.png)
+![](fastlane/metadata/android/en-US/images/phoneScreenshots/13.png)
 
 #### Dark
 
 ![](fastlane/metadata/android/en-US/images/phoneScreenshots/2.png)
-
 ![](fastlane/metadata/android/en-US/images/phoneScreenshots/4.png)
-
 ![](fastlane/metadata/android/en-US/images/phoneScreenshots/6.png)
+![](fastlane/metadata/android/en-US/images/phoneScreenshots/14.png)
 
 ### License
 
