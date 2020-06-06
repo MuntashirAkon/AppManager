@@ -20,23 +20,17 @@ It basically combined the features of five or six apps that any tech-savy needed
 
 Until it is available in the official repo,
 
-[![IzzyOnDroid](https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png "Get it on IzzyOnDroid")](https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager)
+<a href="https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid" width="200dp" /></a>
 
 ### Screenshots
 
 #### Light
 
-![](fastlane/metadata/android/en-US/images/phoneScreenshots/1.png)
-![](fastlane/metadata/android/en-US/images/phoneScreenshots/3.png)
-![](fastlane/metadata/android/en-US/images/phoneScreenshots/5.png)
-![](fastlane/metadata/android/en-US/images/phoneScreenshots/13.png)
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/13.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/9.png" height="500dp" />
 
 #### Dark
 
-![](fastlane/metadata/android/en-US/images/phoneScreenshots/2.png)
-![](fastlane/metadata/android/en-US/images/phoneScreenshots/4.png)
-![](fastlane/metadata/android/en-US/images/phoneScreenshots/6.png)
-![](fastlane/metadata/android/en-US/images/phoneScreenshots/14.png)
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/14.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/10.png" height="500dp" />
 
 ### License
 
