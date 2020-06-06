@@ -77,10 +77,6 @@ public class AppDetailsActivity extends AppCompatActivity {
         if (id == android.R.id.home) {
             finish();
             return true;
-        } else if (id == R.id.action_refresh_details) {
-            Toast.makeText(this, getString(R.string.refresh), Toast.LENGTH_SHORT).show();
-            recreate();
-            return true;
         } else if (id == R.id.action_app_info) {
             Intent appInfoIntent = new Intent(this, AppInfoActivity.class);
             appInfoIntent.putExtra(AppInfoActivity.EXTRA_PACKAGE_NAME, mPackageName);

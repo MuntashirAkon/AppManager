@@ -24,18 +24,21 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/icon"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/padding_small"
+            android:layout_weight="0"
             android:contentDescription="@string/app_name" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical">
 
 
@@ -46,7 +49,6 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
                 android:singleLine="true"
-                android:textColor="@android:color/darker_gray"
                 android:textIsSelectable="true"
                 tools:text="@tools:sample/lorem" />
 
@@ -84,6 +86,18 @@
                 tools:text="@tools:sample/lorem" />
 
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/block_component"
+            style="@android:style/Widget.Material.ImageButton"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:layout_weight="0"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_block_black_24dp" />
+
     </LinearLayout>
 
     <TextView

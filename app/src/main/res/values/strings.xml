@@ -57,45 +57,48 @@
     <string name="about_message"><b>Main window</b>
         \n- Click will open “App Info” window
         \n- Long click will open ”App Details” window
-        \n- View app usage statistics by clicking on the three verticals dots on the right
+        \n- View app usage statistics by clicking on the three verticals dots on the right (requires
+        “Usage Access” permission)
         \n
         \n<b>Main window</b> color codes:
-        \n<b>User</b>: Doesn\'t allow clearing data storage
-        \n<b>System</b>: Persistent app
-        \n<b>App Info</b>: Stopped / Forced closed
-        \n<b>User ID</b> <b>App Details Window</b>: Can read logs
-        \n<b>Uses Permissions</b> <b>Activities</b>: Shared app
-        \n<b>Exodus Window</b> <i>Date</i>: Uses cleartext traffic
-        \n<i>UID</i>: Inactive app
-        \n<i>API</i>: App in debug mode
-        \n<i>X</i>: Disabled app
+        \n<u>Red</u>: Doesn\'t allow clearing data storage
+        \n<u>Magenta</u>: Persistent app
+        \n<u>Blue</u>: Stopped / Forced closed
+        \n<u>Orange</u> <i>Date</i>: Can read logs
+        \n<u>Orange</u> <i>UID</i>: Shared app
+        \n<u>Orange</u> <i>API</i>: Uses cleartext traffic
+        \n<u>Green</u>: Inactive app
+        \n<u>Yellow Star</u>: App in debug mode
+        \n<u>Ocean blue background</u>: Disabled app
         \n
-        \nApp can be <i>0</i> or <i>°</i> with following codes:
-        \n<i>#</i>: Multi architecture
-        \n<i>?</i>: App doesn\'t have code with it
-        \n<i>_</i>: App package in suspended state
-        \n<i>~</i>: The app has requested a large heap
-        \n<i>debug</i>: Whether requested VM in safe mode
+        \nApp can be <b>User</b> or <b>System</b> with following codes:
+        \n<i>X</i>: Multi architecture
+        \n<i>0</i>: App doesn\'t have code with it
+        \n<i>°</i>: App package in suspended state
+        \n<i>#</i>: The app has requested a large heap
+        \n<i>?</i>: Whether requested VM in safe mode
         \n
         \nVersion can have following prefixes:
-        \n<u>Red</u>: No hardware acceleration
-        \n<u>Magenta</u>: TestOnly mode
-        \n<u>Blue</u>: Debuggable app
+        \n<i>_</i>: No hardware acceleration
+        \n<i>~</i>: TestOnly mode
+        \n<i>debug</i>: Debuggable app
         \n
-        \nIn the <u>Orange</u> window, app that requested large heap have their <u>Orange</u>
+        \nIn the <b>App Info</b> window, app that requested large heap have their <b>User ID</b>
         colored red.
         \n
-        \n<u>Orange</u>
-        \n- Double clicking on any permission in the <u>Green</u> tab will display a toast
+        \n<b>App Details Window</b>
+        \n- Double clicking on any permission in the <b>Uses Permissions</b> tab will display a toast
         containing information about the permission.
-        \n- Available activities can be launched from the <u>Yellow Star</u> tab. Also, customizable
+        \n- Available activities can be launched from the <b>Activities</b> tab. Also, customizable
         shortcuts can be made.
+        \n- Activities, receivers and services can be blocked using the block button on the right
+        side of each item. But blocking isn\'t enabled by default. To enable blocking click on “enable
+        blocking” in the menu located in the upper-right side of the window. (Requires root permission)
         \n
-        \n<u>Ocean blue background</u>
+        \n<b>Exodus Window</b>
         \n- ° for \u03b5\' missing
         \n- ² for \u03b5\' Etip stand-by
         \n- µ for micro non-intrusive
-        \n- ? when uncertain
     </string>
     <string name="size_details">Size details</string>
     <string name="internal">Internal</string>
@@ -161,6 +164,7 @@
         \n- <a href="https://code.google.com/p/xml-apk-parser">XmlApkParser</a> (Apache 2.0)
         \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
         (Apache 2.0)
+        \n- <a href="https://github.com/jaredrummler/AndroidShell">Android Shell</a> (Apache 2.0)
     </string>
     <string name="credits">Credits</string>
     <string name="credits_message">To the authors of
@@ -169,6 +173,7 @@
         \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
         \n- <a href="https://codeberg.org/fynngodau/usageDirect">usageDirect</a> and
         <a href="https://github.com/ColeMurray/UsageStatsSample">UsageStatsSample</a>
+        \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
         \nMost of the works done here are based on their works.
     </string>
     <string name="word_wrap">Toggle word wrap</string>
@@ -208,4 +213,6 @@
     <string name="grant_usage_acess_message">Usage access is mandatory in order to display app usage information.</string>
     <string name="share_apk">Share APK</string>
     <string name="failed_to_extract_apk_file">Failed to extract apk file</string>
+    <string name="menu_disable_blocking">Disable blocking</string>
+    <string name="menu_enable_blocking">Enable blocking</string>
 </resources>

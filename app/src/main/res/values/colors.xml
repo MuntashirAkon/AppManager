@@ -7,4 +7,9 @@
     <color name="dark_orange">#ff8017</color>
     <color name="pink">#7D1B7E</color>
     <color name="ocean_blue">#2B65EC</color>
+    <color name="night_blue">#2D545e</color>
+    <color name="night_blue_shadow">#12343B</color>
+    <color name="sand_tan">#E1B382</color>
+    <color name="sand_tan_shadow">#c89666</color>
+    <color name="red">#ff5226</color>
 </resources>

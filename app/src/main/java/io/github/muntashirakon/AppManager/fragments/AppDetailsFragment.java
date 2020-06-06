@@ -22,17 +22,23 @@ import android.os.Bundle;
 import android.os.PatternMatcher;
 import android.text.Layout;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -42,6 +48,8 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
+import io.github.muntashirakon.AppManager.compontents.ComponentType;
+import io.github.muntashirakon.AppManager.compontents.ComponentsApplier;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -70,12 +78,15 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
     private Activity mActivity;
     private ActivitiesListAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefresh;
+    private ComponentsApplier mComponentsApplier;
+    private MenuItem blockingToggler;
 
     private String[] aPermissionsUse;
     private boolean bFi;
 
     private int mColorGrey1;
     private int mColorGrey2;
+    private int mColorRed;
 
     // Load from saved instance if empty constructor is called.
     private boolean isEmptyFragmentConstructCalled = false;
@@ -96,6 +107,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (isEmptyFragmentConstructCalled && savedInstanceState != null){
             neededProperty = savedInstanceState.getInt(NEEDED_PROPERTY_INT);
         }
@@ -110,8 +122,11 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         if (mActivity != null) {
             mColorGrey1 = Color.TRANSPARENT;
             mColorGrey2 = mActivity.getResources().getColor(R.color.SEMI_TRANSPARENT);
+            mColorRed = mActivity.getResources().getColor(R.color.red);
         }
         getPackageInfo(mPackageName);
+
+        mComponentsApplier = ComponentsApplier.getInstance(mActivity);
     }
 
     @Nullable
@@ -127,13 +142,55 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mComponentsApplier.applyRulesForPackage(mPackageName, true);
+//        Toast.makeText(mActivity, "The current configurations has been applied!", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
     public void onRefresh() {
+        refreshDetails();
+        mSwipeRefresh.setRefreshing(false);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_app_details_action, menu);
+        blockingToggler = menu.findItem(R.id.action_toggle_blocking);
+        if (mComponentsApplier.isRulesApplied(mPackageName)) {
+            blockingToggler.setTitle(R.string.menu_disable_blocking);
+        } else {
+            blockingToggler.setTitle(R.string.menu_enable_blocking);
+        }
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh_details:
+                refreshDetails();
+                return true;
+            case R.id.action_toggle_blocking:
+                boolean isRulesApplied = mComponentsApplier.isRulesApplied(mPackageName);
+                mComponentsApplier.applyRulesForPackage(mPackageName, !isRulesApplied);
+                if (mComponentsApplier.isRulesApplied(mPackageName)) {
+                    blockingToggler.setTitle(R.string.menu_disable_blocking);
+                } else {
+                    blockingToggler.setTitle(R.string.menu_enable_blocking);
+                }
+                refreshDetails();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void refreshDetails() {
         if (mAdapter != null){
             getPackageInfo(mPackageName);
             mAdapter.reset();
-            mAdapter.notifyDataSetChanged();
         }
-        mSwipeRefresh.setRefreshing(false);
     }
 
     /**
@@ -307,6 +364,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
     private class ActivitiesListAdapter extends BaseAdapter {
         private int count;
         private Object[] arrayOfThings;
+        private HashMap<String, ComponentType> disabledComponents;
         private int requestedProperty;
 
         ActivitiesListAdapter() {
@@ -316,10 +374,14 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         void reset() {
             requestedProperty = neededProperty;
             arrayOfThings = getNeededArray(requestedProperty);
+            if (neededProperty == ACTIVITIES || neededProperty == RECEIVERS || neededProperty == SERVICES) {
+                disabledComponents = mComponentsApplier.getDisabledComponentNamesForPackage(mPackageName);
+            }
             if (arrayOfThings == null){
                 count = 1; // to produce not found
                 requestedProperty = NOT_FOUND;
             } else count = arrayOfThings.length;
+            notifyDataSetChanged();
         }
 
         /**
@@ -335,9 +397,10 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             TextView textView5;
             TextView textView6;
             ImageView imageView;
-            Button launchBtn;
+            ImageButton blockBtn;
             Button createBtn;
             Button editBtn;
+            Button launchBtn;
         }
 
         @Override
@@ -391,6 +454,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
          * See below checkIfConvertViewMatch method.
          * Bored view inflation / creation.
          */
+        @NonNull
         @SuppressLint("SetTextI18n")
         private View getActivityView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
@@ -406,8 +470,9 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder.textView5 = convertView.findViewById(R.id.orientation);
                 viewHolder.textView6 = convertView.findViewById(R.id.softInput);
                 viewHolder.launchBtn = convertView.findViewById(R.id.launch);
+                viewHolder.blockBtn  = convertView.findViewById(R.id.block_component);
                 viewHolder.createBtn = convertView.findViewById(R.id.create_shortcut_btn);
-                viewHolder.editBtn = convertView.findViewById(R.id.edit_shortcut_btn);
+                viewHolder.editBtn   = convertView.findViewById(R.id.edit_shortcut_btn);
                 convertView.findViewById(R.id.label).setVisibility(View.GONE);
                 convertView.setTag(viewHolder);
             } else {
@@ -417,6 +482,9 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             final ActivityInfo activityInfo = mPackageInfo.activities[index];
             final String activityName = activityInfo.name;
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            if (disabledComponents.containsKey(activityName)) {
+                convertView.setBackgroundColor(mColorRed);
+            }
 
             // Name
             viewHolder.textView2.setText(activityName.startsWith(mPackageName) ?
@@ -496,12 +564,29 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder.editBtn.setVisibility(View.GONE);
             }
 
+            viewHolder.blockBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (disabledComponents.containsKey(activityName)) { // Remove from the list
+                        disabledComponents.remove(activityName);
+                    } else { // Add to the list
+                        disabledComponents.put(activityName, ComponentType.ACTIVITY);
+                    }
+                    try {
+                        mComponentsApplier.saveDisabledComponentsForPackage(mPackageName, disabledComponents);
+                        refreshDetails();
+                    } catch (IOException e) {
+                        Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
             return convertView;
         }
 
         /**
          * Boring view inflation / creation
          */
+        @NonNull
         @SuppressLint("SetTextI18n")
         private View getServicesView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
@@ -514,7 +599,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder.textView1 = convertView.findViewById(R.id.label);
                 viewHolder.textView2 = convertView.findViewById(R.id.name);
                 viewHolder.textView3 = convertView.findViewById(R.id.orientation);
-                //convertView.findViewById(R.id.icon).setVisibility(View.GONE);
+                viewHolder.blockBtn  = convertView.findViewById(R.id.block_component);
                 convertView.findViewById(R.id.taskAffinity).setVisibility(View.GONE);
                 convertView.findViewById(R.id.launchMode).setVisibility(View.GONE);
                 convertView.findViewById(R.id.softInput).setVisibility(View.GONE);
@@ -527,6 +612,9 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
 
             final ServiceInfo serviceInfo = mPackageInfo.services[index];
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            if (disabledComponents.containsKey(serviceInfo.name)) {
+                convertView.setBackgroundColor(mColorRed);
+            }
 
             // Label
             viewHolder.textView1.setText(serviceInfo.loadLabel(mPackageManager));
@@ -543,12 +631,30 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             viewHolder.textView3.setText(Utils.getServiceFlagsString(serviceInfo.flags)
                     + (serviceInfo.permission != null ? "\n" + serviceInfo.permission : "\n"));
 
+            viewHolder.blockBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (disabledComponents.containsKey(serviceInfo.name)) { // Remove from the list
+                        disabledComponents.remove(serviceInfo.name);
+                    } else { // Add to the list
+                        disabledComponents.put(serviceInfo.name, ComponentType.ACTIVITY);
+                    }
+                    try {
+                        mComponentsApplier.saveDisabledComponentsForPackage(mPackageName, disabledComponents);
+                        refreshDetails();
+                    } catch (IOException e) {
+                        Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+
             return convertView;
         }
 
         /**
          * Boring view inflation / creation
          */
+        @NonNull
         @SuppressLint("SetTextI18n")
         private View getReceiverView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
@@ -564,6 +670,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder.textView4 = convertView.findViewById(R.id.launchMode);
                 viewHolder.textView5 = convertView.findViewById(R.id.orientation);
                 viewHolder.textView6 = convertView.findViewById(R.id.softInput);
+                viewHolder.blockBtn  = convertView.findViewById(R.id.block_component);
                 convertView.findViewById(R.id.launch).setVisibility(View.GONE);
                 convertView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
                 convertView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
@@ -574,6 +681,9 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
 
             final ActivityInfo activityInfo = mPackageInfo.receivers[index];
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            if (disabledComponents.containsKey(activityInfo.name)) {
+                convertView.setBackgroundColor(mColorRed);
+            }
 
             // Label
             viewHolder.textView1.setText(activityInfo.loadLabel(mPackageManager));
@@ -599,12 +709,29 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             // SoftInput
             viewHolder.textView6.setText(getString(R.string.softInput) + ": " + Utils.getSoftInputString(activityInfo.softInputMode));
 
+            viewHolder.blockBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (disabledComponents.containsKey(activityInfo.name)) { // Remove from the list
+                        disabledComponents.remove(activityInfo.name);
+                    } else { // Add to the list
+                        disabledComponents.put(activityInfo.name, ComponentType.ACTIVITY);
+                    }
+                    try {
+                        mComponentsApplier.saveDisabledComponentsForPackage(mPackageName, disabledComponents);
+                        refreshDetails();
+                    } catch (IOException e) {
+                        Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
             return convertView;
         }
 
         /**
          * Boring view inflation / creation
          */
+        @NonNull
         @SuppressLint("SetTextI18n")
         private View getProviderView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
@@ -623,6 +750,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 convertView.findViewById(R.id.launch).setVisibility(View.GONE);
                 convertView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
                 convertView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
+                convertView.findViewById(R.id.block_component).setVisibility(View.GONE);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
@@ -692,6 +820,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         /**
          * We do not need complex views, Use recycled view if possible
          */
+        @NonNull
         @SuppressLint("SetTextI18n")
         private View getUsesPermissionsView(View convertView, int index) {
             final String s = aPermissionsUse[index].split(" ")[0];
@@ -745,6 +874,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             return convertView;
         }
 
+        @NonNull
         private View getSharedLibsView(View convertView, int index) {
             if (!(convertView instanceof TextView)) {
                 convertView = new TextView(mActivity);
@@ -765,6 +895,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         /**
          * Boring view inflation / creation
          */
+        @NonNull
         @SuppressLint("SetTextI18n")
         private View getPermissionsView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
@@ -817,6 +948,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         /**
          * Boring view inflation / creation
          */
+        @NonNull
         @SuppressLint("SetTextI18n")
         private View getFeaturesView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
@@ -851,6 +983,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         /**
          * Boring view inflation / creation
          */
+        @NonNull
         @SuppressLint("SetTextI18n")
         private View getConfigurationView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
@@ -889,6 +1022,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         /**
          * We do not need complex views, Use recycled view if possible
          */
+        @NonNull
         @SuppressLint("SetTextI18n")
         private View getSignatureView(View convertView, int index) {
             if (!(convertView instanceof TextView)) {
@@ -917,6 +1051,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         }
     }
 
+    @NonNull
     private String permAppOp(String s) {
         if (Build.VERSION.SDK_INT >= 23 && AppOpsManager.permissionToOp(s) != null) {
             return "\nAppOP> " + AppOpsManager.permissionToOp(s);

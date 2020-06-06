@@ -8,8 +8,8 @@ android {
         applicationId 'io.github.muntashirakon.AppManager'
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 87
-        versionName '2.3.0'
+        versionCode 89
+        versionName '2.4.0'
     }
     buildTypes {
         release {
@@ -33,6 +33,8 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-rc01'
+
+    implementation 'com.jaredrummler:android-shell:1.0.0'
 
 //    implementation 'com.github.kbiakov:CodeView-Android:1.3.2'
 }
