@@ -206,4 +206,6 @@
     <string name="go">Go</string>
     <string name="grant_usage_access">Grant Usage Access</string>
     <string name="grant_usage_acess_message">Usage access is mandatory in order to display app usage information.</string>
+    <string name="share_apk">Share APK</string>
+    <string name="failed_to_extract_apk_file">Failed to extract apk file</string>
 </resources>

@@ -10,4 +10,8 @@
         android:icon="@drawable/ic_refresh_black_24dp"
         android:title="@string/refresh"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_share_apk"
+        android:title="@string/share_apk"
+        app:showAsAction="never" />
 </menu>

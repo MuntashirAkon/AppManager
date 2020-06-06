@@ -12,7 +12,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.FileUtils;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,20 +24,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ShareCompat;
+import androidx.core.content.FileProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.MenuItemCreator;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+    public static final String TAG = "AppInfoActivity";
     public static final String EXTRA_PACKAGE_NAME = "pkg";
 
     private static final String UID_STATS_PATH = "/proc/uid_stat/";
@@ -48,6 +58,8 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     private PackageStats mPackageStats;
     private String mMainActivity = "";
     private final AppCompatActivity mActivity = this;
+    private ApplicationInfo mApplicationInfo;
+    private File tmpApkSource;
 
     @SuppressLint("SimpleDateFormat")
     private SimpleDateFormat mDateFormatter = new SimpleDateFormat("EE LLL dd yyyy kk:mm:ss");
@@ -74,20 +86,49 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        final int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-            return true;
-        } else if (id == R.id.action_refresh_detail) {
-            Toast.makeText(this, getString(R.string.refresh), Toast.LENGTH_SHORT).show();
-            getPackageInfoOrFinish(mPackageName);
-            return true;
-        } else if (id == R.id.action_show_details) {
-            Intent appDetailsIntent = new Intent(this, AppDetailsActivity.class);
-            appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, mPackageName);
-            startActivity(appDetailsIntent);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.action_refresh_detail:
+                Toast.makeText(this, getString(R.string.refresh), Toast.LENGTH_SHORT).show();
+                getPackageInfoOrFinish(mPackageName);
+                return true;
+            case R.id.action_share_apk:
+                try {
+                    File apkSource = new File(mApplicationInfo.sourceDir);
+                    tmpApkSource = File.createTempFile(mApplicationInfo.packageName, ".apk", getExternalCacheDir());
+                    FileUtils.copy(new FileInputStream(apkSource), new FileOutputStream(tmpApkSource));
+                    Intent intent = ShareCompat.IntentBuilder.from(this)
+                            .setStream(FileProvider.getUriForFile(
+                                    this, BuildConfig.APPLICATION_ID + ".provider", tmpApkSource))
+                            .setType("application/vnd.android.package-archive")
+                            .getIntent()
+                            .setAction(Intent.ACTION_SEND)
+                            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(this, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+                return true;
+            case R.id.action_show_details:
+                Intent appDetailsIntent = new Intent(this, AppDetailsActivity.class);
+                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, mPackageName);
+                startActivity(appDetailsIntent);
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (tmpApkSource != null) {
+            if (!tmpApkSource.delete()) {
+                Log.d(TAG, "Failed to close apk source");
+            }
+        }
     }
 
     @Override
@@ -107,13 +148,11 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
      */
     @SuppressLint("SetTextI18n")
     private void setHeaderView() {
-        ApplicationInfo applicationInfo = mPackageInfo.applicationInfo;
-
         int accentColor = mMenu.getSystemColor(android.R.attr.colorActivatedHighlight);
 
         // Set Application Name, aka Label
         TextView labelView = findViewById(R.id.label);
-        CharSequence label = applicationInfo.loadLabel(mPackageManager);
+        CharSequence label = mApplicationInfo.loadLabel(mPackageManager);
         labelView.setText(label);
 
         // Set Package Name
@@ -122,7 +161,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
         // Set App Icon
         ImageView iconView = findViewById(R.id.icon);
-        iconView.setImageDrawable(applicationInfo.loadIcon(mPackageManager));
+        iconView.setImageDrawable(mApplicationInfo.loadIcon(mPackageManager));
 
         // Set App Version
         TextView versionView = findViewById(R.id.version);
@@ -134,28 +173,28 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
         // Set App Type: User or System, if System find out whether it's updated
         TextView isSystemAppView = findViewById(R.id.isSystem);
-        if ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0){
-            if ((applicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) isSystemAppView.setText(R.string.system_app_updated);
+        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0){
+            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) isSystemAppView.setText(R.string.system_app_updated);
             else isSystemAppView.setText(R.string.system_app);
         } else isSystemAppView.setText(R.string.user_app);
         // FIXME: Fix these things
-        if ((applicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) == 0)isSystemAppView.setText(isSystemAppView.getText()+" + Code");
-        if ((applicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)isSystemAppView.setText(isSystemAppView.getText()+" + XLdalvik");
+        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) == 0)isSystemAppView.setText(isSystemAppView.getText()+" + Code");
+        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)isSystemAppView.setText(isSystemAppView.getText()+" + XLdalvik");
 
         // Paths
         mMenu.titleColor = accentColor;
         mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.paths), true);
         mMenu.titleColor = MenuItemCreator.NO_COLOR;
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.apk_path), applicationInfo.sourceDir, MenuItemCreator.SELECTABLE);
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.data_path), applicationInfo.dataDir, MenuItemCreator.SELECTABLE);
+        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.apk_path), mApplicationInfo.sourceDir, MenuItemCreator.SELECTABLE);
+        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.data_path), mApplicationInfo.dataDir, MenuItemCreator.SELECTABLE);
         mMenu.addDivider();
 
         // SDK
         mMenu.titleColor = accentColor;
         mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk), true);
         mMenu.titleColor = MenuItemCreator.NO_COLOR;
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk_max), "" + applicationInfo.targetSdkVersion, MenuItemCreator.SELECTABLE);
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk_min), Build.VERSION.SDK_INT > 23 ? "" + applicationInfo.minSdkVersion : "N/A", MenuItemCreator.SELECTABLE);
+        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk_max), "" + mApplicationInfo.targetSdkVersion, MenuItemCreator.SELECTABLE);
+        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk_min), Build.VERSION.SDK_INT > 23 ? "" + mApplicationInfo.minSdkVersion : "N/A", MenuItemCreator.SELECTABLE);
 
         // Set Flags
         String flags = "";
@@ -189,9 +228,9 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.installer_app), applicationLabel, MenuItemCreator.SELECTABLE);
         }
         // Use red color if FLAG_LARGE_HEAP enabled FIXME: find a suitable place for this
-        if ((applicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)
+        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)
             mMenu.subtitleColor = Color.RED;
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.user_id), "" + applicationInfo.uid, MenuItemCreator.SELECTABLE);
+        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.user_id), "" + mApplicationInfo.uid, MenuItemCreator.SELECTABLE);
         if (mPackageInfo.sharedUserId != null)
             mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.shared_user_id), "" + mPackageInfo.sharedUserId, MenuItemCreator.SELECTABLE);
         mMenu.subtitleColor = MenuItemCreator.NO_COLOR;
@@ -204,7 +243,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_msg), true);
         mMenu.titleColor = MenuItemCreator.NO_COLOR;
 
-        Tuple<String, String> uidNetStats = getNetStats(applicationInfo.uid);
+        Tuple<String, String> uidNetStats = getNetStats(mApplicationInfo.uid);
         mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_transmitted), uidNetStats.getFirst(), MenuItemCreator.SELECTABLE);
         mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_received), uidNetStats.getSecond(), MenuItemCreator.SELECTABLE);
         mMenu.addDivider();
@@ -353,6 +392,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             if (mPackageInfo.activities != null) {
                 mMainActivity = mPackageInfo.activities[0].name;
             }
+            mApplicationInfo = mPackageInfo.applicationInfo;
 
             // MenuItemCreator instance
             mMenu = new MenuItemCreator(this, R.id.details_container, true);
