@@ -485,6 +485,9 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             if (disabledComponents.containsKey(activityName)) {
                 convertView.setBackgroundColor(mColorRed);
+                viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
+            } else {
+                viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
             }
 
             // Name
@@ -615,6 +618,9 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             if (disabledComponents.containsKey(serviceInfo.name)) {
                 convertView.setBackgroundColor(mColorRed);
+                viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
+            } else {
+                viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
             }
 
             // Label
@@ -684,6 +690,9 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             if (disabledComponents.containsKey(activityInfo.name)) {
                 convertView.setBackgroundColor(mColorRed);
+                viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
+            } else {
+                viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
             }
 
             // Label
@@ -838,17 +847,18 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             if (aPermissionsUse[index].startsWith("android.permission"))
                 textView.setText("\u23e9 " + aPermissionsUse[index].substring(18));
             else textView.setText("\u23e9 " + aPermissionsUse[index]);
-            if (aPermissionsUse[index].endsWith("*\u2714")) {
-                textView.setTextColor(Color.BLACK);
+            // Set color: Todo: Remove these with something that's actually useful
+            if (aPermissionsUse[index].endsWith("*\u2714")) {  // Dangerous + Granted
+                textView.setTextColor(mColorRed);
                 textView.setBackgroundColor(mColorGrey2);
-            } else if (aPermissionsUse[index].endsWith("\u2714")) {
-                textView.setTextColor(Color.DKGRAY);
+            } else if (aPermissionsUse[index].endsWith("\u2714")) {  // Granted only
+                textView.setTextColor(Color.MAGENTA);
                 textView.setBackgroundColor(mColorGrey1);
-            } else if (aPermissionsUse[index].endsWith("*")) {
-                textView.setTextColor(Color.GRAY);
+            } else if (aPermissionsUse[index].endsWith("*")) {  // Dangerous only
+                textView.setTextColor(Color.YELLOW);
                 textView.setBackgroundColor(mColorGrey2);
-            } else {
-                textView.setTextColor(Color.GRAY);
+            } else {  // Others
+                textView.setTextColor(Color.DKGRAY);
                 textView.setBackgroundColor(mColorGrey1);
             }
 
