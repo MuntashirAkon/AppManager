@@ -50,6 +50,7 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:textIsSelectable="true"
+                android:textStyle="bold"
                 tools:text="@tools:sample/lorem" />
 
             <TextView

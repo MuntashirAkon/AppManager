@@ -138,6 +138,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
 
         mListView = findViewById(R.id.listView);
         mListView.setTextFilterEnabled(true);
+        mListView.setDividerHeight(0);
 
         mProgressBar = findViewById(R.id.progress_horizontal);
 

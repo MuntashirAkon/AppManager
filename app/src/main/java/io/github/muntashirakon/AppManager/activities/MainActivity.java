@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         mListView.setOnItemClickListener(this);
         mListView.setFastScrollEnabled(true);
+        mListView.setDividerHeight(0);
 
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 

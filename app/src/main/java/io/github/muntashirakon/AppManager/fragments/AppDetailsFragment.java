@@ -136,6 +136,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setOnRefreshListener(this);
         ListView listView = view.findViewById(android.R.id.list);
+        listView.setDividerHeight(0);
         mAdapter = new ActivitiesListAdapter();
         listView.setAdapter(mAdapter);
         return view;
