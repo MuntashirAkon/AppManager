@@ -6,7 +6,6 @@
 package io.github.muntashirakon.AppManager.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +19,7 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import io.github.muntashirakon.AppManager.AsyncProvider;
 import io.github.muntashirakon.AppManager.IconListAdapter;
@@ -47,7 +47,7 @@ public class IconPickerDialogFragment extends DialogFragment implements AsyncPro
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Theme_MaterialComponents_DayNight_Dialog_Alert);
 
         if (getActivity() == null) return builder.create();
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
