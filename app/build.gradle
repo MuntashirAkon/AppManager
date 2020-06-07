@@ -8,8 +8,8 @@ android {
         applicationId 'io.github.muntashirakon.AppManager'
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 89
-        versionName '2.4.0'
+        versionCode 90
+        versionName '2.4.1'
     }
     buildTypes {
         release {

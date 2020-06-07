@@ -238,7 +238,8 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mClassListingAdapter.getFilter().filter(newText);
+        if (mClassListingAdapter != null)
+            mClassListingAdapter.getFilter().filter(newText);
         return true;
     }
 
