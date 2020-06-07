@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_about"
+        android:icon="@drawable/ic_info_outline_black_24dp"
         android:title="@string/about"
         app:showAsAction="never" />
 
@@ -54,6 +55,7 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/action_app_usage"
+        android:icon="@drawable/ic_data_usage_black_24dp"
         android:title="@string/app_usage" />
 
 </menu>

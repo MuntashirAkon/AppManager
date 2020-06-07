@@ -9,7 +9,7 @@
     android:paddingEnd="@dimen/padding_medium"
     android:paddingBottom="@dimen/padding_very_small">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/launch"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -19,7 +19,12 @@
         android:minWidth="0dp"
         android:minHeight="0dp"
         android:singleLine="true"
+        android:layout_marginStart="@dimen/padding_small"
+        android:layout_marginEnd="@dimen/padding_small"
+        android:layout_marginTop="@dimen/padding_very_small"
+        android:layout_marginBottom="@dimen/padding_very_small"
         android:text="@string/launch"
+        style="@style/TextAppearance.MaterialComponents.Button"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -51,6 +56,7 @@
                 android:singleLine="true"
                 android:textIsSelectable="true"
                 android:textStyle="bold"
+                android:textColor="?android:attr/textColorPrimary"
                 tools:text="@tools:sample/lorem" />
 
             <TextView
@@ -91,22 +97,24 @@
         <ImageButton
             android:id="@+id/block_component"
             style="@android:style/Widget.Material.ImageButton"
+            android:backgroundTint="@android:color/transparent"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/padding_small"
             android:layout_weight="0"
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_block_black_24dp" />
 
     </LinearLayout>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="monospace"
         android:textIsSelectable="true"
-        android:textStyle="italic"
+        android:textSize="12sp"
+        android:textStyle="normal"
         tools:text="@tools:sample/lorem" />
 
     <LinearLayout
@@ -114,26 +122,34 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/create_shortcut_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
+            android:layout_marginStart="@dimen/padding_small"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:layout_marginTop="@dimen/padding_very_small"
+            android:layout_marginBottom="@dimen/padding_very_small"
             android:layout_weight="1"
             android:minWidth="0dp"
             android:minHeight="0dp"
             android:singleLine="true"
+            style="@style/TextAppearance.MaterialComponents.Button"
             android:text="@string/create_shortcut" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/edit_shortcut_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="@dimen/padding_small"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:layout_marginTop="@dimen/padding_very_small"
+            android:layout_marginBottom="@dimen/padding_very_small"
             android:layout_weight="1"
             android:minWidth="0dp"
             android:minHeight="0dp"
             android:singleLine="true"
+            style="@style/TextAppearance.MaterialComponents.Button"
             android:text="@string/edit_shortcut" />
     </LinearLayout>
 

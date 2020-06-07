@@ -1,6 +1,7 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -136,6 +137,7 @@ public class MenuItemCreator {
             int padding_medium = mActivity.getResources().getDimensionPixelOffset(R.dimen.padding_medium);
             LinearLayout item_layout = menu_item.findViewById(R.id.item_layout);
             item_layout.setPadding(padding_medium, padding_small, padding_medium, padding_very_small);
+            item_title.setTypeface(Typeface.DEFAULT);
         }
         // Disable animations if not clickable
         if (!isClickable) {

@@ -72,7 +72,6 @@ public class AppUsageActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(getString(R.string.app_usage));
-            actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         app_usage_strings = getResources().getStringArray(R.array.app_usage_dropdown_list);

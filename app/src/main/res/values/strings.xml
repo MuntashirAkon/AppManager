@@ -215,4 +215,5 @@
     <string name="failed_to_extract_apk_file">Failed to extract apk file</string>
     <string name="menu_disable_blocking">Disable blocking</string>
     <string name="menu_enable_blocking">Enable blocking</string>
+    <string name="search">Search</string>
 </resources>

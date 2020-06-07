@@ -45,7 +45,7 @@ public class EditShortcutDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Theme_MaterialComponents_DayNight_Dialog_Alert);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomDialog);
 
         if (getArguments() == null) return  builder.create();
         mActivityInfo = getArguments().getParcelable(ARG_ACTIVITY_INFO);

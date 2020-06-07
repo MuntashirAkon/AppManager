@@ -12,6 +12,7 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/action_share_apk"
+        android:icon="@drawable/ic_share_black_24dp"
         android:title="@string/share_apk"
         app:showAsAction="never" />
 </menu>

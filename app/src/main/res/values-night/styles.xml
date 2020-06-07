@@ -1,0 +1,16 @@
+<resources>
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight" />
+    <style name="Theme.MaterialComponents.DayNight" parent="Theme.MaterialComponents">
+        <item name="colorAccent">@color/sand_tan_shadow</item>
+        <item name="colorPrimary">@color/night_blue</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/darker_gray</item>
+        <item name="actionOverflowButtonStyle">@style/ActionBarOverflowButton</item>
+        <item name="navigationIcon">@drawable/ic_keyboard_backspace_black_24dp</item>
+    </style>
+    <style name="CustomDialog" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
+        <item name="dialogCornerRadius">@dimen/padding_medium</item>
+        <item name="colorPrimary">@color/sand_tan_shadow</item>
+        <item name="colorAccent">@color/sand_tan_shadow</item>
+    </style>
+</resources>

@@ -35,6 +35,7 @@ import java.util.Objects;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.FileProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -69,8 +70,6 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_app_info);
         mPackageName = getIntent().getStringExtra(AppInfoActivity.EXTRA_PACKAGE_NAME);
         if (mPackageName == null) {
@@ -131,9 +130,13 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         }
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_app_info_actions, menu);
+        if (menu instanceof MenuBuilder) {
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -148,7 +151,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
      */
     @SuppressLint("SetTextI18n")
     private void setHeaderView() {
-        int accentColor = mMenu.getSystemColor(android.R.attr.colorActivatedHighlight);
+        int accentColor = Utils.getThemeColor(this, android.R.attr.colorAccent);
 
         // Set Application Name, aka Label
         TextView labelView = findViewById(R.id.label);

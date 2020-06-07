@@ -41,6 +41,7 @@
                     android:textIsSelectable="true"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    android:textColor="?android:attr/textColorPrimary"
                     tools:text="@tools:sample/lorem" />
 
                 <TextView
@@ -49,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textIsSelectable="true"
-                    android:textStyle="bold|italic"
+                    android:textStyle="italic"
                     tools:text="@tools:sample/lorem" />
 
                 <TextView
@@ -111,7 +112,7 @@
                                 android:gravity="center"
                                 android:padding="16dp"
                                 android:text="@string/uninstall"
-                                android:textColor="?android:attr/colorActivatedHighlight" />
+                                android:textColor="?android:attr/colorAccent" />
                         </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
@@ -132,7 +133,7 @@
                                 android:gravity="center"
                                 android:padding="16dp"
                                 android:text="@string/app_info"
-                                android:textColor="?android:attr/colorActivatedHighlight" />
+                                android:textColor="?android:attr/colorAccent" />
                         </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
@@ -153,7 +154,7 @@
                                 android:gravity="center"
                                 android:padding="16dp"
                                 android:text="@string/manifest"
-                                android:textColor="?android:attr/colorActivatedHighlight" />
+                                android:textColor="?android:attr/colorAccent" />
                         </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
@@ -174,7 +175,7 @@
                                 android:gravity="center"
                                 android:padding="16dp"
                                 android:text="@string/exodus"
-                                android:textColor="?android:attr/colorActivatedHighlight" />
+                                android:textColor="?android:attr/colorAccent" />
                         </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
@@ -195,7 +196,7 @@
                                 android:gravity="center"
                                 android:padding="16dp"
                                 android:text="@string/fdroid"
-                                android:textColor="?android:attr/colorActivatedHighlight" />
+                                android:textColor="?android:attr/colorAccent" />
                         </androidx.cardview.widget.CardView>
                     </LinearLayout>
                 </HorizontalScrollView>

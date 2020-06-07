@@ -5,8 +5,10 @@ package io.github.muntashirakon.AppManager.activities;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import io.github.muntashirakon.AppManager.R;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
@@ -72,7 +74,6 @@ public class ClassViewerActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
             CharSequence appName = getIntent().getCharSequenceExtra(ClassViewerActivity.EXTRA_APP_NAME);
             String className = getIntent().getStringExtra(ClassViewerActivity.EXTRA_CLASS_NAME);
             if (className != null) {
@@ -133,9 +134,13 @@ public class ClassViewerActivity extends AppCompatActivity {
         mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_any_viewer_actions, menu);
+        if (menu instanceof MenuBuilder) {
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

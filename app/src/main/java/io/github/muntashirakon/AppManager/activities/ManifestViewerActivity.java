@@ -2,6 +2,7 @@ package io.github.muntashirakon.AppManager.activities;
 
 // NOTE: Commented lines were taken from View2ManifestActivity.java
 
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.xmlapkparser.AXMLPrinter;
 
@@ -52,9 +54,6 @@ public class ManifestViewerActivity extends AppCompatActivity {
         else
             setContentView(R.layout.activity_any_viewer);
 
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         mProgressBar = findViewById(R.id.progress_horizontal);
 
         String packageName = getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
@@ -75,9 +74,13 @@ public class ManifestViewerActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_any_viewer_actions, menu);
+        if (menu instanceof MenuBuilder) {
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

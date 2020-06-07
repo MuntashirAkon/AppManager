@@ -34,7 +34,6 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SearchView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,6 +57,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.widget.SearchView;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -116,14 +117,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(null);
             actionBar.setDisplayShowCustomEnabled(true);
             actionBar.setTitle(getString(R.string.loading));
 
             SearchView searchView = new SearchView(actionBar.getThemedContext());
             searchView.setOnQueryTextListener(this);
+            searchView.setQueryHint(getString(R.string.search));
+
+            ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_button))
+                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
+            ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn))
+                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
 
             LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.gravity = Gravity.END;
             actionBar.setCustomView(searchView, layoutParams);
         }
         if (savedInstanceState != null) {
@@ -158,9 +167,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onSaveInstanceState(outState);
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main_actions, menu);
+        if (menu instanceof MenuBuilder) {
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -176,11 +189,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_about:
-                new AlertDialog.Builder(this, R.style.Theme_MaterialComponents_DayNight_Dialog_Alert)
-                        .setTitle(R.string.about)
+                new AlertDialog.Builder(this, R.style.CustomDialog)
                         .setView(getLayoutInflater().inflate(R.layout.dialog_about, null))
                         .setNegativeButton(android.R.string.ok, null)
-                        .setIcon(R.drawable.ic_launcher_app_manager)
                         .show();
                 return true;
             case R.id.action_refresh:
@@ -423,6 +434,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         private int mColorTransparent;
         private int mColorSemiTransparent;
         private int mColorOrange;
+        private int mColorPrimary;
+        private int mColorSecondary;
+        private int mColorRed;
 
         Adapter(@NonNull Activity activity) {
             mActivity = activity;
@@ -432,6 +446,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             mColorTransparent = Color.TRANSPARENT;
             mColorSemiTransparent = activity.getResources().getColor(R.color.SEMI_TRANSPARENT);
             mColorOrange = activity.getResources().getColor(R.color.orange);
+            mColorPrimary = Utils.getThemeColor(mActivity, android.R.attr.textColorPrimary);
+            mColorSecondary = Utils.getThemeColor(mActivity, android.R.attr.textColorSecondary);
+            mColorRed = activity.getResources().getColor(R.color.red);
         }
 
         void setDefaultList(List<ApplicationItem> list) {
@@ -521,8 +538,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             // Alternate background colors
             view.setBackgroundColor(i % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
-            // Hacky method to set DayNight compatible color to dynamic contents
-            ColorStateList colorStateList = holder.sha.getTextColors();
 
             ApplicationItem item = (ApplicationItem) mAdapterList.get(i);
             ApplicationInfo info = item.applicationInfo;
@@ -555,12 +570,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (mPackageManager.checkPermission(Manifest.permission.READ_LOGS,info.packageName)
                         == PackageManager.PERMISSION_GRANTED)
                     holder.date.setTextColor(mColorOrange);
-                else holder.date.setTextColor(colorStateList);
+                else holder.date.setTextColor(mColorSecondary);
                 // Set kernel user ID
                 holder.shared_id.setText(String.format(Locale.getDefault(),"%d", info.uid));
                 // Set kernel user ID text color to orange if the package is shared
                 if (packageInfo.sharedUserId != null) holder.shared_id.setTextColor(mColorOrange);
-                else holder.shared_id.setTextColor(colorStateList);
+                else holder.shared_id.setTextColor(mColorSecondary);
                 // Set issuer
                 String issuer;
                 try {
@@ -585,7 +600,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             // Set app label color to red if clearing user data not allowed
             if ((info.flags & ApplicationInfo.FLAG_ALLOW_CLEAR_USER_DATA) == 0)
                 holder.label.setTextColor(Color.RED);
-            else holder.label.setTextColor(colorStateList);
+            else holder.label.setTextColor(mColorPrimary);
             // Set package name
             if (mConstraint != null && info.packageName.contains(mConstraint)) {
                 // Highlight searched query
@@ -595,7 +610,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             // Set package name color to blue if the app is in stopped/force closed state
             if ((info.flags & ApplicationInfo.FLAG_STOPPED) != 0) holder.packageName.setTextColor(Color.BLUE);
-            else holder.packageName.setTextColor(colorStateList);
+            else holder.packageName.setTextColor(mColorSecondary);
             // Set version (along with HW accelerated, debug and test only flags)
             CharSequence version = holder.version.getText();
             if ((info.flags & ApplicationInfo.FLAG_HARDWARE_ACCELERATED) == 0) version = "_" + version;
@@ -608,7 +623,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 mUsageStats = mActivity.getSystemService(UsageStatsManager.class);
                 if (mUsageStats != null && mUsageStats.isAppInactive(info.packageName))
                     holder.version.setTextColor(Color.GREEN);
-                else holder.version.setTextColor(colorStateList);
+                else holder.version.setTextColor(mColorSecondary);
             }
             // Set app type: system or user app (along with large heap, suspended, multi-arch,
             // has code, vm safe mode)
@@ -624,7 +639,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             // Set app type text color to magenta if the app is persistent
             if ((info.flags & ApplicationInfo.FLAG_PERSISTENT) != 0)
                 holder.isSystemApp.setTextColor(Color.MAGENTA);
-            else holder.isSystemApp.setTextColor(colorStateList);
+            else holder.isSystemApp.setTextColor(mColorSecondary);
             // Set SDK
             if (Build.VERSION.SDK_INT >= 26) {
                 holder.size.setText(String.format(Locale.getDefault(), "SDK %d", -item.size));
@@ -634,7 +649,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             // Set SDK color to orange if the app is using cleartext (e.g. HTTP) traffic
             if ((info.flags & ApplicationInfo.FLAG_USES_CLEARTEXT_TRAFFIC) !=0)
                 holder.size.setTextColor(mColorOrange);
-            else holder.size.setTextColor(colorStateList);
+            else holder.size.setTextColor(mColorSecondary);
 
             return view;
         }
@@ -643,7 +658,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             Spannable spannable = sSpannableFactory.newSpannable(s);
             int start = s.toLowerCase().indexOf(mConstraint);
             int end = start + mConstraint.length();
-            spannable.setSpan(new BackgroundColorSpan(0xFFB7B7B7), start, end,
+            spannable.setSpan(new BackgroundColorSpan(mColorRed), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             return spannable;
         }

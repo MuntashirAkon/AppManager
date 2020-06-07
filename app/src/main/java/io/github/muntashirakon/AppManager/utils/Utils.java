@@ -1,5 +1,6 @@
 package io.github.muntashirakon.AppManager.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
@@ -11,6 +12,7 @@ import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.os.Build;
 import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
 import android.view.WindowManager;
 
 
@@ -30,6 +32,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Scanner;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -40,6 +43,8 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+
+import androidx.annotation.NonNull;
 
 public class Utils {
 
@@ -403,4 +408,21 @@ public class Utils {
         }
     }
 
+    public static int getSystemColor(@NonNull Context context, int resAttrColor) { // Ex. android.R.attr.colorPrimary
+        // Get accent color
+        TypedValue typedValue = new TypedValue();
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context,
+                android.R.style.Theme_DeviceDefault_DayNight);
+        contextThemeWrapper.getTheme().resolveAttribute(resAttrColor,
+                typedValue, true);
+        return typedValue.data;
+    }
+
+    public static int getThemeColor(@NonNull Context context, int resAttrColor) { // Ex. android.R.attr.colorPrimary
+        // Get accent color
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(resAttrColor,
+                typedValue, true);
+        return typedValue.data;
+    }
 }

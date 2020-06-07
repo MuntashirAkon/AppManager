@@ -1,3 +1,20 @@
 <resources>
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar" />
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight" />
+    <style name="Theme.MaterialComponents.DayNight" parent="Theme.MaterialComponents.Light">
+        <item name="colorPrimary">@android:color/white</item>
+        <item name="colorPrimaryDark">#33000000</item>
+        <item name="colorAccent">@color/cma</item>
+        <item name="android:textColorPrimary">#DE000000</item>
+        <item name="android:textColorSecondary">#99000000</item>
+        <item name="actionOverflowButtonStyle">@style/ActionBarOverflowButton</item>
+        <item name="navigationIcon">@drawable/ic_keyboard_backspace_black_24dp</item>
+    </style>
+    <style name="ActionBarOverflowButton" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_more_vert_black_24dp</item>
+    </style>
+    <style name="CustomDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="dialogCornerRadius">@dimen/padding_medium</item>
+        <item name="colorPrimary">@color/cma</item>
+        <item name="colorAccent">@color/cma</item>
+    </style>
 </resources>

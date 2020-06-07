@@ -1,5 +1,6 @@
 package io.github.muntashirakon.AppManager.activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.BackgroundColorSpan;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,9 +24,9 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,10 +48,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import dalvik.system.DexClassLoader;
 import dalvik.system.DexFile;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static com.google.classysharkandroid.utils.PackageUtils.apkCert;
 import static com.google.classysharkandroid.utils.PackageUtils.convertS;
@@ -122,13 +127,20 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                 Toast.makeText(this, R.string.app_not_installed, Toast.LENGTH_LONG).show();
                 finish();
             }
-            mActionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
+            mActionBar.setDisplayShowCustomEnabled(true);
 
             SearchView searchView = new SearchView(mActionBar.getThemedContext());
             searchView.setOnQueryTextListener(this);
+            searchView.setQueryHint(getString(R.string.search));
 
-            ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_button))
+                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
+            ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn))
+                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
+
+            ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.gravity = Gravity.END;
             mActionBar.setCustomView(searchView, layoutParams);
         }
 
@@ -166,6 +178,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
 
                     PackageManager pm = getApplicationContext().getPackageManager();
                     PackageInfo mPackageInfo = null;
+                    // FIXME: fix this permission mess
                     final int signingCertFlag;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                         signingCertFlag = PackageManager.GET_SIGNING_CERTIFICATES;
@@ -243,10 +256,14 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         return true;
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_class_listing_actions, menu);
-        return true;
+        if (menu instanceof MenuBuilder) {
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        }
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -267,7 +284,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                     if (Names[i - 1].equals(Names[i])) continue;
                     statsMsg.append(Names[i]).append("\n"); j++;
                 }
-                new AlertDialog.Builder(this, R.style.Theme_MaterialComponents_DayNight_Dialog_Alert)
+                new AlertDialog.Builder(this, R.style.CustomDialog)
                         .setTitle(String.format(getString(R.string.trackers_and_classes),
                                 j, Names.length))
                         .setNegativeButton(android.R.string.ok, null)
@@ -307,7 +324,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                 .replaceAll(" ", "&nbsp;").replaceAll("\n", "<br/>")));
         showText.setMovementMethod(new ScrollingMovementMethod());
         showText.setTextIsSelectable(true);
-        new AlertDialog.Builder(this, R.style.Theme_MaterialComponents_DayNight_Dialog_Alert)
+        new AlertDialog.Builder(this, R.style.CustomDialog)
                 .setTitle(String.format(getString(R.string.trackers_and_classes),
                         totalTrackersFound, classesList.size()))
                 .setView(showText)
@@ -465,12 +482,14 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
 
         private int mColorTransparent;
         private int mColorSemiTransparent;
+        private int mColorRed;
 
         ClassListingAdapter(@NonNull Activity activity) {
             mLayoutInflater = activity.getLayoutInflater();
 
             mColorTransparent = Color.TRANSPARENT;
             mColorSemiTransparent = activity.getResources().getColor(R.color.SEMI_TRANSPARENT);
+            mColorRed = activity.getResources().getColor(R.color.red);
         }
 
         void setDefaultList(List<String> list) {
@@ -515,7 +534,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
             Spannable spannable = sSpannableFactory.newSpannable(s);
             int start = s.toLowerCase().indexOf(mConstraint);
             int end = start + mConstraint.length();
-            spannable.setSpan(new BackgroundColorSpan(0xFFB7B7B7), start, end,
+            spannable.setSpan(new BackgroundColorSpan(mColorRed), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             return spannable;
         }
