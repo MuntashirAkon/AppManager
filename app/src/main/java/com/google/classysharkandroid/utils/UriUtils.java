@@ -25,9 +25,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 public class UriUtils {
 
-    public static InputStream getStreamFromUri(Context context, Uri uriFromIntent) throws FileNotFoundException {
+    public static InputStream getStreamFromUri(@NonNull Context context, Uri uriFromIntent)
+            throws FileNotFoundException {
         return context.getContentResolver().openInputStream(uriFromIntent);
     }
 
@@ -35,7 +39,8 @@ public class UriUtils {
         return (uriFromIntent != null) && (uriFromIntent.getScheme().contains("content"));
     }
 
-    public static String pathUriCache(Context context, Uri uri, String nCache) {
+    @Nullable
+    public static String pathUriCache(@NonNull Context context, Uri uri, String nCache) {
         File f = new File(context.getCacheDir(), nCache);
         try {
             FileOutputStream fos = new FileOutputStream(f);

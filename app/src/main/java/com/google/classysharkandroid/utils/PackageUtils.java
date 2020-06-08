@@ -4,7 +4,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.Signature;
-import android.content.pm.SigningInfo;
 import android.os.Build;
 
 import java.io.ByteArrayInputStream;
@@ -14,10 +13,11 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
-import java.util.Comparator;
+
+import androidx.annotation.NonNull;
 
 public class PackageUtils {
-    public static String apkCert(PackageInfo p){
+    public static String apkCert(@NonNull PackageInfo p){
         Signature[] signatures;
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
 //            SigningInfo signingInfo = p.signingInfo;
@@ -49,7 +49,7 @@ public class PackageUtils {
     public static String apkPro(PackageInfo p, PackageManager mPackageManager) {
         String[] aPermissionsUse;
         StringBuilder s = new StringBuilder(apkCert(p));
-        String tmp = "";
+        String tmp;
         PermissionInfo pI;
 
         if (p.requestedPermissions != null) {
@@ -79,11 +79,7 @@ public class PackageUtils {
         }
         if (p.permissions != null) {
             s.append("\n\n#######################\n### Declared Permissions ###");
-            Arrays.sort(p.permissions, new Comparator<PermissionInfo>() {
-                public int compare(PermissionInfo o1, PermissionInfo o2) {
-                    return o1.name.compareToIgnoreCase(o2.name);
-                }
-            });
+            Arrays.sort(p.permissions, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
             for (int i=0;i < p.permissions.length;i++) {
                 s.append("\n\n\u25a0").append(p.permissions[i].name).append("\n").
                         append(p.permissions[i].loadLabel(mPackageManager)).append("\n").

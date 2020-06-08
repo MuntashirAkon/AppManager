@@ -295,7 +295,7 @@ public class StringBlock {
         return style;
     }
 
-    private static final int getShort(int[] array, int offset) {
+    private static int getShort(int[] array, int offset) {
         int value = array[offset / 4];
         if ((offset % 4) / 2 == 0) {
             return (value & 0xFFFF);

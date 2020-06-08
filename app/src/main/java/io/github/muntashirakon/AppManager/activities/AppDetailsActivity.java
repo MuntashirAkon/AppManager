@@ -13,7 +13,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.fragment.app.Fragment;
@@ -58,12 +57,8 @@ public class AppDetailsActivity extends AppCompatActivity {
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
 
-        new TabLayoutMediator(tabLayout, viewPager2, true, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                tab.setText(mTabTitleIds.getText(position));
-            }
-        }).attach();
+        new TabLayoutMediator(tabLayout, viewPager2, true,
+                (tab, position) -> tab.setText(mTabTitleIds.getText(position))).attach();
     }
 
     @SuppressLint("RestrictedApi")

@@ -130,13 +130,9 @@ public class LauncherIconCreator {
             new AlertDialog.Builder(context)
                     .setTitle(context.getString(R.string.error_creating_shortcut))
                     .setMessage(context.getString(R.string.error_verbose_pin_shortcut))
-                    .setPositiveButton(context.getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Just close dialog don't do anything
-                            dialog.cancel();
-                        }
+                    .setPositiveButton(context.getString(android.R.string.ok), (dialog, which) -> {
+                        // Just close dialog don't do anything
+                        dialog.cancel();
                     })
                     .show();
         }

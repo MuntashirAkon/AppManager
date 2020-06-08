@@ -27,6 +27,9 @@ import java.io.File;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * This is example usage of AXMLParser class.
  * <p/>
@@ -35,7 +38,7 @@ import java.util.zip.ZipFile;
 public class AXMLPrinter {
     private static final String DEFAULT_XML = "AndroidManifest.xml";
 
-    public static void main(String[] arguments) {
+    public static void main(@NonNull String[] arguments) {
         if (arguments.length < 1) {
             System.out.println("Usage: AXMLPrinter <APK FILE PATH> <APK sub .XML file>");
             return;
@@ -46,8 +49,9 @@ public class AXMLPrinter {
         System.out.println(getManifestXMLFromAPK(apkPath, fileXML));
     }
 
+    @NonNull
     public static String getManifestXMLFromAPK(String apkPath, String fileXML) {
-        ZipFile file = null;
+        ZipFile file;
         StringBuilder xmlSb = new StringBuilder(100);
         try {
             File apkFile = new File(apkPath);
@@ -112,7 +116,8 @@ public class AXMLPrinter {
         return xmlSb.toString();
     }
 
-    private static String getNamespacePrefix(String prefix) {
+    @NonNull
+    private static String getNamespacePrefix(@Nullable String prefix) {
         if (prefix == null || prefix.length() == 0) {
             return "";
         }
@@ -182,7 +187,7 @@ public class AXMLPrinter {
 
     /////////////////////////////////// ILLEGAL STUFF, DONT LOOK :)
 
-    public static float complexToFloat(int complex) {
+    private static float complexToFloat(int complex) {
         return (float) (complex & 0xFFFFFF00) * RADIX_MULTS[(complex >> 4) & 3];
     }
 

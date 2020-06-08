@@ -113,7 +113,7 @@ public class AXmlResourceParser implements XmlResourceParser {
         }
     }
 
-    public void require(int type, String namespace, String name) throws XmlPullParserException, IOException {
+    public void require(int type, String namespace, String name) throws XmlPullParserException {
         if (type != getEventType() ||
                 (namespace != null && !namespace.equals(getNamespace())) ||
                 (name != null && !name.equals(getName()))) {
@@ -413,15 +413,16 @@ public class AXmlResourceParser implements XmlResourceParser {
         return -1;
     }
 
-    public boolean isEmptyElementTag() throws XmlPullParserException {
+    public boolean isEmptyElementTag() {
         return false;
     }
 
-    public boolean isWhitespace() throws XmlPullParserException {
+    public boolean isWhitespace() {
         return false;
     }
 
-    public void defineEntityReplacementText(String entityName, String replacementText) throws XmlPullParserException {
+    public void defineEntityReplacementText(String entityName, String replacementText)
+            throws XmlPullParserException {
         throw new XmlPullParserException(E_NOT_SUPPORTED);
     }
 
@@ -648,7 +649,7 @@ public class AXmlResourceParser implements XmlResourceParser {
             return -1;
         }
 
-        private final int get(int index, boolean prefix) {
+        private int get(int index, boolean prefix) {
             if (m_dataLength == 0 || index < 0) {
                 return -1;
             }
@@ -717,7 +718,7 @@ public class AXmlResourceParser implements XmlResourceParser {
 
     ///////////////////////////////////
 
-    private final int getAttributeOffset(int index) {
+    private int getAttributeOffset(int index) {
         if (m_event != START_TAG) {
             throw new IndexOutOfBoundsException("Current event is not START_TAG.");
         }
@@ -728,7 +729,7 @@ public class AXmlResourceParser implements XmlResourceParser {
         return offset;
     }
 
-    private final int findAttribute(String namespace, String attribute) {
+    private int findAttribute(String namespace, String attribute) {
         if (m_strings == null || attribute == null) {
             return -1;
         }
@@ -748,7 +749,7 @@ public class AXmlResourceParser implements XmlResourceParser {
         return -1;
     }
 
-    private final void resetEventInfo() {
+    private void resetEventInfo() {
         m_event = -1;
         m_lineNumber = -1;
         m_name = -1;
@@ -759,7 +760,7 @@ public class AXmlResourceParser implements XmlResourceParser {
         m_styleAttribute = -1;
     }
 
-    private final void doNext() throws IOException {
+    private void doNext() throws IOException {
         // Delayed initialization.
         if (m_strings == null) {
             ChunkUtil.readCheckType(m_reader, CHUNK_AXML_FILE);

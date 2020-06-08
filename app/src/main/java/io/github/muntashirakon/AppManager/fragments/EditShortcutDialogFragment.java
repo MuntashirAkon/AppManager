@@ -9,7 +9,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -88,63 +87,51 @@ public class EditShortcutDialogFragment extends DialogFragment {
 
         image_icon = view.findViewById(R.id.insert_icon_btn);
         image_icon.setImageDrawable(mActivityInfo.loadIcon(mPackageManager));
-        image_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IconPickerDialogFragment dialog = new IconPickerDialogFragment();
-                dialog.attachIconPickerListener(new IconPickerDialogFragment.IconPickerListener() {
-                    @Override
-                    public void iconPicked(String icon) {
-                        text_icon.setText(icon);
-                        image_icon.setImageDrawable(getIcon(icon));
-                    }
-                });
-                if (getFragmentManager() != null)
-                    dialog.show(getFragmentManager(), IconPickerDialogFragment.TAG);
-            }
+        image_icon.setOnClickListener(v -> {
+            IconPickerDialogFragment dialog = new IconPickerDialogFragment();
+            dialog.attachIconPickerListener(icon -> {
+                text_icon.setText(icon);
+                image_icon.setImageDrawable(getIcon(icon));
+            });
+            if (getFragmentManager() != null)
+                dialog.show(getFragmentManager(), IconPickerDialogFragment.TAG);
         });
 
         builder.setTitle(mActivityInfo.loadLabel(mPackageManager))
                 .setView(view)
                 .setIcon(mActivityInfo.loadIcon(mPackageManager))
-                .setPositiveButton(R.string.create_shortcut, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String newActivityName = text_name.getText().toString();
-                        if (newActivityName.length() == 0) newActivityName = activityName;
+                .setPositiveButton(R.string.create_shortcut, (dialog, which) -> {
+                    String newActivityName = text_name.getText().toString();
+                    if (newActivityName.length() == 0) newActivityName = activityName;
 
-                        activityIconResourceName[0] = text_icon.getText().toString();
-                        Drawable icon;
-                        try {
-                            final String icon_resource_string = activityIconResourceName[0];
-                            final String pack = icon_resource_string.substring(0, icon_resource_string.indexOf(':'));
-                            final String type = icon_resource_string.substring(icon_resource_string.indexOf(':') + 1, icon_resource_string.indexOf('/'));
-                            final String name = icon_resource_string.substring(icon_resource_string.indexOf('/') + 1);
+                    activityIconResourceName[0] = text_icon.getText().toString();
+                    Drawable icon;
+                    try {
+                        final String icon_resource_string = activityIconResourceName[0];
+                        final String pack = icon_resource_string.substring(0, icon_resource_string.indexOf(':'));
+                        final String type = icon_resource_string.substring(icon_resource_string.indexOf(':') + 1, icon_resource_string.indexOf('/'));
+                        final String name = icon_resource_string.substring(icon_resource_string.indexOf('/') + 1);
 
-                            Resources resources = mPackageManager.getResourcesForApplication(pack);
-                            int icon_resource = resources.getIdentifier(name, type, pack);
-                            if (icon_resource != 0) {
-                                icon = resources.getDrawable(icon_resource);
-                            } else {
-                                icon = mPackageManager.getDefaultActivityIcon();
-                                Toast.makeText(getActivity(), R.string.error_invalid_icon_resource, Toast.LENGTH_LONG).show();
-                            }
-                        } catch (PackageManager.NameNotFoundException e) {
+                        Resources resources = mPackageManager.getResourcesForApplication(pack);
+                        int icon_resource = resources.getIdentifier(name, type, pack);
+                        if (icon_resource != 0) {
+                            icon = resources.getDrawable(icon_resource);
+                        } else {
                             icon = mPackageManager.getDefaultActivityIcon();
                             Toast.makeText(getActivity(), R.string.error_invalid_icon_resource, Toast.LENGTH_LONG).show();
-                        } catch (Exception e) {
-                            icon = mPackageManager.getDefaultActivityIcon();
-                            Toast.makeText(getActivity(), R.string.error_invalid_icon_format, Toast.LENGTH_LONG).show();
                         }
+                    } catch (PackageManager.NameNotFoundException e) {
+                        icon = mPackageManager.getDefaultActivityIcon();
+                        Toast.makeText(getActivity(), R.string.error_invalid_icon_resource, Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        icon = mPackageManager.getDefaultActivityIcon();
+                        Toast.makeText(getActivity(), R.string.error_invalid_icon_format, Toast.LENGTH_LONG).show();
+                    }
 
-                        LauncherIconCreator.createLauncherIcon(getActivity(), mActivityInfo, newActivityName, icon, activityIconResourceName[0]);
-                    }
+                    LauncherIconCreator.createLauncherIcon(getActivity(), mActivityInfo, newActivityName, icon, activityIconResourceName[0]);
                 })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (getDialog() != null) getDialog().cancel();
-                    }
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                    if (getDialog() != null) getDialog().cancel();
                 });
 
         return builder.create();

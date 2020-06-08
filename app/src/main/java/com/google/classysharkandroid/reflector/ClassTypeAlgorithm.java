@@ -18,11 +18,13 @@ package com.google.classysharkandroid.reflector;
 
 import java.util.Hashtable;
 
-public class ClassTypeAlgorithm {
-    private ClassTypeAlgorithm() {
-    }
+import androidx.annotation.NonNull;
 
-    public static String TypeName(String nm, Hashtable ht) {
+public class ClassTypeAlgorithm {
+    private ClassTypeAlgorithm() {}
+
+    @NonNull
+    public static String TypeName(@NonNull String nm, Hashtable<String, String> ht) {
         String yy;
         String arr;
 

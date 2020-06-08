@@ -49,7 +49,7 @@ public class ClassViewerActivity extends AppCompatActivity {
                     "with|yield)\\b", Pattern.MULTILINE);
 
     public final static Pattern TYPES = Pattern.compile
-            ("\\b(j?bool(ean)?|(u|j)?(byte|char|double|float|int(eger)?|" +
+            ("\\b(j?bool(ean)?|[uj]?(byte|char|double|float|int(eger)?|" +
                     "long|short))\\b", Pattern.MULTILINE);
 
     public final static Pattern CC_COMMENT = Pattern.compile
@@ -104,18 +104,12 @@ public class ClassViewerActivity extends AppCompatActivity {
         matcher = CC_COMMENT.matcher(highlightText(matcher, darkOrange));
         final String final_data = highlightText(matcher, Color.GREEN);
         final ClassViewerActivity activity = this;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final Spanned spanned = Html.fromHtml(final_data);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        textView.setText(spanned);
-                        activity.showProgressBar(false);
-                    }
-                });
-            }
+        new Thread(() -> {
+            final Spanned spanned = Html.fromHtml(final_data);
+            runOnUiThread(() -> {
+                textView.setText(spanned);
+                activity.showProgressBar(false);
+            });
         }).start();
     }
 

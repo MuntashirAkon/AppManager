@@ -54,8 +54,7 @@ public final class IntReader {
         }
         try {
             m_stream.close();
-        } catch (IOException e) {
-        }
+        } catch (IOException ignored) {}
         reset(null, false);
     }
 

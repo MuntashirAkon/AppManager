@@ -16,8 +16,14 @@
 
 package com.google.classysharkandroid.reflector;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 
@@ -72,7 +78,7 @@ public class Reflector {
         Field[] fields;
         Class currentClass;
         String x, y;
-        Hashtable classRef;
+        Hashtable<String, String> classRef;
         currentClass = clazz;
 
         /*
@@ -113,43 +119,42 @@ public class Reflector {
                 + fields.length +" fields\n");
     }
 
-    private Hashtable generateDependencies(Constructor[] constructors, Method[] methods, Field[] fields) {
-
-        String x, y;
-        Hashtable classRef = new Hashtable();
+    @NonNull
+    private Hashtable<String, String> generateDependencies(Constructor[] constructors, Method[] methods, @NonNull Field[] fields) {
+        Hashtable<String, String> classRef = new Hashtable<>();
 
         for (Field field : fields) {
-            x = ClassTypeAlgorithm.TypeName(field.getType().getName(), classRef);
+            ClassTypeAlgorithm.TypeName(field.getType().getName(), classRef);
         }
 
         for (Constructor constructor : constructors) {
             Class[] cx = constructor.getParameterTypes();
             if (cx.length > 0) {
                 for (Class aClass : cx) {
-                    x = ClassTypeAlgorithm.TypeName(aClass.getName(), classRef);
+                    ClassTypeAlgorithm.TypeName(aClass.getName(), classRef);
                 }
             }
         }
 
         for (Method method : methods) {
-            x = ClassTypeAlgorithm.TypeName(method.getReturnType().getName(), classRef);
+            ClassTypeAlgorithm.TypeName(method.getReturnType().getName(), classRef);
             Class[] cx = method.getParameterTypes();
             if (cx.length > 0) {
                 for (Class aClass : cx) {
-                    x = ClassTypeAlgorithm.TypeName(aClass.getName(), classRef);
+                    ClassTypeAlgorithm.TypeName(aClass.getName(), classRef);
                 }
             }
 
             Class<?>[] xType = method.getExceptionTypes();
 
             for (Class<?> aClass : xType) {
-                x = ClassTypeAlgorithm.TypeName(aClass.getName(), classRef);
+                ClassTypeAlgorithm.TypeName(aClass.getName(), classRef);
             }
         }
         return classRef;
     }
 
-    private void fillTaggedText(Constructor[] constructors, Method[] methods, Field[] fields, Class currentClass, Hashtable classRef) {
+    private void fillTaggedText(Constructor[] constructors, Method[] methods, Field[] fields, Class currentClass, Hashtable<String, String> classRef) {
         Class supClass;
         String x;
 
@@ -181,7 +186,6 @@ public class Reflector {
                 " */", TAG.DOCUMENT));
 
         for (Field field : fields) {
-            Class ctmp = field.getType();
             int md = field.getModifiers();
 
             words.add(new TaggedWord("\n      " + Modifier.toString(md) + " ", TAG.MODIFIER));

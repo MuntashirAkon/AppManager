@@ -8,13 +8,8 @@ package io.github.muntashirakon.AppManager.fragments;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -55,24 +50,17 @@ public class IconPickerDialogFragment extends DialogFragment implements AsyncPro
         if (inflater == null) return builder.create();
         grid = (GridView) inflater.inflate(R.layout.dialog_icon_picker, null);
 
-        grid.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> view, View item, int index,
-                                    long id) {
-                if (listener != null) {
-                    listener.iconPicked(view.getAdapter().getItem(index).toString());
-                    if (getDialog() != null) getDialog().dismiss();
-                }
+        grid.setOnItemClickListener((view, item, index, id) -> {
+            if (listener != null) {
+                listener.iconPicked(view.getAdapter().getItem(index).toString());
+                if (getDialog() != null) getDialog().dismiss();
             }
         });
 
         builder.setTitle(R.string.icon_picker)
                 .setView(grid)
-                .setNegativeButton(android.R.string.cancel, new OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (getDialog() != null) getDialog().cancel();
-                    }
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                    if (getDialog() != null) getDialog().cancel();
                 });
 
         return builder.create();

@@ -153,18 +153,4 @@ public class MenuItemCreator {
         mMenuContainer.addView(menu_item);
         return menu_item;
     }
-
-    public int getAccentColor(){
-        return getSystemColor(android.R.attr.colorAccent);
-    }
-
-    public int getSystemColor(int resAttrColor) { // Ex. android.R.attr.colorPrimary
-        // Get accent color
-        TypedValue typedValue = new TypedValue();
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(mActivity,
-                android.R.style.Theme_DeviceDefault);
-        contextThemeWrapper.getTheme().resolveAttribute(resAttrColor,
-                typedValue, true);
-        return typedValue.data;
-    }
 }

@@ -10,7 +10,6 @@ import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -46,7 +45,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -143,15 +141,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mListView.setFastScrollEnabled(true);
         mListView.setDividerHeight(0);
 
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent appDetailsIntent = new Intent(MainActivity.this, AppDetailsActivity.class);
-                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, mAdapter.getItem(i).applicationInfo.packageName);
-                MainActivity.this.startActivity(appDetailsIntent);
-                return true;
-            }
+        mListView.setOnItemLongClickListener((adapterView, view, i, l) -> {
+            Intent appDetailsIntent = new Intent(MainActivity.this, AppDetailsActivity.class);
+            appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME,
+                    mAdapter.getItem(i).applicationInfo.packageName);
+            MainActivity.this.startActivity(appDetailsIntent);
+            return true;
         });
 
         mAdapter = new MainActivity.Adapter(MainActivity.this);
@@ -318,32 +313,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void sortApplicationList() {
-        Collections.sort(mItemList, new Comparator<ApplicationItem>() {
-            @Override
-            public int compare(ApplicationItem item1, ApplicationItem item2) {
-                switch (mSortBy) {
-                    case SORT_NAME:
-                        return sCollator.compare(item1.label, item2.label);
-                    case SORT_PKG:
-                        return item1.applicationInfo.packageName.compareTo(item2.applicationInfo.packageName);
-                    case SORT_DOMAIN:
-                        boolean isSystem1 = (item1.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                        boolean isSystem2 = (item2.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                        return Utils.compareBooleans(isSystem1, isSystem2);
-                    case SORT_INSTALLATION:
-                        //Sort in decreasing order
-                        return -item1.date.compareTo(item2.date);
-                    case SORT_SIZE:
-                        return -item1.size.compareTo(item2.size);
-                    case SORT_SHARED_ID:
-                        return item2.applicationInfo.uid - item1.applicationInfo.uid;
-                    case SORT_SHA:
-                        try {
-                            return item1.sha.compareTo(item2.sha);
-                        } catch (NullPointerException ignored) {}
-                    default:
-                        return 0;
-                }
+        Collections.sort(mItemList, (item1, item2) -> {
+            switch (mSortBy) {
+                case SORT_NAME:
+                    return sCollator.compare(item1.label, item2.label);
+                case SORT_PKG:
+                    return item1.applicationInfo.packageName.compareTo(item2.applicationInfo.packageName);
+                case SORT_DOMAIN:
+                    boolean isSystem1 = (item1.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+                    boolean isSystem2 = (item2.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+                    return Utils.compareBooleans(isSystem1, isSystem2);
+                case SORT_INSTALLATION:
+                    //Sort in decreasing order
+                    return -item1.date.compareTo(item2.date);
+                case SORT_SIZE:
+                    return -item1.size.compareTo(item2.size);
+                case SORT_SHARED_ID:
+                    return item2.applicationInfo.uid - item1.applicationInfo.uid;
+                case SORT_SHA:
+                    try {
+                        return item1.sha.compareTo(item2.sha);
+                    } catch (NullPointerException ignored) {}
+                default:
+                    return 0;
             }
         });
     }
@@ -373,18 +365,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             getPackageSizeInfo.invoke(this.getPackageManager(), item.applicationInfo.packageName, new IPackageStatsObserver.Stub() {
                 @Override
                 public void onGetStatsCompleted(final PackageStats pStats, final boolean succeeded) {
-                    MainActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (succeeded)
-                                item.size = pStats.codeSize + pStats.cacheSize + pStats.dataSize
-                                        + pStats.externalCodeSize + pStats.externalCacheSize + pStats.externalDataSize
-                                        + pStats.externalMediaSize + pStats.externalObbSize;
-                            else
-                                item.size = -1L;
+                    MainActivity.this.runOnUiThread(() -> {
+                        if (succeeded)
+                            item.size = pStats.codeSize + pStats.cacheSize + pStats.dataSize
+                                    + pStats.externalCodeSize + pStats.externalCacheSize + pStats.externalDataSize
+                                    + pStats.externalMediaSize + pStats.externalObbSize;
+                        else
+                            item.size = -1L;
 
-                            incrementItemSizeRetrievedCount();
-                        }
+                        incrementItemSizeRetrievedCount();
                     });
                 }
             });

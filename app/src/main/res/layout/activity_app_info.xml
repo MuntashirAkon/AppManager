@@ -85,120 +85,15 @@
                     android:layout_height="wrap_content">
 
                     <LinearLayout
+                        android:id="@+id/horizontal_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
                         android:orientation="horizontal"
                         android:paddingStart="8dp"
                         android:paddingTop="4dp"
                         android:paddingEnd="8dp"
-                        android:paddingBottom="4dp">
+                        android:paddingBottom="4dp" />
 
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/details_uninstall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?android:attr/selectableItemBackground"
-                            app:cardBackgroundColor="@android:color/transparent"
-                            app:cardCornerRadius="0dp"
-                            app:cardElevation="0dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:drawableTop="@drawable/ic_delete_black_24dp"
-                                android:gravity="center"
-                                android:padding="16dp"
-                                android:text="@string/uninstall"
-                                android:textColor="?android:attr/colorAccent" />
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/details_view_in_settings"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?android:attr/selectableItemBackground"
-                            app:cardBackgroundColor="@android:color/transparent"
-                            app:cardCornerRadius="0dp"
-                            app:cardElevation="0dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:drawableTop="@drawable/ic_info_outline_black_24dp"
-                                android:gravity="center"
-                                android:padding="16dp"
-                                android:text="@string/app_info"
-                                android:textColor="?android:attr/colorAccent" />
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/details_manifest"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?android:attr/selectableItemBackground"
-                            app:cardBackgroundColor="@android:color/transparent"
-                            app:cardCornerRadius="0dp"
-                            app:cardElevation="0dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:drawableTop="@drawable/ic_tune_black_24dp"
-                                android:gravity="center"
-                                android:padding="16dp"
-                                android:text="@string/manifest"
-                                android:textColor="?android:attr/colorAccent" />
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/details_exodus"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?android:attr/selectableItemBackground"
-                            app:cardBackgroundColor="@android:color/transparent"
-                            app:cardCornerRadius="0dp"
-                            app:cardElevation="0dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:drawableTop="@drawable/ic_frost_classysharkexodus_black_24dp"
-                                android:gravity="center"
-                                android:padding="16dp"
-                                android:text="@string/exodus"
-                                android:textColor="?android:attr/colorAccent" />
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/details_fdroid"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?android:attr/selectableItemBackground"
-                            app:cardBackgroundColor="@android:color/transparent"
-                            app:cardCornerRadius="0dp"
-                            app:cardElevation="0dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:drawableTop="@drawable/ic_frost_fdroid_black_24dp"
-                                android:gravity="center"
-                                android:padding="16dp"
-                                android:text="@string/fdroid"
-                                android:textColor="?android:attr/colorAccent" />
-                        </androidx.cardview.widget.CardView>
-                    </LinearLayout>
                 </HorizontalScrollView>
 
                 <View

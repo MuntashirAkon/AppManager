@@ -20,20 +20,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.app.ShareCompat;
@@ -61,6 +63,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     private final AppCompatActivity mActivity = this;
     private ApplicationInfo mApplicationInfo;
     private File tmpApkSource;
+    private LinearLayout horizontalLayout;
 
     @SuppressLint("SimpleDateFormat")
     private SimpleDateFormat mDateFormatter = new SimpleDateFormat("EE LLL dd yyyy kk:mm:ss");
@@ -80,6 +83,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setOnRefreshListener(this);
         mPackageManager = getPackageManager();
+        horizontalLayout = findViewById(R.id.horizontal_layout);
         getPackageInfoOrFinish(mPackageName);
     }
 
@@ -184,6 +188,53 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         if ((mApplicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) == 0)isSystemAppView.setText(isSystemAppView.getText()+" + Code");
         if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)isSystemAppView.setText(isSystemAppView.getText()+" + XLdalvik");
 
+        // Horizontal layout //
+        // Set uninstall
+        addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
+                Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
+                uninstallIntent.setData(Uri.parse("package:" + mPackageName));
+                startActivity(uninstallIntent);
+        });
+        // Set app info (open in settings)
+        addToHorizontalLayout(R.string.app_info, R.drawable.ic_info_outline_black_24dp).setOnClickListener(v -> {
+            Intent infoIntent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            infoIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            infoIntent.setData(Uri.parse("package:" + mPackageName));
+            startActivity(infoIntent);
+        });
+        // Set manifest
+        addToHorizontalLayout(R.string.manifest, R.drawable.ic_tune_black_24dp).setOnClickListener(v -> {
+            Intent intent = new Intent(mActivity, ManifestViewerActivity.class);
+            intent.putExtra(ManifestViewerActivity.EXTRA_PACKAGE_NAME, mPackageName);
+            startActivity(intent);
+        });
+        // Set exodus
+        addToHorizontalLayout(R.string.exodus, R.drawable.ic_frost_classysharkexodus_black_24dp).setOnClickListener(v -> {
+            try {
+                Intent newIntent = new Intent(AppInfoActivity.this, ClassListingActivity.class);
+                File file = new File(mPackageManager.getPackageInfo(mPackageName, 0).applicationInfo.publicSourceDir);
+                newIntent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+                newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                newIntent.putExtra(ClassListingActivity.EXTRA_PACKAGE_NAME, mPackageName);
+                startActivity(newIntent);
+            } catch (ActivityNotFoundException | PackageManager.NameNotFoundException e) {
+                Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+        // Set fdroid
+        addToHorizontalLayout(R.string.fdroid, R.drawable.ic_frost_fdroid_black_24dp).setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setClassName("org.fdroid.fdroid", "org.fdroid.fdroid.views.AppDetailsActivity");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("appid", mPackageName);
+            try {
+                startActivity(intent);
+            } catch (Exception e) {
+                Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        // Vertical layout //
         // Paths
         mMenu.titleColor = accentColor;
         mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.paths), true);
@@ -252,6 +303,16 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mMenu.addDivider();
     }
 
+    @NonNull
+    private View addToHorizontalLayout(@StringRes int stringResId, @DrawableRes int iconResId) {
+        View view = getLayoutInflater().inflate(R.layout.item_app_info_actions, horizontalLayout, false);
+        TextView textView = view.findViewById(R.id.item_text);
+        textView.setText(stringResId);
+        textView.setCompoundDrawablesWithIntrinsicBounds(null, getDrawable(iconResId), null, null);
+        horizontalLayout.addView(view);
+        return view;
+    }
+
     /**
      * Load package sizes and update views if success.
      */
@@ -265,12 +326,9 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                 getPackageSizeInfo.invoke(mPackageManager, mPackageName, new IPackageStatsObserver.Stub() {
                     @Override
                     public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded) {
-                        mActivity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mPackageStats = pStats;
-                                onPackageStatsLoaded();
-                            }
+                        mActivity.runOnUiThread(() -> {
+                            mPackageStats = pStats;
+                            onPackageStatsLoaded();
                         });
                     }
                 });
@@ -309,65 +367,6 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         sizeMedia.setText(getReadableSize(mPackageStats.externalMediaSize));
     }
 
-    private void setClickEvents(){
-        // Set events here for now, this is a hack!
-        findViewById(R.id.details_uninstall).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
-                uninstallIntent.setData(Uri.parse("package:" + mPackageName));
-                startActivity(uninstallIntent);
-            }
-        });
-        findViewById(R.id.details_view_in_settings).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent infoIntent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                infoIntent.addCategory(Intent.CATEGORY_DEFAULT);
-                infoIntent.setData(Uri.parse("package:" + mPackageName));
-                startActivity(infoIntent);
-            }
-        });
-        findViewById(R.id.details_manifest).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mActivity, ManifestViewerActivity.class);
-                intent.putExtra(ManifestViewerActivity.EXTRA_PACKAGE_NAME, mPackageName);
-                startActivity(intent);
-            }
-        });
-        findViewById(R.id.details_exodus).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Intent newIntent = new Intent(AppInfoActivity.this, ClassListingActivity.class);
-                    File file = new File(mPackageManager.getPackageInfo(mPackageName, 0).applicationInfo.publicSourceDir);
-                    newIntent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-                    newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    newIntent.putExtra(ClassListingActivity.EXTRA_PACKAGE_NAME, mPackageName);
-                    startActivity(newIntent);
-                } catch (ActivityNotFoundException | PackageManager.NameNotFoundException e) {
-                    Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-        findViewById(R.id.details_fdroid).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClassName("org.fdroid.fdroid", "org.fdroid.fdroid.views.AppDetailsActivity");
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("appid", mPackageName);
-                try {
-                    startActivity(intent);
-                } catch (Exception e) {
-                    Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
-    }
-
     /**
      * Get package info.
      * @param packageName Package name (e.g. com.android.wallpaper)
@@ -403,9 +402,6 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             setHeaderView();
             // Load package size info
             getPackageSizeInfo();
-            // FIXME: Set click events by generating layouts dynamically
-            setClickEvents();
-
         } catch (PackageManager.NameNotFoundException e) {
             finish();
         }

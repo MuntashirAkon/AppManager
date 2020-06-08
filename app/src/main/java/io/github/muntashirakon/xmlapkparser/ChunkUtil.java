@@ -17,12 +17,14 @@ package io.github.muntashirakon.xmlapkparser;
 
 import java.io.IOException;
 
+import androidx.annotation.NonNull;
+
 /**
  * @author Dmitry Skiba
  */
 class ChunkUtil {
 
-    public static final void readCheckType(IntReader reader, int expectedType) throws IOException {
+    public static void readCheckType(@NonNull IntReader reader, int expectedType) throws IOException {
         int type = reader.readInt();
         if (type != expectedType) {
             throw new IOException(

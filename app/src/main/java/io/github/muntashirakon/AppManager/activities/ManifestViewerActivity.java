@@ -127,18 +127,12 @@ public class ManifestViewerActivity extends AppCompatActivity {
         }
         matcher.appendTail(sb);
         final ManifestViewerActivity activity = this;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final Spanned spanned = Html.fromHtml(sb.toString());
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        textView.setText(spanned);
-                        activity.showProgressBar(false);
-                    }
-                });
-            }
+        new Thread(() -> {
+            final Spanned spanned = Html.fromHtml(sb.toString());
+            runOnUiThread(() -> {
+                textView.setText(spanned);
+                activity.showProgressBar(false);
+            });
         }).start();
     }
 

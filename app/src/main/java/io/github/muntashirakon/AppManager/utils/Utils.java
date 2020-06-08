@@ -1,6 +1,5 @@
 package io.github.muntashirakon.AppManager.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
@@ -14,7 +13,6 @@ import android.os.Build;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.WindowManager;
-
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -32,7 +30,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Scanner;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -320,7 +317,7 @@ public class Utils {
             int halfbyte = (b >>> 4) & 0x0F;
             int two_halfs = 0;
             do {
-                buf.append((0 <= halfbyte) && (halfbyte <= 9) ? (char) ('0' + halfbyte) : (char) ('a' + (halfbyte - 10)));
+                buf.append(halfbyte <= 9 ? (char) ('0' + halfbyte) : (char) ('a' + halfbyte - 10));
                 halfbyte = b & 0x0F;
             } while (two_halfs++ < 1);
         }

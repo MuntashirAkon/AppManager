@@ -7,7 +7,6 @@ import android.app.AlertDialog;
 import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -15,7 +14,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -162,19 +160,9 @@ public class AppUsageActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.grant_usage_access)
                 .setMessage(R.string.grant_usage_acess_message)
-                .setPositiveButton(R.string.go, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent(
-                                Settings.ACTION_USAGE_ACCESS_SETTINGS), REQUEST_SETTINGS);
-                    }
-                })
-                .setNegativeButton(getString(R.string.go_back), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                }).setCancelable(false).show();
+                .setPositiveButton(R.string.go, (dialog, which) -> startActivityForResult(new Intent(
+                        Settings.ACTION_USAGE_ACCESS_SETTINGS), REQUEST_SETTINGS))
+                .setNegativeButton(getString(R.string.go_back), (dialog, which) -> finish()).setCancelable(false).show();
     }
 
     @SuppressLint("InlinedApi")

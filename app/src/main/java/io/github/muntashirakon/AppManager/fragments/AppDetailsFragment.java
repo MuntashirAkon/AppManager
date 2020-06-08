@@ -37,7 +37,6 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -217,29 +216,17 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             switch (neededProperty){
                 case SERVICES:
                     if (mPackageInfo.services != null) {
-                        Arrays.sort(mPackageInfo.services, new Comparator<ServiceInfo>() {
-                            public int compare(ServiceInfo o1, ServiceInfo o2) {
-                                return o1.name.compareToIgnoreCase(o2.name);
-                            }
-                        });
+                        Arrays.sort(mPackageInfo.services, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
                     }
                     break;
                 case RECEIVERS:
                     if (mPackageInfo.receivers != null) {
-                        Arrays.sort(mPackageInfo.receivers, new Comparator<ActivityInfo>() {
-                            public int compare(ActivityInfo o1, ActivityInfo o2) {
-                                return o1.name.compareToIgnoreCase(o2.name);
-                            }
-                        });
+                        Arrays.sort(mPackageInfo.receivers, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
                     }
                     break;
                 case PROVIDERS:
                     if (mPackageInfo.providers != null) {
-                        Arrays.sort(mPackageInfo.providers, new Comparator<ProviderInfo>() {
-                            public int compare(ProviderInfo o1, ProviderInfo o2) {
-                                return o1.name.compareToIgnoreCase(o2.name);
-                            }
-                        });
+                        Arrays.sort(mPackageInfo.providers, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
                     }
                     break;
                 case USES_PERMISSIONS:  // Requested Permissions
@@ -268,31 +255,19 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                     break;
                 case PERMISSIONS:
                     if (mPackageInfo.permissions != null) {
-                        Arrays.sort(mPackageInfo.permissions, new Comparator<PermissionInfo>() {
-                            public int compare(PermissionInfo o1, PermissionInfo o2) {
-                                return o1.name.compareToIgnoreCase(o2.name);
-                            }
-                        });
+                        Arrays.sort(mPackageInfo.permissions, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
                     }
                     break;
                 case FEATURES:  // Requested Features
                     if (mPackageInfo.reqFeatures != null) {
                         try {
-                            Arrays.sort(mPackageInfo.reqFeatures, new Comparator<FeatureInfo>() {
-                                public int compare(FeatureInfo o1, FeatureInfo o2) {
-                                    return o1.name.compareToIgnoreCase(o2.name);
-                                }
-                            });
+                            Arrays.sort(mPackageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
                         } catch (NullPointerException e) {
                             for (FeatureInfo fi : mPackageInfo.reqFeatures) {
                                 if (fi.name == null) fi.name = "_MAJOR";
                                 bFi = true;
                             }
-                            Arrays.sort(mPackageInfo.reqFeatures, new Comparator<FeatureInfo>() {
-                                public int compare(FeatureInfo o1, FeatureInfo o2) {
-                                    return o1.name.compareToIgnoreCase(o2.name);
-                                }
-                            });
+                            Arrays.sort(mPackageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
                         }
                     }
                     break;
@@ -303,11 +278,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 case ACTIVITIES:
                 default:
                     if (mPackageInfo.activities != null) {
-                        Arrays.sort(mPackageInfo.activities, new Comparator<ActivityInfo>() {
-                            public int compare(ActivityInfo o1, ActivityInfo o2) {
-                                return o1.name.compareToIgnoreCase(o2.name);
-                            }
-                        });
+                        Arrays.sort(mPackageInfo.activities, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
                     }
             }
         } catch (PackageManager.NameNotFoundException ignored) {
@@ -518,47 +489,38 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             boolean isExported = activityInfo.exported;
             launch.setEnabled(isExported);
             if (isExported) {
-                launch.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent();
-                        intent.setClassName(mPackageName, activityName);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        try {
-                            startActivity(intent);
-                        } catch (Exception e) {
-                            if (getActivity() != null)
-                                getActivity().recreate();
-                            Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
-                        }
+                launch.setOnClickListener(view -> {
+                    Intent intent = new Intent();
+                    intent.setClassName(mPackageName, activityName);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    try {
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        if (getActivity() != null)
+                            getActivity().recreate();
+                        Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
                     }
                 });
-                viewHolder.createBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String iconResourceName = null;
-                        try {
-                            ComponentName activity = new ComponentName(activityInfo.packageName, activityName);
-                            iconResourceName = mPackageManager.getResourcesForActivity(activity)
-                                    .getResourceName(activityInfo.getIconResource());
-                        } catch (PackageManager.NameNotFoundException e) {
-                            Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
-                        }
-                        LauncherIconCreator.createLauncherIcon(getActivity(), activityInfo,
-                                (String) activityInfo.loadLabel(mPackageManager),
-                                activityInfo.loadIcon(mPackageManager), iconResourceName);
+                viewHolder.createBtn.setOnClickListener(view -> {
+                    String iconResourceName = null;
+                    try {
+                        ComponentName activity = new ComponentName(activityInfo.packageName, activityName);
+                        iconResourceName = mPackageManager.getResourcesForActivity(activity)
+                                .getResourceName(activityInfo.getIconResource());
+                    } catch (PackageManager.NameNotFoundException e) {
+                        Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
                     }
+                    LauncherIconCreator.createLauncherIcon(getActivity(), activityInfo,
+                            (String) activityInfo.loadLabel(mPackageManager),
+                            activityInfo.loadIcon(mPackageManager), iconResourceName);
                 });
-                viewHolder.editBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (getFragmentManager() != null) {
-                            DialogFragment dialog = new EditShortcutDialogFragment();
-                            Bundle args = new Bundle();
-                            args.putParcelable(EditShortcutDialogFragment.ARG_ACTIVITY_INFO, activityInfo);
-                            dialog.setArguments(args);
-                            dialog.show(getFragmentManager(), EditShortcutDialogFragment.TAG);
-                        }
+                viewHolder.editBtn.setOnClickListener(view -> {
+                    if (getFragmentManager() != null) {
+                        DialogFragment dialog = new EditShortcutDialogFragment();
+                        Bundle args = new Bundle();
+                        args.putParcelable(EditShortcutDialogFragment.ARG_ACTIVITY_INFO, activityInfo);
+                        dialog.setArguments(args);
+                        dialog.show(getFragmentManager(), EditShortcutDialogFragment.TAG);
                     }
                 });
                 viewHolder.createBtn.setVisibility(View.VISIBLE);
@@ -568,20 +530,17 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder.editBtn.setVisibility(View.GONE);
             }
 
-            viewHolder.blockBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (disabledComponents.containsKey(activityName)) { // Remove from the list
-                        disabledComponents.remove(activityName);
-                    } else { // Add to the list
-                        disabledComponents.put(activityName, ComponentType.ACTIVITY);
-                    }
-                    try {
-                        mComponentsApplier.saveDisabledComponentsForPackage(mPackageName, disabledComponents);
-                        refreshDetails();
-                    } catch (IOException e) {
-                        Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
-                    }
+            viewHolder.blockBtn.setOnClickListener(v -> {
+                if (disabledComponents.containsKey(activityName)) { // Remove from the list
+                    disabledComponents.remove(activityName);
+                } else { // Add to the list
+                    disabledComponents.put(activityName, ComponentType.ACTIVITY);
+                }
+                try {
+                    mComponentsApplier.saveDisabledComponentsForPackage(mPackageName, disabledComponents);
+                    refreshDetails();
+                } catch (IOException e) {
+                    Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
                 }
             });
             return convertView;
@@ -638,20 +597,17 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             viewHolder.textView3.setText(Utils.getServiceFlagsString(serviceInfo.flags)
                     + (serviceInfo.permission != null ? "\n" + serviceInfo.permission : "\n"));
 
-            viewHolder.blockBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (disabledComponents.containsKey(serviceInfo.name)) { // Remove from the list
-                        disabledComponents.remove(serviceInfo.name);
-                    } else { // Add to the list
-                        disabledComponents.put(serviceInfo.name, ComponentType.ACTIVITY);
-                    }
-                    try {
-                        mComponentsApplier.saveDisabledComponentsForPackage(mPackageName, disabledComponents);
-                        refreshDetails();
-                    } catch (IOException e) {
-                        Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
-                    }
+            viewHolder.blockBtn.setOnClickListener(v -> {
+                if (disabledComponents.containsKey(serviceInfo.name)) { // Remove from the list
+                    disabledComponents.remove(serviceInfo.name);
+                } else { // Add to the list
+                    disabledComponents.put(serviceInfo.name, ComponentType.ACTIVITY);
+                }
+                try {
+                    mComponentsApplier.saveDisabledComponentsForPackage(mPackageName, disabledComponents);
+                    refreshDetails();
+                } catch (IOException e) {
+                    Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -719,20 +675,17 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             // SoftInput
             viewHolder.textView6.setText(getString(R.string.softInput) + ": " + Utils.getSoftInputString(activityInfo.softInputMode));
 
-            viewHolder.blockBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (disabledComponents.containsKey(activityInfo.name)) { // Remove from the list
-                        disabledComponents.remove(activityInfo.name);
-                    } else { // Add to the list
-                        disabledComponents.put(activityInfo.name, ComponentType.ACTIVITY);
-                    }
-                    try {
-                        mComponentsApplier.saveDisabledComponentsForPackage(mPackageName, disabledComponents);
-                        refreshDetails();
-                    } catch (IOException e) {
-                        Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
-                    }
+            viewHolder.blockBtn.setOnClickListener(v -> {
+                if (disabledComponents.containsKey(activityInfo.name)) { // Remove from the list
+                    disabledComponents.remove(activityInfo.name);
+                } else { // Add to the list
+                    disabledComponents.put(activityInfo.name, ComponentType.ACTIVITY);
+                }
+                try {
+                    mComponentsApplier.saveDisabledComponentsForPackage(mPackageName, disabledComponents);
+                    refreshDetails();
+                } catch (IOException e) {
+                    Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
                 }
             });
             return convertView;
@@ -867,19 +820,16 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             textView.setPadding(medium_size, small_size, medium_size, small_size);
             textView.setTextSize(12);
             // FIXME: Do something with these!
-            textView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    try {
-                        Toast.makeText(mActivity,
-                                s + "\n" + mPackageManager.getPermissionInfo(s, PackageManager.GET_META_DATA).loadDescription(mPackageManager)
-                                        + "\n\n#" + Utils.getProtectionLevelString(mPackageManager.getPermissionInfo(s, PackageManager.GET_META_DATA).protectionLevel)
-                                        + "\n" + mPackageManager.getPermissionInfo(s, PackageManager.GET_META_DATA).packageName
-                                        + "\n" + mPackageManager.getPermissionInfo(s, PackageManager.GET_META_DATA).group
-                                        + permAppOp(s)
-                                , Toast.LENGTH_LONG).show();
-                    } catch (PackageManager.NameNotFoundException ignored) {}
-                }
+            textView.setOnClickListener(view -> {
+                try {
+                    Toast.makeText(mActivity,
+                            s + "\n" + mPackageManager.getPermissionInfo(s, PackageManager.GET_META_DATA).loadDescription(mPackageManager)
+                                    + "\n\n#" + Utils.getProtectionLevelString(mPackageManager.getPermissionInfo(s, PackageManager.GET_META_DATA).protectionLevel)
+                                    + "\n" + mPackageManager.getPermissionInfo(s, PackageManager.GET_META_DATA).packageName
+                                    + "\n" + mPackageManager.getPermissionInfo(s, PackageManager.GET_META_DATA).group
+                                    + permAppOp(s)
+                            , Toast.LENGTH_LONG).show();
+                } catch (PackageManager.NameNotFoundException ignored) {}
             });
 
             return convertView;

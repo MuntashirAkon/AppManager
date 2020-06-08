@@ -16,6 +16,10 @@
 
 package com.google.classysharkandroid.dex;
 
+import android.content.Context;
+
+import com.google.classysharkandroid.utils.IOUtils;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -25,11 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import android.content.Context;
-import android.os.Build;
-
-import com.google.classysharkandroid.utils.IOUtils;
-
+import androidx.annotation.NonNull;
 import dalvik.system.DexClassLoader;
 
 public class DexLoaderBuilder {
@@ -46,27 +46,19 @@ public class DexLoaderBuilder {
         return fromBytes(context, bFile);
     }
 
-    public static DexClassLoader fromBytes(Context context, final byte[] dexBytes) throws Exception {
-
-        if (null == context) {
-            throw new RuntimeException("No context provided");
-        }
-
+    public static DexClassLoader fromBytes(@NonNull Context context, final byte[] dexBytes) throws Exception {
         String dexFileName = "internal.dex";
-
         final File dexInternalStoragePath = new File(context.getDir("dex", Context.MODE_PRIVATE), dexFileName);
 
         if (!dexInternalStoragePath.exists()) {
-
             prepareDex(dexBytes, dexInternalStoragePath);
         }
 
-        final File optimizedDexOutputPath = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ? context.getCodeCacheDir() : context.getCacheDir();
-
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) optimizedDexOutputPath = context.getCodeCacheDir(); else
+        final File optimizedDexOutputPath = context.getCodeCacheDir();
 
         DexClassLoader loader = new DexClassLoader(dexInternalStoragePath.getAbsolutePath(),
-                optimizedDexOutputPath.getAbsolutePath(), null, context.getClassLoader().getParent());
+                optimizedDexOutputPath.getAbsolutePath(), null,
+                context.getClassLoader().getParent());
 
         dexInternalStoragePath.delete();
         optimizedDexOutputPath.delete();
@@ -97,12 +89,10 @@ public class DexLoaderBuilder {
                     throw new RuntimeException(ioe);
                 }
             }
-            if (bis != null) {
-                try {
-                    bis.close();
-                } catch (IOException ioe) {
-                    throw new RuntimeException(ioe);
-                }
+            try {
+                bis.close();
+            } catch (IOException ioe) {
+                throw new RuntimeException(ioe);
             }
             return false;
         }

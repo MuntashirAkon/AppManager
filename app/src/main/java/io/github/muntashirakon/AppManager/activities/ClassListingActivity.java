@@ -20,7 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -168,43 +167,41 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         try {
             uriStream = UriUtils.getStreamFromUri(ClassListingActivity.this, uriFromIntent);
             final byte[] bytes = readFully(uriStream, -1, true);
-            new Thread(new Runnable() {
-                public void run() {
-                    try {
-                        packageInfo += "\n<b>MD5sum:</b> " + convertS(MessageDigest.getInstance("md5").digest(bytes))
-                                + "\n<b>SHA1sum:</b> " + convertS(MessageDigest.getInstance("sha1").digest(bytes))
-                                + "\n<b>SHA256sum:</b> " + convertS(MessageDigest.getInstance("sha256").digest(bytes));
-                    } catch (NoSuchAlgorithmException ignored) {}
+            new Thread(() -> {
+                try {
+                    packageInfo += "\n<b>MD5sum:</b> " + convertS(MessageDigest.getInstance("md5").digest(bytes))
+                            + "\n<b>SHA1sum:</b> " + convertS(MessageDigest.getInstance("sha1").digest(bytes))
+                            + "\n<b>SHA256sum:</b> " + convertS(MessageDigest.getInstance("sha256").digest(bytes));
+                } catch (NoSuchAlgorithmException ignored) {}
 
-                    PackageManager pm = getApplicationContext().getPackageManager();
-                    PackageInfo mPackageInfo = null;
-                    // FIXME: fix this permission mess
-                    final int signingCertFlag;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        signingCertFlag = PackageManager.GET_SIGNING_CERTIFICATES;
-                    } else {
-                        signingCertFlag = PackageManager.GET_SIGNATURES;
-                    }
-                    if (inIntent != null && inIntent.getAction() != null) {
-                        if (inIntent.getAction().equals(Intent.ACTION_VIEW)) {
-                            String archiveFilePath = UriUtils.pathUriCache(getApplicationContext(),
-                                    uriFromIntent, "cache.apk");
-                            if (archiveFilePath != null) {
-                                mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, PackageManager.GET_SIGNATURES);
-                            }
-                        }
-                    } else {
-                        if (uriFromIntent != null) {
-                            String archiveFilePath = uriFromIntent.getPath();
-                            if (archiveFilePath != null) {
-                                mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, PackageManager.GET_SIGNATURES);
-                            }
-                        }
-                    }
-
-                    if (mPackageInfo != null) packageInfo += apkCert(mPackageInfo);
-                    else packageInfo += "\n<i><b>FAILED to retrieve PackageInfo!</b></i>";
+                PackageManager pm = getApplicationContext().getPackageManager();
+                PackageInfo mPackageInfo = null;
+                // FIXME: fix this permission mess
+                final int signingCertFlag;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    signingCertFlag = PackageManager.GET_SIGNING_CERTIFICATES;
+                } else {
+                    signingCertFlag = PackageManager.GET_SIGNATURES;
                 }
+                if (inIntent != null && inIntent.getAction() != null) {
+                    if (inIntent.getAction().equals(Intent.ACTION_VIEW)) {
+                        String archiveFilePath = UriUtils.pathUriCache(getApplicationContext(),
+                                uriFromIntent, "cache.apk");
+                        if (archiveFilePath != null) {
+                            mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, PackageManager.GET_SIGNATURES);
+                        }
+                    }
+                } else {
+                    if (uriFromIntent != null) {
+                        String archiveFilePath = uriFromIntent.getPath();
+                        if (archiveFilePath != null) {
+                            mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, PackageManager.GET_SIGNATURES);
+                        }
+                    }
+                }
+
+                if (mPackageInfo != null) packageInfo += apkCert(mPackageInfo);
+                else packageInfo += "\n<i><b>FAILED to retrieve PackageInfo!</b></i>";
             }).start();
 
             new FillClassesNamesThread(bytes).start();
@@ -389,26 +386,23 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                 e.printStackTrace();
             }
 
-            ClassListingActivity.this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mClassListingAdapter = new ClassListingAdapter(ClassListingActivity.this);
-                    if (!trackerClassesOnly) {
-                        mClassListingAdapter.setDefaultList(classesList.getClassNames());
-                        mActionBar.setSubtitle(getString(R.string.tracker_classes));
-                    } else {
-                        mClassListingAdapter.setDefaultList(classesListAll.getClassNames());
-                        mActionBar.setSubtitle(getString(R.string.all_classes));
-                    }
+            ClassListingActivity.this.runOnUiThread(() -> {
+                mClassListingAdapter = new ClassListingAdapter(ClassListingActivity.this);
+                if (!trackerClassesOnly) {
+                    mClassListingAdapter.setDefaultList(classesList.getClassNames());
+                    mActionBar.setSubtitle(getString(R.string.tracker_classes));
+                } else {
+                    mClassListingAdapter.setDefaultList(classesListAll.getClassNames());
+                    mActionBar.setSubtitle(getString(R.string.all_classes));
+                }
 //                    mListView.setAdapter(mAdapter);
-                    mListView.setAdapter(mClassListingAdapter);
-                    mProgressBar.setVisibility(View.GONE);
-                    if (classesList.getClassNames().isEmpty() && totalClassesScanned == 0) {
-                        Toast.makeText(ClassListingActivity.this,
-                                "Sorry don't support /system ODEX", Toast.LENGTH_LONG).show();
-                    } else {
-                        viewScanSummary();
-                    }
+                mListView.setAdapter(mClassListingAdapter);
+                mProgressBar.setVisibility(View.GONE);
+                if (classesList.getClassNames().isEmpty() && totalClassesScanned == 0) {
+                    Toast.makeText(ClassListingActivity.this,
+                            "Sorry don't support /system ODEX", Toast.LENGTH_LONG).show();
+                } else {
+                    viewScanSummary();
                 }
             });
         }
@@ -428,43 +422,34 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
 
                 final DexClassLoader loader = DexLoaderBuilder.fromBytes(ClassListingActivity.this, bytes);
 
-                ClassListingActivity.this.runOnUiThread(new Runnable() {
+                ClassListingActivity.this.runOnUiThread(
+                        () -> mListView.setOnItemClickListener((parent, view, position, id) -> {
+                            Class<?> loadClass;
+                            try {
+                                loadClass = loader.loadClass((!trackerClassesOnly ? classesList
+                                        : classesListAll).getClassName((int) (parent
+                                        .getAdapter()).getItemId(position)));
 
-                    @Override
-                    public void run() {
-                        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view,
-                                                    int position, long id) {
-                                Class<?> loadClass;
-                                try {
-                                    loadClass = loader.loadClass((!trackerClassesOnly ? classesList
-                                            : classesListAll).getClassName((int) (parent
-                                            .getAdapter()).getItemId(position)));
+                                Reflector reflector = new Reflector(loadClass);
 
-                                    Reflector reflector = new Reflector(loadClass);
+                                Toast.makeText(ClassListingActivity.this,
+                                        reflector.generateClassData(), Toast.LENGTH_LONG).show();
 
-                                    Toast.makeText(ClassListingActivity.this,
-                                            reflector.generateClassData(), Toast.LENGTH_LONG).show();
-
-                                    Intent intent = new Intent(ClassListingActivity.this,
-                                            ClassViewerActivity.class);
-                                    intent.putExtra(ClassViewerActivity.EXTRA_CLASS_NAME,
-                                            (!trackerClassesOnly ? classesList : classesListAll)
-                                                    .getClassName((int) (parent.getAdapter())
-                                                            .getItemId(position)));
-                                    intent.putExtra(ClassViewerActivity.EXTRA_CLASS_DUMP, reflector.toString());
-                                    intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, mAppName);
-                                    startActivity(intent);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    Toast.makeText(ClassListingActivity.this, e.toString(),
-                                            Toast.LENGTH_LONG).show();
-                                }
+                                Intent intent = new Intent(ClassListingActivity.this,
+                                        ClassViewerActivity.class);
+                                intent.putExtra(ClassViewerActivity.EXTRA_CLASS_NAME,
+                                        (!trackerClassesOnly ? classesList : classesListAll)
+                                                .getClassName((int) (parent.getAdapter())
+                                                        .getItemId(position)));
+                                intent.putExtra(ClassViewerActivity.EXTRA_CLASS_DUMP, reflector.toString());
+                                intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, mAppName);
+                                startActivity(intent);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Toast.makeText(ClassListingActivity.this, e.toString(),
+                                        Toast.LENGTH_LONG).show();
                             }
-                        });
-                    }
-                });
+                        }));
             } catch (Exception e) {
                 e.printStackTrace();
             }
