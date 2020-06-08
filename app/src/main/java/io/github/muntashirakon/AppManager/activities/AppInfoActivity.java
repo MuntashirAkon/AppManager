@@ -2,6 +2,7 @@ package io.github.muntashirakon.AppManager.activities;
 
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageStatsObserver;
@@ -9,12 +10,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.FileUtils;
+import android.provider.Settings;
 import android.text.format.Formatter;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -64,7 +66,6 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     private String mPackageName;
     private PackageInfo mPackageInfo;
     private PackageStats mPackageStats;
-    private String mMainActivity = "";
     private final AppCompatActivity mActivity = this;
     private ApplicationInfo mApplicationInfo;
     private LinearLayout horizontalLayout;
@@ -202,7 +203,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         });
         // Set app info (open in settings)
         addToHorizontalLayout(R.string.app_info, R.drawable.ic_info_outline_black_24dp).setOnClickListener(v -> {
-            Intent infoIntent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Intent infoIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
             infoIntent.addCategory(Intent.CATEGORY_DEFAULT);
             infoIntent.setData(Uri.parse("package:" + mPackageName));
             startActivity(infoIntent);
@@ -260,10 +261,30 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         // Vertical layout //
         // Paths
         mMenu.titleColor = accentColor;
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.paths), true);
+        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.paths_and_directories), true);
         mMenu.titleColor = MenuItemCreator.NO_COLOR;
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.apk_path), mApplicationInfo.sourceDir, MenuItemCreator.SELECTABLE);
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.data_path), mApplicationInfo.dataDir, MenuItemCreator.SELECTABLE);
+        // Source directory (apk path)
+        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.source_dir), mApplicationInfo.sourceDir, MenuItemCreator.SELECTABLE);
+        openAsFolderInFM((new File(mApplicationInfo.sourceDir)).getParent());
+        // Public source directory
+        if (!mApplicationInfo.publicSourceDir.equals(mApplicationInfo.sourceDir)) {
+            mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.public_source_dir), mApplicationInfo.publicSourceDir, MenuItemCreator.SELECTABLE);
+            openAsFolderInFM((new File(mApplicationInfo.publicSourceDir)).getParent());
+        }
+        // Data dir
+        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.data_dir), mApplicationInfo.dataDir, MenuItemCreator.SELECTABLE);
+        openAsFolderInFM(mApplicationInfo.dataDir);
+        // Device-protected data dir
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.dev_protected_data_dir), mApplicationInfo.deviceProtectedDataDir, MenuItemCreator.NO_ACTION);
+            openAsFolderInFM(mApplicationInfo.deviceProtectedDataDir);
+        }
+        // Native JNI library dir
+        File nativeLib = new File(mApplicationInfo.nativeLibraryDir);
+        if (nativeLib.exists()) {
+            mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.native_library_dir), mApplicationInfo.nativeLibraryDir, MenuItemCreator.NO_ACTION);
+            openAsFolderInFM(mApplicationInfo.nativeLibraryDir);
+        }
         mMenu.addDivider();
 
         // SDK
@@ -285,8 +306,10 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             flags += (flags.length() == 0 ? "" : "|" ) + "FLAG_HARDWARE_ACCELERATED";
 
         // TODO: Should be monospaced
-        if(flags.length() != 0)
+        if(flags.length() != 0) {
             mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk_flags), flags, MenuItemCreator.SELECTABLE);
+            mMenu.item_subtitle.setTypeface(Typeface.MONOSPACE);
+        }
         mMenu.addDivider();
 
         mMenu.titleColor = accentColor;
@@ -294,6 +317,8 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mMenu.titleColor = MenuItemCreator.NO_COLOR;
         mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime), MenuItemCreator.NO_ACTION);
         mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime), MenuItemCreator.NO_ACTION);
+        if(!mPackageName.equals(mApplicationInfo.processName))
+            mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.process_name), mApplicationInfo.processName, MenuItemCreator.NO_ACTION);
         String installerPackageName = mPackageManager.getInstallerPackageName(mPackageName);
         if (installerPackageName != null) {
             String applicationLabel;
@@ -311,8 +336,16 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         if (mPackageInfo.sharedUserId != null)
             mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.shared_user_id), "" + mPackageInfo.sharedUserId, MenuItemCreator.SELECTABLE);
         mMenu.subtitleColor = MenuItemCreator.NO_COLOR;
-        if (mMainActivity.length() != 0)
-            mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.main_activity), mMainActivity, MenuItemCreator.SELECTABLE);
+        // Main activity
+        final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
+        if (launchIntentForPackage != null) {
+            final ComponentName launchComponentName = launchIntentForPackage.getComponent();
+            if (launchComponentName != null) {
+                final String mainActivity = launchIntentForPackage.getComponent().getClassName();
+                mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.main_activity), mainActivity, MenuItemCreator.SELECTABLE);
+                mMenu.setOpen(view -> startActivity(launchIntentForPackage));
+            }
+        }
         mMenu.addDivider();
 
         // Netstat
@@ -324,6 +357,15 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_transmitted), uidNetStats.getFirst(), MenuItemCreator.SELECTABLE);
         mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_received), uidNetStats.getSecond(), MenuItemCreator.SELECTABLE);
         mMenu.addDivider();
+    }
+
+    private void openAsFolderInFM(String dir) {
+        mMenu.setOpen(view -> {
+            Intent openFile = new Intent(Intent.ACTION_VIEW);
+            openFile.setDataAndType(Uri.parse(dir), "resource/folder");
+            if (openFile.resolveActivityInfo(mPackageManager, 0) != null)
+                startActivity(openFile);
+        });
     }
 
     @NonNull
@@ -414,9 +456,6 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                 return;
             }
 
-            if (mPackageInfo.activities != null) {
-                mMainActivity = mPackageInfo.activities[0].name;
-            }
             mApplicationInfo = mPackageInfo.applicationInfo;
 
             // MenuItemCreator instance

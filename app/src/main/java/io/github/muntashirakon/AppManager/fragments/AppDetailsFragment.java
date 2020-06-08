@@ -875,6 +875,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 convertView.findViewById(R.id.launch).setVisibility(View.GONE);
                 convertView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
                 convertView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
+                convertView.findViewById(R.id.block_component).setVisibility(View.GONE);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }

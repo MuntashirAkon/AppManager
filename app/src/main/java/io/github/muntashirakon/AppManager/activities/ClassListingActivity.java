@@ -159,7 +159,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         classesListAll  = new ClassesNamesList();
 
         if (inIntent.getData() != null)
-            packageInfo = "<b>" + getString(R.string.apk_path) + ": </b>"
+            packageInfo = "<b>" + getString(R.string.source_dir) + ": </b>"
                     + inIntent.getData().toString() + "\n";
         else packageInfo = "";
 

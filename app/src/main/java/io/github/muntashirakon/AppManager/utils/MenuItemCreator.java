@@ -5,11 +5,13 @@ import android.graphics.Typeface;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.ContextThemeWrapper;
 
+import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.R;
 
 import androidx.cardview.widget.CardView;
@@ -28,6 +30,12 @@ public class MenuItemCreator {
     public int titleColor = NO_COLOR;
     public int subtitleColor = NO_COLOR;
     public int iconColor = NO_COLOR;
+
+    public View menu_item;
+    public TextView item_title;
+    public TextView item_subtitle;
+    public ImageView item_icon;
+    public ImageButton item_open;
 
     /**
      * Constructor.
@@ -96,6 +104,11 @@ public class MenuItemCreator {
     public View addMenuItemWithIconTitleSubtitle(CharSequence title, CharSequence subtitle, int resIdIcon, float isClickableOrSelectable) {
         return addMenuItemWithIconTitleSubtitle(title, subtitle, resIdIcon, isClickableOrSelectable == CLICKABLE, isClickableOrSelectable == SELECTABLE, false);
     }
+
+    public void setOpen(@NonNull View.OnClickListener onClickListener) {
+        item_open.setVisibility(View.VISIBLE);
+        item_open.setOnClickListener(onClickListener);
+    }
     /**
      * Add a menu item to the main menu container.
      *
@@ -105,16 +118,16 @@ public class MenuItemCreator {
      * @return The menu item is returned which can be used for other purpose
      */
     private View addMenuItemWithIconTitleSubtitle(CharSequence title, CharSequence subtitle, int resIdIcon, boolean isClickable, boolean isSelectable, boolean isAllCaps) {
-        View menu_item = mLayoutInflater.inflate(R.layout.item_icon_title_subtitle, mMenuContainer, false);
+        menu_item = mLayoutInflater.inflate(R.layout.item_icon_title_subtitle, mMenuContainer, false);
         // Item Title
-        TextView item_title = menu_item.findViewById(R.id.item_title);
+        item_title = menu_item.findViewById(R.id.item_title);
         item_title.setText(title);
         // Make title all caps if requested
         if (isAllCaps) {
             item_title.setAllCaps(true);
         }
         // Item Subtitle
-        TextView item_subtitle = menu_item.findViewById(R.id.item_subtitle);
+        item_subtitle = menu_item.findViewById(R.id.item_subtitle);
         if (subtitle != null) {
             item_subtitle.setText(subtitle);
         } else {  // Remove subtitle
@@ -125,11 +138,14 @@ public class MenuItemCreator {
             item_subtitle.setTextIsSelectable(true);
         }
         // Item Icon
-        ImageView item_icon = menu_item.findViewById(R.id.item_icon);
+        item_icon = menu_item.findViewById(R.id.item_icon);
         if (resIdIcon != EMPTY) {
             item_icon.setImageResource(resIdIcon);
 //           item_icon.setColorFilter(color);
         }
+        // Remove open with button if not requested
+        item_open = menu_item.findViewById(R.id.item_open);
+        item_open.setVisibility(View.GONE);
         // Reduce padding if both subtitle and icon is empty
         if (subtitle == null && resIdIcon == EMPTY) {
             int padding_small = mActivity.getResources().getDimensionPixelOffset(R.dimen.padding_small);

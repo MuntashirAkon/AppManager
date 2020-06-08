@@ -7,7 +7,10 @@
     <color name="dark_orange">#ff8017</color>
     <color name="pink">#7D1B7E</color>
     <color name="ocean_blue">#2B65EC</color>
+
     <color name="red">#B3FF0000</color>
+    <color name="ten_percent_black">#1A000000</color>
+
     <color name="pure_red">#FF0000</color>
     <color name="cma">#6200EE</color>
 

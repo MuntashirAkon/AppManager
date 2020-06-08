@@ -120,9 +120,9 @@
     <string name="system_app">System App</string>
     <string name="user_app">User App</string>
     <string name="system_app_updated">System App (Updated)</string>
-    <string name="paths">Paths</string>
-    <string name="apk_path">APK Path</string>
-    <string name="data_path">Data Path</string>
+    <string name="paths_and_directories">Paths &amp; Directories</string>
+    <string name="source_dir">Source Directory</string>
+    <string name="data_dir">Data Directory</string>
     <string name="sdk_min">Min</string>
     <string name="sdk_max">Max</string>
     <string name="sdk_flags">Flags</string>
@@ -217,4 +217,8 @@
     <string name="menu_enable_blocking">Enable blocking</string>
     <string name="search">Search</string>
     <string name="aurora">Aurora</string>
+    <string name="dev_protected_data_dir">Device-protected Data Directory</string>
+    <string name="native_library_dir">Native JNI Library Directory</string>
+    <string name="public_source_dir">Public Source Directory</string>
+    <string name="process_name">Process Name</string>
 </resources>
