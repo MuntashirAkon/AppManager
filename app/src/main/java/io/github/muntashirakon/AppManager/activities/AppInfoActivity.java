@@ -57,6 +57,9 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     private static final String UID_STATS_TR = "tcp_rcv";
     private static final String UID_STATS_RC = "tcp_snd";
 
+    private static final String PACKAGE_NAME_FDROID = "org.fdroid.fdroid";
+    private static final String PACKAGE_NAME_AURORA_DROID = "com.aurora.adroid";
+
     private PackageManager mPackageManager;
     private String mPackageName;
     private PackageInfo mPackageInfo;
@@ -89,7 +92,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
@@ -126,7 +129,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     }
 
     @Override
-    protected void onDestroy() {  // TODO: Run some tests
+    protected void onDestroy() {
         super.onDestroy();
         try {
             File dir = getExternalCacheDir();
@@ -223,18 +226,36 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                 Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
             }
         });
-        // Set fdroid
-        addToHorizontalLayout(R.string.fdroid, R.drawable.ic_frost_fdroid_black_24dp).setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.setClassName("org.fdroid.fdroid", "org.fdroid.fdroid.views.AppDetailsActivity");
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("appid", mPackageName);
+        // Set F-Droid or Aurora Droid
+        try {
+            if(!mPackageManager.getApplicationInfo(PACKAGE_NAME_FDROID, 0).enabled)
+                throw new PackageManager.NameNotFoundException();
+            addToHorizontalLayout(R.string.fdroid, R.drawable.ic_frost_fdroid_black_24dp)
+                    .setOnClickListener(v -> {
+                Intent intent = new Intent();
+                intent.setClassName(PACKAGE_NAME_FDROID, "org.fdroid.fdroid.views.AppDetailsActivity");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("appid", mPackageName);
+                try {
+                    startActivity(intent);
+                } catch (Exception ignored) {}
+            });
+        } catch (PackageManager.NameNotFoundException e) {
             try {
-                startActivity(intent);
-            } catch (Exception e) {
-                Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
-            }
-        });
+                if(!mPackageManager.getApplicationInfo(PACKAGE_NAME_AURORA_DROID, 0).enabled)
+                    throw new PackageManager.NameNotFoundException();
+                addToHorizontalLayout(R.string.aurora, R.drawable.ic_frost_auroradroid_black_24dp)
+                        .setOnClickListener(v -> {
+                            Intent intent = new Intent();
+                            intent.setClassName(PACKAGE_NAME_AURORA_DROID, "com.aurora.adroid.ui.activity.DetailsActivity");
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("INTENT_PACKAGE_NAME", mPackageName);
+                            try {
+                                startActivity(intent);
+                            } catch (Exception ignored) {}
+                        });
+            } catch (PackageManager.NameNotFoundException ignored) {}
+        }
 
         // Vertical layout //
         // Paths
