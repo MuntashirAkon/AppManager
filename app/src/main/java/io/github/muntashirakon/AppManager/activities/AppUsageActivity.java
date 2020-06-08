@@ -296,6 +296,7 @@ public class AppUsageActivity extends AppCompatActivity {
                 holder.icon = convertView.findViewById(R.id.item_icon);
                 holder.label = convertView.findViewById(R.id.item_title);
                 holder.usage = convertView.findViewById(R.id.item_subtitle);
+                convertView.findViewById(R.id.item_open).setVisibility(View.GONE);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
