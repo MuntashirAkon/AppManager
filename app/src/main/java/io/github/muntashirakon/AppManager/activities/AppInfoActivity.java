@@ -195,6 +195,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)isSystemAppView.setText(isSystemAppView.getText()+" + XLdalvik");
 
         // Horizontal layout //
+        horizontalLayout.removeAllViews();
         // Set uninstall
         addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
                 Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
