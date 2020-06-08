@@ -6,16 +6,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatSpinner
-        android:id="@+id/spinner_usage"
-        android:layout_width="220dp"
-        android:layout_height="30dp"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/padding_large"
-        android:background="@drawable/spinner_rounded_border"
-        android:gravity="center"
-        android:paddingStart="@dimen/padding_small"
-        android:paddingEnd="@dimen/padding_large" />
+<!--    <androidx.appcompat.widget.AppCompatSpinner-->
+<!--        android:id="@+id/spinner_usage"-->
+<!--        android:layout_width="220dp"-->
+<!--        android:layout_height="30dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:layout_margin="@dimen/padding_large"-->
+<!--        android:background="@drawable/spinner_rounded_border"-->
+<!--        android:gravity="center"-->
+<!--        android:paddingStart="@dimen/padding_small"-->
+<!--        android:paddingEnd="@dimen/padding_large" />-->
 
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/spinner_interval"

@@ -12,11 +12,16 @@
         <item>@string/signatures</item>
         <item>@string/shared_libs</item>
     </array>
-    <string-array name="app_usage_dropdown_list">
+    <string-array name="usage_interval_dropdown_list">
         <item>@string/usage_daily</item>
         <item>@string/usage_weekly</item>
         <item>@string/usage_monthly</item>
         <item>@string/usage_yearly</item>
+    </string-array>
+    <string-array name="usage_types">
+        <item>Screen Time</item>
+        <item>Notifications Received</item>
+        <item>Times Opened</item>
     </string-array>
     <string-array name="tracker_signatures">
         <item>com.facebook.accountkit</item>

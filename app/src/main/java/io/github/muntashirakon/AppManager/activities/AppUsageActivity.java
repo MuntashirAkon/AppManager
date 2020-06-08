@@ -72,7 +72,7 @@ public class AppUsageActivity extends AppCompatActivity {
             actionBar.setTitle(getString(R.string.app_usage));
         }
 
-        app_usage_strings = getResources().getStringArray(R.array.app_usage_dropdown_list);
+        app_usage_strings = getResources().getStringArray(R.array.usage_interval_dropdown_list);
 
         // Get usage stats
         mUsageStatsManager = (UsageStatsManager) getSystemService(SYS_USAGE_STATS_SERVICE);
@@ -86,11 +86,15 @@ public class AppUsageActivity extends AppCompatActivity {
         View header = getLayoutInflater().inflate(R.layout.header_app_usage, null);
         listView.addHeaderView(header);
 
-        Spinner mSpinner = findViewById(R.id.spinner_time_span);
-        SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.app_usage_dropdown_list, android.R.layout.simple_spinner_dropdown_item);
-        mSpinner.setAdapter(spinnerAdapter);
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//        Spinner usageSpinner = findViewById(R.id.spinner_usage);
+//        SpinnerAdapter usageSpinnerAdapter = ArrayAdapter.createFromResource(this,
+//                R.array.usage_types, android.R.layout.simple_spinner_dropdown_item);
+//        usageSpinner.setAdapter(usageSpinnerAdapter);
+        Spinner intervalSpinner = findViewById(R.id.spinner_interval);
+        SpinnerAdapter intervalSpinnerAdapter = ArrayAdapter.createFromResource(this,
+                R.array.usage_interval_dropdown_list, android.R.layout.simple_spinner_dropdown_item);
+        intervalSpinner.setAdapter(intervalSpinnerAdapter);
+        intervalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 current_interval = position;
@@ -122,7 +126,7 @@ public class AppUsageActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         switch (current_interval) {
             case USAGE_DAILY:
-                cal.add(Calendar.MINUTE, -1);
+                cal.add(Calendar.HOUR_OF_DAY, -cal.get(Calendar.HOUR_OF_DAY));
                 break;
             case USAGE_WEEKLY:
                 cal.add(Calendar.DAY_OF_YEAR, -7);
@@ -140,6 +144,14 @@ public class AppUsageActivity extends AppCompatActivity {
         do {
             usageStatsList = mUsageStatsManager.queryUsageStats(current_interval,
                     cal.getTimeInMillis(), System.currentTimeMillis());
+
+            // FIXME
+//            UsageEvents usageEvents = mUsageStatsManager.queryEvents(cal.getTimeInMillis(), System.currentTimeMillis());
+//            while (usageEvents.hasNextEvent()) {
+//                UsageEvents.Event event = new UsageEvents.Event();
+//                usageEvents.getNextEvent(event);
+//                Log.d(TAG, "Event: " + event.getPackageName() + "\t" + event.getTimeStamp() + " (" + event.getEventType() + ")");
+//            }
         } while (0 != --_try && usageStatsList.size() == 0);
 
         // Filter unused apps
