@@ -57,6 +57,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static com.google.classysharkandroid.utils.PackageUtils.apkCert;
 import static com.google.classysharkandroid.utils.PackageUtils.convertS;
+import static io.github.muntashirakon.AppManager.utils.IOUtils.deleteDir;
 import static io.github.muntashirakon.AppManager.utils.IOUtils.readFully;
 
 public class ClassListingActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
@@ -221,24 +222,6 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                 deleteDir(dir);
             }
         } catch (Exception e) { e.printStackTrace();}
-    }
-
-    public static boolean deleteDir(File dir) {
-        if (dir != null && dir.isDirectory()) {
-            String[] children = dir.list();
-            if (children == null) return false;
-            for (String child : children) {
-                boolean success = deleteDir(new File(dir, child));
-                if (!success) {
-                    return false;
-                }
-            }
-            return dir.delete();
-        } else if(dir!= null && dir.isFile()) {
-            return dir.delete();
-        } else {
-            return false;
-        }
     }
 
     @Override

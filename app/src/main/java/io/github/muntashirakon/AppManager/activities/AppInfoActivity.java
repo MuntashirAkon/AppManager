@@ -47,6 +47,8 @@ import io.github.muntashirakon.AppManager.utils.MenuItemCreator;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
+import static io.github.muntashirakon.AppManager.utils.IOUtils.deleteDir;
+
 public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     public static final String TAG = "AppInfoActivity";
     public static final String EXTRA_PACKAGE_NAME = "pkg";
@@ -62,7 +64,6 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     private String mMainActivity = "";
     private final AppCompatActivity mActivity = this;
     private ApplicationInfo mApplicationInfo;
-    private File tmpApkSource;
     private LinearLayout horizontalLayout;
 
     @SuppressLint("SimpleDateFormat")
@@ -100,7 +101,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             case R.id.action_share_apk:
                 try {
                     File apkSource = new File(mApplicationInfo.sourceDir);
-                    tmpApkSource = File.createTempFile(mApplicationInfo.packageName, ".apk", getExternalCacheDir());
+                    File tmpApkSource = File.createTempFile(mApplicationInfo.packageName, ".apk", getExternalCacheDir());
                     FileUtils.copy(new FileInputStream(apkSource), new FileOutputStream(tmpApkSource));
                     Intent intent = ShareCompat.IntentBuilder.from(this)
                             .setStream(FileProvider.getUriForFile(
@@ -125,12 +126,13 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onDestroy() {  // TODO: Run some tests
         super.onDestroy();
-        if (tmpApkSource != null) {
-            if (!tmpApkSource.delete()) {
-                Log.d(TAG, "Failed to close apk source");
-            }
+        try {
+            File dir = getExternalCacheDir();
+            deleteDir(dir);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

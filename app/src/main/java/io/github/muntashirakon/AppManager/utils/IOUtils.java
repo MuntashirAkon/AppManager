@@ -1,6 +1,7 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import java.io.EOFException;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -44,5 +45,28 @@ public class IOUtils {
             pos += cc;
         }
         return output;
+    }
+
+    /**
+     * Delete a directory by recursively deleting its children
+     * @param dir The directory to delete
+     * @return True on success, false on failure
+     */
+    public static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            if (children == null) return false;
+            for (String child : children) {
+                boolean success = deleteDir(new File(dir, child));
+                if (!success) {
+                    return false;
+                }
+            }
+            return dir.delete();
+        } else if(dir!= null && dir.isFile()) {
+            return dir.delete();
+        } else {
+            return false;
+        }
     }
 }
