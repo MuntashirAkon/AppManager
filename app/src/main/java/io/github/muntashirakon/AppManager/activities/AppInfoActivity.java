@@ -20,15 +20,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.classysharkandroid.utils.IOUtils;
 import com.jaredrummler.android.shell.Shell;
 
 import java.io.File;
@@ -114,7 +113,11 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                 try {
                     File apkSource = new File(mApplicationInfo.sourceDir);
                     File tmpApkSource = File.createTempFile(mApplicationInfo.packageName, ".apk", getExternalCacheDir());
-                    FileUtils.copy(new FileInputStream(apkSource), new FileOutputStream(tmpApkSource));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        FileUtils.copy(new FileInputStream(apkSource), new FileOutputStream(tmpApkSource));
+                    } else {
+                        IOUtils.copy(new FileInputStream(apkSource), new FileOutputStream(tmpApkSource));
+                    }
                     Intent intent = ShareCompat.IntentBuilder.from(this)
                             .setStream(FileProvider.getUriForFile(
                                     this, BuildConfig.APPLICATION_ID + ".provider", tmpApkSource))
