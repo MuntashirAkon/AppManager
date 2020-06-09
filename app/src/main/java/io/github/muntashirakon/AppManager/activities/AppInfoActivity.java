@@ -20,13 +20,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.jaredrummler.android.shell.Shell;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,11 +38,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.app.ShareCompat;
@@ -234,6 +239,44 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                 Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
             }
         });
+        // Shared prefs
+        List<String> sharedPrefs;
+        sharedPrefs = getSharedPrefs(mApplicationInfo.dataDir);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            sharedPrefs.addAll(getSharedPrefs(mApplicationInfo.deviceProtectedDataDir));
+        }
+        if (!sharedPrefs.isEmpty()) {
+            CharSequence[] sharedPrefs2 = new CharSequence[sharedPrefs.size()];
+            for (int i = 0; i<sharedPrefs.size(); ++i) {
+                sharedPrefs2[i] = sharedPrefs.get(i);
+            }
+            addToHorizontalLayout(R.string.shared_prefs, R.drawable.ic_view_list_black_24dp).setOnClickListener(v -> {
+                new AlertDialog.Builder(this, R.style.CustomDialog)
+                        .setTitle(R.string.shared_prefs)
+                        .setItems(sharedPrefs2, null)  // TODO
+                        .setNegativeButton(android.R.string.ok, null)
+                        .show();
+            });
+        }
+        // Databases
+        List<String> databases;
+        databases = getDatabases(mApplicationInfo.dataDir);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            databases.addAll(getDatabases(mApplicationInfo.deviceProtectedDataDir));
+        }
+        if (!databases.isEmpty()) {
+            CharSequence[] databases2 = new CharSequence[databases.size()];
+            for (int i = 0; i<databases.size(); ++i) {
+                databases2[i] = databases.get(i);
+            }
+            addToHorizontalLayout(R.string.databases, R.drawable.ic_assignment_black_24dp).setOnClickListener(v -> {
+                new AlertDialog.Builder(this, R.style.CustomDialog)
+                        .setTitle(R.string.databases)
+                        .setItems(databases2, null)  // TODO
+                        .setNegativeButton(android.R.string.ok, null)
+                        .show();
+            });
+        }
         // Set F-Droid or Aurora Droid
         try {
             if(!mPackageManager.getApplicationInfo(PACKAGE_NAME_FDROID, 0).enabled)
@@ -355,6 +398,17 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mList.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_transmitted), uidNetStats.getFirst(), ListItemCreator.SELECTABLE);
         mList.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_received), uidNetStats.getSecond(), ListItemCreator.SELECTABLE);
         mList.addDivider();
+    }
+
+    private List<String> getSharedPrefs(@NonNull String sourceDir) {
+        File sharedPath = new File(sourceDir + "/shared_prefs");
+        return Shell.SU.run(String.format("ls %s | grep -E .xml$", sharedPath.getAbsolutePath())).stdout;
+    }
+
+    private List<String> getDatabases(@NonNull String sourceDir) {
+        File sharedPath = new File(sourceDir + "/databases");
+        // FIXME: SQLite db doesn't necessarily have .db extension
+        return Shell.SU.run(String.format("ls %s | grep -E .db$", sharedPath.getAbsolutePath())).stdout;
     }
 
     private void openAsFolderInFM(String dir) {

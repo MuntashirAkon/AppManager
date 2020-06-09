@@ -226,4 +226,6 @@
     <string name="updated_app">Updated</string>
     <string name="debuggable">Debuggable</string>
     <string name="test_only">Test only</string>
+    <string name="shared_prefs">Shared Prefs</string>
+    <string name="databases">Databases</string>
 </resources>
