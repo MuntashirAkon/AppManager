@@ -43,7 +43,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import io.github.muntashirakon.AppManager.R;
 
 public class AppUsageActivity extends AppCompatActivity {
-    private static final String TAG = "AppUsageActivity";
     private static final String SYS_USAGE_STATS_SERVICE = "usagestats";
 
     // These constants must be aligned with app_usage_dropdown_list array
@@ -177,14 +176,23 @@ public class AppUsageActivity extends AppCompatActivity {
                 .setNegativeButton(getString(R.string.go_back), (dialog, which) -> finish()).setCancelable(false).show();
     }
 
-    @SuppressLint("InlinedApi")
     private boolean checkUsageStatsPermission() {
         AppOpsManager appOpsManager = (AppOpsManager) getSystemService(APP_OPS_SERVICE);
         assert appOpsManager != null;
-        final int mode = appOpsManager.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), getPackageName());
-        return mode == AppOpsManager.MODE_DEFAULT ?
-                (checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED)
-                : (mode == AppOpsManager.MODE_ALLOWED);
+        final int mode;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            mode = appOpsManager.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
+                    android.os.Process.myUid(), getPackageName());
+        } else {
+            mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
+                    android.os.Process.myUid(), getPackageName());
+        }
+        if (mode == AppOpsManager.MODE_DEFAULT
+                && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            return checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS)
+                    == PackageManager.PERMISSION_GRANTED;
+        }
+        return mode == AppOpsManager.MODE_ALLOWED;
     }
 
     private void setUsageSummary() {
@@ -249,7 +257,7 @@ public class AppUsageActivity extends AppCompatActivity {
         static DateFormat sSimpleDateFormat = new SimpleDateFormat("MMM d, yyyy HH:mm:ss", Locale.getDefault());
 
         private LayoutInflater mLayoutInflater;
-        private List mAdapterList;
+        private List<UsageStats> mAdapterList;
         private static PackageManager mPackageManager;
         private Activity mActivity;
 
@@ -303,7 +311,7 @@ public class AppUsageActivity extends AppCompatActivity {
                 if(holder.iconLoader != null) holder.iconLoader.cancel(true);
             }
 
-            UsageStats usageStats = (UsageStats) mAdapterList.get(position);
+            UsageStats usageStats = mAdapterList.get(position);
             // Set label (or package name on failure)
             try {
                 ApplicationInfo applicationInfo = mPackageManager.getApplicationInfo(usageStats.getPackageName(), 0);
