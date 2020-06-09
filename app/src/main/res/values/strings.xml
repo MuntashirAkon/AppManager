@@ -113,7 +113,7 @@
     <string name="system_u">System UPDATED</string>
     <string name="user">User</string>
     <string name="sort">Sort</string>
-    <string name="version">Version</string>
+    <string name="version">Version %s (%d)</string>
     <string name="app_info">App Info</string>
     <string name="exodus">Exodus</string>
     <string name="fdroid">F-Droid</string>
@@ -221,4 +221,9 @@
     <string name="native_library_dir">Native JNI Library Directory</string>
     <string name="public_source_dir">Public Source Directory</string>
     <string name="process_name">Process Name</string>
+    <string name="no_code">No code</string>
+    <string name="requested_large_heap">Large heap</string>
+    <string name="updated_app">Updated</string>
+    <string name="debuggable">Debuggable</string>
+    <string name="test_only">Test only</string>
 </resources>

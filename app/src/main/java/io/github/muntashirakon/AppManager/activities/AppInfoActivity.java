@@ -1,7 +1,6 @@
 package io.github.muntashirakon.AppManager.activities;
 
 import android.annotation.SuppressLint;
-import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -26,6 +25,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -45,14 +47,13 @@ import androidx.core.content.FileProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.MenuItemCreator;
+import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.utils.IOUtils.deleteDir;
 
 public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
-    public static final String TAG = "AppInfoActivity";
     public static final String EXTRA_PACKAGE_NAME = "pkg";
 
     private static final String UID_STATS_PATH = "/proc/uid_stat/";
@@ -68,11 +69,12 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     private PackageStats mPackageStats;
     private final AppCompatActivity mActivity = this;
     private ApplicationInfo mApplicationInfo;
-    private LinearLayout horizontalLayout;
+    private LinearLayout mHorizontalLayout;
+    private ChipGroup mTagCloud;
 
     @SuppressLint("SimpleDateFormat")
     private SimpleDateFormat mDateFormatter = new SimpleDateFormat("EE LLL dd yyyy kk:mm:ss");
-    private MenuItemCreator mMenu;
+    private ListItemCreator mList;
     private SwipeRefreshLayout mSwipeRefresh;
 
     @Override
@@ -88,7 +90,8 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setOnRefreshListener(this);
         mPackageManager = getPackageManager();
-        horizontalLayout = findViewById(R.id.horizontal_layout);
+        mHorizontalLayout = findViewById(R.id.horizontal_layout);
+        mTagCloud = findViewById(R.id.tag_cloud);
         getPackageInfoOrFinish(mPackageName);
     }
 
@@ -159,7 +162,6 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     /**
      * Set views up to details_container.
      */
-    @SuppressLint("SetTextI18n")
     private void setHeaderView() {
         int accentColor = Utils.getThemeColor(this, android.R.attr.colorAccent);
 
@@ -178,24 +180,28 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
         // Set App Version
         TextView versionView = findViewById(R.id.version);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            versionView.setText(getString(R.string.version) + " " + mPackageInfo.versionName + " (" + mPackageInfo.getLongVersionCode() + ")");
-        } else {
-            versionView.setText(getString(R.string.version) + " " + mPackageInfo.versionName + " (" + mPackageInfo.versionCode + ")");
-        }
+        versionView.setText(String.format(getString(R.string.version), mPackageInfo.versionName,
+                    (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ?
+                            mPackageInfo.getLongVersionCode() : mPackageInfo.versionCode)));
 
-        // Set App Type: User or System, if System find out whether it's updated
-        TextView isSystemAppView = findViewById(R.id.isSystem);
-        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0){
-            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) isSystemAppView.setText(R.string.system_app_updated);
-            else isSystemAppView.setText(R.string.system_app);
-        } else isSystemAppView.setText(R.string.user_app);
-        // FIXME: Fix these things
-        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) == 0)isSystemAppView.setText(isSystemAppView.getText()+" + Code");
-        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)isSystemAppView.setText(isSystemAppView.getText()+" + XLdalvik");
+        // Tag cloud //
+        mTagCloud.removeAllViews();
+        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+            addChip(R.string.system_app);
+            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0)
+                addChip(R.string.updated_app);
+        } else addChip(R.string.user_app);
+        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
+            addChip(R.string.debuggable);
+        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
+            addChip(R.string.test_only);
+        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) == 0)
+            addChip(R.string.no_code);
+        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)
+            addChip(R.string.requested_large_heap, Color.RED);
 
         // Horizontal layout //
-        horizontalLayout.removeAllViews();
+        mHorizontalLayout.removeAllViews();
         // Set uninstall
         addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
                 Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
@@ -224,7 +230,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                 newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 newIntent.putExtra(ClassListingActivity.EXTRA_PACKAGE_NAME, mPackageName);
                 startActivity(newIntent);
-            } catch (ActivityNotFoundException | PackageManager.NameNotFoundException e) {
+            } catch (PackageManager.NameNotFoundException e) {
                 Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
             }
         });
@@ -261,39 +267,37 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
         // Vertical layout //
         // Paths
-        mMenu.titleColor = accentColor;
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.paths_and_directories), true);
-        mMenu.titleColor = MenuItemCreator.NO_COLOR;
+        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.paths_and_directories), true);
+        mList.item_title.setTextColor(accentColor);
         // Source directory (apk path)
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.source_dir), mApplicationInfo.sourceDir, MenuItemCreator.SELECTABLE);
+        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.source_dir), mApplicationInfo.sourceDir, ListItemCreator.SELECTABLE);
         openAsFolderInFM((new File(mApplicationInfo.sourceDir)).getParent());
         // Public source directory
         if (!mApplicationInfo.publicSourceDir.equals(mApplicationInfo.sourceDir)) {
-            mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.public_source_dir), mApplicationInfo.publicSourceDir, MenuItemCreator.SELECTABLE);
+            mList.addMenuItemWithIconTitleSubtitle(getString(R.string.public_source_dir), mApplicationInfo.publicSourceDir, ListItemCreator.SELECTABLE);
             openAsFolderInFM((new File(mApplicationInfo.publicSourceDir)).getParent());
         }
         // Data dir
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.data_dir), mApplicationInfo.dataDir, MenuItemCreator.SELECTABLE);
+        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.data_dir), mApplicationInfo.dataDir, ListItemCreator.SELECTABLE);
         openAsFolderInFM(mApplicationInfo.dataDir);
         // Device-protected data dir
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.dev_protected_data_dir), mApplicationInfo.deviceProtectedDataDir, MenuItemCreator.NO_ACTION);
+            mList.addMenuItemWithIconTitleSubtitle(getString(R.string.dev_protected_data_dir), mApplicationInfo.deviceProtectedDataDir, ListItemCreator.NO_ACTION);
             openAsFolderInFM(mApplicationInfo.deviceProtectedDataDir);
         }
         // Native JNI library dir
         File nativeLib = new File(mApplicationInfo.nativeLibraryDir);
         if (nativeLib.exists()) {
-            mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.native_library_dir), mApplicationInfo.nativeLibraryDir, MenuItemCreator.NO_ACTION);
+            mList.addMenuItemWithIconTitleSubtitle(getString(R.string.native_library_dir), mApplicationInfo.nativeLibraryDir, ListItemCreator.NO_ACTION);
             openAsFolderInFM(mApplicationInfo.nativeLibraryDir);
         }
-        mMenu.addDivider();
+        mList.addDivider();
 
         // SDK
-        mMenu.titleColor = accentColor;
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk), true);
-        mMenu.titleColor = MenuItemCreator.NO_COLOR;
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk_max), "" + mApplicationInfo.targetSdkVersion, MenuItemCreator.SELECTABLE);
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk_min), Build.VERSION.SDK_INT > 23 ? "" + mApplicationInfo.minSdkVersion : "N/A", MenuItemCreator.SELECTABLE);
+        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk), true);
+        mList.item_title.setTextColor(accentColor);
+        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk_max), "" + mApplicationInfo.targetSdkVersion, ListItemCreator.SELECTABLE);
+        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk_min), Build.VERSION.SDK_INT > 23 ? "" + mApplicationInfo.minSdkVersion : "N/A", ListItemCreator.SELECTABLE);
 
         // Set Flags
         String flags = "";
@@ -306,20 +310,18 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_HARDWARE_ACCELERATED) == 0)
             flags += (flags.length() == 0 ? "" : "|" ) + "FLAG_HARDWARE_ACCELERATED";
 
-        // TODO: Should be monospaced
         if(flags.length() != 0) {
-            mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk_flags), flags, MenuItemCreator.SELECTABLE);
-            mMenu.item_subtitle.setTypeface(Typeface.MONOSPACE);
+            mList.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk_flags), flags, ListItemCreator.SELECTABLE);
+            mList.item_subtitle.setTypeface(Typeface.MONOSPACE);
         }
-        mMenu.addDivider();
+        mList.addDivider();
 
-        mMenu.titleColor = accentColor;
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.more_info), true);
-        mMenu.titleColor = MenuItemCreator.NO_COLOR;
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime), MenuItemCreator.NO_ACTION);
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime), MenuItemCreator.NO_ACTION);
+        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.more_info), true);
+        mList.item_title.setTextColor(accentColor);
+        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime), ListItemCreator.NO_ACTION);
+        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime), ListItemCreator.NO_ACTION);
         if(!mPackageName.equals(mApplicationInfo.processName))
-            mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.process_name), mApplicationInfo.processName, MenuItemCreator.NO_ACTION);
+            mList.addMenuItemWithIconTitleSubtitle(getString(R.string.process_name), mApplicationInfo.processName, ListItemCreator.NO_ACTION);
         String installerPackageName = mPackageManager.getInstallerPackageName(mPackageName);
         if (installerPackageName != null) {
             String applicationLabel;
@@ -328,40 +330,35 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             } catch (PackageManager.NameNotFoundException e) {
                 applicationLabel = installerPackageName;
             }
-            mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.installer_app), applicationLabel, MenuItemCreator.SELECTABLE);
+            mList.addMenuItemWithIconTitleSubtitle(getString(R.string.installer_app), applicationLabel, ListItemCreator.SELECTABLE);
         }
-        // Use red color if FLAG_LARGE_HEAP enabled FIXME: find a suitable place for this
-        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)
-            mMenu.subtitleColor = Color.RED;
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.user_id), "" + mApplicationInfo.uid, MenuItemCreator.SELECTABLE);
+        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.user_id), Integer.toString(mApplicationInfo.uid), ListItemCreator.SELECTABLE);
         if (mPackageInfo.sharedUserId != null)
-            mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.shared_user_id), "" + mPackageInfo.sharedUserId, MenuItemCreator.SELECTABLE);
-        mMenu.subtitleColor = MenuItemCreator.NO_COLOR;
+            mList.addMenuItemWithIconTitleSubtitle(getString(R.string.shared_user_id), mPackageInfo.sharedUserId, ListItemCreator.SELECTABLE);
         // Main activity
         final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
         if (launchIntentForPackage != null) {
             final ComponentName launchComponentName = launchIntentForPackage.getComponent();
             if (launchComponentName != null) {
                 final String mainActivity = launchIntentForPackage.getComponent().getClassName();
-                mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.main_activity), mainActivity, MenuItemCreator.SELECTABLE);
-                mMenu.setOpen(view -> startActivity(launchIntentForPackage));
+                mList.addMenuItemWithIconTitleSubtitle(getString(R.string.main_activity), mainActivity, ListItemCreator.SELECTABLE);
+                mList.setOpen(view -> startActivity(launchIntentForPackage));
             }
         }
-        mMenu.addDivider();
+        mList.addDivider();
 
         // Netstat
-        mMenu.titleColor = accentColor;
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_msg), true);
-        mMenu.titleColor = MenuItemCreator.NO_COLOR;
+        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_msg), true);
+        mList.item_title.setTextColor(accentColor);
 
         Tuple<String, String> uidNetStats = getNetStats(mApplicationInfo.uid);
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_transmitted), uidNetStats.getFirst(), MenuItemCreator.SELECTABLE);
-        mMenu.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_received), uidNetStats.getSecond(), MenuItemCreator.SELECTABLE);
-        mMenu.addDivider();
+        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_transmitted), uidNetStats.getFirst(), ListItemCreator.SELECTABLE);
+        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_received), uidNetStats.getSecond(), ListItemCreator.SELECTABLE);
+        mList.addDivider();
     }
 
     private void openAsFolderInFM(String dir) {
-        mMenu.setOpen(view -> {
+        mList.setOpen(view -> {
             Intent openFile = new Intent(Intent.ACTION_VIEW);
             openFile.setDataAndType(Uri.parse(dir), "resource/folder");
             if (openFile.resolveActivityInfo(mPackageManager, 0) != null)
@@ -369,13 +366,26 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         });
     }
 
+    private void addChip(@StringRes int resId, int color) {
+        Chip chip = new Chip(this);
+        chip.setText(resId);
+        chip.setTextColor(color);
+        mTagCloud.addView(chip);
+    }
+
+    private void addChip(@StringRes int resId) {
+        Chip chip = new Chip(this);
+        chip.setText(resId);
+        mTagCloud.addView(chip);
+    }
+
     @NonNull
     private View addToHorizontalLayout(@StringRes int stringResId, @DrawableRes int iconResId) {
-        View view = getLayoutInflater().inflate(R.layout.item_app_info_actions, horizontalLayout, false);
+        View view = getLayoutInflater().inflate(R.layout.item_app_info_actions, mHorizontalLayout, false);
         TextView textView = view.findViewById(R.id.item_text);
         textView.setText(stringResId);
         textView.setCompoundDrawablesWithIntrinsicBounds(null, getDrawable(iconResId), null, null);
-        horizontalLayout.addView(view);
+        mHorizontalLayout.addView(view);
         return view;
     }
 
@@ -459,8 +469,8 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
             mApplicationInfo = mPackageInfo.applicationInfo;
 
-            // MenuItemCreator instance
-            mMenu = new MenuItemCreator(this, R.id.details_container, true);
+            // ListItemCreator instance
+            mList = new ListItemCreator(this, R.id.details_container, true);
             // Load headers
             setHeaderView();
             // Load package size info

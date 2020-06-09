@@ -23,13 +23,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:paddingStart="@dimen/padding_medium"
+                android:paddingEnd="@dimen/padding_medium"
+                android:paddingTop="@dimen/padding_medium">
 
                 <ImageView
                     android:id="@+id/icon"
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
-                    android:layout_margin="16dp"
+                    android:layout_marginStart="@dimen/padding_medium"
+                    android:layout_marginEnd="@dimen/padding_medium"
+                    android:layout_marginTop="@dimen/padding_medium"
+                    android:layout_marginBottom="@dimen/padding_small"
                     tools:srcCompat="@tools:sample/avatars"
                     tools:ignore="contentDescription" />
 
@@ -61,16 +66,18 @@
                     android:textIsSelectable="true"
                     tools:text="@tools:sample/us_zipcodes" />
 
-                <TextView
-                    android:id="@+id/isSystem"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    tools:text="@tools:sample/cities" />
             </LinearLayout>
 
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/tag_cloud"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_medium"
+                android:layout_marginEnd="@dimen/padding_medium"
+                android:layout_gravity="center" />
+
             <LinearLayout
+                android:layout_marginTop="@dimen/padding_small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
