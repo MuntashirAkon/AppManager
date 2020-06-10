@@ -251,15 +251,20 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         if (!sharedPrefs.isEmpty()) {
             CharSequence[] sharedPrefs2 = new CharSequence[sharedPrefs.size()];
             for (int i = 0; i<sharedPrefs.size(); ++i) {
+                // TODO: Strip directory names
                 sharedPrefs2[i] = sharedPrefs.get(i);
             }
-            addToHorizontalLayout(R.string.shared_prefs, R.drawable.ic_view_list_black_24dp).setOnClickListener(v -> {
-                new AlertDialog.Builder(this, R.style.CustomDialog)
-                        .setTitle(R.string.shared_prefs)
-                        .setItems(sharedPrefs2, null)  // TODO
-                        .setNegativeButton(android.R.string.ok, null)
-                        .show();
-            });
+            addToHorizontalLayout(R.string.shared_prefs, R.drawable.ic_view_list_black_24dp)
+                .setOnClickListener(v -> new AlertDialog.Builder(this, R.style.CustomDialog)
+                    .setTitle(R.string.shared_prefs)
+                    .setItems(sharedPrefs2, (dialog, which) -> {
+                        Intent intent = new Intent(this, SharedPrefsActivity.class);
+                        intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LOCATION, sharedPrefs.get(which));
+                        intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LABEL, label);
+                        startActivity(intent);
+                    })
+                    .setNegativeButton(android.R.string.ok, null)
+                    .show());
         }
         // Databases
         List<String> databases;
@@ -405,13 +410,13 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
     private List<String> getSharedPrefs(@NonNull String sourceDir) {
         File sharedPath = new File(sourceDir + "/shared_prefs");
-        return Shell.SU.run(String.format("ls %s | grep -E .xml$", sharedPath.getAbsolutePath())).stdout;
+        return Shell.SU.run(String.format("ls %s/*.xml", sharedPath.getAbsolutePath())).stdout;
     }
 
     private List<String> getDatabases(@NonNull String sourceDir) {
         File sharedPath = new File(sourceDir + "/databases");
         // FIXME: SQLite db doesn't necessarily have .db extension
-        return Shell.SU.run(String.format("ls %s | grep -E .db$", sharedPath.getAbsolutePath())).stdout;
+        return Shell.SU.run(String.format("ls %s/*.db", sharedPath.getAbsolutePath())).stdout;
     }
 
     private void openAsFolderInFM(String dir) {

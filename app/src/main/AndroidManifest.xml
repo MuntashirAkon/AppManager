@@ -14,6 +14,7 @@
         android:largeHeap="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
+        <activity android:name=".activities.SharedPrefsActivity" />
         <activity
             android:name=".activities.AppUsageActivity"
             android:permission="android.permission.PACKAGE_USAGE_STATS" />
