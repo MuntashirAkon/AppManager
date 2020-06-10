@@ -3,7 +3,6 @@ package io.github.muntashirakon.AppManager.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
@@ -39,6 +38,7 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import io.github.muntashirakon.AppManager.R;
 
@@ -168,12 +168,14 @@ public class AppUsageActivity extends AppCompatActivity {
     }
 
     private void promptForUsageStatsPermission() {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this, R.style.CustomDialog)
                 .setTitle(R.string.grant_usage_access)
                 .setMessage(R.string.grant_usage_acess_message)
                 .setPositiveButton(R.string.go, (dialog, which) -> startActivityForResult(new Intent(
                         Settings.ACTION_USAGE_ACCESS_SETTINGS), REQUEST_SETTINGS))
-                .setNegativeButton(getString(R.string.go_back), (dialog, which) -> finish()).setCancelable(false).show();
+                .setNegativeButton(getString(R.string.go_back), (dialog, which) -> finish())
+                .setCancelable(false)
+                .show();
     }
 
     private boolean checkUsageStatsPermission() {
