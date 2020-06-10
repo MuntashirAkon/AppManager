@@ -382,8 +382,9 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                 mListView.setAdapter(mClassListingAdapter);
                 mProgressBar.setVisibility(View.GONE);
                 if (classesList.getClassNames().isEmpty() && totalClassesScanned == 0) {
-                    Toast.makeText(ClassListingActivity.this,
-                            "Sorry don't support /system ODEX", Toast.LENGTH_LONG).show();
+                    // FIXME: Add support for odex (using root)
+                    Toast.makeText(ClassListingActivity.this, R.string.system_odex_not_supported, Toast.LENGTH_LONG).show();
+                    finish();
                 } else {
                     viewScanSummary();
                 }
