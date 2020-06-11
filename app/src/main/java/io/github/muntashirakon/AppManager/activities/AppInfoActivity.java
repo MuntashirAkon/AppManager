@@ -167,6 +167,12 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mSwipeRefresh.setRefreshing(false);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getPackageInfoOrFinish(mPackageName);
+    }
+
     /**
      * Set views up to details_container.
      */
