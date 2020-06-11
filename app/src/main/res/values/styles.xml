@@ -17,4 +17,10 @@
         <item name="colorPrimary">@color/cma</item>
         <item name="colorAccent">@color/cma</item>
     </style>
+    <style name="CustomFloatingActionButton" parent="@style/Widget.MaterialComponents.FloatingActionButton">
+        <item name="materialThemeOverlay">@style/CustomFabOverlay</item>
+    </style>
+    <style name="CustomFabOverlay">
+        <item name="colorSecondary">?android:attr/colorAccent</item>
+    </style>
 </resources>

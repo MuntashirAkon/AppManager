@@ -1,12 +1,6 @@
 package io.github.muntashirakon.AppManager.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.Utils;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,6 +9,7 @@ import android.text.style.BackgroundColorSpan;
 import android.util.Xml;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,36 +20,51 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jaredrummler.android.shell.Shell;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class SharedPrefsActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.DialogFragment;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.fragments.EditPrefItemFragment;
+import io.github.muntashirakon.AppManager.utils.Utils;
+
+public class SharedPrefsActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, EditPrefItemFragment.InterfaceCommunicator {
     public static final String EXTRA_PREF_LOCATION = "EXTRA_PREF_LOCATION";
     public static final String EXTRA_PREF_LABEL    = "EXTRA_PREF_LABEL";  // Optional
 
-    private static final String TAG_ROOT     = "map";  // <map></map>
-    private static final String TYPE_BOOLEAN = "boolean";  // <boolean name="bool" value="true" />
-    private static final String TYPE_FLOAT   = "float";  // <float name="float" value="12.3" />
-    private static final String TYPE_INTEGER = "int";  // <int name="integer" value="123" />
-    private static final String TYPE_LONG    = "long";  // <long name="long" value="123456789" />
-    private static final String TYPE_STRING  = "string";  // <string name="string"></string> | <string name="string"><string></string></string>
+    public static final String TAG_ROOT     = "map";  // <map></map>
+    public static final String TYPE_BOOLEAN = "boolean";  // <boolean name="bool" value="true" />
+    public static final String TYPE_FLOAT   = "float";  // <float name="float" value="12.3" />
+    public static final String TYPE_INTEGER = "int";  // <int name="integer" value="123" />
+    public static final String TYPE_LONG    = "long";  // <long name="long" value="123456789" />
+    public static final String TYPE_STRING  = "string";  // <string name="string"></string> | <string name="string"><string></string></string>
 
     private String mSharedPrefFile;
     private File mTempSharedPrefFile;
-    private ListView mListView;
     private SharedPrefsListingAdapter mAdapter;
     private ProgressBar mProgressBar;
+    private HashMap<String, Object> mSharedPrefMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,23 +105,84 @@ public class SharedPrefsActivity extends AppCompatActivity implements SearchView
         }
         mProgressBar = findViewById(R.id.progress_horizontal);
         mProgressBar.setVisibility(View.VISIBLE);
-        mListView = findViewById(R.id.listView);
+        ListView listView = findViewById(R.id.listView);
         mAdapter = new SharedPrefsListingAdapter(this);
-        mListView.setAdapter(mAdapter);
-        new SharedPrefsLoaderThread().start();
-        // TODO:
-        //  - Edit temporary file with Editor
-        //  - A floating action button for adding new entry [INSERT]
-        //  - Edit button in the right side of each entry [UPDATE]
-        //  - Swipe right to delete an entry (also in the edit dialog) [DELETE]
-        //  - Menu actions: save [COMMIT], delete, cancel
+        listView.setAdapter(mAdapter);
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            EditPrefItemFragment.PrefItem prefItem = new EditPrefItemFragment.PrefItem();
+            prefItem.keyName = mAdapter.getItem(position);
+            prefItem.keyValue = mSharedPrefMap.get(prefItem.keyName);
+            DialogFragment dialogFragment = new EditPrefItemFragment();
+            Bundle args = new Bundle();
+            args.putParcelable(EditPrefItemFragment.ARG_PREF_ITEM, prefItem);
+            args.putInt(EditPrefItemFragment.ARG_MODE, EditPrefItemFragment.MODE_EDIT);
+            dialogFragment.setArguments(args);
+            dialogFragment.show(getSupportFragmentManager(), EditPrefItemFragment.TAG);
+        });
+        FloatingActionButton fab = findViewById(R.id.floatingActionButton);
+        fab.setOnClickListener(v -> {
+            DialogFragment dialogFragment = new EditPrefItemFragment();
+            Bundle args = new Bundle();
+            args.putInt(EditPrefItemFragment.ARG_MODE, EditPrefItemFragment.MODE_CREATE);
+            dialogFragment.setArguments(args);
+            dialogFragment.show(getSupportFragmentManager(), EditPrefItemFragment.TAG);
+        });
+        new SharedPrefsReaderThread().start();
+    }
+
+    @SuppressLint("RestrictedApi")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_shared_prefs_actions, menu);
+        if (menu instanceof MenuBuilder) {
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void sendInfo(int mode, EditPrefItemFragment.PrefItem prefItem) {
+        if (prefItem != null) {
+            switch (mode) {
+                case EditPrefItemFragment.MODE_CREATE:
+                case EditPrefItemFragment.MODE_EDIT:
+                    mSharedPrefMap.put(prefItem.keyName, prefItem.keyValue);
+                    mAdapter.setDefaultList(mSharedPrefMap);
+                    break;
+                case EditPrefItemFragment.MODE_DELETE:
+                    mSharedPrefMap.remove(prefItem.keyName);
+                    mAdapter.setDefaultList(mSharedPrefMap);
+                    break;
+            }
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+            case R.id.action_discard:
+                finish();
+                return true;
+            case R.id.action_delete:
+                // Make sure it's a file and then delete
+                boolean isSuccess = Shell.SU.run(String.format("[ -f '%s' ] && rm -f '%s'",
+                        mSharedPrefFile, mSharedPrefFile)).isSuccessful();
+                if (isSuccess) {
+                    Toast.makeText(this, R.string.deleted_successfully, Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
+                    Toast.makeText(this, R.string.deletion_failed, Toast.LENGTH_LONG).show();
+                }
+                return true;
+            case R.id.action_save:
+                if (writeSharedPref(mTempSharedPrefFile, mSharedPrefMap)) {
+                    Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_LONG).show();
+                }
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -138,7 +209,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements SearchView
     }
 
     @NonNull
-    private HashMap<String, Object> loadSharedPref(File sharedPrefsFile) {
+    private HashMap<String, Object> readSharedPref(File sharedPrefsFile) {
         HashMap<String, Object> prefs = new HashMap<>();
         try {
             FileInputStream rulesStream = new FileInputStream(sharedPrefsFile);
@@ -190,7 +261,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements SearchView
         return prefs;
     }
 
-    private class SharedPrefsLoaderThread extends Thread {
+    private class SharedPrefsReaderThread extends Thread {
         @Override
         public void run() {
             String sharedPrefPath = mTempSharedPrefFile.getAbsolutePath();
@@ -198,12 +269,63 @@ public class SharedPrefsActivity extends AppCompatActivity implements SearchView
                     sharedPrefPath, sharedPrefPath)).isSuccessful()) {
                 runOnUiThread(SharedPrefsActivity.this::finish);
             }
-            HashMap<String, Object> hashMap = loadSharedPref(mTempSharedPrefFile);
+            mSharedPrefMap = readSharedPref(mTempSharedPrefFile);
             runOnUiThread(() -> {
-                mAdapter.setDefaultList(hashMap);
+                mAdapter.setDefaultList(mSharedPrefMap);
                 mProgressBar.setVisibility(View.GONE);
             });
         }
+    }
+
+    private boolean writeSharedPref(File sharedPrefsFile, @NonNull HashMap<String, Object> hashMap) {
+        try {
+            FileOutputStream xmlFile = new FileOutputStream(sharedPrefsFile);
+            XmlSerializer xmlSerializer = Xml.newSerializer();
+            StringWriter stringWriter = new StringWriter();
+            xmlSerializer.setOutput(stringWriter);
+            xmlSerializer.startDocument("UTF-8", true);
+            xmlSerializer.startTag("", TAG_ROOT);
+            // Add values
+            for(String name: hashMap.keySet()) {
+                Object value = hashMap.get(name);
+                if (value instanceof Boolean) {
+                    xmlSerializer.startTag("", TYPE_BOOLEAN);
+                    xmlSerializer.attribute("", "name", name);
+                    xmlSerializer.attribute("", "value", value.toString());
+                    xmlSerializer.endTag("", TYPE_BOOLEAN);
+                } else if (value instanceof Float) {
+                    xmlSerializer.startTag("", TYPE_FLOAT);
+                    xmlSerializer.attribute("", "name", name);
+                    xmlSerializer.attribute("", "value", value.toString());
+                    xmlSerializer.endTag("", TYPE_FLOAT);
+                } else if (value instanceof Integer) {
+                    xmlSerializer.startTag("", TYPE_INTEGER);
+                    xmlSerializer.attribute("", "name", name);
+                    xmlSerializer.attribute("", "value", value.toString());
+                    xmlSerializer.endTag("", TYPE_INTEGER);
+                } else if (value instanceof Long) {
+                    xmlSerializer.startTag("", TYPE_LONG);
+                    xmlSerializer.attribute("", "name", name);
+                    xmlSerializer.attribute("", "value", value.toString());
+                    xmlSerializer.endTag("", TYPE_LONG);
+                } else if (value instanceof String) {
+                    xmlSerializer.startTag("", TYPE_STRING);
+                    xmlSerializer.attribute("", "name", name);
+                    xmlSerializer.text(value.toString());
+                    xmlSerializer.endTag("", TYPE_STRING);
+                }
+            }
+            xmlSerializer.endTag("", TAG_ROOT);
+            xmlSerializer.endDocument();
+            xmlSerializer.flush();
+            xmlFile.write(stringWriter.toString().getBytes());
+            xmlFile.close();
+            return Shell.SU.run(String.format("cp '%s' '%s' && chmod 0666 '%s'", sharedPrefsFile,
+                    mSharedPrefFile, mSharedPrefFile)).isSuccessful();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     static class SharedPrefsListingAdapter extends BaseAdapter implements Filterable {
@@ -246,7 +368,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements SearchView
         }
 
         @Override
-        public Object getItem(int position) {
+        public String getItem(int position) {
             return mAdapterList[position];
         }
 

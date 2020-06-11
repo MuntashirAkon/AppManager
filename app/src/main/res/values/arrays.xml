@@ -12,6 +12,13 @@
         <item>@string/signatures</item>
         <item>@string/shared_libs</item>
     </array>
+    <string-array name="shared_pref_types">
+        <item>@string/type_boolean</item>
+        <item>@string/type_float</item>
+        <item>@string/type_int</item>
+        <item>@string/type_long</item>
+        <item>@string/type_string</item>
+    </string-array>
     <string-array name="usage_interval_dropdown_list">
         <item>@string/usage_daily</item>
         <item>@string/usage_weekly</item>
