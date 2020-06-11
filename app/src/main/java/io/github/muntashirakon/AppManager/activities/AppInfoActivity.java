@@ -213,6 +213,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             addChip(R.string.no_code);
         if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)
             addChip(R.string.requested_large_heap, Color.RED);
+        if (!mApplicationInfo.enabled) addChip(R.string.disabled_app, Color.BLUE);
 
         // Horizontal layout //
         mHorizontalLayout.removeAllViews();

@@ -263,4 +263,5 @@
     <string name="type_string">Characters</string>
     <string name="error_evaluating_input">Error evaluating input</string>
     <string name="key_name_cannot_be_null">Key name cannot be empty</string>
+    <string name="disabled_app">Disabled</string>
 </resources>
