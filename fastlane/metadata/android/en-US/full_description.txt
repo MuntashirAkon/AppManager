@@ -1,17 +1,19 @@
-Yet another android package manager and viewer, but...
+<i>App Manager</i> merged the features of <i>App_packages Info</i> (formerly <i>Application Info</i>), <i>ClassyShark3xodus</i>, <i>Activity Launcher</i> and <i>Watt</i> into a single app with material design and dark mode to give a modern look and feel.
 
-- It is free and open source
-- It has material design (and a nice UI)
-- It doesn't have any useless permissions
-- It doesn't connect to the internet
-- It tries to display as much information as possible in the main window
-- It lists activities, broadcast receivers, services, providers, permissions, signatures, shared libraries, etc. of any app
-- It can launch (exportable) activities, create (customizable) shortcuts
-- Using Intent Firewall, it can block any activities, receivers or services you like (requires root)
-- It can scan for trackers in apps and list (all or only) tracking classes (and their code dump)
-- It can generate dynamic manifest for any app
-- It displays your app usage (requires “Usage Access” permission)
-- Apk files can be shared (hence the use of a provider)
+<b>Features:</b><ul>
+<li>It is free and open source</li>
+<li>It has material design (and a nice UI)</li>
+<li>It doesn't have any useless permissions</li>
+<li>It doesn't connect to the internet</li>
+<li>It tries to display as much information as possible in the main window</li>
+<li>It lists activities, broadcast receivers, services, providers, permissions, signatures, shared libraries, etc. of any app</li>
+<li>It can launch (exportable) activities, create (customizable) shortcuts</li>
+<li>Using Intent Firewall, it can block any activities, receivers or services you like (requires root)</li>
+<li>It can scan for trackers in apps and list (all or only) tracking classes (and their code dump)</li>
+<li>It can generate dynamic manifest for any app</li>
+<li>It can be used to view/edit/delete shared preferences of any app (requires root)</li>
+<li>It displays your app usage (requires “Usage Access” permission)</li>
+<li>Apk files can be shared (hence the use of a provider)</li>
 
 ...and other minor features such as uninstalling apks, displaying app installation info, opening on F-Droid or Aurora Droid.
 

@@ -12,6 +12,7 @@ Yet another android package manager and viewer but...
 - Using Intent Firewall, it can block any activities, receivers or services you like (requires root)
 - It can scan for trackers in apps and list (all or only) tracking classes (and their code dump)
 - It can generate dynamic manifest for any app
+- It can be used to view/edit/delete shared preferences of any app (requires root)
 - It displays your app usage (requires “Usage Access” permission)
 - Apk files can be shared (hence the use of a provider)
 

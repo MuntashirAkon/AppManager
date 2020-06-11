@@ -54,7 +54,7 @@
     <string name="netstats_transmitted">Data transmitted</string>
     <string name="netstats_msg">Data Usage Since Last Boot</string>
     <string name="about">About</string>
-    <string name="about_message"><b>Main window</b>
+    <string name="about_message"><b>Main Window</b>
         \n- Click will open “App Info” window
         \n- Long click will open ”App Details” window
         \n- View app usage statistics by clicking on the three verticals dots on the right (requires
@@ -83,8 +83,14 @@
         \n<i>~</i>: TestOnly mode
         \n<i>debug</i>: Debuggable app
         \n
-        \nIn the <b>App Info</b> window, app that requested large heap have their <b>User ID</b>
-        colored red.
+        \n<b>App Info Window</b>
+        \n- Uninstall any user app
+        \n- View dynamic manifest of an app
+        \n- View shared preferences
+        \n- Scan for trackers using Exodus
+        \n- View/edit/delete shared preferences (requires root)
+        \n- View various paths and directories related to the app and open them with external app
+        \n- View installation date, update date, installer app
         \n
         \n<b>App Details Window</b>
         \n- Double clicking on any permission in the <b>Uses Permissions</b> tab will display a toast
@@ -99,6 +105,11 @@
         \n- ° for \u03b5\' missing
         \n- ² for \u03b5\' Etip stand-by
         \n- µ for micro non-intrusive
+        \n
+        \n<b>Shared Preference Editor Window</b>
+        \n- Edit any item by clicking on it
+        \n- Use the add button to add new entry
+        \n- To save or delete the file, use the menu on the top-right of the window
     </string>
     <string name="size_details">Size details</string>
     <string name="internal">Internal</string>
