@@ -66,6 +66,8 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
     private static final String PACKAGE_NAME_FDROID = "org.fdroid.fdroid";
     private static final String PACKAGE_NAME_AURORA_DROID = "com.aurora.adroid";
+    private static final String ACTIVITY_NAME_FDROID = "org.fdroid.fdroid.views.AppDetailsActivity";
+    private static final String ACTIVITY_NAME_AURORA_DROID = "com.aurora.adroid.ui.activity.DetailsActivity";
 
     private PackageManager mPackageManager;
     private String mPackageName;
@@ -80,6 +82,8 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     private SimpleDateFormat mDateFormatter = new SimpleDateFormat("EE LLL dd yyyy kk:mm:ss");
     private ListItemCreator mList;
     private SwipeRefreshLayout mSwipeRefresh;
+    private int mAccentColor;
+    private CharSequence mPackageLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +100,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mPackageManager = getPackageManager();
         mHorizontalLayout = findViewById(R.id.horizontal_layout);
         mTagCloud = findViewById(R.id.tag_cloud);
+        mAccentColor = Utils.getThemeColor(this, android.R.attr.colorAccent);
         getPackageInfoOrFinish(mPackageName);
     }
 
@@ -177,12 +182,9 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
      * Set views up to details_container.
      */
     private void setHeaderView() {
-        int accentColor = Utils.getThemeColor(this, android.R.attr.colorAccent);
-
         // Set Application Name, aka Label
         TextView labelView = findViewById(R.id.label);
-        CharSequence label = mApplicationInfo.loadLabel(mPackageManager);
-        labelView.setText(label);
+        labelView.setText(mPackageLabel);
 
         // Set Package Name
         TextView packageNameView = findViewById(R.id.packageName);
@@ -214,14 +216,15 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)
             addChip(R.string.requested_large_heap, Color.RED);
         if (!mApplicationInfo.enabled) addChip(R.string.disabled_app, Color.BLUE);
+    }
 
-        // Horizontal layout //
+    private void setHorizontalView() {
         mHorizontalLayout.removeAllViews();
         // Set uninstall
         addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
-                Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
-                uninstallIntent.setData(Uri.parse("package:" + mPackageName));
-                startActivity(uninstallIntent);
+            Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
+            uninstallIntent.setData(Uri.parse("package:" + mPackageName));
+            startActivity(uninstallIntent);
         });
         // Set app info (open in settings)
         addToHorizontalLayout(R.string.app_info, R.drawable.ic_info_outline_black_24dp).setOnClickListener(v -> {
@@ -258,20 +261,19 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         if (!sharedPrefs.isEmpty()) {
             CharSequence[] sharedPrefs2 = new CharSequence[sharedPrefs.size()];
             for (int i = 0; i<sharedPrefs.size(); ++i) {
-                // TODO: Strip directory names
-                sharedPrefs2[i] = sharedPrefs.get(i);
+                sharedPrefs2[i] = new File(sharedPrefs.get(i)).getName();
             }
             addToHorizontalLayout(R.string.shared_prefs, R.drawable.ic_view_list_black_24dp)
-                .setOnClickListener(v -> new AlertDialog.Builder(this, R.style.CustomDialog)
-                    .setTitle(R.string.shared_prefs)
-                    .setItems(sharedPrefs2, (dialog, which) -> {
-                        Intent intent = new Intent(this, SharedPrefsActivity.class);
-                        intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LOCATION, sharedPrefs.get(which));
-                        intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LABEL, label);
-                        startActivity(intent);
-                    })
-                    .setNegativeButton(android.R.string.ok, null)
-                    .show());
+                    .setOnClickListener(v -> new AlertDialog.Builder(this, R.style.CustomDialog)
+                            .setTitle(R.string.shared_prefs)
+                            .setItems(sharedPrefs2, (dialog, which) -> {
+                                Intent intent = new Intent(this, SharedPrefsActivity.class);
+                                intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LOCATION, sharedPrefs.get(which));
+                                intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LABEL, mPackageLabel);
+                                startActivity(intent);
+                            })
+                            .setNegativeButton(android.R.string.ok, null)
+                            .show());
         }
         // Databases
         List<String> databases;
@@ -284,13 +286,12 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             for (int i = 0; i<databases.size(); ++i) {
                 databases2[i] = databases.get(i);
             }
-            addToHorizontalLayout(R.string.databases, R.drawable.ic_assignment_black_24dp).setOnClickListener(v -> {
-                new AlertDialog.Builder(this, R.style.CustomDialog)
-                        .setTitle(R.string.databases)
-                        .setItems(databases2, null)  // TODO
-                        .setNegativeButton(android.R.string.ok, null)
-                        .show();
-            });
+            addToHorizontalLayout(R.string.databases, R.drawable.ic_assignment_black_24dp)
+                    .setOnClickListener(v -> new AlertDialog.Builder(this, R.style.CustomDialog)
+                            .setTitle(R.string.databases)
+                            .setItems(databases2, null)  // TODO
+                            .setNegativeButton(android.R.string.ok, null)
+                            .show());
         }
         // Set F-Droid or Aurora Droid
         try {
@@ -298,14 +299,14 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                 throw new PackageManager.NameNotFoundException();
             addToHorizontalLayout(R.string.fdroid, R.drawable.ic_frost_fdroid_black_24dp)
                     .setOnClickListener(v -> {
-                Intent intent = new Intent();
-                intent.setClassName(PACKAGE_NAME_FDROID, "org.fdroid.fdroid.views.AppDetailsActivity");
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("appid", mPackageName);
-                try {
-                    startActivity(intent);
-                } catch (Exception ignored) {}
-            });
+                        Intent intent = new Intent();
+                        intent.setClassName(PACKAGE_NAME_FDROID, ACTIVITY_NAME_FDROID);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("appid", mPackageName);
+                        try {
+                            startActivity(intent);
+                        } catch (Exception ignored) {}
+                    });
         } catch (PackageManager.NameNotFoundException e) {
             try {
                 if(!mPackageManager.getApplicationInfo(PACKAGE_NAME_AURORA_DROID, 0).enabled)
@@ -313,7 +314,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                 addToHorizontalLayout(R.string.aurora, R.drawable.ic_frost_auroradroid_black_24dp)
                         .setOnClickListener(v -> {
                             Intent intent = new Intent();
-                            intent.setClassName(PACKAGE_NAME_AURORA_DROID, "com.aurora.adroid.ui.activity.DetailsActivity");
+                            intent.setClassName(PACKAGE_NAME_AURORA_DROID, ACTIVITY_NAME_AURORA_DROID);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.putExtra("INTENT_PACKAGE_NAME", mPackageName);
                             try {
@@ -322,11 +323,12 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                         });
             } catch (PackageManager.NameNotFoundException ignored) {}
         }
+    }
 
-        // Vertical layout //
-        // Paths
+    private void setVerticalView()  {
+        // Paths and directories
         mList.addMenuItemWithIconTitleSubtitle(getString(R.string.paths_and_directories), true);
-        mList.item_title.setTextColor(accentColor);
+        mList.item_title.setTextColor(mAccentColor);
         // Source directory (apk path)
         mList.addMenuItemWithIconTitleSubtitle(getString(R.string.source_dir), mApplicationInfo.sourceDir, ListItemCreator.SELECTABLE);
         openAsFolderInFM((new File(mApplicationInfo.sourceDir)).getParent());
@@ -353,7 +355,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
         // SDK
         mList.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk), true);
-        mList.item_title.setTextColor(accentColor);
+        mList.item_title.setTextColor(mAccentColor);
         mList.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk_max), "" + mApplicationInfo.targetSdkVersion, ListItemCreator.SELECTABLE);
         mList.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk_min), Build.VERSION.SDK_INT > 23 ? "" + mApplicationInfo.minSdkVersion : "N/A", ListItemCreator.SELECTABLE);
 
@@ -375,7 +377,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mList.addDivider();
 
         mList.addMenuItemWithIconTitleSubtitle(getString(R.string.more_info), true);
-        mList.item_title.setTextColor(accentColor);
+        mList.item_title.setTextColor(mAccentColor);
         mList.addMenuItemWithIconTitleSubtitle(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime), ListItemCreator.NO_ACTION);
         mList.addMenuItemWithIconTitleSubtitle(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime), ListItemCreator.NO_ACTION);
         if(!mPackageName.equals(mApplicationInfo.processName))
@@ -407,7 +409,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
         // Netstat
         mList.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_msg), true);
-        mList.item_title.setTextColor(accentColor);
+        mList.item_title.setTextColor(mAccentColor);
 
         Tuple<String, String> uidNetStats = getNetStats(mApplicationInfo.uid);
         mList.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_transmitted), uidNetStats.getFirst(), ListItemCreator.SELECTABLE);
@@ -537,11 +539,14 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             }
 
             mApplicationInfo = mPackageInfo.applicationInfo;
+            mPackageLabel = mApplicationInfo.loadLabel(mPackageManager);
 
             // ListItemCreator instance
             mList = new ListItemCreator(this, R.id.details_container, true);
-            // Load headers
+            // (Re)load views
             setHeaderView();
+            setHorizontalView();
+            setVerticalView();
             // Load package size info
             getPackageSizeInfo();
         } catch (PackageManager.NameNotFoundException e) {
