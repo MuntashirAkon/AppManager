@@ -96,6 +96,8 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             return;
         }
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
+        mSwipeRefresh.setColorSchemeColors(Utils.getThemeColor(this, android.R.attr.colorAccent));
+        mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(this, android.R.attr.colorPrimary));
         mSwipeRefresh.setOnRefreshListener(this);
         mPackageManager = getPackageManager();
         mHorizontalLayout = findViewById(R.id.horizontal_layout);

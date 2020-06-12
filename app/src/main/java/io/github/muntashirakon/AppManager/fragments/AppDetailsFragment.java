@@ -132,6 +132,8 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.pager_app_details, container, false);
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
+        mSwipeRefresh.setColorSchemeColors(Utils.getThemeColor(mActivity, android.R.attr.colorAccent));
+        mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(mActivity, android.R.attr.colorPrimary));
         mSwipeRefresh.setOnRefreshListener(this);
         ListView listView = view.findViewById(android.R.id.list);
         listView.setDividerHeight(0);

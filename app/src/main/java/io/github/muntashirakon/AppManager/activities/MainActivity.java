@@ -111,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mProgressBar = findViewById(R.id.progress_horizontal);
         mListView = findViewById(R.id.item_list);
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
+        mSwipeRefresh.setColorSchemeColors(Utils.getThemeColor(this, android.R.attr.colorAccent));
+        mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(this, android.R.attr.colorPrimary));
         mSwipeRefresh.setOnRefreshListener(this);
 
         ActionBar actionBar = getSupportActionBar();

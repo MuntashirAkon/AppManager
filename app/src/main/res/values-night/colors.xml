@@ -2,4 +2,5 @@
 <resources>
     <color name="red">#790D0D</color>
     <color name="ten_percent_black">#1AFFFFFF</color>
+    <color name="SEMI_TRANSPARENT">#10FFFFFF</color>
 </resources>
