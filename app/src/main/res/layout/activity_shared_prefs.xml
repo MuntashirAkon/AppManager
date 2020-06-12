@@ -11,12 +11,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ListView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fastScrollEnabled="true" />
-
         <ProgressBar
             android:id="@+id/progress_horizontal"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
@@ -25,6 +19,27 @@
             android:indeterminate="true"
             android:paddingStart="@dimen/padding_medium"
             android:paddingEnd="@dimen/padding_medium" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:isScrollContainer="false"
+                android:nestedScrollingEnabled="false"
+                android:scrollbars="none" />
+
+            <TextView
+                android:id="@android:id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/no_content" />
+
+        </FrameLayout>
 
     </LinearLayout>
 

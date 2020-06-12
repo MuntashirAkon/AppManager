@@ -66,7 +66,6 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
     private static final int CONFIGURATION = 7;
     private static final int SIGNATURES = 8;
     private static final int SHARED_LIBRARY_FILES = 9;
-    private static final int NOT_FOUND = 10;
 
     private int neededProperty;
 
@@ -136,6 +135,9 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         mSwipeRefresh.setOnRefreshListener(this);
         ListView listView = view.findViewById(android.R.id.list);
         listView.setDividerHeight(0);
+        TextView emptyView = view.findViewById(android.R.id.empty);
+        emptyView.setText(getNeededString(neededProperty));
+        listView.setEmptyView(emptyView);
         mAdapter = new ActivitiesListAdapter();
         listView.setAdapter(mAdapter);
         return view;
@@ -349,10 +351,8 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             if (neededProperty == ACTIVITIES || neededProperty == RECEIVERS || neededProperty == SERVICES) {
                 disabledComponents = mComponentsApplier.getDisabledComponentNamesForPackage(mPackageName);
             }
-            if (arrayOfThings == null){
-                count = 1; // to produce not found
-                requestedProperty = NOT_FOUND;
-            } else count = arrayOfThings.length;
+            if (arrayOfThings == null) count = 0;
+            else count = arrayOfThings.length;
             notifyDataSetChanged();
         }
 
@@ -412,10 +412,6 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                     return getSignatureView(convertView, position);
                 case SHARED_LIBRARY_FILES:
                     return getSharedLibsView(convertView, position);
-                case NOT_FOUND:
-                    convertView = mLayoutInflater.inflate(R.layout.item_app_details_not_found, parent, false);
-                    ((TextView) convertView).setText(getNeededString(neededProperty));
-                    return convertView;
                 case ACTIVITIES:
                 default:
                     return getActivityView(parent, convertView, position);

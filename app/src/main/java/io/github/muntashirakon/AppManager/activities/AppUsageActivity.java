@@ -79,6 +79,7 @@ public class AppUsageActivity extends AppCompatActivity {
 
         ListView listView = findViewById(android.R.id.list);
         listView.setDividerHeight(0);
+        listView.setEmptyView(findViewById(android.R.id.empty));
         listView.setAdapter(mAppUsageAdapter);
 
         @SuppressLint("InflateParams")

@@ -200,7 +200,7 @@
     <string name="all_classes">All classes</string>
     <string name="main_list_date_days">%s %d days</string>
     <string name="no_shared_libs">No shared libraries</string>
-    <string name="no_tracking_class">No tracking class</string>
+    <string name="no_tracker_class">No tracker class</string>
     <string name="app_usage">App Usage</string>
     <string name="usage_daily">Daily</string>
     <string name="usage_weekly">Weekly</string>
@@ -264,4 +264,6 @@
     <string name="error_evaluating_input">Error evaluating input</string>
     <string name="key_name_cannot_be_null">Key name cannot be empty</string>
     <string name="disabled_app">Disabled</string>
+    <string name="no_usage_in_this_time_range">No usage in this time range</string>
+    <string name="no_content">No content</string>
 </resources>

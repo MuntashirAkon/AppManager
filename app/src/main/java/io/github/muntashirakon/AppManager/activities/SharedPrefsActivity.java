@@ -105,7 +105,10 @@ public class SharedPrefsActivity extends AppCompatActivity implements SearchView
         }
         mProgressBar = findViewById(R.id.progress_horizontal);
         mProgressBar.setVisibility(View.VISIBLE);
-        ListView listView = findViewById(R.id.listView);
+        ListView listView = findViewById(android.R.id.list);
+        listView.setTextFilterEnabled(true);
+        listView.setDividerHeight(0);
+        listView.setEmptyView(findViewById(android.R.id.empty));
         mAdapter = new SharedPrefsListingAdapter(this);
         listView.setAdapter(mAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {

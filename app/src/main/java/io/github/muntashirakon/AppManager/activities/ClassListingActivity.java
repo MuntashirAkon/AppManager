@@ -148,9 +148,10 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
 
         trackerClassesOnly = false;
 
-        mListView = findViewById(R.id.listView);
+        mListView = findViewById(android.R.id.list);
         mListView.setTextFilterEnabled(true);
         mListView.setDividerHeight(0);
+        mListView.setEmptyView(findViewById(android.R.id.empty));
 
         mProgressBar = findViewById(R.id.progress_horizontal);
 
