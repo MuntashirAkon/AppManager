@@ -142,6 +142,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         listView.setEmptyView(emptyView);
         mAdapter = new ActivitiesListAdapter();
         listView.setAdapter(mAdapter);
+        mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> listView.canScrollVertically(-1));
         return view;
     }
 
