@@ -20,7 +20,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PatternMatcher;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,8 +31,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.jaredrummler.android.shell.Shell;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -50,6 +52,7 @@ import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
 import io.github.muntashirakon.AppManager.compontents.ComponentType;
 import io.github.muntashirakon.AppManager.compontents.ComponentsApplier;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
+import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 
@@ -79,7 +82,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
     private ComponentsApplier mComponentsApplier;
     private MenuItem blockingToggler;
 
-    private String[] aPermissionsUse;
+    private Tuple<String, Integer>[] permissionsWithFlags;
     private boolean bFi;
 
     private int mColorGrey1;
@@ -235,27 +238,14 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                     }
                     break;
                 case USES_PERMISSIONS:  // Requested Permissions
-                    if (mPackageInfo.requestedPermissions == null) aPermissionsUse = null;
+                    if (mPackageInfo.requestedPermissions == null) permissionsWithFlags = null;
                     else {
-                        aPermissionsUse = new String[mPackageInfo.requestedPermissions.length];
+                        //noinspection unchecked
+                        permissionsWithFlags = new Tuple[mPackageInfo.requestedPermissions.length];
                         for (int i = 0; i < mPackageInfo.requestedPermissions.length; ++i) {
-                            aPermissionsUse[i] = mPackageInfo.requestedPermissions[i] + " ";
-                            try {
-                                if (Utils.getProtectionLevelString(
-                                        mPackageManager.getPermissionInfo(
-                                                mPackageInfo.requestedPermissions[i],
-                                                PackageManager.GET_META_DATA).protectionLevel)
-                                        .contains("dangerous")) {
-                                    aPermissionsUse[i] += "*";
-                                }
-                            } catch (PackageManager.NameNotFoundException e) {
-                                e.getStackTrace();
-                            }
-                            if ((mPackageInfo.requestedPermissionsFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
-                                aPermissionsUse[i] += "\u2714";
-                            }
+                            permissionsWithFlags[i] = new Tuple<>(mPackageInfo.requestedPermissions[i],
+                                    mPackageInfo.requestedPermissionsFlags[i]);
                         }
-                        Arrays.sort(aPermissionsUse);
                     }
                     break;
                 case PERMISSIONS:
@@ -299,7 +289,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             case SERVICES: return mPackageInfo.services;
             case RECEIVERS: return mPackageInfo.receivers;
             case PROVIDERS: return mPackageInfo.providers;
-            case USES_PERMISSIONS: return aPermissionsUse;
+            case USES_PERMISSIONS: return permissionsWithFlags;
             case PERMISSIONS: return mPackageInfo.permissions;
             case FEATURES: return mPackageInfo.reqFeatures;
             case CONFIGURATION: return mPackageInfo.configPreferences;
@@ -376,6 +366,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             Button createBtn;
             Button editBtn;
             Button launchBtn;
+            Switch toggleSwitch;
         }
 
         @Override
@@ -404,7 +395,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 case PROVIDERS:
                     return getProviderView(parent, convertView, position);
                 case USES_PERMISSIONS:
-                    return getUsesPermissionsView(convertView, position);
+                    return getUsesPermissionsView(parent, convertView, position);
                 case PERMISSIONS:
                     return getPermissionsView(parent, convertView, position);
                 case FEATURES:
@@ -784,53 +775,96 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
          */
         @NonNull
         @SuppressLint("SetTextI18n")
-        private View getUsesPermissionsView(View convertView, int index) {
-            final String s = aPermissionsUse[index].split(" ")[0];
-            if (!(convertView instanceof TextView)) {
-                convertView = new TextView(mActivity);
+        private View getUsesPermissionsView(ViewGroup viewGroup, View convertView, int index) {
+            ViewHolder viewHolder;
+            if (checkIfConvertViewMatch(convertView, USES_PERMISSIONS)) {
+                convertView = mLayoutInflater.inflate(R.layout.item_app_details_perm, viewGroup, false);
+
+                viewHolder = new ViewHolder();
+                viewHolder.currentViewType = USES_PERMISSIONS;
+                viewHolder.textView1 = convertView.findViewById(R.id.perm_name);
+                viewHolder.textView2 = convertView.findViewById(R.id.perm_description);
+                viewHolder.textView3 = convertView.findViewById(R.id.perm_protection_level);
+                viewHolder.textView4 = convertView.findViewById(R.id.perm_package_name);
+                viewHolder.textView5 = convertView.findViewById(R.id.perm_group);
+                viewHolder.toggleSwitch = convertView.findViewById(R.id.perm_toggle_btn);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            TextView textView = (TextView) convertView;
-            textView.setTextIsSelectable(true);
-            if (Build.VERSION.SDK_INT > 22) {
-                textView.setBreakStrategy(Layout.BREAK_STRATEGY_SIMPLE);
-                textView.setHyphenationFrequency(Layout.HYPHENATION_FREQUENCY_NONE);
-            }
-            if (aPermissionsUse[index].startsWith("android.permission"))
-                textView.setText("\u23e9 " + aPermissionsUse[index].substring(18));
-            else textView.setText("\u23e9 " + aPermissionsUse[index]);
-            // Set color: Todo: Remove these with something that's actually useful
-            if (aPermissionsUse[index].endsWith("*\u2714")) {  // Dangerous + Granted
-                textView.setTextColor(mColorRed);
-                textView.setBackgroundColor(mColorGrey2);
-            } else if (aPermissionsUse[index].endsWith("\u2714")) {  // Granted only
-                textView.setTextColor(Color.MAGENTA);
-                textView.setBackgroundColor(mColorGrey1);
-            } else if (aPermissionsUse[index].endsWith("*")) {  // Dangerous only
-                textView.setTextColor(Color.YELLOW);
-                textView.setBackgroundColor(mColorGrey2);
-            } else {  // Others
-                textView.setTextColor(Color.DKGRAY);
-                textView.setBackgroundColor(mColorGrey1);
-            }
+            convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
 
-            int medium_size = mActivity.getResources().getDimensionPixelSize(R.dimen.padding_medium);
-            int small_size = mActivity.getResources().getDimensionPixelSize(R.dimen.padding_very_small);
-            textView.setPadding(medium_size, small_size, medium_size, small_size);
-            textView.setTextSize(12);
-            // FIXME: Do something with these!
-            textView.setOnClickListener(view -> {
-                try {
-                    Toast.makeText(mActivity,
-                            s + "\n" + mPackageManager.getPermissionInfo(s, PackageManager.GET_META_DATA).loadDescription(mPackageManager)
-                                    + "\n\n#" + Utils.getProtectionLevelString(mPackageManager.getPermissionInfo(s, PackageManager.GET_META_DATA).protectionLevel)
-                                    + "\n" + mPackageManager.getPermissionInfo(s, PackageManager.GET_META_DATA).packageName
-                                    + "\n" + mPackageManager.getPermissionInfo(s, PackageManager.GET_META_DATA).group
-                                    + permAppOp(s)
-                            , Toast.LENGTH_LONG).show();
-                } catch (PackageManager.NameNotFoundException ignored) {}
+            @SuppressWarnings("unchecked")
+            final String permName = ((Tuple<String, Integer>) arrayOfThings[index]).getFirst();
+            @SuppressWarnings("unchecked")
+            final int permFlags = ((Tuple<String, Integer>) arrayOfThings[index]).getSecond();
+            PermissionInfo permissionInfo = null;
+            try {
+                permissionInfo = mPackageManager.getPermissionInfo(permName, PackageManager.GET_META_DATA);
+            } catch (PackageManager.NameNotFoundException ignore) {}
+
+            // Set permission name
+            viewHolder.textView1.setText(permName);
+            // Permission Switch
+            if ((permFlags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
+                // Permission granted
+                viewHolder.toggleSwitch.setChecked(true);
+            } else {
+                viewHolder.toggleSwitch.setChecked(false);
+            }
+            // FIXME: Grant/revoke permissions using AppOpsService
+            viewHolder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    // Enable permission
+                    if (!Shell.SH.run(String.format("pm grant %s %s", mPackageName, permName)).isSuccessful()) {
+                        // try root
+                        if (!Shell.SU.run(String.format("pm grant %s %s", mPackageName, permName)).isSuccessful()) {
+                            Toast.makeText(mActivity, "Failed to grant permission.", Toast.LENGTH_LONG).show();
+                            viewHolder.toggleSwitch.setChecked(false);
+                        }
+                    }
+                } else {
+                    // Disable permission
+                    if (!Shell.SH.run(String.format("pm revoke %s %s", mPackageName, permName)).isSuccessful()) {
+                        // try root
+                        if (!Shell.SU.run(String.format("pm revoke %s %s", mPackageName, permName)).isSuccessful()) {
+                            Toast.makeText(mActivity, "Failed to revoke permission.", Toast.LENGTH_LONG).show();
+                            viewHolder.toggleSwitch.setChecked(true);
+                        }
+                    }
+                }
             });
-
+            // Set others
+            if (permissionInfo != null) {
+                // Description
+                CharSequence description = permissionInfo.loadDescription(mPackageManager);
+                if (description != null) {
+                    viewHolder.textView2.setVisibility(View.VISIBLE);
+                    viewHolder.textView2.setText(description);
+                } else viewHolder.textView2.setVisibility(View.GONE);
+                // Protection level
+                String protectionLevel = Utils.getProtectionLevelString(permissionInfo.protectionLevel);
+                viewHolder.textView3.setText("\u2691 " + protectionLevel);
+                if (protectionLevel.contains("dangerous"))
+                    convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.red));
+                // Set package name
+                if (permissionInfo.packageName != null) {
+                    viewHolder.textView4.setVisibility(View.VISIBLE);
+                    viewHolder.textView4.setText(String.format("%s: %s",
+                            mActivity.getString(R.string.package_name), permissionInfo.packageName));
+                } else viewHolder.textView4.setVisibility(View.GONE);
+                // Set group name
+                if (permissionInfo.group != null) {
+                    viewHolder.textView5.setVisibility(View.VISIBLE);
+                    viewHolder.textView5.setText(String.format("%s: %s",
+                            mActivity.getString(R.string.group), permissionInfo.group));
+                } else viewHolder.textView5.setVisibility(View.GONE);
+            } else {
+                viewHolder.textView2.setVisibility(View.GONE);
+                viewHolder.textView3.setVisibility(View.GONE);
+                viewHolder.textView4.setVisibility(View.GONE);
+                viewHolder.textView5.setVisibility(View.GONE);
+            }
             return convertView;
         }
 

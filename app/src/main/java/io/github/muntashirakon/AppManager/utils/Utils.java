@@ -233,54 +233,54 @@ public class Utils {
         return result.equals("") ? "\u2690" : "\u2691 "+result;
     }
 
+    @NonNull
     public static String getProtectionLevelString(int level) {
-        String protLevel = "????";
+        String protectionLevel = "????";
         switch (level & PermissionInfo.PROTECTION_MASK_BASE) {
             case PermissionInfo.PROTECTION_DANGEROUS:
-                protLevel = "dangerous";
+                protectionLevel = "dangerous";
                 break;
             case PermissionInfo.PROTECTION_NORMAL:
-                protLevel = "normal";
+                protectionLevel = "normal";
                 break;
             case PermissionInfo.PROTECTION_SIGNATURE:
-                protLevel = "signature";
+                protectionLevel = "signature";
                 break;
             case PermissionInfo.PROTECTION_SIGNATURE_OR_SYSTEM:
-                protLevel = "signatureOrSystem";
+                protectionLevel = "signatureOrSystem";
                 break;
         }
         if (Build.VERSION.SDK_INT >= 23){
             if ((level  & PermissionInfo.PROTECTION_FLAG_PRIVILEGED) != 0)
-                protLevel += "|privileged";
+                protectionLevel += "|privileged";
             if ((level  & PermissionInfo.PROTECTION_FLAG_PRE23) != 0)
-                protLevel += "|pre23";
+                protectionLevel += "|pre23";
             if ((level  & PermissionInfo.PROTECTION_FLAG_INSTALLER) != 0)
-                protLevel += "|installer";
+                protectionLevel += "|installer";
             if ((level  & PermissionInfo.PROTECTION_FLAG_VERIFIER) != 0)
-                protLevel += "|verifier";
+                protectionLevel += "|verifier";
             if ((level  & PermissionInfo.PROTECTION_FLAG_PREINSTALLED) != 0)
-                protLevel += "|preinstalled";
+                protectionLevel += "|preinstalled";
             //24
             if ((level  & PermissionInfo.PROTECTION_FLAG_SETUP) != 0)
-                protLevel += "|setup";
+                protectionLevel += "|setup";
             //26
             if ((level  & PermissionInfo.PROTECTION_FLAG_RUNTIME_ONLY) != 0)
-                protLevel += "|runtime";
+                protectionLevel += "|runtime";
             //27
             if ((level  & PermissionInfo.PROTECTION_FLAG_INSTANT) != 0)
-                protLevel += "|instant";
-        }else if ((level & PermissionInfo.PROTECTION_FLAG_SYSTEM) != 0) {
-            protLevel += "|system";
+                protectionLevel += "|instant";
+        } else if ((level & PermissionInfo.PROTECTION_FLAG_SYSTEM) != 0) {
+            protectionLevel += "|system";
         }
-
         if ((level & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0) {
-            protLevel += "|development";
+            protectionLevel += "|development";
         }
         //21
         if ((level & PermissionInfo.PROTECTION_FLAG_APPOP) != 0) {
-            protLevel += "|appop";
+            protectionLevel += "|appop";
         }
-        return protLevel;
+        return protectionLevel;
     }
 
     public static String getFeatureFlagsString(int flags) {
