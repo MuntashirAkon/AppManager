@@ -11,6 +11,11 @@
         android:title="@string/refresh"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_view_settings"
+        android:icon="@drawable/ic_info_outline_black_24dp"
+        android:title="@string/view_in_settings"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_share_apk"
         android:icon="@drawable/ic_share_black_24dp"
         android:title="@string/share_apk"

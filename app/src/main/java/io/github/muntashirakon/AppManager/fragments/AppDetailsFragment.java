@@ -813,24 +813,19 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder.toggleSwitch.setChecked(false);
             }
             // FIXME: Grant/revoke permissions using AppOpsService
+            // FIXME: Remove this switch if root is not available
             viewHolder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
                     // Enable permission
-                    if (!Shell.SH.run(String.format("pm grant %s %s", mPackageName, permName)).isSuccessful()) {
-                        // try root
-                        if (!Shell.SU.run(String.format("pm grant %s %s", mPackageName, permName)).isSuccessful()) {
-                            Toast.makeText(mActivity, "Failed to grant permission.", Toast.LENGTH_LONG).show();
-                            viewHolder.toggleSwitch.setChecked(false);
-                        }
+                    if (!Shell.SU.run(String.format("pm grant %s %s", mPackageName, permName)).isSuccessful()) {
+                        Toast.makeText(mActivity, "Failed to grant permission.", Toast.LENGTH_LONG).show();
+                        viewHolder.toggleSwitch.setChecked(false);
                     }
                 } else {
                     // Disable permission
-                    if (!Shell.SH.run(String.format("pm revoke %s %s", mPackageName, permName)).isSuccessful()) {
-                        // try root
-                        if (!Shell.SU.run(String.format("pm revoke %s %s", mPackageName, permName)).isSuccessful()) {
-                            Toast.makeText(mActivity, "Failed to revoke permission.", Toast.LENGTH_LONG).show();
-                            viewHolder.toggleSwitch.setChecked(true);
-                        }
+                    if (!Shell.SU.run(String.format("pm revoke %s %s", mPackageName, permName)).isSuccessful()) {
+                        Toast.makeText(mActivity, "Failed to revoke permission.", Toast.LENGTH_LONG).show();
+                        viewHolder.toggleSwitch.setChecked(true);
                     }
                 }
             });

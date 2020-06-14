@@ -266,4 +266,9 @@
     <string name="disabled_app">Disabled</string>
     <string name="no_usage_in_this_time_range">No usage in this time range</string>
     <string name="no_content">No content</string>
+    <string name="view_in_settings">View in Settings</string>
+    <string name="uninstall_app_message">Do you want to uninstall this app?</string>
+    <string name="failed_to_uninstall">Failed to uninstall %s.</string>
+    <string name="uninstalled_successfully">%s is successfully uninstalled.</string>
+    <string name="uninstall_system_app_message">This is a system app. Are you sure want to uninstall this app?</string>
 </resources>

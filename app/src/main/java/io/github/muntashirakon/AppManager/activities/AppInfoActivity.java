@@ -2,6 +2,7 @@ package io.github.muntashirakon.AppManager.activities;
 
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageStatsObserver;
@@ -143,6 +144,12 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                 appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, mPackageName);
                 startActivity(appDetailsIntent);
                 return true;
+            case R.id.action_view_settings:
+                Intent infoIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                infoIntent.addCategory(Intent.CATEGORY_DEFAULT);
+                infoIntent.setData(Uri.parse("package:" + mPackageName));
+                startActivity(infoIntent);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -162,6 +169,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_app_info_actions, menu);
+
         if (menu instanceof MenuBuilder) {
             ((MenuBuilder) menu).setOptionalIconsVisible(true);
         }
@@ -224,16 +232,28 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mHorizontalLayout.removeAllViews();
         // Set uninstall
         addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
-            Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
-            uninstallIntent.setData(Uri.parse("package:" + mPackageName));
-            startActivity(uninstallIntent);
-        });
-        // Set app info (open in settings)
-        addToHorizontalLayout(R.string.app_info, R.drawable.ic_info_outline_black_24dp).setOnClickListener(v -> {
-            Intent infoIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            infoIntent.addCategory(Intent.CATEGORY_DEFAULT);
-            infoIntent.setData(Uri.parse("package:" + mPackageName));
-            startActivity(infoIntent);
+            // FIXME: Use default uninstaller if root is unavailable
+            new AlertDialog.Builder(this, R.style.CustomDialog)
+                    .setTitle(mPackageLabel)
+                    .setMessage(((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) ?
+                            R.string.uninstall_system_app_message : R.string.uninstall_app_message)
+                    .setPositiveButton(R.string.uninstall, (dialog, which) -> {
+                        // Try without root first then with root
+                        if (Shell.SU.run(String.format("pm uninstall %s", mPackageName)).isSuccessful()) {
+                            Toast.makeText(mActivity, String.format(getString(R.string.uninstalled_successfully), mPackageLabel), Toast.LENGTH_LONG).show();
+                            finish();
+                        } else {
+                            Toast.makeText(mActivity, String.format(getString(R.string.failed_to_uninstall), mPackageLabel), Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                        if (dialog != null) dialog.cancel();
+                    })
+                    .show();
+
+//            Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
+//            uninstallIntent.setData(Uri.parse("package:" + mPackageName));
+//            startActivity(uninstallIntent);
         });
         // Set manifest
         addToHorizontalLayout(R.string.manifest, R.drawable.ic_tune_black_24dp).setOnClickListener(v -> {
