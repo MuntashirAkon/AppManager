@@ -43,6 +43,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
@@ -219,15 +220,17 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0)
                 addChip(R.string.updated_app);
         } else addChip(R.string.user_app);
-        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
+        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
             addChip(R.string.debuggable);
-        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
+        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
             addChip(R.string.test_only);
         if ((mApplicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) == 0)
             addChip(R.string.no_code);
         if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)
-            addChip(R.string.requested_large_heap, Color.RED);
-        if (!mApplicationInfo.enabled) addChip(R.string.disabled_app, Color.BLUE);
+            addChip(R.string.requested_large_heap, R.color.red);
+        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0)
+            addChip(R.string.stopped, R.color.blue_green);
+        if (!mApplicationInfo.enabled) addChip(R.string.disabled_app, R.color.disabled_app);
     }
 
     private void setHorizontalView() {
@@ -255,6 +258,29 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                     })
                     .show();
         });
+        // Enable/disable app
+        // FIXME: Get current user
+        if (mApplicationInfo.enabled) {
+            // Disable app
+            addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> {
+                if (Shell.SU.run(String.format("pm disable %s", mPackageName)).isSuccessful()) {
+                    // Refresh
+                    getPackageInfoOrFinish(mPackageName);
+                } else {
+                    Toast.makeText(mActivity, String.format(getString(R.string.failed_to_disable), mPackageLabel), Toast.LENGTH_LONG).show();
+                }
+            });
+        } else {
+            // Enable app
+            addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> {
+                if (Shell.SU.run(String.format("pm enable %s", mPackageName)).isSuccessful()) {
+                    // Refresh
+                    getPackageInfoOrFinish(mPackageName);
+                } else {
+                    Toast.makeText(mActivity, String.format(getString(R.string.failed_to_enable), mPackageLabel), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
         // Set manifest
         addToHorizontalLayout(R.string.manifest, R.drawable.ic_tune_black_24dp).setOnClickListener(v -> {
             Intent intent = new Intent(mActivity, ManifestViewerActivity.class);
@@ -459,10 +485,10 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         });
     }
 
-    private void addChip(@StringRes int resId, int color) {
+    private void addChip(@StringRes int resId, @ColorRes int color) {
         Chip chip = new Chip(this);
         chip.setText(resId);
-        chip.setTextColor(color);
+        chip.setChipBackgroundColorResource(color);
         mTagCloud.addView(chip);
     }
 

@@ -9,6 +9,7 @@
     <color name="ocean_blue">#2B65EC</color>
 
     <color name="red">#B3FF0000</color>
+    <color name="disabled_app">@color/egg_yellows</color>
     <color name="ten_percent_black">#1A000000</color>
 
     <color name="pure_red">#FF0000</color>

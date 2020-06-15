@@ -535,7 +535,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             // If the app is disabled, add an ocean blue background
             if (!info.enabled) {
-                view.setBackgroundColor(mActivity.getResources().getColor(R.color.ocean_blue));
+                view.setBackgroundColor(mActivity.getResources().getColor(R.color.disabled_app));
             }
             // Add yellow star if the app is in debug mode
             holder.favorite_icon.setVisibility(item.star ? View.VISIBLE : View.INVISIBLE);
@@ -600,7 +600,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 holder.packageName.setText(info.packageName);
             }
             // Set package name color to blue if the app is in stopped/force closed state
-            if ((info.flags & ApplicationInfo.FLAG_STOPPED) != 0) holder.packageName.setTextColor(Color.BLUE);
+            if ((info.flags & ApplicationInfo.FLAG_STOPPED) != 0)
+                holder.packageName.setTextColor(mActivity.getResources().getColor(R.color.blue_green));
             else holder.packageName.setTextColor(mColorSecondary);
             // Set version (along with HW accelerated, debug and test only flags)
             CharSequence version = holder.version.getText();

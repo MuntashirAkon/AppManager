@@ -271,4 +271,9 @@
     <string name="failed_to_uninstall">Failed to uninstall %s.</string>
     <string name="uninstalled_successfully">%s is successfully uninstalled.</string>
     <string name="uninstall_system_app_message">This is a system app. Are you sure want to uninstall this app?</string>
+    <string name="stopped">Stopped</string>
+    <string name="disable">Disable</string>
+    <string name="enable">Enable</string>
+    <string name="failed_to_disable">Failed to disable %s.</string>
+    <string name="failed_to_enable">Failed to enable %s.</string>
 </resources>
