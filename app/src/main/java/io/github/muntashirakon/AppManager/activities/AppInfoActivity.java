@@ -280,7 +280,8 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         // Force stop
         if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
             addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> {
-                if (Shell.SU.run(String.format("am force-stop %s", mPackageName)).isSuccessful()) {
+                if (Shell.SH.run(String.format("am force-stop %s", mPackageName)).isSuccessful()
+                        || Shell.SU.run(String.format("am force-stop %s", mPackageName)).isSuccessful()) {
                     // Refresh
                     getPackageInfoOrFinish(mPackageName);
                 } else {
