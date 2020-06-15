@@ -805,30 +805,6 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
 
             // Set permission name
             viewHolder.textView1.setText(permName);
-            // Permission Switch
-            if ((permFlags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
-                // Permission granted
-                viewHolder.toggleSwitch.setChecked(true);
-            } else {
-                viewHolder.toggleSwitch.setChecked(false);
-            }
-            // FIXME: Grant/revoke permissions using AppOpsService
-            // FIXME: Remove this switch if root is not available
-            viewHolder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked) {
-                    // Enable permission
-                    if (!Shell.SU.run(String.format("pm grant %s %s", mPackageName, permName)).isSuccessful()) {
-                        Toast.makeText(mActivity, "Failed to grant permission.", Toast.LENGTH_LONG).show();
-                        viewHolder.toggleSwitch.setChecked(false);
-                    }
-                } else {
-                    // Disable permission
-                    if (!Shell.SU.run(String.format("pm revoke %s %s", mPackageName, permName)).isSuccessful()) {
-                        Toast.makeText(mActivity, "Failed to revoke permission.", Toast.LENGTH_LONG).show();
-                        viewHolder.toggleSwitch.setChecked(true);
-                    }
-                }
-            });
             // Set others
             if (permissionInfo != null) {
                 // Description
@@ -854,11 +830,38 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                     viewHolder.textView5.setText(String.format("%s: %s",
                             mActivity.getString(R.string.group), permissionInfo.group));
                 } else viewHolder.textView5.setVisibility(View.GONE);
+                // Permission Switch
+                if (protectionLevel.contains("dangerous")) {
+                    viewHolder.toggleSwitch.setVisibility(View.VISIBLE);
+                    if ((permFlags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
+                        // Permission granted
+                        viewHolder.toggleSwitch.setChecked(true);
+                    } else {
+                        viewHolder.toggleSwitch.setChecked(false);
+                    }
+                    // FIXME: Remove this switch if root is not available
+                    viewHolder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (isChecked) {
+                            // Enable permission
+                            if (!Shell.SU.run(String.format("pm grant %s %s", mPackageName, permName)).isSuccessful()) {
+                                Toast.makeText(mActivity, "Failed to grant permission.", Toast.LENGTH_LONG).show();
+                                viewHolder.toggleSwitch.setChecked(false);
+                            }
+                        } else {
+                            // Disable permission
+                            if (!Shell.SU.run(String.format("pm revoke %s %s", mPackageName, permName)).isSuccessful()) {
+                                Toast.makeText(mActivity, "Failed to revoke permission.", Toast.LENGTH_LONG).show();
+                                viewHolder.toggleSwitch.setChecked(true);
+                            }
+                        }
+                    });
+                } else viewHolder.toggleSwitch.setVisibility(View.GONE);
             } else {
                 viewHolder.textView2.setVisibility(View.GONE);
                 viewHolder.textView3.setVisibility(View.GONE);
                 viewHolder.textView4.setVisibility(View.GONE);
                 viewHolder.textView5.setVisibility(View.GONE);
+                viewHolder.toggleSwitch.setVisibility(View.GONE);
             }
             return convertView;
         }
