@@ -276,4 +276,6 @@
     <string name="enable">Enable</string>
     <string name="failed_to_disable">Failed to disable %s.</string>
     <string name="failed_to_enable">Failed to enable %s.</string>
+    <string name="force_stop">Force Stop</string>
+    <string name="failed_to_stop">Failed to force stop %s.</string>
 </resources>

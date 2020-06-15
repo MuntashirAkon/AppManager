@@ -2,14 +2,12 @@ package io.github.muntashirakon.AppManager.activities;
 
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -17,7 +15,6 @@ import android.os.Bundle;
 import android.os.FileUtils;
 import android.provider.Settings;
 import android.text.format.Formatter;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +27,6 @@ import android.widget.Toast;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.classysharkandroid.utils.IOUtils;
-import com.jaredrummler.android.shell.CommandResult;
 import com.jaredrummler.android.shell.Shell;
 
 import java.io.File;
@@ -278,6 +274,17 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                     getPackageInfoOrFinish(mPackageName);
                 } else {
                     Toast.makeText(mActivity, String.format(getString(R.string.failed_to_enable), mPackageLabel), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+        // Force stop
+        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
+            addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> {
+                if (Shell.SU.run(String.format("am force-stop %s", mPackageName)).isSuccessful()) {
+                    // Refresh
+                    getPackageInfoOrFinish(mPackageName);
+                } else {
+                    Toast.makeText(mActivity, String.format(getString(R.string.failed_to_stop), mPackageLabel), Toast.LENGTH_LONG).show();
                 }
             });
         }
