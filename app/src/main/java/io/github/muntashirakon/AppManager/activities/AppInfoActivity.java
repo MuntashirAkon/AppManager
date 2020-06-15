@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.FileUtils;
 import android.provider.Settings;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.classysharkandroid.utils.IOUtils;
+import com.jaredrummler.android.shell.CommandResult;
 import com.jaredrummler.android.shell.Shell;
 
 import java.io.File;
@@ -232,14 +234,16 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mHorizontalLayout.removeAllViews();
         // Set uninstall
         addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
-            // FIXME: Use default uninstaller if root is unavailable
+            boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+            // FIXME: Uninstall for all users
             new AlertDialog.Builder(this, R.style.CustomDialog)
                     .setTitle(mPackageLabel)
-                    .setMessage(((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) ?
+                    .setMessage(isSystemApp ?
                             R.string.uninstall_system_app_message : R.string.uninstall_app_message)
                     .setPositiveButton(R.string.uninstall, (dialog, which) -> {
                         // Try without root first then with root
-                        if (Shell.SU.run(String.format("pm uninstall %s", mPackageName)).isSuccessful()) {
+                        if (Shell.SH.run(String.format("pm uninstall --user 0 %s", mPackageName)).isSuccessful()
+                                || Shell.SU.run(String.format("pm uninstall --user 0 %s", mPackageName)).isSuccessful()) {
                             Toast.makeText(mActivity, String.format(getString(R.string.uninstalled_successfully), mPackageLabel), Toast.LENGTH_LONG).show();
                             finish();
                         } else {
@@ -250,10 +254,6 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                         if (dialog != null) dialog.cancel();
                     })
                     .show();
-
-//            Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
-//            uninstallIntent.setData(Uri.parse("package:" + mPackageName));
-//            startActivity(uninstallIntent);
         });
         // Set manifest
         addToHorizontalLayout(R.string.manifest, R.drawable.ic_tune_black_24dp).setOnClickListener(v -> {
