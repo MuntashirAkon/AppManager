@@ -1,1 +1,1 @@
-App Manager - Manage & view your apps
+App Manager - Android package manager

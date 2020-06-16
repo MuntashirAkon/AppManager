@@ -1,1 +1,1 @@
-Yet another android package manager and viewer.
+A full-featured open source package manager for android.
