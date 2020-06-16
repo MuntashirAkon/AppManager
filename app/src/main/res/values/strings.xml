@@ -57,16 +57,16 @@
         \n- View app usage statistics by clicking on the three verticals dots on the right (requires
         “Usage Access” permission)
         \n
-        \n<b>Main window</b> color codes:
+        \nList colors used in the main window and their meaning:
         \n<u>Red</u>: Doesn\'t allow clearing data storage
         \n<u>Magenta</u>: Persistent app
-        \n<u>Blue</u>: Stopped / Forced closed
+        \n<u>Blue-green</u>: Stopped / Forced closed
         \n<u>Orange</u> <i>Date</i>: Can read logs
         \n<u>Orange</u> <i>UID</i>: Shared app
         \n<u>Orange</u> <i>API</i>: Uses cleartext traffic
         \n<u>Green</u>: Inactive app
         \n<u>Yellow Star</u>: App in debug mode
-        \n<u>Ocean blue background</u>: Disabled app
+        \n<u>Yellow/blue background</u>: Disabled app
         \n
         \nApp can be <b>User</b> or <b>System</b> with following codes:
         \n<i>X</i>: Multi architecture
@@ -81,22 +81,26 @@
         \n<i>debug</i>: Debuggable app
         \n
         \n<b>App Info Window</b>
-        \n- Uninstall any user app
+        \n- Uninstall/enable/disable/force-stop an app (some operations require root permission)
         \n- View dynamic manifest of an app
         \n- View shared preferences
         \n- Scan for trackers using Exodus
         \n- View/edit/delete shared preferences (requires root)
         \n- View various paths and directories related to the app and open them with external app
         \n- View installation date, update date, installer app
+        \n- View storage information (requires “Usage Access” permission)
+        \n- Delete app cache/data (requires root permission)
         \n
         \n<b>App Details Window</b>
-        \n- Double clicking on any permission in the <b>Uses Permissions</b> tab will display a toast
-        containing information about the permission.
+        \n- Dangerous permissions can be revoked in the <b>Uses Permissions</b> tab (which lists
+        permission from the &lt;uses-permission&gt; tags of the manifest) (requires root permission)
         \n- Available activities can be launched from the <b>Activities</b> tab. Also, customizable
-        shortcuts can be made.
-        \n- Activities, receivers and services can be blocked using the block button on the right
-        side of each item. But blocking isn\'t enabled by default. To enable blocking click on “enable
-        blocking” in the menu located in the upper-right side of the window. (Requires root permission)
+        shortcuts can be made
+        \n- Activities, broadcast receivers, services and providers (aka, components) can be blocked
+        using the block button on the right side of each item. But blocking isn\'t enabled by
+        default. To enable blocking click on “enable blocking” in the menu located in the
+        upper-right side of the window (Requires root permission)
+        \n- Blocked components and dangerous permissions have red background color
         \n
         \n<b>Exodus Window</b>
         \n- ° for \u03b5\' missing
@@ -175,7 +179,7 @@
         \n- <a href="https://codeberg.org/fynngodau/usageDirect">usageDirect</a> and
         <a href="https://github.com/ColeMurray/UsageStatsSample">UsageStatsSample</a>
         \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-        \nMost of the works done here are based on their works.
+        \nLogo credit: <a href="https://github.com/Atrate">Atrate</a>.
     </string>
     <string name="word_wrap">Toggle word wrap</string>
     <string name="class_viewer">Class Viewer</string>
