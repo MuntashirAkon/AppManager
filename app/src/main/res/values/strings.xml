@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">App Manager</string>
-    <string name="loading_apps">Loading applications</string>
-    <string name="is_system_app">System app</string>
     <string name="uninstall">Uninstall</string>
     <string name="permissions">Uses permissions</string>
     <string name="require_no_permission">No permission required</string>
@@ -41,7 +39,6 @@
     <string name="configurations">Configurations</string>
     <string name="no_configurations">No configurations</string>
     <string name="input_features">Input features</string>
-    <string name="view_manifest">View Manifest file</string>
     <string name="manifest">Manifest</string>
     <string name="error">Error</string>
     <string name="loading">Loading &#8230;</string> <!-- &#8230; = ... -->
@@ -111,17 +108,12 @@
         \n- Use the add button to add new entry
         \n- To save or delete the file, use the menu on the top-right of the window
     </string>
-    <string name="size_details">Size details</string>
-    <string name="internal">Internal</string>
-    <string name="external">External</string>
-    <string name="code_size">Code (apk file)</string>
     <string name="data_size">Data</string>
     <string name="cache_size">Cache</string>
     <string name="obb_size">Obb</string>
     <string name="media_size">Media</string>
     <string name="app_not_installed">Application not installed</string>
     <string name="system">System</string>
-    <string name="system_u">System UPDATED</string>
     <string name="user">User</string>
     <string name="sort">Sort</string>
     <string name="version">Version %s (%d)</string>
@@ -130,7 +122,6 @@
     <string name="fdroid">F-Droid</string>
     <string name="system_app">System App</string>
     <string name="user_app">User App</string>
-    <string name="system_app_updated">System App (Updated)</string>
     <string name="paths_and_directories">Paths &amp; Directories</string>
     <string name="source_dir">Source Directory</string>
     <string name="data_dir">Data Directory</string>
@@ -148,7 +139,6 @@
     <string name="instructions">Instructions</string>
     <string name="error_creating_shortcut">Error creating shortcut</string>
     <string name="error_verbose_pin_shortcut">Current launcher does not support PinShortcut. Unable to create shortcut.</string>
-    <string name="creating_application_shortcut">Creating application shortcut for %s</string>
     <string name="starting_activity">Starting activity: %s</string>
     <string name="create_shortcut">Create Shortcut</string>
     <string name="edit_shortcut">Edit Shortcut</string>

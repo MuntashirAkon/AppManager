@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="list_label_max_width">180dp</dimen>
-    <dimen name="header_text_margin">7dp</dimen>
-
     <dimen name="padding_very_large">32dp</dimen>
     <dimen name="padding_large">24dp</dimen>
     <dimen name="padding_medium">16dp</dimen>

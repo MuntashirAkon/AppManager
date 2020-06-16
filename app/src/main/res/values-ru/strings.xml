@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">apps_Packages Info</string>
-    <string name="loading_apps">Получаем приложения</string>
-    <string name="is_system_app">Системное приложение</string>
     <string name="uninstall">Удалить</string>
     <string name="permissions">Используемые разрешения</string>
     <string name="require_no_permission">Разрешения не требуются</string>
@@ -40,7 +38,6 @@
     <string name="configurations">Конфигурации</string>
     <string name="no_configurations">Нет конфигураций</string>
     <string name="input_features">Input features</string>
-    <string name="view_manifest">Открыть файл Manifest</string>
     <string name="manifest">Manifest</string>
     <string name="error">Ошибка</string>
     <string name="loading">Загрузка…</string> <!-- &#8230; = ... -->
@@ -53,10 +50,6 @@
     <string name="netstats_msg">Трафик, использованный с момента последнего запуска</string>
 
     <string name="about">О программе</string>
-    <string name="size_details">Размер</string>
-    <string name="internal">Телефон</string>
-    <string name="external">Внешняя память</string>
-    <string name="code_size">Код (файл .apk)</string>
     <string name="data_size">Данные</string>
     <string name="cache_size">Кэш</string>
     <string name="obb_size">Obb</string>

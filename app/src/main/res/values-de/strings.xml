@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">apps_Packages Info</string>
-    <string name="loading_apps">Lade Apps</string>
-    <string name="is_system_app">Systemapp</string>
     <string name="uninstall">Deinstallieren</string>
     <string name="permissions">Benötigte Berechtigungen</string>
     <string name="require_no_permission">Keine besonderen Berechtigungen</string>
@@ -40,7 +38,6 @@
     <string name="configurations">Konfigurationen</string>
     <string name="no_configurations">Keine Konfigurationen</string>
     <string name="input_features">Eingabefunktionen</string>
-    <string name="view_manifest">Manifest ansehen</string>
     <string name="manifest">Manifest</string>
     <string name="error">Fehler</string>
     <string name="loading">Lade &#8230;</string> <!-- &#8230; = ... -->
@@ -55,10 +52,6 @@
 
     <string name="about">Über</string>
 
-    <string name="size_details">Größendetails</string>
-    <string name="internal">Intern</string>
-    <string name="external">Extern</string>
-    <string name="code_size">Code (APK Datei)</string>
     <string name="data_size">Daten</string>
     <string name="cache_size">Cache</string>
     <string name="obb_size">Obb</string>
@@ -67,7 +60,6 @@
     <string name="app_not_installed">App ist nicht installiert</string>
 
     <string name="system">System</string>
-    <string name="system_u">System UPDATED</string>
     <string name="user">Benutzer</string>
     <string name="sort">Sortieren</string>
 </resources>
