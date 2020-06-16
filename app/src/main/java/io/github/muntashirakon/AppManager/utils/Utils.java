@@ -1,10 +1,13 @@
 package io.github.muntashirakon.AppManager.utils;
 
+import android.Manifest;
+import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
@@ -44,6 +47,26 @@ import javax.xml.xpath.XPathFactory;
 import androidx.annotation.NonNull;
 
 public class Utils {
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean checkUsageStatsPermission(@NonNull Context context) {
+        AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+        assert appOpsManager != null;
+        final int mode;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            mode = appOpsManager.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
+                    android.os.Process.myUid(), context.getPackageName());
+        } else {
+            //noinspection deprecation
+            mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
+                    android.os.Process.myUid(), context.getPackageName());
+        }
+        if (mode == AppOpsManager.MODE_DEFAULT
+                && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            return context.checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS)
+                    == PackageManager.PERMISSION_GRANTED;
+        }
+        return mode == AppOpsManager.MODE_ALLOWED;
+    }
 
     public static int getArrayLengthSafely(Object[] array) {
         return array == null ? 0 : array.length;

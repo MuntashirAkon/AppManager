@@ -1,9 +1,7 @@
 package io.github.muntashirakon.AppManager.activities;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Intent;
@@ -41,6 +39,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class AppUsageActivity extends AppCompatActivity {
     private static final String SYS_USAGE_STATS_SERVICE = "usagestats";
@@ -110,7 +109,7 @@ public class AppUsageActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         // Check permission
-        if (!checkUsageStatsPermission()) promptForUsageStatsPermission();
+        if (!Utils.checkUsageStatsPermission(this)) promptForUsageStatsPermission();
         else getAppUsage();
     }
 
@@ -126,7 +125,7 @@ public class AppUsageActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         switch (current_interval) {
             case USAGE_DAILY:
-                cal.add(Calendar.MINUTE, -1);
+                cal.add(Calendar.HOUR_OF_DAY, -cal.get(Calendar.HOUR_OF_DAY));
                 break;
             case USAGE_WEEKLY:
                 cal.add(Calendar.DAY_OF_YEAR, -7);
@@ -177,26 +176,6 @@ public class AppUsageActivity extends AppCompatActivity {
                 .setNegativeButton(getString(R.string.go_back), (dialog, which) -> finish())
                 .setCancelable(false)
                 .show();
-    }
-
-    private boolean checkUsageStatsPermission() {
-        AppOpsManager appOpsManager = (AppOpsManager) getSystemService(APP_OPS_SERVICE);
-        assert appOpsManager != null;
-        final int mode;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-            mode = appOpsManager.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
-                    android.os.Process.myUid(), getPackageName());
-        } else {
-            //noinspection deprecation
-            mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
-                    android.os.Process.myUid(), getPackageName());
-        }
-        if (mode == AppOpsManager.MODE_DEFAULT
-                && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            return checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS)
-                    == PackageManager.PERMISSION_GRANTED;
-        }
-        return mode == AppOpsManager.MODE_ALLOWED;
     }
 
     private void setUsageSummary() {

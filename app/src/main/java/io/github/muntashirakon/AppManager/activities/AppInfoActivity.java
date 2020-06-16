@@ -1,7 +1,10 @@
 package io.github.muntashirakon.AppManager.activities;
 
 import android.annotation.SuppressLint;
+import android.app.usage.StorageStats;
+import android.app.usage.StorageStatsManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageStatsObserver;
@@ -13,6 +16,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.FileUtils;
+import android.os.Process;
 import android.provider.Settings;
 import android.text.format.Formatter;
 import android.view.Menu;
@@ -32,6 +36,7 @@ import com.jaredrummler.android.shell.Shell;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -103,7 +108,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mHorizontalLayout = findViewById(R.id.horizontal_layout);
         mTagCloud = findViewById(R.id.tag_cloud);
         mAccentColor = Utils.getThemeColor(this, android.R.attr.colorAccent);
-        getPackageInfoOrFinish(mPackageName);
+        getPackageInfoOrFinish();
     }
 
     @Override
@@ -114,7 +119,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                 return true;
             case R.id.action_refresh_detail:
                 Toast.makeText(this, getString(R.string.refresh), Toast.LENGTH_SHORT).show();
-                getPackageInfoOrFinish(mPackageName);
+                getPackageInfoOrFinish();
                 return true;
             case R.id.action_share_apk:
                 try {
@@ -177,14 +182,14 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
     @Override
     public void onRefresh() {
-        getPackageInfoOrFinish(mPackageName);
+        getPackageInfoOrFinish();
         mSwipeRefresh.setRefreshing(false);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        getPackageInfoOrFinish(mPackageName);
+        getPackageInfoOrFinish();
     }
 
     /**
@@ -261,7 +266,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> {
                 if (Shell.SU.run(String.format("pm disable %s", mPackageName)).isSuccessful()) {
                     // Refresh
-                    getPackageInfoOrFinish(mPackageName);
+                    getPackageInfoOrFinish();
                 } else {
                     Toast.makeText(mActivity, String.format(getString(R.string.failed_to_disable), mPackageLabel), Toast.LENGTH_LONG).show();
                 }
@@ -271,7 +276,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> {
                 if (Shell.SU.run(String.format("pm enable %s", mPackageName)).isSuccessful()) {
                     // Refresh
-                    getPackageInfoOrFinish(mPackageName);
+                    getPackageInfoOrFinish();
                 } else {
                     Toast.makeText(mActivity, String.format(getString(R.string.failed_to_enable), mPackageLabel), Toast.LENGTH_LONG).show();
                 }
@@ -283,7 +288,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                 if (Shell.SH.run(String.format("am force-stop %s", mPackageName)).isSuccessful()
                         || Shell.SU.run(String.format("am force-stop %s", mPackageName)).isSuccessful()) {
                     // Refresh
-                    getPackageInfoOrFinish(mPackageName);
+                    getPackageInfoOrFinish();
                 } else {
                     Toast.makeText(mActivity, String.format(getString(R.string.failed_to_stop), mPackageLabel), Toast.LENGTH_LONG).show();
                 }
@@ -467,11 +472,13 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         // Netstat
         mList.addItemWithTitle(getString(R.string.netstats_msg), true);
         mList.item_title.setTextColor(mAccentColor);
-
         Tuple<String, String> uidNetStats = getNetStats(mApplicationInfo.uid);
         mList.addItemWithTitleSubtitle(getString(R.string.netstats_transmitted), uidNetStats.getFirst(), ListItemCreator.SELECTABLE);
         mList.addItemWithTitleSubtitle(getString(R.string.netstats_received), uidNetStats.getSecond(), ListItemCreator.SELECTABLE);
         mList.addDivider();
+
+        // Storage and Cache
+        getPackageSizeInfo();
     }
 
     private List<String> getSharedPrefs(@NonNull String sourceDir) {
@@ -523,8 +530,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     private void getPackageSizeInfo() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             try {
-                @SuppressWarnings("JavaReflectionMemberAccess")
-                Method getPackageSizeInfo = PackageManager.class.getMethod(
+                Method getPackageSizeInfo = mPackageManager.getClass().getMethod(
                         "getPackageSizeInfo", String.class, IPackageStatsObserver.class);
 
                 getPackageSizeInfo.invoke(mPackageManager, mPackageName, new IPackageStatsObserver.Stub() {
@@ -532,51 +538,96 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                     public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded) {
                         mActivity.runOnUiThread(() -> {
                             mPackageStats = pStats;
-                            onPackageStatsLoaded();
+                            setStorageInfo(mPackageStats.codeSize
+                                    + mPackageStats.externalCodeSize, mPackageStats.dataSize
+                                    + mPackageStats.externalDataSize, mPackageStats.cacheSize
+                                    + mPackageStats.externalCacheSize, mPackageStats.externalObbSize,
+                                    mPackageStats.externalMediaSize);
                         });
                     }
                 });
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
+        } else {
+            if (!Utils.checkUsageStatsPermission(this)) {
+                new AlertDialog.Builder(this, R.style.CustomDialog)
+                        .setTitle(R.string.grant_usage_access)
+                        .setMessage(R.string.grant_usage_acess_message)
+                        .setPositiveButton(R.string.go, (dialog, which) -> startActivityForResult(new Intent(
+                                Settings.ACTION_USAGE_ACCESS_SETTINGS), 0))
+                        .setNegativeButton(getString(android.R.string.cancel), null)
+                        .setCancelable(false)
+                        .show();
+                return;
+            }
+            try {
+                StorageStatsManager storageStatsManager = (StorageStatsManager) getSystemService(Context.STORAGE_STATS_SERVICE);
+                StorageStats storageStats = storageStatsManager.queryStatsForPackage(mApplicationInfo.storageUuid, mPackageName, Process.myUserHandle());
+                // TODO: List obb and media size
+                long cacheSize = storageStats.getCacheBytes();
+                setStorageInfo(storageStats.getAppBytes(), storageStats.getDataBytes() - cacheSize, cacheSize, 0, 0);
+            } catch (IOException | PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private void onPackageStatsLoaded() {
-        if (mPackageStats == null)
-            return;
-
-        TextView sizeCodeView = findViewById(R.id.size_code);
-        sizeCodeView.setText(getReadableSize(mPackageStats.codeSize));
-
-        TextView sizeCacheView = findViewById(R.id.size_cache);
-        sizeCacheView.setText(getReadableSize(mPackageStats.cacheSize));
-
-        TextView sizeDataView = findViewById(R.id.size_data);
-        sizeDataView.setText(getReadableSize(mPackageStats.dataSize));
-
-        TextView sizeExtCodeView = findViewById(R.id.size_ext_code);
-        sizeExtCodeView.setText(getReadableSize(mPackageStats.externalCodeSize));
-
-        TextView sizeExtCacheView = findViewById(R.id.size_ext_cache);
-        sizeExtCacheView.setText(getReadableSize(mPackageStats.externalCacheSize));
-
-        TextView sizeExtDataView = findViewById(R.id.size_ext_data);
-        sizeExtDataView.setText(getReadableSize(mPackageStats.externalDataSize));
-
-        TextView sizeObb = findViewById(R.id.size_ext_obb);
-        sizeObb.setText(getReadableSize(mPackageStats.externalObbSize));
-
-        TextView sizeMedia = findViewById(R.id.size_ext_media);
-        sizeMedia.setText(getReadableSize(mPackageStats.externalMediaSize));
+    private void setStorageInfo(long codeSize, long dataSize, long cacheSize, long obbSize, long mediaSize) {
+        mList.addItemWithTitle(getString(R.string.storage_and_cache), true);
+        mList.item_title.setTextColor(mAccentColor);
+        // Code size
+        mList.addItemWithTitleSubtitle(getString(R.string.app_size), getReadableSize(codeSize),
+                ListItemCreator.SELECTABLE);
+        // Data size
+        mList.addItemWithTitleSubtitle(getString(R.string.data_size), getReadableSize(dataSize),
+                ListItemCreator.SELECTABLE);
+        mList.setOpen(v -> {
+            // Clear data
+            if(Shell.SU.run(String.format("pm clear %s", mPackageName)).isSuccessful()) {
+                getPackageInfoOrFinish();
+            }
+        });
+        mList.item_open.setImageDrawable(getDrawable(R.drawable.ic_delete_black_24dp));
+        // Cache size
+        mList.addItemWithTitleSubtitle(getString(R.string.cache_size), getReadableSize(cacheSize),
+                ListItemCreator.SELECTABLE);
+        mList.setOpen(v -> {
+            StringBuilder command = new StringBuilder(String.format("rm -rf %s/cache %s/code_cache",
+                    mApplicationInfo.dataDir, mApplicationInfo.dataDir));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                if (!mApplicationInfo.dataDir.equals(mApplicationInfo.deviceProtectedDataDir)) {
+                    command.append(String.format(" %s/cache %s/code_cache",
+                            mApplicationInfo.deviceProtectedDataDir, mApplicationInfo.deviceProtectedDataDir));
+                }
+            }
+            File[] cacheDirs = getExternalCacheDirs();
+            for(File cacheDir: cacheDirs) {
+                String extCache = cacheDir.getAbsolutePath().replace(getPackageName(), mPackageName);
+                command.append(" ").append(extCache);
+            }
+            if (Shell.SU.run(command.toString()).isSuccessful()) {
+                getPackageInfoOrFinish();
+            }
+        });
+        mList.item_open.setImageDrawable(getDrawable(R.drawable.ic_delete_black_24dp));
+        // OBB size
+        if (obbSize != 0)
+            mList.addItemWithTitleSubtitle(getString(R.string.obb_size), getReadableSize(obbSize),
+                    ListItemCreator.SELECTABLE);
+        // Media size
+        if (mediaSize != 0)
+            mList.addItemWithTitleSubtitle(getString(R.string.media_size), getReadableSize(mediaSize),
+                    ListItemCreator.SELECTABLE);
+        mList.addItemWithTitleSubtitle(getString(R.string.total_size), getReadableSize(codeSize
+                + dataSize + cacheSize + obbSize + mediaSize), ListItemCreator.SELECTABLE);
+        mList.addDivider();
     }
 
     /**
      * Get package info.
-     * @param packageName Package name (e.g. com.android.wallpaper)
      */
-    @SuppressLint("PackageManagerGetSignatures")
-    private void getPackageInfoOrFinish(String packageName) {
+    private void getPackageInfoOrFinish() {
         try {
             final int signingCertFlag;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -584,13 +635,13 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             } else {
                 signingCertFlag = PackageManager.GET_SIGNATURES;
             }
-            mPackageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
+            mPackageInfo = mPackageManager.getPackageInfo(mPackageName, PackageManager.GET_PERMISSIONS
                     | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                     | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
                     | signingCertFlag | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
 
             if (mPackageInfo == null) {
-                Toast.makeText(this, mPackageName + ": " + getString(R.string.app_not_installed), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, this.mPackageName + ": " + getString(R.string.app_not_installed), Toast.LENGTH_LONG).show();
                 finish();
                 return;
             }
@@ -604,8 +655,6 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             setHeaderView();
             setHorizontalView();
             setVerticalView();
-            // Load package size info
-            getPackageSizeInfo();
         } catch (PackageManager.NameNotFoundException e) {
             finish();
         }

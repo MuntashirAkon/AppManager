@@ -278,4 +278,7 @@
     <string name="failed_to_enable">Failed to enable %s.</string>
     <string name="force_stop">Force Stop</string>
     <string name="failed_to_stop">Failed to force stop %s.</string>
+    <string name="storage_and_cache">Storage &amp; Cache</string>
+    <string name="total_size">Total</string>
+    <string name="app_size">App</string>
 </resources>
