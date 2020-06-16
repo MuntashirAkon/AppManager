@@ -126,7 +126,7 @@ public class AppUsageActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         switch (current_interval) {
             case USAGE_DAILY:
-                cal.add(Calendar.HOUR_OF_DAY, -cal.get(Calendar.HOUR_OF_DAY));
+                cal.add(Calendar.MINUTE, -1);
                 break;
             case USAGE_WEEKLY:
                 cal.add(Calendar.DAY_OF_YEAR, -7);
@@ -187,6 +187,7 @@ public class AppUsageActivity extends AppCompatActivity {
             mode = appOpsManager.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
                     android.os.Process.myUid(), getPackageName());
         } else {
+            //noinspection deprecation
             mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
                     android.os.Process.myUid(), getPackageName());
         }
@@ -278,7 +279,6 @@ public class AppUsageActivity extends AppCompatActivity {
         }
 
         void setDefaultList(List<UsageStats> list) {
-//            mDefaultList = list;
             mAdapterList = list;
             notifyDataSetChanged();
         }

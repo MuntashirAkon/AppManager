@@ -420,7 +420,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         private Filter mFilter;
         private String mConstraint;
         private List<ApplicationItem> mDefaultList;
-        private List mAdapterList;
+        private List<ApplicationItem> mAdapterList;
 
         private int mColorTransparent;
         private int mColorSemiTransparent;
@@ -480,9 +480,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         if (filterResults.values == null) {
                             mAdapterList = mDefaultList;
                         } else {
-                            mAdapterList = (List) filterResults.values;
+                            //noinspection unchecked
+                            mAdapterList = (List<ApplicationItem>) filterResults.values;
                         }
-
                         notifyDataSetChanged();
                     }
                 };
@@ -496,7 +496,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         public ApplicationItem getItem(int i) {
-            return (ApplicationItem) mAdapterList.get(i);
+            return mAdapterList.get(i);
         }
 
         @Override
@@ -530,7 +530,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             // Alternate background colors
             view.setBackgroundColor(i % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
 
-            ApplicationItem item = (ApplicationItem) mAdapterList.get(i);
+            ApplicationItem item = mAdapterList.get(i);
             ApplicationInfo info = item.applicationInfo;
 
             // If the app is disabled, add an ocean blue background
@@ -658,7 +658,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public int getPositionForSection(int section) {
             for (int i = 0; i < this.getCount(); i++) {
-                String item = ((ApplicationItem) mAdapterList.get(i)).label;
+                String item = mAdapterList.get(i).label;
                 if (item.length() > 0) {
                     if (item.charAt(0) == sections.charAt(section))
                         return i;
