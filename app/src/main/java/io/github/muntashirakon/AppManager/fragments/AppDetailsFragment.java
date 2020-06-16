@@ -6,7 +6,6 @@ import android.app.AppOpsManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;
@@ -41,7 +40,6 @@ import com.jaredrummler.android.shell.Shell;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

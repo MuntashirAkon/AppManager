@@ -424,7 +424,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             flags += (flags.length() == 0 ? "" : "|" ) + "FLAG_TEST_ONLY";
         if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_MULTIARCH) != 0)
             flags += (flags.length() == 0 ? "" : "|" ) + "FLAG_MULTIARCH";
-        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_HARDWARE_ACCELERATED) == 0)
+        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_HARDWARE_ACCELERATED) != 0)
             flags += (flags.length() == 0 ? "" : "|" ) + "FLAG_HARDWARE_ACCELERATED";
 
         if(flags.length() != 0) {
