@@ -383,37 +383,38 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
     private void setVerticalView()  {
         // Paths and directories
-        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.paths_and_directories), true);
+        mList.addItemWithTitle(getString(R.string.paths_and_directories), true);
         mList.item_title.setTextColor(mAccentColor);
         // Source directory (apk path)
-        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.source_dir), mApplicationInfo.sourceDir, ListItemCreator.SELECTABLE);
+        mList.addItemWithTitleSubtitle(getString(R.string.source_dir), mApplicationInfo.sourceDir, ListItemCreator.SELECTABLE);
         openAsFolderInFM((new File(mApplicationInfo.sourceDir)).getParent());
         // Public source directory
         if (!mApplicationInfo.publicSourceDir.equals(mApplicationInfo.sourceDir)) {
-            mList.addMenuItemWithIconTitleSubtitle(getString(R.string.public_source_dir), mApplicationInfo.publicSourceDir, ListItemCreator.SELECTABLE);
+            mList.addItemWithTitleSubtitle(getString(R.string.public_source_dir), mApplicationInfo.publicSourceDir, ListItemCreator.SELECTABLE);
             openAsFolderInFM((new File(mApplicationInfo.publicSourceDir)).getParent());
         }
         // Data dir
-        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.data_dir), mApplicationInfo.dataDir, ListItemCreator.SELECTABLE);
+        mList.addItemWithTitleSubtitle(getString(R.string.data_dir), mApplicationInfo.dataDir, ListItemCreator.SELECTABLE);
         openAsFolderInFM(mApplicationInfo.dataDir);
         // Device-protected data dir
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mList.addMenuItemWithIconTitleSubtitle(getString(R.string.dev_protected_data_dir), mApplicationInfo.deviceProtectedDataDir, ListItemCreator.NO_ACTION);
+            mList.addItemWithTitleSubtitle(getString(R.string.dev_protected_data_dir), mApplicationInfo.deviceProtectedDataDir, ListItemCreator.NO_ACTION);
             openAsFolderInFM(mApplicationInfo.deviceProtectedDataDir);
         }
         // Native JNI library dir
         File nativeLib = new File(mApplicationInfo.nativeLibraryDir);
         if (nativeLib.exists()) {
-            mList.addMenuItemWithIconTitleSubtitle(getString(R.string.native_library_dir), mApplicationInfo.nativeLibraryDir, ListItemCreator.NO_ACTION);
+            mList.addItemWithTitleSubtitle(getString(R.string.native_library_dir), mApplicationInfo.nativeLibraryDir, ListItemCreator.NO_ACTION);
             openAsFolderInFM(mApplicationInfo.nativeLibraryDir);
         }
         mList.addDivider();
 
         // SDK
-        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk), true);
+        mList.addItemWithTitle(getString(R.string.sdk), true);
         mList.item_title.setTextColor(mAccentColor);
-        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk_max), "" + mApplicationInfo.targetSdkVersion, ListItemCreator.SELECTABLE);
-        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk_min), Build.VERSION.SDK_INT > 23 ? "" + mApplicationInfo.minSdkVersion : "N/A", ListItemCreator.SELECTABLE);
+        mList.addInlineItem(getString(R.string.sdk_max), Integer.toString(mApplicationInfo.targetSdkVersion));
+        if (Build.VERSION.SDK_INT > 23)
+            mList.addInlineItem(getString(R.string.sdk_min), Integer.toString(mApplicationInfo.minSdkVersion));
 
         // Set Flags
         String flags = "";
@@ -427,17 +428,17 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             flags += (flags.length() == 0 ? "" : "|" ) + "FLAG_HARDWARE_ACCELERATED";
 
         if(flags.length() != 0) {
-            mList.addMenuItemWithIconTitleSubtitle(getString(R.string.sdk_flags), flags, ListItemCreator.SELECTABLE);
+            mList.addItemWithTitleSubtitle(getString(R.string.sdk_flags), flags, ListItemCreator.SELECTABLE);
             mList.item_subtitle.setTypeface(Typeface.MONOSPACE);
         }
         mList.addDivider();
 
-        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.more_info), true);
+        mList.addItemWithTitle(getString(R.string.more_info), true);
         mList.item_title.setTextColor(mAccentColor);
-        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime), ListItemCreator.NO_ACTION);
-        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime), ListItemCreator.NO_ACTION);
+        mList.addItemWithTitleSubtitle(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime), ListItemCreator.NO_ACTION);
+        mList.addItemWithTitleSubtitle(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime), ListItemCreator.NO_ACTION);
         if(!mPackageName.equals(mApplicationInfo.processName))
-            mList.addMenuItemWithIconTitleSubtitle(getString(R.string.process_name), mApplicationInfo.processName, ListItemCreator.NO_ACTION);
+            mList.addItemWithTitleSubtitle(getString(R.string.process_name), mApplicationInfo.processName, ListItemCreator.NO_ACTION);
         String installerPackageName = mPackageManager.getInstallerPackageName(mPackageName);
         if (installerPackageName != null) {
             String applicationLabel;
@@ -446,30 +447,30 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             } catch (PackageManager.NameNotFoundException e) {
                 applicationLabel = installerPackageName;
             }
-            mList.addMenuItemWithIconTitleSubtitle(getString(R.string.installer_app), applicationLabel, ListItemCreator.SELECTABLE);
+            mList.addItemWithTitleSubtitle(getString(R.string.installer_app), applicationLabel, ListItemCreator.SELECTABLE);
         }
-        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.user_id), Integer.toString(mApplicationInfo.uid), ListItemCreator.SELECTABLE);
+        mList.addItemWithTitleSubtitle(getString(R.string.user_id), Integer.toString(mApplicationInfo.uid), ListItemCreator.SELECTABLE);
         if (mPackageInfo.sharedUserId != null)
-            mList.addMenuItemWithIconTitleSubtitle(getString(R.string.shared_user_id), mPackageInfo.sharedUserId, ListItemCreator.SELECTABLE);
+            mList.addItemWithTitleSubtitle(getString(R.string.shared_user_id), mPackageInfo.sharedUserId, ListItemCreator.SELECTABLE);
         // Main activity
         final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
         if (launchIntentForPackage != null) {
             final ComponentName launchComponentName = launchIntentForPackage.getComponent();
             if (launchComponentName != null) {
                 final String mainActivity = launchIntentForPackage.getComponent().getClassName();
-                mList.addMenuItemWithIconTitleSubtitle(getString(R.string.main_activity), mainActivity, ListItemCreator.SELECTABLE);
+                mList.addItemWithTitleSubtitle(getString(R.string.main_activity), mainActivity, ListItemCreator.SELECTABLE);
                 mList.setOpen(view -> startActivity(launchIntentForPackage));
             }
         }
         mList.addDivider();
 
         // Netstat
-        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_msg), true);
+        mList.addItemWithTitle(getString(R.string.netstats_msg), true);
         mList.item_title.setTextColor(mAccentColor);
 
         Tuple<String, String> uidNetStats = getNetStats(mApplicationInfo.uid);
-        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_transmitted), uidNetStats.getFirst(), ListItemCreator.SELECTABLE);
-        mList.addMenuItemWithIconTitleSubtitle(getString(R.string.netstats_received), uidNetStats.getSecond(), ListItemCreator.SELECTABLE);
+        mList.addItemWithTitleSubtitle(getString(R.string.netstats_transmitted), uidNetStats.getFirst(), ListItemCreator.SELECTABLE);
+        mList.addItemWithTitleSubtitle(getString(R.string.netstats_received), uidNetStats.getSecond(), ListItemCreator.SELECTABLE);
         mList.addDivider();
     }
 
@@ -626,6 +627,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
      * @param uid Application UID
      * @return A tuple consisting of transmitted and received data
      */
+    @NonNull
     private Tuple<String, String> getNetStats(int uid) {
         Tuple<String, String> tuple = new Tuple<>(getReadableSize(0), getReadableSize(0));
         File uidStatsDir = new File(UID_STATS_PATH + uid);

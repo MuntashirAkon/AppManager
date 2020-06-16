@@ -11,10 +11,12 @@ import android.widget.TextView;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.R;
 
 import androidx.cardview.widget.CardView;
 
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class ListItemCreator {
     private Activity mActivity;
     private LinearLayout mListContainer;
@@ -56,10 +58,22 @@ public class ListItemCreator {
         mActivity = activity;
     }
 
-    public View addDivider() {
+    public void addDivider() {
         View divider = mLayoutInflater.inflate(R.layout.item_divider_horizontal, mListContainer, false);
         mListContainer.addView(divider);
-        return divider;
+    }
+
+    public View addInlineItem(@NonNull CharSequence title, @NonNull CharSequence subtitle) {
+        list_item = mLayoutInflater.inflate(R.layout.item_title_subtitle_inline, mListContainer, false);
+        // Item Title
+        item_title = list_item.findViewById(R.id.item_title);
+        item_title.setText(title);
+        // Item Subtitle
+        item_subtitle = list_item.findViewById(R.id.item_subtitle);
+        item_subtitle.setText(subtitle);
+        // Add new menu to the container
+        mListContainer.addView(list_item);
+        return list_item;
     }
 
     /**
@@ -67,36 +81,36 @@ public class ListItemCreator {
      * @param title Title
      * @return The menu item is returned which can be used for other purpose
      */
-    public View addMenuItemWithIconTitleSubtitle(CharSequence title) {
-        return addMenuItemWithIconTitleSubtitle(title, NO_ACTION);
+    public View addItemWithTitle(CharSequence title) {
+        return addItemWithTitle(title, NO_ACTION);
     }
 
-    public View addMenuItemWithIconTitleSubtitle(CharSequence title, float isClickableOrSelectable) {
-        return addMenuItemWithIconTitleSubtitle(title, null, isClickableOrSelectable);
+    public View addItemWithTitle(CharSequence title, float isClickableOrSelectable) {
+        return addItemWithTitleSubtitle(title, null, isClickableOrSelectable);
     }
 
-    public View addMenuItemWithIconTitleSubtitle(CharSequence title, boolean isAllCaps) {
-        return addMenuItemWithIconTitleSubtitle(title, null, EMPTY, false, false, isAllCaps);
+    public View addItemWithTitle(CharSequence title, boolean isAllCaps) {
+        return addItemWithIconTitleSubtitle(title, null, EMPTY, false, false, isAllCaps);
     }
 
-    public View addMenuItemWithIconTitleSubtitle(CharSequence title, float isClickableOrSelectable, boolean isAllCaps) {
-        return addMenuItemWithIconTitleSubtitle(title, null, EMPTY, isClickableOrSelectable == CLICKABLE, isClickableOrSelectable == SELECTABLE, isAllCaps);
+    public View addItemWithTitle(CharSequence title, float isClickableOrSelectable, boolean isAllCaps) {
+        return addItemWithIconTitleSubtitle(title, null, EMPTY, isClickableOrSelectable == CLICKABLE, isClickableOrSelectable == SELECTABLE, isAllCaps);
     }
 
-    public View addMenuItemWithIconTitleSubtitle(CharSequence title, CharSequence subtitle) {
-        return addMenuItemWithIconTitleSubtitle(title, subtitle, EMPTY);
+    public View addItemWithTitleSubtitle(CharSequence title, CharSequence subtitle) {
+        return addItemWithTitleSubtitle(title, subtitle, EMPTY);
     }
 
-    public View addMenuItemWithIconTitleSubtitle(CharSequence title, CharSequence subtitle, float isClickableOrSelectable) {
-        return addMenuItemWithIconTitleSubtitle(title, subtitle, EMPTY, isClickableOrSelectable);
+    public View addItemWithTitleSubtitle(CharSequence title, CharSequence subtitle, float isClickableOrSelectable) {
+        return addItemWithIconTitleSubtitle(title, subtitle, EMPTY, isClickableOrSelectable);
     }
 
-    public View addMenuItemWithIconTitleSubtitle(CharSequence title, CharSequence subtitle, int resIdIcon) {
-        return addMenuItemWithIconTitleSubtitle(title, subtitle, resIdIcon, true, false, false);
+    public View addItemWithTitleSubtitle(CharSequence title, CharSequence subtitle, int resIdIcon) {
+        return addItemWithIconTitleSubtitle(title, subtitle, resIdIcon, true, false, false);
     }
 
-    public View addMenuItemWithIconTitleSubtitle(CharSequence title, CharSequence subtitle, int resIdIcon, float isClickableOrSelectable) {
-        return addMenuItemWithIconTitleSubtitle(title, subtitle, resIdIcon, isClickableOrSelectable == CLICKABLE, isClickableOrSelectable == SELECTABLE, false);
+    public View addItemWithIconTitleSubtitle(CharSequence title, CharSequence subtitle, int resIdIcon, float isClickableOrSelectable) {
+        return addItemWithIconTitleSubtitle(title, subtitle, resIdIcon, isClickableOrSelectable == CLICKABLE, isClickableOrSelectable == SELECTABLE, false);
     }
 
     public void setOpen(@NonNull View.OnClickListener onClickListener) {
@@ -111,7 +125,10 @@ public class ListItemCreator {
      * @param resIdIcon Resource ID for icon (ListItemCreator.EMPTY to leave it empty)
      * @return The menu item is returned which can be used for other purpose
      */
-    private View addMenuItemWithIconTitleSubtitle(CharSequence title, CharSequence subtitle, int resIdIcon, boolean isClickable, boolean isSelectable, boolean isAllCaps) {
+    private View addItemWithIconTitleSubtitle(@NonNull CharSequence title,
+                                              @Nullable CharSequence subtitle, int resIdIcon,
+                                              boolean isClickable, boolean isSelectable,
+                                              boolean isAllCaps) {
         list_item = mLayoutInflater.inflate(R.layout.item_icon_title_subtitle, mListContainer, false);
         // Item Title
         item_title = list_item.findViewById(R.id.item_title);
@@ -122,7 +139,6 @@ public class ListItemCreator {
         item_subtitle = list_item.findViewById(R.id.item_subtitle);
         if (subtitle != null) item_subtitle.setText(subtitle);
         else item_subtitle.setVisibility(View.GONE);
-
         // Set selectable if requested
         if (isSelectable) item_subtitle.setTextIsSelectable(true);
         // Item Icon
