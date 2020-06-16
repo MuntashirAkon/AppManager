@@ -209,16 +209,18 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
      */
     private void getPackageInfo(String packageName) {
         try {
-            final int signingCertFlag;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                signingCertFlag = PackageManager.GET_SIGNING_CERTIFICATES;
-            } else {
-                signingCertFlag = PackageManager.GET_SIGNATURES;
-            }
+            int apiCompatFlags;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                apiCompatFlags = PackageManager.GET_SIGNING_CERTIFICATES;
+            else apiCompatFlags = PackageManager.GET_SIGNATURES;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                apiCompatFlags |= PackageManager.MATCH_DISABLED_COMPONENTS;
+            else apiCompatFlags |= PackageManager.GET_DISABLED_COMPONENTS;
+
             mPackageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
                     | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                     | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
-                    | signingCertFlag | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
+                    | apiCompatFlags | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
 
             if (mPackageInfo == null) return;
 
@@ -289,16 +291,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         switch (index) {
             case SERVICES: return mPackageInfo.services;
             case RECEIVERS: return mPackageInfo.receivers;
-            case PROVIDERS:
-                Set<String> providers = mComponentsApplier.getDisabledProviders();
-                int len = mPackageInfo.providers.length + providers.size();
-                Object[] providerInfoArray = new Object[len];
-                int i = 0;
-                for (ProviderInfo providerInfo: mPackageInfo.providers)
-                    providerInfoArray[i++] = providerInfo;
-                for (String provider : providers)
-                    providerInfoArray[i++] = provider;
-                return providerInfoArray;
+            case PROVIDERS: return mPackageInfo.providers;
             case USES_PERMISSIONS: return permissionsWithFlags;
             case PERMISSIONS: return mPackageInfo.permissions;
             case FEATURES: return mPackageInfo.reqFeatures;
@@ -714,62 +707,9 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            final String providerName;
-            if (arrayOfThings[index] instanceof String) {
-                providerName = (String) arrayOfThings[index];
-                ApplicationInfo applicationInfo = mPackageInfo.applicationInfo;
-                // Label
-                viewHolder.textView1.setText(mPackageManager.getApplicationLabel(applicationInfo));
-                // Icon
-                viewHolder.imageView.setImageDrawable(applicationInfo.loadIcon(mPackageManager));
-            } else {
-                final ProviderInfo providerInfo = (ProviderInfo) arrayOfThings[index];
-                providerName = providerInfo.name;
-                try {
-                    // Label
-                    viewHolder.textView1.setText(providerInfo.loadLabel(mPackageManager));
-                    // Icon
-                    viewHolder.imageView.setImageDrawable(providerInfo.loadIcon(mPackageManager));
-                    // Uri permission
-                    viewHolder.textView3.setText(getString(R.string.grant_uri_permission) + ": " + providerInfo.grantUriPermissions);
-                    // Path permissions
-                    PathPermission[] pathPermissions = providerInfo.pathPermissions;
-                    String finalString;
-                    if (pathPermissions != null) {
-                        StringBuilder builder = new StringBuilder();
-                        String read = getString(R.string.read);
-                        String write = getString(R.string.write);
-                        for (PathPermission permission : pathPermissions) {
-                            builder.append(read).append(": ").append(permission.getReadPermission());
-                            builder.append("/");
-                            builder.append(write).append(": ").append(permission.getWritePermission());
-                            builder.append(", ");
-                        }
-                        Utils.checkStringBuilderEnd(builder);
-                        finalString = builder.toString();
-                    } else
-                        finalString = "null";
-                    viewHolder.textView4.setText(getString(R.string.path_permissions) + ": " + finalString);//+"\n"+providerInfo.readPermission +"\n"+providerInfo.writePermission);
-                    // Pattern matchers
-                    PatternMatcher[] patternMatchers = providerInfo.uriPermissionPatterns;
-                    String finalString1;
-                    if (patternMatchers != null) {
-                        StringBuilder builder = new StringBuilder();
-                        for (PatternMatcher patternMatcher : patternMatchers) {
-                            builder.append(patternMatcher.toString());
-                            builder.append(", ");
-                        }
-                        Utils.checkStringBuilderEnd(builder);
-                        finalString1 = builder.toString();
-                    } else
-                        finalString1 = "null";
-                    viewHolder.textView5.setText(getString(R.string.patterns_allowed) + ": " + finalString1);
-                    // Authority
-                    viewHolder.textView6.setText(getString(R.string.authority) + ": " + providerInfo.authority);
-                } catch (NullPointerException e) {
-                    viewHolder.textView1.setText("ERROR retrieving: try uninstall re-install apk");
-                }
-            }
+            final ProviderInfo providerInfo = (ProviderInfo) arrayOfThings[index];
+            final String providerName = providerInfo.name;
+            // Set background color
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             if (mComponentsApplier.hasComponent(providerName)) {
                 convertView.setBackgroundColor(mColorRed);
@@ -777,6 +717,46 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             } else {
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
             }
+            // Label
+            viewHolder.textView1.setText(providerInfo.loadLabel(mPackageManager));
+            // Icon
+            viewHolder.imageView.setImageDrawable(providerInfo.loadIcon(mPackageManager));
+            // Uri permission
+            viewHolder.textView3.setText(getString(R.string.grant_uri_permission) + ": " + providerInfo.grantUriPermissions);
+            // Path permissions
+            PathPermission[] pathPermissions = providerInfo.pathPermissions;
+            String finalString;
+            if (pathPermissions != null) {
+                StringBuilder builder = new StringBuilder();
+                String read = getString(R.string.read);
+                String write = getString(R.string.write);
+                for (PathPermission permission : pathPermissions) {
+                    builder.append(read).append(": ").append(permission.getReadPermission());
+                    builder.append("/");
+                    builder.append(write).append(": ").append(permission.getWritePermission());
+                    builder.append(", ");
+                }
+                Utils.checkStringBuilderEnd(builder);
+                finalString = builder.toString();
+            } else
+                finalString = "null";
+            viewHolder.textView4.setText(getString(R.string.path_permissions) + ": " + finalString);//+"\n"+providerInfo.readPermission +"\n"+providerInfo.writePermission);
+            // Pattern matchers
+            PatternMatcher[] patternMatchers = providerInfo.uriPermissionPatterns;
+            String finalString1;
+            if (patternMatchers != null) {
+                StringBuilder builder = new StringBuilder();
+                for (PatternMatcher patternMatcher : patternMatchers) {
+                    builder.append(patternMatcher.toString());
+                    builder.append(", ");
+                }
+                Utils.checkStringBuilderEnd(builder);
+                finalString1 = builder.toString();
+            } else
+                finalString1 = "null";
+            viewHolder.textView5.setText(getString(R.string.patterns_allowed) + ": " + finalString1);
+            // Authority
+            viewHolder.textView6.setText(getString(R.string.authority) + ": " + providerInfo.authority);
             // Name
             viewHolder.textView2.setText(providerName.startsWith(mPackageName) ?
                     providerName.replaceFirst(mPackageName, "") : providerName);

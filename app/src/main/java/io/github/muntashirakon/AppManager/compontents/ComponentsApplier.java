@@ -90,7 +90,6 @@ public class ComponentsApplier {
     private File localRulesFile;
     private File localProvidersFile;
     private HashMap<String, ComponentType> disabledComponents;
-    private Set<String> disabledProviders;
     private Set<String> removedProviders;
     private String packageName;
 
@@ -106,7 +105,6 @@ public class ComponentsApplier {
         this.packageName = packageName;
         this.localRulesFile = new File(LOCAL_RULES_PATH, packageName + ".xml");
         this.localProvidersFile = new File(LOCAL_RULES_PATH, packageName + ".txt");
-        disabledProviders = new HashSet<>();
         removedProviders = new HashSet<>();
         retrieveDisabledComponents();
     }
@@ -126,10 +124,6 @@ public class ComponentsApplier {
             }
             disabledComponents.remove(componentName);
         }
-    }
-
-    public Set<String> getDisabledProviders() {
-        return disabledProviders;
     }
 
     /**
@@ -259,7 +253,6 @@ public class ComponentsApplier {
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
                     if (!line.equals("")) {
-                        disabledProviders.add(line.trim());
                         disabledComponents.put(line.trim(), ComponentType.PROVIDER);
                     }
                 }
