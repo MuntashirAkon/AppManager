@@ -6,6 +6,7 @@ import android.app.AppOpsManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;
@@ -39,8 +40,8 @@ import com.jaredrummler.android.shell.Shell;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Objects;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,8 +50,8 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
-import io.github.muntashirakon.AppManager.compontents.ComponentType;
 import io.github.muntashirakon.AppManager.compontents.ComponentsApplier;
+import io.github.muntashirakon.AppManager.compontents.ComponentsApplier.ComponentType;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -127,7 +128,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         }
         getPackageInfo(mPackageName);
 
-        mComponentsApplier = ComponentsApplier.getInstance(mActivity);
+        mComponentsApplier = ComponentsApplier.getInstance(mActivity, mPackageName);
     }
 
     @Nullable
@@ -152,7 +153,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mComponentsApplier.applyRulesForPackage(mPackageName, true);
+        mComponentsApplier.applyRules(true);
 //        Toast.makeText(mActivity, "The current configurations has been applied!", Toast.LENGTH_LONG).show();
     }
 
@@ -166,7 +167,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_app_details_action, menu);
         blockingToggler = menu.findItem(R.id.action_toggle_blocking);
-        if (mComponentsApplier.isRulesApplied(mPackageName)) {
+        if (mComponentsApplier.isRulesApplied()) {
             blockingToggler.setTitle(R.string.menu_disable_blocking);
         } else {
             blockingToggler.setTitle(R.string.menu_enable_blocking);
@@ -181,9 +182,9 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 refreshDetails();
                 return true;
             case R.id.action_toggle_blocking:
-                boolean isRulesApplied = mComponentsApplier.isRulesApplied(mPackageName);
-                mComponentsApplier.applyRulesForPackage(mPackageName, !isRulesApplied);
-                if (mComponentsApplier.isRulesApplied(mPackageName)) {
+                boolean isRulesApplied = mComponentsApplier.isRulesApplied();
+                mComponentsApplier.applyRules(!isRulesApplied);
+                if (mComponentsApplier.isRulesApplied()) {
                     blockingToggler.setTitle(R.string.menu_disable_blocking);
                 } else {
                     blockingToggler.setTitle(R.string.menu_enable_blocking);
@@ -288,7 +289,16 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         switch (index) {
             case SERVICES: return mPackageInfo.services;
             case RECEIVERS: return mPackageInfo.receivers;
-            case PROVIDERS: return mPackageInfo.providers;
+            case PROVIDERS:
+                Set<String> providers = mComponentsApplier.getDisabledProviders();
+                int len = mPackageInfo.providers.length + providers.size();
+                Object[] providerInfoArray = new Object[len];
+                int i = 0;
+                for (ProviderInfo providerInfo: mPackageInfo.providers)
+                    providerInfoArray[i++] = providerInfo;
+                for (String provider : providers)
+                    providerInfoArray[i++] = provider;
+                return providerInfoArray;
             case USES_PERMISSIONS: return permissionsWithFlags;
             case PERMISSIONS: return mPackageInfo.permissions;
             case FEATURES: return mPackageInfo.reqFeatures;
@@ -331,7 +341,6 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
     private class ActivitiesListAdapter extends BaseAdapter {
         private int count;
         private Object[] arrayOfThings;
-        private HashMap<String, ComponentType> disabledComponents;
         private int requestedProperty;
 
         ActivitiesListAdapter() {
@@ -341,9 +350,6 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         void reset() {
             requestedProperty = neededProperty;
             arrayOfThings = getNeededArray(requestedProperty);
-            if (neededProperty == ACTIVITIES || neededProperty == RECEIVERS || neededProperty == SERVICES) {
-                disabledComponents = mComponentsApplier.getDisabledComponentNamesForPackage(mPackageName);
-            }
             if (arrayOfThings == null) count = 0;
             else count = arrayOfThings.length;
             notifyDataSetChanged();
@@ -441,10 +447,10 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            final ActivityInfo activityInfo = mPackageInfo.activities[index];
+            final ActivityInfo activityInfo = (ActivityInfo) arrayOfThings[index];
             final String activityName = activityInfo.name;
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            if (disabledComponents.containsKey(activityName)) {
+            if (mComponentsApplier.hasComponent(activityName)) {
                 convertView.setBackgroundColor(mColorRed);
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
             } else {
@@ -521,13 +527,13 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             }
 
             viewHolder.blockBtn.setOnClickListener(v -> {
-                if (disabledComponents.containsKey(activityName)) { // Remove from the list
-                    disabledComponents.remove(activityName);
+                if (mComponentsApplier.hasComponent(activityName)) { // Remove from the list
+                    mComponentsApplier.removeComponent(activityName);
                 } else { // Add to the list
-                    disabledComponents.put(activityName, ComponentType.ACTIVITY);
+                    mComponentsApplier.addComponent(activityName, ComponentType.ACTIVITY);
                 }
                 try {
-                    mComponentsApplier.saveDisabledComponentsForPackage(mPackageName, disabledComponents);
+                    mComponentsApplier.saveDisabledComponents();
                     refreshDetails();
                 } catch (IOException e) {
                     Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
@@ -563,9 +569,9 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            final ServiceInfo serviceInfo = mPackageInfo.services[index];
+            final ServiceInfo serviceInfo = (ServiceInfo) arrayOfThings[index];
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            if (disabledComponents.containsKey(serviceInfo.name)) {
+            if (mComponentsApplier.hasComponent(serviceInfo.name)) {
                 convertView.setBackgroundColor(mColorRed);
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
             } else {
@@ -588,13 +594,13 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                     + (serviceInfo.permission != null ? "\n" + serviceInfo.permission : "\n"));
 
             viewHolder.blockBtn.setOnClickListener(v -> {
-                if (disabledComponents.containsKey(serviceInfo.name)) { // Remove from the list
-                    disabledComponents.remove(serviceInfo.name);
+                if (mComponentsApplier.hasComponent(serviceInfo.name)) { // Remove from the list
+                    mComponentsApplier.removeComponent(serviceInfo.name);
                 } else { // Add to the list
-                    disabledComponents.put(serviceInfo.name, ComponentType.ACTIVITY);
+                    mComponentsApplier.addComponent(serviceInfo.name, ComponentType.SERVICE);
                 }
                 try {
-                    mComponentsApplier.saveDisabledComponentsForPackage(mPackageName, disabledComponents);
+                    mComponentsApplier.saveDisabledComponents();
                     refreshDetails();
                 } catch (IOException e) {
                     Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
@@ -632,9 +638,9 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            final ActivityInfo activityInfo = mPackageInfo.receivers[index];
+            final ActivityInfo activityInfo = (ActivityInfo) arrayOfThings[index];
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            if (disabledComponents.containsKey(activityInfo.name)) {
+            if (mComponentsApplier.hasComponent(activityInfo.name)) {
                 convertView.setBackgroundColor(mColorRed);
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
             } else {
@@ -666,13 +672,13 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             viewHolder.textView6.setText(getString(R.string.softInput) + ": " + Utils.getSoftInputString(activityInfo.softInputMode));
 
             viewHolder.blockBtn.setOnClickListener(v -> {
-                if (disabledComponents.containsKey(activityInfo.name)) { // Remove from the list
-                    disabledComponents.remove(activityInfo.name);
+                if (mComponentsApplier.hasComponent(activityInfo.name)) { // Remove from the list
+                    mComponentsApplier.removeComponent(activityInfo.name);
                 } else { // Add to the list
-                    disabledComponents.put(activityInfo.name, ComponentType.ACTIVITY);
+                    mComponentsApplier.addComponent(activityInfo.name, ComponentType.RECEIVER);
                 }
                 try {
-                    mComponentsApplier.saveDisabledComponentsForPackage(mPackageName, disabledComponents);
+                    mComponentsApplier.saveDisabledComponents();
                     refreshDetails();
                 } catch (IOException e) {
                     Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
@@ -700,73 +706,94 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder.textView4 = convertView.findViewById(R.id.orientation);
                 viewHolder.textView5 = convertView.findViewById(R.id.softInput);
                 viewHolder.textView6 = convertView.findViewById(R.id.taskAffinity);
+                viewHolder.blockBtn  = convertView.findViewById(R.id.block_component);
                 convertView.findViewById(R.id.launch).setVisibility(View.GONE);
                 convertView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
                 convertView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
-                convertView.findViewById(R.id.block_component).setVisibility(View.GONE);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            final ProviderInfo providerInfo = mPackageInfo.providers[index];
-            convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-
-            try {
+            final String providerName;
+            if (arrayOfThings[index] instanceof String) {
+                providerName = (String) arrayOfThings[index];
+                ApplicationInfo applicationInfo = mPackageInfo.applicationInfo;
                 // Label
-                viewHolder.textView1.setText(providerInfo.loadLabel(mPackageManager));
-
-                // Name
-                viewHolder.textView2.setText(providerInfo.name.startsWith(mPackageName) ?
-                        providerInfo.name.replaceFirst(mPackageName, "")
-                        : providerInfo.name);
-
+                viewHolder.textView1.setText(mPackageManager.getApplicationLabel(applicationInfo));
                 // Icon
-                viewHolder.imageView.setImageDrawable(providerInfo.loadIcon(mPackageManager));
-
-                // Uri permission
-                viewHolder.textView3.setText(getString(R.string.grant_uri_permission) + ": " + providerInfo.grantUriPermissions);
-
-                // Path permissions
-                PathPermission[] pathPermissions = providerInfo.pathPermissions;
-                String finalString;
-                if (pathPermissions != null) {
-                    StringBuilder builder = new StringBuilder();
-                    String read = getString(R.string.read);
-                    String write = getString(R.string.write);
-                    for (PathPermission permission : pathPermissions) {
-                        builder.append(read).append(": ").append(permission.getReadPermission());
-                        builder.append("/");
-                        builder.append(write).append(": ").append(permission.getWritePermission());
-                        builder.append(", ");
-                    }
-                    Utils.checkStringBuilderEnd(builder);
-                    finalString = builder.toString();
-                } else
-                    finalString = "null";
-                viewHolder.textView4.setText(getString(R.string.path_permissions) + ": " + finalString);//+"\n"+providerInfo.readPermission +"\n"+providerInfo.writePermission);
-
-                // Pattern matchers
-                PatternMatcher[] patternMatchers = providerInfo.uriPermissionPatterns;
-                String finalString1;
-                if (patternMatchers != null) {
-                    StringBuilder builder = new StringBuilder();
-                    for (PatternMatcher patternMatcher : patternMatchers) {
-                        builder.append(patternMatcher.toString());
-                        builder.append(", ");
-                    }
-                    Utils.checkStringBuilderEnd(builder);
-                    finalString1 = builder.toString();
-                } else
-                    finalString1 = "null";
-                viewHolder.textView5.setText(getString(R.string.patterns_allowed) + ": " + finalString1);
-
-                // Authority
-                viewHolder.textView6.setText(getString(R.string.authority) + ": " + providerInfo.authority);
-
-            } catch (NullPointerException e) {
-                viewHolder.textView1.setText("ERROR retrieving: try uninstall re-install apk");
+                viewHolder.imageView.setImageDrawable(applicationInfo.loadIcon(mPackageManager));
+            } else {
+                final ProviderInfo providerInfo = (ProviderInfo) arrayOfThings[index];
+                providerName = providerInfo.name;
+                try {
+                    // Label
+                    viewHolder.textView1.setText(providerInfo.loadLabel(mPackageManager));
+                    // Icon
+                    viewHolder.imageView.setImageDrawable(providerInfo.loadIcon(mPackageManager));
+                    // Uri permission
+                    viewHolder.textView3.setText(getString(R.string.grant_uri_permission) + ": " + providerInfo.grantUriPermissions);
+                    // Path permissions
+                    PathPermission[] pathPermissions = providerInfo.pathPermissions;
+                    String finalString;
+                    if (pathPermissions != null) {
+                        StringBuilder builder = new StringBuilder();
+                        String read = getString(R.string.read);
+                        String write = getString(R.string.write);
+                        for (PathPermission permission : pathPermissions) {
+                            builder.append(read).append(": ").append(permission.getReadPermission());
+                            builder.append("/");
+                            builder.append(write).append(": ").append(permission.getWritePermission());
+                            builder.append(", ");
+                        }
+                        Utils.checkStringBuilderEnd(builder);
+                        finalString = builder.toString();
+                    } else
+                        finalString = "null";
+                    viewHolder.textView4.setText(getString(R.string.path_permissions) + ": " + finalString);//+"\n"+providerInfo.readPermission +"\n"+providerInfo.writePermission);
+                    // Pattern matchers
+                    PatternMatcher[] patternMatchers = providerInfo.uriPermissionPatterns;
+                    String finalString1;
+                    if (patternMatchers != null) {
+                        StringBuilder builder = new StringBuilder();
+                        for (PatternMatcher patternMatcher : patternMatchers) {
+                            builder.append(patternMatcher.toString());
+                            builder.append(", ");
+                        }
+                        Utils.checkStringBuilderEnd(builder);
+                        finalString1 = builder.toString();
+                    } else
+                        finalString1 = "null";
+                    viewHolder.textView5.setText(getString(R.string.patterns_allowed) + ": " + finalString1);
+                    // Authority
+                    viewHolder.textView6.setText(getString(R.string.authority) + ": " + providerInfo.authority);
+                } catch (NullPointerException e) {
+                    viewHolder.textView1.setText("ERROR retrieving: try uninstall re-install apk");
+                }
             }
-
+            convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            if (mComponentsApplier.hasComponent(providerName)) {
+                convertView.setBackgroundColor(mColorRed);
+                viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
+            } else {
+                viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
+            }
+            // Name
+            viewHolder.textView2.setText(providerName.startsWith(mPackageName) ?
+                    providerName.replaceFirst(mPackageName, "") : providerName);
+            // Blocking
+            viewHolder.blockBtn.setOnClickListener(v -> {
+                if (mComponentsApplier.hasComponent(providerName)) { // Remove from the list
+                    mComponentsApplier.removeComponent(providerName);
+                } else { // Add to the list
+                    mComponentsApplier.addComponent(providerName, ComponentType.PROVIDER);
+                }
+                try {
+                    mComponentsApplier.saveDisabledComponents();
+                    refreshDetails();
+                } catch (IOException e) {
+                    Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
+                }
+            });
             return convertView;
         }
 
@@ -795,9 +822,9 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
 
             @SuppressWarnings("unchecked")
-            final String permName = ((Tuple<String, Integer>) arrayOfThings[index]).getFirst();
-            @SuppressWarnings("unchecked")
-            final int permFlags = ((Tuple<String, Integer>) arrayOfThings[index]).getSecond();
+            Tuple<String, Integer> permTuple = (Tuple<String, Integer>) arrayOfThings[index];
+            final String permName = permTuple.getFirst();
+            final int permFlags = permTuple.getSecond();
             PermissionInfo permissionInfo = null;
             try {
                 permissionInfo = mPackageManager.getPermissionInfo(permName, PackageManager.GET_META_DATA);
@@ -874,7 +901,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
 
             TextView textView = (TextView) convertView;
             textView.setTextIsSelectable(true);
-            textView.setText(mPackageInfo.applicationInfo.sharedLibraryFiles[index]);
+            textView.setText((String) arrayOfThings[index]);
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             int medium_size = mActivity.getResources().getDimensionPixelSize(R.dimen.padding_medium);
             int small_size = mActivity.getResources().getDimensionPixelSize(R.dimen.padding_very_small);
@@ -911,7 +938,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            final PermissionInfo permissionInfo = mPackageInfo.permissions[index];
+            final PermissionInfo permissionInfo = (PermissionInfo) arrayOfThings[index];
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
 
             // Label
@@ -957,7 +984,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            final FeatureInfo featureInfo = mPackageInfo.reqFeatures[index];
+            final FeatureInfo featureInfo = (FeatureInfo) arrayOfThings[index];
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
 
             // Name
@@ -993,7 +1020,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            final ConfigurationInfo configurationInfo = mPackageInfo.configPreferences[index];
+            final ConfigurationInfo configurationInfo = (ConfigurationInfo) arrayOfThings[index];
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
 
             // GLES ver

@@ -14,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textIsSelectable="true"
+        android:textColor="?android:attr/textColorPrimary"
         tools:text="@tools:sample/lorem" />
 
     <TextView
