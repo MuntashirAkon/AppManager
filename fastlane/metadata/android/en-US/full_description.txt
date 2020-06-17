@@ -1,6 +1,7 @@
 <i>App Manager</i> began by merging the features of <i>App_packages Info</i> (formerly <i>Application Info</i>), <i>ClassyShark3xodus</i>, <i>Activity Launcher</i> and <i>Watt</i> into a single app with material design and dark mode to give a modern look and feel.
 
-<b>Features:</b><ul>
+<b>Features:</b>
+<ul>
 <li>It is free and open source</li>
 <li>It has material design (and a nice UI)</li>
 <li>It doesn't have any useless permissions</li>
@@ -16,6 +17,7 @@
 <li>It displays your app usage, app storage info (requires “Usage Access” permission)</li>
 <li>Apk files can be shared (hence the use of a provider)</li>
 <li>It can be used to clear app data or app cache (requires root)</li>
+</ul>
 
 ...and other minor features such as uninstalling/enabling/disabling apps, displaying app installation info, opening on F-Droid or Aurora Droid.
 
