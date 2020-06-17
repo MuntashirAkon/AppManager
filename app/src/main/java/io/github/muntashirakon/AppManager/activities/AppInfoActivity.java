@@ -125,11 +125,14 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                 try {
                     File apkSource = new File(mApplicationInfo.sourceDir);
                     File tmpApkSource = File.createTempFile(mApplicationInfo.packageName, ".apk", getExternalCacheDir());
+                    FileInputStream apkInputStream = new FileInputStream(apkSource);
+                    FileOutputStream apkOutputStream = new FileOutputStream(tmpApkSource);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        FileUtils.copy(new FileInputStream(apkSource), new FileOutputStream(tmpApkSource));
+                        FileUtils.copy(apkInputStream, apkOutputStream);
                     } else {
-                        IOUtils.copy(new FileInputStream(apkSource), new FileOutputStream(tmpApkSource));
+                        IOUtils.copy(apkInputStream, apkOutputStream);
                     }
+                    apkInputStream.close(); apkOutputStream.close();
                     Intent intent = ShareCompat.IntentBuilder.from(this)
                             .setStream(FileProvider.getUriForFile(
                                     this, BuildConfig.APPLICATION_ID + ".provider", tmpApkSource))
