@@ -17,6 +17,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -28,10 +29,24 @@ public class EditPrefItemFragment extends DialogFragment {
     public static final String ARG_PREF_ITEM = "ARG_PREF_ITEM";
     public static final String ARG_MODE = "ARG_MODE";
 
+    @IntDef(value = {
+            MODE_EDIT,
+            MODE_CREATE,
+            MODE_DELETE
+    })
+    public @interface Mode {}
     public static final int MODE_EDIT = 1;  // Key name is disabled
     public static final int MODE_CREATE = 2;  // Key name is not disabled
     public static final int MODE_DELETE = 3;
 
+    @IntDef(value = {
+            TYPE_BOOLEAN,
+            TYPE_FLOAT,
+            TYPE_INTEGER,
+            TYPE_LONG,
+            TYPE_STRING
+    })
+    public @interface Type {}
     private static final int TYPE_BOOLEAN = 0;
     private static final int TYPE_FLOAT   = 1;
     private static final int TYPE_INTEGER = 2;
@@ -41,7 +56,7 @@ public class EditPrefItemFragment extends DialogFragment {
     public InterfaceCommunicator interfaceCommunicator;
 
     public interface InterfaceCommunicator {
-        void sendInfo(int mode, PrefItem prefItem);
+        void sendInfo(@Mode int mode, PrefItem prefItem);
     }
 
     public static class PrefItem implements Parcelable {
@@ -79,7 +94,7 @@ public class EditPrefItemFragment extends DialogFragment {
 
     private LinearLayout[] mLayoutTypes = new LinearLayout[5];
     private TextView[] mValues = new TextView[5];
-    private int currentType;
+    private @Type int currentType;
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -87,7 +102,7 @@ public class EditPrefItemFragment extends DialogFragment {
         if (getArguments() == null) return super.onCreateDialog(savedInstanceState);
 
         PrefItem prefItem = getArguments().getParcelable(ARG_PREF_ITEM);
-        int mode = getArguments().getInt(ARG_MODE);
+        @Mode int mode = getArguments().getInt(ARG_MODE);
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (inflater == null) return super.onCreateDialog(savedInstanceState);

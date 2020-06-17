@@ -54,11 +54,11 @@ public class SharedPrefsActivity extends AppCompatActivity implements SearchView
     public static final String EXTRA_PREF_LABEL    = "EXTRA_PREF_LABEL";  // Optional
 
     public static final String TAG_ROOT     = "map";  // <map></map>
-    public static final String TYPE_BOOLEAN = "boolean";  // <boolean name="bool" value="true" />
-    public static final String TYPE_FLOAT   = "float";  // <float name="float" value="12.3" />
-    public static final String TYPE_INTEGER = "int";  // <int name="integer" value="123" />
-    public static final String TYPE_LONG    = "long";  // <long name="long" value="123456789" />
-    public static final String TYPE_STRING  = "string";  // <string name="string"></string> | <string name="string"><string></string></string>
+    public static final String TAG_BOOLEAN = "boolean";  // <boolean name="bool" value="true" />
+    public static final String TAG_FLOAT = "float";  // <float name="float" value="12.3" />
+    public static final String TAG_INTEGER = "int";  // <int name="integer" value="123" />
+    public static final String TAG_LONG = "long";  // <long name="long" value="123456789" />
+    public static final String TAG_STRING = "string";  // <string name="string"></string> | <string name="string"><string></string></string>
 
     private String mSharedPrefFile;
     private File mTempSharedPrefFile;
@@ -78,7 +78,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements SearchView
         }
         String fileName =  (new File(mSharedPrefFile)).getName();
         try {
-            mTempSharedPrefFile = File.createTempFile(fileName, ".xml");
+            mTempSharedPrefFile = File.createTempFile(fileName, ".xml", getCacheDir());
         } catch (IOException e) {
             e.printStackTrace();
             finish();
@@ -144,7 +144,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements SearchView
     }
 
     @Override
-    public void sendInfo(int mode, EditPrefItemFragment.PrefItem prefItem) {
+    public void sendInfo(@EditPrefItemFragment.Mode int mode, EditPrefItemFragment.PrefItem prefItem) {
         if (prefItem != null) {
             switch (mode) {
                 case EditPrefItemFragment.MODE_CREATE:
@@ -229,31 +229,31 @@ public class SharedPrefsActivity extends AppCompatActivity implements SearchView
                     attrName = parser.getAttributeValue(null, "name");
                     attrValue = parser.getAttributeValue(null, "value");
                     switch (tagName) {
-                        case TYPE_BOOLEAN:
+                        case TAG_BOOLEAN:
                             if (attrValue != null) {
                                 prefs.put(attrName, attrValue.equals("true"));
                             }
                             event = parser.nextTag();
                             continue;
-                        case TYPE_FLOAT:
+                        case TAG_FLOAT:
                             if (attrValue != null) {
                                 prefs.put(attrName, Float.valueOf(attrValue));
                             }
                             event = parser.nextTag();
                             continue;
-                        case TYPE_INTEGER:
+                        case TAG_INTEGER:
                             if (attrValue != null) {
                                 prefs.put(attrName, Integer.valueOf(attrValue));
                             }
                             event = parser.nextTag();
                             continue;
-                        case TYPE_LONG:
+                        case TAG_LONG:
                             if (attrValue != null) {
                                 prefs.put(attrName, Long.valueOf(attrValue));
                             }
                             event = parser.nextTag();
                             continue;
-                        case TYPE_STRING:
+                        case TAG_STRING:
                             prefs.put(attrName, parser.nextText());
                     }
                 }
@@ -292,30 +292,30 @@ public class SharedPrefsActivity extends AppCompatActivity implements SearchView
             for(String name: hashMap.keySet()) {
                 Object value = hashMap.get(name);
                 if (value instanceof Boolean) {
-                    xmlSerializer.startTag("", TYPE_BOOLEAN);
+                    xmlSerializer.startTag("", TAG_BOOLEAN);
                     xmlSerializer.attribute("", "name", name);
                     xmlSerializer.attribute("", "value", value.toString());
-                    xmlSerializer.endTag("", TYPE_BOOLEAN);
+                    xmlSerializer.endTag("", TAG_BOOLEAN);
                 } else if (value instanceof Float) {
-                    xmlSerializer.startTag("", TYPE_FLOAT);
+                    xmlSerializer.startTag("", TAG_FLOAT);
                     xmlSerializer.attribute("", "name", name);
                     xmlSerializer.attribute("", "value", value.toString());
-                    xmlSerializer.endTag("", TYPE_FLOAT);
+                    xmlSerializer.endTag("", TAG_FLOAT);
                 } else if (value instanceof Integer) {
-                    xmlSerializer.startTag("", TYPE_INTEGER);
+                    xmlSerializer.startTag("", TAG_INTEGER);
                     xmlSerializer.attribute("", "name", name);
                     xmlSerializer.attribute("", "value", value.toString());
-                    xmlSerializer.endTag("", TYPE_INTEGER);
+                    xmlSerializer.endTag("", TAG_INTEGER);
                 } else if (value instanceof Long) {
-                    xmlSerializer.startTag("", TYPE_LONG);
+                    xmlSerializer.startTag("", TAG_LONG);
                     xmlSerializer.attribute("", "name", name);
                     xmlSerializer.attribute("", "value", value.toString());
-                    xmlSerializer.endTag("", TYPE_LONG);
+                    xmlSerializer.endTag("", TAG_LONG);
                 } else if (value instanceof String) {
-                    xmlSerializer.startTag("", TYPE_STRING);
+                    xmlSerializer.startTag("", TAG_STRING);
                     xmlSerializer.attribute("", "name", name);
                     xmlSerializer.text(value.toString());
-                    xmlSerializer.endTag("", TYPE_STRING);
+                    xmlSerializer.endTag("", TAG_STRING);
                 }
             }
             xmlSerializer.endTag("", TAG_ROOT);
