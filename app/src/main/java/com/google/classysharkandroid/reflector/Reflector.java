@@ -27,8 +27,8 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 
+@SuppressWarnings({"unused", "rawtypes"})
 public class Reflector {
-
     private Class clazz;
     private List<TaggedWord> words;
 
@@ -95,7 +95,7 @@ public class Reflector {
         }
 
         try {
-            fields = currentClass.getDeclaredFields();//NoClassDefFoundError ccc71/at/xposed/blocks/at_block_manage_accounts$5
+            fields = currentClass.getDeclaredFields(); // NoClassDefFoundError ccc71/at/xposed/blocks/at_block_manage_accounts$5
             constructors = currentClass.getDeclaredConstructors();
             methods = currentClass.getDeclaredMethods();
 
@@ -154,7 +154,7 @@ public class Reflector {
         return classRef;
     }
 
-    private void fillTaggedText(Constructor[] constructors, Method[] methods, Field[] fields, Class currentClass, Hashtable<String, String> classRef) {
+    private void fillTaggedText(Constructor[] constructors, Method[] methods, Field[] fields, Class currentClass, @NonNull Hashtable<String, String> classRef) {
         Class supClass;
         String x;
 
@@ -260,7 +260,6 @@ public class Reflector {
     }
 
     public static void main(String[] args) {
-
         Reflector reflector = new Reflector(Integer.class);
         reflector.generateClassData();
 

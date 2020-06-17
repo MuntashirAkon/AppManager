@@ -64,8 +64,8 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     public static final String EXTRA_PACKAGE_NAME = "package_name";
 
     private Intent inIntent;
-    private ClassesNamesList classesList;
-    private ClassesNamesList classesListAll;
+    private ClassesNamesList classList;
+    private ClassesNamesList classListAll;
     private ListView mListView;
     private int totalTrackersFound = 0;
     private int totalClassesScanned = 0;
@@ -156,8 +156,8 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         mProgressBar = findViewById(R.id.progress_horizontal);
 
         final Uri uriFromIntent = inIntent.getData();
-        classesList = new ClassesNamesList();
-        classesListAll  = new ClassesNamesList();
+        classList = new ClassesNamesList();
+        classListAll = new ClassesNamesList();
 
         if (inIntent.getData() != null)
             packageInfo = "<b>" + getString(R.string.source_dir) + ": </b>"
@@ -165,10 +165,10 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         else packageInfo = "";
 
         Names = getResources().getStringArray(R.array.tracker_names);
-        InputStream uriStream;
         try {
-            uriStream = UriUtils.getStreamFromUri(ClassListingActivity.this, uriFromIntent);
+            InputStream uriStream = UriUtils.getStreamFromUri(ClassListingActivity.this, uriFromIntent);
             final byte[] bytes = readFully(uriStream, -1, true);
+            uriStream.close();
             new Thread(() -> {
                 try {
                     packageInfo += "\n<b>MD5sum:</b> " + convertS(MessageDigest.getInstance("md5").digest(bytes))
@@ -266,13 +266,12 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                     statsMsg.append(Names[i]).append("\n"); j++;
                 }
                 new AlertDialog.Builder(this, R.style.CustomDialog)
-                        .setTitle(String.format(getString(R.string.trackers_and_classes),
-                                j, Names.length))
+                        .setTitle(String.format(getString(R.string.trackers_and_classes), j, Names.length))
                         .setNegativeButton(android.R.string.ok, null)
                         .setMessage(statsMsg.toString()).show();
                 return true;
             case R.id.action_toggle_class_listing:
-                mClassListingAdapter.setDefaultList((trackerClassesOnly ? classesList : classesListAll).getClassNames());
+                mClassListingAdapter.setDefaultList((trackerClassesOnly ? classList : classListAll).getClassNames());
                 mActionBar.setSubtitle(getString((trackerClassesOnly ? R.string.tracker_classes : R.string.all_classes)));
                 trackerClassesOnly = !trackerClassesOnly;
                 mListView.setAdapter(mClassListingAdapter);
@@ -307,7 +306,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         showText.setTextIsSelectable(true);
         new AlertDialog.Builder(this, R.style.CustomDialog)
                 .setTitle(String.format(getString(R.string.trackers_and_classes),
-                        totalTrackersFound, classesList.size()))
+                        totalTrackersFound, classList.size()))
                 .setView(showText)
                 .setIcon(R.drawable.ic_frost_classysharkexodus_black_24dp)
                 .setNegativeButton(android.R.string.ok, null)
@@ -337,14 +336,14 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                 signaturesFound = new boolean[signatures.length];
                 for (Enumeration<String> classNames = dx.entries(); classNames.hasMoreElements(); ) {
                     String className = classNames.nextElement();
-                    classesListAll.add(className);
+                    classListAll.add(className);
                     totalClassesScanned++;
                     if (className.length() > 8) {
                         if (className.contains(".")) {
                             for (int i = 0; i < signatures.length; i++) {
                                 totalTimeTaken++; // Total enumerations
                                 if (className.contains(signatures[i])) {
-                                    classesList.add(className);
+                                    classList.add(className);
                                     signatureCount[i]++;
                                     signaturesFound[i] = true;
                                     if (found.toString().contains(Names[i])) break;
@@ -356,6 +355,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                         }
                     }
                 }
+                dx.close();
 
                 if (totalTrackersFound > 0)
                     foundTrackerList = getString(R.string.found_trackers) + "\n" + found;
@@ -373,16 +373,16 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
             ClassListingActivity.this.runOnUiThread(() -> {
                 mClassListingAdapter = new ClassListingAdapter(ClassListingActivity.this);
                 if (!trackerClassesOnly) {
-                    mClassListingAdapter.setDefaultList(classesList.getClassNames());
+                    mClassListingAdapter.setDefaultList(classList.getClassNames());
                     mActionBar.setSubtitle(getString(R.string.tracker_classes));
                 } else {
-                    mClassListingAdapter.setDefaultList(classesListAll.getClassNames());
+                    mClassListingAdapter.setDefaultList(classListAll.getClassNames());
                     mActionBar.setSubtitle(getString(R.string.all_classes));
                 }
 //                    mListView.setAdapter(mAdapter);
                 mListView.setAdapter(mClassListingAdapter);
                 mProgressBar.setVisibility(View.GONE);
-                if (classesList.getClassNames().isEmpty() && totalClassesScanned == 0) {
+                if (classList.getClassNames().isEmpty() && totalClassesScanned == 0) {
                     // FIXME: Add support for odex (using root)
                     Toast.makeText(ClassListingActivity.this, R.string.system_odex_not_supported, Toast.LENGTH_LONG).show();
                     finish();
@@ -411,8 +411,8 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                         () -> mListView.setOnItemClickListener((parent, view, position, id) -> {
                             Class<?> loadClass;
                             try {
-                                loadClass = loader.loadClass((!trackerClassesOnly ? classesList
-                                        : classesListAll).getClassName((int) (parent
+                                loadClass = loader.loadClass((!trackerClassesOnly ? classList
+                                        : classListAll).getClassName((int) (parent
                                         .getAdapter()).getItemId(position)));
 
                                 Reflector reflector = new Reflector(loadClass);
@@ -423,7 +423,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                                 Intent intent = new Intent(ClassListingActivity.this,
                                         ClassViewerActivity.class);
                                 intent.putExtra(ClassViewerActivity.EXTRA_CLASS_NAME,
-                                        (!trackerClassesOnly ? classesList : classesListAll)
+                                        (!trackerClassesOnly ? classList : classListAll)
                                                 .getClassName((int) (parent.getAdapter())
                                                         .getItemId(position)));
                                 intent.putExtra(ClassViewerActivity.EXTRA_CLASS_DUMP, reflector.toString());
@@ -448,7 +448,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         private Filter mFilter;
         private String mConstraint;
         private List<String> mDefaultList;
-        private List mAdapterList;
+        private List<String> mAdapterList;
 
         private int mColorTransparent;
         private int mColorSemiTransparent;
@@ -540,7 +540,8 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                         if (filterResults.values == null) {
                             mAdapterList = mDefaultList;
                         } else {
-                            mAdapterList = (List) filterResults.values;
+                            //noinspection unchecked
+                            mAdapterList = (List<String>) filterResults.values;
                         }
                         notifyDataSetChanged();
                     }
