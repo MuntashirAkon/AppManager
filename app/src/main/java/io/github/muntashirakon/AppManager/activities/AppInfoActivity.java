@@ -569,7 +569,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                 StorageStats storageStats = storageStatsManager.queryStatsForPackage(mApplicationInfo.storageUuid, mPackageName, Process.myUserHandle());
                 // TODO: List obb and media size
                 long cacheSize = storageStats.getCacheBytes();
-                setStorageInfo(storageStats.getAppBytes(), storageStats.getDataBytes() - cacheSize, cacheSize, 0, 0);
+                runOnUiThread(() -> setStorageInfo(storageStats.getAppBytes(), storageStats.getDataBytes() - cacheSize, cacheSize, 0, 0));
             } catch (IOException | PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
@@ -631,36 +631,42 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
      * Get package info.
      */
     private void getPackageInfoOrFinish() {
-        try {
-            final int signingCertFlag;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                signingCertFlag = PackageManager.GET_SIGNING_CERTIFICATES;
-            } else {
-                signingCertFlag = PackageManager.GET_SIGNATURES;
+        new Thread(() -> {
+            try {
+                final int signingCertFlag;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    signingCertFlag = PackageManager.GET_SIGNING_CERTIFICATES;
+                } else {
+                    signingCertFlag = PackageManager.GET_SIGNATURES;
+                }
+                mPackageInfo = mPackageManager.getPackageInfo(mPackageName, PackageManager.GET_PERMISSIONS
+                        | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
+                        | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
+                        | signingCertFlag | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
+
+                if (mPackageInfo == null) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, this.mPackageName + ": " + getString(R.string.app_not_installed), Toast.LENGTH_LONG).show();
+                        finish();
+                    });
+                    return;
+                }
+
+                mApplicationInfo = mPackageInfo.applicationInfo;
+                mPackageLabel = mApplicationInfo.loadLabel(mPackageManager);
+
+                runOnUiThread(() -> {
+                    // ListItemCreator instance
+                    mList = new ListItemCreator(AppInfoActivity.this, R.id.details_container, true);
+                });
+                // (Re)load views
+                runOnUiThread(this::setHeaderView);
+                runOnUiThread(this::setHorizontalView);
+                runOnUiThread(this::setVerticalView);
+            } catch (PackageManager.NameNotFoundException e) {
+                runOnUiThread(this::finish);
             }
-            mPackageInfo = mPackageManager.getPackageInfo(mPackageName, PackageManager.GET_PERMISSIONS
-                    | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                    | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
-                    | signingCertFlag | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
-
-            if (mPackageInfo == null) {
-                Toast.makeText(this, this.mPackageName + ": " + getString(R.string.app_not_installed), Toast.LENGTH_LONG).show();
-                finish();
-                return;
-            }
-
-            mApplicationInfo = mPackageInfo.applicationInfo;
-            mPackageLabel = mApplicationInfo.loadLabel(mPackageManager);
-
-            // ListItemCreator instance
-            mList = new ListItemCreator(this, R.id.details_container, true);
-            // (Re)load views
-            setHeaderView();
-            setHorizontalView();
-            setVerticalView();
-        } catch (PackageManager.NameNotFoundException e) {
-            finish();
-        }
+        }).start();
     }
 
     /**
