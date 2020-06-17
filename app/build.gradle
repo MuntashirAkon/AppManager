@@ -8,7 +8,7 @@ android {
         applicationId 'io.github.muntashirakon.AppManager'
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 118
+        versionCode 121
         versionName '2.5.0'
     }
     buildTypes {

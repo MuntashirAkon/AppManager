@@ -93,7 +93,7 @@ public class AppDetailsActivity extends AppCompatActivity {
 
         @NonNull
         @Override
-        public Fragment createFragment(int position) {
+        public Fragment createFragment(@AppDetailsFragment.Property int position) {
             return new AppDetailsFragment(position);
         }
 

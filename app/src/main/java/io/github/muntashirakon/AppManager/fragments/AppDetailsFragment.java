@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -58,6 +59,21 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private static final String NEEDED_PROPERTY_INT = "neededProperty";
 
+    @IntDef(value = {
+            NONE,
+            ACTIVITIES,
+            SERVICES,
+            RECEIVERS,
+            PROVIDERS,
+            USES_PERMISSIONS,
+            PERMISSIONS,
+            FEATURES,
+            CONFIGURATION,
+            SIGNATURES,
+            SHARED_LIBRARY_FILES
+    })
+    public @interface Property {}
+    private static final int NONE = -1;
     private static final int ACTIVITIES = 0;
     private static final int SERVICES = 1;
     private static final int RECEIVERS = 2;
@@ -69,7 +85,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
     private static final int SIGNATURES = 8;
     private static final int SHARED_LIBRARY_FILES = 9;
 
-    private int neededProperty;
+    private @Property int neededProperty;
 
     private LayoutInflater mLayoutInflater;
     private String mPackageName;
@@ -94,7 +110,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         isEmptyFragmentConstructCalled = true;
     }
 
-    public AppDetailsFragment(int neededProperty) {
+    public AppDetailsFragment(@Property int neededProperty) {
         this.neededProperty = neededProperty;
     }
 
@@ -272,6 +288,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 case SHARED_LIBRARY_FILES:
                     break;
                 case ACTIVITIES:
+                case NONE:
                 default:
                     if (mPackageInfo.activities != null) {
                         Arrays.sort(mPackageInfo.activities, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
@@ -312,7 +329,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
     /**
      * Return corresponding section's array
      */
-    private int getNeededString(int index) {
+    private int getNeededString(@Property int index) {
         switch (index) {
             case SERVICES: return R.string.no_service;
             case RECEIVERS: return R.string.no_receivers;
@@ -324,6 +341,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             case SIGNATURES: return R.string.no_signatures;
             case SHARED_LIBRARY_FILES: return R.string.no_shared_libs;
             case ACTIVITIES:
+            case NONE:
             default: return R.string.no_activities;
         }
     }
@@ -332,7 +350,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
     private class ActivitiesListAdapter extends BaseAdapter {
         private int count;
         private Object[] arrayOfThings;
-        private int requestedProperty;
+        private @Property int requestedProperty;
 
         ActivitiesListAdapter() {
             reset();
@@ -351,7 +369,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
          * the same holder for any kind of view, and view are not all sames.
          */
         class ViewHolder {
-            int currentViewType = -1;
+            @Property int currentViewType = NONE;
             TextView textView1;
             TextView textView2;
             TextView textView3;
@@ -404,6 +422,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 case SHARED_LIBRARY_FILES:
                     return getSharedLibsView(convertView, position);
                 case ACTIVITIES:
+                case NONE:
                 default:
                     return getActivityView(parent, convertView, position);
             }
@@ -1044,7 +1063,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
          * Here we check if recycled view match requested type. Tag can be null if recycled view comes from
          * groups that doesn't implement {@link ViewHolder}, such as groups that use only a simple text view.
          */
-        private boolean checkIfConvertViewMatch(View convertView, int requestedGroup) {
+        private boolean checkIfConvertViewMatch(View convertView, @Property int requestedGroup) {
             return convertView == null || convertView.getTag() == null || ((ViewHolder) convertView.getTag()).currentViewType != requestedGroup;
         }
     }
