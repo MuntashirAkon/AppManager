@@ -70,9 +70,16 @@ import static androidx.appcompat.app.ActionBar.LayoutParams;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
         SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<List<ApplicationItem>>,
         SwipeRefreshLayout.OnRefreshListener {
-    public static final String EXTRA_PACKAGE_NAME = "package_name";
+    public static final String EXTRA_PACKAGE_LIST = "EXTRA_PACKAGE_LIST";
+    public static final String EXTRA_LIST_NAME = "EXTRA_LIST_NAME";
+    /**
+     * A list of packages separated by \r\n. Debug apps should have a * after their package names.
+     */
     public static String packageList;
-    public static String permName;
+    /**
+     * The name of this particular package list
+     */
+    public static String listName;
 
     private static Collator sCollator = Collator.getInstance();
 
@@ -104,9 +111,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        packageList = getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
-        permName = getIntent().getStringExtra("perm_name");
-        if (permName == null) permName = "Onboard.packages";
+        packageList = getIntent().getStringExtra(EXTRA_PACKAGE_LIST);
+        listName = getIntent().getStringExtra(EXTRA_LIST_NAME);
+        if (listName == null) listName = "Onboard.packages";
 
         mProgressBar = findViewById(R.id.progress_horizontal);
         mListView = findViewById(R.id.item_list);
@@ -252,10 +259,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Set title and subtitle
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(MainActivity.permName.substring(0,
-                    MainActivity.permName.lastIndexOf(".")));
-            actionBar.setSubtitle(MainActivity.permName.substring(
-                    MainActivity.permName.lastIndexOf(".") + 1).toLowerCase());
+            actionBar.setTitle(MainActivity.listName.substring(0,
+                    MainActivity.listName.lastIndexOf(".")));
+            actionBar.setSubtitle(MainActivity.listName.substring(
+                    MainActivity.listName.lastIndexOf(".") + 1).toLowerCase());
         }
         if (Build.VERSION.SDK_INT < 26) {
             startRetrievingPackagesSize();

@@ -58,7 +58,6 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
                     itemList.add(item);
                 } catch (PackageManager.NameNotFoundException ignored) {}
             }
-            return itemList;
         } else {
             List<ApplicationInfo> applicationInfoList = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
 
@@ -83,8 +82,8 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
                 }
                 itemList.add(item);
             }
-            return itemList;
         }
+        return itemList;
     }
 
     /**
