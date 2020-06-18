@@ -1,11 +1,13 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight" />
     <style name="Theme.MaterialComponents.DayNight" parent="Theme.MaterialComponents.Light">
         <item name="actionOverflowMenuStyle">@style/Widget.AppCompat.Light.PopupMenu.Overflow</item>
         <item name="colorPrimary">@android:color/white</item>
-        <item name="colorPrimaryDark">#33000000</item>
+        <item name="colorPrimaryDark" tools:targetApi="m">?android:colorBackground</item>
         <item name="colorAccent">@color/cma</item>
         <item name="colorOnSurface">?android:attr/textColorPrimary</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:navigationBarColor">?android:colorBackground</item>
         <item name="android:colorControlActivated">?android:attr/colorAccent</item>
         <item name="android:textColorPrimary">#DE000000</item>
         <item name="android:textColorSecondary">#99000000</item>
