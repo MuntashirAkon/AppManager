@@ -73,7 +73,8 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     private boolean[] signaturesFound;
     private String[] Names;
     private boolean trackerClassesOnly;
-    private int totalTimeTaken = 0;
+    private int totalIteration = 0;
+    private long totalTimeTaken = 0;
     private ClassListingAdapter mClassListingAdapter;
     private String packageInfo = "";
     private CharSequence mAppName;
@@ -298,7 +299,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         int paddingSize = getResources().getDimensionPixelSize(R.dimen.padding_medium);
         showText.setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
         showText.setText(Html.fromHtml(String.format(getString(R.string.tested_signatures_on_classes_and_time_taken),
-                signatures.length, totalClassesScanned, totalTimeTaken, foundTrackerList + foundTrackersInfo + packageInfo)
+                signatures.length, totalClassesScanned, totalTimeTaken, totalIteration, foundTrackerList + foundTrackersInfo + packageInfo)
                 .replaceAll(" ", "&nbsp;").replaceAll("\n", "<br/>")));
         showText.setMovementMethod(new ScrollingMovementMethod());
         showText.setTextIsSelectable(true);
@@ -332,6 +333,8 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                 signatures = getResources().getStringArray(R.array.tracker_signatures);
                 signatureCount = new int[signatures.length];
                 signaturesFound = new boolean[signatures.length];
+                long t_start, t_end;
+                t_start = System.currentTimeMillis();
                 for (Enumeration<String> classNames = dx.entries(); classNames.hasMoreElements(); ) {
                     String className = classNames.nextElement();
                     classListAll.add(className);
@@ -339,7 +342,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                     if (className.length() > 8) {
                         if (className.contains(".")) {
                             for (int i = 0; i < signatures.length; i++) {
-                                totalTimeTaken++; // Total enumerations
+                                totalIteration++;
                                 if (className.contains(signatures[i])) {
                                     classList.add(className);
                                     signatureCount[i]++;
@@ -353,10 +356,11 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                         }
                     }
                 }
+                t_end = System.currentTimeMillis();
+                totalTimeTaken = t_end - t_start;
                 dx.close();
 
-                if (totalTrackersFound > 0)
-                    foundTrackerList = getString(R.string.found_trackers) + "\n" + found;
+                if (totalTrackersFound > 0) foundTrackerList = getString(R.string.found_trackers) + "\n" + found;
 
                 ClassListingActivity.this.deleteFile("*");
                 //noinspection ResultOfMethodCallIgnored

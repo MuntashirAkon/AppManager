@@ -187,7 +187,7 @@
     <string name="view_summary">View Summary</string>
     <string name="toggle_class_listing">Toggle Class Listing</string>
     <string name="trackers_and_classes">%d trackers with %d classes</string>
-    <string name="tested_signatures_on_classes_and_time_taken">Tested %d signatures on %d classes.\nTime taken %d ms.\n\n%s</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Tested %d signatures on %d classes.\nTime taken %d ms (%d iterations).\n\n%s</string>
     <string name="found_trackers">Found Trackers:</string>
     <string name="tracker_details">Tracker details</string>
     <string name="tracker_classes">Tracker classes</string>
