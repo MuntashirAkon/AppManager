@@ -39,6 +39,7 @@
         <item>com.adcash.mobileads.</item>
         <item>com.adcolony</item>
         <item>com.intentsoftware.addapptr.</item>
+        <item>com.noqoush.adfalcon.android.sdk</item>
         <item>com.kakao.adfit.ads.</item>
         <item>com.adform.sdk.</item>
         <item>jp.tjkapp.adfurikunsdk.</item>
@@ -103,6 +104,7 @@
         <item>com.batch.android.</item>
         <item>com.bazaarvoice.bvandroidsdk</item>
         <item>com.beaconsinspace.android.beacon.detector.</item>
+        <item>com.bitly.Bitly</item>
         <item>com.blueconic</item>
         <item>com.bluekai.sdk.</item>
         <item>io.branch.</item>
@@ -139,7 +141,9 @@
         <item>com.dynamicyield.</item>
         <item>com.dynatrace.android.app.</item>
         <item>com.emarsys.predict</item>
+        <item>co.enhance.Enhance</item>
         <item>com.ensighten.</item>
+        <item>com.esri.arcgisruntime.</item>
         <item>com.estimote.</item>
         <item>com.eulerian.android.sdk</item>
         <item>com.exacttarget.</item>
@@ -163,12 +167,14 @@
         <item>com.gemius.sdk</item>
         <item>com.gigya.</item>
         <item>com.gimbal.android</item>
+        <item>com.giphy.sdk.analytics</item>
         <item>com.avocarrot.sdk</item>
         <item>com.glympse.android.</item>
         <item>com.google.android.gms.ads.mediation.</item>
         <item>com.google.android.apps.analytics.</item>
         <item>com.google.android.gms.analytics.</item>
         <item>com.crashlytics.</item>
+        <item>com.google.firebase.crashlytics</item>
         <item>io.fabric.</item>
         <item>com.google.android.gms.ads.doubleclick</item>
         <item>com.google.android.gms.measurement.</item>
@@ -176,6 +182,7 @@
         <item>com.google.android.gms.tagmanager</item>
         <item>com.google.tagmanager</item>
         <item>com.danielcwilson.plugins.analytics</item>
+        <item>com.heapanalytics</item>
         <item>com.helpshift</item>
         <item>com.connecthings.herow</item>
         <item>com.heyzap.sdk.ads.</item>
@@ -188,6 +195,7 @@
         <item>de.infonline.</item>
         <item>com.inmarket</item>
         <item>com.inmobi</item>
+        <item>com.inneractive.api.ads</item>
         <item>com.inrix.sdk</item>
         <item>com.instabug.bug</item>
         <item>com.instabug.library.Instabug</item>
@@ -220,8 +228,13 @@
         <item>com.mapbox.mapboxsdk.telemetry</item>
         <item>org.matomo</item>
         <item>org.piwik</item>
+        <item>com.mdotm.android</item>
+        <item>com.mediba.jp</item>
+        <item>mediba.ad.sdk.android.openx</item>
+        <item>com.metaps</item>
         <item>com.codahale.metrics</item>
         <item>com.microsoft.appcenter.analytics</item>
+        <item>com.microsoft.azure.mobile.analytics</item>
         <item>com.microsoft.appcenter.crashes</item>
         <item>com.millennialmedia.</item>
         <item>com.mintegral.</item>
@@ -255,17 +268,20 @@
         <item>com.optimizely.</item>
         <item>com.otherlevels.</item>
         <item>com.outbrain.</item>
+        <item>com.parsely.parselyandroid</item>
         <item>ly.persona.sdk</item>
         <item>com.foursquare.pilgrim</item>
         <item>com.pingstart.adsdk.</item>
         <item>com.placed.client</item>
         <item>com.placer.client.Placer</item>
+        <item>com.pollfish</item>
         <item>com.pubmatic.sdk</item>
         <item>net.pubnative</item>
         <item>com.pusher.client.</item>
         <item>com.pushspring.sdk.PushSpring</item>
         <item>com.pushwoosh</item>
         <item>com.pyze.</item>
+        <item>com.qualtrics.digital.</item>
         <item>com.quantcast.measurement.service.</item>
         <item>io.radar.sdk.Radar</item>
         <item>com.radiusnetworks</item>
@@ -318,6 +334,7 @@
         <item>com.talkingdata.</item>
         <item>com.tendcloud.appcpa.</item>
         <item>com.tendcloud.tenddata.</item>
+        <item>com.tamoco.sdk</item>
         <item>com.tapdaq.sdk.</item>
         <item>com.tapjoy.</item>
         <item>com.taplytics.sdk</item>
@@ -352,6 +369,7 @@
         <item>com.uxcam.UXCam</item>
         <item>io.vectaury.</item>
         <item>com.vervewireless.advert.</item>
+        <item>com.vpon.ads</item>
         <item>com.vungle.publisher.</item>
         <item>com.weborama.</item>
         <item>com.webtrekk.</item>
@@ -366,6 +384,8 @@
         <item>com.yandex.mobile.ads</item>
         <item>com.yinzcam.sobek</item>
         <item>com.youappi.sdk.</item>
+        <item>com.yume.android</item>
+        <item>com.redbricklane.zapr</item>
         <item>com.buglife.sdk</item>
         <item>io.inventiv.critic.</item>
         <item>io.palaima.debugdrawer.</item>
@@ -384,9 +404,7 @@
         <item>com.databox.</item>
         <item>io.flowup</item>
         <item>com.frogermcs.activityframemetrics</item>
-        <item>com.heapanalytics.</item>
         <item>com.mtraction.mtractioninapptracker.</item>
-        <item>com.parsely.parselyandroid.</item>
         <item>com.parse.Parse</item>
         <item>com.pulsatehq.</item>
         <item>com.rjfun.cordova.ad</item>
@@ -413,6 +431,7 @@
         <item>Adcash</item>
         <item>AdColony</item>
         <item>Add Apt Tr</item>
+        <item>AdFalcon</item>
         <item>AdFit (Daum)</item>
         <item>Adform</item>
         <item>Adfurikun</item>
@@ -477,6 +496,7 @@
         <item>Batch</item>
         <item>Bazaarvoice</item>
         <item>BeaconsInSpace (Fysical)</item>
+        <item>Bitly</item>
         <item>BlueConic</item>
         <item>BlueKai (acquired by Oracle)</item>
         <item>Branch</item>
@@ -513,7 +533,9 @@
         <item>Dynamic Yield</item>
         <item>Dynatrace</item>
         <item>Emarsys Predict</item>
+        <item>Enhance</item>
         <item>Ensighten</item>
+        <item>Esri ArcGIS</item>
         <item>Estimote</item>
         <item>Eulerian</item>
         <item>ExactTarget</item>
@@ -537,11 +559,13 @@
         <item>Gemius HeatMap</item>
         <item>Gigya</item>
         <item>Gimbal</item>
+        <item>GIPHY Analytics</item>
         <item>Glispa Connect (Formerly Avocarrot)</item>
         <item>Glympse</item>
         <item>Google Ads</item>
         <item>Google Analytics</item>
         <item>Google Analytics</item>
+        <item>Google CrashLytics</item>
         <item>Google CrashLytics</item>
         <item>Google CrashLytics</item>
         <item>Google DoubleClick</item>
@@ -550,6 +574,7 @@
         <item>Google Tag Manager</item>
         <item>Google Tag Manager</item>
         <item>google-analytics-plugin</item>
+        <item>Heap</item>
         <item>HelpShift</item>
         <item>Herow</item>
         <item>Heyzap (bought by Fyber)</item>
@@ -562,6 +587,7 @@
         <item>INFOnline</item>
         <item>Inmarket</item>
         <item>Inmobi</item>
+        <item>Inneractive</item>
         <item>Inrix</item>
         <item>Instabug</item>
         <item>Instabug</item>
@@ -594,7 +620,12 @@
         <item>Mapbox</item>
         <item>Matomo (Piwik)</item>
         <item>Matomo (Piwik)</item>
+        <item>MDOTM</item>
+        <item>mediba</item>
+        <item>mediba</item>
+        <item>Metaps</item>
         <item>Metrics</item>
+        <item>Microsoft Appcenter Analytics</item>
         <item>Microsoft Appcenter Analytics</item>
         <item>Microsoft Appcenter Crashes</item>
         <item>Millennial Media</item>
@@ -629,17 +660,20 @@
         <item>Optimizely</item>
         <item>OtherLevels</item>
         <item>OutBrain</item>
+        <item>Parse.ly</item>
         <item>Persona.ly</item>
         <item>Pilgrim</item>
         <item>PingStart</item>
         <item>Placed</item>
         <item>Placer</item>
+        <item>Pollfish</item>
         <item>PubMatic</item>
         <item>PubNative</item>
         <item>Pusher</item>
         <item>PushSpring</item>
         <item>Pushwoosh</item>
         <item>Pyze</item>
+        <item>Qualtrics</item>
         <item>Quantcast</item>
         <item>Radar</item>
         <item>Radius Networks</item>
@@ -692,6 +726,7 @@
         <item>TalkingData</item>
         <item>TalkingData</item>
         <item>TalkingData</item>
+        <item>Tamoco</item>
         <item>Tapdaq</item>
         <item>Tapjoy</item>
         <item>Taplytics</item>
@@ -726,6 +761,7 @@
         <item>UXCam</item>
         <item>Vectaury</item>
         <item>Verve</item>
+        <item>Vpon</item>
         <item>Vungle</item>
         <item>Weborama</item>
         <item>Webtrekk</item>
@@ -740,42 +776,42 @@
         <item>Yandex Ad</item>
         <item>Yinzcam Sobek</item>
         <item>YouAppi</item>
-        <item>°?Buglife</item>
-        <item>°?Critic</item>
-        <item>°?DebugDrawer</item>
-        <item>°?Flipper</item>
-        <item>°?Game Sparks</item>
-        <item>°?PlayFab java</item>
-        <item>°?Raygun</item>
-        <item>°?Rollbar</item>
-        <item>°AppLink.io</item>
-        <item>°Askingpoint</item>
-        <item>°AWS Kinesis</item>
-        <item>°AWS Kinesis</item>
-        <item>°Backendless</item>
-        <item>°BugClipper</item>
-        <item>°BugSense</item>
-        <item>°Databox</item>
-        <item>°FlowUp</item>
-        <item>°froger_mcs</item>
-        <item>°HeapAnalytics</item>
-        <item>°mTraction</item>
-        <item>°Parse.ly</item>
-        <item>°Parse</item>
-        <item>°Pulsate</item>
-        <item>°RJFUN</item>
-        <item>°SAS</item>
-        <item>°Skillz</item>
-        <item>°Teliver</item>
-        <item>°Woopra</item>
-        <item>²GravyAnalytics</item>
-        <item>µ?Acrarium</item>
-        <item>µ?ACRA</item>
-        <item>µ?CleanInsights</item>
-        <item>µ?CleanInsights</item>
-        <item>µ?Custom Activity On Crash</item>
-        <item>µ?Factual</item>
-        <item>µ?Factual</item>
-        <item>µ?Google-Ads Consent</item>
+        <item>YuMe</item>
+        <item>Zapr</item>
+        <item>Â°?Buglife</item>
+        <item>Â°?Critic</item>
+        <item>Â°?DebugDrawer</item>
+        <item>Â°?Flipper</item>
+        <item>Â°?Game Sparks</item>
+        <item>Â°?PlayFab java</item>
+        <item>Â°?Raygun</item>
+        <item>Â°?Rollbar</item>
+        <item>Â°AppLink.io</item>
+        <item>Â°Askingpoint</item>
+        <item>Â°AWS Kinesis</item>
+        <item>Â°AWS Kinesis</item>
+        <item>Â°Backendless</item>
+        <item>Â°BugClipper</item>
+        <item>Â°BugSense</item>
+        <item>Â°Databox</item>
+        <item>Â°FlowUp</item>
+        <item>Â°froger_mcs</item>
+        <item>Â°mTraction</item>
+        <item>Â°Parse</item>
+        <item>Â°Pulsate</item>
+        <item>Â°RJFUN</item>
+        <item>Â°SAS</item>
+        <item>Â°Skillz</item>
+        <item>Â°Teliver</item>
+        <item>Â°Woopra</item>
+        <item>Â²GravyAnalytics</item>
+        <item>Âµ?Acrarium</item>
+        <item>Âµ?ACRA</item>
+        <item>Âµ?CleanInsights</item>
+        <item>Âµ?CleanInsights</item>
+        <item>Âµ?Custom Activity On Crash</item>
+        <item>Âµ?Factual</item>
+        <item>Âµ?Factual</item>
+        <item>Âµ?Google-Ads Consent</item>
     </string-array>
 </resources>
