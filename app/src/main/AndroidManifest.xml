@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="io.github.muntashirakon.AppManager">
+    package="io.github.muntashirakon.AppManager"
+    android:installLocation="auto">
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"
         android:maxSdkVersion="25" />
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
