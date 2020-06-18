@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.style.BackgroundColorSpan;
+import android.util.Log;
 import android.util.Xml;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -150,13 +151,12 @@ public class SharedPrefsActivity extends AppCompatActivity implements SearchView
                 case EditPrefItemFragment.MODE_CREATE:
                 case EditPrefItemFragment.MODE_EDIT:
                     mSharedPrefMap.put(prefItem.keyName, prefItem.keyValue);
-                    mAdapter.setDefaultList(mSharedPrefMap);
                     break;
                 case EditPrefItemFragment.MODE_DELETE:
                     mSharedPrefMap.remove(prefItem.keyName);
-                    mAdapter.setDefaultList(mSharedPrefMap);
                     break;
             }
+            mAdapter.setDefaultList(mSharedPrefMap);
         }
     }
 
@@ -227,6 +227,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements SearchView
                 tagName = parser.getName();
                 if (event == XmlPullParser.START_TAG) {
                     attrName = parser.getAttributeValue(null, "name");
+                    if (attrName == null) attrName = "";
                     attrValue = parser.getAttributeValue(null, "value");
                     switch (tagName) {
                         case TAG_BOOLEAN:
