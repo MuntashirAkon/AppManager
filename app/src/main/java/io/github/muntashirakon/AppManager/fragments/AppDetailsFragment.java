@@ -28,6 +28,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -38,16 +40,21 @@ import android.widget.Toast;
 import com.jaredrummler.android.shell.Shell;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import io.github.muntashirakon.AppManager.AppDetailsItem;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
 import io.github.muntashirakon.AppManager.compontents.ComponentsApplier;
 import io.github.muntashirakon.AppManager.compontents.ComponentsApplier.ComponentType;
@@ -56,7 +63,7 @@ import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 
-public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
     private static final String NEEDED_PROPERTY_INT = "neededProperty";
 
     @IntDef(value = {
@@ -73,17 +80,17 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             SHARED_LIBRARY_FILES
     })
     public @interface Property {}
-    private static final int NONE = -1;
-    private static final int ACTIVITIES = 0;
-    private static final int SERVICES = 1;
-    private static final int RECEIVERS = 2;
-    private static final int PROVIDERS = 3;
-    private static final int USES_PERMISSIONS = 4;
-    private static final int PERMISSIONS = 5;
-    private static final int FEATURES = 6;
-    private static final int CONFIGURATION = 7;
-    private static final int SIGNATURES = 8;
-    private static final int SHARED_LIBRARY_FILES = 9;
+    public static final int NONE = -1;
+    public static final int ACTIVITIES = 0;
+    public static final int SERVICES = 1;
+    public static final int RECEIVERS = 2;
+    public static final int PROVIDERS = 3;
+    public static final int USES_PERMISSIONS = 4;
+    public static final int PERMISSIONS = 5;
+    public static final int FEATURES = 6;
+    public static final int CONFIGURATION = 7;
+    public static final int SIGNATURES = 8;
+    public static final int SHARED_LIBRARY_FILES = 9;
 
     private @Property int neededProperty;
 
@@ -209,6 +216,17 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (mAdapter != null) mAdapter.getFilter().filter(newText);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
     private void refreshDetails() {
         if (mAdapter != null){
             getPackageInfo(mPackageName);
@@ -302,28 +320,109 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
     /**
      * Return corresponding section's array
      */
-    private @Nullable Object[] getNeededArray(int index) {
+    private @NonNull List<AppDetailsItem> getNeededList(@Property int index) {
+        List<AppDetailsItem> appDetailsItems = new ArrayList<>();
         switch (index) {
-            case SERVICES: return mPackageInfo.services;
-            case RECEIVERS: return mPackageInfo.receivers;
-            case PROVIDERS: return mPackageInfo.providers;
-            case USES_PERMISSIONS: return permissionsWithFlags;
-            case PERMISSIONS: return mPackageInfo.permissions;
-            case FEATURES: return mPackageInfo.reqFeatures;
-            case CONFIGURATION: return mPackageInfo.configPreferences;
+            case SERVICES:
+                if (mPackageInfo.services != null) {
+                    for(ServiceInfo serviceInfo: mPackageInfo.services) {
+                        AppDetailsItem appDetailsItem = new AppDetailsItem(serviceInfo);
+                        appDetailsItem.name = serviceInfo.name;
+                        appDetailsItems.add(appDetailsItem);
+                    }
+                }
+                break;
+            case RECEIVERS:
+                if (mPackageInfo.receivers != null) {
+                    for(ActivityInfo activityInfo: mPackageInfo.receivers) {
+                        AppDetailsItem appDetailsItem = new AppDetailsItem(activityInfo);
+                        appDetailsItem.name = activityInfo.name;
+                        appDetailsItems.add(appDetailsItem);
+                    }
+                }
+                break;
+            case PROVIDERS:
+                if (mPackageInfo.providers != null) {
+                    for(ProviderInfo providerInfo: mPackageInfo.providers) {
+                        AppDetailsItem appDetailsItem = new AppDetailsItem(providerInfo);
+                        appDetailsItem.name = providerInfo.name;
+                        appDetailsItems.add(appDetailsItem);
+                    }
+                }
+                break;
+            case USES_PERMISSIONS:
+                if (permissionsWithFlags != null) {
+                    for(Tuple<String, Integer> permissionWithFlags: permissionsWithFlags) {
+                        AppDetailsItem appDetailsItem = new AppDetailsItem(permissionWithFlags);
+                        appDetailsItem.name = permissionWithFlags.getFirst();
+                        appDetailsItems.add(appDetailsItem);
+                    }
+                }
+                break;
+            case PERMISSIONS:
+                if (mPackageInfo.permissions != null) {
+                    for(PermissionInfo permissionInfo: mPackageInfo.permissions) {
+                        AppDetailsItem appDetailsItem = new AppDetailsItem(permissionInfo);
+                        appDetailsItem.name = permissionInfo.name;
+                        appDetailsItems.add(appDetailsItem);
+                    }
+                }
+                break;
+            case FEATURES:
+                if (mPackageInfo.reqFeatures != null) {
+                    for(FeatureInfo featureInfo: mPackageInfo.reqFeatures) {
+                        AppDetailsItem appDetailsItem = new AppDetailsItem(featureInfo);
+                        appDetailsItem.name = featureInfo.name;
+                        appDetailsItems.add(appDetailsItem);
+                    }
+                }
+                break;
+            case CONFIGURATION:
+                if (mPackageInfo.configPreferences != null) {
+                    for(ConfigurationInfo configurationInfo: mPackageInfo.configPreferences) {
+                        AppDetailsItem appDetailsItem = new AppDetailsItem(configurationInfo);
+                        appDetailsItems.add(appDetailsItem);
+                    }
+                }
+                break;
             case SIGNATURES:
+                Signature[] signatures;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     SigningInfo signingInfo = mPackageInfo.signingInfo;
-                    return signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
+                    signatures = signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
                             : signingInfo.getSigningCertificateHistory();
                 } else {
-                    //noinspection deprecation
-                    return mPackageInfo.signatures;
+                    signatures = mPackageInfo.signatures;
                 }
-            case SHARED_LIBRARY_FILES: return mPackageInfo.applicationInfo.sharedLibraryFiles;
+                if (signatures != null) {
+                    for(Signature signature: signatures) {
+                        AppDetailsItem appDetailsItem = new AppDetailsItem(signature);
+                        appDetailsItems.add(appDetailsItem);
+                    }
+                }
+                break;
+            case SHARED_LIBRARY_FILES:
+                if (mPackageInfo.applicationInfo.sharedLibraryFiles != null) {
+                    for(String sharedLibrary: mPackageInfo.applicationInfo.sharedLibraryFiles) {
+                        AppDetailsItem appDetailsItem = new AppDetailsItem(sharedLibrary);
+                        appDetailsItem.name = sharedLibrary;
+                        appDetailsItems.add(appDetailsItem);
+                    }
+                }
+                break;
             case ACTIVITIES:
-            default: return mPackageInfo.activities;
+                if (mPackageInfo.activities != null) {
+                    for(ActivityInfo activityInfo: mPackageInfo.activities) {
+                        AppDetailsItem appDetailsItem = new AppDetailsItem(activityInfo);
+                        appDetailsItem.name = activityInfo.name;
+                        appDetailsItems.add(appDetailsItem);
+                    }
+                }
+                break;
+            case NONE:
+            default:
         }
+        return appDetailsItems;
     }
 
     /**
@@ -346,11 +445,12 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
         }
     }
 
-
-    private class ActivitiesListAdapter extends BaseAdapter {
-        private int count;
-        private Object[] arrayOfThings;
+    private class ActivitiesListAdapter extends BaseAdapter implements Filterable {
+        private List<AppDetailsItem> mAdapterList;
+        private List<AppDetailsItem> mDefaultList;
         private @Property int requestedProperty;
+        private Filter mFilter;
+        private String mConstraint;
 
         ActivitiesListAdapter() {
             reset();
@@ -358,10 +458,49 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
 
         void reset() {
             requestedProperty = neededProperty;
-            arrayOfThings = getNeededArray(requestedProperty);
-            if (arrayOfThings == null) count = 0;
-            else count = arrayOfThings.length;
+            mAdapterList = getNeededList(requestedProperty);
+            mDefaultList = mAdapterList;
             notifyDataSetChanged();
+        }
+
+        @Override
+        public Filter getFilter() {
+            if (mFilter == null)
+                mFilter = new Filter() {
+                    @Override
+                    protected FilterResults performFiltering(CharSequence charSequence) {
+                        String constraint = charSequence.toString().toLowerCase();
+                        mConstraint = constraint;
+                        FilterResults filterResults = new FilterResults();
+                        if (constraint.length() == 0) {
+                            filterResults.count = 0;
+                            filterResults.values = null;
+                            return filterResults;
+                        }
+
+                        List<AppDetailsItem> list = new ArrayList<>(mDefaultList.size());
+                        for (AppDetailsItem item : mDefaultList) {
+                            if (item.name.toLowerCase().contains(constraint))
+                                list.add(item);
+                        }
+
+                        filterResults.count = list.size();
+                        filterResults.values = list;
+                        return filterResults;
+                    }
+
+                    @Override
+                    protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                        if (filterResults.values == null) {
+                            mAdapterList = mDefaultList;
+                        } else {
+                            //noinspection unchecked
+                            mAdapterList = (List<AppDetailsItem>) filterResults.values;
+                        }
+                        notifyDataSetChanged();
+                    }
+                };
+            return mFilter;
         }
 
         /**
@@ -386,12 +525,12 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
 
         @Override
         public int getCount() {
-            return count;
+            return mAdapterList.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return arrayOfThings[position];
+            return mAdapterList.get(position);
         }
 
         @Override
@@ -457,7 +596,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            final ActivityInfo activityInfo = (ActivityInfo) arrayOfThings[index];
+            final ActivityInfo activityInfo = (ActivityInfo) mAdapterList.get(index).vanillaItem;
             final String activityName = activityInfo.name;
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             if (mComponentsApplier.hasComponent(activityName)) {
@@ -466,29 +605,26 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             } else {
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
             }
-
             // Name
-            viewHolder.textView2.setText(activityName.startsWith(mPackageName) ?
-                    activityName.replaceFirst(mPackageName, "")
-                    : activityName);
-
+            if (mConstraint != null && activityName.toLowerCase().contains(mConstraint)) {
+                // Highlight searched query
+                viewHolder.textView2.setText(Utils.getHighlightedText(activityName, mConstraint, mColorRed));
+            } else {
+                viewHolder.textView2.setText(activityName.startsWith(mPackageName) ?
+                        activityName.replaceFirst(mPackageName, "") : activityName);
+            }
             // Icon
             viewHolder.imageView.setImageDrawable(activityInfo.loadIcon(mPackageManager));
-
             // TaskAffinity
             viewHolder.textView3.setText(getString(R.string.taskAffinity) + ": " + activityInfo.taskAffinity);
-
             // LaunchMode
             viewHolder.textView4.setText(getString(R.string.launch_mode) + ": " + Utils.getLaunchMode(activityInfo.launchMode)
                     + " | " + getString(R.string.orientation) + ": " + Utils.getOrientationString(activityInfo.screenOrientation));
-
             // Orientation
             viewHolder.textView5.setText(Utils.getActivitiesFlagsString(activityInfo.flags));
-
             // SoftInput
             viewHolder.textView6.setText(getString(R.string.softInput) + ": " + Utils.getSoftInputString(activityInfo.softInputMode)
                     + " | " + (activityInfo.permission == null ? getString(R.string.require_no_permission) : activityInfo.permission));
-
             // Label
             Button launch = viewHolder.launchBtn;
             launch.setText(activityInfo.loadLabel(mPackageManager));
@@ -579,7 +715,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            final ServiceInfo serviceInfo = (ServiceInfo) arrayOfThings[index];
+            final ServiceInfo serviceInfo = (ServiceInfo) mAdapterList.get(index).vanillaItem;
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             if (mComponentsApplier.hasComponent(serviceInfo.name)) {
                 convertView.setBackgroundColor(mColorRed);
@@ -592,9 +728,13 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             viewHolder.textView1.setText(serviceInfo.loadLabel(mPackageManager));
 
             // Name
-            viewHolder.textView2.setText(serviceInfo.name.startsWith(mPackageName) ?
-                    serviceInfo.name.replaceFirst(mPackageName, "")
-                    : serviceInfo.name);
+            if (mConstraint != null && serviceInfo.name.toLowerCase().contains(mConstraint)) {
+                // Highlight searched query
+                viewHolder.textView2.setText(Utils.getHighlightedText(serviceInfo.name, mConstraint, mColorRed));
+            } else {
+                viewHolder.textView2.setText(serviceInfo.name.startsWith(mPackageName) ?
+                        serviceInfo.name.replaceFirst(mPackageName, "") : serviceInfo.name);
+            }
 
             // Icon
             viewHolder.imageView.setImageDrawable(serviceInfo.loadIcon(mPackageManager));
@@ -648,7 +788,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            final ActivityInfo activityInfo = (ActivityInfo) arrayOfThings[index];
+            final ActivityInfo activityInfo = (ActivityInfo) mAdapterList.get(index).vanillaItem;
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             if (mComponentsApplier.hasComponent(activityInfo.name)) {
                 convertView.setBackgroundColor(mColorRed);
@@ -661,10 +801,14 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             viewHolder.textView1.setText(activityInfo.loadLabel(mPackageManager));
 
             // Name
-            viewHolder.textView2.setText(activityInfo.name.startsWith(mPackageName) ?
-                    activityInfo.name.replaceFirst(mPackageName, "")
-                    : activityInfo.name);
-
+            if (mConstraint != null && activityInfo.name.toLowerCase().contains(mConstraint)) {
+                // Highlight searched query
+                viewHolder.textView2.setText(Utils.getHighlightedText(activityInfo.name, mConstraint, mColorRed));
+            } else {
+                viewHolder.textView2.setText(activityInfo.name.startsWith(mPackageName) ?
+                        activityInfo.name.replaceFirst(mPackageName, "")
+                        : activityInfo.name);
+            }
             // Icon
             viewHolder.imageView.setImageDrawable(activityInfo.loadIcon(mPackageManager));
 
@@ -724,7 +868,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            final ProviderInfo providerInfo = (ProviderInfo) arrayOfThings[index];
+            final ProviderInfo providerInfo = (ProviderInfo) mAdapterList.get(index).vanillaItem;
             final String providerName = providerInfo.name;
             // Set background color
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
@@ -775,8 +919,13 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             // Authority
             viewHolder.textView6.setText(getString(R.string.authority) + ": " + providerInfo.authority);
             // Name
-            viewHolder.textView2.setText(providerName.startsWith(mPackageName) ?
-                    providerName.replaceFirst(mPackageName, "") : providerName);
+            if (mConstraint != null && providerName.toLowerCase().contains(mConstraint)) {
+                // Highlight searched query
+                viewHolder.textView2.setText(Utils.getHighlightedText(providerName, mConstraint, mColorRed));
+            } else {
+                viewHolder.textView2.setText(providerName.startsWith(mPackageName) ?
+                        providerName.replaceFirst(mPackageName, "") : providerName);
+            }
             // Blocking
             viewHolder.blockBtn.setOnClickListener(v -> {
                 if (mComponentsApplier.hasComponent(providerName)) { // Remove from the list
@@ -819,7 +968,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
 
             @SuppressWarnings("unchecked")
-            Tuple<String, Integer> permTuple = (Tuple<String, Integer>) arrayOfThings[index];
+            Tuple<String, Integer> permTuple = (Tuple<String, Integer>) mAdapterList.get(index).vanillaItem;
             final String permName = permTuple.getFirst();
             final int permFlags = permTuple.getSecond();
             PermissionInfo permissionInfo = null;
@@ -828,7 +977,12 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             } catch (PackageManager.NameNotFoundException ignore) {}
 
             // Set permission name
-            viewHolder.textView1.setText(permName);
+            if (mConstraint != null && permName.toLowerCase().contains(mConstraint)) {
+                // Highlight searched query
+                viewHolder.textView1.setText(Utils.getHighlightedText(permName, mConstraint, mColorRed));
+            } else {
+                viewHolder.textView1.setText(permName);
+            }
             // Set others
             if (permissionInfo != null) {
                 // Description
@@ -898,7 +1052,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
 
             TextView textView = (TextView) convertView;
             textView.setTextIsSelectable(true);
-            textView.setText((String) arrayOfThings[index]);
+            textView.setText((String) mAdapterList.get(index).vanillaItem);
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             int medium_size = mActivity.getResources().getDimensionPixelSize(R.dimen.padding_medium);
             int small_size = mActivity.getResources().getDimensionPixelSize(R.dimen.padding_very_small);
@@ -935,16 +1089,20 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            final PermissionInfo permissionInfo = (PermissionInfo) arrayOfThings[index];
+            final PermissionInfo permissionInfo = (PermissionInfo) mAdapterList.get(index).vanillaItem;
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
 
             // Label
             viewHolder.textView1.setText(permissionInfo.loadLabel(mPackageManager));
 
             // Name
-            viewHolder.textView2.setText(permissionInfo.name.startsWith(mPackageName) ?
-                    permissionInfo.name.replaceFirst(mPackageName, "")
-                    : permissionInfo.name);
+            if (mConstraint != null && permissionInfo.name.toLowerCase().contains(mConstraint)) {
+                // Highlight searched query
+                viewHolder.textView2.setText(Utils.getHighlightedText(permissionInfo.name, mConstraint, mColorRed));
+            } else {
+                viewHolder.textView2.setText(permissionInfo.name.startsWith(mPackageName) ?
+                        permissionInfo.name.replaceFirst(mPackageName, "") : permissionInfo.name);
+            }
 
             // Icon
             viewHolder.imageView.setImageDrawable(permissionInfo.loadIcon(mPackageManager));
@@ -981,7 +1139,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            final FeatureInfo featureInfo = (FeatureInfo) arrayOfThings[index];
+            final FeatureInfo featureInfo = (FeatureInfo) mAdapterList.get(index).vanillaItem;
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
 
             // Name
@@ -1017,7 +1175,7 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            final ConfigurationInfo configurationInfo = (ConfigurationInfo) arrayOfThings[index];
+            final ConfigurationInfo configurationInfo = (ConfigurationInfo) mAdapterList.get(index).vanillaItem;
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
 
             // GLES ver
@@ -1047,8 +1205,8 @@ public class AppDetailsFragment extends Fragment implements SwipeRefreshLayout.O
             }
 
             TextView textView = (TextView) convertView;
-            textView.setText(Utils.signCert((Signature) arrayOfThings[index]) + "\n" +
-                    ((Signature) arrayOfThings[index]).toCharsString());
+            final Signature signature = (Signature) mAdapterList.get(index).vanillaItem;
+            textView.setText(Utils.signCert(signature) + "\n" + signature.toCharsString());
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             textView.setTextIsSelectable(true);
             int medium_size = mActivity.getResources().getDimensionPixelSize(R.dimen.padding_medium);

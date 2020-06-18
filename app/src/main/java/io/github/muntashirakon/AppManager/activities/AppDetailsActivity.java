@@ -5,16 +5,22 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
@@ -22,6 +28,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fragments.AppDetailsFragment;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class AppDetailsActivity extends AppCompatActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
@@ -30,6 +37,7 @@ public class AppDetailsActivity extends AppCompatActivity {
     private TypedArray mTabTitleIds;
     AppDetailsFragmentStateAdapter appDetailsFragmentStateAdapter;
     ViewPager2 viewPager2;
+    AppDetailsFragment[] fragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +62,49 @@ public class AppDetailsActivity extends AppCompatActivity {
         appDetailsFragmentStateAdapter = new AppDetailsFragmentStateAdapter(fragmentManager, getLifecycle());
         viewPager2 = findViewById(R.id.pager);
         viewPager2.setAdapter(appDetailsFragmentStateAdapter);
+        fragments = new AppDetailsFragment[mTabTitleIds.length()];
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            final SearchView sSearchView = new SearchView(actionBar.getThemedContext());
+            actionBar.setDisplayShowCustomEnabled(true);
+            sSearchView.setQueryHint(getString(R.string.search));
 
+            ((ImageView) sSearchView.findViewById(androidx.appcompat.R.id.search_button))
+                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
+            ((ImageView) sSearchView.findViewById(androidx.appcompat.R.id.search_close_btn))
+                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
+
+            ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.gravity = Gravity.END;
+            actionBar.setCustomView(sSearchView, layoutParams);
+            viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageSelected(@AppDetailsFragment.Property int position) {
+                    super.onPageSelected(position);
+                    switch (position) {
+                        case AppDetailsFragment.ACTIVITIES:
+                        case AppDetailsFragment.SERVICES:
+                        case AppDetailsFragment.RECEIVERS:
+                        case AppDetailsFragment.PROVIDERS:
+                        case AppDetailsFragment.USES_PERMISSIONS:
+                        case AppDetailsFragment.PERMISSIONS:
+                            sSearchView.setVisibility(View.VISIBLE);
+                            sSearchView.setIconified(true);
+                            if (fragments[position] != null)
+                                sSearchView.setOnQueryTextListener(fragments[position]);
+                            break;
+                        case AppDetailsFragment.FEATURES:
+                        case AppDetailsFragment.CONFIGURATION:
+                        case AppDetailsFragment.SIGNATURES:
+                        case AppDetailsFragment.SHARED_LIBRARY_FILES:
+                        case AppDetailsFragment.NONE:
+                        default:
+                            sSearchView.setVisibility(View.GONE);
+                    }
+                }
+            });
+        }
         TabLayout tabLayout = findViewById(R.id.tab_layout);
 
         new TabLayoutMediator(tabLayout, viewPager2, true,
@@ -72,7 +122,7 @@ public class AppDetailsActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         final int id = item.getItemId();
         if (id == android.R.id.home) {
             finish();
@@ -94,7 +144,7 @@ public class AppDetailsActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment createFragment(@AppDetailsFragment.Property int position) {
-            return new AppDetailsFragment(position);
+            return (fragments[position] = new AppDetailsFragment(position));
         }
 
         @Override
