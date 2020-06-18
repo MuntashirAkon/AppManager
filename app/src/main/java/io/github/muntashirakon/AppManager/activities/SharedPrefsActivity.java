@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Xml;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -35,7 +36,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -47,16 +47,19 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fragments.EditPrefItemFragment;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-public class SharedPrefsActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, EditPrefItemFragment.InterfaceCommunicator {
+public class SharedPrefsActivity extends AppCompatActivity implements
+        SearchView.OnQueryTextListener, EditPrefItemFragment.InterfaceCommunicator {
     public static final String EXTRA_PREF_LOCATION = "EXTRA_PREF_LOCATION";
     public static final String EXTRA_PREF_LABEL    = "EXTRA_PREF_LABEL";  // Optional
 
-    public static final String TAG_ROOT     = "map";  // <map></map>
+    public static final String TAG_ROOT    = "map";  // <map></map>
     public static final String TAG_BOOLEAN = "boolean";  // <boolean name="bool" value="true" />
-    public static final String TAG_FLOAT = "float";  // <float name="float" value="12.3" />
+    public static final String TAG_FLOAT   = "float";  // <float name="float" value="12.3" />
     public static final String TAG_INTEGER = "int";  // <int name="integer" value="123" />
-    public static final String TAG_LONG = "long";  // <long name="long" value="123456789" />
-    public static final String TAG_STRING = "string";  // <string name="string"></string> | <string name="string"><string></string></string>
+    public static final String TAG_LONG    = "long";  // <long name="long" value="123456789" />
+    public static final String TAG_STRING  = "string";  // <string name="string"></string> | <string name="string"><string></string></string>
+
+    public static final int REASONABLE_STR_SIZE = 200;
 
     private String mSharedPrefFile;
     private File mTempSharedPrefFile;
@@ -113,7 +116,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements SearchView
             EditPrefItemFragment.PrefItem prefItem = new EditPrefItemFragment.PrefItem();
             prefItem.keyName = mAdapter.getItem(position);
             prefItem.keyValue = mSharedPrefMap.get(prefItem.keyName);
-            DialogFragment dialogFragment = new EditPrefItemFragment();
+            EditPrefItemFragment dialogFragment = new EditPrefItemFragment();
             Bundle args = new Bundle();
             args.putParcelable(EditPrefItemFragment.ARG_PREF_ITEM, prefItem);
             args.putInt(EditPrefItemFragment.ARG_MODE, EditPrefItemFragment.MODE_EDIT);
@@ -389,14 +392,16 @@ public class SharedPrefsActivity extends AppCompatActivity implements SearchView
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             String prefName = mAdapterList[position];
-
             if (mConstraint != null && prefName.toLowerCase().contains(mConstraint)) {
                 // Highlight searched query
                 viewHolder.item_name.setText(Utils.getHighlightedText(prefName, mConstraint, mColorRed));
             } else {
                 viewHolder.item_name.setText(prefName);
             }
-            viewHolder.item_value.setText(Objects.requireNonNull(mAdapterMap.get(mAdapterList[position])).toString());
+            Object value = mAdapterMap.get(prefName);
+            String strValue = (value != null) ? value.toString() : "";
+            viewHolder.item_value.setText(strValue.length() > REASONABLE_STR_SIZE ?
+                    strValue.substring(0, REASONABLE_STR_SIZE) : strValue);
             convertView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
             return convertView;
         }

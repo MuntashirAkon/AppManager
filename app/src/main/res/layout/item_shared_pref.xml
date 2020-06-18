@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:minLines="1"
+            android:ellipsize="end"
             android:textSize="@dimen/subtitle_font"
             tools:text="@tools:sample/lorem[9]" />
 
