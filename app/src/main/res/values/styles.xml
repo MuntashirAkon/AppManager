@@ -1,9 +1,12 @@
 <resources>
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight" />
     <style name="Theme.MaterialComponents.DayNight" parent="Theme.MaterialComponents.Light">
+        <item name="actionOverflowMenuStyle">@style/Widget.AppCompat.Light.PopupMenu.Overflow</item>
         <item name="colorPrimary">@android:color/white</item>
         <item name="colorPrimaryDark">#33000000</item>
         <item name="colorAccent">@color/cma</item>
+        <item name="colorOnSurface">?android:attr/textColorPrimary</item>
+        <item name="android:colorControlActivated">?android:attr/colorAccent</item>
         <item name="android:textColorPrimary">#DE000000</item>
         <item name="android:textColorSecondary">#99000000</item>
         <item name="actionOverflowButtonStyle">@style/ActionBarOverflowButton</item>
@@ -19,6 +22,10 @@
     </style>
     <style name="CustomFloatingActionButton" parent="@style/Widget.MaterialComponents.FloatingActionButton">
         <item name="materialThemeOverlay">@style/CustomFabOverlay</item>
+    </style>
+    <style name="CustomTextInputLayout" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@drawable/outlined_stroke_color</item>
+        <item name="hintTextColor">?attr/colorAccent</item>
     </style>
     <style name="CustomFabOverlay">
         <item name="colorSecondary">?android:attr/colorAccent</item>

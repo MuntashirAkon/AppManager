@@ -15,111 +15,83 @@
         android:paddingEnd="@dimen/padding_medium"
         android:paddingBottom="@dimen/padding_medium">
 
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/CustomTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:hint="@string/shortcut_name"
+            app:hintAnimationEnabled="true"
+            app:hintEnabled="true">
 
-            <TextView
-                android:id="@+id/shortcut_name_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:text="@string/shortcut_name"
-                android:textAllCaps="true"
-                android:labelFor="@id/shortcut_name" />
-
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/shortcut_name"
+                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:importantForAutofill="no"
-                android:inputType="textPersonName" />
+                android:singleLine="true"
+                tools:text="@tools:sample/full_names" />
 
-        </LinearLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/CustomTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:hint="@string/package_name"
+            app:hintAnimationEnabled="true"
+            app:hintEnabled="true">
 
-            <TextView
-                android:id="@+id/package_name_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:text="@string/package_name"
-                android:textAllCaps="true"
-                android:labelFor="@id/package_name" />
-
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/package_name"
+                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:importantForAutofill="no"
-                android:inputType="textPersonName">
-                <requestFocus />
-            </EditText>
+                android:singleLine="true"
+                tools:text="@tools:sample/full_names" />
 
-        </LinearLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/CustomTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:hint="@string/class_name"
+            app:hintAnimationEnabled="true"
+            app:hintEnabled="true">
 
-            <TextView
-                android:id="@+id/class_name_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:text="@string/class_name"
-                android:textAllCaps="true"
-                android:labelFor="@id/class_name" />
-
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/class_name"
+                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:importantForAutofill="no"
-                android:inputType="textPersonName" />
+                android:singleLine="true"
+                tools:text="@tools:sample/full_names" />
 
-        </LinearLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="0dp"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/CustomTextInputLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:hint="@string/insert_icon"
+                app:hintAnimationEnabled="true"
+                app:hintEnabled="true">
 
-                <TextView
-                    android:id="@+id/icon_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:labelFor="@id/insert_icon"
-                    android:text="@string/insert_icon"
-                    android:textAllCaps="true" />
-
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/insert_icon"
+                    style="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:importantForAutofill="no"
-                    android:inputType="textPersonName" />
+                    android:singleLine="true"
+                    tools:text="@tools:sample/full_names" />
 
-            </LinearLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <ImageView
                 android:id="@+id/insert_icon_btn"
