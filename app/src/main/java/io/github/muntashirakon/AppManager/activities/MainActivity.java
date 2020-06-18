@@ -471,7 +471,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         List<ApplicationItem> list = new ArrayList<>(mDefaultList.size());
                         for (ApplicationItem item : mDefaultList) {
                             if (item.label.toLowerCase().contains(constraint) ||
-                                    item.applicationInfo.packageName.contains(constraint))
+                                    item.applicationInfo.packageName.toLowerCase().contains(constraint))
                                 list.add(item);
                         }
 
@@ -598,7 +598,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 holder.label.setTextColor(Color.RED);
             else holder.label.setTextColor(mColorPrimary);
             // Set package name
-            if (mConstraint != null && info.packageName.contains(mConstraint)) {
+            if (mConstraint != null && info.packageName.toLowerCase().contains(mConstraint)) {
                 // Highlight searched query
                 holder.packageName.setText(Utils.getHighlightedText(info.packageName, mConstraint, mColorRed));
             } else {
