@@ -11,9 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.Spannable;
 import android.text.method.ScrollingMovementMethod;
-import android.text.style.BackgroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -442,8 +440,6 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     }
 
     static class ClassListingAdapter extends BaseAdapter implements Filterable {
-        static final Spannable.Factory sSpannableFactory = Spannable.Factory.getInstance();
-
         private LayoutInflater mLayoutInflater;
         private Filter mFilter;
         private String mConstraint;
@@ -488,25 +484,16 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
             if (convertView == null) {
                 convertView = mLayoutInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
             }
-            String className = (String) mAdapterList.get(position);
+            String className = mAdapterList.get(position);
             TextView textView = (TextView) convertView;
             if (mConstraint != null && className.toLowerCase().contains(mConstraint)) {
                 // Highlight searched query
-                textView.setText(getHighlightedText(className));
+                textView.setText(Utils.getHighlightedText(className, mConstraint, mColorRed));
             } else {
                 textView.setText(className);
             }
             convertView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
             return convertView;
-        }
-
-        Spannable getHighlightedText(String s) {
-            Spannable spannable = sSpannableFactory.newSpannable(s);
-            int start = s.toLowerCase().indexOf(mConstraint);
-            int end = start + mConstraint.length();
-            spannable.setSpan(new BackgroundColorSpan(mColorRed), start, end,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            return spannable;
         }
 
         @Override

@@ -4,9 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.style.BackgroundColorSpan;
-import android.util.Log;
 import android.util.Xml;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -333,8 +330,6 @@ public class SharedPrefsActivity extends AppCompatActivity implements SearchView
     }
 
     static class SharedPrefsListingAdapter extends BaseAdapter implements Filterable {
-        static final Spannable.Factory sSpannableFactory = Spannable.Factory.getInstance();
-
         private LayoutInflater mLayoutInflater;
         private Filter mFilter;
         private String mConstraint;
@@ -397,22 +392,13 @@ public class SharedPrefsActivity extends AppCompatActivity implements SearchView
 
             if (mConstraint != null && prefName.toLowerCase().contains(mConstraint)) {
                 // Highlight searched query
-                viewHolder.item_name.setText(getHighlightedText(prefName));
+                viewHolder.item_name.setText(Utils.getHighlightedText(prefName, mConstraint, mColorRed));
             } else {
                 viewHolder.item_name.setText(prefName);
             }
             viewHolder.item_value.setText(Objects.requireNonNull(mAdapterMap.get(mAdapterList[position])).toString());
             convertView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
             return convertView;
-        }
-
-        Spannable getHighlightedText(String s) {
-            Spannable spannable = sSpannableFactory.newSpannable(s);
-            int start = s.toLowerCase().indexOf(mConstraint);
-            int end = start + mConstraint.length();
-            spannable.setSpan(new BackgroundColorSpan(mColorRed), start, end,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            return spannable;
         }
 
         @Override

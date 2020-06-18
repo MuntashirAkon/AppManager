@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.format.Formatter;
-import android.text.style.BackgroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -404,7 +403,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         static final String sections = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         @SuppressLint("SimpleDateFormat")
         static final DateFormat sSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");// hh:mm:ss");
-        static final Spannable.Factory sSpannableFactory = Spannable.Factory.getInstance();
 
         static class ViewHolder {
             ImageView icon;
@@ -591,7 +589,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             // Set app label
             if (mConstraint != null && item.label.toLowerCase().contains(mConstraint)) {
                 // Highlight searched query
-                holder.label.setText(getHighlightedText(item.label));
+                holder.label.setText(Utils.getHighlightedText(item.label, mConstraint, mColorRed));
             } else {
                 holder.label.setText(item.label);
             }
@@ -602,7 +600,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             // Set package name
             if (mConstraint != null && info.packageName.contains(mConstraint)) {
                 // Highlight searched query
-                holder.packageName.setText(getHighlightedText(info.packageName));
+                holder.packageName.setText(Utils.getHighlightedText(info.packageName, mConstraint, mColorRed));
             } else {
                 holder.packageName.setText(info.packageName);
             }
@@ -651,15 +649,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             else holder.size.setTextColor(mColorSecondary);
 
             return view;
-        }
-
-        Spannable getHighlightedText(String s) {
-            Spannable spannable = sSpannableFactory.newSpannable(s);
-            int start = s.toLowerCase().indexOf(mConstraint);
-            int end = start + mConstraint.length();
-            spannable.setSpan(new BackgroundColorSpan(mColorRed), start, end,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            return spannable;
         }
 
         @Override

@@ -13,6 +13,8 @@ import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.os.Build;
+import android.text.Spannable;
+import android.text.style.BackgroundColorSpan;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.WindowManager;
@@ -45,8 +47,22 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+@SuppressWarnings("unused")
 public class Utils {
+    static final Spannable.Factory sSpannableFactory = Spannable.Factory.getInstance();
+
+    @NonNull
+    public static Spannable getHighlightedText(@NonNull String text, @NonNull String constraint, int color) {
+        Spannable spannable = sSpannableFactory.newSpannable(text);
+        int start = text.toLowerCase().indexOf(constraint);
+        int end = start + constraint.length();
+        spannable.setSpan(new BackgroundColorSpan(color), start, end,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
+    }
+
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean checkUsageStatsPermission(@NonNull Context context) {
         AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
@@ -72,7 +88,7 @@ public class Utils {
         return array == null ? 0 : array.length;
     }
 
-    public static int dpToPx(Context c, int dp) {
+    public static int dpToPx(@NonNull Context c, int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, c.getResources().getDisplayMetrics());
     }
 
@@ -86,21 +102,23 @@ public class Utils {
         return 0;
     }
 
-    public static String getFileContent(File file) {
+    @NonNull
+    public static String getFileContent(@NonNull File file) {
         if (file.isDirectory())
             return "-1";
 
         try {
             Scanner scanner = new Scanner(file);
-            String result = "";
+            StringBuilder result = new StringBuilder();
             while (scanner.hasNext())
-                result += scanner.next();
-            return result;
+                result.append(scanner.next());
+            return result.toString();
         } catch (FileNotFoundException e) {
             return "-1";
         }
     }
 
+    @NonNull
     public static String getLaunchMode(int mode) {
         switch (mode) {
             case ActivityInfo.LAUNCH_MULTIPLE:
@@ -116,6 +134,7 @@ public class Utils {
         }
     }
 
+    @NonNull
     public static String getOrientationString(int orientation) {
         switch (orientation) {
             case ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED:
@@ -155,6 +174,7 @@ public class Utils {
         }
     }
 
+    @NonNull
     public static String getSoftInputString(int flag) {
         StringBuilder builder = new StringBuilder();
         if ((flag & WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING) != 0)
@@ -191,6 +211,7 @@ public class Utils {
         return result.equals("") ? "null" : result;
     }
 
+    @NonNull
     public static String getServiceFlagsString(int flag) {
         StringBuilder builder = new StringBuilder();
         if ((flag & ServiceInfo.FLAG_STOP_WITH_TASK) != 0)
@@ -216,6 +237,7 @@ public class Utils {
         return result.equals("") ? "\u2690" : "\u2691 "+result;
     }
 
+    @NonNull
     public static String getActivitiesFlagsString(int flag) {
         StringBuilder builder = new StringBuilder();
         if ((flag & ActivityInfo.FLAG_ALLOW_TASK_REPARENTING) != 0)
@@ -306,12 +328,12 @@ public class Utils {
         return protectionLevel;
     }
 
+    @NonNull
     public static String getFeatureFlagsString(int flags) {
-        if (flags == FeatureInfo.FLAG_REQUIRED)
-            return "Required";
-        return "null";
+        return (flags == FeatureInfo.FLAG_REQUIRED) ? "Required": "null";
     }
 
+    @NonNull
     public static String getInputFeaturesString(int flag) {
         String string = "";
         if ((flag & ConfigurationInfo.INPUT_FEATURE_FIVE_WAY_NAV) != 0)
@@ -321,20 +343,23 @@ public class Utils {
         return string.length() == 0 ? "null" : string;
     }
 
-    public static void checkStringBuilderEnd(StringBuilder builder) {
+    public static void checkStringBuilderEnd(@NonNull StringBuilder builder) {
         int length = builder.length();
         if (length > 2)
             builder.delete(builder.length() - 2, builder.length());
     }
 
+    @NonNull
     public static String getOpenGL(int reqGL){
             if (reqGL != 0) {
-                return (short)(reqGL>>16)+"."+(short)reqGL;//Integer.toString((reqGL & 0xffff0000) >> 16);
+                return (short) (reqGL >> 16) + "." + (short) reqGL; //Integer.toString((reqGL & 0xffff0000) >> 16);
             } else {
                 return "1"; // Lack of property means OpenGL ES version 1
             }
     }
-    public static String convertToHex(byte[] data) {//https://stackoverflow.com/questions/5980658/how-to-sha1-hash-a-string-in-android
+
+    @NonNull
+    public static String convertToHex(@NonNull byte[] data) { // https://stackoverflow.com/questions/5980658/how-to-sha1-hash-a-string-in-android
         StringBuilder buf = new StringBuilder();
         for (byte b : data) {
             int halfbyte = (b >>> 4) & 0x0F;
@@ -347,7 +372,8 @@ public class Utils {
         return buf.toString();
     }
 
-    public static String signCert(Signature sign){
+    @NonNull
+    public static String signCert(@NonNull Signature sign){
         String s= "";
         try {
             X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X.509")
@@ -369,7 +395,8 @@ public class Utils {
         return s;
     }
 
-    public static Tuple<String, String> apkPro(PackageInfo p){
+    @NonNull
+    public static Tuple<String, String> apkPro(@NonNull PackageInfo p){
         Signature[] signatures;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             SigningInfo signingInfo = p.signingInfo;
@@ -394,7 +421,8 @@ public class Utils {
     /**
      * Format xml file to correct indentation ...
      */
-    public static String getProperXml(String dirtyXml) {
+    @Nullable
+    public static String getProperXml(@NonNull String dirtyXml) {
         try {
             Document document = DocumentBuilderFactory.newInstance()
                     .newDocumentBuilder()
