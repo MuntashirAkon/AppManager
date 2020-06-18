@@ -25,6 +25,7 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,6 +90,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     private SwipeRefreshLayout mSwipeRefresh;
     private int mAccentColor;
     private CharSequence mPackageLabel;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +110,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mHorizontalLayout = findViewById(R.id.horizontal_layout);
         mTagCloud = findViewById(R.id.tag_cloud);
         mAccentColor = Utils.getThemeColor(this, android.R.attr.colorAccent);
+        mProgressBar = findViewById(R.id.progress_horizontal);
         getPackageInfoOrFinish();
     }
 
@@ -631,6 +634,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
      * Get package info.
      */
     private void getPackageInfoOrFinish() {
+        mProgressBar.setVisibility(View.VISIBLE);
         new Thread(() -> {
             try {
                 final int signingCertFlag;
@@ -663,6 +667,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                 runOnUiThread(this::setHeaderView);
                 runOnUiThread(this::setHorizontalView);
                 runOnUiThread(this::setVerticalView);
+                runOnUiThread(() -> mProgressBar.setVisibility(View.GONE));
             } catch (PackageManager.NameNotFoundException e) {
                 runOnUiThread(this::finish);
             }
