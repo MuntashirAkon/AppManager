@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private ProgressBar mProgressBar;
     private LoaderManager mLoaderManager;
     private SwipeRefreshLayout mSwipeRefresh;
+    private static String mConstraint;
 
     private int mSortBy;
 
@@ -296,6 +297,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mSwipeRefresh.setRefreshing(false);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mAdapter != null && mConstraint != null && !mConstraint.equals("")) {
+            mAdapter.getFilter().filter(mConstraint);
+        }
+    }
+
     private void showProgressBar(boolean show) {
         mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
     }
@@ -350,7 +359,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public boolean onQueryTextChange(String s) {
-        mAdapter.getFilter().filter(s);
+        mConstraint = s;
+        if (mAdapter != null)
+            mAdapter.getFilter().filter(mConstraint);
         return true;
     }
 
@@ -450,6 +461,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         void setDefaultList(List<ApplicationItem> list) {
             mDefaultList = list;
             mAdapterList = list;
+            if(MainActivity.mConstraint != null
+                    && !MainActivity.mConstraint.equals("")) {
+                getFilter().filter(MainActivity.mConstraint);
+            }
             notifyDataSetChanged();
         }
 

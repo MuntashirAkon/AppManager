@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Xml;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -66,6 +65,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements
     private SharedPrefsListingAdapter mAdapter;
     private ProgressBar mProgressBar;
     private HashMap<String, Object> mSharedPrefMap;
+    private static String mConstraint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,6 +191,14 @@ public class SharedPrefsActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (mAdapter != null && mConstraint != null && !mConstraint.equals("")) {
+            mAdapter.getFilter().filter(mConstraint);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mTempSharedPrefFile != null && mTempSharedPrefFile.exists()) {
@@ -206,8 +214,10 @@ public class SharedPrefsActivity extends AppCompatActivity implements
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (mAdapter != null)
+        mConstraint = newText;
+        if (mAdapter != null) {
             mAdapter.getFilter().filter(newText);
+        }
         return true;
     }
 
@@ -361,6 +371,10 @@ public class SharedPrefsActivity extends AppCompatActivity implements
             mDefaultList = list.keySet().toArray(new String[0]);
             mAdapterList = mDefaultList;
             mAdapterMap = list;
+            if(SharedPrefsActivity.mConstraint != null
+                    && !SharedPrefsActivity.mConstraint.equals("")) {
+                getFilter().filter(SharedPrefsActivity.mConstraint);
+            }
             notifyDataSetChanged();
         }
 

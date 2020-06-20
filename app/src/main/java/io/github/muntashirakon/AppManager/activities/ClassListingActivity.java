@@ -80,6 +80,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     private CharSequence mAppName;
     private ActionBar mActionBar;
     private ProgressBar mProgressBar;
+    private static String mConstraint;
 
     @Override
     protected void onDestroy() {
@@ -225,12 +226,21 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (mClassListingAdapter != null && mConstraint != null && !mConstraint.equals("")) {
+            mClassListingAdapter.getFilter().filter(mConstraint);
+        }
+    }
+
+    @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
+        mConstraint = newText;
         if (mClassListingAdapter != null)
             mClassListingAdapter.getFilter().filter(newText);
         return true;
@@ -465,6 +475,10 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         void setDefaultList(List<String> list) {
             mDefaultList = list;
             mAdapterList = list;
+            if(ClassListingActivity.mConstraint != null
+                    && !ClassListingActivity.mConstraint.equals("")) {
+                getFilter().filter(ClassListingActivity.mConstraint);
+            }
             notifyDataSetChanged();
         }
 

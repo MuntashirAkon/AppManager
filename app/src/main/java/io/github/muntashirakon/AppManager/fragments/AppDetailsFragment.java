@@ -54,7 +54,6 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.AppDetailsItem;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
 import io.github.muntashirakon.AppManager.compontents.ComponentsApplier;
 import io.github.muntashirakon.AppManager.compontents.ComponentsApplier.ComponentType;
@@ -103,6 +102,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private SwipeRefreshLayout mSwipeRefresh;
     private ComponentsApplier mComponentsApplier;
     private MenuItem blockingToggler;
+    private String mConstraint;
 
     private Tuple<String, Integer>[] permissionsWithFlags;
     private boolean bFi;
@@ -217,7 +217,16 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdapter != null && mConstraint != null && !mConstraint.equals("")) {
+            mAdapter.getFilter().filter(mConstraint);
+        }
+    }
+
+    @Override
     public boolean onQueryTextChange(String newText) {
+        mConstraint = newText;
         if (mAdapter != null) mAdapter.getFilter().filter(newText);
         return true;
     }
@@ -460,6 +469,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             requestedProperty = neededProperty;
             mAdapterList = getNeededList(requestedProperty);
             mDefaultList = mAdapterList;
+            if(AppDetailsFragment.this.mConstraint != null
+                    && !AppDetailsFragment.this.mConstraint.equals("")) {
+                getFilter().filter(AppDetailsFragment.this.mConstraint);
+            }
             notifyDataSetChanged();
         }
 
