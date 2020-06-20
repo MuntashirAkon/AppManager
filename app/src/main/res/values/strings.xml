@@ -275,4 +275,8 @@
     <string name="storage_and_cache">Storage &amp; Cache</string>
     <string name="total_size">Total</string>
     <string name="app_size">App</string>
+    <string name="app_ops">App Ops</string>
+    <string name="no_app_ops">No app operations</string>
+    <string name="failed_to_enable_op">Failed to enable the requested app op</string>
+    <string name="failed_to_disable_op">Failed to disable the requested app op</string>
 </resources>

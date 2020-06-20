@@ -87,6 +87,7 @@ public class AppDetailsActivity extends AppCompatActivity {
                         case AppDetailsFragment.SERVICES:
                         case AppDetailsFragment.RECEIVERS:
                         case AppDetailsFragment.PROVIDERS:
+                        case AppDetailsFragment.APP_OPS:
                         case AppDetailsFragment.USES_PERMISSIONS:
                         case AppDetailsFragment.PERMISSIONS:
                             sSearchView.setVisibility(View.VISIBLE);

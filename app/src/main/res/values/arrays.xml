@@ -5,6 +5,7 @@
         <item>@string/service</item>
         <item>@string/receivers</item>
         <item>@string/providers</item>
+        <item>@string/app_ops</item>
         <item>@string/permissions</item>
         <item>@string/declared_premission</item>
         <item>@string/uses_feature</item>

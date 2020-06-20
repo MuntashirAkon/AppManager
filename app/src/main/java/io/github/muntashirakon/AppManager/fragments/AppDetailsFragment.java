@@ -2,7 +2,6 @@ package io.github.muntashirakon.AppManager.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AppOpsManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -42,8 +41,10 @@ import com.jaredrummler.android.shell.Shell;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -55,6 +56,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.AppDetailsItem;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
+import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.compontents.ComponentsApplier;
 import io.github.muntashirakon.AppManager.compontents.ComponentsApplier.ComponentType;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
@@ -71,6 +74,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             SERVICES,
             RECEIVERS,
             PROVIDERS,
+            APP_OPS,
             USES_PERMISSIONS,
             PERMISSIONS,
             FEATURES,
@@ -84,12 +88,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     public static final int SERVICES = 1;
     public static final int RECEIVERS = 2;
     public static final int PROVIDERS = 3;
-    public static final int USES_PERMISSIONS = 4;
-    public static final int PERMISSIONS = 5;
-    public static final int FEATURES = 6;
-    public static final int CONFIGURATION = 7;
-    public static final int SIGNATURES = 8;
-    public static final int SHARED_LIBRARY_FILES = 9;
+    public static final int APP_OPS = 4;
+    public static final int USES_PERMISSIONS = 5;
+    public static final int PERMISSIONS = 6;
+    public static final int FEATURES = 7;
+    public static final int CONFIGURATION = 8;
+    public static final int SIGNATURES = 9;
+    public static final int SHARED_LIBRARY_FILES = 10;
 
     private @Property int neededProperty;
 
@@ -103,6 +108,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private ComponentsApplier mComponentsApplier;
     private MenuItem blockingToggler;
     private String mConstraint;
+    AppOpsService mAppOpsService;
 
     private Tuple<String, Integer>[] permissionsWithFlags;
     private boolean bFi;
@@ -317,6 +323,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         }
                     }
                     break;
+                case APP_OPS:
                 case CONFIGURATION:
                 case SIGNATURES:
                 case SHARED_LIBRARY_FILES:
@@ -365,6 +372,26 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         appDetailsItems.add(appDetailsItem);
                     }
                 }
+                break;
+            case APP_OPS:
+                mAppOpsService = new AppOpsService();
+                try {
+                    List<AppOpsManager.PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(-1, mPackageName, null);
+                    List<AppOpsManager.OpEntry> opEntries = new ArrayList<>();
+                    if (packageOpsList.size() == 1) opEntries.addAll(packageOpsList.get(0).getOps());
+                    packageOpsList = mAppOpsService.getOpsForPackage(-1, mPackageName, AppOpsManager.sAlwaysShownOp);
+                    if (packageOpsList.size() == 1) opEntries.addAll(packageOpsList.get(0).getOps());
+                    if(opEntries.size() > 0) {
+                        Set<Integer> uniqueSet = new HashSet<>();
+                        for (AppOpsManager.OpEntry opEntry: opEntries) {
+                            if (uniqueSet.contains(opEntry.getOp())) continue;
+                            AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry);
+                            appDetailsItem.name = AppOpsManager.opToName(opEntry.getOp());
+                            appDetailsItems.add(appDetailsItem);
+                            uniqueSet.add(opEntry.getOp());
+                        }
+                    }
+                } catch (Exception ignored) {}
                 break;
             case USES_PERMISSIONS:
                 if (permissionsWithFlags != null) {
@@ -449,6 +476,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             case SERVICES: return R.string.no_service;
             case RECEIVERS: return R.string.no_receivers;
             case PROVIDERS: return R.string.no_providers;
+            case APP_OPS: return R.string.no_app_ops;
             case USES_PERMISSIONS:
             case PERMISSIONS: return R.string.require_no_permission;
             case FEATURES: return R.string.no_feature;
@@ -568,6 +596,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     return getReceiverView(parent, convertView, position);
                 case PROVIDERS:
                     return getProviderView(parent, convertView, position);
+                case APP_OPS:
+                    return getAppOpsView(parent, convertView, position);
                 case USES_PERMISSIONS:
                     return getUsesPermissionsView(parent, convertView, position);
                 case PERMISSIONS:
@@ -966,6 +996,109 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         /**
          * We do not need complex views, Use recycled view if possible
          */
+        @SuppressLint("SetTextI18n")
+        @NonNull
+        private View getAppOpsView(ViewGroup viewGroup, View convertView, int index) {
+            ViewHolder viewHolder;
+            if (checkIfConvertViewMatch(convertView, USES_PERMISSIONS)) {
+                convertView = mLayoutInflater.inflate(R.layout.item_app_details_perm, viewGroup, false);
+
+                viewHolder = new ViewHolder();
+                viewHolder.currentViewType = USES_PERMISSIONS;
+                viewHolder.textView1 = convertView.findViewById(R.id.perm_name);
+                viewHolder.textView2 = convertView.findViewById(R.id.perm_description);
+                viewHolder.textView3 = convertView.findViewById(R.id.perm_protection_level);
+                viewHolder.textView4 = convertView.findViewById(R.id.perm_package_name);
+                viewHolder.textView5 = convertView.findViewById(R.id.perm_group);
+                viewHolder.toggleSwitch = convertView.findViewById(R.id.perm_toggle_btn);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+
+            AppOpsManager.OpEntry opEntry = (AppOpsManager.OpEntry) mAdapterList.get(index).vanillaItem;
+            final String opName = mAdapterList.get(index).name;
+            PermissionInfo permissionInfo = null;
+            try {
+                String permName = AppOpsManager.opToPermission(opName);
+                if (permName != null)
+                    permissionInfo = mPackageManager.getPermissionInfo(permName, PackageManager.GET_META_DATA);
+            } catch (PackageManager.NameNotFoundException | IllegalArgumentException ignore) {}
+
+            // Set permission name
+            if (mConstraint != null && opName.toLowerCase().contains(mConstraint)) {
+                // Highlight searched query
+                viewHolder.textView1.setText(Utils.getHighlightedText(opName, mConstraint, mColorRed));
+            } else {
+                viewHolder.textView1.setText(opName);
+            }
+            // Set others
+            if (permissionInfo != null) {
+                // Description
+                CharSequence description = permissionInfo.loadDescription(mPackageManager);
+                if (description != null) {
+                    viewHolder.textView2.setVisibility(View.VISIBLE);
+                    viewHolder.textView2.setText(description);
+                } else viewHolder.textView2.setVisibility(View.GONE);
+                // Protection level
+                String protectionLevel = Utils.getProtectionLevelString(permissionInfo.protectionLevel);
+                viewHolder.textView3.setText("\u2691 " + protectionLevel);
+                if (protectionLevel.contains("dangerous"))
+                    convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.red));
+                // Set package name
+                if (permissionInfo.packageName != null) {
+                    viewHolder.textView4.setVisibility(View.VISIBLE);
+                    viewHolder.textView4.setText(String.format("%s: %s",
+                            mActivity.getString(R.string.package_name), permissionInfo.packageName));
+                } else viewHolder.textView4.setVisibility(View.GONE);
+                // Set group name
+                if (permissionInfo.group != null) {
+                    viewHolder.textView5.setVisibility(View.VISIBLE);
+                    viewHolder.textView5.setText(String.format("%s: %s",
+                            mActivity.getString(R.string.group), permissionInfo.group));
+                } else viewHolder.textView5.setVisibility(View.GONE);
+            } else {
+                viewHolder.textView2.setVisibility(View.GONE);
+                viewHolder.textView3.setVisibility(View.GONE);
+                viewHolder.textView4.setVisibility(View.GONE);
+                viewHolder.textView5.setVisibility(View.GONE);
+            }
+            // Op Switch
+            viewHolder.toggleSwitch.setVisibility(View.VISIBLE);
+            if (opEntry.getMode() == AppOpsManager.MODE_ALLOWED) {
+                // op granted
+                viewHolder.toggleSwitch.setChecked(true);
+            } else {
+                viewHolder.toggleSwitch.setChecked(false);
+            }
+            viewHolder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    // Enable op
+                    try {
+                        mAppOpsService.setMode(opEntry.getOp(), -1, mPackageName, AppOpsManager.MODE_ALLOWED);
+                    } catch (Exception e) {
+                        Toast.makeText(mActivity, R.string.failed_to_enable_op, Toast.LENGTH_LONG).show();
+                        viewHolder.toggleSwitch.setChecked(false);
+                        e.printStackTrace();
+                    }
+                } else {
+                    // Disable permission
+                    try {
+                        mAppOpsService.setMode(opEntry.getOp(), -1, mPackageName, AppOpsManager.MODE_IGNORED);
+                    } catch (Exception e) {
+                        Toast.makeText(mActivity, R.string.failed_to_disable_op, Toast.LENGTH_LONG).show();
+                        viewHolder.toggleSwitch.setChecked(true);
+                        e.printStackTrace();
+                    }
+                }
+            });
+            return convertView;
+        }
+
+        /**
+         * We do not need complex views, Use recycled view if possible
+         */
         @NonNull
         @SuppressLint("SetTextI18n")
         private View getUsesPermissionsView(ViewGroup viewGroup, View convertView, int index) {
@@ -1248,10 +1381,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     @NonNull
     private String permAppOp(String s) {
-        if (Build.VERSION.SDK_INT >= 23 && AppOpsManager.permissionToOp(s) != null) {
-            return "\nAppOP> " + AppOpsManager.permissionToOp(s);
-        } else {
-            return "";
-        }
+        String opStr = AppOpsManager.permissionToOp(s);
+        return opStr != null ? "\nAppOP> " + opStr : "";
     }
 }
