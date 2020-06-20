@@ -174,8 +174,15 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mComponentsApplier.applyRules(true);
-//        Toast.makeText(mActivity, "The current configurations has been applied!", Toast.LENGTH_LONG).show();
+        if (mComponentsApplier.isRulesApplied())
+            mComponentsApplier.applyRules(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mComponentsApplier.isRulesApplied())
+            mComponentsApplier.applyRules(true);
     }
 
     @Override
