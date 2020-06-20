@@ -29,6 +29,8 @@ class AppOpsService implements IAppOpsService {
             1  // MILLISECOND
     };
 
+    private static final int DEFAULT_MODE_SKIP = 14;
+
     private boolean isSuccessful = false;
     private List<String> output = null;
 
@@ -61,7 +63,7 @@ class AppOpsService implements IAppOpsService {
                     AppOpsManager.OpEntry entry = parseOpName(output.get(0));
                     return entry.getMode();
                 } else if (output.size() == 2) {
-                    opModeOut = output.get(1).substring(14);
+                    opModeOut = output.get(1).substring(DEFAULT_MODE_SKIP);
                     return strModeToMode(opModeOut);
                 }
             } catch (IndexOutOfBoundsException e) {
@@ -84,7 +86,12 @@ class AppOpsService implements IAppOpsService {
         } else {
             for(int op: ops) {
                 runCommand(String.format("appops get %s %s", packageName, AppOpsManager.opToName(op)));
-                lines.addAll(output);
+                if (output.size() == 1) {  // Trivial parser
+                    lines.addAll(output);
+                } else if (output.size() == 2) {  // Custom parser
+                    String name = String.format("%s: %s", AppOpsManager.opToName(op), output.get(1).substring(DEFAULT_MODE_SKIP));
+                    lines.add(name);
+                }
                 if (!isSuccessful) throw new Exception("Failed to get operations for package " + packageName);
             }
         }
