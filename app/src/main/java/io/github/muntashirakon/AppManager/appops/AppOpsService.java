@@ -17,9 +17,9 @@ import androidx.annotation.Nullable;
 public
 class AppOpsService implements IAppOpsService {
     private static final Pattern OP_MATCHER = Pattern.compile("(?:Uid mode: )?(\\w+): (\\w+)" +
-            "(?:; time=(?:\\s*0|([+\\-])(\\d+d)?(\\d{1,2}h)?(\\d{1,2}m)?(\\d{1,2}s)?(\\d{1,3}ms)) ago)?" +
-            "(?:; rejectTime=(?:\\s*0|([+\\-])(\\d+d)?(\\d{1,2}h)?(\\d{1,2}m)?(\\d{1,2}s)?(\\d{1,3}ms)) ago)?" +
-            "( \\(running\\))?(?:; duration=(?:\\s*0|([+\\-])(\\d+d)?(\\d{1,2}h)?(\\d{1,2}m)?(\\d{1,2}s)?(\\d{1,3}ms)))?");
+            "(?:; time=(?:\\s*0|([+\\-])(\\d+d)?(\\d{1,2}h)?(\\d{1,2}m)?(\\d{1,2}s)?(\\d{1,3}m))s ago)?" +
+            "(?:; rejectTime=(?:\\s*0|([+\\-])(\\d+d)?(\\d{1,2}h)?(\\d{1,2}m)?(\\d{1,2}s)?(\\d{1,3}m))s ago)?" +
+            "( \\(running\\))?(?:; duration=(?:\\s*0|([+\\-])(\\d+d)?(\\d{1,2}h)?(\\d{1,2}m)?(\\d{1,2}s)?(\\d{1,3}m))s)?");
 
     private static final long[] TIME  = new long[]{
             86400000,  // DAY
