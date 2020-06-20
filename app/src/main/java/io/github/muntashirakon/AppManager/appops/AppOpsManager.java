@@ -1526,7 +1526,7 @@ public class AppOpsManager {
     // Reference: https://developer.android.com/reference/android/Manifest.permission
     // Reference: rikka.appops
     // TODO: Move from hardcoding to settings
-    private static Integer[] _ALWAYS_SHOWN_OP = {
+    public static int[] sAlwaysShownOp = {
             // [Location]
             OP_COARSE_LOCATION,
             // OP_MOCK_LOCATION,
@@ -1802,6 +1802,25 @@ public class AppOpsManager {
             throw new IllegalArgumentException("Unknown operation string: " + op);
         }
         return val;
+    }
+
+    /**
+     * Gets the app op name associated with a given permission.
+     * The app op name is one of the public constants defined
+     * in this class such as {@link #OPSTR_COARSE_LOCATION}.
+     * This API is intended to be used for mapping runtime
+     * permissions to the corresponding app op.
+     *
+     * @param permission The permission.
+     * @return The app op associated with the permission or null.
+     */
+    @Nullable
+    public static String permissionToOp(String permission) {
+        final Integer opCode = sPermToOp.get(permission);
+        if (opCode == null) {
+            return null;
+        }
+        return sOpToString[opCode];
     }
 
     /**
