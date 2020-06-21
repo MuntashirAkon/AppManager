@@ -181,13 +181,6 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
 
                 PackageManager pm = getApplicationContext().getPackageManager();
                 PackageInfo mPackageInfo = null;
-                // FIXME: fix this permission mess
-                final int signingCertFlag;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    signingCertFlag = PackageManager.GET_SIGNING_CERTIFICATES;
-                } else {
-                    signingCertFlag = PackageManager.GET_SIGNATURES;
-                }
                 if (inIntent != null && inIntent.getAction() != null) {
                     if (inIntent.getAction().equals(Intent.ACTION_VIEW)) {
                         String archiveFilePath = UriUtils.pathUriCache(getApplicationContext(),
