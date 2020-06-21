@@ -35,6 +35,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -407,7 +408,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             String prefName = mAdapterList[position];
-            if (mConstraint != null && prefName.toLowerCase().contains(mConstraint)) {
+            if (mConstraint != null && prefName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 viewHolder.item_name.setText(Utils.getHighlightedText(prefName, mConstraint, mColorRed));
             } else {
@@ -427,7 +428,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements
                 mFilter = new Filter() {
                     @Override
                     protected FilterResults performFiltering(CharSequence charSequence) {
-                        String constraint = charSequence.toString().toLowerCase();
+                        String constraint = charSequence.toString().toLowerCase(Locale.ROOT);
                         mConstraint = constraint;
                         FilterResults filterResults = new FilterResults();
                         if (constraint.length() == 0) {
@@ -438,7 +439,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements
 
                         List<String> list = new ArrayList<>(mDefaultList.length);
                         for (String item : mDefaultList) {
-                            if (item.toLowerCase().contains(constraint))
+                            if (item.toLowerCase(Locale.ROOT).contains(constraint))
                                 list.add(item);
                         }
 

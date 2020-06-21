@@ -34,6 +34,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Locale;
 import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -56,7 +57,7 @@ public class Utils {
     @NonNull
     public static Spannable getHighlightedText(@NonNull String text, @NonNull String constraint, int color) {
         Spannable spannable = sSpannableFactory.newSpannable(text);
-        int start = text.toLowerCase().indexOf(constraint);
+        int start = text.toLowerCase(Locale.ROOT).indexOf(constraint);
         int end = start + constraint.length();
         spannable.setSpan(new BackgroundColorSpan(color), start, end,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

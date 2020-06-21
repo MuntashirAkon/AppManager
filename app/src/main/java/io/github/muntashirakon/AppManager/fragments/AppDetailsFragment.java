@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -539,7 +540,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 mFilter = new Filter() {
                     @Override
                     protected FilterResults performFiltering(CharSequence charSequence) {
-                        String constraint = charSequence.toString().toLowerCase();
+                        String constraint = charSequence.toString().toLowerCase(Locale.ROOT);
                         mConstraint = constraint;
                         FilterResults filterResults = new FilterResults();
                         if (constraint.length() == 0) {
@@ -550,7 +551,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
                         List<AppDetailsItem> list = new ArrayList<>(mDefaultList.size());
                         for (AppDetailsItem item : mDefaultList) {
-                            if (item.name.toLowerCase().contains(constraint))
+                            if (item.name.toLowerCase(Locale.ROOT).contains(constraint))
                                 list.add(item);
                         }
 
@@ -678,7 +679,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
             }
             // Name
-            if (mConstraint != null && activityName.toLowerCase().contains(mConstraint)) {
+            if (mConstraint != null && activityName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 viewHolder.textView2.setText(Utils.getHighlightedText(activityName, mConstraint, mColorRed));
             } else {
@@ -800,7 +801,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             viewHolder.textView1.setText(serviceInfo.loadLabel(mPackageManager));
 
             // Name
-            if (mConstraint != null && serviceInfo.name.toLowerCase().contains(mConstraint)) {
+            if (mConstraint != null && serviceInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 viewHolder.textView2.setText(Utils.getHighlightedText(serviceInfo.name, mConstraint, mColorRed));
             } else {
@@ -873,7 +874,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             viewHolder.textView1.setText(activityInfo.loadLabel(mPackageManager));
 
             // Name
-            if (mConstraint != null && activityInfo.name.toLowerCase().contains(mConstraint)) {
+            if (mConstraint != null && activityInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 viewHolder.textView2.setText(Utils.getHighlightedText(activityInfo.name, mConstraint, mColorRed));
             } else {
@@ -991,7 +992,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Authority
             viewHolder.textView6.setText(getString(R.string.authority) + ": " + providerInfo.authority);
             // Name
-            if (mConstraint != null && providerName.toLowerCase().contains(mConstraint)) {
+            if (mConstraint != null && providerName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 viewHolder.textView2.setText(Utils.getHighlightedText(providerName, mConstraint, mColorRed));
             } else {
@@ -1049,7 +1050,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } catch (PackageManager.NameNotFoundException | IllegalArgumentException ignore) {}
 
             // Set permission name
-            if (mConstraint != null && opName.toLowerCase().contains(mConstraint)) {
+            if (mConstraint != null && opName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 viewHolder.textView1.setText(Utils.getHighlightedText(opName, mConstraint, mColorRed));
             } else {
@@ -1152,7 +1153,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } catch (PackageManager.NameNotFoundException ignore) {}
 
             // Set permission name
-            if (mConstraint != null && permName.toLowerCase().contains(mConstraint)) {
+            if (mConstraint != null && permName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 viewHolder.textView1.setText(Utils.getHighlightedText(permName, mConstraint, mColorRed));
             } else {
@@ -1271,7 +1272,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             viewHolder.textView1.setText(permissionInfo.loadLabel(mPackageManager));
 
             // Name
-            if (mConstraint != null && permissionInfo.name.toLowerCase().contains(mConstraint)) {
+            if (mConstraint != null && permissionInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 viewHolder.textView2.setText(Utils.getHighlightedText(permissionInfo.name, mConstraint, mColorRed));
             } else {

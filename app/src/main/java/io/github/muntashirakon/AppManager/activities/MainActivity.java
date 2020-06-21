@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             actionBar.setTitle(MainActivity.listName.substring(0,
                     MainActivity.listName.lastIndexOf(".")));
             actionBar.setSubtitle(MainActivity.listName.substring(
-                    MainActivity.listName.lastIndexOf(".") + 1).toLowerCase());
+                    MainActivity.listName.lastIndexOf(".") + 1).toLowerCase(Locale.ROOT));
         }
         if (Build.VERSION.SDK_INT <= 25) {
             startRetrievingPackagesSize();
@@ -475,7 +475,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 mFilter = new Filter() {
                     @Override
                     protected FilterResults performFiltering(CharSequence charSequence) {
-                        String constraint = charSequence.toString().toLowerCase();
+                        String constraint = charSequence.toString().toLowerCase(Locale.ROOT);
                         mConstraint = constraint;
                         FilterResults filterResults = new FilterResults();
                         if (constraint.length() == 0) {
@@ -486,8 +486,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                         List<ApplicationItem> list = new ArrayList<>(mDefaultList.size());
                         for (ApplicationItem item : mDefaultList) {
-                            if (item.label.toLowerCase().contains(constraint) ||
-                                    item.applicationInfo.packageName.toLowerCase().contains(constraint))
+                            if (item.label.toLowerCase(Locale.ROOT).contains(constraint) ||
+                                    item.applicationInfo.packageName.toLowerCase(Locale.ROOT).contains(constraint))
                                 list.add(item);
                         }
 
@@ -603,7 +603,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             holder.iconLoader = new MainActivity.Adapter.IconAsyncTask(holder.icon, info);
             holder.iconLoader.execute();
             // Set app label
-            if (mConstraint != null && item.label.toLowerCase().contains(mConstraint)) {
+            if (mConstraint != null && item.label.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 holder.label.setText(Utils.getHighlightedText(item.label, mConstraint, mColorRed));
             } else {
@@ -614,7 +614,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 holder.label.setTextColor(Color.RED);
             else holder.label.setTextColor(mColorPrimary);
             // Set package name
-            if (mConstraint != null && info.packageName.toLowerCase().contains(mConstraint)) {
+            if (mConstraint != null && info.packageName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 holder.packageName.setText(Utils.getHighlightedText(info.packageName, mConstraint, mColorRed));
             } else {

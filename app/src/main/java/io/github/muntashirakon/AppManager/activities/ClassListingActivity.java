@@ -40,6 +40,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -497,7 +498,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
             }
             String className = mAdapterList.get(position);
             TextView textView = (TextView) convertView;
-            if (mConstraint != null && className.toLowerCase().contains(mConstraint)) {
+            if (mConstraint != null && className.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 textView.setText(Utils.getHighlightedText(className, mConstraint, mColorRed));
             } else {
@@ -513,7 +514,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                 mFilter = new Filter() {
                     @Override
                     protected FilterResults performFiltering(CharSequence charSequence) {
-                        String constraint = charSequence.toString().toLowerCase();
+                        String constraint = charSequence.toString().toLowerCase(Locale.ROOT);
                         mConstraint = constraint;
                         FilterResults filterResults = new FilterResults();
                         if (constraint.length() == 0) {
@@ -524,7 +525,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
 
                         List<String> list = new ArrayList<>(mDefaultList.size());
                         for (String item : mDefaultList) {
-                            if (item.toLowerCase().contains(constraint))
+                            if (item.toLowerCase(Locale.ROOT).contains(constraint))
                                 list.add(item);
                         }
 

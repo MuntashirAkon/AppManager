@@ -14,6 +14,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 
@@ -91,7 +92,7 @@ public class PackageUtils {
     public static String convertS(@NonNull byte[] digest) {
         StringBuilder s= new StringBuilder();
         for (byte b:digest){
-            s.append(String.format("%02X", b).toLowerCase());
+            s.append(String.format("%02X", b).toLowerCase(Locale.ROOT));
         }
         return s.toString();
     }

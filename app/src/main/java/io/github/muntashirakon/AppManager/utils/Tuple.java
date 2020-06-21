@@ -1,5 +1,9 @@
 package io.github.muntashirakon.AppManager.utils;
 
+import java.util.Locale;
+
+import androidx.annotation.NonNull;
+
 public class Tuple<T, K> {
 
     private T mObjectOne;
@@ -26,10 +30,12 @@ public class Tuple<T, K> {
         mObjectTwo = k;
     }
 
-    public int compareTo(Tuple tt) {
-        int i = mObjectOne.toString().toLowerCase().compareTo(tt.getFirst().toString().toLowerCase());
-        if (i==0) return mObjectTwo.toString().toLowerCase().compareTo(tt.getSecond().toString().toLowerCase());
-        else if (i<0) return-1;
+    public int compareTo(@NonNull Tuple<T, K> tt) {
+        int i = mObjectOne.toString().toLowerCase(Locale.ROOT).compareTo(
+                tt.getFirst().toString().toLowerCase(Locale.ROOT));
+        if (i == 0) return mObjectTwo.toString().toLowerCase(Locale.ROOT).compareTo(
+                tt.getSecond().toString().toLowerCase(Locale.ROOT));
+        else if (i<0) return -1;
         else return 1;
     }
 }
