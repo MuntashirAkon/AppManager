@@ -13,8 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppTheme"
-        tools:replace="android:icon">
+        android:theme="@style/AppTheme">
         <activity android:name=".activities.SharedPrefsActivity" />
         <activity
             android:name=".activities.AppUsageActivity"
@@ -25,8 +24,7 @@
             android:name=".activities.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            tools:replace="android:icon">
+            android:roundIcon="@mipmap/ic_launcher_round">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

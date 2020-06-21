@@ -111,6 +111,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         super.onSaveInstanceState(outState);
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,19 +192,16 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                     if (inIntent.getAction().equals(Intent.ACTION_VIEW)) {
                         String archiveFilePath = UriUtils.pathUriCache(getApplicationContext(),
                                 uriFromIntent, "cache.apk");
-                        if (archiveFilePath != null) {
-                            mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, PackageManager.GET_SIGNATURES);
-                        }
+                        if (archiveFilePath != null)
+                            mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
                     }
                 } else {
                     if (uriFromIntent != null) {
                         String archiveFilePath = uriFromIntent.getPath();
-                        if (archiveFilePath != null) {
-                            mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, PackageManager.GET_SIGNATURES);
-                        }
+                        if (archiveFilePath != null)
+                            mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
                     }
                 }
-
                 if (mPackageInfo != null) packageInfo += apkCert(mPackageInfo);
                 else packageInfo += "\n<i><b>FAILED to retrieve PackageInfo!</b></i>";
             }).start();

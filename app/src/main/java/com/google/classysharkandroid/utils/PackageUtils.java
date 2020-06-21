@@ -4,6 +4,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.Signature;
+import android.content.pm.SigningInfo;
 import android.os.Build;
 
 import java.io.ByteArrayInputStream;
@@ -18,14 +19,7 @@ import androidx.annotation.NonNull;
 
 public class PackageUtils {
     public static String apkCert(@NonNull PackageInfo p){
-        Signature[] signatures;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-//            SigningInfo signingInfo = p.signingInfo;
-//            signatures = signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
-//                    : signingInfo.getSigningCertificateHistory();
-//        } else {
-            signatures = p.signatures;
-//        }
+        Signature[] signatures = p.signatures;
         String s = "";
         X509Certificate c;
         try {
