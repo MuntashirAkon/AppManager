@@ -22,8 +22,9 @@
             android:id="@+id/icon"
             android:layout_width="@dimen/icon_size"
             android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/padding_small"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:layout_marginEnd="@dimen/padding_small"
+            tools:srcCompat="@tools:sample/avatars"
+            android:contentDescription="@string/str_logo" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -35,9 +36,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:src="@drawable/item_favorite"
-                tools:srcCompat="@tools:sample/avatars" />
+                tools:srcCompat="@tools:sample/avatars"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/label"
@@ -53,7 +54,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label"
                 android:layout_alignStart="@id/label"
-                android:layout_alignLeft="@id/label"
                 android:singleLine="true"
                 android:textStyle="italic"
                 tools:text="@tools:sample/lorem" />
@@ -64,9 +64,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/packageName"
                 android:layout_alignStart="@id/label"
-                android:layout_alignLeft="@id/label"
                 android:singleLine="true"
-                android:textSize="12dp"
+                android:textSize="12sp"
                 tools:text="@tools:sample/date/mmddyy" />
 
             <TextView
@@ -75,12 +74,12 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/packageName"
                 android:layout_toEndOf="@id/date"
-                android:layout_toRightOf="@id/date"
-                android:gravity="right"
-                android:paddingRight="25sp"
+                android:gravity="end"
+                android:paddingEnd="25sp"
                 android:singleLine="true"
-                android:textSize="10dp"
-                tools:text="@tools:sample/lorem" />
+                android:textSize="10sp"
+                tools:text="@tools:sample/lorem"
+                tools:ignore="RtlSymmetry,SmallSp" />
 
             <TextView
                 android:id="@+id/issuer"
@@ -88,10 +87,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/date"
                 android:layout_alignStart="@id/label"
-                android:layout_alignLeft="@id/label"
                 android:singleLine="true"
-                android:textSize="9dp"
-                tools:text="@tools:sample/lorem" />
+                android:textSize="9sp"
+                tools:text="@tools:sample/lorem"
+                tools:ignore="SmallSp" />
 
         </RelativeLayout>
 
@@ -107,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textSize="12dp"
+                android:textSize="12sp"
                 tools:text="@tools:sample/us_zipcodes" />
 
             <TextView
@@ -129,8 +128,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textSize="9dp"
-                tools:text="@tools:sample/lorem" />
+                android:textSize="9sp"
+                tools:text="@tools:sample/lorem"
+                tools:ignore="SmallSp" />
 
         </LinearLayout>
     </LinearLayout>

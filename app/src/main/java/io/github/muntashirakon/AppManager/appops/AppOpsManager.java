@@ -1911,7 +1911,7 @@ public class AppOpsManager {
      */
     public static final class OpEntry implements Parcelable {
         private final int mOp;
-        private final boolean mRunning;
+        private final Boolean mRunning;
         private final @Mode int mMode;
         private final long mAccessTime;
         private final long mRejectTime;
@@ -2030,7 +2030,7 @@ public class AppOpsManager {
         public void writeToParcel(@NonNull Parcel dest, int flags) {
             dest.writeInt(mOp);
             dest.writeInt(mMode);
-            dest.writeBoolean(mRunning);
+            dest.writeValue(mRunning);
             dest.writeLong(mAccessTime);
             dest.writeLong(mRejectTime);
             dest.writeLong(mDuration);
@@ -2041,7 +2041,7 @@ public class AppOpsManager {
         OpEntry(@NonNull Parcel source) {
             mOp = source.readInt();
             mMode = source.readInt();
-            mRunning = source.readBoolean();
+            mRunning = (Boolean) source.readValue(getClass().getClassLoader());
             mAccessTime = source.readLong();
             mRejectTime = source.readLong();
             mDuration = source.readLong();

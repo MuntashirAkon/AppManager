@@ -48,7 +48,7 @@
     <string name="sdk">SDK</string>
     <string name="netstats_received">Empfangene Daten</string>
     <string name="netstats_transmitted">Übermittelte Daten</string>
-    <string name="netstats_msg">Seit dem letzten Gerätestart</string>
+    <string name="netstats_msg">Seitdem letzten Gerätestart</string>
 
     <string name="about">Über</string>
 

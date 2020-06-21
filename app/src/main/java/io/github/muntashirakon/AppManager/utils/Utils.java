@@ -1,6 +1,7 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -49,6 +50,7 @@ import javax.xml.xpath.XPathFactory;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 @SuppressWarnings("unused")
 public class Utils {
@@ -474,6 +476,7 @@ public class Utils {
         }
     }
 
+    @TargetApi(29)
     public static int getSystemColor(@NonNull Context context, int resAttrColor) { // Ex. android.R.attr.colorPrimary
         // Get accent color
         TypedValue typedValue = new TypedValue();
