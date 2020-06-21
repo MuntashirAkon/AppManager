@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager;
+package io.github.muntashirakon.AppManager.types;
 
 import android.content.pm.ApplicationInfo;
 

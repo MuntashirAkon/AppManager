@@ -11,6 +11,7 @@ import android.os.Build;
 
 import androidx.loader.content.AsyncTaskLoader;
 import io.github.muntashirakon.AppManager.activities.MainActivity;
+import io.github.muntashirakon.AppManager.types.ApplicationItem;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
