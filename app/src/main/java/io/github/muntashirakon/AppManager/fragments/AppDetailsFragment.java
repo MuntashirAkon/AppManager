@@ -1048,7 +1048,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final String opName = mAdapterList.get(index).name;
             PermissionInfo permissionInfo = null;
             try {
-                String permName = AppOpsManager.opToPermission(opName);
+                String permName = AppOpsManager.opToPermission(opEntry.getOp());
                 if (permName != null)
                     permissionInfo = mPackageManager.getPermissionInfo(permName, PackageManager.GET_META_DATA);
             } catch (PackageManager.NameNotFoundException | IllegalArgumentException ignore) {}
