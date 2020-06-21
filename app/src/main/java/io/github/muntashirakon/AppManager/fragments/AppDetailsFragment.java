@@ -42,6 +42,7 @@ import com.jaredrummler.android.shell.Shell;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -158,7 +159,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             mColorGrey2 = ContextCompat.getColor(mActivity, R.color.SEMI_TRANSPARENT);
             mColorRed = ContextCompat.getColor(mActivity, R.color.red);
         }
-        getPackageInfo(mPackageName);
+        getPackageInfo();
 
         mComponentsBlocker = ComponentsBlocker.getInstance(mActivity, mPackageName);
     }
@@ -260,17 +261,15 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     private void refreshDetails() {
         if (mAdapter != null){
-            getPackageInfo(mPackageName);
+            getPackageInfo();
             mAdapter.reset();
         }
     }
 
     /**
      * Get package info.
-     *
-     * @param packageName Package name (e.g. com.android.wallpaper)
      */
-    private void getPackageInfo(String packageName) {
+    private void getPackageInfo() {
         try {
             int apiCompatFlags;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
@@ -280,7 +279,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 apiCompatFlags |= PackageManager.MATCH_DISABLED_COMPONENTS;
             else apiCompatFlags |= PackageManager.GET_DISABLED_COMPONENTS;
 
-            mPackageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
+            mPackageInfo = mPackageManager.getPackageInfo(mPackageName, PackageManager.GET_PERMISSIONS
                     | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                     | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
                     | apiCompatFlags | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
@@ -399,6 +398,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             appDetailsItems.add(appDetailsItem);
                             uniqueSet.add(opEntry.getOp());
                         }
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        appDetailsItems.sort((o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
+                    } else {
+                        Collections.sort(appDetailsItems, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
                     }
                 } catch (Exception ignored) {}
                 break;
@@ -1405,6 +1409,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @NonNull
     private String permAppOp(String s) {
         String opStr = AppOpsManager.permissionToOp(s);
-        return opStr != null ? "\nAppOP> " + opStr : "";
+        return opStr != null ? "\nAppOp: " + opStr : "";
     }
 }
