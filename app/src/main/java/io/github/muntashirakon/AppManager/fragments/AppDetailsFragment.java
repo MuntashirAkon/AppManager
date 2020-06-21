@@ -501,14 +501,20 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         }
 
         void reset() {
-            requestedProperty = neededProperty;
-            mAdapterList = getNeededList(requestedProperty);
-            mDefaultList = mAdapterList;
-            if(AppDetailsFragment.this.mConstraint != null
-                    && !AppDetailsFragment.this.mConstraint.equals("")) {
-                getFilter().filter(AppDetailsFragment.this.mConstraint);
-            }
-            notifyDataSetChanged();
+            mProgressBar.setVisibility(View.VISIBLE);
+            new Thread(() -> {
+                requestedProperty = neededProperty;
+                mAdapterList = getNeededList(requestedProperty);
+                mDefaultList = mAdapterList;
+                if(AppDetailsFragment.this.mConstraint != null
+                        && !AppDetailsFragment.this.mConstraint.equals("")) {
+                    getFilter().filter(AppDetailsFragment.this.mConstraint);
+                }
+                mActivity.runOnUiThread(() -> {
+                    ActivitiesListAdapter.this.notifyDataSetChanged();
+                    mProgressBar.setVisibility(View.GONE);
+                });
+            }).start();
         }
 
         @Override
@@ -573,7 +579,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
         @Override
         public int getCount() {
-            return mAdapterList.size();
+            return mAdapterList == null ? 0 : mAdapterList.size();
         }
 
         @Override
