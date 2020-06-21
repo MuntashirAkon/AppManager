@@ -482,13 +482,13 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         }
 
         @Override
-        public Object getItem(int position) {
+        public String getItem(int position) {
             return mAdapterList.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            return position;
+            return mDefaultList.indexOf(mAdapterList.get(position));
         }
 
         @Override
