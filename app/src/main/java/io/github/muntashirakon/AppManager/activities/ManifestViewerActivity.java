@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +21,7 @@ import java.util.regex.Pattern;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.content.ContextCompat;
+import androidx.core.text.HtmlCompat;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.xmlapkparser.AXMLPrinter;
 
@@ -129,7 +129,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
         matcher.appendTail(sb);
         final ManifestViewerActivity activity = this;
         new Thread(() -> {
-            final Spanned spanned = Html.fromHtml(sb.toString());
+            final Spanned spanned = HtmlCompat.fromHtml(sb.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY);
             runOnUiThread(() -> {
                 textView.setText(spanned);
                 activity.showProgressBar(false);

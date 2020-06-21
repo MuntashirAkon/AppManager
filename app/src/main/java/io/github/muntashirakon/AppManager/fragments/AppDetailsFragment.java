@@ -1067,7 +1067,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
                 viewHolder.textView3.setText("\u2691 " + protectionLevel);
                 if (protectionLevel.contains("dangerous"))
-                    convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.red));
+                    convertView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
                 // Set package name
                 if (permissionInfo.packageName != null) {
                     viewHolder.textView4.setVisibility(View.VISIBLE);
@@ -1170,7 +1170,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
                 viewHolder.textView3.setText("\u2691 " + protectionLevel);
                 if (protectionLevel.contains("dangerous"))
-                    convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.red));
+                    convertView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
                 // Set package name
                 if (permissionInfo.packageName != null) {
                     viewHolder.textView4.setVisibility(View.VISIBLE);

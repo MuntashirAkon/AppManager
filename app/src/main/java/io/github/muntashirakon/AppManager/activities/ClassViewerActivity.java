@@ -6,6 +6,8 @@ package io.github.muntashirakon.AppManager.activities;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.core.content.ContextCompat;
+import androidx.core.text.HtmlCompat;
 import io.github.muntashirakon.AppManager.R;
 
 import android.annotation.SuppressLint;
@@ -98,14 +100,14 @@ public class ClassViewerActivity extends AppCompatActivity {
                 .replaceAll(" ", "&nbsp;")
                 .replaceAll("\n", "<br/>");
 
-        int darkOrange = getResources().getColor(R.color.dark_orange);
-        matcher = TYPES.matcher(highlightText(CLASS.matcher(classDump), getResources().getColor(R.color.ocean_blue)));
+        int darkOrange = ContextCompat.getColor(this, R.color.dark_orange);
+        matcher = TYPES.matcher(highlightText(CLASS.matcher(classDump), ContextCompat.getColor(this, R.color.ocean_blue)));
         matcher = KEYWORDS.matcher(highlightText(matcher, darkOrange));
         matcher = CC_COMMENT.matcher(highlightText(matcher, darkOrange));
         final String final_data = highlightText(matcher, Color.GREEN);
         final ClassViewerActivity activity = this;
         new Thread(() -> {
-            final Spanned spanned = Html.fromHtml(final_data);
+            final Spanned spanned = HtmlCompat.fromHtml(final_data, HtmlCompat.FROM_HTML_MODE_LEGACY);
             runOnUiThread(() -> {
                 textView.setText(spanned);
                 activity.showProgressBar(false);

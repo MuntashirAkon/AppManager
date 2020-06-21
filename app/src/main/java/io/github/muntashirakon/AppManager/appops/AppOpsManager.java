@@ -1085,7 +1085,7 @@ public class AppOpsManager {
             Manifest.permission.ADD_VOICEMAIL,
             Manifest.permission.USE_SIP,
             "Manifest.permission.PROCESS_OUTGOING_CALLS",
-            Manifest.permission.USE_FINGERPRINT,
+            "Manifest.permission.USE_FINGERPRINT",
             Manifest.permission.BODY_SENSORS,
             "Manifest.permission.READ_CELL_BROADCASTS",
             null,
