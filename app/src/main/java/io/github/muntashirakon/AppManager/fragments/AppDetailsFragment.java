@@ -111,6 +111,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private String mConstraint;
     private AppOpsService mAppOpsService;
     private ProgressBar mProgressBar;
+    private TextView mProgressMsg;
 
     private Tuple<String, Integer>[] permissionsWithFlags;
     private boolean bFi;
@@ -175,6 +176,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         listView.setEmptyView(emptyView);
         mProgressBar = mActivity.findViewById(R.id.progress_horizontal);
         mProgressBar.setVisibility(View.VISIBLE);
+        mProgressMsg = mActivity.findViewById(R.id.progress_text);
+        mProgressMsg.setVisibility(View.GONE);
         mAdapter = new ActivitiesListAdapter();
         listView.setAdapter(mAdapter);
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> listView.canScrollVertically(-1));
@@ -515,6 +518,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     getFilter().filter(AppDetailsFragment.this.mConstraint);
                 }
                 mActivity.runOnUiThread(() -> {
+                    if (mComponentsApplier.componentCount() > 0
+                            && !mComponentsApplier.isRulesApplied()
+                            && requestedProperty <= AppDetailsFragment.PROVIDERS) {
+                        AppDetailsFragment.this.mProgressMsg.setVisibility(View.VISIBLE);
+                        AppDetailsFragment.this.mProgressMsg.setText(R.string.blocking_is_not_enabled);
+                    } else {
+                        AppDetailsFragment.this.mProgressMsg.setVisibility(View.GONE);
+                    }
                     ActivitiesListAdapter.this.notifyDataSetChanged();
                     mProgressBar.setVisibility(View.GONE);
                 });

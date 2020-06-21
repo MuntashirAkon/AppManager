@@ -279,4 +279,5 @@
     <string name="no_app_ops">No app operations</string>
     <string name="failed_to_enable_op">Failed to enable the requested app op</string>
     <string name="failed_to_disable_op">Failed to disable the requested app op</string>
+    <string name="blocking_is_not_enabled">Blocking is not enabled</string>
 </resources>

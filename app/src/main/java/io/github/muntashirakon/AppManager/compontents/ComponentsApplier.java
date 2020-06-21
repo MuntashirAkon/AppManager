@@ -113,6 +113,10 @@ public class ComponentsApplier {
         return disabledComponents.containsKey(componentName);
     }
 
+    public int componentCount() {
+        return disabledComponents.size();
+    }
+
     public void addComponent(String componentName, ComponentType componentType) {
         disabledComponents.put(componentName, componentType);
     }
