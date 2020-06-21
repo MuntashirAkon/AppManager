@@ -92,8 +92,10 @@
         \n- Delete app cache/data (requires root permission)
         \n
         \n<b>App Details Window</b>
-        \n- Dangerous permissions can be revoked in the <b>Uses Permissions</b> tab (which lists
-        permission from the &lt;uses-permission&gt; tags of the manifest) (requires root permission)
+        \n- App ops or dangerous permissions can be revoked in the <b>App Ops</b> (which lists app
+        operations &amp; can be used to revoke non-revocable permissions) and
+        <b>Uses Permissions</b> tab (which lists permission from the &lt;uses-permission&gt; tags of the
+        manifest) respectively (requires root permission)
         \n- Available activities can be launched from the <b>Activities</b> tab. Also, customizable
         shortcuts can be made
         \n- Activities, broadcast receivers, services and providers (aka, components) can be blocked
@@ -157,7 +159,7 @@
     <string name="license">License</string>
     <string name="license_message"><a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General
         Public License v3.0</a>
-        \n2020 (c) <a href="https://github.com/MuntashirAkon">Muntashir Al-Islam</a>
+        \n2020 © <a href="https://github.com/MuntashirAkon">Muntashir Al-Islam</a>
     </string>
     <string name="third_party">Third-party Libraries and Icons</string>
     <string name="third_party_message">-
@@ -173,6 +175,7 @@
     </string>
     <string name="credits">Credits</string>
     <string name="credits_message">To the authors of
+        \n- The Android Open Source Project
         \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
         \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
         \n- <a href="https://github.com/billthefarmer/editor">Editor</a>

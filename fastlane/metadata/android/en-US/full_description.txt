@@ -11,6 +11,7 @@
 <li>It can launch (exportable) activities, create (customizable) shortcuts</li>
 <li>It can block any activities, broadcast receivers, services or providers you like (requires root)</li>
 <li>It can revoke permissions that are considered dangerous (requires root)</li>
+<li>It can disable app ops that are considered dangerous (requires root)</li>
 <li>It can scan for trackers in apps and list (all or only) tracking classes (and their code dump)</li>
 <li>It can generate dynamic manifest for any app</li>
 <li>It can be used to view/edit/delete shared preferences of any app (requires root)</li>

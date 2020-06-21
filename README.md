@@ -11,6 +11,7 @@ Yet another android package manager and viewer but...
 - It can launch (exportable) activities, create (customizable) shortcuts
 - It can block any activities, broadcast receivers, services or providers you like (requires root)
 - It can revoke permissions that are considered dangerous (requires root)
+- It can disable app ops that are considered dangerous (requires root)
 - It can scan for trackers in apps and list (all or only) tracking classes (and their code dump)
 - It can generate dynamic manifest for any app
 - It can be used to view/edit/delete shared preferences of any app (requires root)
