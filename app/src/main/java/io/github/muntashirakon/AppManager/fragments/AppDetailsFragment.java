@@ -32,6 +32,7 @@ import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -108,7 +109,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private ComponentsApplier mComponentsApplier;
     private MenuItem blockingToggler;
     private String mConstraint;
-    AppOpsService mAppOpsService;
+    private AppOpsService mAppOpsService;
+    private ProgressBar mProgressBar;
 
     private Tuple<String, Integer>[] permissionsWithFlags;
     private boolean bFi;
@@ -171,6 +173,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         TextView emptyView = view.findViewById(android.R.id.empty);
         emptyView.setText(getNeededString(neededProperty));
         listView.setEmptyView(emptyView);
+        mProgressBar = mActivity.findViewById(R.id.progress_horizontal);
+        mProgressBar.setVisibility(View.VISIBLE);
         mAdapter = new ActivitiesListAdapter();
         listView.setAdapter(mAdapter);
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> listView.canScrollVertically(-1));
