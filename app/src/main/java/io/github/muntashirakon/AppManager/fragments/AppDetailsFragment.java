@@ -1104,6 +1104,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     // Enable op
                     try {
                         mAppOpsService.setMode(opEntry.getOp(), -1, mPackageName, AppOpsManager.MODE_ALLOWED);
+                        // TODO: Use AppOpsManager.getOpsForPackage() instead
+                        AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
+                                opEntry.isRunning(), AppOpsManager.MODE_ALLOWED, opEntry.getTime(),
+                                opEntry.getRejectTime(), opEntry.getDuration(),
+                                opEntry.getProxyUid(), opEntry.getProxyPackageName());
+                        AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
+                        appDetailsItem.name = AppOpsManager.opToName(opEntry1.getOp());
+                        mAdapterList.set(index, appDetailsItem);
                     } catch (Exception e) {
                         Toast.makeText(mActivity, R.string.failed_to_enable_op, Toast.LENGTH_LONG).show();
                         viewHolder.toggleSwitch.setChecked(false);
@@ -1113,6 +1121,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     // Disable permission
                     try {
                         mAppOpsService.setMode(opEntry.getOp(), -1, mPackageName, AppOpsManager.MODE_IGNORED);
+                        // TODO: Use AppOpsManager.getOpsForPackage() instead
+                        AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
+                                opEntry.isRunning(), AppOpsManager.MODE_IGNORED, opEntry.getTime(),
+                                opEntry.getRejectTime(), opEntry.getDuration(),
+                                opEntry.getProxyUid(), opEntry.getProxyPackageName());
+                        AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
+                        appDetailsItem.name = AppOpsManager.opToName(opEntry1.getOp());
+                        mAdapterList.set(index, appDetailsItem);
                     } catch (Exception e) {
                         Toast.makeText(mActivity, R.string.failed_to_disable_op, Toast.LENGTH_LONG).show();
                         viewHolder.toggleSwitch.setChecked(true);
