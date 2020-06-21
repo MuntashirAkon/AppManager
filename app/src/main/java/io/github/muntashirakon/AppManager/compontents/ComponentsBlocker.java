@@ -29,7 +29,7 @@ import androidx.annotation.NonNull;
  * xml file which is named after the package name and saved to /data/system/ifw and
  * /sdcard/Android/data/io.github.muntashirakon.AppManager/files/ifw. By default, data is read from
  * both directories but written only to the latter directory unless
- * {@link ComponentsApplier#applyRules(boolean)} is called in which case data is
+ * {@link ComponentsBlocker#applyRules(boolean)} is called in which case data is
  * saved to the former directory (rules are applied automatically once they're copied there).
  * <br>
  * Providers are blocked via <code>pm disable <b>component</b></code> method since there's no way to
@@ -40,13 +40,13 @@ import androidx.annotation.NonNull;
  * @see <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/services/core/java/com/android/server/firewall/IntentFirewall.java">IntentFirewall.java</a>
  * @see ComponentType
  */
-public class ComponentsApplier {
+public class ComponentsBlocker {
     private static final String TAG_ACTIVITY = "activity";
     private static final String TAG_RECEIVER = "broadcast";
     private static final String TAG_SERVICE = "service";
 
     private static final String SYSTEM_RULES_PATH = "/data/system/ifw/";
-    private static ComponentsApplier componentsApplier = null;
+    private static ComponentsBlocker componentsBlocker = null;
 
     /**
      * Component types: activity, broadcast receiver, service, provider
@@ -60,18 +60,18 @@ public class ComponentsApplier {
     }
 
     @NonNull
-    public static ComponentsApplier getInstance(@NonNull Context context, @NonNull String packageName) {
-        if (componentsApplier == null) {
+    public static ComponentsBlocker getInstance(@NonNull Context context, @NonNull String packageName) {
+        if (componentsBlocker == null) {
             try {
                 String localIfwRulesPath = provideLocalIfwRulesPath(context);
-                componentsApplier = new ComponentsApplier(localIfwRulesPath);
+                componentsBlocker = new ComponentsBlocker(localIfwRulesPath);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 throw new AssertionError();
             }
         }
-        componentsApplier.setPackageName(packageName);
-        return componentsApplier;
+        componentsBlocker.setPackageName(packageName);
+        return componentsBlocker;
     }
 
     @NonNull
@@ -93,7 +93,7 @@ public class ComponentsApplier {
     private Set<String> removedProviders;
     private String packageName;
 
-    private ComponentsApplier(@NonNull String localIfwRulesPath) {
+    private ComponentsBlocker(@NonNull String localIfwRulesPath) {
         this.LOCAL_RULES_PATH = localIfwRulesPath;
     }
 

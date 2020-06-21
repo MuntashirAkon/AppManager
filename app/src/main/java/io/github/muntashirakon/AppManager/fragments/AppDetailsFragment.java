@@ -59,8 +59,8 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.compontents.ComponentsApplier;
-import io.github.muntashirakon.AppManager.compontents.ComponentsApplier.ComponentType;
+import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker.ComponentType;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -106,7 +106,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private Activity mActivity;
     private ActivitiesListAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefresh;
-    private ComponentsApplier mComponentsApplier;
+    private ComponentsBlocker mComponentsBlocker;
     private MenuItem blockingToggler;
     private String mConstraint;
     private AppOpsService mAppOpsService;
@@ -158,7 +158,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         }
         getPackageInfo(mPackageName);
 
-        mComponentsApplier = ComponentsApplier.getInstance(mActivity, mPackageName);
+        mComponentsBlocker = ComponentsBlocker.getInstance(mActivity, mPackageName);
     }
 
     @Nullable
@@ -187,15 +187,15 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mComponentsApplier.isRulesApplied())
-            mComponentsApplier.applyRules(true);
+        if (mComponentsBlocker.isRulesApplied())
+            mComponentsBlocker.applyRules(true);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (mComponentsApplier.isRulesApplied())
-            mComponentsApplier.applyRules(true);
+        if (mComponentsBlocker.isRulesApplied())
+            mComponentsBlocker.applyRules(true);
     }
 
     @Override
@@ -208,7 +208,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_app_details_action, menu);
         blockingToggler = menu.findItem(R.id.action_toggle_blocking);
-        if (mComponentsApplier.isRulesApplied()) {
+        if (mComponentsBlocker.isRulesApplied()) {
             blockingToggler.setTitle(R.string.menu_disable_blocking);
         } else {
             blockingToggler.setTitle(R.string.menu_enable_blocking);
@@ -223,9 +223,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 refreshDetails();
                 return true;
             case R.id.action_toggle_blocking:
-                boolean isRulesApplied = mComponentsApplier.isRulesApplied();
-                mComponentsApplier.applyRules(!isRulesApplied);
-                if (mComponentsApplier.isRulesApplied()) {
+                boolean isRulesApplied = mComponentsBlocker.isRulesApplied();
+                mComponentsBlocker.applyRules(!isRulesApplied);
+                if (mComponentsBlocker.isRulesApplied()) {
                     blockingToggler.setTitle(R.string.menu_disable_blocking);
                 } else {
                     blockingToggler.setTitle(R.string.menu_enable_blocking);
@@ -518,8 +518,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     getFilter().filter(AppDetailsFragment.this.mConstraint);
                 }
                 mActivity.runOnUiThread(() -> {
-                    if (mComponentsApplier.componentCount() > 0
-                            && !mComponentsApplier.isRulesApplied()
+                    if (mComponentsBlocker.componentCount() > 0
+                            && !mComponentsBlocker.isRulesApplied()
                             && requestedProperty <= AppDetailsFragment.PROVIDERS) {
                         AppDetailsFragment.this.mProgressMsg.setVisibility(View.VISIBLE);
                         AppDetailsFragment.this.mProgressMsg.setText(R.string.blocking_is_not_enabled);
@@ -670,7 +670,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final ActivityInfo activityInfo = (ActivityInfo) mAdapterList.get(index).vanillaItem;
             final String activityName = activityInfo.name;
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            if (mComponentsApplier.hasComponent(activityName)) {
+            if (mComponentsBlocker.hasComponent(activityName)) {
                 convertView.setBackgroundColor(mColorRed);
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
             } else {
@@ -744,13 +744,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
 
             viewHolder.blockBtn.setOnClickListener(v -> {
-                if (mComponentsApplier.hasComponent(activityName)) { // Remove from the list
-                    mComponentsApplier.removeComponent(activityName);
+                if (mComponentsBlocker.hasComponent(activityName)) { // Remove from the list
+                    mComponentsBlocker.removeComponent(activityName);
                 } else { // Add to the list
-                    mComponentsApplier.addComponent(activityName, ComponentType.ACTIVITY);
+                    mComponentsBlocker.addComponent(activityName, ComponentType.ACTIVITY);
                 }
                 try {
-                    mComponentsApplier.saveDisabledComponents();
+                    mComponentsBlocker.saveDisabledComponents();
                     refreshDetails();
                 } catch (IOException e) {
                     Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
@@ -788,7 +788,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
             final ServiceInfo serviceInfo = (ServiceInfo) mAdapterList.get(index).vanillaItem;
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            if (mComponentsApplier.hasComponent(serviceInfo.name)) {
+            if (mComponentsBlocker.hasComponent(serviceInfo.name)) {
                 convertView.setBackgroundColor(mColorRed);
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
             } else {
@@ -815,13 +815,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     + (serviceInfo.permission != null ? "\n" + serviceInfo.permission : "\n"));
 
             viewHolder.blockBtn.setOnClickListener(v -> {
-                if (mComponentsApplier.hasComponent(serviceInfo.name)) { // Remove from the list
-                    mComponentsApplier.removeComponent(serviceInfo.name);
+                if (mComponentsBlocker.hasComponent(serviceInfo.name)) { // Remove from the list
+                    mComponentsBlocker.removeComponent(serviceInfo.name);
                 } else { // Add to the list
-                    mComponentsApplier.addComponent(serviceInfo.name, ComponentType.SERVICE);
+                    mComponentsBlocker.addComponent(serviceInfo.name, ComponentType.SERVICE);
                 }
                 try {
-                    mComponentsApplier.saveDisabledComponents();
+                    mComponentsBlocker.saveDisabledComponents();
                     refreshDetails();
                 } catch (IOException e) {
                     Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
@@ -861,7 +861,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
             final ActivityInfo activityInfo = (ActivityInfo) mAdapterList.get(index).vanillaItem;
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            if (mComponentsApplier.hasComponent(activityInfo.name)) {
+            if (mComponentsBlocker.hasComponent(activityInfo.name)) {
                 convertView.setBackgroundColor(mColorRed);
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
             } else {
@@ -897,13 +897,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             viewHolder.textView6.setText(getString(R.string.softInput) + ": " + Utils.getSoftInputString(activityInfo.softInputMode));
 
             viewHolder.blockBtn.setOnClickListener(v -> {
-                if (mComponentsApplier.hasComponent(activityInfo.name)) { // Remove from the list
-                    mComponentsApplier.removeComponent(activityInfo.name);
+                if (mComponentsBlocker.hasComponent(activityInfo.name)) { // Remove from the list
+                    mComponentsBlocker.removeComponent(activityInfo.name);
                 } else { // Add to the list
-                    mComponentsApplier.addComponent(activityInfo.name, ComponentType.RECEIVER);
+                    mComponentsBlocker.addComponent(activityInfo.name, ComponentType.RECEIVER);
                 }
                 try {
-                    mComponentsApplier.saveDisabledComponents();
+                    mComponentsBlocker.saveDisabledComponents();
                     refreshDetails();
                 } catch (IOException e) {
                     Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
@@ -943,7 +943,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final String providerName = providerInfo.name;
             // Set background color
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            if (mComponentsApplier.hasComponent(providerName)) {
+            if (mComponentsBlocker.hasComponent(providerName)) {
                 convertView.setBackgroundColor(mColorRed);
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
             } else {
@@ -999,13 +999,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
             // Blocking
             viewHolder.blockBtn.setOnClickListener(v -> {
-                if (mComponentsApplier.hasComponent(providerName)) { // Remove from the list
-                    mComponentsApplier.removeComponent(providerName);
+                if (mComponentsBlocker.hasComponent(providerName)) { // Remove from the list
+                    mComponentsBlocker.removeComponent(providerName);
                 } else { // Add to the list
-                    mComponentsApplier.addComponent(providerName, ComponentType.PROVIDER);
+                    mComponentsBlocker.addComponent(providerName, ComponentType.PROVIDER);
                 }
                 try {
-                    mComponentsApplier.saveDisabledComponents();
+                    mComponentsBlocker.saveDisabledComponents();
                     refreshDetails();
                 } catch (IOException e) {
                     Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
