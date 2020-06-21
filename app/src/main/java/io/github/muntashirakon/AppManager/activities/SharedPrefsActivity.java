@@ -41,6 +41,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fragments.EditPrefItemFragment;
@@ -363,8 +364,8 @@ public class SharedPrefsActivity extends AppCompatActivity implements
             mLayoutInflater = activity.getLayoutInflater();
 
             mColorTransparent = Color.TRANSPARENT;
-            mColorSemiTransparent = activity.getResources().getColor(R.color.SEMI_TRANSPARENT);
-            mColorRed = activity.getResources().getColor(R.color.red);
+            mColorSemiTransparent = ContextCompat.getColor(activity, R.color.SEMI_TRANSPARENT);
+            mColorRed = ContextCompat.getColor(activity, R.color.red);
         }
 
         void setDefaultList(@NonNull HashMap<String, Object> list) {

@@ -72,7 +72,6 @@ public class Utils {
             mode = appOpsManager.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
                     android.os.Process.myUid(), context.getPackageName());
         } else {
-            //noinspection deprecation
             mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
                     android.os.Process.myUid(), context.getPackageName());
         }
@@ -279,53 +278,71 @@ public class Utils {
     }
 
     @NonNull
-    public static String getProtectionLevelString(int level) {
-        String protectionLevel = "????";
-        switch (level & PermissionInfo.PROTECTION_MASK_BASE) {
+    public static String getProtectionLevelString(PermissionInfo permissionInfo) {
+        int basePermissionType;
+        int permissionFlags;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            permissionFlags = permissionInfo.getProtectionFlags();
+            basePermissionType = permissionInfo.getProtection();
+        } else {
+            permissionFlags = permissionInfo.protectionLevel;
+            basePermissionType = permissionFlags & PermissionInfo.PROTECTION_MASK_BASE;
+        }
+        String protLevel = "????";
+        switch (basePermissionType) {
             case PermissionInfo.PROTECTION_DANGEROUS:
-                protectionLevel = "dangerous";
+                protLevel = "dangerous";
                 break;
             case PermissionInfo.PROTECTION_NORMAL:
-                protectionLevel = "normal";
+                protLevel = "normal";
                 break;
             case PermissionInfo.PROTECTION_SIGNATURE:
-                protectionLevel = "signature";
-                break;
-            case PermissionInfo.PROTECTION_SIGNATURE_OR_SYSTEM:
-                protectionLevel = "signatureOrSystem";
+                protLevel = "signature";
                 break;
         }
-        if (Build.VERSION.SDK_INT >= 23){
-            if ((level  & PermissionInfo.PROTECTION_FLAG_PRIVILEGED) != 0)
-                protectionLevel += "|privileged";
-            if ((level  & PermissionInfo.PROTECTION_FLAG_PRE23) != 0)
-                protectionLevel += "|pre23";
-            if ((level  & PermissionInfo.PROTECTION_FLAG_INSTALLER) != 0)
-                protectionLevel += "|installer";
-            if ((level  & PermissionInfo.PROTECTION_FLAG_VERIFIER) != 0)
-                protectionLevel += "|verifier";
-            if ((level  & PermissionInfo.PROTECTION_FLAG_PREINSTALLED) != 0)
-                protectionLevel += "|preinstalled";
-            //24
-            if ((level  & PermissionInfo.PROTECTION_FLAG_SETUP) != 0)
-                protectionLevel += "|setup";
-            //26
-            if ((level  & PermissionInfo.PROTECTION_FLAG_RUNTIME_ONLY) != 0)
-                protectionLevel += "|runtime";
-            //27
-            if ((level  & PermissionInfo.PROTECTION_FLAG_INSTANT) != 0)
-                protectionLevel += "|instant";
-        } else if ((level & PermissionInfo.PROTECTION_FLAG_SYSTEM) != 0) {
-            protectionLevel += "|system";
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (basePermissionType == (PermissionInfo.PROTECTION_SIGNATURE
+                    | PermissionInfo.PROTECTION_FLAG_PRIVILEGED)) {
+                protLevel = "signatureOrPrivileged";
+            }
+            if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_PRIVILEGED) != 0)
+                protLevel += "|privileged";
+            if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_PRE23) != 0)
+                protLevel += "|pre23";  // pre marshmallow
+            if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_INSTALLER) != 0)
+                protLevel += "|installer";
+            if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_VERIFIER) != 0)
+                protLevel += "|verifier";
+            if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_PREINSTALLED) != 0)
+                protLevel += "|preinstalled";
+            if (Build.VERSION.SDK_INT >= 24) {
+                if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_SETUP) != 0)
+                    protLevel += "|setup";
+            }
+            if (Build.VERSION.SDK_INT >= 26) {
+                if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_RUNTIME_ONLY) != 0)
+                    protLevel += "|runtime";
+            }
+            if (Build.VERSION.SDK_INT >= 27) {
+                if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_INSTANT) != 0)
+                    protLevel += "|instant";
+            }
+        } else {
+            if (basePermissionType == PermissionInfo.PROTECTION_SIGNATURE_OR_SYSTEM) {
+                protLevel = "signatureOrSystem";
+            }
+            if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_SYSTEM) != 0) {
+                protLevel += "|system";
+            }
         }
-        if ((level & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0) {
-            protectionLevel += "|development";
+
+        if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0) {
+            protLevel += "|development";
         }
-        //21
-        if ((level & PermissionInfo.PROTECTION_FLAG_APPOP) != 0) {
-            protectionLevel += "|appop";
+        if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_APPOP) != 0) {
+            protLevel += "|appop";
         }
-        return protectionLevel;
+        return protLevel;
     }
 
     @NonNull

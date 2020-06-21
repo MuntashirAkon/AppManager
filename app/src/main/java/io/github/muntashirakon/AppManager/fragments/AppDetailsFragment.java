@@ -51,6 +51,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -113,7 +114,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private ProgressBar mProgressBar;
     private TextView mProgressMsg;
 
-    private Tuple<String, Integer>[] permissionsWithFlags;
+    private List<Tuple<String, Integer>> permissionsWithFlags;
     private boolean bFi;
 
     private int mColorGrey1;
@@ -153,8 +154,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         mActivity = getActivity();
         if (mActivity != null) {
             mColorGrey1 = Color.TRANSPARENT;
-            mColorGrey2 = mActivity.getResources().getColor(R.color.SEMI_TRANSPARENT);
-            mColorRed = mActivity.getResources().getColor(R.color.red);
+            mColorGrey2 = ContextCompat.getColor(mActivity, R.color.SEMI_TRANSPARENT);
+            mColorRed = ContextCompat.getColor(mActivity, R.color.red);
         }
         getPackageInfo(mPackageName);
 
@@ -304,11 +305,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 case USES_PERMISSIONS:  // Requested Permissions
                     if (mPackageInfo.requestedPermissions == null) permissionsWithFlags = null;
                     else {
-                        //noinspection unchecked
-                        permissionsWithFlags = new Tuple[mPackageInfo.requestedPermissions.length];
+                        permissionsWithFlags = new ArrayList<>(mPackageInfo.requestedPermissions.length);
                         for (int i = 0; i < mPackageInfo.requestedPermissions.length; ++i) {
-                            permissionsWithFlags[i] = new Tuple<>(mPackageInfo.requestedPermissions[i],
-                                    mPackageInfo.requestedPermissionsFlags[i]);
+                            permissionsWithFlags.add(
+                                    new Tuple<>(mPackageInfo.requestedPermissions[i],
+                                    mPackageInfo.requestedPermissionsFlags[i]));
                         }
                     }
                     break;
@@ -1063,7 +1064,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     viewHolder.textView2.setText(description);
                 } else viewHolder.textView2.setVisibility(View.GONE);
                 // Protection level
-                String protectionLevel = Utils.getProtectionLevelString(permissionInfo.protectionLevel);
+                String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
                 viewHolder.textView3.setText("\u2691 " + protectionLevel);
                 if (protectionLevel.contains("dangerous"))
                     convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.red));
@@ -1166,7 +1167,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     viewHolder.textView2.setText(description);
                 } else viewHolder.textView2.setVisibility(View.GONE);
                 // Protection level
-                String protectionLevel = Utils.getProtectionLevelString(permissionInfo.protectionLevel);
+                String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
                 viewHolder.textView3.setText("\u2691 " + protectionLevel);
                 if (protectionLevel.contains("dangerous"))
                     convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.red));
@@ -1289,7 +1290,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     + permAppOp(permissionInfo.name));
 
             // Protection level
-            viewHolder.textView5.setText(getString(R.string.protection_level) + ": " + Utils.getProtectionLevelString(permissionInfo.protectionLevel));
+            viewHolder.textView5.setText(getString(R.string.protection_level) + ": " + Utils.getProtectionLevelString(permissionInfo));
 
             return convertView;
         }

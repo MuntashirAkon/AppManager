@@ -20,23 +20,26 @@ import android.widget.ImageView;
 import java.util.List;
 import java.util.TreeSet;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
+
 public class IconListAdapter extends BaseAdapter {
     private String[] icons;
     private PackageManager pm;
     private Context context;
 
-    IconListAdapter(Context context) {
+    IconListAdapter(@NonNull Context context) {
         this.context = context;
         this.pm = context.getPackageManager();
     }
 
-    private static Drawable getIcon(String icon_resource_string, PackageManager pm) {
+    private Drawable getIcon(String icon_resource_string, PackageManager pm) {
         try {
             String pack = icon_resource_string.substring(0, icon_resource_string.indexOf(':'));
             String type = icon_resource_string.substring(icon_resource_string.indexOf(':') + 1, icon_resource_string.indexOf('/'));
             String name = icon_resource_string.substring(icon_resource_string.indexOf('/') + 1);
             Resources res = pm.getResourcesForApplication(pack);
-            return res.getDrawable(res.getIdentifier(name, type, pack));
+            return ResourcesCompat.getDrawable(res, res.getIdentifier(name, type, pack), context.getTheme());
         } catch (Exception e) {
             return pm.getDefaultActivityIcon();
         }
@@ -93,7 +96,7 @@ public class IconListAdapter extends BaseAdapter {
         int size = context.getResources().getDimensionPixelSize(R.dimen.icon_size);
         view.setLayoutParams(new AbsListView.LayoutParams(size, size));
         String icon_resource_string = this.icons[position];
-        view.setImageDrawable(IconListAdapter.getIcon(icon_resource_string, this.pm));
+        view.setImageDrawable(getIcon(icon_resource_string, this.pm));
         return view;
     }
 }

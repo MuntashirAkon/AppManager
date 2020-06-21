@@ -48,6 +48,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.text.HtmlCompat;
 import dalvik.system.DexClassLoader;
 import dalvik.system.DexFile;
 import io.github.muntashirakon.AppManager.R;
@@ -308,9 +310,9 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         TextView showText = new TextView(this);
         int paddingSize = getResources().getDimensionPixelSize(R.dimen.padding_medium);
         showText.setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
-        showText.setText(Html.fromHtml(String.format(getString(R.string.tested_signatures_on_classes_and_time_taken),
+        showText.setText(HtmlCompat.fromHtml(String.format(getString(R.string.tested_signatures_on_classes_and_time_taken),
                 signatures.length, totalClassesScanned, totalTimeTaken, totalIteration, foundTrackerList + foundTrackersInfo + packageInfo)
-                .replaceAll(" ", "&nbsp;").replaceAll("\n", "<br/>")));
+                .replaceAll(" ", "&nbsp;").replaceAll("\n", "<br/>"), HtmlCompat.FROM_HTML_MODE_LEGACY));
         showText.setMovementMethod(new ScrollingMovementMethod());
         showText.setTextIsSelectable(true);
         new AlertDialog.Builder(this, R.style.CustomDialog)
@@ -468,8 +470,8 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
             mLayoutInflater = activity.getLayoutInflater();
 
             mColorTransparent = Color.TRANSPARENT;
-            mColorSemiTransparent = activity.getResources().getColor(R.color.SEMI_TRANSPARENT);
-            mColorRed = activity.getResources().getColor(R.color.red);
+            mColorSemiTransparent = ContextCompat.getColor(activity, R.color.SEMI_TRANSPARENT);
+            mColorRed = ContextCompat.getColor(activity, R.color.red);
         }
 
         void setDefaultList(List<String> list) {

@@ -117,7 +117,6 @@ public class LauncherIconCreator {
             Bitmap bitmap = getBitmapFromDrawable(draw);
             intent.setAction(Intent.ACTION_CREATE_SHORTCUT);
 
-
             ShortcutInfo shortcutInfo = new ShortcutInfo.Builder(context, appName)
                     .setShortLabel(appName)
                     .setLongLabel(appName)

@@ -25,6 +25,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
@@ -44,6 +45,7 @@ public class EditShortcutDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        assert getActivity() != null;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomDialog);
 
         if (getArguments() == null) return  builder.create();
@@ -115,7 +117,7 @@ public class EditShortcutDialogFragment extends DialogFragment {
                         Resources resources = mPackageManager.getResourcesForApplication(pack);
                         int icon_resource = resources.getIdentifier(name, type, pack);
                         if (icon_resource != 0) {
-                            icon = resources.getDrawable(icon_resource);
+                            icon = ResourcesCompat.getDrawable(resources, icon_resource, getActivity().getTheme());
                         } else {
                             icon = mPackageManager.getDefaultActivityIcon();
                             Toast.makeText(getActivity(), R.string.error_invalid_icon_resource, Toast.LENGTH_LONG).show();
@@ -143,7 +145,8 @@ public class EditShortcutDialogFragment extends DialogFragment {
             String type = icon_resource_string.substring(icon_resource_string.indexOf(':') + 1, icon_resource_string.indexOf('/'));
             String name = icon_resource_string.substring(icon_resource_string.indexOf('/') + 1);
             Resources res = mPackageManager.getResourcesForApplication(pack);
-            return res.getDrawable(res.getIdentifier(name, type, pack));
+            return ResourcesCompat.getDrawable(res, res.getIdentifier(name, type, pack),
+                    getActivity() == null ? null : getActivity().getTheme());
         } catch (Exception e) {
             return mPackageManager.getDefaultActivityIcon();
         }

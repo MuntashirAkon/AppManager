@@ -42,6 +42,7 @@ public class IconPickerDialogFragment extends DialogFragment implements AsyncPro
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        assert getActivity() != null;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomDialog);
 
         if (getActivity() == null) return builder.create();

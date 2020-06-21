@@ -46,6 +46,7 @@ public class PackageUtils {
         return s;
     }
 
+    @NonNull
     public static String apkPro(PackageInfo p, PackageManager mPackageManager) {
         String[] aPermissionsUse;
         StringBuilder s = new StringBuilder(apkCert(p));
@@ -60,7 +61,7 @@ public class PackageUtils {
                 else aPermissionsUse[i] = p.requestedPermissions[i] + " ";
                 try {
                     pI = mPackageManager.getPermissionInfo(p.requestedPermissions[i], PackageManager.GET_META_DATA);
-                    tmp = getProtectionLevelString(pI.protectionLevel);
+                    tmp = getProtectionLevelString(pI);
                     if (tmp.contains("dangerous")) aPermissionsUse[i] = "*\u2638"+aPermissionsUse[i];
                     aPermissionsUse[i] += tmp+"\n-->"+pI.group;
                 } catch (PackageManager.NameNotFoundException ignored) {}
@@ -92,7 +93,8 @@ public class PackageUtils {
         return s.toString();
     }
 
-    public static String convertS(byte[] digest) {
+    @NonNull
+    public static String convertS(@NonNull byte[] digest) {
         StringBuilder s= new StringBuilder();
         for (byte b:digest){
             s.append(String.format("%02X", b).toLowerCase());
@@ -100,9 +102,19 @@ public class PackageUtils {
         return s.toString();
     }
 
-    public static String getProtectionLevelString(int level) {
+    @NonNull
+    public static String getProtectionLevelString(PermissionInfo permissionInfo) {
+        int basePermissionType;
+        int permissionFlags;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            permissionFlags = permissionInfo.getProtectionFlags();
+            basePermissionType = permissionInfo.getProtection();
+        } else {
+            permissionFlags = permissionInfo.protectionLevel;
+            basePermissionType = permissionFlags & PermissionInfo.PROTECTION_MASK_BASE;
+        }
         String protLevel = "????";
-        switch (level & PermissionInfo.PROTECTION_MASK_BASE) {
+        switch (basePermissionType) {
             case PermissionInfo.PROTECTION_DANGEROUS:
                 protLevel = "dangerous";
                 break;
@@ -112,39 +124,46 @@ public class PackageUtils {
             case PermissionInfo.PROTECTION_SIGNATURE:
                 protLevel = "signature";
                 break;
-            case PermissionInfo.PROTECTION_SIGNATURE_OR_SYSTEM:
-                protLevel = "signatureOrSystem";
-                break;
         }
         if (Build.VERSION.SDK_INT >= 23) {
-            if ((level  & PermissionInfo.PROTECTION_FLAG_PRIVILEGED) != 0)
+            if (basePermissionType == (PermissionInfo.PROTECTION_SIGNATURE
+                    | PermissionInfo.PROTECTION_FLAG_PRIVILEGED)) {
+                protLevel = "signatureOrPrivileged";
+            }
+            if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_PRIVILEGED) != 0)
                 protLevel += "|privileged";
-            if ((level  & PermissionInfo.PROTECTION_FLAG_PRE23) != 0)
-                protLevel += "|pre23";
-            if ((level  & PermissionInfo.PROTECTION_FLAG_INSTALLER) != 0)
+            if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_PRE23) != 0)
+                protLevel += "|pre23";  // pre marshmallow
+            if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_INSTALLER) != 0)
                 protLevel += "|installer";
-            if ((level  & PermissionInfo.PROTECTION_FLAG_VERIFIER) != 0)
+            if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_VERIFIER) != 0)
                 protLevel += "|verifier";
-            if ((level  & PermissionInfo.PROTECTION_FLAG_PREINSTALLED) != 0)
+            if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_PREINSTALLED) != 0)
                 protLevel += "|preinstalled";
-            //24
-            if ((level  & PermissionInfo.PROTECTION_FLAG_SETUP) != 0)
-                protLevel += "|setup";
-            //26
-            if ((level  & PermissionInfo.PROTECTION_FLAG_RUNTIME_ONLY) != 0)
-                protLevel += "|runtime";
-            //27
-            if ((level  & PermissionInfo.PROTECTION_FLAG_INSTANT) != 0)
-                protLevel += "|instant";
-        }else if ((level & PermissionInfo.PROTECTION_FLAG_SYSTEM) != 0) {
-            protLevel += "|system";
+            if (Build.VERSION.SDK_INT >= 24) {
+                if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_SETUP) != 0)
+                    protLevel += "|setup";
+            }
+            if (Build.VERSION.SDK_INT >= 26) {
+                if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_RUNTIME_ONLY) != 0)
+                    protLevel += "|runtime";
+            }
+            if (Build.VERSION.SDK_INT >= 27) {
+                if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_INSTANT) != 0)
+                    protLevel += "|instant";
+            }
+        } else {
+            if (basePermissionType == PermissionInfo.PROTECTION_SIGNATURE_OR_SYSTEM) {
+                protLevel = "signatureOrSystem";
+            }
+            if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_SYSTEM) != 0) {
+                protLevel += "|system";
+            }
         }
-
-        if ((level & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0) {
+        if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0) {
             protLevel += "|development";
         }
-        //21
-        if ((level & PermissionInfo.PROTECTION_FLAG_APPOP) != 0) {
+        if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_APPOP) != 0) {
             protLevel += "|appop";
         }
         return protLevel;

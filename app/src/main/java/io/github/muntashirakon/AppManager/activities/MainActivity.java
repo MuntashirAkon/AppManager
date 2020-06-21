@@ -56,6 +56,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -264,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             actionBar.setSubtitle(MainActivity.listName.substring(
                     MainActivity.listName.lastIndexOf(".") + 1).toLowerCase());
         }
-        if (Build.VERSION.SDK_INT < 26) {
+        if (Build.VERSION.SDK_INT <= 25) {
             startRetrievingPackagesSize();
         }
         showProgressBar(false);
@@ -451,11 +452,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             mPackageManager = activity.getPackageManager();
 
             mColorTransparent = Color.TRANSPARENT;
-            mColorSemiTransparent = activity.getResources().getColor(R.color.SEMI_TRANSPARENT);
-            mColorOrange = activity.getResources().getColor(R.color.orange);
+            mColorSemiTransparent = ContextCompat.getColor(mActivity, R.color.SEMI_TRANSPARENT);
+            mColorOrange = ContextCompat.getColor(mActivity, R.color.orange);
             mColorPrimary = Utils.getThemeColor(mActivity, android.R.attr.textColorPrimary);
             mColorSecondary = Utils.getThemeColor(mActivity, android.R.attr.textColorSecondary);
-            mColorRed = activity.getResources().getColor(R.color.red);
+            mColorRed = ContextCompat.getColor(mActivity, R.color.red);
         }
 
         void setDefaultList(List<ApplicationItem> list) {
@@ -555,7 +556,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             // If the app is disabled, add an ocean blue background
             if (!info.enabled) {
-                view.setBackgroundColor(mActivity.getResources().getColor(R.color.disabled_app));
+                view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.disabled_app));
             }
             // Add yellow star if the app is in debug mode
             holder.favorite_icon.setVisibility(item.star ? View.VISIBLE : View.INVISIBLE);
@@ -621,7 +622,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             // Set package name color to blue if the app is in stopped/force closed state
             if ((info.flags & ApplicationInfo.FLAG_STOPPED) != 0)
-                holder.packageName.setTextColor(mActivity.getResources().getColor(R.color.blue_green));
+                holder.packageName.setTextColor(ContextCompat.getColor(mActivity, R.color.blue_green));
             else holder.packageName.setTextColor(mColorSecondary);
             // Set version (along with HW accelerated, debug and test only flags)
             CharSequence version = holder.version.getText();

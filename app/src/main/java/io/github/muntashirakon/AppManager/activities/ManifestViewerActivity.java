@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.xmlapkparser.AXMLPrinter;
 
@@ -100,7 +101,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
 
     private void displayContent() {
         final TextView textView = findViewById(R.id.any_view);
-        textView.setTextColor(getResources().getColor(R.color.dark_orange));
+        textView.setTextColor(ContextCompat.getColor(this, R.color.dark_orange));
         Matcher matcher;
         final StringBuffer sb = new StringBuffer();
         String textFormat = "<font color='#%06X'>%s</font>";
@@ -110,7 +111,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
                 .replaceAll(" ", "&nbsp;")
                 .replaceAll("\n", "<br/>");
 
-        int tagColor = getResources().getColor(R.color.pink);
+        int tagColor = ContextCompat.getColor(this, R.color.pink);
         matcher = MANIFEST_TAGS.matcher(code);
         while (matcher.find()) {
             String formattedText = String.format(textFormat, (0xFFFFFF & tagColor), matcher.group());
@@ -120,7 +121,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
         matcher = QUOTATIONS.matcher(sb.toString());
         sb.setLength(0);
         textFormat = "<i>" + textFormat + "</i>";
-        int attr_value = getResources().getColor(R.color.ocean_blue);
+        int attr_value = ContextCompat.getColor(this, R.color.ocean_blue);
         while (matcher.find()) {
             String formattedText = String.format(textFormat, (0xFFFFFF & attr_value), matcher.group());
             matcher.appendReplacement(sb, formattedText);
