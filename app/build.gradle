@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "30.0.0 rc4"
+    buildToolsVersion '30.0.0'
 
     defaultConfig {
         applicationId 'io.github.muntashirakon.AppManager'
