@@ -1318,10 +1318,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
             final PermissionInfo permissionInfo = (PermissionInfo) mAdapterList.get(index).vanillaItem;
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-
             // Label
             viewHolder.textView1.setText(permissionInfo.loadLabel(mPackageManager));
-
             // Name
             if (mConstraint != null && permissionInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
@@ -1330,20 +1328,18 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 viewHolder.textView2.setText(permissionInfo.name.startsWith(mPackageName) ?
                         permissionInfo.name.replaceFirst(mPackageName, "") : permissionInfo.name);
             }
-
             // Icon
             viewHolder.imageView.setImageDrawable(permissionInfo.loadIcon(mPackageManager));
-
             // Description
             viewHolder.textView3.setText(permissionInfo.loadDescription(mPackageManager));
-
             // LaunchMode
             viewHolder.textView4.setText(getString(R.string.group) + ": " + permissionInfo.group
                     + permAppOp(permissionInfo.name));
-
             // Protection level
-            viewHolder.textView5.setText(getString(R.string.protection_level) + ": " + Utils.getProtectionLevelString(permissionInfo));
-
+            String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
+            viewHolder.textView5.setText(getString(R.string.protection_level) + ": " + protectionLevel);
+            if (protectionLevel.contains("dangerous"))
+                convertView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
             return convertView;
         }
 
