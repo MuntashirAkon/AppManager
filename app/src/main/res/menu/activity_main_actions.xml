@@ -53,9 +53,15 @@
         android:icon="@drawable/ic_refresh_black_24dp"
         android:title="@string/refresh"
         app:showAsAction="never" />
+
     <item
         android:id="@+id/action_app_usage"
         android:icon="@drawable/ic_data_usage_black_24dp"
         android:title="@string/app_usage" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="@string/app_settings" />
 
 </menu>

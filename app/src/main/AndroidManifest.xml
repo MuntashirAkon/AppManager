@@ -10,10 +10,11 @@
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.SettingsActivity"></activity>
         <activity android:name=".activities.SharedPrefsActivity" />
         <activity
             android:name=".activities.AppUsageActivity"
@@ -42,12 +43,14 @@
         <activity
             android:name=".activities.ManifestViewerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" />
+
         <provider
-            android:authorities="${applicationId}.provider"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
-            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
     </application>

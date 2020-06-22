@@ -284,4 +284,11 @@
     <string name="failed_to_disable_op">Failed to disable the requested app op</string>
     <string name="blocking_is_not_enabled">Blocking is not enabled</string>
     <string name="str_logo">Logo</string>
+    <string name="pref_root_mode_enabled">Root mode</string>
+    <string name="pref_root_mode_enabled_msg">Enabling root mode activates all root features of this app</string>
+    <string name="pref_global_blocking_enabled">Global component blocking</string>
+    <string name="pref_global_blocking_enabled_msg">Enabling global component blocking lets you block any component of any app without explicitly enabling blocking for the app</string>
+    <string name="pref_usage_access_enabled">Usage access</string>
+    <string name="pref_usage_access_enabled_msg">Enabling usage acess lets you see your app usage statistics and app data info</string>
+    <string name="app_settings">Settings</string>
 </resources>

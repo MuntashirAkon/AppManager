@@ -63,6 +63,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.types.ApplicationItem;
 import io.github.muntashirakon.AppManager.MainLoader;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static androidx.appcompat.app.ActionBar.LayoutParams;
@@ -150,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mListView.setOnItemClickListener(this);
         mListView.setFastScrollEnabled(true);
         mListView.setDividerHeight(0);
-
         mListView.setOnItemLongClickListener((adapterView, view, i, l) -> {
             Intent appDetailsIntent = new Intent(MainActivity.this, AppDetailsActivity.class);
             appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME,
@@ -158,9 +158,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             MainActivity.this.startActivity(appDetailsIntent);
             return true;
         });
-
         mAdapter = new MainActivity.Adapter(MainActivity.this);
         mListView.setAdapter(mAdapter);
+
+        // Initialize app prefs
+        AppPref.getInstance(this);
 
         mLoaderManager = LoaderManager.getInstance(this);
         mLoaderManager.initLoader(0, null, this);
@@ -209,6 +211,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
                 mLoaderManager.restartLoader(0, null, this);
                 return true;
+            case R.id.action_settings:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
+                return  true;
             case R.id.action_sort_name:
                 setSortBy(SORT_NAME);
                 item.setChecked(true);
@@ -238,8 +244,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 item.setChecked(true);
                 return true;
             case R.id.action_app_usage:
-                Intent intent = new Intent(this, AppUsageActivity.class);
-                startActivity(intent);
+                Intent usageIntent = new Intent(this, AppUsageActivity.class);
+                startActivity(usageIntent);
             default:
                 return super.onOptionsItemSelected(item);
         }
