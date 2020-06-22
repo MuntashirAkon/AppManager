@@ -57,6 +57,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.types.AppDetailsItem;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
@@ -112,7 +113,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private SwipeRefreshLayout mSwipeRefresh;
     private ComponentsBlocker mComponentsBlocker;
     private MenuItem blockingToggler;
-    private String mConstraint;
     private AppOpsService mAppOpsService;
     private ProgressBar mProgressBar;
     private TextView mProgressMsg;
@@ -263,15 +263,18 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public void onResume() {
         super.onResume();
-        if (mAdapter != null && mConstraint != null && !mConstraint.equals("")) {
-            mAdapter.getFilter().filter(mConstraint);
+        if (mAdapter != null && AppDetailsActivity.mConstraint != null
+                && !AppDetailsActivity.mConstraint.equals("")) {
+            mAdapter.getFilter().filter(AppDetailsActivity.mConstraint);
         }
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mConstraint = newText;
-        if (mAdapter != null) mAdapter.getFilter().filter(newText);
+        AppDetailsActivity.mConstraint = newText;
+        if (mAdapter != null) {
+            mAdapter.getFilter().filter(newText);
+        }
         return true;
     }
 
@@ -284,6 +287,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         if (mAdapter != null){
             getPackageInfo();
             mAdapter.reset();
+        }
+    }
+
+    public void resetFilter() {
+        if (mAdapter != null) {
+            mAdapter.getFilter().filter(AppDetailsActivity.mConstraint);
         }
     }
 
@@ -551,11 +560,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 requestedProperty = neededProperty;
                 mAdapterList = getNeededList(requestedProperty);
                 mDefaultList = mAdapterList;
-                if(AppDetailsFragment.this.mConstraint != null
-                        && !AppDetailsFragment.this.mConstraint.equals("")) {
-                    getFilter().filter(AppDetailsFragment.this.mConstraint);
-                }
                 mActivity.runOnUiThread(() -> {
+                    if(AppDetailsActivity.mConstraint != null
+                            && !AppDetailsActivity.mConstraint.equals("")) {
+                        getFilter().filter(AppDetailsActivity.mConstraint);
+                    }
                     if (isRootEnabled && !isBlockingEnabled && mComponentsBlocker.componentCount() > 0
                             && !mComponentsBlocker.isRulesApplied()
                             && requestedProperty <= AppDetailsFragment.PROVIDERS) {

@@ -33,6 +33,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 public class AppDetailsActivity extends AppCompatActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
 
+    public static String mConstraint;
     private String mPackageName;
     private TypedArray mTabTitleIds;
     AppDetailsFragmentStateAdapter appDetailsFragmentStateAdapter;
@@ -65,19 +66,19 @@ public class AppDetailsActivity extends AppCompatActivity {
         fragments = new AppDetailsFragment[mTabTitleIds.length()];
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            final SearchView sSearchView = new SearchView(actionBar.getThemedContext());
+            final SearchView searchView = new SearchView(actionBar.getThemedContext());
             actionBar.setDisplayShowCustomEnabled(true);
-            sSearchView.setQueryHint(getString(R.string.search));
+            searchView.setQueryHint(getString(R.string.search));
 
-            ((ImageView) sSearchView.findViewById(androidx.appcompat.R.id.search_button))
+            ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_button))
                     .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
-            ((ImageView) sSearchView.findViewById(androidx.appcompat.R.id.search_close_btn))
+            ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn))
                     .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
 
             ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.gravity = Gravity.END;
-            actionBar.setCustomView(sSearchView, layoutParams);
+            actionBar.setCustomView(searchView, layoutParams);
             viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                 @Override
                 public void onPageSelected(@AppDetailsFragment.Property int position) {
@@ -90,10 +91,11 @@ public class AppDetailsActivity extends AppCompatActivity {
                         case AppDetailsFragment.APP_OPS:
                         case AppDetailsFragment.USES_PERMISSIONS:
                         case AppDetailsFragment.PERMISSIONS:
-                            sSearchView.setVisibility(View.VISIBLE);
-                            sSearchView.setIconified(true);
-                            if (fragments[position] != null)
-                                sSearchView.setOnQueryTextListener(fragments[position]);
+                            searchView.setVisibility(View.VISIBLE);
+                            if (fragments[position] != null) {
+                                searchView.setOnQueryTextListener(fragments[position]);
+                                fragments[position].resetFilter();
+                            }
                             break;
                         case AppDetailsFragment.FEATURES:
                         case AppDetailsFragment.CONFIGURATION:
@@ -101,7 +103,7 @@ public class AppDetailsActivity extends AppCompatActivity {
                         case AppDetailsFragment.SHARED_LIBRARY_FILES:
                         case AppDetailsFragment.NONE:
                         default:
-                            sSearchView.setVisibility(View.GONE);
+                            searchView.setVisibility(View.GONE);
                     }
                 }
             });
