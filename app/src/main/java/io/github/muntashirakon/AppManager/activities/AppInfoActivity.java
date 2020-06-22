@@ -57,6 +57,7 @@ import androidx.core.content.FileProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -244,8 +245,9 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mHorizontalLayout.removeAllViews();
         // Set uninstall
         addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
-            boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+            final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
             // FIXME: Uninstall for all users
+            final Boolean isRootEnabled = (Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
             new AlertDialog.Builder(this, R.style.CustomDialog)
                     .setTitle(mPackageLabel)
                     .setMessage(isSystemApp ?
@@ -253,7 +255,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                     .setPositiveButton(R.string.uninstall, (dialog, which) -> {
                         // Try without root first then with root
                         if (Shell.SH.run(String.format("pm uninstall --user 0 %s", mPackageName)).isSuccessful()
-                                || Shell.SU.run(String.format("pm uninstall --user 0 %s", mPackageName)).isSuccessful()) {
+                                || (isRootEnabled && Shell.SU.run(String.format("pm uninstall --user 0 %s", mPackageName)).isSuccessful())) {
                             Toast.makeText(mActivity, String.format(getString(R.string.uninstalled_successfully), mPackageLabel), Toast.LENGTH_LONG).show();
                             finish();
                         } else {
@@ -265,34 +267,36 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                     })
                     .show();
         });
-        // Enable/disable app
-        // FIXME: Get current user
-        if (mApplicationInfo.enabled) {
-            // Disable app
-            addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> {
-                if (Shell.SU.run(String.format("pm disable %s", mPackageName)).isSuccessful()) {
-                    // Refresh
-                    getPackageInfoOrFinish();
-                } else {
-                    Toast.makeText(mActivity, String.format(getString(R.string.failed_to_disable), mPackageLabel), Toast.LENGTH_LONG).show();
-                }
-            });
-        } else {
-            // Enable app
-            addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> {
-                if (Shell.SU.run(String.format("pm enable %s", mPackageName)).isSuccessful()) {
-                    // Refresh
-                    getPackageInfoOrFinish();
-                } else {
-                    Toast.makeText(mActivity, String.format(getString(R.string.failed_to_enable), mPackageLabel), Toast.LENGTH_LONG).show();
-                }
-            });
-        }
+        // Enable/disable app (root only)
+        if ((Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
+            if (mApplicationInfo.enabled) {
+                // Disable app
+                addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> {
+                    if (Shell.SU.run(String.format("pm disable %s", mPackageName)).isSuccessful()) {
+                        // Refresh
+                        getPackageInfoOrFinish();
+                    } else {
+                        Toast.makeText(mActivity, String.format(getString(R.string.failed_to_disable), mPackageLabel), Toast.LENGTH_LONG).show();
+                    }
+                });
+            } else {
+                // Enable app
+                addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> {
+                    if (Shell.SU.run(String.format("pm enable %s", mPackageName)).isSuccessful()) {
+                        // Refresh
+                        getPackageInfoOrFinish();
+                    } else {
+                        Toast.makeText(mActivity, String.format(getString(R.string.failed_to_enable), mPackageLabel), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        }  // End root only
         // Force stop
         if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
             addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> {
+                final Boolean isRootEnabled = (Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
                 if (Shell.SH.run(String.format("am force-stop %s", mPackageName)).isSuccessful()
-                        || Shell.SU.run(String.format("am force-stop %s", mPackageName)).isSuccessful()) {
+                        || (isRootEnabled && Shell.SU.run(String.format("am force-stop %s", mPackageName)).isSuccessful())) {
                     // Refresh
                     getPackageInfoOrFinish();
                 } else {
@@ -319,47 +323,50 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                 Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
             }
         });
-        // Shared prefs
-        List<String> sharedPrefs;
-        sharedPrefs = getSharedPrefs(mApplicationInfo.dataDir);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            sharedPrefs.addAll(getSharedPrefs(mApplicationInfo.deviceProtectedDataDir));
-        }
-        if (!sharedPrefs.isEmpty()) {
-            CharSequence[] sharedPrefs2 = new CharSequence[sharedPrefs.size()];
-            for (int i = 0; i<sharedPrefs.size(); ++i) {
-                sharedPrefs2[i] = new File(sharedPrefs.get(i)).getName();
+        // Root only features
+        if ((Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
+            // Shared prefs (root only)
+            List<String> sharedPrefs;
+            sharedPrefs = getSharedPrefs(mApplicationInfo.dataDir);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                sharedPrefs.addAll(getSharedPrefs(mApplicationInfo.deviceProtectedDataDir));
             }
-            addToHorizontalLayout(R.string.shared_prefs, R.drawable.ic_view_list_black_24dp)
-                    .setOnClickListener(v -> new AlertDialog.Builder(this, R.style.CustomDialog)
-                            .setTitle(R.string.shared_prefs)
-                            .setItems(sharedPrefs2, (dialog, which) -> {
-                                Intent intent = new Intent(this, SharedPrefsActivity.class);
-                                intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LOCATION, sharedPrefs.get(which));
-                                intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LABEL, mPackageLabel);
-                                startActivity(intent);
-                            })
-                            .setNegativeButton(android.R.string.ok, null)
-                            .show());
-        }
-        // Databases
-        List<String> databases;
-        databases = getDatabases(mApplicationInfo.dataDir);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            databases.addAll(getDatabases(mApplicationInfo.deviceProtectedDataDir));
-        }
-        if (!databases.isEmpty()) {
-            CharSequence[] databases2 = new CharSequence[databases.size()];
-            for (int i = 0; i<databases.size(); ++i) {
-                databases2[i] = databases.get(i);
+            if (!sharedPrefs.isEmpty()) {
+                CharSequence[] sharedPrefs2 = new CharSequence[sharedPrefs.size()];
+                for (int i = 0; i < sharedPrefs.size(); ++i) {
+                    sharedPrefs2[i] = new File(sharedPrefs.get(i)).getName();
+                }
+                addToHorizontalLayout(R.string.shared_prefs, R.drawable.ic_view_list_black_24dp)
+                        .setOnClickListener(v -> new AlertDialog.Builder(this, R.style.CustomDialog)
+                                .setTitle(R.string.shared_prefs)
+                                .setItems(sharedPrefs2, (dialog, which) -> {
+                                    Intent intent = new Intent(this, SharedPrefsActivity.class);
+                                    intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LOCATION, sharedPrefs.get(which));
+                                    intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LABEL, mPackageLabel);
+                                    startActivity(intent);
+                                })
+                                .setNegativeButton(android.R.string.ok, null)
+                                .show());
             }
-            addToHorizontalLayout(R.string.databases, R.drawable.ic_assignment_black_24dp)
-                    .setOnClickListener(v -> new AlertDialog.Builder(this, R.style.CustomDialog)
-                            .setTitle(R.string.databases)
-                            .setItems(databases2, null)  // TODO
-                            .setNegativeButton(android.R.string.ok, null)
-                            .show());
-        }
+            // Databases (root only)
+            List<String> databases;
+            databases = getDatabases(mApplicationInfo.dataDir);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                databases.addAll(getDatabases(mApplicationInfo.deviceProtectedDataDir));
+            }
+            if (!databases.isEmpty()) {
+                CharSequence[] databases2 = new CharSequence[databases.size()];
+                for (int i = 0; i < databases.size(); ++i) {
+                    databases2[i] = databases.get(i);
+                }
+                addToHorizontalLayout(R.string.databases, R.drawable.ic_assignment_black_24dp)
+                        .setOnClickListener(v -> new AlertDialog.Builder(this, R.style.CustomDialog)
+                                .setTitle(R.string.databases)
+                                .setItems(databases2, null)  // TODO
+                                .setNegativeButton(android.R.string.ok, null)
+                                .show());
+            }
+        }  // End root only features
         // Set F-Droid or Aurora Droid
         try {
             if(!mPackageManager.getApplicationInfo(PACKAGE_NAME_FDROID, 0).enabled)
@@ -393,30 +400,31 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     }
 
     private void setVerticalView()  {
+        final Boolean isRootEnabled = (Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
         // Paths and directories
         mList.addItemWithTitle(getString(R.string.paths_and_directories), true);
         mList.item_title.setTextColor(mAccentColor);
         // Source directory (apk path)
         mList.addItemWithTitleSubtitle(getString(R.string.source_dir), mApplicationInfo.sourceDir, ListItemCreator.SELECTABLE);
-        openAsFolderInFM((new File(mApplicationInfo.sourceDir)).getParent());
+        if (isRootEnabled) openAsFolderInFM((new File(mApplicationInfo.sourceDir)).getParent());
         // Public source directory
         if (!mApplicationInfo.publicSourceDir.equals(mApplicationInfo.sourceDir)) {
             mList.addItemWithTitleSubtitle(getString(R.string.public_source_dir), mApplicationInfo.publicSourceDir, ListItemCreator.SELECTABLE);
-            openAsFolderInFM((new File(mApplicationInfo.publicSourceDir)).getParent());
+            if (isRootEnabled) openAsFolderInFM((new File(mApplicationInfo.publicSourceDir)).getParent());
         }
         // Data dir
         mList.addItemWithTitleSubtitle(getString(R.string.data_dir), mApplicationInfo.dataDir, ListItemCreator.SELECTABLE);
-        openAsFolderInFM(mApplicationInfo.dataDir);
+        if (isRootEnabled) openAsFolderInFM(mApplicationInfo.dataDir);
         // Device-protected data dir
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             mList.addItemWithTitleSubtitle(getString(R.string.dev_protected_data_dir), mApplicationInfo.deviceProtectedDataDir, ListItemCreator.NO_ACTION);
-            openAsFolderInFM(mApplicationInfo.deviceProtectedDataDir);
+            if (isRootEnabled) openAsFolderInFM(mApplicationInfo.deviceProtectedDataDir);
         }
         // Native JNI library dir
         File nativeLib = new File(mApplicationInfo.nativeLibraryDir);
         if (nativeLib.exists()) {
             mList.addItemWithTitleSubtitle(getString(R.string.native_library_dir), mApplicationInfo.nativeLibraryDir, ListItemCreator.NO_ACTION);
-            openAsFolderInFM(mApplicationInfo.nativeLibraryDir);
+            if (isRootEnabled) openAsFolderInFM(mApplicationInfo.nativeLibraryDir);
         }
         mList.addDivider();
 
@@ -484,7 +492,8 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mList.addDivider();
 
         // Storage and Cache
-        getPackageSizeInfo();
+        if ((Boolean) AppPref.get(this, AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN))
+            getPackageSizeInfo();
     }
 
     private List<String> getSharedPrefs(@NonNull String sourceDir) {
@@ -581,6 +590,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     }
 
     private void setStorageInfo(long codeSize, long dataSize, long cacheSize, long obbSize, long mediaSize) {
+        final Boolean isRootEnabled = (Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
         mList.addItemWithTitle(getString(R.string.storage_and_cache), true);
         mList.item_title.setTextColor(mAccentColor);
         // Code size
@@ -589,35 +599,39 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         // Data size
         mList.addItemWithTitleSubtitle(getString(R.string.data_size), getReadableSize(dataSize),
                 ListItemCreator.SELECTABLE);
-        mList.setOpen(v -> {
-            // Clear data
-            if(Shell.SU.run(String.format("pm clear %s", mPackageName)).isSuccessful()) {
-                getPackageInfoOrFinish();
-            }
-        });
-        mList.item_open.setImageDrawable(getDrawable(R.drawable.ic_delete_black_24dp));
+        if (isRootEnabled) {
+            mList.setOpen(v -> {
+                // Clear data
+                if (Shell.SU.run(String.format("pm clear %s", mPackageName)).isSuccessful()) {
+                    getPackageInfoOrFinish();
+                }
+            });
+            mList.item_open.setImageDrawable(getDrawable(R.drawable.ic_delete_black_24dp));
+        }
         // Cache size
         mList.addItemWithTitleSubtitle(getString(R.string.cache_size), getReadableSize(cacheSize),
                 ListItemCreator.SELECTABLE);
-        mList.setOpen(v -> {
-            StringBuilder command = new StringBuilder(String.format("rm -rf %s/cache %s/code_cache",
-                    mApplicationInfo.dataDir, mApplicationInfo.dataDir));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                if (!mApplicationInfo.dataDir.equals(mApplicationInfo.deviceProtectedDataDir)) {
-                    command.append(String.format(" %s/cache %s/code_cache",
-                            mApplicationInfo.deviceProtectedDataDir, mApplicationInfo.deviceProtectedDataDir));
+        if (isRootEnabled) {
+            mList.setOpen(v -> {
+                StringBuilder command = new StringBuilder(String.format("rm -rf %s/cache %s/code_cache",
+                        mApplicationInfo.dataDir, mApplicationInfo.dataDir));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    if (!mApplicationInfo.dataDir.equals(mApplicationInfo.deviceProtectedDataDir)) {
+                        command.append(String.format(" %s/cache %s/code_cache",
+                                mApplicationInfo.deviceProtectedDataDir, mApplicationInfo.deviceProtectedDataDir));
+                    }
                 }
-            }
-            File[] cacheDirs = getExternalCacheDirs();
-            for(File cacheDir: cacheDirs) {
-                String extCache = cacheDir.getAbsolutePath().replace(getPackageName(), mPackageName);
-                command.append(" ").append(extCache);
-            }
-            if (Shell.SU.run(command.toString()).isSuccessful()) {
-                getPackageInfoOrFinish();
-            }
-        });
-        mList.item_open.setImageDrawable(getDrawable(R.drawable.ic_delete_black_24dp));
+                File[] cacheDirs = getExternalCacheDirs();
+                for (File cacheDir : cacheDirs) {
+                    String extCache = cacheDir.getAbsolutePath().replace(getPackageName(), mPackageName);
+                    command.append(" ").append(extCache);
+                }
+                if (Shell.SU.run(command.toString()).isSuccessful()) {
+                    getPackageInfoOrFinish();
+                }
+            });
+            mList.item_open.setImageDrawable(getDrawable(R.drawable.ic_delete_black_24dp));
+        }
         // OBB size
         if (obbSize != 0)
             mList.addItemWithTitleSubtitle(getString(R.string.obb_size), getReadableSize(obbSize),

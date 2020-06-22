@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private LoaderManager mLoaderManager;
     private SwipeRefreshLayout mSwipeRefresh;
     private static String mConstraint;
+    private MenuItem appUsageMenu;
 
     private int mSortBy;
 
@@ -178,6 +179,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main_actions, menu);
+        appUsageMenu = menu.findItem(R.id.action_app_usage);
+        if ((Boolean) AppPref.get(this, AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN)) {
+            appUsageMenu.setVisible(true);
+        } else appUsageMenu.setVisible(false);
         if (menu instanceof MenuBuilder) {
             ((MenuBuilder) menu).setOptionalIconsVisible(true);
         }
@@ -309,6 +314,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onResume();
         if (mAdapter != null && mConstraint != null && !mConstraint.equals("")) {
             mAdapter.getFilter().filter(mConstraint);
+        }
+        if (appUsageMenu != null) {
+            if ((Boolean) AppPref.get(this, AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN))
+                appUsageMenu.setVisible(true);
+            else appUsageMenu.setVisible(false);
         }
     }
 

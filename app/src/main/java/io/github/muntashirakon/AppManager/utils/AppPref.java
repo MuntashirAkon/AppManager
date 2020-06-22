@@ -38,11 +38,15 @@ public class AppPref {
     public static final int TYPE_STRING  = 4;
 
     private static AppPref appPref;
-    public static AppPref getInstance(Context context) {
+    public static AppPref getInstance(@NonNull Context context) {
         if (appPref == null) {
             appPref = new AppPref(context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE));
         }
         return appPref;
+    }
+
+    public static @NonNull Object get(@NonNull Context context, @PrefKey String key, @Type int type) {
+        return getInstance(context).getPref(key, type);
     }
 
     private @NonNull SharedPreferences preferences;
