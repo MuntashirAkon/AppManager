@@ -502,6 +502,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mList.setOpen(view -> {
             Intent openFile = new Intent(Intent.ACTION_VIEW);
             openFile.setDataAndType(Uri.parse(dir), "resource/folder");
+            openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             if (openFile.resolveActivityInfo(mPackageManager, 0) != null)
                 startActivity(openFile);
         });
