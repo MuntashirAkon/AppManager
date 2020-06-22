@@ -1,11 +1,13 @@
 package io.github.muntashirakon.AppManager.activities;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -25,12 +27,9 @@ public class SettingsActivity extends AppCompatActivity {
         final MaterialCardView blockingView = findViewById(R.id.blocking_view);
 
         // Read pref
-        Object object = appPref.getPref(AppPref.PREF_ROOT_MODE_ENABLED.getFirst(), AppPref.TYPE_BOOLEAN);
-        Boolean rootEnabled = object == null ? AppPref.PREF_ROOT_MODE_ENABLED.getSecond() : (Boolean) object;
-        object = appPref.getPref(AppPref.PREF_GLOBAL_BLOCKING_ENABLED.getFirst(), AppPref.TYPE_BOOLEAN);
-        Boolean blockingEnabled = object == null ? AppPref.PREF_GLOBAL_BLOCKING_ENABLED.getSecond() : (Boolean) object;
-        object = appPref.getPref(AppPref.PREF_USAGE_ACCESS_ENABLED.getFirst(), AppPref.TYPE_BOOLEAN);
-        Boolean usageEnabled = object == null ? AppPref.PREF_USAGE_ACCESS_ENABLED.getSecond() : (Boolean) object;
+        Boolean rootEnabled = (Boolean) appPref.getPref(AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
+        Boolean blockingEnabled = (Boolean) appPref.getPref(AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN);
+        Boolean usageEnabled = (Boolean) appPref.getPref(AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN);
 
         // Set changed values
         rootSwitcher.setChecked(rootEnabled);
@@ -40,19 +39,27 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Set listeners
         rootSwitcher.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            appPref.setPref(AppPref.PREF_ROOT_MODE_ENABLED.getFirst(), isChecked);
+            appPref.setPref(AppPref.PREF_ROOT_MODE_ENABLED, isChecked);
             blockingView.setVisibility(isChecked ? View.VISIBLE : View.GONE);
         });
         blockingSwitcher.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            appPref.setPref(AppPref.PREF_GLOBAL_BLOCKING_ENABLED.getFirst(), isChecked);
-            Object object1 = appPref.getPref(AppPref.PREF_ROOT_MODE_ENABLED.getFirst(), AppPref.TYPE_BOOLEAN);
-            Boolean rootEnabled1 = object1 == null ? AppPref.PREF_ROOT_MODE_ENABLED.getSecond() : (Boolean) object1;
+            appPref.setPref(AppPref.PREF_GLOBAL_BLOCKING_ENABLED, isChecked);
+            Boolean rootEnabled1 = (Boolean) appPref.getPref(AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
             if (rootEnabled1 && isChecked) {
                 // TODO: Apply current settings
             }
         });
         usageSwitcher.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            appPref.setPref(AppPref.PREF_USAGE_ACCESS_ENABLED.getFirst(), isChecked);
+            appPref.setPref(AppPref.PREF_USAGE_ACCESS_ENABLED, isChecked);
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

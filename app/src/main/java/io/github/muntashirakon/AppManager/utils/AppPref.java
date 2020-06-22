@@ -4,14 +4,24 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.Map;
+
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringDef;
 
 public class AppPref {
     private static final String PREF_NAME = "preferences";
-    public static final Tuple<String, Boolean> PREF_ROOT_MODE_ENABLED = new Tuple<>("root_mode_enabled", true);
-    public static final Tuple<String, Boolean> PREF_GLOBAL_BLOCKING_ENABLED = new Tuple<>("global_blocking_enabled", false);
-    public static final Tuple<String, Boolean> PREF_USAGE_ACCESS_ENABLED = new Tuple<>("usage_access_enabled", true);
+
+    @StringDef(value = {
+            PREF_ROOT_MODE_ENABLED,
+            PREF_GLOBAL_BLOCKING_ENABLED,
+            PREF_USAGE_ACCESS_ENABLED
+    })
+    public @interface PrefKey {}
+    public static final String PREF_ROOT_MODE_ENABLED = "root_mode_enabled";
+    public static final String PREF_GLOBAL_BLOCKING_ENABLED = "global_blocking_enabled";
+    public static final String PREF_USAGE_ACCESS_ENABLED = "usage_access_enabled";
 
     @IntDef(value = {
             TYPE_BOOLEAN,
@@ -45,24 +55,25 @@ public class AppPref {
         init();
     }
 
-    public Object getPref(String key, @Type int type) {
-        if (!preferences.contains(key)) init();
-        // Default values here doesn't matter as they're initialized already
+    public @NonNull Object getPref(@PrefKey String key, @Type int type) {
+        Map<String, ?> prefValues = preferences.getAll();
+        Object nullableValue = prefValues.get(key);
+        String value = (nullableValue == null ? getDefaultValue(key) : nullableValue).toString();
         try {
             switch (type) {
                 case TYPE_BOOLEAN:
-                    return preferences.getBoolean(key, false);
+                    return Boolean.valueOf(value);
                 case TYPE_FLOAT:
-                    return preferences.getFloat(key, 0.0f);
+                    return Float.valueOf(value);
                 case TYPE_INTEGER:
-                    return preferences.getInt(key, 0);
+                    return Integer.valueOf(value);
                 case TYPE_LONG:
-                    return preferences.getLong(key, 0);
+                    return Long.valueOf(value);
                 case TYPE_STRING:
-                    return preferences.getString(key, "");
+                    return value;
             }
         } catch (ClassCastException ignore) {}
-        return null;
+        return value; // This shouldn't be here FIXME: Throw an exception
     }
 
     public void setPref(String key, Object value) {
@@ -75,15 +86,25 @@ public class AppPref {
     }
 
     private void init() {
-        if (!preferences.contains(PREF_ROOT_MODE_ENABLED.getFirst())) {
-            editor.putBoolean(PREF_ROOT_MODE_ENABLED.getFirst(), PREF_ROOT_MODE_ENABLED.getSecond());
+        if (!preferences.contains(PREF_ROOT_MODE_ENABLED)) {
+            editor.putBoolean(PREF_ROOT_MODE_ENABLED, (Boolean) getDefaultValue(PREF_ROOT_MODE_ENABLED));
         }
-        if (!preferences.contains(PREF_GLOBAL_BLOCKING_ENABLED.getFirst())) {
-            editor.putBoolean(PREF_GLOBAL_BLOCKING_ENABLED.getFirst(), PREF_GLOBAL_BLOCKING_ENABLED.getSecond());
+        if (!preferences.contains(PREF_GLOBAL_BLOCKING_ENABLED)) {
+            editor.putBoolean(PREF_GLOBAL_BLOCKING_ENABLED, (Boolean) getDefaultValue(PREF_GLOBAL_BLOCKING_ENABLED));
         }
-        if (!preferences.contains(PREF_USAGE_ACCESS_ENABLED.getFirst())) {
-            editor.putBoolean(PREF_USAGE_ACCESS_ENABLED.getFirst(), PREF_USAGE_ACCESS_ENABLED.getSecond());
+        if (!preferences.contains(PREF_USAGE_ACCESS_ENABLED)) {
+            editor.putBoolean(PREF_USAGE_ACCESS_ENABLED, (Boolean) getDefaultValue(PREF_USAGE_ACCESS_ENABLED));
         }
         editor.commit();
+    }
+
+    private  @NonNull Object getDefaultValue(@NonNull @PrefKey String key) {
+        switch (key) {
+            case PREF_ROOT_MODE_ENABLED:
+            case PREF_USAGE_ACCESS_ENABLED:
+                return true;
+            case PREF_GLOBAL_BLOCKING_ENABLED: return false;
+        }
+        return "-1";
     }
 }
