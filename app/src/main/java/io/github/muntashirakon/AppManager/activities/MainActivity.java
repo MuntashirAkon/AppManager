@@ -164,6 +164,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Initialize app prefs
         AppPref.getInstance(this);
+        // Check root
+        if (!Utils.isRootGiven())
+            AppPref.getInstance(this).setPref(AppPref.PREF_ROOT_MODE_ENABLED, false);
 
         mLoaderManager = LoaderManager.getInstance(this);
         mLoaderManager.initLoader(0, null, this);

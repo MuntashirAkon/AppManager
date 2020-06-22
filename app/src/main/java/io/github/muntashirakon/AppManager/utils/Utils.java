@@ -20,6 +20,8 @@ import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.WindowManager;
 
+import com.jaredrummler.android.shell.Shell;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -50,7 +52,6 @@ import javax.xml.xpath.XPathFactory;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 @SuppressWarnings("unused")
 public class Utils {
@@ -493,5 +494,27 @@ public class Utils {
         context.getTheme().resolveAttribute(resAttrColor,
                 typedValue, true);
         return typedValue.data;
+    }
+
+    public static boolean isRootGiven() {
+        if (isRootAvailable()) {
+            String output = Shell.SU.run("id").getStdout();
+            return output != null && output.toLowerCase().contains("uid=0");
+        }
+        return false;
+    }
+
+    private static boolean isRootAvailable() {
+        String pathEnv = System.getenv("PATH");
+        if (pathEnv != null) {
+            for (String pathDir : pathEnv.split(":")) {
+                try {
+                    if (new File(pathDir, "su").exists()) {
+                        return true;
+                    }
+                } catch (NullPointerException ignore) {}
+            }
+        }
+        return false;
     }
 }
