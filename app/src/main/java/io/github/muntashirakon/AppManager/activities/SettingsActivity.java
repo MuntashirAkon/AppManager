@@ -10,6 +10,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -46,12 +47,11 @@ public class SettingsActivity extends AppCompatActivity {
             appPref.setPref(AppPref.PREF_GLOBAL_BLOCKING_ENABLED, isChecked);
             Boolean rootEnabled1 = (Boolean) appPref.getPref(AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
             if (rootEnabled1 && isChecked) {
-                // TODO: Apply current settings
+                ComponentsBlocker.applyAllRules(this);
             }
         });
-        usageSwitcher.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            appPref.setPref(AppPref.PREF_USAGE_ACCESS_ENABLED, isChecked);
-        });
+        usageSwitcher.setOnCheckedChangeListener((buttonView, isChecked) ->
+                appPref.setPref(AppPref.PREF_USAGE_ACCESS_ENABLED, isChecked));
     }
 
     @Override

@@ -3,6 +3,7 @@ package io.github.muntashirakon.AppManager.compontents;
 import android.content.Context;
 import android.util.Xml;
 
+import com.jaredrummler.android.shell.CommandResult;
 import com.jaredrummler.android.shell.Shell;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -17,6 +18,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import androidx.annotation.NonNull;
@@ -84,6 +86,25 @@ public class ComponentsBlocker {
             }
         }
         return file.getAbsolutePath();
+    }
+
+    public static void applyAllRules(@NonNull Context context) {
+        try {
+            String ifwPath = provideLocalIfwRulesPath(context);
+            CommandResult result = Shell.SU.run(String.format("ls %s/*.xml", ifwPath));
+            if (result.isSuccessful()) {
+                // Get packages
+                List<String> packageNames = result.stdout;
+                for(int i = 0; i<packageNames.size(); ++i) {
+                    String s = new File(packageNames.get(i)).getName();
+                    packageNames.set(i, s.substring(0, s.lastIndexOf(".xml")));
+                }
+                // Apply rules for each package
+                for(String packageName: packageNames) {
+                    getInstance(context, packageName).applyRules(true);
+                }
+            }
+        } catch (FileNotFoundException ignore) {}
     }
 
     private final String LOCAL_RULES_PATH;
