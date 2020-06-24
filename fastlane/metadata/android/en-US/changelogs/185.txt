@@ -1,0 +1,4 @@
+- Auto detection of root (if you deny root permission, it'll be considered as non-root device)
+- App usage now displays more accurate data than it previously was (still incomplete though)
+- Added exodus link (due to limitations, I only added the latest version)
+- Added user preferences to disable root, enable blocking for all apps, disable app usage
