@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -406,25 +407,45 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mList.item_title.setTextColor(mAccentColor);
         // Source directory (apk path)
         mList.addItemWithTitleSubtitle(getString(R.string.source_dir), mApplicationInfo.sourceDir, ListItemCreator.SELECTABLE);
-        if (isRootEnabled) openAsFolderInFM((new File(mApplicationInfo.sourceDir)).getParent());
+        openAsFolderInFM((new File(mApplicationInfo.sourceDir)).getParent());
         // Public source directory
         if (!mApplicationInfo.publicSourceDir.equals(mApplicationInfo.sourceDir)) {
             mList.addItemWithTitleSubtitle(getString(R.string.public_source_dir), mApplicationInfo.publicSourceDir, ListItemCreator.SELECTABLE);
-            if (isRootEnabled) openAsFolderInFM((new File(mApplicationInfo.publicSourceDir)).getParent());
+            openAsFolderInFM((new File(mApplicationInfo.publicSourceDir)).getParent());
         }
         // Data dir
         mList.addItemWithTitleSubtitle(getString(R.string.data_dir), mApplicationInfo.dataDir, ListItemCreator.SELECTABLE);
-        if (isRootEnabled) openAsFolderInFM(mApplicationInfo.dataDir);
+        openAsFolderInFM(mApplicationInfo.dataDir);
         // Device-protected data dir
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             mList.addItemWithTitleSubtitle(getString(R.string.dev_protected_data_dir), mApplicationInfo.deviceProtectedDataDir, ListItemCreator.NO_ACTION);
-            if (isRootEnabled) openAsFolderInFM(mApplicationInfo.deviceProtectedDataDir);
+            openAsFolderInFM(mApplicationInfo.deviceProtectedDataDir);
+        }
+        // External data dirs
+        File[] dataDirs = getExternalCacheDirs();
+        List<String> extDataDirs = new ArrayList<>();
+        for(File dataDir: dataDirs) {
+            //noinspection ConstantConditions
+            extDataDirs.add((new File(dataDir.getParent())).getParent() + "/" + mPackageName);
+        }
+        if (extDataDirs.size() == 1) {
+            if (new File(extDataDirs.get(0)).exists()) {
+                mList.addItemWithTitleSubtitle(getString(R.string.external_data_dir), extDataDirs.get(0), ListItemCreator.NO_ACTION);
+                openAsFolderInFM(extDataDirs.get(0));
+            }
+        } else {
+            for(int i = 0; i<extDataDirs.size(); ++i) {
+                if (new File(extDataDirs.get(i)).exists()) {
+                    mList.addItemWithTitleSubtitle(String.format(getString(R.string.external_multiple_data_dir), i), extDataDirs.get(i), ListItemCreator.NO_ACTION);
+                    openAsFolderInFM(extDataDirs.get(i));
+                }
+            }
         }
         // Native JNI library dir
         File nativeLib = new File(mApplicationInfo.nativeLibraryDir);
         if (nativeLib.exists()) {
             mList.addItemWithTitleSubtitle(getString(R.string.native_library_dir), mApplicationInfo.nativeLibraryDir, ListItemCreator.NO_ACTION);
-            if (isRootEnabled) openAsFolderInFM(mApplicationInfo.nativeLibraryDir);
+            openAsFolderInFM(mApplicationInfo.nativeLibraryDir);
         }
         mList.addDivider();
 
