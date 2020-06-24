@@ -27,6 +27,8 @@ Until it is available in the official repo,
 
 <a href="https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid" width="200dp" /></a>
 
+Join our Telegram channel: https://t.me/AppManagerAndroid
+
 ### Screenshots
 
 #### Light
