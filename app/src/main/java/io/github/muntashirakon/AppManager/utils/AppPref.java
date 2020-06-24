@@ -9,6 +9,7 @@ import java.util.Map;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
+import io.github.muntashirakon.AppManager.activities.MainActivity;
 
 public class AppPref {
     private static final String PREF_NAME = "preferences";
@@ -16,12 +17,14 @@ public class AppPref {
     @StringDef(value = {
             PREF_ROOT_MODE_ENABLED,
             PREF_GLOBAL_BLOCKING_ENABLED,
-            PREF_USAGE_ACCESS_ENABLED
+            PREF_USAGE_ACCESS_ENABLED,
+            PREF_MAIN_WINDOW_SORT_ORDER
     })
     public @interface PrefKey {}
-    public static final String PREF_ROOT_MODE_ENABLED = "root_mode_enabled";
-    public static final String PREF_GLOBAL_BLOCKING_ENABLED = "global_blocking_enabled";
-    public static final String PREF_USAGE_ACCESS_ENABLED = "usage_access_enabled";
+    public static final String PREF_ROOT_MODE_ENABLED = "root_mode_enabled";  // boolean
+    public static final String PREF_GLOBAL_BLOCKING_ENABLED = "global_blocking_enabled";  // boolean
+    public static final String PREF_USAGE_ACCESS_ENABLED = "usage_access_enabled";  // boolean
+    public static final String PREF_MAIN_WINDOW_SORT_ORDER = "main_window_sort_order";  // int
 
     @IntDef(value = {
             TYPE_BOOLEAN,
@@ -99,6 +102,9 @@ public class AppPref {
         if (!preferences.contains(PREF_USAGE_ACCESS_ENABLED)) {
             editor.putBoolean(PREF_USAGE_ACCESS_ENABLED, (Boolean) getDefaultValue(PREF_USAGE_ACCESS_ENABLED));
         }
+        if (!preferences.contains(PREF_MAIN_WINDOW_SORT_ORDER)) {
+            editor.putInt(PREF_MAIN_WINDOW_SORT_ORDER, (Integer) getDefaultValue(PREF_MAIN_WINDOW_SORT_ORDER));
+        }
         editor.commit();
     }
 
@@ -108,6 +114,7 @@ public class AppPref {
             case PREF_USAGE_ACCESS_ENABLED:
                 return true;
             case PREF_GLOBAL_BLOCKING_ENABLED: return false;
+            case PREF_MAIN_WINDOW_SORT_ORDER: return MainActivity.SORT_BY_APP_LABEL;
         }
         return "-1";
     }

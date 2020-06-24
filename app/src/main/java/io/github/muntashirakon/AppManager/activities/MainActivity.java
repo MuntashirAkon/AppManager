@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -89,14 +90,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             R.id.action_sort_installation,R.id.action_sort_sharedid,
             R.id.action_sort_size,R.id.action_sort_sha};
 
-    private static final int SORT_DOMAIN = 0;
-    private static final int SORT_NAME = 1;
-    private static final int SORT_PKG = 2;
-    private static final int SORT_INSTALLATION = 3;
-    private static final int SORT_SHARED_ID = 4;
-    private static final int SORT_SIZE = 5;
-    private static final int SORT_SHA = 6;
-    private static final String INSTANCE_STATE_SORT_BY = "sort_by";
+    @IntDef(value = {
+            SORT_BY_DOMAIN,
+            SORT_BY_APP_LABEL,
+            SORT_BY_PACKAGE_NAME,
+            SORT_BY_LAST_UPDATE,
+            SORT_BY_SHARED_ID,
+            SORT_BY_APP_SIZE_OR_SDK,
+            SORT_BY_SHA,
+    })
+    public @interface SortOrder {}
+    public static final int SORT_BY_DOMAIN = 0;  // User/system app
+    public static final int SORT_BY_APP_LABEL = 1;
+    public static final int SORT_BY_PACKAGE_NAME = 2;
+    public static final int SORT_BY_LAST_UPDATE = 3;
+    public static final int SORT_BY_SHARED_ID = 4;
+    public static final int SORT_BY_APP_SIZE_OR_SDK = 5;  // App size FIXME: This isn't working after O
+    public static final int SORT_BY_SHA = 6;  // Signature
 
     private MainActivity.Adapter mAdapter;
     private List<ApplicationItem> mItemList = new ArrayList<>();
@@ -107,8 +117,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private SwipeRefreshLayout mSwipeRefresh;
     private static String mConstraint;
     private MenuItem appUsageMenu;
-
-    private int mSortBy;
+    private @SortOrder int mSortBy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,9 +154,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             layoutParams.gravity = Gravity.END;
             actionBar.setCustomView(searchView, layoutParams);
         }
-        if (savedInstanceState != null) {
-            mSortBy = savedInstanceState.getInt(INSTANCE_STATE_SORT_BY);
-        } else mSortBy = SORT_NAME;
 
         mListView.setOnItemClickListener(this);
         mListView.setFastScrollEnabled(true);
@@ -173,9 +179,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putInt(INSTANCE_STATE_SORT_BY, mSortBy);
-        super.onSaveInstanceState(outState);
+    protected void onPause() {
+        super.onPause();
+        AppPref.getInstance(this).setPref(AppPref.PREF_MAIN_WINDOW_SORT_ORDER, mSortBy);
     }
 
     @SuppressLint("RestrictedApi")
@@ -210,8 +216,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         .show();
                 return true;
             case R.id.action_refresh:
-                if (mSortBy == SORT_SIZE && Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
                     Toast t = Toast.makeText(this, getString(R.string.refresh) + " & " + getString(R.string.sort) + "/" + getString(R.string.size)
+                if (mSortBy == SORT_BY_APP_SIZE_OR_SDK && Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
                             + "\n" + getString(R.string.unsupported), Toast.LENGTH_LONG);
                     t.setGravity(Gravity.CENTER , Gravity.CENTER, Gravity.CENTER);
                     t.show();
@@ -224,31 +230,31 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 startActivity(settingsIntent);
                 return  true;
             case R.id.action_sort_name:
-                setSortBy(SORT_NAME);
+                setSortBy(SORT_BY_APP_LABEL);
                 item.setChecked(true);
                 return true;
             case R.id.action_sort_pkg:
-                setSortBy(SORT_PKG);
+                setSortBy(SORT_BY_PACKAGE_NAME);
                 item.setChecked(true);
                 return true;
             case R.id.action_sort_domain:
-                setSortBy(SORT_DOMAIN);
+                setSortBy(SORT_BY_DOMAIN);
                 item.setChecked(true);
                 return true;
             case R.id.action_sort_installation:
-                setSortBy(SORT_INSTALLATION);
+                setSortBy(SORT_BY_LAST_UPDATE);
                 item.setChecked(true);
                 return true;
             case R.id.action_sort_sharedid:
-                setSortBy(SORT_SHARED_ID);
+                setSortBy(SORT_BY_SHARED_ID);
                 item.setChecked(true);
                 return true;
             case R.id.action_sort_sha:
-                setSortBy(SORT_SHA);
+                setSortBy(SORT_BY_SHA);
                 item.setChecked(true);
                 return true;
             case R.id.action_sort_size:
-                setSortBy(SORT_SIZE);
+                setSortBy(SORT_BY_APP_SIZE_OR_SDK);
                 item.setChecked(true);
                 return true;
             case R.id.action_app_usage:
@@ -301,8 +307,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onRefresh() {
-        if (mSortBy == SORT_SIZE && Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
             Toast t = Toast.makeText(this, getString(R.string.refresh) + " & " + getString(R.string.sort) + "/" + getString(R.string.size)
+        if (mSortBy == SORT_BY_APP_SIZE_OR_SDK && Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
                     + "\n" + getString(R.string.unsupported), Toast.LENGTH_LONG);
             t.setGravity(Gravity.CENTER , Gravity.CENTER, Gravity.CENTER);
             t.show();
@@ -315,14 +321,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
+        // Set filter
         if (mAdapter != null && mConstraint != null && !mConstraint.equals("")) {
             mAdapter.getFilter().filter(mConstraint);
         }
+        // Show/hide app usage menu
         if (appUsageMenu != null) {
             if ((Boolean) AppPref.get(this, AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN))
                 appUsageMenu.setVisible(true);
             else appUsageMenu.setVisible(false);
         }
+        // Set sort by
+        mSortBy = (int) AppPref.get(this, AppPref.PREF_MAIN_WINDOW_SORT_ORDER, AppPref.TYPE_INTEGER);
     }
 
     private void showProgressBar(boolean show) {
@@ -346,30 +356,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void checkFastScroll() {
-        mListView.setFastScrollEnabled(mSortBy == SORT_NAME);
+        mListView.setFastScrollEnabled(mSortBy == SORT_BY_APP_LABEL);
     }
 
     private void sortApplicationList() {
-        Collections.sort(mItemList, (item1, item2) -> {
+        Collections.sort(mItemList, (o1, o2) -> {
             switch (mSortBy) {
-                case SORT_NAME:
-                    return sCollator.compare(item1.label, item2.label);
-                case SORT_PKG:
-                    return item1.applicationInfo.packageName.compareTo(item2.applicationInfo.packageName);
-                case SORT_DOMAIN:
-                    boolean isSystem1 = (item1.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                    boolean isSystem2 = (item2.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+                case SORT_BY_APP_LABEL:
+                    return sCollator.compare(o1.label, o2.label);
+                case SORT_BY_PACKAGE_NAME:
+                    return o1.applicationInfo.packageName.compareTo(o2.applicationInfo.packageName);
+                case SORT_BY_DOMAIN:
+                    boolean isSystem1 = (o1.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+                    boolean isSystem2 = (o2.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
                     return Utils.compareBooleans(isSystem1, isSystem2);
-                case SORT_INSTALLATION:
-                    //Sort in decreasing order
-                    return -item1.date.compareTo(item2.date);
-                case SORT_SIZE:
-                    return -item1.size.compareTo(item2.size);
-                case SORT_SHARED_ID:
-                    return item2.applicationInfo.uid - item1.applicationInfo.uid;
-                case SORT_SHA:
+                case SORT_BY_LAST_UPDATE:
+                    // Sort in decreasing order
+                    return -o1.date.compareTo(o2.date);
+                case SORT_BY_APP_SIZE_OR_SDK:
+                    return -o1.size.compareTo(o2.size);
+                case SORT_BY_SHARED_ID:
+                    return o2.applicationInfo.uid - o1.applicationInfo.uid;
+                case SORT_BY_SHA:
                     try {
-                        return item1.sha.compareTo(item2.sha);
+                        return o1.sha.compareTo(o2.sha);
                     } catch (NullPointerException ignored) {}
                 default:
                     return 0;
