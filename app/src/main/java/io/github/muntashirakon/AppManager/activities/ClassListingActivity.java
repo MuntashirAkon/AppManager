@@ -3,6 +3,7 @@ package io.github.muntashirakon.AppManager.activities;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -10,7 +11,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -84,6 +84,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     private ActionBar mActionBar;
     private ProgressBar mProgressBar;
     private static String mConstraint;
+    private String mPackageName;
 
     @Override
     protected void onDestroy() {
@@ -119,11 +120,11 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         setContentView(R.layout.activity_class_listing);
         mActionBar = getSupportActionBar();
         if (mActionBar != null) {
-            String packageName = getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
+            mPackageName = getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
             PackageManager pm = getPackageManager();
             try {
-                assert packageName != null;
-                mAppName = pm.getApplicationInfo(packageName, 0).loadLabel(pm);
+                assert mPackageName != null;
+                mAppName = pm.getApplicationInfo(mPackageName, 0).loadLabel(pm);
                 mActionBar.setTitle(mAppName);
                 mActionBar.setSubtitle(getString(R.string.tracker_classes));
             } catch (PackageManager.NameNotFoundException e) {
@@ -313,6 +314,13 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                 .setView(showText)
                 .setIcon(R.drawable.ic_frost_classysharkexodus_black_24dp)
                 .setNegativeButton(android.R.string.ok, null)
+                .setNeutralButton(R.string.exodus_link, (DialogInterface.OnClickListener) (dialog, which) -> {
+                    Uri exodus_link = Uri.parse(String.format("https://reports.exodus-privacy.eu.org/en/reports/%s/latest/", mPackageName));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, exodus_link);
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(intent);
+                    }
+                })
                 .show();
     }
 
