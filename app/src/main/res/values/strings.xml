@@ -179,8 +179,7 @@
         \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
         \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
         \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
-        \n- <a href="https://codeberg.org/fynngodau/usageDirect">usageDirect</a> and
-        <a href="https://github.com/ColeMurray/UsageStatsSample">UsageStatsSample</a>
+        \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
         \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
         \nLogo credit: <a href="https://github.com/Atrate">Atrate</a>.
     </string>
@@ -199,7 +198,6 @@
     <string name="no_shared_libs">No shared libraries</string>
     <string name="no_tracker_class">No tracker class</string>
     <string name="app_usage">App Usage</string>
-    <string name="usage_daily">Daily</string>
     <string name="usage_weekly">Weekly</string>
     <string name="usage_monthly">Monthly</string>
     <string name="usage_yearly">Yearly</string>
@@ -292,4 +290,6 @@
     <string name="pref_usage_access_enabled_msg">Enabling usage acess lets you see your app usage statistics and app data info</string>
     <string name="app_settings">Settings</string>
     <string name="only_works_in_root_mode">Only works in root mode</string>
+    <string name="usage_yesterday">Yesterday</string>
+    <string name="exodus_link">Exodus Link</string>
 </resources>

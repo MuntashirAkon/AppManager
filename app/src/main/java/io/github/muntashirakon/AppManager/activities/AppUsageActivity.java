@@ -2,8 +2,7 @@ package io.github.muntashirakon.AppManager.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.usage.UsageStats;
-import android.app.usage.UsageStatsManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -27,9 +26,6 @@ import android.widget.TextView;
 import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -39,23 +35,21 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
+import io.github.muntashirakon.AppManager.usage.Utils.IntervalType;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
+import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_MONTHLY;
+import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_WEEKLY;
+import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_YEARLY;
+import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_TODAY;
+import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_YESTERDAY;
+
 public class AppUsageActivity extends AppCompatActivity {
-    private static final String SYS_USAGE_STATS_SERVICE = "usagestats";
-
-    // These constants must be aligned with app_usage_dropdown_list array
-    // Same as UsageStatsManager.INTERVAL_*
-    private static final int USAGE_DAILY = 0;
-    private static final int USAGE_WEEKLY = 1;
-    private static final int USAGE_MONTHLY = 2;
-    private static final int USAGE_YEARLY = 3;
-
-    private UsageStatsManager mUsageStatsManager;
     private AppUsageAdapter mAppUsageAdapter;
-    private int totalTimeInMs;
+    private long totalTimeInMs;
     String[] app_usage_strings;
-    private int current_interval = USAGE_DAILY;
+    private @IntervalType int current_interval = USAGE_TODAY;
 
     private static final int REQUEST_SETTINGS = 0;
 
@@ -73,9 +67,7 @@ public class AppUsageActivity extends AppCompatActivity {
         app_usage_strings = getResources().getStringArray(R.array.usage_interval_dropdown_list);
 
         // Get usage stats
-        mUsageStatsManager = (UsageStatsManager) getSystemService(SYS_USAGE_STATS_SERVICE);
         mAppUsageAdapter = new AppUsageAdapter(this);
-
         ListView listView = findViewById(android.R.id.list);
         listView.setDividerHeight(0);
         listView.setEmptyView(findViewById(android.R.id.empty));
@@ -85,10 +77,6 @@ public class AppUsageActivity extends AppCompatActivity {
         View header = getLayoutInflater().inflate(R.layout.header_app_usage, null);
         listView.addHeaderView(header);
 
-//        Spinner usageSpinner = findViewById(R.id.spinner_usage);
-//        SpinnerAdapter usageSpinnerAdapter = ArrayAdapter.createFromResource(this,
-//                R.array.usage_types, android.R.layout.simple_spinner_dropdown_item);
-//        usageSpinner.setAdapter(usageSpinnerAdapter);
         Spinner intervalSpinner = findViewById(R.id.spinner_interval);
         SpinnerAdapter intervalSpinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.usage_interval_dropdown_list, android.R.layout.simple_spinner_dropdown_item);
@@ -122,48 +110,23 @@ public class AppUsageActivity extends AppCompatActivity {
     }
 
     private void getAppUsage() {
-        Calendar cal = Calendar.getInstance();
-        switch (current_interval) {
-            case USAGE_DAILY:
-                cal.add(Calendar.HOUR_OF_DAY, -cal.get(Calendar.HOUR_OF_DAY));
-                break;
-            case USAGE_WEEKLY:
-                cal.add(Calendar.DAY_OF_YEAR, -7);
-                break;
-            case USAGE_MONTHLY:
-                cal.add(Calendar.MONTH, -1);
-                break;
-            case USAGE_YEARLY:
-                cal.add(Calendar.YEAR, -1);
-                break;
-        }
-
         int _try = 5; // try to get usage stat 5 times
-        List<UsageStats> usageStatsList;
+        List<AppUsageStatsManager.PackageUS> usageStatsList;
         do {
-            usageStatsList = mUsageStatsManager.queryUsageStats(current_interval,
-                    cal.getTimeInMillis(), System.currentTimeMillis());
-
+            usageStatsList = AppUsageStatsManager.getInstance(this).getUsageStats(0, current_interval);
             // FIXME
-//            UsageEvents usageEvents = mUsageStatsManager.queryEvents(cal.getTimeInMillis(), System.currentTimeMillis());
+//            Tuple<Long, Long> interval = io.github.muntashirakon.AppManager.usage.Utils.getTimeInterval(current_interval);
+//            UsageStatsManager manager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
+//            UsageEvents usageEvents = manager.queryEvents(interval.getFirst(), interval.getSecond());
+//            UsageEvents.Event event = new UsageEvents.Event();
 //            while (usageEvents.hasNextEvent()) {
-//                UsageEvents.Event event = new UsageEvents.Event();
 //                usageEvents.getNextEvent(event);
-//                Log.d(TAG, "Event: " + event.getPackageName() + "\t" + event.getTimeStamp() + " (" + event.getEventType() + ")");
+//                Log.d("TestAUA", "Event: " + event.getPackageName() + "\t" + event.getTimeStamp() + " (" + event.getEventType() + ")");
 //            }
         } while (0 != --_try && usageStatsList.size() == 0);
-
-        // Filter unused apps
-        totalTimeInMs = 0;
-        for (int i = usageStatsList.size() - 1; i >= 0; i--) {
-            UsageStats usageStats = usageStatsList.get(i);
-            totalTimeInMs += usageStats.getTotalTimeInForeground();
-            if (usageStats.getTotalTimeInForeground() <= 0)
-                usageStatsList.remove(i);
-        }
-
-        Collections.sort(usageStatsList, new TimeInForegroundComparatorDesc());
         mAppUsageAdapter.setDefaultList(usageStatsList);
+        totalTimeInMs = 0;
+        for(AppUsageStatsManager.PackageUS appItem: usageStatsList) totalTimeInMs += appItem.screenTime;
         setUsageSummary();
     }
 
@@ -183,8 +146,11 @@ public class AppUsageActivity extends AppCompatActivity {
         TextView timeRange = findViewById(R.id.time_range);
         timeUsed.setText(formattedTime(this, totalTimeInMs));
         switch (current_interval) {
-            case USAGE_DAILY:
+            case USAGE_TODAY:
                 timeRange.setText(R.string.usage_today);
+                break;
+            case USAGE_YESTERDAY:
+                timeRange.setText(R.string.usage_yesterday);
                 break;
             case USAGE_WEEKLY:
                 timeRange.setText(R.string.usage_7_days);
@@ -198,7 +164,7 @@ public class AppUsageActivity extends AppCompatActivity {
         }
     }
 
-    private static String formattedTime(Activity activity, long time) {
+    public static String formattedTime(Context context, long time) {
         time /= 60000; // minutes
         long month, day, hour, min;
         month = time / 43200; time %= 43200;
@@ -208,39 +174,31 @@ public class AppUsageActivity extends AppCompatActivity {
         String fTime = "";
         int count = 0;
         if (month != 0){
-            fTime += String.format(activity.getString(month > 0 ? R.string.usage_months : R.string.usage_month), month);
+            fTime += String.format(context.getString(month > 0 ? R.string.usage_months : R.string.usage_month), month);
             ++count;
         }
         if (day != 0) {
-            fTime += (count > 0 ? " " : "") + String.format(activity.getString(
+            fTime += (count > 0 ? " " : "") + String.format(context.getString(
                     day > 1 ? R.string.usage_days : R.string.usage_day), day);
             ++count;
         }
         if (hour != 0) {
-            fTime += (count > 0 ? " " : "") + String.format(activity.getString(R.string.usage_hour), hour);
+            fTime += (count > 0 ? " " : "") + String.format(context.getString(R.string.usage_hour), hour);
             ++count;
         }
         if (min != 0) {
-            fTime += (count > 0 ? " " : "") + String.format(activity.getString(R.string.usage_min), min);
+            fTime += (count > 0 ? " " : "") + String.format(context.getString(R.string.usage_min), min);
         } else {
-            if (count == 0) fTime = activity.getString(R.string.usage_less_than_a_minute);
+            if (count == 0) fTime = context.getString(R.string.usage_less_than_a_minute);
         }
         return fTime;
-    }
-
-    private static class TimeInForegroundComparatorDesc implements Comparator<UsageStats> {
-
-        @Override
-        public int compare(UsageStats left, UsageStats right) {
-            return Long.compare(right.getTotalTimeInForeground(), left.getTotalTimeInForeground());
-        }
     }
 
     static class AppUsageAdapter extends BaseAdapter {
         static DateFormat sSimpleDateFormat = new SimpleDateFormat("MMM d, yyyy HH:mm:ss", Locale.getDefault());
 
         private LayoutInflater mLayoutInflater;
-        private List<UsageStats> mAdapterList;
+        private List<AppUsageStatsManager.PackageUS> mAdapterList;
         private static PackageManager mPackageManager;
         private Activity mActivity;
 
@@ -257,7 +215,7 @@ public class AppUsageActivity extends AppCompatActivity {
             mActivity = activity;
         }
 
-        void setDefaultList(List<UsageStats> list) {
+        void setDefaultList(List<AppUsageStatsManager.PackageUS> list) {
             mAdapterList = list;
             notifyDataSetChanged();
         }
@@ -293,22 +251,22 @@ public class AppUsageActivity extends AppCompatActivity {
                 if(holder.iconLoader != null) holder.iconLoader.cancel(true);
             }
 
-            UsageStats usageStats = mAdapterList.get(position);
+            AppUsageStatsManager.PackageUS appItem = mAdapterList.get(position);
             // Set label (or package name on failure)
             try {
-                ApplicationInfo applicationInfo = mPackageManager.getApplicationInfo(usageStats.getPackageName(), 0);
+                ApplicationInfo applicationInfo = mPackageManager.getApplicationInfo(appItem.packageName, 0);
                 holder.label.setText(mPackageManager.getApplicationLabel(applicationInfo));
                 // Set icon
                 holder.iconLoader = new IconAsyncTask(holder.icon, applicationInfo);
                 holder.iconLoader.execute();
             } catch (PackageManager.NameNotFoundException e) {
-                holder.label.setText(usageStats.getPackageName());
+                holder.label.setText(appItem.packageName);
                 holder.icon.setImageDrawable(mPackageManager.getDefaultActivityIcon());
             }
             // Set usage
-            long lastTimeUsed = usageStats.getLastTimeUsed();
+            long lastTimeUsed = appItem.lastUsageTime;
             String string;
-            string = formattedTime(mActivity, usageStats.getTotalTimeInForeground());
+            string = formattedTime(mActivity, appItem.screenTime);
             if (lastTimeUsed > 1)
                 string += ", " + mActivity.getString(R.string.usage_last_used)
                         + " " + sSimpleDateFormat.format(new Date(lastTimeUsed));
