@@ -14,7 +14,7 @@
     <string name="no_providers">Keine Provider</string>
     <string name="launch_mode">Startmodus</string>
     <string name="taskAffinity">taskAffinity</string>
-    <string name="update">Update</string>
+    <string name="sort_by_last_update">Update</string>
     <string name="authority">Authority</string>
     <string name="service">Services</string>
     <string name="no_service">Keine Services</string>
@@ -41,10 +41,10 @@
     <string name="manifest">Manifest</string>
     <string name="error">Fehler</string>
     <string name="loading">Lade &#8230;</string> <!-- &#8230; = ... -->
-    <string name="name">Name</string>
-    <string name="package_string">Paket</string>
-    <string name="system_user">System/Benutzer</string>
-    <string name="size">Größe</string>
+    <string name="sort_by_app_label">Name</string>
+    <string name="sort_by_package_name">Paket</string>
+    <string name="sort_by_domain">System/Benutzer</string>
+    <string name="sort_by_app_size">Größe</string>
     <string name="sdk">SDK</string>
     <string name="netstats_received">Empfangene Daten</string>
     <string name="netstats_transmitted">Übermittelte Daten</string>

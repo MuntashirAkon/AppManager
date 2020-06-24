@@ -14,7 +14,7 @@
     <string name="no_providers">No providers</string>
     <string name="launch_mode">Launch mode</string>
     <string name="taskAffinity">Task affinity</string>
-    <string name="update">Update</string>
+    <string name="sort_by_last_update">Last update</string>
     <string name="authority">Authority</string>
     <string name="service">Services</string>
     <string name="no_service">No services</string>
@@ -33,7 +33,9 @@
     <string name="uses_feature">Uses features</string>
     <string name="gles_ver">Req. Gles ver.</string>
     <string name="no_feature">No features</string>
+    <string name="sort_by_shared_user_id">Shared User ID</string>
     <string name="shared_user_id">Shared User ID</string>
+    <string name="sort_by_sha">Signature</string>
     <string name="signatures">Signatures</string>
     <string name="no_signatures">No signatures</string>
     <string name="configurations">Configurations</string>
@@ -42,10 +44,10 @@
     <string name="manifest">Manifest</string>
     <string name="error">Error</string>
     <string name="loading">Loading &#8230;</string> <!-- &#8230; = ... -->
-    <string name="name">Name</string>
-    <string name="package_string">Package</string>
-    <string name="system_user">System/User</string>
-    <string name="size">Size</string>
+    <string name="sort_by_app_label">App label</string>
+    <string name="sort_by_package_name">Package name</string>
+    <string name="sort_by_domain">User app first</string>
+    <string name="sort_by_app_size">App size/sdk</string>
     <string name="sdk">SDK</string>
     <string name="netstats_received">Data received</string>
     <string name="netstats_transmitted">Data transmitted</string>
@@ -292,4 +294,6 @@
     <string name="only_works_in_root_mode">Only works in root mode</string>
     <string name="usage_yesterday">Yesterday</string>
     <string name="exodus_link">Exodus Link</string>
+    <string name="sort_by_disabled_app">Disabled first</string>
+    <string name="sort_by_blocked_components">Blocked first</string>
 </resources>

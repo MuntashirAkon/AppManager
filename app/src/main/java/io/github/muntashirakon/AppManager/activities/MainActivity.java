@@ -85,10 +85,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private static Collator sCollator = Collator.getInstance();
 
-    private static final int[] sSortMenuItemIdsMap = {R.id.action_sort_domain,
-            R.id.action_sort_name,R.id.action_sort_pkg,
-            R.id.action_sort_installation,R.id.action_sort_sharedid,
-            R.id.action_sort_size,R.id.action_sort_sha};
+    private static final int[] sSortMenuItemIdsMap = {R.id.action_sort_by_domain,
+            R.id.action_sort_by_app_label, R.id.action_sort_by_package_name,
+            R.id.action_sort_by_last_update, R.id.action_sort_by_shared_user_id,
+            R.id.action_sort_by_app_size, R.id.action_sort_by_sha, R.id.action_sort_by_disabled_app,
+            R.id.action_sort_by_blocked_components};
 
     @IntDef(value = {
             SORT_BY_DOMAIN,
@@ -98,6 +99,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             SORT_BY_SHARED_ID,
             SORT_BY_APP_SIZE_OR_SDK,
             SORT_BY_SHA,
+            SORT_BY_DISABLED_APP,
+            SORT_BY_BLOCKED_COMPONENTS
     })
     public @interface SortOrder {}
     public static final int SORT_BY_DOMAIN = 0;  // User/system app
@@ -107,6 +110,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public static final int SORT_BY_SHARED_ID = 4;
     public static final int SORT_BY_APP_SIZE_OR_SDK = 5;  // App size FIXME: This isn't working after O
     public static final int SORT_BY_SHA = 6;  // Signature
+    public static final int SORT_BY_DISABLED_APP = 7;
+    public static final int SORT_BY_BLOCKED_COMPONENTS = 8;
 
     private MainActivity.Adapter mAdapter;
     private List<ApplicationItem> mItemList = new ArrayList<>();
@@ -117,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private SwipeRefreshLayout mSwipeRefresh;
     private static String mConstraint;
     private MenuItem appUsageMenu;
+    private MenuItem sortByBlockedComponentMenu;
     private @SortOrder int mSortBy;
 
     @Override
@@ -192,6 +198,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if ((Boolean) AppPref.get(this, AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN)) {
             appUsageMenu.setVisible(true);
         } else appUsageMenu.setVisible(false);
+        sortByBlockedComponentMenu = menu.findItem(R.id.action_sort_by_blocked_components);
+        if ((Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
+            sortByBlockedComponentMenu.setVisible(true);
+        } else sortByBlockedComponentMenu.setVisible(false);
         if (menu instanceof MenuBuilder) {
             ((MenuBuilder) menu).setOptionalIconsVisible(true);
         }
@@ -216,8 +226,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         .show();
                 return true;
             case R.id.action_refresh:
-                    Toast t = Toast.makeText(this, getString(R.string.refresh) + " & " + getString(R.string.sort) + "/" + getString(R.string.size)
                 if (mSortBy == SORT_BY_APP_SIZE_OR_SDK && Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
+                    Toast t = Toast.makeText(this, getString(R.string.refresh) + " & " + getString(R.string.sort) + "/" + getString(R.string.sort_by_app_size)
                             + "\n" + getString(R.string.unsupported), Toast.LENGTH_LONG);
                     t.setGravity(Gravity.CENTER , Gravity.CENTER, Gravity.CENTER);
                     t.show();
@@ -228,33 +238,41 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case R.id.action_settings:
                 Intent settingsIntent = new Intent(this, SettingsActivity.class);
                 startActivity(settingsIntent);
-                return  true;
-            case R.id.action_sort_name:
+                return true;
+            case R.id.action_sort_by_app_label:
                 setSortBy(SORT_BY_APP_LABEL);
                 item.setChecked(true);
                 return true;
-            case R.id.action_sort_pkg:
+            case R.id.action_sort_by_package_name:
                 setSortBy(SORT_BY_PACKAGE_NAME);
                 item.setChecked(true);
                 return true;
-            case R.id.action_sort_domain:
+            case R.id.action_sort_by_domain:
                 setSortBy(SORT_BY_DOMAIN);
                 item.setChecked(true);
                 return true;
-            case R.id.action_sort_installation:
+            case R.id.action_sort_by_last_update:
                 setSortBy(SORT_BY_LAST_UPDATE);
                 item.setChecked(true);
                 return true;
-            case R.id.action_sort_sharedid:
+            case R.id.action_sort_by_shared_user_id:
                 setSortBy(SORT_BY_SHARED_ID);
                 item.setChecked(true);
                 return true;
-            case R.id.action_sort_sha:
+            case R.id.action_sort_by_sha:
                 setSortBy(SORT_BY_SHA);
                 item.setChecked(true);
                 return true;
-            case R.id.action_sort_size:
+            case R.id.action_sort_by_app_size:
                 setSortBy(SORT_BY_APP_SIZE_OR_SDK);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_by_disabled_app:
+                setSortBy(SORT_BY_DISABLED_APP);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_by_blocked_components:
+                setSortBy(SORT_BY_BLOCKED_COMPONENTS);
                 item.setChecked(true);
                 return true;
             case R.id.action_app_usage:
@@ -307,8 +325,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onRefresh() {
-            Toast t = Toast.makeText(this, getString(R.string.refresh) + " & " + getString(R.string.sort) + "/" + getString(R.string.size)
         if (mSortBy == SORT_BY_APP_SIZE_OR_SDK && Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
+            Toast t = Toast.makeText(this, getString(R.string.refresh) + " & " + getString(R.string.sort) + "/" + getString(R.string.sort_by_app_size)
                     + "\n" + getString(R.string.unsupported), Toast.LENGTH_LONG);
             t.setGravity(Gravity.CENTER , Gravity.CENTER, Gravity.CENTER);
             t.show();
@@ -333,6 +351,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         // Set sort by
         mSortBy = (int) AppPref.get(this, AppPref.PREF_MAIN_WINDOW_SORT_ORDER, AppPref.TYPE_INTEGER);
+        if ((Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
+            if (sortByBlockedComponentMenu != null) sortByBlockedComponentMenu.setVisible(true);
+        } else {
+            if (mSortBy == SORT_BY_BLOCKED_COMPONENTS) mSortBy = SORT_BY_APP_LABEL;
+            if (sortByBlockedComponentMenu != null) sortByBlockedComponentMenu.setVisible(false);
+        }
     }
 
     private void showProgressBar(boolean show) {
@@ -344,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      *
      * @param sort Must be one of SORT_*
      */
-    private void setSortBy(int sort) {
+    private void setSortBy(@SortOrder int sort) {
         mSortBy = sort;
         sortApplicationList();
 
@@ -360,6 +384,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void sortApplicationList() {
+        final Boolean isRootEnabled = (Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
         Collections.sort(mItemList, (o1, o2) -> {
             switch (mSortBy) {
                 case SORT_BY_APP_LABEL:
@@ -381,9 +406,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     try {
                         return o1.sha.compareTo(o2.sha);
                     } catch (NullPointerException ignored) {}
-                default:
-                    return 0;
+                    break;
+                case SORT_BY_BLOCKED_COMPONENTS:
+                    if (isRootEnabled)
+                        return -o1.blockedCount.compareTo(o2.blockedCount);
+                    break;
+                case SORT_BY_DISABLED_APP:
+                    return Utils.compareBooleans(o1.applicationInfo.enabled, o2.applicationInfo.enabled);
             }
+            return 0;
         });
     }
 

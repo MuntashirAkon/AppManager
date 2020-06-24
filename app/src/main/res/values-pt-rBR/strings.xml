@@ -14,7 +14,7 @@
     <string name="no_providers">Sem provedores</string>
     <string name="launch_mode">Modo de lançamento</string>
     <string name="taskAffinity">Afinidade da tarefa</string>
-    <string name="update">Atualização</string>
+    <string name="sort_by_last_update">Atualização</string>
     <string name="authority">Autoridade</string>
     <string name="service">Serviços</string>
     <string name="no_service">Sem serviços</string>
@@ -32,7 +32,7 @@
     <string name="uses_feature">Uses features</string>
     <string name="gles_ver">Req. Gles ver.</string>
     <string name="no_feature">No features</string>
-    <string name="shared_user_id">Id de usuário compartilhado</string>
+    <string name="sort_by_shared_user_id">Id de usuário compartilhado</string>
     <string name="signatures">Assinaturas</string>
     <string name="no_signatures">Sem assinaturas</string>
     <string name="configurations">Configurações</string>
@@ -41,10 +41,10 @@
     <string name="manifest">Manifesto</string>
     <string name="error">Erro</string>
     <string name="loading">Carregando &#8230;</string> <!-- &#8230; = ... -->
-    <string name="name">Nome</string>
-    <string name="package_string">Pacote</string>
-    <string name="system_user">Sistema/Usuário</string>
-    <string name="size">Tamanho</string>
+    <string name="sort_by_app_label">Nome</string>
+    <string name="sort_by_package_name">Pacote</string>
+    <string name="sort_by_domain">Sistema/Usuário</string>
+    <string name="sort_by_app_size">Tamanho</string>
     <string name="netstats_received">Dados recebidos</string>
     <string name="netstats_transmitted">Dados transmitidos</string>
     <string name="netstats_msg">Dados transmitidos desde a última inicialização do dispositivo</string>

@@ -14,7 +14,7 @@
     <string name="no_providers">Нет провайдеров</string>
     <string name="launch_mode">Режим запуска</string>
     <string name="taskAffinity">Task affinity</string>
-    <string name="update">Обновить</string>
+    <string name="sort_by_last_update">Обновить</string>
     <string name="authority">Authority</string>
     <string name="service">Службы</string>
     <string name="no_service">Нет служб</string>
@@ -32,7 +32,7 @@
     <string name="uses_feature">Использует свойства</string>
     <string name="gles_ver">Необх. версия GL ES</string>
     <string name="no_feature">No features</string>
-    <string name="shared_user_id">Общий пользовательский ID</string>
+    <string name="sort_by_shared_user_id">Общий пользовательский ID</string>
     <string name="signatures">Подписи</string>
     <string name="no_signatures">Нет подписей</string>
     <string name="configurations">Конфигурации</string>
@@ -41,10 +41,10 @@
     <string name="manifest">Manifest</string>
     <string name="error">Ошибка</string>
     <string name="loading">Загрузка…</string> <!-- &#8230; = ... -->
-    <string name="name">Название</string>
-    <string name="package_string">Пакет</string>
-    <string name="system_user">Системное/Пользовательское</string>
-    <string name="size">Размер</string>
+    <string name="sort_by_app_label">Название</string>
+    <string name="sort_by_package_name">Пакет</string>
+    <string name="sort_by_domain">Системное/Пользовательское</string>
+    <string name="sort_by_app_size">Размер</string>
     <string name="netstats_received">Загружено</string>
     <string name="netstats_transmitted">Передано</string>
     <string name="netstats_msg">Трафик, использованный с момента последнего запуска</string>

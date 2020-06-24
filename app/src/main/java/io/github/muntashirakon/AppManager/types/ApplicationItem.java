@@ -32,4 +32,8 @@ public class ApplicationItem {
      * Issuer and signature
      */
     public Tuple<String, String> sha;
+    /**
+     * Blocked components count
+     */
+    public Integer blockedCount;
 }

@@ -17,32 +17,40 @@
                 android:menuCategory="container">
 
                 <item
-                    android:id="@+id/action_sort_domain"
-                    android:title="@string/system_user" />
+                    android:id="@+id/action_sort_by_domain"
+                    android:title="@string/sort_by_domain" />
 
                 <item
-                    android:id="@+id/action_sort_name"
-                    android:title="@string/name" />
+                    android:id="@+id/action_sort_by_app_label"
+                    android:title="@string/sort_by_app_label" />
 
                 <item
-                    android:id="@+id/action_sort_pkg"
-                    android:title="@string/package_string" />
+                    android:id="@+id/action_sort_by_package_name"
+                    android:title="@string/sort_by_package_name" />
 
                 <item
-                    android:id="@+id/action_sort_installation"
-                    android:title="@string/update" />
+                    android:id="@+id/action_sort_by_last_update"
+                    android:title="@string/sort_by_last_update" />
 
                 <item
-                    android:id="@+id/action_sort_sharedid"
-                    android:title="@string/shared_user_id" />
+                    android:id="@+id/action_sort_by_shared_user_id"
+                    android:title="@string/sort_by_shared_user_id" />
 
                 <item
-                    android:id="@+id/action_sort_size"
-                    android:title="@string/size" />
+                    android:id="@+id/action_sort_by_app_size"
+                    android:title="@string/sort_by_app_size" />
 
                 <item
-                    android:id="@+id/action_sort_sha"
-                    android:title="@string/signatures" />
+                    android:id="@+id/action_sort_by_sha"
+                    android:title="@string/sort_by_sha" />
+
+                <item
+                    android:id="@+id/action_sort_by_disabled_app"
+                    android:title="@string/sort_by_disabled_app" />
+
+                <item
+                    android:id="@+id/action_sort_by_blocked_components"
+                    android:title="@string/sort_by_blocked_components" />
 
             </group>
         </menu>

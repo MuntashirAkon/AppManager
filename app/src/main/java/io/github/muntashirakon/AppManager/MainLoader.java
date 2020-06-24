@@ -11,7 +11,9 @@ import android.os.Build;
 
 import androidx.loader.content.AsyncTaskLoader;
 import io.github.muntashirakon.AppManager.activities.MainActivity;
+import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.types.ApplicationItem;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -33,10 +35,9 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
     public List<ApplicationItem> loadInBackground() {
         List<ApplicationItem> itemList = new ArrayList<>();
         String pName;
-
+        final Boolean isRootEnabled = (Boolean) AppPref.get(getContext(), AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
         if (MainActivity.packageList != null) {
             String[] aList = MainActivity.packageList.split("[\\r\\n]+");
-
             for (String s : aList) {
                 ApplicationItem item = new ApplicationItem();
                 if (s.endsWith("*")) {
@@ -56,12 +57,15 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
                     if (Build.VERSION.SDK_INT >= 26) {
                         item.size = (long) -1 * applicationInfo.targetSdkVersion;
                     }
+                    if (isRootEnabled) {
+                        item.blockedCount = ComponentsBlocker.getInstance(getContext(), pName)
+                                .componentCount();
+                    }
                     itemList.add(item);
                 } catch (PackageManager.NameNotFoundException ignored) {}
             }
         } else {
             List<ApplicationInfo> applicationInfoList = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-
             for (ApplicationInfo applicationInfo : applicationInfoList) {
                 ApplicationItem item = new ApplicationItem();
                 item.applicationInfo = applicationInfo;
@@ -80,6 +84,10 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
                 } catch (PackageManager.NameNotFoundException e) {
                     item.date = 0L;
                     item.sha = new Tuple<>("?", "?");
+                }
+                if (isRootEnabled) {
+                    item.blockedCount = ComponentsBlocker.getInstance(getContext(),
+                            applicationInfo.packageName).componentCount();
                 }
                 itemList.add(item);
             }
