@@ -6,7 +6,9 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Spanned;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +23,6 @@ import java.util.regex.Pattern;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.content.ContextCompat;
-import androidx.core.text.HtmlCompat;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.xmlapkparser.AXMLPrinter;
 
@@ -35,12 +36,12 @@ public class ManifestViewerActivity extends AppCompatActivity {
     public final static Pattern QUOTATIONS = Pattern.compile("\"([^\"]*)\"", Pattern.MULTILINE);
 
     public final static Pattern MANIFEST_TAGS = Pattern.compile
-            ("(&lt;/?(manifest|application|compatible-screens|instrumentation|permission" +
+            ("(</?(manifest|application|compatible-screens|instrumentation|permission" +
                             "(-group|-tree)?|supports-(gl-texture|screens)|uses-(configuration|" +
                             "feature|permission(-sdk-23)?|sdk)|activity(-alias)?|meta-data|service|" +
                             "receiver|provider|uses-library|intent-filter|layout|eat-comment|" +
                             "grant-uri-permissions|path-permission|action|category|data|protected-" +
-                            "broadcast|overlay|library|original-package|restrict-update)\\b|/?&#62;)",
+                            "broadcast|overlay|library|original-package|restrict-update)\\b|/?>)",
                     Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 
     private static String code;
@@ -102,37 +103,23 @@ public class ManifestViewerActivity extends AppCompatActivity {
     private void displayContent() {
         final TextView textView = findViewById(R.id.any_view);
         textView.setTextColor(ContextCompat.getColor(this, R.color.dark_orange));
-        Matcher matcher;
-        final StringBuffer sb = new StringBuffer();
-        String textFormat = "<font color='#%06X'>%s</font>";
-        // Take precautions
-        code = code.trim().replaceAll("<", "&lt;")
-                .replaceAll(">", "&#62;")
-                .replaceAll(" ", "&nbsp;")
-                .replaceAll("\n", "<br/>");
-
-        int tagColor = ContextCompat.getColor(this, R.color.pink);
-        matcher = MANIFEST_TAGS.matcher(code);
-        while (matcher.find()) {
-            String formattedText = String.format(textFormat, (0xFFFFFF & tagColor), matcher.group());
-            matcher.appendReplacement(sb, formattedText);
-        }
-        matcher.appendTail(sb);
-        matcher = QUOTATIONS.matcher(sb.toString());
-        sb.setLength(0);
-        textFormat = "<i>" + textFormat + "</i>";
-        int attr_value = ContextCompat.getColor(this, R.color.ocean_blue);
-        while (matcher.find()) {
-            String formattedText = String.format(textFormat, (0xFFFFFF & attr_value), matcher.group());
-            matcher.appendReplacement(sb, formattedText);
-        }
-        matcher.appendTail(sb);
-        final ManifestViewerActivity activity = this;
+        final int tagColor = ContextCompat.getColor(this, R.color.pink);
+        final int attrValueColor = ContextCompat.getColor(this, R.color.ocean_blue);
         new Thread(() -> {
-            final Spanned spanned = HtmlCompat.fromHtml(sb.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY);
+            SpannableString spannableString = new SpannableString(code);
+            Matcher matcher = MANIFEST_TAGS.matcher(code);
+            while (matcher.find()) {
+                spannableString.setSpan(new ForegroundColorSpan(tagColor), matcher.start(),
+                        matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            matcher.usePattern(QUOTATIONS);
+            while (matcher.find()) {
+                spannableString.setSpan(new ForegroundColorSpan(attrValueColor), matcher.start(),
+                        matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
             runOnUiThread(() -> {
-                textView.setText(spanned);
-                activity.showProgressBar(false);
+                textView.setText(spannableString);
+                ManifestViewerActivity.this.showProgressBar(false);
             });
         }).start();
     }

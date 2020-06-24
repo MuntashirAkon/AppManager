@@ -3,18 +3,12 @@ package io.github.muntashirakon.AppManager.activities;
 // NOTE: Patterns here are taken from https://github.com/billthefarmer/editor
 // Some of them might be slightly modified
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuBuilder;
-import androidx.core.content.ContextCompat;
-import androidx.core.text.HtmlCompat;
-import io.github.muntashirakon.AppManager.R;
-
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.Spanned;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +17,12 @@ import android.widget.TextView;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.core.content.ContextCompat;
+import io.github.muntashirakon.AppManager.R;
 
 public class ClassViewerActivity extends AppCompatActivity {
     public static final String EXTRA_APP_NAME = "app_name";
@@ -93,37 +93,36 @@ public class ClassViewerActivity extends AppCompatActivity {
     private void displayContent() {
         showProgressBar(true);
         final TextView textView = findViewById(R.id.any_view);
-        Matcher matcher;
-        // Take precautions
-        classDump = classDump.trim().replaceAll("<", "&lt;")
-                .replaceAll(">", "&#62;")
-                .replaceAll(" ", "&nbsp;")
-                .replaceAll("\n", "<br/>");
-
-        int darkOrange = ContextCompat.getColor(this, R.color.dark_orange);
-        matcher = TYPES.matcher(highlightText(CLASS.matcher(classDump), ContextCompat.getColor(this, R.color.ocean_blue)));
-        matcher = KEYWORDS.matcher(highlightText(matcher, darkOrange));
-        matcher = CC_COMMENT.matcher(highlightText(matcher, darkOrange));
-        final String final_data = highlightText(matcher, Color.GREEN);
-        final ClassViewerActivity activity = this;
+        final int typeClassColor = ContextCompat.getColor(this, R.color.ocean_blue);
+        final int keywordsColor = ContextCompat.getColor(this, R.color.dark_orange);
+        final int commentColor = Color.GREEN;
         new Thread(() -> {
-            final Spanned spanned = HtmlCompat.fromHtml(final_data, HtmlCompat.FROM_HTML_MODE_LEGACY);
+            SpannableString spannableString = new SpannableString(classDump);
+            Matcher matcher = TYPES.matcher(classDump);
+            while (matcher.find()) {
+                spannableString.setSpan(new ForegroundColorSpan(typeClassColor), matcher.start(),
+                        matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            matcher.usePattern(CLASS);
+            while (matcher.find()) {
+                spannableString.setSpan(new ForegroundColorSpan(typeClassColor), matcher.start(),
+                        matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            matcher.usePattern(KEYWORDS);
+            while (matcher.find()) {
+                spannableString.setSpan(new ForegroundColorSpan(keywordsColor), matcher.start(),
+                        matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            matcher.usePattern(CC_COMMENT);
+            while (matcher.find()) {
+                spannableString.setSpan(new ForegroundColorSpan(commentColor), matcher.start(),
+                        matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
             runOnUiThread(() -> {
-                textView.setText(spanned);
-                activity.showProgressBar(false);
+                textView.setText(spannableString);
+                ClassViewerActivity.this.showProgressBar(false);
             });
         }).start();
-    }
-
-    private String highlightText(Matcher matcher, int color) {
-        String textFormat = "<font color='#%06X'>%s</font>";
-        StringBuffer sb = new StringBuffer();
-        while (matcher.find()) {
-            String formattedText = String.format(textFormat, (0xFFFFFF & color), matcher.group());
-            matcher.appendReplacement(sb, formattedText);
-        }
-        matcher.appendTail(sb);
-        return sb.toString();
     }
 
     private void showProgressBar(boolean show) {
