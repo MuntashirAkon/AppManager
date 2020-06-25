@@ -18,16 +18,12 @@ public class Utils {
             USAGE_TODAY,
             USAGE_YESTERDAY,
             USAGE_WEEKLY,
-            USAGE_MONTHLY,
-            USAGE_YEARLY,
             USAGE_LAST_BOOT
     })
     public @interface IntervalType {}
     public static final int USAGE_TODAY = 0;
     public static final int USAGE_YESTERDAY = 1;
     public static final int USAGE_WEEKLY = 2;
-    public static final int USAGE_MONTHLY = 3;
-    public static final int USAGE_YEARLY = 4;
     public static final int USAGE_LAST_BOOT = 5;
 
     @NonNull
@@ -66,12 +62,6 @@ public class Utils {
                 break;
             case USAGE_WEEKLY:
                 interval = getWeeklyInterval();
-                break;
-            case USAGE_MONTHLY:
-                interval = getMonthlyInterval();
-                break;
-            case USAGE_YEARLY:
-                interval = getYearlyInterval();
                 break;
             case USAGE_LAST_BOOT:
                 interval = getSinceLastBoot();
@@ -119,17 +109,4 @@ public class Utils {
         return new Tuple<>(timeStart, timeEnd);
     }
 
-    @NonNull
-    private static Tuple<Long, Long> getMonthlyInterval() {
-        long timeEnd = System.currentTimeMillis();
-        long timeStart = timeEnd - TimeUnit.MILLISECONDS.convert(30, TimeUnit.DAYS);
-        return new Tuple<>(timeStart, timeEnd);
-    }
-
-    @NonNull
-    private static Tuple<Long, Long> getYearlyInterval() {
-        long timeEnd = System.currentTimeMillis();
-        long timeStart = timeEnd - TimeUnit.MILLISECONDS.convert(365, TimeUnit.DAYS);
-        return new Tuple<>(timeStart, timeEnd);
-    }
 }

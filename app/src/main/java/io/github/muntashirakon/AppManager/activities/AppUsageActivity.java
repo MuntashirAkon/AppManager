@@ -41,10 +41,9 @@ import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.Utils.IntervalType;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_MONTHLY;
-import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_WEEKLY;
-import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_YEARLY;
+import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_LAST_BOOT;
 import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_TODAY;
+import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_WEEKLY;
 import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_YESTERDAY;
 
 public class AppUsageActivity extends AppCompatActivity {
@@ -116,15 +115,6 @@ public class AppUsageActivity extends AppCompatActivity {
         List<AppUsageStatsManager.PackageUS> usageStatsList;
         do {
             usageStatsList = AppUsageStatsManager.getInstance(this).getUsageStats(0, current_interval);
-            // FIXME
-//            Tuple<Long, Long> interval = io.github.muntashirakon.AppManager.usage.Utils.getTimeInterval(current_interval);
-//            UsageStatsManager manager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
-//            UsageEvents usageEvents = manager.queryEvents(interval.getFirst(), interval.getSecond());
-//            UsageEvents.Event event = new UsageEvents.Event();
-//            while (usageEvents.hasNextEvent()) {
-//                usageEvents.getNextEvent(event);
-//                Log.d("TestAUA", "Event: " + event.getPackageName() + "\t" + event.getTimeStamp() + " (" + event.getEventType() + ")");
-//            }
         } while (0 != --_try && usageStatsList.size() == 0);
         mAppUsageAdapter.setDefaultList(usageStatsList);
         totalTimeInMs = 0;
@@ -157,11 +147,7 @@ public class AppUsageActivity extends AppCompatActivity {
             case USAGE_WEEKLY:
                 timeRange.setText(R.string.usage_7_days);
                 break;
-            case USAGE_MONTHLY:
-                timeRange.setText(R.string.usage_30_days);
-                break;
-            case USAGE_YEARLY:
-                timeRange.setText(R.string.usage_365_days);
+            case USAGE_LAST_BOOT:
                 break;
         }
     }
