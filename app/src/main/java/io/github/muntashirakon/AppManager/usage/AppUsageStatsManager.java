@@ -249,41 +249,42 @@ public class AppUsageStatsManager {
 
     @TargetApi(23)
     @NonNull
-    protected Tuple<Long, Long> getWifiMobileUsageForPackage(String mPackageName, @Utils.IntervalType int usage_interval) {
-        long totalWifi = 0;
-        long totalMobile = 0;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            NetworkStatsManager networkStatsManager = (NetworkStatsManager) context.getSystemService(Context.NETWORK_STATS_SERVICE);
-            int targetUid = Utils.getAppUid(mPackageManager, mPackageName);
-            Tuple<Long, Long> range = Utils.getTimeInterval(usage_interval);
-            try {
-                if (networkStatsManager != null) {
-                    NetworkStats networkStats = networkStatsManager.querySummary(NetworkCapabilities.TRANSPORT_WIFI, null, range.getFirst(), range.getSecond());
-                    if (networkStats != null) {
-                        while (networkStats.hasNextBucket()) {
-                            NetworkStats.Bucket bucket = new NetworkStats.Bucket();
-                            networkStats.getNextBucket(bucket);
-                            if (bucket.getUid() == targetUid) {
-                                totalWifi += bucket.getTxBytes() + bucket.getRxBytes();
-                            }
-                        }
-                    }
-                    NetworkStats networkStatsM = networkStatsManager.querySummary(NetworkCapabilities.TRANSPORT_CELLULAR, null, range.getFirst(), range.getSecond());
-                    if (networkStatsM != null) {
-                        while (networkStatsM.hasNextBucket()) {
-                            NetworkStats.Bucket bucket = new NetworkStats.Bucket();
-                            networkStatsM.getNextBucket(bucket);
-                            if (bucket.getUid() == targetUid) {
-                                totalMobile += bucket.getTxBytes() + bucket.getRxBytes();
-                            }
+    public static Tuple<Tuple<Long, Long>, Tuple<Long, Long>> getWifiMobileUsageForPackage(
+            @NonNull Context context, String mPackageName, @Utils.IntervalType int usage_interval) {
+        long totalWifiTx = 0;
+        long totalWifiRx = 0;
+        long totalMobileTx = 0;
+        long totalMobileRx = 0;
+        NetworkStatsManager networkStatsManager = (NetworkStatsManager) context.getSystemService(Context.NETWORK_STATS_SERVICE);
+        int targetUid = Utils.getAppUid(context.getPackageManager(), mPackageName);
+        Tuple<Long, Long> range = Utils.getTimeInterval(usage_interval);
+        try {
+            if (networkStatsManager != null) {
+                NetworkStats networkStats = networkStatsManager.querySummary(NetworkCapabilities.TRANSPORT_WIFI, null, range.getFirst(), range.getSecond());
+                if (networkStats != null) {
+                    while (networkStats.hasNextBucket()) {
+                        NetworkStats.Bucket bucket = new NetworkStats.Bucket();
+                        networkStats.getNextBucket(bucket);
+                        if (bucket.getUid() == targetUid) {
+                            totalWifiTx += bucket.getTxBytes();
+                            totalWifiRx += bucket.getRxBytes();
                         }
                     }
                 }
-            } catch (RemoteException e) {
-                e.printStackTrace();
+                NetworkStats networkStatsM = networkStatsManager.querySummary(NetworkCapabilities.TRANSPORT_CELLULAR, null, range.getFirst(), range.getSecond());
+                if (networkStatsM != null) {
+                    while (networkStatsM.hasNextBucket()) {
+                        NetworkStats.Bucket bucket = new NetworkStats.Bucket();
+                        networkStatsM.getNextBucket(bucket);
+                        if (bucket.getUid() == targetUid) {
+                            totalMobileTx += bucket.getTxBytes();
+                            totalMobileRx += bucket.getRxBytes();
+                        }
+                    }
+                }
             }
-        }
-        return new Tuple<>(totalWifi, totalMobile);
+        } catch (RemoteException ignore) {}
+        return new Tuple<>(new Tuple<>(totalWifiTx, totalWifiRx), new Tuple<>(totalMobileTx, totalMobileRx));
     }
 
     public static class PackageUS {

@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.FileUtils;
 import android.os.Process;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.format.Formatter;
 import android.view.Menu;
@@ -58,6 +59,7 @@ import androidx.core.content.FileProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.Tuple;
@@ -504,13 +506,28 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         }
         mList.addDivider();
 
-        // Netstat
-        mList.addItemWithTitle(getString(R.string.netstats_msg), true);
-        mList.item_title.setTextColor(mAccentColor);
-        Tuple<String, String> uidNetStats = getNetStats(mApplicationInfo.uid);
-        mList.addItemWithTitleSubtitle(getString(R.string.netstats_transmitted), uidNetStats.getFirst(), ListItemCreator.SELECTABLE);
-        mList.addItemWithTitleSubtitle(getString(R.string.netstats_received), uidNetStats.getSecond(), ListItemCreator.SELECTABLE);
-        mList.addDivider();
+        // Net statistics
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if ((Boolean) AppPref.get(this, AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN)) {
+                Tuple<Tuple<Long, Long>, Tuple<Long, Long>> dataUsage = AppUsageStatsManager
+                        .getWifiMobileUsageForPackage(this, mPackageName,
+                                io.github.muntashirakon.AppManager.usage.Utils.USAGE_LAST_BOOT);
+                mList.addItemWithTitle(getString(R.string.netstats_msg), true);
+                mList.item_title.setTextColor(mAccentColor);
+                mList.addItemWithTitleSubtitle(getString(R.string.netstats_transmitted),
+                        getReadableSize(dataUsage.getFirst().getFirst() + dataUsage.getSecond().getFirst()), ListItemCreator.SELECTABLE);
+                mList.addItemWithTitleSubtitle(getString(R.string.netstats_received),
+                        getReadableSize(dataUsage.getFirst().getSecond() + dataUsage.getSecond().getSecond()), ListItemCreator.SELECTABLE);
+                mList.addDivider();
+            }
+        } else {
+            mList.addItemWithTitle(getString(R.string.netstats_msg), true);
+            mList.item_title.setTextColor(mAccentColor);
+            Tuple<String, String> uidNetStats = getNetStats(mApplicationInfo.uid);
+            mList.addItemWithTitleSubtitle(getString(R.string.netstats_transmitted), uidNetStats.getFirst(), ListItemCreator.SELECTABLE);
+            mList.addItemWithTitleSubtitle(getString(R.string.netstats_received), uidNetStats.getSecond(), ListItemCreator.SELECTABLE);
+            mList.addDivider();
+        }
 
         // Storage and Cache
         if ((Boolean) AppPref.get(this, AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN))

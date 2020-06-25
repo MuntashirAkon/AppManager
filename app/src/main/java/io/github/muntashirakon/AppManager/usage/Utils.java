@@ -2,6 +2,7 @@ package io.github.muntashirakon.AppManager.usage;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.SystemClock;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -18,7 +19,8 @@ public class Utils {
             USAGE_YESTERDAY,
             USAGE_WEEKLY,
             USAGE_MONTHLY,
-            USAGE_YEARLY
+            USAGE_YEARLY,
+            USAGE_LAST_BOOT
     })
     public @interface IntervalType {}
     public static final int USAGE_TODAY = 0;
@@ -26,6 +28,7 @@ public class Utils {
     public static final int USAGE_WEEKLY = 2;
     public static final int USAGE_MONTHLY = 3;
     public static final int USAGE_YEARLY = 4;
+    public static final int USAGE_LAST_BOOT = 5;
 
     @NonNull
     public static String getPackageLabel(@NonNull PackageManager packageManager, String packageName) {
@@ -70,11 +73,19 @@ public class Utils {
             case USAGE_YEARLY:
                 interval = getYearlyInterval();
                 break;
+            case USAGE_LAST_BOOT:
+                interval = getSinceLastBoot();
+                break;
             case USAGE_TODAY:
             default:
                 interval = getToday();
         }
         return interval;
+    }
+
+    @NonNull
+    private static Tuple<Long, Long> getSinceLastBoot() {
+        return new Tuple<>(SystemClock.elapsedRealtime(), System.currentTimeMillis());
     }
 
     @NonNull
