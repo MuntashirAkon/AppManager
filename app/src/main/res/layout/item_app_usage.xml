@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardElevation="0dp"
+    app:cardCornerRadius="0dp"
+    android:foreground="?selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding_small"
+        android:paddingStart="@dimen/padding_small"
+        android:paddingTop="@dimen/padding_small">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/padding_small"
+            tools:srcCompat="@tools:sample/avatars"
+            android:contentDescription="@string/str_logo" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textStyle="bold"
+                tools:text="@tools:sample/lorem" />
+
+            <TextView
+                android:id="@+id/package_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/label"
+                android:layout_alignStart="@id/label"
+                android:singleLine="true"
+                android:textStyle="italic"
+                tools:text="@tools:sample/lorem" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/package_name"
+                android:layout_alignStart="@id/label"
+                android:singleLine="true"
+                android:textSize="12sp"
+                tools:text="@tools:sample/date/mmddyy" />
+
+            <TextView
+                android:id="@+id/screen_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/package_name"
+                android:layout_toEndOf="@id/date"
+                android:gravity="end"
+                android:paddingEnd="25sp"
+                android:singleLine="true"
+                android:textSize="10sp"
+                tools:text="@tools:sample/lorem"
+                tools:ignore="RtlSymmetry,SmallSp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/padding_small">
+
+            <TextView
+                android:id="@+id/data_usage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textSize="10sp"
+                tools:text="@tools:sample/us_zipcodes[0]" />
+
+            <TextView
+                android:id="@+id/wifi_usage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textSize="10sp"
+                tools:text="@tools:sample/us_zipcodes[1]" />
+
+            <TextView
+                android:id="@+id/times_opened"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textSize="10sp"
+                tools:text="@tools:sample/us_zipcodes[3]" />
+
+            <TextView
+                android:id="@+id/notification_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textSize="10sp"
+                tools:text="@tools:sample/lorem"
+                tools:ignore="SmallSp" />
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

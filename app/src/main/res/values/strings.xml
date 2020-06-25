@@ -296,4 +296,10 @@
     <string name="exodus_link">Exodus Link</string>
     <string name="sort_by_disabled_app">Disabled first</string>
     <string name="sort_by_blocked_components">Blocked first</string>
+    <string name="external_data_dir">External Data Directory</string>
+    <string name="external_multiple_data_dir">External Data Directory %d</string>
+    <string name="no_of_times_opened">%d times</string>
+    <string name="one_time_opened">%d time</string>
+    <string name="one_notification_received">%d notification</string>
+    <string name="no_of_notification_received">%d notifications</string>
 </resources>

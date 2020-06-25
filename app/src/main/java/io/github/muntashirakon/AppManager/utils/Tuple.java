@@ -38,4 +38,10 @@ public class Tuple<T, K> {
         else if (i<0) return -1;
         else return 1;
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Tuple(" + mObjectOne + mObjectTwo + ')';
+    }
 }

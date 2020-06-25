@@ -8,8 +8,10 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -195,7 +197,7 @@ public class AppUsageActivity extends AppCompatActivity {
     }
 
     static class AppUsageAdapter extends BaseAdapter {
-        static DateFormat sSimpleDateFormat = new SimpleDateFormat("MMM d, yyyy HH:mm:ss", Locale.getDefault());
+        static DateFormat sSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
 
         private LayoutInflater mLayoutInflater;
         private List<AppUsageStatsManager.PackageUS> mAdapterList;
@@ -203,9 +205,15 @@ public class AppUsageActivity extends AppCompatActivity {
         private Activity mActivity;
 
         static class ViewHolder {
-            ImageView icon;
-            TextView label;
-            TextView usage;
+            ImageView appIcon;
+            TextView appLabel;
+            TextView packageName;
+            TextView lastUsageDate;
+            TextView timesOpened;
+            TextView mobileDataUsage;
+            TextView wifiDataUsage;
+            TextView screenTime;
+            TextView notificationCount;
             IconAsyncTask iconLoader;
         }
 
@@ -235,43 +243,64 @@ public class AppUsageActivity extends AppCompatActivity {
             return position;
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
-                convertView = mLayoutInflater.inflate(R.layout.item_icon_title_subtitle, parent, false);
+                convertView = mLayoutInflater.inflate(R.layout.item_app_usage, parent, false);
                 holder = new ViewHolder();
-                holder.icon = convertView.findViewById(R.id.item_icon);
-                holder.label = convertView.findViewById(R.id.item_title);
-                holder.usage = convertView.findViewById(R.id.item_subtitle);
-                convertView.findViewById(R.id.item_open).setVisibility(View.GONE);
+                holder.appIcon = convertView.findViewById(R.id.icon);
+                holder.appLabel = convertView.findViewById(R.id.label);
+                holder.packageName = convertView.findViewById(R.id.package_name);
+                holder.lastUsageDate = convertView.findViewById(R.id.date);
+                holder.timesOpened = convertView.findViewById(R.id.times_opened);
+                holder.mobileDataUsage = convertView.findViewById(R.id.data_usage);
+                holder.wifiDataUsage = convertView.findViewById(R.id.wifi_usage);
+                holder.screenTime = convertView.findViewById(R.id.screen_time);
+                holder.notificationCount = convertView.findViewById(R.id.notification_count);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
                 if(holder.iconLoader != null) holder.iconLoader.cancel(true);
             }
-
-            AppUsageStatsManager.PackageUS appItem = mAdapterList.get(position);
+            AppUsageStatsManager.PackageUS packageUS = mAdapterList.get(position);
             // Set label (or package name on failure)
             try {
-                ApplicationInfo applicationInfo = mPackageManager.getApplicationInfo(appItem.packageName, 0);
-                holder.label.setText(mPackageManager.getApplicationLabel(applicationInfo));
+                ApplicationInfo applicationInfo = mPackageManager.getApplicationInfo(packageUS.packageName, 0);
+                holder.appLabel.setText(mPackageManager.getApplicationLabel(applicationInfo));
                 // Set icon
-                holder.iconLoader = new IconAsyncTask(holder.icon, applicationInfo);
+                holder.iconLoader = new IconAsyncTask(holder.appIcon, applicationInfo);
                 holder.iconLoader.execute();
             } catch (PackageManager.NameNotFoundException e) {
-                holder.label.setText(appItem.packageName);
-                holder.icon.setImageDrawable(mPackageManager.getDefaultActivityIcon());
+                holder.appLabel.setText(packageUS.packageName);
+                holder.appIcon.setImageDrawable(mPackageManager.getDefaultActivityIcon());
             }
+            // Set package name
+            holder.packageName.setText(packageUS.packageName);
             // Set usage
-            long lastTimeUsed = appItem.lastUsageTime;
-            String string;
-            string = formattedTime(mActivity, appItem.screenTime);
-            if (lastTimeUsed > 1)
-                string += ", " + mActivity.getString(R.string.usage_last_used)
-                        + " " + sSimpleDateFormat.format(new Date(lastTimeUsed));
-
-            holder.usage.setText(string);
+            long lastTimeUsed = packageUS.lastUsageTime;
+            if (lastTimeUsed > 1) {
+                holder.lastUsageDate.setText(sSimpleDateFormat.format(new Date(lastTimeUsed)));
+            }
+            // Set times opened
+            holder.timesOpened.setText(String.format(packageUS.timesOpened == 1 ?
+                    mActivity.getString(R.string.one_time_opened)
+                    : mActivity.getString(R.string.no_of_times_opened), packageUS.timesOpened));
+            // Set screen time
+            holder.screenTime.setText(formattedTime(mActivity, packageUS.screenTime));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // Set data usage
+                holder.mobileDataUsage.setText("M: \u2191 " + Formatter.formatFileSize(mActivity, packageUS.mobileData.getFirst())
+                            + " \u2193 " + Formatter.formatFileSize(mActivity, packageUS.mobileData.getSecond()));
+                holder.wifiDataUsage.setText("W: \u2191 " + Formatter.formatFileSize(mActivity, packageUS.wifiData.getFirst())
+                        + " \u2193 " + Formatter.formatFileSize(mActivity, packageUS.wifiData.getSecond()));
+            }
+            // Set notification count
+//            holder.notificationCount.setText(String.format(packageUS.notificationReceived == 1 ?
+//                    mActivity.getString(R.string.one_notification_received)
+//                    : mActivity.getString(R.string.no_of_notification_received),
+//                    packageUS.notificationReceived));
             return convertView;
         }
 

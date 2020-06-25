@@ -1,19 +1,16 @@
 package io.github.muntashirakon.AppManager.usage;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.usage.NetworkStats;
 import android.app.usage.NetworkStatsManager;
 import android.app.usage.UsageEvents;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.os.Build;
 import android.os.RemoteException;
-import android.telephony.TelephonyManager;
-import android.text.TextUtils;
-import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,7 +23,6 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 
 public class AppUsageStatsManager {
@@ -87,12 +83,18 @@ public class AppUsageStatsManager {
         return packageUS;
     }
 
+    /**
+     * Calculate screen time based on the assumption that no application can be run in the middle of
+     * a running application. This is a valid assumption since <code>Activity#onPause()</code> is
+     * called whenever an app goes to background and <code>Activity#onResume</code> is called
+     * whenever an app appears in foreground.
+     * @param sort Sorting order TODO
+     * @param usage_interval Usage interval
+     * @return A list of package usage
+     */
     public List<PackageUS> getUsageStats(int sort, @Utils.IntervalType int usage_interval) {
         List<PackageUS> screenTimeList = new ArrayList<>();
         if (mUsageStatsManager == null) return screenTimeList;
-        String prevPackageName = "";
-        Map<String, Long> openingTimes = new HashMap<>();
-        Map<String, Long> closingTimes = new HashMap<>();
         Map<String, Long> screenTimes = new HashMap<>();
         Map<String, Long> lastUse = new HashMap<>();
         Map<String, Integer> accessCount = new HashMap<>();
@@ -100,50 +102,49 @@ public class AppUsageStatsManager {
         Tuple<Long, Long> interval = Utils.getTimeInterval(usage_interval);
         UsageEvents events = mUsageStatsManager.queryEvents(interval.getFirst(), interval.getSecond());
         UsageEvents.Event event = new UsageEvents.Event();
+        long startTime;
+        long endTime;
+        boolean skip_new = false;
         while (events.hasNextEvent()) {
-            events.getNextEvent(event);
+            if (!skip_new) events.getNextEvent(event);
             int eventType = event.getEventType();
             long eventTime = event.getTimeStamp();
             String packageName = event.getPackageName();
             if (eventType == UsageEvents.Event.ACTIVITY_RESUMED) {  // App opened: MOVE_TO_FOREGROUND
-                if (!openingTimes.containsKey(packageName)) {
-                    openingTimes.put(packageName, eventTime);
-                }
-            } else if (eventType == UsageEvents.Event.ACTIVITY_PAUSED) {  // App closed: MOVE_TO_BACKGROUND
-                if (openingTimes.containsKey(packageName)) {
-                    closingTimes.put(packageName, eventTime);
-                }
-            }
-            // Calculate usage time based on the assumption that no application can be run in
-            // the middle of a running application. This is a valid assumption since onPause
-            // is called whenever an app goes to background and onResume is called whenever an
-            // app appears in foreground.
-            if (TextUtils.isEmpty(prevPackageName)) prevPackageName = packageName;  // Initial value
-            if (!prevPackageName.equals(packageName)) {  // Application switched, store duration
-                if (openingTimes.containsKey(prevPackageName) && closingTimes.containsKey(prevPackageName)) {
-                    //noinspection ConstantConditions
-                    long time = closingTimes.get(prevPackageName) - openingTimes.get(prevPackageName);
-                    if (screenTimes.containsKey(prevPackageName))
-                        //noinspection ConstantConditions
-                        screenTimes.put(prevPackageName, screenTimes.get(prevPackageName) + time);
-                    else screenTimes.put(prevPackageName, time);
-                    lastUse.put(prevPackageName, closingTimes.get(prevPackageName));
-                    if (time > USAGE_TIME_MAX) {
-                        if (accessCount.containsKey(prevPackageName))
-                            accessCount.put(prevPackageName, accessCount.get(prevPackageName));
-                        else accessCount.put(prevPackageName, 1);
+                startTime = eventTime;
+                while (events.hasNextEvent()) {
+                    events.getNextEvent(event);
+                    eventType = event.getEventType();
+                    eventTime = event.getTimeStamp();
+                    if (eventType == UsageEvents.Event.ACTIVITY_RESUMED) {
+                        skip_new = true; break;
+                    } else if (eventType == UsageEvents.Event.ACTIVITY_PAUSED) {
+                        endTime = eventTime;
+                        skip_new = false;
+                        if (packageName.equals(event.getPackageName())) {
+                            long time = endTime - startTime;
+                            if (time > USAGE_TIME_MAX) {
+                                if (screenTimes.containsKey(packageName))
+                                    //noinspection ConstantConditions
+                                    screenTimes.put(packageName, screenTimes.get(packageName) + time);
+                                else screenTimes.put(packageName, time);
+                                lastUse.put(packageName, endTime);
+                                if (accessCount.containsKey(packageName)) //noinspection ConstantConditions
+                                    accessCount.put(packageName, accessCount.get(packageName) + 1);
+                                else accessCount.put(packageName, 1);
+                            }
+                        }
+                        break;
                     }
-                    openingTimes.remove(prevPackageName);
-                    closingTimes.remove(prevPackageName);
                 }
-                prevPackageName = packageName;
             }
         }
-        Map<String, Long> mobileData = new HashMap<>();
+        Map<String, Tuple<Long, Long>> mobileData = new HashMap<>();
+        Map<String, Tuple<Long, Long>> wifiData = new HashMap<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             NetworkStatsManager networkStatsManager = (NetworkStatsManager) context.getSystemService(Context.NETWORK_STATS_SERVICE);
-            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            mobileData = getMobileData(telephonyManager, networkStatsManager, usage_interval);
+            mobileData = getMobileData(networkStatsManager, usage_interval);
+            wifiData = getWifiData(networkStatsManager, usage_interval);
         }
         for(String packageName: screenTimes.keySet()) {
             // Skip not installed packages
@@ -153,11 +154,14 @@ public class AppUsageStatsManager {
             packageUS.timesOpened = accessCount.get(packageName);
             packageUS.lastUsageTime = lastUse.get(packageName);
             packageUS.screenTime = screenTimes.get(packageName);
-            String key = "u" + Utils.getAppUid(mPackageManager, packageName);
-            packageUS.mobileData = 0L;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                String key = "u" + Utils.getAppUid(mPackageManager, packageName);
                 if (mobileData.containsKey(key))
                     packageUS.mobileData = mobileData.get(key);
+                else packageUS.mobileData = new Tuple<>(0L, 0L);
+                if (wifiData.containsKey(key))
+                    packageUS.wifiData = wifiData.get(key);
+                else packageUS.wifiData = new Tuple<>(0L, 0L);
             }
             screenTimeList.add(packageUS);
         }
@@ -170,43 +174,82 @@ public class AppUsageStatsManager {
         } else if (sort == 2) {
             Collections.sort(screenTimeList, (o1, o2) -> o2.timesOpened - o1.timesOpened);
         } else {
-            Collections.sort(screenTimeList, (o1, o2) -> (int) (o2.mobileData - o1.mobileData));
+            Collections.sort(screenTimeList, (o1, o2) -> o1.mobileData.compareTo(o2.mobileData));
         }
 //        Log.d("US", getUsageStatsForPackage(context.getPackageName(), usage_interval).toString());
         return screenTimeList;
     }
 
+    @TargetApi(23)
     @NonNull
-    private Map<String, Long> getMobileData(TelephonyManager tm, NetworkStatsManager nsm, @Utils.IntervalType int usage_interval) {
-        Map<String, Long> result = new HashMap<>();
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-            Tuple<Long, Long> range = Utils.getTimeInterval(usage_interval);
-            NetworkStats networkStatsM;
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    networkStatsM = nsm.querySummary(ConnectivityManager.TYPE_MOBILE, null, range.getFirst(), range.getSecond());
-                    if (networkStatsM != null) {
-                        while (networkStatsM.hasNextBucket()) {
-                            NetworkStats.Bucket bucket = new NetworkStats.Bucket();
-                            networkStatsM.getNextBucket(bucket);
-                            String key = "u" + bucket.getUid();
-                            Log.d("******", key + " " + bucket.getTxBytes() + " " + bucket.getRxBytes());
-                            if (result.containsKey(key)) {
-                                result.put(key, result.get(key) + bucket.getTxBytes() + bucket.getRxBytes());
-                            } else {
-                                result.put(key, bucket.getTxBytes() + bucket.getRxBytes());
-                            }
-                        }
+    private Map<String, Tuple<Long, Long>> getMobileData(@NonNull NetworkStatsManager nsm, @Utils.IntervalType int usage_interval) {
+        Map<String, Tuple<Long, Long>> result = new HashMap<>();
+        Tuple<Long, Long> range  = Utils.getTimeInterval(usage_interval);
+        Map<String, Long> txData = new HashMap<>();
+        Map<String, Long> rxData = new HashMap<>();
+        NetworkStats networkStats;
+        try {
+            networkStats = nsm.querySummary(NetworkCapabilities.TRANSPORT_CELLULAR, null, range.getFirst(), range.getSecond());
+            if (networkStats != null) {
+                while (networkStats.hasNextBucket()) {
+                    NetworkStats.Bucket bucket = new NetworkStats.Bucket();
+                    networkStats.getNextBucket(bucket);
+                    String key = "u" + bucket.getUid();
+                    if (result.containsKey(key)) {
+                        //noinspection ConstantConditions
+                        txData.put(key, txData.get(key) + bucket.getTxBytes());
+                        //noinspection ConstantConditions
+                        rxData.put(key, rxData.get(key) + bucket.getRxBytes());
+                    } else {
+                        txData.put(key, bucket.getTxBytes());
+                        rxData.put(key, bucket.getRxBytes());
                     }
                 }
-            } catch (RemoteException e) {
-                e.printStackTrace();
             }
-        }
+            for (String uid: txData.keySet()) {
+                result.put(uid, new Tuple<>(txData.get(uid), rxData.get(uid)));
+            }
+        } catch (RemoteException ignore) {}
         return result;
     }
 
-    protected Long[] getWifiMobileUsageForPackage(String mPackageName, @Utils.IntervalType int usage_interval) {
+
+    @TargetApi(23)
+    @NonNull
+    private Map<String, Tuple<Long, Long>> getWifiData(@NonNull NetworkStatsManager nsm, @Utils.IntervalType int usage_interval) {
+        Map<String, Tuple<Long, Long>> result = new HashMap<>();
+        Tuple<Long, Long> range  = Utils.getTimeInterval(usage_interval);
+        Map<String, Long> txData = new HashMap<>();
+        Map<String, Long> rxData = new HashMap<>();
+        NetworkStats networkStats;
+        try {
+            networkStats = nsm.querySummary(NetworkCapabilities.TRANSPORT_WIFI, null, range.getFirst(), range.getSecond());
+            if (networkStats != null) {
+                while (networkStats.hasNextBucket()) {
+                    NetworkStats.Bucket bucket = new NetworkStats.Bucket();
+                    networkStats.getNextBucket(bucket);
+                    String key = "u" + bucket.getUid();
+                    if (result.containsKey(key)) {
+                        //noinspection ConstantConditions
+                        txData.put(key, txData.get(key) + bucket.getTxBytes());
+                        //noinspection ConstantConditions
+                        rxData.put(key, rxData.get(key) + bucket.getRxBytes());
+                    } else {
+                        txData.put(key, bucket.getTxBytes());
+                        rxData.put(key, bucket.getRxBytes());
+                    }
+                }
+            }
+            for (String uid: txData.keySet()) {
+                result.put(uid, new Tuple<>(txData.get(uid), rxData.get(uid)));
+            }
+        } catch (RemoteException ignore) {}
+        return result;
+    }
+
+    @TargetApi(23)
+    @NonNull
+    protected Tuple<Long, Long> getWifiMobileUsageForPackage(String mPackageName, @Utils.IntervalType int usage_interval) {
         long totalWifi = 0;
         long totalMobile = 0;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -215,7 +258,7 @@ public class AppUsageStatsManager {
             Tuple<Long, Long> range = Utils.getTimeInterval(usage_interval);
             try {
                 if (networkStatsManager != null) {
-                    NetworkStats networkStats = networkStatsManager.querySummary(ConnectivityManager.TYPE_WIFI, "", range.getFirst(), range.getSecond());
+                    NetworkStats networkStats = networkStatsManager.querySummary(NetworkCapabilities.TRANSPORT_WIFI, null, range.getFirst(), range.getSecond());
                     if (networkStats != null) {
                         while (networkStats.hasNextBucket()) {
                             NetworkStats.Bucket bucket = new NetworkStats.Bucket();
@@ -225,16 +268,13 @@ public class AppUsageStatsManager {
                             }
                         }
                     }
-                    TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                        NetworkStats networkStatsM = networkStatsManager.querySummary(ConnectivityManager.TYPE_MOBILE, null, range.getFirst(), range.getSecond());
-                        if (networkStatsM != null) {
-                            while (networkStatsM.hasNextBucket()) {
-                                NetworkStats.Bucket bucket = new NetworkStats.Bucket();
-                                networkStatsM.getNextBucket(bucket);
-                                if (bucket.getUid() == targetUid) {
-                                    totalMobile += bucket.getTxBytes() + bucket.getRxBytes();
-                                }
+                    NetworkStats networkStatsM = networkStatsManager.querySummary(NetworkCapabilities.TRANSPORT_CELLULAR, null, range.getFirst(), range.getSecond());
+                    if (networkStatsM != null) {
+                        while (networkStatsM.hasNextBucket()) {
+                            NetworkStats.Bucket bucket = new NetworkStats.Bucket();
+                            networkStatsM.getNextBucket(bucket);
+                            if (bucket.getUid() == targetUid) {
+                                totalMobile += bucket.getTxBytes() + bucket.getRxBytes();
                             }
                         }
                     }
@@ -243,20 +283,18 @@ public class AppUsageStatsManager {
                 e.printStackTrace();
             }
         }
-        return new Long[]{totalWifi, totalMobile};
+        return new Tuple<>(totalWifi, totalMobile);
     }
 
     public static class PackageUS {
         public @NonNull String packageName;
         public String appLabel;
-        public Long screenTime;
-        public Long lastUsageTime;
-        public Integer timesOpened;
-        public Integer notificationReceived;
-        public Long mobileData;
-        public Long wifiData;
-        public Long txData;
-        public Long rxData;
+        public Long screenTime = 0L;
+        public Long lastUsageTime = 0L;
+        public Integer timesOpened = 0;
+        public Integer notificationReceived = 0;
+        public Tuple<Long, Long> mobileData;  // Tx, Rx
+        public Tuple<Long, Long> wifiData;  // Tx, Rx
         public @Nullable List<USEntry> entries;
 
         public PackageUS(@NonNull String packageName) {
@@ -273,10 +311,8 @@ public class AppUsageStatsManager {
                     ", lastUsageTime=" + lastUsageTime +
                     ", timesOpened=" + timesOpened +
                     ", notificationReceived=" + notificationReceived +
-                    ", mobileData=" + mobileData +
-                    ", wifiData=" + wifiData +
-                    ", txData=" + txData +
-                    ", rxData=" + rxData +
+                    ", txData=" + mobileData +
+                    ", rxData=" + wifiData +
                     ", entries=" + entries +
                     '}';
         }
