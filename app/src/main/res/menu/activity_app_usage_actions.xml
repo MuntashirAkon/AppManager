@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:icon="@drawable/ic_sort_black_24dp"
+        android:title="@string/sort"
+        app:showAsAction="ifRoom">
+
+        <menu>
+
+            <group
+                android:checkableBehavior="single"
+                android:menuCategory="container">
+
+                <item
+                    android:id="@+id/action_sort_by_app_label"
+                    android:title="@string/sort_by_app_label" />
+
+                <item
+                    android:id="@+id/action_sort_by_package_name"
+                    android:title="@string/sort_by_package_name" />
+
+                <item
+                    android:id="@+id/action_sort_by_last_used"
+                    android:title="@string/sort_by_last_used" />
+
+                <item
+                    android:id="@+id/action_sort_by_screen_time"
+                    android:title="@string/sort_by_screen_time" />
+
+                <item
+                    android:id="@+id/action_sort_by_times_opened"
+                    android:title="@string/sort_by_times_opened" />
+
+                <item
+                    android:id="@+id/action_sort_by_mobile_data"
+                    android:title="@string/sort_by_mobile_data" />
+
+            </group>
+
+        </menu>
+
+    </item>
+
+</menu>

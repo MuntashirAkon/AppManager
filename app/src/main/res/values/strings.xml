@@ -302,4 +302,8 @@
     <string name="one_time_opened">%d time</string>
     <string name="one_notification_received">%d notification</string>
     <string name="no_of_notification_received">%d notifications</string>
+    <string name="sort_by_last_used">Last used</string>
+    <string name="sort_by_screen_time">Screen time</string>
+    <string name="sort_by_times_opened">Times opened</string>
+    <string name="sort_by_mobile_data">Mobile data</string>
 </resources>

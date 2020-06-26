@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,16 +27,20 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
+import java.text.Collator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.Utils.IntervalType;
@@ -47,25 +52,42 @@ import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_WEEKLY;
 import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_YESTERDAY;
 
 public class AppUsageActivity extends AppCompatActivity {
-    private AppUsageAdapter mAppUsageAdapter;
-    private long totalTimeInMs;
-    String[] app_usage_strings;
-    private @IntervalType int current_interval = USAGE_TODAY;
+    @IntDef(value = {
+            SORT_BY_APP_LABEL,
+            SORT_BY_LAST_USED,
+            SORT_BY_MOBILE_DATA,
+            SORT_BY_PACKAGE_NAME,
+            SORT_BY_SCREEN_TIME,
+            SORT_BY_TIMES_OPENED
+    })
+    private @interface SortOrder {}
+    private static final int SORT_BY_APP_LABEL    = 0;
+    private static final int SORT_BY_LAST_USED    = 1;
+    private static final int SORT_BY_MOBILE_DATA  = 2;
+    private static final int SORT_BY_PACKAGE_NAME = 3;
+    private static final int SORT_BY_SCREEN_TIME  = 4;
+    private static final int SORT_BY_TIMES_OPENED = 5;
 
-    private static final int REQUEST_SETTINGS = 0;
+    private static final int[] sSortMenuItemIdsMap = {
+            R.id.action_sort_by_app_label, R.id.action_sort_by_last_used,
+            R.id.action_sort_by_mobile_data, R.id.action_sort_by_package_name,
+            R.id.action_sort_by_screen_time, R.id.action_sort_by_times_opened};
+
+    private AppUsageAdapter mAppUsageAdapter;
+    List<AppUsageStatsManager.PackageUS> mPackageUSList;
+    private long totalScreenTime;
+    private @IntervalType int current_interval = USAGE_TODAY;
+    private @SortOrder int mSortBy;
 
     @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_usage);
-
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(getString(R.string.app_usage));
         }
-
-        app_usage_strings = getResources().getStringArray(R.array.usage_interval_dropdown_list);
 
         // Get usage stats
         mAppUsageAdapter = new AppUsageAdapter(this);
@@ -92,6 +114,8 @@ public class AppUsageActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+
+        mSortBy = SORT_BY_SCREEN_TIME;
     }
 
     @Override
@@ -102,23 +126,95 @@ public class AppUsageActivity extends AppCompatActivity {
         else getAppUsage();
     }
 
+    @SuppressLint("RestrictedApi")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_app_usage_actions, menu);
+        if (menu instanceof MenuBuilder) {
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(sSortMenuItemIdsMap[mSortBy]).setChecked(true);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.action_sort_by_app_label:
+                setSortBy(SORT_BY_APP_LABEL);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_by_last_used:
+                setSortBy(SORT_BY_LAST_USED);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_by_mobile_data:
+                setSortBy(SORT_BY_MOBILE_DATA);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_by_package_name:
+                setSortBy(SORT_BY_PACKAGE_NAME);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_by_screen_time:
+                setSortBy(SORT_BY_SCREEN_TIME);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_by_times_opened:
+                setSortBy(SORT_BY_TIMES_OPENED);
+                item.setChecked(true);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void setSortBy(@SortOrder int sort) {
+        mSortBy = sort;
+        sortPackageUSList();
+        if (mAppUsageAdapter != null)
+            mAppUsageAdapter.notifyDataSetChanged();
+    }
+
+    private void sortPackageUSList() {
+        if (mPackageUSList == null) return;
+        Collections.sort(mPackageUSList, ((o1, o2) -> {
+            switch (mSortBy) {
+                case SORT_BY_APP_LABEL:
+                    return Collator.getInstance().compare(o1.appLabel, o2.appLabel);
+                case SORT_BY_LAST_USED:
+                    return -o1.lastUsageTime.compareTo(o2.lastUsageTime);
+                case SORT_BY_MOBILE_DATA:
+                    Long o1Data = o1.mobileData.getFirst() + o1.mobileData.getSecond();
+                    Long o2Data = o2.mobileData.getFirst() + o2.mobileData.getSecond();
+                    return -o1Data.compareTo(o2Data);
+                case SORT_BY_PACKAGE_NAME:
+                    return o1.packageName.compareTo(o2.packageName);
+                case SORT_BY_SCREEN_TIME:
+                    return -o1.screenTime.compareTo(o2.screenTime);
+                case SORT_BY_TIMES_OPENED:
+                    return -o1.timesOpened.compareTo(o2.timesOpened);
+            }
+            return 0;
+        }));
+    }
+
     private void getAppUsage() {
         int _try = 5; // try to get usage stat 5 times
-        List<AppUsageStatsManager.PackageUS> usageStatsList;
         do {
-            usageStatsList = AppUsageStatsManager.getInstance(this).getUsageStats(0, current_interval);
-        } while (0 != --_try && usageStatsList.size() == 0);
-        mAppUsageAdapter.setDefaultList(usageStatsList);
-        totalTimeInMs = 0;
-        for(AppUsageStatsManager.PackageUS appItem: usageStatsList) totalTimeInMs += appItem.screenTime;
+            mPackageUSList = AppUsageStatsManager.getInstance(this).getUsageStats(0, current_interval);
+        } while (0 != --_try && mPackageUSList.size() == 0);
+        mAppUsageAdapter.setDefaultList(mPackageUSList);
+        totalScreenTime = 0;
+        for(AppUsageStatsManager.PackageUS appItem: mPackageUSList) totalScreenTime += appItem.screenTime;
+        sortPackageUSList();
         setUsageSummary();
     }
 
@@ -126,8 +222,8 @@ public class AppUsageActivity extends AppCompatActivity {
         new AlertDialog.Builder(this, R.style.CustomDialog)
                 .setTitle(R.string.grant_usage_access)
                 .setMessage(R.string.grant_usage_acess_message)
-                .setPositiveButton(R.string.go, (dialog, which) -> startActivityForResult(new Intent(
-                        Settings.ACTION_USAGE_ACCESS_SETTINGS), REQUEST_SETTINGS))
+                .setPositiveButton(R.string.go, (dialog, which) -> startActivity(new Intent(
+                        Settings.ACTION_USAGE_ACCESS_SETTINGS)))
                 .setNegativeButton(getString(R.string.go_back), (dialog, which) -> finish())
                 .setCancelable(false)
                 .show();
@@ -136,7 +232,7 @@ public class AppUsageActivity extends AppCompatActivity {
     private void setUsageSummary() {
         TextView timeUsed = findViewById(R.id.time_used);
         TextView timeRange = findViewById(R.id.time_range);
-        timeUsed.setText(formattedTime(this, totalTimeInMs));
+        timeUsed.setText(formattedTime(this, totalScreenTime));
         switch (current_interval) {
             case USAGE_TODAY:
                 timeRange.setText(R.string.usage_today);
