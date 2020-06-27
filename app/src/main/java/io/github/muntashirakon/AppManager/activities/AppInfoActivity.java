@@ -17,7 +17,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.FileUtils;
 import android.os.Process;
-import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.format.Formatter;
 import android.view.Menu;
@@ -76,8 +75,10 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
     private static final String PACKAGE_NAME_FDROID = "org.fdroid.fdroid";
     private static final String PACKAGE_NAME_AURORA_DROID = "com.aurora.adroid";
+    private static final String PACKAGE_NAME_AURORA_STORE = "com.aurora.store";
     private static final String ACTIVITY_NAME_FDROID = "org.fdroid.fdroid.views.AppDetailsActivity";
     private static final String ACTIVITY_NAME_AURORA_DROID = "com.aurora.adroid.ui.activity.DetailsActivity";
+    private static final String ACTIVITY_NAME_AURORA_STORE = "com.aurora.store.ui.details.DetailsActivity";
 
     private PackageManager mPackageManager;
     private String mPackageName;
@@ -400,10 +401,24 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                         });
             } catch (PackageManager.NameNotFoundException ignored) {}
         }
+        // Set Aurora Store
+        try {
+            if(!mPackageManager.getApplicationInfo(PACKAGE_NAME_AURORA_STORE, 0).enabled)
+                throw new PackageManager.NameNotFoundException();
+            addToHorizontalLayout(R.string.store, R.drawable.ic_frost_aurorastore_black_24dp)
+                    .setOnClickListener(v -> {
+                        Intent intent = new Intent();
+                        intent.setClassName(PACKAGE_NAME_AURORA_STORE, ACTIVITY_NAME_AURORA_STORE);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("INTENT_PACKAGE_NAME", mPackageName);
+                        try {
+                            startActivity(intent);
+                        } catch (Exception ignored) {}
+                    });
+        } catch (PackageManager.NameNotFoundException ignored) {}
     }
 
     private void setVerticalView()  {
-        final Boolean isRootEnabled = (Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
         // Paths and directories
         mList.addItemWithTitle(getString(R.string.paths_and_directories), true);
         mList.item_title.setTextColor(mAccentColor);

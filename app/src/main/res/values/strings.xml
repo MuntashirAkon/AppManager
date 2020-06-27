@@ -313,4 +313,6 @@
     <string name="select_files">Select file(s)</string>
     <string name="the_import_was_successful">The import was successful</string>
     <string name="failed_to_import_files">Failed to import %d files.</string>
+    <string name="apk_updater">APK Updater</string>
+    <string name="store">Store</string>
 </resources>

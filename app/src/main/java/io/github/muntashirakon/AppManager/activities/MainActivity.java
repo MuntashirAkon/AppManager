@@ -74,6 +74,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         SwipeRefreshLayout.OnRefreshListener {
     public static final String EXTRA_PACKAGE_LIST = "EXTRA_PACKAGE_LIST";
     public static final String EXTRA_LIST_NAME = "EXTRA_LIST_NAME";
+
+    private static final String PACKAGE_NAME_APK_UPDATER = "com.apkupdater";
+    private static final String ACTIVITY_NAME_APK_UPDATER = "com.apkupdater.activity.MainActivity";
     /**
      * A list of packages separated by \r\n. Debug apps should have a * after their package names.
      */
@@ -202,6 +205,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if ((Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
             sortByBlockedComponentMenu.setVisible(true);
         } else sortByBlockedComponentMenu.setVisible(false);
+        MenuItem apkUpdaterMenu = menu.findItem(R.id.action_apk_updater);
+        try {
+            if(!getPackageManager().getApplicationInfo(PACKAGE_NAME_APK_UPDATER, 0).enabled)
+                throw new PackageManager.NameNotFoundException();
+            apkUpdaterMenu.setVisible(true);
+        } catch (PackageManager.NameNotFoundException e) {
+            apkUpdaterMenu.setVisible(false);
+        }
         if (menu instanceof MenuBuilder) {
             ((MenuBuilder) menu).setOptionalIconsVisible(true);
         }
@@ -278,6 +289,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case R.id.action_app_usage:
                 Intent usageIntent = new Intent(this, AppUsageActivity.class);
                 startActivity(usageIntent);
+            case R.id.action_apk_updater:
+                try {
+                    if(!getPackageManager().getApplicationInfo(PACKAGE_NAME_APK_UPDATER, 0).enabled)
+                        throw new PackageManager.NameNotFoundException();
+                    Intent intent = new Intent();
+                    intent.setClassName(PACKAGE_NAME_APK_UPDATER, ACTIVITY_NAME_APK_UPDATER);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    try {
+                        startActivity(intent);
+                    } catch (Exception ignored) {}
+                } catch (PackageManager.NameNotFoundException ignored) {}
             default:
                 return super.onOptionsItemSelected(item);
         }
