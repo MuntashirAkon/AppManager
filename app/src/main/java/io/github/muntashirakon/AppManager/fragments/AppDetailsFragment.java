@@ -585,9 +585,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 mFilter = new Filter() {
                     @Override
                     protected FilterResults performFiltering(CharSequence charSequence) {
+                        FilterResults filterResults = new FilterResults();
+                        if (charSequence == null) {
+                            filterResults.count = mDefaultList == null ? 0 : mDefaultList.size();
+                            filterResults.values = mDefaultList;
+                            return filterResults;
+                        }
                         String constraint = charSequence.toString().toLowerCase(Locale.ROOT);
                         mConstraint = constraint;
-                        FilterResults filterResults = new FilterResults();
                         if (constraint.length() == 0) {
                             filterResults.count = 0;
                             filterResults.values = null;
