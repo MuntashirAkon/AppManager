@@ -26,7 +26,7 @@ import androidx.fragment.app.DialogFragment;
 import io.github.muntashirakon.AppManager.R;
 
 public class IconPickerDialogFragment extends DialogFragment {
-    static final String TAG = "IconPickerDialogFragment";
+    public static final String TAG = "IconPickerDialogFragment";
 
     private IconPickerListener listener = null;
     private IconListingAdapter adapter;
@@ -41,8 +41,6 @@ public class IconPickerDialogFragment extends DialogFragment {
                 getActivity().runOnUiThread(() -> IconPickerDialogFragment.this.adapter.notifyDataSetChanged());
             }
         }).start();
-//        IconListingAsyncTask provider = new IconListingAsyncTask(this.getActivity());
-//        provider.execute();
     }
 
     void attachIconPickerListener(IconPickerListener listener) {
@@ -53,13 +51,9 @@ public class IconPickerDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        assert getActivity() != null;
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomDialog);
-
-        if (getActivity() == null) return builder.create();
+        if (getActivity() == null) return super.onCreateDialog(savedInstanceState);
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        if (inflater == null) return builder.create();
+        if (inflater == null) return super.onCreateDialog(savedInstanceState);
         GridView grid = (GridView) inflater.inflate(R.layout.dialog_icon_picker, null);
         grid.setAdapter(adapter);
         grid.setOnItemClickListener((view, item, index, id) -> {
@@ -68,7 +62,7 @@ public class IconPickerDialogFragment extends DialogFragment {
                 if (getDialog() != null) getDialog().dismiss();
             }
         });
-
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomDialog);
         builder.setTitle(R.string.icon_picker)
                 .setView(grid)
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
