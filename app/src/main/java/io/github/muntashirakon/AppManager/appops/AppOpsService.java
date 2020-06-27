@@ -92,7 +92,7 @@ class AppOpsService implements IAppOpsService {
                     String name = String.format("%s: %s", AppOpsManager.opToName(op), output.get(1).substring(DEFAULT_MODE_SKIP));
                     lines.add(name);
                 }
-                if (!isSuccessful) throw new Exception("Failed to get operations for package " + packageName);
+//                if (!isSuccessful) throw new Exception("Failed to get operations for package " + packageName);
             }
         }
         List<AppOpsManager.OpEntry> opEntries = new ArrayList<>();
