@@ -32,6 +32,7 @@ Join our Telegram channel: https://t.me/AppManagerAndroid
 ### Mirrors
 
 Gitlab: https://gitlab.com/muntashir/AppManager
+
 Riseup: https://0xacab.org/muntashir/AppManager
 
 ### Screenshots

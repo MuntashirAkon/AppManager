@@ -1,0 +1,6 @@
+- App Usage UI is improved by adding data usage, times opened and sorting capabilities
+- Added the ability to import from Blocker and Watt (in Settings)
+- Added sort by disabled app and blocked components in the main window
+- Display external data directories in App Info
+- Fixed data usage since last boot in App Info
+- Sorting preference is now saved permanently (main window only)
