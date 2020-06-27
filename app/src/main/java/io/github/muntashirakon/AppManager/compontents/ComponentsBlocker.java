@@ -77,7 +77,7 @@ public class ComponentsBlocker {
     }
 
     @NonNull
-    private static String provideLocalIfwRulesPath(@NonNull Context context) throws FileNotFoundException {
+    public static String provideLocalIfwRulesPath(@NonNull Context context) throws FileNotFoundException {
         File file = context.getExternalFilesDir("ifw");
         if (file == null || (!file.exists() && !file.mkdirs())) {
             file = new File(context.getFilesDir(), "ifw");

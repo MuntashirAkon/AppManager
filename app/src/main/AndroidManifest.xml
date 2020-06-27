@@ -14,7 +14,7 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.SettingsActivity"></activity>
+        <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.SharedPrefsActivity" />
         <activity
             android:name=".activities.AppUsageActivity"

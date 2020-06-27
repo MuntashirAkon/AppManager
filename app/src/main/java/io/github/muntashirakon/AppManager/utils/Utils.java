@@ -3,6 +3,7 @@ package io.github.muntashirakon.AppManager.utils;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AppOpsManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
@@ -13,7 +14,10 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.OpenableColumns;
 import android.text.Spannable;
 import android.text.style.BackgroundColorSpan;
 import android.util.TypedValue;
@@ -30,6 +34,7 @@ import org.xml.sax.InputSource;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -105,6 +110,27 @@ public class Utils {
         return 0;
     }
 
+    @Nullable
+    public static String getName(@NonNull ContentResolver resolver, Uri uri) {
+        Cursor returnCursor =
+                resolver.query(uri, null, null, null, null);
+        if (returnCursor == null) return null;
+        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+        returnCursor.moveToFirst();
+        String name = returnCursor.getString(nameIndex);
+        returnCursor.close();
+        return name;
+    }
+
+    @NonNull
+    public static String trimExtension(@NonNull String filename) {
+        try {
+            return filename.substring(0, filename.lastIndexOf('.'));
+        } catch (Exception e) {
+            return filename;
+        }
+    }
+
     @NonNull
     public static String getFileContent(@NonNull File file) {
         if (file.isDirectory())
@@ -119,6 +145,17 @@ public class Utils {
         } catch (FileNotFoundException e) {
             return "-1";
         }
+    }
+
+    @NonNull
+    public static String getFileContent(@NonNull ContentResolver contentResolver, @NonNull Uri file)
+            throws FileNotFoundException {
+        InputStream inputStream = contentResolver.openInputStream(file);
+        Scanner scanner = new Scanner(inputStream);
+        StringBuilder result = new StringBuilder();
+        while (scanner.hasNext())
+            result.append(scanner.next());
+        return result.toString();
     }
 
     @NonNull

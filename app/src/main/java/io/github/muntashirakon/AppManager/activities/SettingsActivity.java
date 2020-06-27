@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.fragments.ImportExportDialogFragment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -52,6 +53,15 @@ public class SettingsActivity extends AppCompatActivity {
         });
         usageSwitcher.setOnCheckedChangeListener((buttonView, isChecked) ->
                 appPref.setPref(AppPref.PREF_USAGE_ACCESS_ENABLED, isChecked));
+
+        // Import/Export
+        if ((Boolean) appPref.getPref(AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
+            findViewById(R.id.import_view).setOnClickListener(v ->
+                    (new ImportExportDialogFragment()).show(getSupportFragmentManager(),
+                            ImportExportDialogFragment.TAG));
+        } else {
+            findViewById(R.id.import_view).setVisibility(View.GONE);
+        }
     }
 
     @Override
