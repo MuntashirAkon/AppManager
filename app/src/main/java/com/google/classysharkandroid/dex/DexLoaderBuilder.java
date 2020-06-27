@@ -18,13 +18,10 @@ package com.google.classysharkandroid.dex;
 
 import android.content.Context;
 
-import com.google.classysharkandroid.utils.IOUtils;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -37,25 +34,13 @@ public class DexLoaderBuilder {
 
     private DexLoaderBuilder() {}
 
-    public static DexClassLoader fromFile(Context context, final File dexFile) throws Exception {
-
-        FileInputStream fileInputStream = new FileInputStream(dexFile);
-
-        byte[] bFile = IOUtils.toByteArray(fileInputStream);
-
-        return fromBytes(context, bFile);
-    }
-
+    @NonNull
     public static DexClassLoader fromBytes(@NonNull Context context, final byte[] dexBytes) throws Exception {
         String dexFileName = "internal.dex";
         final File dexInternalStoragePath = new File(context.getDir("dex", Context.MODE_PRIVATE), dexFileName);
-
-        if (!dexInternalStoragePath.exists()) {
-            prepareDex(dexBytes, dexInternalStoragePath);
-        }
+        if (!dexInternalStoragePath.exists()) prepareDex(dexBytes, dexInternalStoragePath);
 
         final File optimizedDexOutputPath = context.getCodeCacheDir();
-
         DexClassLoader loader = new DexClassLoader(dexInternalStoragePath.getAbsolutePath(),
                 optimizedDexOutputPath.getAbsolutePath(), null,
                 context.getClassLoader().getParent());

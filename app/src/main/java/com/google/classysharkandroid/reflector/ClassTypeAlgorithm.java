@@ -47,37 +47,16 @@ public class ClassTypeAlgorithm {
                 case 'L':
                     yy = TypeName(nm.substring(nm.indexOf("L") + 1, nm.indexOf(";")), ht);
                     break;
-                case 'I':
-                    yy = "int";
-                    break;
-                case 'V':
-                    yy = "void";
-                    break;
-                case 'C':
-                    yy = "char";
-                    break;
-                case 'D':
-                    yy = "double";
-                    break;
-                case 'F':
-                    yy = "float";
-                    break;
-                case 'J':
-                    yy = "long";
-                    break;
-                case 'S':
-                    yy = "short";
-                    break;
-                case 'Z':
-                    yy = "boolean";
-                    break;
-                case 'B':
-                    yy = "byte";
-                    break;
-                default:
-                    yy = "BOGUS:" + nm;
-                    break;
-
+                case 'I': yy = "int"; break;
+                case 'V': yy = "void"; break;
+                case 'C': yy = "char"; break;
+                case 'D': yy = "double"; break;
+                case 'F': yy = "float"; break;
+                case 'J': yy = "long"; break;
+                case 'S': yy = "short"; break;
+                case 'Z': yy = "boolean"; break;
+                case 'B': yy = "byte"; break;
+                default: yy = "BOGUS:" + nm;
             }
         }
         return yy + arr;

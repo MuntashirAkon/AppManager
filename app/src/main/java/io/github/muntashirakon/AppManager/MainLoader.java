@@ -50,9 +50,9 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
                     item.label = applicationInfo.loadLabel(mPackageManager).toString();
                     item.date = mPackageManager.getPackageInfo(applicationInfo.packageName, 0).lastUpdateTime; // .firstInstallTime;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        item.sha = Utils.apkPro(mPackageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNING_CERTIFICATES));
+                        item.sha = Utils.getIssuerAndAlg(mPackageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNING_CERTIFICATES));
                     } else {
-                        item.sha = Utils.apkPro(mPackageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNATURES));
+                        item.sha = Utils.getIssuerAndAlg(mPackageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNATURES));
                     }
                     if (Build.VERSION.SDK_INT >= 26) {
                         item.size = (long) -1 * applicationInfo.targetSdkVersion;
@@ -76,9 +76,9 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
                 }
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        item.sha = Utils.apkPro(mPackageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNING_CERTIFICATES));
+                        item.sha = Utils.getIssuerAndAlg(mPackageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNING_CERTIFICATES));
                     } else {
-                        item.sha = Utils.apkPro(mPackageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNATURES));
+                        item.sha = Utils.getIssuerAndAlg(mPackageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNATURES));
                     }
                     item.date = mPackageManager.getPackageInfo(applicationInfo.packageName, 0).lastUpdateTime; // .firstInstallTime;
                 } catch (PackageManager.NameNotFoundException e) {

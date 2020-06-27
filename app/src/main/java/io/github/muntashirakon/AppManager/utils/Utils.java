@@ -63,7 +63,8 @@ public class Utils {
     static final Spannable.Factory sSpannableFactory = Spannable.Factory.getInstance();
 
     @NonNull
-    public static Spannable getHighlightedText(@NonNull String text, @NonNull String constraint, int color) {
+    public static Spannable getHighlightedText(@NonNull String text, @NonNull String constraint,
+                                               int color) {
         Spannable spannable = sSpannableFactory.newSpannable(text);
         int start = text.toLowerCase(Locale.ROOT).indexOf(constraint);
         int end = start + constraint.length();
@@ -96,17 +97,14 @@ public class Utils {
         return array == null ? 0 : array.length;
     }
 
-    public static int dpToPx(@NonNull Context c, int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, c.getResources().getDisplayMetrics());
+    public static int dpToPx(@NonNull Context context, int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+                context.getResources().getDisplayMetrics());
     }
 
     public static int compareBooleans(boolean b1, boolean b2) {
-        if (b1 && !b2) {
-            return +1;
-        }
-        if (!b1 && b2) {
-            return -1;
-        }
+        if (b1 && !b2) return +1;
+        if (!b1 && b2) return -1;
         return 0;
     }
 
@@ -133,14 +131,11 @@ public class Utils {
 
     @NonNull
     public static String getFileContent(@NonNull File file) {
-        if (file.isDirectory())
-            return "-1";
-
+        if (file.isDirectory()) return "-1";
         try {
             Scanner scanner = new Scanner(file);
             StringBuilder result = new StringBuilder();
-            while (scanner.hasNext())
-                result.append(scanner.next());
+            while (scanner.hasNext()) result.append(scanner.next());
             return result.toString();
         } catch (FileNotFoundException e) {
             return "-1";
@@ -158,62 +153,43 @@ public class Utils {
         return result.toString();
     }
 
+    // FIXME: Add translation support
     @NonNull
     public static String getLaunchMode(int mode) {
         switch (mode) {
-            case ActivityInfo.LAUNCH_MULTIPLE:
-                return "Multiple";
-            case ActivityInfo.LAUNCH_SINGLE_INSTANCE:
-                return "Single instance";
-            case ActivityInfo.LAUNCH_SINGLE_TASK:
-                return "Single task";
-            case ActivityInfo.LAUNCH_SINGLE_TOP:
-                return "Single top";
-            default:
-                return "null";
+            case ActivityInfo.LAUNCH_MULTIPLE: return "Multiple";
+            case ActivityInfo.LAUNCH_SINGLE_INSTANCE: return "Single instance";
+            case ActivityInfo.LAUNCH_SINGLE_TASK: return "Single task";
+            case ActivityInfo.LAUNCH_SINGLE_TOP: return "Single top";
+            default: return "null";
         }
     }
 
+    // FIXME: Add translation support
     @NonNull
     public static String getOrientationString(int orientation) {
         switch (orientation) {
-            case ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED:
-                return "Unspecified";
-            case ActivityInfo.SCREEN_ORIENTATION_BEHIND:
-                return "Behind";
-            case ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR:
-                return "Full sensor";
-            case ActivityInfo.SCREEN_ORIENTATION_FULL_USER:
-                return "Full user";
-            case ActivityInfo.SCREEN_ORIENTATION_LOCKED:
-                return "Locked";
-            case ActivityInfo.SCREEN_ORIENTATION_NOSENSOR:
-                return "No sensor";
-            case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
-                return "Landscape";
-            case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:
-                return "Portrait";
-            case ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT:
-                return "Reverse portrait";
-            case ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE:
-                return "Reverse landscape";
-            case ActivityInfo.SCREEN_ORIENTATION_USER:
-                return "User";
-            case ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE:
-                return "Sensor landscape";
-            case ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT:
-                return "Sensor portrait";
-            case ActivityInfo.SCREEN_ORIENTATION_SENSOR:
-                return "Sensor";
-            case ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE:
-                return "User landscape";
-            case ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT:
-                return "User portrait";
-            default:
-                return "null";
+            case ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED: return "Unspecified";
+            case ActivityInfo.SCREEN_ORIENTATION_BEHIND: return "Behind";
+            case ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR: return "Full sensor";
+            case ActivityInfo.SCREEN_ORIENTATION_FULL_USER: return "Full user";
+            case ActivityInfo.SCREEN_ORIENTATION_LOCKED: return "Locked";
+            case ActivityInfo.SCREEN_ORIENTATION_NOSENSOR: return "No sensor";
+            case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE: return "Landscape";
+            case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT: return "Portrait";
+            case ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT: return "Reverse portrait";
+            case ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE: return "Reverse landscape";
+            case ActivityInfo.SCREEN_ORIENTATION_USER: return "User";
+            case ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE: return "Sensor landscape";
+            case ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT: return "Sensor portrait";
+            case ActivityInfo.SCREEN_ORIENTATION_SENSOR: return "Sensor";
+            case ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE: return "User landscape";
+            case ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT: return "User portrait";
+            default: return "null";
         }
     }
 
+    // FIXME: Translation support
     @NonNull
     public static String getSoftInputString(int flag) {
         StringBuilder builder = new StringBuilder();
@@ -245,12 +221,12 @@ public class Utils {
             builder.append("Mask state, ");
         if ((flag & WindowManager.LayoutParams.SOFT_INPUT_MODE_CHANGED) != 0)
             builder.append("Mode changed, ");
-
         checkStringBuilderEnd(builder);
         String result = builder.toString();
         return result.equals("") ? "null" : result;
     }
 
+    // FIXME Add translation support
     @NonNull
     public static String getServiceFlagsString(int flag) {
         StringBuilder builder = new StringBuilder();
@@ -271,12 +247,12 @@ public class Utils {
                     builder.append("Use app zygote, ");
             }
         }
-
         checkStringBuilderEnd(builder);
         String result = builder.toString();
         return result.equals("") ? "\u2690" : "\u2691 "+result;
     }
 
+    // FIXME Add translation support
     @NonNull
     public static String getActivitiesFlagsString(int flag) {
         StringBuilder builder = new StringBuilder();
@@ -312,12 +288,12 @@ public class Utils {
             builder.append("Single, ");
         if ((flag & ActivityInfo.FLAG_STATE_NOT_NEEDED) != 0)
             builder.append("NotNeeded, ");
-
         checkStringBuilderEnd(builder);
         String result = builder.toString();
         return result.equals("") ? "\u2690" : "\u2691 "+result;
     }
 
+    // FIXME Add translation support
     @NonNull
     public static String getProtectionLevelString(PermissionInfo permissionInfo) {
         int basePermissionType;
@@ -386,11 +362,13 @@ public class Utils {
         return protLevel;
     }
 
+    // FIXME Add translation support
     @NonNull
     public static String getFeatureFlagsString(int flags) {
         return (flags == FeatureInfo.FLAG_REQUIRED) ? "Required": "null";
     }
 
+    // FIXME Add translation support
     @NonNull
     public static String getInputFeaturesString(int flag) {
         String string = "";
@@ -403,17 +381,14 @@ public class Utils {
 
     public static void checkStringBuilderEnd(@NonNull StringBuilder builder) {
         int length = builder.length();
-        if (length > 2)
-            builder.delete(builder.length() - 2, builder.length());
+        if (length > 2) builder.delete(length - 2, length);
     }
 
     @NonNull
     public static String getOpenGL(int reqGL){
             if (reqGL != 0) {
-                return (short) (reqGL >> 16) + "." + (short) reqGL; //Integer.toString((reqGL & 0xffff0000) >> 16);
-            } else {
-                return "1"; // Lack of property means OpenGL ES version 1
-            }
+                return (short) (reqGL >> 16) + "." + (short) reqGL; // Integer.toString((reqGL & 0xffff0000) >> 16);
+            } else return "1"; // Lack of property means OpenGL ES version 1
     }
 
     @NonNull
@@ -430,31 +405,32 @@ public class Utils {
         return buf.toString();
     }
 
+    // FIXME Add translation support
     @NonNull
     public static String signCert(@NonNull Signature sign){
-        String s= "";
+        String s = "";
         try {
             X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X.509")
                     .generateCertificate(new ByteArrayInputStream(sign.toByteArray()));
 
-            s="\n"+cert.getIssuerX500Principal().getName()
-                    +"\nCertificate fingerprints:"
-                    +"\n"+"md5: "+Utils.convertToHex(MessageDigest.getInstance("md5").digest(sign.toByteArray()))
-                    +"\n"+"sha1: "+Utils.convertToHex(MessageDigest.getInstance("sha1").digest(sign.toByteArray()))
-                    +"\n"+"sha256: "+Utils.convertToHex(MessageDigest.getInstance("sha256").digest(sign.toByteArray()))
-                    +"\n"+cert.toString()
-                    +"\n"+(cert.getPublicKey().getAlgorithm())
-                    +"---"+cert.getSigAlgName()+"---"+cert.getSigAlgOID()
-                    +"\n"+(cert.getPublicKey())
-                    +"\n";
-        }catch (NoSuchAlgorithmException |CertificateException e) {
-            return e.toString()+s;
+            s = "\n" + cert.getIssuerX500Principal().getName()
+                    + "\nCertificate fingerprints:"
+                    + "\nmd5: " + Utils.convertToHex(MessageDigest.getInstance("md5").digest(sign.toByteArray()))
+                    + "\nsha1: " + Utils.convertToHex(MessageDigest.getInstance("sha1").digest(sign.toByteArray()))
+                    + "\nsha256: " + Utils.convertToHex(MessageDigest.getInstance("sha256").digest(sign.toByteArray()))
+                    + "\n" + cert.toString()
+                    + "\n" + cert.getPublicKey().getAlgorithm()
+                    + "---" + cert.getSigAlgName() + "---" + cert.getSigAlgOID()
+                    + "\n" + cert.getPublicKey()
+                    + "\n";
+        }catch (NoSuchAlgorithmException | CertificateException e) {
+            return e.toString() + s;
         }
         return s;
     }
 
     @NonNull
-    public static Tuple<String, String> apkPro(@NonNull PackageInfo p){
+    public static Tuple<String, String> getIssuerAndAlg(@NonNull PackageInfo p){
         Signature[] signatures;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             SigningInfo signingInfo = p.signingInfo;

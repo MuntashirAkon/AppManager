@@ -42,6 +42,9 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 public class IOUtils {
 
     public static void bytesToFile(byte[] bytes, File result) throws IOException {
@@ -52,6 +55,7 @@ public class IOUtils {
         bos.close();
     }
 
+    @NonNull
     public static byte[] toByteArray(InputStream input) throws IOException {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         copy(input, output);
@@ -68,7 +72,7 @@ public class IOUtils {
 
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
-    static long copyLarge(InputStream input, OutputStream output) throws IOException {
+    static long copyLarge(@NonNull InputStream input, OutputStream output) throws IOException {
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         long count = 0;
         int n;
@@ -81,6 +85,7 @@ public class IOUtils {
     /**
      * Format xml file to correct indentation ...
      */
+    @Nullable
     public static String getProperXml(String dirtyXml) {
         try {
             Document document = DocumentBuilderFactory.newInstance()
