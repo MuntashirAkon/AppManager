@@ -317,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onLoadFinished(@NonNull Loader<List<ApplicationItem>> loader, List<ApplicationItem> applicationItems) {
         mItemList = applicationItems;
-        sortApplicationList();
+        sortApplicationList(mSortBy);
         mAdapter.setDefaultList(mItemList);
         // Set title and subtitle
         ActionBar actionBar = getSupportActionBar();
@@ -394,7 +394,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private void setSortBy(@SortOrder int sort) {
         mSortBy = sort;
-        sortApplicationList();
+        sortApplicationList(mSortBy);
 
         if (mAdapter != null)
             mAdapter.notifyDataSetChanged();
@@ -407,10 +407,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mListView.setFastScrollEnabled(mSortBy == SORT_BY_APP_LABEL);
     }
 
-    private void sortApplicationList() {
+    private void sortApplicationList(@SortOrder int sortBy) {
         final Boolean isRootEnabled = (Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
+        if (sortBy != SORT_BY_APP_LABEL) sortApplicationList(SORT_BY_APP_LABEL);
         Collections.sort(mItemList, (o1, o2) -> {
-            switch (mSortBy) {
+            switch (sortBy) {
                 case SORT_BY_APP_LABEL:
                     return sCollator.compare(o1.label, o2.label);
                 case SORT_BY_PACKAGE_NAME:
