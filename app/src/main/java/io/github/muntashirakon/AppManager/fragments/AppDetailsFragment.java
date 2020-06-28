@@ -750,7 +750,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     + " | " + (activityInfo.permission == null ? getString(R.string.require_no_permission) : activityInfo.permission));
             // Label
             Button launch = viewHolder.launchBtn;
-            launch.setText(activityInfo.loadLabel(mPackageManager));
+            String appLabel = mPackageInfo.applicationInfo.loadLabel(mPackageManager).toString();
+            String activityLabel = activityInfo.loadLabel(mPackageManager).toString();
+            launch.setText(activityLabel.equals(appLabel) ?
+                    Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityInfo.name))
+                    : activityLabel);
             boolean isExported = activityInfo.exported;
             launch.setEnabled(isExported);
             if (isExported) {
@@ -849,7 +853,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
             }
             // Label
-            viewHolder.textView1.setText(serviceInfo.loadLabel(mPackageManager));
+            viewHolder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(serviceInfo.name)));
             // Name
             if (mConstraint != null && serviceInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
@@ -920,7 +924,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
             }
             // Label
-            viewHolder.textView1.setText(activityInfo.loadLabel(mPackageManager));
+            viewHolder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityInfo.name)));
             // Name
             if (mConstraint != null && activityInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
@@ -999,7 +1003,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
             }
             // Label
-            viewHolder.textView1.setText(providerInfo.loadLabel(mPackageManager));
+            viewHolder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(providerName)));
             // Icon
             viewHolder.imageView.setImageDrawable(providerInfo.loadIcon(mPackageManager));
             // Uri permission

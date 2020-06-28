@@ -19,6 +19,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.OpenableColumns;
 import android.text.Spannable;
+import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
@@ -42,6 +43,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -108,6 +111,40 @@ public class Utils {
         return 0;
     }
 
+    @NonNull
+    public static String camelCaseToSpaceSeparatedString(@NonNull String str) {
+        return TextUtils.join(" ", splitByCharacterType(str, true));
+    }
+
+    // https://commons.apache.org/proper/commons-lang/javadocs/api-3.1/src-html/org/apache/commons/lang3/StringUtils.html#line.3164
+    @NonNull
+    public static String[] splitByCharacterType(@NonNull String str, boolean camelCase) {
+        if (str.length() == 0) return new String[]{};
+        char[] c = str.toCharArray();
+        List<String> list = new ArrayList<>();
+        int tokenStart = 0;
+        int currentType = Character.getType(c[tokenStart]);
+        for (int pos = tokenStart + 1; pos < c.length; pos++) {
+                int type = Character.getType(c[pos]);
+                if (type == currentType) {
+                        continue;
+                    }
+                if (camelCase && type == Character.LOWERCASE_LETTER && currentType == Character.UPPERCASE_LETTER) {
+                        int newTokenStart = pos - 1;
+                        if (newTokenStart != tokenStart) {
+                                list.add(new String(c, tokenStart, newTokenStart - tokenStart));
+                                tokenStart = newTokenStart;
+                            }
+                    } else {
+                        list.add(new String(c, tokenStart, pos - tokenStart));
+                        tokenStart = pos;
+                    }
+                currentType = type;
+            }
+        list.add(new String(c, tokenStart, c.length - tokenStart));
+        return list.toArray(new String[0]);
+    }
+
     @Nullable
     public static String getName(@NonNull ContentResolver resolver, Uri uri) {
         Cursor returnCursor =
@@ -126,6 +163,15 @@ public class Utils {
             return filename.substring(0, filename.lastIndexOf('.'));
         } catch (Exception e) {
             return filename;
+        }
+    }
+
+    @NonNull
+    public static String getLastComponent(@NonNull String str) {
+        try {
+            return str.substring(str.lastIndexOf('.')+1);
+        } catch (Exception e) {
+            return str;
         }
     }
 
