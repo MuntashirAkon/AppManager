@@ -289,6 +289,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             case R.id.action_app_usage:
                 Intent usageIntent = new Intent(this, AppUsageActivity.class);
                 startActivity(usageIntent);
+                return true;
             case R.id.action_apk_updater:
                 try {
                     if(!getPackageManager().getApplicationInfo(PACKAGE_NAME_APK_UPDATER, 0).enabled)
@@ -300,6 +301,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         startActivity(intent);
                     } catch (Exception ignored) {}
                 } catch (PackageManager.NameNotFoundException ignored) {}
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
