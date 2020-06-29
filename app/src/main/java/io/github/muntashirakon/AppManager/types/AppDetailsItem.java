@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 public class AppDetailsItem {
     public @NonNull Object vanillaItem;
     public @NonNull String name = "";
+    public boolean isBlocked = false;
 
     public AppDetailsItem(@NonNull Object object) {
         vanillaItem = object;

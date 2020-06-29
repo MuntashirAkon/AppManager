@@ -385,11 +385,22 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private @NonNull List<AppDetailsItem> getNeededList(@Property int index) {
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
         switch (index) {
+            case ACTIVITIES:
+                if (mPackageInfo.activities != null) {
+                    for(ActivityInfo activityInfo: mPackageInfo.activities) {
+                        AppDetailsItem appDetailsItem = new AppDetailsItem(activityInfo);
+                        appDetailsItem.name = activityInfo.name;
+                        appDetailsItem.isBlocked = mComponentsBlocker.hasComponent(activityInfo.name);
+                        appDetailsItems.add(appDetailsItem);
+                    }
+                }
+                break;
             case SERVICES:
                 if (mPackageInfo.services != null) {
                     for(ServiceInfo serviceInfo: mPackageInfo.services) {
                         AppDetailsItem appDetailsItem = new AppDetailsItem(serviceInfo);
                         appDetailsItem.name = serviceInfo.name;
+                        appDetailsItem.isBlocked = mComponentsBlocker.hasComponent(serviceInfo.name);
                         appDetailsItems.add(appDetailsItem);
                     }
                 }
@@ -399,6 +410,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     for(ActivityInfo activityInfo: mPackageInfo.receivers) {
                         AppDetailsItem appDetailsItem = new AppDetailsItem(activityInfo);
                         appDetailsItem.name = activityInfo.name;
+                        appDetailsItem.isBlocked = mComponentsBlocker.hasComponent(activityInfo.name);
                         appDetailsItems.add(appDetailsItem);
                     }
                 }
@@ -408,6 +420,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     for(ProviderInfo providerInfo: mPackageInfo.providers) {
                         AppDetailsItem appDetailsItem = new AppDetailsItem(providerInfo);
                         appDetailsItem.name = providerInfo.name;
+                        appDetailsItem.isBlocked = mComponentsBlocker.hasComponent(providerInfo.name);
                         appDetailsItems.add(appDetailsItem);
                     }
                 }
@@ -498,15 +511,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     for(String sharedLibrary: mPackageInfo.applicationInfo.sharedLibraryFiles) {
                         AppDetailsItem appDetailsItem = new AppDetailsItem(sharedLibrary);
                         appDetailsItem.name = sharedLibrary;
-                        appDetailsItems.add(appDetailsItem);
-                    }
-                }
-                break;
-            case ACTIVITIES:
-                if (mPackageInfo.activities != null) {
-                    for(ActivityInfo activityInfo: mPackageInfo.activities) {
-                        AppDetailsItem appDetailsItem = new AppDetailsItem(activityInfo);
-                        appDetailsItem.name = activityInfo.name;
                         appDetailsItems.add(appDetailsItem);
                     }
                 }
@@ -720,10 +724,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            final ActivityInfo activityInfo = (ActivityInfo) mAdapterList.get(index).vanillaItem;
+            final AppDetailsItem appDetailsItem = mAdapterList.get(index);
+            final ActivityInfo activityInfo = (ActivityInfo) appDetailsItem.vanillaItem;
             final String activityName = activityInfo.name;
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            if (mComponentsBlocker.hasComponent(activityName)) {
+            if (appDetailsItem.isBlocked) {
                 convertView.setBackgroundColor(mColorRed);
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
             } else {
@@ -810,7 +815,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     }
                     try {
                         mComponentsBlocker.saveDisabledComponents();
-                        refreshDetails();
+                        appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
+                        mAdapterList.set(index, appDetailsItem);
+                        notifyDataSetChanged();
                     } catch (IOException e) {
                         Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
                     }
@@ -845,9 +852,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            final ServiceInfo serviceInfo = (ServiceInfo) mAdapterList.get(index).vanillaItem;
+            final AppDetailsItem appDetailsItem = mAdapterList.get(index);
+            final ServiceInfo serviceInfo = (ServiceInfo) appDetailsItem.vanillaItem;
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            if (mComponentsBlocker.hasComponent(serviceInfo.name)) {
+            if (appDetailsItem.isBlocked) {
                 convertView.setBackgroundColor(mColorRed);
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
             } else {
@@ -879,7 +887,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     }
                     try {
                         mComponentsBlocker.saveDisabledComponents();
-                        refreshDetails();
+                        appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
+                        mAdapterList.set(index, appDetailsItem);
+                        notifyDataSetChanged();
                     } catch (IOException e) {
                         Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
                     }
@@ -915,10 +925,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-
-            final ActivityInfo activityInfo = (ActivityInfo) mAdapterList.get(index).vanillaItem;
+            final AppDetailsItem appDetailsItem = mAdapterList.get(index);
+            final ActivityInfo activityInfo = (ActivityInfo) appDetailsItem.vanillaItem;
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            if (mComponentsBlocker.hasComponent(activityInfo.name)) {
+            if (appDetailsItem.isBlocked) {
                 convertView.setBackgroundColor(mColorRed);
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
             } else {
@@ -957,7 +967,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     }
                     try {
                         mComponentsBlocker.saveDisabledComponents();
-                        refreshDetails();
+                        appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
+                        mAdapterList.set(index, appDetailsItem);
+                        notifyDataSetChanged();
                     } catch (IOException e) {
                         Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
                     }
@@ -992,12 +1004,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-
-            final ProviderInfo providerInfo = (ProviderInfo) mAdapterList.get(index).vanillaItem;
+            final AppDetailsItem appDetailsItem = mAdapterList.get(index);
+            final ProviderInfo providerInfo = (ProviderInfo) appDetailsItem.vanillaItem;
             final String providerName = providerInfo.name;
             // Set background color
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            if (mComponentsBlocker.hasComponent(providerName)) {
+            if (appDetailsItem.isBlocked) {
                 convertView.setBackgroundColor(mColorRed);
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
             } else {
@@ -1062,7 +1074,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     }
                     try {
                         mComponentsBlocker.saveDisabledComponents();
-                        refreshDetails();
+                        appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
+                        mAdapterList.set(index, appDetailsItem);
+                        notifyDataSetChanged();
                     } catch (IOException e) {
                         Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
                     }
