@@ -14,13 +14,22 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.SettingsActivity" />
-        <activity android:name=".activities.SharedPrefsActivity" />
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SharedPrefsActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.AppUsageActivity"
-            android:permission="android.permission.PACKAGE_USAGE_STATS" />
-        <activity android:name=".activities.ClassViewerActivity" />
-        <activity android:name=".activities.ClassListingActivity" />
+            android:permission="android.permission.PACKAGE_USAGE_STATS"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ClassViewerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ClassListingActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -36,13 +45,16 @@
         <activity
             android:name=".activities.AppInfoActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_info" />
+            android:label="@string/app_info"
+            android:exported="false" />
         <activity
             android:name=".activities.AppDetailsActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false" />
         <activity
             android:name=".activities.ManifestViewerActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
