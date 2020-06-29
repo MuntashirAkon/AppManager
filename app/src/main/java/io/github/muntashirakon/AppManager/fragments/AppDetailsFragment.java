@@ -19,6 +19,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PatternMatcher;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -752,7 +753,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             Button launch = viewHolder.launchBtn;
             String appLabel = mPackageInfo.applicationInfo.loadLabel(mPackageManager).toString();
             String activityLabel = activityInfo.loadLabel(mPackageManager).toString();
-            launch.setText(activityLabel.equals(appLabel) ?
+            launch.setText(activityLabel.equals(appLabel) || TextUtils.isEmpty(activityLabel) ?
                     Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityInfo.name))
                     : activityLabel);
             boolean isExported = activityInfo.exported;
