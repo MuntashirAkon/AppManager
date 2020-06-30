@@ -250,26 +250,31 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         // Set uninstall
         addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
             final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-            // FIXME: Uninstall for all users
             final Boolean isRootEnabled = (Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
-            new AlertDialog.Builder(this, R.style.CustomDialog)
-                    .setTitle(mPackageLabel)
-                    .setMessage(isSystemApp ?
-                            R.string.uninstall_system_app_message : R.string.uninstall_app_message)
-                    .setPositiveButton(R.string.uninstall, (dialog, which) -> {
-                        // Try without root first then with root
-                        if (Shell.SH.run(String.format("pm uninstall --user 0 %s", mPackageName)).isSuccessful()
-                                || (isRootEnabled && Shell.SU.run(String.format("pm uninstall --user 0 %s", mPackageName)).isSuccessful())) {
-                            Toast.makeText(mActivity, String.format(getString(R.string.uninstalled_successfully), mPackageLabel), Toast.LENGTH_LONG).show();
-                            finish();
-                        } else {
-                            Toast.makeText(mActivity, String.format(getString(R.string.failed_to_uninstall), mPackageLabel), Toast.LENGTH_LONG).show();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                        if (dialog != null) dialog.cancel();
-                    })
-                    .show();
+            if (isRootEnabled) {
+                new AlertDialog.Builder(this, R.style.CustomDialog)
+                        .setTitle(mPackageLabel)
+                        .setMessage(isSystemApp ?
+                                R.string.uninstall_system_app_message : R.string.uninstall_app_message)
+                        .setPositiveButton(R.string.uninstall, (dialog, which) -> {
+                            // Try without root first then with root
+                            if (Shell.SH.run(String.format("pm uninstall --user 0 %s", mPackageName)).isSuccessful()
+                                    || Shell.SU.run(String.format("pm uninstall --user 0 %s", mPackageName)).isSuccessful()) {
+                                Toast.makeText(mActivity, String.format(getString(R.string.uninstalled_successfully), mPackageLabel), Toast.LENGTH_LONG).show();
+                                finish();
+                            } else {
+                                Toast.makeText(mActivity, String.format(getString(R.string.failed_to_uninstall), mPackageLabel), Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                            if (dialog != null) dialog.cancel();
+                        })
+                        .show();
+            } else {
+                Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
+                uninstallIntent.setData(Uri.parse("package:" + mPackageName));
+                startActivity(uninstallIntent);
+            }
         });
         // Enable/disable app (root only)
         if ((Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
@@ -294,20 +299,20 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                     }
                 });
             }
+            // Force stop
+            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
+                addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> {
+                    final Boolean isRootEnabled = (Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
+                    if (Shell.SH.run(String.format("am force-stop %s", mPackageName)).isSuccessful()
+                            || (isRootEnabled && Shell.SU.run(String.format("am force-stop %s", mPackageName)).isSuccessful())) {
+                        // Refresh
+                        getPackageInfoOrFinish();
+                    } else {
+                        Toast.makeText(mActivity, String.format(getString(R.string.failed_to_stop), mPackageLabel), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
         }  // End root only
-        // Force stop
-        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
-            addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> {
-                final Boolean isRootEnabled = (Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
-                if (Shell.SH.run(String.format("am force-stop %s", mPackageName)).isSuccessful()
-                        || (isRootEnabled && Shell.SU.run(String.format("am force-stop %s", mPackageName)).isSuccessful())) {
-                    // Refresh
-                    getPackageInfoOrFinish();
-                } else {
-                    Toast.makeText(mActivity, String.format(getString(R.string.failed_to_stop), mPackageLabel), Toast.LENGTH_LONG).show();
-                }
-            });
-        }
         // Set manifest
         addToHorizontalLayout(R.string.manifest, R.drawable.ic_tune_black_24dp).setOnClickListener(v -> {
             Intent intent = new Intent(mActivity, ManifestViewerActivity.class);
