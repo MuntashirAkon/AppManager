@@ -316,4 +316,10 @@
     <string name="apk_updater">APK Updater</string>
     <string name="store">Store</string>
     <string name="running_apps">Running Apps</string>
+    <string name="no_running_apps">No running apps</string>
+    <string name="kill_process">Kill</string>
+    <string name="disable_background_run">Disable Background Run</string>
+    <string name="pid_and_ppid">Process ID: %d, Parent Process ID: %d</string>
+    <string name="memory_virtual_memory">Memory: %s, Virtual Memory: %s</string>
+    <string name="user_and_uid">User: %s (%d)</string>
 </resources>

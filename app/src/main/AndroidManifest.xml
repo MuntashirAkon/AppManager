@@ -16,6 +16,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.RunningAppsActivity"
+            android:label="@string/running_apps"
             android:exported="false" />
         <activity
             android:name=".activities.SettingsActivity"
