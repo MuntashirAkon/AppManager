@@ -291,11 +291,9 @@ public class AppUsageActivity extends AppCompatActivity {
             TextView appLabel;
             TextView packageName;
             TextView lastUsageDate;
-            TextView timesOpened;
             TextView mobileDataUsage;
             TextView wifiDataUsage;
             TextView screenTime;
-            TextView notificationCount;
             IconAsyncTask iconLoader;
         }
 
@@ -336,11 +334,9 @@ public class AppUsageActivity extends AppCompatActivity {
                 holder.appLabel = convertView.findViewById(R.id.label);
                 holder.packageName = convertView.findViewById(R.id.package_name);
                 holder.lastUsageDate = convertView.findViewById(R.id.date);
-                holder.timesOpened = convertView.findViewById(R.id.times_opened);
                 holder.mobileDataUsage = convertView.findViewById(R.id.data_usage);
                 holder.wifiDataUsage = convertView.findViewById(R.id.wifi_usage);
                 holder.screenTime = convertView.findViewById(R.id.screen_time);
-                holder.notificationCount = convertView.findViewById(R.id.notification_count);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -365,12 +361,14 @@ public class AppUsageActivity extends AppCompatActivity {
             if (lastTimeUsed > 1) {
                 holder.lastUsageDate.setText(sSimpleDateFormat.format(new Date(lastTimeUsed)));
             }
+            String screenTimesWithTimesOpened;
             // Set times opened
-            holder.timesOpened.setText(String.format(packageUS.timesOpened == 1 ?
+            screenTimesWithTimesOpened = String.format(packageUS.timesOpened == 1 ?
                     mActivity.getString(R.string.one_time_opened)
-                    : mActivity.getString(R.string.no_of_times_opened), packageUS.timesOpened));
+                    : mActivity.getString(R.string.no_of_times_opened), packageUS.timesOpened);
             // Set screen time
-            holder.screenTime.setText(formattedTime(mActivity, packageUS.screenTime));
+            screenTimesWithTimesOpened += ", " + formattedTime(mActivity, packageUS.screenTime);
+            holder.screenTime.setText(screenTimesWithTimesOpened);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // Set data usage
                 holder.mobileDataUsage.setText("M: \u2191 " + Formatter.formatFileSize(mActivity, packageUS.mobileData.getFirst())
@@ -378,11 +376,6 @@ public class AppUsageActivity extends AppCompatActivity {
                 holder.wifiDataUsage.setText("W: \u2191 " + Formatter.formatFileSize(mActivity, packageUS.wifiData.getFirst())
                         + " \u2193 " + Formatter.formatFileSize(mActivity, packageUS.wifiData.getSecond()));
             }
-            // Set notification count
-//            holder.notificationCount.setText(String.format(packageUS.notificationReceived == 1 ?
-//                    mActivity.getString(R.string.one_notification_received)
-//                    : mActivity.getString(R.string.no_of_notification_received),
-//                    packageUS.notificationReceived));
             return convertView;
         }
 
