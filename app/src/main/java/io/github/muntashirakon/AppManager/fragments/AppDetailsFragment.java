@@ -59,6 +59,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
+import io.github.muntashirakon.AppManager.storage.StorageManager;
 import io.github.muntashirakon.AppManager.types.AppDetailsItem;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
@@ -1169,6 +1170,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     // Enable op
                     try {
                         mAppOpsService.setMode(opEntry.getOp(), -1, mPackageName, AppOpsManager.MODE_ALLOWED);
+                        StorageManager.getInstance(mActivity, mPackageName).setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_ALLOWED);
                         // TODO: Use AppOpsManager.getOpsForPackage() instead
                         AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
                                 opEntry.isRunning(), AppOpsManager.MODE_ALLOWED, opEntry.getTime(),
@@ -1186,6 +1188,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     // Disable permission
                     try {
                         mAppOpsService.setMode(opEntry.getOp(), -1, mPackageName, AppOpsManager.MODE_IGNORED);
+                        StorageManager.getInstance(mActivity, mPackageName).setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_IGNORED);
                         // TODO: Use AppOpsManager.getOpsForPackage() instead
                         AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
                                 opEntry.isRunning(), AppOpsManager.MODE_IGNORED, opEntry.getTime(),
@@ -1284,13 +1287,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             if (!Shell.SU.run(String.format("pm grant %s %s", mPackageName, permName)).isSuccessful()) {
                                 Toast.makeText(mActivity, "Failed to grant permission.", Toast.LENGTH_LONG).show();
                                 viewHolder.toggleSwitch.setChecked(false);
-                            }
+                            } else StorageManager.getInstance(mActivity, mPackageName).setPermission(permName, true);
                         } else {
                             // Disable permission
                             if (!Shell.SU.run(String.format("pm revoke %s %s", mPackageName, permName)).isSuccessful()) {
                                 Toast.makeText(mActivity, "Failed to revoke permission.", Toast.LENGTH_LONG).show();
                                 viewHolder.toggleSwitch.setChecked(true);
-                            }
+                            } else StorageManager.getInstance(mActivity, mPackageName).setPermission(permName, false);
                         }
                     });
                 } else viewHolder.toggleSwitch.setVisibility(View.GONE);
