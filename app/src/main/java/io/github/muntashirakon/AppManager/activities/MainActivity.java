@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private SwipeRefreshLayout mSwipeRefresh;
     private static String mConstraint;
     private MenuItem appUsageMenu;
+    private MenuItem runningAppsMenu;
     private MenuItem sortByBlockedComponentMenu;
     private @SortOrder int mSortBy;
 
@@ -201,10 +202,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if ((Boolean) AppPref.get(this, AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN)) {
             appUsageMenu.setVisible(true);
         } else appUsageMenu.setVisible(false);
+        runningAppsMenu = menu.findItem(R.id.action_running_apps);
         sortByBlockedComponentMenu = menu.findItem(R.id.action_sort_by_blocked_components);
         if ((Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
+            runningAppsMenu.setVisible(true);
             sortByBlockedComponentMenu.setVisible(true);
-        } else sortByBlockedComponentMenu.setVisible(false);
+        } else {
+            runningAppsMenu.setVisible(true);
+            sortByBlockedComponentMenu.setVisible(false);
+        }
         MenuItem apkUpdaterMenu = menu.findItem(R.id.action_apk_updater);
         try {
             if(!getPackageManager().getApplicationInfo(PACKAGE_NAME_APK_UPDATER, 0).enabled)
@@ -380,9 +386,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Set sort by
         mSortBy = (int) AppPref.get(this, AppPref.PREF_MAIN_WINDOW_SORT_ORDER, AppPref.TYPE_INTEGER);
         if ((Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
+            if (runningAppsMenu != null) runningAppsMenu.setVisible(true);
             if (sortByBlockedComponentMenu != null) sortByBlockedComponentMenu.setVisible(true);
         } else {
             if (mSortBy == SORT_BY_BLOCKED_COMPONENTS) mSortBy = SORT_BY_APP_LABEL;
+            if (runningAppsMenu != null) runningAppsMenu.setVisible(false);
             if (sortByBlockedComponentMenu != null) sortByBlockedComponentMenu.setVisible(false);
         }
     }
