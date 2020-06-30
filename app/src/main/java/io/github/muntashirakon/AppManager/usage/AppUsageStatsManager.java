@@ -10,6 +10,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.NetworkCapabilities;
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.os.RemoteException;
 
 import java.text.SimpleDateFormat;
@@ -20,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -287,19 +290,75 @@ public class AppUsageStatsManager {
         return new Tuple<>(new Tuple<>(totalWifiTx, totalWifiRx), new Tuple<>(totalMobileTx, totalMobileRx));
     }
 
-    public static class PackageUS {
+    public static class PackageUS implements Parcelable {
         public @NonNull String packageName;
         public String appLabel;
         public Long screenTime = 0L;
         public Long lastUsageTime = 0L;
         public Integer timesOpened = 0;
-        public Integer notificationReceived = 0;
         public Tuple<Long, Long> mobileData;  // Tx, Rx
         public Tuple<Long, Long> wifiData;  // Tx, Rx
         public @Nullable List<USEntry> entries;
 
         public PackageUS(@NonNull String packageName) {
             this.packageName = packageName;
+        }
+
+        protected PackageUS(@NonNull Parcel in) {
+            packageName = Objects.requireNonNull(in.readString());
+            appLabel = in.readString();
+            screenTime = in.readByte() == 0 ? 0L : in.readLong();
+            lastUsageTime = in.readByte() == 0 ? 0L : in.readLong();
+            timesOpened = in.readByte() == 0 ? 0 : in.readInt();
+        }
+
+        @Override
+        public void writeToParcel(@NonNull Parcel dest, int flags) {
+            dest.writeString(packageName);
+            dest.writeString(appLabel);
+            if (screenTime == null) {
+                dest.writeByte((byte) 0);
+            } else {
+                dest.writeByte((byte) 1);
+                dest.writeLong(screenTime);
+            }
+            if (lastUsageTime == null) {
+                dest.writeByte((byte) 0);
+            } else {
+                dest.writeByte((byte) 1);
+                dest.writeLong(lastUsageTime);
+            }
+            if (timesOpened == null) {
+                dest.writeByte((byte) 0);
+            } else {
+                dest.writeByte((byte) 1);
+                dest.writeInt(timesOpened);
+            }
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<PackageUS> CREATOR = new Creator<PackageUS>() {
+            @Override
+            public PackageUS createFromParcel(Parcel in) {
+                return new PackageUS(in);
+            }
+
+            @Override
+            public PackageUS[] newArray(int size) {
+                return new PackageUS[size];
+            }
+        };
+
+        public void copyOthers(@NonNull PackageUS packageUS) {
+            screenTime = packageUS.screenTime;
+            lastUsageTime = packageUS.lastUsageTime;
+            timesOpened = packageUS.timesOpened;
+            mobileData = packageUS.mobileData;
+            wifiData = packageUS.wifiData;
         }
 
         @NonNull
@@ -311,7 +370,6 @@ public class AppUsageStatsManager {
                     ", screenTime=" + screenTime +
                     ", lastUsageTime=" + lastUsageTime +
                     ", timesOpened=" + timesOpened +
-                    ", notificationReceived=" + notificationReceived +
                     ", txData=" + mobileData +
                     ", rxData=" + wifiData +
                     ", entries=" + entries +

@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +43,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.fragments.AppUsageDetailsDialogFragment;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.Utils.IntervalType;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -51,7 +53,7 @@ import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_TODAY;
 import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_WEEKLY;
 import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_YESTERDAY;
 
-public class AppUsageActivity extends AppCompatActivity {
+public class AppUsageActivity extends AppCompatActivity implements ListView.OnItemClickListener {
     @IntDef(value = {
             SORT_BY_APP_LABEL,
             SORT_BY_LAST_USED,
@@ -95,6 +97,7 @@ public class AppUsageActivity extends AppCompatActivity {
         listView.setDividerHeight(0);
         listView.setEmptyView(findViewById(android.R.id.empty));
         listView.setAdapter(mAppUsageAdapter);
+        listView.setOnItemClickListener(this);
 
         @SuppressLint("InflateParams")
         View header = getLayoutInflater().inflate(R.layout.header_app_usage, null);
@@ -174,6 +177,18 @@ public class AppUsageActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        AppUsageStatsManager.PackageUS packageUS = mAppUsageAdapter.getItem(position-1);
+        AppUsageStatsManager.PackageUS packageUS1 = AppUsageStatsManager.getInstance(this).getUsageStatsForPackage(packageUS.packageName, current_interval);
+        packageUS1.copyOthers(packageUS);
+        AppUsageDetailsDialogFragment appUsageDetailsDialogFragment = new AppUsageDetailsDialogFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(AppUsageDetailsDialogFragment.ARG_PACKAGE_US, packageUS1);
+        appUsageDetailsDialogFragment.setArguments(args);
+        appUsageDetailsDialogFragment.show(getSupportFragmentManager(), AppUsageDetailsDialogFragment.TAG);
     }
 
     private void setSortBy(@SortOrder int sort) {
@@ -314,7 +329,7 @@ public class AppUsageActivity extends AppCompatActivity {
         }
 
         @Override
-        public Object getItem(int position) {
+        public AppUsageStatsManager.PackageUS getItem(int position) {
             return mAdapterList.get(position);
         }
 
