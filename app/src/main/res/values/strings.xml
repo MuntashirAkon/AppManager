@@ -56,8 +56,9 @@
     <string name="about_message"><b>Main Window</b>
         \n- Click will open “App Info” window
         \n- Long click will open ”App Details” window
-        \n- View app usage statistics by clicking on the three verticals dots on the right (requires
-        “Usage Access” permission)
+        \n- View app usage statistics (in the menu) (requires “Usage Access” permission)
+        \n- View running apps/processes (in the menu) (requires root)
+        \n- Open APK Updater directly (in the menu) (if installed)
         \n
         \nList colors used in the main window and their meaning:
         \n<u>Red</u>: Doesn\'t allow clearing data storage

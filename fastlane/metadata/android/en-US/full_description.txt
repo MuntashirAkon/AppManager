@@ -2,22 +2,23 @@
 
 <b>Features:</b>
 <ul>
-<li>It is free and open source</li>
-<li>It has material design (and a nice UI)</li>
-<li>It doesn't have any useless permissions</li>
-<li>It doesn't connect to the internet</li>
-<li>It tries to display as much information as possible in the main window</li>
-<li>It lists activities, broadcast receivers, services, providers, permissions, signatures, shared libraries, etc. of any app</li>
-<li>It can launch (exportable) activities, create (customizable) shortcuts</li>
-<li>It can block any activities, broadcast receivers, services or providers you like (requires root)</li>
-<li>It can revoke permissions that are considered dangerous (requires root)</li>
-<li>It can disable app ops that are considered dangerous (requires root)</li>
-<li>It can scan for trackers in apps and list (all or only) tracking classes (and their code dump)</li>
-<li>It can generate dynamic manifest for any app</li>
-<li>It can be used to view/edit/delete shared preferences of any app (requires root)</li>
-<li>It displays your app usage, app storage info (requires “Usage Access” permission)</li>
-<li>Apk files can be shared (hence the use of a provider)</li>
-<li>It can be used to clear app data or app cache (requires root)</li>
+    <li>Free and open source</li>
+    <li>Material design (and a nice UI)</li>
+    <li>No any useless permissions</li>
+    <li>Doesn't connect to the internet</li>
+    <li>Display as much information as possible in the main window</li>
+    <li>Lists activities, broadcast receivers, services, providers, permissions, signatures, shared libraries, etc. of any app</li>
+    <li>Ability to launch (exportable) activities, create (customizable) shortcuts</li>
+    <li>Ability to block any activities, broadcast receivers, services or providers you like with Watt and Blocker import support (requires root)</li>
+    <li>Ability to revoke permissions that are considered dangerous (requires root)</li>
+    <li>Ability to disable any app ops (requires root)</li>
+    <li>Scan for trackers in apps and list (all or only) tracking classes (and their code dump)</li>
+    <li>Ability to generate dynamic manifest for any app</li>
+    <li>View/edit/delete shared preferences of any app (requires root)</li>
+    <li>Ability to view running apps/process (requires root)</li>
+    <li>Ability to view app usage, data usage and app storage info (requires “Usage Access” permission)</li>
+    <li>Apk file sharing (hence the use of a provider)</li>
+    <li>Ability to to clear app data or app cache (requires root)</li>
 </ul>
 
 ...and other minor features such as uninstalling/enabling/disabling apps, displaying app installation info, opening on F-Droid or Aurora Droid.
