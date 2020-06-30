@@ -68,6 +68,11 @@
         android:title="@string/app_usage" />
 
     <item
+        android:id="@+id/action_running_apps"
+        android:icon="@drawable/ic_tune_black_24dp"
+        android:title="@string/running_apps" />
+
+    <item
         android:id="@+id/action_apk_updater"
         android:icon="@drawable/ic_baseline_sync_24"
         android:title="@string/apk_updater" />

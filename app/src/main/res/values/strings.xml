@@ -315,4 +315,5 @@
     <string name="failed_to_import_files">Failed to import %d files.</string>
     <string name="apk_updater">APK Updater</string>
     <string name="store">Store</string>
+    <string name="running_apps">Running Apps</string>
 </resources>

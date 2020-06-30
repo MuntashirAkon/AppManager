@@ -199,6 +199,39 @@ public class Utils {
         return result.toString();
     }
 
+    @NonNull
+    public static String getProcessStateName(@NonNull String shortName) {
+        switch (shortName) {
+            case "R": return "Running";
+            case "S": return "Sleeping";
+            case "D": return "Device I/O";
+            case "T": return "Stopped";
+            case "t": return "Trace stop";
+            case "x":
+            case "X": return "Dead";
+            case "Z": return "Zombie";
+            case "P": return "Parked";
+            case "I": return "Idle";
+            case "K": return "Wake kill";
+            case "W": return "Waking";
+            default: return "";
+        }
+    }
+
+    @NonNull
+    public static String getProcessStateExtraName(String shortName) {
+        if (shortName == null) return "";
+        switch (shortName) {
+            case "<": return "High priority";
+            case "N": return "Low priority";
+            case "L": return "Locked memory";
+            case "s": return "Session leader";
+            case "+": return "foreground";
+            case "l": return "Multithreaded";
+            default: return "";
+        }
+    }
+
     // FIXME: Add translation support
     @NonNull
     public static String getLaunchMode(int mode) {

@@ -302,6 +302,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     } catch (Exception ignored) {}
                 } catch (PackageManager.NameNotFoundException ignored) {}
                 return true;
+            case R.id.action_running_apps:
+                Intent runningAppsIntent = new Intent(this, RunningAppsActivity.class);
+                startActivity(runningAppsIntent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
