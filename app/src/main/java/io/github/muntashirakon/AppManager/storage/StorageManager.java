@@ -41,6 +41,16 @@ public class StorageManager {
         public String name; // pk
         public Type type;
         public Object extra; // mode, is_applied, is_granted
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "Entry{" +
+                    "name='" + name + '\'' +
+                    ", type=" + type +
+                    ", extra=" + extra +
+                    '}';
+        }
     }
 
     private Context context;
@@ -95,11 +105,11 @@ public class StorageManager {
 
     public void removeEntry(Entry entry) {
         entries.remove(entry);
+        commit();
     }
 
     public void removeEntry(String name) {
-        for (Iterator<Entry> iterator = entries.iterator(); iterator.hasNext();)
-            if (iterator.next().name.equals(name)) iterator.remove();
+        removeEntry(name, true);
     }
 
     public void setComponent(String name, Type componentType, Boolean isApplied) {
@@ -127,9 +137,15 @@ public class StorageManager {
     }
 
     private void addEntry(@NonNull Entry entry) {
-        removeEntry(entry.name);
+        removeEntry(entry.name, false);
         entries.add(entry);
         commit();
+    }
+
+    private void removeEntry(String name, Boolean isCommit) {
+        for (Iterator<Entry> iterator = entries.iterator(); iterator.hasNext();)
+            if (iterator.next().name.equals(name)) iterator.remove();
+        if (isCommit) commit();
     }
 
     private void loadEntries() {
@@ -158,6 +174,11 @@ public class StorageManager {
 
     private void saveEntries() {
         try {
+            if (entries.size() == 0) {
+                //noinspection ResultOfMethodCallIgnored
+                getDesiredFile().delete();
+                return;
+            }
             StringBuilder stringBuilder = new StringBuilder();
             for(Entry entry: entries) {
                 stringBuilder.append(entry.name).append("\t").append(entry.type).append("\t").append(entry.extra).append("\n");
