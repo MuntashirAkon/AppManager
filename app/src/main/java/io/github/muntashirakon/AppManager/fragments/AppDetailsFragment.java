@@ -40,7 +40,6 @@ import android.widget.Toast;
 
 import com.jaredrummler.android.shell.Shell;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -66,7 +65,6 @@ import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker.ComponentType;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.Tuple;
@@ -197,11 +195,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if ((Boolean) AppPref.get(mActivity, AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN)
                     || mComponentsBlocker.isRulesApplied())
                 mComponentsBlocker.applyRules(true);
-            else {
-                try {
-                    mComponentsBlocker.saveDisabledComponents();
-                } catch (IOException ignore) {}
-            }
         }
     }
 
@@ -212,11 +205,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if ((Boolean) AppPref.get(mActivity, AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN)
                     || mComponentsBlocker.isRulesApplied())
                 mComponentsBlocker.applyRules(true);
-            else {
-                try {
-                    mComponentsBlocker.saveDisabledComponents();
-                } catch (IOException ignore) {}
-            }
         }
     }
 
@@ -812,16 +800,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     if (mComponentsBlocker.hasComponent(activityName)) { // Remove from the list
                         mComponentsBlocker.removeComponent(activityName);
                     } else { // Add to the list
-                        mComponentsBlocker.addComponent(activityName, ComponentType.ACTIVITY);
+                        mComponentsBlocker.addComponent(activityName, StorageManager.Type.ACTIVITY);
                     }
-                    try {
-                        mComponentsBlocker.saveDisabledComponents();
-                        appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
-                        mAdapterList.set(index, appDetailsItem);
-                        notifyDataSetChanged();
-                    } catch (IOException e) {
-                        Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
-                    }
+                    appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
+                    mAdapterList.set(index, appDetailsItem);
+                    notifyDataSetChanged();
                 });
             } else viewHolder.blockBtn.setVisibility(View.GONE);
             return convertView;
@@ -884,16 +867,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     if (mComponentsBlocker.hasComponent(serviceInfo.name)) { // Remove from the list
                         mComponentsBlocker.removeComponent(serviceInfo.name);
                     } else { // Add to the list
-                        mComponentsBlocker.addComponent(serviceInfo.name, ComponentType.SERVICE);
+                        mComponentsBlocker.addComponent(serviceInfo.name, StorageManager.Type.SERVICE);
                     }
-                    try {
-                        mComponentsBlocker.saveDisabledComponents();
-                        appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
-                        mAdapterList.set(index, appDetailsItem);
-                        notifyDataSetChanged();
-                    } catch (IOException e) {
-                        Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
-                    }
+                    appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
+                    mAdapterList.set(index, appDetailsItem);
+                    notifyDataSetChanged();
                 });
             } else viewHolder.blockBtn.setVisibility(View.GONE);
             return convertView;
@@ -964,16 +942,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     if (mComponentsBlocker.hasComponent(activityInfo.name)) { // Remove from the list
                         mComponentsBlocker.removeComponent(activityInfo.name);
                     } else { // Add to the list
-                        mComponentsBlocker.addComponent(activityInfo.name, ComponentType.RECEIVER);
+                        mComponentsBlocker.addComponent(activityInfo.name, StorageManager.Type.RECEIVER);
                     }
-                    try {
-                        mComponentsBlocker.saveDisabledComponents();
-                        appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
-                        mAdapterList.set(index, appDetailsItem);
-                        notifyDataSetChanged();
-                    } catch (IOException e) {
-                        Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
-                    }
+                    appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
+                    mAdapterList.set(index, appDetailsItem);
+                    notifyDataSetChanged();
                 });
             } else viewHolder.blockBtn.setVisibility(View.GONE);
             return convertView;
@@ -1071,16 +1044,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     if (mComponentsBlocker.hasComponent(providerName)) { // Remove from the list
                         mComponentsBlocker.removeComponent(providerName);
                     } else { // Add to the list
-                        mComponentsBlocker.addComponent(providerName, ComponentType.PROVIDER);
+                        mComponentsBlocker.addComponent(providerName, StorageManager.Type.PROVIDER);
                     }
-                    try {
-                        mComponentsBlocker.saveDisabledComponents();
-                        appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
-                        mAdapterList.set(index, appDetailsItem);
-                        notifyDataSetChanged();
-                    } catch (IOException e) {
-                        Toast.makeText(mActivity, "Failed to save component details to the local disk!", Toast.LENGTH_LONG).show();
-                    }
+                    appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
+                    mAdapterList.set(index, appDetailsItem);
+                    notifyDataSetChanged();
                 });
             } else viewHolder.blockBtn.setVisibility(View.GONE);
             return convertView;

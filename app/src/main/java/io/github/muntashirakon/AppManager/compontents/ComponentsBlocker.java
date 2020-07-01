@@ -17,7 +17,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,7 +41,7 @@ import io.github.muntashirakon.AppManager.storage.StorageManager;
  * provider is saved in a new line.
  *
  * @see <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/services/core/java/com/android/server/firewall/IntentFirewall.java">IntentFirewall.java</a>
- * @see ComponentType
+ * @see StorageManager
  */
 public class ComponentsBlocker {
     private static final String TAG_ACTIVITY = "activity";
@@ -52,19 +51,13 @@ public class ComponentsBlocker {
     private static final String SYSTEM_RULES_PATH = "/data/system/ifw/";
     private static ComponentsBlocker componentsBlocker = null;
 
-    /**
-     * Component types: activity, broadcast receiver, service, provider
-     */
-    public enum ComponentType {
-        ACTIVITY,
-        SERVICE,
-        RECEIVER,
-        PROVIDER,
-        UNKNOWN
+    @NonNull
+    public static ComponentsBlocker getInstance(@NonNull Context context, @NonNull String packageName) {
+        return getInstance(context, packageName, false);
     }
 
     @NonNull
-    public static ComponentsBlocker getInstance(@NonNull Context context, @NonNull String packageName) {
+    public static ComponentsBlocker getInstance(@NonNull Context context, @NonNull String packageName, boolean noLoadFromDisk) {
         if (componentsBlocker == null) {
             try {
                 String localIfwRulesPath = provideLocalIfwRulesPath(context);
@@ -74,12 +67,14 @@ public class ComponentsBlocker {
                 throw new AssertionError();
             }
         }
-        componentsBlocker.setPackageName(context, packageName);
+        if (ComponentsBlocker.packageName == null || !ComponentsBlocker.packageName.equals(packageName))
+            componentsBlocker.setPackageName(context, packageName, noLoadFromDisk);
         return componentsBlocker;
     }
 
     @NonNull
     public static String provideLocalIfwRulesPath(@NonNull Context context) throws FileNotFoundException {
+        // FIXME: Move from getExternalFilesDir to getCacheDir
         File file = context.getExternalFilesDir("ifw");
         if (file == null || (!file.exists() && !file.mkdirs())) {
             file = new File(context.getFilesDir(), "ifw");
@@ -112,9 +107,8 @@ public class ComponentsBlocker {
     private final String LOCAL_RULES_PATH;
     private File localRulesFile;
     private File localProvidersFile;
-    private HashMap<String, ComponentType> disabledComponents;
     private Set<String> removedProviders;
-    private String packageName;
+    private static String packageName;
     private StorageManager storageManager;
 
     private ComponentsBlocker(@NonNull String localIfwRulesPath) {
@@ -125,34 +119,32 @@ public class ComponentsBlocker {
      * Alternative to constructor
      * @param packageName Name of the package to handle
      */
-    private void setPackageName(Context context, String packageName) {
-        this.packageName = packageName;
+    private void setPackageName(Context context, String packageName, boolean noLoadFromDisk) {
+        ComponentsBlocker.packageName = packageName;
         this.storageManager = StorageManager.getInstance(context, packageName);
         this.localRulesFile = new File(LOCAL_RULES_PATH, packageName + ".xml");
         this.localProvidersFile = new File(LOCAL_RULES_PATH, packageName + ".txt");
         removedProviders = new HashSet<>();
-        retrieveDisabledComponents();
+        if (!noLoadFromDisk) retrieveDisabledComponents();
     }
 
     public Boolean hasComponent(String componentName) {
-        return disabledComponents.containsKey(componentName);
+        return storageManager.hasName(componentName);
     }
 
     public int componentCount() {
-        return disabledComponents.size();
+        return storageManager.getAllComponents().size();
     }
 
-    public void addComponent(String componentName, ComponentType componentType) {
-        disabledComponents.put(componentName, componentType);
+    public void addComponent(String componentName, StorageManager.Type componentType) {
+        storageManager.setComponent(componentName, componentType, false);
     }
 
     public void removeComponent(String componentName) {
-        if (hasComponent(componentName)) {
-            if (disabledComponents.get(componentName) == ComponentType.PROVIDER) {
+        if (storageManager.hasName(componentName)) {
+            if (storageManager.get(componentName).type == StorageManager.Type.PROVIDER)
                 removedProviders.add(componentName);
-                storageManager.removeEntry(componentName);
-            }
-            disabledComponents.remove(componentName);
+            storageManager.removeEntry(componentName);
         }
     }
 
@@ -160,23 +152,24 @@ public class ComponentsBlocker {
      * Save the disabled components locally (not applied to the system)
      * @throws IOException If it fails to write to the destination file
      */
-    public void saveDisabledComponents() throws IOException {
+    private void saveDisabledComponents() throws IOException {
+        if (componentCount() == 0) {
+            if (localRulesFile.exists()) //noinspection ResultOfMethodCallIgnored
+                localRulesFile.delete();
+            return;
+        }
         StringBuilder activities = new StringBuilder();
         StringBuilder services = new StringBuilder();
         StringBuilder receivers = new StringBuilder();
-        for (String component : disabledComponents.keySet()) {
-            String componentFilter = "<component-filter name=\"" + packageName + "/" + component + "\"/>\n";
-            ComponentType componentType = disabledComponents.get(component);
-            if (componentType != null) {
-                switch (componentType) {
-                    case ACTIVITY: activities.append(componentFilter); break;
-                    case RECEIVER: receivers.append(componentFilter); break;
-                    case SERVICE: services.append(componentFilter); break;
-                    case PROVIDER:
-                        storageManager.setComponent(component, StorageManager.Type.PROVIDER, false);
-                        break;
-                }
+        for (StorageManager.Entry component : storageManager.getAllComponents()) {
+            String componentFilter = "  <component-filter name=\"" + packageName + "/" + component.name + "\"/>\n";
+            StorageManager.Type componentType = component.type;
+            switch (component.type) {
+                case ACTIVITY: activities.append(componentFilter); break;
+                case RECEIVER: receivers.append(componentFilter); break;
+                case SERVICE: services.append(componentFilter); break;
             }
+            storageManager.setComponent(component.name, componentType, true);
         }
 
         String rules = "<rules>\n" +
@@ -195,8 +188,9 @@ public class ComponentsBlocker {
      * @return True if applied, false otherwise
      */
     public boolean isRulesApplied() {
-        // FIXME
-        return Shell.SU.run(String.format("test -e '%s%s.xml' && echo 1 || echo 0", SYSTEM_RULES_PATH, packageName)).getStdout().equals("1");
+        List<StorageManager.Entry> entries = storageManager.getAllComponents();
+        for (StorageManager.Entry entry: entries) if (!((Boolean) entry.extra)) return false;
+        return true;
     }
 
     /**
@@ -218,6 +212,8 @@ public class ComponentsBlocker {
                 Shell.SU.run(String.format("test -e '%s%s.xml' && rm -rf %s%s.xml && am force-stop %s",
                         SYSTEM_RULES_PATH, packageName, SYSTEM_RULES_PATH, packageName, packageName));
             }
+            if (localRulesFile.exists()) //noinspection ResultOfMethodCallIgnored
+                localRulesFile.delete();
             // Enable removed providers
             for (String provider : removedProviders) {
                 Shell.SU.run(String.format("pm enable %s/%s", packageName, provider));
@@ -247,18 +243,22 @@ public class ComponentsBlocker {
      * If it's available in the system, save a copy to the local source and then retrieve the components
      */
     private void retrieveDisabledComponents() {
-        disabledComponents = new HashMap<>();
         int packageNameLength = packageName.length()+1;
-        if (!localRulesFile.exists()) {
-            // Rules doesn't exist in locally
-            if (isRulesApplied()) {
-                // But there are rules in the system
-                // Copy system rules to make them accessible locally
-                Shell.SU.run(String.format("cp %s%s.xml '%s'", SYSTEM_RULES_PATH, packageName, LOCAL_RULES_PATH));
-            } else return;
+        if (isRulesApplied()) {
+            // Copy system rules to access them locally
+            // FIXME: Read all files instead of just one for greater compatibility
+            // FIXME: In v2.5.7, file contents will be copied instead of copying the file itself
+            Shell.SU.run(String.format("cp %s%s.xml '%s' && chmod 0666 '%s/%s.xml'",
+                    SYSTEM_RULES_PATH, packageName, LOCAL_RULES_PATH, LOCAL_RULES_PATH, packageName));
         }
         retrieveDisabledProviders();
         try {
+            if (!localRulesFile.exists()) {
+                for (StorageManager.Entry entry: storageManager.getAllComponents()) {
+                    storageManager.setComponent(entry.name, entry.type, false);
+                }
+                return;
+            }
             FileInputStream rulesStream = new FileInputStream(localRulesFile);
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -266,7 +266,7 @@ public class ComponentsBlocker {
             parser.nextTag();
             parser.require(XmlPullParser.START_TAG, null, "rules");
             int event = parser.nextTag();
-            ComponentType componentType = ComponentType.UNKNOWN;
+            StorageManager.Type componentType = StorageManager.Type.UNKNOWN;
             while (event != XmlPullParser.END_DOCUMENT) {
                 String name = parser.getName();
                 switch (event) {
@@ -278,53 +278,49 @@ public class ComponentsBlocker {
                     case XmlPullParser.END_TAG:
                         if (name.equals("component-filter")) {
                             String fullKey = parser.getAttributeValue(null, "name");
-                            disabledComponents.put(fullKey.substring(packageNameLength), componentType);
+                            // FIXME: Verify package name
+                            // Overwrite rules if exists
+                            storageManager.setComponent(fullKey.substring(packageNameLength), componentType, true);
                         }
                 }
                 event = parser.nextTag();
             }
             rulesStream.close();
+            //noinspection ResultOfMethodCallIgnored
+            localRulesFile.delete();
         } catch (IOException | XmlPullParserException ignored) {}
     }
 
+    // FIXME: Remove this in v2.5.7
+    @Deprecated
     private void retrieveDisabledProviders() {
         // Read from external provider file if exists and delete it
-        // FIXME: Remove this logic in v2.5.7
         if (localProvidersFile.exists()) {
             try {
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(localProvidersFile));
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
                     if (!TextUtils.isEmpty(line))
-                        disabledComponents.put(line.trim(), ComponentType.PROVIDER);
+                        storageManager.setComponent(line.trim(), StorageManager.Type.PROVIDER, true);
                 }
                 bufferedReader.close();
                 //noinspection ResultOfMethodCallIgnored
                 localProvidersFile.delete();
             } catch (IOException ignored) {}
         }
-        // Read from storage manager
-        List<StorageManager.Entry> disabledProviders = storageManager.getAll(StorageManager.Type.PROVIDER);
-        for (StorageManager.Entry provider: disabledProviders) {
-            disabledComponents.put(provider.name, ComponentType.PROVIDER);
-        }
     }
 
     /**
      * Get component type from TAG_* constants
      * @param componentName Name of the constant: one of the TAG_*
-     * @return One of the {@link ComponentType}
+     * @return One of the {@link StorageManager.Type}
      */
-    private ComponentType getComponentType(@NonNull String componentName) {
+    private StorageManager.Type getComponentType(@NonNull String componentName) {
         switch (componentName) {
-            case TAG_ACTIVITY:
-                return ComponentType.ACTIVITY;
-            case TAG_RECEIVER:
-                return ComponentType.RECEIVER;
-            case TAG_SERVICE:
-                return ComponentType.SERVICE;
-            default:
-                return ComponentType.UNKNOWN;
+            case TAG_ACTIVITY: return StorageManager.Type.ACTIVITY;
+            case TAG_RECEIVER: return StorageManager.Type.RECEIVER;
+            case TAG_SERVICE: return StorageManager.Type.SERVICE;
+            default: return StorageManager.Type.UNKNOWN;
         }
     }
 }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.FileUtils;
-import android.util.Log;
 
 import com.google.classysharkandroid.utils.IOUtils;
 
@@ -21,10 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.storage.StorageManager;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
-
-import static io.github.muntashirakon.AppManager.compontents.ComponentsBlocker.ComponentType;
 
 /**
  * Import components from external apps like Blocker, MyAndroidTools, Watt
@@ -65,6 +63,8 @@ public class ExternalComponentsImporter {
 
     /**
      * Watt only supports IFW, so copy them directly
+     *
+     * FIXME: Breaks in v2.5.6
      * @param context Application context
      * @param fileUri File URI
      */
@@ -100,7 +100,7 @@ public class ExternalComponentsImporter {
             throws Exception {
         try {
             String jsonString = Utils.getFileContent(context.getContentResolver(), uri);
-            HashMap<String, HashMap<String, ComponentType>> packageComponents = new HashMap<>();
+            HashMap<String, HashMap<String, StorageManager.Type>> packageComponents = new HashMap<>();
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONArray components = jsonObject.getJSONArray("components");
             for(int i = 0; i<components.length(); ++i) {
@@ -116,7 +116,7 @@ public class ExternalComponentsImporter {
             if (packageComponents.size() > 0) {
                 ComponentsBlocker blocker;
                 for (String packageName: packageComponents.keySet()) {
-                    HashMap<String, ComponentType> disabledComponents = packageComponents.get(packageName);
+                    HashMap<String, StorageManager.Type> disabledComponents = packageComponents.get(packageName);
                     //noinspection ConstantConditions
                     if (disabledComponents.size() > 0) {
                         blocker = ComponentsBlocker.getInstance(context, packageName);
@@ -134,13 +134,13 @@ public class ExternalComponentsImporter {
     }
 
     @NonNull
-    private static ComponentType getTypeFromString(@NonNull String strType) {
+    private static StorageManager.Type getTypeFromString(@NonNull String strType) {
         switch (strType) {
-            case "ACTIVITY": return ComponentType.ACTIVITY;
-            case "PROVIDER": return ComponentType.PROVIDER;
-            case "RECEIVER": return ComponentType.RECEIVER;
-            case "SERVICE": return ComponentType.SERVICE;
+            case "ACTIVITY": return StorageManager.Type.ACTIVITY;
+            case "PROVIDER": return StorageManager.Type.PROVIDER;
+            case "RECEIVER": return StorageManager.Type.RECEIVER;
+            case "SERVICE": return StorageManager.Type.SERVICE;
         }
-        return ComponentType.UNKNOWN;
+        return StorageManager.Type.UNKNOWN;
     }
 }
