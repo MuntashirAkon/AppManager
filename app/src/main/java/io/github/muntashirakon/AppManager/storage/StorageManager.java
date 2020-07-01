@@ -163,24 +163,22 @@ public class StorageManager {
                 entries.add(entry);
             }
             TSVFile.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException ignore) {}
     }
 
     private void commit() {
-        new Thread(this::saveEntries).start();
+        new Thread(() -> saveEntries(new ArrayList<>(entries))).start();
     }
 
-    private void saveEntries() {
+    private void saveEntries(List<Entry> finalEntries) {
         try {
-            if (entries.size() == 0) {
+            if (finalEntries.size() == 0) {
                 //noinspection ResultOfMethodCallIgnored
                 getDesiredFile().delete();
                 return;
             }
             StringBuilder stringBuilder = new StringBuilder();
-            for(Entry entry: entries) {
+            for(Entry entry: finalEntries) {
                 stringBuilder.append(entry.name).append("\t").append(entry.type).append("\t").append(entry.extra).append("\n");
             }
             FileOutputStream TSVFile = new FileOutputStream(getDesiredFile());
