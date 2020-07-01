@@ -1,6 +1,7 @@
 package io.github.muntashirakon.AppManager.compontents;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Xml;
 
 import com.jaredrummler.android.shell.CommandResult;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.storage.StorageManager;
 
 /**
  * Block application components: activities, broadcasts, services and providers.
@@ -72,7 +74,7 @@ public class ComponentsBlocker {
                 throw new AssertionError();
             }
         }
-        componentsBlocker.setPackageName(packageName);
+        componentsBlocker.setPackageName(context, packageName);
         return componentsBlocker;
     }
 
@@ -113,6 +115,7 @@ public class ComponentsBlocker {
     private HashMap<String, ComponentType> disabledComponents;
     private Set<String> removedProviders;
     private String packageName;
+    private StorageManager storageManager;
 
     private ComponentsBlocker(@NonNull String localIfwRulesPath) {
         this.LOCAL_RULES_PATH = localIfwRulesPath;
@@ -122,8 +125,9 @@ public class ComponentsBlocker {
      * Alternative to constructor
      * @param packageName Name of the package to handle
      */
-    private void setPackageName(String packageName) {
+    private void setPackageName(Context context, String packageName) {
         this.packageName = packageName;
+        this.storageManager = StorageManager.getInstance(context, packageName);
         this.localRulesFile = new File(LOCAL_RULES_PATH, packageName + ".xml");
         this.localProvidersFile = new File(LOCAL_RULES_PATH, packageName + ".txt");
         removedProviders = new HashSet<>();
@@ -146,6 +150,7 @@ public class ComponentsBlocker {
         if (hasComponent(componentName)) {
             if (disabledComponents.get(componentName) == ComponentType.PROVIDER) {
                 removedProviders.add(componentName);
+                storageManager.removeEntry(componentName);
             }
             disabledComponents.remove(componentName);
         }
@@ -156,17 +161,9 @@ public class ComponentsBlocker {
      * @throws IOException If it fails to write to the destination file
      */
     public void saveDisabledComponents() throws IOException {
-        if (disabledComponents.isEmpty()) {
-            if (localRulesFile.exists()) {
-                //noinspection ResultOfMethodCallIgnored
-                localRulesFile.delete();
-            }
-            return;
-        }
         StringBuilder activities = new StringBuilder();
         StringBuilder services = new StringBuilder();
         StringBuilder receivers = new StringBuilder();
-        StringBuilder providers = new StringBuilder();
         for (String component : disabledComponents.keySet()) {
             String componentFilter = "<component-filter name=\"" + packageName + "/" + component + "\"/>\n";
             ComponentType componentType = disabledComponents.get(component);
@@ -175,7 +172,9 @@ public class ComponentsBlocker {
                     case ACTIVITY: activities.append(componentFilter); break;
                     case RECEIVER: receivers.append(componentFilter); break;
                     case SERVICE: services.append(componentFilter); break;
-                    case PROVIDER: providers.append(component).append("\n"); break;
+                    case PROVIDER:
+                        storageManager.setComponent(component, StorageManager.Type.PROVIDER, false);
+                        break;
                 }
             }
         }
@@ -189,10 +188,6 @@ public class ComponentsBlocker {
         FileOutputStream rulesStream = new FileOutputStream(localRulesFile);
         rulesStream.write(rules.getBytes());
         rulesStream.close();
-        // Save providers
-        FileOutputStream providersStream = new FileOutputStream(localProvidersFile);
-        providersStream.write(providers.toString().getBytes());
-        providersStream.close();
     }
 
     /**
@@ -227,30 +222,20 @@ public class ComponentsBlocker {
             for (String provider : removedProviders) {
                 Shell.SU.run(String.format("pm enable %s/%s", packageName, provider));
             }
-            // Fetch providers from file once again
-            Set<String> providers = new HashSet<>();
-            if (localProvidersFile.exists()) {
-                try {
-                    BufferedReader bufferedReader = new BufferedReader(new FileReader(localProvidersFile));
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        if (!line.equals("")) {
-                            providers.add(line.trim());
-                        }
-                    }
-                    bufferedReader.close();
-                } catch (IOException ignored) {}
-            }
+            // Read from storage manager
+            List<StorageManager.Entry> disabledProviders = storageManager.getAll(StorageManager.Type.PROVIDER);
             // Enable/disable components
             if (apply) {
                 // Disable providers
-                for (String provider : providers) {
-                    Shell.SU.run(String.format("pm disable %s/%s", packageName, provider));
+                for (StorageManager.Entry provider: disabledProviders) {
+                    Shell.SU.run(String.format("pm disable %s/%s", packageName, provider.name));
+                    storageManager.setComponent(provider.name, provider.type, true);
                 }
             } else {
                 // Enable providers
-                for (String provider : providers) {
-                    Shell.SU.run(String.format("pm enable %s/%s", packageName, provider));
+                for (StorageManager.Entry provider: disabledProviders) {
+                    Shell.SU.run(String.format("pm enable %s/%s", packageName, provider.name));
+                    storageManager.removeEntry(provider);
                 }
             }
         } catch (IOException ignored) {}
@@ -272,18 +257,7 @@ public class ComponentsBlocker {
                 Shell.SU.run(String.format("cp %s%s.xml '%s'", SYSTEM_RULES_PATH, packageName, LOCAL_RULES_PATH));
             } else return;
         }
-        if (localProvidersFile.exists()) {
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(localProvidersFile));
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    if (!line.equals("")) {
-                        disabledComponents.put(line.trim(), ComponentType.PROVIDER);
-                    }
-                }
-                bufferedReader.close();
-            } catch (IOException ignored) {}
-        }
+        retrieveDisabledProviders();
         try {
             FileInputStream rulesStream = new FileInputStream(localRulesFile);
             XmlPullParser parser = Xml.newPullParser();
@@ -311,6 +285,29 @@ public class ComponentsBlocker {
             }
             rulesStream.close();
         } catch (IOException | XmlPullParserException ignored) {}
+    }
+
+    private void retrieveDisabledProviders() {
+        // Read from external provider file if exists and delete it
+        // FIXME: Remove this logic in v2.5.7
+        if (localProvidersFile.exists()) {
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(localProvidersFile));
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    if (!TextUtils.isEmpty(line))
+                        disabledComponents.put(line.trim(), ComponentType.PROVIDER);
+                }
+                bufferedReader.close();
+                //noinspection ResultOfMethodCallIgnored
+                localProvidersFile.delete();
+            } catch (IOException ignored) {}
+        }
+        // Read from storage manager
+        List<StorageManager.Entry> disabledProviders = storageManager.getAll(StorageManager.Type.PROVIDER);
+        for (StorageManager.Entry provider: disabledProviders) {
+            disabledComponents.put(provider.name, ComponentType.PROVIDER);
+        }
     }
 
     /**
