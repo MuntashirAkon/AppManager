@@ -1,6 +1,12 @@
 package io.github.muntashirakon.AppManager.compontents;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PermissionInfo;
+import android.content.pm.ProviderInfo;
+import android.content.pm.ServiceInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.FileUtils;
@@ -92,7 +98,6 @@ public class ExternalComponentsImporter {
 
     /**
      * Apply from blocker
-     * FIXME: Retrieve component types using PackageInfo instead of json file
      * @param context Application context
      * @param uri File URI
      */
@@ -101,17 +106,22 @@ public class ExternalComponentsImporter {
         try {
             String jsonString = Utils.getFileContent(context.getContentResolver(), uri);
             HashMap<String, HashMap<String, StorageManager.Type>> packageComponents = new HashMap<>();
+            HashMap<String, PackageInfo> packageInfoList = new HashMap<>();
+            PackageManager packageManager = context.getPackageManager();
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONArray components = jsonObject.getJSONArray("components");
             for(int i = 0; i<components.length(); ++i) {
                 JSONObject component = (JSONObject) components.get(i);
                 String packageName = component.getString("packageName");
+                if (!packageInfoList.containsKey(packageName))
+                    packageInfoList.put(packageName, packageManager.getPackageInfo(packageName,
+                            PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
+                                    | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES));
                 String componentName = component.getString("name");
-                String type = component.getString("type");
                 if (!packageComponents.containsKey(packageName))
                     packageComponents.put(packageName, new HashMap<>());
                 //noinspection ConstantConditions
-                packageComponents.get(packageName).put(componentName, getTypeFromString(type));
+                packageComponents.get(packageName).put(componentName, getType(componentName, packageInfoList.get(packageName)));
             }
             if (packageComponents.size() > 0) {
                 ComponentsBlocker blocker;
@@ -133,14 +143,15 @@ public class ExternalComponentsImporter {
         }
     }
 
-    @NonNull
-    private static StorageManager.Type getTypeFromString(@NonNull String strType) {
-        switch (strType) {
-            case "ACTIVITY": return StorageManager.Type.ACTIVITY;
-            case "PROVIDER": return StorageManager.Type.PROVIDER;
-            case "RECEIVER": return StorageManager.Type.RECEIVER;
-            case "SERVICE": return StorageManager.Type.SERVICE;
-        }
+    private static StorageManager.Type getType(@NonNull String name, @NonNull PackageInfo packageInfo) {
+        for (ActivityInfo activityInfo: packageInfo.activities)
+            if (activityInfo.name.equals(name)) return StorageManager.Type.ACTIVITY;
+        for (ProviderInfo providerInfo: packageInfo.providers)
+            if (providerInfo.name.equals(name)) return StorageManager.Type.PROVIDER;
+        for (ActivityInfo receiverInfo: packageInfo.receivers)
+            if (receiverInfo.name.equals(name)) return StorageManager.Type.RECEIVER;
+        for (ServiceInfo serviceInfo: packageInfo.services)
+            if (serviceInfo.name.equals(name)) return StorageManager.Type.SERVICE;
         return StorageManager.Type.UNKNOWN;
     }
 }
