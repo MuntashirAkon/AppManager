@@ -72,7 +72,7 @@ public class EditShortcutDialogFragment extends DialogFragment {
         try {
             activityIconResourceName[0] = mPackageManager.getResourcesForActivity(activity).getResourceName(mActivityInfo.getIconResource());
             text_icon.setText(activityIconResourceName[0]);
-        } catch (PackageManager.NameNotFoundException ignored) {}
+        } catch (PackageManager.NameNotFoundException | Resources.NotFoundException ignored) {}
 
         text_icon.addTextChangedListener(new TextWatcher() {
             @Override

@@ -15,6 +15,7 @@ import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -752,7 +753,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     : activityLabel);
             boolean isExported = activityInfo.exported;
             launch.setEnabled(isExported);
-            if (isExported) {
+            if (isExported && !appDetailsItem.isBlocked) {
                 launch.setOnClickListener(view -> {
                     Intent intent = new Intent();
                     intent.setClassName(mPackageName, activityName);
@@ -773,7 +774,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                                 .getResourceName(activityInfo.getIconResource());
                     } catch (PackageManager.NameNotFoundException e) {
                         Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
-                    }
+                    } catch (Resources.NotFoundException ignore) {}
                     LauncherIconCreator.createLauncherIcon(getActivity(), activityInfo,
                             (String) activityInfo.loadLabel(mPackageManager),
                             activityInfo.loadIcon(mPackageManager), iconResourceName);
