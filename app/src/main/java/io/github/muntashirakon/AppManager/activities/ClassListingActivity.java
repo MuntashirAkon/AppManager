@@ -118,6 +118,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class_listing);
+        setSupportActionBar(findViewById(R.id.toolbar));
         mActionBar = getSupportActionBar();
         if (mActionBar != null) {
             mPackageName = getIntent().getStringExtra(EXTRA_PACKAGE_NAME);

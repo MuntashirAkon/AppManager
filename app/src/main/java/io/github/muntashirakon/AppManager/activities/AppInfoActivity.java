@@ -101,6 +101,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_info);
+        setSupportActionBar(findViewById(R.id.toolbar));
         mPackageName = getIntent().getStringExtra(AppInfoActivity.EXTRA_PACKAGE_NAME);
         if (mPackageName == null) {
             Toast.makeText(this, getString(R.string.empty_package_name), Toast.LENGTH_LONG).show();

@@ -73,6 +73,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shared_prefs);
+        setSupportActionBar(findViewById(R.id.toolbar));
         mSharedPrefFile = getIntent().getStringExtra(EXTRA_PREF_LOCATION);
         String appLabel = getIntent().getStringExtra(EXTRA_PREF_LABEL);
         if (mSharedPrefFile == null) {

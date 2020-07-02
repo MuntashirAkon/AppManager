@@ -55,6 +55,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
             setContentView(R.layout.activity_any_viewer_wrapped);
         else
             setContentView(R.layout.activity_any_viewer);
+        setSupportActionBar(findViewById(R.id.toolbar));
 
         mProgressBar = findViewById(R.id.progress_horizontal);
 

@@ -1,6 +1,6 @@
 <resources>
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight" />
-    <style name="Theme.MaterialComponents.DayNight" parent="Theme.MaterialComponents">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+    <style name="Theme.MaterialComponents.DayNight.NoActionBar" parent="Theme.MaterialComponents.NoActionBar">
         <item name="actionOverflowMenuStyle">@style/Widget.AppCompat.PopupMenu.Overflow</item>
         <item name="colorAccent">@color/sand_tan_shadow</item>
         <item name="colorPrimary">?android:colorBackground</item>

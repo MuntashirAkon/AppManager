@@ -146,9 +146,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(this, android.R.attr.colorPrimary));
         mSwipeRefresh.setOnRefreshListener(this);
 
+        setSupportActionBar(findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(null);
             actionBar.setDisplayShowCustomEnabled(true);
             actionBar.setTitle(getString(R.string.loading));
 

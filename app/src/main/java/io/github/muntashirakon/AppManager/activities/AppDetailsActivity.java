@@ -44,6 +44,7 @@ public class AppDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_details);
+        setSupportActionBar(findViewById(R.id.toolbar));
         mConstraint = null;
         mPackageName = getIntent().getStringExtra(AppInfoActivity.EXTRA_PACKAGE_NAME);
         if (mPackageName == null) {
