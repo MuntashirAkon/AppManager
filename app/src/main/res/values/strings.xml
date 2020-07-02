@@ -323,4 +323,10 @@
     <string name="pid_and_ppid">Process ID: %d, Parent Process ID: %d</string>
     <string name="memory_virtual_memory">Memory: %s, Virtual Memory: %s</string>
     <string name="user_and_uid">User: %s (%d)</string>
+    <string name="clear_data">Clear Data</string>
+    <string name="backup_apk">Backup APK</string>
+    <string name="backup_data">Backup Data</string>
+    <string name="disable_background">Disable Background</string>
+    <string name="export_blocking_data">Export Blocking Data</string>
+    <string name="some_items_selected">%d selected</string>
 </resources>

@@ -4,4 +4,5 @@
     <color name="disabled_app">@color/blue_popsicle</color>
     <color name="ten_percent_black">#1AFFFFFF</color>
     <color name="SEMI_TRANSPARENT">#10FFFFFF</color>
+    <color name="highlight">@color/purple_shadow</color>
 </resources>

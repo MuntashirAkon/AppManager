@@ -14,6 +14,12 @@
         <item name="actionOverflowButtonStyle">@style/ActionBarOverflowButton</item>
         <item name="navigationIcon">@drawable/ic_keyboard_backspace_black_24dp</item>
     </style>
+    <style name="CustomBottomAppBar" parent="Widget.MaterialComponents.BottomAppBar.Colored">
+        <item name="materialThemeOverlay">@style/CustomBottomAppBarOverlay</item>
+    </style>
+    <style name="CustomBottomAppBarOverlay">
+        <item name="colorOnSurface">?android:attr/colorBackground</item>
+    </style>
     <style name="ActionBarOverflowButton" parent="@style/Widget.AppCompat.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_more_vert_black_24dp</item>
     </style>

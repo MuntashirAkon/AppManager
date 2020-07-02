@@ -35,6 +35,9 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.textview.MaterialTextView;
+
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -57,7 +60,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SearchView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -124,28 +129,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private ProgressBar mProgressBar;
     private LoaderManager mLoaderManager;
     private SwipeRefreshLayout mSwipeRefresh;
+    private BottomAppBar mBottomAppBar;
+    private MaterialTextView mBottomAppBarCounter;
+    private LinearLayoutCompat mMainLayout;
     private static String mConstraint;
     private static @NonNull Set<String> mPackageNames = new HashSet<>();
+    private CoordinatorLayout.LayoutParams mLayoutParamsSelection;
+    private CoordinatorLayout.LayoutParams mLayoutParamsTypical;
     private MenuItem appUsageMenu;
     private MenuItem runningAppsMenu;
     private MenuItem sortByBlockedComponentMenu;
     private @SortOrder int mSortBy;
 
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        packageList = getIntent().getStringExtra(EXTRA_PACKAGE_LIST);
-        listName = getIntent().getStringExtra(EXTRA_LIST_NAME);
-        if (listName == null) listName = "Onboard.packages";
-
-        mProgressBar = findViewById(R.id.progress_horizontal);
-        mListView = findViewById(R.id.item_list);
-        mSwipeRefresh = findViewById(R.id.swipe_refresh);
-        mSwipeRefresh.setColorSchemeColors(Utils.getThemeColor(this, android.R.attr.colorAccent));
-        mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(this, android.R.attr.colorPrimary));
-        mSwipeRefresh.setOnRefreshListener(this);
-
         setSupportActionBar(findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -166,7 +166,33 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             layoutParams.gravity = Gravity.END;
             actionBar.setCustomView(searchView, layoutParams);
         }
+        packageList = getIntent().getStringExtra(EXTRA_PACKAGE_LIST);
+        listName = getIntent().getStringExtra(EXTRA_LIST_NAME);
+        if (listName == null) listName = "Onboard.packages";
 
+        mProgressBar = findViewById(R.id.progress_horizontal);
+        mListView = findViewById(R.id.item_list);
+        mSwipeRefresh = findViewById(R.id.swipe_refresh);
+        mBottomAppBar = findViewById(R.id.bottom_appbar);
+        mBottomAppBarCounter = findViewById(R.id.bottom_appbar_counter);
+        mMainLayout = findViewById(R.id.main_layout);
+
+        mSwipeRefresh.setColorSchemeColors(Utils.getThemeColor(this, android.R.attr.colorAccent));
+        mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(this, android.R.attr.colorPrimary));
+        mSwipeRefresh.setOnRefreshListener(this);
+
+        int margin = Utils.dpToPx(this, 56);
+        mLayoutParamsSelection = new CoordinatorLayout.LayoutParams(
+                CoordinatorLayout.LayoutParams.MATCH_PARENT,
+                CoordinatorLayout.LayoutParams.MATCH_PARENT);
+        mLayoutParamsSelection.setMargins(0, margin, 0, margin);
+        mLayoutParamsTypical = new CoordinatorLayout.LayoutParams(
+                CoordinatorLayout.LayoutParams.MATCH_PARENT,
+                CoordinatorLayout.LayoutParams.MATCH_PARENT);
+        mLayoutParamsTypical.setMargins(0, margin, 0, 0);
+
+        mAdapter = new MainActivity.Adapter(MainActivity.this);
+        mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
         mListView.setFastScrollEnabled(true);
         mListView.setDividerHeight(0);
@@ -177,8 +203,38 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             MainActivity.this.startActivity(appDetailsIntent);
             return true;
         });
-        mAdapter = new MainActivity.Adapter(MainActivity.this);
-        mListView.setAdapter(mAdapter);
+
+
+        Menu menu = mBottomAppBar.getMenu();
+        if (menu instanceof MenuBuilder) {
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        }
+        mBottomAppBar.setNavigationOnClickListener(v -> {
+            mPackageNames.clear();
+            mBottomAppBar.setVisibility(View.GONE);
+            mMainLayout.setLayoutParams(mLayoutParamsTypical);
+            mListView.invalidateViews();
+        });
+        mBottomAppBar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.action_uninstall:
+                case R.id.action_disable:
+                case R.id.action_clear_data:
+                case R.id.action_backup_apk:
+                case R.id.action_kill_process:
+                case R.id.action_backup_data:
+                case R.id.action_disable_background:
+                case R.id.action_export_blocking_data:
+                    Toast.makeText(this, "This operation is not supported yet.", Toast.LENGTH_LONG).show();
+                    mPackageNames.clear();
+                    mListView.invalidateViews();
+                    return true;
+            }
+            mPackageNames.clear();
+            mListView.invalidateViews();
+            return false;
+        });
+        handleSelection();
 
         // Initialize app prefs
         AppPref.getInstance(this);
@@ -397,6 +453,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    private void handleSelection() {
+        if (mPackageNames.size() == 0) {
+            mBottomAppBar.setVisibility(View.GONE);
+            mMainLayout.setLayoutParams(mLayoutParamsTypical);
+        } else {
+            mBottomAppBar.setVisibility(View.VISIBLE);
+            mBottomAppBarCounter.setText(String.format(getString(R.string.some_items_selected), mPackageNames.size()));
+            mMainLayout.setLayoutParams(mLayoutParamsSelection);
+        }
+    }
+
     private void showProgressBar(boolean show) {
         mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
     }
@@ -540,7 +607,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         private int mColorTransparent;
         private int mColorSemiTransparent;
-        private int mColorBackgroundTan;
+        private int mColorHighlight;
         private int mColorOrange;
         private int mColorPrimary;
         private int mColorSecondary;
@@ -553,7 +620,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             mColorTransparent = Color.TRANSPARENT;
             mColorSemiTransparent = ContextCompat.getColor(mActivity, R.color.SEMI_TRANSPARENT);
-            mColorBackgroundTan = ContextCompat.getColor(mActivity, R.color.background_tan);
+            mColorHighlight = ContextCompat.getColor(mActivity, R.color.highlight);
             mColorOrange = ContextCompat.getColor(mActivity, R.color.orange);
             mColorPrimary = Utils.getThemeColor(mActivity, android.R.attr.textColorPrimary);
             mColorSecondary = Utils.getThemeColor(mActivity, android.R.attr.textColorSecondary);
@@ -561,7 +628,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         void setDefaultList(List<ApplicationItem> list) {
-            mPackageNames = new HashSet<>();
             mDefaultList = list;
             mAdapterList = list;
             if(MainActivity.mConstraint != null
@@ -655,7 +721,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             // Alternate background colors
             if (mPackageNames.contains(info.packageName)) {
-                view.setBackgroundColor(mColorBackgroundTan);
+                view.setBackgroundColor(mColorHighlight);
             } else view.setBackgroundColor(i % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
 
             // If the app is disabled, add an ocean blue background
@@ -774,8 +840,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     finalView.setBackgroundColor(i % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
                 } else {
                     MainActivity.mPackageNames.add(info.packageName);
-                    finalView.setBackgroundColor(mColorBackgroundTan);
+                    finalView.setBackgroundColor(mColorHighlight);
                 }
+                mActivity.handleSelection();
             });
             return view;
         }
