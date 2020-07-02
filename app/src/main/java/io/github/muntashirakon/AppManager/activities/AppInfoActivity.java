@@ -116,7 +116,6 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         mTagCloud = findViewById(R.id.tag_cloud);
         mAccentColor = Utils.getThemeColor(this, android.R.attr.colorAccent);
         mProgressBar = findViewById(R.id.progress_horizontal);
-        getPackageInfoOrFinish();
     }
 
     @Override
