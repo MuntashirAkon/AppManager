@@ -540,7 +540,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         private int mColorTransparent;
         private int mColorSemiTransparent;
-        private int mColorTenPercentBlack;
+        private int mColorBackgroundTan;
         private int mColorOrange;
         private int mColorPrimary;
         private int mColorSecondary;
@@ -553,7 +553,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             mColorTransparent = Color.TRANSPARENT;
             mColorSemiTransparent = ContextCompat.getColor(mActivity, R.color.SEMI_TRANSPARENT);
-            mColorTenPercentBlack = ContextCompat.getColor(mActivity, R.color.background_tan);
+            mColorBackgroundTan = ContextCompat.getColor(mActivity, R.color.background_tan);
             mColorOrange = ContextCompat.getColor(mActivity, R.color.orange);
             mColorPrimary = Utils.getThemeColor(mActivity, android.R.attr.textColorPrimary);
             mColorSecondary = Utils.getThemeColor(mActivity, android.R.attr.textColorSecondary);
@@ -655,7 +655,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             // Alternate background colors
             if (mPackageNames.contains(info.packageName)) {
-                view.setBackgroundColor(mColorTenPercentBlack);
+                view.setBackgroundColor(mColorBackgroundTan);
             } else view.setBackgroundColor(i % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
 
             // If the app is disabled, add an ocean blue background
@@ -774,7 +774,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     finalView.setBackgroundColor(i % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
                 } else {
                     MainActivity.mPackageNames.add(info.packageName);
-                    finalView.setBackgroundColor(mColorTenPercentBlack);
+                    finalView.setBackgroundColor(mColorBackgroundTan);
                 }
             });
             return view;
