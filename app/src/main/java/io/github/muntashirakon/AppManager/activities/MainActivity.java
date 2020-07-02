@@ -2,7 +2,6 @@ package io.github.muntashirakon.AppManager.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.usage.UsageStatsManager;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -45,8 +44,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.IntDef;
@@ -61,9 +62,9 @@ import androidx.core.content.ContextCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import io.github.muntashirakon.AppManager.types.ApplicationItem;
 import io.github.muntashirakon.AppManager.MainLoader;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.types.ApplicationItem;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -124,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private LoaderManager mLoaderManager;
     private SwipeRefreshLayout mSwipeRefresh;
     private static String mConstraint;
+    private static @NonNull Set<String> mPackageNames = new HashSet<>();
     private MenuItem appUsageMenu;
     private MenuItem runningAppsMenu;
     private MenuItem sortByBlockedComponentMenu;
@@ -528,7 +530,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             MainActivity.Adapter.IconAsyncTask iconLoader;
         }
 
-        private Activity mActivity;
+        private MainActivity mActivity;
         private LayoutInflater mLayoutInflater;
         private static PackageManager mPackageManager;
         private Filter mFilter;
@@ -538,18 +540,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         private int mColorTransparent;
         private int mColorSemiTransparent;
+        private int mColorTenPercentBlack;
         private int mColorOrange;
         private int mColorPrimary;
         private int mColorSecondary;
         private int mColorRed;
 
-        Adapter(@NonNull Activity activity) {
+        Adapter(@NonNull MainActivity activity) {
             mActivity = activity;
             mLayoutInflater = activity.getLayoutInflater();
             mPackageManager = activity.getPackageManager();
 
             mColorTransparent = Color.TRANSPARENT;
             mColorSemiTransparent = ContextCompat.getColor(mActivity, R.color.SEMI_TRANSPARENT);
+            mColorTenPercentBlack = ContextCompat.getColor(mActivity, R.color.background_tan);
             mColorOrange = ContextCompat.getColor(mActivity, R.color.orange);
             mColorPrimary = Utils.getThemeColor(mActivity, android.R.attr.textColorPrimary);
             mColorSecondary = Utils.getThemeColor(mActivity, android.R.attr.textColorSecondary);
@@ -557,6 +561,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         void setDefaultList(List<ApplicationItem> list) {
+            mPackageNames = new HashSet<>();
             mDefaultList = list;
             mAdapterList = list;
             if(MainActivity.mConstraint != null
@@ -645,11 +650,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 holder.iconLoader.cancel(true);
             }
 
-            // Alternate background colors
-            view.setBackgroundColor(i % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
-
             ApplicationItem item = mAdapterList.get(i);
             ApplicationInfo info = item.applicationInfo;
+
+            // Alternate background colors
+            if (mPackageNames.contains(info.packageName)) {
+                view.setBackgroundColor(mColorTenPercentBlack);
+            } else view.setBackgroundColor(i % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
 
             // If the app is disabled, add an ocean blue background
             if (!info.enabled) {
@@ -760,7 +767,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             if ((info.flags & ApplicationInfo.FLAG_USES_CLEARTEXT_TRAFFIC) !=0)
                 holder.size.setTextColor(mColorOrange);
             else holder.size.setTextColor(mColorSecondary);
-
+            View finalView = view;
+            holder.icon.setOnClickListener(v -> {
+                if (MainActivity.mPackageNames.contains(info.packageName)) {
+                    MainActivity.mPackageNames.remove(info.packageName);
+                    finalView.setBackgroundColor(i % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
+                } else {
+                    MainActivity.mPackageNames.add(info.packageName);
+                    finalView.setBackgroundColor(mColorTenPercentBlack);
+                }
+            });
             return view;
         }
 
