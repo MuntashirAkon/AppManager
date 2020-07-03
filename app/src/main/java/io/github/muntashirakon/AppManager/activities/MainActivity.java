@@ -480,17 +480,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void handleBatchOp(@BatchOpsManager.OpType int op, @StringRes int msg) {
-        if (!mBatchOpsManager.performOp(op, new ArrayList<>(mPackageNames)).isSuccessful()) {
-            new AlertDialog.Builder(this, R.style.CustomDialog)
-                    .setTitle(msg)
-                    .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
-                            mBatchOpsManager.getLastResult().failedPackages()), null)
-                    .setNegativeButton(android.R.string.ok, null)
-                    .show();
-        }
-        mPackageNames.clear();
-        mListView.invalidateViews();
-        handleSelection();
+        mProgressBar.setVisibility(View.VISIBLE);
+        new Thread(() -> {
+            if (!mBatchOpsManager.performOp(op, new ArrayList<>(mPackageNames)).isSuccessful()) {
+                runOnUiThread(() -> new AlertDialog.Builder(this, R.style.CustomDialog)
+                        .setTitle(msg)
+                        .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+                                mBatchOpsManager.getLastResult().failedPackages()), null)
+                        .setNegativeButton(android.R.string.ok, null)
+                        .show());
+            } else {
+                runOnUiThread(() -> Toast.makeText(this,
+                        R.string.the_operation_was_successful, Toast.LENGTH_LONG).show());
+            }
+            mPackageNames.clear();
+            runOnUiThread(() -> {
+                mListView.invalidateViews();
+                handleSelection();
+                mProgressBar.setVisibility(View.GONE);
+            });
+        }).start();
     }
 
     private void showProgressBar(boolean show) {
