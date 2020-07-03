@@ -375,28 +375,28 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         }  // End root only features
         // Set F-Droid or Aurora Droid
         try {
-            if(!mPackageManager.getApplicationInfo(PACKAGE_NAME_FDROID, 0).enabled)
+            if(!mPackageManager.getApplicationInfo(PACKAGE_NAME_AURORA_DROID, 0).enabled)
                 throw new PackageManager.NameNotFoundException();
-            addToHorizontalLayout(R.string.fdroid, R.drawable.ic_frost_fdroid_black_24dp)
+            addToHorizontalLayout(R.string.aurora, R.drawable.ic_frost_auroradroid_black_24dp)
                     .setOnClickListener(v -> {
                         Intent intent = new Intent();
-                        intent.setClassName(PACKAGE_NAME_FDROID, ACTIVITY_NAME_FDROID);
+                        intent.setClassName(PACKAGE_NAME_AURORA_DROID, ACTIVITY_NAME_AURORA_DROID);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("appid", mPackageName);
+                        intent.putExtra("INTENT_PACKAGE_NAME", mPackageName);
                         try {
                             startActivity(intent);
                         } catch (Exception ignored) {}
                     });
         } catch (PackageManager.NameNotFoundException e) {
             try {
-                if(!mPackageManager.getApplicationInfo(PACKAGE_NAME_AURORA_DROID, 0).enabled)
+                if(!mPackageManager.getApplicationInfo(PACKAGE_NAME_FDROID, 0).enabled)
                     throw new PackageManager.NameNotFoundException();
-                addToHorizontalLayout(R.string.aurora, R.drawable.ic_frost_auroradroid_black_24dp)
+                addToHorizontalLayout(R.string.fdroid, R.drawable.ic_frost_fdroid_black_24dp)
                         .setOnClickListener(v -> {
                             Intent intent = new Intent();
-                            intent.setClassName(PACKAGE_NAME_AURORA_DROID, ACTIVITY_NAME_AURORA_DROID);
+                            intent.setClassName(PACKAGE_NAME_FDROID, ACTIVITY_NAME_FDROID);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("INTENT_PACKAGE_NAME", mPackageName);
+                            intent.putExtra("appid", mPackageName);
                             try {
                                 startActivity(intent);
                             } catch (Exception ignored) {}
