@@ -8,7 +8,6 @@ import java.util.Locale;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.StorageManager;
@@ -42,13 +41,11 @@ public class BatchOpsManager {
     }
 
     private List<String> packageNames;
-    private @OpType int op;
     private Result lastResult;
 
     @NonNull
     public Result performOp(@OpType int op, List<String> packageNames) {
         this.runner.clear();
-        this.op = op;
         this.packageNames = packageNames;
         switch (op) {
             case OP_BACKUP_APK:  // TODO
@@ -58,16 +55,11 @@ public class BatchOpsManager {
             case OP_DISABLE: return opDisable();
             case OP_DISABLE_BACKGROUND: return opDisableBackground();
             case OP_EXPORT_RULES:  // TODO
-            case OP_KILL: // TODO
                 break;
+            case OP_KILL: return opKill();
             case OP_UNINSTALL: return opUninstall();
         }
         lastResult = new Result() {
-            @Override
-            public int getOp() {
-                return op;
-            }
-
             @Override
             public boolean isSuccessful() {
                 return false;
@@ -86,9 +78,9 @@ public class BatchOpsManager {
     }
 
     @NonNull
-    private Result opUninstall() {
+    private Result opClearData() {
         for(String packageName: packageNames) {
-            addCommand(packageName, String.format(Locale.ROOT, "pm uninstall --user 0 %s", packageName));
+            addCommand(packageName, String.format(Locale.ROOT, "pm clear %s", packageName));
         }
         return runOpAndFetchResults();
     }
@@ -119,26 +111,41 @@ public class BatchOpsManager {
     }
 
     @NonNull
-    private Result opClearData() {
+    private Result opKill() {
+        for (String packageName : packageNames) {
+            addCommand(packageName, String.format(Locale.ROOT, "pidof %s", packageName), false);
+        }
+        Result result = runOpAndFetchResults();
+        List<String> pidOrPackageNames = result.failedPackages();
+        runner.clear();
+        for (int i = 0; i<packageNames.size(); ++i) {
+            if (!pidOrPackageNames.get(i).equals(packageNames.get(i))) {
+                addCommand(packageNames.get(i), String.format(Locale.ROOT, "kill -9 %s", pidOrPackageNames.get(i)));
+            }
+        }
+        return runOpAndFetchResults();
+    }
+
+    @NonNull
+    private Result opUninstall() {
         for(String packageName: packageNames) {
-            addCommand(packageName, String.format(Locale.ROOT, "pm clear %s", packageName));
+            addCommand(packageName, String.format(Locale.ROOT, "pm uninstall --user 0 %s", packageName));
         }
         return runOpAndFetchResults();
     }
 
     private void addCommand(String packageName, String command) {
-        runner.addCommand(String.format(Locale.ROOT, "%s > /dev/null 2>&1 || echo %s", command, packageName));
+        addCommand(packageName, command, true);
+    }
+
+    private void addCommand(String packageName, String command, boolean isDevNull) {
+        runner.addCommand(String.format(Locale.ROOT, "%s %s || echo %s", command, isDevNull ? "> /dev/null 2>&1" : "", packageName));
     }
 
     @NonNull
     private Result runOpAndFetchResults() {
         Runner.Result result = runner.run();
         lastResult = new Result() {
-            @Override
-            public int getOp() {
-                return op;
-            }
-
             @Override
             public boolean isSuccessful() {
                 return TextUtils.isEmpty(result.getOutput());
@@ -153,7 +160,6 @@ public class BatchOpsManager {
     }
 
     public interface Result {
-        @OpType int getOp();
         boolean isSuccessful();
         List<String> failedPackages();
     }
