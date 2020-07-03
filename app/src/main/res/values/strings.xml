@@ -329,4 +329,7 @@
     <string name="disable_background">Disable Background</string>
     <string name="export_blocking_data">Export Blocking Data</string>
     <string name="some_items_selected">%d selected</string>
+    <string name="alert_failed_to_clear_data">Failed to clear data of some packages</string>
+    <string name="alert_failed_to_disable">Failed to disable some packages</string>
+    <string name="alert_failed_to_uninstall">Failed to uninstall some packages</string>
 </resources>

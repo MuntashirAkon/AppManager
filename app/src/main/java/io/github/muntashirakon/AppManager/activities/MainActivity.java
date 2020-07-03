@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -56,6 +57,7 @@ import java.util.concurrent.TimeUnit;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -220,41 +222,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
         mBottomAppBar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
-                case R.id.action_uninstall:
-                    if (!mBatchOpsManager.performOp(BatchOpsManager.OP_UNINSTALL,
-                            new ArrayList<>(mPackageNames)).isSuccessful()) {
-                        // TODO: Make custom alert dialog
-                        Toast.makeText(this, "Failed to uninstall some packages.\n"
-                                + mBatchOpsManager.getLastResult().failedPackages().toString(),
-                                Toast.LENGTH_LONG).show();
-                    }
-                    mPackageNames.clear();
-                    mListView.invalidateViews();
-                    handleSelection();
+                case R.id.action_clear_data:
+                    handleBatchOp(BatchOpsManager.OP_CLEAR_DATA, R.string.alert_failed_to_clear_data);
                     return true;
                 case R.id.action_disable:
-                    if (!mBatchOpsManager.performOp(BatchOpsManager.OP_DISABLE,
-                            new ArrayList<>(mPackageNames)).isSuccessful()) {
-                        // TODO: Make custom alert dialog
-                        Toast.makeText(this, "Failed to disable some packages.\n"
-                                        + mBatchOpsManager.getLastResult().failedPackages().toString(),
-                                Toast.LENGTH_LONG).show();
-                    }
-                    mPackageNames.clear();
-                    mListView.invalidateViews();
-                    handleSelection();
+                    handleBatchOp(BatchOpsManager.OP_DISABLE, R.string.alert_failed_to_disable);
                     return true;
-                case R.id.action_clear_data:
-                    if (!mBatchOpsManager.performOp(BatchOpsManager.OP_CLEAR_DATA,
-                            new ArrayList<>(mPackageNames)).isSuccessful()) {
-                        // TODO: Make custom alert dialog
-                        Toast.makeText(this, "Failed to clear data for some packages.\n"
-                                        + mBatchOpsManager.getLastResult().failedPackages().toString(),
-                                Toast.LENGTH_LONG).show();
-                    }
-                    mPackageNames.clear();
-                    mListView.invalidateViews();
-                    handleSelection();
+                case R.id.action_uninstall:
+                    handleBatchOp(BatchOpsManager.OP_UNINSTALL, R.string.alert_failed_to_uninstall);
                     return true;
                 case R.id.action_backup_apk:
                 case R.id.action_kill_process:
@@ -500,6 +475,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             mBottomAppBarCounter.setText(String.format(getString(R.string.some_items_selected), mPackageNames.size()));
             mMainLayout.setLayoutParams(mLayoutParamsSelection);
         }
+    }
+
+    private void handleBatchOp(@BatchOpsManager.OpType int op, @StringRes int msg) {
+        if (!mBatchOpsManager.performOp(op, new ArrayList<>(mPackageNames)).isSuccessful()) {
+            new AlertDialog.Builder(this, R.style.CustomDialog)
+                    .setTitle(msg)
+                    .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+                            mBatchOpsManager.getLastResult().failedPackages()), null)
+                    .setNegativeButton(android.R.string.ok, null)
+                    .show();
+        }
+        mPackageNames.clear();
+        mListView.invalidateViews();
+        handleSelection();
     }
 
     private void showProgressBar(boolean show) {

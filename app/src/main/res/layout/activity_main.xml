@@ -65,6 +65,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:textSize="20sp"
+            android:textColor="?android:attr/textColorPrimary"
             tools:text="@tools:sample/lorem[4]" />
 
     </com.google.android.material.bottomappbar.BottomAppBar>
