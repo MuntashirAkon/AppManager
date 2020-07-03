@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.jaredrummler.android.shell.Shell;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -46,6 +45,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fragments.EditPrefItemFragment;
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class SharedPrefsActivity extends AppCompatActivity implements
@@ -173,7 +173,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements
                 return true;
             case R.id.action_delete:
                 // Make sure it's a file and then delete
-                boolean isSuccess = Shell.SU.run(String.format("[ -f '%s' ] && rm -f '%s'",
+                boolean isSuccess = Runner.run(this, String.format("[ -f '%s' ] && rm -f '%s'",
                         mSharedPrefFile, mSharedPrefFile)).isSuccessful();
                 if (isSuccess) {
                     Toast.makeText(this, R.string.deleted_successfully, Toast.LENGTH_LONG).show();
@@ -282,7 +282,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements
         @Override
         public void run() {
             String sharedPrefPath = mTempSharedPrefFile.getAbsolutePath();
-            if(!Shell.SU.run(String.format("cp '%s' '%s' && chmod 0666 '%s'", mSharedPrefFile,
+            if(!Runner.run(SharedPrefsActivity.this, String.format("cp '%s' '%s' && chmod 0666 '%s'", mSharedPrefFile,
                     sharedPrefPath, sharedPrefPath)).isSuccessful()) {
                 runOnUiThread(SharedPrefsActivity.this::finish);
             }
@@ -337,7 +337,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements
             xmlSerializer.flush();
             xmlFile.write(stringWriter.toString().getBytes());
             xmlFile.close();
-            return Shell.SU.run(String.format("cp '%s' '%s' && chmod 0666 '%s'", sharedPrefsFile,
+            return Runner.run(this, String.format("cp '%s' '%s' && chmod 0666 '%s'", sharedPrefsFile,
                     mSharedPrefFile, mSharedPrefFile)).isSuccessful();
         } catch (IOException e) {
             e.printStackTrace();

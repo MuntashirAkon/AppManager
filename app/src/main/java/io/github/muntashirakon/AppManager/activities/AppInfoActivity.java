@@ -32,7 +32,6 @@ import android.widget.Toast;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.classysharkandroid.utils.IOUtils;
-import com.jaredrummler.android.shell.Shell;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -58,6 +57,7 @@ import androidx.core.content.FileProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
@@ -258,8 +258,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                                 R.string.uninstall_system_app_message : R.string.uninstall_app_message)
                         .setPositiveButton(R.string.uninstall, (dialog, which) -> {
                             // Try without root first then with root
-                            if (Shell.SH.run(String.format("pm uninstall --user 0 %s", mPackageName)).isSuccessful()
-                                    || Shell.SU.run(String.format("pm uninstall --user 0 %s", mPackageName)).isSuccessful()) {
+                            if (Runner.run(this, String.format("pm uninstall --user 0 %s", mPackageName)).isSuccessful()) {
                                 Toast.makeText(mActivity, String.format(getString(R.string.uninstalled_successfully), mPackageLabel), Toast.LENGTH_LONG).show();
                                 finish();
                             } else {
@@ -281,7 +280,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             if (mApplicationInfo.enabled) {
                 // Disable app
                 addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> {
-                    if (Shell.SU.run(String.format("pm disable %s", mPackageName)).isSuccessful()) {
+                    if (Runner.run(this, String.format("pm disable %s", mPackageName)).isSuccessful()) {
                         // Refresh
                         getPackageInfoOrFinish();
                     } else {
@@ -291,7 +290,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             } else {
                 // Enable app
                 addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> {
-                    if (Shell.SU.run(String.format("pm enable %s", mPackageName)).isSuccessful()) {
+                    if (Runner.run(this, String.format("pm enable %s", mPackageName)).isSuccessful()) {
                         // Refresh
                         getPackageInfoOrFinish();
                     } else {
@@ -302,9 +301,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             // Force stop
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
                 addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> {
-                    final Boolean isRootEnabled = (Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
-                    if (Shell.SH.run(String.format("am force-stop %s", mPackageName)).isSuccessful()
-                            || (isRootEnabled && Shell.SU.run(String.format("am force-stop %s", mPackageName)).isSuccessful())) {
+                    if (Runner.run(this, String.format("am force-stop %s", mPackageName)).isSuccessful()) {
                         // Refresh
                         getPackageInfoOrFinish();
                     } else {
@@ -556,13 +553,13 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
     private List<String> getSharedPrefs(@NonNull String sourceDir) {
         File sharedPath = new File(sourceDir + "/shared_prefs");
-        return Shell.SU.run(String.format("ls %s/*.xml", sharedPath.getAbsolutePath())).stdout;
+        return Runner.run(this, String.format("ls %s/*.xml", sharedPath.getAbsolutePath())).getOutputAsList();
     }
 
     private List<String> getDatabases(@NonNull String sourceDir) {
         File sharedPath = new File(sourceDir + "/databases");
         // FIXME: SQLite db doesn't necessarily have .db extension
-        return Shell.SU.run(String.format("ls %s/*.db", sharedPath.getAbsolutePath())).stdout;
+        return Runner.run(this, String.format("ls %s/*.db", sharedPath.getAbsolutePath())).getOutputAsList();
     }
 
     private void openAsFolderInFM(String dir) {
@@ -660,7 +657,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         if (isRootEnabled) {
             mList.setOpen(v -> {
                 // Clear data
-                if (Shell.SU.run(String.format("pm clear %s", mPackageName)).isSuccessful()) {
+                if (Runner.run(this, String.format("pm clear %s", mPackageName)).isSuccessful()) {
                     getPackageInfoOrFinish();
                 }
             });
@@ -684,7 +681,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                     String extCache = cacheDir.getAbsolutePath().replace(getPackageName(), mPackageName);
                     command.append(" ").append(extCache);
                 }
-                if (Shell.SU.run(command.toString()).isSuccessful()) {
+                if (Runner.run(this, command.toString()).isSuccessful()) {
                     getPackageInfoOrFinish();
                 }
             });

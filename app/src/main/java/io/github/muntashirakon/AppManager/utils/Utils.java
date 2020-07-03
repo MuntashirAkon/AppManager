@@ -25,8 +25,6 @@ import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.WindowManager;
 
-import com.jaredrummler.android.shell.Shell;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -60,6 +58,7 @@ import javax.xml.xpath.XPathFactory;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.runner.Runner;
 
 @SuppressWarnings("unused")
 public class Utils {
@@ -588,9 +587,9 @@ public class Utils {
         return typedValue.data;
     }
 
-    public static boolean isRootGiven() {
+    public static boolean isRootGiven(Context context) {
         if (isRootAvailable()) {
-            String output = Shell.SU.run("id").getStdout();
+            String output = Runner.run(context, "id").getOutput();
             return output != null && output.toLowerCase().contains("uid=0");
         }
         return false;

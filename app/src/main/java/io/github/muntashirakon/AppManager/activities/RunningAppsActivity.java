@@ -22,8 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
-import com.jaredrummler.android.shell.CommandResult;
-import com.jaredrummler.android.shell.Shell;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -42,6 +40,7 @@ import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.StorageManager;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -263,7 +262,7 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
             if (applicationInfo != null) {
                 holder.forceStopBtn.setVisibility(View.VISIBLE);
                 holder.forceStopBtn.setOnClickListener(v -> {
-                    if (Shell.SU.run(String.format("am force-stop %s", applicationInfo.packageName)).isSuccessful()) {
+                    if (Runner.run(mActivity, String.format("am force-stop %s", applicationInfo.packageName)).isSuccessful()) {
                         mActivity.refresh();
                     } else {
                         Toast.makeText(mActivity, String.format(mActivity.getString(R.string.failed_to_stop), processName), Toast.LENGTH_LONG).show();
@@ -271,13 +270,13 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
                 });
                 int mode = AppOpsManager.MODE_DEFAULT;
                 try {
-                    mode = new AppOpsService().checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName);
+                    mode = new AppOpsService(mActivity).checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName);
                 } catch (Exception ignore) {}
                 if (mode != AppOpsManager.MODE_IGNORED) {
                     holder.disableBackgroundRunBtn.setVisibility(View.VISIBLE);
                     holder.disableBackgroundRunBtn.setOnClickListener(v -> {
                         try {
-                            new AppOpsService().setMode(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName, AppOpsManager.MODE_IGNORED);
+                            new AppOpsService(mActivity).setMode(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName, AppOpsManager.MODE_IGNORED);
                             StorageManager.getInstance(mActivity, applicationInfo.packageName).setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
                             mActivity.refresh();
                         } catch (Exception e) {
@@ -290,7 +289,7 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
                 holder.disableBackgroundRunBtn.setVisibility(View.GONE);
             }
             holder.killBtn.setOnClickListener(v -> {
-                if (Shell.SU.run(String.format(Locale.ROOT, "kill -9 %d", processItem.pid)).isSuccessful()) {
+                if (Runner.run(mActivity, String.format(Locale.ROOT, "kill -9 %d", processItem.pid)).isSuccessful()) {
                     mActivity.refresh();
                 } else {
                     Toast.makeText(mActivity, String.format(mActivity.getString(R.string.failed_to_stop), processName), Toast.LENGTH_LONG).show();
@@ -387,13 +386,13 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
         @Override
         public void run() {
             List<ApplicationInfo> applicationInfoList = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-            CommandResult result = Shell.SU.run("ps -dwZ -o PID,PPID,RSS,VSZ,USER,UID,STAT,NAME | grep -v :kernel:");
-            if (result.isSuccessful()) {
-                List<String> processInfoLines = result.stdout;
+            Runner.run(RunningAppsActivity.this, "ps -dwZ -o PID,PPID,RSS,VSZ,USER,UID,STAT,NAME | grep -v :kernel:");
+            if (Runner.getLastResult().isSuccessful()) {
+                List<String> processInfoLines = Runner.getLastResult().getOutputAsList(1);
                 HashMap<String, ProcessItem> processList = new HashMap<>();
-                for (int i = 1; i<processInfoLines.size(); ++i) {
+                for (String processInfoLine: processInfoLines) {
                     try {
-                        ProcessItem processItem = parseProcess(processInfoLines.get(i));
+                        ProcessItem processItem = parseProcess(processInfoLine);
                         processList.put(processItem.name, processItem);
                     } catch (Exception ignore) {}
                 }

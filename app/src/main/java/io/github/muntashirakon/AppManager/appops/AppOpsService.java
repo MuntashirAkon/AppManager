@@ -1,9 +1,7 @@
 package io.github.muntashirakon.AppManager.appops;
 
 import android.annotation.SuppressLint;
-
-import com.jaredrummler.android.shell.CommandResult;
-import com.jaredrummler.android.shell.Shell;
+import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +10,7 @@ import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.runner.Runner;
 
 @SuppressLint("DefaultLocale")
 public
@@ -33,6 +32,10 @@ class AppOpsService implements IAppOpsService {
 
     private boolean isSuccessful = false;
     private List<String> output = null;
+    private Context context;
+    public AppOpsService(Context context) {
+        this.context = context;
+    }
 
     /**
      * Get the mode of operation of the given package or uid.
@@ -131,9 +134,9 @@ class AppOpsService implements IAppOpsService {
      * @param command The command to run
      */
     private void runCommand(String command) {
-        CommandResult commandResult = Shell.SU.run(command);
-        isSuccessful = commandResult.isSuccessful();
-        output = commandResult.stdout;
+        Runner.Result result = Runner.run(context, command);
+        isSuccessful = result.isSuccessful();
+        output = result.getOutputAsList();
     }
 
     /**

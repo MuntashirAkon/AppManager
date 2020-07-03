@@ -1,11 +1,9 @@
 package io.github.muntashirakon.AppManager.compontents;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Xml;
-
-import com.jaredrummler.android.shell.CommandResult;
-import com.jaredrummler.android.shell.Shell;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -22,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.StorageManager;
 
 /**
@@ -49,6 +48,7 @@ public class ComponentsBlocker {
     private static final String TAG_SERVICE = "service";
 
     private static final String SYSTEM_RULES_PATH = "/data/system/ifw/";
+    @SuppressLint("StaticFieldLeak")
     private static ComponentsBlocker componentsBlocker = null;
 
     @NonNull
@@ -61,14 +61,14 @@ public class ComponentsBlocker {
         if (componentsBlocker == null) {
             try {
                 String localIfwRulesPath = provideLocalIfwRulesPath(context);
-                componentsBlocker = new ComponentsBlocker(localIfwRulesPath);
+                componentsBlocker = new ComponentsBlocker(context.getApplicationContext(), localIfwRulesPath);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 throw new AssertionError();
             }
         }
         if (ComponentsBlocker.packageName == null || !ComponentsBlocker.packageName.equals(packageName))
-            componentsBlocker.setPackageName(context, packageName, noLoadFromDisk);
+            componentsBlocker.setPackageName(packageName, noLoadFromDisk);
         return componentsBlocker;
     }
 
@@ -88,10 +88,10 @@ public class ComponentsBlocker {
     public static void applyAllRules(@NonNull Context context) {
         try {
             String ifwPath = provideLocalIfwRulesPath(context);
-            CommandResult result = Shell.SU.run(String.format("ls %s/*.xml", ifwPath));
-            if (result.isSuccessful()) {
+            Runner.run(context, String.format("ls %s/*.xml", ifwPath));
+            if (Runner.getLastResult().isSuccessful()) {
                 // Get packages
-                List<String> packageNames = result.stdout;
+                List<String> packageNames = Runner.getLastResult().getOutputAsList();
                 for(int i = 0; i<packageNames.size(); ++i) {
                     String s = new File(packageNames.get(i)).getName();
                     packageNames.set(i, s.substring(0, s.lastIndexOf(".xml")));
@@ -110,8 +110,10 @@ public class ComponentsBlocker {
     private Set<String> removedProviders;
     private static String packageName;
     private StorageManager storageManager;
+    private Context context;
 
-    private ComponentsBlocker(@NonNull String localIfwRulesPath) {
+    private ComponentsBlocker(@NonNull Context context, @NonNull String localIfwRulesPath) {
+        this.context = context;
         this.LOCAL_RULES_PATH = localIfwRulesPath;
     }
 
@@ -119,7 +121,7 @@ public class ComponentsBlocker {
      * Alternative to constructor
      * @param packageName Name of the package to handle
      */
-    private void setPackageName(Context context, String packageName, boolean noLoadFromDisk) {
+    private void setPackageName(String packageName, boolean noLoadFromDisk) {
         ComponentsBlocker.packageName = packageName;
         this.storageManager = StorageManager.getInstance(context, packageName);
         this.localRulesFile = new File(LOCAL_RULES_PATH, packageName + ".xml");
@@ -204,19 +206,19 @@ public class ComponentsBlocker {
             // Apply/Remove rules
             if (apply && localRulesFile.exists()) {
                 // Apply rules
-                Shell.SU.run(String.format("cp '%s' %s && chmod 0666 %s%s.xml && am force-stop %s",
+                Runner.run(context, String.format("cp '%s' %s && chmod 0666 %s%s.xml && am force-stop %s",
                         localRulesFile.getAbsolutePath(), SYSTEM_RULES_PATH, SYSTEM_RULES_PATH,
                         packageName, packageName));
             } else {
                 // Remove rules
-                Shell.SU.run(String.format("test -e '%s%s.xml' && rm -rf %s%s.xml && am force-stop %s",
+                Runner.run(context, String.format("test -e '%s%s.xml' && rm -rf %s%s.xml && am force-stop %s",
                         SYSTEM_RULES_PATH, packageName, SYSTEM_RULES_PATH, packageName, packageName));
             }
             if (localRulesFile.exists()) //noinspection ResultOfMethodCallIgnored
                 localRulesFile.delete();
             // Enable removed providers
             for (String provider : removedProviders) {
-                Shell.SU.run(String.format("pm enable %s/%s", packageName, provider));
+                Runner.run(context, String.format("pm enable %s/%s", packageName, provider));
             }
             // Read from storage manager
             List<StorageManager.Entry> disabledProviders = storageManager.getAll(StorageManager.Type.PROVIDER);
@@ -224,13 +226,13 @@ public class ComponentsBlocker {
             if (apply) {
                 // Disable providers
                 for (StorageManager.Entry provider: disabledProviders) {
-                    Shell.SU.run(String.format("pm disable %s/%s", packageName, provider.name));
+                    Runner.run(context, String.format("pm disable %s/%s", packageName, provider.name));
                     storageManager.setComponent(provider.name, provider.type, true);
                 }
             } else {
                 // Enable providers
                 for (StorageManager.Entry provider: disabledProviders) {
-                    Shell.SU.run(String.format("pm enable %s/%s", packageName, provider.name));
+                    Runner.run(context, String.format("pm enable %s/%s", packageName, provider.name));
                     storageManager.removeEntry(provider);
                 }
             }
@@ -248,7 +250,7 @@ public class ComponentsBlocker {
             // Copy system rules to access them locally
             // FIXME: Read all files instead of just one for greater compatibility
             // FIXME: In v2.5.7, file contents will be copied instead of copying the file itself
-            Shell.SU.run(String.format("cp %s%s.xml '%s' && chmod 0666 '%s/%s.xml'",
+            Runner.run(context, String.format("cp %s%s.xml '%s' && chmod 0666 '%s/%s.xml'",
                     SYSTEM_RULES_PATH, packageName, LOCAL_RULES_PATH, LOCAL_RULES_PATH, packageName));
         }
         retrieveDisabledProviders();

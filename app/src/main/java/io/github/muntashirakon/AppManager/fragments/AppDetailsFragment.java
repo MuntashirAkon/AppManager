@@ -39,8 +39,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jaredrummler.android.shell.Shell;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -58,14 +56,15 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
-import io.github.muntashirakon.AppManager.storage.StorageManager;
-import io.github.muntashirakon.AppManager.types.AppDetailsItem;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.storage.StorageManager;
+import io.github.muntashirakon.AppManager.types.AppDetailsItem;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.Tuple;
@@ -417,7 +416,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 break;
             case APP_OPS:
                 if ((Boolean) AppPref.get(mActivity, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
-                    mAppOpsService = new AppOpsService();
+                    mAppOpsService = new AppOpsService(mActivity);
                     try {
                         List<AppOpsManager.PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(-1, mPackageName, null);
                         List<AppOpsManager.OpEntry> opEntries = new ArrayList<>();
@@ -1253,13 +1252,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     viewHolder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
                         if (isChecked) {
                             // Enable permission
-                            if (!Shell.SU.run(String.format("pm grant %s %s", mPackageName, permName)).isSuccessful()) {
+                            if (!Runner.run(mActivity, String.format("pm grant %s %s", mPackageName, permName)).isSuccessful()) {
                                 Toast.makeText(mActivity, "Failed to grant permission.", Toast.LENGTH_LONG).show();
                                 viewHolder.toggleSwitch.setChecked(false);
                             } else StorageManager.getInstance(mActivity, mPackageName).setPermission(permName, true);
                         } else {
                             // Disable permission
-                            if (!Shell.SU.run(String.format("pm revoke %s %s", mPackageName, permName)).isSuccessful()) {
+                            if (!Runner.run(mActivity, String.format("pm revoke %s %s", mPackageName, permName)).isSuccessful()) {
                                 Toast.makeText(mActivity, "Failed to revoke permission.", Toast.LENGTH_LONG).show();
                                 viewHolder.toggleSwitch.setChecked(true);
                             } else StorageManager.getInstance(mActivity, mPackageName).setPermission(permName, false);
