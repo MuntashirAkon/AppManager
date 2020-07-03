@@ -26,15 +26,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ProgressBar
-                    android:id="@+id/progress_horizontal"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:indeterminate="true"
-                    android:paddingStart="@dimen/padding_medium"
-                    android:paddingEnd="@dimen/padding_medium" />
-
                 <LinearLayout
                     android:id="@+id/details_header"
                     android:layout_width="match_parent"

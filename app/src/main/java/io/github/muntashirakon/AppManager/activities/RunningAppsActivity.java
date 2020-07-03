@@ -17,11 +17,11 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.progressindicator.ProgressIndicator;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
 
     private RunningAppsAdapter mAdapter;
     private static PackageManager mPackageManager;
-    private ProgressBar mProgressBar;
+    private ProgressIndicator mProgressIndicator;
 
     static class ProcessItem {
         int pid;
@@ -92,7 +92,7 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
             actionBar.setCustomView(searchView, layoutParams);
         }
         mPackageManager = getPackageManager();
-        mProgressBar = findViewById(R.id.progress_horizontal);
+        mProgressIndicator = findViewById(R.id.progress_linear);
         ListView mListView = findViewById(android.R.id.list);
         mListView.setTextFilterEnabled(true);
         mListView.setDividerHeight(0);
@@ -409,7 +409,7 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
                 List<ProcessItem> processItemList = new ArrayList<>(processList.values());
                 runOnUiThread(() -> {
                     mAdapter.setDefaultList(processItemList);
-                    mProgressBar.setVisibility(View.GONE);
+                    mProgressIndicator.hide();
                 });
             }
         }

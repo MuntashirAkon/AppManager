@@ -8,7 +8,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -16,6 +16,13 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?android:colorBackground"
             app:navigationIcon="@null" />
+
+        <com.google.android.material.progressindicator.ProgressIndicator
+            android:id="@+id/progress_linear"
+            style="@style/Widget.MaterialComponents.ProgressIndicator.Linear.Indeterminate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:indicatorColor="?colorAccent" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -26,15 +33,6 @@
         android:layout_marginBottom="?attr/actionBarSize"
         android:orientation="vertical"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-        <ProgressBar
-            android:id="@+id/progress_horizontal"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="16dip"
-            android:indeterminate="true"
-            android:paddingStart="@dimen/padding_medium"
-            android:paddingEnd="@dimen/padding_medium" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh"

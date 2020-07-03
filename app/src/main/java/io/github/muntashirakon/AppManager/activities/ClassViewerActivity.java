@@ -11,9 +11,9 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.google.android.material.progressindicator.ProgressIndicator;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,7 +62,7 @@ public class ClassViewerActivity extends AppCompatActivity {
             ("\\b[A-Z][A-Za-z0-9_]+\\b", Pattern.MULTILINE);
 
     private String classDump;
-    private ProgressBar mProgressBar;
+    private ProgressIndicator mProgressIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,7 @@ public class ClassViewerActivity extends AppCompatActivity {
         else
             setContentView(R.layout.activity_any_viewer);
 
-        mProgressBar = findViewById(R.id.progress_horizontal);
+        mProgressIndicator = findViewById(R.id.progress_linear);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -91,7 +91,7 @@ public class ClassViewerActivity extends AppCompatActivity {
     }
 
     private void displayContent() {
-        showProgressBar(true);
+        mProgressIndicator.show();
         final TextView textView = findViewById(R.id.any_view);
         final int typeClassColor = ContextCompat.getColor(this, R.color.ocean_blue);
         final int keywordsColor = ContextCompat.getColor(this, R.color.dark_orange);
@@ -120,13 +120,9 @@ public class ClassViewerActivity extends AppCompatActivity {
             }
             runOnUiThread(() -> {
                 textView.setText(spannableString);
-                ClassViewerActivity.this.showProgressBar(false);
+                mProgressIndicator.hide();
             });
         }).start();
-    }
-
-    private void showProgressBar(boolean show) {
-        mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     @SuppressLint("RestrictedApi")

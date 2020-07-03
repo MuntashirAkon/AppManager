@@ -21,6 +21,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         setSupportActionBar(findViewById(R.id.toolbar));
+        findViewById(R.id.progress_linear).setVisibility(View.GONE);
         appPref = AppPref.getInstance(this);
 
         final SwitchMaterial rootSwitcher = findViewById(R.id.root_toggle_btn);

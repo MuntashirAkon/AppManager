@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.format.Formatter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +25,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+
+import com.google.android.material.progressindicator.ProgressIndicator;
 
 import java.lang.ref.WeakReference;
 import java.text.Collator;
@@ -75,6 +76,7 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
             R.id.action_sort_by_mobile_data, R.id.action_sort_by_package_name,
             R.id.action_sort_by_screen_time, R.id.action_sort_by_times_opened};
 
+    private ProgressIndicator mProgressIndicator;
     private AppUsageAdapter mAppUsageAdapter;
     List<AppUsageStatsManager.PackageUS> mPackageUSList;
     private long totalScreenTime;
@@ -91,6 +93,8 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
         if (actionBar != null) {
             actionBar.setTitle(getString(R.string.app_usage));
         }
+
+        mProgressIndicator = findViewById(R.id.progress_linear);
 
         // Get usage stats
         mAppUsageAdapter = new AppUsageAdapter(this);
@@ -223,15 +227,22 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
     }
 
     private void getAppUsage() {
-        int _try = 5; // try to get usage stat 5 times
-        do {
-            mPackageUSList = AppUsageStatsManager.getInstance(this).getUsageStats(0, current_interval);
-        } while (0 != --_try && mPackageUSList.size() == 0);
-        mAppUsageAdapter.setDefaultList(mPackageUSList);
-        totalScreenTime = 0;
-        for(AppUsageStatsManager.PackageUS appItem: mPackageUSList) totalScreenTime += appItem.screenTime;
-        sortPackageUSList();
-        setUsageSummary();
+        mProgressIndicator.show();
+        new Thread(() -> {
+            int _try = 5; // try to get usage stat 5 times
+            do {
+                mPackageUSList = AppUsageStatsManager.getInstance(this).getUsageStats(0, current_interval);
+            } while (0 != --_try && mPackageUSList.size() == 0);
+            totalScreenTime = 0;
+            for (AppUsageStatsManager.PackageUS appItem : mPackageUSList)
+                totalScreenTime += appItem.screenTime;
+            sortPackageUSList();
+            runOnUiThread(() -> {
+                mAppUsageAdapter.setDefaultList(mPackageUSList);
+                setUsageSummary();
+                mProgressIndicator.hide();
+            });
+        }).start();
     }
 
     private void promptForUsageStatsPermission() {

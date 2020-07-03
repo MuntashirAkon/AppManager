@@ -11,10 +11,10 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.progressindicator.ProgressIndicator;
 
 import java.lang.ref.WeakReference;
 import java.util.regex.Matcher;
@@ -45,7 +45,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
                     Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 
     private static String code;
-    private ProgressBar mProgressBar;
+    private ProgressIndicator mProgressIndicator;
 
 
     @Override
@@ -57,7 +57,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
             setContentView(R.layout.activity_any_viewer);
         setSupportActionBar(findViewById(R.id.toolbar));
 
-        mProgressBar = findViewById(R.id.progress_horizontal);
+        mProgressIndicator = findViewById(R.id.progress_linear);
 
         String packageName = getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
         String filePath = null, applicationLabel = null;
@@ -120,7 +120,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
             }
             runOnUiThread(() -> {
                 textView.setText(spannableString);
-                ManifestViewerActivity.this.showProgressBar(false);
+                ManifestViewerActivity.this.showProgressIndicator(false);
             });
         }).start();
     }
@@ -130,8 +130,9 @@ public class ManifestViewerActivity extends AppCompatActivity {
         finish();
     }
 
-    private void showProgressBar(boolean show) {
-        mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+    private void showProgressIndicator(boolean show) {
+        if (show) mProgressIndicator.show();
+        else mProgressIndicator.hide();
     }
 
     /**
@@ -150,7 +151,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if(mActivity.get() != null) mActivity.get().showProgressBar(true);
+            if(mActivity.get() != null) mActivity.get().showProgressIndicator(true);
         }
 
         @Override
@@ -189,7 +190,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
 //        @Override
 //        protected void onPreExecute() {
 //            super.onPreExecute();
-//            if (mActivity.get() != null) mActivity.get().showProgressBar(true);
+//            if (mActivity.get() != null) mActivity.get().showProgressIndicator(true);
 //        }
 //
 //        @Override
@@ -223,7 +224,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
 //        protected void onPostExecute(Boolean result) {
 //            super.onPostExecute(result);
 //            if (mActivity.get() != null) {
-//                mActivity.get().showProgressBar(false);
+//                mActivity.get().showProgressIndicator(false);
 //                if (result)
 //                    mActivity.get().displayContent();
 //                else

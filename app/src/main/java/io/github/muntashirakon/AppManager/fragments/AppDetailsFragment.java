@@ -34,10 +34,11 @@ import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.progressindicator.ProgressIndicator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -114,7 +115,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private ComponentsBlocker mComponentsBlocker;
     private MenuItem blockingToggler;
     private AppOpsService mAppOpsService;
-    private ProgressBar mProgressBar;
+    private ProgressIndicator mProgressIndicator;
     private TextView mProgressMsg;
 
     private List<Tuple<String, Integer>> permissionsWithFlags;
@@ -178,8 +179,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         TextView emptyView = view.findViewById(android.R.id.empty);
         emptyView.setText(getNeededString(neededProperty));
         listView.setEmptyView(emptyView);
-        mProgressBar = mActivity.findViewById(R.id.progress_horizontal);
-        mProgressBar.setVisibility(View.VISIBLE);
+        mProgressIndicator = mActivity.findViewById(R.id.progress_linear);
+        showProgressIndicator(true);
         mProgressMsg = mActivity.findViewById(R.id.progress_text);
         mProgressMsg.setVisibility(View.GONE);
         mAdapter = new ActivitiesListAdapter();
@@ -534,6 +535,16 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         }
     }
 
+    private void showProgressIndicator(boolean show) {
+        if (show) {
+            mProgressIndicator.setVisibility(View.VISIBLE);
+            mProgressIndicator.show();
+        } else {
+            mProgressIndicator.hide();
+            mProgressIndicator.setVisibility(View.GONE);
+        }
+    }
+
     private class ActivitiesListAdapter extends BaseAdapter implements Filterable {
         private List<AppDetailsItem> mAdapterList;
         private List<AppDetailsItem> mDefaultList;
@@ -549,7 +560,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         void reset() {
             isRootEnabled = (Boolean) AppPref.get(mActivity, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
             final Boolean isBlockingEnabled = (Boolean) AppPref.get(mActivity, AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN);
-            mProgressBar.setVisibility(View.VISIBLE);
+            showProgressIndicator(true);
             new Thread(() -> {
                 requestedProperty = neededProperty;
                 mAdapterList = getNeededList(requestedProperty);
@@ -568,7 +579,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         AppDetailsFragment.this.mProgressMsg.setVisibility(View.GONE);
                     }
                     ActivitiesListAdapter.this.notifyDataSetChanged();
-                    mProgressBar.setVisibility(View.GONE);
+                    showProgressIndicator(false);
                 });
             }).start();
         }

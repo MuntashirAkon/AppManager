@@ -31,12 +31,12 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.lang.ref.WeakReference;
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private List<ApplicationItem> mItemList = new ArrayList<>();
     private int mItemSizeRetrievedCount;
     private ListView mListView;
-    private ProgressBar mProgressBar;
+    private ProgressIndicator mProgressIndicator;
     private LoaderManager mLoaderManager;
     private SwipeRefreshLayout mSwipeRefresh;
     private BottomAppBar mBottomAppBar;
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         listName = getIntent().getStringExtra(EXTRA_LIST_NAME);
         if (listName == null) listName = "Onboard.packages";
 
-        mProgressBar = findViewById(R.id.progress_horizontal);
+        mProgressIndicator = findViewById(R.id.progress_linear);
         mListView = findViewById(R.id.item_list);
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
         mBottomAppBar = findViewById(R.id.bottom_appbar);
@@ -395,7 +395,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @NonNull
     @Override
     public Loader<List<ApplicationItem>> onCreateLoader(int id, @Nullable Bundle args) {
-        showProgressBar(true);
+        showProgressIndicator(true);
         return new MainLoader(this);
     }
 
@@ -415,14 +415,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (Build.VERSION.SDK_INT <= 25) {
             startRetrievingPackagesSize();
         }
-        showProgressBar(false);
+        showProgressIndicator(false);
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<List<ApplicationItem>> loader) {
         mItemList = null;
         mAdapter.setDefaultList(null);
-        showProgressBar(false);
+        showProgressIndicator(false);
     }
 
     @Override
@@ -482,7 +482,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void handleBatchOp(@BatchOpsManager.OpType int op, @StringRes int msg) {
-        mProgressBar.setVisibility(View.VISIBLE);
+        showProgressIndicator(true);
         new Thread(() -> {
             if (!mBatchOpsManager.performOp(op, new ArrayList<>(mPackageNames)).isSuccessful()) {
                 runOnUiThread(() -> new AlertDialog.Builder(this, R.style.CustomDialog)
@@ -499,13 +499,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             runOnUiThread(() -> {
                 mListView.invalidateViews();
                 handleSelection();
-                mProgressBar.setVisibility(View.GONE);
+                showProgressIndicator(false);
             });
         }).start();
     }
 
-    private void showProgressBar(boolean show) {
-        mProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+    private void showProgressIndicator(boolean show) {
+        if (show) mProgressIndicator.show();
+        else mProgressIndicator.hide();
     }
 
     /**

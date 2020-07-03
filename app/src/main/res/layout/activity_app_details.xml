@@ -34,14 +34,12 @@
         android:orientation="vertical"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <ProgressBar
-            android:id="@+id/progress_horizontal"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        <com.google.android.material.progressindicator.ProgressIndicator
+            android:id="@+id/progress_linear"
+            style="@style/Widget.MaterialComponents.ProgressIndicator.Linear.Indeterminate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:paddingStart="@dimen/padding_medium"
-            android:paddingEnd="@dimen/padding_medium" />
+            app:indicatorColor="?colorAccent" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/progress_text"

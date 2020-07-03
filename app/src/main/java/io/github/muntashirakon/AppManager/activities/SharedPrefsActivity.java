@@ -16,11 +16,11 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.progressindicator.ProgressIndicator;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -65,7 +65,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements
     private String mSharedPrefFile;
     private File mTempSharedPrefFile;
     private SharedPrefsListingAdapter mAdapter;
-    private ProgressBar mProgressBar;
+    private ProgressIndicator mProgressIndicator;
     private HashMap<String, Object> mSharedPrefMap;
     private static String mConstraint;
 
@@ -107,8 +107,8 @@ public class SharedPrefsActivity extends AppCompatActivity implements
             layoutParams.gravity = Gravity.END;
             actionBar.setCustomView(searchView, layoutParams);
         }
-        mProgressBar = findViewById(R.id.progress_horizontal);
-        mProgressBar.setVisibility(View.VISIBLE);
+        mProgressIndicator = findViewById(R.id.progress_linear);
+        mProgressIndicator.show();
         ListView listView = findViewById(android.R.id.list);
         listView.setTextFilterEnabled(true);
         listView.setDividerHeight(0);
@@ -289,7 +289,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements
             mSharedPrefMap = readSharedPref(mTempSharedPrefFile);
             runOnUiThread(() -> {
                 mAdapter.setDefaultList(mSharedPrefMap);
-                mProgressBar.setVisibility(View.GONE);
+                mProgressIndicator.hide();
             });
         }
     }

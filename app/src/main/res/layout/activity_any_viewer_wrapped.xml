@@ -8,38 +8,22 @@
 
     <include layout="@layout/appbar" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:fillViewport="true"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <ProgressBar
-            android:id="@+id/progress_horizontal"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/any_view"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:paddingStart="@dimen/padding_medium"
-            android:paddingEnd="@dimen/padding_medium" />
+            android:fontFamily="monospace"
+            android:gravity="top"
+            android:padding="@dimen/padding_small"
+            android:textIsSelectable="true"
+            tools:text="@tools:sample/lorem/random" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
-
-            <TextView
-                android:id="@+id/any_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:gravity="top"
-                android:padding="@dimen/padding_small"
-                android:textIsSelectable="true"
-                tools:text="@tools:sample/lorem/random" />
-
-        </ScrollView>
-
-    </LinearLayout>
+    </ScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

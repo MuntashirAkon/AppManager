@@ -3,7 +3,6 @@ package io.github.muntashirakon.AppManager.activities;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -23,10 +22,10 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.classysharkandroid.dex.DexLoaderBuilder;
 import com.google.classysharkandroid.reflector.ClassesNamesList;
 import com.google.classysharkandroid.reflector.Reflector;
@@ -82,7 +81,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     private String packageInfo = "";
     private CharSequence mAppName;
     private ActionBar mActionBar;
-    private ProgressBar mProgressBar;
+    private ProgressIndicator mProgressIndicator;
     private static String mConstraint;
     private String mPackageName;
 
@@ -159,7 +158,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         mListView.setDividerHeight(0);
         mListView.setEmptyView(findViewById(android.R.id.empty));
 
-        mProgressBar = findViewById(R.id.progress_horizontal);
+        mProgressIndicator = findViewById(R.id.progress_linear);
 
         final Uri uriFromIntent = inIntent.getData();
         classList = new ClassesNamesList();
@@ -315,7 +314,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                 .setView(showText)
                 .setIcon(R.drawable.ic_frost_classysharkexodus_black_24dp)
                 .setNegativeButton(android.R.string.ok, null)
-                .setNeutralButton(R.string.exodus_link, (DialogInterface.OnClickListener) (dialog, which) -> {
+                .setNeutralButton(R.string.exodus_link, (dialog, which) -> {
                     Uri exodus_link = Uri.parse(String.format("https://reports.exodus-privacy.eu.org/en/reports/%s/latest/", mPackageName));
                     Intent intent = new Intent(Intent.ACTION_VIEW, exodus_link);
                     if (intent.resolveActivity(getPackageManager()) != null) {
@@ -396,7 +395,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                 }
 //                    mListView.setAdapter(mAdapter);
                 mListView.setAdapter(mClassListingAdapter);
-                mProgressBar.setVisibility(View.GONE);
+                mProgressIndicator.hide();
                 if (classList.getClassNames().isEmpty() && totalClassesScanned == 0) {
                     // FIXME: Add support for odex (using root)
                     Toast.makeText(ClassListingActivity.this, R.string.system_odex_not_supported, Toast.LENGTH_LONG).show();
