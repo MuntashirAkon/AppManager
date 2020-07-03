@@ -754,18 +754,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 holder.iconLoader.cancel(true);
             }
 
-            ApplicationItem item = mAdapterList.get(i);
-            ApplicationInfo info = item.applicationInfo;
+            final ApplicationItem item = mAdapterList.get(i);
+            final ApplicationInfo info = item.applicationInfo;
 
             // Alternate background colors
-            if (mPackageNames.contains(info.packageName)) {
+            if (mPackageNames.contains(info.packageName))
                 view.setBackgroundColor(mColorHighlight);
-            } else view.setBackgroundColor(i % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
-
-            // If the app is disabled, add an ocean blue background
-            if (!info.enabled) {
+            else if (!info.enabled)
                 view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.disabled_app));
-            }
+            else view.setBackgroundColor(i % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
+
             // Add yellow star if the app is in debug mode
             holder.favorite_icon.setVisibility(item.star ? View.VISIBLE : View.INVISIBLE);
             try {
@@ -875,7 +873,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             holder.icon.setOnClickListener(v -> {
                 if (MainActivity.mPackageNames.contains(info.packageName)) {
                     MainActivity.mPackageNames.remove(info.packageName);
-                    finalView.setBackgroundColor(i % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
+                    if (!info.enabled)
+                        finalView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.disabled_app));
+                    else
+                        finalView.setBackgroundColor(i % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
                 } else {
                     MainActivity.mPackageNames.add(info.packageName);
                     finalView.setBackgroundColor(mColorHighlight);
