@@ -9,7 +9,9 @@ import java.util.Locale;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.storage.StorageManager;
 
 public class BatchOpsManager {
     @IntDef(value = {
@@ -33,7 +35,9 @@ public class BatchOpsManager {
     public static final int OP_UNINSTALL = 7;
 
     private Runner runner;
+    private Context context;
     public BatchOpsManager(Context context) {
+        this.context = context;
         this.runner = Runner.getInstance(context);
     }
 
@@ -50,16 +54,13 @@ public class BatchOpsManager {
             case OP_BACKUP_APK:  // TODO
             case OP_BACKUP_DATA:  // TODO
                 break;
-            case OP_CLEAR_DATA:
-                return opClearData();
-            case OP_DISABLE:
-                return opDisable();
-            case OP_DISABLE_BACKGROUND:  // TODO
+            case OP_CLEAR_DATA: return opClearData();
+            case OP_DISABLE: return opDisable();
+            case OP_DISABLE_BACKGROUND: return opDisableBackground();
             case OP_EXPORT_RULES:  // TODO
             case OP_KILL: // TODO
                 break;
-            case OP_UNINSTALL:
-                return opUninstall();
+            case OP_UNINSTALL: return opUninstall();
         }
         lastResult = new Result() {
             @Override
@@ -98,6 +99,23 @@ public class BatchOpsManager {
             addCommand(packageName, String.format(Locale.ROOT, "pm disable %s", packageName));
         }
         return runOpAndFetchResults();
+    }
+
+    @NonNull
+    private Result opDisableBackground() {
+        for(String packageName: packageNames) {
+            addCommand(packageName, String.format(Locale.ROOT, "appops set %s 63 %d", packageName, AppOpsManager.MODE_IGNORED));
+        }
+        Result result = runOpAndFetchResults();
+        List<String> failedPackages = result.failedPackages();
+        for (String packageName: packageNames) {
+            if (!failedPackages.contains(packageName)) {
+                StorageManager.getInstance(context, packageName).setAppOp(
+                        String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND),
+                        AppOpsManager.MODE_IGNORED);
+            }
+        }
+        return result;
     }
 
     @NonNull

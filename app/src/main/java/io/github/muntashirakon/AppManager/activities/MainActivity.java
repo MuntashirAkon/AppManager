@@ -228,13 +228,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 case R.id.action_disable:
                     handleBatchOp(BatchOpsManager.OP_DISABLE, R.string.alert_failed_to_disable);
                     return true;
+                case R.id.action_disable_background:
+                    handleBatchOp(BatchOpsManager.OP_DISABLE_BACKGROUND, R.string.alert_failed_to_disable_background);
+                    return true;
                 case R.id.action_uninstall:
                     handleBatchOp(BatchOpsManager.OP_UNINSTALL, R.string.alert_failed_to_uninstall);
                     return true;
                 case R.id.action_backup_apk:
                 case R.id.action_kill_process:
                 case R.id.action_backup_data:
-                case R.id.action_disable_background:
                 case R.id.action_export_blocking_data:
                     Toast.makeText(this, "This operation is not supported yet.", Toast.LENGTH_LONG).show();
                     mPackageNames.clear();

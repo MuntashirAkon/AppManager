@@ -332,4 +332,6 @@
     <string name="alert_failed_to_clear_data">Failed to clear data of some packages</string>
     <string name="alert_failed_to_disable">Failed to disable some packages</string>
     <string name="alert_failed_to_uninstall">Failed to uninstall some packages</string>
+    <string name="alert_failed_to_disable_background">Failed to disable run in background for some packages</string>
+    <string name="the_operation_was_successful">The operation was successful</string>
 </resources>
