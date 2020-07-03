@@ -58,7 +58,7 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
                         item.size = (long) -1 * applicationInfo.targetSdkVersion;
                     }
                     if (isRootEnabled) {
-                        item.blockedCount = ComponentsBlocker.getInstance(getContext(), pName, true)
+                        item.blockedCount = ComponentsBlocker.getInstance(getContext(), pName, false)
                                 .componentCount();
                     }
                     itemList.add(item);
@@ -87,7 +87,7 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
                 }
                 if (isRootEnabled) {
                     item.blockedCount = ComponentsBlocker.getInstance(getContext(),
-                            applicationInfo.packageName, true).componentCount();
+                            applicationInfo.packageName, false).componentCount();
                 }
                 itemList.add(item);
             }

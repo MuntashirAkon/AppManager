@@ -59,6 +59,7 @@
         \n- View app usage statistics (in the menu) (requires “Usage Access” permission)
         \n- View running apps/processes (in the menu) (requires root)
         \n- Open APK Updater directly (in the menu) (if installed)
+        \n- Batch operations (click on any app icon to select)
         \n
         \nList colors used in the main window and their meaning:
         \n<u>Red</u>: Doesn\'t allow clearing data storage

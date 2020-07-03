@@ -19,8 +19,9 @@ Yet another android package manager and viewer but...
 - It displays your app usage, data usage and app storage info (requires “Usage Access” permission)
 - Apk files can be shared (hence the use of a provider)
 - It can be used to clear app data or app cache (requires root)
+- Batch operations: clear app data, disable run in background, disable/kill/uninstall apps
 
-...and other minor features such as uninstalling/enabling/disabling apps, displaying app installation info, opening on F-Droid or Aurora Droid.
+...and other minor features such as uninstalling/enabling/disabling apps, displaying app installation info, opening on F-Droid, Aurora Droid or Aurora Store.
 
 It basically combined the features of five or six apps that any tech-savy person is needed to install in order to have a “life”.
 

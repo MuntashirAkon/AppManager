@@ -1,0 +1,8 @@
+- [Feature] Batch operations in the main window: clear app data, disable run in background, disable/kill/uninstall apps (click on the app icon to select)
+- [Feature] Full support of Blocker's exported files which was broken due to a bug on Blocker app
+- [Feature] Reimplementation of blocking activities, receivers, services and providers
+- [Fix] Remove ConstraintLayout dependency therefore a potential decrease in app size
+- [Fix] Fix duplicate app usage warning in the App Info window
+- [Fix] Fix crash when an app icon is not found in App Details window
+
+Note for root users: In order to ensure that the previous blocking rules are preserved with the new blocking implementation, this update reads from the previous rules consequently increasing the loading time in the main window. This feature will be removed in the next release but can still be simulated by applying global rules in settings.
