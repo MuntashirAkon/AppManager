@@ -69,6 +69,7 @@ import androidx.loader.content.Loader;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.MainLoader;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.types.ApplicationItem;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -139,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private MenuItem appUsageMenu;
     private MenuItem runningAppsMenu;
     private MenuItem sortByBlockedComponentMenu;
+    private BatchOpsManager mBatchOpsManager;
     private @SortOrder int mSortBy;
 
     @SuppressLint("RestrictedApi")
@@ -204,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             return true;
         });
 
+        mBatchOpsManager = new BatchOpsManager(this);
 
         Menu menu = mBottomAppBar.getMenu();
         if (menu instanceof MenuBuilder) {
@@ -218,8 +221,41 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mBottomAppBar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.action_uninstall:
+                    if (!mBatchOpsManager.performOp(BatchOpsManager.OP_UNINSTALL,
+                            new ArrayList<>(mPackageNames)).isSuccessful()) {
+                        // TODO: Make custom alert dialog
+                        Toast.makeText(this, "Failed to uninstall some packages.\n"
+                                + mBatchOpsManager.getLastResult().failedPackages().toString(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                    mPackageNames.clear();
+                    mListView.invalidateViews();
+                    handleSelection();
+                    return true;
                 case R.id.action_disable:
+                    if (!mBatchOpsManager.performOp(BatchOpsManager.OP_DISABLE,
+                            new ArrayList<>(mPackageNames)).isSuccessful()) {
+                        // TODO: Make custom alert dialog
+                        Toast.makeText(this, "Failed to disable some packages.\n"
+                                        + mBatchOpsManager.getLastResult().failedPackages().toString(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                    mPackageNames.clear();
+                    mListView.invalidateViews();
+                    handleSelection();
+                    return true;
                 case R.id.action_clear_data:
+                    if (!mBatchOpsManager.performOp(BatchOpsManager.OP_CLEAR_DATA,
+                            new ArrayList<>(mPackageNames)).isSuccessful()) {
+                        // TODO: Make custom alert dialog
+                        Toast.makeText(this, "Failed to clear data for some packages.\n"
+                                        + mBatchOpsManager.getLastResult().failedPackages().toString(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                    mPackageNames.clear();
+                    mListView.invalidateViews();
+                    handleSelection();
+                    return true;
                 case R.id.action_backup_apk:
                 case R.id.action_kill_process:
                 case R.id.action_backup_data:
@@ -228,10 +264,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     Toast.makeText(this, "This operation is not supported yet.", Toast.LENGTH_LONG).show();
                     mPackageNames.clear();
                     mListView.invalidateViews();
+                    handleSelection();
                     return true;
             }
             mPackageNames.clear();
             mListView.invalidateViews();
+            handleSelection();
             return false;
         });
         handleSelection();
