@@ -188,21 +188,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        if ((neededProperty == ACTIVITIES || neededProperty == PROVIDERS ||
-                neededProperty == RECEIVERS || neededProperty == SERVICES)
-                && (Boolean) AppPref.get(mActivity, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
-                if ((Boolean) AppPref.get(mActivity, AppPref.PREF_GLOBAL_BLOCKING_ENABLED,
-                        AppPref.TYPE_BOOLEAN) || cb.isRulesApplied()) {
-                    cb.applyRules(true);
-                }
-            }
-        }
-    }
-
-    @Override
     public void onRefresh() {
         refreshDetails();
         mSwipeRefresh.setRefreshing(false);
@@ -266,6 +251,21 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
+    }
+
+    synchronized private void applyRules(String componentName, StorageManager.Type type) {
+        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
+            if (cb.hasComponent(componentName)) { // Remove from the list
+                cb.removeComponent(componentName);
+            } else { // Add to the list
+                cb.addComponent(componentName, type);
+            }
+            // Apply rules
+            if ((Boolean) AppPref.get(mActivity, AppPref.PREF_GLOBAL_BLOCKING_ENABLED,
+                    AppPref.TYPE_BOOLEAN) || cb.isRulesApplied()) {
+                cb.applyRules(true);
+            }
+        }
     }
 
     private void refreshDetails() {
@@ -812,13 +812,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (isRootEnabled) {
                 viewHolder.blockBtn.setVisibility(View.VISIBLE);
                 viewHolder.blockBtn.setOnClickListener(v -> {
-                    try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
-                        if (cb.hasComponent(activityName)) { // Remove from the list
-                            cb.removeComponent(activityName);
-                        } else { // Add to the list
-                            cb.addComponent(activityName, StorageManager.Type.ACTIVITY);
-                        }
-                    }
+                    applyRules(activityName, StorageManager.Type.ACTIVITY);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
                     notifyDataSetChanged();
@@ -881,13 +875,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (isRootEnabled) {
                 viewHolder.blockBtn.setVisibility(View.VISIBLE);
                 viewHolder.blockBtn.setOnClickListener(v -> {
-                    try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
-                        if (cb.hasComponent(serviceInfo.name)) { // Remove from the list
-                            cb.removeComponent(serviceInfo.name);
-                        } else { // Add to the list
-                            cb.addComponent(serviceInfo.name, StorageManager.Type.SERVICE);
-                        }
-                    }
+                    applyRules(serviceInfo.name, StorageManager.Type.SERVICE);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
                     notifyDataSetChanged();
@@ -958,13 +946,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (isRootEnabled) {
                 viewHolder.blockBtn.setVisibility(View.VISIBLE);
                 viewHolder.blockBtn.setOnClickListener(v -> {
-                    try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
-                        if (cb.hasComponent(activityInfo.name)) { // Remove from the list
-                            cb.removeComponent(activityInfo.name);
-                        } else { // Add to the list
-                            cb.addComponent(activityInfo.name, StorageManager.Type.RECEIVER);
-                        }
-                    }
+                    applyRules(activityInfo.name, StorageManager.Type.RECEIVER);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
                     notifyDataSetChanged();
@@ -1062,13 +1044,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (isRootEnabled) {
                 viewHolder.blockBtn.setVisibility(View.VISIBLE);
                 viewHolder.blockBtn.setOnClickListener(v -> {
-                    try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
-                        if (cb.hasComponent(providerName)) { // Remove from the list
-                            cb.removeComponent(providerName);
-                        } else { // Add to the list
-                            cb.addComponent(providerName, StorageManager.Type.PROVIDER);
-                        }
-                    }
+                    applyRules(providerName, StorageManager.Type.PROVIDER);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
                     notifyDataSetChanged();
