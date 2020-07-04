@@ -7,21 +7,17 @@ import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.net.Uri;
-import android.os.Build;
-import android.os.FileUtils;
 import android.util.Log;
-
-import com.google.classysharkandroid.utils.IOUtils;
+import android.util.Xml;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 
@@ -56,10 +52,7 @@ public class ExternalComponentsImporter {
         Integer failedCount = 0;
         for(Uri uri: uriList) {
             try {
-                String packageName = applyFromWatt(context, uri);
-                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
-                    cb.applyRules(true);
-                }
+                applyFromWatt(context, uri);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 failed = true;
@@ -72,28 +65,54 @@ public class ExternalComponentsImporter {
     /**
      * Watt only supports IFW, so copy them directly
      *
-     * FIXME: Breaks in v2.5.6
      * @param context Application context
      * @param fileUri File URI
      */
-    @NonNull
-    private static String applyFromWatt(@NonNull Context context, Uri fileUri) throws FileNotFoundException {
+    private static void applyFromWatt(@NonNull Context context, Uri fileUri) throws FileNotFoundException {
         String filename = Utils.getName(context.getContentResolver(), fileUri);
         if (filename == null) throw new FileNotFoundException("The requested content is not found.");
-        File amFile = new File(ComponentsBlocker.getLocalIfwRulesPath(context) + "/" + filename);
         InputStream inputStream = context.getContentResolver().openInputStream(fileUri);
         if (inputStream == null) throw new FileNotFoundException("The requested content is not found.");
-        OutputStream outputStream = new FileOutputStream(amFile);
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                FileUtils.copy(inputStream, outputStream);
-            } else {
-                IOUtils.copy(inputStream, outputStream);
+            try (InputStream rulesStream = context.getContentResolver().openInputStream(fileUri)) {
+                XmlPullParser parser = Xml.newPullParser();
+                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+                parser.setInput(rulesStream, null);
+                parser.nextTag();
+                parser.require(XmlPullParser.START_TAG, null, "rules");
+                int event = parser.nextTag();
+                StorageManager.Type componentType = StorageManager.Type.UNKNOWN;
+                String packageName = Utils.trimExtension(filename);
+                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
+                    String name;
+                    while (!(name = parser.getName()).equals("rules")) {
+                        switch (event) {
+                            case XmlPullParser.START_TAG:
+                                if (name.equals(ComponentsBlocker.TAG_ACTIVITY)
+                                        || name.equals(ComponentsBlocker.TAG_RECEIVER)
+                                        || name.equals(ComponentsBlocker.TAG_SERVICE)) {
+                                    componentType = cb.getComponentType(name);
+                                }
+                                break;
+                            case XmlPullParser.END_TAG:
+                                if (name.equals("component-filter")) {
+                                    String fullKey = parser.getAttributeValue(null, "name");
+                                    int divider = fullKey.indexOf('/');
+                                    String pkgName = fullKey.substring(0, divider);
+                                    String componentName = fullKey.substring(divider + 1);
+                                    if (pkgName.equals(packageName)) {
+                                        // Overwrite rules if exists
+                                        cb.addComponent(componentName, componentType);
+                                    }
+                                }
+                        }
+                        event = parser.nextTag();
+                    }
+                    Log.d("ECI", cb.getAll().toString());
+                    cb.applyRules(true);
+                }
             }
-            inputStream.close();
-            outputStream.close();
-            return Utils.trimExtension(filename);
-        } catch (IOException e) {
+        } catch (IOException|XmlPullParserException e) {
             throw new FileNotFoundException(e.getMessage());
         }
     }
@@ -134,7 +153,6 @@ public class ExternalComponentsImporter {
                             for (String component: disabledComponents.keySet()) {
                                 cb.addComponent(component, disabledComponents.get(component));
                             }
-                            Log.d("ECI", cb.getAll().toString());
                             cb.applyRules(true);
                             if (!cb.isRulesApplied())
                                 throw new Exception("Rules not applied for package " + packageName);

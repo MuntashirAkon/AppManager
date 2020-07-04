@@ -2,6 +2,7 @@ package io.github.muntashirakon.AppManager.compontents;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -42,9 +43,9 @@ import io.github.muntashirakon.AppManager.storage.StorageManager;
  * @see <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/services/core/java/com/android/server/firewall/IntentFirewall.java">IntentFirewall.java</a>
  */
 public class ComponentsBlocker extends StorageManager {
-    private static final String TAG_ACTIVITY = "activity";
-    private static final String TAG_RECEIVER = "broadcast";
-    private static final String TAG_SERVICE = "service";
+    public static final String TAG_ACTIVITY = "activity";
+    public static final String TAG_RECEIVER = "broadcast";
+    public static final String TAG_SERVICE = "service";
 
     private static final String SYSTEM_RULES_PATH = "/data/system/ifw/";
     private static String LOCAL_RULES_PATH;
@@ -148,10 +149,11 @@ public class ComponentsBlocker extends StorageManager {
     }
 
     public void addComponent(String componentName, StorageManager.Type componentType) {
-        setComponent(componentName, componentType, false);
+        if (!readOnly) setComponent(componentName, componentType, false);
     }
 
     public void removeComponent(String componentName) {
+        if (readOnly) return;
         if (hasName(componentName)) {
             if (get(componentName).type == StorageManager.Type.PROVIDER)
                 removedProviders.add(componentName);
@@ -164,6 +166,7 @@ public class ComponentsBlocker extends StorageManager {
      * @throws IOException If it fails to write to the destination file
      */
     private void saveDisabledComponents() throws IOException {
+        if (readOnly) throw new IOException("Saving disabled components in read only mode.");
         if (componentCount() == 0) {
             if (localRulesFile.exists()) //noinspection ResultOfMethodCallIgnored
                 localRulesFile.delete();
@@ -189,9 +192,10 @@ public class ComponentsBlocker extends StorageManager {
                 ((receivers.length() == 0) ? "" : "<broadcast block=\"true\" log=\"false\">\n" + receivers + "</broadcast>\n") +
                 "</rules>";
         // Save rules
-        FileOutputStream rulesStream = new FileOutputStream(localRulesFile);
-        rulesStream.write(rules.getBytes());
-        rulesStream.close();
+        try (FileOutputStream rulesStream = new FileOutputStream(localRulesFile)) {
+            Log.d("Rules", rules);
+            rulesStream.write(rules.getBytes());
+        }
     }
 
     /**
@@ -245,7 +249,9 @@ public class ComponentsBlocker extends StorageManager {
                     removeEntry(provider);
                 }
             }
-        } catch (IOException ignored) {}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -270,33 +276,37 @@ public class ComponentsBlocker extends StorageManager {
                 }
                 return;
             }
-            FileInputStream rulesStream = new FileInputStream(localRulesFile);
-            XmlPullParser parser = Xml.newPullParser();
-            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(rulesStream, null);
-            parser.nextTag();
-            parser.require(XmlPullParser.START_TAG, null, "rules");
-            int event = parser.nextTag();
-            StorageManager.Type componentType = StorageManager.Type.UNKNOWN;
-            while (event != XmlPullParser.END_DOCUMENT) {
-                String name = parser.getName();
-                switch (event) {
-                    case XmlPullParser.START_TAG:
-                        if (name.equals(TAG_ACTIVITY) || name.equals(TAG_RECEIVER) || name.equals(TAG_SERVICE)) {
-                            componentType = getComponentType(name);
-                        }
-                        break;
-                    case XmlPullParser.END_TAG:
-                        if (name.equals("component-filter")) {
-                            String fullKey = parser.getAttributeValue(null, "name");
-                            // FIXME: Verify package name
-                            // Overwrite rules if exists
-                            setComponent(fullKey.substring(packageNameLength), componentType, true);
-                        }
+            try (FileInputStream rulesStream = new FileInputStream(localRulesFile)) {
+                XmlPullParser parser = Xml.newPullParser();
+                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+                parser.setInput(rulesStream, null);
+                parser.nextTag();
+                parser.require(XmlPullParser.START_TAG, null, "rules");
+                int event = parser.nextTag();
+                StorageManager.Type componentType = StorageManager.Type.UNKNOWN;
+                while (event != XmlPullParser.END_DOCUMENT) {
+                    String name = parser.getName();
+                    switch (event) {
+                        case XmlPullParser.START_TAG:
+                            if (name.equals(TAG_ACTIVITY) || name.equals(TAG_RECEIVER) || name.equals(TAG_SERVICE)) {
+                                componentType = getComponentType(name);
+                            }
+                            break;
+                        case XmlPullParser.END_TAG:
+                            if (name.equals("component-filter")) {
+                                String fullKey = parser.getAttributeValue(null, "name");
+                                int divider = fullKey.indexOf('/');
+                                String pkgName = fullKey.substring(0, divider);
+                                String componentName = fullKey.substring(divider + 1);
+                                if (pkgName.equals(packageName)) {
+                                    // Overwrite rules if exists
+                                    setComponent(componentName, componentType, true);
+                                }
+                            }
+                    }
+                    event = parser.nextTag();
                 }
-                event = parser.nextTag();
             }
-            rulesStream.close();
             //noinspection ResultOfMethodCallIgnored
             localRulesFile.delete();
         } catch (IOException | XmlPullParserException ignored) {}
@@ -307,17 +317,17 @@ public class ComponentsBlocker extends StorageManager {
     private void retrieveDisabledProviders() {
         // Read from external provider file if exists and delete it
         if (localProvidersFile.exists()) {
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(localProvidersFile));
+            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(localProvidersFile))) {
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
                     if (!TextUtils.isEmpty(line))
                         setComponent(line.trim(), StorageManager.Type.PROVIDER, true);
                 }
-                bufferedReader.close();
+            } catch (IOException ignored) {
+            } finally {
                 //noinspection ResultOfMethodCallIgnored
                 localProvidersFile.delete();
-            } catch (IOException ignored) {}
+            }
         }
     }
 
@@ -326,7 +336,7 @@ public class ComponentsBlocker extends StorageManager {
      * @param componentName Name of the constant: one of the TAG_*
      * @return One of the {@link StorageManager.Type}
      */
-    private StorageManager.Type getComponentType(@NonNull String componentName) {
+    StorageManager.Type getComponentType(@NonNull String componentName) {
         switch (componentName) {
             case TAG_ACTIVITY: return StorageManager.Type.ACTIVITY;
             case TAG_RECEIVER: return StorageManager.Type.RECEIVER;
