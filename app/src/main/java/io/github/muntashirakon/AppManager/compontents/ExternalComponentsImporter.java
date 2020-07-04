@@ -7,7 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.net.Uri;
-import android.util.Log;
+import android.os.Build;
 import android.util.Xml;
 
 import org.json.JSONArray;
@@ -108,7 +108,6 @@ public class ExternalComponentsImporter {
                         }
                         event = parser.nextTag();
                     }
-                    Log.d("ECI", cb.getAll().toString());
                     cb.applyRules(true);
                 }
             }
@@ -131,13 +130,19 @@ public class ExternalComponentsImporter {
             PackageManager packageManager = context.getPackageManager();
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONArray components = jsonObject.getJSONArray("components");
-            for(int i = 0; i<components.length(); ++i) {
+            for (int i = 0; i<components.length(); ++i) {
                 JSONObject component = (JSONObject) components.get(i);
                 String packageName = component.getString("packageName");
-                if (!packageInfoList.containsKey(packageName))
+                if (!packageInfoList.containsKey(packageName)) {
+                    int apiCompatFlags;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                        apiCompatFlags = PackageManager.MATCH_DISABLED_COMPONENTS;
+                    else apiCompatFlags = PackageManager.GET_DISABLED_COMPONENTS;
                     packageInfoList.put(packageName, packageManager.getPackageInfo(packageName,
                             PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
-                                    | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES));
+                                    | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES
+                                    | apiCompatFlags));
+                }
                 String componentName = component.getString("name");
                 if (!packageComponents.containsKey(packageName))
                     packageComponents.put(packageName, new HashMap<>());
