@@ -21,7 +21,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PatternMatcher;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -116,7 +115,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private MenuItem blockingToggler;
     private AppOpsService mAppOpsService;
     private ProgressIndicator mProgressIndicator;
-    private TextView mProgressMsg;
+    private TextView mRulesNotAppliedMsg;
 
     private List<Tuple<String, Integer>> permissionsWithFlags;
     private boolean bFi;
@@ -179,8 +178,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         listView.setEmptyView(emptyView);
         mProgressIndicator = mActivity.findViewById(R.id.progress_linear);
         showProgressIndicator(true);
-        mProgressMsg = mActivity.findViewById(R.id.progress_text);
-        mProgressMsg.setVisibility(View.GONE);
+        mRulesNotAppliedMsg = mActivity.findViewById(R.id.progress_text);
+        mRulesNotAppliedMsg.setVisibility(View.GONE);
+        mRulesNotAppliedMsg.setText(R.string.rules_not_applied);
         mAdapter = new ActivitiesListAdapter();
         listView.setAdapter(mAdapter);
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> listView.canScrollVertically(-1));
@@ -264,6 +264,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if ((Boolean) AppPref.get(mActivity, AppPref.PREF_GLOBAL_BLOCKING_ENABLED,
                     AppPref.TYPE_BOOLEAN) || cb.isRulesApplied()) {
                 cb.applyRules(true);
+            }
+            if (cb.isRulesApplied()) {
+                mRulesNotAppliedMsg.setVisibility(View.GONE);
+            } else {
+                mRulesNotAppliedMsg.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -576,10 +581,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         if (isRootEnabled && !isBlockingEnabled && cb.componentCount() > 0
                                 && requestedProperty <= AppDetailsFragment.PROVIDERS
                                 && !cb.isRulesApplied()) {
-                            AppDetailsFragment.this.mProgressMsg.setVisibility(View.VISIBLE);
-                            AppDetailsFragment.this.mProgressMsg.setText(R.string.rules_not_applied);
+                            AppDetailsFragment.this.mRulesNotAppliedMsg.setVisibility(View.VISIBLE);
                         } else {
-                            AppDetailsFragment.this.mProgressMsg.setVisibility(View.GONE);
+                            AppDetailsFragment.this.mRulesNotAppliedMsg.setVisibility(View.GONE);
                         }
                     }
                     ActivitiesListAdapter.this.notifyDataSetChanged();

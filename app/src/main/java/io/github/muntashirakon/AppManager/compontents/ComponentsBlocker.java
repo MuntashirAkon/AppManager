@@ -199,11 +199,13 @@ public class ComponentsBlocker extends StorageManager {
     }
 
     /**
-     * Check whether rules are applied successfully
+     * Check whether previous rules are applied successfully
      * @return True if applied, false otherwise
      */
     public boolean isRulesApplied() {
         List<StorageManager.Entry> entries = getAllComponents();
+        if (Runner.run(context, String.format("test -e '%s%s.xml'", SYSTEM_RULES_PATH, packageName))
+                .isSuccessful()) return true;
         for (StorageManager.Entry entry: entries) if (!((Boolean) entry.extra)) return false;
         return true;
     }
