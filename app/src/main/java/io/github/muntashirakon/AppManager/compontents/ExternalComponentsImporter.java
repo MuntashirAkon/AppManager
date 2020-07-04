@@ -9,6 +9,7 @@ import android.content.pm.ServiceInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.FileUtils;
+import android.util.Log;
 
 import com.google.classysharkandroid.utils.IOUtils;
 
@@ -56,7 +57,7 @@ public class ExternalComponentsImporter {
         for(Uri uri: uriList) {
             try {
                 String packageName = applyFromWatt(context, uri);
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(context, packageName)) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
                     cb.applyRules(true);
                 }
             } catch (FileNotFoundException e) {
@@ -79,7 +80,7 @@ public class ExternalComponentsImporter {
     private static String applyFromWatt(@NonNull Context context, Uri fileUri) throws FileNotFoundException {
         String filename = Utils.getName(context.getContentResolver(), fileUri);
         if (filename == null) throw new FileNotFoundException("The requested content is not found.");
-        File amFile = new File(ComponentsBlocker.provideLocalIfwRulesPath(context) + "/" + filename);
+        File amFile = new File(ComponentsBlocker.getLocalIfwRulesPath(context) + "/" + filename);
         InputStream inputStream = context.getContentResolver().openInputStream(fileUri);
         if (inputStream == null) throw new FileNotFoundException("The requested content is not found.");
         OutputStream outputStream = new FileOutputStream(amFile);
@@ -129,10 +130,11 @@ public class ExternalComponentsImporter {
                     HashMap<String, StorageManager.Type> disabledComponents = packageComponents.get(packageName);
                     //noinspection ConstantConditions
                     if (disabledComponents.size() > 0) {
-                        try (ComponentsBlocker cb = ComponentsBlocker.getInstance(context, packageName)){
-                            for (String component : disabledComponents.keySet()) {
+                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)){
+                            for (String component: disabledComponents.keySet()) {
                                 cb.addComponent(component, disabledComponents.get(component));
                             }
+                            Log.d("ECI", cb.getAll().toString());
                             cb.applyRules(true);
                             if (!cb.isRulesApplied())
                                 throw new Exception("Rules not applied for package " + packageName);

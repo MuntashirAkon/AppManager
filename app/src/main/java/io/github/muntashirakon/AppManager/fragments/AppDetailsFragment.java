@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PatternMatcher;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -112,7 +113,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private Activity mActivity;
     private ActivitiesListAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefresh;
-    private ComponentsBlocker mComponentsBlocker;
     private MenuItem blockingToggler;
     private AppOpsService mAppOpsService;
     private ProgressIndicator mProgressIndicator;
@@ -162,8 +162,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             mColorRed = ContextCompat.getColor(mActivity, R.color.red);
         }
         getPackageInfo();
-
-        mComponentsBlocker = ComponentsBlocker.getInstance(mActivity, mPackageName);
     }
 
     @Nullable
@@ -190,25 +188,18 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if ((Boolean) AppPref.get(mActivity, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
-            if ((Boolean) AppPref.get(mActivity, AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN)
-                    || mComponentsBlocker.isRulesApplied())
-                mComponentsBlocker.applyRules(true);
-        }
-        if (mComponentsBlocker != null) mComponentsBlocker.close();
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
-        if ((Boolean) AppPref.get(mActivity, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
-            if ((Boolean) AppPref.get(mActivity, AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN)
-                    || mComponentsBlocker.isRulesApplied())
-                mComponentsBlocker.applyRules(true);
+        if ((neededProperty == ACTIVITIES || neededProperty == PROVIDERS ||
+                neededProperty == RECEIVERS || neededProperty == SERVICES)
+                && (Boolean) AppPref.get(mActivity, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
+                if ((Boolean) AppPref.get(mActivity, AppPref.PREF_GLOBAL_BLOCKING_ENABLED,
+                        AppPref.TYPE_BOOLEAN) || cb.isRulesApplied()) {
+                    cb.applyRules(true);
+                }
+            }
         }
-        if (mComponentsBlocker != null) mComponentsBlocker.commit();
     }
 
     @Override
@@ -224,10 +215,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         if ((Boolean) AppPref.get(mActivity, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)
         && !(Boolean) AppPref.get(mActivity, AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN)) {
             blockingToggler.setVisible(true);
-            if (mComponentsBlocker.isRulesApplied()) {
-                blockingToggler.setTitle(R.string.menu_remove_rules);
-            } else {
-                blockingToggler.setTitle(R.string.menu_apply_rules);
+            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
+                if (cb.isRulesApplied()) {
+                    blockingToggler.setTitle(R.string.menu_remove_rules);
+                } else {
+                    blockingToggler.setTitle(R.string.menu_apply_rules);
+                }
             }
         } else blockingToggler.setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
@@ -240,12 +233,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 refreshDetails();
                 return true;
             case R.id.action_toggle_blocking:
-                boolean isRulesApplied = mComponentsBlocker.isRulesApplied();
-                mComponentsBlocker.applyRules(!isRulesApplied);
-                if (mComponentsBlocker.isRulesApplied()) {
-                    blockingToggler.setTitle(R.string.menu_remove_rules);
-                } else {
-                    blockingToggler.setTitle(R.string.menu_apply_rules);
+                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
+                    boolean isRulesApplied = cb.isRulesApplied();
+                    cb.applyRules(!isRulesApplied);
+                    if (cb.isRulesApplied()) blockingToggler.setTitle(R.string.menu_remove_rules);
+                    else blockingToggler.setTitle(R.string.menu_apply_rules);
                 }
                 refreshDetails();
                 return true;
@@ -378,42 +370,50 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
         switch (index) {
             case ACTIVITIES:
-                if (mPackageInfo.activities != null) {
-                    for(ActivityInfo activityInfo: mPackageInfo.activities) {
-                        AppDetailsItem appDetailsItem = new AppDetailsItem(activityInfo);
-                        appDetailsItem.name = activityInfo.name;
-                        appDetailsItem.isBlocked = mComponentsBlocker.hasComponent(activityInfo.name);
-                        appDetailsItems.add(appDetailsItem);
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
+                    if (mPackageInfo.activities != null) {
+                        for (ActivityInfo activityInfo : mPackageInfo.activities) {
+                            AppDetailsItem appDetailsItem = new AppDetailsItem(activityInfo);
+                            appDetailsItem.name = activityInfo.name;
+                            appDetailsItem.isBlocked = cb.hasComponent(activityInfo.name);
+                            appDetailsItems.add(appDetailsItem);
+                        }
                     }
                 }
                 break;
             case SERVICES:
-                if (mPackageInfo.services != null) {
-                    for(ServiceInfo serviceInfo: mPackageInfo.services) {
-                        AppDetailsItem appDetailsItem = new AppDetailsItem(serviceInfo);
-                        appDetailsItem.name = serviceInfo.name;
-                        appDetailsItem.isBlocked = mComponentsBlocker.hasComponent(serviceInfo.name);
-                        appDetailsItems.add(appDetailsItem);
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
+                    if (mPackageInfo.services != null) {
+                        for (ServiceInfo serviceInfo : mPackageInfo.services) {
+                            AppDetailsItem appDetailsItem = new AppDetailsItem(serviceInfo);
+                            appDetailsItem.name = serviceInfo.name;
+                            appDetailsItem.isBlocked = cb.hasComponent(serviceInfo.name);
+                            appDetailsItems.add(appDetailsItem);
+                        }
                     }
                 }
                 break;
             case RECEIVERS:
-                if (mPackageInfo.receivers != null) {
-                    for(ActivityInfo activityInfo: mPackageInfo.receivers) {
-                        AppDetailsItem appDetailsItem = new AppDetailsItem(activityInfo);
-                        appDetailsItem.name = activityInfo.name;
-                        appDetailsItem.isBlocked = mComponentsBlocker.hasComponent(activityInfo.name);
-                        appDetailsItems.add(appDetailsItem);
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
+                    if (mPackageInfo.receivers != null) {
+                        for (ActivityInfo activityInfo : mPackageInfo.receivers) {
+                            AppDetailsItem appDetailsItem = new AppDetailsItem(activityInfo);
+                            appDetailsItem.name = activityInfo.name;
+                            appDetailsItem.isBlocked = cb.hasComponent(activityInfo.name);
+                            appDetailsItems.add(appDetailsItem);
+                        }
                     }
                 }
                 break;
             case PROVIDERS:
-                if (mPackageInfo.providers != null) {
-                    for(ProviderInfo providerInfo: mPackageInfo.providers) {
-                        AppDetailsItem appDetailsItem = new AppDetailsItem(providerInfo);
-                        appDetailsItem.name = providerInfo.name;
-                        appDetailsItem.isBlocked = mComponentsBlocker.hasComponent(providerInfo.name);
-                        appDetailsItems.add(appDetailsItem);
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
+                    if (mPackageInfo.providers != null) {
+                        for (ProviderInfo providerInfo : mPackageInfo.providers) {
+                            AppDetailsItem appDetailsItem = new AppDetailsItem(providerInfo);
+                            appDetailsItem.name = providerInfo.name;
+                            appDetailsItem.isBlocked = cb.hasComponent(providerInfo.name);
+                            appDetailsItems.add(appDetailsItem);
+                        }
                     }
                 }
                 break;
@@ -572,13 +572,15 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             && !AppDetailsActivity.mConstraint.equals("")) {
                         getFilter().filter(AppDetailsActivity.mConstraint);
                     }
-                    if (isRootEnabled && !isBlockingEnabled && mComponentsBlocker.componentCount() > 0
-                            && !mComponentsBlocker.isRulesApplied()
-                            && requestedProperty <= AppDetailsFragment.PROVIDERS) {
-                        AppDetailsFragment.this.mProgressMsg.setVisibility(View.VISIBLE);
-                        AppDetailsFragment.this.mProgressMsg.setText(R.string.rules_not_applied);
-                    } else {
-                        AppDetailsFragment.this.mProgressMsg.setVisibility(View.GONE);
+                    try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
+                        if (isRootEnabled && !isBlockingEnabled && cb.componentCount() > 0
+                                && requestedProperty <= AppDetailsFragment.PROVIDERS
+                                && !cb.isRulesApplied()) {
+                            AppDetailsFragment.this.mProgressMsg.setVisibility(View.VISIBLE);
+                            AppDetailsFragment.this.mProgressMsg.setText(R.string.rules_not_applied);
+                        } else {
+                            AppDetailsFragment.this.mProgressMsg.setVisibility(View.GONE);
+                        }
                     }
                     ActivitiesListAdapter.this.notifyDataSetChanged();
                     showProgressIndicator(false);
@@ -810,10 +812,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (isRootEnabled) {
                 viewHolder.blockBtn.setVisibility(View.VISIBLE);
                 viewHolder.blockBtn.setOnClickListener(v -> {
-                    if (mComponentsBlocker.hasComponent(activityName)) { // Remove from the list
-                        mComponentsBlocker.removeComponent(activityName);
-                    } else { // Add to the list
-                        mComponentsBlocker.addComponent(activityName, StorageManager.Type.ACTIVITY);
+                    try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
+                        if (cb.hasComponent(activityName)) { // Remove from the list
+                            cb.removeComponent(activityName);
+                        } else { // Add to the list
+                            cb.addComponent(activityName, StorageManager.Type.ACTIVITY);
+                        }
                     }
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
@@ -877,10 +881,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (isRootEnabled) {
                 viewHolder.blockBtn.setVisibility(View.VISIBLE);
                 viewHolder.blockBtn.setOnClickListener(v -> {
-                    if (mComponentsBlocker.hasComponent(serviceInfo.name)) { // Remove from the list
-                        mComponentsBlocker.removeComponent(serviceInfo.name);
-                    } else { // Add to the list
-                        mComponentsBlocker.addComponent(serviceInfo.name, StorageManager.Type.SERVICE);
+                    try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
+                        if (cb.hasComponent(serviceInfo.name)) { // Remove from the list
+                            cb.removeComponent(serviceInfo.name);
+                        } else { // Add to the list
+                            cb.addComponent(serviceInfo.name, StorageManager.Type.SERVICE);
+                        }
                     }
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
@@ -952,10 +958,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (isRootEnabled) {
                 viewHolder.blockBtn.setVisibility(View.VISIBLE);
                 viewHolder.blockBtn.setOnClickListener(v -> {
-                    if (mComponentsBlocker.hasComponent(activityInfo.name)) { // Remove from the list
-                        mComponentsBlocker.removeComponent(activityInfo.name);
-                    } else { // Add to the list
-                        mComponentsBlocker.addComponent(activityInfo.name, StorageManager.Type.RECEIVER);
+                    try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
+                        if (cb.hasComponent(activityInfo.name)) { // Remove from the list
+                            cb.removeComponent(activityInfo.name);
+                        } else { // Add to the list
+                            cb.addComponent(activityInfo.name, StorageManager.Type.RECEIVER);
+                        }
                     }
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
@@ -1054,10 +1062,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (isRootEnabled) {
                 viewHolder.blockBtn.setVisibility(View.VISIBLE);
                 viewHolder.blockBtn.setOnClickListener(v -> {
-                    if (mComponentsBlocker.hasComponent(providerName)) { // Remove from the list
-                        mComponentsBlocker.removeComponent(providerName);
-                    } else { // Add to the list
-                        mComponentsBlocker.addComponent(providerName, StorageManager.Type.PROVIDER);
+                    try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
+                        if (cb.hasComponent(providerName)) { // Remove from the list
+                            cb.removeComponent(providerName);
+                        } else { // Add to the list
+                            cb.addComponent(providerName, StorageManager.Type.PROVIDER);
+                        }
                     }
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
@@ -1151,8 +1161,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     // Enable op
                     try {
                         mAppOpsService.setMode(opEntry.getOp(), -1, mPackageName, AppOpsManager.MODE_ALLOWED);
-                        try (StorageManager sm = StorageManager.getInstance(mActivity, mPackageName)) {
-                            sm.setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_ALLOWED);
+                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
+                            cb.setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_ALLOWED);
                         }
                         // TODO: Use AppOpsManager.getOpsForPackage() instead
                         AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
@@ -1171,8 +1181,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     // Disable permission
                     try {
                         mAppOpsService.setMode(opEntry.getOp(), -1, mPackageName, AppOpsManager.MODE_IGNORED);
-                        try (StorageManager sm = StorageManager.getInstance(mActivity, mPackageName)) {
-                            sm.setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_IGNORED);
+                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
+                            cb.setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_IGNORED);
                         }
                         // TODO: Use AppOpsManager.getOpsForPackage() instead
                         AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
@@ -1273,8 +1283,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                                 Toast.makeText(mActivity, "Failed to grant permission.", Toast.LENGTH_LONG).show();
                                 viewHolder.toggleSwitch.setChecked(false);
                             } else {
-                                try (StorageManager sm = StorageManager.getInstance(mActivity, mPackageName)) {
-                                    sm.setPermission(permName, true);
+                                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
+                                    cb.setPermission(permName, true);
                                 }
                             }
                         } else {
@@ -1283,8 +1293,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                                 Toast.makeText(mActivity, "Failed to revoke permission.", Toast.LENGTH_LONG).show();
                                 viewHolder.toggleSwitch.setChecked(true);
                             } else {
-                                try (StorageManager sm = StorageManager.getInstance(mActivity, mPackageName)) {
-                                    sm.setPermission(permName, false);
+                                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
+                                    cb.setPermission(permName, false);
                                 }
                             }
                         }

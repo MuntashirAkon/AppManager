@@ -1,6 +1,7 @@
 package io.github.muntashirakon.AppManager.storage;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -10,7 +11,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -20,19 +20,9 @@ import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 
 public class StorageManager implements Closeable {
-    private static @NonNull HashMap<String, StorageManager> storageManagers = new HashMap<>();
-
-    @NonNull
-    public static StorageManager getInstance(Context context, String packageName) {
-        if (!storageManagers.containsKey(packageName))
-            storageManagers.put(packageName, new StorageManager(context.getApplicationContext(), packageName));
-        //noinspection ConstantConditions
-        return storageManagers.get(packageName);
-    }
-
     @Override
     public void close() {
-        commit();
+        if (!readOnly) commit();
     }
 
     public enum Type {
@@ -63,16 +53,13 @@ public class StorageManager implements Closeable {
 
     protected Context context;
     protected String packageName;
+    protected boolean readOnly = true;
     private List<Entry> entries;
 
     protected StorageManager(Context context, String packageName) {
         this.context = context;
         this.packageName = packageName;
         loadEntries();
-    }
-
-    public int entryCount() {
-        return entries.size();
     }
 
     public Entry get(String name) {
@@ -171,7 +158,7 @@ public class StorageManager implements Closeable {
         }).start();
     }
 
-    private void saveEntries(@NonNull List<Entry> finalEntries) throws IOException {
+    synchronized private void saveEntries(@NonNull List<Entry> finalEntries) throws IOException {
         if (finalEntries.size() == 0) {
             //noinspection ResultOfMethodCallIgnored
             getDesiredFile().delete();

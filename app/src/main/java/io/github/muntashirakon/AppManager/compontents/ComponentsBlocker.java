@@ -57,10 +57,17 @@ public class ComponentsBlocker extends StorageManager {
     }
 
     @NonNull
+    public static ComponentsBlocker getMutableInstance(@NonNull Context context, @NonNull String packageName) {
+        ComponentsBlocker componentsBlocker = getInstance(context, packageName, true);
+        componentsBlocker.readOnly = false;
+        return componentsBlocker;
+    }
+
+    @NonNull
     public static ComponentsBlocker getInstance(@NonNull Context context, @NonNull String packageName, boolean noLoadFromDisk) {
         if (!componentsBlockers.containsKey(packageName)) {
             try {
-                provideLocalIfwRulesPath(context);
+                getLocalIfwRulesPath(context);
                 componentsBlockers.put(packageName, new ComponentsBlocker(context, packageName));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -71,11 +78,13 @@ public class ComponentsBlocker extends StorageManager {
         if (!noLoadFromDisk) //noinspection ConstantConditions
             componentsBlocker.retrieveDisabledComponents();
         //noinspection ConstantConditions
+        componentsBlocker.readOnly = true;
         return componentsBlocker;
     }
 
     @NonNull
-    public static String provideLocalIfwRulesPath(@NonNull Context context) throws FileNotFoundException {
+    public static String getLocalIfwRulesPath(@NonNull Context context)
+            throws FileNotFoundException {
         // FIXME: Move from getExternalFilesDir to getCacheDir
         if (LOCAL_RULES_PATH == null) {
             File file = context.getExternalFilesDir("ifw");
@@ -99,18 +108,18 @@ public class ComponentsBlocker extends StorageManager {
 
     public static void applyAllRules(@NonNull Context context) {
         try {
-            String ifwPath = provideLocalIfwRulesPath(context);
+            String ifwPath = getLocalIfwRulesPath(context);
             Runner.run(context, String.format("ls %s/*.xml", ifwPath));
             if (Runner.getLastResult().isSuccessful()) {
                 // Get packages
                 List<String> packageNames = Runner.getLastResult().getOutputAsList();
-                for(int i = 0; i<packageNames.size(); ++i) {
+                for (int i = 0; i<packageNames.size(); ++i) {
                     String s = new File(packageNames.get(i)).getName();
                     packageNames.set(i, s.substring(0, s.lastIndexOf(".xml")));
                 }
                 // Apply rules for each package
-                for(String packageName: packageNames) {
-                    try (ComponentsBlocker cb = getInstance(context, packageName)) {
+                for (String packageName: packageNames) {
+                    try (ComponentsBlocker cb = getMutableInstance(context, packageName)) {
                         cb.applyRules(true);
                     }
                 }
@@ -127,7 +136,15 @@ public class ComponentsBlocker extends StorageManager {
     }
 
     public int componentCount() {
-        return entryCount();
+        int count = 0;
+        for (Entry entry: getAll()) {
+            if (entry.type.equals(Type.ACTIVITY)
+                    || entry.type.equals(Type.PROVIDER)
+                    || entry.type.equals(Type.RECEIVER)
+                    || entry.type.equals(Type.SERVICE))
+                ++count;
+        }
+        return count;
     }
 
     public void addComponent(String componentName, StorageManager.Type componentType) {

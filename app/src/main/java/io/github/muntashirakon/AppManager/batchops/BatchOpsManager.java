@@ -9,6 +9,7 @@ import java.util.Locale;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.StorageManager;
 
@@ -102,8 +103,8 @@ public class BatchOpsManager {
         List<String> failedPackages = result.failedPackages();
         for (String packageName: packageNames) {
             if (!failedPackages.contains(packageName)) {
-                try (StorageManager sm = StorageManager.getInstance(context, packageName)) {
-                    sm.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
+                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
+                    cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
                 }
             }
         }

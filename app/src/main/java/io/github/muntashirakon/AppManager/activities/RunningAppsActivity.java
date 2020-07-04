@@ -40,8 +40,8 @@ import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.storage.StorageManager;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class RunningAppsActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
@@ -277,8 +277,8 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
                     holder.disableBackgroundRunBtn.setOnClickListener(v -> {
                         try {
                             new AppOpsService(mActivity).setMode(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName, AppOpsManager.MODE_IGNORED);
-                            try (StorageManager sm = StorageManager.getInstance(mActivity, applicationInfo.packageName)) {
-                                sm.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
+                            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, applicationInfo.packageName)) {
+                                cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
                             }
                             mActivity.refresh();
                         } catch (Exception e) {
