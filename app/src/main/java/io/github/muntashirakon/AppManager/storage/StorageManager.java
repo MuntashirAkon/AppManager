@@ -1,15 +1,16 @@
 package io.github.muntashirakon.AppManager.storage;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -18,13 +19,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 
-public class StorageManager {
-    @SuppressLint("StaticFieldLeak")
-    private static StorageManager storageManager;
+public class StorageManager implements Closeable {
+    private static @NonNull HashMap<String, StorageManager> storageManagers = new HashMap<>();
+
+    @NonNull
     public static StorageManager getInstance(Context context, String packageName) {
-        if (storageManager == null) storageManager = new StorageManager(context.getApplicationContext());
-        storageManager.setPackageName(packageName);
-        return storageManager;
+        if (!storageManagers.containsKey(packageName))
+            storageManagers.put(packageName, new StorageManager(context.getApplicationContext(), packageName));
+        //noinspection ConstantConditions
+        return storageManagers.get(packageName);
+    }
+
+    @Override
+    public void close() {
+        commit();
     }
 
     public enum Type {
@@ -53,17 +61,18 @@ public class StorageManager {
         }
     }
 
-    private Context context;
-    private String packageName;
+    protected Context context;
+    protected String packageName;
     private List<Entry> entries;
 
-    private StorageManager(Context context) {
+    protected StorageManager(Context context, String packageName) {
         this.context = context;
-    }
-
-    private void setPackageName(String packageName) {
         this.packageName = packageName;
         loadEntries();
+    }
+
+    public int entryCount() {
+        return entries.size();
     }
 
     public Entry get(String name) {
@@ -77,7 +86,7 @@ public class StorageManager {
         return newEntries;
     }
 
-    public List<Entry> getAllComponents() {
+    protected List<Entry> getAllComponents() {
         List<Entry> newEntries = new ArrayList<>();
         for (Entry entry: entries) {
             if (entry.type.equals(Type.ACTIVITY)
@@ -98,26 +107,21 @@ public class StorageManager {
         return false;
     }
 
-    public boolean hasEntry(Entry entry) {
-        for (Entry _entry: entries) if (_entry.equals(entry)) return true;
-        return false;
-    }
-
     public void removeEntry(Entry entry) {
         entries.remove(entry);
-        commit();
     }
 
     public void removeEntry(String name) {
-        removeEntry(name, true);
+        for (Iterator<Entry> iterator = entries.iterator(); iterator.hasNext();)
+            if (iterator.next().name.equals(name)) iterator.remove();
     }
 
-    public void setComponent(String name, Type componentType, Boolean isApplied) {
+    protected void setComponent(String name, Type componentType, Boolean isApplied) {
         Entry entry = new Entry();
         entry.name = name;
         entry.type = componentType;
         entry.extra = isApplied;
-        addEntry(entry);
+        addEntry(entry); // FIXME
     }
 
     public void setAppOp(String name, @AppOpsManager.Mode int mode) {
@@ -137,23 +141,15 @@ public class StorageManager {
     }
 
     private void addEntry(@NonNull Entry entry) {
-        removeEntry(entry.name, false);
+        removeEntry(entry.name);
         entries.add(entry);
-        commit();
-    }
-
-    private void removeEntry(String name, Boolean isCommit) {
-        for (Iterator<Entry> iterator = entries.iterator(); iterator.hasNext();)
-            if (iterator.next().name.equals(name)) iterator.remove();
-        if (isCommit) commit();
     }
 
     private void loadEntries() {
-        try {
-            entries = new ArrayList<>();
-            StringTokenizer tokenizer;
-            BufferedReader TSVFile = new BufferedReader(new FileReader(getDesiredFile()));
-            String dataRow;
+        entries = new ArrayList<>();
+        StringTokenizer tokenizer;
+        String dataRow;
+        try (BufferedReader TSVFile = new BufferedReader(new FileReader(getDesiredFile()))) {
             while ((dataRow = TSVFile.readLine()) != null){
                 tokenizer = new StringTokenizer(dataRow,"\t");
                 Entry entry = new Entry();
@@ -162,30 +158,32 @@ public class StorageManager {
                 if (tokenizer.hasMoreElements()) entry.extra = getExtra(entry.type, tokenizer.nextElement().toString());
                 entries.add(entry);
             }
-            TSVFile.close();
         } catch (IOException ignore) {}
     }
 
-    private void commit() {
-        new Thread(() -> saveEntries(new ArrayList<>(entries))).start();
+    public void commit() {
+        new Thread(() -> {
+            try {
+                saveEntries(new ArrayList<>(entries));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }).start();
     }
 
-    private void saveEntries(List<Entry> finalEntries) {
-        try {
-            if (finalEntries.size() == 0) {
-                //noinspection ResultOfMethodCallIgnored
-                getDesiredFile().delete();
-                return;
-            }
-            StringBuilder stringBuilder = new StringBuilder();
-            for(Entry entry: finalEntries) {
-                stringBuilder.append(entry.name).append("\t").append(entry.type).append("\t").append(entry.extra).append("\n");
-            }
-            FileOutputStream TSVFile = new FileOutputStream(getDesiredFile());
+    private void saveEntries(@NonNull List<Entry> finalEntries) throws IOException {
+        if (finalEntries.size() == 0) {
+            //noinspection ResultOfMethodCallIgnored
+            getDesiredFile().delete();
+            return;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for(Entry entry: finalEntries) {
+            stringBuilder.append(entry.name).append("\t").append(entry.type).append("\t").
+                    append(entry.extra).append("\n");
+        }
+        try (FileOutputStream TSVFile = new FileOutputStream(getDesiredFile())) {
             TSVFile.write(stringBuilder.toString().getBytes());
-            TSVFile.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

@@ -102,9 +102,9 @@ public class BatchOpsManager {
         List<String> failedPackages = result.failedPackages();
         for (String packageName: packageNames) {
             if (!failedPackages.contains(packageName)) {
-                StorageManager.getInstance(context, packageName).setAppOp(
-                        String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND),
-                        AppOpsManager.MODE_IGNORED);
+                try (StorageManager sm = StorageManager.getInstance(context, packageName)) {
+                    sm.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
+                }
             }
         }
         return result;

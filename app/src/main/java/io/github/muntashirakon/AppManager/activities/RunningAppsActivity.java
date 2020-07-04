@@ -277,7 +277,9 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
                     holder.disableBackgroundRunBtn.setOnClickListener(v -> {
                         try {
                             new AppOpsService(mActivity).setMode(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName, AppOpsManager.MODE_IGNORED);
-                            StorageManager.getInstance(mActivity, applicationInfo.packageName).setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
+                            try (StorageManager sm = StorageManager.getInstance(mActivity, applicationInfo.packageName)) {
+                                sm.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
+                            }
                             mActivity.refresh();
                         } catch (Exception e) {
                             Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_disable_op), Toast.LENGTH_LONG).show();

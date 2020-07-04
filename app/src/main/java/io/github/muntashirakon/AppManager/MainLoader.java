@@ -58,8 +58,9 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
                         item.size = (long) -1 * applicationInfo.targetSdkVersion;
                     }
                     if (isRootEnabled) {
-                        item.blockedCount = ComponentsBlocker.getInstance(getContext(), pName, true)
-                                .componentCount();
+                        try (ComponentsBlocker cb = ComponentsBlocker.getInstance(getContext(), pName, true)) {
+                            item.blockedCount = cb.componentCount();
+                        }
                     }
                     itemList.add(item);
                 } catch (PackageManager.NameNotFoundException ignored) {}
@@ -86,8 +87,9 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
                     item.sha = new Tuple<>("?", "?");
                 }
                 if (isRootEnabled) {
-                    item.blockedCount = ComponentsBlocker.getInstance(getContext(),
-                            applicationInfo.packageName, true).componentCount();
+                    try (ComponentsBlocker cb = ComponentsBlocker.getInstance(getContext(), applicationInfo.packageName, true)) {
+                        item.blockedCount = cb.componentCount();
+                    }
                 }
                 itemList.add(item);
             }

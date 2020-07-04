@@ -197,6 +197,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     || mComponentsBlocker.isRulesApplied())
                 mComponentsBlocker.applyRules(true);
         }
+        if (mComponentsBlocker != null) mComponentsBlocker.close();
     }
 
     @Override
@@ -207,6 +208,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     || mComponentsBlocker.isRulesApplied())
                 mComponentsBlocker.applyRules(true);
         }
+        if (mComponentsBlocker != null) mComponentsBlocker.commit();
     }
 
     @Override
@@ -223,9 +225,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         && !(Boolean) AppPref.get(mActivity, AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN)) {
             blockingToggler.setVisible(true);
             if (mComponentsBlocker.isRulesApplied()) {
-                blockingToggler.setTitle(R.string.menu_disable_blocking);
+                blockingToggler.setTitle(R.string.menu_remove_rules);
             } else {
-                blockingToggler.setTitle(R.string.menu_enable_blocking);
+                blockingToggler.setTitle(R.string.menu_apply_rules);
             }
         } else blockingToggler.setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
@@ -241,9 +243,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 boolean isRulesApplied = mComponentsBlocker.isRulesApplied();
                 mComponentsBlocker.applyRules(!isRulesApplied);
                 if (mComponentsBlocker.isRulesApplied()) {
-                    blockingToggler.setTitle(R.string.menu_disable_blocking);
+                    blockingToggler.setTitle(R.string.menu_remove_rules);
                 } else {
-                    blockingToggler.setTitle(R.string.menu_enable_blocking);
+                    blockingToggler.setTitle(R.string.menu_apply_rules);
                 }
                 refreshDetails();
                 return true;
@@ -574,7 +576,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             && !mComponentsBlocker.isRulesApplied()
                             && requestedProperty <= AppDetailsFragment.PROVIDERS) {
                         AppDetailsFragment.this.mProgressMsg.setVisibility(View.VISIBLE);
-                        AppDetailsFragment.this.mProgressMsg.setText(R.string.blocking_is_not_enabled);
+                        AppDetailsFragment.this.mProgressMsg.setText(R.string.rules_not_applied);
                     } else {
                         AppDetailsFragment.this.mProgressMsg.setVisibility(View.GONE);
                     }
@@ -1149,7 +1151,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     // Enable op
                     try {
                         mAppOpsService.setMode(opEntry.getOp(), -1, mPackageName, AppOpsManager.MODE_ALLOWED);
-                        StorageManager.getInstance(mActivity, mPackageName).setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_ALLOWED);
+                        try (StorageManager sm = StorageManager.getInstance(mActivity, mPackageName)) {
+                            sm.setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_ALLOWED);
+                        }
                         // TODO: Use AppOpsManager.getOpsForPackage() instead
                         AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
                                 opEntry.isRunning(), AppOpsManager.MODE_ALLOWED, opEntry.getTime(),
@@ -1167,7 +1171,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     // Disable permission
                     try {
                         mAppOpsService.setMode(opEntry.getOp(), -1, mPackageName, AppOpsManager.MODE_IGNORED);
-                        StorageManager.getInstance(mActivity, mPackageName).setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_IGNORED);
+                        try (StorageManager sm = StorageManager.getInstance(mActivity, mPackageName)) {
+                            sm.setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_IGNORED);
+                        }
                         // TODO: Use AppOpsManager.getOpsForPackage() instead
                         AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
                                 opEntry.isRunning(), AppOpsManager.MODE_IGNORED, opEntry.getTime(),
@@ -1266,13 +1272,21 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             if (!Runner.run(mActivity, String.format("pm grant %s %s", mPackageName, permName)).isSuccessful()) {
                                 Toast.makeText(mActivity, "Failed to grant permission.", Toast.LENGTH_LONG).show();
                                 viewHolder.toggleSwitch.setChecked(false);
-                            } else StorageManager.getInstance(mActivity, mPackageName).setPermission(permName, true);
+                            } else {
+                                try (StorageManager sm = StorageManager.getInstance(mActivity, mPackageName)) {
+                                    sm.setPermission(permName, true);
+                                }
+                            }
                         } else {
                             // Disable permission
                             if (!Runner.run(mActivity, String.format("pm revoke %s %s", mPackageName, permName)).isSuccessful()) {
                                 Toast.makeText(mActivity, "Failed to revoke permission.", Toast.LENGTH_LONG).show();
                                 viewHolder.toggleSwitch.setChecked(true);
-                            } else StorageManager.getInstance(mActivity, mPackageName).setPermission(permName, false);
+                            } else {
+                                try (StorageManager sm = StorageManager.getInstance(mActivity, mPackageName)) {
+                                    sm.setPermission(permName, false);
+                                }
+                            }
                         }
                     });
                 } else viewHolder.toggleSwitch.setVisibility(View.GONE);

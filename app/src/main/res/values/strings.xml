@@ -97,15 +97,15 @@
         \n
         \n<b>App Details Window</b>
         \n- App ops or dangerous permissions can be revoked in the <b>App Ops</b> (which lists app
-        operations &amp; can be used to revoke non-revocable permissions) and
-        <b>Uses Permissions</b> tab (which lists permission from the &lt;uses-permission&gt; tags of the
-        manifest) respectively (requires root permission)
+        operations &amp; can be used to revoke non-revocable permissions) and <b>Uses Permissions</b>
+        tab (which lists permission from the &lt;uses-permission&gt; tags of the manifest) respectively
+        (requires root permission)
         \n- Available activities can be launched from the <b>Activities</b> tab. Also, customizable
         shortcuts can be made
         \n- Activities, broadcast receivers, services and providers (aka, components) can be blocked
         using the block button on the right side of each item. But blocking isn\'t enabled by
-        default. To enable blocking click on “enable blocking” in the menu located in the
-        upper-right side of the window (Requires root permission)
+        default. To enable blocking click on “apply rules” in the menu. You can also apply rules
+        globally by enabling global component blocking in the settings (Requires root permission)
         \n- Blocked components and dangerous permissions have red background color
         \n
         \n<b>Exodus Window</b>
@@ -223,8 +223,8 @@
     <string name="grant_usage_acess_message">Usage access is mandatory in order to display app usage information.</string>
     <string name="share_apk">Share APK</string>
     <string name="failed_to_extract_apk_file">Failed to extract apk file</string>
-    <string name="menu_disable_blocking">Disable blocking</string>
-    <string name="menu_enable_blocking">Enable blocking</string>
+    <string name="menu_remove_rules">Remove rules</string>
+    <string name="menu_apply_rules">Apply rules</string>
     <string name="search">Search</string>
     <string name="aurora">Aurora</string>
     <string name="dev_protected_data_dir">Device-protected Data Directory</string>
@@ -284,7 +284,7 @@
     <string name="no_app_ops">No app operations</string>
     <string name="failed_to_enable_op">Failed to enable the requested app op</string>
     <string name="failed_to_disable_op">Failed to disable the requested app op</string>
-    <string name="blocking_is_not_enabled">Blocking is not enabled</string>
+    <string name="rules_not_applied">Rules are not applied</string>
     <string name="str_logo">Logo</string>
     <string name="pref_root_mode_enabled">Root mode</string>
     <string name="pref_root_mode_enabled_msg">Enabling root mode activates all root features of this app</string>

@@ -56,7 +56,9 @@ public class ExternalComponentsImporter {
         for(Uri uri: uriList) {
             try {
                 String packageName = applyFromWatt(context, uri);
-                ComponentsBlocker.getInstance(context, packageName).applyRules(true);
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(context, packageName)) {
+                    cb.applyRules(true);
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 failed = true;
@@ -123,17 +125,18 @@ public class ExternalComponentsImporter {
                 packageComponents.get(packageName).put(componentName, getType(componentName, packageInfoList.get(packageName)));
             }
             if (packageComponents.size() > 0) {
-                ComponentsBlocker blocker;
                 for (String packageName: packageComponents.keySet()) {
                     HashMap<String, StorageManager.Type> disabledComponents = packageComponents.get(packageName);
                     //noinspection ConstantConditions
                     if (disabledComponents.size() > 0) {
-                        blocker = ComponentsBlocker.getInstance(context, packageName);
-                        for (String component: disabledComponents.keySet()) {
-                            blocker.addComponent(component, disabledComponents.get(component));
+                        try (ComponentsBlocker cb = ComponentsBlocker.getInstance(context, packageName)){
+                            for (String component : disabledComponents.keySet()) {
+                                cb.addComponent(component, disabledComponents.get(component));
+                            }
+                            cb.applyRules(true);
+                            if (!cb.isRulesApplied())
+                                throw new Exception("Rules not applied for package " + packageName);
                         }
-                        blocker.applyRules(true);
-                        if (!blocker.isRulesApplied()) throw new Exception("Rules not applied for package " + packageName);
                     }
                 }
             }
