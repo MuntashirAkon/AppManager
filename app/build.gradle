@@ -54,4 +54,5 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     implementation 'com.jaredrummler:android-shell:1.0.0'
+    implementation 'com.tananaev:adblib:1.2'
 }
