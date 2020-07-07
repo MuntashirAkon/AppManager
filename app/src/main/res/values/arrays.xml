@@ -165,13 +165,13 @@
         <item>com.giphy.sdk.analytics</item>
         <item>com.avocarrot.sdk</item>
         <item>com.glympse.android.</item>
-        <item>com.google.android.gms.ads.mediation.</item>
+        <item>com.google.ads.</item>
+        <item>com.google.android.gms.ads.</item>
         <item>com.google.android.apps.analytics.</item>
         <item>com.google.android.gms.analytics.</item>
         <item>com.crashlytics.</item>
         <item>com.google.firebase.crashlytics</item>
         <item>io.fabric.</item>
-        <item>com.google.android.gms.ads.doubleclick</item>
         <item>com.google.android.gms.measurement.</item>
         <item>com.google.firebase.analytics.</item>
         <item>com.google.android.gms.tagmanager</item>
@@ -415,7 +415,6 @@
         <item>cat.ereza.customactivityoncrash</item>
         <item>com.factual.engine.</item>
         <item>com.factual.Factual</item>
-        <item>com.google.ads.consent</item>
     </string-array>
     <string-array name="tracker_names">
         <item>AccountKit</item>
@@ -557,13 +556,13 @@
         <item>GIPHY Analytics</item>
         <item>Glispa Connect (Formerly Avocarrot)</item>
         <item>Glympse</item>
-        <item>Google Ads</item>
+        <item>Google AdMob</item>
+        <item>Google AdMob</item>
         <item>Google Analytics</item>
         <item>Google Analytics</item>
         <item>Google CrashLytics</item>
         <item>Google CrashLytics</item>
         <item>Google CrashLytics</item>
-        <item>Google DoubleClick</item>
         <item>Google Firebase Analytics</item>
         <item>Google Firebase Analytics</item>
         <item>Google Tag Manager</item>
@@ -773,40 +772,39 @@
         <item>YouAppi</item>
         <item>YuMe</item>
         <item>Zapr</item>
-        <item>Â°?Buglife</item>
-        <item>Â°?Critic</item>
-        <item>Â°?DebugDrawer</item>
-        <item>Â°?Flipper</item>
-        <item>Â°?Game Sparks</item>
-        <item>Â°?PlayFab java</item>
-        <item>Â°?Raygun</item>
-        <item>Â°?Rollbar</item>
-        <item>Â°AppLink.io</item>
-        <item>Â°Askingpoint</item>
-        <item>Â°AWS Kinesis</item>
-        <item>Â°AWS Kinesis</item>
-        <item>Â°Backendless</item>
-        <item>Â°BugClipper</item>
-        <item>Â°BugSense</item>
-        <item>Â°Databox</item>
-        <item>Â°FlowUp</item>
-        <item>Â°froger_mcs</item>
-        <item>Â°mTraction</item>
-        <item>Â°Parse</item>
-        <item>Â°Pulsate</item>
-        <item>Â°RJFUN</item>
-        <item>Â°SAS</item>
-        <item>Â°Skillz</item>
-        <item>Â°Teliver</item>
-        <item>Â°Woopra</item>
-        <item>Â²GravyAnalytics</item>
-        <item>Âµ?Acrarium</item>
-        <item>Âµ?ACRA</item>
-        <item>Âµ?CleanInsights</item>
-        <item>Âµ?CleanInsights</item>
-        <item>Âµ?Custom Activity On Crash</item>
-        <item>Âµ?Factual</item>
-        <item>Âµ?Factual</item>
-        <item>Âµ?Google-Ads Consent</item>
+        <item>°?Buglife</item>
+        <item>°?Critic</item>
+        <item>°?DebugDrawer</item>
+        <item>°?Flipper</item>
+        <item>°?Game Sparks</item>
+        <item>°?PlayFab java</item>
+        <item>°?Raygun</item>
+        <item>°?Rollbar</item>
+        <item>°AppLink.io</item>
+        <item>°Askingpoint</item>
+        <item>°AWS Kinesis</item>
+        <item>°AWS Kinesis</item>
+        <item>°Backendless</item>
+        <item>°BugClipper</item>
+        <item>°BugSense</item>
+        <item>°Databox</item>
+        <item>°FlowUp</item>
+        <item>°froger_mcs</item>
+        <item>°mTraction</item>
+        <item>°Parse</item>
+        <item>°Pulsate</item>
+        <item>°RJFUN</item>
+        <item>°SAS</item>
+        <item>°Skillz</item>
+        <item>°Teliver</item>
+        <item>°Woopra</item>
+        <item>²GravyAnalytics</item>
+        <item>µ?Acrarium</item>
+        <item>µ?ACRA</item>
+        <item>µ?CleanInsights</item>
+        <item>µ?CleanInsights</item>
+        <item>µ?Custom Activity On Crash</item>
+        <item>µ?Factual</item>
+        <item>µ?Factual</item>
     </string-array>
 </resources>
