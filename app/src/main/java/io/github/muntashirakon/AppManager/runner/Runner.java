@@ -6,6 +6,8 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.muntashirakon.AppManager.utils.AppPref;
+
 public class Runner {
 
     public interface Result {
@@ -18,9 +20,17 @@ public class Runner {
 
     @SuppressLint("StaticFieldLeak")
     private static Runner runner;
+    private static boolean isAdb = false;
     public static Runner getInstance(Context context) {
-        // TODO: Determine class type based on preferences
-        if (runner == null) runner = new RootShellRunner(context.getApplicationContext());
+        if (runner == null || (isAdb && !AppPref.isAdbEnabled()) || (!isAdb && AppPref.isAdbEnabled())) {
+            if (AppPref.isRootEnabled()) {
+                runner = new RootShellRunner(context.getApplicationContext());
+                isAdb = false;
+            } else {
+                runner = new AdbShellRunner(context.getApplicationContext());
+                isAdb = true;
+            }
+        }
         return runner;
     }
 
