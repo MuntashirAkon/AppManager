@@ -559,13 +559,15 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         private Filter mFilter;
         private String mConstraint;
         private Boolean isRootEnabled = true;
+        private Boolean isADBEnabled = true;
 
         ActivitiesListAdapter() {
             reset();
         }
 
         void reset() {
-            isRootEnabled = (Boolean) AppPref.get(mActivity, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
+            isRootEnabled = AppPref.isRootEnabled();
+            isADBEnabled = AppPref.isAdbEnabled();
             final Boolean isBlockingEnabled = (Boolean) AppPref.get(mActivity, AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN);
             showProgressIndicator(true);
             new Thread(() -> {
@@ -1138,7 +1140,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } else {
                 viewHolder.toggleSwitch.setChecked(false);
             }
-            viewHolder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            viewHolder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> new Thread(() -> {
                 if (isChecked) {
                     // Enable op
                     try {
@@ -1153,11 +1155,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                                 opEntry.getProxyUid(), opEntry.getProxyPackageName());
                         AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
                         appDetailsItem.name = AppOpsManager.opToName(opEntry1.getOp());
-                        mAdapterList.set(index, appDetailsItem);
+                        mActivity.runOnUiThread(() -> mAdapterList.set(index, appDetailsItem));
                     } catch (Exception e) {
-                        Toast.makeText(mActivity, R.string.failed_to_enable_op, Toast.LENGTH_LONG).show();
-                        viewHolder.toggleSwitch.setChecked(false);
-                        e.printStackTrace();
+                        mActivity.runOnUiThread(() -> {
+                            Toast.makeText(mActivity, R.string.failed_to_enable_op, Toast.LENGTH_LONG).show();
+                            viewHolder.toggleSwitch.setChecked(false);
+                        });
                     }
                 } else {
                     // Disable permission
@@ -1173,14 +1176,15 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                                 opEntry.getProxyUid(), opEntry.getProxyPackageName());
                         AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
                         appDetailsItem.name = AppOpsManager.opToName(opEntry1.getOp());
-                        mAdapterList.set(index, appDetailsItem);
+                        mActivity.runOnUiThread(() -> mAdapterList.set(index, appDetailsItem));
                     } catch (Exception e) {
-                        Toast.makeText(mActivity, R.string.failed_to_disable_op, Toast.LENGTH_LONG).show();
-                        viewHolder.toggleSwitch.setChecked(true);
-                        e.printStackTrace();
+                        mActivity.runOnUiThread(() -> {
+                            Toast.makeText(mActivity, R.string.failed_to_disable_op, Toast.LENGTH_LONG).show();
+                            viewHolder.toggleSwitch.setChecked(true);
+                        });
                     }
                 }
-            });
+            }).start());
             return convertView;
         }
 
@@ -1250,7 +1254,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             mActivity.getString(R.string.group), permissionInfo.group));
                 } else viewHolder.textView5.setVisibility(View.GONE);
                 // Permission Switch
-                if (isRootEnabled && protectionLevel.contains("dangerous")) {
+                if ((isRootEnabled || isADBEnabled) && protectionLevel.contains("dangerous")) {
                     viewHolder.toggleSwitch.setVisibility(View.VISIBLE);
                     if ((permFlags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
                         // Permission granted
@@ -1258,12 +1262,15 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     } else {
                         viewHolder.toggleSwitch.setChecked(false);
                     }
-                    viewHolder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    viewHolder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) ->
+                            new Thread(() -> {
                         if (isChecked) {
                             // Enable permission
                             if (!Runner.run(mActivity, String.format("pm grant %s %s", mPackageName, permName)).isSuccessful()) {
-                                Toast.makeText(mActivity, "Failed to grant permission.", Toast.LENGTH_LONG).show();
-                                viewHolder.toggleSwitch.setChecked(false);
+                                mActivity.runOnUiThread(() -> {
+                                    Toast.makeText(mActivity, "Failed to grant permission.", Toast.LENGTH_LONG).show();
+                                    viewHolder.toggleSwitch.setChecked(false);
+                                });
                             } else {
                                 try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
                                     cb.setPermission(permName, true);
@@ -1272,15 +1279,17 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         } else {
                             // Disable permission
                             if (!Runner.run(mActivity, String.format("pm revoke %s %s", mPackageName, permName)).isSuccessful()) {
-                                Toast.makeText(mActivity, "Failed to revoke permission.", Toast.LENGTH_LONG).show();
-                                viewHolder.toggleSwitch.setChecked(true);
+                                mActivity.runOnUiThread(() -> {
+                                    Toast.makeText(mActivity, "Failed to revoke permission.", Toast.LENGTH_LONG).show();
+                                    viewHolder.toggleSwitch.setChecked(true);
+                                });
                             } else {
                                 try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
                                     cb.setPermission(permName, false);
                                 }
                             }
                         }
-                    });
+                    }).start());
                 } else viewHolder.toggleSwitch.setVisibility(View.GONE);
             } else {
                 viewHolder.textView2.setVisibility(View.GONE);
