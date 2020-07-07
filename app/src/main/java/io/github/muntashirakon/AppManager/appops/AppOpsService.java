@@ -54,10 +54,10 @@ class AppOpsService implements IAppOpsService {
     public int checkOperation(int op, int uid, @Nullable String packageName)
             throws Exception {
         String opStr = AppOpsManager.opToName(op);
-        if (uid >= 0)
-            runCommand(String.format("appops get %d %s", uid, opStr));
-        else if (packageName != null)
-            runCommand(String.format("appops get %s %s", packageName, opStr));
+        if (packageName != null)
+            runCommand(String.format("appops get %s %d", packageName, op));
+        else if (uid >= 0)
+            runCommand(String.format("appops get %d %d", uid, op));
         else throw new Exception("No uid or package name provided");
         if (isSuccessful) {
             try {
@@ -88,12 +88,15 @@ class AppOpsService implements IAppOpsService {
             if (!isSuccessful) throw new Exception("Failed to get operations for package " + packageName);
         } else {
             for(int op: ops) {
-                runCommand(String.format("appops get %s %s", packageName, AppOpsManager.opToName(op)));
+                runCommand(String.format("appops get %s %d", packageName, op));
                 if (output.size() == 1) {  // Trivial parser
                     lines.addAll(output);
                 } else if (output.size() == 2) {  // Custom parser
-                    String name = String.format("%s: %s", AppOpsManager.opToName(op), output.get(1).substring(DEFAULT_MODE_SKIP));
-                    lines.add(name);
+                    String line2 = output.get(1);
+                    if (line2.startsWith("Default mode:")) {
+                        String name = String.format("%s: %s", AppOpsManager.opToName(op), line2.substring(DEFAULT_MODE_SKIP));
+                        lines.add(name);
+                    } else lines.add(line2);  // To prevent weird bug in some cases
                 }
 //                if (!isSuccessful) throw new Exception("Failed to get operations for package " + packageName);
             }
@@ -109,15 +112,14 @@ class AppOpsService implements IAppOpsService {
 
     @Override
     public void setMode(int op, int uid, String packageName, int mode) throws Exception {
-        String opStr = AppOpsManager.opToName(op);
         String modeStr = AppOpsManager.modeToName(mode);
         if (uid >= 0)
-            runCommand(String.format("appops set --uid %d %s %s", uid, opStr, modeStr));
+            runCommand(String.format("appops set --uid %d %d %s", uid, op, modeStr));
         else if (packageName != null)
-            runCommand(String.format("appops set %s %s %s", packageName, opStr, modeStr));
+            runCommand(String.format("appops set %s %d %s", packageName, op, modeStr));
         else throw new Exception("No uid or package name provided");
         if (isSuccessful) { return; }
-        throw new Exception("Failed to check operation " + opStr);
+        throw new Exception("Failed to check operation " + op);
     }
 
     @Override
@@ -178,7 +180,8 @@ class AppOpsService implements IAppOpsService {
         }
     }
 
-    private static AppOpsManager.OpEntry parseOpName(String line) throws Exception {
+    @NonNull
+    private static AppOpsManager.OpEntry parseOpName(@NonNull String line) throws Exception {
         Matcher matcher = OP_MATCHER.matcher(line);
         if (matcher.find()) {
             if (matcher.group(1) == null && matcher.group(2) == null)

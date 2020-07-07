@@ -1799,6 +1799,7 @@ public class AppOpsManager {
     public static int strOpToOp(@NonNull String op) {
         Integer val = sOpStrToOp.get(op);
         if (val == null) {
+            // TODO: Try old names
             throw new IllegalArgumentException("Unknown operation string: " + op);
         }
         return val;
