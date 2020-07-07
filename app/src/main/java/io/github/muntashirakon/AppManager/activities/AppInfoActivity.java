@@ -756,7 +756,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
     /**
      * Get network stats.
-     * TODO: Doesn't work in newer Android versions
+     *
      * @param uid Application UID
      * @return A tuple consisting of transmitted and received data
      */
@@ -768,9 +768,9 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         if (uidStatsDir.exists() && uidStatsDir.isDirectory()) {
             for (File child : Objects.requireNonNull(uidStatsDir.listFiles())) {
                 if (child.getName().equals(UID_STATS_TR))
-                    tuple.setFirst(getReadableSize(Long.parseLong(Utils.getFileContent(child))));
+                    tuple.setFirst(getReadableSize(Long.parseLong(Utils.getFileContent(child, "-1"))));
                 else if (child.getName().equals(UID_STATS_RC))
-                    tuple.setSecond(getReadableSize(Long.parseLong(Utils.getFileContent(child))));
+                    tuple.setSecond(getReadableSize(Long.parseLong(Utils.getFileContent(child, "-1"))));
             }
         }
         return tuple;

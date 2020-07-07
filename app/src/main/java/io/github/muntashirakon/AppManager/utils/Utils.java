@@ -176,14 +176,18 @@ public class Utils {
 
     @NonNull
     public static String getFileContent(@NonNull File file) {
-        if (file.isDirectory()) return "-1";
-        try {
-            Scanner scanner = new Scanner(file);
+        return getFileContent(file, "");
+    }
+
+    @NonNull
+    public static String getFileContent(@NonNull File file, @NonNull String emptyValue) {
+        if (file.isDirectory()) return emptyValue;
+        try (Scanner scanner = new Scanner(file)){
             StringBuilder result = new StringBuilder();
             while (scanner.hasNext()) result.append(scanner.next());
             return result.toString();
         } catch (FileNotFoundException e) {
-            return "-1";
+            return emptyValue;
         }
     }
 
