@@ -39,9 +39,11 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.NoSuchAlgorithmException;
 import java.text.Collator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -71,6 +73,7 @@ import androidx.loader.content.Loader;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.MainLoader;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.types.ApplicationItem;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -256,8 +259,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Initialize app prefs
         AppPref.getInstance(this);
         // Check root
-        if (!Utils.isRootGiven(this))
+        if (!Utils.isRootGiven(this)) {
             AppPref.getInstance(this).setPref(AppPref.PREF_ROOT_MODE_ENABLED, false);
+            // Check for adb
+            new Thread(() -> {
+                try {
+                    AdbShell.run("id");
+                    AppPref.getInstance(this).setPref(AppPref.PREF_ADB_MODE_ENABLED, true);
+                } catch (IOException | InterruptedException | NoSuchAlgorithmException e) {
+                    AppPref.getInstance(this).setPref(AppPref.PREF_ADB_MODE_ENABLED, false);
+                }
+            }).start();
+        }
 
         mLoaderManager = LoaderManager.getInstance(this);
         mLoaderManager.initLoader(0, null, this);
