@@ -1,5 +1,6 @@
 package io.github.muntashirakon.AppManager.runner;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -8,9 +9,20 @@ import com.jaredrummler.android.shell.Shell;
 
 import java.util.List;
 
-class RootShellRunner extends Runner {
+public class RootShellRunner extends Runner {
     protected RootShellRunner(Context context) {
         super(context);
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private static RootShellRunner rootShellRunner;
+    public static RootShellRunner getInstance(Context context) {
+        if (rootShellRunner == null) rootShellRunner = new RootShellRunner(context.getApplicationContext());
+        return rootShellRunner;
+    }
+
+    public static Result run(Context context, String command) {
+        return getInstance(context).run(command);
     }
 
     @Override

@@ -58,6 +58,7 @@ import javax.xml.xpath.XPathFactory;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.runner.RootShellRunner;
 import io.github.muntashirakon.AppManager.runner.Runner;
 
 @SuppressWarnings("unused")
@@ -593,7 +594,7 @@ public class Utils {
 
     public static boolean isRootGiven(Context context) {
         if (isRootAvailable()) {
-            String output = Runner.run(context, "id").getOutput();
+            String output = RootShellRunner.run(context, "id").getOutput();
             return output != null && output.toLowerCase().contains("uid=0");
         }
         return false;
