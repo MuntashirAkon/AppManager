@@ -250,21 +250,22 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         // Set uninstall
         addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
             final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-            final Boolean isRootEnabled = (Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
-            if (isRootEnabled) {
+            if (AppPref.isRootEnabled()) {
                 new AlertDialog.Builder(this, R.style.CustomDialog)
                         .setTitle(mPackageLabel)
                         .setMessage(isSystemApp ?
                                 R.string.uninstall_system_app_message : R.string.uninstall_app_message)
-                        .setPositiveButton(R.string.uninstall, (dialog, which) -> {
+                        .setPositiveButton(R.string.uninstall, (dialog, which) -> new Thread(() -> {
                             // Try without root first then with root
                             if (Runner.run(this, String.format("pm uninstall --user 0 %s", mPackageName)).isSuccessful()) {
-                                Toast.makeText(mActivity, String.format(getString(R.string.uninstalled_successfully), mPackageLabel), Toast.LENGTH_LONG).show();
-                                finish();
+                                runOnUiThread(() -> {
+                                    Toast.makeText(mActivity, String.format(getString(R.string.uninstalled_successfully), mPackageLabel), Toast.LENGTH_LONG).show();
+                                    finish();
+                                });
                             } else {
-                                Toast.makeText(mActivity, String.format(getString(R.string.failed_to_uninstall), mPackageLabel), Toast.LENGTH_LONG).show();
+                                runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_uninstall), mPackageLabel), Toast.LENGTH_LONG).show());
                             }
-                        })
+                        }).start())
                         .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
                             if (dialog != null) dialog.cancel();
                         })
@@ -276,38 +277,38 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             }
         });
         // Enable/disable app (root only)
-        if ((Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
+        if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
             if (mApplicationInfo.enabled) {
                 // Disable app
-                addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> {
+                addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> new Thread(() -> {
                     if (Runner.run(this, String.format("pm disable %s", mPackageName)).isSuccessful()) {
                         // Refresh
-                        getPackageInfoOrFinish();
+                        runOnUiThread(this::getPackageInfoOrFinish);
                     } else {
-                        Toast.makeText(mActivity, String.format(getString(R.string.failed_to_disable), mPackageLabel), Toast.LENGTH_LONG).show();
+                        runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_disable), mPackageLabel), Toast.LENGTH_LONG).show());
                     }
-                });
+                }).start());
             } else {
                 // Enable app
-                addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> {
+                addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> new Thread(() -> {
                     if (Runner.run(this, String.format("pm enable %s", mPackageName)).isSuccessful()) {
                         // Refresh
-                        getPackageInfoOrFinish();
+                        runOnUiThread(this::getPackageInfoOrFinish);
                     } else {
-                        Toast.makeText(mActivity, String.format(getString(R.string.failed_to_enable), mPackageLabel), Toast.LENGTH_LONG).show();
+                        runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_enable), mPackageLabel), Toast.LENGTH_LONG).show());
                     }
-                });
+                }).start());
             }
             // Force stop
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
-                addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> {
+                addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> new Thread(() -> {
                     if (Runner.run(this, String.format("am force-stop %s", mPackageName)).isSuccessful()) {
                         // Refresh
-                        getPackageInfoOrFinish();
+                        runOnUiThread(this::getPackageInfoOrFinish);
                     } else {
-                        Toast.makeText(mActivity, String.format(getString(R.string.failed_to_stop), mPackageLabel), Toast.LENGTH_LONG).show();
+                        runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_stop), mPackageLabel), Toast.LENGTH_LONG).show());
                     }
-                });
+                }).start());
             }
         }  // End root only
         // Set manifest
@@ -330,7 +331,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             }
         });
         // Root only features
-        if ((Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
+        if (AppPref.isRootEnabled()) {
             // Shared prefs (root only)
             List<String> sharedPrefs;
             sharedPrefs = getSharedPrefs(mApplicationInfo.dataDir);
@@ -645,7 +646,6 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     }
 
     private void setStorageInfo(long codeSize, long dataSize, long cacheSize, long obbSize, long mediaSize) {
-        final Boolean isRootEnabled = (Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
         mList.addItemWithTitle(getString(R.string.storage_and_cache), true);
         mList.item_title.setTextColor(mAccentColor);
         // Code size
@@ -654,20 +654,20 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         // Data size
         mList.addItemWithTitleSubtitle(getString(R.string.data_size), getReadableSize(dataSize),
                 ListItemCreator.SELECTABLE);
-        if (isRootEnabled) {
-            mList.setOpen(v -> {
+        if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
+            mList.setOpen(v -> new Thread(() -> {
                 // Clear data
                 if (Runner.run(this, String.format("pm clear %s", mPackageName)).isSuccessful()) {
-                    getPackageInfoOrFinish();
+                    runOnUiThread(this::getPackageInfoOrFinish);
                 }
-            });
+            }).start());
             mList.item_open.setImageDrawable(getDrawable(R.drawable.ic_delete_black_24dp));
         }
         // Cache size
         mList.addItemWithTitleSubtitle(getString(R.string.cache_size), getReadableSize(cacheSize),
                 ListItemCreator.SELECTABLE);
-        if (isRootEnabled) {
-            mList.setOpen(v -> {
+        if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
+            mList.setOpen(v -> new Thread(() -> {
                 StringBuilder command = new StringBuilder(String.format("rm -rf %s/cache %s/code_cache",
                         mApplicationInfo.dataDir, mApplicationInfo.dataDir));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -682,9 +682,9 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                     command.append(" ").append(extCache);
                 }
                 if (Runner.run(this, command.toString()).isSuccessful()) {
-                    getPackageInfoOrFinish();
+                    runOnUiThread(this::getPackageInfoOrFinish);
                 }
-            });
+            }).start());
             mList.item_open.setImageDrawable(getDrawable(R.drawable.ic_delete_black_24dp));
         }
         // OBB size

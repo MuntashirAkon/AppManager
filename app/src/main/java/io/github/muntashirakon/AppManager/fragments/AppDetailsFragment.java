@@ -423,7 +423,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 }
                 break;
             case APP_OPS:
-                if ((Boolean) AppPref.get(mActivity, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
+                if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
                     mAppOpsService = new AppOpsService(mActivity);
                     try {
                         List<AppOpsManager.PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(-1, mPackageName, null);
@@ -527,7 +527,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             case RECEIVERS: return R.string.no_receivers;
             case PROVIDERS: return R.string.no_providers;
             case APP_OPS:
-                if ((Boolean) AppPref.get(mActivity, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
+                if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
                     return R.string.no_app_ops;
                 } else return R.string.only_works_in_root_mode;
             case USES_PERMISSIONS:
@@ -573,19 +573,21 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 mAdapterList = getNeededList(requestedProperty);
                 mDefaultList = mAdapterList;
                 mActivity.runOnUiThread(() -> {
-                    if(AppDetailsActivity.mConstraint != null
+                    if (AppDetailsActivity.mConstraint != null
                             && !AppDetailsActivity.mConstraint.equals("")) {
                         getFilter().filter(AppDetailsActivity.mConstraint);
                     }
-                    try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
-                        if (isRootEnabled && !isBlockingEnabled && cb.componentCount() > 0
-                                && requestedProperty <= AppDetailsFragment.PROVIDERS
-                                && !cb.isRulesApplied()) {
-                            AppDetailsFragment.this.mRulesNotAppliedMsg.setVisibility(View.VISIBLE);
-                        } else {
-                            AppDetailsFragment.this.mRulesNotAppliedMsg.setVisibility(View.GONE);
-                        }
+                });
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
+                    if (isRootEnabled && !isBlockingEnabled && cb.componentCount() > 0
+                            && requestedProperty <= AppDetailsFragment.PROVIDERS
+                            && !cb.isRulesApplied()) {
+                        mActivity.runOnUiThread(() -> mRulesNotAppliedMsg.setVisibility(View.VISIBLE));
+                    } else {
+                        mActivity.runOnUiThread(() -> mRulesNotAppliedMsg.setVisibility(View.GONE));
                     }
+                }
+                mActivity.runOnUiThread(() -> {
                     ActivitiesListAdapter.this.notifyDataSetChanged();
                     showProgressIndicator(false);
                 });
