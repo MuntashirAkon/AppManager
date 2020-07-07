@@ -292,11 +292,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         } else appUsageMenu.setVisible(false);
         runningAppsMenu = menu.findItem(R.id.action_running_apps);
         sortByBlockedComponentMenu = menu.findItem(R.id.action_sort_by_blocked_components);
-        if ((Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
+        if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
             runningAppsMenu.setVisible(true);
             sortByBlockedComponentMenu.setVisible(true);
         } else {
-            runningAppsMenu.setVisible(true);
+            runningAppsMenu.setVisible(false);
             sortByBlockedComponentMenu.setVisible(false);
         }
         MenuItem apkUpdaterMenu = menu.findItem(R.id.action_apk_updater);
@@ -473,7 +473,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         // Set sort by
         mSortBy = (int) AppPref.get(this, AppPref.PREF_MAIN_WINDOW_SORT_ORDER, AppPref.TYPE_INTEGER);
-        if ((Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
+        if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
             if (runningAppsMenu != null) runningAppsMenu.setVisible(true);
             if (sortByBlockedComponentMenu != null) sortByBlockedComponentMenu.setVisible(true);
         } else {

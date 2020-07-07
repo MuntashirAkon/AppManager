@@ -42,6 +42,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class RunningAppsActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
@@ -162,6 +163,7 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
         private List<ProcessItem> mDefaultList;
         private List<ProcessItem> mAdapterList;
         private RunningAppsActivity mActivity;
+        private boolean isAdbMode = false;
 
         private int mColorTransparent;
         private int mColorSemiTransparent;
@@ -179,6 +181,7 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
         void setDefaultList(List<ProcessItem> list) {
             mDefaultList = list;
             mAdapterList = list;
+            isAdbMode = AppPref.isAdbEnabled();
             if(RunningAppsActivity.mConstraint != null
                     && !RunningAppsActivity.mConstraint.equals("")) {
                 getFilter().filter(RunningAppsActivity.mConstraint);
@@ -261,42 +264,50 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
             // Buttons
             if (applicationInfo != null) {
                 holder.forceStopBtn.setVisibility(View.VISIBLE);
-                holder.forceStopBtn.setOnClickListener(v -> {
+                holder.forceStopBtn.setOnClickListener(v -> new Thread(() -> {
                     if (Runner.run(mActivity, String.format("am force-stop %s", applicationInfo.packageName)).isSuccessful()) {
-                        mActivity.refresh();
+                        mActivity.runOnUiThread(() -> mActivity.refresh());
                     } else {
-                        Toast.makeText(mActivity, String.format(mActivity.getString(R.string.failed_to_stop), processName), Toast.LENGTH_LONG).show();
+                        mActivity.runOnUiThread(() -> Toast.makeText(mActivity, String.format(mActivity.getString(R.string.failed_to_stop), processName), Toast.LENGTH_LONG).show());
                     }
-                });
-                int mode = AppOpsManager.MODE_DEFAULT;
-                try {
-                    mode = new AppOpsService(mActivity).checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName);
-                } catch (Exception ignore) {}
-                if (mode != AppOpsManager.MODE_IGNORED) {
-                    holder.disableBackgroundRunBtn.setVisibility(View.VISIBLE);
-                    holder.disableBackgroundRunBtn.setOnClickListener(v -> {
-                        try {
-                            new AppOpsService(mActivity).setMode(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName, AppOpsManager.MODE_IGNORED);
-                            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, applicationInfo.packageName)) {
-                                cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
-                            }
-                            mActivity.refresh();
-                        } catch (Exception e) {
-                            Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_disable_op), Toast.LENGTH_LONG).show();
-                        }
+                }).start());
+                new Thread(() -> {
+                    int mode = AppOpsManager.MODE_DEFAULT;
+                    try {
+                        mode = new AppOpsService(mActivity).checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName);
+                    } catch (Exception ignore) {}
+                    int finalMode = mode;
+                    mActivity.runOnUiThread(() -> {
+                        if (finalMode != AppOpsManager.MODE_IGNORED) {
+                            holder.disableBackgroundRunBtn.setVisibility(View.VISIBLE);
+                            holder.disableBackgroundRunBtn.setOnClickListener(v -> new Thread(() -> {
+                                try {
+                                    new AppOpsService(mActivity).setMode(AppOpsManager.OP_RUN_IN_BACKGROUND,
+                                            applicationInfo.uid, applicationInfo.packageName, AppOpsManager.MODE_IGNORED);
+                                    try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, applicationInfo.packageName)) {
+                                        cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
+                                    }
+                                    mActivity.runOnUiThread(() -> mActivity.refresh());
+                                } catch (Exception e) {
+                                    mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_disable_op), Toast.LENGTH_LONG).show());
+                                }
+                            }).start());
+                        } else holder.disableBackgroundRunBtn.setVisibility(View.GONE);
                     });
-                } else holder.disableBackgroundRunBtn.setVisibility(View.GONE);
+                }).start();
             } else {
                 holder.forceStopBtn.setVisibility(View.GONE);
                 holder.disableBackgroundRunBtn.setVisibility(View.GONE);
             }
-            holder.killBtn.setOnClickListener(v -> {
-                if (Runner.run(mActivity, String.format(Locale.ROOT, "kill -9 %d", processItem.pid)).isSuccessful()) {
-                    mActivity.refresh();
-                } else {
-                    Toast.makeText(mActivity, String.format(mActivity.getString(R.string.failed_to_stop), processName), Toast.LENGTH_LONG).show();
-                }
-            });
+            if (!isAdbMode) {
+                holder.killBtn.setOnClickListener(v -> new Thread(() -> {
+                    if (Runner.run(mActivity, String.format(Locale.ROOT, "kill -9 %d", processItem.pid)).isSuccessful()) {
+                        mActivity.runOnUiThread(() -> mActivity.refresh());
+                    } else {
+                        mActivity.runOnUiThread(() -> Toast.makeText(mActivity, String.format(mActivity.getString(R.string.failed_to_stop), processName), Toast.LENGTH_LONG).show());
+                    }
+                }).start());
+            } else holder.killBtn.setVisibility(View.GONE);
             convertView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
             return convertView;
         }

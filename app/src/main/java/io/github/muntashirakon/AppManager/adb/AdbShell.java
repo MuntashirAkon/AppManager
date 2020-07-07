@@ -99,5 +99,6 @@ public class AdbShell {
         // Delete files
         stdoutPath.delete();
         retCodePath.delete();
-        return new CommandResult(stdout, returnCode);    }
+        return new CommandResult(stdout, returnCode);
+    }
 }
