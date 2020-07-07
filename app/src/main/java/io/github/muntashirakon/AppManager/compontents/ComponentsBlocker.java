@@ -23,6 +23,7 @@ import java.util.Set;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.StorageManager;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 
 /**
  * Block application components: activities, broadcasts, services and providers.
@@ -76,7 +77,7 @@ public class ComponentsBlocker extends StorageManager {
             }
         }
         ComponentsBlocker componentsBlocker = componentsBlockers.get(packageName);
-        if (!noLoadFromDisk) //noinspection ConstantConditions
+        if (!noLoadFromDisk && AppPref.isRootEnabled()) //noinspection ConstantConditions
             componentsBlocker.retrieveDisabledComponents();
         //noinspection ConstantConditions
         componentsBlocker.readOnly = true;
@@ -204,8 +205,8 @@ public class ComponentsBlocker extends StorageManager {
      */
     public boolean isRulesApplied() {
         List<StorageManager.Entry> entries = getAllComponents();
-        if (Runner.run(context, String.format("test -e '%s%s.xml'", SYSTEM_RULES_PATH, packageName))
-                .isSuccessful()) return true;
+        if (AppPref.isRootEnabled() && Runner.run(context, String.format("test -e '%s%s.xml'",
+                SYSTEM_RULES_PATH, packageName)).isSuccessful()) return true;
         for (StorageManager.Entry entry: entries) if (!((Boolean) entry.extra)) return false;
         return true;
     }
@@ -262,7 +263,6 @@ public class ComponentsBlocker extends StorageManager {
      * If it's available in the system, save a copy to the local source and then retrieve the components
      */
     private void retrieveDisabledComponents() {
-        int packageNameLength = packageName.length()+1;
         if (isRulesApplied()) {
             // Copy system rules to access them locally
             // FIXME: Read all files instead of just one for greater compatibility
