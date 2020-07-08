@@ -53,11 +53,22 @@
     <string name="netstats_transmitted">Data transmitted</string>
     <string name="netstats_msg">Data Usage Since Last Boot</string>
     <string name="about">About</string>
-    <string name="about_message"><b>Main Window</b>
+    <string name="about_message"><b>ADB over TCP</b>
+        \nMany root-only features of this can still be used by enabling ADB over TCP. To do that, a
+        PC or Mac is required with ADB tools installed, and an Android phone with Developer Mode
+        &amp; USB debugging enabled
+        (<a href="https://www.xda-developers.com/install-adb-windows-macos-linux/">tutorial</a>).
+        After that, connect the phone to the PC or Mac using a data cable. Then, open command prompt
+        or terminal and run <u>adb tcpip 5555</u>. After that, run this app again. In some Android
+        phones, a prompt will appear saying <i>Allow USB Debugging</i>. In that case, check
+        <i>Always allow from this computer</i> and click on <i>Allow</i>. In some devices, you may
+        need to connect/disconnect the data cable in order for it to work.
+        \n
+        \n<b>Main Window</b>
         \n- Click will open “App Info” window
         \n- Long click will open ”App Details” window
         \n- View app usage statistics (in the menu) (requires “Usage Access” permission)
-        \n- View running apps/processes (in the menu) (requires root)
+        \n- Manage running apps/processes (in the menu) (requires root/ADB)
         \n- Open APK Updater directly (in the menu) (if installed)
         \n- Batch operations (click on any app icon to select)
         \n
@@ -85,7 +96,7 @@
         \n<i>debug</i>: Debuggable app
         \n
         \n<b>App Info Window</b>
-        \n- Uninstall/enable/disable/force-stop an app (some operations require root permission)
+        \n- Uninstall/enable/disable/force-stop an app (some operations require root/adb permission)
         \n- View dynamic manifest of an app
         \n- View shared preferences
         \n- Scan for trackers using Exodus
@@ -93,13 +104,13 @@
         \n- View various paths and directories related to the app and open them with external app
         \n- View installation date, update date, installer app
         \n- View storage information (requires “Usage Access” permission)
-        \n- Delete app cache/data (requires root permission)
+        \n- Delete app cache/data (requires root/adb permission)
         \n
         \n<b>App Details Window</b>
         \n- App ops or dangerous permissions can be revoked in the <b>App Ops</b> (which lists app
         operations &amp; can be used to revoke non-revocable permissions) and <b>Uses Permissions</b>
         tab (which lists permission from the &lt;uses-permission&gt; tags of the manifest) respectively
-        (requires root permission)
+        (requires root/adb permission)
         \n- Available activities can be launched from the <b>Activities</b> tab. Also, customizable
         shortcuts can be made
         \n- Activities, broadcast receivers, services and providers (aka, components) can be blocked
@@ -166,7 +177,7 @@
         \n2020 © <a href="https://github.com/MuntashirAkon">Muntashir Al-Islam</a>
     </string>
     <string name="third_party">Third-party Libraries and Icons</string>
-    <string name="third_party_message">-
+    <string name="third_party_message" translatable="false">-
         <a href="https://github.com/material-components/material-components-android">Material
         Components</a> (Apache 2.0)
         \n- <a href="https://github.com/google/material-design-icons">Material Design Icons</a>
@@ -176,6 +187,7 @@
         \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
         (Apache 2.0)
         \n- <a href="https://github.com/jaredrummler/AndroidShell">Android Shell</a> (Apache 2.0)
+        \n- <a href="https://github.com/tananaev/adblib">ADB Library</a> (BSD-3-Clause License)
     </string>
     <string name="credits">Credits</string>
     <string name="credits_message">To the authors of
@@ -185,6 +197,7 @@
         \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
         \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
         \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+        \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
         \nLogo credit: <a href="https://github.com/Atrate">Atrate</a>.
     </string>
     <string name="word_wrap">Toggle word wrap</string>
