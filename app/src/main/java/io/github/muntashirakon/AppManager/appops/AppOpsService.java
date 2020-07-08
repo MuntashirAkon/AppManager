@@ -63,11 +63,13 @@ class AppOpsService implements IAppOpsService {
             try {
                 String opModeOut;
                 if (output.size() == 1) {
-                    AppOpsManager.OpEntry entry = parseOpName(output.get(0));
-                    return entry.getMode();
+                    return parseOpName(output.get(0)).getMode();
                 } else if (output.size() == 2) {
-                    opModeOut = output.get(1).substring(DEFAULT_MODE_SKIP);
-                    return strModeToMode(opModeOut);
+                    String line2 = output.get(1);
+                    if (line2.startsWith("Default mode:")) {
+                        opModeOut = line2.substring(DEFAULT_MODE_SKIP);
+                        return strModeToMode(opModeOut);
+                    } else return parseOpName(line2).getMode();
                 }
             } catch (IndexOutOfBoundsException e) {
                 throw new Exception("Invalid output from appops");
