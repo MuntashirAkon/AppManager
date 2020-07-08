@@ -1,5 +1,6 @@
 package io.github.muntashirakon.AppManager.activities;
 
+import android.annotation.SuppressLint;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.text.format.Formatter;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +37,7 @@ import java.util.regex.Pattern;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.R;
@@ -56,6 +59,7 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
     private RunningAppsAdapter mAdapter;
     private static PackageManager mPackageManager;
     private ProgressIndicator mProgressIndicator;
+    private static boolean enableKillForSystem = false;
 
     static class ProcessItem {
         int pid;
@@ -100,12 +104,33 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
         mListView.setEmptyView(findViewById(android.R.id.empty));
         mAdapter = new RunningAppsAdapter(this);
         mListView.setAdapter(mAdapter);
-        new ProcessRefreshingThread().start();
+        mConstraint = null;
+        enableKillForSystem = (boolean) AppPref.get(this, AppPref.PREF_ENABLE_KILL_FOR_SYSTEM, AppPref.TYPE_BOOLEAN);
+        refresh();
+    }
+
+    @SuppressLint("RestrictedApi")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_running_apps_actions, menu);
+        if (menu instanceof MenuBuilder) {
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        }
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) finish();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.action_toggle_kill:
+                enableKillForSystem = !enableKillForSystem;
+                AppPref.getInstance(this).setPref(AppPref.PREF_ENABLE_KILL_FOR_SYSTEM, enableKillForSystem);
+                refresh();
+                return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -299,7 +324,8 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
                 holder.forceStopBtn.setVisibility(View.GONE);
                 holder.disableBackgroundRunBtn.setVisibility(View.GONE);
             }
-            if (!isAdbMode) {
+            if ((processItem.pid >= 10000 || enableKillForSystem) && !isAdbMode) {
+                holder.killBtn.setVisibility(View.VISIBLE);
                 holder.killBtn.setOnClickListener(v -> new Thread(() -> {
                     if (Runner.run(mActivity, String.format(Locale.ROOT, "kill -9 %d", processItem.pid)).isSuccessful()) {
                         mActivity.runOnUiThread(() -> mActivity.refresh());

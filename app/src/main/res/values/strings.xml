@@ -336,4 +336,5 @@
     <string name="alert_failed_to_disable_background">Failed to disable run in background for some packages</string>
     <string name="the_operation_was_successful">The operation was successful</string>
     <string name="alert_failed_to_kill">Failed to kill some processes</string>
+    <string name="toggle_kill_for_system_apps">Toogle kill for system apps</string>
 </resources>

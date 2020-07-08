@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_toggle_kill"
+        android:icon="@drawable/ic_baseline_clear_24"
+        app:showAsAction="never"
+        android:title="@string/toggle_kill_for_system_apps" />
+
+</menu>

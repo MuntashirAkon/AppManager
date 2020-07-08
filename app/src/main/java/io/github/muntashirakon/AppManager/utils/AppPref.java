@@ -16,18 +16,20 @@ public class AppPref {
     private static final String PREF_NAME = "preferences";
 
     @StringDef(value = {
-            PREF_ROOT_MODE_ENABLED,
             PREF_ADB_MODE_ENABLED,
+            PREF_ENABLE_KILL_FOR_SYSTEM,
             PREF_GLOBAL_BLOCKING_ENABLED,
+            PREF_MAIN_WINDOW_SORT_ORDER,
+            PREF_ROOT_MODE_ENABLED,
             PREF_USAGE_ACCESS_ENABLED,
-            PREF_MAIN_WINDOW_SORT_ORDER
     })
     public @interface PrefKey {}
-    public static final String PREF_ROOT_MODE_ENABLED = "root_mode_enabled";  // boolean
     public static final String PREF_ADB_MODE_ENABLED = "adb_mode_enabled";  // boolean
+    public static final String PREF_ENABLE_KILL_FOR_SYSTEM = "enable_kill_for_system";  // boolean
     public static final String PREF_GLOBAL_BLOCKING_ENABLED = "global_blocking_enabled";  // boolean
-    public static final String PREF_USAGE_ACCESS_ENABLED = "usage_access_enabled";  // boolean
     public static final String PREF_MAIN_WINDOW_SORT_ORDER = "main_window_sort_order";  // int
+    public static final String PREF_ROOT_MODE_ENABLED = "root_mode_enabled";  // boolean
+    public static final String PREF_USAGE_ACCESS_ENABLED = "usage_access_enabled";  // boolean
 
     @IntDef(value = {
             TYPE_BOOLEAN,
@@ -104,20 +106,23 @@ public class AppPref {
     }
 
     private void init() {
-        if (!preferences.contains(PREF_ROOT_MODE_ENABLED)) {
-            editor.putBoolean(PREF_ROOT_MODE_ENABLED, (Boolean) getDefaultValue(PREF_ROOT_MODE_ENABLED));
-        }
         if (!preferences.contains(PREF_ADB_MODE_ENABLED)) {
             editor.putBoolean(PREF_ADB_MODE_ENABLED, (Boolean) getDefaultValue(PREF_ADB_MODE_ENABLED));
         }
         if (!preferences.contains(PREF_GLOBAL_BLOCKING_ENABLED)) {
             editor.putBoolean(PREF_GLOBAL_BLOCKING_ENABLED, (Boolean) getDefaultValue(PREF_GLOBAL_BLOCKING_ENABLED));
         }
-        if (!preferences.contains(PREF_USAGE_ACCESS_ENABLED)) {
-            editor.putBoolean(PREF_USAGE_ACCESS_ENABLED, (Boolean) getDefaultValue(PREF_USAGE_ACCESS_ENABLED));
-        }
         if (!preferences.contains(PREF_MAIN_WINDOW_SORT_ORDER)) {
             editor.putInt(PREF_MAIN_WINDOW_SORT_ORDER, (Integer) getDefaultValue(PREF_MAIN_WINDOW_SORT_ORDER));
+        }
+        if (!preferences.contains(PREF_ENABLE_KILL_FOR_SYSTEM)) {
+            editor.putBoolean(PREF_ENABLE_KILL_FOR_SYSTEM, (Boolean) getDefaultValue(PREF_ENABLE_KILL_FOR_SYSTEM));
+        }
+        if (!preferences.contains(PREF_ROOT_MODE_ENABLED)) {
+            editor.putBoolean(PREF_ROOT_MODE_ENABLED, (Boolean) getDefaultValue(PREF_ROOT_MODE_ENABLED));
+        }
+        if (!preferences.contains(PREF_USAGE_ACCESS_ENABLED)) {
+            editor.putBoolean(PREF_USAGE_ACCESS_ENABLED, (Boolean) getDefaultValue(PREF_USAGE_ACCESS_ENABLED));
         }
         editor.commit();
     }
@@ -128,6 +133,7 @@ public class AppPref {
             case PREF_USAGE_ACCESS_ENABLED:
                 return true;
             case PREF_ADB_MODE_ENABLED:
+            case PREF_ENABLE_KILL_FOR_SYSTEM:
             case PREF_GLOBAL_BLOCKING_ENABLED: return false;
             case PREF_MAIN_WINDOW_SORT_ORDER: return MainActivity.SORT_BY_APP_LABEL;
         }
