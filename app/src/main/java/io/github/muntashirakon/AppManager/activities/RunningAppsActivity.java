@@ -297,13 +297,13 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
                     }
                 }).start());
                 new Thread(() -> {
-                    int mode = AppOpsManager.MODE_DEFAULT;
+                    String mode = AppOpsManager.modeToName(AppOpsManager.MODE_DEFAULT);
                     try {
                         mode = new AppOpsService(mActivity).checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName);
                     } catch (Exception ignore) {}
-                    int finalMode = mode;
+                    String finalMode = mode;
                     mActivity.runOnUiThread(() -> {
-                        if (finalMode != AppOpsManager.MODE_IGNORED) {
+                        if (!finalMode.equals(AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED))) {
                             holder.disableBackgroundRunBtn.setVisibility(View.VISIBLE);
                             holder.disableBackgroundRunBtn.setOnClickListener(v -> new Thread(() -> {
                                 try {

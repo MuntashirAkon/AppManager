@@ -1913,14 +1913,14 @@ public class AppOpsManager {
     public static final class OpEntry implements Parcelable {
         private final int mOp;
         private final Boolean mRunning;
-        private final @Mode int mMode;
+        private final @NonNull String mMode;
         private final long mAccessTime;
         private final long mRejectTime;
         private final long mDuration;
         private final @Nullable String mProxyUid;
         private final @Nullable String mProxyPackageName;
 
-        public OpEntry(int op, boolean running, @Mode int mode,
+        public OpEntry(int op, boolean running, @NonNull String mode,
                        long accessTime, long rejectTime,
                        long duration, @Nullable String proxyUid,
                        @Nullable String proxyPackageName) {
@@ -1934,7 +1934,7 @@ public class AppOpsManager {
             mProxyPackageName = proxyPackageName;
         }
 
-        public OpEntry(int op, @Mode int mode) {
+        public OpEntry(int op, @NonNull String mode) {
             mOp = op;
             mMode = mode;
             mRunning = false;
@@ -1958,10 +1958,9 @@ public class AppOpsManager {
         }
 
         /**
-         * @return this entry's current mode, such as {@link #MODE_ALLOWED}.
+         * @return this entry's current mode string value, such as allow and ignore.
          */
-        public @Mode
-        int getMode() {
+        public String getMode() {
             return mMode;
         }
 
@@ -2015,7 +2014,7 @@ public class AppOpsManager {
             return "OpEntry{" +
                     "mOp=" + opToName(mOp) +
                     ", mRunning=" + mRunning +
-                    ", mMode=" + modeToName(mMode) +
+                    ", mMode=" + mMode +
                     ", mAccessTime=" + mAccessTime +
                     ", mRejectTime=" + mRejectTime +
                     ", mDuration=" + mDuration +
@@ -2030,7 +2029,7 @@ public class AppOpsManager {
         @Override
         public void writeToParcel(@NonNull Parcel dest, int flags) {
             dest.writeInt(mOp);
-            dest.writeInt(mMode);
+            dest.writeString(mMode);
             dest.writeValue(mRunning);
             dest.writeLong(mAccessTime);
             dest.writeLong(mRejectTime);
@@ -2041,7 +2040,7 @@ public class AppOpsManager {
 
         OpEntry(@NonNull Parcel source) {
             mOp = source.readInt();
-            mMode = source.readInt();
+            mMode = Objects.requireNonNull(source.readString());
             mRunning = (Boolean) source.readValue(getClass().getClassLoader());
             mAccessTime = source.readLong();
             mRejectTime = source.readLong();

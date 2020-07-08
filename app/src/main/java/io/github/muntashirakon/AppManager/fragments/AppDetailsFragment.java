@@ -1134,7 +1134,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
             // Op Switch
             viewHolder.toggleSwitch.setVisibility(View.VISIBLE);
-            if (opEntry.getMode() == AppOpsManager.MODE_ALLOWED) {
+            if (opEntry.getMode().equals(AppOpsManager.modeToName(AppOpsManager.MODE_ALLOWED))) {
                 // op granted
                 viewHolder.toggleSwitch.setChecked(true);
             } else {
@@ -1150,7 +1150,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         }
                         // TODO: Use AppOpsManager.getOpsForPackage() instead
                         AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
-                                opEntry.isRunning(), AppOpsManager.MODE_ALLOWED, opEntry.getTime(),
+                                opEntry.isRunning(), AppOpsManager.modeToName(AppOpsManager.MODE_ALLOWED), opEntry.getTime(),
                                 opEntry.getRejectTime(), opEntry.getDuration(),
                                 opEntry.getProxyUid(), opEntry.getProxyPackageName());
                         AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
@@ -1171,7 +1171,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         }
                         // TODO: Use AppOpsManager.getOpsForPackage() instead
                         AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
-                                opEntry.isRunning(), AppOpsManager.MODE_IGNORED, opEntry.getTime(),
+                                opEntry.isRunning(), AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED), opEntry.getTime(),
                                 opEntry.getRejectTime(), opEntry.getDuration(),
                                 opEntry.getProxyUid(), opEntry.getProxyPackageName());
                         AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);

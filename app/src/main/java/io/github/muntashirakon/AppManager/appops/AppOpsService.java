@@ -50,8 +50,7 @@ class AppOpsService implements IAppOpsService {
      * an invalid operation name or mode name or there's an error parsing the output
      */
     @Override
-    @AppOpsManager.Mode
-    public int checkOperation(int op, int uid, @Nullable String packageName)
+    public String checkOperation(int op, int uid, @Nullable String packageName)
             throws Exception {
         String opStr = AppOpsManager.opToName(op);
         if (packageName != null)
@@ -68,7 +67,7 @@ class AppOpsService implements IAppOpsService {
                     String line2 = output.get(1);
                     if (line2.startsWith("Default mode:")) {
                         opModeOut = line2.substring(DEFAULT_MODE_SKIP);
-                        return strModeToMode(opModeOut);
+                        return opModeOut;
                     } else return parseOpName(line2).getMode();
                 }
             } catch (IndexOutOfBoundsException e) {
@@ -105,7 +104,9 @@ class AppOpsService implements IAppOpsService {
         }
         List<AppOpsManager.OpEntry> opEntries = new ArrayList<>();
         for(String line: lines) {
-            opEntries.add(parseOpName(line));
+            try {
+                opEntries.add(parseOpName(line));
+            } catch (Exception ignored) {}
         }
         AppOpsManager.PackageOps packageOps = new AppOpsManager.PackageOps(packageName, uid, opEntries);
         packageOpsList.add(packageOps);
@@ -188,8 +189,8 @@ class AppOpsService implements IAppOpsService {
         if (matcher.find()) {
             if (matcher.group(1) == null && matcher.group(2) == null)
                 throw new Exception("Op name or mode cannot be empty");
-            int op = strOpToOp(matcher.group(1));
-            @AppOpsManager.Mode int mode = strModeToMode(matcher.group(2));
+            int op = strOpToOp(matcher.group(1));  // FIXME: make it string as there could be many custom mode
+            String mode = matcher.group(2);
             boolean running = matcher.group(15) != null;
             long accessTime = getTime(matcher, 3);
             long rejectTime = getTime(matcher, 9);
