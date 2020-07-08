@@ -16,24 +16,41 @@
         android:paddingBottom="@dimen/padding_small"
         android:paddingEnd="@dimen/padding_small"
         android:paddingStart="@dimen/padding_small"
-        android:paddingTop="@dimen/padding_small">
-
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="@dimen/padding_small"
-            android:layout_weight="0"
-            tools:srcCompat="@tools:sample/avatars"
-            android:contentDescription="@string/str_logo" />
+        android:paddingTop="@dimen/padding_small"
+        android:baselineAligned="false">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/padding_small"
             android:orientation="vertical">
 
-            <TextView
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                tools:srcCompat="@tools:sample/avatars"
+                android:contentDescription="@string/str_logo" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/percent_usage"
+                android:layout_width="match_parent"
+                android:layout_height="14dp"
+                android:layout_weight="0"
+                android:gravity="center"
+                android:textSize="12sp"
+                tools:text="@tools:sample/us_zipcodes" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -42,7 +59,7 @@
                 android:textStyle="bold"
                 tools:text="@tools:sample/lorem" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/package_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -63,7 +80,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -71,7 +88,7 @@
                         android:textSize="12sp"
                         tools:text="@tools:sample/date/mmddyy" />
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/screen_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -87,7 +104,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/data_usage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -95,7 +112,7 @@
                         android:textSize="12sp"
                         tools:text="@tools:sample/us_zipcodes[0]" />
 
-                    <TextView
+                    <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/wifi_usage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -107,7 +124,17 @@
 
             </LinearLayout>
 
+            <com.google.android.material.progressindicator.ProgressIndicator
+                android:id="@+id/progress_linear"
+                style="@style/Widget.MaterialComponents.ProgressIndicator.Linear.Determinate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_very_small"
+                android:max="100"
+                app:indicatorColor="?colorAccent" />
+
         </LinearLayout>
 
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>

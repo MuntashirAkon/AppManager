@@ -42,6 +42,6 @@ public class Tuple<T, K> {
     @NonNull
     @Override
     public String toString() {
-        return "Tuple(" + mObjectOne + mObjectTwo + ')';
+        return "Tuple(" + mObjectOne + ", " + mObjectTwo + ')';
     }
 }

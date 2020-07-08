@@ -27,6 +27,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.textview.MaterialTextView;
 
 import java.lang.ref.WeakReference;
 import java.text.Collator;
@@ -47,6 +48,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fragments.AppUsageDetailsDialogFragment;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.Utils.IntervalType;
+import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_LAST_BOOT;
@@ -79,7 +81,7 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
     private ProgressIndicator mProgressIndicator;
     private AppUsageAdapter mAppUsageAdapter;
     List<AppUsageStatsManager.PackageUS> mPackageUSList;
-    private long totalScreenTime;
+    private static long totalScreenTime;
     private @IntervalType int current_interval = USAGE_TODAY;
     private @SortOrder int mSortBy;
 
@@ -315,12 +317,14 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
 
         static class ViewHolder {
             ImageView appIcon;
-            TextView appLabel;
-            TextView packageName;
-            TextView lastUsageDate;
-            TextView mobileDataUsage;
-            TextView wifiDataUsage;
-            TextView screenTime;
+            MaterialTextView appLabel;
+            MaterialTextView packageName;
+            MaterialTextView lastUsageDate;
+            MaterialTextView mobileDataUsage;
+            MaterialTextView wifiDataUsage;
+            MaterialTextView screenTime;
+            MaterialTextView percentUsage;
+            ProgressIndicator usageIndicator;
             IconAsyncTask iconLoader;
         }
 
@@ -364,12 +368,15 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
                 holder.mobileDataUsage = convertView.findViewById(R.id.data_usage);
                 holder.wifiDataUsage = convertView.findViewById(R.id.wifi_usage);
                 holder.screenTime = convertView.findViewById(R.id.screen_time);
+                holder.percentUsage = convertView.findViewById(R.id.percent_usage);
+                holder.usageIndicator = convertView.findViewById(R.id.progress_linear);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
                 if(holder.iconLoader != null) holder.iconLoader.cancel(true);
             }
-            AppUsageStatsManager.PackageUS packageUS = mAdapterList.get(position);
+            final AppUsageStatsManager.PackageUS packageUS = mAdapterList.get(position);
+            final int percentUsage = (int) (packageUS.screenTime * 100f / totalScreenTime);
             // Set label (or package name on failure)
             try {
                 ApplicationInfo applicationInfo = mPackageManager.getApplicationInfo(packageUS.packageName, 0);
@@ -398,11 +405,21 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
             holder.screenTime.setText(screenTimesWithTimesOpened);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // Set data usage
-                holder.mobileDataUsage.setText("M: \u2191 " + Formatter.formatFileSize(mActivity, packageUS.mobileData.getFirst())
-                            + " \u2193 " + Formatter.formatFileSize(mActivity, packageUS.mobileData.getSecond()));
-                holder.wifiDataUsage.setText("W: \u2191 " + Formatter.formatFileSize(mActivity, packageUS.wifiData.getFirst())
-                        + " \u2193 " + Formatter.formatFileSize(mActivity, packageUS.wifiData.getSecond()));
+                final Tuple<Long, Long> mobileData = packageUS.mobileData;
+                if (mobileData.getFirst() != 0 || mobileData.getSecond() != 0) {
+                    holder.mobileDataUsage.setText("M: \u2191 " + Formatter.formatFileSize(mActivity, mobileData.getFirst())
+                            + " \u2193 " + Formatter.formatFileSize(mActivity, mobileData.getSecond()));
+                } else holder.mobileDataUsage.setText("");
+                final Tuple<Long, Long> wifiData = packageUS.wifiData;
+                if (wifiData.getFirst() != 0 || wifiData.getSecond() != 0) {
+                    holder.wifiDataUsage.setText("W: \u2191 " + Formatter.formatFileSize(mActivity, wifiData.getFirst())
+                            + " \u2193 " + Formatter.formatFileSize(mActivity, wifiData.getSecond()));
+                } else holder.wifiDataUsage.setText("");
+
             }
+            // Set usage percentage
+            holder.percentUsage.setText(String.format(Locale.ROOT, "%d%%", percentUsage));
+            holder.usageIndicator.setProgress(percentUsage);
             return convertView;
         }
 
