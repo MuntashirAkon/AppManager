@@ -270,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     AppPref.getInstance(this).setPref(AppPref.PREF_ADB_MODE_ENABLED, false);
                 }
             }).start();
-        }
+        } else AppPref.getInstance(this).setPref(AppPref.PREF_ADB_MODE_ENABLED, false);
 
         mLoaderManager = LoaderManager.getInstance(this);
         mLoaderManager.initLoader(0, null, this);
