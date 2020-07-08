@@ -256,22 +256,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
         handleSelection();
 
-        // Initialize app prefs
-        AppPref.getInstance(this);
-        // Check root
-        if (!Utils.isRootGiven(this)) {
-            AppPref.getInstance(this).setPref(AppPref.PREF_ROOT_MODE_ENABLED, false);
-            // Check for adb
-            new Thread(() -> {
-                try {
-                    AdbShell.run("id");
-                    AppPref.getInstance(this).setPref(AppPref.PREF_ADB_MODE_ENABLED, true);
-                } catch (IOException | InterruptedException | NoSuchAlgorithmException e) {
-                    AppPref.getInstance(this).setPref(AppPref.PREF_ADB_MODE_ENABLED, false);
-                }
-            }).start();
-        } else AppPref.getInstance(this).setPref(AppPref.PREF_ADB_MODE_ENABLED, false);
-
         mLoaderManager = LoaderManager.getInstance(this);
         mLoaderManager.initLoader(0, null, this);
     }
@@ -461,6 +445,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
+        // Check root
+        if (!Utils.isRootGiven(this)) {
+            AppPref.getInstance(this).setPref(AppPref.PREF_ROOT_MODE_ENABLED, false);
+            // Check for adb
+            new Thread(() -> {
+                try {
+                    AdbShell.run("id");
+                    AppPref.getInstance(this).setPref(AppPref.PREF_ADB_MODE_ENABLED, true);
+                } catch (IOException | InterruptedException | NoSuchAlgorithmException e) {
+                    AppPref.getInstance(this).setPref(AppPref.PREF_ADB_MODE_ENABLED, false);
+                }
+            }).start();
+        } else AppPref.getInstance(this).setPref(AppPref.PREF_ADB_MODE_ENABLED, false);
         // Set filter
         if (mAdapter != null && mConstraint != null && !mConstraint.equals("")) {
             mAdapter.getFilter().filter(mConstraint);
