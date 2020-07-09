@@ -15,7 +15,7 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 @SuppressLint("DefaultLocale")
 public
 class AppOpsService implements IAppOpsService {
-    private static final Pattern OP_MATCHER = Pattern.compile("(?:Uid mode: )?(\\w+): (\\w+)" +
+    private static final Pattern OP_MATCHER = Pattern.compile("(?:Uid mode: )?([\\w()]+): ([\\w=]+)" +
             "(?:; time=(?:\\s*0|([+\\-])(\\d+d)?(\\d{1,2}h)?(\\d{1,2}m)?(\\d{1,2}s)?(\\d{1,3}m))s ago)?" +
             "(?:; rejectTime=(?:\\s*0|([+\\-])(\\d+d)?(\\d{1,2}h)?(\\d{1,2}m)?(\\d{1,2}s)?(\\d{1,3}m))s ago)?" +
             "( \\(running\\))?(?:; duration=(?:\\s*0|([+\\-])(\\d+d)?(\\d{1,2}h)?(\\d{1,2}m)?(\\d{1,2}s)?(\\d{1,3}m))s)?");
@@ -29,6 +29,9 @@ class AppOpsService implements IAppOpsService {
     };
 
     private static final int DEFAULT_MODE_SKIP = 14;
+    private static final int UNKNOWN_MODE_SKIP = 5;
+    private static final int UNKNOWN_OP_SKIP = 8;
+    private static final int OP_PREFIX_OP_SKIP = 3;
 
     private boolean isSuccessful = false;
     private List<String> output = null;
@@ -145,25 +148,6 @@ class AppOpsService implements IAppOpsService {
     }
 
     /**
-     * Mode names to mode values
-     * @param modeStr Mode name, eg. allow
-     * @return Integer value of the mode
-     */
-    @SuppressLint("WrongConstant")
-    @AppOpsManager.Mode
-    private static int strModeToMode(String modeStr) throws Exception {
-        for (int i = AppOpsManager.MODE_NAMES.length - 1; i >= 0; i--) {
-            if (AppOpsManager.MODE_NAMES[i].equals(modeStr)) {
-                return i;
-            }
-        }
-        try {
-            return Integer.parseInt(modeStr);
-        } catch (NumberFormatException ignored) {}
-        throw new Exception("Invalid mode " + modeStr);
-    }
-
-    /**
      * String value of op to integer value of op
      *
      * @param op String value of op, eg. android:coarse_location
@@ -187,15 +171,28 @@ class AppOpsService implements IAppOpsService {
     private static AppOpsManager.OpEntry parseOpName(@NonNull String line) throws Exception {
         Matcher matcher = OP_MATCHER.matcher(line);
         if (matcher.find()) {
-            if (matcher.group(1) == null && matcher.group(2) == null)
+            String opStr = matcher.group(1);
+            String modeStr = matcher.group(2);
+            if (opStr == null || modeStr == null)
                 throw new Exception("Op name or mode cannot be empty");
-            int op = strOpToOp(matcher.group(1));  // FIXME: make it string as there could be many custom mode
-            String mode = matcher.group(2);
+            // Handle Unknown(op)
+            if (opStr.startsWith("Unknown("))
+                opStr = opStr.substring(UNKNOWN_OP_SKIP, opStr.length()-1);
+            if (opStr.startsWith("OP_"))
+                opStr = opStr.substring(OP_PREFIX_OP_SKIP);
+            // FIXME: Check old opStr as well
+            // Handle mode=5
+            if (modeStr.startsWith("mode="))
+                modeStr = modeStr.substring(UNKNOWN_MODE_SKIP);
+            int op = AppOpsManager.OP_NONE;
+            try {
+                op = strOpToOp(opStr);
+            } catch (Exception ignore) {}
             boolean running = matcher.group(15) != null;
             long accessTime = getTime(matcher, 3);
             long rejectTime = getTime(matcher, 9);
             long duration = getTime(matcher, 16);
-            return new AppOpsManager.OpEntry(op, running, mode, accessTime, rejectTime, duration, null, null);
+            return new AppOpsManager.OpEntry(op, opStr, running, modeStr, accessTime, rejectTime, duration, null, null);
         }
         throw new Exception("Failed to parse line");
     }

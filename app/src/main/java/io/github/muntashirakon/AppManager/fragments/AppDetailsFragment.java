@@ -434,13 +434,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         if (packageOpsList.size() == 1)
                             opEntries.addAll(packageOpsList.get(0).getOps());
                         if (opEntries.size() > 0) {
-                            Set<Integer> uniqueSet = new HashSet<>();
+                            Set<String> uniqueSet = new HashSet<>();
                             for (AppOpsManager.OpEntry opEntry : opEntries) {
-                                if (uniqueSet.contains(opEntry.getOp())) continue;
+                                if (uniqueSet.contains(opEntry.getOpStr())) continue;
                                 AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry);
-                                appDetailsItem.name = AppOpsManager.opToName(opEntry.getOp());
+                                appDetailsItem.name = opEntry.getOpStr();
                                 appDetailsItems.add(appDetailsItem);
-                                uniqueSet.add(opEntry.getOp());
+                                uniqueSet.add(opEntry.getOpStr());
                             }
                         }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -1092,7 +1092,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 String permName = AppOpsManager.opToPermission(opEntry.getOp());
                 if (permName != null)
                     permissionInfo = mPackageManager.getPermissionInfo(permName, PackageManager.GET_META_DATA);
-            } catch (PackageManager.NameNotFoundException | IllegalArgumentException ignore) {}
+            } catch (PackageManager.NameNotFoundException | IllegalArgumentException | IndexOutOfBoundsException ignore) {}
 
             // Set permission name
             if (mConstraint != null && opName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
@@ -1150,11 +1150,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         }
                         // TODO: Use AppOpsManager.getOpsForPackage() instead
                         AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
-                                opEntry.isRunning(), AppOpsManager.modeToName(AppOpsManager.MODE_ALLOWED), opEntry.getTime(),
+                                opEntry.getOpStr(), opEntry.isRunning(), AppOpsManager.modeToName(AppOpsManager.MODE_ALLOWED), opEntry.getTime(),
                                 opEntry.getRejectTime(), opEntry.getDuration(),
                                 opEntry.getProxyUid(), opEntry.getProxyPackageName());
                         AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
-                        appDetailsItem.name = AppOpsManager.opToName(opEntry1.getOp());
+                        appDetailsItem.name = opEntry1.getOpStr();
                         mActivity.runOnUiThread(() -> mAdapterList.set(index, appDetailsItem));
                     } catch (Exception e) {
                         mActivity.runOnUiThread(() -> {
@@ -1171,11 +1171,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         }
                         // TODO: Use AppOpsManager.getOpsForPackage() instead
                         AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
-                                opEntry.isRunning(), AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED), opEntry.getTime(),
+                                opEntry.getOpStr(), opEntry.isRunning(), AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED), opEntry.getTime(),
                                 opEntry.getRejectTime(), opEntry.getDuration(),
                                 opEntry.getProxyUid(), opEntry.getProxyPackageName());
                         AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
-                        appDetailsItem.name = AppOpsManager.opToName(opEntry1.getOp());
+                        appDetailsItem.name = opEntry1.getOpStr();
                         mActivity.runOnUiThread(() -> mAdapterList.set(index, appDetailsItem));
                     } catch (Exception e) {
                         mActivity.runOnUiThread(() -> {

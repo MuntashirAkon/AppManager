@@ -1912,6 +1912,7 @@ public class AppOpsManager {
      */
     public static final class OpEntry implements Parcelable {
         private final int mOp;
+        private final String mOpStr;
         private final Boolean mRunning;
         private final @NonNull String mMode;
         private final long mAccessTime;
@@ -1920,11 +1921,12 @@ public class AppOpsManager {
         private final @Nullable String mProxyUid;
         private final @Nullable String mProxyPackageName;
 
-        public OpEntry(int op, boolean running, @NonNull String mode,
+        public OpEntry(int op, @NonNull String opStr, boolean running, @NonNull String mode,
                        long accessTime, long rejectTime,
                        long duration, @Nullable String proxyUid,
                        @Nullable String proxyPackageName) {
             mOp = op;
+            mOpStr = opStr;
             mRunning = running;
             mMode = mode;
             mAccessTime = accessTime;
@@ -1936,6 +1938,7 @@ public class AppOpsManager {
 
         public OpEntry(int op, @NonNull String mode) {
             mOp = op;
+            mOpStr = "";
             mMode = mode;
             mRunning = false;
             mAccessTime = 0;
@@ -1954,7 +1957,7 @@ public class AppOpsManager {
          */
         public @NonNull
         String getOpStr() {
-            return sOpToString[mOp];
+            return mOpStr;
         }
 
         /**
@@ -2012,7 +2015,8 @@ public class AppOpsManager {
         @Override
         public String toString() {
             return "OpEntry{" +
-                    "mOp=" + opToName(mOp) +
+                    "mOp=" + mOp +
+                    ", mOpStr=" + mOpStr +
                     ", mRunning=" + mRunning +
                     ", mMode=" + mMode +
                     ", mAccessTime=" + mAccessTime +
@@ -2029,6 +2033,7 @@ public class AppOpsManager {
         @Override
         public void writeToParcel(@NonNull Parcel dest, int flags) {
             dest.writeInt(mOp);
+            dest.writeString(mOpStr);
             dest.writeString(mMode);
             dest.writeValue(mRunning);
             dest.writeLong(mAccessTime);
@@ -2040,6 +2045,7 @@ public class AppOpsManager {
 
         OpEntry(@NonNull Parcel source) {
             mOp = source.readInt();
+            mOpStr = source.readString();
             mMode = Objects.requireNonNull(source.readString());
             mRunning = (Boolean) source.readValue(getClass().getClassLoader());
             mAccessTime = source.readLong();
