@@ -1,7 +1,6 @@
 package io.github.muntashirakon.AppManager.storage;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -14,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,7 +54,7 @@ public class StorageManager implements Closeable {
     protected Context context;
     protected String packageName;
     protected boolean readOnly = true;
-    private List<Entry> entries;
+    private CopyOnWriteArrayList<Entry> entries;
 
     protected StorageManager(Context context, String packageName) {
         this.context = context;
@@ -99,8 +99,9 @@ public class StorageManager implements Closeable {
     }
 
     public void removeEntry(String name) {
-        for (Iterator<Entry> iterator = entries.iterator(); iterator.hasNext();)
-            if (iterator.next().name.equals(name)) iterator.remove();
+        Entry removableEntry = null;
+        for (Entry entry: entries) if (entry.name.equals(name)) removableEntry = entry;
+        entries.remove(removableEntry);
     }
 
     protected void setComponent(String name, Type componentType, Boolean isApplied) {
@@ -133,7 +134,7 @@ public class StorageManager implements Closeable {
     }
 
     private void loadEntries() {
-        entries = new ArrayList<>();
+        entries = new CopyOnWriteArrayList<>();
         StringTokenizer tokenizer;
         String dataRow;
         try (BufferedReader TSVFile = new BufferedReader(new FileReader(getDesiredFile()))) {
