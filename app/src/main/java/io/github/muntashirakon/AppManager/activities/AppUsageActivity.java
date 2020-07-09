@@ -44,6 +44,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fragments.AppUsageDetailsDialogFragment;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
@@ -56,7 +57,7 @@ import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_TODAY;
 import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_WEEKLY;
 import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_YESTERDAY;
 
-public class AppUsageActivity extends AppCompatActivity implements ListView.OnItemClickListener {
+public class AppUsageActivity extends AppCompatActivity implements ListView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
     @IntDef(value = {
             SORT_BY_APP_LABEL,
             SORT_BY_LAST_USED,
@@ -79,6 +80,7 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
             R.id.action_sort_by_screen_time, R.id.action_sort_by_times_opened};
 
     private ProgressIndicator mProgressIndicator;
+    private SwipeRefreshLayout mSwipeRefresh;
     private AppUsageAdapter mAppUsageAdapter;
     List<AppUsageStatsManager.PackageUS> mPackageUSList;
     private static long totalScreenTime;
@@ -106,6 +108,12 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
         listView.setAdapter(mAppUsageAdapter);
         listView.setOnItemClickListener(this);
 
+        mSwipeRefresh = findViewById(R.id.swipe_refresh);
+        mSwipeRefresh.setColorSchemeColors(Utils.getThemeColor(this, android.R.attr.colorAccent));
+        mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(this, android.R.attr.colorPrimary));
+        mSwipeRefresh.setOnRefreshListener(this);
+        mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> listView.canScrollVertically(-1));
+
         @SuppressLint("InflateParams")
         View header = getLayoutInflater().inflate(R.layout.header_app_usage, null);
         listView.addHeaderView(header);
@@ -131,6 +139,14 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
     @Override
     protected void onStart() {
         super.onStart();
+        // Check permission
+        if (!Utils.checkUsageStatsPermission(this)) promptForUsageStatsPermission();
+        else getAppUsage();
+    }
+
+    @Override
+    public void onRefresh() {
+        mSwipeRefresh.setRefreshing(false);
         // Check permission
         if (!Utils.checkUsageStatsPermission(this)) promptForUsageStatsPermission();
         else getAppUsage();
