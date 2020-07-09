@@ -1,7 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
     <style name="Theme.MaterialComponents.DayNight.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="actionOverflowMenuStyle">@style/Widget.AppCompat.Light.PopupMenu.Overflow</item>
         <item name="colorPrimary">@android:color/white</item>
         <item name="colorPrimaryDark" tools:targetApi="m">?android:colorBackground</item>
         <item name="colorAccent">@color/cma</item>
@@ -13,12 +12,16 @@
         <item name="android:textColorSecondary">#99000000</item>
         <item name="actionOverflowButtonStyle">@style/ActionBarOverflowButton</item>
         <item name="navigationIcon">@drawable/ic_keyboard_backspace_black_24dp</item>
+        <item name="actionOverflowMenuStyle">@style/ActionBarOverflowMenu</item>
     </style>
     <style name="CustomBottomAppBar" parent="Widget.MaterialComponents.BottomAppBar.Colored">
         <item name="materialThemeOverlay">@style/CustomBottomAppBarOverlay</item>
     </style>
     <style name="CustomBottomAppBarOverlay">
         <item name="colorOnSurface">?android:attr/colorBackground</item>
+    </style>
+    <style name="ActionBarOverflowMenu" parent="Widget.MaterialComponents.PopupMenu.Overflow">
+        <item name="android:popupBackground">@drawable/rounded_border</item>
     </style>
     <style name="ActionBarOverflowButton" parent="@style/Widget.AppCompat.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_more_vert_black_24dp</item>
