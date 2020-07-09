@@ -350,4 +350,6 @@
     <string name="the_operation_was_successful">The operation was successful</string>
     <string name="alert_failed_to_kill">Failed to kill some processes</string>
     <string name="toggle_kill_for_system_apps">Toogle kill for system apps</string>
+    <string name="app_op_cannot_be_enabled">This app op cannot be enabled, possibly a read-only app op depended on another app op.</string>
+    <string name="app_op_cannot_be_disabled">This app op cannot be disabled, possibly a read-only app op depended on another app op.</string>
 </resources>

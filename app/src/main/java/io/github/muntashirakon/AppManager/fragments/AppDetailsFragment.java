@@ -1148,14 +1148,20 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
                             cb.setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_ALLOWED);
                         }
-                        // TODO: Use AppOpsManager.getOpsForPackage() instead
-                        AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
-                                opEntry.getOpStr(), opEntry.isRunning(), AppOpsManager.modeToName(AppOpsManager.MODE_ALLOWED), opEntry.getTime(),
-                                opEntry.getRejectTime(), opEntry.getDuration(),
-                                opEntry.getProxyUid(), opEntry.getProxyPackageName());
-                        AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
-                        appDetailsItem.name = opEntry1.getOpStr();
-                        mActivity.runOnUiThread(() -> mAdapterList.set(index, appDetailsItem));
+                        if (mAppOpsService.checkOperation(opEntry.getOp(), -1, mPackageName).equals(AppOpsManager.modeToName(AppOpsManager.MODE_ALLOWED))) {
+                            AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
+                                    opEntry.getOpStr(), opEntry.isRunning(), AppOpsManager.modeToName(AppOpsManager.MODE_ALLOWED), opEntry.getTime(),
+                                    opEntry.getRejectTime(), opEntry.getDuration(),
+                                    opEntry.getProxyUid(), opEntry.getProxyPackageName());
+                            AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
+                            appDetailsItem.name = opEntry1.getOpStr();
+                            mActivity.runOnUiThread(() -> mAdapterList.set(index, appDetailsItem));
+                        } else {
+                            mActivity.runOnUiThread(() -> {
+                                Toast.makeText(mActivity, R.string.app_op_cannot_be_enabled, Toast.LENGTH_LONG).show();
+                                viewHolder.toggleSwitch.setChecked(false);
+                            });
+                        }
                     } catch (Exception e) {
                         mActivity.runOnUiThread(() -> {
                             Toast.makeText(mActivity, R.string.failed_to_enable_op, Toast.LENGTH_LONG).show();
@@ -1169,14 +1175,20 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
                             cb.setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_IGNORED);
                         }
-                        // TODO: Use AppOpsManager.getOpsForPackage() instead
-                        AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
-                                opEntry.getOpStr(), opEntry.isRunning(), AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED), opEntry.getTime(),
-                                opEntry.getRejectTime(), opEntry.getDuration(),
-                                opEntry.getProxyUid(), opEntry.getProxyPackageName());
-                        AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
-                        appDetailsItem.name = opEntry1.getOpStr();
-                        mActivity.runOnUiThread(() -> mAdapterList.set(index, appDetailsItem));
+                        if (mAppOpsService.checkOperation(opEntry.getOp(), -1, mPackageName).equals(AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED))) {
+                            AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
+                                    opEntry.getOpStr(), opEntry.isRunning(), AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED), opEntry.getTime(),
+                                    opEntry.getRejectTime(), opEntry.getDuration(),
+                                    opEntry.getProxyUid(), opEntry.getProxyPackageName());
+                            AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
+                            appDetailsItem.name = opEntry1.getOpStr();
+                            mActivity.runOnUiThread(() -> mAdapterList.set(index, appDetailsItem));
+                        } else {
+                            mActivity.runOnUiThread(() -> {
+                                Toast.makeText(mActivity, R.string.app_op_cannot_be_disabled, Toast.LENGTH_LONG).show();
+                                viewHolder.toggleSwitch.setChecked(true);
+                            });
+                        }
                     } catch (Exception e) {
                         mActivity.runOnUiThread(() -> {
                             Toast.makeText(mActivity, R.string.failed_to_disable_op, Toast.LENGTH_LONG).show();
