@@ -36,7 +36,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/percent_usage"
                 android:layout_width="match_parent"
-                android:layout_height="14dp"
+                android:layout_height="14sp"
                 android:layout_weight="0"
                 android:gravity="center"
                 android:textSize="12sp"

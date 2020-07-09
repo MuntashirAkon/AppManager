@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="io.github.muntashirakon.AppManager"
     android:installLocation="auto">
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"
         android:maxSdkVersion="25" />
     <uses-permission android:name="android.permission.INTERNET" />
