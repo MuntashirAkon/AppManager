@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/padding_medium"
+    android:paddingTop="@dimen/padding_very_small"
+    android:paddingEnd="@dimen/padding_medium"
+    android:paddingBottom="@dimen/padding_very_small">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/op_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textIsSelectable="true"
+            android:textStyle="bold"
+            tools:text="@tools:sample/lorem" />
+
+        <TextView
+            android:id="@+id/op_mode_running_duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            tools:text="@tools:sample/lorem" />
+
+        <TextView
+            android:id="@+id/op_accept_reject_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            tools:text="@tools:sample/lorem" />
+
+        <TextView
+            android:id="@+id/perm_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            tools:text="@tools:sample/lorem" />
+
+        <TextView
+            android:id="@+id/perm_protection_level"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            tools:ignore="SmallSp"
+            tools:text="@tools:sample/lorem" />
+
+        <TextView
+            android:id="@+id/perm_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            android:textSize="12sp"
+            tools:text="@tools:sample/lorem" />
+
+        <TextView
+            android:id="@+id/perm_package_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            android:textSize="12sp"
+            tools:text="@tools:sample/lorem" />
+
+        <TextView
+            android:id="@+id/perm_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            android:textSize="12sp"
+            tools:text="@tools:sample/lorem" />
+
+    </LinearLayout>
+
+    <Switch
+        android:id="@+id/perm_toggle_btn"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|center_horizontal|center_vertical"
+        android:layout_weight="0" />
+
+</LinearLayout>

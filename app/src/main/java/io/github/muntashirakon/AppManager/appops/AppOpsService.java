@@ -2,6 +2,7 @@ package io.github.muntashirakon.AppManager.appops;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,6 +179,7 @@ class AppOpsService implements IAppOpsService {
             // Handle Unknown(op)
             if (opStr.startsWith("Unknown("))
                 opStr = opStr.substring(UNKNOWN_OP_SKIP, opStr.length()-1);
+            final String finalOpStr = opStr; // Save the op str before modifying it
             if (opStr.startsWith("OP_"))
                 opStr = opStr.substring(OP_PREFIX_OP_SKIP);
             // FIXME: Check old opStr as well
@@ -192,19 +194,22 @@ class AppOpsService implements IAppOpsService {
             long accessTime = getTime(matcher, 3);
             long rejectTime = getTime(matcher, 9);
             long duration = getTime(matcher, 16);
-            return new AppOpsManager.OpEntry(op, opStr, running, modeStr, accessTime, rejectTime, duration, null, null);
+            return new AppOpsManager.OpEntry(op, finalOpStr, running, modeStr, accessTime, rejectTime, duration, null, null);
         }
         throw new Exception("Failed to parse line");
     }
 
     private static long getTime(@NonNull Matcher matcher, int start) {
-        long time = 1;
+        long time = 0;
         String sign = matcher.group(start);
         if (sign == null) return 0;
         String tmp;
         for(int i = 0; i<5; ++i) {
-            tmp = removeLastChar(matcher.group(start+i));
-            if (tmp != null && !tmp.equals("")) time += Integer.parseInt(tmp) * TIME[i];
+            tmp = removeLastChar(matcher.group(start+i+1));
+            if (!TextUtils.isEmpty(tmp)) {
+                //noinspection ConstantConditions
+                time += Long.parseLong(tmp) * TIME[i];
+            }
         }
         return sign.equals("-") ? -time : time;
     }

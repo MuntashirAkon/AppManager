@@ -352,4 +352,11 @@
     <string name="toggle_kill_for_system_apps">Toogle kill for system apps</string>
     <string name="app_op_cannot_be_enabled">This app op cannot be enabled, possibly a read-only app op depended on another app op.</string>
     <string name="app_op_cannot_be_disabled">This app op cannot be disabled, possibly a read-only app op depended on another app op.</string>
+    <string name="permission_name">Permission Name</string>
+    <string name="mode">Mode</string>
+    <string name="running">Running</string>
+    <string name="duration">Duration</string>
+    <string name="accept_time">Accept Time</string>
+    <string name="reject_time">Reject Time</string>
+    <string name="ago">ago</string>
 </resources>

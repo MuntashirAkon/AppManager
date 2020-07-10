@@ -2,7 +2,6 @@ package io.github.muntashirakon.AppManager.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -277,7 +276,7 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
     private void setUsageSummary() {
         TextView timeUsed = findViewById(R.id.time_used);
         TextView timeRange = findViewById(R.id.time_range);
-        timeUsed.setText(formattedTime(this, totalScreenTime));
+        timeUsed.setText(Utils.getFormattedDuration(this, totalScreenTime));
         switch (current_interval) {
             case USAGE_TODAY:
                 timeRange.setText(R.string.usage_today);
@@ -291,36 +290,6 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
             case USAGE_LAST_BOOT:
                 break;
         }
-    }
-
-    public static String formattedTime(Context context, long time) {
-        time /= 60000; // minutes
-        long month, day, hour, min;
-        month = time / 43200; time %= 43200;
-        day = time / 1440; time %= 1440;
-        hour = time / 60;
-        min = time % 60;
-        String fTime = "";
-        int count = 0;
-        if (month != 0){
-            fTime += String.format(context.getString(month > 0 ? R.string.usage_months : R.string.usage_month), month);
-            ++count;
-        }
-        if (day != 0) {
-            fTime += (count > 0 ? " " : "") + String.format(context.getString(
-                    day > 1 ? R.string.usage_days : R.string.usage_day), day);
-            ++count;
-        }
-        if (hour != 0) {
-            fTime += (count > 0 ? " " : "") + String.format(context.getString(R.string.usage_hour), hour);
-            ++count;
-        }
-        if (min != 0) {
-            fTime += (count > 0 ? " " : "") + String.format(context.getString(R.string.usage_min), min);
-        } else {
-            if (count == 0) fTime = context.getString(R.string.usage_less_than_a_minute);
-        }
-        return fTime;
     }
 
     static class AppUsageAdapter extends BaseAdapter {
@@ -417,7 +386,7 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
                     mActivity.getString(R.string.one_time_opened)
                     : mActivity.getString(R.string.no_of_times_opened), packageUS.timesOpened);
             // Set screen time
-            screenTimesWithTimesOpened += ", " + formattedTime(mActivity, packageUS.screenTime);
+            screenTimesWithTimesOpened += ", " + Utils.getFormattedDuration(mActivity, packageUS.screenTime);
             holder.screenTime.setText(screenTimesWithTimesOpened);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // Set data usage

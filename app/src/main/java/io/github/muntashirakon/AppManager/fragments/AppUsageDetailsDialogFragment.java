@@ -15,8 +15,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -28,8 +26,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.activities.AppUsageActivity;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class AppUsageDetailsDialogFragment extends DialogFragment {
     public static final String TAG = "AppUsageDetailsDialogFragment";
@@ -125,7 +123,7 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
             } else holder = (ViewHolder) convertView.getTag();
             AppUsageStatsManager.USEntry usEntry = mAdapterList.get(position);
             holder.title.setText(String.format(Locale.ROOT, "%s - %s", sSimpleDateFormat.format(usEntry.startTime), sSimpleDateFormat.format(usEntry.endTime)));
-            holder.subtitle.setText(AppUsageActivity.formattedTime(context, usEntry.getDuration()));
+            holder.subtitle.setText(Utils.getFormattedDuration(context, usEntry.getDuration()));
             convertView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
             return convertView;
         }

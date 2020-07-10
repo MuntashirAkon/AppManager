@@ -673,6 +673,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             TextView textView4;
             TextView textView5;
             TextView textView6;
+            TextView textView7;
+            TextView textView8;
             ImageView imageView;
             ImageButton blockBtn;
             Button createBtn;
@@ -1107,40 +1109,63 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         private View getAppOpsView(ViewGroup viewGroup, View convertView, int index) {
             ViewHolder viewHolder;
             if (checkIfConvertViewMatch(convertView, USES_PERMISSIONS)) {
-                convertView = mLayoutInflater.inflate(R.layout.item_app_details_perm, viewGroup, false);
-
+                convertView = mLayoutInflater.inflate(R.layout.item_app_details_appop, viewGroup, false);
                 viewHolder = new ViewHolder();
                 viewHolder.currentViewType = USES_PERMISSIONS;
-                viewHolder.textView1 = convertView.findViewById(R.id.perm_name);
+                viewHolder.textView1 = convertView.findViewById(R.id.op_name);
                 viewHolder.textView2 = convertView.findViewById(R.id.perm_description);
                 viewHolder.textView3 = convertView.findViewById(R.id.perm_protection_level);
                 viewHolder.textView4 = convertView.findViewById(R.id.perm_package_name);
                 viewHolder.textView5 = convertView.findViewById(R.id.perm_group);
+                viewHolder.textView6 = convertView.findViewById(R.id.perm_name);
+                viewHolder.textView7 = convertView.findViewById(R.id.op_mode_running_duration);
+                viewHolder.textView8 = convertView.findViewById(R.id.op_accept_reject_time);
                 viewHolder.toggleSwitch = convertView.findViewById(R.id.perm_toggle_btn);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-
+            } else viewHolder = (ViewHolder) convertView.getTag();
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-
             AppOpsManager.OpEntry opEntry = (AppOpsManager.OpEntry) mAdapterList.get(index).vanillaItem;
-            final String opName = mAdapterList.get(index).name;
+            final String opStr = mAdapterList.get(index).name;
             PermissionInfo permissionInfo = null;
             try {
                 String permName = AppOpsManager.opToPermission(opEntry.getOp());
                 if (permName != null)
                     permissionInfo = mPackageManager.getPermissionInfo(permName, PackageManager.GET_META_DATA);
             } catch (PackageManager.NameNotFoundException | IllegalArgumentException | IndexOutOfBoundsException ignore) {}
-
-            // Set permission name
-            if (mConstraint != null && opName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
+            // Set op name
+            String opName = "(" + opEntry.getOp() + ") ";
+            if (mConstraint != null && opStr.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                viewHolder.textView1.setText(Utils.getHighlightedText(opName, mConstraint, mColorRed));
+                opName += Utils.getHighlightedText(opStr, mConstraint, mColorRed);
             } else {
-                viewHolder.textView1.setText(opName);
+                opName += opStr;
             }
+            viewHolder.textView1.setText(opName);
+            // Set op mode, running and duration
+            String opRunningInfo = mActivity.getString(R.string.mode) + ": " + opEntry.getMode();
+            if (opEntry.isRunning()) opRunningInfo += ", " + mActivity.getString(R.string.running);
+            if (opEntry.getDuration() != 0)
+                opRunningInfo += ", " + mActivity.getString(R.string.duration) + ": " +
+                        Utils.getFormattedDuration(mActivity, opEntry.getDuration(), true);
+            viewHolder.textView7.setText(opRunningInfo);
+            // Set accept time and/or reject time
+            if (opEntry.getTime() != 0 || opEntry.getRejectTime() != 0) {
+                String opTime = "";
+                if (opEntry.getTime() != 0)
+                    opTime = mActivity.getString(R.string.accept_time) + ": " +
+                            Utils.getFormattedDuration(mActivity, opEntry.getTime())
+                            + " " + mActivity.getString(R.string.ago);
+                if (opEntry.getRejectTime() != 0)
+                    opTime += (opTime.equals("") ? "" : "\n") + mActivity.getString(R.string.reject_time)
+                            + ": " + Utils.getFormattedDuration(mActivity, opEntry.getRejectTime())
+                            + " " + mActivity.getString(R.string.ago);
+                viewHolder.textView8.setVisibility(View.VISIBLE);
+                viewHolder.textView8.setText(opTime);
+            } else viewHolder.textView8.setVisibility(View.GONE);
             // Set others
             if (permissionInfo != null) {
+                // Set permission name
+                viewHolder.textView6.setVisibility(View.VISIBLE);
+                viewHolder.textView6.setText(String.format("%s: %s", mActivity.getString(R.string.permission_name), permissionInfo.name));
                 // Description
                 CharSequence description = permissionInfo.loadDescription(mPackageManager);
                 if (description != null) {
@@ -1169,6 +1194,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 viewHolder.textView3.setVisibility(View.GONE);
                 viewHolder.textView4.setVisibility(View.GONE);
                 viewHolder.textView5.setVisibility(View.GONE);
+                viewHolder.textView6.setVisibility(View.GONE);
             }
             // Op Switch
             viewHolder.toggleSwitch.setVisibility(View.VISIBLE);
@@ -1193,7 +1219,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                                     opEntry.getProxyUid(), opEntry.getProxyPackageName());
                             AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
                             appDetailsItem.name = opEntry1.getOpStr();
-                            mActivity.runOnUiThread(() -> mAdapterList.set(index, appDetailsItem));
+                            mActivity.runOnUiThread(() -> {
+                                mAdapterList.set(index, appDetailsItem);
+                                notifyDataSetChanged();
+                            });
                         } else {
                             mActivity.runOnUiThread(() -> {
                                 Toast.makeText(mActivity, R.string.app_op_cannot_be_enabled, Toast.LENGTH_LONG).show();
@@ -1220,7 +1249,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                                     opEntry.getProxyUid(), opEntry.getProxyPackageName());
                             AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
                             appDetailsItem.name = opEntry1.getOpStr();
-                            mActivity.runOnUiThread(() -> mAdapterList.set(index, appDetailsItem));
+                            mActivity.runOnUiThread(() -> {
+                                mAdapterList.set(index, appDetailsItem);
+                                notifyDataSetChanged();
+                            });
                         } else {
                             mActivity.runOnUiThread(() -> {
                                 Toast.makeText(mActivity, R.string.app_op_cannot_be_disabled, Toast.LENGTH_LONG).show();
