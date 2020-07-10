@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import io.github.muntashirakon.AppManager.storage.StorageManager;
+import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -81,7 +81,7 @@ public class ExternalComponentsImporter {
                 parser.nextTag();
                 parser.require(XmlPullParser.START_TAG, null, "rules");
                 int event = parser.nextTag();
-                StorageManager.Type componentType = StorageManager.Type.UNKNOWN;
+                RulesStorageManager.Type componentType = RulesStorageManager.Type.UNKNOWN;
                 String packageName = Utils.trimExtension(filename);
                 try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
                     String name;
@@ -125,7 +125,7 @@ public class ExternalComponentsImporter {
             throws Exception {
         try {
             String jsonString = Utils.getFileContent(context.getContentResolver(), uri);
-            HashMap<String, HashMap<String, StorageManager.Type>> packageComponents = new HashMap<>();
+            HashMap<String, HashMap<String, RulesStorageManager.Type>> packageComponents = new HashMap<>();
             HashMap<String, PackageInfo> packageInfoList = new HashMap<>();
             PackageManager packageManager = context.getPackageManager();
             JSONObject jsonObject = new JSONObject(jsonString);
@@ -151,7 +151,7 @@ public class ExternalComponentsImporter {
             }
             if (packageComponents.size() > 0) {
                 for (String packageName: packageComponents.keySet()) {
-                    HashMap<String, StorageManager.Type> disabledComponents = packageComponents.get(packageName);
+                    HashMap<String, RulesStorageManager.Type> disabledComponents = packageComponents.get(packageName);
                     //noinspection ConstantConditions
                     if (disabledComponents.size() > 0) {
                         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)){
@@ -170,15 +170,15 @@ public class ExternalComponentsImporter {
         }
     }
 
-    private static StorageManager.Type getType(@NonNull String name, @NonNull PackageInfo packageInfo) {
+    private static RulesStorageManager.Type getType(@NonNull String name, @NonNull PackageInfo packageInfo) {
         for (ActivityInfo activityInfo: packageInfo.activities)
-            if (activityInfo.name.equals(name)) return StorageManager.Type.ACTIVITY;
+            if (activityInfo.name.equals(name)) return RulesStorageManager.Type.ACTIVITY;
         for (ProviderInfo providerInfo: packageInfo.providers)
-            if (providerInfo.name.equals(name)) return StorageManager.Type.PROVIDER;
+            if (providerInfo.name.equals(name)) return RulesStorageManager.Type.PROVIDER;
         for (ActivityInfo receiverInfo: packageInfo.receivers)
-            if (receiverInfo.name.equals(name)) return StorageManager.Type.RECEIVER;
+            if (receiverInfo.name.equals(name)) return RulesStorageManager.Type.RECEIVER;
         for (ServiceInfo serviceInfo: packageInfo.services)
-            if (serviceInfo.name.equals(name)) return StorageManager.Type.SERVICE;
-        return StorageManager.Type.UNKNOWN;
+            if (serviceInfo.name.equals(name)) return RulesStorageManager.Type.SERVICE;
+        return RulesStorageManager.Type.UNKNOWN;
     }
 }

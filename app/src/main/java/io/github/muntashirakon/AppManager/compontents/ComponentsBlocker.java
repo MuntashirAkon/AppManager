@@ -22,7 +22,7 @@ import java.util.Set;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.storage.StorageManager;
+import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 /**
@@ -43,7 +43,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
  *
  * @see <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/services/core/java/com/android/server/firewall/IntentFirewall.java">IntentFirewall.java</a>
  */
-public class ComponentsBlocker extends StorageManager {
+public class ComponentsBlocker extends RulesStorageManager {
     public static final String TAG_ACTIVITY = "activity";
     public static final String TAG_RECEIVER = "broadcast";
     public static final String TAG_SERVICE = "service";
@@ -184,14 +184,14 @@ public class ComponentsBlocker extends StorageManager {
         return count;
     }
 
-    public void addComponent(String componentName, StorageManager.Type componentType) {
+    public void addComponent(String componentName, RulesStorageManager.Type componentType) {
         if (!readOnly) setComponent(componentName, componentType, false);
     }
 
     public void removeComponent(String componentName) {
         if (readOnly) return;
         if (hasName(componentName)) {
-            if (get(componentName).type == StorageManager.Type.PROVIDER)
+            if (get(componentName).type == RulesStorageManager.Type.PROVIDER)
                 removedProviders.add(componentName);
             removeEntry(componentName);
         }
@@ -211,9 +211,9 @@ public class ComponentsBlocker extends StorageManager {
         StringBuilder activities = new StringBuilder();
         StringBuilder services = new StringBuilder();
         StringBuilder receivers = new StringBuilder();
-        for (StorageManager.Entry component : getAllComponents()) {
+        for (RulesStorageManager.Entry component : getAllComponents()) {
             String componentFilter = "  <component-filter name=\"" + packageName + "/" + component.name + "\"/>\n";
-            StorageManager.Type componentType = component.type;
+            RulesStorageManager.Type componentType = component.type;
             switch (component.type) {
                 case ACTIVITY: activities.append(componentFilter); break;
                 case RECEIVER: receivers.append(componentFilter); break;
@@ -239,10 +239,10 @@ public class ComponentsBlocker extends StorageManager {
      * @return True if applied, false otherwise
      */
     public boolean isRulesApplied() {
-        List<StorageManager.Entry> entries = getAllComponents();
+        List<RulesStorageManager.Entry> entries = getAllComponents();
         if (AppPref.isRootEnabled() && Runner.run(context, String.format("test -e '%s%s.xml'",
                 SYSTEM_RULES_PATH, packageName)).isSuccessful()) return true;
-        for (StorageManager.Entry entry: entries) if (!((Boolean) entry.extra)) return false;
+        for (RulesStorageManager.Entry entry: entries) if (!((Boolean) entry.extra)) return false;
         return true;
     }
 
@@ -272,17 +272,17 @@ public class ComponentsBlocker extends StorageManager {
                 Runner.run(context, String.format("pm enable %s/%s", packageName, provider));
             }
             // Read from storage manager
-            List<StorageManager.Entry> disabledProviders = getAll(StorageManager.Type.PROVIDER);
+            List<RulesStorageManager.Entry> disabledProviders = getAll(RulesStorageManager.Type.PROVIDER);
             // Enable/disable components
             if (apply) {
                 // Disable providers
-                for (StorageManager.Entry provider: disabledProviders) {
+                for (RulesStorageManager.Entry provider: disabledProviders) {
                     Runner.run(context, String.format("pm disable %s/%s", packageName, provider.name));
                     setComponent(provider.name, provider.type, true);
                 }
             } else {
                 // Enable providers
-                for (StorageManager.Entry provider: disabledProviders) {
+                for (RulesStorageManager.Entry provider: disabledProviders) {
                     Runner.run(context, String.format("pm enable %s/%s", packageName, provider.name));
                     removeEntry(provider);
                 }
@@ -310,7 +310,7 @@ public class ComponentsBlocker extends StorageManager {
         retrieveDisabledProviders();
         try {
             if (!localRulesFile.exists()) {
-                for (StorageManager.Entry entry: getAllComponents()) {
+                for (RulesStorageManager.Entry entry: getAllComponents()) {
                     setComponent(entry.name, entry.type, false);
                 }
                 return;
@@ -322,7 +322,7 @@ public class ComponentsBlocker extends StorageManager {
                 parser.nextTag();
                 parser.require(XmlPullParser.START_TAG, null, "rules");
                 int event = parser.nextTag();
-                StorageManager.Type componentType = StorageManager.Type.UNKNOWN;
+                RulesStorageManager.Type componentType = RulesStorageManager.Type.UNKNOWN;
                 while (event != XmlPullParser.END_DOCUMENT) {
                     String name = parser.getName();
                     switch (event) {
@@ -364,7 +364,7 @@ public class ComponentsBlocker extends StorageManager {
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
                     if (!TextUtils.isEmpty(line))
-                        setComponent(line.trim(), StorageManager.Type.PROVIDER, true);
+                        setComponent(line.trim(), RulesStorageManager.Type.PROVIDER, true);
                 }
             } catch (IOException ignored) {
             } finally {
@@ -377,14 +377,14 @@ public class ComponentsBlocker extends StorageManager {
     /**
      * Get component type from TAG_* constants
      * @param componentName Name of the constant: one of the TAG_*
-     * @return One of the {@link StorageManager.Type}
+     * @return One of the {@link RulesStorageManager.Type}
      */
-    StorageManager.Type getComponentType(@NonNull String componentName) {
+    RulesStorageManager.Type getComponentType(@NonNull String componentName) {
         switch (componentName) {
-            case TAG_ACTIVITY: return StorageManager.Type.ACTIVITY;
-            case TAG_RECEIVER: return StorageManager.Type.RECEIVER;
-            case TAG_SERVICE: return StorageManager.Type.SERVICE;
-            default: return StorageManager.Type.UNKNOWN;
+            case TAG_ACTIVITY: return RulesStorageManager.Type.ACTIVITY;
+            case TAG_RECEIVER: return RulesStorageManager.Type.RECEIVER;
+            case TAG_SERVICE: return RulesStorageManager.Type.SERVICE;
+            default: return RulesStorageManager.Type.UNKNOWN;
         }
     }
 }

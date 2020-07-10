@@ -66,7 +66,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.storage.StorageManager;
+import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
 import io.github.muntashirakon.AppManager.types.AppDetailsItem;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
@@ -253,7 +253,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         return false;
     }
 
-    synchronized private void applyRules(String componentName, StorageManager.Type type) {
+    synchronized private void applyRules(String componentName, RulesStorageManager.Type type) {
         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
             if (cb.hasComponent(componentName)) { // Remove from the list
                 cb.removeComponent(componentName);
@@ -846,7 +846,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (isRootEnabled) {
                 viewHolder.blockBtn.setVisibility(View.VISIBLE);
                 viewHolder.blockBtn.setOnClickListener(v -> {
-                    applyRules(activityName, StorageManager.Type.ACTIVITY);
+                    applyRules(activityName, RulesStorageManager.Type.ACTIVITY);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
                     notifyDataSetChanged();
@@ -916,7 +916,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (isRootEnabled) {
                 viewHolder.blockBtn.setVisibility(View.VISIBLE);
                 viewHolder.blockBtn.setOnClickListener(v -> {
-                    applyRules(serviceInfo.name, StorageManager.Type.SERVICE);
+                    applyRules(serviceInfo.name, RulesStorageManager.Type.SERVICE);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
                     notifyDataSetChanged();
@@ -991,7 +991,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (isRootEnabled) {
                 viewHolder.blockBtn.setVisibility(View.VISIBLE);
                 viewHolder.blockBtn.setOnClickListener(v -> {
-                    applyRules(activityInfo.name, StorageManager.Type.RECEIVER);
+                    applyRules(activityInfo.name, RulesStorageManager.Type.RECEIVER);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
                     notifyDataSetChanged();
@@ -1092,7 +1092,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (isRootEnabled) {
                 viewHolder.blockBtn.setVisibility(View.VISIBLE);
                 viewHolder.blockBtn.setOnClickListener(v -> {
-                    applyRules(providerName, StorageManager.Type.PROVIDER);
+                    applyRules(providerName, RulesStorageManager.Type.PROVIDER);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
                     notifyDataSetChanged();

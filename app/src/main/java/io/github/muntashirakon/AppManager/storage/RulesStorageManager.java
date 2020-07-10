@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 
-public class StorageManager implements Closeable {
+public class RulesStorageManager implements Closeable {
     @Override
     public void close() {
         if (!readOnly) commit();
@@ -55,7 +55,7 @@ public class StorageManager implements Closeable {
     protected boolean readOnly = true;
     private CopyOnWriteArrayList<Entry> entries;
 
-    protected StorageManager(Context context, String packageName) {
+    protected RulesStorageManager(Context context, String packageName) {
         this.context = context;
         this.packageName = packageName;
         loadEntries();
