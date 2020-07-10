@@ -58,6 +58,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
@@ -69,6 +70,7 @@ import io.github.muntashirakon.AppManager.storage.StorageManager;
 import io.github.muntashirakon.AppManager.types.AppDetailsItem;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -121,10 +123,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private List<Tuple<String, Integer>> permissionsWithFlags;
     private boolean bFi;
 
-    private int mColorGrey1;
-    private int mColorGrey2;
-    private int mColorRed;
-    private int mColorDisabled;
+    private static int mColorGrey1 = Color.TRANSPARENT;
+    private static int mColorGrey2 = ContextCompat.getColor(AppManager.getContext(), R.color.SEMI_TRANSPARENT);
+    private static int mColorRed = ContextCompat.getColor(AppManager.getContext(), R.color.red);
+    private static int mColorDisabled = ContextCompat.getColor(AppManager.getContext(), R.color.disabled_app);
+    private static int mColorRunning = ContextCompat.getColor(AppManager.getContext(), R.color.blue_green);
 
     // Load from saved instance if empty constructor is called.
     private boolean isEmptyFragmentConstructCalled = false;
@@ -157,12 +160,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         mPackageManager = getActivity().getPackageManager();
         mLayoutInflater = getLayoutInflater();
         mActivity = getActivity();
-        if (mActivity != null) {
-            mColorGrey1 = Color.TRANSPARENT;
-            mColorGrey2 = ContextCompat.getColor(mActivity, R.color.SEMI_TRANSPARENT);
-            mColorRed = ContextCompat.getColor(mActivity, R.color.red);
-            mColorDisabled = ContextCompat.getColor(mActivity, R.color.disabled_app);
-        }
         getPackageInfo();
     }
 
@@ -580,6 +577,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         private String mConstraint;
         private Boolean isRootEnabled = true;
         private Boolean isADBEnabled = true;
+        private List<String> runningServices;
 
         ActivitiesListAdapter() {
             reset();
@@ -593,6 +591,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             new Thread(() -> {
                 requestedProperty = neededProperty;
                 mAdapterList = getNeededList(requestedProperty);
+                if (requestedProperty == SERVICES)
+                    runningServices = PackageUtils.getRunningServicesForPackage(mPackageName);
                 mDefaultList = mAdapterList;
                 mActivity.runOnUiThread(() -> {
                     if (AppDetailsActivity.mConstraint != null
@@ -881,8 +881,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
             final AppDetailsItem appDetailsItem = mAdapterList.get(index);
             final ServiceInfo serviceInfo = (ServiceInfo) appDetailsItem.vanillaItem;
-            // Background color: regular < disabled < blocked
+            // Background color: regular < running < disabled < blocked
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            if (runningServices.contains(serviceInfo.name)) {
+                convertView.setBackgroundColor(mColorRunning);
+            }
             if (isComponentDisabled(mPackageManager, serviceInfo)) {
                 convertView.setBackgroundColor(mColorDisabled);
             }
