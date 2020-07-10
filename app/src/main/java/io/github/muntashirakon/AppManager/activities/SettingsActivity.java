@@ -48,8 +48,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
         blockingSwitcher.setOnCheckedChangeListener((buttonView, isChecked) -> {
             appPref.setPref(AppPref.PREF_GLOBAL_BLOCKING_ENABLED, isChecked);
-            Boolean rootEnabled1 = (Boolean) appPref.getPref(AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
-            if (rootEnabled1 && isChecked) {
+            if (AppPref.isRootEnabled() && isChecked) {
                 ComponentsBlocker.applyAllRules(this);
             }
         });

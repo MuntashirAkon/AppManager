@@ -10,7 +10,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -176,7 +175,7 @@ public class StorageManager implements Closeable {
     }
 
     @NonNull
-    private File getDesiredFile() throws FileNotFoundException {
+    protected File getDesiredFile() throws FileNotFoundException {
         File file = new File(context.getFilesDir(), "conf");
         if (!file.exists() && !file.mkdirs()) {
             throw new FileNotFoundException("Can not get correct path to save ifw rules");

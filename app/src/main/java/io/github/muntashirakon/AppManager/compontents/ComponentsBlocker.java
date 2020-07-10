@@ -109,6 +109,29 @@ public class ComponentsBlocker extends StorageManager {
     }
 
     public static void applyAllRules(@NonNull Context context) {
+        // Apply all rules from the local IFW folder
+        applyAllLocalRules(context);
+        // Apply all rules from conf folder
+        File confPath = new File(context.getFilesDir(), "conf");
+        Runner.run(context, String.format("ls %s/*.tsv", confPath.getAbsolutePath()));
+        if (Runner.getLastResult().isSuccessful()) {
+            // Get packages
+            List<String> packageNames = Runner.getLastResult().getOutputAsList();
+            for (int i = 0; i<packageNames.size(); ++i) {
+                String s = new File(packageNames.get(i)).getName();
+                packageNames.set(i, s.substring(0, s.lastIndexOf(".tsv")));
+            }
+            // Apply rules for each package
+            for (String packageName: packageNames) {
+                try (ComponentsBlocker cb = getMutableInstance(context, packageName)) {
+                    cb.applyRules(true);
+                }
+            }
+        }
+    }
+
+    @Deprecated
+    public static void applyAllLocalRules(@NonNull Context context) {
         try {
             String ifwPath = getLocalIfwRulesPath(context);
             Runner.run(context, String.format("ls %s/*.xml", ifwPath));
@@ -121,8 +144,9 @@ public class ComponentsBlocker extends StorageManager {
                 }
                 // Apply rules for each package
                 for (String packageName: packageNames) {
-                    try (ComponentsBlocker cb = getMutableInstance(context, packageName)) {
-                        cb.applyRules(true);
+                    try (ComponentsBlocker cb = getInstance(context, packageName)) {
+                        // Make the instance mutable
+                        cb.readOnly = false;
                     }
                 }
             }
@@ -263,10 +287,13 @@ public class ComponentsBlocker extends StorageManager {
      * If it's available in the system, save a copy to the local source and then retrieve the components
      */
     private void retrieveDisabledComponents() {
-        if (isRulesApplied()) {
+        Log.d("ComponentBlocker", "Retrieving disabled components for package " + packageName);
+        if (AppPref.isRootEnabled() && Runner.run(context, String.format("test -e '%s%s.xml'",
+                SYSTEM_RULES_PATH, packageName)).isSuccessful()) {
             // Copy system rules to access them locally
+            Log.d("ComponentBlocker - IFW", "Copying disabled components for package " + packageName);
             // FIXME: Read all files instead of just one for greater compatibility
-            // FIXME: In v2.5.7, file contents will be copied instead of copying the file itself
+            // FIXME: In v2.6, file contents will be copied instead of copying the file itself
             Runner.run(context, String.format("cp %s%s.xml '%s' && chmod 0666 '%s/%s.xml'",
                     SYSTEM_RULES_PATH, packageName, LOCAL_RULES_PATH, LOCAL_RULES_PATH, packageName));
         }
@@ -314,7 +341,7 @@ public class ComponentsBlocker extends StorageManager {
         } catch (IOException | XmlPullParserException ignored) {}
     }
 
-    // FIXME: Remove this in v2.5.7
+    // FIXME: Remove this in v2.6
     @Deprecated
     private void retrieveDisabledProviders() {
         // Read from external provider file if exists and delete it
