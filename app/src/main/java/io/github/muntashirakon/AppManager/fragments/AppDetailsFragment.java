@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ComponentInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;
@@ -123,6 +124,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private int mColorGrey1;
     private int mColorGrey2;
     private int mColorRed;
+    private int mColorDisabled;
 
     // Load from saved instance if empty constructor is called.
     private boolean isEmptyFragmentConstructCalled = false;
@@ -159,6 +161,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             mColorGrey1 = Color.TRANSPARENT;
             mColorGrey2 = ContextCompat.getColor(mActivity, R.color.SEMI_TRANSPARENT);
             mColorRed = ContextCompat.getColor(mActivity, R.color.red);
+            mColorDisabled = ContextCompat.getColor(mActivity, R.color.disabled_app);
         }
         getPackageInfo();
     }
@@ -552,6 +555,23 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         }
     }
 
+    public static boolean isComponentDisabled(@NonNull PackageManager pm, @NonNull ComponentInfo componentInfo) {
+        ComponentName componentName = new ComponentName(componentInfo.packageName, componentInfo.name);
+        int componentEnabledSetting = pm.getComponentEnabledSetting(componentName);
+
+        switch (componentEnabledSetting) {
+            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED:
+            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED:
+            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER:
+                return true;
+            case PackageManager.COMPONENT_ENABLED_STATE_ENABLED:
+                return false;
+            case PackageManager.COMPONENT_ENABLED_STATE_DEFAULT:
+            default:
+                return !componentInfo.isEnabled();
+        }
+    }
+
     private class ActivitiesListAdapter extends BaseAdapter implements Filterable {
         private List<AppDetailsItem> mAdapterList;
         private List<AppDetailsItem> mDefaultList;
@@ -739,7 +759,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final AppDetailsItem appDetailsItem = mAdapterList.get(index);
             final ActivityInfo activityInfo = (ActivityInfo) appDetailsItem.vanillaItem;
             final String activityName = activityInfo.name;
+            // Background color: regular < disabled < blocked
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            if (isComponentDisabled(mPackageManager, activityInfo)) {
+                convertView.setBackgroundColor(mColorDisabled);
+            }
             if (appDetailsItem.isBlocked) {
                 convertView.setBackgroundColor(mColorRed);
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
@@ -857,7 +881,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
             final AppDetailsItem appDetailsItem = mAdapterList.get(index);
             final ServiceInfo serviceInfo = (ServiceInfo) appDetailsItem.vanillaItem;
+            // Background color: regular < disabled < blocked
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            if (isComponentDisabled(mPackageManager, serviceInfo)) {
+                convertView.setBackgroundColor(mColorDisabled);
+            }
             if (appDetailsItem.isBlocked) {
                 convertView.setBackgroundColor(mColorRed);
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
@@ -921,7 +949,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
             final AppDetailsItem appDetailsItem = mAdapterList.get(index);
             final ActivityInfo activityInfo = (ActivityInfo) appDetailsItem.vanillaItem;
+            // Background color: regular < disabled < blocked
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            if (isComponentDisabled(mPackageManager, activityInfo)) {
+                convertView.setBackgroundColor(mColorDisabled);
+            }
             if (appDetailsItem.isBlocked) {
                 convertView.setBackgroundColor(mColorRed);
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
@@ -992,8 +1024,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final AppDetailsItem appDetailsItem = mAdapterList.get(index);
             final ProviderInfo providerInfo = (ProviderInfo) appDetailsItem.vanillaItem;
             final String providerName = providerInfo.name;
-            // Set background color
+            // Background color: regular < disabled < blocked
             convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            if (isComponentDisabled(mPackageManager, providerInfo)) {
+                convertView.setBackgroundColor(mColorDisabled);
+            }
             if (appDetailsItem.isBlocked) {
                 convertView.setBackgroundColor(mColorRed);
                 viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
