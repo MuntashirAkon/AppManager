@@ -108,9 +108,14 @@ public class ComponentsBlocker extends StorageManager {
         removedProviders = new HashSet<>();
     }
 
+    /**
+     * Apply all rules configured within App Manager. This includes the external IFW path as well as
+     * the internal conf path. In v2.6, the former path will be removed.
+     * @param context Application Context
+     */
     public static void applyAllRules(@NonNull Context context) {
-        // Apply all rules from the local IFW folder
-        applyAllLocalRules(context);
+        // Add all rules from the local IFW folder
+        addAllLocalRules(context);
         // Apply all rules from conf folder
         File confPath = new File(context.getFilesDir(), "conf");
         Runner.run(context, String.format("ls %s/*.tsv", confPath.getAbsolutePath()));
@@ -130,8 +135,14 @@ public class ComponentsBlocker extends StorageManager {
         }
     }
 
+    /**
+     * Add all rules from the external IFW path
+     * @param context Application context
+     * @deprecated Due to the fact that any application can edit or delete these files, this method
+     *      is not secured and will be removed in v2.6
+     */
     @Deprecated
-    public static void applyAllLocalRules(@NonNull Context context) {
+    public static void addAllLocalRules(@NonNull Context context) {
         try {
             String ifwPath = getLocalIfwRulesPath(context);
             Runner.run(context, String.format("ls %s/*.xml", ifwPath));
@@ -282,9 +293,8 @@ public class ComponentsBlocker extends StorageManager {
     }
 
     /**
-     * Retrieve a set of disabled components from local source
-     *
-     * If it's available in the system, save a copy to the local source and then retrieve the components
+     * Retrieve a set of disabled components from local source. If it's available in the system,
+     * save a copy to the local source and then retrieve the components
      */
     private void retrieveDisabledComponents() {
         Log.d("ComponentBlocker", "Retrieving disabled components for package " + packageName);
@@ -341,7 +351,11 @@ public class ComponentsBlocker extends StorageManager {
         } catch (IOException | XmlPullParserException ignored) {}
     }
 
-    // FIXME: Remove this in v2.6
+    /**
+     * Retrieve disabled providers from the local IFW path.
+     * @deprecated Due to the fact that any application can edit or delete these files, this method
+     *      is not secured and will be removed in v2.6
+     */
     @Deprecated
     private void retrieveDisabledProviders() {
         // Read from external provider file if exists and delete it
