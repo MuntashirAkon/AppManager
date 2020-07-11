@@ -123,11 +123,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private List<Tuple<String, Integer>> permissionsWithFlags;
     private boolean bFi;
 
-    private static int mColorGrey1 = Color.TRANSPARENT;
-    private static int mColorGrey2 = ContextCompat.getColor(AppManager.getContext(), R.color.SEMI_TRANSPARENT);
-    private static int mColorRed = ContextCompat.getColor(AppManager.getContext(), R.color.red);
-    private static int mColorDisabled = ContextCompat.getColor(AppManager.getContext(), R.color.disabled_app);
-    private static int mColorRunning = ContextCompat.getColor(AppManager.getContext(), R.color.blue_green);
+    private static int mColorGrey1;
+    private static int mColorGrey2;
+    private static int mColorRed;
+    private static int mColorDisabled;
+    private static int mColorRunning;
 
     // Load from saved instance if empty constructor is called.
     private boolean isEmptyFragmentConstructCalled = false;
@@ -160,6 +160,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         mPackageManager = getActivity().getPackageManager();
         mLayoutInflater = getLayoutInflater();
         mActivity = getActivity();
+        if (mActivity != null) {
+            mColorGrey1 = Color.TRANSPARENT;
+            mColorGrey2 = ContextCompat.getColor(mActivity, R.color.SEMI_TRANSPARENT);
+            mColorRed = ContextCompat.getColor(mActivity, R.color.red);
+            mColorDisabled = ContextCompat.getColor(mActivity, R.color.disabled_app);
+            mColorRunning = ContextCompat.getColor(mActivity, R.color.running);
+        }
         getPackageInfo();
     }
 

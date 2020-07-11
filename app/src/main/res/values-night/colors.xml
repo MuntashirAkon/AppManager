@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="red">#790D0D</color>
-    <color name="disabled_app">@color/blue_popsicle</color>
+    <color name="disabled_app">#BF4F1C14</color>
+    <color name="running">@color/purple</color>
     <color name="ten_percent_black">#1AFFFFFF</color>
     <color name="SEMI_TRANSPARENT">#10FFFFFF</color>
     <color name="highlight">@color/purple_shadow</color>
