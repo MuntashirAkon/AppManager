@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.text.style.RelativeSizeSpan;
 import android.view.Gravity;
@@ -140,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private List<ApplicationItem> mItemList = new ArrayList<>();
     private int mItemSizeRetrievedCount;
     private ListView mListView;
+    private SearchView mSearchView;
     private ProgressIndicator mProgressIndicator;
     private LoaderManager mLoaderManager;
     private SwipeRefreshLayout mSwipeRefresh;
@@ -167,19 +169,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             actionBar.setDisplayShowCustomEnabled(true);
             actionBar.setTitle(getString(R.string.loading));
 
-            SearchView searchView = new SearchView(actionBar.getThemedContext());
-            searchView.setOnQueryTextListener(this);
-            searchView.setQueryHint(getString(R.string.search));
+            mSearchView = new SearchView(actionBar.getThemedContext());
+            mSearchView.setOnQueryTextListener(this);
+            mSearchView.setQueryHint(getString(R.string.search));
 
-            ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_button))
+            ((ImageView) mSearchView.findViewById(androidx.appcompat.R.id.search_button))
                     .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
-            ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn))
+            ((ImageView) mSearchView.findViewById(androidx.appcompat.R.id.search_close_btn))
                     .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
 
             LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.gravity = Gravity.END;
-            actionBar.setCustomView(searchView, layoutParams);
+            actionBar.setCustomView(mSearchView, layoutParams);
         }
         packageList = getIntent().getStringExtra(EXTRA_PACKAGE_LIST);
         listName = getIntent().getStringExtra(EXTRA_LIST_NAME);
@@ -493,8 +495,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }).start();
         } else AppPref.getInstance(this).setPref(AppPref.PREF_ADB_MODE_ENABLED, false);
         // Set filter
-        if (mAdapter != null && mConstraint != null && !mConstraint.equals("")) {
-            mAdapter.getFilter().filter(mConstraint);
+        if (mAdapter != null && mSearchView != null && !TextUtils.isEmpty(mConstraint)) {
+            mSearchView.setIconified(false);
+            mSearchView.setQuery(mConstraint, false);
         }
         // Show/hide app usage menu
         if (appUsageMenu != null) {
