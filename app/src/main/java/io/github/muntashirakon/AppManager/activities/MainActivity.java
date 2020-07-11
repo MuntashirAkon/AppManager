@@ -2,6 +2,7 @@ package io.github.muntashirakon.AppManager.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.usage.UsageStatsManager;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -48,6 +49,7 @@ import java.text.Collator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -75,6 +77,7 @@ import io.github.muntashirakon.AppManager.MainLoader;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
+import io.github.muntashirakon.AppManager.fragments.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.types.ApplicationItem;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -89,6 +92,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private static final String PACKAGE_NAME_APK_UPDATER = "com.apkupdater";
     private static final String ACTIVITY_NAME_APK_UPDATER = "com.apkupdater.activity.MainActivity";
+
+    private static final String MIME_TSV = "text/tab-separated-values";
+
+    private static final int REQUEST_CODE_BATCH_EXPORT = 441;
+
     /**
      * A list of packages separated by \r\n. Debug apps should have a * after their package names.
      */
@@ -234,6 +242,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 case R.id.action_disable_background:
                     handleBatchOp(BatchOpsManager.OP_DISABLE_BACKGROUND, R.string.alert_failed_to_disable_background);
                     return true;
+                case R.id.action_export_blocking_data:
+                    @SuppressLint("SimpleDateFormat")
+                    String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
+                    Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType(MIME_TSV);
+                    intent.putExtra(Intent.EXTRA_TITLE, fileName);
+                    MainActivity.this.startActivityForResult(intent, REQUEST_CODE_BATCH_EXPORT);
+                    return true;
                 case R.id.action_kill_process:
                     handleBatchOp(BatchOpsManager.OP_KILL, R.string.alert_failed_to_kill);
                     return true;
@@ -242,7 +259,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     return true;
                 case R.id.action_backup_apk:
                 case R.id.action_backup_data:
-                case R.id.action_export_blocking_data:
                     Toast.makeText(this, "This operation is not supported yet.", Toast.LENGTH_LONG).show();
                     mPackageNames.clear();
                     mListView.invalidateViews();
@@ -258,6 +274,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         mLoaderManager = LoaderManager.getInstance(this);
         mLoaderManager.initLoader(0, null, this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE_BATCH_EXPORT) {
+                if (data != null) {
+                    RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
+                    Bundle args = new Bundle();
+                    args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
+                    args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, data.getData());
+                    args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, new ArrayList<>(mPackageNames));
+                    dialogFragment.setArguments(args);
+                    dialogFragment.show(getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+                }
+            }
+        }
     }
 
     @Override
