@@ -242,14 +242,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 case R.id.action_disable_background:
                     handleBatchOp(BatchOpsManager.OP_DISABLE_BACKGROUND, R.string.alert_failed_to_disable_background);
                     return true;
-                case R.id.action_export_blocking_data:
+                case R.id.action_export_blocking_rules:
                     @SuppressLint("SimpleDateFormat")
                     String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
                     Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
                     intent.addCategory(Intent.CATEGORY_OPENABLE);
                     intent.setType(MIME_TSV);
                     intent.putExtra(Intent.EXTRA_TITLE, fileName);
-                    MainActivity.this.startActivityForResult(intent, REQUEST_CODE_BATCH_EXPORT);
+                    startActivityForResult(intent, REQUEST_CODE_BATCH_EXPORT);
                     return true;
                 case R.id.action_kill_process:
                     handleBatchOp(BatchOpsManager.OP_KILL, R.string.alert_failed_to_kill);

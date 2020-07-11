@@ -20,4 +20,9 @@
         android:icon="@drawable/ic_share_black_24dp"
         android:title="@string/share_apk"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_export_blocking_rules"
+        android:title="@string/export_blocking_rules"
+        android:icon="@drawable/ic_open_in_new_black_24dp"
+        app:showAsAction="never" />
 </menu>

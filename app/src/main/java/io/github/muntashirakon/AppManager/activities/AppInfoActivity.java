@@ -1,6 +1,7 @@
 package io.github.muntashirakon.AppManager.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.usage.StorageStats;
 import android.app.usage.StorageStatsManager;
 import android.content.ComponentName;
@@ -41,6 +42,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -48,6 +50,7 @@ import java.util.Objects;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,6 +60,7 @@ import androidx.core.content.FileProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.fragments.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -79,6 +83,10 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     private static final String ACTIVITY_NAME_FDROID = "org.fdroid.fdroid.views.AppDetailsActivity";
     private static final String ACTIVITY_NAME_AURORA_DROID = "com.aurora.adroid.ui.activity.DetailsActivity";
     private static final String ACTIVITY_NAME_AURORA_STORE = "com.aurora.store.ui.details.DetailsActivity";
+
+    private static final String MIME_TSV = "text/tab-separated-values";
+
+    private static final int REQUEST_CODE_BATCH_EXPORT = 441;
 
     private PackageManager mPackageManager;
     private String mPackageName;
@@ -165,8 +173,37 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                 infoIntent.setData(Uri.parse("package:" + mPackageName));
                 startActivity(infoIntent);
                 return true;
+            case R.id.action_export_blocking_rules:
+                @SuppressLint("SimpleDateFormat")
+                String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
+                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType(MIME_TSV);
+                intent.putExtra(Intent.EXTRA_TITLE, fileName);
+                startActivityForResult(intent, REQUEST_CODE_BATCH_EXPORT);
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE_BATCH_EXPORT) {
+                if (data != null) {
+                    RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
+                    Bundle args = new Bundle();
+                    ArrayList<String> packages = new ArrayList<>();
+                    packages.add(mPackageName);
+                    args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
+                    args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, data.getData());
+                    args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, packages);
+                    dialogFragment.setArguments(args);
+                    dialogFragment.show(getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+                }
+            }
+        }
     }
 
     @Override
