@@ -9,9 +9,7 @@ android {
         Properties versionProps = new Properties()
         versionProps.load(new FileInputStream(versionPropsFile))
         def name = versionProps['VERSION_NAME']
-        def code = versionProps['VERSION_CODE'].toInteger() + 1
-        versionProps['VERSION_CODE'] = code.toString()
-        versionProps.store(versionPropsFile.newWriter(), null)
+        def code = versionProps['VERSION_CODE'].toInteger()
 
         defaultConfig {
             applicationId 'io.github.muntashirakon.AppManager'
