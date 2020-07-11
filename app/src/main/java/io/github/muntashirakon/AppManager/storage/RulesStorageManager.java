@@ -17,6 +17,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.runner.Runner;
 
 public class RulesStorageManager implements Closeable {
     @Override
@@ -31,7 +33,13 @@ public class RulesStorageManager implements Closeable {
         SERVICE,
         APP_OP,
         PERMISSION,
-        UNKNOWN
+        UNKNOWN;
+
+        public static final String[] names = new String[values().length];
+        static {
+            Type[] values = values();
+            for (int i = 0; i<values.length; ++i) names[i] = values[i].name();
+        }
     }
 
     public static class Entry {
@@ -127,9 +135,41 @@ public class RulesStorageManager implements Closeable {
         addEntry(entry);
     }
 
-    private void addEntry(@NonNull Entry entry) {
+    public void addEntry(@NonNull Entry entry) {
         removeEntry(entry.name);
         entries.add(entry);
+    }
+
+    public void applyAppOpsAndPerms(boolean apply) {
+        AppOpsService appOpsService = new AppOpsService(context);
+        if (apply) {
+            // Apply all app ops
+            List<Entry> appOps = getAll(Type.APP_OP);
+            for (Entry appOp: appOps) {
+                try {
+                    appOpsService.setMode(Integer.parseInt(appOp.name), -1, packageName, (Integer) appOp.extra);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            // Apply all permissions
+            List<Entry> permissions = getAll(Type.PERMISSION);
+            for (Entry permission: permissions) {
+                Runner.run(context, String.format("pm %s %s %s", (Boolean) permission.extra ? "grant" : "revoke", packageName, permission.name));
+            }
+        } else {
+            // Reset all app ops
+            try {
+                appOpsService.resetAllModes(-1, packageName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            // Revoke all permissions
+            List<Entry> permissions = getAll(Type.PERMISSION);
+            for (Entry permission: permissions) {
+                Runner.run(context, String.format("pm revoke %s %s", packageName, permission.name));
+            }
+        }
     }
 
     private void loadEntries() {
@@ -141,7 +181,13 @@ public class RulesStorageManager implements Closeable {
                 tokenizer = new StringTokenizer(dataRow,"\t");
                 Entry entry = new Entry();
                 if (tokenizer.hasMoreElements()) entry.name = tokenizer.nextElement().toString();
-                if (tokenizer.hasMoreElements()) entry.type = getType(tokenizer.nextElement().toString());
+                if (tokenizer.hasMoreElements()) {
+                    try {
+                        entry.type = Type.valueOf(tokenizer.nextElement().toString());
+                    } catch (Exception e) {
+                        entry.type = Type.UNKNOWN;
+                    }
+                }
                 if (tokenizer.hasMoreElements()) entry.extra = getExtra(entry.type, tokenizer.nextElement().toString());
                 entries.add(entry);
             }
@@ -166,7 +212,7 @@ public class RulesStorageManager implements Closeable {
         }
         StringBuilder stringBuilder = new StringBuilder();
         for(Entry entry: finalEntries) {
-            stringBuilder.append(entry.name).append("\t").append(entry.type).append("\t").
+            stringBuilder.append(entry.name).append("\t").append(entry.type.name()).append("\t").
                     append(entry.extra).append("\n");
         }
         try (FileOutputStream TSVFile = new FileOutputStream(getDesiredFile())) {
@@ -183,20 +229,8 @@ public class RulesStorageManager implements Closeable {
         return new File(file, packageName + ".tsv");
     }
 
-    private Type getType(@NonNull String strType) {
-        switch (strType) {
-            case "ACTIVITY": return Type.ACTIVITY;
-            case "PROVIDER": return Type.PROVIDER;
-            case "RECEIVER": return Type.RECEIVER;
-            case "SERVICE": return Type.SERVICE;
-            case "APP_OP": return Type.APP_OP;
-            case "PERMISSION": return Type.PERMISSION;
-            default: return Type.UNKNOWN;
-        }
-    }
-
     @Nullable
-    private Object getExtra(@NonNull Type type, @NonNull String strExtra) {
+    static Object getExtra(@NonNull Type type, @NonNull String strExtra) {
         switch (type) {
             case ACTIVITY:
             case PROVIDER:

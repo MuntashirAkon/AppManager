@@ -13,6 +13,14 @@
         <item>@string/signatures</item>
         <item>@string/shared_libs</item>
     </array>
+    <array name="rule_types">
+        <item>@string/activities</item>
+        <item>@string/service</item>
+        <item>@string/receivers</item>
+        <item>@string/providers</item>
+        <item>@string/app_ops</item>
+        <item>@string/permissions</item>
+    </array>
     <string-array name="shared_pref_types">
         <item>@string/type_boolean</item>
         <item>@string/type_float</item>

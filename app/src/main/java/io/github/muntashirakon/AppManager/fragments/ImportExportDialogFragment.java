@@ -11,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -19,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.utils.Tuple;
@@ -26,25 +29,48 @@ import io.github.muntashirakon.AppManager.utils.Tuple;
 public class ImportExportDialogFragment extends DialogFragment {
     public static final String TAG = "ImportExportDialogFragment";
 
+    private static final String MIME_JSON = "application/json";
+    private static final String MIME_TSV = "text/tab-separated-values";
+    private static final String MIME_XML = "text/xml";
+
+    private static final int RESULT_CODE_EXPORT = 849;
+    private static final int RESULT_CODE_IMPORT = 247;
     private static final int RESULT_CODE_WATT = 711;
     private static final int RESULT_CODE_BLOCKER = 459;
 
-    private Context context;
+    private FragmentActivity activity;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         if (getActivity() == null) return super.onCreateDialog(savedInstanceState);
-        context = getActivity();
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (getFragmentManager() == null) return super.onCreateDialog(savedInstanceState);
+        activity = getActivity();
+        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.dialog_settings_import_export, null);
+        view.findViewById(R.id.export_internal).setOnClickListener(v -> {
+            @SuppressLint("SimpleDateFormat")
+            String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
+            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType(MIME_TSV);
+            intent.putExtra(Intent.EXTRA_TITLE, fileName);
+            startActivityForResult(intent, RESULT_CODE_EXPORT);
+        });
+        view.findViewById(R.id.import_internal).setOnClickListener(v -> {
+            Intent intent = new Intent()
+                    .addCategory(Intent.CATEGORY_OPENABLE)
+                    .setType(MIME_TSV)
+                    .setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RESULT_CODE_IMPORT);
+        });
         view.findViewById(R.id.import_watt).setOnClickListener(v -> {
             Intent intent = new Intent()
                     .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
                     .addCategory(Intent.CATEGORY_OPENABLE)
-                    .setType("text/xml")
+                    .setType(MIME_XML)
                     .setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RESULT_CODE_WATT);
         });
@@ -52,13 +78,13 @@ public class ImportExportDialogFragment extends DialogFragment {
             Intent intent = new Intent()
                     .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
                     .addCategory(Intent.CATEGORY_OPENABLE)
-                    .setType("application/json")
+                    .setType(MIME_JSON)
                     .setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RESULT_CODE_BLOCKER);
         });
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomDialog);
         builder.setView(view)
-                .setTitle(R.string.pref_import_export)
+                .setTitle(R.string.pref_import_export_blocking_rules)
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
                     if (getDialog() != null) getDialog().cancel();
                 });
@@ -77,7 +103,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                         }
                     } else uriList.add(data.getData());
                     Tuple<Boolean, Integer> status = ExternalComponentsImporter.applyFromWatt(
-                            context.getApplicationContext(), uriList);
+                            activity.getApplicationContext(), uriList);
                     if (!status.getFirst()) {  // Not failed
                         Toast.makeText(getContext(), R.string.the_import_was_successful,
                                 Toast.LENGTH_LONG).show();
@@ -97,7 +123,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                         }
                     } else uriList.add(data.getData());
                     Tuple<Boolean, Integer> status = ExternalComponentsImporter.applyFromBlocker(
-                            context.getApplicationContext(), uriList);
+                            activity.getApplicationContext(), uriList);
                     if (!status.getFirst()) {  // Not failed
                         Toast.makeText(getContext(), R.string.the_import_was_successful,
                                 Toast.LENGTH_LONG).show();
@@ -107,6 +133,28 @@ public class ImportExportDialogFragment extends DialogFragment {
                                 Toast.LENGTH_LONG).show();
                     }
                     if (getDialog() != null) getDialog().cancel();
+                }
+            } else if (requestCode == RESULT_CODE_EXPORT) {
+                if (data != null) {
+                    RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
+                    Bundle args = new Bundle();
+                    args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
+                    args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, data.getData());
+                    args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, null);
+                    dialogFragment.setArguments(args);
+                    activity.getSupportFragmentManager().popBackStackImmediate();
+                    dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+                }
+            } else if (requestCode == RESULT_CODE_IMPORT) {
+                if (data != null) {
+                    RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
+                    Bundle args = new Bundle();
+                    args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_IMPORT);
+                    args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, data.getData());
+                    args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, null);
+                    dialogFragment.setArguments(args);
+                    activity.getSupportFragmentManager().popBackStackImmediate();
+                    dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
                 }
             }
         }

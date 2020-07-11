@@ -321,12 +321,13 @@
     <string name="sort_by_screen_time">Screen time</string>
     <string name="sort_by_times_opened">Times opened</string>
     <string name="sort_by_mobile_data">Mobile data</string>
-    <string name="pref_import_export">Import</string>
-    <string name="pref_import_export_msg">Import configurations from Watt or Blocker</string>
+    <string name="pref_import_export_blocking_rules">Import/Export Blocking Rules</string>
+    <string name="pref_import_export_blocking_rules_msg">Import/export rules, import external rules from Watt or Blocker</string>
     <string name="pref_import_watt">Import from Watt</string>
     <string name="pref_import_blocker">Import from Blocker</string>
     <string name="select_files">Select file(s)</string>
     <string name="the_import_was_successful">The import was successful</string>
+    <string name="the_export_was_successful">The export was successful</string>
     <string name="failed_to_import_files">Failed to import %d files.</string>
     <string name="apk_updater">APK Updater</string>
     <string name="store">Store</string>
@@ -359,4 +360,10 @@
     <string name="accept_time">Accept Time</string>
     <string name="reject_time">Reject Time</string>
     <string name="ago">ago</string>
+    <string name="pref_import">Import</string>
+    <string name="pref_export">Export</string>
+    <string name="import_options">Import Options</string>
+    <string name="export_options">Export Options</string>
+    <string name="import_failed">Import failed!</string>
+    <string name="export_failed">Export failed!</string>
 </resources>

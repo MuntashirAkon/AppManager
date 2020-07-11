@@ -23,9 +23,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="@dimen/padding_medium"
-                android:paddingTop="@dimen/padding_very_small"
-                android:paddingEnd="@dimen/padding_medium"
+                android:padding="@dimen/padding_medium"
                 android:paddingBottom="@dimen/padding_very_small">
 
                 <LinearLayout
@@ -68,9 +66,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="@dimen/padding_medium"
-                android:paddingTop="@dimen/padding_very_small"
-                android:paddingEnd="@dimen/padding_medium"
+                android:padding="@dimen/padding_medium"
                 android:paddingBottom="@dimen/padding_very_small">
 
                 <LinearLayout
@@ -113,9 +109,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="@dimen/padding_medium"
-                android:paddingTop="@dimen/padding_very_small"
-                android:paddingEnd="@dimen/padding_medium"
+                android:padding="@dimen/padding_medium"
                 android:paddingBottom="@dimen/padding_very_small">
 
                 <LinearLayout
@@ -158,23 +152,20 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="@dimen/padding_medium"
-                android:paddingTop="@dimen/padding_very_small"
-                android:paddingEnd="@dimen/padding_medium"
-                android:paddingBottom="@dimen/padding_very_small"
+                android:padding="@dimen/padding_medium"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="?android:attr/textColorPrimary"
-                    android:text="@string/pref_import_export"
+                    android:text="@string/pref_import_export_blocking_rules"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/pref_import_export_msg"
+                    android:text="@string/pref_import_export_blocking_rules_msg"
                     android:textSize="12sp" />
 
             </LinearLayout>
