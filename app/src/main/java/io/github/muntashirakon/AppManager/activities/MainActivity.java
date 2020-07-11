@@ -26,13 +26,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,6 +70,8 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.MainLoader;
 import io.github.muntashirakon.AppManager.R;
@@ -85,7 +84,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static androidx.appcompat.app.ActionBar.LayoutParams;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
+public class MainActivity extends AppCompatActivity implements
         SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<List<ApplicationItem>>,
         SwipeRefreshLayout.OnRefreshListener {
     public static final String EXTRA_PACKAGE_LIST = "EXTRA_PACKAGE_LIST";
@@ -132,15 +131,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public static final int SORT_BY_PACKAGE_NAME = 2;
     public static final int SORT_BY_LAST_UPDATE = 3;
     public static final int SORT_BY_SHARED_ID = 4;
-    public static final int SORT_BY_APP_SIZE_OR_SDK = 5;  // App size FIXME: This isn't working after O
+    public static final int SORT_BY_APP_SIZE_OR_SDK = 5;  // App size/sdk
     public static final int SORT_BY_SHA = 6;  // Signature
     public static final int SORT_BY_DISABLED_APP = 7;
     public static final int SORT_BY_BLOCKED_COMPONENTS = 8;
 
-    private MainActivity.Adapter mAdapter;
-    private List<ApplicationItem> mItemList = new ArrayList<>();
+    private MainActivity.MainRecyclerAdapter mAdapter;
+    private List<ApplicationItem> mApplicationItems = new ArrayList<>();
     private int mItemSizeRetrievedCount;
-    private ListView mListView;
     private SearchView mSearchView;
     private ProgressIndicator mProgressIndicator;
     private LoaderManager mLoaderManager;
@@ -150,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private LinearLayoutCompat mMainLayout;
     private static String mConstraint;
     private static @NonNull Set<String> mPackageNames = new HashSet<>();
+    private static @NonNull Set<ApplicationItem> mSelectedApplicationItems = new HashSet<>();
     private CoordinatorLayout.LayoutParams mLayoutParamsSelection;
     private CoordinatorLayout.LayoutParams mLayoutParamsTypical;
     private MenuItem appUsageMenu;
@@ -188,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (listName == null) listName = "Onboard.packages";
 
         mProgressIndicator = findViewById(R.id.progress_linear);
-        mListView = findViewById(R.id.item_list);
+        RecyclerView recyclerView = findViewById(R.id.item_list);
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
         mBottomAppBar = findViewById(R.id.bottom_appbar);
         mBottomAppBarCounter = findViewById(R.id.bottom_appbar_counter);
@@ -208,18 +207,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 CoordinatorLayout.LayoutParams.MATCH_PARENT);
         mLayoutParamsTypical.setMargins(0, margin, 0, 0);
 
-        mAdapter = new MainActivity.Adapter(MainActivity.this);
-        mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(this);
-        mListView.setFastScrollEnabled(true);
-        mListView.setDividerHeight(0);
-        mListView.setOnItemLongClickListener((adapterView, view, i, l) -> {
-            Intent appDetailsIntent = new Intent(MainActivity.this, AppDetailsActivity.class);
-            appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME,
-                    mAdapter.getItem(i).applicationInfo.packageName);
-            MainActivity.this.startActivity(appDetailsIntent);
-            return true;
-        });
+        mAdapter = new MainActivity.MainRecyclerAdapter(MainActivity.this);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(mAdapter);
 
         mBatchOpsManager = new BatchOpsManager(this);
 
@@ -229,9 +220,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         mBottomAppBar.setNavigationOnClickListener(v -> {
             mPackageNames.clear();
-            mBottomAppBar.setVisibility(View.GONE);
-            mMainLayout.setLayoutParams(mLayoutParamsTypical);
-            mListView.invalidateViews();
+            handleSelection();
         });
         mBottomAppBar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
@@ -263,12 +252,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 case R.id.action_backup_data:
                     Toast.makeText(this, "This operation is not supported yet.", Toast.LENGTH_LONG).show();
                     mPackageNames.clear();
-                    mListView.invalidateViews();
                     handleSelection();
                     return true;
             }
             mPackageNames.clear();
-            mListView.invalidateViews();
             handleSelection();
             return false;
         });
@@ -434,9 +421,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<ApplicationItem>> loader, List<ApplicationItem> applicationItems) {
-        mItemList = applicationItems;
+        mApplicationItems = applicationItems;
         sortApplicationList(mSortBy);
-        mAdapter.setDefaultList(mItemList);
+        mAdapter.setDefaultList(mApplicationItems);
         // Set title and subtitle
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -453,16 +440,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onLoaderReset(@NonNull Loader<List<ApplicationItem>> loader) {
-        mItemList = null;
+        mApplicationItems = null;
         mAdapter.setDefaultList(null);
         showProgressIndicator(false);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Intent intent = new Intent(this, AppInfoActivity.class);
-        intent.putExtra(AppInfoActivity.EXTRA_PACKAGE_NAME, mAdapter.getItem(i).applicationInfo.packageName);
-        startActivity(intent);
     }
 
     @Override
@@ -521,6 +501,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (mPackageNames.size() == 0) {
             mBottomAppBar.setVisibility(View.GONE);
             mMainLayout.setLayoutParams(mLayoutParamsTypical);
+            mAdapter.clearSelection();
         } else {
             mBottomAppBar.setVisibility(View.VISIBLE);
             mBottomAppBarCounter.setText(String.format(getString(R.string.some_items_selected), mPackageNames.size()));
@@ -544,7 +525,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             mPackageNames.clear();
             runOnUiThread(() -> {
-                mListView.invalidateViews();
                 handleSelection();
                 showProgressIndicator(false);
             });
@@ -564,22 +544,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void setSortBy(@SortOrder int sort) {
         mSortBy = sort;
         sortApplicationList(mSortBy);
-
-        if (mAdapter != null)
-            mAdapter.notifyDataSetChanged();
-
-        if (mListView != null)
-            checkFastScroll();
-    }
-
-    private void checkFastScroll() {
-        mListView.setFastScrollEnabled(mSortBy == SORT_BY_APP_LABEL);
+        if (mAdapter != null) mAdapter.notifyDataSetChanged();
     }
 
     private void sortApplicationList(@SortOrder int sortBy) {
         final Boolean isRootEnabled = (Boolean) AppPref.get(this, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
         if (sortBy != SORT_BY_APP_LABEL) sortApplicationList(SORT_BY_APP_LABEL);
-        Collections.sort(mItemList, (o1, o2) -> {
+        Collections.sort(mApplicationItems, (o1, o2) -> {
             switch (sortBy) {
                 case SORT_BY_APP_LABEL:
                     return sCollator.compare(o1.label, o2.label);
@@ -626,7 +597,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void startRetrievingPackagesSize() {
-        for (ApplicationItem item : mItemList)
+        for (ApplicationItem item : mApplicationItems)
             getItemSize(item);
     }
 
@@ -660,33 +631,49 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void incrementItemSizeRetrievedCount() {
         mItemSizeRetrievedCount++;
 
-        if (mItemSizeRetrievedCount == mItemList.size())
+        if (mItemSizeRetrievedCount == mApplicationItems.size())
             mAdapter.notifyDataSetChanged();
     }
 
-    static class Adapter extends BaseAdapter implements SectionIndexer, Filterable {
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        View mainView;
+        ImageView icon;
+        ImageView favorite_icon;
+        TextView label;
+        TextView packageName;
+        TextView version;
+        TextView isSystemApp;
+        TextView date;
+        TextView size;
+        TextView shared_id;
+        TextView issuer;
+        TextView sha;
+        MainRecyclerAdapter.IconAsyncTask iconLoader;
 
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mainView = itemView.findViewById(R.id.main_view);
+            icon = itemView.findViewById(R.id.icon);
+            favorite_icon = itemView.findViewById(R.id.favorite_icon);
+            label = itemView.findViewById(R.id.label);
+            packageName = itemView.findViewById(R.id.packageName);
+            version = itemView.findViewById(R.id.version);
+            isSystemApp = itemView.findViewById(R.id.isSystem);
+            date = itemView.findViewById(R.id.date);
+            size = itemView.findViewById(R.id.size);
+            shared_id = itemView.findViewById(R.id.shareid);
+            issuer = itemView.findViewById(R.id.issuer);
+            sha = itemView.findViewById(R.id.sha);
+        }
+    }
+
+    static class MainRecyclerAdapter extends RecyclerView.Adapter<MainActivity.ViewHolder>
+            implements SectionIndexer, Filterable {
         static final String sections = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         @SuppressLint("SimpleDateFormat")
-        static final DateFormat sSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");// hh:mm:ss");
-
-        static class ViewHolder {
-            ImageView icon;
-            ImageView favorite_icon;
-            TextView label;
-            TextView packageName;
-            TextView version;
-            TextView isSystemApp;
-            TextView date;
-            TextView size;
-            TextView shared_id;
-            TextView issuer;
-            TextView sha;
-            MainActivity.Adapter.IconAsyncTask iconLoader;
-        }
+        static final DateFormat sSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy"); // hh:mm:ss");
 
         private MainActivity mActivity;
-        private LayoutInflater mLayoutInflater;
         private static PackageManager mPackageManager;
         private Filter mFilter;
         private String mConstraint;
@@ -701,9 +688,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         private int mColorSecondary;
         private int mColorRed;
 
-        Adapter(@NonNull MainActivity activity) {
+        MainRecyclerAdapter(@NonNull MainActivity activity) {
             mActivity = activity;
-            mLayoutInflater = activity.getLayoutInflater();
             mPackageManager = activity.getPackageManager();
 
             mColorTransparent = Color.TRANSPARENT;
@@ -723,6 +709,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 getFilter().filter(MainActivity.mConstraint);
             }
             notifyDataSetChanged();
+        }
+
+        void clearSelection() {
+            mPackageNames.clear();
+            int itemId;
+            for (ApplicationItem applicationItem: mSelectedApplicationItems) {
+                itemId = mAdapterList.indexOf(applicationItem);
+                if (itemId != -1) notifyItemChanged(itemId);
+            }
+            mSelectedApplicationItems.clear();
         }
 
         @Override
@@ -766,54 +762,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             return mFilter;
         }
 
+        @NonNull
         @Override
-        public int getCount() {
-            return mAdapterList == null ? 0 : mAdapterList.size();
+        public MainActivity.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            @SuppressLint("InflateParams")
+            final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_main, null);
+            return new ViewHolder(view);
         }
 
         @Override
-        public ApplicationItem getItem(int i) {
-            return mAdapterList.get(i);
-        }
+        public void onBindViewHolder(@NonNull MainActivity.ViewHolder holder, int position) {
+            if (holder.iconLoader != null) holder.iconLoader.cancel(true);
 
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            MainActivity.Adapter.ViewHolder holder;
-            if (view == null) {
-                view = mLayoutInflater.inflate(R.layout.item_main, viewGroup, false);
-                holder = new MainActivity.Adapter.ViewHolder();
-                holder.icon = view.findViewById(R.id.icon);
-                holder.favorite_icon = view.findViewById(R.id.favorite_icon);
-                holder.label = view.findViewById(R.id.label);
-                holder.packageName = view.findViewById(R.id.packageName);
-                holder.version = view.findViewById(R.id.version);
-                holder.isSystemApp = view.findViewById(R.id.isSystem);
-                holder.date = view.findViewById(R.id.date);
-                holder.size = view.findViewById(R.id.size);
-                holder.shared_id = view.findViewById(R.id.shareid);
-                holder.issuer = view.findViewById(R.id.issuer);
-                holder.sha = view.findViewById(R.id.sha);
-                view.setTag(holder);
-            } else {
-                holder = (MainActivity.Adapter.ViewHolder) view.getTag();
-                holder.iconLoader.cancel(true);
-            }
-
-            final ApplicationItem item = mAdapterList.get(i);
+            final ApplicationItem item = mAdapterList.get(position);
             final ApplicationInfo info = item.applicationInfo;
 
+            View view = holder.mainView;
+            // Add click listeners
+            holder.itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(mActivity, AppInfoActivity.class);
+                intent.putExtra(AppInfoActivity.EXTRA_PACKAGE_NAME, info.packageName);
+                mActivity.startActivity(intent);
+            });
+            holder.itemView.setOnLongClickListener(v -> {
+                Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
+                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, info.packageName);
+                mActivity.startActivity(appDetailsIntent);
+                return true;
+            });
             // Alternate background colors
             if (mPackageNames.contains(info.packageName))
                 view.setBackgroundColor(mColorHighlight);
             else if (!info.enabled)
                 view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.disabled_app));
-            else view.setBackgroundColor(i % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
-
+            else view.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
             // Add yellow star if the app is in debug mode
             holder.favorite_icon.setVisibility(item.star ? View.VISIBLE : View.INVISIBLE);
             try {
@@ -856,15 +838,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 holder.sha.setText(item.sha.getSecond());
             } catch (PackageManager.NameNotFoundException | NullPointerException ignored) {}
             // Load app icon
-            holder.iconLoader = new MainActivity.Adapter.IconAsyncTask(holder.icon, info);
+            holder.iconLoader = new IconAsyncTask(holder.icon, info);
             holder.iconLoader.execute();
             // Set app label
             if (mConstraint != null && item.label.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 holder.label.setText(Utils.getHighlightedText(item.label, mConstraint, mColorRed));
-            } else {
-                holder.label.setText(item.label);
-            }
+            } else holder.label.setText(item.label);
             // Set app label color to red if clearing user data not allowed
             if ((info.flags & ApplicationInfo.FLAG_ALLOW_CLEAR_USER_DATA) == 0)
                 holder.label.setTextColor(Color.RED);
@@ -873,9 +853,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             if (mConstraint != null && info.packageName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 holder.packageName.setText(Utils.getHighlightedText(info.packageName, mConstraint, mColorRed));
-            } else {
-                holder.packageName.setText(info.packageName);
-            }
+            } else holder.packageName.setText(info.packageName);
             // Set package name color to blue if the app is in stopped/force closed state
             if ((info.flags & ApplicationInfo.FLAG_STOPPED) != 0)
                 holder.packageName.setTextColor(ContextCompat.getColor(mActivity, R.color.blue_green));
@@ -919,26 +897,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             if ((info.flags & ApplicationInfo.FLAG_USES_CLEARTEXT_TRAFFIC) !=0)
                 holder.size.setTextColor(mColorOrange);
             else holder.size.setTextColor(mColorSecondary);
-            View finalView = view;
             holder.icon.setOnClickListener(v -> {
                 if (MainActivity.mPackageNames.contains(info.packageName)) {
                     MainActivity.mPackageNames.remove(info.packageName);
-                    if (!info.enabled)
-                        finalView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.disabled_app));
-                    else
-                        finalView.setBackgroundColor(i % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
+                    MainActivity.mSelectedApplicationItems.remove(item);
                 } else {
                     MainActivity.mPackageNames.add(info.packageName);
-                    finalView.setBackgroundColor(mColorHighlight);
+                    MainActivity.mSelectedApplicationItems.add(item);
                 }
+                notifyItemChanged(position);
                 mActivity.handleSelection();
             });
-            return view;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public int getItemCount() {
+            return mAdapterList == null ? 0 : mAdapterList.size();
         }
 
         @Override
         public int getPositionForSection(int section) {
-            for (int i = 0; i < this.getCount(); i++) {
+            for (int i = 0; i < getItemCount(); i++) {
                 String item = mAdapterList.get(i).label;
                 if (item.length() > 0) {
                     if (item.charAt(0) == sections.charAt(section))
@@ -996,7 +980,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (imageView.get()!=null){
                     imageView.get().setImageDrawable(drawable);
                     imageView.get().setVisibility(View.VISIBLE);
-
                 }
             }
         }

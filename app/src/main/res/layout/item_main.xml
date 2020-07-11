@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="@android:color/transparent"
-    app:cardElevation="0dp"
-    app:cardCornerRadius="0dp"
-    android:foreground="?selectableItemBackground">
+    android:background="?selectableItemBackground">
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/main_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -26,7 +24,7 @@
             tools:srcCompat="@tools:sample/avatars"
             android:contentDescription="@string/str_logo" />
 
-        <RelativeLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1">
@@ -35,66 +33,72 @@
                 android:id="@+id/favorite_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:src="@drawable/item_favorite"
                 tools:srcCompat="@tools:sample/avatars"
+                android:layout_gravity="end|top"
                 tools:ignore="ContentDescription" />
 
-            <TextView
-                android:id="@+id/label"
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textStyle="bold"
-                tools:text="@tools:sample/lorem" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/packageName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/label"
-                android:layout_alignStart="@id/label"
-                android:singleLine="true"
-                android:textStyle="italic"
-                tools:text="@tools:sample/lorem" />
+                <TextView
+                    android:id="@+id/label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textStyle="bold"
+                    tools:text="@tools:sample/lorem" />
 
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/packageName"
-                android:layout_alignStart="@id/label"
-                android:singleLine="true"
-                android:textSize="12sp"
-                tools:text="@tools:sample/date/mmddyy" />
+                <TextView
+                    android:id="@+id/packageName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textStyle="italic"
+                    tools:text="@tools:sample/lorem" />
 
-            <TextView
-                android:id="@+id/shareid"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/packageName"
-                android:layout_toEndOf="@id/date"
-                android:gravity="end"
-                android:paddingEnd="25sp"
-                android:singleLine="true"
-                android:textSize="10sp"
-                tools:text="@tools:sample/lorem"
-                tools:ignore="RtlSymmetry,SmallSp" />
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/issuer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/date"
-                android:layout_alignStart="@id/label"
-                android:singleLine="true"
-                android:textSize="9sp"
-                tools:text="@tools:sample/lorem"
-                tools:ignore="SmallSp" />
+                    <TextView
+                        android:id="@+id/date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textSize="12sp"
+                        tools:text="@tools:sample/date/mmddyy" />
 
-        </RelativeLayout>
+                    <TextView
+                        android:id="@+id/shareid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:paddingEnd="25sp"
+                        android:singleLine="true"
+                        android:textSize="10sp"
+                        tools:text="@tools:sample/lorem"
+                        tools:ignore="RtlSymmetry,SmallSp" />
 
-        <LinearLayout
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <TextView
+                    android:id="@+id/issuer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textSize="9sp"
+                    tools:text="@tools:sample/lorem"
+                    tools:ignore="SmallSp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </FrameLayout>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
@@ -132,6 +136,8 @@
                 tools:text="@tools:sample/lorem"
                 tools:ignore="SmallSp" />
 
-        </LinearLayout>
-    </LinearLayout>
-</com.google.android.material.card.MaterialCardView>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</RelativeLayout>
