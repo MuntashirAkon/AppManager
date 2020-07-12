@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -118,7 +119,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private AppOpsService mAppOpsService;
     private ProgressIndicator mProgressIndicator;
     private TextView mRulesNotAppliedMsg;
-
     private List<Tuple<String, Integer>> permissionsWithFlags;
     private boolean bFi;
 
@@ -183,13 +183,18 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         recyclerView.setEmptyView(emptyView);
         mProgressIndicator = mActivity.findViewById(R.id.progress_linear);
         showProgressIndicator(true);
-        mRulesNotAppliedMsg = mActivity.findViewById(R.id.progress_text);
+        mRulesNotAppliedMsg = mActivity.findViewById(R.id.alert_text);
         mRulesNotAppliedMsg.setVisibility(View.GONE);
         mRulesNotAppliedMsg.setText(R.string.rules_not_applied);
         mAdapter = new AppDetailsRecyclerAdapter();
         recyclerView.setAdapter(mAdapter);
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        mAdapter.reset();
     }
 
     @Override
@@ -276,8 +281,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         }
     }
 
-    public void refreshDetails() {
-        if (mAdapter != null)mAdapter.reset();
+    private void refreshDetails() {
+        if (mAdapter != null) mAdapter.reset();
     }
 
     public void resetFilter() {
@@ -543,6 +548,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     private void showProgressIndicator(boolean show) {
+        if (mProgressIndicator == null) return;
         if (show) {
             mProgressIndicator.setVisibility(View.VISIBLE);
             mProgressIndicator.show();
@@ -599,21 +605,19 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 if (requestedProperty == SERVICES)
                     runningServices = PackageUtils.getRunningServicesForPackage(mPackageName);
                 mDefaultList = mAdapterList;
-                mActivity.runOnUiThread(() -> {
-                    if (!TextUtils.isEmpty(AppDetailsActivity.sConstraint)) {
-                        getFilter().filter(AppDetailsActivity.sConstraint);
-                    }
-                });
+                final AtomicInteger rules_msg_visibility = new AtomicInteger(View.GONE);
                 if (requestedProperty <= AppDetailsFragment.PROVIDERS) {
                     try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
                         if (isRootEnabled && !isBlockingEnabled && cb.componentCount() > 0 && !cb.isRulesApplied()) {
-                            mActivity.runOnUiThread(() -> sRulesNotAppliedMsg.setVisibility(View.VISIBLE));
-                        } else {
-                            mActivity.runOnUiThread(() -> sRulesNotAppliedMsg.setVisibility(View.GONE));
+                            rules_msg_visibility.set(View.VISIBLE);
                         }
                     }
                 }
                 mActivity.runOnUiThread(() -> {
+                    if (!TextUtils.isEmpty(AppDetailsActivity.sConstraint)) {
+                        getFilter().filter(AppDetailsActivity.sConstraint);
+                    }
+                    mRulesNotAppliedMsg.setVisibility(rules_msg_visibility.get());
                     notifyDataSetChanged();
                     showProgressIndicator(false);
                 });

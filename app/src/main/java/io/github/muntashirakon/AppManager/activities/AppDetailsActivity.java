@@ -96,7 +96,6 @@ public class AppDetailsActivity extends AppCompatActivity {
                     super.onPageSelected(position);
                     pageNo = position;
                     if (fragments[position] != null) {  // Fragment is created (the second case)
-                        fragments[position].refreshDetails();
                         fragmentLoaded = true;
                         fixSearch();
                     } else fragmentLoaded = false;
@@ -118,7 +117,6 @@ public class AppDetailsActivity extends AppCompatActivity {
                         case ViewPager2.SCROLL_STATE_IDLE:
                             if (!fragmentLoaded && fragments[pageNo] != null) {
                                 Log.d("VP2 - State", "Refreshing details");
-                                fragments[pageNo].refreshDetails();
                                 fragmentLoaded = true;
                                 fixSearch();
                             }

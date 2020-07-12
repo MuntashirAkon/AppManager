@@ -28,7 +28,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -42,7 +42,7 @@
             app:indicatorColor="?colorAccent" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/progress_text"
+            android:id="@+id/alert_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/padding_medium"
@@ -60,6 +60,6 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
