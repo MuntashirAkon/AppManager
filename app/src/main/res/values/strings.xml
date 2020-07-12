@@ -366,4 +366,7 @@
     <string name="export_options">Export Options</string>
     <string name="import_failed">Import failed!</string>
     <string name="export_failed">Export failed!</string>
+    <string name="keyboard_type">Keyboard Type</string>
+    <string name="navigation">Navigation</string>
+    <string name="touchscreen">Touchscreen</string>
 </resources>
