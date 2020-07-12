@@ -733,8 +733,7 @@ public class MainActivity extends AppCompatActivity implements
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            @SuppressLint("InflateParams")
-            final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_main, null);
+            final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_main, parent, false);
             return new ViewHolder(view);
         }
 
