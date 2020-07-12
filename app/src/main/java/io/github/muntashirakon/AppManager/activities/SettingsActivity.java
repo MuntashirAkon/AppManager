@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import androidx.annotation.NonNull;
@@ -28,7 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
         final SwitchMaterial blockingSwitcher = findViewById(R.id.blocking_toggle_btn);
         final SwitchMaterial usageSwitcher = findViewById(R.id.usage_toggle_btn);
 
-        final MaterialCardView blockingView = findViewById(R.id.blocking_view);
+        final View blockingView = findViewById(R.id.blocking_view);
 
         // Read pref
         Boolean rootEnabled = (Boolean) appPref.getPref(AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);

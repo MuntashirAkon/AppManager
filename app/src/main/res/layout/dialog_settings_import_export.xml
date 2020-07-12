@@ -4,83 +4,130 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.google.android.material.card.MaterialCardView
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/export_internal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/padding_medium"
+            android:paddingTop="@dimen/padding_small"
+            android:paddingEnd="@dimen/padding_medium"
+            android:paddingBottom="@dimen/padding_small"
+            android:background="?selectableItemBackground"
+            android:orientation="vertical">
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="@dimen/padding_medium"
-                android:paddingTop="@dimen/padding_small"
-                android:paddingEnd="@dimen/padding_medium"
-                android:paddingBottom="@dimen/padding_small"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/pref_export"
-                android:textSize="20sp" />
+                android:textStyle="bold" />
 
-        </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pref_export_msg"
+                android:textSize="12sp" />
 
-        <com.google.android.material.card.MaterialCardView
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/import_internal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/padding_medium"
+            android:paddingTop="@dimen/padding_small"
+            android:paddingEnd="@dimen/padding_medium"
+            android:paddingBottom="@dimen/padding_small"
+            android:background="?selectableItemBackground"
+            android:orientation="vertical">
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="@dimen/padding_medium"
-                android:paddingTop="@dimen/padding_small"
-                android:paddingEnd="@dimen/padding_medium"
-                android:paddingBottom="@dimen/padding_small"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/pref_import"
-                android:textSize="20sp" />
+                android:textStyle="bold" />
 
-        </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pref_import_msg"
+                android:textSize="12sp" />
 
-        <com.google.android.material.card.MaterialCardView
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/import_watt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/padding_medium"
+            android:paddingTop="@dimen/padding_small"
+            android:paddingEnd="@dimen/padding_medium"
+            android:paddingBottom="@dimen/padding_small"
+            android:background="?selectableItemBackground"
+            android:orientation="vertical">
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="@dimen/padding_medium"
-                android:paddingTop="@dimen/padding_small"
-                android:paddingEnd="@dimen/padding_medium"
-                android:paddingBottom="@dimen/padding_small"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/pref_import_watt"
-                android:textSize="20sp" />
+                android:textStyle="bold" />
 
-        </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pref_import_watt_msg"
+                android:textSize="12sp" />
 
-        <com.google.android.material.card.MaterialCardView
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/import_blocker"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/padding_medium"
+            android:paddingTop="@dimen/padding_small"
+            android:paddingEnd="@dimen/padding_medium"
+            android:paddingBottom="@dimen/padding_small"
+            android:background="?selectableItemBackground"
+            android:orientation="vertical">
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="@dimen/padding_medium"
-                android:paddingTop="@dimen/padding_small"
-                android:paddingEnd="@dimen/padding_medium"
-                android:paddingBottom="@dimen/padding_small"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/pref_import_blocker"
-                android:textSize="20sp" />
+                android:textStyle="bold" />
 
-        </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pref_import_blocker_msg"
+                android:textSize="12sp" />
 
-    </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </ScrollView>

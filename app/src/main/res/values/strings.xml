@@ -300,7 +300,7 @@
     <string name="rules_not_applied">Rules are not applied</string>
     <string name="str_logo">Logo</string>
     <string name="pref_root_mode_enabled">Root mode</string>
-    <string name="pref_root_mode_enabled_msg">Enabling root mode activates all root features of this app</string>
+    <string name="pref_root_mode_enabled_msg">Enabling root mode activates all root features of this app, ADB mode is detected automatically when this is disabled</string>
     <string name="pref_global_blocking_enabled">Global component blocking</string>
     <string name="pref_global_blocking_enabled_msg">Enabling global component blocking lets you block any component of any app without explicitly enabling blocking for the app</string>
     <string name="pref_usage_access_enabled">Usage access</string>
@@ -369,4 +369,8 @@
     <string name="keyboard_type">Keyboard Type</string>
     <string name="navigation">Navigation</string>
     <string name="touchscreen">Touchscreen</string>
+    <string name="pref_export_msg">Export blocking rules configured within App Manager to external storage</string>
+    <string name="pref_import_msg">Import previously exported blocking rules from App Manager</string>
+    <string name="pref_import_watt_msg">Import blocking rules from Watt, each file containing rules for a single package and file name being the package name with xml extension</string>
+    <string name="pref_import_blocker_msg">Import blocking rules from Blocker, each file containing rules for a single package</string>
 </resources>
