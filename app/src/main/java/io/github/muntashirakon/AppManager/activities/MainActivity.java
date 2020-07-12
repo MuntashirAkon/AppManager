@@ -635,39 +635,7 @@ public class MainActivity extends AppCompatActivity implements
             mAdapter.notifyDataSetChanged();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        View mainView;
-        ImageView icon;
-        ImageView favorite_icon;
-        TextView label;
-        TextView packageName;
-        TextView version;
-        TextView isSystemApp;
-        TextView date;
-        TextView size;
-        TextView shared_id;
-        TextView issuer;
-        TextView sha;
-        MainRecyclerAdapter.IconAsyncTask iconLoader;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            mainView = itemView.findViewById(R.id.main_view);
-            icon = itemView.findViewById(R.id.icon);
-            favorite_icon = itemView.findViewById(R.id.favorite_icon);
-            label = itemView.findViewById(R.id.label);
-            packageName = itemView.findViewById(R.id.packageName);
-            version = itemView.findViewById(R.id.version);
-            isSystemApp = itemView.findViewById(R.id.isSystem);
-            date = itemView.findViewById(R.id.date);
-            size = itemView.findViewById(R.id.size);
-            shared_id = itemView.findViewById(R.id.shareid);
-            issuer = itemView.findViewById(R.id.issuer);
-            sha = itemView.findViewById(R.id.sha);
-        }
-    }
-
-    static class MainRecyclerAdapter extends RecyclerView.Adapter<MainActivity.ViewHolder>
+    static class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>
             implements SectionIndexer, Filterable {
         static final String sections = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         @SuppressLint("SimpleDateFormat")
@@ -764,14 +732,14 @@ public class MainActivity extends AppCompatActivity implements
 
         @NonNull
         @Override
-        public MainActivity.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             @SuppressLint("InflateParams")
             final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_main, null);
             return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull MainActivity.ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             if (holder.iconLoader != null) holder.iconLoader.cancel(true);
 
             final ApplicationItem item = mAdapterList.get(position);
@@ -944,6 +912,38 @@ public class MainActivity extends AppCompatActivity implements
                 sectionsArr[i] = "" + sections.charAt(i);
 
             return sectionsArr;
+        }
+
+        static class ViewHolder extends RecyclerView.ViewHolder {
+            View mainView;
+            ImageView icon;
+            ImageView favorite_icon;
+            TextView label;
+            TextView packageName;
+            TextView version;
+            TextView isSystemApp;
+            TextView date;
+            TextView size;
+            TextView shared_id;
+            TextView issuer;
+            TextView sha;
+            MainRecyclerAdapter.IconAsyncTask iconLoader;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                mainView = itemView.findViewById(R.id.main_view);
+                icon = itemView.findViewById(R.id.icon);
+                favorite_icon = itemView.findViewById(R.id.favorite_icon);
+                label = itemView.findViewById(R.id.label);
+                packageName = itemView.findViewById(R.id.packageName);
+                version = itemView.findViewById(R.id.version);
+                isSystemApp = itemView.findViewById(R.id.isSystem);
+                date = itemView.findViewById(R.id.date);
+                size = itemView.findViewById(R.id.size);
+                shared_id = itemView.findViewById(R.id.shareid);
+                issuer = itemView.findViewById(R.id.issuer);
+                sha = itemView.findViewById(R.id.sha);
+            }
         }
 
         private static class IconAsyncTask extends AsyncTask<Void, Integer, Drawable> {
