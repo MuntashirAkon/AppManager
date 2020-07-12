@@ -28,13 +28,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,8 +55,9 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
@@ -68,6 +67,7 @@ import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
 import io.github.muntashirakon.AppManager.types.AppDetailsItem;
+import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -108,12 +108,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     private @Property int neededProperty;
 
-    private LayoutInflater mLayoutInflater;
     private String mPackageName;
     private PackageManager mPackageManager;
     private PackageInfo mPackageInfo;
     private Activity mActivity;
-    private ActivitiesListAdapter mAdapter;
+    private AppDetailsRecyclerAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefresh;
     private MenuItem blockingToggler;
     private AppOpsService mAppOpsService;
@@ -158,7 +157,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             return;
         }
         mPackageManager = getActivity().getPackageManager();
-        mLayoutInflater = getLayoutInflater();
         mActivity = getActivity();
         if (mActivity != null) {
             mColorGrey1 = Color.TRANSPARENT;
@@ -178,19 +176,20 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         mSwipeRefresh.setColorSchemeColors(Utils.getThemeColor(mActivity, android.R.attr.colorAccent));
         mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(mActivity, android.R.attr.colorPrimary));
         mSwipeRefresh.setOnRefreshListener(this);
-        ListView listView = view.findViewById(android.R.id.list);
-        listView.setDividerHeight(0);
+        RecyclerViewWithEmptyView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         TextView emptyView = view.findViewById(android.R.id.empty);
         emptyView.setText(getNeededString(neededProperty));
-        listView.setEmptyView(emptyView);
+        recyclerView.setEmptyView(emptyView);
         mProgressIndicator = mActivity.findViewById(R.id.progress_linear);
         showProgressIndicator(true);
         mRulesNotAppliedMsg = mActivity.findViewById(R.id.progress_text);
         mRulesNotAppliedMsg.setVisibility(View.GONE);
         mRulesNotAppliedMsg.setText(R.string.rules_not_applied);
-        mAdapter = new ActivitiesListAdapter();
-        listView.setAdapter(mAdapter);
-        mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> listView.canScrollVertically(-1));
+        mAdapter = new AppDetailsRecyclerAdapter();
+        recyclerView.setAdapter(mAdapter);
+        mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
         return view;
     }
 
@@ -576,7 +575,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         }
     }
 
-    private class ActivitiesListAdapter extends BaseAdapter implements Filterable {
+    @NonNull
+    private String permAppOp(String s) {
+        String opStr = AppOpsManager.permissionToOp(s);
+        return opStr != null ? "\nAppOp: " + opStr : "";
+    }
+
+    private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsRecyclerAdapter.ViewHolder> implements Filterable {
         private List<AppDetailsItem> mAdapterList;
         private List<AppDetailsItem> mDefaultList;
         private @Property int requestedProperty;
@@ -586,7 +591,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         private Boolean isADBEnabled = true;
         private List<String> runningServices;
 
-        ActivitiesListAdapter() {
+        AppDetailsRecyclerAdapter() {
             reset();
         }
 
@@ -617,7 +622,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     }
                 }
                 mActivity.runOnUiThread(() -> {
-                    ActivitiesListAdapter.this.notifyDataSetChanged();
+                    notifyDataSetChanged();
                     showProgressIndicator(false);
                 });
             }).start();
@@ -672,8 +677,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
          * ViewHolder to use recycled views efficiently. Fields names are not expressive because we use
          * the same holder for any kind of view, and view are not all sames.
          */
-        class ViewHolder {
-            @Property int currentViewType = NONE;
+        class ViewHolder extends RecyclerView.ViewHolder {
             TextView textView1;
             TextView textView2;
             TextView textView3;
@@ -688,16 +692,193 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             Button editBtn;
             Button launchBtn;
             Switch toggleSwitch;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                switch (requestedProperty) {
+                    case ACTIVITIES:
+                        imageView = itemView.findViewById(R.id.icon);
+                        textView2 = itemView.findViewById(R.id.name);
+                        textView3 = itemView.findViewById(R.id.taskAffinity);
+                        textView4 = itemView.findViewById(R.id.launchMode);
+                        textView5 = itemView.findViewById(R.id.orientation);
+                        textView6 = itemView.findViewById(R.id.softInput);
+                        launchBtn = itemView.findViewById(R.id.launch);
+                        blockBtn  = itemView.findViewById(R.id.block_component);
+                        createBtn = itemView.findViewById(R.id.create_shortcut_btn);
+                        editBtn   = itemView.findViewById(R.id.edit_shortcut_btn);
+                        itemView.findViewById(R.id.label).setVisibility(View.GONE);
+                        break;
+                    case SERVICES:
+                        imageView = itemView.findViewById(R.id.icon);
+                        textView1 = itemView.findViewById(R.id.label);
+                        textView2 = itemView.findViewById(R.id.name);
+                        textView3 = itemView.findViewById(R.id.orientation);
+                        blockBtn  = itemView.findViewById(R.id.block_component);
+                        itemView.findViewById(R.id.taskAffinity).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.launchMode).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.softInput).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.launch).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
+                        break;
+                    case RECEIVERS:
+                        imageView = itemView.findViewById(R.id.icon);
+                        textView1 = itemView.findViewById(R.id.label);
+                        textView2 = itemView.findViewById(R.id.name);
+                        textView3 = itemView.findViewById(R.id.taskAffinity);
+                        textView4 = itemView.findViewById(R.id.launchMode);
+                        textView5 = itemView.findViewById(R.id.orientation);
+                        textView6 = itemView.findViewById(R.id.softInput);
+                        blockBtn  = itemView.findViewById(R.id.block_component);
+                        itemView.findViewById(R.id.launch).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
+                        break;
+                    case PROVIDERS:
+                        imageView = itemView.findViewById(R.id.icon);
+                        textView1 = itemView.findViewById(R.id.label);
+                        textView2 = itemView.findViewById(R.id.name);
+                        textView3 = itemView.findViewById(R.id.launchMode);
+                        textView4 = itemView.findViewById(R.id.orientation);
+                        textView5 = itemView.findViewById(R.id.softInput);
+                        textView6 = itemView.findViewById(R.id.taskAffinity);
+                        blockBtn  = itemView.findViewById(R.id.block_component);
+                        itemView.findViewById(R.id.launch).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
+                        break;
+                    case PERMISSIONS:
+                        imageView = itemView.findViewById(R.id.icon);
+                        textView1 = itemView.findViewById(R.id.label);
+                        textView2 = itemView.findViewById(R.id.name);
+                        textView3 = itemView.findViewById(R.id.taskAffinity);
+                        textView4 = itemView.findViewById(R.id.orientation);
+                        textView5 = itemView.findViewById(R.id.launchMode);
+                        itemView.findViewById(R.id.softInput).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.launch).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.block_component).setVisibility(View.GONE);
+                        break;
+                    case APP_OPS:
+                        textView1 = itemView.findViewById(R.id.op_name);
+                        textView2 = itemView.findViewById(R.id.perm_description);
+                        textView3 = itemView.findViewById(R.id.perm_protection_level);
+                        textView4 = itemView.findViewById(R.id.perm_package_name);
+                        textView5 = itemView.findViewById(R.id.perm_group);
+                        textView6 = itemView.findViewById(R.id.perm_name);
+                        textView7 = itemView.findViewById(R.id.op_mode_running_duration);
+                        textView8 = itemView.findViewById(R.id.op_accept_reject_time);
+                        toggleSwitch = itemView.findViewById(R.id.perm_toggle_btn);
+                        break;
+                    case USES_PERMISSIONS:
+                        textView1 = itemView.findViewById(R.id.perm_name);
+                        textView2 = itemView.findViewById(R.id.perm_description);
+                        textView3 = itemView.findViewById(R.id.perm_protection_level);
+                        textView4 = itemView.findViewById(R.id.perm_package_name);
+                        textView5 = itemView.findViewById(R.id.perm_group);
+                        toggleSwitch = itemView.findViewById(R.id.perm_toggle_btn);
+                        break;
+                    case FEATURES:
+                        textView1 = itemView.findViewById(R.id.name);
+                        textView2 = itemView.findViewById(R.id.flags);
+                        textView3 = itemView.findViewById(R.id.gles_ver);
+                        break;
+                    case CONFIGURATION:
+                        textView1 = itemView.findViewById(R.id.reqgles);
+                        textView2 = itemView.findViewById(R.id.reqfea);
+                        textView3 = itemView.findViewById(R.id.reqkey);
+                        textView4 = itemView.findViewById(R.id.reqnav);
+                        textView5 = itemView.findViewById(R.id.reqtouch);
+                        break;
+                    case SIGNATURES:
+                    case SHARED_LIBRARY_FILES:
+                    case NONE:
+                    default:
+                        break;
+                }
+            }
         }
 
-        @Override
         public int getCount() {
             return mAdapterList == null ? 0 : mAdapterList.size();
         }
 
+        @NonNull
         @Override
-        public Object getItem(int position) {
-            return mAdapterList.get(position);
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            @SuppressLint("InflateParams")
+            final View view;
+            switch (requestedProperty) {
+                case ACTIVITIES:
+                case SERVICES:
+                case RECEIVERS:
+                case PROVIDERS:
+                case PERMISSIONS:
+                case NONE:
+                default:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_details_primary, parent, false);
+                    break;
+                case APP_OPS:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_details_appop, parent, false);
+                    break;
+                case USES_PERMISSIONS:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_details_perm, parent, false);
+                    break;
+                case FEATURES:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_details_secondary, parent, false);
+                    break;
+                case CONFIGURATION:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_details_tertiary, parent, false);
+                    break;
+                case SIGNATURES:
+                case SHARED_LIBRARY_FILES:
+                    view = new TextView(mActivity);
+                    break;
+            }
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            switch (requestedProperty) {
+                case SERVICES:
+                    getServicesView(holder, position);
+                    break;
+                case RECEIVERS:
+                    getReceiverView(holder, position);
+                    break;
+                case PROVIDERS:
+                    getProviderView(holder, position);
+                    break;
+                case APP_OPS:
+                    getAppOpsView(holder, position);
+                    break;
+                case USES_PERMISSIONS:
+                    getUsesPermissionsView(holder, position);
+                    break;
+                case PERMISSIONS:
+                    getPermissionsView(holder, position);
+                    break;
+                case FEATURES:
+                    getFeaturesView(holder, position);
+                    break;
+                case CONFIGURATION:
+                    getConfigurationView(holder, position);
+                    break;
+                case SIGNATURES:
+                    getSignatureView(holder, position);
+                    break;
+                case SHARED_LIBRARY_FILES:
+                    getSharedLibsView(holder, position);
+                    break;
+                case ACTIVITIES:
+                case NONE:
+                default:
+                    getActivityView(holder, position);
+                    break;
+            }
         }
 
         @Override
@@ -705,102 +886,55 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             return position;
         }
 
-        @NonNull
         @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            switch (requestedProperty) {
-                case SERVICES:
-                    return getServicesView(parent, convertView, position);
-                case RECEIVERS:
-                    return getReceiverView(parent, convertView, position);
-                case PROVIDERS:
-                    return getProviderView(parent, convertView, position);
-                case APP_OPS:
-                    return getAppOpsView(parent, convertView, position);
-                case USES_PERMISSIONS:
-                    return getUsesPermissionsView(parent, convertView, position);
-                case PERMISSIONS:
-                    return getPermissionsView(parent, convertView, position);
-                case FEATURES:
-                    return getFeaturesView(parent, convertView, position);
-                case CONFIGURATION:
-                    return getConfigurationView(parent, convertView, position);
-                case SIGNATURES:
-                    return getSignatureView(convertView, position);
-                case SHARED_LIBRARY_FILES:
-                    return getSharedLibsView(convertView, position);
-                case ACTIVITIES:
-                case NONE:
-                default:
-                    return getActivityView(parent, convertView, position);
-            }
+        public int getItemCount() {
+            return mAdapterList == null ? 0 : mAdapterList.size();
         }
 
         /**
-         * See below checkIfConvertViewMatch method.
          * Bored view inflation / creation.
          */
-        @NonNull
-        @SuppressLint("SetTextI18n")
-        private View getActivityView(ViewGroup viewGroup, View convertView, int index) {
-            ViewHolder viewHolder;
-            if (checkIfConvertViewMatch(convertView, ACTIVITIES)) {
-                convertView = mLayoutInflater.inflate(R.layout.item_app_details_primary, viewGroup, false);
-
-                viewHolder = new ViewHolder();
-                viewHolder.currentViewType = ACTIVITIES;
-                viewHolder.imageView = convertView.findViewById(R.id.icon);
-                viewHolder.textView2 = convertView.findViewById(R.id.name);
-                viewHolder.textView3 = convertView.findViewById(R.id.taskAffinity);
-                viewHolder.textView4 = convertView.findViewById(R.id.launchMode);
-                viewHolder.textView5 = convertView.findViewById(R.id.orientation);
-                viewHolder.textView6 = convertView.findViewById(R.id.softInput);
-                viewHolder.launchBtn = convertView.findViewById(R.id.launch);
-                viewHolder.blockBtn  = convertView.findViewById(R.id.block_component);
-                viewHolder.createBtn = convertView.findViewById(R.id.create_shortcut_btn);
-                viewHolder.editBtn   = convertView.findViewById(R.id.edit_shortcut_btn);
-                convertView.findViewById(R.id.label).setVisibility(View.GONE);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-
+        private void getActivityView(@NonNull ViewHolder holder, int index) {
+            final View view = holder.itemView;
             final AppDetailsItem appDetailsItem = mAdapterList.get(index);
             final ActivityInfo activityInfo = (ActivityInfo) appDetailsItem.vanillaItem;
             final String activityName = activityInfo.name;
             // Background color: regular < disabled < blocked
-            convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             if (isComponentDisabled(mPackageManager, activityInfo)) {
-                convertView.setBackgroundColor(mColorDisabled);
+                view.setBackgroundColor(mColorDisabled);
             }
             if (appDetailsItem.isBlocked) {
-                convertView.setBackgroundColor(mColorRed);
-                viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
+                view.setBackgroundColor(mColorRed);
+                holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
             } else {
-                viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
+                holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
             }
             // Name
             if (mConstraint != null && activityName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                viewHolder.textView2.setText(Utils.getHighlightedText(activityName, mConstraint, mColorRed));
+                holder.textView2.setText(Utils.getHighlightedText(activityName, mConstraint, mColorRed));
             } else {
-                viewHolder.textView2.setText(activityName.startsWith(mPackageName) ?
+                holder.textView2.setText(activityName.startsWith(mPackageName) ?
                         activityName.replaceFirst(mPackageName, "") : activityName);
             }
             // Icon
-            viewHolder.imageView.setImageDrawable(activityInfo.loadIcon(mPackageManager));
+            holder.imageView.setImageDrawable(activityInfo.loadIcon(mPackageManager));
             // TaskAffinity
-            viewHolder.textView3.setText(getString(R.string.taskAffinity) + ": " + activityInfo.taskAffinity);
+            holder.textView3.setText(String.format(Locale.getDefault(), "%s: %s",
+                    getString(R.string.taskAffinity), activityInfo.taskAffinity));
             // LaunchMode
-            viewHolder.textView4.setText(getString(R.string.launch_mode) + ": " + Utils.getLaunchMode(activityInfo.launchMode)
-                    + " | " + getString(R.string.orientation) + ": " + Utils.getOrientationString(activityInfo.screenOrientation));
+            holder.textView4.setText(String.format(Locale.getDefault(), "%s: %s | %s: %s",
+                    getString(R.string.launch_mode), Utils.getLaunchMode(activityInfo.launchMode),
+                    getString(R.string.orientation), Utils.getOrientationString(activityInfo.screenOrientation)));
             // Orientation
-            viewHolder.textView5.setText(Utils.getActivitiesFlagsString(activityInfo.flags));
+            holder.textView5.setText(Utils.getActivitiesFlagsString(activityInfo.flags));
             // SoftInput
-            viewHolder.textView6.setText(getString(R.string.softInput) + ": " + Utils.getSoftInputString(activityInfo.softInputMode)
-                    + " | " + (activityInfo.permission == null ? getString(R.string.require_no_permission) : activityInfo.permission));
+            holder.textView6.setText(String.format(Locale.getDefault(), "%s: %s | %s",
+                    getString(R.string.softInput), Utils.getSoftInputString(activityInfo.softInputMode),
+                    (activityInfo.permission == null ? getString(R.string.require_no_permission) : activityInfo.permission)));
             // Label
-            Button launch = viewHolder.launchBtn;
+            Button launch = holder.launchBtn;
             String appLabel = mPackageInfo.applicationInfo.loadLabel(mPackageManager).toString();
             String activityLabel = activityInfo.loadLabel(mPackageManager).toString();
             launch.setText(activityLabel.equals(appLabel) || TextUtils.isEmpty(activityLabel) ?
@@ -809,7 +943,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             boolean isExported = activityInfo.exported;
             launch.setEnabled(isExported);
             if (isExported && !appDetailsItem.isBlocked) {
-                launch.setOnClickListener(view -> {
+                launch.setOnClickListener(v -> {
                     Intent intent = new Intent();
                     intent.setClassName(mPackageName, activityName);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -821,7 +955,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
                     }
                 });
-                viewHolder.createBtn.setOnClickListener(view -> {
+                holder.createBtn.setOnClickListener(v -> {
                     String iconResourceName = null;
                     try {
                         ComponentName activity = new ComponentName(activityInfo.packageName, activityName);
@@ -834,7 +968,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             (String) activityInfo.loadLabel(mPackageManager),
                             activityInfo.loadIcon(mPackageManager), iconResourceName);
                 });
-                viewHolder.editBtn.setOnClickListener(view -> {
+                holder.editBtn.setOnClickListener(v -> {
                     if (getFragmentManager() != null) {
                         DialogFragment dialog = new EditShortcutDialogFragment();
                         Bundle args = new Bundle();
@@ -843,216 +977,154 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         dialog.show(getFragmentManager(), EditShortcutDialogFragment.TAG);
                     }
                 });
-                viewHolder.createBtn.setVisibility(View.VISIBLE);
-                viewHolder.editBtn.setVisibility(View.VISIBLE);
+                holder.createBtn.setVisibility(View.VISIBLE);
+                holder.editBtn.setVisibility(View.VISIBLE);
             } else {
-                viewHolder.createBtn.setVisibility(View.GONE);
-                viewHolder.editBtn.setVisibility(View.GONE);
+                holder.createBtn.setVisibility(View.GONE);
+                holder.editBtn.setVisibility(View.GONE);
             }
             // Blocking
             if (isRootEnabled) {
-                viewHolder.blockBtn.setVisibility(View.VISIBLE);
-                viewHolder.blockBtn.setOnClickListener(v -> {
+                holder.blockBtn.setVisibility(View.VISIBLE);
+                holder.blockBtn.setOnClickListener(v -> {
                     applyRules(activityName, RulesStorageManager.Type.ACTIVITY);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
                     notifyDataSetChanged();
                 });
-            } else viewHolder.blockBtn.setVisibility(View.GONE);
-            return convertView;
+            } else holder.blockBtn.setVisibility(View.GONE);
         }
 
         /**
          * Boring view inflation / creation
          */
-        @NonNull
-        @SuppressLint("SetTextI18n")
-        private View getServicesView(ViewGroup viewGroup, View convertView, int index) {
-            ViewHolder viewHolder;
-            if (checkIfConvertViewMatch(convertView, SERVICES)) {
-                convertView = mLayoutInflater.inflate(R.layout.item_app_details_primary, viewGroup, false);
-
-                viewHolder = new ViewHolder();
-                viewHolder.currentViewType = SERVICES;
-                viewHolder.imageView = convertView.findViewById(R.id.icon);
-                viewHolder.textView1 = convertView.findViewById(R.id.label);
-                viewHolder.textView2 = convertView.findViewById(R.id.name);
-                viewHolder.textView3 = convertView.findViewById(R.id.orientation);
-                viewHolder.blockBtn  = convertView.findViewById(R.id.block_component);
-                convertView.findViewById(R.id.taskAffinity).setVisibility(View.GONE);
-                convertView.findViewById(R.id.launchMode).setVisibility(View.GONE);
-                convertView.findViewById(R.id.softInput).setVisibility(View.GONE);
-                convertView.findViewById(R.id.launch).setVisibility(View.GONE);
-                convertView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
-                convertView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
+        private void getServicesView(@NonNull ViewHolder holder, int index) {
+            View view = holder.itemView;
             final AppDetailsItem appDetailsItem = mAdapterList.get(index);
             final ServiceInfo serviceInfo = (ServiceInfo) appDetailsItem.vanillaItem;
             // Background color: regular < running < disabled < blocked
-            convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             if (runningServices.contains(serviceInfo.name)) {
-                convertView.setBackgroundColor(mColorRunning);
+                view.setBackgroundColor(mColorRunning);
             }
             if (isComponentDisabled(mPackageManager, serviceInfo)) {
-                convertView.setBackgroundColor(mColorDisabled);
+                view.setBackgroundColor(mColorDisabled);
             }
             if (appDetailsItem.isBlocked) {
-                convertView.setBackgroundColor(mColorRed);
-                viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
+                view.setBackgroundColor(mColorRed);
+                holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
             } else {
-                viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
+                holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
             }
             // Label
-            viewHolder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(serviceInfo.name)));
+            holder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(serviceInfo.name)));
             // Name
             if (mConstraint != null && serviceInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                viewHolder.textView2.setText(Utils.getHighlightedText(serviceInfo.name, mConstraint, mColorRed));
+                holder.textView2.setText(Utils.getHighlightedText(serviceInfo.name, mConstraint, mColorRed));
             } else {
-                viewHolder.textView2.setText(serviceInfo.name.startsWith(mPackageName) ?
+                holder.textView2.setText(serviceInfo.name.startsWith(mPackageName) ?
                         serviceInfo.name.replaceFirst(mPackageName, "") : serviceInfo.name);
             }
             // Icon
-            viewHolder.imageView.setImageDrawable(serviceInfo.loadIcon(mPackageManager));
-            // Flags and 1Permission
-            viewHolder.textView3.setText(Utils.getServiceFlagsString(serviceInfo.flags)
-                    + (serviceInfo.permission != null ? "\n" + serviceInfo.permission : "\n"));
+            holder.imageView.setImageDrawable(serviceInfo.loadIcon(mPackageManager));
+            // Flags and Permission
+            holder.textView3.setText(String.format(Locale.getDefault(), "%s\n%s",
+                    Utils.getServiceFlagsString(serviceInfo.flags),
+                    (serviceInfo.permission != null ? serviceInfo.permission : "")));
             // Blocking
             if (isRootEnabled) {
-                viewHolder.blockBtn.setVisibility(View.VISIBLE);
-                viewHolder.blockBtn.setOnClickListener(v -> {
+                holder.blockBtn.setVisibility(View.VISIBLE);
+                holder.blockBtn.setOnClickListener(v -> {
                     applyRules(serviceInfo.name, RulesStorageManager.Type.SERVICE);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
                     notifyDataSetChanged();
                 });
-            } else viewHolder.blockBtn.setVisibility(View.GONE);
-            return convertView;
+            } else holder.blockBtn.setVisibility(View.GONE);
         }
 
         /**
          * Boring view inflation / creation
          */
-        @NonNull
         @SuppressLint("SetTextI18n")
-        private View getReceiverView(ViewGroup viewGroup, View convertView, int index) {
-            ViewHolder viewHolder;
-            if (checkIfConvertViewMatch(convertView, RECEIVERS)) {
-                convertView = mLayoutInflater.inflate(R.layout.item_app_details_primary, viewGroup, false);
-
-                viewHolder = new ViewHolder();
-                viewHolder.currentViewType = RECEIVERS;
-                viewHolder.imageView = convertView.findViewById(R.id.icon);
-                viewHolder.textView1 = convertView.findViewById(R.id.label);
-                viewHolder.textView2 = convertView.findViewById(R.id.name);
-                viewHolder.textView3 = convertView.findViewById(R.id.taskAffinity);
-                viewHolder.textView4 = convertView.findViewById(R.id.launchMode);
-                viewHolder.textView5 = convertView.findViewById(R.id.orientation);
-                viewHolder.textView6 = convertView.findViewById(R.id.softInput);
-                viewHolder.blockBtn  = convertView.findViewById(R.id.block_component);
-                convertView.findViewById(R.id.launch).setVisibility(View.GONE);
-                convertView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
-                convertView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
+        private void getReceiverView(@NonNull ViewHolder holder, int index) {
+            View view = holder.itemView;
             final AppDetailsItem appDetailsItem = mAdapterList.get(index);
             final ActivityInfo activityInfo = (ActivityInfo) appDetailsItem.vanillaItem;
             // Background color: regular < disabled < blocked
-            convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             if (isComponentDisabled(mPackageManager, activityInfo)) {
-                convertView.setBackgroundColor(mColorDisabled);
+                view.setBackgroundColor(mColorDisabled);
             }
             if (appDetailsItem.isBlocked) {
-                convertView.setBackgroundColor(mColorRed);
-                viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
+                view.setBackgroundColor(mColorRed);
+                holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
             } else {
-                viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
+                holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
             }
             // Label
-            viewHolder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityInfo.name)));
+            holder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityInfo.name)));
             // Name
             if (mConstraint != null && activityInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                viewHolder.textView2.setText(Utils.getHighlightedText(activityInfo.name, mConstraint, mColorRed));
+                holder.textView2.setText(Utils.getHighlightedText(activityInfo.name, mConstraint, mColorRed));
             } else {
-                viewHolder.textView2.setText(activityInfo.name.startsWith(mPackageName) ?
+                holder.textView2.setText(activityInfo.name.startsWith(mPackageName) ?
                         activityInfo.name.replaceFirst(mPackageName, "")
                         : activityInfo.name);
             }
             // Icon
-            viewHolder.imageView.setImageDrawable(activityInfo.loadIcon(mPackageManager));
+            holder.imageView.setImageDrawable(activityInfo.loadIcon(mPackageManager));
             // TaskAffinity
-            viewHolder.textView3.setText(getString(R.string.taskAffinity) + ": " + activityInfo.taskAffinity);
+            holder.textView3.setText(String.format(Locale.getDefault(), "%s: %s",
+                    getString(R.string.taskAffinity), activityInfo.taskAffinity));
             // LaunchMode
-            viewHolder.textView4.setText(getString(R.string.launch_mode) + ": " + Utils.getLaunchMode(activityInfo.launchMode)
+            holder.textView4.setText(getString(R.string.launch_mode) + ": " + Utils.getLaunchMode(activityInfo.launchMode)
                     + " | " + getString(R.string.orientation) + ": " + Utils.getOrientationString(activityInfo.screenOrientation));
             // Orientation
-            viewHolder.textView5.setText(activityInfo.permission == null ? getString(R.string.require_no_permission) : activityInfo.permission);
+            holder.textView5.setText(activityInfo.permission == null ? getString(R.string.require_no_permission) : activityInfo.permission);
             // SoftInput
-            viewHolder.textView6.setText(getString(R.string.softInput) + ": " + Utils.getSoftInputString(activityInfo.softInputMode));
+            holder.textView6.setText(String.format(Locale.getDefault(), "%s: %s",
+                    getString(R.string.softInput), Utils.getSoftInputString(activityInfo.softInputMode)));
             // Blocking
             if (isRootEnabled) {
-                viewHolder.blockBtn.setVisibility(View.VISIBLE);
-                viewHolder.blockBtn.setOnClickListener(v -> {
+                holder.blockBtn.setVisibility(View.VISIBLE);
+                holder.blockBtn.setOnClickListener(v -> {
                     applyRules(activityInfo.name, RulesStorageManager.Type.RECEIVER);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
                     notifyDataSetChanged();
                 });
-            } else viewHolder.blockBtn.setVisibility(View.GONE);
-            return convertView;
+            } else holder.blockBtn.setVisibility(View.GONE);
         }
 
         /**
          * Boring view inflation / creation
          */
-        @NonNull
         @SuppressLint("SetTextI18n")
-        private View getProviderView(ViewGroup viewGroup, View convertView, int index) {
-            ViewHolder viewHolder;
-            if (checkIfConvertViewMatch(convertView, PROVIDERS)) {
-                convertView = mLayoutInflater.inflate(R.layout.item_app_details_primary, viewGroup, false);
-
-                viewHolder = new ViewHolder();
-                viewHolder.currentViewType = PROVIDERS;
-                viewHolder.imageView = convertView.findViewById(R.id.icon);
-                viewHolder.textView1 = convertView.findViewById(R.id.label);
-                viewHolder.textView2 = convertView.findViewById(R.id.name);
-                viewHolder.textView3 = convertView.findViewById(R.id.launchMode);
-                viewHolder.textView4 = convertView.findViewById(R.id.orientation);
-                viewHolder.textView5 = convertView.findViewById(R.id.softInput);
-                viewHolder.textView6 = convertView.findViewById(R.id.taskAffinity);
-                viewHolder.blockBtn  = convertView.findViewById(R.id.block_component);
-                convertView.findViewById(R.id.launch).setVisibility(View.GONE);
-                convertView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
-                convertView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
+        private void getProviderView(@NonNull ViewHolder holder, int index) {
+            View view = holder.itemView;
             final AppDetailsItem appDetailsItem = mAdapterList.get(index);
             final ProviderInfo providerInfo = (ProviderInfo) appDetailsItem.vanillaItem;
             final String providerName = providerInfo.name;
             // Background color: regular < disabled < blocked
-            convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             if (isComponentDisabled(mPackageManager, providerInfo)) {
-                convertView.setBackgroundColor(mColorDisabled);
+                view.setBackgroundColor(mColorDisabled);
             }
             if (appDetailsItem.isBlocked) {
-                convertView.setBackgroundColor(mColorRed);
-                viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
+                view.setBackgroundColor(mColorRed);
+                holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
             } else {
-                viewHolder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
+                holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
             }
             // Label
-            viewHolder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(providerName)));
+            holder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(providerName)));
             // Icon
-            viewHolder.imageView.setImageDrawable(providerInfo.loadIcon(mPackageManager));
+            holder.imageView.setImageDrawable(providerInfo.loadIcon(mPackageManager));
             // Uri permission
-            viewHolder.textView3.setText(getString(R.string.grant_uri_permission) + ": " + providerInfo.grantUriPermissions);
+            holder.textView3.setText(getString(R.string.grant_uri_permission) + ": " + providerInfo.grantUriPermissions);
             // Path permissions
             PathPermission[] pathPermissions = providerInfo.pathPermissions;
             String finalString;
@@ -1070,7 +1142,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 finalString = builder.toString();
             } else
                 finalString = "null";
-            viewHolder.textView4.setText(getString(R.string.path_permissions) + ": " + finalString);//+"\n"+providerInfo.readPermission +"\n"+providerInfo.writePermission);
+            holder.textView4.setText(getString(R.string.path_permissions) + ": " + finalString);//+"\n"+providerInfo.readPermission +"\n"+providerInfo.writePermission);
             // Pattern matchers
             PatternMatcher[] patternMatchers = providerInfo.uriPermissionPatterns;
             String finalString1;
@@ -1084,52 +1156,36 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 finalString1 = builder.toString();
             } else
                 finalString1 = "null";
-            viewHolder.textView5.setText(getString(R.string.patterns_allowed) + ": " + finalString1);
+            holder.textView5.setText(getString(R.string.patterns_allowed) + ": " + finalString1);
             // Authority
-            viewHolder.textView6.setText(getString(R.string.authority) + ": " + providerInfo.authority);
+            holder.textView6.setText(getString(R.string.authority) + ": " + providerInfo.authority);
             // Name
             if (mConstraint != null && providerName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                viewHolder.textView2.setText(Utils.getHighlightedText(providerName, mConstraint, mColorRed));
+                holder.textView2.setText(Utils.getHighlightedText(providerName, mConstraint, mColorRed));
             } else {
-                viewHolder.textView2.setText(providerName.startsWith(mPackageName) ?
+                holder.textView2.setText(providerName.startsWith(mPackageName) ?
                         providerName.replaceFirst(mPackageName, "") : providerName);
             }
             // Blocking
             if (isRootEnabled) {
-                viewHolder.blockBtn.setVisibility(View.VISIBLE);
-                viewHolder.blockBtn.setOnClickListener(v -> {
+                holder.blockBtn.setVisibility(View.VISIBLE);
+                holder.blockBtn.setOnClickListener(v -> {
                     applyRules(providerName, RulesStorageManager.Type.PROVIDER);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
                     notifyDataSetChanged();
                 });
-            } else viewHolder.blockBtn.setVisibility(View.GONE);
-            return convertView;
+            } else holder.blockBtn.setVisibility(View.GONE);
         }
 
         /**
          * We do not need complex views, Use recycled view if possible
          */
         @SuppressLint("SetTextI18n")
-        @NonNull
-        private View getAppOpsView(ViewGroup viewGroup, View convertView, int index) {
-            ViewHolder viewHolder;
-            if (checkIfConvertViewMatch(convertView, USES_PERMISSIONS)) {
-                convertView = mLayoutInflater.inflate(R.layout.item_app_details_appop, viewGroup, false);
-                viewHolder = new ViewHolder();
-                viewHolder.currentViewType = USES_PERMISSIONS;
-                viewHolder.textView1 = convertView.findViewById(R.id.op_name);
-                viewHolder.textView2 = convertView.findViewById(R.id.perm_description);
-                viewHolder.textView3 = convertView.findViewById(R.id.perm_protection_level);
-                viewHolder.textView4 = convertView.findViewById(R.id.perm_package_name);
-                viewHolder.textView5 = convertView.findViewById(R.id.perm_group);
-                viewHolder.textView6 = convertView.findViewById(R.id.perm_name);
-                viewHolder.textView7 = convertView.findViewById(R.id.op_mode_running_duration);
-                viewHolder.textView8 = convertView.findViewById(R.id.op_accept_reject_time);
-                viewHolder.toggleSwitch = convertView.findViewById(R.id.perm_toggle_btn);
-            } else viewHolder = (ViewHolder) convertView.getTag();
-            convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+        private void getAppOpsView(@NonNull ViewHolder holder, int index) {
+            View view = holder.itemView;
+            view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             AppOpsManager.OpEntry opEntry = (AppOpsManager.OpEntry) mAdapterList.get(index).vanillaItem;
             final String opStr = mAdapterList.get(index).name;
             PermissionInfo permissionInfo = null;
@@ -1146,14 +1202,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } else {
                 opName += opStr;
             }
-            viewHolder.textView1.setText(opName);
+            holder.textView1.setText(opName);
             // Set op mode, running and duration
             String opRunningInfo = mActivity.getString(R.string.mode) + ": " + opEntry.getMode();
             if (opEntry.isRunning()) opRunningInfo += ", " + mActivity.getString(R.string.running);
             if (opEntry.getDuration() != 0)
                 opRunningInfo += ", " + mActivity.getString(R.string.duration) + ": " +
                         Utils.getFormattedDuration(mActivity, opEntry.getDuration(), true);
-            viewHolder.textView7.setText(opRunningInfo);
+            holder.textView7.setText(opRunningInfo);
             // Set accept time and/or reject time
             if (opEntry.getTime() != 0 || opEntry.getRejectTime() != 0) {
                 String opTime = "";
@@ -1165,53 +1221,53 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     opTime += (opTime.equals("") ? "" : "\n") + mActivity.getString(R.string.reject_time)
                             + ": " + Utils.getFormattedDuration(mActivity, opEntry.getRejectTime())
                             + " " + mActivity.getString(R.string.ago);
-                viewHolder.textView8.setVisibility(View.VISIBLE);
-                viewHolder.textView8.setText(opTime);
-            } else viewHolder.textView8.setVisibility(View.GONE);
+                holder.textView8.setVisibility(View.VISIBLE);
+                holder.textView8.setText(opTime);
+            } else holder.textView8.setVisibility(View.GONE);
             // Set others
             if (permissionInfo != null) {
                 // Set permission name
-                viewHolder.textView6.setVisibility(View.VISIBLE);
-                viewHolder.textView6.setText(String.format("%s: %s", mActivity.getString(R.string.permission_name), permissionInfo.name));
+                holder.textView6.setVisibility(View.VISIBLE);
+                holder.textView6.setText(String.format("%s: %s", mActivity.getString(R.string.permission_name), permissionInfo.name));
                 // Description
                 CharSequence description = permissionInfo.loadDescription(mPackageManager);
                 if (description != null) {
-                    viewHolder.textView2.setVisibility(View.VISIBLE);
-                    viewHolder.textView2.setText(description);
-                } else viewHolder.textView2.setVisibility(View.GONE);
+                    holder.textView2.setVisibility(View.VISIBLE);
+                    holder.textView2.setText(description);
+                } else holder.textView2.setVisibility(View.GONE);
                 // Protection level
                 String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
-                viewHolder.textView3.setText("\u2691 " + protectionLevel);
+                holder.textView3.setText("\u2691 " + protectionLevel);
                 if (protectionLevel.contains("dangerous"))
-                    convertView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
+                    view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
                 // Set package name
                 if (permissionInfo.packageName != null) {
-                    viewHolder.textView4.setVisibility(View.VISIBLE);
-                    viewHolder.textView4.setText(String.format("%s: %s",
+                    holder.textView4.setVisibility(View.VISIBLE);
+                    holder.textView4.setText(String.format("%s: %s",
                             mActivity.getString(R.string.package_name), permissionInfo.packageName));
-                } else viewHolder.textView4.setVisibility(View.GONE);
+                } else holder.textView4.setVisibility(View.GONE);
                 // Set group name
                 if (permissionInfo.group != null) {
-                    viewHolder.textView5.setVisibility(View.VISIBLE);
-                    viewHolder.textView5.setText(String.format("%s: %s",
+                    holder.textView5.setVisibility(View.VISIBLE);
+                    holder.textView5.setText(String.format("%s: %s",
                             mActivity.getString(R.string.group), permissionInfo.group));
-                } else viewHolder.textView5.setVisibility(View.GONE);
+                } else holder.textView5.setVisibility(View.GONE);
             } else {
-                viewHolder.textView2.setVisibility(View.GONE);
-                viewHolder.textView3.setVisibility(View.GONE);
-                viewHolder.textView4.setVisibility(View.GONE);
-                viewHolder.textView5.setVisibility(View.GONE);
-                viewHolder.textView6.setVisibility(View.GONE);
+                holder.textView2.setVisibility(View.GONE);
+                holder.textView3.setVisibility(View.GONE);
+                holder.textView4.setVisibility(View.GONE);
+                holder.textView5.setVisibility(View.GONE);
+                holder.textView6.setVisibility(View.GONE);
             }
             // Op Switch
-            viewHolder.toggleSwitch.setVisibility(View.VISIBLE);
+            holder.toggleSwitch.setVisibility(View.VISIBLE);
             if (opEntry.getMode().equals(AppOpsManager.modeToName(AppOpsManager.MODE_ALLOWED))) {
                 // op granted
-                viewHolder.toggleSwitch.setChecked(true);
+                holder.toggleSwitch.setChecked(true);
             } else {
-                viewHolder.toggleSwitch.setChecked(false);
+                holder.toggleSwitch.setChecked(false);
             }
-            viewHolder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> new Thread(() -> {
+            holder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> new Thread(() -> {
                 if (isChecked) {
                     // Enable op
                     try {
@@ -1227,19 +1283,19 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
                             appDetailsItem.name = opEntry1.getOpStr();
                             mActivity.runOnUiThread(() -> {
-                                mAdapterList.set(index, appDetailsItem);
+                                mAdapterList.set(index, appDetailsItem);  // FIXME: Check if index exists first
                                 notifyDataSetChanged();
                             });
                         } else {
                             mActivity.runOnUiThread(() -> {
                                 Toast.makeText(mActivity, R.string.app_op_cannot_be_enabled, Toast.LENGTH_LONG).show();
-                                viewHolder.toggleSwitch.setChecked(false);
+                                holder.toggleSwitch.setChecked(false);
                             });
                         }
                     } catch (Exception e) {
                         mActivity.runOnUiThread(() -> {
                             Toast.makeText(mActivity, R.string.failed_to_enable_op, Toast.LENGTH_LONG).show();
-                            viewHolder.toggleSwitch.setChecked(false);
+                            holder.toggleSwitch.setChecked(false);
                         });
                     }
                 } else {
@@ -1263,44 +1319,26 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         } else {
                             mActivity.runOnUiThread(() -> {
                                 Toast.makeText(mActivity, R.string.app_op_cannot_be_disabled, Toast.LENGTH_LONG).show();
-                                viewHolder.toggleSwitch.setChecked(true);
+                                holder.toggleSwitch.setChecked(true);
                             });
                         }
                     } catch (Exception e) {
                         mActivity.runOnUiThread(() -> {
                             Toast.makeText(mActivity, R.string.failed_to_disable_op, Toast.LENGTH_LONG).show();
-                            viewHolder.toggleSwitch.setChecked(true);
+                            holder.toggleSwitch.setChecked(true);
                         });
                     }
                 }
             }).start());
-            return convertView;
         }
 
         /**
          * We do not need complex views, Use recycled view if possible
          */
-        @NonNull
         @SuppressLint("SetTextI18n")
-        private View getUsesPermissionsView(ViewGroup viewGroup, View convertView, int index) {
-            ViewHolder viewHolder;
-            if (checkIfConvertViewMatch(convertView, USES_PERMISSIONS)) {
-                convertView = mLayoutInflater.inflate(R.layout.item_app_details_perm, viewGroup, false);
-
-                viewHolder = new ViewHolder();
-                viewHolder.currentViewType = USES_PERMISSIONS;
-                viewHolder.textView1 = convertView.findViewById(R.id.perm_name);
-                viewHolder.textView2 = convertView.findViewById(R.id.perm_description);
-                viewHolder.textView3 = convertView.findViewById(R.id.perm_protection_level);
-                viewHolder.textView4 = convertView.findViewById(R.id.perm_package_name);
-                viewHolder.textView5 = convertView.findViewById(R.id.perm_group);
-                viewHolder.toggleSwitch = convertView.findViewById(R.id.perm_toggle_btn);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-
-            convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-
+        private void getUsesPermissionsView(@NonNull ViewHolder holder, int index) {
+            View view = holder.itemView;
+            view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             @SuppressWarnings("unchecked")
             Tuple<String, Integer> permTuple = (Tuple<String, Integer>) mAdapterList.get(index).vanillaItem;
             final String permName = permTuple.getFirst();
@@ -1313,52 +1351,52 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Set permission name
             if (mConstraint != null && permName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                viewHolder.textView1.setText(Utils.getHighlightedText(permName, mConstraint, mColorRed));
+                holder.textView1.setText(Utils.getHighlightedText(permName, mConstraint, mColorRed));
             } else {
-                viewHolder.textView1.setText(permName);
+                holder.textView1.setText(permName);
             }
             // Set others
             if (permissionInfo != null) {
                 // Description
                 CharSequence description = permissionInfo.loadDescription(mPackageManager);
                 if (description != null) {
-                    viewHolder.textView2.setVisibility(View.VISIBLE);
-                    viewHolder.textView2.setText(description);
-                } else viewHolder.textView2.setVisibility(View.GONE);
+                    holder.textView2.setVisibility(View.VISIBLE);
+                    holder.textView2.setText(description);
+                } else holder.textView2.setVisibility(View.GONE);
                 // Protection level
                 String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
-                viewHolder.textView3.setText("\u2691 " + protectionLevel);
+                holder.textView3.setText("\u2691 " + protectionLevel);
                 if (protectionLevel.contains("dangerous"))
-                    convertView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
+                    view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
                 // Set package name
                 if (permissionInfo.packageName != null) {
-                    viewHolder.textView4.setVisibility(View.VISIBLE);
-                    viewHolder.textView4.setText(String.format("%s: %s",
+                    holder.textView4.setVisibility(View.VISIBLE);
+                    holder.textView4.setText(String.format("%s: %s",
                             mActivity.getString(R.string.package_name), permissionInfo.packageName));
-                } else viewHolder.textView4.setVisibility(View.GONE);
+                } else holder.textView4.setVisibility(View.GONE);
                 // Set group name
                 if (permissionInfo.group != null) {
-                    viewHolder.textView5.setVisibility(View.VISIBLE);
-                    viewHolder.textView5.setText(String.format("%s: %s",
+                    holder.textView5.setVisibility(View.VISIBLE);
+                    holder.textView5.setText(String.format("%s: %s",
                             mActivity.getString(R.string.group), permissionInfo.group));
-                } else viewHolder.textView5.setVisibility(View.GONE);
+                } else holder.textView5.setVisibility(View.GONE);
                 // Permission Switch
                 if ((isRootEnabled || isADBEnabled) && protectionLevel.contains("dangerous")) {
-                    viewHolder.toggleSwitch.setVisibility(View.VISIBLE);
+                    holder.toggleSwitch.setVisibility(View.VISIBLE);
                     if ((permFlags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
                         // Permission granted
-                        viewHolder.toggleSwitch.setChecked(true);
+                        holder.toggleSwitch.setChecked(true);
                     } else {
-                        viewHolder.toggleSwitch.setChecked(false);
+                        holder.toggleSwitch.setChecked(false);
                     }
-                    viewHolder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) ->
+                    holder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) ->
                             new Thread(() -> {
                         if (isChecked) {
                             // Enable permission
                             if (!Runner.run(mActivity, String.format("pm grant %s %s", mPackageName, permName)).isSuccessful()) {
                                 mActivity.runOnUiThread(() -> {
                                     Toast.makeText(mActivity, "Failed to grant permission.", Toast.LENGTH_LONG).show();
-                                    viewHolder.toggleSwitch.setChecked(false);
+                                    holder.toggleSwitch.setChecked(false);
                                 });
                             } else {
                                 try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
@@ -1370,7 +1408,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             if (!Runner.run(mActivity, String.format("pm revoke %s %s", mPackageName, permName)).isSuccessful()) {
                                 mActivity.runOnUiThread(() -> {
                                     Toast.makeText(mActivity, "Failed to revoke permission.", Toast.LENGTH_LONG).show();
-                                    viewHolder.toggleSwitch.setChecked(true);
+                                    holder.toggleSwitch.setChecked(true);
                                 });
                             } else {
                                 try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
@@ -1379,24 +1417,18 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             }
                         }
                     }).start());
-                } else viewHolder.toggleSwitch.setVisibility(View.GONE);
+                } else holder.toggleSwitch.setVisibility(View.GONE);
             } else {
-                viewHolder.textView2.setVisibility(View.GONE);
-                viewHolder.textView3.setVisibility(View.GONE);
-                viewHolder.textView4.setVisibility(View.GONE);
-                viewHolder.textView5.setVisibility(View.GONE);
-                viewHolder.toggleSwitch.setVisibility(View.GONE);
+                holder.textView2.setVisibility(View.GONE);
+                holder.textView3.setVisibility(View.GONE);
+                holder.textView4.setVisibility(View.GONE);
+                holder.textView5.setVisibility(View.GONE);
+                holder.toggleSwitch.setVisibility(View.GONE);
             }
-            return convertView;
         }
 
-        @NonNull
-        private View getSharedLibsView(View convertView, int index) {
-            if (!(convertView instanceof TextView)) {
-                convertView = new TextView(mActivity);
-            }
-
-            TextView textView = (TextView) convertView;
+        private void getSharedLibsView(@NonNull ViewHolder holder, int index) {
+            TextView textView = (TextView) holder.itemView;
             textView.setTextIsSelectable(true);
             textView.setText((String) mAdapterList.get(index).vanillaItem);
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
@@ -1404,149 +1436,80 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             int small_size = mActivity.getResources().getDimensionPixelSize(R.dimen.padding_very_small);
             textView.setTextSize(12);
             textView.setPadding(medium_size, small_size, medium_size, small_size);
-
-            return convertView;
         }
 
         /**
          * Boring view inflation / creation
          */
-        @NonNull
         @SuppressLint("SetTextI18n")
-        private View getPermissionsView(ViewGroup viewGroup, View convertView, int index) {
-            ViewHolder viewHolder;
-            if (checkIfConvertViewMatch(convertView, PERMISSIONS)) {
-                convertView = mLayoutInflater.inflate(R.layout.item_app_details_primary, viewGroup, false);
-
-                viewHolder = new ViewHolder();
-                viewHolder.currentViewType = PERMISSIONS;
-                viewHolder.imageView = convertView.findViewById(R.id.icon);
-                viewHolder.textView1 = convertView.findViewById(R.id.label);
-                viewHolder.textView2 = convertView.findViewById(R.id.name);
-                viewHolder.textView3 = convertView.findViewById(R.id.taskAffinity);
-                viewHolder.textView4 = convertView.findViewById(R.id.orientation);
-                viewHolder.textView5 = convertView.findViewById(R.id.launchMode);
-                convertView.findViewById(R.id.softInput).setVisibility(View.GONE);
-                convertView.findViewById(R.id.launch).setVisibility(View.GONE);
-                convertView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
-                convertView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
-                convertView.findViewById(R.id.block_component).setVisibility(View.GONE);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-
+        private void getPermissionsView(@NonNull ViewHolder holder, int index) {
+            View view = holder.itemView;
             final PermissionInfo permissionInfo = (PermissionInfo) mAdapterList.get(index).vanillaItem;
-            convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // Label
-            viewHolder.textView1.setText(permissionInfo.loadLabel(mPackageManager));
+            holder.textView1.setText(permissionInfo.loadLabel(mPackageManager));
             // Name
             if (mConstraint != null && permissionInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                viewHolder.textView2.setText(Utils.getHighlightedText(permissionInfo.name, mConstraint, mColorRed));
+                holder.textView2.setText(Utils.getHighlightedText(permissionInfo.name, mConstraint, mColorRed));
             } else {
-                viewHolder.textView2.setText(permissionInfo.name.startsWith(mPackageName) ?
+                holder.textView2.setText(permissionInfo.name.startsWith(mPackageName) ?
                         permissionInfo.name.replaceFirst(mPackageName, "") : permissionInfo.name);
             }
             // Icon
-            viewHolder.imageView.setImageDrawable(permissionInfo.loadIcon(mPackageManager));
+            holder.imageView.setImageDrawable(permissionInfo.loadIcon(mPackageManager));
             // Description
-            viewHolder.textView3.setText(permissionInfo.loadDescription(mPackageManager));
+            holder.textView3.setText(permissionInfo.loadDescription(mPackageManager));
             // LaunchMode
-            viewHolder.textView4.setText(getString(R.string.group) + ": " + permissionInfo.group
+            holder.textView4.setText(getString(R.string.group) + ": " + permissionInfo.group
                     + permAppOp(permissionInfo.name));
             // Protection level
             String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
-            viewHolder.textView5.setText(getString(R.string.protection_level) + ": " + protectionLevel);
+            holder.textView5.setText(getString(R.string.protection_level) + ": " + protectionLevel);
             if (protectionLevel.contains("dangerous"))
-                convertView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
-            return convertView;
+                view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
         }
 
         /**
          * Boring view inflation / creation
          */
-        @NonNull
         @SuppressLint("SetTextI18n")
-        private View getFeaturesView(ViewGroup viewGroup, View convertView, int index) {
-            ViewHolder viewHolder;
-            if (checkIfConvertViewMatch(convertView, FEATURES)) {
-                convertView = mLayoutInflater.inflate(R.layout.item_app_details_secondary, viewGroup, false);
-
-                viewHolder = new ViewHolder();
-                viewHolder.currentViewType = FEATURES;
-                viewHolder.textView1 = convertView.findViewById(R.id.name);
-                viewHolder.textView2 = convertView.findViewById(R.id.flags);
-                viewHolder.textView3 = convertView.findViewById(R.id.gles_ver);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-
+        private void getFeaturesView(@NonNull ViewHolder holder, int index) {
+            View view = holder.itemView;
             final FeatureInfo featureInfo = (FeatureInfo) mAdapterList.get(index).vanillaItem;
-            convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-
+            view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // Name
-            viewHolder.textView1.setText(featureInfo.name);
-
+            holder.textView1.setText(featureInfo.name);
             // Flags
-            viewHolder.textView2.setText(getString(R.string.flags) + ": " + Utils.getFeatureFlagsString(featureInfo.flags)
+            holder.textView2.setText(getString(R.string.flags) + ": " + Utils.getFeatureFlagsString(featureInfo.flags)
                     + (Build.VERSION.SDK_INT >= 24 && featureInfo.version != 0 ? " | minV%:" + featureInfo.version : ""));
-
             // GLES ver
-            viewHolder.textView3.setText(getString(R.string.gles_ver) + ": " + (bFi && !featureInfo.name.equals("_MAJOR") ? "_" : Utils.getOpenGL(featureInfo.reqGlEsVersion)));
-
-            return convertView;
+            holder.textView3.setText(getString(R.string.gles_ver) + ": " + (bFi && !featureInfo.name.equals("_MAJOR") ? "_" : Utils.getOpenGL(featureInfo.reqGlEsVersion)));
         }
 
         /**
          * Boring view inflation / creation
          */
-        @NonNull
         @SuppressLint("SetTextI18n")
-        private View getConfigurationView(ViewGroup viewGroup, View convertView, int index) {
-            ViewHolder viewHolder;
-            if (checkIfConvertViewMatch(convertView, CONFIGURATION)) {
-                convertView = mLayoutInflater.inflate(R.layout.item_app_details_tertiary, viewGroup, false);
-                viewHolder = new ViewHolder();
-                viewHolder.currentViewType = CONFIGURATION;
-                viewHolder.textView1 = convertView.findViewById(R.id.reqgles);
-                viewHolder.textView2 = convertView.findViewById(R.id.reqfea);
-                viewHolder.textView3 = convertView.findViewById(R.id.reqkey);
-                viewHolder.textView4 = convertView.findViewById(R.id.reqnav);
-                viewHolder.textView5 = convertView.findViewById(R.id.reqtouch);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-
+        private void getConfigurationView(@NonNull ViewHolder holder, int index) {
+            View view = holder.itemView;
             final ConfigurationInfo configurationInfo = (ConfigurationInfo) mAdapterList.get(index).vanillaItem;
-            convertView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-
+            view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // GLES ver
-            viewHolder.textView1.setText(getString(R.string.gles_ver) + ": " + Utils.getOpenGL(configurationInfo.reqGlEsVersion));
-
+            holder.textView1.setText(getString(R.string.gles_ver) + ": " + Utils.getOpenGL(configurationInfo.reqGlEsVersion));
             // Flag & others
-            viewHolder.textView2.setText(getString(R.string.input_features) + ": " + configurationInfo.reqInputFeatures);
-
-            viewHolder.textView3.setText("KeyboardType" + ": " + configurationInfo.reqKeyboardType);
-
-            viewHolder.textView4.setText("Navigation" + ": " + configurationInfo.reqNavigation);
-
-            viewHolder.textView5.setText("Touchscreen" + ": " + configurationInfo.reqTouchScreen);
-
-
-            return convertView;
+            holder.textView2.setText(getString(R.string.input_features) + ": " + configurationInfo.reqInputFeatures);
+            holder.textView3.setText("KeyboardType" + ": " + configurationInfo.reqKeyboardType);
+            holder.textView4.setText("Navigation" + ": " + configurationInfo.reqNavigation);
+            holder.textView5.setText("Touchscreen" + ": " + configurationInfo.reqTouchScreen);
         }
 
         /**
          * We do not need complex views, Use recycled view if possible
          */
-        @NonNull
         @SuppressLint("SetTextI18n")
-        private View getSignatureView(View convertView, int index) {
-            if (!(convertView instanceof TextView)) {
-                convertView = new TextView(mActivity);
-            }
-
-            TextView textView = (TextView) convertView;
+        private void getSignatureView(@NonNull ViewHolder holder, int index) {
+            TextView textView = (TextView) holder.itemView;
             final Signature signature = (Signature) mAdapterList.get(index).vanillaItem;
             textView.setText(Utils.signCert(signature) + "\n" + signature.toCharsString());
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
@@ -1555,22 +1518,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             int small_size = mActivity.getResources().getDimensionPixelSize(R.dimen.padding_small);
             textView.setTextSize(12);
             textView.setPadding(medium_size, 0, medium_size, small_size);
-
-            return convertView;
         }
-
-        /**
-         * Here we check if recycled view match requested type. Tag can be null if recycled view comes from
-         * groups that doesn't implement {@link ViewHolder}, such as groups that use only a simple text view.
-         */
-        private boolean checkIfConvertViewMatch(View convertView, @Property int requestedGroup) {
-            return convertView == null || convertView.getTag() == null || ((ViewHolder) convertView.getTag()).currentViewType != requestedGroup;
-        }
-    }
-
-    @NonNull
-    private String permAppOp(String s) {
-        String opStr = AppOpsManager.permissionToOp(s);
-        return opStr != null ? "\nAppOp: " + opStr : "";
     }
 }
