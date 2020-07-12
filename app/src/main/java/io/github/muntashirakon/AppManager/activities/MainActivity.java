@@ -698,7 +698,7 @@ public class MainActivity extends AppCompatActivity implements
                         String constraint = charSequence.toString().toLowerCase(Locale.ROOT);
                         mConstraint = constraint;
                         FilterResults filterResults = new FilterResults();
-                        if (constraint.length() == 0) {
+                        if (constraint.length() == 0 || mDefaultList == null) {
                             filterResults.count = 0;
                             filterResults.values = null;
                             return filterResults;
