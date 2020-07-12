@@ -39,6 +39,8 @@ public class AppDetailsActivity extends AppCompatActivity {
     AppDetailsFragmentStateAdapter appDetailsFragmentStateAdapter;
     ViewPager2 viewPager2;
     AppDetailsFragment[] fragments;
+    private int pageNo;
+    private boolean fragmentLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +84,52 @@ public class AppDetailsActivity extends AppCompatActivity {
             layoutParams.gravity = Gravity.END;
             actionBar.setCustomView(searchView, layoutParams);
             viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                /**
+                 * Page selected is called in two ways: 1) Called before fragment when a tab is
+                 * pressed directly, 2) Called after the fragment when dragging is used. In the
+                 * first way, we cannot call reset() on the fragments adapter since it's not loaded,
+                 * but we can do that for the second case.
+                 * @param position Position of the view
+                 */
                 @Override
                 public void onPageSelected(@AppDetailsFragment.Property int position) {
                     super.onPageSelected(position);
-                    switch (position) {
+                    pageNo = position;
+                    if (fragments[position] != null) {  // Fragment is created (the second case)
+                        fragments[position].refreshDetails();
+                        fragmentLoaded = true;
+                        fixSearch();
+                    } else fragmentLoaded = false;
+                }
+
+                /**
+                 * Our interest is {@link ViewPager2#SCROLL_STATE_IDLE}. It's called in two ways in
+                 * respect to {@link ViewPager2.OnPageChangeCallback#onPageSelected(int)}. We need
+                 * to check whether the fragment adapter was refreshed in the function above. If it
+                 * doesn't we'll refresh here.
+                 * @param state Current scroll state
+                 */
+                @Override
+                public void onPageScrollStateChanged(int state) {
+                    super.onPageScrollStateChanged(state);
+                    switch (state) {
+                        case ViewPager2.SCROLL_STATE_DRAGGING:
+                            break;
+                        case ViewPager2.SCROLL_STATE_IDLE:
+                            if (!fragmentLoaded && fragments[pageNo] != null) {
+                                Log.d("VP2 - State", "Refreshing details");
+                                fragments[pageNo].refreshDetails();
+                                fragmentLoaded = true;
+                                fixSearch();
+                            }
+                            break;
+                        case ViewPager2.SCROLL_STATE_SETTLING:
+                            break;
+                    }
+                }
+
+                private void fixSearch() {
+                    switch (pageNo) {
                         case AppDetailsFragment.ACTIVITIES:
                         case AppDetailsFragment.SERVICES:
                         case AppDetailsFragment.RECEIVERS:
@@ -94,9 +138,9 @@ public class AppDetailsActivity extends AppCompatActivity {
                         case AppDetailsFragment.USES_PERMISSIONS:
                         case AppDetailsFragment.PERMISSIONS:
                             searchView.setVisibility(View.VISIBLE);
-                            if (fragments[position] != null) {
-                                searchView.setOnQueryTextListener(fragments[position]);
-                                fragments[position].resetFilter();
+                            if (fragments[pageNo] != null) {
+                                searchView.setOnQueryTextListener(fragments[pageNo]);
+                                fragments[pageNo].resetFilter();
                             }
                             break;
                         case AppDetailsFragment.FEATURES:
@@ -149,6 +193,7 @@ public class AppDetailsActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment createFragment(@AppDetailsFragment.Property int position) {
+            if (position == pageNo) fragmentLoaded = false;
             return (fragments[position] = new AppDetailsFragment(position));
         }
 

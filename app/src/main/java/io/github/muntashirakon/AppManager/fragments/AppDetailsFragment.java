@@ -165,7 +165,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             mColorDisabled = ContextCompat.getColor(mActivity, R.color.disabled_app);
             mColorRunning = ContextCompat.getColor(mActivity, R.color.running);
         }
-        getPackageInfo();
     }
 
     @Nullable
@@ -279,7 +278,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         }
     }
 
-    private void refreshDetails() {
+    public void refreshDetails() {
         if (mAdapter != null){
             getPackageInfo();
             mAdapter.reset();
@@ -591,9 +590,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         private Boolean isADBEnabled = true;
         private List<String> runningServices;
 
-        AppDetailsRecyclerAdapter() {
-            reset();
-        }
+        AppDetailsRecyclerAdapter() {}
 
         void reset() {
             isRootEnabled = AppPref.isRootEnabled();
