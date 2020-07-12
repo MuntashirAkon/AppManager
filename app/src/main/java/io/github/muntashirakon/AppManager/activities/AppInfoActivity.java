@@ -563,7 +563,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
         // Net statistics
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if ((Boolean) AppPref.get(this, AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN)) {
+            if ((Boolean) AppPref.get(AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN)) {
                 Tuple<Tuple<Long, Long>, Tuple<Long, Long>> dataUsage = AppUsageStatsManager
                         .getWifiMobileUsageForPackage(this, mPackageName,
                                 io.github.muntashirakon.AppManager.usage.Utils.USAGE_LAST_BOOT);
@@ -585,7 +585,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         }
 
         // Storage and Cache
-        if ((Boolean) AppPref.get(this, AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN))
+        if ((Boolean) AppPref.get(AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN))
             getPackageSizeInfo();
     }
 

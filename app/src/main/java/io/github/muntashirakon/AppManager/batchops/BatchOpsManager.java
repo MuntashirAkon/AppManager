@@ -54,8 +54,7 @@ public class BatchOpsManager {
             case OP_CLEAR_DATA: return opClearData();
             case OP_DISABLE: return opDisable();
             case OP_DISABLE_BACKGROUND: return opDisableBackground();
-            case OP_EXPORT_RULES:  // TODO
-                break;
+            case OP_EXPORT_RULES: break;  // Done in the main activity
             case OP_KILL: return opKill();
             case OP_UNINSTALL: return opUninstall();
         }
@@ -79,7 +78,7 @@ public class BatchOpsManager {
 
     @NonNull
     private Result opClearData() {
-        for(String packageName: packageNames) {
+        for (String packageName: packageNames) {
             addCommand(packageName, String.format(Locale.ROOT, "pm clear %s", packageName));
         }
         return runOpAndFetchResults();
@@ -87,7 +86,7 @@ public class BatchOpsManager {
 
     @NonNull
     private Result opDisable() {
-        for(String packageName: packageNames) {
+        for (String packageName: packageNames) {
             addCommand(packageName, String.format(Locale.ROOT, "pm disable %s", packageName));
         }
         return runOpAndFetchResults();
@@ -95,7 +94,7 @@ public class BatchOpsManager {
 
     @NonNull
     private Result opDisableBackground() {
-        for(String packageName: packageNames) {
+        for (String packageName: packageNames) {
             addCommand(packageName, String.format(Locale.ROOT, "appops set %s 63 %d", packageName, AppOpsManager.MODE_IGNORED));
         }
         Result result = runOpAndFetchResults();
@@ -128,7 +127,7 @@ public class BatchOpsManager {
 
     @NonNull
     private Result opUninstall() {
-        for(String packageName: packageNames) {
+        for (String packageName: packageNames) {
             addCommand(packageName, String.format(Locale.ROOT, "pm uninstall --user 0 %s", packageName));
         }
         return runOpAndFetchResults();

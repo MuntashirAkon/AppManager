@@ -9,6 +9,7 @@ import java.util.Map;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
+import androidx.appcompat.app.AppCompatDelegate;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.activities.MainActivity;
 
@@ -17,6 +18,7 @@ public class AppPref {
 
     @StringDef(value = {
             PREF_ADB_MODE_ENABLED,
+            PREF_APP_THEME,
             PREF_ENABLE_KILL_FOR_SYSTEM,
             PREF_GLOBAL_BLOCKING_ENABLED,
             PREF_MAIN_WINDOW_SORT_ORDER,
@@ -25,6 +27,7 @@ public class AppPref {
     })
     public @interface PrefKey {}
     public static final String PREF_ADB_MODE_ENABLED = "adb_mode_enabled";  // boolean
+    public static final String PREF_APP_THEME = "app_theme";  // int
     public static final String PREF_ENABLE_KILL_FOR_SYSTEM = "enable_kill_for_system";  // boolean
     public static final String PREF_GLOBAL_BLOCKING_ENABLED = "global_blocking_enabled";  // boolean
     public static final String PREF_MAIN_WINDOW_SORT_ORDER = "main_window_sort_order";  // int
@@ -46,23 +49,24 @@ public class AppPref {
     public static final int TYPE_STRING  = 4;
 
     private static AppPref appPref;
-    public static AppPref getInstance(@NonNull Context context) {
+    public static AppPref getInstance() {
         if (appPref == null) {
+            Context context = AppManager.getContext();
             appPref = new AppPref(context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE));
         }
         return appPref;
     }
 
-    public static @NonNull Object get(@NonNull Context context, @PrefKey String key, @Type int type) {
-        return getInstance(context).getPref(key, type);
+    public static @NonNull Object get(@PrefKey String key, @Type int type) {
+        return getInstance().getPref(key, type);
     }
 
     public static boolean isRootEnabled() {
-        return (Boolean) getInstance(AppManager.getContext()).getPref(PREF_ROOT_MODE_ENABLED, TYPE_BOOLEAN);
+        return (Boolean) getInstance().getPref(PREF_ROOT_MODE_ENABLED, TYPE_BOOLEAN);
     }
 
     public static boolean isAdbEnabled() {
-        return (Boolean) getInstance(AppManager.getContext()).getPref(PREF_ADB_MODE_ENABLED, TYPE_BOOLEAN);
+        return (Boolean) getInstance().getPref(PREF_ADB_MODE_ENABLED, TYPE_BOOLEAN);
     }
 
     private @NonNull SharedPreferences preferences;
@@ -109,6 +113,9 @@ public class AppPref {
         if (!preferences.contains(PREF_ADB_MODE_ENABLED)) {
             editor.putBoolean(PREF_ADB_MODE_ENABLED, (Boolean) getDefaultValue(PREF_ADB_MODE_ENABLED));
         }
+        if (!preferences.contains(PREF_APP_THEME)) {
+            editor.putInt(PREF_APP_THEME, (Integer) getDefaultValue(PREF_APP_THEME));
+        }
         if (!preferences.contains(PREF_GLOBAL_BLOCKING_ENABLED)) {
             editor.putBoolean(PREF_GLOBAL_BLOCKING_ENABLED, (Boolean) getDefaultValue(PREF_GLOBAL_BLOCKING_ENABLED));
         }
@@ -127,7 +134,7 @@ public class AppPref {
         editor.commit();
     }
 
-    private  @NonNull Object getDefaultValue(@NonNull @PrefKey String key) {
+    private @NonNull Object getDefaultValue(@NonNull @PrefKey String key) {
         switch (key) {
             case PREF_ROOT_MODE_ENABLED:
             case PREF_USAGE_ACCESS_ENABLED:
@@ -135,6 +142,7 @@ public class AppPref {
             case PREF_ADB_MODE_ENABLED:
             case PREF_ENABLE_KILL_FOR_SYSTEM:
             case PREF_GLOBAL_BLOCKING_ENABLED: return false;
+            case PREF_APP_THEME: return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
             case PREF_MAIN_WINDOW_SORT_ORDER: return MainActivity.SORT_BY_APP_LABEL;
         }
         return "-1";

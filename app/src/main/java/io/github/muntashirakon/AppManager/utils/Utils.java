@@ -60,7 +60,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
-import io.github.muntashirakon.AppManager.runner.Runner;
 
 @SuppressWarnings("unused")
 public class Utils {

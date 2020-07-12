@@ -373,4 +373,12 @@
     <string name="pref_import_msg">Import previously exported blocking rules from App Manager</string>
     <string name="pref_import_watt_msg">Import blocking rules from Watt, each file containing rules for a single package and file name being the package name with xml extension</string>
     <string name="pref_import_blocker_msg">Import blocking rules from Blocker, each file containing rules for a single package</string>
+    <string name="pref_app_theme">App Theme</string>
+    <string name="follow_system">Follow system</string>
+    <string name="battery_mode">Battery mode</string>
+    <string name="day">Day</string>
+    <string name="night">Night</string>
+    <string name="select_theme">Select a theme</string>
+    <string name="apply">Apply</string>
+    <string name="current_theme">Current theme: %s</string>
 </resources>

@@ -207,7 +207,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_app_details_action, menu);
         blockingToggler = menu.findItem(R.id.action_toggle_blocking);
-        if (neededProperty <= PROVIDERS && AppPref.isRootEnabled() && !(Boolean) AppPref.get(mActivity,
+        if (neededProperty <= PROVIDERS && AppPref.isRootEnabled() && !(Boolean) AppPref.get(
                 AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN)) {
             blockingToggler.setVisible(true);
             try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
@@ -269,7 +269,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 cb.addComponent(componentName, type);
             }
             // Apply rules
-            if ((Boolean) AppPref.get(mActivity, AppPref.PREF_GLOBAL_BLOCKING_ENABLED,
+            if ((Boolean) AppPref.get(AppPref.PREF_GLOBAL_BLOCKING_ENABLED,
                     AppPref.TYPE_BOOLEAN) || cb.isRulesApplied()) {
                 cb.applyRules(true);
             }
@@ -596,7 +596,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         void reset() {
             isRootEnabled = AppPref.isRootEnabled();
             isADBEnabled = AppPref.isAdbEnabled();
-            final Boolean isBlockingEnabled = (Boolean) AppPref.get(mActivity, AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN);
+            final Boolean isBlockingEnabled = (Boolean) AppPref.get(AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN);
             showProgressIndicator(true);
             new Thread(() -> {
                 getPackageInfo();

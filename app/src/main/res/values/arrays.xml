@@ -21,6 +21,12 @@
         <item>@string/app_ops</item>
         <item>@string/permissions</item>
     </array>
+    <array name="themes">
+        <item>@string/follow_system</item>
+        <item>@string/battery_mode</item>
+        <item>@string/day</item>
+        <item>@string/night</item>
+    </array>
     <string-array name="shared_pref_types">
         <item>@string/type_boolean</item>
         <item>@string/type_float</item>

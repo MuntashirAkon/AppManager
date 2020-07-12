@@ -35,7 +35,7 @@ public class MainLoader extends AsyncTaskLoader<List<ApplicationItem>> {
     public List<ApplicationItem> loadInBackground() {
         List<ApplicationItem> itemList = new ArrayList<>();
         String pName;
-        final Boolean isRootEnabled = (Boolean) AppPref.get(getContext(), AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
+        final boolean isRootEnabled = AppPref.isRootEnabled();
         if (MainActivity.packageList != null) {
             String[] aList = MainActivity.packageList.split("[\\r\\n]+");
             for (String s : aList) {
