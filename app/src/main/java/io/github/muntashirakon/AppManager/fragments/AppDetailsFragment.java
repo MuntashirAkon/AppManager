@@ -635,7 +635,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     @Override
                     protected FilterResults performFiltering(CharSequence charSequence) {
                         FilterResults filterResults = new FilterResults();
-                        if (charSequence == null) {
+                        if (charSequence == null || mDefaultList == null) {
                             filterResults.count = mDefaultList == null ? 0 : mDefaultList.size();
                             filterResults.values = mDefaultList;
                             return filterResults;
@@ -990,7 +990,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     applyRules(activityName, RulesStorageManager.Type.ACTIVITY);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
-                    notifyDataSetChanged();
+                    notifyItemChanged(index);
                 });
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -1039,7 +1039,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     applyRules(serviceInfo.name, RulesStorageManager.Type.SERVICE);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
-                    notifyDataSetChanged();
+                    notifyItemChanged(index);
                 });
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -1094,7 +1094,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     applyRules(activityInfo.name, RulesStorageManager.Type.RECEIVER);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
-                    notifyDataSetChanged();
+                    notifyItemChanged(index);
                 });
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -1172,7 +1172,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     applyRules(providerName, RulesStorageManager.Type.PROVIDER);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     mAdapterList.set(index, appDetailsItem);
-                    notifyDataSetChanged();
+                    notifyItemChanged(index);
                 });
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -1265,65 +1265,67 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 holder.toggleSwitch.setChecked(false);
             }
             holder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> new Thread(() -> {
-                if (isChecked) {
-                    // Enable op
-                    try {
-                        mAppOpsService.setMode(opEntry.getOp(), -1, mPackageName, AppOpsManager.MODE_ALLOWED);
-                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
-                            cb.setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_ALLOWED);
-                        }
-                        if (mAppOpsService.checkOperation(opEntry.getOp(), -1, mPackageName).equals(AppOpsManager.modeToName(AppOpsManager.MODE_ALLOWED))) {
-                            AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
-                                    opEntry.getOpStr(), opEntry.isRunning(), AppOpsManager.modeToName(AppOpsManager.MODE_ALLOWED), opEntry.getTime(),
-                                    opEntry.getRejectTime(), opEntry.getDuration(),
-                                    opEntry.getProxyUid(), opEntry.getProxyPackageName());
-                            AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
-                            appDetailsItem.name = opEntry1.getOpStr();
+                if (buttonView.isPressed()) {
+                    if (isChecked) {
+                        // Enable op
+                        try {
+                            mAppOpsService.setMode(opEntry.getOp(), -1, mPackageName, AppOpsManager.MODE_ALLOWED);
+                            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
+                                cb.setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_ALLOWED);
+                            }
+                            if (mAppOpsService.checkOperation(opEntry.getOp(), -1, mPackageName).equals(AppOpsManager.modeToName(AppOpsManager.MODE_ALLOWED))) {
+                                AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
+                                        opEntry.getOpStr(), opEntry.isRunning(), AppOpsManager.modeToName(AppOpsManager.MODE_ALLOWED), opEntry.getTime(),
+                                        opEntry.getRejectTime(), opEntry.getDuration(),
+                                        opEntry.getProxyUid(), opEntry.getProxyPackageName());
+                                AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
+                                appDetailsItem.name = opEntry1.getOpStr();
+                                mActivity.runOnUiThread(() -> {
+                                    mAdapterList.set(index, appDetailsItem);
+                                    notifyDataSetChanged();
+                                });
+                            } else {
+                                mActivity.runOnUiThread(() -> {
+                                    Toast.makeText(mActivity, R.string.app_op_cannot_be_enabled, Toast.LENGTH_LONG).show();
+                                    holder.toggleSwitch.setChecked(false);
+                                });
+                            }
+                        } catch (Exception e) {
                             mActivity.runOnUiThread(() -> {
-                                mAdapterList.set(index, appDetailsItem);  // FIXME: Check if index exists first
-                                notifyDataSetChanged();
-                            });
-                        } else {
-                            mActivity.runOnUiThread(() -> {
-                                Toast.makeText(mActivity, R.string.app_op_cannot_be_enabled, Toast.LENGTH_LONG).show();
+                                Toast.makeText(mActivity, R.string.failed_to_enable_op, Toast.LENGTH_LONG).show();
                                 holder.toggleSwitch.setChecked(false);
                             });
                         }
-                    } catch (Exception e) {
-                        mActivity.runOnUiThread(() -> {
-                            Toast.makeText(mActivity, R.string.failed_to_enable_op, Toast.LENGTH_LONG).show();
-                            holder.toggleSwitch.setChecked(false);
-                        });
-                    }
-                } else {
-                    // Disable permission
-                    try {
-                        mAppOpsService.setMode(opEntry.getOp(), -1, mPackageName, AppOpsManager.MODE_IGNORED);
-                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
-                            cb.setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_IGNORED);
-                        }
-                        if (mAppOpsService.checkOperation(opEntry.getOp(), -1, mPackageName).equals(AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED))) {
-                            AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
-                                    opEntry.getOpStr(), opEntry.isRunning(), AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED), opEntry.getTime(),
-                                    opEntry.getRejectTime(), opEntry.getDuration(),
-                                    opEntry.getProxyUid(), opEntry.getProxyPackageName());
-                            AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
-                            appDetailsItem.name = opEntry1.getOpStr();
+                    } else {
+                        // Disable permission
+                        try {
+                            mAppOpsService.setMode(opEntry.getOp(), -1, mPackageName, AppOpsManager.MODE_IGNORED);
+                            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
+                                cb.setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_IGNORED);
+                            }
+                            if (mAppOpsService.checkOperation(opEntry.getOp(), -1, mPackageName).equals(AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED))) {
+                                AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
+                                        opEntry.getOpStr(), opEntry.isRunning(), AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED), opEntry.getTime(),
+                                        opEntry.getRejectTime(), opEntry.getDuration(),
+                                        opEntry.getProxyUid(), opEntry.getProxyPackageName());
+                                AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
+                                appDetailsItem.name = opEntry1.getOpStr();
+                                mActivity.runOnUiThread(() -> {
+                                    mAdapterList.set(index, appDetailsItem);
+                                    notifyDataSetChanged();
+                                });
+                            } else {
+                                mActivity.runOnUiThread(() -> {
+                                    Toast.makeText(mActivity, R.string.app_op_cannot_be_disabled, Toast.LENGTH_LONG).show();
+                                    holder.toggleSwitch.setChecked(true);
+                                });
+                            }
+                        } catch (Exception e) {
                             mActivity.runOnUiThread(() -> {
-                                mAdapterList.set(index, appDetailsItem);
-                                notifyDataSetChanged();
-                            });
-                        } else {
-                            mActivity.runOnUiThread(() -> {
-                                Toast.makeText(mActivity, R.string.app_op_cannot_be_disabled, Toast.LENGTH_LONG).show();
+                                Toast.makeText(mActivity, R.string.failed_to_disable_op, Toast.LENGTH_LONG).show();
                                 holder.toggleSwitch.setChecked(true);
                             });
                         }
-                    } catch (Exception e) {
-                        mActivity.runOnUiThread(() -> {
-                            Toast.makeText(mActivity, R.string.failed_to_disable_op, Toast.LENGTH_LONG).show();
-                            holder.toggleSwitch.setChecked(true);
-                        });
                     }
                 }
             }).start());
