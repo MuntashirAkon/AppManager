@@ -33,7 +33,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 public class AppDetailsActivity extends AppCompatActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
 
-    public static String mConstraint;
+    public static String sConstraint;
     private String mPackageName;
     private TypedArray mTabTitleIds;
     AppDetailsFragmentStateAdapter appDetailsFragmentStateAdapter;
@@ -47,7 +47,7 @@ public class AppDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_details);
         setSupportActionBar(findViewById(R.id.toolbar));
-        mConstraint = null;
+        sConstraint = null;
         mPackageName = getIntent().getStringExtra(AppInfoActivity.EXTRA_PACKAGE_NAME);
         if (mPackageName == null) {
             Toast.makeText(this, getString(R.string.empty_package_name), Toast.LENGTH_LONG).show();

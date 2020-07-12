@@ -202,8 +202,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_app_details_action, menu);
         blockingToggler = menu.findItem(R.id.action_toggle_blocking);
-        if ((Boolean) AppPref.get(mActivity, AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)
-        && !(Boolean) AppPref.get(mActivity, AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN)) {
+        if (neededProperty <= PROVIDERS && AppPref.isRootEnabled() && !(Boolean) AppPref.get(mActivity,
+                AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN)) {
             blockingToggler.setVisible(true);
             try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
                 if (cb.isRulesApplied()) {
@@ -229,7 +229,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     if (cb.isRulesApplied()) blockingToggler.setTitle(R.string.menu_remove_rules);
                     else blockingToggler.setTitle(R.string.menu_apply_rules);
                 }
-                refreshDetails();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -238,15 +237,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public void onResume() {
         super.onResume();
-        if (mAdapter != null && AppDetailsActivity.mConstraint != null
-                && !AppDetailsActivity.mConstraint.equals("")) {
-            mAdapter.getFilter().filter(AppDetailsActivity.mConstraint);
+        if (mAdapter != null && !TextUtils.isEmpty(AppDetailsActivity.sConstraint)) {
+            mAdapter.getFilter().filter(AppDetailsActivity.sConstraint);
         }
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        AppDetailsActivity.mConstraint = newText;
+        AppDetailsActivity.sConstraint = newText;
         if (mAdapter != null) {
             mAdapter.getFilter().filter(newText);
         }
@@ -279,20 +277,17 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     public void refreshDetails() {
-        if (mAdapter != null){
-            getPackageInfo();
-            mAdapter.reset();
-        }
+        if (mAdapter != null)mAdapter.reset();
     }
 
     public void resetFilter() {
         if (mAdapter != null) {
-            mAdapter.getFilter().filter(AppDetailsActivity.mConstraint);
+            mAdapter.getFilter().filter(AppDetailsActivity.sConstraint);
         }
     }
 
     /**
-     * Get package info.
+     * Get package info (should only be called from a non-UI thread)
      */
     private void getPackageInfo() {
         try {
@@ -368,8 +363,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         Arrays.sort(mPackageInfo.activities, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
                     }
             }
-        } catch (PackageManager.NameNotFoundException ignored) {
-            mActivity.finish();
+        } catch (PackageManager.NameNotFoundException e) {
+            mActivity.runOnUiThread(() -> mActivity.finish());
         }
     }
 
@@ -598,24 +593,24 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final Boolean isBlockingEnabled = (Boolean) AppPref.get(mActivity, AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN);
             showProgressIndicator(true);
             new Thread(() -> {
+                getPackageInfo();
                 requestedProperty = neededProperty;
                 mAdapterList = getNeededList(requestedProperty);
                 if (requestedProperty == SERVICES)
                     runningServices = PackageUtils.getRunningServicesForPackage(mPackageName);
                 mDefaultList = mAdapterList;
                 mActivity.runOnUiThread(() -> {
-                    if (AppDetailsActivity.mConstraint != null
-                            && !AppDetailsActivity.mConstraint.equals("")) {
-                        getFilter().filter(AppDetailsActivity.mConstraint);
+                    if (!TextUtils.isEmpty(AppDetailsActivity.sConstraint)) {
+                        getFilter().filter(AppDetailsActivity.sConstraint);
                     }
                 });
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
-                    if (isRootEnabled && !isBlockingEnabled && cb.componentCount() > 0
-                            && requestedProperty <= AppDetailsFragment.PROVIDERS
-                            && !cb.isRulesApplied()) {
-                        mActivity.runOnUiThread(() -> mRulesNotAppliedMsg.setVisibility(View.VISIBLE));
-                    } else {
-                        mActivity.runOnUiThread(() -> mRulesNotAppliedMsg.setVisibility(View.GONE));
+                if (requestedProperty <= AppDetailsFragment.PROVIDERS) {
+                    try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
+                        if (isRootEnabled && !isBlockingEnabled && cb.componentCount() > 0 && !cb.isRulesApplied()) {
+                            mActivity.runOnUiThread(() -> sRulesNotAppliedMsg.setVisibility(View.VISIBLE));
+                        } else {
+                            mActivity.runOnUiThread(() -> sRulesNotAppliedMsg.setVisibility(View.GONE));
+                        }
                     }
                 }
                 mActivity.runOnUiThread(() -> {
