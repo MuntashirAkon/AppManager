@@ -44,7 +44,6 @@
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textSize="@dimen/title_font"
-                android:textStyle="bold"
                 tools:text="@tools:sample/lorem" />
 
             <TextView

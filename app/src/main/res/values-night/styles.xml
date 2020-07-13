@@ -1,20 +1,17 @@
 <resources>
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
     <style name="Theme.MaterialComponents.DayNight.NoActionBar" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="colorAccent">@color/sand_tan_shadow</item>
-        <item name="colorPrimary">?android:colorBackground</item>
-        <item name="colorPrimaryDark">?android:colorBackground</item>
-        <item name="android:navigationBarColor">?android:colorBackground</item>
-        <item name="android:colorControlActivated">?android:attr/colorAccent</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorBackground">@color/colorPrimaryDark</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+        <item name="android:colorControlActivated">@color/colorAccent</item>
         <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColor">@android:color/darker_gray</item>
         <item name="android:textColorSecondary">@android:color/darker_gray</item>
         <item name="actionOverflowButtonStyle">@style/ActionBarOverflowButton</item>
         <item name="navigationIcon">@drawable/ic_keyboard_backspace_black_24dp</item>
         <item name="actionOverflowMenuStyle">@style/ActionBarOverflowMenu</item>
-    </style>
-    <style name="CustomDialog" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
-        <item name="dialogCornerRadius">@dimen/padding_medium</item>
-        <item name="colorPrimary">@color/sand_tan_shadow</item>
-        <item name="colorAccent">@color/sand_tan_shadow</item>
     </style>
 </resources>

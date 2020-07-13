@@ -1,0 +1,10 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/white_layover"/>
+    <item
+        android:bottom="1dp"
+        android:drawable="@color/purple"
+        android:left="1dp"
+        android:right="2dp"
+        android:top="2dp">
+    </item>
+</layer-list>

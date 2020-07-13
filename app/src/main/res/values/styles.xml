@@ -1,14 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
     <style name="Theme.MaterialComponents.DayNight.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@android:color/white</item>
-        <item name="colorPrimaryDark" tools:targetApi="m">?android:colorBackground</item>
-        <item name="colorAccent">@color/cma</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark" tools:targetApi="m">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="colorOnSurface">?android:attr/textColorPrimary</item>
+        <item name="android:colorBackground">@color/colorPrimaryDark</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
-        <item name="android:navigationBarColor">?android:colorBackground</item>
-        <item name="android:colorControlActivated">?android:attr/colorAccent</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+        <item name="android:colorControlActivated">@color/colorAccent</item>
         <item name="android:textColorPrimary">#DE000000</item>
+        <item name="android:textColor">#99000000</item>
         <item name="android:textColorSecondary">#99000000</item>
         <item name="actionOverflowButtonStyle">@style/ActionBarOverflowButton</item>
         <item name="navigationIcon">@drawable/ic_keyboard_backspace_black_24dp</item>
@@ -18,7 +20,7 @@
         <item name="materialThemeOverlay">@style/CustomBottomAppBarOverlay</item>
     </style>
     <style name="CustomBottomAppBarOverlay">
-        <item name="colorOnSurface">?android:attr/colorBackground</item>
+        <item name="colorOnSurface">?android:colorBackground</item>
     </style>
     <style name="ActionBarOverflowMenu" parent="Widget.MaterialComponents.PopupMenu.Overflow">
         <item name="android:popupBackground">@drawable/rounded_border</item>
@@ -26,19 +28,48 @@
     <style name="ActionBarOverflowButton" parent="@style/Widget.AppCompat.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_more_vert_black_24dp</item>
     </style>
-    <style name="CustomDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
-        <item name="dialogCornerRadius">@dimen/padding_medium</item>
-        <item name="colorPrimary">@color/cma</item>
-        <item name="colorAccent">@color/cma</item>
+    <style name="CustomDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="android:windowBackground">@drawable/item_bordered</item>
+        <item name="colorPrimary">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorOnSurface">@color/colorPrimaryDark</item>
+        <item name="shapeAppearanceOverlay">@style/CustomDialog.Rounded</item>
+        <item name="android:checkedTextViewStyle">@style/CustomDialog.CheckedTextView</item>
+        <item name="checkedTextViewStyle">@style/CustomDialog.CheckedTextView</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/CustomDialog.Title.Text</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/CustomDialog.Body.Text</item>
+        <item name="materialAlertDialogTitlePanelStyle">@style/CustomDialog.Title.Panel</item>
+    </style>
+    <style name="CustomDialog.Rounded" parent="MaterialAlertDialog.MaterialComponents.Title.Panel">
+        <item name="cornerSize">@dimen/padding_medium</item>
+    </style>
+    <style name="CustomDialog.Title.Panel" parent="MaterialAlertDialog.MaterialComponents.Title.Panel">
+        <item name="android:paddingTop">@dimen/padding_medium</item>
+        <item name="android:paddingBottom">@dimen/padding_small</item>
+        <item name="android:paddingLeft">@dimen/padding_medium</item>
+        <item name="android:paddingRight">@dimen/padding_medium</item>
+    </style>
+    <style name="CustomDialog.Title.Text" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/title_font</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+    <style name="CustomDialog.Body.Text" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
+        <item name="android:textSize">@dimen/subtitle_font</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
+    </style>
+    <style name="CustomDialog.CheckedTextView" parent="Widget.MaterialComponents.CheckedTextView">
+        <item name="android:textSize">@dimen/title_font</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
     </style>
     <style name="CustomFloatingActionButton" parent="@style/Widget.MaterialComponents.FloatingActionButton">
         <item name="materialThemeOverlay">@style/CustomFabOverlay</item>
     </style>
     <style name="CustomTextInputLayout" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">@drawable/outlined_stroke_color</item>
-        <item name="hintTextColor">?attr/colorAccent</item>
+        <item name="hintTextColor">@color/colorAccent</item>
     </style>
     <style name="CustomFabOverlay">
-        <item name="colorSecondary">?android:attr/colorAccent</item>
+        <item name="colorSecondary">@color/colorAccent</item>
     </style>
 </resources>

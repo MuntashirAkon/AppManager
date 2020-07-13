@@ -199,7 +199,7 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
             mLayoutInflater = activity.getLayoutInflater();
 
             mColorTransparent = Color.TRANSPARENT;
-            mColorSemiTransparent = ContextCompat.getColor(activity, R.color.SEMI_TRANSPARENT);
+            mColorSemiTransparent = ContextCompat.getColor(activity, R.color.semi_transparent);
             mColorRed = ContextCompat.getColor(activity, R.color.red);
         }
 

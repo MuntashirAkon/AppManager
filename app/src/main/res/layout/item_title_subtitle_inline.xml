@@ -19,7 +19,6 @@
         android:layout_weight="1"
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="@dimen/title_font"
-        android:textStyle="bold"
         tools:text="@tools:sample/lorem[1]" />
 
     <TextView

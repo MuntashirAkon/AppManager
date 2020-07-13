@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.classysharkandroid.utils.IOUtils;
 
@@ -52,7 +53,6 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.app.ShareCompat;
@@ -258,7 +258,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
 
         // Set App Version
         TextView versionView = findViewById(R.id.version);
-        versionView.setText(String.format(getString(R.string.version), mPackageInfo.versionName,
+        versionView.setText(String.format(getString(R.string.version_name_with_code), mPackageInfo.versionName,
                     (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ?
                             mPackageInfo.getLongVersionCode() : mPackageInfo.versionCode)));
 
@@ -288,7 +288,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
             final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
             if (AppPref.isRootEnabled()) {
-                new AlertDialog.Builder(this, R.style.CustomDialog)
+                new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
                         .setTitle(mPackageLabel)
                         .setMessage(isSystemApp ?
                                 R.string.uninstall_system_app_message : R.string.uninstall_app_message)
@@ -381,7 +381,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                     sharedPrefs2[i] = new File(sharedPrefs.get(i)).getName();
                 }
                 addToHorizontalLayout(R.string.shared_prefs, R.drawable.ic_view_list_black_24dp)
-                        .setOnClickListener(v -> new AlertDialog.Builder(this, R.style.CustomDialog)
+                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
                                 .setTitle(R.string.shared_prefs)
                                 .setItems(sharedPrefs2, (dialog, which) -> {
                                     Intent intent = new Intent(this, SharedPrefsActivity.class);
@@ -404,7 +404,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                     databases2[i] = databases.get(i);
                 }
                 addToHorizontalLayout(R.string.databases, R.drawable.ic_assignment_black_24dp)
-                        .setOnClickListener(v -> new AlertDialog.Builder(this, R.style.CustomDialog)
+                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
                                 .setTitle(R.string.databases)
                                 .setItems(databases2, null)  // TODO
                                 .setNegativeButton(android.R.string.ok, null)
@@ -660,7 +660,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             }
         } else {
             if (!Utils.checkUsageStatsPermission(this)) {
-                new AlertDialog.Builder(this, R.style.CustomDialog)
+                new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
                         .setTitle(R.string.grant_usage_access)
                         .setMessage(R.string.grant_usage_acess_message)
                         .setPositiveButton(R.string.go, (dialog, which) -> startActivityForResult(new Intent(

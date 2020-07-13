@@ -54,12 +54,11 @@
     <string name="netstats_msg">Data Usage Since Last Boot</string>
     <string name="about">About</string>
     <string name="about_message"><b>ADB over TCP</b>
-        \nMany root-only features of this can still be used by enabling ADB over TCP. To do that, a
-        PC or Mac is required with ADB tools installed, and an Android phone with Developer Mode
-        &amp; USB debugging enabled
-        (<a href="https://www.xda-developers.com/install-adb-windows-macos-linux/">tutorial</a>).
-        After that, connect the phone to the PC or Mac using a data cable. Then, open command prompt
-        or terminal and run <u>adb tcpip 5555</u>. After that, run this app again. In some Android
+        \nMany root-only features can still be used by enabling ADB over TCP. To do that, a PC or
+        Mac is required with ADB tools installed, and an Android phone with Developer Mode &amp; USB
+        debugging enabled (<a href="https://www.xda-developers.com/install-adb-windows-macos-linux/">tutorial</a>).
+        Now, connect the phone to the PC or Mac using a data cable. Then, open command prompt or
+        terminal and run <u>adb tcpip 5555</u>. After that, run this app again. In some Android
         phones, a prompt will appear saying <i>Allow USB Debugging</i>. In that case, check
         <i>Always allow from this computer</i> and click on <i>Allow</i>. In some devices, you may
         need to connect/disconnect the data cable in order for it to work.
@@ -70,10 +69,11 @@
         \n- View app usage statistics (in the menu) (requires “Usage Access” permission)
         \n- Manage running apps/processes (in the menu) (requires root/ADB)
         \n- Open APK Updater directly (in the menu) (if installed)
-        \n- Batch operations (click on any app icon to select)
+        \n- Batch operations: disable, uninstall, clear data, kill, disable run in background or
+        export blocking rules (click on any app icon to select)
         \n
         \nList colors used in the main window and their meaning:
-        \n<u>Red</u>: Doesn\'t allow clearing data storage
+        \n<u>Red</u>: Does not allow clearing data storage
         \n<u>Magenta</u>: Persistent app
         \n<u>Blue-green</u>: Stopped / Forced closed
         \n<u>Orange</u> <i>Date</i>: Can read logs
@@ -81,18 +81,18 @@
         \n<u>Orange</u> <i>API</i>: Uses cleartext traffic
         \n<u>Green</u>: Inactive app
         \n<u>Yellow Star</u>: App in debug mode
-        \n<u>Yellow/blue background</u>: Disabled app
+        \n<u>pink/red-black background</u>: Disabled app
         \n
         \nApp can be <b>User</b> or <b>System</b> with following codes:
         \n<i>X</i>: Multi architecture
-        \n<i>0</i>: App doesn\'t have code with it
+        \n<i>0</i>: App does not have code with it
         \n<i>°</i>: App package in suspended state
         \n<i>#</i>: The app has requested a large heap
         \n<i>?</i>: Whether requested VM in safe mode
         \n
         \nVersion can have following prefixes:
         \n<i>_</i>: No hardware acceleration
-        \n<i>~</i>: TestOnly mode
+        \n<i>~</i>: Test only mode
         \n<i>debug</i>: Debuggable app
         \n
         \n<b>App Info Window</b>
@@ -105,6 +105,7 @@
         \n- View installation date, update date, installer app
         \n- View storage information (requires “Usage Access” permission)
         \n- Delete app cache/data (requires root/adb permission)
+        \n- Export blocking rules
         \n
         \n<b>App Details Window</b>
         \n- App ops or dangerous permissions can be revoked in the <b>App Ops</b> (which lists app
@@ -118,6 +119,11 @@
         default. To enable blocking click on “apply rules” in the menu. You can also apply rules
         globally by enabling global component blocking in the settings (Requires root permission)
         \n- Blocked components and dangerous permissions have red background color
+        \n- Disabled components outside App Manager have pink/red-black color. It should be noted
+        that a component displaying as disabled does not mean that it is disabled by user: It could
+        be disabled by system as well. Also, all components of a disabled apps are also considered
+        disabled by the system
+        \n- Services that are currently running has light/dark purple color
         \n
         \n<b>Exodus Window</b>
         \n- ° for \u03b5\' missing
@@ -128,6 +134,18 @@
         \n- Edit any item by clicking on it
         \n- Use the add button to add new entry
         \n- To save or delete the file, use the menu on the top-right of the window
+        \n
+        \n<b>Settings Window</b>
+        \n- Supported theme modes: follow system, auto battery, day, night
+        \n- Root mode: Enable or disable root mode. If you want to use ADB, you have to disable this
+        first
+        \n- Global component blocking: Enable component blocking globally. By default, blocking rules
+        are not applied unless they are applied in the App Details window for any package. Enabling
+        this options lets you apply (old and new) rules immediately without explicitly enabling
+        blocking for a package
+        \n- Usage access: Disabling this disables App Usage window as well as data usage and app
+        storage data in the App Info window. If you enable this without enable the usage access
+        permission, the app will never ask for this permission as well.
     </string>
     <string name="data_size">Data</string>
     <string name="cache_size">Cache</string>
@@ -137,7 +155,7 @@
     <string name="system">System</string>
     <string name="user">User</string>
     <string name="sort">Sort</string>
-    <string name="version">Version %s (%d)</string>
+    <string name="version_name_with_code">Version %s (%d)</string>
     <string name="app_info">App Info</string>
     <string name="exodus">Exodus</string>
     <string name="fdroid">F-Droid</string>
@@ -172,10 +190,9 @@
     <string name="icon_picker">Icon Picker</string>
     <string name="error_loading_icons">Error loading icons</string>
     <string name="license">License</string>
-    <string name="license_message"><a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General
-        Public License v3.0</a>
-        \n2020 © <a href="https://github.com/MuntashirAkon">Muntashir Al-Islam</a>
-    </string>
+    <string name="license_message" translatable="false"><a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General
+        Public License v3.0</a></string>
+    <string name="copyright_message" translatable="false">© 2020 <a href="https://github.com/MuntashirAkon">Muntashir Al-Islam</a></string>
     <string name="third_party">Third-party Libraries and Icons</string>
     <string name="third_party_message" translatable="false">-
         <a href="https://github.com/material-components/material-components-android">Material
@@ -321,7 +338,7 @@
     <string name="sort_by_screen_time">Screen time</string>
     <string name="sort_by_times_opened">Times opened</string>
     <string name="sort_by_mobile_data">Mobile data</string>
-    <string name="pref_import_export_blocking_rules">Import/Export Blocking Rules</string>
+    <string name="pref_import_export_blocking_rules">Import/Export blocking rules</string>
     <string name="pref_import_export_blocking_rules_msg">Import/export rules, import external rules from Watt or Blocker</string>
     <string name="pref_import_watt">Import from Watt</string>
     <string name="pref_import_blocker">Import from Blocker</string>
@@ -373,7 +390,7 @@
     <string name="pref_import_msg">Import previously exported blocking rules from App Manager</string>
     <string name="pref_import_watt_msg">Import blocking rules from Watt, each file containing rules for a single package and file name being the package name with xml extension</string>
     <string name="pref_import_blocker_msg">Import blocking rules from Blocker, each file containing rules for a single package</string>
-    <string name="pref_app_theme">App Theme</string>
+    <string name="pref_app_theme">App theme</string>
     <string name="follow_system">Follow system</string>
     <string name="battery_mode">Battery mode</string>
     <string name="day">Day</string>
@@ -381,4 +398,6 @@
     <string name="select_theme">Select a theme</string>
     <string name="apply">Apply</string>
     <string name="current_theme">Current theme: %s</string>
+    <string name="pref_about_msg">App Manager version, license, credits, etc.</string>
+    <string name="version">Version</string>
 </resources>

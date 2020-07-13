@@ -22,11 +22,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
 
@@ -37,40 +39,32 @@ public class EditShortcutDialogFragment extends DialogFragment {
     private ActivityInfo mActivityInfo;
     private PackageManager mPackageManager;
     private EditText text_name;
-    private EditText text_package;
-    private EditText text_class;
     private EditText text_icon;
     private ImageView image_icon;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        assert getActivity() != null;
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomDialog);
-
-        if (getArguments() == null) return  builder.create();
+        if (getArguments() == null) return super.onCreateDialog(savedInstanceState);
+        final FragmentActivity activity = requireActivity();
         mActivityInfo = getArguments().getParcelable(ARG_ACTIVITY_INFO);
-
-        if (getActivity() == null) return  builder.create();
-        mPackageManager = getActivity().getPackageManager();
-
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (inflater == null) return builder.create();
+        mPackageManager = activity.getPackageManager();
+        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (inflater == null) return super.onCreateDialog(savedInstanceState);
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.dialog_shortcut, null);
-
         final String activityName = (String) mActivityInfo.loadLabel(mPackageManager);
         text_name = view.findViewById(R.id.shortcut_name);
         text_name.setText(activityName);
-        text_package = view.findViewById(R.id.package_name);
+        EditText text_package = view.findViewById(R.id.package_name);
         text_package.setText(mActivityInfo.packageName);
-        text_class = view.findViewById(R.id.class_name);
+        EditText text_class = view.findViewById(R.id.class_name);
         text_class.setText(mActivityInfo.name);
         text_icon = view.findViewById(R.id.insert_icon);
-        ComponentName activity = new ComponentName(mActivityInfo.packageName, mActivityInfo.name);
+        ComponentName activityComponent = new ComponentName(mActivityInfo.packageName, mActivityInfo.name);
         final String[] activityIconResourceName = new String[1];
         try {
-            activityIconResourceName[0] = mPackageManager.getResourcesForActivity(activity).getResourceName(mActivityInfo.getIconResource());
+            activityIconResourceName[0] = mPackageManager.getResourcesForActivity(activityComponent).getResourceName(mActivityInfo.getIconResource());
             text_icon.setText(activityIconResourceName[0]);
         } catch (PackageManager.NameNotFoundException | Resources.NotFoundException ignored) {}
 
@@ -99,7 +93,8 @@ public class EditShortcutDialogFragment extends DialogFragment {
                 dialog.show(getFragmentManager(), IconPickerDialogFragment.TAG);
         });
 
-        builder.setTitle(mActivityInfo.loadLabel(mPackageManager))
+        return new MaterialAlertDialogBuilder(activity, R.style.CustomDialog)
+                .setTitle(mActivityInfo.loadLabel(mPackageManager))
                 .setView(view)
                 .setIcon(mActivityInfo.loadIcon(mPackageManager))
                 .setPositiveButton(R.string.create_shortcut, (dialog, which) -> {
@@ -117,14 +112,14 @@ public class EditShortcutDialogFragment extends DialogFragment {
                         Resources resources = mPackageManager.getResourcesForApplication(pack);
                         int icon_resource = resources.getIdentifier(name, type, pack);
                         if (icon_resource != 0) {
-                            icon = ResourcesCompat.getDrawable(resources, icon_resource, getActivity().getTheme());
+                            icon = ResourcesCompat.getDrawable(resources, icon_resource, activity.getTheme());
                         } else {
                             icon = mPackageManager.getDefaultActivityIcon();
-                            Toast.makeText(getActivity(), R.string.error_invalid_icon_resource, Toast.LENGTH_LONG).show();
+                            Toast.makeText(activity, R.string.error_invalid_icon_resource, Toast.LENGTH_LONG).show();
                         }
                     } catch (PackageManager.NameNotFoundException e) {
                         icon = mPackageManager.getDefaultActivityIcon();
-                        Toast.makeText(getActivity(), R.string.error_invalid_icon_resource, Toast.LENGTH_LONG).show();
+                        Toast.makeText(activity, R.string.error_invalid_icon_resource, Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
                         icon = mPackageManager.getDefaultActivityIcon();
                         Toast.makeText(getActivity(), R.string.error_invalid_icon_format, Toast.LENGTH_LONG).show();
@@ -134,9 +129,7 @@ public class EditShortcutDialogFragment extends DialogFragment {
                 })
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
                     if (getDialog() != null) getDialog().cancel();
-                });
-
-        return builder.create();
+                }).create();
     }
 
     private Drawable getIcon(String icon_resource_string) {

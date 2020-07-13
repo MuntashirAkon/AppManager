@@ -25,20 +25,20 @@
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/pref_export"
-                android:textStyle="bold" />
+                android:textSize="@dimen/title_font" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/pref_export_msg"
-                android:textSize="12sp" />
+                android:textSize="@dimen/subtitle_font" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
+            android:background="@color/ten_percent_black" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/import_internal"
@@ -56,20 +56,20 @@
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/pref_import"
-                android:textStyle="bold" />
+                android:textSize="@dimen/title_font" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/pref_import_msg"
-                android:textSize="12sp" />
+                android:textSize="@dimen/subtitle_font" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
+            android:background="@color/ten_percent_black" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/import_watt"
@@ -87,20 +87,20 @@
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/pref_import_watt"
-                android:textStyle="bold" />
+                android:textSize="@dimen/title_font" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/pref_import_watt_msg"
-                android:textSize="12sp" />
+                android:textSize="@dimen/subtitle_font" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
+            android:background="@color/ten_percent_black" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/import_blocker"
@@ -118,13 +118,13 @@
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/pref_import_blocker"
-                android:textStyle="bold" />
+                android:textSize="@dimen/title_font" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/pref_import_blocker_msg"
-                android:textSize="12sp" />
+                android:textSize="@dimen/subtitle_font" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

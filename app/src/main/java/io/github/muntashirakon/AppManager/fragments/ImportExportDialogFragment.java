@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,7 +21,6 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
@@ -82,13 +83,12 @@ public class ImportExportDialogFragment extends DialogFragment {
                     .setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RESULT_CODE_BLOCKER);
         });
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomDialog);
-        builder.setView(view)
+        return new MaterialAlertDialogBuilder(getActivity(), R.style.CustomDialog)
+                .setView(view)
                 .setTitle(R.string.pref_import_export_blocking_rules)
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
                     if (getDialog() != null) getDialog().cancel();
-                });
-        return builder.create();
+                }).create();
     }
 
     @Override

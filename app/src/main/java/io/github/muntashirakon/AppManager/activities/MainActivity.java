@@ -35,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -61,7 +62,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.view.menu.MenuBuilder;
@@ -333,9 +333,10 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_about:
-                new AlertDialog.Builder(this, R.style.CustomDialog)
-                        .setView(getLayoutInflater().inflate(R.layout.dialog_about, null))
+            case R.id.action_instructions:
+                new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
+                        .setTitle(R.string.instructions)
+                        .setView(R.layout.dialog_instructions)
                         .setNegativeButton(android.R.string.ok, null)
                         .show();
                 return true;
@@ -515,7 +516,7 @@ public class MainActivity extends AppCompatActivity implements
         showProgressIndicator(true);
         new Thread(() -> {
             if (!mBatchOpsManager.performOp(op, new ArrayList<>(mPackageNames)).isSuccessful()) {
-                runOnUiThread(() -> new AlertDialog.Builder(this, R.style.CustomDialog)
+                runOnUiThread(() -> new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
                         .setTitle(msg)
                         .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
                                 mBatchOpsManager.getLastResult().failedPackages()), null)
@@ -663,7 +664,7 @@ public class MainActivity extends AppCompatActivity implements
             mPackageManager = activity.getPackageManager();
 
             mColorTransparent = Color.TRANSPARENT;
-            mColorSemiTransparent = ContextCompat.getColor(mActivity, R.color.SEMI_TRANSPARENT);
+            mColorSemiTransparent = ContextCompat.getColor(mActivity, R.color.semi_transparent);
             mColorHighlight = ContextCompat.getColor(mActivity, R.color.highlight);
             mColorOrange = ContextCompat.getColor(mActivity, R.color.orange);
             mColorPrimary = Utils.getThemeColor(mActivity, android.R.attr.textColorPrimary);

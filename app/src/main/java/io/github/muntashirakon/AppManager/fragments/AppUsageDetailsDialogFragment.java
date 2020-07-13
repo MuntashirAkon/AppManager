@@ -15,6 +15,8 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -22,7 +24,6 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import io.github.muntashirakon.AppManager.R;
@@ -50,7 +51,7 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
         AppUsageDetailsAdapter adapter = new AppUsageDetailsAdapter(getActivity());
         listView.setAdapter(adapter);
         adapter.setDefaultList(packageUS.entries);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.CustomDialog)
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext(), R.style.CustomDialog)
                 .setTitle(packageUS.packageName)
                 .setView(view)
                 .setNegativeButton(android.R.string.ok, (dialog, which) -> {
@@ -82,7 +83,7 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
             context = activity;
             mLayoutInflater = activity.getLayoutInflater();
             mColorTransparent = Color.TRANSPARENT;
-            mColorSemiTransparent = ContextCompat.getColor(activity, R.color.SEMI_TRANSPARENT);
+            mColorSemiTransparent = ContextCompat.getColor(activity, R.color.semi_transparent);
         }
 
         void setDefaultList(List<AppUsageStatsManager.USEntry> list) {

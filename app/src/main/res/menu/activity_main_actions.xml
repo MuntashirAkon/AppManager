@@ -2,9 +2,9 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/action_about"
+        android:id="@+id/action_instructions"
         android:icon="@drawable/ic_info_outline_black_24dp"
-        android:title="@string/about"
+        android:title="@string/instructions"
         app:showAsAction="never" />
 
     <item

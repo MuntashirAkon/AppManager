@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -40,7 +41,6 @@ import java.util.Locale;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -263,7 +263,7 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
     }
 
     private void promptForUsageStatsPermission() {
-        new AlertDialog.Builder(this, R.style.CustomDialog)
+        new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
                 .setTitle(R.string.grant_usage_access)
                 .setMessage(R.string.grant_usage_acess_message)
                 .setPositiveButton(R.string.go, (dialog, which) -> startActivity(new Intent(

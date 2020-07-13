@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,69 +9,80 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingStart="@dimen/padding_medium"
-        android:paddingTop="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_very_small"
         android:paddingEnd="@dimen/padding_medium"
-        android:paddingBottom="@dimen/padding_medium">
+        android:paddingBottom="@dimen/padding_very_small">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/instructions"
-            android:textSize="20sp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textStyle="bold" />
+            android:text="@string/app_name"
+            android:textSize="@dimen/title_font"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:autoLink="web"
-            android:text="@string/about_message"
-            android:textSize="16sp" />
+            android:layout_height="wrap_content"
+            android:text="@string/copyright_message"
+            android:textSize="@dimen/subtitle_font" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_medium"
+            android:text="@string/version"
+            android:textSize="@dimen/title_font"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:id="@+id/version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/subtitle_font"
+            tools:text="@tools:sample/lorem[2]" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
             android:text="@string/license"
-            android:textSize="20sp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textStyle="bold" />
+            android:textSize="@dimen/title_font"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/license_message"
-            android:textSize="16sp" />
+            android:textSize="@dimen/subtitle_font" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
             android:text="@string/third_party"
-            android:textSize="20sp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textStyle="bold" />
+            android:textSize="@dimen/title_font"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/third_party_message"
-            android:textSize="16sp" />
+            android:textSize="@dimen/subtitle_font" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
             android:text="@string/credits"
-            android:textSize="20sp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textStyle="bold" />
+            android:textSize="@dimen/title_font"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/credits_message"
-            android:textSize="16sp" />
+            android:textSize="@dimen/subtitle_font" />
 
     </LinearLayout>
+
 </ScrollView>

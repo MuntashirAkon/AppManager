@@ -7,9 +7,7 @@
     android:horizontalSpacing="8dp"
     android:numColumns="auto_fit"
     android:paddingStart="@dimen/padding_medium"
-    android:paddingTop="@dimen/padding_medium"
     android:paddingEnd="@dimen/padding_medium"
-    android:paddingBottom="@dimen/padding_medium"
     android:stretchMode="spacingWidthUniform"
     android:verticalSpacing="8dp">
 

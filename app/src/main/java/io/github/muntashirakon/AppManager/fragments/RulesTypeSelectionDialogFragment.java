@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +17,6 @@ import java.util.List;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
@@ -61,7 +62,7 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
         if (mUri == null) return super.onCreateDialog(savedInstanceState);
         final boolean[] checkedItems = {true, true, true, true, true, true};
         mSelectedTypes = new HashSet<>(Arrays.asList(RulesStorageManager.Type.values()));
-        return new AlertDialog.Builder(activity, R.style.CustomDialog)
+        return new MaterialAlertDialogBuilder(activity, R.style.CustomDialog)
                 .setTitle(mode == MODE_IMPORT ? R.string.import_options : R.string.export_options)
                 .setMultiChoiceItems(R.array.rule_types, checkedItems, (dialog, which, isChecked) -> {
                     if (isChecked) mSelectedTypes.add(types[which]);

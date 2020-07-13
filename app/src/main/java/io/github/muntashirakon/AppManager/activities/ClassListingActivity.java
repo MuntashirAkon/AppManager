@@ -25,6 +25,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.classysharkandroid.dex.DexLoaderBuilder;
 import com.google.classysharkandroid.reflector.ClassesNamesList;
@@ -43,7 +44,6 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
@@ -269,7 +269,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                     if (Names[i - 1].equals(Names[i])) continue;
                     statsMsg.append(Names[i]).append("\n"); j++;
                 }
-                new AlertDialog.Builder(this, R.style.CustomDialog)
+                new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
                         .setTitle(String.format(getString(R.string.trackers_and_classes), j, Names.length))
                         .setNegativeButton(android.R.string.ok, null)
                         .setMessage(statsMsg.toString()).show();
@@ -308,7 +308,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                 .replaceAll(" ", "&nbsp;").replaceAll("\n", "<br/>"), HtmlCompat.FROM_HTML_MODE_LEGACY));
         showText.setMovementMethod(new ScrollingMovementMethod());
         showText.setTextIsSelectable(true);
-        new AlertDialog.Builder(this, R.style.CustomDialog)
+        new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
                 .setTitle(String.format(getString(R.string.trackers_and_classes),
                         totalTrackersFound, classList.size()))
                 .setView(showText)
@@ -470,7 +470,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
             mLayoutInflater = activity.getLayoutInflater();
 
             mColorTransparent = Color.TRANSPARENT;
-            mColorSemiTransparent = ContextCompat.getColor(activity, R.color.SEMI_TRANSPARENT);
+            mColorSemiTransparent = ContextCompat.getColor(activity, R.color.semi_transparent);
             mColorRed = ContextCompat.getColor(activity, R.color.red);
         }
 

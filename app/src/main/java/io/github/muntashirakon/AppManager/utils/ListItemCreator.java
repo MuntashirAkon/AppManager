@@ -2,6 +2,7 @@ package io.github.muntashirakon.AppManager.utils;
 
 import android.app.Activity;
 import android.graphics.Typeface;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -134,7 +135,10 @@ public class ListItemCreator {
         item_title = list_item.findViewById(R.id.item_title);
         item_title.setText(title);
         // Make title all caps if requested
-        if (isAllCaps) item_title.setAllCaps(true);
+        if (isAllCaps) {
+            item_title.setAllCaps(true);
+            item_title.setTextSize(12f);  // FIXME: Use a dimen value
+        }
         // Item Subtitle
         item_subtitle = list_item.findViewById(R.id.item_subtitle);
         if (subtitle != null) item_subtitle.setText(subtitle);

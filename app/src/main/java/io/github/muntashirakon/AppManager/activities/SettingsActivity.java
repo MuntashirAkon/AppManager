@@ -1,11 +1,14 @@
 package io.github.muntashirakon.AppManager.activities;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.Arrays;
@@ -13,7 +16,6 @@ import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import io.github.muntashirakon.AppManager.R;
@@ -57,22 +59,21 @@ public class SettingsActivity extends AppCompatActivity {
         appThemeMsg.setText(String.format(Locale.getDefault(), getString(R.string.current_theme), themes[themeConst.indexOf(currentTheme)]));
 
         // Set listeners
-        findViewById(R.id.app_theme).setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialog)
-                    .setTitle(R.string.select_theme)
-                    .setSingleChoiceItems(themes, themeConst.indexOf(currentTheme),
-                            (dialog, which) -> currentTheme = themeConst.get(which))
-                    .setPositiveButton(R.string.apply, (dialog, which) -> {
-                        appPref.setPref(AppPref.PREF_APP_THEME, currentTheme);
-                        AppCompatDelegate.setDefaultNightMode(currentTheme);
-                        Intent intent = new Intent(this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    })
-                    .setNegativeButton(android.R.string.cancel, null);
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        });
+        findViewById(R.id.app_theme).setOnClickListener(v ->
+                new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
+                        .setTitle(R.string.select_theme)
+                        .setSingleChoiceItems(themes, themeConst.indexOf(currentTheme),
+                                (dialog, which) -> currentTheme = themeConst.get(which))
+                        .setPositiveButton(R.string.apply, (dialog, which) -> {
+                            appPref.setPref(AppPref.PREF_APP_THEME, currentTheme);
+                            AppCompatDelegate.setDefaultNightMode(currentTheme);
+                            Intent intent = new Intent(this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        })
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .create()
+                        .show());
         rootSwitcher.setOnCheckedChangeListener((buttonView, isChecked) -> {
             appPref.setPref(AppPref.PREF_ROOT_MODE_ENABLED, isChecked);
             blockingView.setVisibility(isChecked ? View.VISIBLE : View.GONE);
@@ -94,6 +95,27 @@ public class SettingsActivity extends AppCompatActivity {
         } else {
             findViewById(R.id.import_view).setVisibility(View.GONE);
         }
+
+        findViewById(R.id.about_view).setOnClickListener(v -> {
+                View view = getLayoutInflater().inflate(R.layout.dialog_about, null);
+                try {
+                    PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                    String version = packageInfo.versionName;
+                    long versionCode;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                        versionCode = packageInfo.getLongVersionCode();
+                    } else versionCode = packageInfo.versionCode;
+                    ((TextView) view.findViewById(R.id.version)).setText(String.format(Locale.ROOT,
+                            "%s (%d)", version, versionCode));
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
+                        .setTitle(R.string.about)
+                        .setView(view)
+                        .setNegativeButton(android.R.string.ok, null)
+                        .show();
+        });
     }
 
     @Override

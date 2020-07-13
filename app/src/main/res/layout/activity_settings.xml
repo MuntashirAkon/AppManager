@@ -18,7 +18,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
+            android:background="@color/ten_percent_black" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/app_theme"
@@ -33,13 +33,13 @@
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/pref_app_theme"
-                android:textStyle="bold" />
+                android:textSize="@dimen/title_font" />
 
             <TextView
                 android:id="@+id/app_theme_msg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
+                android:textSize="@dimen/subtitle_font"
                 tools:text="@tools:sample/lorem[5]" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -47,7 +47,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
+            android:background="@color/ten_percent_black" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/root_view"
@@ -67,13 +67,13 @@
                     android:layout_height="wrap_content"
                     android:textColor="?android:attr/textColorPrimary"
                     android:text="@string/pref_root_mode_enabled"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/title_font" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/pref_root_mode_enabled_msg"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/subtitle_font" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -89,7 +89,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
+            android:background="@color/ten_percent_black" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/blocking_view"
@@ -109,13 +109,13 @@
                     android:layout_height="wrap_content"
                     android:textColor="?android:attr/textColorPrimary"
                     android:text="@string/pref_global_blocking_enabled"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/title_font" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/pref_global_blocking_enabled_msg"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/subtitle_font" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -131,7 +131,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
+            android:background="@color/ten_percent_black" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/usage_view"
@@ -151,13 +151,13 @@
                     android:layout_height="wrap_content"
                     android:textColor="?android:attr/textColorPrimary"
                     android:text="@string/pref_usage_access_enabled"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/title_font" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/pref_usage_access_enabled_msg"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/subtitle_font" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -173,7 +173,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
+            android:background="@color/ten_percent_black" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/import_view"
@@ -188,20 +188,48 @@
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="@string/pref_import_export_blocking_rules"
-                android:textStyle="bold" />
+                android:textSize="@dimen/title_font" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/pref_import_export_blocking_rules_msg"
-                android:textSize="12sp" />
+                android:textSize="@dimen/subtitle_font" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider" />
+            android:background="@color/ten_percent_black" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/about_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium"
+            android:background="?selectableItemBackground"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="?android:attr/textColorPrimary"
+                android:text="@string/about"
+                android:textSize="@dimen/title_font" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pref_about_msg"
+                android:textSize="@dimen/subtitle_font" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/ten_percent_black" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -160,7 +160,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         mActivity = getActivity();
         if (mActivity != null) {
             mColorGrey1 = Color.TRANSPARENT;
-            mColorGrey2 = ContextCompat.getColor(mActivity, R.color.SEMI_TRANSPARENT);
+            mColorGrey2 = ContextCompat.getColor(mActivity, R.color.semi_transparent);
             mColorRed = ContextCompat.getColor(mActivity, R.color.red);
             mColorDisabled = ContextCompat.getColor(mActivity, R.color.disabled_app);
             mColorRunning = ContextCompat.getColor(mActivity, R.color.running);

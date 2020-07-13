@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="grey_0">#ffe0e0e0</color>
-    <color name="grey_1">#00000000</color>
-    <color name="SEMI_TRANSPARENT">#10000000</color>
+    <color name="colorPrimary">@android:color/white</color>
+    <color name="colorPrimaryDark">@android:color/white</color>
+    <color name="colorAccent">#6200EE</color>
+
+    <color name="disabled_app">#FF8A80</color>
     <color name="highlight">@color/background_tan</color>
-    <!--    <color name="orange">#ffff9702</color>-->
+    <color name="red">#B3FF0000</color>
+    <color name="running">#EA80FC</color>
+    <color name="semi_transparent">#10000000</color>
+    <color name="ten_percent_black">#1A000000</color>
+
+    <color name="grey">#ffe0e0e0</color>
+    <color name="original_orange">#ff9702</color>
     <color name="dark_orange">#ff8017</color>
     <color name="pink">#7D1B7E</color>
     <color name="ocean_blue">#2B65EC</color>
-
-    <color name="red">#B3FF0000</color>
-    <color name="disabled_app">#FF8A80</color>
-    <color name="running">#EA80FC</color>
-    <color name="ten_percent_black">#1A000000</color>
-
     <color name="pure_red">#FF0000</color>
-    <color name="cma">#6200EE</color>
 
     <color name="bright_green">#BEEF00</color>
     <color name="electric_red">#ff0028</color>

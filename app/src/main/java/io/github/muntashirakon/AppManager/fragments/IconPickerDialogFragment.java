@@ -16,11 +16,12 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.util.List;
 import java.util.TreeSet;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 import io.github.muntashirakon.AppManager.R;
@@ -62,14 +63,12 @@ public class IconPickerDialogFragment extends DialogFragment {
                 if (getDialog() != null) getDialog().dismiss();
             }
         });
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomDialog);
-        builder.setTitle(R.string.icon_picker)
+        return new MaterialAlertDialogBuilder(getActivity(), R.style.CustomDialog)
+                .setTitle(R.string.icon_picker)
                 .setView(grid)
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
                     if (getDialog() != null) getDialog().cancel();
-                });
-
-        return builder.create();
+                }).create();
     }
 
     public interface IconPickerListener {

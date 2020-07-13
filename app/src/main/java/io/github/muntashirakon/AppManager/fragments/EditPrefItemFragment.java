@@ -17,10 +17,11 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import io.github.muntashirakon.AppManager.R;
 
@@ -171,7 +172,7 @@ public class EditPrefItemFragment extends DialogFragment {
             }
         }
         interfaceCommunicator = (InterfaceCommunicator) getActivity();
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomDialog);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity(), R.style.CustomDialog);
         builder.setView(view)
                 .setPositiveButton(mode == MODE_CREATE ? R.string.add_item : R.string.done, (dialog, which) -> {
                     PrefItem newPrefItem;
