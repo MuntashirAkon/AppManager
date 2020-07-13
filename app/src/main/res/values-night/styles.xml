@@ -10,8 +10,11 @@
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColor">@android:color/darker_gray</item>
         <item name="android:textColorSecondary">@android:color/darker_gray</item>
-        <item name="actionOverflowButtonStyle">@style/ActionBarOverflowButton</item>
+        <item name="actionOverflowButtonStyle">@style/AppTheme.ActionButton.Overflow</item>
         <item name="navigationIcon">@drawable/ic_keyboard_backspace_black_24dp</item>
-        <item name="actionOverflowMenuStyle">@style/ActionBarOverflowMenu</item>
+        <item name="actionOverflowMenuStyle">@style/AppTheme.PopupMenu.Overflow</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
 </resources>

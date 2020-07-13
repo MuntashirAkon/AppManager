@@ -63,7 +63,7 @@ public class IconPickerDialogFragment extends DialogFragment {
                 if (getDialog() != null) getDialog().dismiss();
             }
         });
-        return new MaterialAlertDialogBuilder(getActivity(), R.style.CustomDialog)
+        return new MaterialAlertDialogBuilder(getActivity(), R.style.AppTheme_AlertDialog)
                 .setTitle(R.string.icon_picker)
                 .setView(grid)
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> {

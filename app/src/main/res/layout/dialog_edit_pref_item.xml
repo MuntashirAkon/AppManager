@@ -34,7 +34,7 @@
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/CustomTextInputLayout"
+            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/key_name"
@@ -81,7 +81,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_float"
             android:visibility="gone"
-            style="@style/CustomTextInputLayout"
+            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/decimal_value"
@@ -103,7 +103,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_int"
             android:visibility="gone"
-            style="@style/CustomTextInputLayout"
+            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/integer_value"
@@ -125,7 +125,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_long"
             android:visibility="gone"
-            style="@style/CustomTextInputLayout"
+            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/long_integer_value"
@@ -147,7 +147,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_string"
             android:visibility="gone"
-            style="@style/CustomTextInputLayout"
+            style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/string_value"

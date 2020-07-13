@@ -35,7 +35,7 @@
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_baseline_add_24"
-        style="@style/CustomFloatingActionButton"
+        style="@style/AppTheme.FloatingActionButton"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/padding_medium" />
 

@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:autoLink="web"
+            android:textSize="@dimen/subtitle_font"
             android:text="@string/about_message" />
 
     </LinearLayout>

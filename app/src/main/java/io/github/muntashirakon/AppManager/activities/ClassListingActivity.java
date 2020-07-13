@@ -269,7 +269,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                     if (Names[i - 1].equals(Names[i])) continue;
                     statsMsg.append(Names[i]).append("\n"); j++;
                 }
-                new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
+                new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
                         .setTitle(String.format(getString(R.string.trackers_and_classes), j, Names.length))
                         .setNegativeButton(android.R.string.ok, null)
                         .setMessage(statsMsg.toString()).show();
@@ -308,7 +308,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                 .replaceAll(" ", "&nbsp;").replaceAll("\n", "<br/>"), HtmlCompat.FROM_HTML_MODE_LEGACY));
         showText.setMovementMethod(new ScrollingMovementMethod());
         showText.setTextIsSelectable(true);
-        new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
+        new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
                 .setTitle(String.format(getString(R.string.trackers_and_classes),
                         totalTrackersFound, classList.size()))
                 .setView(showText)

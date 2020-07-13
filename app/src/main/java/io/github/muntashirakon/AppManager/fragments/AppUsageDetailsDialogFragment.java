@@ -51,7 +51,7 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
         AppUsageDetailsAdapter adapter = new AppUsageDetailsAdapter(getActivity());
         listView.setAdapter(adapter);
         adapter.setDefaultList(packageUS.entries);
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext(), R.style.CustomDialog)
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext(), R.style.AppTheme_AlertDialog)
                 .setTitle(packageUS.packageName)
                 .setView(view)
                 .setNegativeButton(android.R.string.ok, (dialog, which) -> {

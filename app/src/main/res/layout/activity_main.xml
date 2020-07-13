@@ -55,7 +55,7 @@
         android:layout_height="?attr/actionBarSize"
         app:navigationIcon="@drawable/ic_baseline_clear_24"
         app:menu="@menu/activity_main_selection_actions"
-        style="@style/CustomBottomAppBar"
+        style="@style/AppTheme.BottomAppBar"
         android:layout_gravity="bottom">
 
         <com.google.android.material.textview.MaterialTextView

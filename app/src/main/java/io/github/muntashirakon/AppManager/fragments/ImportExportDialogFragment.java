@@ -83,7 +83,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                     .setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RESULT_CODE_BLOCKER);
         });
-        return new MaterialAlertDialogBuilder(getActivity(), R.style.CustomDialog)
+        return new MaterialAlertDialogBuilder(getActivity(), R.style.AppTheme_AlertDialog)
                 .setView(view)
                 .setTitle(R.string.pref_import_export_blocking_rules)
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> {

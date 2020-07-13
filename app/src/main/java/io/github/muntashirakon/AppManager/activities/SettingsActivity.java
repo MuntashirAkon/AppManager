@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.fragments.ImportExportDialogFragment;
+import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -60,7 +61,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Set listeners
         findViewById(R.id.app_theme).setOnClickListener(v ->
-                new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
+                new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
                         .setTitle(R.string.select_theme)
                         .setSingleChoiceItems(themes, themeConst.indexOf(currentTheme),
                                 (dialog, which) -> currentTheme = themeConst.get(which))
@@ -110,12 +111,11 @@ public class SettingsActivity extends AppCompatActivity {
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
-                new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
+                new FullscreenDialog(this)
                         .setTitle(R.string.about)
                         .setView(view)
-                        .setNegativeButton(android.R.string.ok, null)
                         .show();
-        });
+            });
     }
 
     @Override

@@ -288,7 +288,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
             final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
             if (AppPref.isRootEnabled()) {
-                new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
+                new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
                         .setTitle(mPackageLabel)
                         .setMessage(isSystemApp ?
                                 R.string.uninstall_system_app_message : R.string.uninstall_app_message)
@@ -381,7 +381,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                     sharedPrefs2[i] = new File(sharedPrefs.get(i)).getName();
                 }
                 addToHorizontalLayout(R.string.shared_prefs, R.drawable.ic_view_list_black_24dp)
-                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
+                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
                                 .setTitle(R.string.shared_prefs)
                                 .setItems(sharedPrefs2, (dialog, which) -> {
                                     Intent intent = new Intent(this, SharedPrefsActivity.class);
@@ -404,7 +404,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
                     databases2[i] = databases.get(i);
                 }
                 addToHorizontalLayout(R.string.databases, R.drawable.ic_assignment_black_24dp)
-                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
+                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
                                 .setTitle(R.string.databases)
                                 .setItems(databases2, null)  // TODO
                                 .setNegativeButton(android.R.string.ok, null)
@@ -660,7 +660,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
             }
         } else {
             if (!Utils.checkUsageStatsPermission(this)) {
-                new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
+                new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
                         .setTitle(R.string.grant_usage_access)
                         .setMessage(R.string.grant_usage_acess_message)
                         .setPositiveButton(R.string.go, (dialog, which) -> startActivityForResult(new Intent(

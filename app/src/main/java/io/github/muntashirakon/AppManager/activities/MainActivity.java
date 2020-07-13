@@ -80,6 +80,7 @@ import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.fragments.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.types.ApplicationItem;
+import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -334,10 +335,9 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_instructions:
-                new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
+                new FullscreenDialog(this)
                         .setTitle(R.string.instructions)
                         .setView(R.layout.dialog_instructions)
-                        .setNegativeButton(android.R.string.ok, null)
                         .show();
                 return true;
             case R.id.action_refresh:
@@ -516,7 +516,7 @@ public class MainActivity extends AppCompatActivity implements
         showProgressIndicator(true);
         new Thread(() -> {
             if (!mBatchOpsManager.performOp(op, new ArrayList<>(mPackageNames)).isSuccessful()) {
-                runOnUiThread(() -> new MaterialAlertDialogBuilder(this, R.style.CustomDialog)
+                runOnUiThread(() -> new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
                         .setTitle(msg)
                         .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
                                 mBatchOpsManager.getLastResult().failedPackages()), null)
