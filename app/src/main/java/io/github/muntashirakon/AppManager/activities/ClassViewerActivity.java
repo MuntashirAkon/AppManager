@@ -69,8 +69,8 @@ public class ClassViewerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (getIntent().getBooleanExtra(EXTRA_IS_WRAPPED, false))
             setContentView(R.layout.activity_any_viewer_wrapped);
-        else
-            setContentView(R.layout.activity_any_viewer);
+        else setContentView(R.layout.activity_any_viewer);
+        setSupportActionBar(findViewById(R.id.toolbar));
 
         mProgressIndicator = findViewById(R.id.progress_linear);
 
