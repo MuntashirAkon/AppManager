@@ -63,7 +63,8 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
             SORT_BY_MOBILE_DATA,
             SORT_BY_PACKAGE_NAME,
             SORT_BY_SCREEN_TIME,
-            SORT_BY_TIMES_OPENED
+            SORT_BY_TIMES_OPENED,
+            SORT_BY_WIFI_DATA
     })
     private @interface SortOrder {}
     private static final int SORT_BY_APP_LABEL    = 0;
@@ -72,11 +73,13 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
     private static final int SORT_BY_PACKAGE_NAME = 3;
     private static final int SORT_BY_SCREEN_TIME  = 4;
     private static final int SORT_BY_TIMES_OPENED = 5;
+    private static final int SORT_BY_WIFI_DATA    = 6;
 
     private static final int[] sSortMenuItemIdsMap = {
             R.id.action_sort_by_app_label, R.id.action_sort_by_last_used,
             R.id.action_sort_by_mobile_data, R.id.action_sort_by_package_name,
-            R.id.action_sort_by_screen_time, R.id.action_sort_by_times_opened};
+            R.id.action_sort_by_screen_time, R.id.action_sort_by_times_opened,
+            R.id.action_sort_by_wifi_data};
 
     private ProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
@@ -197,6 +200,10 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
                 setSortBy(SORT_BY_TIMES_OPENED);
                 item.setChecked(true);
                 return true;
+            case R.id.action_sort_by_wifi_data:
+                setSortBy(SORT_BY_WIFI_DATA);
+                item.setChecked(true);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -229,15 +236,19 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
                 case SORT_BY_LAST_USED:
                     return -o1.lastUsageTime.compareTo(o2.lastUsageTime);
                 case SORT_BY_MOBILE_DATA:
-                    Long o1Data = o1.mobileData.getFirst() + o1.mobileData.getSecond();
-                    Long o2Data = o2.mobileData.getFirst() + o2.mobileData.getSecond();
-                    return -o1Data.compareTo(o2Data);
+                    Long o1MData = o1.mobileData.getFirst() + o1.mobileData.getSecond();
+                    Long o2MData = o2.mobileData.getFirst() + o2.mobileData.getSecond();
+                    return -o1MData.compareTo(o2MData);
                 case SORT_BY_PACKAGE_NAME:
                     return o1.packageName.compareTo(o2.packageName);
                 case SORT_BY_SCREEN_TIME:
                     return -o1.screenTime.compareTo(o2.screenTime);
                 case SORT_BY_TIMES_OPENED:
                     return -o1.timesOpened.compareTo(o2.timesOpened);
+                case SORT_BY_WIFI_DATA:
+                    Long o1WData = o1.wifiData.getFirst() + o1.wifiData.getSecond();
+                    Long o2WData = o2.wifiData.getFirst() + o2.wifiData.getSecond();
+                    return -o1WData.compareTo(o2WData);
             }
             return 0;
         }));

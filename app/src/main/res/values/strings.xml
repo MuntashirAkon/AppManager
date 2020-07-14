@@ -453,4 +453,5 @@
         as well as data usage and app storage info in the <i>App Info</i> window. With this option
         turned off, App Manager will never ask for <i>Usage Access</i> permission
     </string>
+    <string name="sort_by_wifi_data">Wifi data</string>
 </resources>

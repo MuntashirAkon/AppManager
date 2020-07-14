@@ -37,6 +37,10 @@
                     android:id="@+id/action_sort_by_mobile_data"
                     android:title="@string/sort_by_mobile_data" />
 
+                <item
+                    android:id="@+id/action_sort_by_wifi_data"
+                    android:title="@string/sort_by_wifi_data" />
+
             </group>
 
         </menu>
