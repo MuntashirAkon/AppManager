@@ -165,9 +165,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             mColorGrey1 = Color.TRANSPARENT;
             mColorGrey2 = ContextCompat.getColor(mActivity, R.color.semi_transparent);
             mColorRed = ContextCompat.getColor(mActivity, R.color.red);
-            mColorDisabled = ContextCompat.getColor(mActivity, R.color.disabled_app);
+            mColorDisabled = ContextCompat.getColor(mActivity, R.color.disabled_user);
             mColorRunning = ContextCompat.getColor(mActivity, R.color.running);
-            mColorTracker = ContextCompat.getColor(mActivity, R.color.dark_orange);
+            mColorTracker = ContextCompat.getColor(mActivity, R.color.tracker);
         }
     }
 
@@ -850,41 +850,19 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             switch (requestedProperty) {
-                case SERVICES:
-                    getServicesView(holder, position);
-                    break;
-                case RECEIVERS:
-                    getReceiverView(holder, position);
-                    break;
-                case PROVIDERS:
-                    getProviderView(holder, position);
-                    break;
-                case APP_OPS:
-                    getAppOpsView(holder, position);
-                    break;
-                case USES_PERMISSIONS:
-                    getUsesPermissionsView(holder, position);
-                    break;
-                case PERMISSIONS:
-                    getPermissionsView(holder, position);
-                    break;
-                case FEATURES:
-                    getFeaturesView(holder, position);
-                    break;
-                case CONFIGURATION:
-                    getConfigurationView(holder, position);
-                    break;
-                case SIGNATURES:
-                    getSignatureView(holder, position);
-                    break;
-                case SHARED_LIBRARY_FILES:
-                    getSharedLibsView(holder, position);
-                    break;
+                case SERVICES: getServicesView(holder, position); break;
+                case RECEIVERS: getReceiverView(holder, position); break;
+                case PROVIDERS: getProviderView(holder, position); break;
+                case APP_OPS: getAppOpsView(holder, position); break;
+                case USES_PERMISSIONS: getUsesPermissionsView(holder, position); break;
+                case PERMISSIONS: getPermissionsView(holder, position); break;
+                case FEATURES: getFeaturesView(holder, position); break;
+                case CONFIGURATION: getConfigurationView(holder, position); break;
+                case SIGNATURES: getSignatureView(holder, position); break;
+                case SHARED_LIBRARY_FILES: getSharedLibsView(holder, position); break;
                 case ACTIVITIES:
                 case NONE:
-                default:
-                    getActivityView(holder, position);
-                    break;
+                default: getActivityView(holder, position); break;
             }
         }
 

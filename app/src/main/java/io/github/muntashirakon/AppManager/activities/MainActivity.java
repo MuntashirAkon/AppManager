@@ -43,7 +43,6 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.NoSuchAlgorithmException;
 import java.text.Collator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -767,7 +766,7 @@ public class MainActivity extends AppCompatActivity implements
             if (mPackageNames.contains(info.packageName))
                 view.setBackgroundColor(mColorHighlight);
             else if (!info.enabled)
-                view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.disabled_app));
+                view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.disabled_user));
             else view.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
             // Add yellow star if the app is in debug mode
             holder.favorite_icon.setVisibility(item.star ? View.VISIBLE : View.INVISIBLE);

@@ -4,12 +4,13 @@
     <color name="colorPrimaryDark">@android:color/white</color>
     <color name="colorAccent">#6200EE</color>
 
-    <color name="disabled_app">#FF8A80</color>
+    <color name="disabled_user">#FF8A80</color>
     <color name="highlight">@color/background_tan</color>
     <color name="red">#B3FF0000</color>
     <color name="running">#EA80FC</color>
     <color name="semi_transparent">#10000000</color>
     <color name="ten_percent_black">#1A000000</color>
+    <color name="tracker">#FFFF8017</color> <!-- dark orange -->
 
     <color name="grey">#ffe0e0e0</color>
     <color name="original_orange">#ff9702</color>
