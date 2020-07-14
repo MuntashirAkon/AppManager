@@ -26,9 +26,12 @@ public class Runner {
             if (AppPref.isRootEnabled()) {
                 runner = new RootShellRunner(context.getApplicationContext());
                 isAdb = false;
-            } else {
+            } else if (AppPref.isAdbEnabled()) {
                 runner = new AdbShellRunner(context.getApplicationContext());
                 isAdb = true;
+            } else {
+                runner = new UserShellRunner(context.getApplicationContext());
+                isAdb = false;
             }
         }
         return runner;
