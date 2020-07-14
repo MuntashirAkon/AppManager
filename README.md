@@ -9,7 +9,7 @@ Yet another android package manager and viewer but...
 - It tries to display as much information as possible in the main window
 - It lists activities, broadcast receivers, services, providers, permissions, signatures, shared libraries, etc. of any app
 - It can launch (exportable) activities, create (customizable) shortcuts
-- It can block any activities, broadcast receivers, services or providers you like with Watt and Blocker import support (requires root)
+- It can block any activities, broadcast receivers, services or providers you like with native import/export as well as Watt and Blocker import support (requires root)
 - It can revoke permissions that are considered dangerous (requires root/ADB)
 - It can disable app ops that are considered dangerous (requires root/ADB)
 - It can scan for trackers in apps and list (all or only) tracking classes (and their code dump)

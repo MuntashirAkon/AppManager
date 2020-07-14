@@ -1,0 +1,14 @@
+- [Feature] Added import/export capabilities for blocking rules
+- [Feature] Added ability to select themes (night/day)
+- [Feature] Added mode, duration, accept time, reject time for app ops
+- [Feature] Highlight running services
+- [Feature] Highlight disabled components not disabled within App Manager
+- [Feature] Add swipe to refresh in the App Usage window
+- [Feature] Added screen time percentage with indicator
+- [Feature] Separate instructions and about pages with fullscreen dialog for both
+- [Feature] Rounded overflow menu (still incomplete)
+- [Fix] Fixed various device/SDK specific app ops issues
+- [Fix] Stability improvements of the entire apps
+- [Fix] Added ACCESS_NETWORK_STATE permission to support older operating systems
+- [Fix] Fixed deleting all IFW rules when selecting apply global rules
+- [Fix] Fixed various searching issues

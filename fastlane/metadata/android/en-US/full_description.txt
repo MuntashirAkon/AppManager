@@ -9,7 +9,7 @@
     <li>Display as much information as possible in the main window</li>
     <li>Lists activities, broadcast receivers, services, providers, permissions, signatures, shared libraries, etc. of any app</li>
     <li>Launch (exportable) activities, create (customizable) shortcuts</li>
-    <li>Block any activities, broadcast receivers, services or providers with Watt and Blocker import support (requires root)</li>
+    <li>Block any activities, broadcast receivers, services or providers with native import/export as well as Watt and Blocker import support (requires root)</li>
     <li>Revoke <i>dangerous</i> permissions (requires root/ADB)</li>
     <li>Disable any app ops, therefore any hidden permissions (requires root/ADB)</li>
     <li>Scan for trackers in apps and list (all or only) tracking classes (and their code dump)</li>
@@ -26,4 +26,4 @@
 
 It basically combined the features of five or six apps that any tech-savy person is needed to install in order to have a “life”.
 
-See the about section within the app for more information on how to use the app.
+See the instructions within the app for more information on how to use the app.
