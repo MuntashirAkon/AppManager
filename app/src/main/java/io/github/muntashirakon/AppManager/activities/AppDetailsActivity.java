@@ -116,7 +116,6 @@ public class AppDetailsActivity extends AppCompatActivity {
                             break;
                         case ViewPager2.SCROLL_STATE_IDLE:
                             if (!fragmentLoaded && fragments[pageNo] != null) {
-                                Log.d("VP2 - State", "Refreshing details");
                                 fragmentLoaded = true;
                                 fixSearch();
                             }

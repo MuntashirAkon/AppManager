@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,9 +15,108 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="@dimen/subtitle_font"
-            android:text="@string/about_message" />
+            android:layout_height="wrap_content"
+            android:text="@string/adb_over_tcp"
+            android:textSize="@dimen/title_font"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/adb_over_tcp_description"
+            android:textIsSelectable="true"
+            android:textSize="@dimen/subtitle_font" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_medium"
+            android:text="@string/main_window"
+            android:textSize="@dimen/title_font"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/main_window_description"
+            android:textIsSelectable="true"
+            android:textSize="@dimen/subtitle_font" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_medium"
+            android:text="@string/app_info_window"
+            android:textSize="@dimen/title_font"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_info_window_description"
+            android:textIsSelectable="true"
+            android:textSize="@dimen/subtitle_font" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_medium"
+            android:text="@string/app_details_window"
+            android:textSize="@dimen/title_font"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_details_window_description"
+            android:textIsSelectable="true"
+            android:textSize="@dimen/subtitle_font" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_medium"
+            android:text="@string/exodus_window"
+            android:textSize="@dimen/title_font"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/exodus_window_description"
+            android:textIsSelectable="true"
+            android:textSize="@dimen/subtitle_font" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_medium"
+            android:text="@string/shared_prefs_window"
+            android:textSize="@dimen/title_font"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/shared_prefs_window_description"
+            android:textIsSelectable="true"
+            android:textSize="@dimen/subtitle_font" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_medium"
+            android:text="@string/settings_window"
+            android:textSize="@dimen/title_font"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_window_description"
+            android:textIsSelectable="true"
+            android:textSize="@dimen/subtitle_font" />
 
     </LinearLayout>
+
 </ScrollView>

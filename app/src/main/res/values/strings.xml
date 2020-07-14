@@ -53,100 +53,6 @@
     <string name="netstats_transmitted">Data transmitted</string>
     <string name="netstats_msg">Data Usage Since Last Boot</string>
     <string name="about">About</string>
-    <string name="about_message"><b>ADB over TCP</b>
-        \nMany root-only features can still be used by enabling ADB over TCP. To do that, a PC or
-        Mac is required with ADB tools installed, and an Android phone with Developer Mode &amp; USB
-        debugging enabled (<a href="https://www.xda-developers.com/install-adb-windows-macos-linux/">tutorial</a>).
-        Now, connect the phone to the PC or Mac using a data cable. Then, open command prompt or
-        terminal and run <u>adb tcpip 5555</u>. After that, run this app again. In some Android
-        phones, a prompt will appear saying <i>Allow USB Debugging</i>. In that case, check
-        <i>Always allow from this computer</i> and click on <i>Allow</i>. In some devices, you may
-        need to connect/disconnect the data cable in order for it to work.
-        \n
-        \n<b>Main Window</b>
-        \n- Click will open “App Info” window
-        \n- Long click will open ”App Details” window
-        \n- View app usage statistics (in the menu) (requires “Usage Access” permission)
-        \n- Manage running apps/processes (in the menu) (requires root/ADB)
-        \n- Open APK Updater directly (in the menu) (if installed)
-        \n- Batch operations: disable, uninstall, clear data, kill, disable run in background or
-        export blocking rules (click on any app icon to select)
-        \n
-        \nList colors used in the main window and their meaning:
-        \n<u>Red</u>: Does not allow clearing data storage
-        \n<u>Magenta</u>: Persistent app
-        \n<u>Blue-green</u>: Stopped / Forced closed
-        \n<u>Orange</u> <i>Date</i>: Can read logs
-        \n<u>Orange</u> <i>UID</i>: Shared app
-        \n<u>Orange</u> <i>API</i>: Uses cleartext traffic
-        \n<u>Green</u>: Inactive app
-        \n<u>Yellow Star</u>: App in debug mode
-        \n<u>pink/red-black background</u>: Disabled app
-        \n
-        \nApp can be <b>User</b> or <b>System</b> with following codes:
-        \n<i>X</i>: Multi architecture
-        \n<i>0</i>: App does not have code with it
-        \n<i>°</i>: App package in suspended state
-        \n<i>#</i>: The app has requested a large heap
-        \n<i>?</i>: Whether requested VM in safe mode
-        \n
-        \nVersion can have following prefixes:
-        \n<i>_</i>: No hardware acceleration
-        \n<i>~</i>: Test only mode
-        \n<i>debug</i>: Debuggable app
-        \n
-        \n<b>App Info Window</b>
-        \n- Uninstall/enable/disable/force-stop an app (some operations require root/adb permission)
-        \n- View dynamic manifest of an app
-        \n- View shared preferences
-        \n- Scan for trackers using Exodus
-        \n- View/edit/delete shared preferences (requires root)
-        \n- View various paths and directories related to the app and open them with external app
-        \n- View installation date, update date, installer app
-        \n- View storage information (requires “Usage Access” permission)
-        \n- Delete app cache/data (requires root/adb permission)
-        \n- Export blocking rules
-        \n
-        \n<b>App Details Window</b>
-        \n- App ops or dangerous permissions can be revoked in the <b>App Ops</b> (which lists app
-        operations &amp; can be used to revoke non-revocable permissions) and <b>Uses Permissions</b>
-        tab (which lists permission from the &lt;uses-permission&gt; tags of the manifest) respectively
-        (requires root/adb permission)
-        \n- Available activities can be launched from the <b>Activities</b> tab. Also, customizable
-        shortcuts can be made
-        \n- Activities, broadcast receivers, services and providers (aka, components) can be blocked
-        using the block button on the right side of each item. But blocking isn\'t enabled by
-        default. To enable blocking click on “apply rules” in the menu. You can also apply rules
-        globally by enabling global component blocking in the settings (Requires root permission)
-        \n- Blocked components and dangerous permissions have red background color
-        \n- Disabled components outside App Manager have pink/red-black color. It should be noted
-        that a component displaying as disabled does not mean that it is disabled by user: It could
-        be disabled by system as well. Also, all components of a disabled apps are also considered
-        disabled by the system
-        \n- Services that are currently running has light/dark purple color
-        \n
-        \n<b>Exodus Window</b>
-        \n- ° for \u03b5\' missing
-        \n- ² for \u03b5\' Etip stand-by
-        \n- µ for micro non-intrusive
-        \n
-        \n<b>Shared Preference Editor Window</b>
-        \n- Edit any item by clicking on it
-        \n- Use the add button to add new entry
-        \n- To save or delete the file, use the menu on the top-right of the window
-        \n
-        \n<b>Settings Window</b>
-        \n- Supported theme modes: follow system, auto battery, day, night
-        \n- Root mode: Enable or disable root mode. If you want to use ADB, you have to disable this
-        first
-        \n- Global component blocking: Enable component blocking globally. By default, blocking rules
-        are not applied unless they are applied in the App Details window for any package. Enabling
-        this options lets you apply (old and new) rules immediately without explicitly enabling
-        blocking for a package
-        \n- Usage access: Disabling this disables App Usage window as well as data usage and app
-        storage data in the App Info window. If you enable this without enable the usage access
-        permission, the app will never ask for this permission as well.
-    </string>
     <string name="data_size">Data</string>
     <string name="cache_size">Cache</string>
     <string name="obb_size">Obb</string>
@@ -157,7 +63,7 @@
     <string name="sort">Sort</string>
     <string name="version_name_with_code">Version %s (%d)</string>
     <string name="app_info">App Info</string>
-    <string name="exodus">Exodus</string>
+    <string name="exodus">\u03b5xodus</string>
     <string name="fdroid">F-Droid</string>
     <string name="system_app">System App</string>
     <string name="user_app">User App</string>
@@ -325,7 +231,7 @@
     <string name="app_settings">Settings</string>
     <string name="only_works_in_root_mode">Only works in root mode</string>
     <string name="usage_yesterday">Yesterday</string>
-    <string name="exodus_link">Exodus Link</string>
+    <string name="exodus_link">\u03b5xodus Link</string>
     <string name="sort_by_disabled_app">Disabled first</string>
     <string name="sort_by_blocked_components">Blocked first</string>
     <string name="external_data_dir">External Data Directory</string>
@@ -400,4 +306,151 @@
     <string name="current_theme">Current theme: %s</string>
     <string name="pref_about_msg">App Manager version, license, credits, etc.</string>
     <string name="version">Version</string>
+    <string name="adb_over_tcp">ADB over TCP</string>
+    <string name="adb_over_tcp_description">Many root-only features can still be used by enabling
+        ADB over TCP. To do that, a PC or Mac is required with ADB tools installed, and an Android
+        phone with Developer Mode &amp; USB debugging enabled
+        (<a href="https://www.xda-developers.com/install-adb-windows-macos-linux/">tutorial</a>).
+
+        \n\nAfter fulfilling the above requirement, the phone has to be connected to the PC or Mac
+        using a data cable. Then, in a command prompt, power shell or terminal, the following
+        command has to be run:
+
+        \n\n<i>adb tcpip 5555</i>
+
+        \n\nAfter that, App Manager has to be relaunched. In some Android phones, an alert prompt will
+        be appeared with a message <i>Allow USB Debugging</i> in which case, check <i>Always allow
+        from this computer</i> and click <i>Allow</i>. In some other Android phones, the data cable
+        may need to be connected or disconnected in order for it to work.
+    </string>
+    <string name="main_window">Main Window</string>
+    <string name="main_window_description">Main window lists all the installed apps (or a list of
+        apps supplied by any third-party application). A simple click on any app item opens the
+        respective <i>App Info</i> window and a long click opens the <i>App Details</i> window.
+        Using the sort option from the menu, the app items can be sorted in various ways and kept it
+        as such. Batch operations such as disabling, uninstalling, killing, disabling run in
+        background, exporting blocking rules and clearing data from apps are also available within
+        this window (most these operations require root or ADB).
+
+        \n\nList of colors used in this window and their meaning:
+        \n\u2022 <font fgcolor="red">Red</font>: App does not allow clearing data
+        \n\u2022 <font fgcolor="magenta">Magenta</font>: Persistent app ie., remains running all the
+        time
+        \n\u2022 <font fgcolor="#FF1DBAB4">Blue-green</font>: Stopped or forced closed app
+        \n\u2022 <font fgcolor="#FFE05915">Orange</font> <i>Date</i>: App can read logs
+        \n\u2022 <font fgcolor="#FFE05915">Orange</font> <i>UID</i>: App has shared user ID
+        \n\u2022 <font fgcolor="#FFE05915">Orange</font> <i>SDK</i>: Uses cleartext (ie. HTTP)
+        traffic
+        \n\u2022 <font fgcolor="green">Green</font>: Inactive app
+        \n\u2022 <font bgcolor="#FFFF8A80" fgcolor="#DE000000"> Salmon (day) </font> or
+        <font bgcolor="#BF4F1C14" fgcolor="#FFAAAAAA"> dark red (night) </font> background: Disabled app
+        \n\u2022 <font bgcolor="yellow"> Yellow </font> <i>Star</i>: App is in debug mode
+
+        \n\nAn app can be either <b>User</b> or <b>System</b> app along with the following codes:
+        \n\u2022 <i>X</i>: Multi architecture: 32-bit, 64-bit or arm-v7, arm-v8, etc.
+        \n\u2022 <i>0</i>: App does not have code with it
+        \n\u2022 <i>°</i>: App is in suspended state
+        \n\u2022 <i>#</i>: App has requested a large heap
+        \n\u2022 <i>?</i>: Whether the app has requested VM in safe mode
+
+        \n\nVersion can have the following prefixes:
+        \n\u2022 <i>_</i>: No hardware acceleration
+        \n\u2022 <i>~</i>: Test only mode
+        \n\u2022 <i>debug</i>: Debuggable app\n
+
+        \nApp usage statistics such as screen time, data usage (mobile and Wifi), number of
+        times an app was opened can be accessed by clicking on the <i>App Usage</i> option in the
+        menu (requires <i>Usage Access</i> permission). A list of running apps or processes can also
+        be viewed by clicking on the <i>Running Apps</i> option in the menu (requires root or ADB).
+        These apps or processes can also be force-closed or killed within the resultant window.
+
+        \n\nIf you have the app <i>APK Updater</i> installed, there is link in the menu which can be
+        used to open the app directly.
+    </string>
+    <string name="app_info_window">App Info Window</string>
+    <string name="app_info_window_description">App Info window contains general information about
+        the app such as app directories, data directories, sdk version, install date, last update
+        date, installer app, data usage, app size, data size, cache size (some of these information
+        require <i>Usage Access</i> permission). It also has the ability to perform many actions,
+        some of which are listed below:
+        \n\u2022 Uninstall/enable/disable/force-stop (some operations require root or ADB)
+        \n\u2022 View dynamic manifest
+        \n\u2022 View shared preferences: clicking on a preference opens the <i>Shared Preferences
+        Editor</i> window (requires root)
+        \n\u2022 Scan for trackers using \u03b5xodus
+        \n\u2022 Open paths and directories with external app
+        \n\u2022 Delete app cache or app data (requires root or ADB)
+        \n\u2022 Export blocking rules
+        \n\u2022 Open in system settings (in the menu)
+        \n\u2022 Open in F-Droid, Aurora Droid or Aurora Store (if installed)
+        \n\u2022 Open the main activity
+        \n\u2022 Share the apk file (in the menu)
+    </string>
+    <string name="app_details_window">App Details Window</string>
+    <string name="app_details_window_description">App Details window lists application components
+        such as activities, broadcast receivers, services, providers as well as app operations (ie.
+        app ops), permissions, features, configurations, shared libraries and signatures. Most of
+        these information actually comes from the application manifest. The manifest has two kinds
+        of permission: <i>permission</i> and <i>uses-permission</i>, which is why there are two tabs
+        for permissions in the window (named accordingly).
+
+        \n\nWith root or ADB, any app op or any <i>dangerous</i> permission can be granted or
+        revoked. With root, any app component can also be blocked via intent firewall (for
+        activities, receivers and services) or (for providers,) using the <i>pm</i> command line
+        tool. There is a toggle button on the right side of each component item which can be used to
+        block or unblock each component, and there is a switch button next to each app op or
+        permission item. By default, when components are blocked using the block buttons, they are
+        not immediately applied. To apply them, you need to click on <i>Apply Rules</i> in the menu.
+        Another option is to enable component blocking globally in the app settings. In the case of
+        app ops and permissions, the changes are applied immediately. Exported activities can be
+        launched, or customizable launcher icons or shortcuts can be created in the
+        <b>Activities</b> tab.
+
+        \n\nList of background colors used in this window and their meaning:
+        \n\u2022 <font bgcolor="#B3FF0000"> Red </font>: Any app op or permission that has the
+        dangerous flag are marked as red. Components that blocked within App Manager are also marked
+        as red
+        \n\u2022 <font bgcolor="#FFFF8A80" fgcolor="#DE000000"> Salmon (day) </font> or
+        <font bgcolor="#BF4F1C14" fgcolor="#FFAAAAAA"> dark red (night) </font>: Components that are
+        disabled outside App Manager have these colors. It should be noted that a component that is
+        marked as disabled does not always mean that it is disabled by the user: It could be
+        disabled by the system as well. Also, all components of a disabled app are also considered
+        disabled by the system (and so does App Manager)
+        \n\u2022 <font bgcolor="#FFEA80FC" fgcolor="#DE000000"> pink (day) </font> or
+        <font bgcolor="#FF431C5D" fgcolor="#FFAAAAAA"> purple (night) </font>: Currently running services
+    </string>
+    <string name="exodus_window">\u03b5xodus Window</string>
+    <string name="exodus_window_description">\u03b5xodus window appears after clicking on the
+        <i>\u03b5xodus</i> button in the <i>App Info</i> window. It scans for trackers and displays
+        a list of trackers and their classes as a summary. A list of tracker classes for the given
+        app is also displayed. All the classes of the app can also be viewed by clicking on the
+        <i>Toggle Class Listing</i> menu. A sneak-peak of each class can be viewed by simply
+        clicking on any class item. The tracker names has some prefixes, and although they are not
+        properly documented in the original <a href="https://gitlab.com/oF2pks/3xodusprivacy-toolbox">repository</a>, a list is
+        given below:
+        \n\u2022 °: Missing in \u03b5xodus\' list
+        \n\u2022 ²: <a href="https://etip.exodus-privacy.eu.org">ETIP</a> stand-by
+        \n\u2022 µ: Micro non-intrusive
+        \n\u2022 ?: Unconfirmed
+    </string>
+    <string name="shared_prefs_window">Shared Preferences Editor Window</string>
+    <string name="shared_prefs_window_description">Shared preferences can be edited in this window.
+        Clicking any item on the list opens the edit dialog where the item can be edited. The
+        floating action button on the bottom-right corner can be used to add a new item. To save or
+        delete the file, or discard current changes, the respective options in the menu can be used.
+    </string>
+    <string name="settings_window">Settings</string>
+    <string name="settings_window_description">Settings can be used to customize the behavior of the
+        app. These customizations are described below:
+        \n\u2022 <b>App theme</b>: Application theme selection
+        \n\u2022 <b>Root mode</b>: Enable or disable root mode. To use ADB, root mode has to be
+        disabled at first and then preferably after a relaunch, ADB mode will be detected automatically
+        \n\u2022 <b>Global component blocking</b>: Enable component blocking globally. By default,
+        blocking rules are not applied unless they are applied in the <i>App Details</i> window for
+        any package. Upon enabling this option, all (old and new) rules are applied immediately for
+        all apps without explicitly enabling blocking for any app
+        \n\u2022 <b>Usage access</b>: Turning off this option disables the <i>App Usage</i> window
+        as well as data usage and app storage info in the <i>App Info</i> window. With this option
+        turned off, App Manager will never ask for <i>Usage Access</i> permission
+    </string>
 </resources>
