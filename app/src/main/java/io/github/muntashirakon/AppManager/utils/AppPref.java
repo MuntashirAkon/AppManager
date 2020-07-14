@@ -106,6 +106,7 @@ public class AppPref {
         else if (value instanceof Integer) editor.putInt(key, (Integer) value);
         else if (value instanceof Long) editor.putLong(key, (Long) value);
         else if (value instanceof String) editor.putString(key, (String) value);
+        editor.apply();
         editor.commit();
     }
 
@@ -131,7 +132,7 @@ public class AppPref {
         if (!preferences.contains(PREF_USAGE_ACCESS_ENABLED)) {
             editor.putBoolean(PREF_USAGE_ACCESS_ENABLED, (Boolean) getDefaultValue(PREF_USAGE_ACCESS_ENABLED));
         }
-        editor.commit();
+        editor.apply();
     }
 
     private @NonNull Object getDefaultValue(@NonNull @PrefKey String key) {

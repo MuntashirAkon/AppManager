@@ -462,21 +462,24 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         // Check root
+        AppPref.getInstance().setPref(AppPref.PREF_ADB_MODE_ENABLED, false);
         if (!Utils.isRootGiven(this)) {
             AppPref.getInstance().setPref(AppPref.PREF_ROOT_MODE_ENABLED, false);
             // Check for adb
             new Thread(() -> {
                 try {
-                    AdbShell.run("id");
+                    AdbShell.CommandResult result = AdbShell.run("id");
+                    if (!result.isSuccessful()) throw new IOException("Adb not available");
                     AppPref.getInstance().setPref(AppPref.PREF_ADB_MODE_ENABLED, true);
-                } catch (IOException | InterruptedException | NoSuchAlgorithmException e) {
-                    AppPref.getInstance().setPref(AppPref.PREF_ADB_MODE_ENABLED, false);
-                }
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "Working on ADB mode", Toast.LENGTH_SHORT).show();
+                    });
+                } catch (Exception ignored) {}
             }).start();
-        } else AppPref.getInstance().setPref(AppPref.PREF_ADB_MODE_ENABLED, false);
+        }
         // Set filter
         if (mAdapter != null && mSearchView != null && !TextUtils.isEmpty(mConstraint)) {
             mSearchView.setIconified(false);

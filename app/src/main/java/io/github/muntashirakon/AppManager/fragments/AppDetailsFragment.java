@@ -67,6 +67,8 @@ import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
+import io.github.muntashirakon.AppManager.storage.compontents.TrackerComponentFinder;
+import io.github.muntashirakon.AppManager.types.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.types.AppDetailsItem;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -127,6 +129,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private static int mColorRed;
     private static int mColorDisabled;
     private static int mColorRunning;
+    private static int mColorTracker;
 
     // Load from saved instance if empty constructor is called.
     private boolean isEmptyFragmentConstructCalled = false;
@@ -164,6 +167,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             mColorRed = ContextCompat.getColor(mActivity, R.color.red);
             mColorDisabled = ContextCompat.getColor(mActivity, R.color.disabled_app);
             mColorRunning = ContextCompat.getColor(mActivity, R.color.running);
+            mColorTracker = ContextCompat.getColor(mActivity, R.color.dark_orange);
         }
     }
 
@@ -383,9 +387,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
                     if (mPackageInfo.activities != null) {
                         for (ActivityInfo activityInfo : mPackageInfo.activities) {
-                            AppDetailsItem appDetailsItem = new AppDetailsItem(activityInfo);
+                            AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
                             appDetailsItem.name = activityInfo.name;
                             appDetailsItem.isBlocked = cb.hasComponent(activityInfo.name);
+                            appDetailsItem.isTracker = TrackerComponentFinder.isTracker(activityInfo.name);
                             appDetailsItems.add(appDetailsItem);
                         }
                     }
@@ -395,9 +400,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
                     if (mPackageInfo.services != null) {
                         for (ServiceInfo serviceInfo : mPackageInfo.services) {
-                            AppDetailsItem appDetailsItem = new AppDetailsItem(serviceInfo);
+                            AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(serviceInfo);
                             appDetailsItem.name = serviceInfo.name;
                             appDetailsItem.isBlocked = cb.hasComponent(serviceInfo.name);
+                            appDetailsItem.isTracker = TrackerComponentFinder.isTracker(serviceInfo.name);
                             appDetailsItems.add(appDetailsItem);
                         }
                     }
@@ -407,9 +413,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
                     if (mPackageInfo.receivers != null) {
                         for (ActivityInfo activityInfo : mPackageInfo.receivers) {
-                            AppDetailsItem appDetailsItem = new AppDetailsItem(activityInfo);
+                            AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
                             appDetailsItem.name = activityInfo.name;
                             appDetailsItem.isBlocked = cb.hasComponent(activityInfo.name);
+                            appDetailsItem.isTracker = TrackerComponentFinder.isTracker(activityInfo.name);
                             appDetailsItems.add(appDetailsItem);
                         }
                     }
@@ -419,9 +426,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
                     if (mPackageInfo.providers != null) {
                         for (ProviderInfo providerInfo : mPackageInfo.providers) {
-                            AppDetailsItem appDetailsItem = new AppDetailsItem(providerInfo);
+                            AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(providerInfo);
                             appDetailsItem.name = providerInfo.name;
                             appDetailsItem.isBlocked = cb.hasComponent(providerInfo.name);
+                            appDetailsItem.isTracker = TrackerComponentFinder.isTracker(providerInfo.name);
                             appDetailsItems.add(appDetailsItem);
                         }
                     }
@@ -602,13 +610,16 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 getPackageInfo();
                 requestedProperty = neededProperty;
                 mAdapterList = getNeededList(requestedProperty);
-                if (requestedProperty == SERVICES)
-                    runningServices = PackageUtils.getRunningServicesForPackage(mPackageName);
+                if (requestedProperty == SERVICES) {
+                    if (isRootEnabled || isADBEnabled)
+                        runningServices = PackageUtils.getRunningServicesForPackage(mPackageName);
+                    else runningServices = new ArrayList<>();
+                }
                 mDefaultList = mAdapterList;
                 final AtomicInteger rules_msg_visibility = new AtomicInteger(View.GONE);
-                if (requestedProperty <= AppDetailsFragment.PROVIDERS) {
+                if (isRootEnabled && requestedProperty <= AppDetailsFragment.PROVIDERS && !isBlockingEnabled) {
                     try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
-                        if (isRootEnabled && !isBlockingEnabled && cb.componentCount() > 0 && !cb.isRulesApplied()) {
+                        if (cb.componentCount() > 0 && !cb.isRulesApplied()) {
                             rules_msg_visibility.set(View.VISIBLE);
                         }
                     }
@@ -892,20 +903,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
          */
         private void getActivityView(@NonNull ViewHolder holder, int index) {
             final View view = holder.itemView;
-            final AppDetailsItem appDetailsItem = mAdapterList.get(index);
+            final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
             final ActivityInfo activityInfo = (ActivityInfo) appDetailsItem.vanillaItem;
             final String activityName = activityInfo.name;
-            // Background color: regular < disabled < blocked
-            view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            if (isComponentDisabled(mPackageManager, activityInfo)) {
-                view.setBackgroundColor(mColorDisabled);
-            }
-            if (appDetailsItem.isBlocked) {
-                view.setBackgroundColor(mColorRed);
-                holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
-            } else {
-                holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
-            }
+            // Background color: regular < tracker < disabled < blocked
+            if (appDetailsItem.isBlocked) view.setBackgroundColor(mColorRed);
+            else if (isComponentDisabled(mPackageManager, activityInfo)) view.setBackgroundColor(mColorDisabled);
+            else if (appDetailsItem.isTracker) view.setBackgroundColor(mColorTracker);
+            else view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // Name
             if (mConstraint != null && activityName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
@@ -981,6 +986,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
             // Blocking
             if (isRootEnabled) {
+                if (appDetailsItem.isBlocked) {
+                    holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
+                } else {
+                    holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
+                }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
                     applyRules(activityName, RulesStorageManager.Type.ACTIVITY);
@@ -996,22 +1006,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
          */
         private void getServicesView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            final AppDetailsItem appDetailsItem = mAdapterList.get(index);
+            final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
             final ServiceInfo serviceInfo = (ServiceInfo) appDetailsItem.vanillaItem;
-            // Background color: regular < running < disabled < blocked
-            view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            if (runningServices.contains(serviceInfo.name)) {
-                view.setBackgroundColor(mColorRunning);
-            }
-            if (isComponentDisabled(mPackageManager, serviceInfo)) {
-                view.setBackgroundColor(mColorDisabled);
-            }
-            if (appDetailsItem.isBlocked) {
-                view.setBackgroundColor(mColorRed);
-                holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
-            } else {
-                holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
-            }
+            // Background color: regular < running < tracker < disabled < blocked
+            if (appDetailsItem.isBlocked) view.setBackgroundColor(mColorRed);
+            else if (isComponentDisabled(mPackageManager, serviceInfo)) view.setBackgroundColor(mColorDisabled);
+            else if (appDetailsItem.isTracker) view.setBackgroundColor(mColorTracker);
+            else if (runningServices.contains(serviceInfo.name)) view.setBackgroundColor(mColorRunning);
+            else view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // Label
             holder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(serviceInfo.name)));
             // Name
@@ -1030,6 +1032,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     (serviceInfo.permission != null ? serviceInfo.permission : "")));
             // Blocking
             if (isRootEnabled) {
+                if (appDetailsItem.isBlocked) {
+                    holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
+                } else {
+                    holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
+                }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
                     applyRules(serviceInfo.name, RulesStorageManager.Type.SERVICE);
@@ -1045,19 +1052,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
          */
         private void getReceiverView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            final AppDetailsItem appDetailsItem = mAdapterList.get(index);
+            final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
             final ActivityInfo activityInfo = (ActivityInfo) appDetailsItem.vanillaItem;
-            // Background color: regular < disabled < blocked
-            view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            if (isComponentDisabled(mPackageManager, activityInfo)) {
-                view.setBackgroundColor(mColorDisabled);
-            }
-            if (appDetailsItem.isBlocked) {
-                view.setBackgroundColor(mColorRed);
-                holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
-            } else {
-                holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
-            }
+            // Background color: regular < tracker < disabled < blocked
+            if (appDetailsItem.isBlocked) view.setBackgroundColor(mColorRed);
+            else if (isComponentDisabled(mPackageManager, activityInfo)) view.setBackgroundColor(mColorDisabled);
+            else if (appDetailsItem.isTracker) view.setBackgroundColor(mColorTracker);
+            else view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // Label
             holder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityInfo.name)));
             // Name
@@ -1085,6 +1086,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     getString(R.string.softInput), Utils.getSoftInputString(activityInfo.softInputMode)));
             // Blocking
             if (isRootEnabled) {
+                if (appDetailsItem.isBlocked) {
+                    holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
+                } else {
+                    holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
+                }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
                     applyRules(activityInfo.name, RulesStorageManager.Type.RECEIVER);
@@ -1100,20 +1106,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
          */
         private void getProviderView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            final AppDetailsItem appDetailsItem = mAdapterList.get(index);
+            final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
             final ProviderInfo providerInfo = (ProviderInfo) appDetailsItem.vanillaItem;
             final String providerName = providerInfo.name;
-            // Background color: regular < disabled < blocked
-            view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            if (isComponentDisabled(mPackageManager, providerInfo)) {
-                view.setBackgroundColor(mColorDisabled);
-            }
-            if (appDetailsItem.isBlocked) {
-                view.setBackgroundColor(mColorRed);
-                holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
-            } else {
-                holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
-            }
+            // Background color: regular < tracker < disabled < blocked
+            if (appDetailsItem.isBlocked) view.setBackgroundColor(mColorRed);
+            else if (isComponentDisabled(mPackageManager, providerInfo)) view.setBackgroundColor(mColorDisabled);
+            else if (appDetailsItem.isTracker) view.setBackgroundColor(mColorTracker);
+            else view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // Label
             holder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(providerName)));
             // Icon
@@ -1163,6 +1163,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
             // Blocking
             if (isRootEnabled) {
+                if (appDetailsItem.isBlocked) {
+                    holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
+                } else {
+                    holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
+                }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
                     applyRules(providerName, RulesStorageManager.Type.PROVIDER);
