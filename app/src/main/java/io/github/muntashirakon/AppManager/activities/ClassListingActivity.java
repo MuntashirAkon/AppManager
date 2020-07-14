@@ -28,9 +28,7 @@ import android.widget.Toast;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.classysharkandroid.dex.DexLoaderBuilder;
-import com.google.classysharkandroid.reflector.ClassesNamesList;
 import com.google.classysharkandroid.reflector.Reflector;
-import com.google.classysharkandroid.utils.IOUtils;
 import com.google.classysharkandroid.utils.UriUtils;
 
 import java.io.File;
@@ -38,7 +36,6 @@ import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 
@@ -51,8 +48,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 import dalvik.system.DexClassLoader;
-import dalvik.system.DexFile;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static com.google.classysharkandroid.utils.PackageUtils.apkCert;
@@ -64,8 +62,8 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     public static final String EXTRA_PACKAGE_NAME = "package_name";
 
     private Intent inIntent;
-    private ClassesNamesList classList;
-    private ClassesNamesList classListAll;
+    private List<String> classList;
+    private List<String> classListAll;
     private ListView mListView;
     private int totalTrackersFound = 0;
     private int totalClassesScanned = 0;
@@ -161,15 +159,14 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         mProgressIndicator = findViewById(R.id.progress_linear);
 
         final Uri uriFromIntent = inIntent.getData();
-        classList = new ClassesNamesList();
-        classListAll = new ClassesNamesList();
+        classList = new ArrayList<>();
 
         if (inIntent.getData() != null)
             packageInfo = "<b>" + getString(R.string.source_dir) + ": </b>"
                     + inIntent.getData().toString() + "\n";
         else packageInfo = "";
 
-        Names = getResources().getStringArray(R.array.tracker_names);
+        Names = StaticDataset.getTrackerNames();
         try {
             InputStream uriStream = UriUtils.getStreamFromUri(ClassListingActivity.this, uriFromIntent);
             final byte[] bytes = readFully(uriStream, -1, true);
@@ -275,7 +272,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                         .setMessage(statsMsg.toString()).show();
                 return true;
             case R.id.action_toggle_class_listing:
-                mClassListingAdapter.setDefaultList((trackerClassesOnly ? classList : classListAll).getClassNames());
+                mClassListingAdapter.setDefaultList(trackerClassesOnly ? classList : classListAll);
                 mActionBar.setSubtitle(getString((trackerClassesOnly ? R.string.tracker_classes : R.string.all_classes)));
                 trackerClassesOnly = !trackerClassesOnly;
                 mListView.setAdapter(mClassListingAdapter);
@@ -335,50 +332,33 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         public void run() {
             try {
                 Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-                long threadId = Thread.currentThread().getId();
-                File incomeFile = File.createTempFile("classes" + threadId, ".dex", getCacheDir());
-                IOUtils.bytesToFile(bytes, incomeFile);
-                File optimizedFile = File.createTempFile("opt" + threadId, ".dex", getCacheDir());
-                DexFile dx = DexFile.loadDex(incomeFile.getPath(), optimizedFile.getPath(), 0);
-
+                classListAll = PackageUtils.getClassNames(bytes);
+                totalClassesScanned = classListAll.size();
                 StringBuilder found = new StringBuilder();
-                signatures = getResources().getStringArray(R.array.tracker_signatures);
+                signatures = StaticDataset.getTrackerCodeSignatures();
                 signatureCount = new int[signatures.length];
                 signaturesFound = new boolean[signatures.length];
                 long t_start, t_end;
                 t_start = System.currentTimeMillis();
-                for (Enumeration<String> classNames = dx.entries(); classNames.hasMoreElements(); ) {
-                    String className = classNames.nextElement();
-                    classListAll.add(className);
-                    totalClassesScanned++;
-                    if (className.length() > 8) {
-                        if (className.contains(".")) {
-                            for (int i = 0; i < signatures.length; i++) {
-                                totalIteration++;
-                                if (className.contains(signatures[i])) {
-                                    classList.add(className);
-                                    signatureCount[i]++;
-                                    signaturesFound[i] = true;
-                                    if (found.toString().contains(Names[i])) break;
-                                    else found.append("<b>").append(++totalTrackersFound)
-                                            .append(". ").append(Names[i]).append("</b>\n");
-                                    break;
-                                }
+                for (String className : classListAll) {
+                    if (className.length() > 8 && className.contains(".")) {
+                        for (int i = 0; i < signatures.length; i++) {
+                            totalIteration++;
+                            if (className.contains(signatures[i])) {
+                                classList.add(className);
+                                signatureCount[i]++;
+                                signaturesFound[i] = true;
+                                if (found.toString().contains(Names[i])) break;
+                                else found.append("<b>").append(++totalTrackersFound)
+                                        .append(". ").append(Names[i]).append("</b>\n");
+                                break;
                             }
                         }
                     }
                 }
                 t_end = System.currentTimeMillis();
                 totalTimeTaken = t_end - t_start;
-                dx.close();
-
                 if (totalTrackersFound > 0) foundTrackerList = getString(R.string.found_trackers) + "\n" + found;
-
-                ClassListingActivity.this.deleteFile("*");
-                //noinspection ResultOfMethodCallIgnored
-                incomeFile.delete();
-                //noinspection ResultOfMethodCallIgnored
-                optimizedFile.delete();
             } catch (Exception e) {
                 // ODEX, need to see how to handle
                 e.printStackTrace();
@@ -387,16 +367,15 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
             ClassListingActivity.this.runOnUiThread(() -> {
                 mClassListingAdapter = new ClassListingAdapter(ClassListingActivity.this);
                 if (!trackerClassesOnly) {
-                    mClassListingAdapter.setDefaultList(classList.getClassNames());
+                    mClassListingAdapter.setDefaultList(classList);
                     mActionBar.setSubtitle(getString(R.string.tracker_classes));
                 } else {
-                    mClassListingAdapter.setDefaultList(classListAll.getClassNames());
+                    mClassListingAdapter.setDefaultList(classListAll);
                     mActionBar.setSubtitle(getString(R.string.all_classes));
                 }
-//                    mListView.setAdapter(mAdapter);
                 mListView.setAdapter(mClassListingAdapter);
                 mProgressIndicator.hide();
-                if (classList.getClassNames().isEmpty() && totalClassesScanned == 0) {
+                if (classList.isEmpty() && totalClassesScanned == 0) {
                     // FIXME: Add support for odex (using root)
                     Toast.makeText(ClassListingActivity.this, R.string.system_odex_not_supported, Toast.LENGTH_LONG).show();
                     finish();
@@ -426,8 +405,8 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                             Class<?> loadClass;
                             try {
                                 loadClass = loader.loadClass((!trackerClassesOnly ? classList
-                                        : classListAll).getClassName((int) (parent
-                                        .getAdapter()).getItemId(position)));
+                                        : classListAll).get((int) (parent.getAdapter())
+                                        .getItemId(position)));
 
                                 Reflector reflector = new Reflector(loadClass);
 
@@ -437,9 +416,8 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                                 Intent intent = new Intent(ClassListingActivity.this,
                                         ClassViewerActivity.class);
                                 intent.putExtra(ClassViewerActivity.EXTRA_CLASS_NAME,
-                                        (!trackerClassesOnly ? classList : classListAll)
-                                                .getClassName((int) (parent.getAdapter())
-                                                        .getItemId(position)));
+                                        (!trackerClassesOnly ? classList : classListAll).get((int)
+                                                (parent.getAdapter()).getItemId(position)));
                                 intent.putExtra(ClassViewerActivity.EXTRA_CLASS_DUMP, reflector.toString());
                                 intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, mAppName);
                                 startActivity(intent);

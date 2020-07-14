@@ -1,12 +1,22 @@
 package io.github.muntashirakon.AppManager.utils;
 
+import java.io.BufferedOutputStream;
 import java.io.EOFException;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-public class IOUtils {
+public final class IOUtils {
+
+    public static void bytesToFile(byte[] bytes, File result) throws IOException {
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(result));
+        bos.write(bytes);
+        bos.flush();
+        bos.close();
+    }
+
     /**
      * Get byte array from an InputStream most efficiently.
      * Taken from sun.misc.IOUtils

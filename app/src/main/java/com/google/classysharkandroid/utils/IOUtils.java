@@ -21,11 +21,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,21 +42,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class IOUtils {
-
-    public static void bytesToFile(byte[] bytes, File result) throws IOException {
-        BufferedOutputStream bos =
-                new BufferedOutputStream(new FileOutputStream(result));
-        bos.write(bytes);
-        bos.flush();
-        bos.close();
-    }
-
-    @NonNull
-    public static byte[] toByteArray(InputStream input) throws IOException {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        copy(input, output);
-        return output.toByteArray();
-    }
 
     public static int copy(InputStream input, OutputStream output) throws IOException {
         long count = copyLarge(input, output);
