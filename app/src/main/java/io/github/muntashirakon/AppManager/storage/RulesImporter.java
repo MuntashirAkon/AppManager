@@ -17,7 +17,7 @@ import java.util.StringTokenizer;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 
 /**
  * Rules importer is used to import internal rules to App Manager. Rules should only be imported

@@ -24,7 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.compontents.ExternalComponentsImporter;
+import io.github.muntashirakon.AppManager.storage.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 
 public class ImportExportDialogFragment extends DialogFragment {

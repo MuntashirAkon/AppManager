@@ -11,7 +11,7 @@ import android.os.Build;
 
 import androidx.loader.content.AsyncTaskLoader;
 import io.github.muntashirakon.AppManager.activities.MainActivity;
-import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.types.ApplicationItem;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Tuple;

@@ -14,7 +14,7 @@ import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 
 /**
  * Export rules to external directory either for a single package or multiple packages.

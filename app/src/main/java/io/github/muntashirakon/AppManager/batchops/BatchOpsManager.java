@@ -9,7 +9,7 @@ import java.util.Locale;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 
 public class BatchOpsManager {

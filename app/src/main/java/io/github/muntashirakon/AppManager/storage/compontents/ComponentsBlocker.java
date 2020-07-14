@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.compontents;
+package io.github.muntashirakon.AppManager.storage.compontents;
 
 import android.content.Context;
 import android.text.TextUtils;
