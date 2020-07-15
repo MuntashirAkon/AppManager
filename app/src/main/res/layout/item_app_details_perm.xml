@@ -52,7 +52,7 @@
 
     </LinearLayout>
 
-    <Switch
+    <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/perm_toggle_btn"
         android:layout_width="56dp"
         android:layout_height="wrap_content"
