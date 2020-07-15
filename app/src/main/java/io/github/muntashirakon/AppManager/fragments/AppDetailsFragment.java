@@ -491,7 +491,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     if (mPackageInfo.activities != null) {
                         for (ActivityInfo activityInfo : mPackageInfo.activities) {
                             AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
-                            appDetailsItem.name = activityInfo.name;
+                            appDetailsItem.name = activityInfo.targetActivity == null ? activityInfo.name : activityInfo.targetActivity;
                             appDetailsItem.isBlocked = cb.hasComponent(activityInfo.name);
                             appDetailsItem.isTracker = TrackerComponentFinder.isTracker(activityInfo.name);
                             appDetailsItems.add(appDetailsItem);
@@ -683,7 +683,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     public static boolean isComponentDisabled(@NonNull PackageManager pm, @NonNull ComponentInfo componentInfo) {
-        ComponentName componentName = new ComponentName(componentInfo.packageName, componentInfo.name);
+        String className = componentInfo.name;
+        if (componentInfo instanceof ActivityInfo
+                && ((ActivityInfo) componentInfo).targetActivity != null) {
+            className = ((ActivityInfo) componentInfo).targetActivity;
+        }
+        ComponentName componentName = new ComponentName(componentInfo.packageName, className);
         int componentEnabledSetting = pm.getComponentEnabledSetting(componentName);
 
         switch (componentEnabledSetting) {
@@ -1061,7 +1066,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final View view = holder.itemView;
             final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
             final ActivityInfo activityInfo = (ActivityInfo) appDetailsItem.vanillaItem;
-            final String activityName = activityInfo.name;
+            final String activityName = appDetailsItem.name;
             // Background color: regular < tracker < disabled < blocked
             if (appDetailsItem.isBlocked) view.setBackgroundColor(mColorRed);
             else if (isComponentDisabled(mPackageManager, activityInfo)) view.setBackgroundColor(mColorDisabled);
@@ -1078,16 +1083,16 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Icon
             holder.imageView.setImageDrawable(activityInfo.loadIcon(mPackageManager));
             // TaskAffinity
-            holder.textView3.setText(String.format(Locale.getDefault(), "%s: %s",
+            holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.taskAffinity), activityInfo.taskAffinity));
             // LaunchMode
-            holder.textView4.setText(String.format(Locale.getDefault(), "%s: %s | %s: %s",
+            holder.textView4.setText(String.format(Locale.ROOT, "%s: %s | %s: %s",
                     getString(R.string.launch_mode), Utils.getLaunchMode(activityInfo.launchMode),
                     getString(R.string.orientation), Utils.getOrientationString(activityInfo.screenOrientation)));
             // Orientation
             holder.textView5.setText(Utils.getActivitiesFlagsString(activityInfo.flags));
             // SoftInput
-            holder.textView6.setText(String.format(Locale.getDefault(), "%s: %s | %s",
+            holder.textView6.setText(String.format(Locale.ROOT, "%s: %s | %s",
                     getString(R.string.softInput), Utils.getSoftInputString(activityInfo.softInputMode),
                     (activityInfo.permission == null ? getString(R.string.require_no_permission) : activityInfo.permission)));
             // Label
@@ -1115,7 +1120,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 holder.createBtn.setOnClickListener(v -> {
                     String iconResourceName = null;
                     try {
-                        ComponentName activity = new ComponentName(activityInfo.packageName, activityName);
+                        ComponentName activity = new ComponentName(activityInfo.packageName, activityInfo.name);
                         iconResourceName = mPackageManager.getResourcesForActivity(activity)
                                 .getResourceName(activityInfo.getIconResource());
                     } catch (PackageManager.NameNotFoundException e) {
@@ -1183,7 +1188,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Icon
             holder.imageView.setImageDrawable(serviceInfo.loadIcon(mPackageManager));
             // Flags and Permission
-            holder.textView3.setText(String.format(Locale.getDefault(), "%s\n%s",
+            holder.textView3.setText(String.format(Locale.ROOT, "%s\n%s",
                     Utils.getServiceFlagsString(serviceInfo.flags),
                     (serviceInfo.permission != null ? serviceInfo.permission : "")));
             // Blocking
@@ -1229,16 +1234,16 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Icon
             holder.imageView.setImageDrawable(activityInfo.loadIcon(mPackageManager));
             // TaskAffinity
-            holder.textView3.setText(String.format(Locale.getDefault(), "%s: %s",
+            holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.taskAffinity), activityInfo.taskAffinity));
             // LaunchMode
-            holder.textView4.setText(String.format(Locale.getDefault(), "%s: %s | %s: %s",
+            holder.textView4.setText(String.format(Locale.ROOT, "%s: %s | %s: %s",
                     getString(R.string.launch_mode), Utils.getLaunchMode(activityInfo.launchMode),
                     getString(R.string.orientation), Utils.getOrientationString(activityInfo.screenOrientation)));
             // Orientation
             holder.textView5.setText(activityInfo.permission == null ? getString(R.string.require_no_permission) : activityInfo.permission);
             // SoftInput
-            holder.textView6.setText(String.format(Locale.getDefault(), "%s: %s",
+            holder.textView6.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.softInput), Utils.getSoftInputString(activityInfo.softInputMode)));
             // Blocking
             if (isRootEnabled) {
@@ -1275,7 +1280,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Icon
             holder.imageView.setImageDrawable(providerInfo.loadIcon(mPackageManager));
             // Uri permission
-            holder.textView3.setText(String.format(Locale.getDefault(), "%s: %s", getString(R.string.grant_uri_permission), providerInfo.grantUriPermissions));
+            holder.textView3.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.grant_uri_permission), providerInfo.grantUriPermissions));
             // Path permissions
             PathPermission[] pathPermissions = providerInfo.pathPermissions;
             String finalString;
@@ -1292,7 +1297,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 Utils.checkStringBuilderEnd(builder);
                 finalString = builder.toString();
             } else finalString = "null";
-            holder.textView4.setText(String.format(Locale.getDefault(), "%s: %s", getString(R.string.path_permissions), finalString)); // +"\n"+providerInfo.readPermission +"\n"+providerInfo.writePermission);
+            holder.textView4.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.path_permissions), finalString)); // +"\n"+providerInfo.readPermission +"\n"+providerInfo.writePermission);
             // Pattern matchers
             PatternMatcher[] patternMatchers = providerInfo.uriPermissionPatterns;
             String finalString1;
@@ -1306,9 +1311,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 finalString1 = builder.toString();
             } else
                 finalString1 = "null";
-            holder.textView5.setText(String.format(Locale.getDefault(), "%s: %s", getString(R.string.patterns_allowed), finalString1));
+            holder.textView5.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.patterns_allowed), finalString1));
             // Authority
-            holder.textView6.setText(String.format(Locale.getDefault(), "%s: %s", getString(R.string.authority), providerInfo.authority));
+            holder.textView6.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.authority), providerInfo.authority));
             // Name
             if (mConstraint != null && providerName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
@@ -1340,9 +1345,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
          */
         private void getAppOpsView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             AppOpsManager.OpEntry opEntry = (AppOpsManager.OpEntry) mAdapterList.get(index).vanillaItem;
             final String opStr = mAdapterList.get(index).name;
+            boolean isDangerousOp = false;
             PermissionInfo permissionInfo = null;
             try {
                 String permName = AppOpsManager.opToPermission(opEntry.getOp());
@@ -1354,9 +1359,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (mConstraint != null && opStr.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 opName += Utils.getHighlightedText(opStr, mConstraint, mColorRed);
-            } else {
-                opName += opStr;
-            }
+            } else opName += opStr;
             holder.textView1.setText(opName);
             // Set op mode, running and duration
             String opRunningInfo = mActivity.getString(R.string.mode) + ": " + opEntry.getMode();
@@ -1383,7 +1386,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (permissionInfo != null) {
                 // Set permission name
                 holder.textView6.setVisibility(View.VISIBLE);
-                holder.textView6.setText(String.format("%s: %s", mActivity.getString(R.string.permission_name), permissionInfo.name));
+                holder.textView6.setText(String.format(Locale.ROOT, "%s: %s", mActivity.getString(R.string.permission_name), permissionInfo.name));
                 // Description
                 CharSequence description = permissionInfo.loadDescription(mPackageManager);
                 if (description != null) {
@@ -1392,19 +1395,19 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 } else holder.textView2.setVisibility(View.GONE);
                 // Protection level
                 String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
-                holder.textView3.setText(String.format(Locale.getDefault(), "\u2691 %s", protectionLevel));
-                if (protectionLevel.contains("dangerous"))
-                    view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
+                holder.textView3.setVisibility(View.VISIBLE);
+                holder.textView3.setText(String.format(Locale.ROOT, "\u2691 %s", protectionLevel));
+                if (protectionLevel.contains("dangerous")) isDangerousOp = true;
                 // Set package name
                 if (permissionInfo.packageName != null) {
                     holder.textView4.setVisibility(View.VISIBLE);
-                    holder.textView4.setText(String.format("%s: %s",
+                    holder.textView4.setText(String.format(Locale.ROOT, "%s: %s",
                             mActivity.getString(R.string.package_name), permissionInfo.packageName));
                 } else holder.textView4.setVisibility(View.GONE);
                 // Set group name
                 if (permissionInfo.group != null) {
                     holder.textView5.setVisibility(View.VISIBLE);
-                    holder.textView5.setText(String.format("%s: %s",
+                    holder.textView5.setText(String.format(Locale.ROOT, "%s: %s",
                             mActivity.getString(R.string.group), permissionInfo.group));
                 } else holder.textView5.setVisibility(View.GONE);
             } else {
@@ -1414,6 +1417,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 holder.textView5.setVisibility(View.GONE);
                 holder.textView6.setVisibility(View.GONE);
             }
+            // Set background
+            if (isDangerousOp) view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
+            else view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // Op Switch
             holder.toggleSwitch.setVisibility(View.VISIBLE);
             if (opEntry.getMode().equals(AppOpsManager.modeToName(AppOpsManager.MODE_ALLOWED))) {
@@ -1511,7 +1517,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Protection level
             String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
             protectionLevel += '|' + (permissionItem.isGranted ? "granted" : "revoked");
-            holder.textView3.setText(String.format(Locale.getDefault(), "\u2691 %s", protectionLevel));
+            holder.textView3.setText(String.format(Locale.ROOT, "\u2691 %s", protectionLevel));
             if (permissionItem.isDangerous)
                 view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
             // Set package name
@@ -1616,11 +1622,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Description
             holder.textView3.setText(permissionInfo.loadDescription(mPackageManager));
             // LaunchMode
-            holder.textView4.setText(String.format(Locale.getDefault(), "%s: %s",
+            holder.textView4.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.group), permissionInfo.group + permAppOp(permissionInfo.name)));
             // Protection level
             String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
-            holder.textView5.setText(String.format(Locale.getDefault(), "%s: %s",
+            holder.textView5.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.protection_level), protectionLevel));
             if (protectionLevel.contains("dangerous"))
                 view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
@@ -1636,11 +1642,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Name
             holder.textView1.setText(featureInfo.name);
             // Flags
-            holder.textView2.setText(String.format(Locale.getDefault(), "%s: %s",
+            holder.textView2.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.flags), Utils.getFeatureFlagsString(featureInfo.flags)
                     + (Build.VERSION.SDK_INT >= 24 && featureInfo.version != 0 ? " | minV%:" + featureInfo.version : "")));
             // GLES ver
-            holder.textView3.setText(String.format(Locale.getDefault(), "%s: %s",
+            holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.gles_ver), (bFi && !featureInfo.name.equals("_MAJOR") ? "_"
                             : Utils.getOpenGL(featureInfo.reqGlEsVersion))));
         }
@@ -1653,16 +1659,16 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final ConfigurationInfo configurationInfo = (ConfigurationInfo) mAdapterList.get(index).vanillaItem;
             view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // GLES ver
-            holder.textView1.setText(String.format(Locale.getDefault(), "%s: %s",
+            holder.textView1.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.gles_ver), Utils.getOpenGL(configurationInfo.reqGlEsVersion)));
             // Flag & others
-            holder.textView2.setText(String.format(Locale.getDefault(), "%s: %s",
+            holder.textView2.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.input_features), configurationInfo.reqInputFeatures));
-            holder.textView3.setText(String.format(Locale.getDefault(), "%s: %s",
+            holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.keyboard_type), configurationInfo.reqKeyboardType));
-            holder.textView4.setText(String.format(Locale.getDefault(), "%s: %s",
+            holder.textView4.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.navigation), configurationInfo.reqNavigation));
-            holder.textView5.setText(String.format(Locale.getDefault(), "%s: %s",
+            holder.textView5.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.touchscreen), configurationInfo.reqTouchScreen));
         }
 
@@ -1672,7 +1678,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         private void getSignatureView(@NonNull ViewHolder holder, int index) {
             TextView textView = (TextView) holder.itemView;
             final Signature signature = (Signature) mAdapterList.get(index).vanillaItem;
-            textView.setText(String.format(Locale.getDefault(), "%s\n%s",
+            textView.setText(String.format(Locale.ROOT, "%s\n%s",
                     Utils.signCert(signature), signature.toCharsString()));
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             textView.setTextIsSelectable(true);

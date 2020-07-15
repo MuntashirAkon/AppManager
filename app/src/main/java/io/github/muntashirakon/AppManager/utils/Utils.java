@@ -113,7 +113,7 @@ public class Utils {
 
     @NonNull
     public static String camelCaseToSpaceSeparatedString(@NonNull String str) {
-        return TextUtils.join(" ", splitByCharacterType(str, true));
+        return TextUtils.join(" ", splitByCharacterType(str, true)).replace(" _", "");
     }
 
     // https://commons.apache.org/proper/commons-lang/javadocs/api-3.1/src-html/org/apache/commons/lang3/StringUtils.html#line.3164
