@@ -783,32 +783,34 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
         private void sortList() {
             if (mAdapterList == null) return;
-            Collections.sort(mAdapterList, (o1, o2) -> {
-                switch (mSortBy) {
-                    // All
-                    case AppDetailsFragment.SORT_BY_NAME:
-                        return o1.name.compareTo(o2.name);
-                    // Components
-                    case AppDetailsFragment.SORT_BY_BLOCKED:
-                        return -Utils.compareBooleans(((AppDetailsComponentItem) o1).isBlocked, ((AppDetailsComponentItem) o2).isBlocked);
-                    case AppDetailsFragment.SORT_BY_TRACKERS:
-                        return -Utils.compareBooleans(((AppDetailsComponentItem) o1).isTracker, ((AppDetailsComponentItem) o2).isTracker);
-                    // App ops
-                    case AppDetailsFragment.SORT_BY_APP_OP_VALUES:
-                        Integer o1Op = ((AppOpsManager.OpEntry) o1.vanillaItem).getOp();
-                        Integer o2Op = ((AppOpsManager.OpEntry) o2.vanillaItem).getOp();
-                        return o1Op.compareTo(o2Op);
-                    case AppDetailsFragment.SORT_BY_DENIED_APP_OPS:
-                        // A slight hack to sort it this way: ignore > foreground > deny > default[ > ask] > allow
-                        return -((AppOpsManager.OpEntry) o1.vanillaItem).getMode().compareTo(((AppOpsManager.OpEntry) o2.vanillaItem).getMode());
-                    // Permissions
-                    case AppDetailsFragment.SORT_BY_DANGEROUS_PERMS:
-                        return -Utils.compareBooleans(((AppDetailsPermissionItem) o1).isDangerous, ((AppDetailsPermissionItem) o2).isDangerous);
-                    case AppDetailsFragment.SORT_BY_DENIED_PERMS:
-                        return Utils.compareBooleans(((AppDetailsPermissionItem) o1).isGranted, ((AppDetailsPermissionItem) o2).isGranted);
-                }
-                return 0;
-            });
+            synchronized (this) {
+                Collections.sort(mAdapterList, (o1, o2) -> {
+                    switch (mSortBy) {
+                        // All
+                        case AppDetailsFragment.SORT_BY_NAME:
+                            return o1.name.compareTo(o2.name);
+                        // Components
+                        case AppDetailsFragment.SORT_BY_BLOCKED:
+                            return -Utils.compareBooleans(((AppDetailsComponentItem) o1).isBlocked, ((AppDetailsComponentItem) o2).isBlocked);
+                        case AppDetailsFragment.SORT_BY_TRACKERS:
+                            return -Utils.compareBooleans(((AppDetailsComponentItem) o1).isTracker, ((AppDetailsComponentItem) o2).isTracker);
+                        // App ops
+                        case AppDetailsFragment.SORT_BY_APP_OP_VALUES:
+                            Integer o1Op = ((AppOpsManager.OpEntry) o1.vanillaItem).getOp();
+                            Integer o2Op = ((AppOpsManager.OpEntry) o2.vanillaItem).getOp();
+                            return o1Op.compareTo(o2Op);
+                        case AppDetailsFragment.SORT_BY_DENIED_APP_OPS:
+                            // A slight hack to sort it this way: ignore > foreground > deny > default[ > ask] > allow
+                            return -((AppOpsManager.OpEntry) o1.vanillaItem).getMode().compareTo(((AppOpsManager.OpEntry) o2.vanillaItem).getMode());
+                        // Permissions
+                        case AppDetailsFragment.SORT_BY_DANGEROUS_PERMS:
+                            return -Utils.compareBooleans(((AppDetailsPermissionItem) o1).isDangerous, ((AppDetailsPermissionItem) o2).isDangerous);
+                        case AppDetailsFragment.SORT_BY_DENIED_PERMS:
+                            return Utils.compareBooleans(((AppDetailsPermissionItem) o1).isGranted, ((AppDetailsPermissionItem) o2).isGranted);
+                    }
+                    return 0;
+                });
+            }
         }
 
         @Override
