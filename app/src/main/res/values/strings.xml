@@ -336,12 +336,12 @@
         \n\u2022 <font fgcolor="red">Red</font>: App does not allow clearing data
         \n\u2022 <font fgcolor="magenta">Magenta</font>: Persistent app ie., remains running all the
         time
-        \n\u2022 <font fgcolor="#FF1DBAB4">Blue-green</font>: Stopped or forced closed app
+        \n\u2022 <font fgcolor="#FF09868B">Blue-green</font> <i>Package name</i>: Stopped or forced closed app
+        \n\u2022 <font fgcolor="#FF09868B">Blue-green</font> <i>Version</i>: Inactive app
         \n\u2022 <font fgcolor="#FFE05915">Orange</font> <i>Date</i>: App can read logs
         \n\u2022 <font fgcolor="#FFE05915">Orange</font> <i>UID</i>: App has shared user ID
         \n\u2022 <font fgcolor="#FFE05915">Orange</font> <i>SDK</i>: Uses cleartext (ie. HTTP)
         traffic
-        \n\u2022 <font fgcolor="green">Green</font>: Inactive app
         \n\u2022 <font bgcolor="#FFFF8A80" fgcolor="#DE000000"> Salmon (day) </font> or
         <font bgcolor="#BF4F1C14" fgcolor="#FFAAAAAA"> dark red (night) </font> background: Disabled app
         \n\u2022 <font bgcolor="yellow"> Yellow </font> <i>Star</i>: App is in debug mode

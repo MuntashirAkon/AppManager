@@ -278,7 +278,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
         if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)
             addChip(R.string.requested_large_heap, R.color.red);
         if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0)
-            addChip(R.string.stopped, R.color.blue_green);
+            addChip(R.string.stopped, R.color.stopped);
         if (!mApplicationInfo.enabled) addChip(R.string.disabled_app, R.color.disabled_user);
     }
 

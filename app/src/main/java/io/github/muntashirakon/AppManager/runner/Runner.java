@@ -50,7 +50,7 @@ public class Runner {
         commands.clear();
     }
 
-    public Result run() {
+    synchronized public Result run() {
         return null;
     }
 

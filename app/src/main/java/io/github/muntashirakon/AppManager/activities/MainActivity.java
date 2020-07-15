@@ -743,12 +743,10 @@ public class MainActivity extends AppCompatActivity implements
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            // Cancel an existing icon loading operation
             if (holder.iconLoader != null) holder.iconLoader.cancel(true);
-
             final ApplicationItem item = mAdapterList.get(position);
             final ApplicationInfo info = item.applicationInfo;
-
-            View view = holder.mainView;
             // Add click listeners
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(mActivity, AppInfoActivity.class);
@@ -761,19 +759,19 @@ public class MainActivity extends AppCompatActivity implements
                 mActivity.startActivity(appDetailsIntent);
                 return true;
             });
-            // Alternate background colors
+            // Alternate background colors: selected > disabled > regular
             if (mPackageNames.contains(info.packageName))
-                view.setBackgroundColor(mColorHighlight);
+                holder.mainView.setBackgroundColor(mColorHighlight);
             else if (!info.enabled)
-                view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.disabled_user));
-            else view.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
+                holder.mainView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.disabled_user));
+            else holder.mainView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
             // Add yellow star if the app is in debug mode
             holder.favorite_icon.setVisibility(item.star ? View.VISIBLE : View.INVISIBLE);
             try {
                 PackageInfo packageInfo = mPackageManager.getPackageInfo(info.packageName, 0);
                 // Set version name
                 holder.version.setText(packageInfo.versionName);
-                // Set date and (if available,) days
+                // Set date and (if available,) days between first install and last update
                 String lastUpdateDate = sSimpleDateFormat.format(new Date(packageInfo.lastUpdateTime));
                 if (packageInfo.firstInstallTime == packageInfo.lastUpdateTime)
                     holder.date.setText(lastUpdateDate);
@@ -793,10 +791,10 @@ public class MainActivity extends AppCompatActivity implements
                     holder.date.setTextColor(mColorOrange);
                 else holder.date.setTextColor(mColorSecondary);
                 // Set kernel user ID
-                holder.shared_id.setText(String.format(Locale.getDefault(),"%d", info.uid));
+                holder.sharedId.setText(String.format(Locale.getDefault(),"%d", info.uid));
                 // Set kernel user ID text color to orange if the package is shared
-                if (packageInfo.sharedUserId != null) holder.shared_id.setTextColor(mColorOrange);
-                else holder.shared_id.setTextColor(mColorSecondary);
+                if (packageInfo.sharedUserId != null) holder.sharedId.setTextColor(mColorOrange);
+                else holder.sharedId.setTextColor(mColorSecondary);
                 // Set issuer
                 String issuer;
                 try {
@@ -812,7 +810,7 @@ public class MainActivity extends AppCompatActivity implements
             holder.iconLoader = new IconAsyncTask(holder.icon, info);
             holder.iconLoader.execute();
             // Set app label
-            if (mConstraint != null && item.label.toLowerCase(Locale.ROOT).contains(mConstraint)) {
+            if (!TextUtils.isEmpty(mConstraint) && item.label.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 holder.label.setText(Utils.getHighlightedText(item.label, mConstraint, mColorRed));
             } else holder.label.setText(item.label);
@@ -821,13 +819,13 @@ public class MainActivity extends AppCompatActivity implements
                 holder.label.setTextColor(Color.RED);
             else holder.label.setTextColor(mColorPrimary);
             // Set package name
-            if (mConstraint != null && info.packageName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
+            if (!TextUtils.isEmpty(mConstraint) && info.packageName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 holder.packageName.setText(Utils.getHighlightedText(info.packageName, mConstraint, mColorRed));
             } else holder.packageName.setText(info.packageName);
             // Set package name color to blue if the app is in stopped/force closed state
             if ((info.flags & ApplicationInfo.FLAG_STOPPED) != 0)
-                holder.packageName.setTextColor(ContextCompat.getColor(mActivity, R.color.blue_green));
+                holder.packageName.setTextColor(ContextCompat.getColor(mActivity, R.color.stopped));
             else holder.packageName.setTextColor(mColorSecondary);
             // Set version (along with HW accelerated, debug and test only flags)
             CharSequence version = holder.version.getText();
@@ -840,7 +838,7 @@ public class MainActivity extends AppCompatActivity implements
                 UsageStatsManager mUsageStats;
                 mUsageStats = mActivity.getSystemService(UsageStatsManager.class);
                 if (mUsageStats != null && mUsageStats.isAppInactive(info.packageName))
-                    holder.version.setTextColor(Color.GREEN);
+                    holder.version.setTextColor(ContextCompat.getColor(mActivity, R.color.stopped));
                 else holder.version.setTextColor(mColorSecondary);
             }
             // Set app type: system or user app (along with large heap, suspended, multi-arch,
@@ -927,7 +925,7 @@ public class MainActivity extends AppCompatActivity implements
             TextView isSystemApp;
             TextView date;
             TextView size;
-            TextView shared_id;
+            TextView sharedId;
             TextView issuer;
             TextView sha;
             MainRecyclerAdapter.IconAsyncTask iconLoader;
@@ -943,7 +941,7 @@ public class MainActivity extends AppCompatActivity implements
                 isSystemApp = itemView.findViewById(R.id.isSystem);
                 date = itemView.findViewById(R.id.date);
                 size = itemView.findViewById(R.id.size);
-                shared_id = itemView.findViewById(R.id.shareid);
+                sharedId = itemView.findViewById(R.id.shareid);
                 issuer = itemView.findViewById(R.id.issuer);
                 sha = itemView.findViewById(R.id.sha);
             }

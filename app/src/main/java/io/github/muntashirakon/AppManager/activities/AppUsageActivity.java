@@ -240,7 +240,7 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
                     Long o2MData = o2.mobileData.getFirst() + o2.mobileData.getSecond();
                     return -o1MData.compareTo(o2MData);
                 case SORT_BY_PACKAGE_NAME:
-                    return o1.packageName.compareTo(o2.packageName);
+                    return o1.packageName.compareToIgnoreCase(o2.packageName);
                 case SORT_BY_SCREEN_TIME:
                     return -o1.screenTime.compareTo(o2.screenTime);
                 case SORT_BY_TIMES_OPENED:

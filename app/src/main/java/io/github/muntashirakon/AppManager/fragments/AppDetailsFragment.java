@@ -57,6 +57,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -78,12 +79,11 @@ import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.viewmodels.AppDetailsViewModel;
 
 
-public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
-    private static final String NEEDED_PROPERTY_INT = "neededProperty";
-    private static final String SORT_BY_INT = "neededProperty";
-
+public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTextListener,
+        SwipeRefreshLayout.OnRefreshListener {
     @IntDef(value = {
             NONE,
             ACTIVITIES,
@@ -121,7 +121,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             SORT_BY_DANGEROUS_PERMS,
             SORT_BY_DENIED_PERMS
     })
-    private @interface SortOrder {}
+    public @interface SortOrder {}
     private static final int SORT_BY_NAME    = 0;
     private static final int SORT_BY_BLOCKED  = 1;
     private static final int SORT_BY_TRACKERS = 2;
@@ -149,7 +149,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private List<Tuple<String, Integer>> permissionsWithFlags;
     private boolean bFi;
     private @Property int neededProperty;
-    private @SortOrder int mSortBy;
+    AppDetailsViewModel model;
 
     private static int mColorGrey1;
     private static int mColorGrey2;
@@ -169,21 +169,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(NEEDED_PROPERTY_INT, neededProperty);
-        outState.putSerializable(SORT_BY_INT, mSortBy);
-    }
-
-    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        if (savedInstanceState != null){
-            mSortBy = savedInstanceState.getInt(SORT_BY_INT);
-            if (isEmptyFragmentConstructCalled)
-                neededProperty = savedInstanceState.getInt(NEEDED_PROPERTY_INT);
-        } else mSortBy = SORT_BY_NAME;
+        model = new ViewModelProvider(this).get(AppDetailsViewModel.class);
+        if (isEmptyFragmentConstructCalled) {
+            neededProperty = model.getNeededProperty();
+        } else model.setNeededProperty(neededProperty);
         try {
             mPackageName = Objects.requireNonNull(getActivity()).getIntent().getStringExtra(AppInfoActivity.EXTRA_PACKAGE_NAME);
         } catch (NullPointerException e) {
@@ -220,7 +212,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         mRulesNotAppliedMsg = view.findViewById(R.id.alert_text);
         mRulesNotAppliedMsg.setVisibility(View.GONE);
         mRulesNotAppliedMsg.setText(R.string.rules_not_applied);
-        mAdapter = new AppDetailsRecyclerAdapter();
+        mAdapter = new AppDetailsRecyclerAdapter(model.getSortBy());
         recyclerView.setAdapter(mAdapter);
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
         return view;
@@ -277,8 +269,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        if (neededProperty <= USES_PERMISSIONS)
-            menu.findItem(sSortMenuItemIdsMap[mSortBy]).setChecked(true);
+        if (neededProperty <= PROVIDERS) {
+            if (AppPref.isRootEnabled())
+                menu.findItem(sSortMenuItemIdsMap[model.getSortBy()]).setChecked(true);
+        } else if (neededProperty <= USES_PERMISSIONS)
+            menu.findItem(sSortMenuItemIdsMap[model.getSortBy()]).setChecked(true);
         super.onPrepareOptionsMenu(menu);
     }
 
@@ -363,9 +358,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         return false;
     }
 
-    private void setSortBy(@SortOrder int sort) {
-        mSortBy = sort;
-        if (mAdapter != null) mAdapter.sortList(mSortBy);
+    private void setSortBy(@SortOrder int sortBy) { // FIXME: Add param to adapter
+        model.setSortBy(sortBy);
+        if (mAdapter != null) mAdapter.sortList(sortBy);
     }
 
     synchronized private void applyRules(String componentName, RulesStorageManager.Type type) {
@@ -415,65 +410,30 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                     | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
                     | apiCompatFlags | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
-
             if (mPackageInfo == null) return;
 
-            switch (neededProperty){
-                case SERVICES:
-                    if (mPackageInfo.services != null) {
-                        Arrays.sort(mPackageInfo.services, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
+            if (neededProperty == USES_PERMISSIONS) {
+                if (mPackageInfo.requestedPermissions == null) permissionsWithFlags = null;
+                else {
+                    permissionsWithFlags = new ArrayList<>(mPackageInfo.requestedPermissions.length);
+                    for (int i = 0; i < mPackageInfo.requestedPermissions.length; ++i) {
+                        permissionsWithFlags.add(
+                                new Tuple<>(mPackageInfo.requestedPermissions[i],
+                                        mPackageInfo.requestedPermissionsFlags[i]));
                     }
-                    break;
-                case RECEIVERS:
-                    if (mPackageInfo.receivers != null) {
-                        Arrays.sort(mPackageInfo.receivers, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-                    }
-                    break;
-                case PROVIDERS:
-                    if (mPackageInfo.providers != null) {
-                        Arrays.sort(mPackageInfo.providers, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-                    }
-                    break;
-                case USES_PERMISSIONS:  // Requested Permissions
-                    if (mPackageInfo.requestedPermissions == null) permissionsWithFlags = null;
-                    else {
-                        permissionsWithFlags = new ArrayList<>(mPackageInfo.requestedPermissions.length);
-                        for (int i = 0; i < mPackageInfo.requestedPermissions.length; ++i) {
-                            permissionsWithFlags.add(
-                                    new Tuple<>(mPackageInfo.requestedPermissions[i],
-                                    mPackageInfo.requestedPermissionsFlags[i]));
+                }
+            } else if (neededProperty == FEATURES) {
+                if (mPackageInfo.reqFeatures != null) {
+                    try {
+                        Arrays.sort(mPackageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
+                    } catch (NullPointerException e) {
+                        for (FeatureInfo fi : mPackageInfo.reqFeatures) {
+                            if (fi.name == null) fi.name = "_MAJOR";
+                            bFi = true;
                         }
+                        Arrays.sort(mPackageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
                     }
-                    break;
-                case PERMISSIONS:
-                    if (mPackageInfo.permissions != null) {
-                        Arrays.sort(mPackageInfo.permissions, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-                    }
-                    break;
-                case FEATURES:  // Requested Features
-                    if (mPackageInfo.reqFeatures != null) {
-                        try {
-                            Arrays.sort(mPackageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-                        } catch (NullPointerException e) {
-                            for (FeatureInfo fi : mPackageInfo.reqFeatures) {
-                                if (fi.name == null) fi.name = "_MAJOR";
-                                bFi = true;
-                            }
-                            Arrays.sort(mPackageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-                        }
-                    }
-                    break;
-                case APP_OPS:
-                case CONFIGURATION:
-                case SIGNATURES:
-                case SHARED_LIBRARY_FILES:
-                    break;
-                case ACTIVITIES:
-                case NONE:
-                default:
-                    if (mPackageInfo.activities != null) {
-                        Arrays.sort(mPackageInfo.activities, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-                    }
+                }
             }
         } catch (PackageManager.NameNotFoundException e) {
             mActivity.runOnUiThread(() -> mActivity.finish());
@@ -721,8 +681,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         private List<String> runningServices;
         private @SortOrder int mSortBy;
 
-        AppDetailsRecyclerAdapter() {
-            mSortBy = SORT_BY_NAME;
+        AppDetailsRecyclerAdapter(@SortOrder int sortBy) {
+            mSortBy = sortBy;
         }
 
         void reset() {
@@ -793,7 +753,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     switch (mSortBy) {
                         // All
                         case AppDetailsFragment.SORT_BY_NAME:
-                            return o1.name.compareTo(o2.name);
+                            return o1.name.compareToIgnoreCase(o2.name);
                         // Components
                         case AppDetailsFragment.SORT_BY_BLOCKED:
                             return -Utils.compareBooleans(((AppDetailsComponentItem) o1).isBlocked, ((AppDetailsComponentItem) o2).isBlocked);
@@ -806,7 +766,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             return o1Op.compareTo(o2Op);
                         case AppDetailsFragment.SORT_BY_DENIED_APP_OPS:
                             // A slight hack to sort it this way: ignore > foreground > deny > default[ > ask] > allow
-                            return -((AppOpsManager.OpEntry) o1.vanillaItem).getMode().compareTo(((AppOpsManager.OpEntry) o2.vanillaItem).getMode());
+                            return -((AppOpsManager.OpEntry) o1.vanillaItem).getMode().compareToIgnoreCase(((AppOpsManager.OpEntry) o2.vanillaItem).getMode());
                         // Permissions
                         case AppDetailsFragment.SORT_BY_DANGEROUS_PERMS:
                             return -Utils.compareBooleans(((AppDetailsPermissionItem) o1).isDangerous, ((AppDetailsPermissionItem) o2).isDangerous);
