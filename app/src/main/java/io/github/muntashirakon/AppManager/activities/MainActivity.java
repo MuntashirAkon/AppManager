@@ -653,13 +653,13 @@ public class MainActivity extends AppCompatActivity implements
         private List<ApplicationItem> mDefaultList;
         private List<ApplicationItem> mAdapterList;
 
-        private int mColorTransparent;
-        private int mColorSemiTransparent;
-        private int mColorHighlight;
-        private int mColorOrange;
-        private int mColorPrimary;
-        private int mColorSecondary;
-        private int mColorRed;
+        private static int mColorTransparent;
+        private static int mColorSemiTransparent;
+        private static int mColorHighlight;
+        private static int mColorOrange;
+        private static int mColorPrimary;
+        private static int mColorSecondary;
+        private static int mColorRed;
 
         MainRecyclerAdapter(@NonNull MainActivity activity) {
             mActivity = activity;
@@ -677,8 +677,7 @@ public class MainActivity extends AppCompatActivity implements
         void setDefaultList(List<ApplicationItem> list) {
             mDefaultList = list;
             mAdapterList = list;
-            if(MainActivity.mConstraint != null
-                    && !MainActivity.mConstraint.equals("")) {
+            if(!TextUtils.isEmpty(MainActivity.mConstraint)) {
                 getFilter().filter(MainActivity.mConstraint);
             }
             notifyDataSetChanged();

@@ -106,14 +106,19 @@ class AppOpsService implements IAppOpsService {
                         String name = String.format("%s: %s", AppOpsManager.opToName(op), line2.substring(DEFAULT_MODE_SKIP));
                         lines.add(name);
                     } else lines.add(line2);  // To prevent weird bug in some cases
+                } else if (output.size() > 2) {
+                    // In some cases, due to some bugs, output is more than two lines.
+                    // If that's the case, add only the last line.
+                    lines.add(output.get(output.size()-1));
                 }
 //                if (!isSuccessful) throw new Exception("Failed to get operations for package " + packageName);
             }
         }
         List<AppOpsManager.OpEntry> opEntries = new ArrayList<>();
-        for(String line: lines) {
+        // Iterate in backward direction to get only the last value of the duplicate app ops
+        for(int i = lines.size()-1; i >= 0; --i) {
             try {
-                opEntries.add(parseOpName(line));
+                opEntries.add(parseOpName(lines.get(i)));
             } catch (Exception ignored) {}
         }
         AppOpsManager.PackageOps packageOps = new AppOpsManager.PackageOps(packageName, uid, opEntries);

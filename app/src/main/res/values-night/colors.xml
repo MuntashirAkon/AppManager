@@ -3,6 +3,8 @@
     <color name="colorPrimary">#FF121212</color>
     <color name="colorPrimaryDark">#FF121212</color>
     <color name="colorAccent">@color/sand_tan_shadow</color>
+    <color name="textColorPrimary">@android:color/white</color>
+    <color name="textColorSecondary">#FFBEBEBE</color>
 
     <color name="disabled_user">#BF4F1C14</color>
     <color name="highlight">@color/purple_shadow</color>

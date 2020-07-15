@@ -3,6 +3,8 @@
     <color name="colorPrimary">@android:color/white</color>
     <color name="colorPrimaryDark">@android:color/white</color>
     <color name="colorAccent">#6200EE</color>
+    <color name="textColorPrimary">#DE000000</color>
+    <color name="textColorSecondary">#99000000</color>
 
     <color name="disabled_user">#FF8A80</color>
     <color name="highlight">@color/background_tan</color>
