@@ -2,27 +2,55 @@
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipe_refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView
-            android:id="@+id/recycler_view"
+        <com.google.android.material.progressindicator.ProgressIndicator
+            android:id="@+id/progress_linear"
+            style="@style/Widget.MaterialComponents.ProgressIndicator.Linear.Indeterminate"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical" />
+            android:layout_height="wrap_content"
+            app:indicatorColor="?colorAccent" />
 
-        <TextView
-            android:id="@android:id/empty"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/alert_text"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/padding_medium"
+            android:paddingEnd="@dimen/padding_medium"
+            android:paddingTop="@dimen/padding_small"
+            android:paddingBottom="@dimen/padding_small"
+            android:textColor="@color/orange"
             android:gravity="center"
-            tools:text="@tools:sample/lorem[2]" />
+            android:textStyle="italic"
+            tools:text="@tools:sample/lorem[5]" />
 
-    </FrameLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
+
+            <TextView
+                android:id="@android:id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                tools:text="@tools:sample/lorem[2]" />
+
+        </FrameLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

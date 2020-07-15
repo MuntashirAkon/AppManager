@@ -28,38 +28,10 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-        <com.google.android.material.progressindicator.ProgressIndicator
-            android:id="@+id/progress_linear"
-            style="@style/Widget.MaterialComponents.ProgressIndicator.Linear.Indeterminate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:indicatorColor="?colorAccent" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/alert_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/padding_medium"
-            android:paddingEnd="@dimen/padding_medium"
-            android:paddingTop="@dimen/padding_small"
-            android:paddingBottom="@dimen/padding_small"
-            android:textColor="@color/orange"
-            android:gravity="center"
-            android:textStyle="italic"
-            tools:text="@tools:sample/lorem[5]" />
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

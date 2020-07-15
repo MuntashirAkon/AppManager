@@ -73,6 +73,10 @@ class AppOpsService implements IAppOpsService {
                         opModeOut = line2.substring(DEFAULT_MODE_SKIP);
                         return opModeOut;
                     } else return parseOpName(line2).getMode();
+                } else if (output.size() > 2) {
+                    // In some cases, due to some bugs, output is more than two lines.
+                    // If that's the case, parse only the last line.
+                    return parseOpName(output.get(output.size()-1)).getMode();
                 }
             } catch (IndexOutOfBoundsException e) {
                 throw new Exception("Invalid output from appops");

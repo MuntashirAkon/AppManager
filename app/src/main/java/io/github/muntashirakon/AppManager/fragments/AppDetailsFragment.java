@@ -212,12 +212,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         RecyclerViewWithEmptyView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-        TextView emptyView = view.findViewById(android.R.id.empty);
+        final TextView emptyView = view.findViewById(android.R.id.empty);
         emptyView.setText(getNeededString(neededProperty));
         recyclerView.setEmptyView(emptyView);
-        mProgressIndicator = mActivity.findViewById(R.id.progress_linear);
+        mProgressIndicator = view.findViewById(R.id.progress_linear);
         showProgressIndicator(true);
-        mRulesNotAppliedMsg = mActivity.findViewById(R.id.alert_text);
+        mRulesNotAppliedMsg = view.findViewById(R.id.alert_text);
         mRulesNotAppliedMsg.setVisibility(View.GONE);
         mRulesNotAppliedMsg.setText(R.string.rules_not_applied);
         mAdapter = new AppDetailsRecyclerAdapter();
