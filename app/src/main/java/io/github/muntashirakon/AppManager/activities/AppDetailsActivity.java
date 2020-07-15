@@ -41,6 +41,74 @@ public class AppDetailsActivity extends AppCompatActivity {
     AppDetailsFragment[] fragments;
     private int pageNo;
     private boolean fragmentLoaded = false;
+    private SearchView searchView;
+    private ViewPager2.OnPageChangeCallback pageChangeCallback = new ViewPager2.OnPageChangeCallback() {
+        /**
+         * Page selected is called in two ways: 1) Called before fragment when a tab is
+         * pressed directly, 2) Called after the fragment when dragging is used. In the
+         * first way, we cannot call reset() on the fragments adapter since it's not loaded,
+         * but we can do that for the second case.
+         * @param position Position of the view
+         */
+        @Override
+        public void onPageSelected(@AppDetailsFragment.Property int position) {
+            super.onPageSelected(position);
+            pageNo = position;
+            if (fragments[position] != null) {  // Fragment is created (the second case)
+                fragmentLoaded = true;
+                fixSearch();
+            } else fragmentLoaded = false;
+        }
+
+        /**
+         * Our interest is {@link ViewPager2#SCROLL_STATE_IDLE}. It's called in two ways in
+         * respect to {@link ViewPager2.OnPageChangeCallback#onPageSelected(int)}. We need
+         * to check whether the fragment adapter was refreshed in the function above. If it
+         * doesn't we'll refresh here.
+         * @param state Current scroll state
+         */
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            super.onPageScrollStateChanged(state);
+            switch (state) {
+                case ViewPager2.SCROLL_STATE_DRAGGING:
+                case ViewPager2.SCROLL_STATE_SETTLING:
+                    break;
+                case ViewPager2.SCROLL_STATE_IDLE:
+                    if (!fragmentLoaded && fragments[pageNo] != null) {
+                        fragmentLoaded = true;
+                        fixSearch();
+                    }
+                    break;
+            }
+        }
+
+        private void fixSearch() {
+            if (searchView == null) return;
+            switch (pageNo) {
+                case AppDetailsFragment.ACTIVITIES:
+                case AppDetailsFragment.SERVICES:
+                case AppDetailsFragment.RECEIVERS:
+                case AppDetailsFragment.PROVIDERS:
+                case AppDetailsFragment.APP_OPS:
+                case AppDetailsFragment.USES_PERMISSIONS:
+                case AppDetailsFragment.PERMISSIONS:
+                    searchView.setVisibility(View.VISIBLE);
+                    if (fragments[pageNo] != null) {
+                        searchView.setOnQueryTextListener(fragments[pageNo]);
+                        fragments[pageNo].resetFilter();
+                    }
+                    break;
+                case AppDetailsFragment.FEATURES:
+                case AppDetailsFragment.CONFIGURATION:
+                case AppDetailsFragment.SIGNATURES:
+                case AppDetailsFragment.SHARED_LIBRARY_FILES:
+                case AppDetailsFragment.NONE:
+                default:
+                    searchView.setVisibility(View.GONE);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +138,7 @@ public class AppDetailsActivity extends AppCompatActivity {
         fragments = new AppDetailsFragment[mTabTitleIds.length()];
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            final SearchView searchView = new SearchView(actionBar.getThemedContext());
+            searchView = new SearchView(actionBar.getThemedContext());
             actionBar.setDisplayShowCustomEnabled(true);
             searchView.setQueryHint(getString(R.string.search));
 
@@ -83,77 +151,18 @@ public class AppDetailsActivity extends AppCompatActivity {
                     ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.gravity = Gravity.END;
             actionBar.setCustomView(searchView, layoutParams);
-            viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                /**
-                 * Page selected is called in two ways: 1) Called before fragment when a tab is
-                 * pressed directly, 2) Called after the fragment when dragging is used. In the
-                 * first way, we cannot call reset() on the fragments adapter since it's not loaded,
-                 * but we can do that for the second case.
-                 * @param position Position of the view
-                 */
-                @Override
-                public void onPageSelected(@AppDetailsFragment.Property int position) {
-                    super.onPageSelected(position);
-                    pageNo = position;
-                    if (fragments[position] != null) {  // Fragment is created (the second case)
-                        fragmentLoaded = true;
-                        fixSearch();
-                    } else fragmentLoaded = false;
-                }
-
-                /**
-                 * Our interest is {@link ViewPager2#SCROLL_STATE_IDLE}. It's called in two ways in
-                 * respect to {@link ViewPager2.OnPageChangeCallback#onPageSelected(int)}. We need
-                 * to check whether the fragment adapter was refreshed in the function above. If it
-                 * doesn't we'll refresh here.
-                 * @param state Current scroll state
-                 */
-                @Override
-                public void onPageScrollStateChanged(int state) {
-                    super.onPageScrollStateChanged(state);
-                    switch (state) {
-                        case ViewPager2.SCROLL_STATE_DRAGGING:
-                        case ViewPager2.SCROLL_STATE_SETTLING:
-                            break;
-                        case ViewPager2.SCROLL_STATE_IDLE:
-                            if (!fragmentLoaded && fragments[pageNo] != null) {
-                                fragmentLoaded = true;
-                                fixSearch();
-                            }
-                            break;
-                    }
-                }
-
-                private void fixSearch() {
-                    switch (pageNo) {
-                        case AppDetailsFragment.ACTIVITIES:
-                        case AppDetailsFragment.SERVICES:
-                        case AppDetailsFragment.RECEIVERS:
-                        case AppDetailsFragment.PROVIDERS:
-                        case AppDetailsFragment.APP_OPS:
-                        case AppDetailsFragment.USES_PERMISSIONS:
-                        case AppDetailsFragment.PERMISSIONS:
-                            searchView.setVisibility(View.VISIBLE);
-                            if (fragments[pageNo] != null) {
-                                searchView.setOnQueryTextListener(fragments[pageNo]);
-                                fragments[pageNo].resetFilter();
-                            }
-                            break;
-                        case AppDetailsFragment.FEATURES:
-                        case AppDetailsFragment.CONFIGURATION:
-                        case AppDetailsFragment.SIGNATURES:
-                        case AppDetailsFragment.SHARED_LIBRARY_FILES:
-                        case AppDetailsFragment.NONE:
-                        default:
-                            searchView.setVisibility(View.GONE);
-                    }
-                }
-            });
+            viewPager2.registerOnPageChangeCallback(pageChangeCallback);
         }
         TabLayout tabLayout = findViewById(R.id.tab_layout);
 
         new TabLayoutMediator(tabLayout, viewPager2, true,
                 (tab, position) -> tab.setText(mTabTitleIds.getText(position))).attach();
+    }
+
+    @Override
+    protected void onDestroy() {
+        viewPager2.unregisterOnPageChangeCallback(pageChangeCallback);
+        super.onDestroy();
     }
 
     @SuppressLint("RestrictedApi")

@@ -358,7 +358,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         return false;
     }
 
-    private void setSortBy(@SortOrder int sortBy) { // FIXME: Add param to adapter
+    private void setSortBy(@SortOrder int sortBy) {
         model.setSortBy(sortBy);
         if (mAdapter != null) mAdapter.sortList(sortBy);
     }
