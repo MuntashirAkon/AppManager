@@ -61,12 +61,16 @@ public class AppPref {
         return getInstance().getPref(key, type);
     }
 
-    public static boolean isRootEnabled() {
-        return (Boolean) getInstance().getPref(PREF_ROOT_MODE_ENABLED, TYPE_BOOLEAN);
-    }
-
     public static boolean isAdbEnabled() {
         return (Boolean) getInstance().getPref(PREF_ADB_MODE_ENABLED, TYPE_BOOLEAN);
+    }
+
+    public static boolean isGlobalBlockingEnabled() {
+        return (Boolean) getInstance().getPref(PREF_GLOBAL_BLOCKING_ENABLED, TYPE_BOOLEAN);
+    }
+
+    public static boolean isRootEnabled() {
+        return (Boolean) getInstance().getPref(PREF_ROOT_MODE_ENABLED, TYPE_BOOLEAN);
     }
 
     private @NonNull SharedPreferences preferences;

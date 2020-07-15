@@ -8,10 +8,4 @@
         android:title="@string/refresh"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_toggle_blocking"
-        android:icon="@drawable/ic_block_black_24dp"
-        android:title=""
-        app:showAsAction="never" />
-
 </menu>

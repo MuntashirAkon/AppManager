@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.IntDef;
@@ -64,12 +65,13 @@ import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
+import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.storage.compontents.TrackerComponentFinder;
 import io.github.muntashirakon.AppManager.types.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.types.AppDetailsItem;
+import io.github.muntashirakon.AppManager.types.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
@@ -80,6 +82,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
     private static final String NEEDED_PROPERTY_INT = "neededProperty";
+    private static final String SORT_BY_INT = "neededProperty";
 
     @IntDef(value = {
             NONE,
@@ -109,7 +112,29 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     public static final int SIGNATURES = 9;
     public static final int SHARED_LIBRARY_FILES = 10;
 
-    private @Property int neededProperty;
+    @IntDef(value = {
+            SORT_BY_NAME,
+            SORT_BY_BLOCKED,
+            SORT_BY_TRACKERS,
+            SORT_BY_APP_OP_VALUES,
+            SORT_BY_DENIED_APP_OPS,
+            SORT_BY_DANGEROUS_PERMS,
+            SORT_BY_DENIED_PERMS
+    })
+    private @interface SortOrder {}
+    private static final int SORT_BY_NAME    = 0;
+    private static final int SORT_BY_BLOCKED  = 1;
+    private static final int SORT_BY_TRACKERS = 2;
+    private static final int SORT_BY_APP_OP_VALUES   = 3;
+    private static final int SORT_BY_DENIED_APP_OPS  = 4;
+    private static final int SORT_BY_DANGEROUS_PERMS = 5;
+    private static final int SORT_BY_DENIED_PERMS    = 6;
+
+    private static final int[] sSortMenuItemIdsMap = {
+            R.id.action_sort_by_name, R.id.action_sort_by_blocked_components,
+            R.id.action_sort_by_tracker_components, R.id.action_sort_by_app_ops_values,
+            R.id.action_sort_by_denied_app_ops, R.id.action_sort_by_dangerous_permissions,
+            R.id.action_sort_by_denied_permissions};
 
     private String mPackageName;
     private PackageManager mPackageManager;
@@ -123,6 +148,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private TextView mRulesNotAppliedMsg;
     private List<Tuple<String, Integer>> permissionsWithFlags;
     private boolean bFi;
+    private @Property int neededProperty;
+    private @SortOrder int mSortBy;
 
     private static int mColorGrey1;
     private static int mColorGrey2;
@@ -145,15 +172,18 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(NEEDED_PROPERTY_INT, neededProperty);
+        outState.putSerializable(SORT_BY_INT, mSortBy);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        if (isEmptyFragmentConstructCalled && savedInstanceState != null){
-            neededProperty = savedInstanceState.getInt(NEEDED_PROPERTY_INT);
-        }
+        if (savedInstanceState != null){
+            mSortBy = savedInstanceState.getInt(SORT_BY_INT);
+            if (isEmptyFragmentConstructCalled)
+                neededProperty = savedInstanceState.getInt(NEEDED_PROPERTY_INT);
+        } else mSortBy = SORT_BY_NAME;
         try {
             mPackageName = Objects.requireNonNull(getActivity()).getIntent().getStringExtra(AppInfoActivity.EXTRA_PACKAGE_NAME);
         } catch (NullPointerException e) {
@@ -209,20 +239,47 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_app_details_action, menu);
-        blockingToggler = menu.findItem(R.id.action_toggle_blocking);
-        if (neededProperty <= PROVIDERS && AppPref.isRootEnabled() && !(Boolean) AppPref.get(
-                AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN)) {
-            blockingToggler.setVisible(true);
-            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
-                if (cb.isRulesApplied()) {
-                    blockingToggler.setTitle(R.string.menu_remove_rules);
-                } else {
-                    blockingToggler.setTitle(R.string.menu_apply_rules);
-                }
-            }
-        } else blockingToggler.setVisible(false);
+        switch (neededProperty) {
+            case ACTIVITIES:
+            case PROVIDERS:
+            case RECEIVERS:
+            case SERVICES:
+                if (AppPref.isRootEnabled()) {
+                    inflater.inflate(R.menu.fragment_app_details_components_actions, menu);
+                    blockingToggler = menu.findItem(R.id.action_toggle_blocking);
+                    if (!AppPref.isGlobalBlockingEnabled()) {
+                        blockingToggler.setVisible(true);
+                        try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
+                            if (cb.componentCount() > 0 && cb.isRulesApplied()) {
+                                blockingToggler.setTitle(R.string.menu_remove_rules);
+                            } else blockingToggler.setTitle(R.string.menu_apply_rules);
+                        }
+                    } else blockingToggler.setVisible(false);
+                } else inflater.inflate(R.menu.fragment_app_details_refresh_actions, menu);
+                break;
+            case APP_OPS:
+                inflater.inflate(R.menu.fragment_app_details_app_ops_actions, menu);
+                break;
+            case USES_PERMISSIONS:
+                inflater.inflate(R.menu.fragment_app_details_permissions_actions, menu);
+                break;
+            case CONFIGURATION:
+            case FEATURES:
+            case NONE:
+            case PERMISSIONS:
+            case SHARED_LIBRARY_FILES:
+            case SIGNATURES:
+                inflater.inflate(R.menu.fragment_app_details_refresh_actions, menu);
+                break;
+        }
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        if (neededProperty <= USES_PERMISSIONS)
+            menu.findItem(sSortMenuItemIdsMap[mSortBy]).setChecked(true);
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -231,13 +288,54 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             case R.id.action_refresh_details:
                 refreshDetails();
                 return true;
-            case R.id.action_toggle_blocking:
+            case R.id.action_toggle_blocking:  // Components
                 try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
                     boolean isRulesApplied = cb.isRulesApplied();
                     cb.applyRules(!isRulesApplied);
-                    if (cb.isRulesApplied()) blockingToggler.setTitle(R.string.menu_remove_rules);
+                    if (cb.componentCount() > 0 && cb.isRulesApplied()) blockingToggler.setTitle(R.string.menu_remove_rules);
                     else blockingToggler.setTitle(R.string.menu_apply_rules);
                 }
+                return true;
+            case R.id.action_block_trackers:  // Components
+                // TODO:
+                return true;
+            case R.id.action_reset_to_default:  // App ops
+                // TODO:
+                return true;
+            case R.id.action_deny_dangerous_app_ops:  // App ops
+                // TODO:
+                return true;
+            case R.id.action_deny_dangerous_permissions:  // permissions
+                // TODO:
+                return true;
+            // Sorting
+            case R.id.action_sort_by_name:  // All
+                setSortBy(SORT_BY_NAME);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_by_blocked_components:  // Components
+                setSortBy(SORT_BY_BLOCKED);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_by_tracker_components:  // Components
+                setSortBy(SORT_BY_TRACKERS);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_by_app_ops_values:  // App ops
+                setSortBy(SORT_BY_APP_OP_VALUES);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_by_denied_app_ops:  // App ops
+                setSortBy(SORT_BY_DENIED_APP_OPS);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_by_dangerous_permissions:  // App ops
+                setSortBy(SORT_BY_DANGEROUS_PERMS);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_by_denied_permissions:
+                setSortBy(SORT_BY_DENIED_PERMS);
+                item.setChecked(true);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -263,6 +361,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
+    }
+
+    private void setSortBy(@SortOrder int sort) {
+        mSortBy = sort;
+        if (mAdapter != null) mAdapter.sortList(mSortBy);
     }
 
     synchronized private void applyRules(String componentName, RulesStorageManager.Type type) {
@@ -468,9 +571,22 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             case USES_PERMISSIONS:
                 if (permissionsWithFlags != null) {
                     for(Tuple<String, Integer> permissionWithFlags: permissionsWithFlags) {
-                        AppDetailsItem appDetailsItem = new AppDetailsItem(permissionWithFlags);
-                        appDetailsItem.name = permissionWithFlags.getFirst();
-                        appDetailsItems.add(appDetailsItem);
+                        try {
+                            PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(
+                                    permissionWithFlags.getFirst(), PackageManager.GET_META_DATA);
+                            AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionInfo);
+                            appDetailsItem.name = permissionWithFlags.getFirst();
+                            appDetailsItem.flags = permissionWithFlags.getSecond();
+                            int basePermissionType;
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                basePermissionType = permissionInfo.getProtection();
+                            } else {
+                                basePermissionType = permissionInfo.protectionLevel & PermissionInfo.PROTECTION_MASK_BASE;
+                            }
+                            appDetailsItem.isDangerous = basePermissionType == PermissionInfo.PROTECTION_DANGEROUS;
+                            appDetailsItem.isGranted = (appDetailsItem.flags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
+                            appDetailsItems.add(appDetailsItem);
+                        } catch (PackageManager.NameNotFoundException ignore) {}
                     }
                 }
                 break;
@@ -598,8 +714,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         private Boolean isRootEnabled = true;
         private Boolean isADBEnabled = true;
         private List<String> runningServices;
+        private @SortOrder int mSortBy;
 
-        AppDetailsRecyclerAdapter() {}
+        AppDetailsRecyclerAdapter() {
+            mSortBy = SORT_BY_NAME;
+        }
 
         void reset() {
             isRootEnabled = AppPref.isRootEnabled();
@@ -629,10 +748,67 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         getFilter().filter(AppDetailsActivity.sConstraint);
                     }
                     mRulesNotAppliedMsg.setVisibility(rules_msg_visibility.get());
-                    notifyDataSetChanged();
+                    sortList(mSortBy);
                     showProgressIndicator(false);
                 });
             }).start();
+        }
+
+        void sortList(@SortOrder int sort) {
+            new Thread(() -> {
+                if (sort != SORT_BY_NAME) {
+                    mSortBy = SORT_BY_NAME;
+                    sortList();
+                }
+                mSortBy = sort;
+                sortList();
+                mActivity.runOnUiThread(this::notifyDataSetChanged);
+            }).start();
+        }
+
+        void set(int currentIndex, AppDetailsItem appDetailsItem) {
+            mAdapterList.set(currentIndex, appDetailsItem);
+            notifyItemChanged(currentIndex);
+            // Update the values in default list as well
+            synchronized (this) {
+                new Thread(() -> {
+                    for (int i = 0; i < mDefaultList.size(); ++i) {
+                        if (mDefaultList.get(i).name.equals(appDetailsItem.name)) {
+                            mDefaultList.set(i, appDetailsItem);
+                        }
+                    }
+                }).start();
+            }
+        }
+
+        private void sortList() {
+            if (mAdapterList == null) return;
+            Collections.sort(mAdapterList, (o1, o2) -> {
+                switch (mSortBy) {
+                    // All
+                    case AppDetailsFragment.SORT_BY_NAME:
+                        return o1.name.compareTo(o2.name);
+                    // Components
+                    case AppDetailsFragment.SORT_BY_BLOCKED:
+                        return -Utils.compareBooleans(((AppDetailsComponentItem) o1).isBlocked, ((AppDetailsComponentItem) o2).isBlocked);
+                    case AppDetailsFragment.SORT_BY_TRACKERS:
+                        return -Utils.compareBooleans(((AppDetailsComponentItem) o1).isTracker, ((AppDetailsComponentItem) o2).isTracker);
+                    // App ops
+                    case AppDetailsFragment.SORT_BY_APP_OP_VALUES:
+                        Integer o1Op = ((AppOpsManager.OpEntry) o1.vanillaItem).getOp();
+                        Integer o2Op = ((AppOpsManager.OpEntry) o2.vanillaItem).getOp();
+                        return o1Op.compareTo(o2Op);
+                    case AppDetailsFragment.SORT_BY_DENIED_APP_OPS:
+                        // A slight hack to sort it this way: ignore > foreground > deny > default[ > ask] > allow
+                        return -((AppOpsManager.OpEntry) o1.vanillaItem).getMode().compareTo(((AppOpsManager.OpEntry) o2.vanillaItem).getMode());
+                    // Permissions
+                    case AppDetailsFragment.SORT_BY_DANGEROUS_PERMS:
+                        return -Utils.compareBooleans(((AppDetailsPermissionItem) o1).isDangerous, ((AppDetailsPermissionItem) o2).isDangerous);
+                    case AppDetailsFragment.SORT_BY_DENIED_PERMS:
+                        return Utils.compareBooleans(((AppDetailsPermissionItem) o1).isGranted, ((AppDetailsPermissionItem) o2).isGranted);
+                }
+                return 0;
+            });
         }
 
         @Override
@@ -674,7 +850,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             //noinspection unchecked
                             mAdapterList = (List<AppDetailsItem>) filterResults.values;
                         }
-                        notifyDataSetChanged();
+                        sortList(mSortBy);
                     }
                 };
             return mFilter;
@@ -973,8 +1149,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 holder.blockBtn.setOnClickListener(v -> {
                     applyRules(activityName, RulesStorageManager.Type.ACTIVITY);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
-                    mAdapterList.set(index, appDetailsItem);
-                    notifyItemChanged(index);
+                    set(index, appDetailsItem);
+                    if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
                 });
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -1019,8 +1195,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 holder.blockBtn.setOnClickListener(v -> {
                     applyRules(serviceInfo.name, RulesStorageManager.Type.SERVICE);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
-                    mAdapterList.set(index, appDetailsItem);
-                    notifyItemChanged(index);
+                    set(index, appDetailsItem);
+                    if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
                 });
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -1073,8 +1249,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 holder.blockBtn.setOnClickListener(v -> {
                     applyRules(activityInfo.name, RulesStorageManager.Type.RECEIVER);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
-                    mAdapterList.set(index, appDetailsItem);
-                    notifyItemChanged(index);
+                    set(index, appDetailsItem);
+                    if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
                 });
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -1150,8 +1326,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 holder.blockBtn.setOnClickListener(v -> {
                     applyRules(providerName, RulesStorageManager.Type.PROVIDER);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
-                    mAdapterList.set(index, appDetailsItem);
+                    set(index, appDetailsItem);
                     notifyItemChanged(index);
+                    if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
                 });
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -1240,9 +1417,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (opEntry.getMode().equals(AppOpsManager.modeToName(AppOpsManager.MODE_ALLOWED))) {
                 // op granted
                 holder.toggleSwitch.setChecked(true);
-            } else {
-                holder.toggleSwitch.setChecked(false);
-            }
+            } else holder.toggleSwitch.setChecked(false);
             holder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> new Thread(() -> {
                 if (buttonView.isPressed()) {
                     if (isChecked) {
@@ -1260,8 +1435,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                                 AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
                                 appDetailsItem.name = opEntry1.getOpStr();
                                 mActivity.runOnUiThread(() -> {
-                                    mAdapterList.set(index, appDetailsItem);
-                                    notifyDataSetChanged();
+                                    set(index, appDetailsItem);
+                                    if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
                                 });
                             } else {
                                 mActivity.runOnUiThread(() -> {
@@ -1290,8 +1465,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                                 AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
                                 appDetailsItem.name = opEntry1.getOpStr();
                                 mActivity.runOnUiThread(() -> {
-                                    mAdapterList.set(index, appDetailsItem);
+                                    set(index, appDetailsItem);
                                     notifyDataSetChanged();
+                                    if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
                                 });
                             } else {
                                 mActivity.runOnUiThread(() -> {
@@ -1316,15 +1492,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         private void getUsesPermissionsView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
             view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            @SuppressWarnings("unchecked")
-            Tuple<String, Integer> permTuple = (Tuple<String, Integer>) mAdapterList.get(index).vanillaItem;
-            final String permName = permTuple.getFirst();
-            final int permFlags = permTuple.getSecond();
-            PermissionInfo permissionInfo = null;
-            try {
-                permissionInfo = mPackageManager.getPermissionInfo(permName, PackageManager.GET_META_DATA);
-            } catch (PackageManager.NameNotFoundException ignore) {}
-
+            AppDetailsPermissionItem permissionItem = (AppDetailsPermissionItem) mAdapterList.get(index);
+            @NonNull PermissionInfo permissionInfo = (PermissionInfo) permissionItem.vanillaItem;
+            final String permName = permissionInfo.name;
             // Set permission name
             if (mConstraint != null && permName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
@@ -1333,41 +1503,42 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 holder.textView1.setText(permName);
             }
             // Set others
-            if (permissionInfo != null) {
-                // Description
-                CharSequence description = permissionInfo.loadDescription(mPackageManager);
-                if (description != null) {
-                    holder.textView2.setVisibility(View.VISIBLE);
-                    holder.textView2.setText(description);
-                } else holder.textView2.setVisibility(View.GONE);
-                // Protection level
-                String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
-                holder.textView3.setText(String.format(Locale.getDefault(), "\u2691 %s", protectionLevel));
-                if (protectionLevel.contains("dangerous"))
-                    view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
-                // Set package name
-                if (permissionInfo.packageName != null) {
-                    holder.textView4.setVisibility(View.VISIBLE);
-                    holder.textView4.setText(String.format("%s: %s",
-                            mActivity.getString(R.string.package_name), permissionInfo.packageName));
-                } else holder.textView4.setVisibility(View.GONE);
-                // Set group name
-                if (permissionInfo.group != null) {
-                    holder.textView5.setVisibility(View.VISIBLE);
-                    holder.textView5.setText(String.format("%s: %s",
-                            mActivity.getString(R.string.group), permissionInfo.group));
-                } else holder.textView5.setVisibility(View.GONE);
-                // Permission Switch
-                if ((isRootEnabled || isADBEnabled) && protectionLevel.contains("dangerous")) {
-                    holder.toggleSwitch.setVisibility(View.VISIBLE);
-                    if ((permFlags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
-                        // Permission granted
-                        holder.toggleSwitch.setChecked(true);
-                    } else {
-                        holder.toggleSwitch.setChecked(false);
-                    }
-                    holder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) ->
-                            new Thread(() -> {
+            // Description
+            CharSequence description = permissionInfo.loadDescription(mPackageManager);
+            if (description != null) {
+                holder.textView2.setVisibility(View.VISIBLE);
+                holder.textView2.setText(description);
+            } else holder.textView2.setVisibility(View.GONE);
+            // Protection level
+            String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
+            holder.textView3.setText(String.format(Locale.getDefault(), "\u2691 %s", protectionLevel));
+            if (permissionItem.isDangerous)
+                view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
+            // Set package name
+            if (permissionInfo.packageName != null) {
+                holder.textView4.setVisibility(View.VISIBLE);
+                holder.textView4.setText(String.format("%s: %s",
+                        mActivity.getString(R.string.package_name), permissionInfo.packageName));
+            } else holder.textView4.setVisibility(View.GONE);
+            // Set group name
+            if (permissionInfo.group != null) {
+                holder.textView5.setVisibility(View.VISIBLE);
+                holder.textView5.setText(String.format("%s: %s",
+                        mActivity.getString(R.string.group), permissionInfo.group));
+            } else holder.textView5.setVisibility(View.GONE);
+            // Permission Switch
+            if ((isRootEnabled || isADBEnabled) && permissionItem.isDangerous) {
+                holder.toggleSwitch.setVisibility(View.VISIBLE);
+                if (permissionItem.isGranted) {
+                    // Permission granted
+                    holder.toggleSwitch.setChecked(true);
+                } else {
+                    holder.toggleSwitch.setChecked(false);
+                }
+                holder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> new Thread(() -> {
+                    if (buttonView.isPressed()) {
+                        boolean permChanged = false;
+                        final AtomicBoolean permGranted = new AtomicBoolean(false);
                         if (isChecked) {
                             // Enable permission
                             if (!Runner.run(mActivity, String.format("pm grant %s %s", mPackageName, permName)).isSuccessful()) {
@@ -1378,6 +1549,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             } else {
                                 try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
                                     cb.setPermission(permName, true);
+                                    permChanged = true;
+                                    permGranted.set(true);
                                 }
                             }
                         } else {
@@ -1390,18 +1563,28 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             } else {
                                 try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
                                     cb.setPermission(permName, false);
+                                    permChanged = true;
+                                    permGranted.set(false);
                                 }
                             }
                         }
-                    }).start());
-                } else holder.toggleSwitch.setVisibility(View.GONE);
-            } else {
-                holder.textView2.setVisibility(View.GONE);
-                holder.textView3.setVisibility(View.GONE);
-                holder.textView4.setVisibility(View.GONE);
-                holder.textView5.setVisibility(View.GONE);
-                holder.toggleSwitch.setVisibility(View.GONE);
-            }
+                        if (permChanged) {
+                            mActivity.runOnUiThread(() -> {
+                                try {
+                                    PermissionInfo newPermissionInfo = mPackageManager.getPermissionInfo(permissionItem.name, PackageManager.GET_META_DATA);
+                                    AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(newPermissionInfo);
+                                    appDetailsItem.name = permissionItem.name;
+                                    appDetailsItem.flags = permissionItem.flags;
+                                    appDetailsItem.isDangerous = permissionItem.isDangerous;
+                                    appDetailsItem.isGranted = permGranted.get();
+                                    set(index, appDetailsItem);
+                                    if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
+                                } catch (PackageManager.NameNotFoundException ignore) {}
+                            });
+                        }
+                    }
+                }).start());
+            } else holder.toggleSwitch.setVisibility(View.GONE);
         }
 
         private void getSharedLibsView(@NonNull ViewHolder holder, int index) {

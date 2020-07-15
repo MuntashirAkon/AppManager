@@ -454,4 +454,16 @@
         turned off, App Manager will never ask for <i>Usage Access</i> permission
     </string>
     <string name="sort_by_wifi_data">Wifi data</string>
+    <string name="block_trackers">Block trackers</string>
+    <string name="sort_by_component_name">Component name</string>
+    <string name="reset_to_default">Reset to default</string>
+    <string name="deny_dangerous_app_ops">Deny dangerous app ops</string>
+    <string name="sort_by_app_ops_names">App ops name</string>
+    <string name="sort_by_denied_app_ops">Denied first</string>
+    <string name="sort_by_app_ops_values">App ops value</string>
+    <string name="sort_by_permission_names">Permission name</string>
+    <string name="sort_by_dangerous_permissions">Dangerous first</string>
+    <string name="sort_by_denied_permissions">Denied first</string>
+    <string name="deny_dangerous_permissions">Deny dangerous permissions</string>
+    <string name="sort_by_tracker_components">Tracker first</string>
 </resources>

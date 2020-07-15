@@ -113,14 +113,13 @@ public class AppDetailsActivity extends AppCompatActivity {
                     super.onPageScrollStateChanged(state);
                     switch (state) {
                         case ViewPager2.SCROLL_STATE_DRAGGING:
+                        case ViewPager2.SCROLL_STATE_SETTLING:
                             break;
                         case ViewPager2.SCROLL_STATE_IDLE:
                             if (!fragmentLoaded && fragments[pageNo] != null) {
                                 fragmentLoaded = true;
                                 fixSearch();
                             }
-                            break;
-                        case ViewPager2.SCROLL_STATE_SETTLING:
                             break;
                     }
                 }

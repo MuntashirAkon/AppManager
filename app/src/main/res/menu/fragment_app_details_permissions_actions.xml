@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_refresh_details"
+        android:icon="@drawable/ic_refresh_black_24dp"
+        android:title="@string/refresh"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_deny_dangerous_permissions"
+        android:icon="@drawable/ic_block_black_24dp"
+        android:title="@string/deny_dangerous_permissions"
+        app:showAsAction="never" />
+
+    <item
+        android:icon="@drawable/ic_sort_black_24dp"
+        android:title="@string/sort"
+        app:showAsAction="never">
+
+        <menu>
+
+            <group
+                android:checkableBehavior="single"
+                android:menuCategory="container">
+
+                <item
+                    android:id="@+id/action_sort_by_name"
+                    android:title="@string/sort_by_permission_names" />
+
+                <item
+                    android:id="@+id/action_sort_by_dangerous_permissions"
+                    android:title="@string/sort_by_dangerous_permissions" />
+
+                <item
+                    android:id="@+id/action_sort_by_denied_permissions"
+                    android:title="@string/sort_by_denied_permissions" />
+
+            </group>
+
+        </menu>
+
+    </item>
+
+</menu>

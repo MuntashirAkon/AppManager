@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
  */
 public class AppDetailsComponentItem extends AppDetailsItem {
     public boolean isTracker = false;
+    public boolean isBlocked = false;
+
     public AppDetailsComponentItem(@NonNull ComponentInfo componentInfo) {
         super(componentInfo);
     }
