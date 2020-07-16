@@ -337,14 +337,18 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if (mAdapter != null) mainModel.load(neededProperty);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (mAdapter != null) {
             if (!TextUtils.isEmpty(AppDetailsActivity.sConstraint)) {
                 mAdapter.getFilter().filter(AppDetailsActivity.sConstraint);
             }
-            // Refresh details
-            mainModel.load(neededProperty);
         }
     }
 

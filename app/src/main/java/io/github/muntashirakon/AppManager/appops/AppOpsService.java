@@ -57,31 +57,18 @@ class AppOpsService implements IAppOpsService {
     public String checkOperation(int op, int uid, @Nullable String packageName)
             throws Exception {
         String opStr = AppOpsManager.opToName(op);
-        if (packageName != null)
-            runCommand(String.format("appops get %s %d", packageName, op));
-        else if (uid >= 0)
-            runCommand(String.format("appops get %d %d", uid, op));
-        else throw new Exception("No uid or package name provided");
-        if (isSuccessful) {
-            try {
-                String opModeOut;
-                if (output.size() == 1) {
-                    return parseOpName(output.get(0)).getMode();
-                } else if (output.size() == 2) {
-                    String line2 = output.get(1);
-                    if (line2.startsWith("Default mode:")) {
-                        opModeOut = line2.substring(DEFAULT_MODE_SKIP);
-                        return opModeOut;
-                    } else return parseOpName(line2).getMode();
-                } else if (output.size() > 2) {
-                    // In some cases, due to some bugs, output is more than two lines.
-                    // If that's the case, parse only the last line.
-                    return parseOpName(output.get(output.size()-1)).getMode();
-                }
-            } catch (IndexOutOfBoundsException e) {
-                throw new Exception("Invalid output from appops");
+        try {
+            // Check among all
+            AppOpsManager.PackageOps packageOps = getOpsForPackage(uid, packageName, null).get(0);
+            List<AppOpsManager.OpEntry> entries = packageOps.getOps();
+            // Iterate in backward direction to get only the last value of the duplicate app ops
+            for (int i = entries.size()-1; i>=0; --i) {
+                if (entries.get(i).getOp() == op) return entries.get(i).getMode();
             }
-        }
+            packageOps = getOpsForPackage(uid, packageName, new int[]{op}).get(0);
+            entries = packageOps.getOps();
+            if (entries.size() == 1) return entries.get(0).getMode();
+        } catch (Exception ignore) {}
         throw new Exception("Failed to check operation " + opStr);
     }
 
