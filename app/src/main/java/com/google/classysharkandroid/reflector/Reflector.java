@@ -89,16 +89,15 @@ public class Reflector {
         if (x.lastIndexOf(".") != -1) {
             y = x.substring(0, x.lastIndexOf("."));
 
-            words.add(new TaggedWord("\npackage ", TAG.MODIFIER));
+            words.add(new TaggedWord("package ", TAG.MODIFIER));
             words.add(new TaggedWord(y, TAG.IDENTIFIER));
-            words.add(new TaggedWord(";", TAG.MODIFIER));
+            words.add(new TaggedWord(";\n", TAG.MODIFIER));
         }
 
         try {
             fields = currentClass.getDeclaredFields(); // NoClassDefFoundError ccc71/at/xposed/blocks/at_block_manage_accounts$5
             constructors = currentClass.getDeclaredConstructors();
             methods = currentClass.getDeclaredMethods();
-
         } catch (NoClassDefFoundError e){
             e.printStackTrace();
             return e.toString();
@@ -181,14 +180,14 @@ public class Reflector {
         words.add(new TaggedWord("\n{", TAG.IDENTIFIER));
 
         words.add(new TaggedWord("\n" +
-                "/*\n" +
-                " * Field Definitions.\n" +
-                " */", TAG.DOCUMENT));
+                "    /*\n" +
+                "     * Field Definitions.\n" +
+                "     */", TAG.DOCUMENT));
 
         for (Field field : fields) {
             int md = field.getModifiers();
 
-            words.add(new TaggedWord("\n      " + Modifier.toString(md) + " ", TAG.MODIFIER));
+            words.add(new TaggedWord("\n    " + Modifier.toString(md) + " ", TAG.MODIFIER));
             words.add(new TaggedWord(ClassTypeAlgorithm.TypeName(field.getType().getName(), null) + " ",
                     TAG.IDENTIFIER));
             words.add(new TaggedWord(field.getName() + ";", TAG.DOCUMENT));
@@ -198,9 +197,9 @@ public class Reflector {
         // http://stackoverflow.com/questions/140537/how-to-use-java-reflection-when-the-enum-type-is-a-class
 
         words.add(new TaggedWord("\n" +
-                "/*\n" +
-                " * Declared Constructors.\n" +
-                " */\n", TAG.DOCUMENT));
+                "    /*\n" +
+                "     * Declared Constructors.\n" +
+                "     */\n", TAG.DOCUMENT));
         x = ClassTypeAlgorithm.TypeName(currentClass.getName(), null);
         for (Constructor constructor : constructors) {
             int md = constructor.getModifiers();

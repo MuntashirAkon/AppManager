@@ -3,23 +3,29 @@ package io.github.muntashirakon.AppManager.activities;
 // NOTE: Commented lines were taken from View2ManifestActivity.java
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.progressindicator.ProgressIndicator;
 
-import java.lang.ref.WeakReference;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.content.ContextCompat;
@@ -28,14 +34,12 @@ import io.github.muntashirakon.xmlapkparser.AXMLPrinter;
 
 public class ManifestViewerActivity extends AppCompatActivity {
     public static final String EXTRA_PACKAGE_NAME = "package_name";
-    /**
-     * To use a wrapped layout, instead of the default one
-     */
-    public static final String EXTRA_IS_WRAPPED = "is_wrapped";
 
-    public final static Pattern QUOTATIONS = Pattern.compile("\"([^\"]*)\"", Pattern.MULTILINE);
+    private static final String MIME_XML = "text/xml";
+    private static final int RESULT_CODE_EXPORT = 849;
 
-    public final static Pattern MANIFEST_TAGS = Pattern.compile
+    private static final Pattern QUOTATIONS = Pattern.compile("\"([^\"]*)\"", Pattern.MULTILINE);
+    private static final Pattern MANIFEST_TAGS = Pattern.compile
             ("(</?(manifest|application|compatible-screens|instrumentation|permission" +
                             "(-group|-tree)?|supports-(gl-texture|screens)|uses-(configuration|" +
                             "feature|permission(-sdk-23)?|sdk)|activity(-alias)?|meta-data|service|" +
@@ -46,21 +50,21 @@ public class ManifestViewerActivity extends AppCompatActivity {
 
     private static String code;
     private ProgressIndicator mProgressIndicator;
-
+    private boolean isWrapped = true;  // Wrap by default
+    private TextView container;
+    private SpannableString formattedContent;
+    private String filePath;
+    private String packageName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getIntent().getBooleanExtra(EXTRA_IS_WRAPPED, false))
-            setContentView(R.layout.activity_any_viewer_wrapped);
-        else
-            setContentView(R.layout.activity_any_viewer);
+        setContentView(R.layout.activity_any_viewer);
         setSupportActionBar(findViewById(R.id.toolbar));
-
         mProgressIndicator = findViewById(R.id.progress_linear);
-
-        String packageName = getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
-        String filePath = null, applicationLabel = null;
+        packageName = getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
+        filePath = null;
+        String applicationLabel = null;
         try {
             assert packageName != null;
             filePath = getPackageManager().getPackageInfo(packageName, 0).applicationInfo.sourceDir;
@@ -70,9 +74,8 @@ public class ManifestViewerActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.app_not_installed, Toast.LENGTH_LONG).show();
             finish();
         }
-
         setTitle("\u2707 " + applicationLabel);
-        new AsyncManifestLoader(ManifestViewerActivity.this).execute(filePath);
+        setWrapped();
 //        new AsyncManifestLoaderPkg(ManifestViewerActivity.this).execute(packageName);
 
     }
@@ -89,88 +92,79 @@ public class ManifestViewerActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        final int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-            return true;
-        } else if (id == R.id.action_wrap) {
-            getIntent().putExtra(EXTRA_IS_WRAPPED, !getIntent().getBooleanExtra(EXTRA_IS_WRAPPED, false));
-            recreate();
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home: finish(); return true;
+            case R.id.action_wrap: setWrapped(); return true;
+            case R.id.action_save:
+                String fileName = packageName +  "_AndroidManifest.xml";
+                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType(MIME_XML);
+                intent.putExtra(Intent.EXTRA_TITLE, fileName);
+                startActivityForResult(intent, RESULT_CODE_EXPORT);
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK) return;
+        if (requestCode != RESULT_CODE_EXPORT) return;
+        if (data == null) return;
+        Uri uri = data.getData();
+        if(uri == null) return;
+        try (OutputStream outputStream = getContentResolver().openOutputStream(uri)) {
+            Objects.requireNonNull(outputStream).write(code.getBytes());
+            outputStream.flush();
+            Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setWrapped() {
+        if (container != null) container.setVisibility(View.GONE);
+        if (isWrapped) container = findViewById(R.id.any_view_wrapped);
+        else container = findViewById(R.id.any_view);
+        container.setVisibility(View.VISIBLE);
+        container.setTextColor(ContextCompat.getColor(this, R.color.dark_orange));
+        displayContent();
+        isWrapped = !isWrapped;
+    }
+
     private void displayContent() {
-        final TextView textView = findViewById(R.id.any_view);
-        textView.setTextColor(ContextCompat.getColor(this, R.color.dark_orange));
+        mProgressIndicator.show();
         final int tagColor = ContextCompat.getColor(this, R.color.pink);
         final int attrValueColor = ContextCompat.getColor(this, R.color.ocean_blue);
         new Thread(() -> {
-            SpannableString spannableString = new SpannableString(code);
-            Matcher matcher = MANIFEST_TAGS.matcher(code);
-            while (matcher.find()) {
-                spannableString.setSpan(new ForegroundColorSpan(tagColor), matcher.start(),
-                        matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-            matcher.usePattern(QUOTATIONS);
-            while (matcher.find()) {
-                spannableString.setSpan(new ForegroundColorSpan(attrValueColor), matcher.start(),
-                        matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (formattedContent == null) {
+                code = io.github.muntashirakon.AppManager.utils.Utils.getProperXml(AXMLPrinter.getManifestXMLFromAPK(filePath, "AndroidManifest.xml"));
+                if (code == null) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
+                        finish();
+                    });
+                    return;
+                }
+                formattedContent = new SpannableString(code);
+                Matcher matcher = MANIFEST_TAGS.matcher(code);
+                while (matcher.find()) {
+                    formattedContent.setSpan(new ForegroundColorSpan(tagColor), matcher.start(),
+                            matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                matcher.usePattern(QUOTATIONS);
+                while (matcher.find()) {
+                    formattedContent.setSpan(new ForegroundColorSpan(attrValueColor), matcher.start(),
+                            matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
             }
             runOnUiThread(() -> {
-                textView.setText(spannableString);
-                ManifestViewerActivity.this.showProgressIndicator(false);
+                container.setText(formattedContent);
+                mProgressIndicator.hide();
             });
         }).start();
-    }
-
-    private void handleError() {
-        Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
-        finish();
-    }
-
-    private void showProgressIndicator(boolean show) {
-        if (show) mProgressIndicator.show();
-        else mProgressIndicator.hide();
-    }
-
-    /**
-     * This AsyncTask takes filepath file path as argument
-     */
-    private static class AsyncManifestLoader extends AsyncTask<String, Integer, Boolean> {
-        private WeakReference<ManifestViewerActivity> mActivity = null;
-        private AsyncManifestLoader (ManifestViewerActivity pActivity) {
-            link(pActivity);
-        }
-
-        private void link (ManifestViewerActivity pActivity) {
-            mActivity = new WeakReference<>(pActivity);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if(mActivity.get() != null) mActivity.get().showProgressIndicator(true);
-        }
-
-        @Override
-        protected Boolean doInBackground(String... strings) {
-            String filePath = strings[0];
-            code = io.github.muntashirakon.AppManager.utils.Utils.getProperXml(AXMLPrinter.getManifestXMLFromAPK(filePath, "AndroidManifest.xml"));
-            return (code != null);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-            if (mActivity.get() != null) {
-                if (result)
-                    mActivity.get().displayContent();
-                else
-                    mActivity.get().handleError();
-            }
-        }
     }
 
 //    /**

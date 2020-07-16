@@ -14,22 +14,43 @@
         android:fillViewport="true"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <HorizontalScrollView
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fillViewport="true">
+            android:orientation="horizontal">
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+                <TextView
+                    android:id="@+id/any_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
+                    android:gravity="top"
+                    android:padding="@dimen/padding_small"
+                    android:textSize="@dimen/subtitle_font"
+                    android:textIsSelectable="true"
+                    android:visibility="gone"
+                    tools:text="@tools:sample/lorem/random" />
+
+            </HorizontalScrollView>
 
             <TextView
-                android:id="@+id/any_view"
+                android:id="@+id/any_view_wrapped"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
                 android:gravity="top"
                 android:padding="@dimen/padding_small"
+                android:textSize="@dimen/subtitle_font"
                 android:textIsSelectable="true"
+                android:visibility="visible"
                 tools:text="@tools:sample/lorem/random" />
 
-        </HorizontalScrollView>
+        </FrameLayout>
 
     </ScrollView>
 

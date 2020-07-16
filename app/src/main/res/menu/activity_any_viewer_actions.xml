@@ -7,4 +7,11 @@
         android:icon="@drawable/ic_wrap_text_black_24dp"
         android:title="@string/word_wrap"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_save"
+        android:icon="@drawable/ic_baseline_save_24"
+        android:title="@string/save"
+        app:showAsAction="ifRoom" />
+
 </menu>
