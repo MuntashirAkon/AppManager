@@ -1,21 +1,18 @@
 package io.github.muntashirakon.AppManager.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ComponentInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PathPermission;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
-import android.content.pm.SigningInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
@@ -40,13 +37,9 @@ import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -63,13 +56,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
-import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
 import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.storage.compontents.TrackerComponentFinder;
 import io.github.muntashirakon.AppManager.types.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.types.AppDetailsItem;
 import io.github.muntashirakon.AppManager.types.AppDetailsPermissionItem;
@@ -77,8 +68,8 @@ import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.viewmodels.AppDetailsFragmentViewModel;
 import io.github.muntashirakon.AppManager.viewmodels.AppDetailsViewModel;
 
 
@@ -94,9 +85,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             USES_PERMISSIONS,
             PERMISSIONS,
             FEATURES,
-            CONFIGURATION,
+            CONFIGURATIONS,
             SIGNATURES,
-            SHARED_LIBRARY_FILES
+            SHARED_LIBRARIES
     })
     public @interface Property {}
     public static final int NONE = -1;
@@ -108,9 +99,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     public static final int USES_PERMISSIONS = 5;
     public static final int PERMISSIONS = 6;
     public static final int FEATURES = 7;
-    public static final int CONFIGURATION = 8;
+    public static final int CONFIGURATIONS = 8;
     public static final int SIGNATURES = 9;
-    public static final int SHARED_LIBRARY_FILES = 10;
+    public static final int SHARED_LIBRARIES = 10;
 
     @IntDef(value = {
             SORT_BY_NAME,
@@ -138,18 +129,17 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     private String mPackageName;
     private PackageManager mPackageManager;
-    private PackageInfo mPackageInfo;
-    private Activity mActivity;
+    private AppDetailsActivity mActivity;
     private AppDetailsRecyclerAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefresh;
     private MenuItem blockingToggler;
     private AppOpsService mAppOpsService;
     private ProgressIndicator mProgressIndicator;
     private TextView mRulesNotAppliedMsg;
-    private List<Tuple<String, Integer>> permissionsWithFlags;
     private boolean bFi;
     private @Property int neededProperty;
-    AppDetailsViewModel model;
+    AppDetailsFragmentViewModel model;
+    AppDetailsViewModel mainModel;
 
     private static int mColorGrey1;
     private static int mColorGrey2;
@@ -172,17 +162,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        model = new ViewModelProvider(this).get(AppDetailsViewModel.class);
+        model = new ViewModelProvider(this).get(AppDetailsFragmentViewModel.class);
         if (isEmptyFragmentConstructCalled) {
             neededProperty = model.getNeededProperty();
         } else model.setNeededProperty(neededProperty);
-        try {
-            mPackageName = Objects.requireNonNull(getActivity()).getIntent().getStringExtra(AppInfoActivity.EXTRA_PACKAGE_NAME);
-        } catch (NullPointerException e) {
-            return;
-        }
-        mPackageManager = getActivity().getPackageManager();
-        mActivity = getActivity();
+        mActivity = (AppDetailsActivity) requireActivity();
+        mainModel = mActivity.model;
+        mPackageName = mainModel.getPackageName();
+        mPackageManager = mActivity.getPackageManager();
         if (mActivity != null) {
             mColorGrey1 = Color.TRANSPARENT;
             mColorGrey2 = ContextCompat.getColor(mActivity, R.color.semi_transparent);
@@ -205,7 +192,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         final TextView emptyView = view.findViewById(android.R.id.empty);
-        emptyView.setText(getNeededString(neededProperty));
+        emptyView.setText(getNotFoundString(neededProperty));
         recyclerView.setEmptyView(emptyView);
         mProgressIndicator = view.findViewById(R.id.progress_linear);
         showProgressIndicator(true);
@@ -220,7 +207,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mAdapter.reset();
+        mAppOpsService = new AppOpsService(requireActivity());
+        mainModel.get(neededProperty).observe(mActivity, appDetailsItems -> {
+            mAdapter.setDefaultList(appDetailsItems);
+            if (neededProperty == FEATURES) bFi = mainModel.isbFi();
+        });
     }
 
     @Override
@@ -255,11 +246,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             case USES_PERMISSIONS:
                 inflater.inflate(R.menu.fragment_app_details_permissions_actions, menu);
                 break;
-            case CONFIGURATION:
+            case CONFIGURATIONS:
             case FEATURES:
             case NONE:
             case PERMISSIONS:
-            case SHARED_LIBRARY_FILES:
+            case SHARED_LIBRARIES:
             case SIGNATURES:
                 inflater.inflate(R.menu.fragment_app_details_refresh_actions, menu);
                 break;
@@ -284,12 +275,16 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 refreshDetails();
                 return true;
             case R.id.action_toggle_blocking:  // Components
-                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
-                    boolean isRulesApplied = cb.isRulesApplied();
-                    cb.applyRules(!isRulesApplied);
-                    if (cb.componentCount() > 0 && cb.isRulesApplied()) blockingToggler.setTitle(R.string.menu_remove_rules);
-                    else blockingToggler.setTitle(R.string.menu_apply_rules);
-                }
+                new Thread(() -> {
+                    try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
+                        boolean isRulesApplied = cb.isRulesApplied();
+                        cb.applyRules(!isRulesApplied);
+                        if (cb.componentCount() > 0 && cb.isRulesApplied())
+                            mActivity.runOnUiThread(() -> blockingToggler.setTitle(R.string.menu_remove_rules));
+                        else mActivity.runOnUiThread(() -> blockingToggler.setTitle(R.string.menu_apply_rules));
+                    }
+                    mActivity.runOnUiThread(this::refreshDetails);
+                }).start();
                 return true;
             case R.id.action_block_trackers:  // Components
                 // TODO:
@@ -384,7 +379,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     private void refreshDetails() {
-        if (mAdapter != null) mAdapter.reset();
+        if (mAdapter != null) {
+            mainModel.load(neededProperty);
+        }
     }
 
     public void resetFilter() {
@@ -394,223 +391,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     /**
-     * Get package info (should only be called from a non-UI thread)
-     */
-    private void getPackageInfo() {
-        try {
-            int apiCompatFlags;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-                apiCompatFlags = PackageManager.GET_SIGNING_CERTIFICATES;
-            else apiCompatFlags = PackageManager.GET_SIGNATURES;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                apiCompatFlags |= PackageManager.MATCH_DISABLED_COMPONENTS;
-            else apiCompatFlags |= PackageManager.GET_DISABLED_COMPONENTS;
-
-            mPackageInfo = mPackageManager.getPackageInfo(mPackageName, PackageManager.GET_PERMISSIONS
-                    | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                    | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
-                    | apiCompatFlags | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
-            if (mPackageInfo == null) return;
-
-            if (neededProperty == USES_PERMISSIONS) {
-                if (mPackageInfo.requestedPermissions == null) permissionsWithFlags = null;
-                else {
-                    permissionsWithFlags = new ArrayList<>(mPackageInfo.requestedPermissions.length);
-                    for (int i = 0; i < mPackageInfo.requestedPermissions.length; ++i) {
-                        permissionsWithFlags.add(
-                                new Tuple<>(mPackageInfo.requestedPermissions[i],
-                                        mPackageInfo.requestedPermissionsFlags[i]));
-                    }
-                }
-            } else if (neededProperty == FEATURES) {
-                if (mPackageInfo.reqFeatures != null) {
-                    try {
-                        Arrays.sort(mPackageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-                    } catch (NullPointerException e) {
-                        for (FeatureInfo fi : mPackageInfo.reqFeatures) {
-                            if (fi.name == null) fi.name = "_MAJOR";
-                            bFi = true;
-                        }
-                        Arrays.sort(mPackageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-                    }
-                }
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            mActivity.runOnUiThread(() -> mActivity.finish());
-        }
-    }
-
-    /**
      * Return corresponding section's array
+     *
+     * TODO: Move it to the static dataset
      */
-    private @NonNull List<AppDetailsItem> getNeededList(@Property int index) {
-        List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        switch (index) {
-            case ACTIVITIES:
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
-                    if (mPackageInfo.activities != null) {
-                        for (ActivityInfo activityInfo : mPackageInfo.activities) {
-                            AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
-                            appDetailsItem.name = activityInfo.targetActivity == null ? activityInfo.name : activityInfo.targetActivity;
-                            appDetailsItem.isBlocked = cb.hasComponent(activityInfo.name);
-                            appDetailsItem.isTracker = TrackerComponentFinder.isTracker(activityInfo.name);
-                            appDetailsItems.add(appDetailsItem);
-                        }
-                    }
-                }
-                break;
-            case SERVICES:
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
-                    if (mPackageInfo.services != null) {
-                        for (ServiceInfo serviceInfo : mPackageInfo.services) {
-                            AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(serviceInfo);
-                            appDetailsItem.name = serviceInfo.name;
-                            appDetailsItem.isBlocked = cb.hasComponent(serviceInfo.name);
-                            appDetailsItem.isTracker = TrackerComponentFinder.isTracker(serviceInfo.name);
-                            appDetailsItems.add(appDetailsItem);
-                        }
-                    }
-                }
-                break;
-            case RECEIVERS:
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
-                    if (mPackageInfo.receivers != null) {
-                        for (ActivityInfo activityInfo : mPackageInfo.receivers) {
-                            AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
-                            appDetailsItem.name = activityInfo.name;
-                            appDetailsItem.isBlocked = cb.hasComponent(activityInfo.name);
-                            appDetailsItem.isTracker = TrackerComponentFinder.isTracker(activityInfo.name);
-                            appDetailsItems.add(appDetailsItem);
-                        }
-                    }
-                }
-                break;
-            case PROVIDERS:
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
-                    if (mPackageInfo.providers != null) {
-                        for (ProviderInfo providerInfo : mPackageInfo.providers) {
-                            AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(providerInfo);
-                            appDetailsItem.name = providerInfo.name;
-                            appDetailsItem.isBlocked = cb.hasComponent(providerInfo.name);
-                            appDetailsItem.isTracker = TrackerComponentFinder.isTracker(providerInfo.name);
-                            appDetailsItems.add(appDetailsItem);
-                        }
-                    }
-                }
-                break;
-            case APP_OPS:
-                if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
-                    mAppOpsService = new AppOpsService(mActivity);
-                    try {
-                        List<AppOpsManager.PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(-1, mPackageName, null);
-                        List<AppOpsManager.OpEntry> opEntries = new ArrayList<>();
-                        if (packageOpsList.size() == 1)
-                            opEntries.addAll(packageOpsList.get(0).getOps());
-                        packageOpsList = mAppOpsService.getOpsForPackage(-1, mPackageName, AppOpsManager.sAlwaysShownOp);
-                        if (packageOpsList.size() == 1)
-                            opEntries.addAll(packageOpsList.get(0).getOps());
-                        if (opEntries.size() > 0) {
-                            Set<String> uniqueSet = new HashSet<>();
-                            for (AppOpsManager.OpEntry opEntry : opEntries) {
-                                if (uniqueSet.contains(opEntry.getOpStr())) continue;
-                                AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry);
-                                appDetailsItem.name = opEntry.getOpStr();
-                                appDetailsItems.add(appDetailsItem);
-                                uniqueSet.add(opEntry.getOpStr());
-                            }
-                        }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            appDetailsItems.sort((o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-                        } else {
-                            Collections.sort(appDetailsItems, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-                        }
-                    } catch (Exception ignored) {
-                    }
-                }
-                break;
-            case USES_PERMISSIONS:
-                if (permissionsWithFlags != null) {
-                    for(Tuple<String, Integer> permissionWithFlags: permissionsWithFlags) {
-                        try {
-                            PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(
-                                    permissionWithFlags.getFirst(), PackageManager.GET_META_DATA);
-                            AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionInfo);
-                            appDetailsItem.name = permissionWithFlags.getFirst();
-                            appDetailsItem.flags = permissionWithFlags.getSecond();
-                            int basePermissionType;
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                                basePermissionType = permissionInfo.getProtection();
-                            } else {
-                                basePermissionType = permissionInfo.protectionLevel & PermissionInfo.PROTECTION_MASK_BASE;
-                            }
-                            appDetailsItem.isDangerous = basePermissionType == PermissionInfo.PROTECTION_DANGEROUS;
-                            appDetailsItem.isGranted = (appDetailsItem.flags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
-                            appDetailsItems.add(appDetailsItem);
-                        } catch (PackageManager.NameNotFoundException ignore) {}
-                    }
-                }
-                break;
-            case PERMISSIONS:
-                if (mPackageInfo.permissions != null) {
-                    for(PermissionInfo permissionInfo: mPackageInfo.permissions) {
-                        AppDetailsItem appDetailsItem = new AppDetailsItem(permissionInfo);
-                        appDetailsItem.name = permissionInfo.name;
-                        appDetailsItems.add(appDetailsItem);
-                    }
-                }
-                break;
-            case FEATURES:
-                if (mPackageInfo.reqFeatures != null) {
-                    for(FeatureInfo featureInfo: mPackageInfo.reqFeatures) {
-                        AppDetailsItem appDetailsItem = new AppDetailsItem(featureInfo);
-                        appDetailsItem.name = featureInfo.name;
-                        appDetailsItems.add(appDetailsItem);
-                    }
-                }
-                break;
-            case CONFIGURATION:
-                if (mPackageInfo.configPreferences != null) {
-                    for(ConfigurationInfo configurationInfo: mPackageInfo.configPreferences) {
-                        AppDetailsItem appDetailsItem = new AppDetailsItem(configurationInfo);
-                        appDetailsItems.add(appDetailsItem);
-                    }
-                }
-                break;
-            case SIGNATURES:
-                Signature[] signatures;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    SigningInfo signingInfo = mPackageInfo.signingInfo;
-                    signatures = signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
-                            : signingInfo.getSigningCertificateHistory();
-                } else {
-                    signatures = mPackageInfo.signatures;
-                }
-                if (signatures != null) {
-                    for(Signature signature: signatures) {
-                        AppDetailsItem appDetailsItem = new AppDetailsItem(signature);
-                        appDetailsItems.add(appDetailsItem);
-                    }
-                }
-                break;
-            case SHARED_LIBRARY_FILES:
-                if (mPackageInfo.applicationInfo.sharedLibraryFiles != null) {
-                    for(String sharedLibrary: mPackageInfo.applicationInfo.sharedLibraryFiles) {
-                        AppDetailsItem appDetailsItem = new AppDetailsItem(sharedLibrary);
-                        appDetailsItem.name = sharedLibrary;
-                        appDetailsItems.add(appDetailsItem);
-                    }
-                }
-                break;
-            case NONE:
-            default:
-        }
-        return appDetailsItems;
-    }
-
-    /**
-     * Return corresponding section's array
-     */
-    private int getNeededString(@Property int index) {
+    private int getNotFoundString(@Property int index) {
         switch (index) {
             case SERVICES: return R.string.no_service;
             case RECEIVERS: return R.string.no_receivers;
@@ -622,9 +407,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             case USES_PERMISSIONS:
             case PERMISSIONS: return R.string.require_no_permission;
             case FEATURES: return R.string.no_feature;
-            case CONFIGURATION: return R.string.no_configurations;
+            case CONFIGURATIONS: return R.string.no_configurations;
             case SIGNATURES: return R.string.no_signatures;
-            case SHARED_LIBRARY_FILES: return R.string.no_shared_libs;
+            case SHARED_LIBRARIES: return R.string.no_shared_libs;
             case ACTIVITIES:
             case NONE:
             default: return R.string.no_activities;
@@ -685,15 +470,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             mSortBy = sortBy;
         }
 
-        void reset() {
+        void setDefaultList(List<AppDetailsItem> list) {
             isRootEnabled = AppPref.isRootEnabled();
             isADBEnabled = AppPref.isAdbEnabled();
             final Boolean isBlockingEnabled = (Boolean) AppPref.get(AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN);
             showProgressIndicator(true);
             new Thread(() -> {
-                getPackageInfo();
                 requestedProperty = neededProperty;
-                mAdapterList = getNeededList(requestedProperty);
+                mAdapterList = list;
                 if (requestedProperty == SERVICES) {
                     if (isRootEnabled || isADBEnabled)
                         runningServices = PackageUtils.getRunningServicesForPackage(mPackageName);
@@ -746,36 +530,34 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
         }
 
-        private void sortList() {
+        synchronized private void sortList() {
             if (mAdapterList == null) return;
-            synchronized (this) {
-                Collections.sort(mAdapterList, (o1, o2) -> {
-                    switch (mSortBy) {
-                        // All
-                        case AppDetailsFragment.SORT_BY_NAME:
-                            return o1.name.compareToIgnoreCase(o2.name);
-                        // Components
-                        case AppDetailsFragment.SORT_BY_BLOCKED:
-                            return -Utils.compareBooleans(((AppDetailsComponentItem) o1).isBlocked, ((AppDetailsComponentItem) o2).isBlocked);
-                        case AppDetailsFragment.SORT_BY_TRACKERS:
-                            return -Utils.compareBooleans(((AppDetailsComponentItem) o1).isTracker, ((AppDetailsComponentItem) o2).isTracker);
-                        // App ops
-                        case AppDetailsFragment.SORT_BY_APP_OP_VALUES:
-                            Integer o1Op = ((AppOpsManager.OpEntry) o1.vanillaItem).getOp();
-                            Integer o2Op = ((AppOpsManager.OpEntry) o2.vanillaItem).getOp();
-                            return o1Op.compareTo(o2Op);
-                        case AppDetailsFragment.SORT_BY_DENIED_APP_OPS:
-                            // A slight hack to sort it this way: ignore > foreground > deny > default[ > ask] > allow
-                            return -((AppOpsManager.OpEntry) o1.vanillaItem).getMode().compareToIgnoreCase(((AppOpsManager.OpEntry) o2.vanillaItem).getMode());
-                        // Permissions
-                        case AppDetailsFragment.SORT_BY_DANGEROUS_PERMS:
-                            return -Utils.compareBooleans(((AppDetailsPermissionItem) o1).isDangerous, ((AppDetailsPermissionItem) o2).isDangerous);
-                        case AppDetailsFragment.SORT_BY_DENIED_PERMS:
-                            return Utils.compareBooleans(((AppDetailsPermissionItem) o1).isGranted, ((AppDetailsPermissionItem) o2).isGranted);
-                    }
-                    return 0;
-                });
-            }
+            Collections.sort(mAdapterList, (o1, o2) -> {
+                switch (mSortBy) {
+                    // All
+                    case AppDetailsFragment.SORT_BY_NAME:
+                        return o1.name.compareToIgnoreCase(o2.name);
+                    // Components
+                    case AppDetailsFragment.SORT_BY_BLOCKED:
+                        return -Utils.compareBooleans(((AppDetailsComponentItem) o1).isBlocked, ((AppDetailsComponentItem) o2).isBlocked);
+                    case AppDetailsFragment.SORT_BY_TRACKERS:
+                        return -Utils.compareBooleans(((AppDetailsComponentItem) o1).isTracker, ((AppDetailsComponentItem) o2).isTracker);
+                    // App ops
+                    case AppDetailsFragment.SORT_BY_APP_OP_VALUES:
+                        Integer o1Op = ((AppOpsManager.OpEntry) o1.vanillaItem).getOp();
+                        Integer o2Op = ((AppOpsManager.OpEntry) o2.vanillaItem).getOp();
+                        return o1Op.compareTo(o2Op);
+                    case AppDetailsFragment.SORT_BY_DENIED_APP_OPS:
+                        // A slight hack to sort it this way: ignore > foreground > deny > default[ > ask] > allow
+                        return -((AppOpsManager.OpEntry) o1.vanillaItem).getMode().compareToIgnoreCase(((AppOpsManager.OpEntry) o2.vanillaItem).getMode());
+                    // Permissions
+                    case AppDetailsFragment.SORT_BY_DANGEROUS_PERMS:
+                        return -Utils.compareBooleans(((AppDetailsPermissionItem) o1).isDangerous, ((AppDetailsPermissionItem) o2).isDangerous);
+                    case AppDetailsFragment.SORT_BY_DENIED_PERMS:
+                        return Utils.compareBooleans(((AppDetailsPermissionItem) o1).isGranted, ((AppDetailsPermissionItem) o2).isGranted);
+                }
+                return 0;
+            });
         }
 
         @Override
@@ -935,7 +717,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         textView2 = itemView.findViewById(R.id.flags);
                         textView3 = itemView.findViewById(R.id.gles_ver);
                         break;
-                    case CONFIGURATION:
+                    case CONFIGURATIONS:
                         textView1 = itemView.findViewById(R.id.reqgles);
                         textView2 = itemView.findViewById(R.id.reqfea);
                         textView3 = itemView.findViewById(R.id.reqkey);
@@ -943,7 +725,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         textView5 = itemView.findViewById(R.id.reqtouch);
                         break;
                     case SIGNATURES:
-                    case SHARED_LIBRARY_FILES:
+                    case SHARED_LIBRARIES:
                     case NONE:
                     default:
                         break;
@@ -979,11 +761,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 case FEATURES:
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_details_secondary, parent, false);
                     break;
-                case CONFIGURATION:
+                case CONFIGURATIONS:
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_details_tertiary, parent, false);
                     break;
                 case SIGNATURES:
-                case SHARED_LIBRARY_FILES:
+                case SHARED_LIBRARIES:
                     view = new TextView(mActivity);
                     break;
             }
@@ -1000,9 +782,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 case USES_PERMISSIONS: getUsesPermissionsView(holder, position); break;
                 case PERMISSIONS: getPermissionsView(holder, position); break;
                 case FEATURES: getFeaturesView(holder, position); break;
-                case CONFIGURATION: getConfigurationView(holder, position); break;
+                case CONFIGURATIONS: getConfigurationView(holder, position); break;
                 case SIGNATURES: getSignatureView(holder, position); break;
-                case SHARED_LIBRARY_FILES: getSharedLibsView(holder, position); break;
+                case SHARED_LIBRARIES: getSharedLibsView(holder, position); break;
                 case ACTIVITIES:
                 case NONE:
                 default: getActivityView(holder, position); break;
@@ -1057,7 +839,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     (activityInfo.permission == null ? getString(R.string.require_no_permission) : activityInfo.permission)));
             // Label
             Button launch = holder.launchBtn;
-            String appLabel = mPackageInfo.applicationInfo.loadLabel(mPackageManager).toString();
+            String appLabel = activityInfo.applicationInfo.loadLabel(mPackageManager).toString();
             String activityLabel = activityInfo.loadLabel(mPackageManager).toString();
             launch.setText(activityLabel.equals(appLabel) || TextUtils.isEmpty(activityLabel) ?
                     Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityInfo.name))

@@ -24,16 +24,21 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fragments.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.viewmodels.AppDetailsViewModel;
 
 public class AppDetailsActivity extends AppCompatActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
 
     public static String sConstraint;
+
+    public AppDetailsViewModel model;
+
     private String mPackageName;
     private TypedArray mTabTitleIds;
     AppDetailsFragmentStateAdapter appDetailsFragmentStateAdapter;
@@ -100,9 +105,9 @@ public class AppDetailsActivity extends AppCompatActivity {
                     }
                     break;
                 case AppDetailsFragment.FEATURES:
-                case AppDetailsFragment.CONFIGURATION:
+                case AppDetailsFragment.CONFIGURATIONS:
                 case AppDetailsFragment.SIGNATURES:
-                case AppDetailsFragment.SHARED_LIBRARY_FILES:
+                case AppDetailsFragment.SHARED_LIBRARIES:
                 case AppDetailsFragment.NONE:
                 default:
                     searchView.setVisibility(View.GONE);
@@ -129,6 +134,9 @@ public class AppDetailsActivity extends AppCompatActivity {
             finish();
             return;
         }
+        // Get model
+        model = new ViewModelProvider.AndroidViewModelFactory(getApplication()).create(AppDetailsViewModel.class);
+        model.setPackageName(mPackageName);
         // Initialize tabs
         mTabTitleIds = getResources().obtainTypedArray(R.array.TAB_TITLES);
         FragmentManager fragmentManager = getSupportFragmentManager();
