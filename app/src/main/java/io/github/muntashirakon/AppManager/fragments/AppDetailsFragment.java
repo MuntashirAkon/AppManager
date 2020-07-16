@@ -53,7 +53,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
@@ -66,6 +65,7 @@ import io.github.muntashirakon.AppManager.types.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.types.AppDetailsItem;
 import io.github.muntashirakon.AppManager.types.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
+import io.github.muntashirakon.AppManager.types.ScrollSafeSwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -75,7 +75,7 @@ import io.github.muntashirakon.AppManager.viewmodels.AppDetailsViewModel;
 
 
 public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTextListener,
-        SwipeRefreshLayout.OnRefreshListener {
+        ScrollSafeSwipeRefreshLayout.OnRefreshListener {
     @IntDef(value = {
             NONE,
             ACTIVITIES,
@@ -132,7 +132,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private PackageManager mPackageManager;
     private AppDetailsActivity mActivity;
     private AppDetailsRecyclerAdapter mAdapter;
-    private SwipeRefreshLayout mSwipeRefresh;
+    private ScrollSafeSwipeRefreshLayout mSwipeRefresh;
     private MenuItem blockingToggler;
     private AppOpsService mAppOpsService;
     private ProgressIndicator mProgressIndicator;

@@ -72,7 +72,6 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.MainLoader;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
@@ -80,6 +79,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.fragments.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.types.ApplicationItem;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
+import io.github.muntashirakon.AppManager.types.ScrollSafeSwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -87,7 +87,7 @@ import static androidx.appcompat.app.ActionBar.LayoutParams;
 
 public class MainActivity extends AppCompatActivity implements
         SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<List<ApplicationItem>>,
-        SwipeRefreshLayout.OnRefreshListener {
+        ScrollSafeSwipeRefreshLayout.OnRefreshListener {
     public static final String EXTRA_PACKAGE_LIST = "EXTRA_PACKAGE_LIST";
     public static final String EXTRA_LIST_NAME = "EXTRA_LIST_NAME";
 
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements
     private SearchView mSearchView;
     private ProgressIndicator mProgressIndicator;
     private LoaderManager mLoaderManager;
-    private SwipeRefreshLayout mSwipeRefresh;
+    private ScrollSafeSwipeRefreshLayout mSwipeRefresh;
     private BottomAppBar mBottomAppBar;
     private MaterialTextView mBottomAppBarCounter;
     private LinearLayoutCompat mMainLayout;

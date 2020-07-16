@@ -57,11 +57,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.FileProvider;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fragments.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.types.ScrollSafeSwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
@@ -70,7 +70,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.utils.IOUtils.deleteDir;
 
-public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwipeRefreshLayout.OnRefreshListener {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
 
     private static final String UID_STATS_PATH = "/proc/uid_stat/";
@@ -100,7 +100,7 @@ public class AppInfoActivity extends AppCompatActivity implements SwipeRefreshLa
     @SuppressLint("SimpleDateFormat")
     private SimpleDateFormat mDateFormatter = new SimpleDateFormat("EE LLL dd yyyy kk:mm:ss");
     private ListItemCreator mList;
-    private SwipeRefreshLayout mSwipeRefresh;
+    private ScrollSafeSwipeRefreshLayout mSwipeRefresh;
     private int mAccentColor;
     private CharSequence mPackageLabel;
     private ProgressIndicator mProgressIndicator;
