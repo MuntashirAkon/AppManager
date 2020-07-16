@@ -56,6 +56,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
+import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -167,8 +168,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             neededProperty = model.getNeededProperty();
         } else model.setNeededProperty(neededProperty);
         mActivity = (AppDetailsActivity) requireActivity();
-        mainModel = mActivity.model;
+        mainModel = new ViewModelProvider.AndroidViewModelFactory(mActivity.getApplication()).create(AppDetailsViewModel.class);
         mPackageName = mainModel.getPackageName();
+        if (mPackageName == null) {
+            mainModel.setPackageName(mActivity.getIntent().getStringExtra(AppInfoActivity.EXTRA_PACKAGE_NAME));
+            mPackageName = mainModel.getPackageName();
+        }
         mPackageManager = mActivity.getPackageManager();
         if (mActivity != null) {
             mColorGrey1 = Color.TRANSPARENT;
@@ -334,8 +339,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public void onResume() {
         super.onResume();
-        if (mAdapter != null && !TextUtils.isEmpty(AppDetailsActivity.sConstraint)) {
-            mAdapter.getFilter().filter(AppDetailsActivity.sConstraint);
+        if (mAdapter != null) {
+            if (!TextUtils.isEmpty(AppDetailsActivity.sConstraint)) {
+                mAdapter.getFilter().filter(AppDetailsActivity.sConstraint);
+            }
+            // Refresh details
+            mainModel.load(neededProperty);
         }
     }
 
@@ -367,21 +376,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
             // Apply rules
             if ((Boolean) AppPref.get(AppPref.PREF_GLOBAL_BLOCKING_ENABLED,
-                    AppPref.TYPE_BOOLEAN) || cb.isRulesApplied()) {
-                cb.applyRules(true);
-            }
-            if (cb.isRulesApplied()) {
-                mRulesNotAppliedMsg.setVisibility(View.GONE);
-            } else {
-                mRulesNotAppliedMsg.setVisibility(View.VISIBLE);
-            }
+                    AppPref.TYPE_BOOLEAN) || cb.isRulesApplied()) cb.applyRules(true);
+            mRulesNotAppliedMsg.setVisibility(cb.isRulesApplied() ? View.GONE : View.VISIBLE);
         }
     }
 
     private void refreshDetails() {
-        if (mAdapter != null) {
-            mainModel.load(neededProperty);
-        }
+        if (mAdapter != null) mainModel.load(neededProperty);
     }
 
     public void resetFilter() {
@@ -809,9 +810,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
             final ActivityInfo activityInfo = (ActivityInfo) appDetailsItem.vanillaItem;
             final String activityName = appDetailsItem.name;
+            final boolean isDisabled = isComponentDisabled(mPackageManager, activityInfo);
             // Background color: regular < tracker < disabled < blocked
             if (appDetailsItem.isBlocked) view.setBackgroundColor(mColorRed);
-            else if (isComponentDisabled(mPackageManager, activityInfo)) view.setBackgroundColor(mColorDisabled);
+            else if (isDisabled) view.setBackgroundColor(mColorDisabled);
             else if (appDetailsItem.isTracker) view.setBackgroundColor(mColorTracker);
             else view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // Name
@@ -845,8 +847,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityInfo.name))
                     : activityLabel);
             boolean isExported = activityInfo.exported;
-            launch.setEnabled(isExported);
-            if (isExported && !appDetailsItem.isBlocked) {
+            launch.setEnabled(isExported && !isDisabled && !appDetailsItem.isBlocked);
+            if (isExported && !isDisabled && !appDetailsItem.isBlocked) {
                 launch.setOnClickListener(v -> {
                     Intent intent = new Intent();
                     intent.setClassName(mPackageName, activityName);
