@@ -1104,10 +1104,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } catch (PackageManager.NameNotFoundException | IllegalArgumentException | IndexOutOfBoundsException ignore) {}
             // Set op name
             String opName = "(" + opEntry.getOp() + ") ";
-            if (mConstraint != null && opStr.toLowerCase(Locale.ROOT).contains(mConstraint)) {
-                // Highlight searched query
-                opName += Utils.getHighlightedText(opStr, mConstraint, mColorRed);
-            } else opName += opStr;
+            if (opEntry.getOpStr().equals(String.valueOf(opEntry))) {
+                opName += getString(R.string.unknown_op);
+            } else {
+                if (mConstraint != null && opStr.toLowerCase(Locale.ROOT).contains(mConstraint)) {
+                    // Highlight searched query
+                    opName += Utils.getHighlightedText(opStr, mConstraint, mColorRed);
+                } else opName += opStr;
+            }
             holder.textView1.setText(opName);
             // Set op mode, running and duration
             String opRunningInfo = mActivity.getString(R.string.mode) + ": " + opEntry.getMode();

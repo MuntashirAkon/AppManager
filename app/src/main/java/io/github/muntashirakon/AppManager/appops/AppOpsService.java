@@ -31,7 +31,6 @@ class AppOpsService implements IAppOpsService {
 
     private static final int DEFAULT_MODE_SKIP = 14;
     private static final int UNKNOWN_MODE_SKIP = 5;
-    private static final int UNKNOWN_OP_SKIP = 8;
     private static final int OP_PREFIX_OP_SKIP = 3;
 
     private boolean isSuccessful = false;
@@ -172,14 +171,18 @@ class AppOpsService implements IAppOpsService {
             String modeStr = matcher.group(2);
             if (opStr == null || modeStr == null)
                 throw new Exception("Op name or mode cannot be empty");
-            // Handle Unknown(op)
-            if (opStr.startsWith("Unknown("))
-                opStr = opStr.substring(UNKNOWN_OP_SKIP, opStr.length()-1);
+            // Handle Unknown(op), MIUIOP(op), etc.
+            if (opStr.endsWith(")")) {
+                try {
+                    int leftBracket = opStr.indexOf('(');
+                    opStr = opStr.substring(leftBracket + 1, opStr.length() - 1);
+                } catch (Exception ignore) {}
+            }
             final String finalOpStr = opStr; // Save the op str before modifying it
             if (opStr.startsWith("OP_"))
                 opStr = opStr.substring(OP_PREFIX_OP_SKIP);
             // FIXME: Check old opStr as well
-            // Handle mode=5
+            // Handle mode=(mode)
             if (modeStr.startsWith("mode="))
                 modeStr = modeStr.substring(UNKNOWN_MODE_SKIP);
             int op = AppOpsManager.OP_NONE;

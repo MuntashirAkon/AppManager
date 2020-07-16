@@ -466,4 +466,5 @@
     <string name="sort_by_denied_permissions">Denied first</string>
     <string name="deny_dangerous_permissions">Deny dangerous permissions</string>
     <string name="sort_by_tracker_components">Tracker first</string>
+    <string name="unknown_op">Unknown Operation</string>
 </resources>
