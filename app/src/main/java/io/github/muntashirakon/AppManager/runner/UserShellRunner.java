@@ -10,23 +10,19 @@ import com.jaredrummler.android.shell.Shell;
 import java.util.List;
 
 public class UserShellRunner extends Runner {
-    protected UserShellRunner(Context context) {
-        super(context);
-    }
-
     @SuppressLint("StaticFieldLeak")
     private static UserShellRunner rootShellRunner;
-    public static UserShellRunner getInstance(Context context) {
-        if (rootShellRunner == null) rootShellRunner = new UserShellRunner(context.getApplicationContext());
+    public static UserShellRunner getInstance() {
+        if (rootShellRunner == null) rootShellRunner = new UserShellRunner();
         return rootShellRunner;
     }
 
-    public static Result run(Context context, String command) {
-        return getInstance(context).run(command);
+    public static Result runCommand(String command) {
+        return getInstance().run(command);
     }
 
     @Override
-    public Result run() {
+    public Result runCommand() {
         CommandResult result = Shell.SH.run(TextUtils.join("; ", commands));
         clear();
         lastResult = new Result() {
@@ -62,6 +58,6 @@ public class UserShellRunner extends Runner {
     protected Result run(String command) {
         clear();
         addCommand(command);
-        return run();
+        return runCommand();
     }
 }

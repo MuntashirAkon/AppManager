@@ -12,6 +12,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.compontents.ExternalComponentsImporter;
+import io.github.muntashirakon.AppManager.utils.RunnerUtils;
 
 public class BatchOpsManager {
     @IntDef(value = {
@@ -40,7 +41,7 @@ public class BatchOpsManager {
     private Context context;
     public BatchOpsManager(Context context) {
         this.context = context;
-        this.runner = Runner.getInstance(context);
+        this.runner = Runner.getInstance();
     }
 
     private List<String> packageNames;
@@ -98,7 +99,7 @@ public class BatchOpsManager {
     @NonNull
     private Result opClearData() {
         for (String packageName: packageNames) {
-            addCommand(packageName, String.format(Locale.ROOT, "pm clear %s", packageName));
+            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_CLEAR_PACKAGE_DATA, packageName));
         }
         return runOpAndFetchResults();
     }
@@ -106,7 +107,7 @@ public class BatchOpsManager {
     @NonNull
     private Result opDisable() {
         for (String packageName: packageNames) {
-            addCommand(packageName, String.format(Locale.ROOT, "pm disable %s", packageName));
+            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_DISABLE_PACKAGE, packageName));
         }
         return runOpAndFetchResults();
     }
@@ -114,7 +115,7 @@ public class BatchOpsManager {
     @NonNull
     private Result opDisableBackground() {
         for (String packageName: packageNames) {
-            addCommand(packageName, String.format(Locale.ROOT, "appops set %s 63 %d", packageName, AppOpsManager.MODE_IGNORED));
+            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_APP_OPS_SET_MODE_INT, packageName, 63, AppOpsManager.MODE_IGNORED));
         }
         Result result = runOpAndFetchResults();
         List<String> failedPackages = result.failedPackages();
@@ -131,14 +132,14 @@ public class BatchOpsManager {
     @NonNull
     private Result opKill() {
         for (String packageName : packageNames) {
-            addCommand(packageName, String.format(Locale.ROOT, "pidof %s", packageName), false);
+            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_PID_PACKAGE, packageName), false);
         }
         Result result = runOpAndFetchResults();
         List<String> pidOrPackageNames = result.failedPackages();
         runner.clear();
         for (int i = 0; i<packageNames.size(); ++i) {
             if (!pidOrPackageNames.get(i).equals(packageNames.get(i))) {
-                addCommand(packageNames.get(i), String.format(Locale.ROOT, "kill -9 %s", pidOrPackageNames.get(i)));
+                addCommand(packageNames.get(i), String.format(Locale.ROOT, RunnerUtils.CMD_KILL_SIG9, pidOrPackageNames.get(i)));
             }
         }
         return runOpAndFetchResults();
@@ -147,7 +148,7 @@ public class BatchOpsManager {
     @NonNull
     private Result opUninstall() {
         for (String packageName: packageNames) {
-            addCommand(packageName, String.format(Locale.ROOT, "pm uninstall --user 0 %s", packageName));
+            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_UNINSTALL_PACKAGE, packageName));
         }
         return runOpAndFetchResults();
     }
@@ -162,7 +163,7 @@ public class BatchOpsManager {
 
     @NonNull
     private Result runOpAndFetchResults() {
-        Runner.Result result = runner.run();
+        Runner.Result result = runner.runCommand();
         lastResult = new Result() {
             @Override
             public boolean isSuccessful() {

@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.RunnerUtils;
 
 /**
  * Block application components: activities, broadcasts, services and providers.
@@ -118,7 +119,7 @@ public class ComponentsBlocker extends RulesStorageManager {
         addAllLocalRules(context);
         // Apply all rules from conf folder
         File confPath = new File(context.getFilesDir(), "conf");
-        Runner.run(context, String.format("ls %s/*.tsv", confPath.getAbsolutePath()));
+        Runner.runCommand(String.format("ls %s/*.tsv", confPath.getAbsolutePath()));
         if (Runner.getLastResult().isSuccessful()) {
             // Get packages
             List<String> packageNames = Runner.getLastResult().getOutputAsList();
@@ -145,7 +146,7 @@ public class ComponentsBlocker extends RulesStorageManager {
     public static void addAllLocalRules(@NonNull Context context) {
         try {
             String ifwPath = getLocalIfwRulesPath(context);
-            Runner.run(context, String.format("ls %s/*.xml", ifwPath));
+            Runner.runCommand(String.format("ls %s/*.xml", ifwPath));
             if (Runner.getLastResult().isSuccessful()) {
                 // Get packages
                 List<String> packageNames = Runner.getLastResult().getOutputAsList();
@@ -185,15 +186,15 @@ public class ComponentsBlocker extends RulesStorageManager {
     }
 
     public void addComponent(String componentName, RulesStorageManager.Type componentType) {
-        if (!readOnly) setComponent(componentName, componentType, false);
+        if (!readOnly) setComponent(componentName, componentType, COMPONENT_TO_BE_BLOCKED);
     }
 
     public void removeComponent(String componentName) {
         if (readOnly) return;
         if (hasName(componentName)) {
-            if (get(componentName).type == RulesStorageManager.Type.PROVIDER)
-                removedProviders.add(componentName);
-            removeEntry(componentName);
+            if (get(componentName).type == Type.PROVIDER)  // Preserve for later
+                setComponent(componentName, Type.PROVIDER, COMPONENT_TO_BE_UNBLOCKED);
+            else removeEntry(componentName);
         }
     }
 
@@ -212,14 +213,16 @@ public class ComponentsBlocker extends RulesStorageManager {
         StringBuilder services = new StringBuilder();
         StringBuilder receivers = new StringBuilder();
         for (RulesStorageManager.Entry component : getAllComponents()) {
+            if (component.extra == COMPONENT_TO_BE_UNBLOCKED) continue;
             String componentFilter = "  <component-filter name=\"" + packageName + "/" + component.name + "\"/>\n";
             RulesStorageManager.Type componentType = component.type;
             switch (component.type) {
                 case ACTIVITY: activities.append(componentFilter); break;
                 case RECEIVER: receivers.append(componentFilter); break;
                 case SERVICE: services.append(componentFilter); break;
+                case PROVIDER: continue;
             }
-            setComponent(component.name, componentType, true);
+            setComponent(component.name, componentType, COMPONENT_BLOCKED);
         }
 
         String rules = "<rules>\n" +
@@ -240,7 +243,7 @@ public class ComponentsBlocker extends RulesStorageManager {
      */
     public boolean isRulesApplied() {
         List<RulesStorageManager.Entry> entries = getAllComponents();
-        if (AppPref.isRootEnabled() && Runner.run(context, String.format("test -e '%s%s.xml'",
+        if (AppPref.isRootEnabled() && Runner.runCommand(String.format("test -e '%s%s.xml'",
                 SYSTEM_RULES_PATH, packageName)).isSuccessful()) return true;
         for (RulesStorageManager.Entry entry: entries) if (!((Boolean) entry.extra)) return false;
         return true;
@@ -257,33 +260,35 @@ public class ComponentsBlocker extends RulesStorageManager {
             // Apply/Remove rules
             if (apply && localRulesFile.exists()) {
                 // Apply rules
-                Runner.run(context, String.format("cp '%s' %s && chmod 0666 %s%s.xml && am force-stop %s",
+                Runner.runCommand(String.format("cp '%s' %s && chmod 0666 %s%s.xml && am force-stop %s",
                         localRulesFile.getAbsolutePath(), SYSTEM_RULES_PATH, SYSTEM_RULES_PATH,
                         packageName, packageName));
             } else {
                 // Remove rules
-                Runner.run(context, String.format("test -e '%s%s.xml' && rm -rf %s%s.xml && am force-stop %s",
+                Runner.runCommand(String.format("test -e '%s%s.xml' && rm -rf %s%s.xml && am force-stop %s",
                         SYSTEM_RULES_PATH, packageName, SYSTEM_RULES_PATH, packageName, packageName));
             }
             if (localRulesFile.exists()) //noinspection ResultOfMethodCallIgnored
                 localRulesFile.delete();
-            // Enable removed providers
-            for (String provider : removedProviders) {
-                Runner.run(context, String.format("pm enable %s/%s", packageName, provider));
-            }
             // Read from storage manager
             List<RulesStorageManager.Entry> disabledProviders = getAll(RulesStorageManager.Type.PROVIDER);
+            Log.d("ComponentBlocker", "Providers: " + disabledProviders.toString());
             // Enable/disable components
             if (apply) {
                 // Disable providers
                 for (RulesStorageManager.Entry provider: disabledProviders) {
-                    Runner.run(context, String.format("pm disable %s/%s", packageName, provider.name));
-                    setComponent(provider.name, provider.type, true);
+                    if (provider.extra == COMPONENT_TO_BE_UNBLOCKED) {  // Enable components that are removed
+                        RunnerUtils.enableComponent(packageName, provider.name);
+                        removeEntry(provider);
+                    } else {
+                        RunnerUtils.disableComponent(packageName, provider.name);
+                        setComponent(provider.name, provider.type, COMPONENT_BLOCKED);
+                    }
                 }
             } else {
                 // Enable providers
                 for (RulesStorageManager.Entry provider: disabledProviders) {
-                    Runner.run(context, String.format("pm enable %s/%s", packageName, provider.name));
+                    RunnerUtils.enableComponent(packageName, provider.name);
                     removeEntry(provider);
                 }
             }
@@ -298,20 +303,20 @@ public class ComponentsBlocker extends RulesStorageManager {
      */
     private void retrieveDisabledComponents() {
         Log.d("ComponentBlocker", "Retrieving disabled components for package " + packageName);
-        if (AppPref.isRootEnabled() && Runner.run(context, String.format("test -e '%s%s.xml'",
+        if (AppPref.isRootEnabled() && Runner.runCommand(String.format("test -e '%s%s.xml'",
                 SYSTEM_RULES_PATH, packageName)).isSuccessful()) {
             // Copy system rules to access them locally
             Log.d("ComponentBlocker - IFW", "Copying disabled components for package " + packageName);
             // FIXME: Read all files instead of just one for greater compatibility
             // FIXME: In v2.6, file contents will be copied instead of copying the file itself
-            Runner.run(context, String.format("cp %s%s.xml '%s' && chmod 0666 '%s/%s.xml'",
+            Runner.runCommand(String.format("cp %s%s.xml '%s' && chmod 0666 '%s/%s.xml'",
                     SYSTEM_RULES_PATH, packageName, LOCAL_RULES_PATH, LOCAL_RULES_PATH, packageName));
         }
         retrieveDisabledProviders();
         try {
             if (!localRulesFile.exists()) {
                 for (RulesStorageManager.Entry entry: getAllComponents()) {
-                    setComponent(entry.name, entry.type, false);
+                    setComponent(entry.name, entry.type, COMPONENT_TO_BE_BLOCKED);
                 }
                 return;
             }
@@ -339,7 +344,7 @@ public class ComponentsBlocker extends RulesStorageManager {
                                 String componentName = fullKey.substring(divider + 1);
                                 if (pkgName.equals(packageName)) {
                                     // Overwrite rules if exists
-                                    setComponent(componentName, componentType, true);
+                                    setComponent(componentName, componentType, COMPONENT_BLOCKED);
                                 }
                             }
                     }
@@ -364,7 +369,7 @@ public class ComponentsBlocker extends RulesStorageManager {
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
                     if (!TextUtils.isEmpty(line))
-                        setComponent(line.trim(), RulesStorageManager.Type.PROVIDER, true);
+                        setComponent(line.trim(), RulesStorageManager.Type.PROVIDER, COMPONENT_BLOCKED);
                 }
             } catch (IOException ignored) {
             } finally {

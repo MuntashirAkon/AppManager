@@ -58,7 +58,6 @@ import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
 import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.storage.compontents.ExternalComponentsImporter;
@@ -70,6 +69,7 @@ import io.github.muntashirakon.AppManager.types.ScrollSafeSwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.viewmodels.AppDetailsFragmentViewModel;
 import io.github.muntashirakon.AppManager.viewmodels.AppDetailsViewModel;
@@ -1306,7 +1306,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         final AtomicBoolean permGranted = new AtomicBoolean(false);
                         if (isChecked) {
                             // Enable permission
-                            if (!Runner.run(mActivity, String.format("pm grant %s %s", mPackageName, permName)).isSuccessful()) {
+                            if (!RunnerUtils.grantPermission(mPackageName, permName).isSuccessful()) {
                                 mActivity.runOnUiThread(() -> {
                                     Toast.makeText(mActivity, "Failed to grant permission.", Toast.LENGTH_SHORT).show();
                                     notifyItemChanged(index);
@@ -1320,7 +1320,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             }
                         } else {
                             // Disable permission
-                            if (!Runner.run(mActivity, String.format("pm revoke %s %s", mPackageName, permName)).isSuccessful()) {
+                            if (!RunnerUtils.revokePermission(mPackageName, permName).isSuccessful()) {
                                 mActivity.runOnUiThread(() -> {
                                     Toast.makeText(mActivity, "Failed to revoke permission.", Toast.LENGTH_SHORT).show();
                                     notifyItemChanged(index);

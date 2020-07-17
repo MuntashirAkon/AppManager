@@ -6,6 +6,7 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class Runner {
@@ -21,24 +22,24 @@ public class Runner {
     @SuppressLint("StaticFieldLeak")
     private static Runner runner;
     private static boolean isAdb = false;
-    public static Runner getInstance(Context context) {
+    public static Runner getInstance() {
         if (runner == null || (isAdb && !AppPref.isAdbEnabled()) || (!isAdb && AppPref.isAdbEnabled())) {
             if (AppPref.isRootEnabled()) {
-                runner = new RootShellRunner(context.getApplicationContext());
+                runner = new RootShellRunner();
                 isAdb = false;
             } else if (AppPref.isAdbEnabled()) {
-                runner = new AdbShellRunner(context.getApplicationContext());
+                runner = new AdbShellRunner();
                 isAdb = true;
             } else {
-                runner = new UserShellRunner(context.getApplicationContext());
+                runner = new UserShellRunner();
                 isAdb = false;
             }
         }
         return runner;
     }
 
-    public static Result run(Context context, String command) {
-        return getInstance(context).run(command);
+    public static Result runCommand(String command) {
+        return getInstance().run(command);
     }
 
     protected List<String> commands;
@@ -50,7 +51,7 @@ public class Runner {
         commands.clear();
     }
 
-    synchronized public Result run() {
+    synchronized public Result runCommand() {
         return null;
     }
 
@@ -60,8 +61,8 @@ public class Runner {
     }
 
     protected Context context;
-    protected Runner(Context context) {
-        this.context = context;
+    protected Runner() {
+        this.context = AppManager.getContext();
         this.commands = new ArrayList<>();
     }
 

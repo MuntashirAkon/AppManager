@@ -173,7 +173,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements
                 return true;
             case R.id.action_delete:
                 // Make sure it's a file and then delete
-                boolean isSuccess = Runner.run(this, String.format("[ -f '%s' ] && rm -f '%s'",
+                boolean isSuccess = Runner.runCommand(String.format("[ -f '%s' ] && rm -f '%s'",
                         mSharedPrefFile, mSharedPrefFile)).isSuccessful();
                 if (isSuccess) {
                     Toast.makeText(this, R.string.deleted_successfully, Toast.LENGTH_LONG).show();
@@ -282,7 +282,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements
         @Override
         public void run() {
             String sharedPrefPath = mTempSharedPrefFile.getAbsolutePath();
-            if(!Runner.run(SharedPrefsActivity.this, String.format("cp '%s' '%s' && chmod 0666 '%s'", mSharedPrefFile,
+            if(!Runner.runCommand(String.format("cp '%s' '%s' && chmod 0666 '%s'", mSharedPrefFile,
                     sharedPrefPath, sharedPrefPath)).isSuccessful()) {
                 runOnUiThread(SharedPrefsActivity.this::finish);
             }
@@ -337,7 +337,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements
             xmlSerializer.flush();
             xmlFile.write(stringWriter.toString().getBytes());
             xmlFile.close();
-            return Runner.run(this, String.format("cp '%s' '%s' && chmod 0666 '%s'", sharedPrefsFile,
+            return Runner.runCommand(String.format("cp '%s' '%s' && chmod 0666 '%s'", sharedPrefsFile,
                     mSharedPrefFile, mSharedPrefFile)).isSuccessful();
         } catch (IOException e) {
             e.printStackTrace();

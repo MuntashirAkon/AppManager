@@ -138,7 +138,7 @@ class AppOpsService implements IAppOpsService {
      * @param command The command to run
      */
     private void runCommand(String command) {
-        Runner.Result result = Runner.run(context, command);
+        Runner.Result result = Runner.runCommand(command);
         isSuccessful = result.isSuccessful();
         output = result.getOutputAsList();
     }

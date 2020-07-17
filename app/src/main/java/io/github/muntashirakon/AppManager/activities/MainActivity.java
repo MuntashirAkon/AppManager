@@ -468,7 +468,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onStart();
         // Check root
         AppPref.getInstance().setPref(AppPref.PREF_ADB_MODE_ENABLED, false);
-        if (!Utils.isRootGiven(this)) {
+        if (!Utils.isRootGiven()) {
             AppPref.getInstance().setPref(AppPref.PREF_ROOT_MODE_ENABLED, false);
             // Check for adb
             new Thread(() -> {

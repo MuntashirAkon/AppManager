@@ -116,7 +116,7 @@ public final class PackageUtils {
     @NonNull
     public static List<String> getRunningServicesForPackage(String packageName) {
         List<String> runningServices = new ArrayList<>();
-        Runner.run(AppManager.getContext(), "dumpsys activity services -p " + packageName);
+        Runner.runCommand("dumpsys activity services -p " + packageName);
         if (Runner.getLastResult().isSuccessful()) {
             List<String> serviceDump = Runner.getLastResult().getOutputAsList();
             Matcher matcher;

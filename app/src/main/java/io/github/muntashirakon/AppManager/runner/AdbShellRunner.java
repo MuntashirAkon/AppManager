@@ -1,6 +1,5 @@
 package io.github.muntashirakon.AppManager.runner;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 import java.io.IOException;
@@ -10,12 +9,8 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
 
 public class AdbShellRunner extends Runner {
-    protected AdbShellRunner(Context context) {
-        super(context);
-    }
-
     @Override
-    public Result run() {
+    public Result runCommand() {
         try {
             AdbShell.CommandResult result = AdbShell.run(TextUtils.join("; ", commands));
             clear();
@@ -56,6 +51,6 @@ public class AdbShellRunner extends Runner {
     protected Result run(String command) {
         clear();
         addCommand(command);
-        return run();
+        return runCommand();
     }
 }

@@ -1,7 +1,6 @@
 package io.github.muntashirakon.AppManager.runner;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.text.TextUtils;
 
 import com.jaredrummler.android.shell.CommandResult;
@@ -10,23 +9,19 @@ import com.jaredrummler.android.shell.Shell;
 import java.util.List;
 
 public class RootShellRunner extends Runner {
-    protected RootShellRunner(Context context) {
-        super(context);
-    }
-
     @SuppressLint("StaticFieldLeak")
     private static RootShellRunner rootShellRunner;
-    public static RootShellRunner getInstance(Context context) {
-        if (rootShellRunner == null) rootShellRunner = new RootShellRunner(context.getApplicationContext());
+    public static RootShellRunner getInstance() {
+        if (rootShellRunner == null) rootShellRunner = new RootShellRunner();
         return rootShellRunner;
     }
 
-    public static Result run(Context context, String command) {
-        return getInstance(context).run(command);
+    public static Result runCommand(String command) {
+        return getInstance().run(command);
     }
 
     @Override
-    public Result run() {
+    synchronized public Result runCommand() {
         CommandResult result = Shell.SU.run(TextUtils.join("; ", commands));
         clear();
         lastResult = new Result() {
@@ -62,6 +57,6 @@ public class RootShellRunner extends Runner {
     protected Result run(String command) {
         clear();
         addCommand(command);
-        return run();
+        return runCommand();
     }
 }

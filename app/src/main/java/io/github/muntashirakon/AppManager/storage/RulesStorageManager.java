@@ -11,20 +11,27 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringDef;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.utils.RunnerUtils;
 
 public class RulesStorageManager implements Closeable {
-    @Override
-    public void close() {
-        if (!readOnly) commit();
-    }
+    @StringDef(value = {
+            COMPONENT_BLOCKED,
+            COMPONENT_TO_BE_BLOCKED,
+            COMPONENT_TO_BE_UNBLOCKED
+    })
+    public @interface ComponentStatus {}
+    public static final String COMPONENT_BLOCKED = "true";  // To preserve compatibility
+    public static final String COMPONENT_TO_BE_BLOCKED = "false";  // To preserve compatibility
+    public static final String COMPONENT_TO_BE_UNBLOCKED = "unblocked";
 
     public enum Type {
         ACTIVITY,
@@ -69,6 +76,11 @@ public class RulesStorageManager implements Closeable {
         loadEntries();
     }
 
+    @Override
+    public void close() {
+        if (!readOnly) commit();
+    }
+
     public Entry get(String name) {
         for (Entry entry: entries) if (entry.name.equals(name)) return entry;
         return null;
@@ -111,12 +123,12 @@ public class RulesStorageManager implements Closeable {
         entries.remove(removableEntry);
     }
 
-    protected void setComponent(String name, Type componentType, Boolean isApplied) {
+    protected void setComponent(String name, Type componentType, @ComponentStatus String componentStatus) {
         Entry entry = new Entry();
         entry.name = name;
         entry.type = componentType;
-        entry.extra = isApplied;
-        addEntry(entry); // FIXME
+        entry.extra = componentStatus;
+        addEntry(entry);
     }
 
     public void setAppOp(String name, @AppOpsManager.Mode int mode) {
@@ -141,13 +153,13 @@ public class RulesStorageManager implements Closeable {
     }
 
     public void applyAppOpsAndPerms(boolean apply) {
-        AppOpsService appOpsService = new AppOpsService(context);
+        Runner runner = Runner.getInstance();
         if (apply) {
             // Apply all app ops
             List<Entry> appOps = getAll(Type.APP_OP);
             for (Entry appOp: appOps) {
                 try {
-                    appOpsService.setMode(Integer.parseInt(appOp.name), -1, packageName, (Integer) appOp.extra);
+                    runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_APP_OPS_SET, packageName, Integer.parseInt(appOp.name), appOp.extra));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -155,21 +167,28 @@ public class RulesStorageManager implements Closeable {
             // Apply all permissions
             List<Entry> permissions = getAll(Type.PERMISSION);
             for (Entry permission: permissions) {
-                Runner.run(context, String.format("pm %s %s %s", (Boolean) permission.extra ? "grant" : "revoke", packageName, permission.name));
+                if ((Boolean) permission.extra) {
+                    // grant permission
+                    runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_GRANT, packageName, permission.name));
+                } else {
+                    runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_REVOKE, packageName, permission.name));
+                }
             }
         } else {
             // Reset all app ops
             try {
-                appOpsService.resetAllModes(-1, packageName);
+                runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_APP_OPS_RESET, packageName));
             } catch (Exception e) {
                 e.printStackTrace();
             }
             // Revoke all permissions
             List<Entry> permissions = getAll(Type.PERMISSION);
             for (Entry permission: permissions) {
-                Runner.run(context, String.format("pm revoke %s %s", packageName, permission.name));
+                runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_REVOKE, packageName, permission.name));
             }
         }
+        // Run all commands
+        runner.runCommand();
     }
 
     private void loadEntries() {
@@ -236,6 +255,7 @@ public class RulesStorageManager implements Closeable {
             case PROVIDER:
             case RECEIVER:
             case SERVICE:
+                return strExtra;
             case PERMISSION:
                 return Boolean.valueOf(strExtra);
             case APP_OP: return Integer.valueOf(strExtra);

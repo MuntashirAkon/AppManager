@@ -65,6 +65,7 @@ import io.github.muntashirakon.AppManager.types.ScrollSafeSwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
+import io.github.muntashirakon.AppManager.utils.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -294,7 +295,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
                                 R.string.uninstall_system_app_message : R.string.uninstall_app_message)
                         .setPositiveButton(R.string.uninstall, (dialog, which) -> new Thread(() -> {
                             // Try without root first then with root
-                            if (Runner.run(this, String.format("pm uninstall --user 0 %s", mPackageName)).isSuccessful()) {
+                            if (RunnerUtils.uninstallPackage(mPackageName).isSuccessful()) {
                                 runOnUiThread(() -> {
                                     Toast.makeText(mActivity, String.format(getString(R.string.uninstalled_successfully), mPackageLabel), Toast.LENGTH_LONG).show();
                                     finish();
@@ -318,7 +319,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
             if (mApplicationInfo.enabled) {
                 // Disable app
                 addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> new Thread(() -> {
-                    if (Runner.run(this, String.format("pm disable %s", mPackageName)).isSuccessful()) {
+                    if (RunnerUtils.disablePackage(mPackageName).isSuccessful()) {
                         // Refresh
                         runOnUiThread(this::getPackageInfoOrFinish);
                     } else {
@@ -328,7 +329,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
             } else {
                 // Enable app
                 addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> new Thread(() -> {
-                    if (Runner.run(this, String.format("pm enable %s", mPackageName)).isSuccessful()) {
+                    if (RunnerUtils.enablePackage(mPackageName).isSuccessful()) {
                         // Refresh
                         runOnUiThread(this::getPackageInfoOrFinish);
                     } else {
@@ -339,7 +340,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
             // Force stop
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
                 addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> new Thread(() -> {
-                    if (Runner.run(this, String.format("am force-stop %s", mPackageName)).isSuccessful()) {
+                    if (RunnerUtils.forceStopPackage(mPackageName).isSuccessful()) {
                         // Refresh
                         runOnUiThread(this::getPackageInfoOrFinish);
                     } else {
@@ -591,13 +592,13 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
 
     private List<String> getSharedPrefs(@NonNull String sourceDir) {
         File sharedPath = new File(sourceDir + "/shared_prefs");
-        return Runner.run(this, String.format("ls %s/*.xml", sharedPath.getAbsolutePath())).getOutputAsList();
+        return Runner.runCommand(String.format("ls %s/*.xml", sharedPath.getAbsolutePath())).getOutputAsList();
     }
 
     private List<String> getDatabases(@NonNull String sourceDir) {
         File sharedPath = new File(sourceDir + "/databases");
         // FIXME: SQLite db doesn't necessarily have .db extension
-        return Runner.run(this, String.format("ls %s/*.db", sharedPath.getAbsolutePath())).getOutputAsList();
+        return Runner.runCommand(String.format("ls %s/*.db", sharedPath.getAbsolutePath())).getOutputAsList();
     }
 
     private void openAsFolderInFM(String dir) {
@@ -694,7 +695,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
         if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
             mList.setOpen(v -> new Thread(() -> {
                 // Clear data
-                if (Runner.run(this, String.format("pm clear %s", mPackageName)).isSuccessful()) {
+                if (RunnerUtils.clearPackageData(mPackageName).isSuccessful()) {
                     runOnUiThread(this::getPackageInfoOrFinish);
                 }
             }).start());
@@ -718,7 +719,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
                     String extCache = cacheDir.getAbsolutePath().replace(getPackageName(), mPackageName);
                     command.append(" ").append(extCache);
                 }
-                if (Runner.run(this, command.toString()).isSuccessful()) {
+                if (Runner.runCommand(command.toString()).isSuccessful()) {
                     runOnUiThread(this::getPackageInfoOrFinish);
                 }
             }).start());
