@@ -38,7 +38,7 @@ public class Runner {
         return runner;
     }
 
-    public static Result runCommand(String command) {
+    synchronized public static Result runCommand(String command) {
         return getInstance().run(command);
     }
 

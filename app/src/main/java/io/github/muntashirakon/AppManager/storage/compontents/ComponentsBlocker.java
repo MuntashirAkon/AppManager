@@ -245,7 +245,7 @@ public class ComponentsBlocker extends RulesStorageManager {
         List<RulesStorageManager.Entry> entries = getAllComponents();
         if (AppPref.isRootEnabled() && Runner.runCommand(String.format("test -e '%s%s.xml'",
                 SYSTEM_RULES_PATH, packageName)).isSuccessful()) return true;
-        for (RulesStorageManager.Entry entry: entries) if (!((Boolean) entry.extra)) return false;
+        for (RulesStorageManager.Entry entry: entries) if (entry.extra == COMPONENT_TO_BE_BLOCKED) return false;
         return true;
     }
 

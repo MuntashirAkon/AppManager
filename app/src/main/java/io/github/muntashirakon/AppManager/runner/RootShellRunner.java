@@ -21,7 +21,7 @@ public class RootShellRunner extends Runner {
     }
 
     @Override
-    synchronized public Result runCommand() {
+    public Result runCommand() {
         CommandResult result = Shell.SU.run(TextUtils.join("; ", commands));
         clear();
         lastResult = new Result() {

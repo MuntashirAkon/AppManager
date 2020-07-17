@@ -497,7 +497,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 if (requestedProperty == SERVICES) {
                     if (isRootEnabled || isADBEnabled)
                         runningServices = PackageUtils.getRunningServicesForPackage(mPackageName);
-                    else runningServices = new ArrayList<>();
                 }
                 mDefaultList = mAdapterList;
                 final AtomicInteger rules_msg_visibility = new AtomicInteger(View.GONE);
@@ -932,7 +931,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (appDetailsItem.isBlocked) view.setBackgroundColor(mColorRed);
             else if (isComponentDisabled(mPackageManager, serviceInfo)) view.setBackgroundColor(mColorDisabled);
             else if (appDetailsItem.isTracker) view.setBackgroundColor(mColorTracker);
-            else if (runningServices.contains(serviceInfo.name)) view.setBackgroundColor(mColorRunning);
+            else if (runningServices != null && runningServices.contains(serviceInfo.name)) view.setBackgroundColor(mColorRunning);
             else view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // Label
             holder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(serviceInfo.name)));
