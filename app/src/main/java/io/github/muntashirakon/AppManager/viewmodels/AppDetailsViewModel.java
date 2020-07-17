@@ -29,7 +29,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.fragments.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.storage.compontents.TrackerComponentFinder;
+import io.github.muntashirakon.AppManager.storage.compontents.TrackerComponentUtils;
 import io.github.muntashirakon.AppManager.types.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.types.AppDetailsItem;
 import io.github.muntashirakon.AppManager.types.AppDetailsPermissionItem;
@@ -127,7 +127,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
                         appDetailsItem.name = activityInfo.targetActivity == null ? activityInfo.name : activityInfo.targetActivity;
                         appDetailsItem.isBlocked = cb.hasComponent(activityInfo.name);
-                        appDetailsItem.isTracker = TrackerComponentFinder.isTracker(activityInfo.name);
+                        appDetailsItem.isTracker = TrackerComponentUtils.isTracker(activityInfo.name);
                         appDetailsItems.add(appDetailsItem);
                     }
                 }
@@ -156,7 +156,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(serviceInfo);
                         appDetailsItem.name = serviceInfo.name;
                         appDetailsItem.isBlocked = cb.hasComponent(serviceInfo.name);
-                        appDetailsItem.isTracker = TrackerComponentFinder.isTracker(serviceInfo.name);
+                        appDetailsItem.isTracker = TrackerComponentUtils.isTracker(serviceInfo.name);
                         appDetailsItems.add(appDetailsItem);
                     }
                 }
@@ -185,7 +185,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
                         appDetailsItem.name = activityInfo.name;
                         appDetailsItem.isBlocked = cb.hasComponent(activityInfo.name);
-                        appDetailsItem.isTracker = TrackerComponentFinder.isTracker(activityInfo.name);
+                        appDetailsItem.isTracker = TrackerComponentUtils.isTracker(activityInfo.name);
                         appDetailsItems.add(appDetailsItem);
                     }
                 }
@@ -214,7 +214,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(providerInfo);
                         appDetailsItem.name = providerInfo.name;
                         appDetailsItem.isBlocked = cb.hasComponent(providerInfo.name);
-                        appDetailsItem.isTracker = TrackerComponentFinder.isTracker(providerInfo.name);
+                        appDetailsItem.isTracker = TrackerComponentUtils.isTracker(providerInfo.name);
                         appDetailsItems.add(appDetailsItem);
                     }
                 }

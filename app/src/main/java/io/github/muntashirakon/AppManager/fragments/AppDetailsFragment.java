@@ -61,6 +61,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
 import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.storage.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.types.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.types.AppDetailsItem;
 import io.github.muntashirakon.AppManager.types.AppDetailsPermissionItem;
@@ -292,7 +293,17 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 }).start();
                 return true;
             case R.id.action_block_trackers:  // Components
-                // TODO:
+                new Thread(() -> {
+                    List<String> failedPkgList = ExternalComponentsImporter.applyFromTrackingComponents(mActivity, Collections.singletonList(mPackageName));
+                    if (failedPkgList.contains(mPackageName)) {
+                        mActivity.runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_disable_trackers, Toast.LENGTH_SHORT).show());
+                    } else {
+                        mActivity.runOnUiThread(() -> {
+                            Toast.makeText(mActivity, R.string.trackers_disabled_successfully, Toast.LENGTH_SHORT).show();
+                            if (mAdapter != null) mainModel.load(neededProperty);
+                        });
+                    }
+                }).start();
                 return true;
             case R.id.action_reset_to_default:  // App ops
                 // TODO:

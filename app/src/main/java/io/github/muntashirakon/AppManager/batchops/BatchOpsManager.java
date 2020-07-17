@@ -11,11 +11,13 @@ import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.storage.compontents.ExternalComponentsImporter;
 
 public class BatchOpsManager {
     @IntDef(value = {
             OP_BACKUP_APK,
             OP_BACKUP_DATA,
+            OP_BLOCK_TRACKERS,
             OP_CLEAR_DATA,
             OP_DISABLE,
             OP_DISABLE_BACKGROUND,
@@ -26,12 +28,13 @@ public class BatchOpsManager {
     public @interface OpType {}
     public static final int OP_BACKUP_APK = 0;
     public static final int OP_BACKUP_DATA = 1;
-    public static final int OP_CLEAR_DATA = 2;
-    public static final int OP_DISABLE = 3;
-    public static final int OP_DISABLE_BACKGROUND = 4;
-    public static final int OP_EXPORT_RULES = 5;
-    public static final int OP_KILL = 6;
-    public static final int OP_UNINSTALL = 7;
+    public static final int OP_BLOCK_TRACKERS = 2;
+    public static final int OP_CLEAR_DATA = 3;
+    public static final int OP_DISABLE = 4;
+    public static final int OP_DISABLE_BACKGROUND = 5;
+    public static final int OP_EXPORT_RULES = 6;
+    public static final int OP_KILL = 7;
+    public static final int OP_UNINSTALL = 8;
 
     private Runner runner;
     private Context context;
@@ -51,6 +54,7 @@ public class BatchOpsManager {
             case OP_BACKUP_APK:  // TODO
             case OP_BACKUP_DATA:  // TODO
                 break;
+            case OP_BLOCK_TRACKERS: return opBlockTrackers();
             case OP_CLEAR_DATA: return opClearData();
             case OP_DISABLE: return opDisable();
             case OP_DISABLE_BACKGROUND: return opDisableBackground();
@@ -74,6 +78,21 @@ public class BatchOpsManager {
 
     public Result getLastResult() {
         return lastResult;
+    }
+
+    private Result opBlockTrackers() {
+        final List<String> failedPkgList = ExternalComponentsImporter.applyFromTrackingComponents(context, packageNames);
+        return lastResult = new Result() {
+            @Override
+            public boolean isSuccessful() {
+                return failedPkgList.size() == 0;
+            }
+
+            @Override
+            public List<String> failedPackages() {
+                return failedPkgList;
+            }
+        };
     }
 
     @NonNull

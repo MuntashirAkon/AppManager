@@ -467,4 +467,7 @@
     <string name="deny_dangerous_permissions">Deny dangerous permissions</string>
     <string name="sort_by_tracker_components">Tracker first</string>
     <string name="unknown_op">Unknown Operation</string>
+    <string name="failed_to_disable_trackers">Failed to disable trackers</string>
+    <string name="trackers_disabled_successfully">Trackers are sucessfully disabled</string>
+    <string name="alert_failed_to_disable_trackers">Failed to disable trackers for some packages</string>
 </resources>

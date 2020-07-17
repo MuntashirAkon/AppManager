@@ -18,11 +18,13 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -30,6 +32,44 @@ import io.github.muntashirakon.AppManager.utils.Utils;
  * Import components from external apps like Blocker, MyAndroidTools, Watt
  */
 public class ExternalComponentsImporter {
+    @NonNull
+    public static List<String> applyFromTrackingComponents(@NonNull Context context, @NonNull List<String> packageNames) {
+        List<String> failedPkgList = new ArrayList<>();
+        HashMap<String, RulesStorageManager.Type> components;
+        for (String packageName: packageNames) {
+            components = TrackerComponentUtils.getTrackerComponentsForPackage(packageName);
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
+                for (String componentName: components.keySet()) {
+                    cb.addComponent(componentName, components.get(componentName));
+                }
+                cb.applyRules(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                failedPkgList.add(packageName);
+            }
+        }
+        return failedPkgList;
+    }
+
+    @NonNull
+    public static List<String> applyFromExistingBlockList(@NonNull Context context, @NonNull List<String> packageNames) {
+        List<String> failedPkgList = new ArrayList<>();
+        HashMap<String, RulesStorageManager.Type> components;
+        for (String packageName: packageNames) {
+            components = PackageUtils.getUserDisabledComponentsForPackage(packageName);
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
+                for (String componentName: components.keySet()) {
+                    cb.addComponent(componentName, components.get(componentName));
+                }
+                cb.applyRules(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                failedPkgList.add(packageName);
+            }
+        }
+        return failedPkgList;
+    }
+
     @NonNull
     public static Tuple<Boolean, Integer> applyFromBlocker(@NonNull Context context, @NonNull List<Uri> uriList) {
         boolean failed = false;

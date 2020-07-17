@@ -226,6 +226,9 @@ public class MainActivity extends AppCompatActivity implements
         });
         mBottomAppBar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
+                case R.id.action_block_trackers:
+                    handleBatchOp(BatchOpsManager.OP_BLOCK_TRACKERS, R.string.alert_failed_to_disable_trackers);
+                    return true;
                 case R.id.action_clear_data:
                     handleBatchOp(BatchOpsManager.OP_CLEAR_DATA, R.string.alert_failed_to_clear_data);
                     return true;
@@ -473,9 +476,7 @@ public class MainActivity extends AppCompatActivity implements
                     AdbShell.CommandResult result = AdbShell.run("id");
                     if (!result.isSuccessful()) throw new IOException("Adb not available");
                     AppPref.getInstance().setPref(AppPref.PREF_ADB_MODE_ENABLED, true);
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, "Working on ADB mode", Toast.LENGTH_SHORT).show();
-                    });
+                    runOnUiThread(() -> Toast.makeText(this, "Working on ADB mode", Toast.LENGTH_SHORT).show());
                 } catch (Exception ignored) {}
             }).start();
         }
