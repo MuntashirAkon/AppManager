@@ -285,6 +285,12 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
 
     private void setHorizontalView() {
         mHorizontalLayout.removeAllViews();
+        // Set open
+        final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
+        if (launchIntentForPackage != null) {
+            addToHorizontalLayout(R.string.launch_app, R.drawable.ic_open_in_new_black_24dp)
+                    .setOnClickListener(v -> startActivity(launchIntentForPackage));
+        }
         // Set uninstall
         addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
             final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
