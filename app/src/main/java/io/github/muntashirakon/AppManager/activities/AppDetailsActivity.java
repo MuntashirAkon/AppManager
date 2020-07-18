@@ -27,6 +27,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fragments.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -135,7 +136,7 @@ public class AppDetailsActivity extends AppCompatActivity {
             return;
         }
         // Get model
-        model = new ViewModelProvider.AndroidViewModelFactory(getApplication()).create(AppDetailsViewModel.class);
+        model = ViewModelProvider.AndroidViewModelFactory.getInstance(AppManager.getInstance()).create(AppDetailsViewModel.class);
         model.setPackageName(mPackageName);
         // Initialize tabs
         mTabTitleIds = getResources().obtainTypedArray(R.array.TAB_TITLES);

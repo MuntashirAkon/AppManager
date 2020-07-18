@@ -13,6 +13,7 @@ import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.os.Build;
 import android.os.Handler;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,48 +29,182 @@ import androidx.lifecycle.MutableLiveData;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.fragments.AppDetailsFragment;
+import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
 import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.storage.compontents.TrackerComponentUtils;
 import io.github.muntashirakon.AppManager.types.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.types.AppDetailsItem;
 import io.github.muntashirakon.AppManager.types.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.RunnerUtils;
 
 public class AppDetailsViewModel extends AndroidViewModel {
     private PackageManager mPackageManager;
     private PackageInfo packageInfo;
     private String packageName;
     private Handler handler;
+    private ComponentsBlocker blocker;
+    private int flagSigningInfo;
+    private int flagDisabledComponents;
 
     public AppDetailsViewModel(@NonNull Application application) {
         super(application);
+        Log.d("ADVM", "New constructor called.");
         mPackageManager = application.getPackageManager();
         handler = new Handler(application.getMainLooper());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
+        else flagSigningInfo = PackageManager.GET_SIGNATURES;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            flagDisabledComponents = PackageManager.MATCH_DISABLED_COMPONENTS;
+        else flagDisabledComponents = PackageManager.GET_DISABLED_COMPONENTS;
+    }
+
+    @Override
+    protected void onCleared() {
+        Log.d("ADVM", "On Clear called for " + packageName);
+        new Thread(() -> {
+            synchronized (ComponentsBlocker.class) {
+                if (blocker != null) {
+                    // To prevent commit if a mutable instance was created in the middle,
+                    // set the instance read only again
+                    blocker.setReadOnly();
+                    blocker.close();
+                }
+            }
+        }).start();
+        super.onCleared();
     }
 
     public void setPackageName(String packageName) {
+        if (this.packageName != null) return;
+        Log.d("ADVM", "Package name is being set for " + packageName);
         this.packageName = packageName;
+        new Thread(() -> {
+            synchronized (ComponentsBlocker.class) {
+                if (blocker != null) {
+                    // To prevent commit if a mutable instance was created in the middle,
+                    // set the instance read only again
+                    blocker.setReadOnly();
+                    blocker.close();
+                }
+                blocker = ComponentsBlocker.getInstance(getApplication(), packageName);
+                ComponentsBlocker.class.notifyAll();
+            }
+        }).start();
     }
+
     public String getPackageName() {
         return packageName;
     }
 
-    public void setPackageInfo() {
-        if (packageName == null) return;
-        try {
-            int apiCompatFlags;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-                apiCompatFlags = PackageManager.GET_SIGNING_CERTIFICATES;
-            else apiCompatFlags = PackageManager.GET_SIGNATURES;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                apiCompatFlags |= PackageManager.MATCH_DISABLED_COMPONENTS;
-            else apiCompatFlags |= PackageManager.GET_DISABLED_COMPONENTS;
+    MutableLiveData<Boolean> isRulesApplied;
+    public LiveData<Boolean> getIsRulesApplied() {
+        if (isRulesApplied == null) {
+            isRulesApplied = new MutableLiveData<>();
+            new Thread(this::setIsRulesApplied).start();
+        }
+        return isRulesApplied;
+    }
 
-            packageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
-                    | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                    | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
-                    | apiCompatFlags | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
-        } catch (PackageManager.NameNotFoundException ignore) {}
+    /**
+     * This function should always be called inside a thread
+     */
+    public void setIsRulesApplied() {
+        synchronized (ComponentsBlocker.class) {
+            if (packageName == null) return;
+            waitForBlockerOrExit();
+            boolean newIsRulesApplied = blocker.componentCount() > 0 && blocker.isRulesApplied();
+            handler.post(() -> isRulesApplied.postValue(newIsRulesApplied));
+        }
+    }
+
+    public void updateRulesForComponent(String componentName, RulesStorageManager.Type type) {
+        new Thread(() -> {
+            synchronized (ComponentsBlocker.class) {
+                waitForBlockerOrExit();
+                blocker.setMutable();
+                if (blocker.hasComponent(componentName)) { // Remove from the list
+                    blocker.removeComponent(componentName);
+                } else { // Add to the list
+                    blocker.addComponent(componentName, type);
+                }
+                // Apply rules if global blocking enable or already applied
+                if ((Boolean) AppPref.get(AppPref.PREF_GLOBAL_BLOCKING_ENABLED,
+                        AppPref.TYPE_BOOLEAN) || blocker.isRulesApplied()) {
+                    blocker.applyRules(true);
+                    setIsRulesApplied();
+                }
+                // Commit changes
+                blocker.commit();
+                blocker.setReadOnly();
+                // Update UI
+                reloadComponents();
+            }
+        }).start();
+    }
+
+    public boolean setPermission(String permissionName, boolean isGranted) {
+        if (isGranted) {
+            if (!RunnerUtils.grantPermission(packageName, permissionName).isSuccessful())
+                return false;
+        } else {
+            if (!RunnerUtils.revokePermission(packageName, permissionName).isSuccessful())
+                return false;
+        }
+        new Thread(() -> {
+            synchronized (ComponentsBlocker.class) {
+                waitForBlockerOrExit();
+                blocker.setMutable();
+                blocker.setPermission(permissionName, isGranted);
+                blocker.commit();
+                blocker.setReadOnly();
+                ComponentsBlocker.class.notifyAll();
+            }
+        }).start();
+        return true;
+    }
+
+    AppOpsService mAppOpsService;
+    public boolean setAppOp(int op, int mode) {
+        if (mAppOpsService == null) mAppOpsService = new AppOpsService(getApplication());
+        try {
+            // Set mode
+            mAppOpsService.setMode(op, -1, packageName, mode);
+            // Verify changes
+            if (!mAppOpsService.checkOperation(op, -1, packageName).equals(AppOpsManager.modeToName(mode)))
+                return false;
+            new Thread(() -> {
+                synchronized (ComponentsBlocker.class) {
+                    waitForBlockerOrExit();
+                    blocker.setMutable();
+                    blocker.setAppOp(String.valueOf(op), mode);
+                    blocker.commit();
+                    blocker.setReadOnly();
+                    ComponentsBlocker.class.notifyAll();
+                }
+            }).start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public void applyRules() {
+        final Boolean newIsRulesApplied = isRulesApplied.getValue();
+        new Thread(() -> {
+            synchronized (ComponentsBlocker.class) {
+                waitForBlockerOrExit();
+                boolean oldIsRulesApplied = newIsRulesApplied == null ? blocker.componentCount() > 0 && blocker.isRulesApplied() : newIsRulesApplied;
+                blocker.setMutable();
+                blocker.applyRules(!oldIsRulesApplied);
+                blocker.commit();
+                blocker.setReadOnly();
+                reloadComponents();
+                setIsRulesApplied();
+            }
+        }).start();
     }
 
     public LiveData<List<AppDetailsItem>> get(@AppDetailsFragment.Property int property) {
@@ -107,6 +242,42 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
     }
 
+    private void waitForBlockerOrExit() {
+        if (blocker == null) {
+            try {
+                ComponentsBlocker.class.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    private void reloadComponents() {
+        handler.post(() -> {
+            loadActivities();
+            loadServices();
+            loadReceivers();
+            loadProviders();
+        });
+    }
+
+    private void setPackageInfo() {
+        if (packageName == null) return;
+        // Wait for component blocker to appear
+        synchronized (ComponentsBlocker.class) {
+            waitForBlockerOrExit();
+        }
+        if (packageInfo != null) return;
+        try {
+            packageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
+                    | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
+                    | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
+                    | flagDisabledComponents | flagSigningInfo | PackageManager.GET_CONFIGURATIONS
+                    | PackageManager.GET_SHARED_LIBRARY_FILES);
+        } catch (PackageManager.NameNotFoundException ignore) {}
+    }
+
     MutableLiveData<List<AppDetailsItem>> activities;
     private LiveData<List<AppDetailsItem>> getActivities() {
         if (activities == null) {
@@ -117,19 +288,18 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     private void loadActivities() {
+        if (activities == null) return;
         new Thread(() -> {
             setPackageInfo();
             if (packageInfo == null) return;
             List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(getApplication(), packageName)) {
-                if (packageInfo.activities != null) {
-                    for (ActivityInfo activityInfo : packageInfo.activities) {
-                        AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
-                        appDetailsItem.name = activityInfo.targetActivity == null ? activityInfo.name : activityInfo.targetActivity;
-                        appDetailsItem.isBlocked = cb.hasComponent(activityInfo.name);
-                        appDetailsItem.isTracker = TrackerComponentUtils.isTracker(activityInfo.name);
-                        appDetailsItems.add(appDetailsItem);
-                    }
+            if (packageInfo.activities != null) {
+                for (ActivityInfo activityInfo : packageInfo.activities) {
+                    AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
+                    appDetailsItem.name = activityInfo.targetActivity == null ? activityInfo.name : activityInfo.targetActivity;
+                    appDetailsItem.isBlocked = blocker.hasComponent(activityInfo.name);
+                    appDetailsItem.isTracker = TrackerComponentUtils.isTracker(activityInfo.name);
+                    appDetailsItems.add(appDetailsItem);
                 }
             }
             handler.post(() -> activities.postValue(appDetailsItems));
@@ -146,19 +316,18 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     private void loadServices() {
+        if (services == null) return;
         new Thread(() -> {
             setPackageInfo();
             if (packageInfo == null) return;
             List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(getApplication(), packageName)) {
-                if (packageInfo.services != null) {
-                    for (ServiceInfo serviceInfo : packageInfo.services) {
-                        AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(serviceInfo);
-                        appDetailsItem.name = serviceInfo.name;
-                        appDetailsItem.isBlocked = cb.hasComponent(serviceInfo.name);
-                        appDetailsItem.isTracker = TrackerComponentUtils.isTracker(serviceInfo.name);
-                        appDetailsItems.add(appDetailsItem);
-                    }
+            if (packageInfo.services != null) {
+                for (ServiceInfo serviceInfo : packageInfo.services) {
+                    AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(serviceInfo);
+                    appDetailsItem.name = serviceInfo.name;
+                    appDetailsItem.isBlocked = blocker.hasComponent(serviceInfo.name);
+                    appDetailsItem.isTracker = TrackerComponentUtils.isTracker(serviceInfo.name);
+                    appDetailsItems.add(appDetailsItem);
                 }
             }
             handler.post(() -> services.postValue(appDetailsItems));
@@ -175,19 +344,18 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     private void loadReceivers() {
+        if (receivers == null) return;
         new Thread(() -> {
             setPackageInfo();
             if (packageInfo == null) return;
             List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(getApplication(), packageName)) {
-                if (packageInfo.receivers != null) {
-                    for (ActivityInfo activityInfo : packageInfo.receivers) {
-                        AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
-                        appDetailsItem.name = activityInfo.name;
-                        appDetailsItem.isBlocked = cb.hasComponent(activityInfo.name);
-                        appDetailsItem.isTracker = TrackerComponentUtils.isTracker(activityInfo.name);
-                        appDetailsItems.add(appDetailsItem);
-                    }
+            if (packageInfo.receivers != null) {
+                for (ActivityInfo activityInfo : packageInfo.receivers) {
+                    AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
+                    appDetailsItem.name = activityInfo.name;
+                    appDetailsItem.isBlocked = blocker.hasComponent(activityInfo.name);
+                    appDetailsItem.isTracker = TrackerComponentUtils.isTracker(activityInfo.name);
+                    appDetailsItems.add(appDetailsItem);
                 }
             }
             handler.post(() -> receivers.postValue(appDetailsItems));
@@ -204,19 +372,18 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     private void loadProviders() {
+        if (providers == null) return;
         new Thread(() -> {
             setPackageInfo();
             if (packageInfo == null) return;
             List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(getApplication(), packageName)) {
-                if (packageInfo.providers != null) {
-                    for (ProviderInfo providerInfo : packageInfo.providers) {
-                        AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(providerInfo);
-                        appDetailsItem.name = providerInfo.name;
-                        appDetailsItem.isBlocked = cb.hasComponent(providerInfo.name);
-                        appDetailsItem.isTracker = TrackerComponentUtils.isTracker(providerInfo.name);
-                        appDetailsItems.add(appDetailsItem);
-                    }
+            if (packageInfo.providers != null) {
+                for (ProviderInfo providerInfo : packageInfo.providers) {
+                    AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(providerInfo);
+                    appDetailsItem.name = providerInfo.name;
+                    appDetailsItem.isBlocked = blocker.hasComponent(providerInfo.name);
+                    appDetailsItem.isTracker = TrackerComponentUtils.isTracker(providerInfo.name);
+                    appDetailsItems.add(appDetailsItem);
                 }
             }
             handler.post(() -> providers.postValue(appDetailsItems));

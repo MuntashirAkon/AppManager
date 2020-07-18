@@ -76,6 +76,14 @@ public class RulesStorageManager implements Closeable {
         loadEntries();
     }
 
+    public void setReadOnly() {
+        this.readOnly = true;
+    }
+
+    public void setMutable() {
+        this.readOnly = false;
+    }
+
     @Override
     public void close() {
         if (!readOnly) commit();

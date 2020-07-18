@@ -470,4 +470,6 @@
     <string name="failed_to_disable_trackers">Failed to disable trackers</string>
     <string name="trackers_disabled_successfully">Trackers are sucessfully disabled</string>
     <string name="alert_failed_to_disable_trackers">Failed to disable trackers for some packages</string>
+    <string name="failed_to_grant_permission">Failed to grant permission</string>
+    <string name="failed_to_revoke_permission">Failed to revoke permission</string>
 </resources>

@@ -37,11 +37,10 @@ import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -53,13 +52,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
-import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.storage.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.types.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.types.AppDetailsItem;
@@ -69,7 +67,6 @@ import io.github.muntashirakon.AppManager.types.ScrollSafeSwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.viewmodels.AppDetailsFragmentViewModel;
 import io.github.muntashirakon.AppManager.viewmodels.AppDetailsViewModel;
@@ -135,7 +132,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private AppDetailsRecyclerAdapter mAdapter;
     private ScrollSafeSwipeRefreshLayout mSwipeRefresh;
     private MenuItem blockingToggler;
-    private AppOpsService mAppOpsService;
     private ProgressIndicator mProgressIndicator;
     private TextView mRulesNotAppliedMsg;
     private boolean bFi;
@@ -169,7 +165,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             neededProperty = model.getNeededProperty();
         } else model.setNeededProperty(neededProperty);
         mActivity = (AppDetailsActivity) requireActivity();
-        mainModel = new ViewModelProvider.AndroidViewModelFactory(mActivity.getApplication()).create(AppDetailsViewModel.class);
+        mainModel = mActivity.model;
+        if (mainModel == null)
+            mainModel = ViewModelProvider.AndroidViewModelFactory.getInstance(AppManager.getInstance()).create(AppDetailsViewModel.class);
         mPackageName = mainModel.getPackageName();
         if (mPackageName == null) {
             mainModel.setPackageName(mActivity.getIntent().getStringExtra(AppInfoActivity.EXTRA_PACKAGE_NAME));
@@ -213,10 +211,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mAppOpsService = new AppOpsService(requireActivity());
         mainModel.get(neededProperty).observe(mActivity, appDetailsItems -> {
             mAdapter.setDefaultList(appDetailsItems);
             if (neededProperty == FEATURES) bFi = mainModel.isbFi();
+        });
+        mainModel.getIsRulesApplied().observe(mActivity, isRulesApplied -> {
+            if (neededProperty <= PROVIDERS) {
+                mRulesNotAppliedMsg.setVisibility(isRulesApplied ? View.GONE : View.VISIBLE);
+            }
         });
     }
 
@@ -238,12 +240,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     blockingToggler = menu.findItem(R.id.action_toggle_blocking);
                     if (!AppPref.isGlobalBlockingEnabled()) {
                         blockingToggler.setVisible(true);
-                        try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
-                            if (cb.componentCount() > 0 && cb.isRulesApplied()) {
-                                blockingToggler.setTitle(R.string.menu_remove_rules);
-                            } else blockingToggler.setTitle(R.string.menu_apply_rules);
-                        }
                     } else blockingToggler.setVisible(false);
+                    mainModel.getIsRulesApplied().observe(mActivity, isRulesApplied ->
+                            blockingToggler.setTitle(isRulesApplied ? R.string.menu_remove_rules : R.string.menu_apply_rules));
                 } else inflater.inflate(R.menu.fragment_app_details_refresh_actions, menu);
                 break;
             case APP_OPS:
@@ -281,28 +280,20 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 refreshDetails();
                 return true;
             case R.id.action_toggle_blocking:  // Components
-                new Thread(() -> {
-                    try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
-                        boolean isRulesApplied = cb.isRulesApplied();
-                        cb.applyRules(!isRulesApplied);
-                        if (cb.componentCount() > 0 && cb.isRulesApplied())
-                            mActivity.runOnUiThread(() -> blockingToggler.setTitle(R.string.menu_remove_rules));
-                        else mActivity.runOnUiThread(() -> blockingToggler.setTitle(R.string.menu_apply_rules));
-                    }
-                    mActivity.runOnUiThread(this::refreshDetails);
-                }).start();
+                if (mainModel != null) mainModel.applyRules();
                 return true;
             case R.id.action_block_trackers:  // Components
                 new Thread(() -> {
                     List<String> failedPkgList = ExternalComponentsImporter.applyFromTrackingComponents(mActivity, Collections.singletonList(mPackageName));
                     if (failedPkgList.contains(mPackageName)) {
-                        mActivity.runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_disable_trackers, Toast.LENGTH_SHORT).show());
+                        runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_disable_trackers, Toast.LENGTH_SHORT).show());
                     } else {
-                        mActivity.runOnUiThread(() -> {
+                        runOnUiThread(() -> {
                             Toast.makeText(mActivity, R.string.trackers_disabled_successfully, Toast.LENGTH_SHORT).show();
                             if (mAdapter != null) mainModel.load(neededProperty);
                         });
                     }
+                    runOnUiThread(() -> mainModel.setIsRulesApplied());
                 }).start();
                 return true;
             case R.id.action_reset_to_default:  // App ops
@@ -377,23 +368,17 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         return false;
     }
 
+    private void runOnUiThread(Runnable runnable) {
+        mActivity.runOnUiThread(runnable);
+    }
+
     private void setSortBy(@SortOrder int sortBy) {
         model.setSortBy(sortBy);
         if (mAdapter != null) mAdapter.sortList(sortBy);
     }
 
     synchronized private void applyRules(String componentName, RulesStorageManager.Type type) {
-        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
-            if (cb.hasComponent(componentName)) { // Remove from the list
-                cb.removeComponent(componentName);
-            } else { // Add to the list
-                cb.addComponent(componentName, type);
-            }
-            // Apply rules
-            if ((Boolean) AppPref.get(AppPref.PREF_GLOBAL_BLOCKING_ENABLED,
-                    AppPref.TYPE_BOOLEAN) || cb.isRulesApplied()) cb.applyRules(true);
-            mRulesNotAppliedMsg.setVisibility(cb.isRulesApplied() ? View.GONE : View.VISIBLE);
-        }
+        if (mainModel != null) mainModel.updateRulesForComponent(componentName, type);
     }
 
     private void refreshDetails() {
@@ -472,8 +457,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsRecyclerAdapter.ViewHolder> implements Filterable {
-        private List<AppDetailsItem> mAdapterList;
-        private List<AppDetailsItem> mDefaultList;
+        private final List<AppDetailsItem> mAdapterList;
+        private final List<AppDetailsItem> mDefaultList;
         private @Property int requestedProperty;
         private Filter mFilter;
         private String mConstraint;
@@ -484,49 +469,43 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
         AppDetailsRecyclerAdapter(@SortOrder int sortBy) {
             mSortBy = sortBy;
+            mAdapterList = new ArrayList<>();
+            mDefaultList = new ArrayList<>();
         }
 
         void setDefaultList(List<AppDetailsItem> list) {
             isRootEnabled = AppPref.isRootEnabled();
             isADBEnabled = AppPref.isAdbEnabled();
-            final Boolean isBlockingEnabled = (Boolean) AppPref.get(AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN);
             showProgressIndicator(true);
+            requestedProperty = neededProperty;
+            mAdapterList.clear();
+            mDefaultList.clear();
+            mAdapterList.addAll(list);
+            mDefaultList.addAll(list);
+            if (!TextUtils.isEmpty(AppDetailsActivity.sConstraint)) {
+                getFilter().filter(AppDetailsActivity.sConstraint);
+            }
+            sortList(mSortBy);
+            showProgressIndicator(false);
             new Thread(() -> {
-                requestedProperty = neededProperty;
-                mAdapterList = list;
                 if (requestedProperty == SERVICES) {
                     if (isRootEnabled || isADBEnabled)
                         runningServices = PackageUtils.getRunningServicesForPackage(mPackageName);
                 }
-                mDefaultList = mAdapterList;
-                final AtomicInteger rules_msg_visibility = new AtomicInteger(View.GONE);
-                if (isRootEnabled && requestedProperty <= AppDetailsFragment.PROVIDERS && !isBlockingEnabled) {
-                    try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mActivity, mPackageName)) {
-                        if (cb.componentCount() > 0 && !cb.isRulesApplied()) {
-                            rules_msg_visibility.set(View.VISIBLE);
-                        }
-                    }
-                }
-                mActivity.runOnUiThread(() -> {
-                    if (!TextUtils.isEmpty(AppDetailsActivity.sConstraint)) {
-                        getFilter().filter(AppDetailsActivity.sConstraint);
-                    }
-                    mRulesNotAppliedMsg.setVisibility(rules_msg_visibility.get());
-                    sortList(mSortBy);
-                    showProgressIndicator(false);
-                });
             }).start();
         }
 
         void sortList(@SortOrder int sort) {
             new Thread(() -> {
-                if (sort != SORT_BY_NAME) {
-                    mSortBy = SORT_BY_NAME;
+                synchronized (List.class) {
+                    if (sort != SORT_BY_NAME) {
+                        mSortBy = SORT_BY_NAME;
+                        sortList();
+                    }
+                    mSortBy = sort;
                     sortList();
+                    runOnUiThread(this::notifyDataSetChanged);
                 }
-                mSortBy = sort;
-                sortList();
-                mActivity.runOnUiThread(this::notifyDataSetChanged);
             }).start();
         }
 
@@ -545,8 +524,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
         }
 
-        synchronized private void sortList() {
-            if (mAdapterList == null) return;
+        private void sortList() {
             Collections.sort(mAdapterList, (o1, o2) -> {
                 switch (mSortBy) {
                     // All
@@ -582,8 +560,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     @Override
                     protected FilterResults performFiltering(CharSequence charSequence) {
                         FilterResults filterResults = new FilterResults();
-                        if (charSequence == null || mDefaultList == null) {
-                            filterResults.count = mDefaultList == null ? 0 : mDefaultList.size();
+                        if (charSequence == null) {
+                            filterResults.count = mDefaultList.size();
                             filterResults.values = mDefaultList;
                             return filterResults;
                         }
@@ -608,11 +586,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
                     @Override
                     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                        mAdapterList.clear();
                         if (filterResults.values == null) {
-                            mAdapterList = mDefaultList;
+                            mAdapterList.addAll(mDefaultList);
                         } else {
                             //noinspection unchecked
-                            mAdapterList = (List<AppDetailsItem>) filterResults.values;
+                            mAdapterList.addAll((Collection<? extends AppDetailsItem>) filterResults.values);
                         }
                         sortList(mSortBy);
                     }
@@ -748,10 +727,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
         }
 
-        public int getCount() {
-            return mAdapterList == null ? 0 : mAdapterList.size();
-        }
-
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -813,7 +788,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
         @Override
         public int getItemCount() {
-            return mAdapterList == null ? 0 : mAdapterList.size();
+            return mAdapterList.size();
         }
 
         /**
@@ -1188,71 +1163,30 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 // op granted
                 holder.toggleSwitch.setChecked(true);
             } else holder.toggleSwitch.setChecked(false);
-            holder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> new Thread(() -> {
+            holder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (buttonView.isPressed()) {
-                    if (isChecked) {
-                        // Enable op
-                        try {
-                            mAppOpsService.setMode(opEntry.getOp(), -1, mPackageName, AppOpsManager.MODE_ALLOWED);
-                            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
-                                cb.setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_ALLOWED);
-                            }
-                            if (mAppOpsService.checkOperation(opEntry.getOp(), -1, mPackageName).equals(AppOpsManager.modeToName(AppOpsManager.MODE_ALLOWED))) {
-                                AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
-                                        opEntry.getOpStr(), opEntry.isRunning(), AppOpsManager.modeToName(AppOpsManager.MODE_ALLOWED), opEntry.getTime(),
-                                        opEntry.getRejectTime(), opEntry.getDuration(),
-                                        opEntry.getProxyUid(), opEntry.getProxyPackageName());
-                                AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
-                                appDetailsItem.name = opEntry1.getOpStr();
-                                mActivity.runOnUiThread(() -> {
-                                    set(index, appDetailsItem);
-                                    if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
-                                });
-                            } else {
-                                mActivity.runOnUiThread(() -> {
-                                    Toast.makeText(mActivity, R.string.app_op_cannot_be_enabled, Toast.LENGTH_LONG).show();
-                                    notifyItemChanged(index);
-                                });
-                            }
-                        } catch (Exception e) {
-                            mActivity.runOnUiThread(() -> {
-                                Toast.makeText(mActivity, R.string.failed_to_enable_op, Toast.LENGTH_LONG).show();
+                    new Thread(() -> {
+                        int opMode = isChecked ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED;
+                        if (mainModel.setAppOp(opEntry.getOp(), opMode)) {
+                            AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
+                                    opEntry.getOpStr(), opEntry.isRunning(), AppOpsManager.modeToName(opMode), opEntry.getTime(),
+                                    opEntry.getRejectTime(), opEntry.getDuration(),
+                                    opEntry.getProxyUid(), opEntry.getProxyPackageName());
+                            AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
+                            appDetailsItem.name = opEntry1.getOpStr();
+                            runOnUiThread(() -> {
+                                set(index, appDetailsItem);
+                                if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
+                            });
+                        } else {
+                            runOnUiThread(() -> {
+                                Toast.makeText(mActivity, isChecked ? R.string.failed_to_enable_op : R.string.app_op_cannot_be_disabled, Toast.LENGTH_LONG).show();
                                 notifyItemChanged(index);
                             });
                         }
-                    } else {
-                        // Disable permission
-                        try {
-                            mAppOpsService.setMode(opEntry.getOp(), -1, mPackageName, AppOpsManager.MODE_IGNORED);
-                            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
-                                cb.setAppOp(String.valueOf(opEntry.getOp()), AppOpsManager.MODE_IGNORED);
-                            }
-                            if (mAppOpsService.checkOperation(opEntry.getOp(), -1, mPackageName).equals(AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED))) {
-                                AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
-                                        opEntry.getOpStr(), opEntry.isRunning(), AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED), opEntry.getTime(),
-                                        opEntry.getRejectTime(), opEntry.getDuration(),
-                                        opEntry.getProxyUid(), opEntry.getProxyPackageName());
-                                AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
-                                appDetailsItem.name = opEntry1.getOpStr();
-                                mActivity.runOnUiThread(() -> {
-                                    set(index, appDetailsItem);
-                                    if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
-                                });
-                            } else {
-                                mActivity.runOnUiThread(() -> {
-                                    Toast.makeText(mActivity, R.string.app_op_cannot_be_disabled, Toast.LENGTH_LONG).show();
-                                    notifyItemChanged(index);
-                                });
-                            }
-                        } catch (Exception e) {
-                            mActivity.runOnUiThread(() -> {
-                                Toast.makeText(mActivity, R.string.failed_to_disable_op, Toast.LENGTH_LONG).show();
-                                notifyItemChanged(index);
-                            });
-                        }
-                    }
+                    }).start();
                 }
-            }).start());
+            });
         }
 
         /**
@@ -1299,55 +1233,32 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 holder.toggleSwitch.setVisibility(View.VISIBLE);
                 if (permissionItem.isGranted) holder.toggleSwitch.setChecked(true);
                 else holder.toggleSwitch.setChecked(false);
-                holder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> new Thread(() -> {
+                holder.toggleSwitch.setOnCheckedChangeListener((buttonView, isGranted) -> {
                     if (buttonView.isPressed()) {
-                        boolean permChanged = false;
-                        final AtomicBoolean permGranted = new AtomicBoolean(false);
-                        if (isChecked) {
-                            // Enable permission
-                            if (!RunnerUtils.grantPermission(mPackageName, permName).isSuccessful()) {
-                                mActivity.runOnUiThread(() -> {
-                                    Toast.makeText(mActivity, "Failed to grant permission.", Toast.LENGTH_SHORT).show();
-                                    notifyItemChanged(index);
+                        new Thread(() -> {
+                            if (mainModel.setPermission(permName, isGranted)) {
+                                runOnUiThread(() -> {
+                                    try {
+                                        PermissionInfo newPermissionInfo = mPackageManager.getPermissionInfo(permissionItem.name, PackageManager.GET_META_DATA);
+                                        AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(newPermissionInfo);
+                                        appDetailsItem.name = permissionItem.name;
+                                        appDetailsItem.flags = permissionItem.flags;
+                                        appDetailsItem.isDangerous = permissionItem.isDangerous;
+                                        appDetailsItem.isGranted = isGranted;
+                                        set(index, appDetailsItem);
+                                        if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
+                                    } catch (PackageManager.NameNotFoundException ignore) {
+                                    }
                                 });
                             } else {
-                                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
-                                    cb.setPermission(permName, true);
-                                    permChanged = true;
-                                    permGranted.set(true);
-                                }
-                            }
-                        } else {
-                            // Disable permission
-                            if (!RunnerUtils.revokePermission(mPackageName, permName).isSuccessful()) {
-                                mActivity.runOnUiThread(() -> {
-                                    Toast.makeText(mActivity, "Failed to revoke permission.", Toast.LENGTH_SHORT).show();
+                                runOnUiThread(() -> {
+                                    Toast.makeText(mActivity, isGranted ? R.string.failed_to_grant_permission : R.string.failed_to_revoke_permission, Toast.LENGTH_SHORT).show();
                                     notifyItemChanged(index);
                                 });
-                            } else {
-                                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, mPackageName)) {
-                                    cb.setPermission(permName, false);
-                                    permChanged = true;
-                                    permGranted.set(false);
-                                }
                             }
-                        }
-                        if (permChanged) {
-                            mActivity.runOnUiThread(() -> {
-                                try {
-                                    PermissionInfo newPermissionInfo = mPackageManager.getPermissionInfo(permissionItem.name, PackageManager.GET_META_DATA);
-                                    AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(newPermissionInfo);
-                                    appDetailsItem.name = permissionItem.name;
-                                    appDetailsItem.flags = permissionItem.flags;
-                                    appDetailsItem.isDangerous = permissionItem.isDangerous;
-                                    appDetailsItem.isGranted = permGranted.get();
-                                    set(index, appDetailsItem);
-                                    if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
-                                } catch (PackageManager.NameNotFoundException ignore) {}
-                            });
-                        }
+                        }).start();
                     }
-                }).start());
+                });
             } else holder.toggleSwitch.setVisibility(View.GONE);
         }
 
