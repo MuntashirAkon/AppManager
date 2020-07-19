@@ -112,13 +112,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             SORT_BY_DENIED_PERMS
     })
     public @interface SortOrder {}
-    private static final int SORT_BY_NAME    = 0;
-    private static final int SORT_BY_BLOCKED  = 1;
-    private static final int SORT_BY_TRACKERS = 2;
-    private static final int SORT_BY_APP_OP_VALUES   = 3;
-    private static final int SORT_BY_DENIED_APP_OPS  = 4;
-    private static final int SORT_BY_DANGEROUS_PERMS = 5;
-    private static final int SORT_BY_DENIED_PERMS    = 6;
+    public static final int SORT_BY_NAME    = 0;
+    public static final int SORT_BY_BLOCKED  = 1;
+    public static final int SORT_BY_TRACKERS = 2;
+    public static final int SORT_BY_APP_OP_VALUES   = 3;
+    public static final int SORT_BY_DENIED_APP_OPS  = 4;
+    public static final int SORT_BY_DANGEROUS_PERMS = 5;
+    public static final int SORT_BY_DENIED_PERMS    = 6;
 
     private static final int[] sSortMenuItemIdsMap = {
             R.id.action_sort_by_name, R.id.action_sort_by_blocked_components,
@@ -203,23 +203,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         mRulesNotAppliedMsg = view.findViewById(R.id.alert_text);
         mRulesNotAppliedMsg.setVisibility(View.GONE);
         mRulesNotAppliedMsg.setText(R.string.rules_not_applied);
-        mAdapter = new AppDetailsRecyclerAdapter(model.getSortBy());
+        mAdapter = new AppDetailsRecyclerAdapter();
         recyclerView.setAdapter(mAdapter);
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
         return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mainModel.get(neededProperty).observe(mActivity, appDetailsItems -> {
-            mAdapter.setDefaultList(appDetailsItems);
-            if (neededProperty == FEATURES) bFi = mainModel.isbFi();
-        });
-        mainModel.getIsRulesApplied().observe(mActivity, isRulesApplied -> {
-            if (neededProperty <= PROVIDERS) {
-                mRulesNotAppliedMsg.setVisibility(isRulesApplied ? View.GONE : View.VISIBLE);
-            }
-        });
     }
 
     @Override
@@ -297,13 +284,25 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 }).start();
                 return true;
             case R.id.action_reset_to_default:  // App ops
-                // TODO:
+                new Thread(() -> {
+                    if (mainModel == null || !mainModel.resetAppOps()) {
+                        runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_reset_app_ops, Toast.LENGTH_SHORT).show());
+                    }
+                }).start();
                 return true;
             case R.id.action_deny_dangerous_app_ops:  // App ops
-                // TODO:
+                new Thread(() -> {
+                    if (mainModel == null || !mainModel.ignoreDangerousAppOps()) {
+                        runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_deny_dangerous_app_ops, Toast.LENGTH_SHORT).show());
+                    }
+                }).start();
                 return true;
             case R.id.action_deny_dangerous_permissions:  // permissions
-                // TODO:
+                new Thread(() -> {
+                    if (mainModel == null || !mainModel.revokeDangerousPermissions()) {
+                        runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_deny_dangerous_perms, Toast.LENGTH_SHORT).show());
+                    }
+                }).start();
                 return true;
             // Sorting
             case R.id.action_sort_by_name:  // All
@@ -341,17 +340,21 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public void onStart() {
         super.onStart();
-        if (mAdapter != null) mainModel.load(neededProperty);
+        mainModel.get(neededProperty).observe(mActivity, appDetailsItems -> {
+            mAdapter.setDefaultList(appDetailsItems);
+            if (neededProperty == FEATURES) bFi = mainModel.isbFi();
+        });
+        mainModel.getIsRulesApplied().observe(mActivity, isRulesApplied -> {
+            if (neededProperty <= PROVIDERS) {
+                mRulesNotAppliedMsg.setVisibility(isRulesApplied ? View.GONE : View.VISIBLE);
+            }
+        });
+//        if (mAdapter != null) mainModel.load(neededProperty);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (mAdapter != null) {
-            if (!TextUtils.isEmpty(AppDetailsActivity.sConstraint)) {
-                mAdapter.getFilter().filter(AppDetailsActivity.sConstraint);
-            }
-        }
     }
 
     @Override
@@ -373,8 +376,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     private void setSortBy(@SortOrder int sortBy) {
+        mainModel.setSortOrder(sortBy, neededProperty);
+        mainModel.load(neededProperty);
         model.setSortBy(sortBy);
-        if (mAdapter != null) mAdapter.sortList(sortBy);
     }
 
     synchronized private void applyRules(String componentName, RulesStorageManager.Type type) {
@@ -465,10 +469,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         private Boolean isRootEnabled = true;
         private Boolean isADBEnabled = true;
         private List<String> runningServices;
-        private @SortOrder int mSortBy;
 
-        AppDetailsRecyclerAdapter(@SortOrder int sortBy) {
-            mSortBy = sortBy;
+        AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
             mDefaultList = new ArrayList<>();
         }
@@ -485,8 +487,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (!TextUtils.isEmpty(AppDetailsActivity.sConstraint)) {
                 getFilter().filter(AppDetailsActivity.sConstraint);
             }
-            sortList(mSortBy);
             showProgressIndicator(false);
+            notifyDataSetChanged();
             new Thread(() -> {
                 if (requestedProperty == SERVICES) {
                     if (isRootEnabled || isADBEnabled)
@@ -495,64 +497,22 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }).start();
         }
 
-        void sortList(@SortOrder int sort) {
-            new Thread(() -> {
-                synchronized (List.class) {
-                    if (sort != SORT_BY_NAME) {
-                        mSortBy = SORT_BY_NAME;
-                        sortList();
-                    }
-                    mSortBy = sort;
-                    sortList();
-                    runOnUiThread(this::notifyDataSetChanged);
-                }
-            }).start();
-        }
-
         void set(int currentIndex, AppDetailsItem appDetailsItem) {
             mAdapterList.set(currentIndex, appDetailsItem);
             notifyItemChanged(currentIndex);
             // Update the values in default list as well
-            synchronized (this) {
-                new Thread(() -> {
+            new Thread(() -> {
+                synchronized (mDefaultList) {
                     for (int i = 0; i < mDefaultList.size(); ++i) {
                         if (mDefaultList.get(i).name.equals(appDetailsItem.name)) {
                             mDefaultList.set(i, appDetailsItem);
                         }
                     }
-                }).start();
-            }
-        }
-
-        private void sortList() {
-            Collections.sort(mAdapterList, (o1, o2) -> {
-                switch (mSortBy) {
-                    // All
-                    case AppDetailsFragment.SORT_BY_NAME:
-                        return o1.name.compareToIgnoreCase(o2.name);
-                    // Components
-                    case AppDetailsFragment.SORT_BY_BLOCKED:
-                        return -Utils.compareBooleans(((AppDetailsComponentItem) o1).isBlocked, ((AppDetailsComponentItem) o2).isBlocked);
-                    case AppDetailsFragment.SORT_BY_TRACKERS:
-                        return -Utils.compareBooleans(((AppDetailsComponentItem) o1).isTracker, ((AppDetailsComponentItem) o2).isTracker);
-                    // App ops
-                    case AppDetailsFragment.SORT_BY_APP_OP_VALUES:
-                        Integer o1Op = ((AppOpsManager.OpEntry) o1.vanillaItem).getOp();
-                        Integer o2Op = ((AppOpsManager.OpEntry) o2.vanillaItem).getOp();
-                        return o1Op.compareTo(o2Op);
-                    case AppDetailsFragment.SORT_BY_DENIED_APP_OPS:
-                        // A slight hack to sort it this way: ignore > foreground > deny > default[ > ask] > allow
-                        return -((AppOpsManager.OpEntry) o1.vanillaItem).getMode().compareToIgnoreCase(((AppOpsManager.OpEntry) o2.vanillaItem).getMode());
-                    // Permissions
-                    case AppDetailsFragment.SORT_BY_DANGEROUS_PERMS:
-                        return -Utils.compareBooleans(((AppDetailsPermissionItem) o1).isDangerous, ((AppDetailsPermissionItem) o2).isDangerous);
-                    case AppDetailsFragment.SORT_BY_DENIED_PERMS:
-                        return Utils.compareBooleans(((AppDetailsPermissionItem) o1).isGranted, ((AppDetailsPermissionItem) o2).isGranted);
                 }
-                return 0;
-            });
+            }).start();
         }
 
+        // TODO: Do it in the view model
         @Override
         public Filter getFilter() {
             if (mFilter == null)
@@ -593,7 +553,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             //noinspection unchecked
                             mAdapterList.addAll((Collection<? extends AppDetailsItem>) filterResults.values);
                         }
-                        sortList(mSortBy);
+                        notifyDataSetChanged();
                     }
                 };
             return mFilter;
@@ -890,7 +850,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     applyRules(activityName, RulesStorageManager.Type.ACTIVITY);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     set(index, appDetailsItem);
-                    if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
                 });
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -936,7 +895,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     applyRules(serviceInfo.name, RulesStorageManager.Type.SERVICE);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     set(index, appDetailsItem);
-                    if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
                 });
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -990,7 +948,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     applyRules(activityInfo.name, RulesStorageManager.Type.RECEIVER);
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     set(index, appDetailsItem);
-                    if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
                 });
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -1068,7 +1025,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     appDetailsItem.isBlocked = !appDetailsItem.isBlocked;
                     set(index, appDetailsItem);
                     notifyItemChanged(index);
-                    if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
                 });
             } else holder.blockBtn.setVisibility(View.GONE);
         }
@@ -1174,10 +1130,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                                     opEntry.getProxyUid(), opEntry.getProxyPackageName());
                             AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
                             appDetailsItem.name = opEntry1.getOpStr();
-                            runOnUiThread(() -> {
-                                set(index, appDetailsItem);
-                                if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
-                            });
+                            runOnUiThread(() -> set(index, appDetailsItem));
                         } else {
                             runOnUiThread(() -> {
                                 Toast.makeText(mActivity, isChecked ? R.string.failed_to_enable_op : R.string.app_op_cannot_be_disabled, Toast.LENGTH_LONG).show();
@@ -1246,9 +1199,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                                         appDetailsItem.isDangerous = permissionItem.isDangerous;
                                         appDetailsItem.isGranted = isGranted;
                                         set(index, appDetailsItem);
-                                        if (mSortBy != SORT_BY_NAME) setSortBy(mSortBy);
-                                    } catch (PackageManager.NameNotFoundException ignore) {
-                                    }
+                                    } catch (PackageManager.NameNotFoundException ignore) {}
                                 });
                             } else {
                                 runOnUiThread(() -> {

@@ -1,5 +1,6 @@
 package io.github.muntashirakon.AppManager.viewmodels;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
@@ -37,6 +38,7 @@ import io.github.muntashirakon.AppManager.types.AppDetailsItem;
 import io.github.muntashirakon.AppManager.types.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.RunnerUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class AppDetailsViewModel extends AndroidViewModel {
     private PackageManager mPackageManager;
@@ -44,8 +46,16 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private String packageName;
     private Handler handler;
     private ComponentsBlocker blocker;
+
     private int flagSigningInfo;
     private int flagDisabledComponents;
+
+    private @AppDetailsFragment.SortOrder int sortOrderComponents = AppDetailsFragment.SORT_BY_NAME;
+    private @AppDetailsFragment.SortOrder int sortOrderAppOps = AppDetailsFragment.SORT_BY_NAME;
+    private @AppDetailsFragment.SortOrder int sortOrderPermissions = AppDetailsFragment.SORT_BY_NAME;
+
+    private String searchQuery;
+    private boolean waitForBlocker;
 
     public AppDetailsViewModel(@NonNull Application application) {
         super(application);
@@ -58,6 +68,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
             flagDisabledComponents = PackageManager.MATCH_DISABLED_COMPONENTS;
         else flagDisabledComponents = PackageManager.GET_DISABLED_COMPONENTS;
+        waitForBlocker = true;
     }
 
     @Override
@@ -82,6 +93,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         this.packageName = packageName;
         new Thread(() -> {
             synchronized (ComponentsBlocker.class) {
+                waitForBlocker = true;
                 if (blocker != null) {
                     // To prevent commit if a mutable instance was created in the middle,
                     // set the instance read only again
@@ -89,6 +101,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     blocker.close();
                 }
                 blocker = ComponentsBlocker.getInstance(getApplication(), packageName);
+                waitForBlocker = false;
                 ComponentsBlocker.class.notifyAll();
             }
         }).start();
@@ -96,6 +109,22 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     public String getPackageName() {
         return packageName;
+    }
+
+    @SuppressLint("SwitchIntDef")
+    public void setSortOrder(@AppDetailsFragment.SortOrder int sortOrder, @AppDetailsFragment.Property int property) {
+        switch (property) {
+            case AppDetailsFragment.ACTIVITIES:
+            case AppDetailsFragment.SERVICES:
+            case AppDetailsFragment.RECEIVERS:
+            case AppDetailsFragment.PROVIDERS: sortOrderComponents = sortOrder; break;
+            case AppDetailsFragment.APP_OPS: sortOrderAppOps = sortOrder; break;
+            case AppDetailsFragment.USES_PERMISSIONS: sortOrderPermissions = sortOrder; break;
+        }
+    }
+
+    public void setSearchQuery(String searchQuery) {
+        this.searchQuery = searchQuery;
     }
 
     MutableLiveData<Boolean> isRulesApplied;
@@ -114,7 +143,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         synchronized (ComponentsBlocker.class) {
             if (packageName == null) return;
             waitForBlockerOrExit();
-            boolean newIsRulesApplied = blocker.componentCount() > 0 && blocker.isRulesApplied();
+            boolean newIsRulesApplied = blocker.isRulesApplied();
             handler.post(() -> isRulesApplied.postValue(newIsRulesApplied));
         }
     }
@@ -165,6 +194,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return true;
     }
 
+    public boolean revokeDangerousPermissions() {
+        // TODO: revoke all dangerous permissions and reload
+        return false;
+    }
+
     AppOpsService mAppOpsService;
     public boolean setAppOp(int op, int mode) {
         if (mAppOpsService == null) mAppOpsService = new AppOpsService(getApplication());
@@ -191,12 +225,22 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return true;
     }
 
+    public boolean resetAppOps() {
+        // TODO: reset app ops and reload
+        return false;
+    }
+
+    public boolean ignoreDangerousAppOps() {
+        // TODO: ignore all dangerous app ops and reload
+        return false;
+    }
+
     public void applyRules() {
         final Boolean newIsRulesApplied = isRulesApplied.getValue();
         new Thread(() -> {
             synchronized (ComponentsBlocker.class) {
                 waitForBlockerOrExit();
-                boolean oldIsRulesApplied = newIsRulesApplied == null ? blocker.componentCount() > 0 && blocker.isRulesApplied() : newIsRulesApplied;
+                boolean oldIsRulesApplied = newIsRulesApplied == null ? blocker.isRulesApplied() : newIsRulesApplied;
                 blocker.setMutable();
                 blocker.applyRules(!oldIsRulesApplied);
                 blocker.commit();
@@ -245,7 +289,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private void waitForBlockerOrExit() {
         if (blocker == null) {
             try {
-                ComponentsBlocker.class.wait();
+                while (waitForBlocker) ComponentsBlocker.class.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();
@@ -302,6 +346,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     appDetailsItems.add(appDetailsItem);
                 }
             }
+            sortComponents(appDetailsItems);
             handler.post(() -> activities.postValue(appDetailsItems));
         }).start();
     }
@@ -330,6 +375,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     appDetailsItems.add(appDetailsItem);
                 }
             }
+            sortComponents(appDetailsItems);
             handler.post(() -> services.postValue(appDetailsItems));
         }).start();
     }
@@ -358,6 +404,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     appDetailsItems.add(appDetailsItem);
                 }
             }
+            sortComponents(appDetailsItems);
             handler.post(() -> receivers.postValue(appDetailsItems));
         }).start();
     }
@@ -386,8 +433,24 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     appDetailsItems.add(appDetailsItem);
                 }
             }
+            sortComponents(appDetailsItems);
             handler.post(() -> providers.postValue(appDetailsItems));
         }).start();
+    }
+
+    @SuppressLint("SwitchIntDef")
+    private void sortComponents(List<AppDetailsItem> appDetailsItems) {
+        Collections.sort(appDetailsItems, (o1, o2) -> {
+            switch (sortOrderComponents) {
+                case AppDetailsFragment.SORT_BY_NAME:
+                    return o1.name.compareToIgnoreCase(o2.name);
+                case AppDetailsFragment.SORT_BY_BLOCKED:
+                    return -Utils.compareBooleans(((AppDetailsComponentItem) o1).isBlocked, ((AppDetailsComponentItem) o2).isBlocked);
+                case AppDetailsFragment.SORT_BY_TRACKERS:
+                    return -Utils.compareBooleans(((AppDetailsComponentItem) o1).isTracker, ((AppDetailsComponentItem) o2).isTracker);
+            }
+            return 0;
+        });
     }
 
     MutableLiveData<List<AppDetailsItem>> appOps;
@@ -400,6 +463,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return appOps;
     }
 
+    @SuppressLint("SwitchIntDef")
     private void loadAppOps() {
         new Thread(() -> {
             if (packageName == null) return;
@@ -426,6 +490,20 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     }
                 } catch (Exception ignored) {}
             }
+            Collections.sort(appDetailsItems, (o1, o2) -> {
+                switch (sortOrderAppOps) {
+                    case AppDetailsFragment.SORT_BY_NAME:
+                        return o1.name.compareToIgnoreCase(o2.name);
+                    case AppDetailsFragment.SORT_BY_APP_OP_VALUES:
+                        Integer o1Op = ((AppOpsManager.OpEntry) o1.vanillaItem).getOp();
+                        Integer o2Op = ((AppOpsManager.OpEntry) o2.vanillaItem).getOp();
+                        return o1Op.compareTo(o2Op);
+                    case AppDetailsFragment.SORT_BY_DENIED_APP_OPS:
+                        // A slight hack to sort it this way: ignore > foreground > deny > default[ > ask] > allow
+                        return -((AppOpsManager.OpEntry) o1.vanillaItem).getMode().compareToIgnoreCase(((AppOpsManager.OpEntry) o2.vanillaItem).getMode());
+                }
+                return 0;
+            });
             handler.post(() -> appOps.postValue(appDetailsItems));
         }).start();
     }
@@ -439,6 +517,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return usesPermissions;
     }
 
+    @SuppressLint("SwitchIntDef")
     private void loadUsesPermissions() {
         new Thread(() -> {
             setPackageInfo();
@@ -464,6 +543,17 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     } catch (PackageManager.NameNotFoundException ignore) {}
                 }
             }
+            Collections.sort(appDetailsItems, (o1, o2) -> {
+                switch (sortOrderPermissions) {
+                    case AppDetailsFragment.SORT_BY_NAME:
+                        return o1.name.compareToIgnoreCase(o2.name);
+                    case AppDetailsFragment.SORT_BY_DANGEROUS_PERMS:
+                        return -Utils.compareBooleans(((AppDetailsPermissionItem) o1).isDangerous, ((AppDetailsPermissionItem) o2).isDangerous);
+                    case AppDetailsFragment.SORT_BY_DENIED_PERMS:
+                        return Utils.compareBooleans(((AppDetailsPermissionItem) o1).isGranted, ((AppDetailsPermissionItem) o2).isGranted);
+                }
+                return 0;
+            });
             handler.post(() -> usesPermissions.postValue(appDetailsItems));
         }).start();
     }
