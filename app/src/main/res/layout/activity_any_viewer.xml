@@ -24,7 +24,7 @@
                 android:layout_height="match_parent"
                 android:fillViewport="true">
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/any_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -34,11 +34,12 @@
                     android:textSize="@dimen/subtitle_font"
                     android:textIsSelectable="true"
                     android:visibility="gone"
+                    android:background="@null"
                     tools:text="@tools:sample/lorem/random" />
 
             </HorizontalScrollView>
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/any_view_wrapped"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -48,6 +49,7 @@
                 android:textSize="@dimen/subtitle_font"
                 android:textIsSelectable="true"
                 android:visibility="visible"
+                android:background="@null"
                 tools:text="@tools:sample/lorem/random" />
 
         </FrameLayout>

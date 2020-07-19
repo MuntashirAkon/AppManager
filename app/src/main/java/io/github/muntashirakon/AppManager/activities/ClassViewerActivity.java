@@ -14,7 +14,6 @@ import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.progressindicator.ProgressIndicator;
@@ -29,6 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.R;
 
@@ -71,7 +71,7 @@ public class ClassViewerActivity extends AppCompatActivity {
     private String classDump;
     private SpannableString formattedContent;
     private boolean isWrapped = true;  // Wrap by default
-    private TextView container;
+    private AppCompatEditText container;
     private ProgressIndicator mProgressIndicator;
     String className;
 
@@ -107,6 +107,7 @@ public class ClassViewerActivity extends AppCompatActivity {
         if (isWrapped) container = findViewById(R.id.any_view_wrapped);
         else container = findViewById(R.id.any_view);
         container.setVisibility(View.VISIBLE);
+        container.setKeyListener(null);
         container.setTextColor(ContextCompat.getColor(this, R.color.dark_orange));
         displayContent();
         isWrapped = !isWrapped;
