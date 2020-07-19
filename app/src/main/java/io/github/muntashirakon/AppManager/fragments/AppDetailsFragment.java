@@ -18,6 +18,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PatternMatcher;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -207,19 +208,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        mainModel.get(neededProperty).observe(mActivity, appDetailsItems -> {
-            mAdapter.setDefaultList(appDetailsItems);
-            if (neededProperty == FEATURES) bFi = mainModel.isbFi();
-        });
-        mainModel.getIsRulesApplied().observe(mActivity, isRulesApplied -> {
-            if (neededProperty <= PROVIDERS) {
-                mRulesNotAppliedMsg.setVisibility(isRulesApplied ? View.GONE : View.VISIBLE);
-            }
-        });
-    }
-
-    @Override
     public void onRefresh() {
         refreshDetails();
         mSwipeRefresh.setRefreshing(false);
@@ -350,6 +338,15 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public void onStart() {
         super.onStart();
+        mainModel.get(neededProperty).observe(mActivity, appDetailsItems -> {
+            mAdapter.setDefaultList(appDetailsItems);
+            if (neededProperty == FEATURES) bFi = mainModel.isbFi();
+        });
+        mainModel.getIsRulesApplied().observe(mActivity, isRulesApplied -> {
+            if (neededProperty <= PROVIDERS) {
+                mRulesNotAppliedMsg.setVisibility(isRulesApplied ? View.GONE : View.VISIBLE);
+            }
+        });
     }
 
     @Override
@@ -996,14 +993,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     permissionInfo = mPackageManager.getPermissionInfo(permName, PackageManager.GET_META_DATA);
             } catch (PackageManager.NameNotFoundException | IllegalArgumentException | IndexOutOfBoundsException ignore) {}
             // Set op name
-            String opName = "(" + opEntry.getOp() + ") ";
+            SpannableStringBuilder opName = new SpannableStringBuilder("(" + opEntry.getOp() + ") ");
             if (opEntry.getOpStr().equals(String.valueOf(opEntry))) {
-                opName += getString(R.string.unknown_op);
+                opName.append(getString(R.string.unknown_op));
             } else {
                 if (mConstraint != null && opStr.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                     // Highlight searched query
-                    opName += Utils.getHighlightedText(opStr, mConstraint, mColorRed);
-                } else opName += opStr;
+                    opName.append(Utils.getHighlightedText(opStr, mConstraint, mColorRed));
+                } else opName.append(opStr);
             }
             holder.textView1.setText(opName);
             // Set op mode, running and duration

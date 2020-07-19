@@ -473,6 +473,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     MutableLiveData<List<AppDetailsItem>> appOps;
+    List<AppDetailsItem> appOpItems;
     AppOpsService appOpsService;
     private LiveData<List<AppDetailsItem>> getAppOps() {
         if (appOps == null) {
@@ -486,31 +487,37 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private void loadAppOps() {
         new Thread(() -> {
             if (packageName == null) return;
-            List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-            if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
-                appOpsService = new AppOpsService(getApplication());
-                try {
-                    List<AppOpsManager.PackageOps> packageOpsList = appOpsService.getOpsForPackage(-1, packageName, null);
-                    List<AppOpsManager.OpEntry> opEntries = new ArrayList<>();
-                    if (packageOpsList.size() == 1)
-                        opEntries.addAll(packageOpsList.get(0).getOps());
-                    packageOpsList = appOpsService.getOpsForPackage(-1, packageName, AppOpsManager.sAlwaysShownOp);
-                    if (packageOpsList.size() == 1)
-                        opEntries.addAll(packageOpsList.get(0).getOps());
-                    if (opEntries.size() > 0) {
-                        Set<String> uniqueSet = new HashSet<>();
-                        for (AppOpsManager.OpEntry opEntry : opEntries) {
-                            if (uniqueSet.contains(opEntry.getOpStr())) continue;
-                            AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry);
-                            appDetailsItem.name = opEntry.getOpStr();
-                            uniqueSet.add(opEntry.getOpStr());
-                            if (TextUtils.isEmpty(searchQuery)
-                                    || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
-                                appDetailsItems.add(appDetailsItem);
+            if (appOpItems == null) {
+                appOpItems = new ArrayList<>();
+                if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
+                    appOpsService = new AppOpsService(getApplication());
+                    try {
+                        List<AppOpsManager.PackageOps> packageOpsList = appOpsService.getOpsForPackage(-1, packageName, null);
+                        List<AppOpsManager.OpEntry> opEntries = new ArrayList<>();
+                        if (packageOpsList.size() == 1)
+                            opEntries.addAll(packageOpsList.get(0).getOps());
+                        packageOpsList = appOpsService.getOpsForPackage(-1, packageName, AppOpsManager.sAlwaysShownOp);
+                        if (packageOpsList.size() == 1)
+                            opEntries.addAll(packageOpsList.get(0).getOps());
+                        if (opEntries.size() > 0) {
+                            Set<String> uniqueSet = new HashSet<>();
+                            for (AppOpsManager.OpEntry opEntry : opEntries) {
+                                if (uniqueSet.contains(opEntry.getOpStr())) continue;
+                                AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry);
+                                appDetailsItem.name = opEntry.getOpStr();
+                                uniqueSet.add(opEntry.getOpStr());
+                                appOpItems.add(appDetailsItem);
+                            }
                         }
-                    }
-                } catch (Exception ignored) {}
+                    } catch (Exception ignored) {}
+                }
             }
+            final List<AppDetailsItem> appDetailsItems = new ArrayList<>();
+            if (!TextUtils.isEmpty(searchQuery)) {
+                for (AppDetailsItem appDetailsItem: appOpItems)
+                    if (appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
+                        appDetailsItems.add(appDetailsItem);
+            } else appDetailsItems.addAll(appOpItems);
             Collections.sort(appDetailsItems, (o1, o2) -> {
                 switch (sortOrderAppOps) {
                     case AppDetailsFragment.SORT_BY_NAME:
