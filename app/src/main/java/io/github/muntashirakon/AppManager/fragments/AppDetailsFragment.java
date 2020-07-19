@@ -26,8 +26,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,7 +35,6 @@ import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -361,15 +358,15 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         if (neededProperty <= PERMISSIONS) {
             mActivity.searchView.setVisibility(View.VISIBLE);
             mActivity.searchView.setOnQueryTextListener(this);
-            if (mAdapter != null) mAdapter.getFilter().filter(mainModel.getSearchQuery());
+            if (mainModel != null) mainModel.load(neededProperty);
         } else mActivity.searchView.setVisibility(View.GONE);
     }
 
     @Override
     public boolean onQueryTextChange(String searchQuery) {
-        if (mAdapter != null) {
+        if (mainModel != null) {
             mainModel.setSearchQuery(searchQuery);
-            mAdapter.getFilter().filter(searchQuery);
+            mainModel.load(neededProperty);
         }
         return true;
     }
@@ -466,11 +463,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         return opStr != null ? "\nAppOp: " + opStr : "";
     }
 
-    private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsRecyclerAdapter.ViewHolder> implements Filterable {
+    private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsRecyclerAdapter.ViewHolder> {
         private final List<AppDetailsItem> mAdapterList;
         private final List<AppDetailsItem> mDefaultList;
         private @Property int requestedProperty;
-        private Filter mFilter;
         private String mConstraint;
         private Boolean isRootEnabled = true;
         private Boolean isADBEnabled = true;
@@ -485,13 +481,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             isRootEnabled = AppPref.isRootEnabled();
             isADBEnabled = AppPref.isAdbEnabled();
             requestedProperty = neededProperty;
+            mConstraint = mainModel.getSearchQuery();
             mAdapterList.clear();
             mDefaultList.clear();
             mAdapterList.addAll(list);
             mDefaultList.addAll(list);
-            if (neededProperty <= PERMISSIONS && mainModel.getSearchQuery() != null) {
-                getFilter().filter(mainModel.getSearchQuery());
-            }
             showProgressIndicator(false);
             notifyDataSetChanged();
             new Thread(() -> {
@@ -515,53 +509,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     }
                 }
             }).start();
-        }
-
-        // TODO: Do it in the view model
-        @Override
-        public Filter getFilter() {
-            if (mFilter == null)
-                mFilter = new Filter() {
-                    @Override
-                    protected FilterResults performFiltering(CharSequence charSequence) {
-                        FilterResults filterResults = new FilterResults();
-                        if (charSequence == null) {
-                            filterResults.count = mDefaultList.size();
-                            filterResults.values = mDefaultList;
-                            return filterResults;
-                        }
-                        String constraint = charSequence.toString().toLowerCase(Locale.ROOT);
-                        mConstraint = constraint;
-                        if (constraint.length() == 0) {
-                            filterResults.count = 0;
-                            filterResults.values = null;
-                            return filterResults;
-                        }
-
-                        List<AppDetailsItem> list = new ArrayList<>(mDefaultList.size());
-                        for (AppDetailsItem item : mDefaultList) {
-                            if (item.name.toLowerCase(Locale.ROOT).contains(constraint))
-                                list.add(item);
-                        }
-
-                        filterResults.count = list.size();
-                        filterResults.values = list;
-                        return filterResults;
-                    }
-
-                    @Override
-                    protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                        mAdapterList.clear();
-                        if (filterResults.values == null) {
-                            mAdapterList.addAll(mDefaultList);
-                        } else {
-                            //noinspection unchecked
-                            mAdapterList.addAll((Collection<? extends AppDetailsItem>) filterResults.values);
-                        }
-                        notifyDataSetChanged();
-                    }
-                };
-            return mFilter;
         }
 
         /**

@@ -14,6 +14,7 @@ import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.os.Build;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import androidx.annotation.NonNull;
@@ -350,7 +352,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     appDetailsItem.name = activityInfo.targetActivity == null ? activityInfo.name : activityInfo.targetActivity;
                     appDetailsItem.isBlocked = blocker.hasComponent(activityInfo.name);
                     appDetailsItem.isTracker = TrackerComponentUtils.isTracker(activityInfo.name);
-                    appDetailsItems.add(appDetailsItem);
+                    if (TextUtils.isEmpty(searchQuery)
+                            || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
+                        appDetailsItems.add(appDetailsItem);
                 }
             }
             sortComponents(appDetailsItems);
@@ -379,7 +383,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     appDetailsItem.name = serviceInfo.name;
                     appDetailsItem.isBlocked = blocker.hasComponent(serviceInfo.name);
                     appDetailsItem.isTracker = TrackerComponentUtils.isTracker(serviceInfo.name);
-                    appDetailsItems.add(appDetailsItem);
+                    if (TextUtils.isEmpty(searchQuery)
+                            || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
+                        appDetailsItems.add(appDetailsItem);
                 }
             }
             sortComponents(appDetailsItems);
@@ -408,7 +414,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     appDetailsItem.name = activityInfo.name;
                     appDetailsItem.isBlocked = blocker.hasComponent(activityInfo.name);
                     appDetailsItem.isTracker = TrackerComponentUtils.isTracker(activityInfo.name);
-                    appDetailsItems.add(appDetailsItem);
+                    if (TextUtils.isEmpty(searchQuery)
+                            || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
+                        appDetailsItems.add(appDetailsItem);
                 }
             }
             sortComponents(appDetailsItems);
@@ -437,7 +445,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     appDetailsItem.name = providerInfo.name;
                     appDetailsItem.isBlocked = blocker.hasComponent(providerInfo.name);
                     appDetailsItem.isTracker = TrackerComponentUtils.isTracker(providerInfo.name);
-                    appDetailsItems.add(appDetailsItem);
+                    if (TextUtils.isEmpty(searchQuery)
+                            || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
+                        appDetailsItems.add(appDetailsItem);
                 }
             }
             sortComponents(appDetailsItems);
@@ -447,6 +457,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @SuppressLint("SwitchIntDef")
     private void sortComponents(List<AppDetailsItem> appDetailsItems) {
+        if (sortOrderComponents != AppDetailsFragment.SORT_BY_NAME)
+            Collections.sort(appDetailsItems, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
         Collections.sort(appDetailsItems, (o1, o2) -> {
             switch (sortOrderComponents) {
                 case AppDetailsFragment.SORT_BY_NAME:
@@ -491,8 +503,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
                             if (uniqueSet.contains(opEntry.getOpStr())) continue;
                             AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry);
                             appDetailsItem.name = opEntry.getOpStr();
-                            appDetailsItems.add(appDetailsItem);
                             uniqueSet.add(opEntry.getOpStr());
+                            if (TextUtils.isEmpty(searchQuery)
+                                    || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
+                                appDetailsItems.add(appDetailsItem);
                         }
                     }
                 } catch (Exception ignored) {}
@@ -546,7 +560,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         }
                         appDetailsItem.isDangerous = basePermissionType == PermissionInfo.PROTECTION_DANGEROUS;
                         appDetailsItem.isGranted = (appDetailsItem.flags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
-                        appDetailsItems.add(appDetailsItem);
+                        if (TextUtils.isEmpty(searchQuery)
+                                || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
+                            appDetailsItems.add(appDetailsItem);
                     } catch (PackageManager.NameNotFoundException ignore) {}
                 }
             }
@@ -583,7 +599,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 for(PermissionInfo permissionInfo: packageInfo.permissions) {
                     AppDetailsItem appDetailsItem = new AppDetailsItem(permissionInfo);
                     appDetailsItem.name = permissionInfo.name;
-                    appDetailsItems.add(appDetailsItem);
+                    if (TextUtils.isEmpty(searchQuery)
+                            || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
+                        appDetailsItems.add(appDetailsItem);
                 }
                 Collections.sort(appDetailsItems, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
             }
