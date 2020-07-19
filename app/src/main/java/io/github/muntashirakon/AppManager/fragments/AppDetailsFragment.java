@@ -210,6 +210,19 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        mainModel.get(neededProperty).observe(mActivity, appDetailsItems -> {
+            mAdapter.setDefaultList(appDetailsItems);
+            if (neededProperty == FEATURES) bFi = mainModel.isbFi();
+        });
+        mainModel.getIsRulesApplied().observe(mActivity, isRulesApplied -> {
+            if (neededProperty <= PROVIDERS) {
+                mRulesNotAppliedMsg.setVisibility(isRulesApplied ? View.GONE : View.VISIBLE);
+            }
+        });
+    }
+
+    @Override
     public void onRefresh() {
         refreshDetails();
         mSwipeRefresh.setRefreshing(false);
@@ -340,28 +353,23 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public void onStart() {
         super.onStart();
-        mainModel.get(neededProperty).observe(mActivity, appDetailsItems -> {
-            mAdapter.setDefaultList(appDetailsItems);
-            if (neededProperty == FEATURES) bFi = mainModel.isbFi();
-        });
-        mainModel.getIsRulesApplied().observe(mActivity, isRulesApplied -> {
-            if (neededProperty <= PROVIDERS) {
-                mRulesNotAppliedMsg.setVisibility(isRulesApplied ? View.GONE : View.VISIBLE);
-            }
-        });
-//        if (mAdapter != null) mainModel.load(neededProperty);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        if (neededProperty <= PERMISSIONS) {
+            mActivity.searchView.setVisibility(View.VISIBLE);
+            mActivity.searchView.setOnQueryTextListener(this);
+            if (mAdapter != null) mAdapter.getFilter().filter(mainModel.getSearchQuery());
+        } else mActivity.searchView.setVisibility(View.GONE);
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
-        AppDetailsActivity.sConstraint = newText;
+    public boolean onQueryTextChange(String searchQuery) {
         if (mAdapter != null) {
-            mAdapter.getFilter().filter(newText);
+            mainModel.setSearchQuery(searchQuery);
+            mAdapter.getFilter().filter(searchQuery);
         }
         return true;
     }
@@ -376,6 +384,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     private void setSortBy(@SortOrder int sortBy) {
+        showProgressIndicator(true);
         mainModel.setSortOrder(sortBy, neededProperty);
         mainModel.load(neededProperty);
         model.setSortBy(sortBy);
@@ -386,12 +395,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     private void refreshDetails() {
-        if (mAdapter != null) mainModel.load(neededProperty);
-    }
-
-    public void resetFilter() {
         if (mAdapter != null) {
-            mAdapter.getFilter().filter(AppDetailsActivity.sConstraint);
+            showProgressIndicator(true);
+            mainModel.load(neededProperty);
         }
     }
 
@@ -478,14 +484,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         void setDefaultList(List<AppDetailsItem> list) {
             isRootEnabled = AppPref.isRootEnabled();
             isADBEnabled = AppPref.isAdbEnabled();
-            showProgressIndicator(true);
             requestedProperty = neededProperty;
             mAdapterList.clear();
             mDefaultList.clear();
             mAdapterList.addAll(list);
             mDefaultList.addAll(list);
-            if (!TextUtils.isEmpty(AppDetailsActivity.sConstraint)) {
-                getFilter().filter(AppDetailsActivity.sConstraint);
+            if (neededProperty <= PERMISSIONS && mainModel.getSearchQuery() != null) {
+                getFilter().filter(mainModel.getSearchQuery());
             }
             showProgressIndicator(false);
             notifyDataSetChanged();

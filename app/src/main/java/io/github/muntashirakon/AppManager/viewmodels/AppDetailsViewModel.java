@@ -127,6 +127,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
         this.searchQuery = searchQuery;
     }
 
+    public String getSearchQuery() {
+        return searchQuery;
+    }
+
     MutableLiveData<Boolean> isRulesApplied;
     public LiveData<Boolean> getIsRulesApplied() {
         if (isRulesApplied == null) {
@@ -319,7 +323,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
                     | flagDisabledComponents | flagSigningInfo | PackageManager.GET_CONFIGURATIONS
                     | PackageManager.GET_SHARED_LIBRARY_FILES);
-        } catch (PackageManager.NameNotFoundException ignore) {}
+        } catch (PackageManager.NameNotFoundException ignore) {
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     MutableLiveData<List<AppDetailsItem>> activities;
