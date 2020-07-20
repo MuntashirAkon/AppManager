@@ -489,6 +489,16 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return appOps;
     }
 
+    public void setAppOp(AppDetailsItem appDetailsItem) {
+        new Thread(() -> {
+            for (int i = 0; i < appOpItems.size(); ++i) {
+                if (appOpItems.get(i).name.equals(appDetailsItem.name)) {
+                    appOpItems.set(i, appDetailsItem);
+                }
+            }
+        }).start();
+    }
+
     @SuppressLint("SwitchIntDef")
     private void loadAppOps() {
         new Thread(() -> {

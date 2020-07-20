@@ -488,7 +488,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsRecyclerAdapter.ViewHolder> {
         private final List<AppDetailsItem> mAdapterList;
-        private final List<AppDetailsItem> mDefaultList;
         private @Property int requestedProperty;
         private String mConstraint;
         private Boolean isRootEnabled = true;
@@ -497,7 +496,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
         AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
-            mDefaultList = new ArrayList<>();
         }
 
         void setDefaultList(List<AppDetailsItem> list) {
@@ -506,9 +504,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             requestedProperty = neededProperty;
             mConstraint = mainModel.getSearchQuery();
             mAdapterList.clear();
-            mDefaultList.clear();
             mAdapterList.addAll(list);
-            mDefaultList.addAll(list);
             showProgressIndicator(false);
             notifyDataSetChanged();
             new Thread(() -> {
@@ -522,16 +518,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         void set(int currentIndex, AppDetailsItem appDetailsItem) {
             mAdapterList.set(currentIndex, appDetailsItem);
             notifyItemChanged(currentIndex);
-            // Update the values in default list as well
-            new Thread(() -> {
-                synchronized (mDefaultList) {
-                    for (int i = 0; i < mDefaultList.size(); ++i) {
-                        if (mDefaultList.get(i).name.equals(appDetailsItem.name)) {
-                            mDefaultList.set(i, appDetailsItem);
-                        }
-                    }
-                }
-            }).start();
+            // Update the value in the app ops list in view model
+            if (neededProperty == APP_OPS) {
+                mainModel.setAppOp(appDetailsItem);
+            }
         }
 
         /**
