@@ -296,7 +296,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 new Thread(() -> {
                     if (mainModel == null || !mainModel.resetAppOps()) {
                         runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_reset_app_ops, Toast.LENGTH_SHORT).show());
-                    }
+                    } else runOnUiThread(() -> showProgressIndicator(true));
                 }).start();
                 return true;
             case R.id.action_deny_dangerous_app_ops:  // App ops

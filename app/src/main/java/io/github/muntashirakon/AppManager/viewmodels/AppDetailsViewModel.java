@@ -239,7 +239,17 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     public boolean resetAppOps() {
-        // TODO: reset app ops and reload
+        if (appOpsService != null) {
+            try {
+                appOpsService.resetAllModes(-1, packageName);
+                appOpItems.clear();
+                appOpItems = null;
+                loadAppOps();
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         return false;
     }
 
