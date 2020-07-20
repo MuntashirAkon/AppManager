@@ -225,11 +225,20 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 if (AppPref.isRootEnabled()) {
                     inflater.inflate(R.menu.fragment_app_details_components_actions, menu);
                     blockingToggler = menu.findItem(R.id.action_toggle_blocking);
-                    if (!AppPref.isGlobalBlockingEnabled()) {
-                        blockingToggler.setVisible(true);
-                    } else blockingToggler.setVisible(false);
-                    mainModel.getIsRulesApplied().observe(mActivity, isRulesApplied ->
-                            blockingToggler.setTitle(isRulesApplied ? R.string.menu_remove_rules : R.string.menu_apply_rules));
+                    mainModel.getRuleApplicationStatus().observe(mActivity, status -> {
+                        switch (status) {
+                            case AppDetailsViewModel.RULE_APPLIED:
+                                blockingToggler.setVisible(!AppPref.isGlobalBlockingEnabled());
+                                blockingToggler.setTitle(R.string.menu_remove_rules);
+                                break;
+                            case AppDetailsViewModel.RULE_NOT_APPLIED:
+                                blockingToggler.setVisible(!AppPref.isGlobalBlockingEnabled());
+                                blockingToggler.setTitle(R.string.menu_apply_rules);
+                                break;
+                            case AppDetailsViewModel.RULE_NO_RULE:
+                                blockingToggler.setVisible(false);
+                        }
+                    });
                 } else inflater.inflate(R.menu.fragment_app_details_refresh_actions, menu);
                 break;
             case APP_OPS:
@@ -280,7 +289,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             if (mAdapter != null) mainModel.load(neededProperty);
                         });
                     }
-                    runOnUiThread(() -> mainModel.setIsRulesApplied());
+                    runOnUiThread(() -> mainModel.setRuleApplicationStatus());
                 }).start();
                 return true;
             case R.id.action_reset_to_default:  // App ops
@@ -344,9 +353,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             mAdapter.setDefaultList(appDetailsItems);
             if (neededProperty == FEATURES) bFi = mainModel.isbFi();
         });
-        mainModel.getIsRulesApplied().observe(mActivity, isRulesApplied -> {
+        mainModel.getRuleApplicationStatus().observe(mActivity, status -> {
             if (neededProperty <= PROVIDERS) {
-                mRulesNotAppliedMsg.setVisibility(isRulesApplied ? View.GONE : View.VISIBLE);
+                mRulesNotAppliedMsg.setVisibility(status != AppDetailsViewModel.RULE_NOT_APPLIED ?
+                        View.GONE : View.VISIBLE);
             }
         });
     }

@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -133,24 +134,29 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return searchQuery;
     }
 
-    MutableLiveData<Boolean> isRulesApplied;
-    public LiveData<Boolean> getIsRulesApplied() {
-        if (isRulesApplied == null) {
-            isRulesApplied = new MutableLiveData<>();
-            new Thread(this::setIsRulesApplied).start();
+    MutableLiveData<Integer> ruleApplicationStatus;
+    public static final int RULE_APPLIED     = 0;
+    public static final int RULE_NOT_APPLIED = 1;
+    public static final int RULE_NO_RULE     = 2;
+    public LiveData<Integer> getRuleApplicationStatus() {
+        if (ruleApplicationStatus == null) {
+            ruleApplicationStatus = new MutableLiveData<>();
+            new Thread(this::setRuleApplicationStatus).start();
         }
-        return isRulesApplied;
+        return ruleApplicationStatus;
     }
 
     /**
      * This function should always be called inside a thread
      */
-    public void setIsRulesApplied() {
+    public void setRuleApplicationStatus() {
         synchronized (ComponentsBlocker.class) {
             if (packageName == null) return;
             waitForBlockerOrExit();
-            boolean newIsRulesApplied = blocker.isRulesApplied();
-            handler.post(() -> isRulesApplied.postValue(newIsRulesApplied));
+            final AtomicInteger newRuleApplicationStatus = new AtomicInteger();
+            newRuleApplicationStatus.set(blocker.isRulesApplied() ? RULE_APPLIED : RULE_NOT_APPLIED);
+            if (blocker.componentCount() == 0) newRuleApplicationStatus.set(RULE_NO_RULE);
+            handler.post(() -> ruleApplicationStatus.postValue(newRuleApplicationStatus.get()));
         }
     }
 
@@ -168,8 +174,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 if ((Boolean) AppPref.get(AppPref.PREF_GLOBAL_BLOCKING_ENABLED,
                         AppPref.TYPE_BOOLEAN) || blocker.isRulesApplied()) {
                     blocker.applyRules(true);
-                    setIsRulesApplied();
                 }
+                // Set new status
+                setRuleApplicationStatus();
                 // Commit changes
                 blocker.commit();
                 blocker.setReadOnly();
@@ -242,17 +249,16 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     public void applyRules() {
-        final Boolean newIsRulesApplied = isRulesApplied.getValue();
         new Thread(() -> {
             synchronized (ComponentsBlocker.class) {
                 waitForBlockerOrExit();
-                boolean oldIsRulesApplied = newIsRulesApplied == null ? blocker.isRulesApplied() : newIsRulesApplied;
+                boolean oldIsRulesApplied = blocker.isRulesApplied();
                 blocker.setMutable();
                 blocker.applyRules(!oldIsRulesApplied);
                 blocker.commit();
                 blocker.setReadOnly();
                 reloadComponents();
-                setIsRulesApplied();
+                setRuleApplicationStatus();
             }
         }).start();
     }
