@@ -672,7 +672,9 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
                         .setMessage(R.string.grant_usage_acess_message)
                         .setPositiveButton(R.string.go, (dialog, which) -> startActivityForResult(new Intent(
                                 Settings.ACTION_USAGE_ACCESS_SETTINGS), 0))
-                        .setNegativeButton(getString(android.R.string.cancel), null)
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setNeutralButton(R.string.never_ask, (dialog, which) ->
+                                AppPref.getInstance().setPref(AppPref.PREF_USAGE_ACCESS_ENABLED, false))
                         .setCancelable(false)
                         .show();
                 return;

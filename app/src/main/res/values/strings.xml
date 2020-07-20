@@ -476,4 +476,5 @@
     <string name="failed_to_deny_dangerous_perms">Failed to deny all dangerous permissions</string>
     <string name="failed_to_deny_dangerous_app_ops">Failed to deny all dangerous app ops</string>
     <string name="launch_app">Launch</string>
+    <string name="never_ask">Never ask</string>
 </resources>
