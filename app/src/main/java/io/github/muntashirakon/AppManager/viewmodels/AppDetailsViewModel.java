@@ -209,8 +209,17 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     public boolean revokeDangerousPermissions() {
-        // TODO: revoke all dangerous permissions and reload
-        return false;
+        AppDetailsPermissionItem permissionItem;
+        for (int i = 0; i<usesPermissionItems.size(); ++i) {
+            permissionItem = usesPermissionItems.get(i);
+            if (permissionItem.isDangerous && permissionItem.isGranted) {
+                if (RunnerUtils.revokePermission(packageName, permissionItem.name).isSuccessful()) {
+                    permissionItem.isGranted = false;
+                    usesPermissionItems.set(i, permissionItem);
+                } else return false;
+            }
+        }
+        return true;
     }
 
     AppOpsService mAppOpsService;
