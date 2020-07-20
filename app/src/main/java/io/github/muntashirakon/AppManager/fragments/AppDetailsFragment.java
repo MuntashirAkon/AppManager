@@ -300,10 +300,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 }).start();
                 return true;
             case R.id.action_deny_dangerous_app_ops:  // App ops
+                showProgressIndicator(true);
                 new Thread(() -> {
                     if (mainModel == null || !mainModel.ignoreDangerousAppOps()) {
                         runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_deny_dangerous_app_ops, Toast.LENGTH_SHORT).show());
                     }
+                    runOnUiThread(() -> mainModel.load(neededProperty));
                 }).start();
                 return true;
             case R.id.action_deny_dangerous_permissions:  // permissions

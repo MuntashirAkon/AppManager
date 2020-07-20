@@ -216,6 +216,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 if (RunnerUtils.revokePermission(packageName, permissionItem.name).isSuccessful()) {
                     permissionItem.isGranted = false;
                     usesPermissionItems.set(i, permissionItem);
+                    // TODO: Save to CB rules
                 } else return false;
             }
         }
@@ -249,9 +250,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     public boolean resetAppOps() {
-        if (appOpsService != null) {
+        if (mAppOpsService != null) {
             try {
-                appOpsService.resetAllModes(-1, packageName);
+                mAppOpsService.resetAllModes(-1, packageName);
                 appOpItems.clear();
                 appOpItems = null;
                 loadAppOps();
@@ -264,8 +265,61 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     public boolean ignoreDangerousAppOps() {
-        // TODO: ignore all dangerous app ops and reload
-        return false;
+        AppDetailsItem appDetailsItem;
+        AppOpsManager.OpEntry opEntry;
+        String permName;
+        final List<Integer> opItems = new ArrayList<>();
+        final String modeName = AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED);
+        boolean isSuccessful = true;
+        if (mAppOpsService == null) mAppOpsService = new AppOpsService(getApplication());
+        for (int i = 0; i<appOpItems.size(); ++i) {
+            appDetailsItem = appOpItems.get(i);
+            opEntry = (AppOpsManager.OpEntry) appDetailsItem.vanillaItem;
+            try {
+                permName = AppOpsManager.opToPermission(opEntry.getOp());
+                if (permName != null) {
+                    PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(permName, PackageManager.GET_META_DATA);
+                    int basePermissionType;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        basePermissionType = permissionInfo.getProtection();
+                    } else {
+                        basePermissionType = permissionInfo.protectionLevel & PermissionInfo.PROTECTION_MASK_BASE;
+                    }
+                    if (basePermissionType == PermissionInfo.PROTECTION_DANGEROUS) {
+                        // Set mode
+                        try {
+                            mAppOpsService.setMode(opEntry.getOp(), -1, packageName, AppOpsManager.MODE_IGNORED);
+                            // Verify changes
+                            if (!mAppOpsService.checkOperation(opEntry.getOp(), -1, packageName).equals(modeName))
+                                throw new Exception();
+                            opItems.add(opEntry.getOp());
+                            appDetailsItem.vanillaItem = new AppOpsManager.OpEntry(opEntry.getOp(),
+                                    opEntry.getOpStr(), opEntry.isRunning(), modeName,
+                                    opEntry.getTime(), opEntry.getRejectTime(), opEntry.getDuration(),
+                                    opEntry.getProxyUid(), opEntry.getProxyPackageName());
+                            appOpItems.set(i, appDetailsItem);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            isSuccessful = false;
+                            break;
+                        }
+                    }
+                }
+            } catch (PackageManager.NameNotFoundException | IllegalArgumentException | IndexOutOfBoundsException ignore) {}
+        }
+        // Save values to the blocking rules
+        new Thread(() -> {
+            synchronized (ComponentsBlocker.class) {
+                waitForBlockerOrExit();
+                blocker.setMutable();
+                for (int op: opItems)
+                    blocker.setAppOp(String.valueOf(op), AppOpsManager.MODE_IGNORED);
+                blocker.commit();
+                blocker.setReadOnly();
+                ComponentsBlocker.class.notifyAll();
+            }
+        }).start();
+        return isSuccessful;
     }
 
     public void applyRules() {
@@ -500,7 +554,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     MutableLiveData<List<AppDetailsItem>> appOps;
     List<AppDetailsItem> appOpItems;
-    AppOpsService appOpsService;
     private LiveData<List<AppDetailsItem>> getAppOps() {
         if (appOps == null) {
             appOps = new MutableLiveData<>();
@@ -527,13 +580,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
             if (appOpItems == null) {
                 appOpItems = new ArrayList<>();
                 if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
-                    appOpsService = new AppOpsService(getApplication());
+                    if (mAppOpsService == null) mAppOpsService = new AppOpsService(getApplication());
                     try {
-                        List<AppOpsManager.PackageOps> packageOpsList = appOpsService.getOpsForPackage(-1, packageName, null);
+                        List<AppOpsManager.PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(-1, packageName, null);
                         List<AppOpsManager.OpEntry> opEntries = new ArrayList<>();
                         if (packageOpsList.size() == 1)
                             opEntries.addAll(packageOpsList.get(0).getOps());
-                        packageOpsList = appOpsService.getOpsForPackage(-1, packageName, AppOpsManager.sAlwaysShownOp);
+                        packageOpsList = mAppOpsService.getOpsForPackage(-1, packageName, AppOpsManager.sAlwaysShownOp);
                         if (packageOpsList.size() == 1)
                             opEntries.addAll(packageOpsList.get(0).getOps());
                         if (opEntries.size() > 0) {
