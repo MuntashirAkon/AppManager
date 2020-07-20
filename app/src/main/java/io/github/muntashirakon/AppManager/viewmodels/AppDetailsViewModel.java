@@ -210,17 +210,34 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     public boolean revokeDangerousPermissions() {
         AppDetailsPermissionItem permissionItem;
+        List<String> revokedPermissions = new ArrayList<>();
+        boolean isSuccessful = true;
         for (int i = 0; i<usesPermissionItems.size(); ++i) {
             permissionItem = usesPermissionItems.get(i);
             if (permissionItem.isDangerous && permissionItem.isGranted) {
                 if (RunnerUtils.revokePermission(packageName, permissionItem.name).isSuccessful()) {
                     permissionItem.isGranted = false;
                     usesPermissionItems.set(i, permissionItem);
-                    // TODO: Save to CB rules
-                } else return false;
+                    revokedPermissions.add(permissionItem.name);
+                } else {
+                    isSuccessful = false;
+                    break;
+                }
             }
         }
-        return true;
+        // Save values to the blocking rules
+        new Thread(() -> {
+            synchronized (ComponentsBlocker.class) {
+                waitForBlockerOrExit();
+                blocker.setMutable();
+                for (String permName: revokedPermissions)
+                    blocker.setPermission(permName, false);
+                blocker.commit();
+                blocker.setReadOnly();
+                ComponentsBlocker.class.notifyAll();
+            }
+        }).start();
+        return isSuccessful;
     }
 
     AppOpsService mAppOpsService;
