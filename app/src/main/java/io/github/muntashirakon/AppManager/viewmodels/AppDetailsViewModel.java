@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.NonNull;
@@ -504,6 +505,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             for (int i = 0; i < appOpItems.size(); ++i) {
                 if (appOpItems.get(i).name.equals(appDetailsItem.name)) {
                     appOpItems.set(i, appDetailsItem);
+                    break;
                 }
             }
         }).start();
@@ -563,6 +565,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     MutableLiveData<List<AppDetailsItem>> usesPermissions;
+    CopyOnWriteArrayList<AppDetailsPermissionItem> usesPermissionItems;
     private LiveData<List<AppDetailsItem>> getUsesPermissions() {
         if (usesPermissions == null) {
             usesPermissions = new MutableLiveData<>();
@@ -571,34 +574,55 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return usesPermissions;
     }
 
+    public void setUsesPermission(String permissionName, boolean isGranted) {
+        new Thread(() -> {
+            AppDetailsPermissionItem permissionItem;
+            for (int i = 0; i < usesPermissionItems.size(); ++i) {
+                permissionItem = usesPermissionItems.get(i);
+                if (permissionItem.name.equals(permissionName)) {
+                    permissionItem.isGranted = isGranted;
+                    usesPermissionItems.set(i, permissionItem);
+                    break;
+                }
+            }
+        }).start();
+    }
+
     @SuppressLint("SwitchIntDef")
     private void loadUsesPermissions() {
         new Thread(() -> {
             setPackageInfo();
             if (packageInfo == null) return;
-            List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-            if (packageInfo.requestedPermissions != null) {
-                for (int i = 0; i < packageInfo.requestedPermissions.length; ++i) {
-                    try {
-                        PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(
-                                packageInfo.requestedPermissions[i], PackageManager.GET_META_DATA);
-                        AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionInfo);
-                        appDetailsItem.name = packageInfo.requestedPermissions[i];
-                        appDetailsItem.flags = packageInfo.requestedPermissionsFlags[i];
-                        int basePermissionType;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                            basePermissionType = permissionInfo.getProtection();
-                        } else {
-                            basePermissionType = permissionInfo.protectionLevel & PermissionInfo.PROTECTION_MASK_BASE;
-                        }
-                        appDetailsItem.isDangerous = basePermissionType == PermissionInfo.PROTECTION_DANGEROUS;
-                        appDetailsItem.isGranted = (appDetailsItem.flags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
-                        if (TextUtils.isEmpty(searchQuery)
-                                || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
-                            appDetailsItems.add(appDetailsItem);
-                    } catch (PackageManager.NameNotFoundException ignore) {}
+            if (usesPermissionItems == null) {
+                usesPermissionItems = new CopyOnWriteArrayList<>();
+                if (packageInfo.requestedPermissions != null) {
+                    for (int i = 0; i < packageInfo.requestedPermissions.length; ++i) {
+                        try {
+                            PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(
+                                    packageInfo.requestedPermissions[i], PackageManager.GET_META_DATA);
+                            AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionInfo);
+                            appDetailsItem.name = packageInfo.requestedPermissions[i];
+                            appDetailsItem.flags = packageInfo.requestedPermissionsFlags[i];
+                            int basePermissionType;
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                basePermissionType = permissionInfo.getProtection();
+                            } else {
+                                basePermissionType = permissionInfo.protectionLevel & PermissionInfo.PROTECTION_MASK_BASE;
+                            }
+                            appDetailsItem.isDangerous = basePermissionType == PermissionInfo.PROTECTION_DANGEROUS;
+                            appDetailsItem.isGranted = (appDetailsItem.flags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
+                            usesPermissionItems.add(appDetailsItem);
+                        } catch (PackageManager.NameNotFoundException ignore) {}
+                    }
                 }
             }
+            // Filter items
+            final List<AppDetailsItem> appDetailsItems = new ArrayList<>();
+            if (!TextUtils.isEmpty(searchQuery)) {
+                for (AppDetailsPermissionItem appDetailsItem: usesPermissionItems)
+                    if (appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
+                        appDetailsItems.add(appDetailsItem);
+            } else appDetailsItems.addAll(usesPermissionItems);
             Collections.sort(appDetailsItems, (o1, o2) -> {
                 switch (sortOrderPermissions) {
                     case AppDetailsFragment.SORT_BY_NAME:

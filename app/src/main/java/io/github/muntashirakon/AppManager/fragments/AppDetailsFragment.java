@@ -1198,6 +1198,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                                         appDetailsItem.isDangerous = permissionItem.isDangerous;
                                         appDetailsItem.isGranted = isGranted;
                                         set(index, appDetailsItem);
+                                        mainModel.setUsesPermission(appDetailsItem.name, isGranted);
                                     } catch (PackageManager.NameNotFoundException ignore) {}
                                 });
                             } else {
