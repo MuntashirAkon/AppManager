@@ -256,6 +256,19 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 appOpItems.clear();
                 appOpItems = null;
                 loadAppOps();
+                // Save values to the blocking rules
+                new Thread(() -> {
+                    synchronized (ComponentsBlocker.class) {
+                        waitForBlockerOrExit();
+                        List<RulesStorageManager.Entry> appOpEntries = blocker.getAll(RulesStorageManager.Type.APP_OP);
+                        blocker.setMutable();
+                        for (RulesStorageManager.Entry entry: appOpEntries)
+                            blocker.removeEntry(entry);
+                        blocker.commit();
+                        blocker.setReadOnly();
+                        ComponentsBlocker.class.notifyAll();
+                    }
+                }).start();
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
