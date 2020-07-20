@@ -172,10 +172,11 @@ public class ComponentsBlocker extends RulesStorageManager {
     public int componentCount() {
         int count = 0;
         for (Entry entry: getAll()) {
-            if (entry.type.equals(Type.ACTIVITY)
+            if ((entry.type.equals(Type.ACTIVITY)
                     || entry.type.equals(Type.PROVIDER)
                     || entry.type.equals(Type.RECEIVER)
                     || entry.type.equals(Type.SERVICE))
+                    && entry.extra != COMPONENT_TO_BE_UNBLOCKED)
                 ++count;
         }
         return count;
@@ -234,14 +235,17 @@ public class ComponentsBlocker extends RulesStorageManager {
     }
 
     /**
-     * Check whether previous rules are applied successfully
+     * Find if there is any component that needs blocking. Previous implementations checked for
+     * rules file in the system IFW directory as well, but since all controls are now inside the app
+     * itself, it's no longer deemed necessary to check the existence of the file. Besides, previous
+     * implementation (which was similar to Watt's) did not take providers into account, which are
+     * blocked via <code>pm</code>.
      * @return True if applied, false otherwise
      */
     public boolean isRulesApplied() {
         List<RulesStorageManager.Entry> entries = getAllComponents();
-        if (AppPref.isRootEnabled() && Runner.runCommand(String.format("test -e '%s%s.xml'",
-                SYSTEM_RULES_PATH, packageName)).isSuccessful()) return true;
-        for (RulesStorageManager.Entry entry: entries) if (entry.extra == COMPONENT_TO_BE_BLOCKED) return false;
+        for (RulesStorageManager.Entry entry: entries)
+            if (entry.extra == COMPONENT_TO_BE_BLOCKED) return false;
         return true;
     }
 
