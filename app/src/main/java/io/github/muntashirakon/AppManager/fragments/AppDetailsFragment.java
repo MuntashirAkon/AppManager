@@ -352,11 +352,25 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public void onResume() {
         super.onResume();
+        mSwipeRefresh.setEnabled(true);
         if (neededProperty <= PERMISSIONS) {
             mActivity.searchView.setVisibility(View.VISIBLE);
             mActivity.searchView.setOnQueryTextListener(this);
             if (mainModel != null) mainModel.load(neededProperty);
         } else mActivity.searchView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mSwipeRefresh.setEnabled(false);
+    }
+
+    @Override
+    public void onDestroyView() {
+        mSwipeRefresh.setRefreshing(false);
+        mSwipeRefresh.clearAnimation();
+        super.onDestroyView();
     }
 
     @Override

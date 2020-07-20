@@ -86,6 +86,7 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
     private AppUsageAdapter mAppUsageAdapter;
     List<AppUsageStatsManager.PackageUS> mPackageUSList;
     private static long totalScreenTime;
+    private static PackageManager mPackageManager;
     private @IntervalType int current_interval = USAGE_TODAY;
     private @SortOrder int mSortBy;
 
@@ -109,6 +110,8 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
         listView.setEmptyView(findViewById(android.R.id.empty));
         listView.setAdapter(mAppUsageAdapter);
         listView.setOnItemClickListener(this);
+
+        mPackageManager = getPackageManager();
 
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setColorSchemeColors(Utils.getThemeColor(this, android.R.attr.colorAccent));
@@ -144,6 +147,12 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
         // Check permission
         if (!Utils.checkUsageStatsPermission(this)) promptForUsageStatsPermission();
         else getAppUsage();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPackageManager = null;
+        super.onDestroy();
     }
 
     @Override
@@ -308,7 +317,6 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
 
         private LayoutInflater mLayoutInflater;
         private List<AppUsageStatsManager.PackageUS> mAdapterList;
-        private static PackageManager mPackageManager;
         private Activity mActivity;
 
         static class ViewHolder {
@@ -326,7 +334,6 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
 
         AppUsageAdapter(@NonNull Activity activity) {
             mLayoutInflater = activity.getLayoutInflater();
-            mPackageManager = activity.getPackageManager();
             mActivity = activity;
         }
 

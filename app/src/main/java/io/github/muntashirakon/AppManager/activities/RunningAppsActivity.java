@@ -141,6 +141,12 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
     }
 
     @Override
+    protected void onDestroy() {
+        mPackageManager = null;
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }

@@ -53,4 +53,6 @@ dependencies {
 
     implementation 'com.jaredrummler:android-shell:1.0.0'
     implementation 'com.tananaev:adblib:1.2'
+
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 }

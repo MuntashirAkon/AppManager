@@ -23,8 +23,10 @@ public class ScrollSafeSwipeRefreshLayout extends SwipeRefreshLayout {
     public boolean onInterceptTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                mPrevX = MotionEvent.obtain(event).getX();
+                MotionEvent motionEvent = MotionEvent.obtain(event);
+                mPrevX = motionEvent.getX();
                 mDeclined = false; // New action
+                motionEvent.recycle();
                 break;
             case MotionEvent.ACTION_MOVE:
                 final float eventX = event.getX();
