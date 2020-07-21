@@ -2,17 +2,16 @@ package io.github.muntashirakon.AppManager.utils;
 
 import android.app.Activity;
 import android.graphics.Typeface;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import io.github.muntashirakon.AppManager.R;
 
 import androidx.cardview.widget.CardView;
@@ -20,7 +19,7 @@ import androidx.cardview.widget.CardView;
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class ListItemCreator {
     private Activity mActivity;
-    private LinearLayout mListContainer;
+    private LinearLayoutCompat mListContainer;
     private LayoutInflater mLayoutInflater;
     private static final int EMPTY = -1;
 
@@ -156,7 +155,7 @@ public class ListItemCreator {
             int padding_small = mActivity.getResources().getDimensionPixelOffset(R.dimen.padding_small);
             int padding_very_small = mActivity.getResources().getDimensionPixelOffset(R.dimen.padding_very_small);
             int padding_medium = mActivity.getResources().getDimensionPixelOffset(R.dimen.padding_medium);
-            LinearLayout item_layout = list_item.findViewById(R.id.item_layout);
+            LinearLayoutCompat item_layout = list_item.findViewById(R.id.item_layout);
             item_layout.setPadding(padding_medium, padding_small, padding_medium, padding_very_small);
             item_title.setTypeface(Typeface.DEFAULT);
         }

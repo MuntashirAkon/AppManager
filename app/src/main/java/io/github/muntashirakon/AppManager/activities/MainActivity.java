@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppCompatDelegate.setDefaultNightMode((int) AppPref.get(AppPref.PREF_APP_THEME, AppPref.TYPE_INTEGER));
+        AppCompatDelegate.setDefaultNightMode((int) AppPref.get(AppPref.PrefKey.PREF_APP_THEME_INT));
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
@@ -291,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-        AppPref.getInstance().setPref(AppPref.PREF_MAIN_WINDOW_SORT_ORDER, mSortBy);
+        AppPref.getInstance().setPref(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT, mSortBy);
     }
 
     @SuppressLint("RestrictedApi")
@@ -299,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main_actions, menu);
         appUsageMenu = menu.findItem(R.id.action_app_usage);
-        if ((Boolean) AppPref.get(AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN)) {
+        if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
             appUsageMenu.setVisible(true);
         } else appUsageMenu.setVisible(false);
         runningAppsMenu = menu.findItem(R.id.action_running_apps);
@@ -467,15 +467,15 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         // Check root
-        AppPref.getInstance().setPref(AppPref.PREF_ADB_MODE_ENABLED, false);
+        AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
         if (!Utils.isRootGiven()) {
-            AppPref.getInstance().setPref(AppPref.PREF_ROOT_MODE_ENABLED, false);
+            AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
             // Check for adb
             new Thread(() -> {
                 try {
                     AdbShell.CommandResult result = AdbShell.run("id");
                     if (!result.isSuccessful()) throw new IOException("Adb not available");
-                    AppPref.getInstance().setPref(AppPref.PREF_ADB_MODE_ENABLED, true);
+                    AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
                     runOnUiThread(() -> Toast.makeText(this, "Working on ADB mode", Toast.LENGTH_SHORT).show());
                 } catch (Exception ignored) {}
             }).start();
@@ -487,12 +487,12 @@ public class MainActivity extends AppCompatActivity implements
         }
         // Show/hide app usage menu
         if (appUsageMenu != null) {
-            if ((Boolean) AppPref.get(AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN))
+            if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL))
                 appUsageMenu.setVisible(true);
             else appUsageMenu.setVisible(false);
         }
         // Set sort by
-        mSortBy = (int) AppPref.get(AppPref.PREF_MAIN_WINDOW_SORT_ORDER, AppPref.TYPE_INTEGER);
+        mSortBy = (int) AppPref.get(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT);
         if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
             if (runningAppsMenu != null) runningAppsMenu.setVisible(true);
             if (sortByBlockedComponentMenu != null) sortByBlockedComponentMenu.setVisible(true);
@@ -554,7 +554,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void sortApplicationList(@SortOrder int sortBy) {
-        final Boolean isRootEnabled = (Boolean) AppPref.get(AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
+        final Boolean isRootEnabled = AppPref.isRootEnabled();
         if (sortBy != SORT_BY_APP_LABEL) sortApplicationList(SORT_BY_APP_LABEL);
         Collections.sort(mApplicationItems, (o1, o2) -> {
             switch (sortBy) {

@@ -105,7 +105,7 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
         mAdapter = new RunningAppsAdapter(this);
         mListView.setAdapter(mAdapter);
         mConstraint = null;
-        enableKillForSystem = (boolean) AppPref.get(AppPref.PREF_ENABLE_KILL_FOR_SYSTEM, AppPref.TYPE_BOOLEAN);
+        enableKillForSystem = (boolean) AppPref.get(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL);
         refresh();
     }
 
@@ -127,7 +127,7 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
                 return true;
             case R.id.action_toggle_kill:
                 enableKillForSystem = !enableKillForSystem;
-                AppPref.getInstance().setPref(AppPref.PREF_ENABLE_KILL_FOR_SYSTEM, enableKillForSystem);
+                AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL, enableKillForSystem);
                 refresh();
                 return true;
         }

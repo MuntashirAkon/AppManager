@@ -570,7 +570,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
 
         // Net statistics
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if ((Boolean) AppPref.get(AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN)) {
+            if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
                 Tuple<Tuple<Long, Long>, Tuple<Long, Long>> dataUsage = AppUsageStatsManager
                         .getWifiMobileUsageForPackage(this, mPackageName,
                                 io.github.muntashirakon.AppManager.usage.Utils.USAGE_LAST_BOOT);
@@ -592,7 +592,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
         }
 
         // Storage and Cache
-        if ((Boolean) AppPref.get(AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN))
+        if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL))
             getPackageSizeInfo();
     }
 
@@ -674,7 +674,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
                                 Settings.ACTION_USAGE_ACCESS_SETTINGS), 0))
                         .setNegativeButton(android.R.string.cancel, null)
                         .setNeutralButton(R.string.never_ask, (dialog, which) ->
-                                AppPref.getInstance().setPref(AppPref.PREF_USAGE_ACCESS_ENABLED, false))
+                                AppPref.getInstance().setPref(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, false))
                         .setCancelable(false)
                         .show();
                 return;

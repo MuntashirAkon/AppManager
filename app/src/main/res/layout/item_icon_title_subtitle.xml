@@ -12,7 +12,7 @@
     app:cardCornerRadius="0dp"
     app:cardElevation="0dp">
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/item_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,7 +31,7 @@
             tools:ignore="ContentDescription"
             tools:srcCompat="@tools:sample/avatars" />
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/item_text_view_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,9 +52,9 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/subtitle_font"
                 tools:text="@tools:sample/lorem" />
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/item_open"
             android:layout_width="56dp"
             android:layout_height="56dp"
@@ -67,6 +67,6 @@
             android:src="@drawable/ic_open_in_new_black_24dp"
             tools:ignore="ContentDescription,UnusedAttribute" />
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.cardview.widget.CardView>

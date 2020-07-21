@@ -46,10 +46,10 @@ public class SettingsActivity extends AppCompatActivity {
         final TextView appThemeMsg = findViewById(R.id.app_theme_msg);
 
         // Read pref
-        Boolean rootEnabled = (Boolean) appPref.getPref(AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN);
-        Boolean blockingEnabled = (Boolean) appPref.getPref(AppPref.PREF_GLOBAL_BLOCKING_ENABLED, AppPref.TYPE_BOOLEAN);
-        Boolean usageEnabled = (Boolean) appPref.getPref(AppPref.PREF_USAGE_ACCESS_ENABLED, AppPref.TYPE_BOOLEAN);
-        currentTheme = (int) appPref.getPref(AppPref.PREF_APP_THEME, AppPref.TYPE_INTEGER);
+        boolean rootEnabled = appPref.getBoolean(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL);
+        boolean blockingEnabled = appPref.getBoolean(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL);
+        boolean usageEnabled = appPref.getBoolean(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL);
+        currentTheme = appPref.getInt(AppPref.PrefKey.PREF_APP_THEME_INT);
 
         // Set changed values
         rootSwitcher.setChecked(rootEnabled);
@@ -66,7 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
                         .setSingleChoiceItems(themes, themeConst.indexOf(currentTheme),
                                 (dialog, which) -> currentTheme = themeConst.get(which))
                         .setPositiveButton(R.string.apply, (dialog, which) -> {
-                            appPref.setPref(AppPref.PREF_APP_THEME, currentTheme);
+                            appPref.setPref(AppPref.PrefKey.PREF_APP_THEME_INT, currentTheme);
                             AppCompatDelegate.setDefaultNightMode(currentTheme);
                             Intent intent = new Intent(this, MainActivity.class);
                             startActivity(intent);
@@ -76,20 +76,20 @@ public class SettingsActivity extends AppCompatActivity {
                         .create()
                         .show());
         rootSwitcher.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            appPref.setPref(AppPref.PREF_ROOT_MODE_ENABLED, isChecked);
+            appPref.setPref(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, isChecked);
             blockingView.setVisibility(isChecked ? View.VISIBLE : View.GONE);
         });
         blockingSwitcher.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            appPref.setPref(AppPref.PREF_GLOBAL_BLOCKING_ENABLED, isChecked);
+            appPref.setPref(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL, isChecked);
             if (AppPref.isRootEnabled() && isChecked) {
                 ComponentsBlocker.applyAllRules(this);
             }
         });
         usageSwitcher.setOnCheckedChangeListener((buttonView, isChecked) ->
-                appPref.setPref(AppPref.PREF_USAGE_ACCESS_ENABLED, isChecked));
+                appPref.setPref(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, isChecked));
 
         // Import/Export
-        if ((Boolean) appPref.getPref(AppPref.PREF_ROOT_MODE_ENABLED, AppPref.TYPE_BOOLEAN)) {
+        if (AppPref.isRootEnabled()) {
             findViewById(R.id.import_view).setOnClickListener(v ->
                     (new ImportExportDialogFragment()).show(getSupportFragmentManager(),
                             ImportExportDialogFragment.TAG));
