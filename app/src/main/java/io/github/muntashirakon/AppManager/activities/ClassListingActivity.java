@@ -71,7 +71,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     private String[] signatures;
     private int[] signatureCount;
     private boolean[] signaturesFound;
-    private String[] Names;
+    private String[] tracker_names;
     private boolean trackerClassesOnly;
     private int totalIteration = 0;
     private long totalTimeTaken = 0;
@@ -147,8 +147,6 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
             mActionBar.setCustomView(searchView, layoutParams);
         }
 
-        inIntent = getIntent();
-
         trackerClassesOnly = false;
 
         mListView = findViewById(android.R.id.list);
@@ -158,52 +156,52 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
 
         mProgressIndicator = findViewById(R.id.progress_linear);
 
-        final Uri uriFromIntent = inIntent.getData();
-        classList = new ArrayList<>();
+        new Thread(() -> {
+            inIntent = getIntent();
+            final Uri uriFromIntent = inIntent.getData();
+            classList = new ArrayList<>();
+            if (uriFromIntent != null) packageInfo = "<b>" + getString(R.string.source_dir) + ": </b>" + uriFromIntent.toString() + "\n";
+            else packageInfo = "";
+            tracker_names = StaticDataset.getTrackerNames();
+            signatures = StaticDataset.getTrackerCodeSignatures();
+            try {
+                InputStream uriStream = UriUtils.getStreamFromUri(ClassListingActivity.this, uriFromIntent);
+                final byte[] bytes = readFully(uriStream, -1, true);
+                uriStream.close();
+                new Thread(() -> {
+                    try {
+                        packageInfo += "\n<b>MD5sum:</b> " + convertS(MessageDigest.getInstance("md5").digest(bytes))
+                                + "\n<b>SHA1sum:</b> " + convertS(MessageDigest.getInstance("sha1").digest(bytes))
+                                + "\n<b>SHA256sum:</b> " + convertS(MessageDigest.getInstance("sha256").digest(bytes));
+                    } catch (NoSuchAlgorithmException ignored) {}
 
-        if (inIntent.getData() != null)
-            packageInfo = "<b>" + getString(R.string.source_dir) + ": </b>"
-                    + inIntent.getData().toString() + "\n";
-        else packageInfo = "";
-
-        Names = StaticDataset.getTrackerNames();
-        try {
-            InputStream uriStream = UriUtils.getStreamFromUri(ClassListingActivity.this, uriFromIntent);
-            final byte[] bytes = readFully(uriStream, -1, true);
-            uriStream.close();
-            new Thread(() -> {
-                try {
-                    packageInfo += "\n<b>MD5sum:</b> " + convertS(MessageDigest.getInstance("md5").digest(bytes))
-                            + "\n<b>SHA1sum:</b> " + convertS(MessageDigest.getInstance("sha1").digest(bytes))
-                            + "\n<b>SHA256sum:</b> " + convertS(MessageDigest.getInstance("sha256").digest(bytes));
-                } catch (NoSuchAlgorithmException ignored) {}
-
-                PackageManager pm = getApplicationContext().getPackageManager();
-                PackageInfo mPackageInfo = null;
-                if (inIntent != null && inIntent.getAction() != null) {
-                    if (inIntent.getAction().equals(Intent.ACTION_VIEW)) {
-                        String archiveFilePath = UriUtils.pathUriCache(getApplicationContext(),
-                                uriFromIntent, "cache.apk");
-                        if (archiveFilePath != null)
-                            mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
+                    PackageManager pm = getApplicationContext().getPackageManager();
+                    PackageInfo mPackageInfo = null;
+                    if (inIntent != null && inIntent.getAction() != null) {
+                        if (inIntent.getAction().equals(Intent.ACTION_VIEW)) {
+                            String archiveFilePath = UriUtils.pathUriCache(getApplicationContext(),
+                                    uriFromIntent, "cache.apk");
+                            if (archiveFilePath != null)
+                                mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
+                        }
+                    } else {
+                        if (uriFromIntent != null) {
+                            String archiveFilePath = uriFromIntent.getPath();
+                            if (archiveFilePath != null)
+                                mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
+                        }
                     }
-                } else {
-                    if (uriFromIntent != null) {
-                        String archiveFilePath = uriFromIntent.getPath();
-                        if (archiveFilePath != null)
-                            mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
-                    }
-                }
-                if (mPackageInfo != null) packageInfo += apkCert(mPackageInfo);
-                else packageInfo += "\n<i><b>FAILED to retrieve PackageInfo!</b></i>";
-            }).start();
+                    if (mPackageInfo != null) packageInfo += apkCert(mPackageInfo);
+                    else packageInfo += "\n<i><b>FAILED to retrieve PackageInfo!</b></i>";
+                }).start();
 
-            new FillClassesNamesThread(bytes).start();
-            new StartDexLoaderThread(bytes).start();
-        } catch (Exception e) {
-            e.printStackTrace();
-            ActivityCompat.finishAffinity(this);
-        }
+                new FillClassesNamesThread(bytes).start();
+                new StartDexLoaderThread(bytes).start();
+            } catch (Exception e) {
+                e.printStackTrace();
+                ActivityCompat.finishAffinity(this);
+            }
+        }).start();
     }
 
     public static void deleteCache(Context context) {
@@ -259,15 +257,15 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                 viewScanSummary();
                 return true;
             case R.id.action_view_trackers:
-                StringBuilder statsMsg = new StringBuilder(Names[0] + "\n");
+                StringBuilder statsMsg = new StringBuilder(tracker_names[0] + "\n");
                 int i, j;
                 j = 1;
-                for (i = 1; i < Names.length; i++) {
-                    if (Names[i - 1].equals(Names[i])) continue;
-                    statsMsg.append(Names[i]).append("\n"); j++;
+                for (i = 1; i < tracker_names.length; i++) {
+                    if (tracker_names[i - 1].equals(tracker_names[i])) continue;
+                    statsMsg.append(tracker_names[i]).append("\n"); j++;
                 }
                 new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
-                        .setTitle(String.format(getString(R.string.trackers_and_classes), j, Names.length))
+                        .setTitle(String.format(getString(R.string.trackers_and_classes), j, tracker_names.length))
                         .setNegativeButton(android.R.string.ok, null)
                         .setMessage(statsMsg.toString()).show();
                 return true;
@@ -288,8 +286,8 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
             foundTrackersInfo.append("\n").append(getString(R.string.tracker_details)).append(":");
         for (int i = 0, j = 0; i < signatures.length; i++) {
             if (signaturesFound[i]) {
-                if (!foundTrackersInfo.toString().contains(Names[i]))
-                    foundTrackersInfo.append("\n<b><u>").append(++j).append(". ").append(Names[i]).append("</b></u>\n");
+                if (!foundTrackersInfo.toString().contains(tracker_names[i]))
+                    foundTrackersInfo.append("\n<b><u>").append(++j).append(". ").append(tracker_names[i]).append("</b></u>\n");
                 foundTrackersInfo.append("  ").append(signatures[i]).append(" (").append(signatureCount[i]).append(")\n");
             }
         }
@@ -335,7 +333,6 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                 classListAll = PackageUtils.getClassNames(bytes);
                 totalClassesScanned = classListAll.size();
                 StringBuilder found = new StringBuilder();
-                signatures = StaticDataset.getTrackerCodeSignatures();
                 signatureCount = new int[signatures.length];
                 signaturesFound = new boolean[signatures.length];
                 long t_start, t_end;
@@ -348,9 +345,9 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                                 classList.add(className);
                                 signatureCount[i]++;
                                 signaturesFound[i] = true;
-                                if (found.toString().contains(Names[i])) break;
+                                if (found.toString().contains(tracker_names[i])) break;
                                 else found.append("<b>").append(++totalTrackersFound)
-                                        .append(". ").append(Names[i]).append("</b>\n");
+                                        .append(". ").append(tracker_names[i]).append("</b>\n");
                                 break;
                             }
                         }
