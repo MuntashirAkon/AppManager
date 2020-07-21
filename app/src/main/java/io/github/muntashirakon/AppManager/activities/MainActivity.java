@@ -750,9 +750,11 @@ public class MainActivity extends AppCompatActivity implements
             final ApplicationInfo info = item.applicationInfo;
             // Add click listeners
             holder.itemView.setOnClickListener(v -> {
-                Intent intent = new Intent(mActivity, AppInfoActivity.class);
-                intent.putExtra(AppInfoActivity.EXTRA_PACKAGE_NAME, info.packageName);
-                mActivity.startActivity(intent);
+                if (mPackageNames.size() == 0) {
+                    Intent intent = new Intent(mActivity, AppInfoActivity.class);
+                    intent.putExtra(AppInfoActivity.EXTRA_PACKAGE_NAME, info.packageName);
+                    mActivity.startActivity(intent);
+                } else toggleSelection(item, position);
             });
             holder.itemView.setOnLongClickListener(v -> {
                 Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
@@ -867,17 +869,20 @@ public class MainActivity extends AppCompatActivity implements
             if ((info.flags & ApplicationInfo.FLAG_USES_CLEARTEXT_TRAFFIC) !=0)
                 holder.size.setTextColor(mColorOrange);
             else holder.size.setTextColor(mColorSecondary);
-            holder.icon.setOnClickListener(v -> {
-                if (MainActivity.mPackageNames.contains(info.packageName)) {
-                    MainActivity.mPackageNames.remove(info.packageName);
-                    MainActivity.mSelectedApplicationItems.remove(item);
-                } else {
-                    MainActivity.mPackageNames.add(info.packageName);
-                    MainActivity.mSelectedApplicationItems.add(item);
-                }
-                notifyItemChanged(position);
-                mActivity.handleSelection();
-            });
+            holder.icon.setOnClickListener(v -> toggleSelection(item, position));
+        }
+
+        public void toggleSelection(@NonNull ApplicationItem item, int position) {
+            ApplicationInfo info = item.applicationInfo;
+            if (mPackageNames.contains(info.packageName)) {
+                mPackageNames.remove(info.packageName);
+                mSelectedApplicationItems.remove(item);
+            } else {
+                mPackageNames.add(info.packageName);
+                mSelectedApplicationItems.add(item);
+            }
+            notifyItemChanged(position);
+            mActivity.handleSelection();
         }
 
         @Override
