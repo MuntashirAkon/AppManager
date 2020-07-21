@@ -172,8 +172,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     blocker.addComponent(componentName, type);
                 }
                 // Apply rules if global blocking enable or already applied
+                //noinspection ConstantConditions
                 if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL)
-                        || blocker.isRulesApplied()) {
+                        || (ruleApplicationStatus != null && ruleApplicationStatus.getValue() == RULE_APPLIED)) {
                     blocker.applyRules(true);
                 }
                 // Set new status
