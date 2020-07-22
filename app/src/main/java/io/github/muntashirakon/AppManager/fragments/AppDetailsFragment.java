@@ -55,7 +55,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
-import io.github.muntashirakon.AppManager.activities.AppInfoActivity;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
 import io.github.muntashirakon.AppManager.storage.compontents.ExternalComponentsImporter;
@@ -71,11 +70,11 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.viewmodels.AppDetailsFragmentViewModel;
 import io.github.muntashirakon.AppManager.viewmodels.AppDetailsViewModel;
 
-
 public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTextListener,
         ScrollSafeSwipeRefreshLayout.OnRefreshListener {
     @IntDef(value = {
             NONE,
+            APP_INFO,
             ACTIVITIES,
             SERVICES,
             RECEIVERS,
@@ -90,17 +89,18 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     })
     public @interface Property {}
     public static final int NONE = -1;
-    public static final int ACTIVITIES = 0;
-    public static final int SERVICES = 1;
-    public static final int RECEIVERS = 2;
-    public static final int PROVIDERS = 3;
-    public static final int APP_OPS = 4;
-    public static final int USES_PERMISSIONS = 5;
-    public static final int PERMISSIONS = 6;
-    public static final int FEATURES = 7;
-    public static final int CONFIGURATIONS = 8;
-    public static final int SIGNATURES = 9;
-    public static final int SHARED_LIBRARIES = 10;
+    public static final int APP_INFO = 0;
+    public static final int ACTIVITIES = 1;
+    public static final int SERVICES = 2;
+    public static final int RECEIVERS = 3;
+    public static final int PROVIDERS = 4;
+    public static final int APP_OPS = 5;
+    public static final int USES_PERMISSIONS = 6;
+    public static final int PERMISSIONS = 7;
+    public static final int FEATURES = 8;
+    public static final int CONFIGURATIONS = 9;
+    public static final int SIGNATURES = 10;
+    public static final int SHARED_LIBRARIES = 11;
 
     @IntDef(value = {
             SORT_BY_NAME,
@@ -170,7 +170,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             mainModel = ViewModelProvider.AndroidViewModelFactory.getInstance(AppManager.getInstance()).create(AppDetailsViewModel.class);
         mPackageName = mainModel.getPackageName();
         if (mPackageName == null) {
-            mainModel.setPackageName(mActivity.getIntent().getStringExtra(AppInfoActivity.EXTRA_PACKAGE_NAME));
+            mainModel.setPackageName(mActivity.getIntent().getStringExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME));
             mPackageName = mainModel.getPackageName();
         }
         mPackageManager = mActivity.getPackageManager();
@@ -255,18 +255,21 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             case SIGNATURES:
                 inflater.inflate(R.menu.fragment_app_details_refresh_actions, menu);
                 break;
+            case APP_INFO:
+                break;
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        if (neededProperty <= PROVIDERS) {
+        if (neededProperty == APP_INFO) super.onPrepareOptionsMenu(menu);
+        else if (neededProperty <= PROVIDERS)
             if (AppPref.isRootEnabled())
                 menu.findItem(sSortMenuItemIdsMap[model.getSortBy()]).setChecked(true);
-        } else if (neededProperty <= USES_PERMISSIONS)
+        else if (neededProperty <= USES_PERMISSIONS)
             menu.findItem(sSortMenuItemIdsMap[model.getSortBy()]).setChecked(true);
-        super.onPrepareOptionsMenu(menu);
+        else super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -358,7 +361,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (neededProperty == FEATURES) bFi = mainModel.isbFi();
         });
         mainModel.getRuleApplicationStatus().observe(mActivity, status -> {
-            if (neededProperty <= PROVIDERS) {
+            if (neededProperty > APP_INFO && neededProperty <= PROVIDERS) {
                 mRulesNotAppliedMsg.setVisibility(status != AppDetailsViewModel.RULE_NOT_APPLIED ?
                         View.GONE : View.VISIBLE);
             }
@@ -369,7 +372,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     public void onResume() {
         super.onResume();
         mSwipeRefresh.setEnabled(true);
-        if (neededProperty <= PERMISSIONS) {
+        if (neededProperty > APP_INFO && neededProperty <= PERMISSIONS) {
             mActivity.searchView.setVisibility(View.VISIBLE);
             mActivity.searchView.setOnQueryTextListener(this);
             if (mainModel != null) mainModel.load(neededProperty);
@@ -436,9 +439,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             case RECEIVERS: return R.string.no_receivers;
             case PROVIDERS: return R.string.no_providers;
             case APP_OPS:
-                if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
-                    return R.string.no_app_ops;
-                } else return R.string.only_works_in_root_mode;
+                if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) return R.string.no_app_ops;
+                else return R.string.only_works_in_root_mode;
             case USES_PERMISSIONS:
             case PERMISSIONS: return R.string.require_no_permission;
             case FEATURES: return R.string.no_feature;
@@ -446,8 +448,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             case SIGNATURES: return R.string.no_signatures;
             case SHARED_LIBRARIES: return R.string.no_shared_libs;
             case ACTIVITIES:
+            case APP_INFO:
             case NONE:
-            default: return R.string.no_activities;
+            default:
+                return R.string.no_activities;
         }
     }
 
@@ -651,6 +655,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     case SIGNATURES:
                     case SHARED_LIBRARIES:
                     case NONE:
+                    case APP_INFO:
                     default:
                         break;
                 }
@@ -694,6 +699,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 case PROVIDERS:
                 case PERMISSIONS:
                 case NONE:
+                case APP_INFO:
                 default:
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_details_primary, parent, false);
                     break;
@@ -732,6 +738,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 case SHARED_LIBRARIES: getSharedLibsView(holder, position); break;
                 case ACTIVITIES:
                 case NONE:
+                case APP_INFO:
                 default: getActivityView(holder, position); break;
             }
         }

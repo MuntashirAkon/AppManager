@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.activities;
+package io.github.muntashirakon.AppManager.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -20,9 +20,12 @@ import android.os.FileUtils;
 import android.os.Process;
 import android.provider.Settings;
 import android.text.format.Formatter;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -53,13 +56,17 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.fragments.RulesTypeSelectionDialogFragment;
+import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
+import io.github.muntashirakon.AppManager.activities.ClassListingActivity;
+import io.github.muntashirakon.AppManager.activities.ManifestViewerActivity;
+import io.github.muntashirakon.AppManager.activities.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.types.ScrollSafeSwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
@@ -68,12 +75,12 @@ import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.viewmodels.AppDetailsViewModel;
 
 import static io.github.muntashirakon.AppManager.utils.IOUtils.deleteDir;
 
-public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwipeRefreshLayout.OnRefreshListener {
-    public static final String EXTRA_PACKAGE_NAME = "pkg";
-
+public class AppInfoFragment extends Fragment
+        implements ScrollSafeSwipeRefreshLayout.OnRefreshListener {
     private static final String UID_STATS_PATH = "/proc/uid_stat/";
     private static final String UID_STATS_TR = "tcp_rcv";
     private static final String UID_STATS_RC = "tcp_snd";
@@ -93,11 +100,10 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
     private String mPackageName;
     private PackageInfo mPackageInfo;
     private PackageStats mPackageStats;
-    private final AppCompatActivity mActivity = this;
+    private AppDetailsActivity mActivity;
     private ApplicationInfo mApplicationInfo;
     private LinearLayout mHorizontalLayout;
     private ChipGroup mTagCloud;
-
     @SuppressLint("SimpleDateFormat")
     private SimpleDateFormat mDateFormatter = new SimpleDateFormat("EE LLL dd yyyy kk:mm:ss");
     private ListItemCreator mList;
@@ -105,43 +111,62 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
     private int mAccentColor;
     private CharSequence mPackageLabel;
     private ProgressIndicator mProgressIndicator;
+    private AppDetailsViewModel mainModel;
+    private View view;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_app_info);
-        setSupportActionBar(findViewById(R.id.toolbar));
-        mPackageName = getIntent().getStringExtra(AppInfoActivity.EXTRA_PACKAGE_NAME);
+        setHasOptionsMenu(true);
+        mActivity = (AppDetailsActivity) requireActivity();
+        mainModel = mActivity.model;
+        if (mainModel == null)
+            mainModel = ViewModelProvider.AndroidViewModelFactory.getInstance(AppManager.getInstance()).create(AppDetailsViewModel.class);
+        mPackageName = mainModel.getPackageName();
         if (mPackageName == null) {
-            Toast.makeText(this, getString(R.string.empty_package_name), Toast.LENGTH_LONG).show();
-            finish();
-            return;
+            mainModel.setPackageName(mActivity.getIntent().getStringExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME));
+            mPackageName = mainModel.getPackageName();
         }
-        mSwipeRefresh = findViewById(R.id.swipe_refresh);
-        mSwipeRefresh.setColorSchemeColors(Utils.getThemeColor(this, android.R.attr.colorAccent));
-        mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(this, android.R.attr.colorPrimary));
+        mPackageManager = mActivity.getPackageManager();
+        mAccentColor = Utils.getThemeColor(mActivity, android.R.attr.colorAccent);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.pager_app_info, container, false);
+        mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
+        mSwipeRefresh.setColorSchemeColors(mAccentColor);
+        mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(mActivity, android.R.attr.colorPrimary));
         mSwipeRefresh.setOnRefreshListener(this);
-        mPackageManager = getPackageManager();
-        mHorizontalLayout = findViewById(R.id.horizontal_layout);
-        mTagCloud = findViewById(R.id.tag_cloud);
-        mAccentColor = Utils.getThemeColor(this, android.R.attr.colorAccent);
-        mProgressIndicator = findViewById(R.id.progress_linear);
+        mHorizontalLayout = view.findViewById(R.id.horizontal_layout);
+        mTagCloud = view.findViewById(R.id.tag_cloud);
+        mProgressIndicator = view.findViewById(R.id.progress_linear);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        getPackageInfoOrFinish();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_app_info_actions, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
             case R.id.action_refresh_detail:
-                Toast.makeText(this, getString(R.string.refresh), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, getString(R.string.refresh), Toast.LENGTH_SHORT).show();
                 getPackageInfoOrFinish();
                 return true;
             case R.id.action_share_apk:
                 try {
                     File apkSource = new File(mApplicationInfo.sourceDir);
-                    File tmpApkSource = File.createTempFile(mApplicationInfo.packageName, ".apk", getExternalCacheDir());
+                    File tmpApkSource = File.createTempFile(mApplicationInfo.packageName, ".apk", mActivity.getExternalCacheDir());
                     FileInputStream apkInputStream = new FileInputStream(apkSource);
                     FileOutputStream apkOutputStream = new FileOutputStream(tmpApkSource);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -150,23 +175,17 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
                         IOUtils.copy(apkInputStream, apkOutputStream);
                     }
                     apkInputStream.close(); apkOutputStream.close();
-                    Intent intent = ShareCompat.IntentBuilder.from(this)
-                            .setStream(FileProvider.getUriForFile(
-                                    this, BuildConfig.APPLICATION_ID + ".provider", tmpApkSource))
+                    Intent intent = ShareCompat.IntentBuilder.from(mActivity)
+                            .setStream(FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID + ".provider", tmpApkSource))
                             .setType("application/vnd.android.package-archive")
                             .getIntent()
                             .setAction(Intent.ACTION_SEND)
                             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     startActivity(intent);
                 } catch (Exception e) {
-                    Toast.makeText(this, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
-                return true;
-            case R.id.action_show_details:
-                Intent appDetailsIntent = new Intent(this, AppDetailsActivity.class);
-                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, mPackageName);
-                startActivity(appDetailsIntent);
                 return true;
             case R.id.action_view_settings:
                 Intent infoIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
@@ -188,8 +207,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_BATCH_EXPORT) {
                 if (data != null) {
@@ -201,32 +219,10 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
                     args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, data.getData());
                     args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, packages);
                     dialogFragment.setArguments(args);
-                    dialogFragment.show(getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+                    dialogFragment.show(mActivity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
                 }
             }
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        try {
-            File dir = getExternalCacheDir();
-            deleteDir(dir);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @SuppressLint("RestrictedApi")
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_app_info_actions, menu);
-
-        if (menu instanceof MenuBuilder) {
-            ((MenuBuilder) menu).setOptionalIconsVisible(true);
-        }
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -236,9 +232,21 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        getPackageInfoOrFinish();
+        mActivity.searchView.setVisibility(View.GONE);
+        getPackageInfoOrFinish();  // FIXME: Use broadcast receiver instead of refreshing on each resume
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            File dir = mActivity.getExternalCacheDir();
+            deleteDir(dir);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -246,22 +254,22 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
      */
     private void setHeaderView() {
         // Set Application Name, aka Label
-        TextView labelView = findViewById(R.id.label);
+        TextView labelView = view.findViewById(R.id.label);
         labelView.setText(mPackageLabel);
 
         // Set Package Name
-        TextView packageNameView = findViewById(R.id.packageName);
+        TextView packageNameView = view.findViewById(R.id.packageName);
         packageNameView.setText(mPackageName);
 
         // Set App Icon
-        ImageView iconView = findViewById(R.id.icon);
+        ImageView iconView = view.findViewById(R.id.icon);
         iconView.setImageDrawable(mApplicationInfo.loadIcon(mPackageManager));
 
         // Set App Version
-        TextView versionView = findViewById(R.id.version);
+        TextView versionView = view.findViewById(R.id.version);
         versionView.setText(String.format(getString(R.string.version_name_with_code), mPackageInfo.versionName,
-                    (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ?
-                            mPackageInfo.getLongVersionCode() : mPackageInfo.versionCode)));
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ?
+                        mPackageInfo.getLongVersionCode() : mPackageInfo.versionCode)));
 
         // Tag cloud //
         mTagCloud.removeAllViews();
@@ -295,7 +303,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
         addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
             final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
             if (AppPref.isRootEnabled()) {
-                new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                new MaterialAlertDialogBuilder(mActivity, R.style.AppTheme_AlertDialog)
                         .setTitle(mPackageLabel)
                         .setMessage(isSystemApp ?
                                 R.string.uninstall_system_app_message : R.string.uninstall_app_message)
@@ -304,7 +312,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
                             if (RunnerUtils.uninstallPackage(mPackageName).isSuccessful()) {
                                 runOnUiThread(() -> {
                                     Toast.makeText(mActivity, String.format(getString(R.string.uninstalled_successfully), mPackageLabel), Toast.LENGTH_LONG).show();
-                                    finish();
+                                    mActivity.finish();
                                 });
                             } else {
                                 runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_uninstall), mPackageLabel), Toast.LENGTH_LONG).show());
@@ -364,7 +372,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
         // Set exodus
         addToHorizontalLayout(R.string.exodus, R.drawable.ic_frost_classysharkexodus_black_24dp).setOnClickListener(v -> {
             try {
-                Intent newIntent = new Intent(AppInfoActivity.this, ClassListingActivity.class);
+                Intent newIntent = new Intent(mActivity, ClassListingActivity.class);
                 File file = new File(mPackageManager.getPackageInfo(mPackageName, 0).applicationInfo.publicSourceDir);
                 newIntent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
                 newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -388,10 +396,10 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
                     sharedPrefs2[i] = new File(sharedPrefs.get(i)).getName();
                 }
                 addToHorizontalLayout(R.string.shared_prefs, R.drawable.ic_view_list_black_24dp)
-                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity, R.style.AppTheme_AlertDialog)
                                 .setTitle(R.string.shared_prefs)
                                 .setItems(sharedPrefs2, (dialog, which) -> {
-                                    Intent intent = new Intent(this, SharedPrefsActivity.class);
+                                    Intent intent = new Intent(mActivity, SharedPrefsActivity.class);
                                     intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LOCATION, sharedPrefs.get(which));
                                     intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LABEL, mPackageLabel);
                                     startActivity(intent);
@@ -411,7 +419,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
                     databases2[i] = databases.get(i);
                 }
                 addToHorizontalLayout(R.string.databases, R.drawable.ic_assignment_black_24dp)
-                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity, R.style.AppTheme_AlertDialog)
                                 .setTitle(R.string.databases)
                                 .setItems(databases2, null)  // TODO
                                 .setNegativeButton(android.R.string.ok, null)
@@ -486,7 +494,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
             openAsFolderInFM(mApplicationInfo.deviceProtectedDataDir);
         }
         // External data dirs
-        File[] dataDirs = getExternalCacheDirs();
+        File[] dataDirs = mActivity.getExternalCacheDirs();
         List<String> extDataDirs = new ArrayList<>();
         for(File dataDir: dataDirs) {
             //noinspection ConstantConditions
@@ -545,12 +553,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
             mList.addItemWithTitleSubtitle(getString(R.string.process_name), mApplicationInfo.processName, ListItemCreator.NO_ACTION);
         String installerPackageName = mPackageManager.getInstallerPackageName(mPackageName);
         if (installerPackageName != null) {
-            String applicationLabel;
-            try {
-                applicationLabel = getPackageManager().getApplicationInfo(installerPackageName, 0).loadLabel(getPackageManager()).toString();
-            } catch (PackageManager.NameNotFoundException e) {
-                applicationLabel = installerPackageName;
-            }
+            String applicationLabel = mApplicationInfo.loadLabel(mPackageManager).toString();
             mList.addItemWithTitleSubtitle(getString(R.string.installer_app), applicationLabel, ListItemCreator.SELECTABLE);
         }
         mList.addItemWithTitleSubtitle(getString(R.string.user_id), Integer.toString(mApplicationInfo.uid), ListItemCreator.SELECTABLE);
@@ -572,7 +575,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
                 Tuple<Tuple<Long, Long>, Tuple<Long, Long>> dataUsage = AppUsageStatsManager
-                        .getWifiMobileUsageForPackage(this, mPackageName,
+                        .getWifiMobileUsageForPackage(mActivity, mPackageName,
                                 io.github.muntashirakon.AppManager.usage.Utils.USAGE_LAST_BOOT);
                 mList.addItemWithTitle(getString(R.string.netstats_msg), true);
                 mList.item_title.setTextColor(mAccentColor);
@@ -618,14 +621,14 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
     }
 
     private void addChip(@StringRes int resId, @ColorRes int color) {
-        Chip chip = new Chip(this);
+        Chip chip = new Chip(mActivity);
         chip.setText(resId);
         chip.setChipBackgroundColorResource(color);
         mTagCloud.addView(chip);
     }
 
     private void addChip(@StringRes int resId) {
-        Chip chip = new Chip(this);
+        Chip chip = new Chip(mActivity);
         chip.setText(resId);
         mTagCloud.addView(chip);
     }
@@ -635,7 +638,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
         View view = getLayoutInflater().inflate(R.layout.item_app_info_actions, mHorizontalLayout, false);
         TextView textView = view.findViewById(R.id.item_text);
         textView.setText(stringResId);
-        textView.setCompoundDrawablesWithIntrinsicBounds(null, getDrawable(iconResId), null, null);
+        textView.setCompoundDrawablesWithIntrinsicBounds(null, mActivity.getDrawable(iconResId), null, null);
         mHorizontalLayout.addView(view);
         return view;
     }
@@ -655,9 +658,9 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
                         mActivity.runOnUiThread(() -> {
                             mPackageStats = pStats;
                             setStorageInfo(mPackageStats.codeSize
-                                    + mPackageStats.externalCodeSize, mPackageStats.dataSize
-                                    + mPackageStats.externalDataSize, mPackageStats.cacheSize
-                                    + mPackageStats.externalCacheSize, mPackageStats.externalObbSize,
+                                            + mPackageStats.externalCodeSize, mPackageStats.dataSize
+                                            + mPackageStats.externalDataSize, mPackageStats.cacheSize
+                                            + mPackageStats.externalCacheSize, mPackageStats.externalObbSize,
                                     mPackageStats.externalMediaSize);
                         });
                     }
@@ -666,8 +669,8 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
                 e.printStackTrace();
             }
         } else {
-            if (!Utils.checkUsageStatsPermission(this)) {
-                new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+            if (!Utils.checkUsageStatsPermission(mActivity)) {
+                new MaterialAlertDialogBuilder(mActivity, R.style.AppTheme_AlertDialog)
                         .setTitle(R.string.grant_usage_access)
                         .setMessage(R.string.grant_usage_acess_message)
                         .setPositiveButton(R.string.go, (dialog, which) -> startActivityForResult(new Intent(
@@ -680,7 +683,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
                 return;
             }
             try {
-                StorageStatsManager storageStatsManager = (StorageStatsManager) getSystemService(Context.STORAGE_STATS_SERVICE);
+                StorageStatsManager storageStatsManager = (StorageStatsManager) mActivity.getSystemService(Context.STORAGE_STATS_SERVICE);
                 StorageStats storageStats = storageStatsManager.queryStatsForPackage(mApplicationInfo.storageUuid, mPackageName, Process.myUserHandle());
                 // TODO: List obb and media size
                 long cacheSize = storageStats.getCacheBytes();
@@ -707,7 +710,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
                     runOnUiThread(this::getPackageInfoOrFinish);
                 }
             }).start());
-            mList.item_open.setImageDrawable(getDrawable(R.drawable.ic_delete_black_24dp));
+            mList.item_open.setImageDrawable(mActivity.getDrawable(R.drawable.ic_delete_black_24dp));
         }
         // Cache size
         mList.addItemWithTitleSubtitle(getString(R.string.cache_size), getReadableSize(cacheSize),
@@ -722,16 +725,16 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
                                 mApplicationInfo.deviceProtectedDataDir, mApplicationInfo.deviceProtectedDataDir));
                     }
                 }
-                File[] cacheDirs = getExternalCacheDirs();
+                File[] cacheDirs = mActivity.getExternalCacheDirs();
                 for (File cacheDir : cacheDirs) {
-                    String extCache = cacheDir.getAbsolutePath().replace(getPackageName(), mPackageName);
+                    String extCache = cacheDir.getAbsolutePath().replace(mActivity.getPackageName(), mPackageName);
                     command.append(" ").append(extCache);
                 }
                 if (Runner.runCommand(command.toString()).isSuccessful()) {
                     runOnUiThread(this::getPackageInfoOrFinish);
                 }
             }).start());
-            mList.item_open.setImageDrawable(getDrawable(R.drawable.ic_delete_black_24dp));
+            mList.item_open.setImageDrawable(mActivity.getDrawable(R.drawable.ic_delete_black_24dp));
         }
         // OBB size
         if (obbSize != 0)
@@ -766,8 +769,8 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
 
                 if (mPackageInfo == null) {
                     runOnUiThread(() -> {
-                        Toast.makeText(this, this.mPackageName + ": " + getString(R.string.app_not_installed), Toast.LENGTH_LONG).show();
-                        finish();
+                        Toast.makeText(mActivity, this.mPackageName + ": " + getString(R.string.app_not_installed), Toast.LENGTH_LONG).show();
+                        mActivity.finish();
                     });
                     return;
                 }
@@ -777,7 +780,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
 
                 runOnUiThread(() -> {
                     // ListItemCreator instance
-                    mList = new ListItemCreator(AppInfoActivity.this, R.id.details_container, true);
+                    mList = new ListItemCreator(mActivity, R.id.details_container, true);
                 });
                 // (Re)load views
                 runOnUiThread(this::setHeaderView);
@@ -785,7 +788,7 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
                 runOnUiThread(this::setVerticalView);
                 runOnUiThread(() -> mProgressIndicator.hide());
             } catch (PackageManager.NameNotFoundException e) {
-                runOnUiThread(this::finish);
+                runOnUiThread(mActivity::finish);
             }
         }).start();
     }
@@ -828,6 +831,10 @@ public class AppInfoActivity extends AppCompatActivity implements ScrollSafeSwip
      * @return Formatted size
      */
     private String getReadableSize(long size) {
-        return Formatter.formatFileSize(this, size);
+        return Formatter.formatFileSize(mActivity, size);
+    }
+
+    private void runOnUiThread(Runnable runnable) {
+        mActivity.runOnUiThread(runnable);
     }
 }

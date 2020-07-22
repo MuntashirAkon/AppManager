@@ -554,7 +554,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void sortApplicationList(@SortOrder int sortBy) {
-        final Boolean isRootEnabled = AppPref.isRootEnabled();
+        final boolean isRootEnabled = AppPref.isRootEnabled();
         if (sortBy != SORT_BY_APP_LABEL) sortApplicationList(SORT_BY_APP_LABEL);
         Collections.sort(mApplicationItems, (o1, o2) -> {
             switch (sortBy) {
@@ -751,15 +751,13 @@ public class MainActivity extends AppCompatActivity implements
             // Add click listeners
             holder.itemView.setOnClickListener(v -> {
                 if (mPackageNames.size() == 0) {
-                    Intent intent = new Intent(mActivity, AppInfoActivity.class);
-                    intent.putExtra(AppInfoActivity.EXTRA_PACKAGE_NAME, info.packageName);
-                    mActivity.startActivity(intent);
+                    Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
+                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, info.packageName);
+                    mActivity.startActivity(appDetailsIntent);
                 } else toggleSelection(item, position);
             });
             holder.itemView.setOnLongClickListener(v -> {
-                Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
-                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, info.packageName);
-                mActivity.startActivity(appDetailsIntent);
+                toggleSelection(item, position);
                 return true;
             });
             // Alternate background colors: selected > disabled > regular

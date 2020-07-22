@@ -1,7 +1,6 @@
 package io.github.muntashirakon.AppManager.activities;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -20,6 +19,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
@@ -27,6 +27,7 @@ import androidx.viewpager.widget.ViewPager;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fragments.AppDetailsFragment;
+import io.github.muntashirakon.AppManager.fragments.AppInfoFragment;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.viewmodels.AppDetailsViewModel;
 
@@ -36,37 +37,36 @@ public class AppDetailsActivity extends AppCompatActivity {
     public AppDetailsViewModel model;
     public SearchView searchView;
 
-    private String mPackageName;
     private TypedArray mTabTitleIds;
-    private AppDetailsFragment[] fragments;
+    private Fragment[] fragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_details);
         setSupportActionBar(findViewById(R.id.toolbar));
-        mPackageName = getIntent().getStringExtra(AppInfoActivity.EXTRA_PACKAGE_NAME);
-        if (mPackageName == null) {
+        String packageName = getIntent().getStringExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME);
+        if (packageName == null) {
             Toast.makeText(this, getString(R.string.empty_package_name), Toast.LENGTH_LONG).show();
             finish();
             return;
         }
         // Set title
         try {
-            setTitle(getPackageManager().getApplicationInfo(mPackageName, 0).loadLabel(getPackageManager()).toString());
+            setTitle(getPackageManager().getApplicationInfo(packageName, 0).loadLabel(getPackageManager()).toString());
         } catch (PackageManager.NameNotFoundException ignored) {
             finish();
             return;
         }
         // Get model
         model = ViewModelProvider.AndroidViewModelFactory.getInstance(AppManager.getInstance()).create(AppDetailsViewModel.class);
-        model.setPackageName(mPackageName);
+        model.setPackageName(packageName);
         // Initialize tabs
         mTabTitleIds = getResources().obtainTypedArray(R.array.TAB_TITLES);
         FragmentManager fragmentManager = getSupportFragmentManager();
         ViewPager viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(new AppDetailsFragmentPagerAdapter(fragmentManager));
-        fragments = new AppDetailsFragment[mTabTitleIds.length()];
+        fragments = new Fragment[mTabTitleIds.length()];
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             searchView = new SearchView(actionBar.getThemedContext());
@@ -90,7 +90,6 @@ public class AppDetailsActivity extends AppCompatActivity {
     @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_app_details_actions, menu);
         if (menu instanceof MenuBuilder) {
             ((MenuBuilder) menu).setOptionalIconsVisible(true);
         }
@@ -103,10 +102,6 @@ public class AppDetailsActivity extends AppCompatActivity {
         if (id == android.R.id.home) {
             finish();
             return true;
-        } else if (id == R.id.action_app_info) {
-            Intent appInfoIntent = new Intent(this, AppInfoActivity.class);
-            appInfoIntent.putExtra(AppInfoActivity.EXTRA_PACKAGE_NAME, mPackageName);
-            startActivity(appInfoIntent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -119,8 +114,11 @@ public class AppDetailsActivity extends AppCompatActivity {
 
         @NonNull
         @Override
-        public AppDetailsFragment getItem(int position) {
-            if (fragments[position] == null) fragments[position] = new AppDetailsFragment(position);
+        public Fragment getItem(int position) {
+            if (fragments[position] == null) {
+                if (position == 0) fragments[position] = new AppInfoFragment();
+                else fragments[position] = new AppDetailsFragment(position);
+            }
             return fragments[position];
         }
 

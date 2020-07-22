@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="TAB_TITLES">
+        <item>@string/app_info</item>
         <item>@string/activities</item>
         <item>@string/service</item>
         <item>@string/receivers</item>

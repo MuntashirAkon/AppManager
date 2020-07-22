@@ -18,6 +18,7 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.fragments.ImportExportDialogFragment;
@@ -98,23 +99,10 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         findViewById(R.id.about_view).setOnClickListener(v -> {
-                View view = getLayoutInflater().inflate(R.layout.dialog_about, null);
-                try {
-                    PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-                    String version = packageInfo.versionName;
-                    long versionCode;
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-                        versionCode = packageInfo.getLongVersionCode();
-                    } else versionCode = packageInfo.versionCode;
-                    ((TextView) view.findViewById(R.id.version)).setText(String.format(Locale.ROOT,
-                            "%s (%d)", version, versionCode));
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-                new FullscreenDialog(this)
-                        .setTitle(R.string.about)
-                        .setView(view)
-                        .show();
+            View view = getLayoutInflater().inflate(R.layout.dialog_about, null);
+            ((TextView) view.findViewById(R.id.version)).setText(String.format(Locale.ROOT,
+                    "%s (%d)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
+            new FullscreenDialog(this).setTitle(R.string.about).setView(view).show();
             });
     }
 

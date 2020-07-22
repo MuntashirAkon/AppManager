@@ -11,17 +11,17 @@
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <application
+        android:name=".AppManager"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:name=".AppManager"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.RunningAppsActivity"
-            android:label="@string/running_apps"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/running_apps" />
         <activity
             android:name=".activities.SettingsActivity"
             android:exported="false" />
@@ -30,8 +30,8 @@
             android:exported="false" />
         <activity
             android:name=".activities.AppUsageActivity"
-            android:permission="android.permission.PACKAGE_USAGE_STATS"
-            android:exported="false" />
+            android:exported="false"
+            android:permission="android.permission.PACKAGE_USAGE_STATS" />
         <activity
             android:name=".activities.ClassViewerActivity"
             android:exported="false" />
@@ -50,11 +50,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.AppInfoActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_info"
-            android:exported="false" />
         <activity
             android:name=".activities.AppDetailsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
