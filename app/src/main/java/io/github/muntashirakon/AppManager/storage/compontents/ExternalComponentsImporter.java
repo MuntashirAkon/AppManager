@@ -111,8 +111,6 @@ public class ExternalComponentsImporter {
     private static void applyFromWatt(@NonNull Context context, Uri fileUri) throws FileNotFoundException {
         String filename = Utils.getName(context.getContentResolver(), fileUri);
         if (filename == null) throw new FileNotFoundException("The requested content is not found.");
-        InputStream inputStream = context.getContentResolver().openInputStream(fileUri);
-        if (inputStream == null) throw new FileNotFoundException("The requested content is not found.");
         try {
             try (InputStream rulesStream = context.getContentResolver().openInputStream(fileUri)) {
                 XmlPullParser parser = Xml.newPullParser();

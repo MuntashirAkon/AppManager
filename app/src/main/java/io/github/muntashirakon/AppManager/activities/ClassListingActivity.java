@@ -59,9 +59,7 @@ import static io.github.muntashirakon.AppManager.utils.IOUtils.deleteDir;
 import static io.github.muntashirakon.AppManager.utils.IOUtils.readFully;
 
 public class ClassListingActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
-    public static final String EXTRA_PACKAGE_NAME = "package_name";
-
-    private Intent inIntent;
+    private Intent intent;
     private List<String> classList;
     private List<String> classListAll;
     private ListView mListView;
@@ -117,19 +115,8 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         setContentView(R.layout.activity_class_listing);
         setSupportActionBar(findViewById(R.id.toolbar));
         mActionBar = getSupportActionBar();
+        intent = getIntent();
         if (mActionBar != null) {
-            mPackageName = getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
-            PackageManager pm = getPackageManager();
-            try {
-                assert mPackageName != null;
-                mAppName = pm.getApplicationInfo(mPackageName, 0).loadLabel(pm);
-                mActionBar.setTitle(mAppName);
-                mActionBar.setSubtitle(getString(R.string.tracker_classes));
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-                Toast.makeText(this, R.string.app_not_installed, Toast.LENGTH_LONG).show();
-                finish();
-            }
             mActionBar.setDisplayShowCustomEnabled(true);
 
             SearchView searchView = new SearchView(mActionBar.getThemedContext());
@@ -157,8 +144,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         mProgressIndicator = findViewById(R.id.progress_linear);
 
         new Thread(() -> {
-            inIntent = getIntent();
-            final Uri uriFromIntent = inIntent.getData();
+            final Uri uriFromIntent = intent.getData();
             classList = new ArrayList<>();
             if (uriFromIntent != null) packageInfo = "<b>" + getString(R.string.source_dir) + ": </b>" + uriFromIntent.toString() + "\n";
             else packageInfo = "";
@@ -175,10 +161,10 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                                 + "\n<b>SHA256sum:</b> " + convertS(MessageDigest.getInstance("sha256").digest(bytes));
                     } catch (NoSuchAlgorithmException ignored) {}
 
-                    PackageManager pm = getApplicationContext().getPackageManager();
+                    final PackageManager pm = getApplicationContext().getPackageManager();
                     PackageInfo mPackageInfo = null;
-                    if (inIntent != null && inIntent.getAction() != null) {
-                        if (inIntent.getAction().equals(Intent.ACTION_VIEW)) {
+                    if (intent != null && intent.getAction() != null) {
+                        if (intent.getAction().equals(Intent.ACTION_VIEW)) {
                             String archiveFilePath = UriUtils.pathUriCache(getApplicationContext(),
                                     uriFromIntent, "cache.apk");
                             if (archiveFilePath != null)
@@ -191,8 +177,17 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                                 mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
                         }
                     }
-                    if (mPackageInfo != null) packageInfo += apkCert(mPackageInfo);
-                    else packageInfo += "\n<i><b>FAILED to retrieve PackageInfo!</b></i>";
+                    if (mPackageInfo != null) {
+                        packageInfo += apkCert(mPackageInfo);
+                        mPackageName = mPackageInfo.packageName;
+                        mAppName = mPackageInfo.applicationInfo.loadLabel(pm);
+                        runOnUiThread(() -> {
+                            if (mActionBar != null) {
+                                mActionBar.setTitle(mAppName);
+                                mActionBar.setSubtitle(getString(R.string.tracker_classes));
+                            }
+                        });
+                    } else packageInfo += "\n<i><b>FAILED to retrieve PackageInfo!</b></i>";
                 }).start();
 
                 new FillClassesNamesThread(bytes).start();

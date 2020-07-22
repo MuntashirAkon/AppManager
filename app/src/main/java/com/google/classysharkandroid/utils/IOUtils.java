@@ -61,6 +61,8 @@ public class IOUtils {
             output.write(buffer, 0, n);
             count += n;
         }
+        input.close();
+        if (output != null) output.close();
         return count;
     }
     /**

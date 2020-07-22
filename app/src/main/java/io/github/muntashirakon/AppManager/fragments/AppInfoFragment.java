@@ -369,16 +369,10 @@ public class AppInfoFragment extends Fragment
         });
         // Set exodus
         addToHorizontalLayout(R.string.exodus, R.drawable.ic_frost_classysharkexodus_black_24dp).setOnClickListener(v -> {
-            try {
-                Intent newIntent = new Intent(mActivity, ClassListingActivity.class);
-                File file = new File(mPackageManager.getPackageInfo(mPackageName, 0).applicationInfo.publicSourceDir);
-                newIntent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-                newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                newIntent.putExtra(ClassListingActivity.EXTRA_PACKAGE_NAME, mPackageName);
-                startActivity(newIntent);
-            } catch (PackageManager.NameNotFoundException e) {
-                Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
-            }
+            Intent newIntent = new Intent(mActivity, ClassListingActivity.class);
+            File file = new File(mApplicationInfo.publicSourceDir);
+            newIntent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+            startActivity(newIntent);
         });
         // Root only features
         if (AppPref.isRootEnabled()) {

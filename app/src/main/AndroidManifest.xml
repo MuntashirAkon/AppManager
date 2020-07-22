@@ -41,7 +41,18 @@
             android:exported="false" />
         <activity
             android:name=".activities.ClassListingActivity"
-            android:exported="false" />
+            android:exported="true"
+            android:label="@string/exodus">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:mimeType="application/vnd.android.package-archive" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
