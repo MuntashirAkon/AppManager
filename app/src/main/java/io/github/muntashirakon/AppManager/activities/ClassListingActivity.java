@@ -2,13 +2,11 @@ package io.github.muntashirakon.AppManager.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
@@ -50,15 +48,17 @@ import androidx.core.text.HtmlCompat;
 import dalvik.system.DexClassLoader;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static com.google.classysharkandroid.utils.PackageUtils.apkCert;
 import static com.google.classysharkandroid.utils.PackageUtils.convertS;
-import static io.github.muntashirakon.AppManager.utils.IOUtils.deleteDir;
-import static io.github.muntashirakon.AppManager.utils.IOUtils.readFully;
 
 public class ClassListingActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+    private static final String APP_DEX = "app_dex";
+    private static final String EXODUS_CACHE_APK = "exodus_cache.apk";
+
     private Intent intent;
     private List<String> classList;
     private List<String> classListAll;
@@ -83,24 +83,10 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
 
     @Override
     protected void onDestroy() {
-        deleteCache(this);
-        clearApplicationData();
+        IOUtils.deleteDir(new File(getCacheDir().getParent(), APP_DEX));
+        IOUtils.deleteDir(getCodeCacheDir());
+        IOUtils.deleteDir(new File(getFilesDir(), EXODUS_CACHE_APK));
         super.onDestroy();
-    }
-
-    private void clearApplicationData() {
-        String appCacheDirStr = getCacheDir().getParent();
-        if (appCacheDirStr == null) return;
-        File appCacheDir = new File(appCacheDirStr);
-        if (appCacheDir.exists()) {
-            String[] children = appCacheDir.list();
-            if (children == null) return;
-            for (String s : children) {
-                if (!s.equals("lib")) {
-                    deleteDir(new File(appCacheDir, s));
-                }
-            }
-        }
     }
 
     @Override
@@ -152,7 +138,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
             signatures = StaticDataset.getTrackerCodeSignatures();
             try {
                 InputStream uriStream = UriUtils.getStreamFromUri(ClassListingActivity.this, uriFromIntent);
-                final byte[] bytes = readFully(uriStream, -1, true);
+                final byte[] bytes = IOUtils.readFully(uriStream, -1, true);
                 uriStream.close();
                 new Thread(() -> {
                     try {
@@ -166,7 +152,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                     if (intent != null && intent.getAction() != null) {
                         if (intent.getAction().equals(Intent.ACTION_VIEW)) {
                             String archiveFilePath = UriUtils.pathUriCache(getApplicationContext(),
-                                    uriFromIntent, "cache.apk");
+                                    uriFromIntent, EXODUS_CACHE_APK);
                             if (archiveFilePath != null)
                                 mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
                         }
@@ -197,17 +183,6 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                 ActivityCompat.finishAffinity(this);
             }
         }).start();
-    }
-
-    public static void deleteCache(Context context) {
-        try {
-            File dir = context.getCacheDir();
-            deleteDir(dir);
-            if (Build.VERSION.SDK_INT >= 21) {
-                dir = context.getCodeCacheDir();
-                deleteDir(dir);
-            }
-        } catch (Exception e) { e.printStackTrace();}
     }
 
     @Override

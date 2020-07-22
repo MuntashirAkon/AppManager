@@ -41,7 +41,7 @@ public class UriUtils {
 
     @Nullable
     public static String pathUriCache(@NonNull Context context, Uri uri, String nCache) {
-        File f = new File(context.getCacheDir(), nCache);
+        File f = new File(context.getFilesDir(), nCache);
         try {
             FileOutputStream fos = new FileOutputStream(f);
             InputStream is = context.getContentResolver().openInputStream(uri);

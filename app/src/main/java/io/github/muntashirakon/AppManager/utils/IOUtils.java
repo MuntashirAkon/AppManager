@@ -66,17 +66,13 @@ public final class IOUtils {
         if (dir != null && dir.isDirectory()) {
             String[] children = dir.list();
             if (children == null) return false;
-            for (String child : children) {
+            for (String child: children) {
                 boolean success = deleteDir(new File(dir, child));
-                if (!success) {
-                    return false;
-                }
+                if (!success) return false;
             }
             return dir.delete();
-        } else if(dir!= null && dir.isFile()) {
+        } else if(dir != null && dir.isFile()) {
             return dir.delete();
-        } else {
-            return false;
-        }
+        } else return false;
     }
 }
