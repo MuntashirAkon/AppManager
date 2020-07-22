@@ -59,8 +59,6 @@ import androidx.annotation.StringRes;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
@@ -120,11 +118,9 @@ public class AppInfoFragment extends Fragment
         setHasOptionsMenu(true);
         mActivity = (AppDetailsActivity) requireActivity();
         mainModel = mActivity.model;
-        if (mainModel == null)
-            mainModel = ViewModelProvider.AndroidViewModelFactory.getInstance(AppManager.getInstance()).create(AppDetailsViewModel.class);
         mPackageName = mainModel.getPackageName();
         if (mPackageName == null) {
-            mainModel.setPackageName(mActivity.getIntent().getStringExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME));
+            mainModel.setPackageInfo(false);
             mPackageName = mainModel.getPackageName();
         }
         mPackageManager = mActivity.getPackageManager();
@@ -147,7 +143,7 @@ public class AppInfoFragment extends Fragment
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_app_info_actions, menu);
+        if (!mainModel.getIsExternalApk()) inflater.inflate(R.menu.fragment_app_info_actions, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -239,7 +235,7 @@ public class AppInfoFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        mActivity.searchView.setVisibility(View.GONE);
+        if (mActivity.searchView != null) mActivity.searchView.setVisibility(View.GONE);
     }
 
     @Override
@@ -297,70 +293,74 @@ public class AppInfoFragment extends Fragment
 
     private void setHorizontalView() {
         mHorizontalLayout.removeAllViews();
-        // Set open
-        final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
-        if (launchIntentForPackage != null) {
-            addToHorizontalLayout(R.string.launch_app, R.drawable.ic_open_in_new_black_24dp)
-                    .setOnClickListener(v -> startActivity(launchIntentForPackage));
+        if (!mainModel.getIsExternalApk()) {
+            // Set open
+            final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
+            if (launchIntentForPackage != null) {
+                addToHorizontalLayout(R.string.launch_app, R.drawable.ic_open_in_new_black_24dp)
+                        .setOnClickListener(v -> startActivity(launchIntentForPackage));
+            }
+            // Set uninstall
+            addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
+                final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+                if (AppPref.isRootEnabled()) {
+                    new MaterialAlertDialogBuilder(mActivity, R.style.AppTheme_AlertDialog)
+                            .setTitle(mPackageLabel)
+                            .setMessage(isSystemApp ?
+                                    R.string.uninstall_system_app_message : R.string.uninstall_app_message)
+                            .setPositiveButton(R.string.uninstall, (dialog, which) -> new Thread(() -> {
+                                // Try without root first then with root
+                                if (RunnerUtils.uninstallPackage(mPackageName).isSuccessful()) {
+                                    runOnUiThread(() -> {
+                                        Toast.makeText(mActivity, String.format(getString(R.string.uninstalled_successfully), mPackageLabel), Toast.LENGTH_LONG).show();
+                                        mActivity.finish();
+                                    });
+                                } else {
+                                    runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_uninstall), mPackageLabel), Toast.LENGTH_LONG).show());
+                                }
+                            }).start())
+                            .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                                if (dialog != null) dialog.cancel();
+                            })
+                            .show();
+                } else {
+                    Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
+                    uninstallIntent.setData(Uri.parse("package:" + mPackageName));
+                    startActivity(uninstallIntent);
+                }
+            });
+            // Enable/disable app (root only)
+            if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
+                if (mApplicationInfo.enabled) {
+                    // Disable app
+                    addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> new Thread(() -> {
+                        if (!RunnerUtils.disablePackage(mPackageName).isSuccessful()) {
+                            runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_disable), mPackageLabel), Toast.LENGTH_LONG).show());
+                        }
+                    }).start());
+                } else {
+                    // Enable app
+                    addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> new Thread(() -> {
+                        if (!RunnerUtils.enablePackage(mPackageName).isSuccessful()) {
+                            runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_enable), mPackageLabel), Toast.LENGTH_LONG).show());
+                        }
+                    }).start());
+                }
+                // Force stop
+                if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
+                    addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> new Thread(() -> {
+                        if (RunnerUtils.forceStopPackage(mPackageName).isSuccessful()) {
+                            // Refresh
+                            runOnUiThread(() -> mainModel.setIsPackageChanged());
+                        } else {
+                            runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_stop), mPackageLabel), Toast.LENGTH_LONG).show());
+                        }
+                    }).start());
+                }
+            }  // End root only
+        } else {
+            // TODO: Add install/update
         }
-        // Set uninstall
-        addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
-            final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-            if (AppPref.isRootEnabled()) {
-                new MaterialAlertDialogBuilder(mActivity, R.style.AppTheme_AlertDialog)
-                        .setTitle(mPackageLabel)
-                        .setMessage(isSystemApp ?
-                                R.string.uninstall_system_app_message : R.string.uninstall_app_message)
-                        .setPositiveButton(R.string.uninstall, (dialog, which) -> new Thread(() -> {
-                            // Try without root first then with root
-                            if (RunnerUtils.uninstallPackage(mPackageName).isSuccessful()) {
-                                runOnUiThread(() -> {
-                                    Toast.makeText(mActivity, String.format(getString(R.string.uninstalled_successfully), mPackageLabel), Toast.LENGTH_LONG).show();
-                                    mActivity.finish();
-                                });
-                            } else {
-                                runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_uninstall), mPackageLabel), Toast.LENGTH_LONG).show());
-                            }
-                        }).start())
-                        .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                            if (dialog != null) dialog.cancel();
-                        })
-                        .show();
-            } else {
-                Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
-                uninstallIntent.setData(Uri.parse("package:" + mPackageName));
-                startActivity(uninstallIntent);
-            }
-        });
-        // Enable/disable app (root only)
-        if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
-            if (mApplicationInfo.enabled) {
-                // Disable app
-                addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> new Thread(() -> {
-                    if (!RunnerUtils.disablePackage(mPackageName).isSuccessful()) {
-                        runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_disable), mPackageLabel), Toast.LENGTH_LONG).show());
-                    }
-                }).start());
-            } else {
-                // Enable app
-                addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> new Thread(() -> {
-                    if (!RunnerUtils.enablePackage(mPackageName).isSuccessful()) {
-                        runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_enable), mPackageLabel), Toast.LENGTH_LONG).show());
-                    }
-                }).start());
-            }
-            // Force stop
-            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
-                addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> new Thread(() -> {
-                    if (RunnerUtils.forceStopPackage(mPackageName).isSuccessful()) {
-                        // Refresh
-                        runOnUiThread(() -> mainModel.setIsPackageChanged());
-                    } else {
-                        runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_stop), mPackageLabel), Toast.LENGTH_LONG).show());
-                    }
-                }).start());
-            }
-        }  // End root only
         // Set manifest
         addToHorizontalLayout(R.string.manifest, R.drawable.ic_tune_black_24dp).setOnClickListener(v -> {
             Intent intent = new Intent(mActivity, ManifestViewerActivity.class);
@@ -375,7 +375,7 @@ public class AppInfoFragment extends Fragment
             startActivity(newIntent);
         });
         // Root only features
-        if (AppPref.isRootEnabled()) {
+        if (!mainModel.getIsExternalApk() && AppPref.isRootEnabled()) {
             // Shared prefs (root only)
             List<String> sharedPrefs;
             sharedPrefs = getSharedPrefs(mApplicationInfo.dataDir);
@@ -465,7 +465,7 @@ public class AppInfoFragment extends Fragment
         } catch (PackageManager.NameNotFoundException ignored) {}
     }
 
-    private void setVerticalView()  {
+    private void setPathsAndDirectories() {
         // Paths and directories
         mList.addItemWithTitle(getString(R.string.paths_and_directories), true);
         mList.item_title.setTextColor(mAccentColor);
@@ -512,31 +512,9 @@ public class AppInfoFragment extends Fragment
             openAsFolderInFM(mApplicationInfo.nativeLibraryDir);
         }
         mList.addDivider();
+    }
 
-        // SDK
-        mList.addItemWithTitle(getString(R.string.sdk), true);
-        mList.item_title.setTextColor(mAccentColor);
-        mList.addInlineItem(getString(R.string.sdk_max), Integer.toString(mApplicationInfo.targetSdkVersion));
-        if (Build.VERSION.SDK_INT > 23)
-            mList.addInlineItem(getString(R.string.sdk_min), Integer.toString(mApplicationInfo.minSdkVersion));
-
-        // Set Flags
-        String flags = "";
-        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
-            flags += "FLAG_DEBUGGABLE";
-        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
-            flags += (flags.length() == 0 ? "" : "|" ) + "FLAG_TEST_ONLY";
-        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_MULTIARCH) != 0)
-            flags += (flags.length() == 0 ? "" : "|" ) + "FLAG_MULTIARCH";
-        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_HARDWARE_ACCELERATED) != 0)
-            flags += (flags.length() == 0 ? "" : "|" ) + "FLAG_HARDWARE_ACCELERATED";
-
-        if(flags.length() != 0) {
-            mList.addItemWithTitleSubtitle(getString(R.string.sdk_flags), flags, ListItemCreator.SELECTABLE);
-            mList.item_subtitle.setTypeface(Typeface.MONOSPACE);
-        }
-        mList.addDivider();
-
+    private void setMoreInfo() {
         mList.addItemWithTitle(getString(R.string.more_info), true);
         mList.item_title.setTextColor(mAccentColor);
         mList.addItemWithTitleSubtitle(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime), ListItemCreator.NO_ACTION);
@@ -565,6 +543,39 @@ public class AppInfoFragment extends Fragment
             }
         }
         mList.addDivider();
+    }
+
+    private void setVerticalView()  {
+        // Set paths and directories
+        if (!mainModel.getIsExternalApk()) setPathsAndDirectories();
+        // SDK
+        mList.addItemWithTitle(getString(R.string.sdk), true);
+        mList.item_title.setTextColor(mAccentColor);
+        mList.addInlineItem(getString(R.string.sdk_max), Integer.toString(mApplicationInfo.targetSdkVersion));
+        if (Build.VERSION.SDK_INT > 23)
+            mList.addInlineItem(getString(R.string.sdk_min), Integer.toString(mApplicationInfo.minSdkVersion));
+
+        // Set Flags
+        String flags = "";
+        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
+            flags += "FLAG_DEBUGGABLE";
+        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
+            flags += (flags.length() == 0 ? "" : "|" ) + "FLAG_TEST_ONLY";
+        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_MULTIARCH) != 0)
+            flags += (flags.length() == 0 ? "" : "|" ) + "FLAG_MULTIARCH";
+        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_HARDWARE_ACCELERATED) != 0)
+            flags += (flags.length() == 0 ? "" : "|" ) + "FLAG_HARDWARE_ACCELERATED";
+
+        if(flags.length() != 0) {
+            mList.addItemWithTitleSubtitle(getString(R.string.sdk_flags), flags, ListItemCreator.SELECTABLE);
+            mList.item_subtitle.setTypeface(Typeface.MONOSPACE);
+        }
+        mList.addDivider();
+
+        if (mainModel.getIsExternalApk()) return;
+
+        // Set more info
+        setMoreInfo();
 
         // Net statistics
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
