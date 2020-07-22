@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.Spanned;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -18,12 +19,14 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.text.HtmlCompat;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.fragments.ImportExportDialogFragment;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class SettingsActivity extends AppCompatActivity {
     private static List<Integer> themeConst = Arrays.asList(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM, AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY, AppCompatDelegate.MODE_NIGHT_NO, AppCompatDelegate.MODE_NIGHT_YES);
@@ -104,6 +107,16 @@ public class SettingsActivity extends AppCompatActivity {
                     "%s (%d)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
             new FullscreenDialog(this).setTitle(R.string.about).setView(view).show();
             });
+
+        findViewById(R.id.changelog_view).setOnClickListener(v -> new Thread(() -> {
+            final Spanned spannedChangelog = HtmlCompat.fromHtml(Utils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
+            runOnUiThread(() ->
+                    new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                            .setTitle(R.string.changelog)
+                            .setMessage(spannedChangelog)
+                            .setNegativeButton(android.R.string.ok, null)
+                            .show());
+        }).start());
     }
 
     @Override

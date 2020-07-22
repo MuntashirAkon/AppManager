@@ -63,6 +63,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_one_click_ops"
+        android:icon="@drawable/ic_outline_plus_one_24"
+        android:title="@string/one_click_ops" />
+
+    <item
         android:id="@+id/action_app_usage"
         android:icon="@drawable/ic_data_usage_black_24dp"
         android:title="@string/app_usage" />

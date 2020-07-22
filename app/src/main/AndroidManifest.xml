@@ -19,6 +19,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activities.OneClickOpsActivity"
+            android:exported="false"
+            android:label="@string/one_click_ops" />
+        <activity
             android:name=".activities.RunningAppsActivity"
             android:exported="false"
             android:label="@string/running_apps" />

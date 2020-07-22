@@ -1,0 +1,83 @@
+<h5>v2.5.9 (315):</h5>
+<ul>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Merged App Info as a single tab in App Details</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added option to reset all app ops</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added option to revoke all dangerous app ops/permissions</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Highlight trackers in the component tabs</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added option to save manifest and class dump</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added the ability to grant/revoke development permissions</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added sorting options for components, app ops and uses permissions tabs</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added sort by wifi usage in the App Usage window</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added launch button in the App Info tab</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added never ask option to usage status prompt</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added long click to select apps in the main window</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added changelog within the app</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Click to select apps during selection mode</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Improved component blocker</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Improved manifest loading for large apps</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Improved tab loading performance</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Fixed app ops checking and custom app ops for some devices</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Disabled activity opening for disabled activities</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Get real activity name for activities that use activity-alias</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Fixed background colors</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Fixed crashing when loading the services tab for non-root users</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Fixed back button for class viewer which was not working</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Changed block icon's colour to accent colour</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Removed translation until the app is complete</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Made links in the credit section clickable</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Fixed various memory leaks</li>
+</ul><br/>
+
+<h5>v2.5.8 (289):</h5>
+<ul>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added import/export capabilities for blocking rules</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added ability to select themes (night/day)</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added mode, duration, accept time, reject time for app ops</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Highlight running services</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Highlight disabled components not disabled within App Manager</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added swipe to refresh in the App Usage window</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added screen time percentage with indicator</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Separate instructions and about pages with fullscreen dialog for both</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Rounded overflow menu (still incomplete)</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Fixed various device/SDK specific app ops issues</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Stability improvements of the entire apps</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Added <tt>ACCESS_NETWORK_STATE</tt> permission to support older operating systems</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Fixed deleting all IFW rules when selecting apply global rules</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Fixed various search issues</li>
+</ul><br/>
+
+<h5>v2.5.7 (265):</h5>
+<ul>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Initial support for ADB over TCP (port 5555) for non-root users</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Fixed importing rules from Watt and Blocker</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Display Aurora Droid in App Info window as a first priority over F-Droid</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Improved performance for component blocking</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Fixed app op mode detection issue</li>
+</ul>
+<p>
+    <b>For root users:</b> If you've skipped v2.5.6, you may need to apply all rules globally in Settings in order for them to work.
+</p><br/>
+
+<h5>v2.5.6 (233):</h5>
+<ul>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Batch operations in the main window: clear app data, disable run in background, disable/kill/uninstall apps (click on the app icon to select)</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Full support of Blocker's exported files which was broken due to a bug on Blocker app</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Reimplementation of blocking activities, receivers, services and providers</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Removed ConstraintLayout dependency therefore a potential decrease in app size</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Fixed duplicate app usage warning in the App Info window</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Fixed crash when an app icon is not found in App Details window</li>
+</ul>
+<p>
+    <b>Note for root users:</b> In order to ensure that the previous blocking rules are preserved with the new blocking implementation, this update reads from the previous rules consequently increasing the loading time in the main window. This feature will be removed in the next release but can still be simulated by applying global rules in settings.
+</p><br/>
+
+<h5>v2.5.5 (215):</h5>
+<ul>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added running apps/process viewer (requires root)</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added usage details viewer</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Added apk updater and aurora store support</li>
+    <li>&nbsp;<font color="#09868B">[Feature]</font> Save modified values of app ops and permissions to the disk (on progress)</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Uninstall support for non-root users</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Restructure app usage</li>
+    <li>&nbsp;<font color="red">[Fix]</font> Added more clarity as well as improve performance in the app details window</li>
+</ul>

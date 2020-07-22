@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.text.style.RelativeSizeSpan;
@@ -68,10 +69,12 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SearchView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.text.HtmlCompat;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.MainLoader;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
@@ -213,6 +216,9 @@ public class MainActivity extends AppCompatActivity implements
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
+
+        checkFirstRun();
+        checkAppUpdate();
 
         mBatchOpsManager = new BatchOpsManager(this);
 
@@ -396,6 +402,10 @@ public class MainActivity extends AppCompatActivity implements
                 Intent usageIntent = new Intent(this, AppUsageActivity.class);
                 startActivity(usageIntent);
                 return true;
+            case R.id.action_one_click_ops:
+                Intent onClickOpsIntent = new Intent(this, OneClickOpsActivity.class);
+                startActivity(onClickOpsIntent);
+                return true;
             case R.id.action_apk_updater:
                 try {
                     if(!getPackageManager().getApplicationInfo(PACKAGE_NAME_APK_UPDATER, 0).enabled)
@@ -500,6 +510,38 @@ public class MainActivity extends AppCompatActivity implements
             if (mSortBy == SORT_BY_BLOCKED_COMPONENTS) mSortBy = SORT_BY_APP_LABEL;
             if (runningAppsMenu != null) runningAppsMenu.setVisible(false);
             if (sortByBlockedComponentMenu != null) sortByBlockedComponentMenu.setVisible(false);
+        }
+    }
+
+    private void checkFirstRun() {
+        if (Utils.isAppInstalled()) {
+            new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                    .setTitle(R.string.instructions)
+                    .setView(R.layout.dialog_instructions)
+                    .setNegativeButton(android.R.string.ok, null)
+                    .show();
+            AppPref.getInstance().setPref(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
+        }
+    }
+
+    private void checkAppUpdate() {
+        if (Utils.isAppUpdated()) {
+            new Thread(() -> {
+                final Spanned spannedChangelog = HtmlCompat.fromHtml(Utils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
+                runOnUiThread(() ->
+                        new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                                .setTitle(R.string.changelog)
+                                .setMessage(spannedChangelog)
+                                .setNegativeButton(android.R.string.ok, null)
+                                .setNeutralButton(R.string.instructions, (dialog, which) -> {
+                                    new FullscreenDialog(this)
+                                            .setTitle(R.string.instructions)
+                                            .setView(R.layout.dialog_instructions)
+                                            .show();
+                                })
+                                .show());
+            }).start();
+            AppPref.getInstance().setPref(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
         }
     }
 
@@ -657,6 +699,8 @@ public class MainActivity extends AppCompatActivity implements
         private static int mColorTransparent;
         private static int mColorSemiTransparent;
         private static int mColorHighlight;
+        private static int mColorDisabled;
+        private static int mColorStopped;
         private static int mColorOrange;
         private static int mColorPrimary;
         private static int mColorSecondary;
@@ -669,6 +713,8 @@ public class MainActivity extends AppCompatActivity implements
             mColorTransparent = Color.TRANSPARENT;
             mColorSemiTransparent = ContextCompat.getColor(mActivity, R.color.semi_transparent);
             mColorHighlight = ContextCompat.getColor(mActivity, R.color.highlight);
+            mColorDisabled = ContextCompat.getColor(mActivity, R.color.disabled_user);
+            mColorStopped = ContextCompat.getColor(mActivity, R.color.stopped);
             mColorOrange = ContextCompat.getColor(mActivity, R.color.orange);
             mColorPrimary = Utils.getThemeColor(mActivity, android.R.attr.textColorPrimary);
             mColorSecondary = Utils.getThemeColor(mActivity, android.R.attr.textColorSecondary);
@@ -763,8 +809,7 @@ public class MainActivity extends AppCompatActivity implements
             // Alternate background colors: selected > disabled > regular
             if (mPackageNames.contains(info.packageName))
                 holder.mainView.setBackgroundColor(mColorHighlight);
-            else if (!info.enabled)
-                holder.mainView.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.disabled_user));
+            else if (!info.enabled) holder.mainView.setBackgroundColor(mColorDisabled);
             else holder.mainView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
             // Add yellow star if the app is in debug mode
             holder.favorite_icon.setVisibility(item.star ? View.VISIBLE : View.INVISIBLE);
@@ -824,9 +869,9 @@ public class MainActivity extends AppCompatActivity implements
                 // Highlight searched query
                 holder.packageName.setText(Utils.getHighlightedText(info.packageName, mConstraint, mColorRed));
             } else holder.packageName.setText(info.packageName);
-            // Set package name color to blue if the app is in stopped/force closed state
+            // Set package name color to dark cyan if the app is in stopped/force closed state
             if ((info.flags & ApplicationInfo.FLAG_STOPPED) != 0)
-                holder.packageName.setTextColor(ContextCompat.getColor(mActivity, R.color.stopped));
+                holder.packageName.setTextColor(mColorStopped);
             else holder.packageName.setTextColor(mColorSecondary);
             // Set version (along with HW accelerated, debug and test only flags)
             CharSequence version = holder.version.getText();
@@ -834,12 +879,12 @@ public class MainActivity extends AppCompatActivity implements
             if ((info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0) version = "debug" + version;
             if ((info.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0) version = "~" + version;
             holder.version.setText(version);
-            // Set version color to green if the app is inactive
+            // Set version color to dark cyan if the app is inactive
             if (Build.VERSION.SDK_INT >= 23) {
                 UsageStatsManager mUsageStats;
                 mUsageStats = mActivity.getSystemService(UsageStatsManager.class);
                 if (mUsageStats != null && mUsageStats.isAppInactive(info.packageName))
-                    holder.version.setTextColor(ContextCompat.getColor(mActivity, R.color.stopped));
+                    holder.version.setTextColor(mColorStopped);
                 else holder.version.setTextColor(mColorSecondary);
             }
             // Set app type: system or user app (along with large heap, suspended, multi-arch,

@@ -503,4 +503,6 @@
     <string name="failed_to_deny_dangerous_app_ops">Failed to deny all dangerous app ops</string>
     <string name="launch_app">Launch</string>
     <string name="never_ask">Never ask</string>
+    <string name="one_click_ops">1-Click Ops</string>
+    <string name="changelog">Changelog</string>
 </resources>

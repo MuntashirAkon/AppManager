@@ -21,6 +21,7 @@ public class AppPref {
     private static final int PREF_SKIP = 5;
 
     public enum PrefKey {
+        // Keep this in sync with getDefaultValue(PrefKey)
         PREF_ADB_MODE_ENABLED_BOOL,
         PREF_APP_THEME_INT,
         PREF_ENABLE_KILL_FOR_SYSTEM_BOOL,

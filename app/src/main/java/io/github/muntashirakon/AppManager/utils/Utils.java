@@ -31,10 +31,13 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -58,6 +61,7 @@ import javax.xml.xpath.XPathFactory;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
 
@@ -190,6 +194,24 @@ public class Utils {
         } catch (FileNotFoundException e) {
             return emptyValue;
         }
+    }
+
+    @NonNull
+    public static String getContentFromAssets(@NonNull Context context, String fileName) {
+        try {
+            InputStream inputStream = context.getResources().getAssets().open(fileName);
+            byte[] buffer = new byte[1024];
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            for (int length = inputStream.read(buffer); length != -1; length = inputStream.read(buffer)) {
+                outputStream.write(buffer, 0, length);
+            }
+            inputStream.close();
+            outputStream.close();
+            return new String(outputStream.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     @NonNull
@@ -650,5 +672,15 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    public static boolean isAppUpdated() {
+        long newVersionCode = BuildConfig.VERSION_CODE;
+        long oldVersionCode = (long) AppPref.get(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG);
+        return oldVersionCode != 0 && oldVersionCode < newVersionCode;
+    }
+
+    public static boolean isAppInstalled() { // or data cleared
+        return (long) AppPref.get(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG) == 0;
     }
 }
