@@ -146,11 +146,6 @@ public class AppInfoFragment extends Fragment
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        getPackageInfoOrFinish();
-    }
-
-    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_app_info_actions, menu);
         super.onCreateOptionsMenu(menu, inflater);
@@ -160,8 +155,7 @@ public class AppInfoFragment extends Fragment
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_detail:
-                Toast.makeText(mActivity, getString(R.string.refresh), Toast.LENGTH_SHORT).show();
-                getPackageInfoOrFinish();
+                mainModel.setIsPackageChanged();
                 return true;
             case R.id.action_share_apk:
                 try {
@@ -226,8 +220,19 @@ public class AppInfoFragment extends Fragment
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mainModel.getIsPackageChanged().observe(this, isPackageChanged -> {
+            //noinspection ConstantConditions
+            if (isPackageChanged && mainModel.getIsPackageExist().getValue()) getPackageInfo();
+        });
+        // First load
+        mainModel.setIsPackageChanged();
+    }
+
+    @Override
     public void onRefresh() {
-        getPackageInfoOrFinish();
+        mainModel.setIsPackageChanged();
         mSwipeRefresh.setRefreshing(false);
     }
 
@@ -235,7 +240,6 @@ public class AppInfoFragment extends Fragment
     public void onResume() {
         super.onResume();
         mActivity.searchView.setVisibility(View.GONE);
-        getPackageInfoOrFinish();  // FIXME: Use broadcast receiver instead of refreshing on each resume
     }
 
     @Override
@@ -333,20 +337,14 @@ public class AppInfoFragment extends Fragment
             if (mApplicationInfo.enabled) {
                 // Disable app
                 addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> new Thread(() -> {
-                    if (RunnerUtils.disablePackage(mPackageName).isSuccessful()) {
-                        // Refresh
-                        runOnUiThread(this::getPackageInfoOrFinish);
-                    } else {
+                    if (!RunnerUtils.disablePackage(mPackageName).isSuccessful()) {
                         runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_disable), mPackageLabel), Toast.LENGTH_LONG).show());
                     }
                 }).start());
             } else {
                 // Enable app
                 addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> new Thread(() -> {
-                    if (RunnerUtils.enablePackage(mPackageName).isSuccessful()) {
-                        // Refresh
-                        runOnUiThread(this::getPackageInfoOrFinish);
-                    } else {
+                    if (!RunnerUtils.enablePackage(mPackageName).isSuccessful()) {
                         runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_enable), mPackageLabel), Toast.LENGTH_LONG).show());
                     }
                 }).start());
@@ -356,7 +354,7 @@ public class AppInfoFragment extends Fragment
                 addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> new Thread(() -> {
                     if (RunnerUtils.forceStopPackage(mPackageName).isSuccessful()) {
                         // Refresh
-                        runOnUiThread(this::getPackageInfoOrFinish);
+                        runOnUiThread(() -> mainModel.setIsPackageChanged());
                     } else {
                         runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_stop), mPackageLabel), Toast.LENGTH_LONG).show());
                     }
@@ -551,7 +549,10 @@ public class AppInfoFragment extends Fragment
         mList.addItemWithTitleSubtitle(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime), ListItemCreator.NO_ACTION);
         if(!mPackageName.equals(mApplicationInfo.processName))
             mList.addItemWithTitleSubtitle(getString(R.string.process_name), mApplicationInfo.processName, ListItemCreator.NO_ACTION);
-        String installerPackageName = mPackageManager.getInstallerPackageName(mPackageName);
+        String installerPackageName = null;
+        try {
+            installerPackageName = mPackageManager.getInstallerPackageName(mPackageName);
+        } catch (IllegalArgumentException ignore) {}
         if (installerPackageName != null) {
             String applicationLabel = mApplicationInfo.loadLabel(mPackageManager).toString();
             mList.addItemWithTitleSubtitle(getString(R.string.installer_app), applicationLabel, ListItemCreator.SELECTABLE);
@@ -707,7 +708,7 @@ public class AppInfoFragment extends Fragment
             mList.setOpen(v -> new Thread(() -> {
                 // Clear data
                 if (RunnerUtils.clearPackageData(mPackageName).isSuccessful()) {
-                    runOnUiThread(this::getPackageInfoOrFinish);
+                    runOnUiThread(() -> mainModel.setIsPackageChanged());
                 }
             }).start());
             mList.item_open.setImageDrawable(mActivity.getDrawable(R.drawable.ic_delete_black_24dp));
@@ -715,7 +716,7 @@ public class AppInfoFragment extends Fragment
         // Cache size
         mList.addItemWithTitleSubtitle(getString(R.string.cache_size), getReadableSize(cacheSize),
                 ListItemCreator.SELECTABLE);
-        if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
+        if (AppPref.isRootEnabled()) {
             mList.setOpen(v -> new Thread(() -> {
                 StringBuilder command = new StringBuilder(String.format("rm -rf %s/cache %s/code_cache",
                         mApplicationInfo.dataDir, mApplicationInfo.dataDir));
@@ -731,7 +732,7 @@ public class AppInfoFragment extends Fragment
                     command.append(" ").append(extCache);
                 }
                 if (Runner.runCommand(command.toString()).isSuccessful()) {
-                    runOnUiThread(this::getPackageInfoOrFinish);
+                    runOnUiThread(() -> mainModel.setIsPackageChanged());
                 }
             }).start());
             mList.item_open.setImageDrawable(mActivity.getDrawable(R.drawable.ic_delete_black_24dp));
@@ -752,44 +753,22 @@ public class AppInfoFragment extends Fragment
     /**
      * Get package info.
      */
-    private void getPackageInfoOrFinish() {
+    private void getPackageInfo() {
         mProgressIndicator.show();
         new Thread(() -> {
-            try {
-                final int signingCertFlag;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    signingCertFlag = PackageManager.GET_SIGNING_CERTIFICATES;
-                } else {
-                    signingCertFlag = PackageManager.GET_SIGNATURES;
-                }
-                mPackageInfo = mPackageManager.getPackageInfo(mPackageName, PackageManager.GET_PERMISSIONS
-                        | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                        | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
-                        | signingCertFlag | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
-
-                if (mPackageInfo == null) {
-                    runOnUiThread(() -> {
-                        Toast.makeText(mActivity, this.mPackageName + ": " + getString(R.string.app_not_installed), Toast.LENGTH_LONG).show();
-                        mActivity.finish();
-                    });
-                    return;
-                }
-
-                mApplicationInfo = mPackageInfo.applicationInfo;
-                mPackageLabel = mApplicationInfo.loadLabel(mPackageManager);
-
-                runOnUiThread(() -> {
-                    // ListItemCreator instance
-                    mList = new ListItemCreator(mActivity, R.id.details_container, true);
-                });
-                // (Re)load views
-                runOnUiThread(this::setHeaderView);
-                runOnUiThread(this::setHorizontalView);
-                runOnUiThread(this::setVerticalView);
-                runOnUiThread(() -> mProgressIndicator.hide());
-            } catch (PackageManager.NameNotFoundException e) {
-                runOnUiThread(mActivity::finish);
-            }
+            mPackageInfo = mainModel.getPackageInfo();
+            if (mPackageInfo == null) return;
+            mApplicationInfo = mPackageInfo.applicationInfo;
+            mPackageLabel = mApplicationInfo.loadLabel(mPackageManager);
+            runOnUiThread(() -> {
+                // ListItemCreator instance
+                mList = new ListItemCreator(mActivity, R.id.details_container, true);
+            });
+            // (Re)load views
+            runOnUiThread(this::setHeaderView);
+            runOnUiThread(this::setHorizontalView);
+            runOnUiThread(this::setVerticalView);
+            runOnUiThread(() -> mProgressIndicator.hide());
         }).start();
     }
 

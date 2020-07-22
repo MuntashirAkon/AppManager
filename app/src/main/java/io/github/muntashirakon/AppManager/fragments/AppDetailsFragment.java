@@ -289,7 +289,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     } else {
                         runOnUiThread(() -> {
                             Toast.makeText(mActivity, R.string.trackers_disabled_successfully, Toast.LENGTH_SHORT).show();
-                            if (mAdapter != null) mainModel.load(neededProperty);
+                            if (mAdapter != null) mainModel.setIsPackageChanged();
                         });
                     }
                     runOnUiThread(() -> mainModel.setRuleApplicationStatus());
@@ -308,7 +308,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     if (mainModel == null || !mainModel.ignoreDangerousAppOps()) {
                         runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_deny_dangerous_app_ops, Toast.LENGTH_SHORT).show());
                     }
-                    runOnUiThread(() -> mainModel.load(neededProperty));
+                    runOnUiThread(() -> mainModel.setIsPackageChanged());
                 }).start();
                 return true;
             case R.id.action_deny_dangerous_permissions:  // permissions
@@ -317,7 +317,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     if (mainModel == null || !mainModel.revokeDangerousPermissions()) {
                         runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_deny_dangerous_perms, Toast.LENGTH_SHORT).show());
                     }
-                    runOnUiThread(() -> mainModel.load(neededProperty));
+                    runOnUiThread(() -> mainModel.setIsPackageChanged());
                 }).start();
                 return true;
             // Sorting
@@ -366,6 +366,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         View.GONE : View.VISIBLE);
             }
         });
+        mainModel.getIsPackageChanged().observe(this, isPackageChanged -> {
+            //noinspection ConstantConditions
+            if (isPackageChanged && mainModel.getIsPackageExist().getValue()) mainModel.load(neededProperty);
+        });
     }
 
     @Override
@@ -375,7 +379,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         if (neededProperty > APP_INFO && neededProperty <= PERMISSIONS) {
             mActivity.searchView.setVisibility(View.VISIBLE);
             mActivity.searchView.setOnQueryTextListener(this);
-            if (mainModel != null) mainModel.load(neededProperty);
         } else mActivity.searchView.setVisibility(View.GONE);
     }
 
@@ -424,7 +427,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private void refreshDetails() {
         if (mAdapter != null) {
             showProgressIndicator(true);
-            mainModel.load(neededProperty);
+            mainModel.setIsPackageChanged();
         }
     }
 

@@ -45,7 +45,7 @@ public class AppDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_details);
         setSupportActionBar(findViewById(R.id.toolbar));
-        String packageName = getIntent().getStringExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME);
+        final String packageName = getIntent().getStringExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME);
         if (packageName == null) {
             Toast.makeText(this, getString(R.string.empty_package_name), Toast.LENGTH_LONG).show();
             finish();
@@ -85,6 +85,13 @@ public class AppDetailsActivity extends AppCompatActivity {
         }
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
+        // Check for the existence of package
+        model.getIsPackageExist().observe(this, isPackageExist -> {
+            if (!isPackageExist) {
+                Toast.makeText(this, packageName + ": " + getString(R.string.app_not_installed), Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
     }
 
     @SuppressLint("RestrictedApi")
