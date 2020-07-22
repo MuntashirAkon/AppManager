@@ -325,109 +325,129 @@
     </string>
     <string name="main_window">Main Window</string>
     <string name="main_window_description">Main window lists all the installed apps (or a list of
-        apps supplied by any third-party application). A simple click on any app item opens the
-        respective <i>App Info</i> window and a long click opens the <i>App Details</i> window.
-        Using the sort option from the menu, the app items can be sorted in various ways and kept it
-        as such. Batch operations such as disabling, uninstalling, killing, disabling run in
-        background, exporting blocking rules and clearing data from apps are also available within
-        this window (most these operations require root or ADB).
+        apps supplied by any third-party application). A single click on any app item opens the
+        respective <b>App Details</b> window. Using the sort option from the menu, the app items can
+        be sorted in various ways and preserved on close.
+
+        \n\nBatch operations or operation on multiple apps are also available within this window
+        (most these operations require root or ADB). To enable multiple selection mode, click on any
+        app icon or long click on any app. After that you can use the regular click to select apps
+        instead of opening the <b>App Details</b> window. These operations include:
+        \n\u2022 Disable/uninstall/kill apps
+        \n\u2022 Disable run in background, ads and trackers
+        \n\u2022 Export blocking rules
+        \n\u2022 Clear data from apps
 
         \n\nList of colors used in this window and their meaning:
+        \n\u2022 <font bgcolor="#FFFCEED1" fgcolor="#DE000000"> Light grayish orange (day) </font>
+            or <font bgcolor="#FF091F36" fgcolor="#FFAAAAAA"> dark blue (night) </font> background:
+            App selected for batch operation
+        \n\u2022 <font bgcolor="#FFFF8A80" fgcolor="#DE000000"> Light red (day) </font> or <font
+            bgcolor="#BF4F1C14" fgcolor="#FFAAAAAA"> very dark red (night) </font> background:
+            Disabled app
+        \n\u2022 <font bgcolor="yellow" fgcolor="#DE000000"> Yellow </font> <i>Star</i>: App is in debug mode
+        \n\u2022 <font fgcolor="#FFE05915">Orange</font> <i>Date</i>: App can read logs (permission granted)
+        \n\u2022 <font fgcolor="#FFE05915">Orange</font> <i>UID</i>: User ID is being shared between apps
         \n\u2022 <font fgcolor="red">Red</font>: App does not allow clearing data
+        \n\u2022 <font fgcolor="#FF09868B">Dark cyan</font> <i>Package name</i>: Stopped or forced closed app
+        \n\u2022 <font fgcolor="#FF09868B">Dark cyan</font> <i>Version</i>: Inactive app
         \n\u2022 <font fgcolor="magenta">Magenta</font>: Persistent app ie., remains running all the
-        time
-        \n\u2022 <font fgcolor="#FF09868B">Blue-green</font> <i>Package name</i>: Stopped or forced closed app
-        \n\u2022 <font fgcolor="#FF09868B">Blue-green</font> <i>Version</i>: Inactive app
-        \n\u2022 <font fgcolor="#FFE05915">Orange</font> <i>Date</i>: App can read logs
-        \n\u2022 <font fgcolor="#FFE05915">Orange</font> <i>UID</i>: App has shared user ID
-        \n\u2022 <font fgcolor="#FFE05915">Orange</font> <i>SDK</i>: Uses cleartext (ie. HTTP)
-        traffic
-        \n\u2022 <font bgcolor="#FFFF8A80" fgcolor="#DE000000"> Salmon (day) </font> or
-        <font bgcolor="#BF4F1C14" fgcolor="#FFAAAAAA"> dark red (night) </font> background: Disabled app
-        \n\u2022 <font bgcolor="yellow"> Yellow </font> <i>Star</i>: App is in debug mode
+            time
+        \n\u2022 <font fgcolor="#FFE05915">Orange</font> <i>SDK/Size</i>: Uses cleartext (ie. HTTP)
+            traffic
 
         \n\nAn app can be either <b>User</b> or <b>System</b> app along with the following codes:
         \n\u2022 <i>X</i>: Multi architecture: 32-bit, 64-bit or arm-v7, arm-v8, etc.
         \n\u2022 <i>0</i>: App does not have code with it
         \n\u2022 <i>°</i>: App is in suspended state
         \n\u2022 <i>#</i>: App has requested a large heap
-        \n\u2022 <i>?</i>: Whether the app has requested VM in safe mode
+        \n\u2022 <i>?</i>: App has requested VM in safe mode
 
         \n\nVersion can have the following prefixes:
         \n\u2022 <i>_</i>: No hardware acceleration
         \n\u2022 <i>~</i>: Test only mode
         \n\u2022 <i>debug</i>: Debuggable app\n
 
-        \nApp usage statistics such as screen time, data usage (mobile and Wifi), number of
-        times an app was opened can be accessed by clicking on the <i>App Usage</i> option in the
-        menu (requires <i>Usage Access</i> permission). A list of running apps or processes can also
-        be viewed by clicking on the <i>Running Apps</i> option in the menu (requires root or ADB).
-        These apps or processes can also be force-closed or killed within the resultant window.
+        \nApp usage statistics such as screen time, data usage (mobile and Wifi), number of times an
+        app was opened can be accessed by clicking on the <b>App Usage</b> option in the menu
+        (requires <i>Usage Access</i> permission). A list of running apps or processes can also be
+        viewed by clicking on the <b>Running Apps</b> option in the menu (requires root or ADB).
+        Running apps or processes can also be force-closed or killed within the resultant window.
 
-        \n\nIf you have the app <i>APK Updater</i> installed, there is link in the menu which can be
+        \n\nIf you have the app <b>APK Updater</b> installed, there is link in the menu which can be
         used to open the app directly.
     </string>
-    <string name="app_info_window">App Info Window</string>
-    <string name="app_info_window_description">App Info window contains general information about
-        the app such as app directories, data directories, sdk version, install date, last update
-        date, installer app, data usage, app size, data size, cache size (some of these information
+    <string name="app_details_window">App Details Window</string>
+    <string name="app_details_window_description">App Info tab contains general information about the
+        app such as app directories, data directories, sdk version, install date, last update date,
+        installer app, data usage, app size, data size, cache size (some of these information
         require <i>Usage Access</i> permission). It also has the ability to perform many actions,
         some of which are listed below:
-        \n\u2022 Uninstall/enable/disable/force-stop (some operations require root or ADB)
+        \n\u2022 Launch/uninstall/enable/disable/force-stop (some operations require root or ADB)
         \n\u2022 View dynamic manifest
-        \n\u2022 View shared preferences: clicking on a preference opens the <i>Shared Preferences
-        Editor</i> window (requires root)
+        \n\u2022 View shared preferences: clicking on a preference opens the <b>Shared Preferences
+            Editor</b> window (requires root)
         \n\u2022 Scan for trackers using \u03b5xodus
         \n\u2022 Open paths and directories with external app
         \n\u2022 Delete app cache or app data (requires root or ADB)
         \n\u2022 Export blocking rules
         \n\u2022 Open in system settings (in the menu)
         \n\u2022 Open in F-Droid, Aurora Droid or Aurora Store (if installed)
-        \n\u2022 Open the main activity
-        \n\u2022 Share the apk file (in the menu)
-    </string>
-    <string name="app_details_window">App Details Window</string>
-    <string name="app_details_window_description">App Details window lists application components
-        such as activities, broadcast receivers, services, providers as well as app operations (ie.
-        app ops), permissions, features, configurations, shared libraries and signatures. Most of
-        these information actually comes from the application manifest. The manifest has two kinds
-        of permission: <i>permission</i> and <i>uses-permission</i>, which is why there are two tabs
-        for permissions in the window (named accordingly).
+        \n\u2022 Share/save the apk file (in the menu)
+
+        \n\nOther tabs list application components such as activities, broadcast receivers, services,
+        providers as well as app operations (ie. app ops), permissions, features, configurations,
+        shared libraries and signatures. Most of these information actually come from the
+        application manifest. The manifest has two kinds of permissions: <i>permission</i> and
+        <i>uses-permission</i>, which is why there are two tabs for permissions in the window
+        (named accordingly).
 
         \n\nWith root or ADB, any app op or any <i>dangerous</i> permission can be granted or
-        revoked. With root, any app component can also be blocked via intent firewall (for
-        activities, receivers and services) or (for providers,) using the <i>pm</i> command line
-        tool. There is a toggle button on the right side of each component item which can be used to
-        block or unblock each component, and there is a switch button next to each app op or
-        permission item. By default, when components are blocked using the block buttons, they are
-        not immediately applied. To apply them, you need to click on <i>Apply Rules</i> in the menu.
-        Another option is to enable component blocking globally in the app settings. In the case of
-        app ops and permissions, the changes are applied immediately. Exported activities can be
-        launched, or customizable launcher icons or shortcuts can be created in the
-        <b>Activities</b> tab.
+        revoked. With root, any app component (that is activities, broadcast receivers, services
+        and providers) can also be blocked via intent firewall (for activities, receivers and
+        services) or (for providers,) using the <i>pm</i> command line tool. There is a toggle
+        button on the right side of each component item which can be used to block or unblock each
+        component, and there is a switch button next to each app op or permission item. By default,
+        when components are blocked using the block buttons, they are not immediately applied. To
+        apply them, <i>Apply Rules</i> option in the menu has to be used. Another option is to
+        enable component blocking globally in the app settings. There is also an option to disable
+        all tracker components in the menu as well as sorting by blocking components. In this latter
+        case and for app ops and permissions, the changes are applied immediately. Activities that
+        are marked as <i>exported</i> in the app manifest can be launched, or customizable launcher
+        icons or shortcuts can be created in the <b>Activities</b> tab. For app ops, there is an
+        option to disable all dangerous app ops or reset them. For permissions, there is an option
+        to revoke all dangerous permissions as well. Like components, both app ops and permissions
+        can be sorted in different ways.
 
-        \n\nList of background colors used in this window and their meaning:
-        \n\u2022 <font bgcolor="#B3FF0000"> Red </font>: Any app op or permission that has the
-        dangerous flag are marked as red. Components that blocked within App Manager are also marked
-        as red
-        \n\u2022 <font bgcolor="#FFFF8A80" fgcolor="#DE000000"> Salmon (day) </font> or
-        <font bgcolor="#BF4F1C14" fgcolor="#FFAAAAAA"> dark red (night) </font>: Components that are
-        disabled outside App Manager have these colors. It should be noted that a component that is
-        marked as disabled does not always mean that it is disabled by the user: It could be
-        disabled by the system as well. Also, all components of a disabled app are also considered
-        disabled by the system (and so does App Manager)
-        \n\u2022 <font bgcolor="#FFEA80FC" fgcolor="#DE000000"> pink (day) </font> or
-        <font bgcolor="#FF431C5D" fgcolor="#FFAAAAAA"> purple (night) </font>: Currently running services
+        \n\nList of background colors used in the tabs and their meaning:
+        \n\u2022 <font bgcolor="#B3FF0000" fgcolor="#DE000000"> Red (day) </font> or <font
+            bgcolor="#FF790D0D" fgcolor="#FFAAAAAA"> dark red (night) </font>: Any app op or
+            permission that has the dangerous flag is marked as red. Components that are blocked
+            within App Manager are also marked as red
+        \n\u2022 <font bgcolor="#FFFF8A80" fgcolor="#DE000000"> Light red (day) </font> or <font
+            bgcolor="#BF4F1C14" fgcolor="#FFAAAAAA"> very dark red (night) </font>: Components that
+            are disabled outside App Manager have these colors. It should be noted that a component
+            that is marked as disabled does not always mean that it is disabled by the user: It
+            could be disabled by the system as well or marked as disabled in the app manifest. Also,
+            all components of a disabled app are also considered disabled by the system (and by the
+            App Manager as well)
+        \n\u2022 <font bgcolor="#FFFF8017" fgcolor="#DE000000"> Vivid orange (day) </font> or <font
+            bgcolor="#80FF8017" fgcolor="#FFAAAAAA"> very dark orange (night) </font>: Tracker or
+            add components
+        \n\u2022 <font bgcolor="#FFEA80FC" fgcolor="#DE000000"> Soft magenta (day) </font> or <font
+            bgcolor="#FF431C5D" fgcolor="#FFAAAAAA"> very dark violet (night) </font>: Currently
+            running services
     </string>
     <string name="exodus_window">\u03b5xodus Window</string>
     <string name="exodus_window_description">\u03b5xodus window appears after clicking on the
-        <i>\u03b5xodus</i> button in the <i>App Info</i> window. It scans for trackers and displays
-        a list of trackers and their classes as a summary. A list of tracker classes for the given
-        app is also displayed. All the classes of the app can also be viewed by clicking on the
-        <i>Toggle Class Listing</i> menu. A sneak-peak of each class can be viewed by simply
-        clicking on any class item. The tracker names has some prefixes, and although they are not
-        properly documented in the original <a href="https://gitlab.com/oF2pks/3xodusprivacy-toolbox">repository</a>, a list is
-        given below:
+        <i>\u03b5xodus</i> button in the <b>App Info</b> tab in the <b>App Details</b> window. It
+        scans for trackers and displays a list of trackers and their classes as a summary. A list
+        of tracker classes for the given app is also displayed. All the classes of the app can also
+        be viewed by clicking on the <i>Toggle Class Listing</i> menu. A sneak-peak of each class
+        can be viewed by simply clicking on any class item. The tracker names has some prefixes,
+        and although they are not properly documented in the original
+        <a href="https://gitlab.com/oF2pks/3xodusprivacy-toolbox">repository</a>, a list is given
+        below:
         \n\u2022 °: Missing in \u03b5xodus\' list
         \n\u2022 ²: <a href="https://etip.exodus-privacy.eu.org">ETIP</a> stand-by
         \n\u2022 µ: Micro non-intrusive
@@ -452,6 +472,12 @@
         \n\u2022 <b>Usage access</b>: Turning off this option disables the <i>App Usage</i> window
         as well as data usage and app storage info in the <i>App Info</i> window. With this option
         turned off, App Manager will never ask for <i>Usage Access</i> permission
+        \n\u2022 <b>Import/export blocking rules</b>: It is possible to import or export blocking
+        rules within App Manager for all apps. There is a choice to export or import only certain
+        rules (components, app ops or permissions) instead of all of them. It is also possible to
+        import blocking rules from Blocker and Watt. If it is necessary to export blocking rules for
+        a single app, use the respective <b>App Details</b> window to export rules, or for multiple
+        apps, use the batch operation available in the main window.
     </string>
     <string name="sort_by_wifi_data">Wifi data</string>
     <string name="block_trackers">Block trackers</string>
