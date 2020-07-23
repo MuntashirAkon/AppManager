@@ -7,7 +7,9 @@ import android.app.usage.StorageStatsManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.ComponentInfo;
 import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -66,6 +68,7 @@ import io.github.muntashirakon.AppManager.activities.ClassListingActivity;
 import io.github.muntashirakon.AppManager.activities.ManifestViewerActivity;
 import io.github.muntashirakon.AppManager.activities.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.storage.compontents.TrackerComponentUtils;
 import io.github.muntashirakon.AppManager.types.ScrollSafeSwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -272,23 +275,57 @@ public class AppInfoFragment extends Fragment
                         mPackageInfo.getLongVersionCode() : mPackageInfo.versionCode)));
 
         // Tag cloud //
-        mTagCloud.removeAllViews();
-        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-            addChip(R.string.system_app);
-            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0)
-                addChip(R.string.updated_app);
-        } else addChip(R.string.user_app);
-        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
-            addChip(R.string.debuggable);
-        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
-            addChip(R.string.test_only);
-        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) == 0)
-            addChip(R.string.no_code);
-        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)
-            addChip(R.string.requested_large_heap, R.color.red);
-        if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0)
-            addChip(R.string.stopped, R.color.stopped);
-        if (!mApplicationInfo.enabled) addChip(R.string.disabled_app, R.color.disabled_user);
+        new Thread(() -> {
+            List<String> componentList = new ArrayList<>();
+            // Add activities
+            if (mPackageInfo.activities != null) {
+                String activityName;
+                for (ActivityInfo activityInfo : mPackageInfo.activities) {
+                    if (activityInfo.targetActivity != null) activityName = activityInfo.targetActivity;
+                    else activityName = activityInfo.name;
+                    if (TrackerComponentUtils.isTracker(activityName)) componentList.add(activityName);
+                }
+            }
+            // Add others
+            if (mPackageInfo.services != null) {
+                for (ComponentInfo componentInfo : mPackageInfo.services)
+                    if (TrackerComponentUtils.isTracker(componentInfo.name)) componentList.add(componentInfo.name);
+            }
+            if (mPackageInfo.receivers != null) {
+                for (ComponentInfo componentInfo : mPackageInfo.receivers)
+                    if (TrackerComponentUtils.isTracker(componentInfo.name)) componentList.add(componentInfo.name);
+            }
+            if (mPackageInfo.providers != null) {
+                for (ComponentInfo componentInfo : mPackageInfo.providers)
+                    if (TrackerComponentUtils.isTracker(componentInfo.name)) componentList.add(componentInfo.name);
+            }
+            runOnUiThread(() -> {
+                mTagCloud.removeAllViews();
+                // Add tracker chip
+                if (!componentList.isEmpty()) {
+                    Chip chip = new Chip(mActivity);
+                    chip.setText(String.format(getString(R.string.no_of_trackers), componentList.size()));
+                    chip.setChipBackgroundColorResource(R.color.red);
+                    mTagCloud.addView(chip);
+                }
+                if ((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+                    addChip(R.string.system_app);
+                    if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0)
+                        addChip(R.string.updated_app);
+                } else if (!mainModel.getIsExternalApk()) addChip(R.string.user_app);
+                if ((mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
+                    addChip(R.string.debuggable);
+                if ((mApplicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
+                    addChip(R.string.test_only);
+                if ((mApplicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) == 0)
+                    addChip(R.string.no_code);
+                if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)
+                    addChip(R.string.requested_large_heap, R.color.red);
+                if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0)
+                    addChip(R.string.stopped, R.color.stopped);
+                if (!mApplicationInfo.enabled) addChip(R.string.disabled_app, R.color.disabled_user);
+            });
+        }).start();
     }
 
     private void setHorizontalView() {

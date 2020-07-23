@@ -508,4 +508,5 @@
     <string name="external_apk_no_app_op">External apk does not have any app operation</string>
     <string name="manifest_viewer">Manifest Viewer</string>
     <string name="scanning_is_still_in_progress">Scanning is still in progress</string>
+    <string name="no_of_trackers">%d trackers</string>
 </resources>
