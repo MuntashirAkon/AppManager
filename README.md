@@ -23,13 +23,17 @@ Yet another android package manager and viewer but...
 
 ...and other minor features such as uninstalling/enabling/disabling apps, displaying app installation info, opening on F-Droid, Aurora Droid or Aurora Store.
 
-It basically combined the features of five or six apps that any tech-savy person is needed to install in order to have a “life”.
+It basically combines the features of 5 or 6 apps that any tech-savvy person needs to use in order to have a life.
+
+See the instructions page within the app for more information on how to use the app.
 
 Until it is available in the official repo,
 
 <a href="https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid" width="200dp" /></a>
 
-Join our Telegram channel: https://t.me/AppManagerAndroid
+Telegram Support Group: https://t.me/AppManagerAndroid
+
+Telegram Update Channel: https://t.me/AppManagerChannel
 
 ### Mirrors
 

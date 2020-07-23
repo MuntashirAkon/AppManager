@@ -4,7 +4,7 @@
 <ul>
     <li>Free and open source</li>
     <li>Material design (and a nice UI)</li>
-    <li>No any useless permissions</li>
+    <li>No useless permissions requested</li>
     <li>Doesn't connect to the internet (internet permission is required for ADB mode)</li>
     <li>Display as much information as possible in the main window</li>
     <li>Lists activities, broadcast receivers, services, providers, permissions, signatures, shared libraries, etc. of any app</li>
@@ -24,6 +24,6 @@
 
 ...and other minor features such as uninstalling/enabling/disabling apps, displaying app installation info, opening on F-Droid, Aurora Droid or Aurora Store.
 
-It basically combined the features of five or six apps that any tech-savy person is needed to install in order to have a “life”.
+It basically combines the features of 5 or 6 apps that any tech-savvy person needs to use in order to have a life.
 
-See the instructions within the app for more information on how to use the app.
+See the instructions page within the app for more information on how to use the app.
