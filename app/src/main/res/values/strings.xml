@@ -506,4 +506,5 @@
     <string name="one_click_ops">1-Click Ops</string>
     <string name="changelog">Changelog</string>
     <string name="external_apk_no_app_op">External apk does not have any app operation</string>
+    <string name="manifest_viewer">Manifest Viewer</string>
 </resources>

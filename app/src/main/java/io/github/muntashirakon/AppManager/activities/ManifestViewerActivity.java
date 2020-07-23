@@ -5,6 +5,8 @@ package io.github.muntashirakon.AppManager.activities;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +19,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.classysharkandroid.utils.UriUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Objects;
@@ -30,10 +34,12 @@ import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.xmlapkparser.AXMLPrinter;
 
 public class ManifestViewerActivity extends AppCompatActivity {
-    public static final String EXTRA_PACKAGE_NAME = "package_name";
+    public static final String MANIFEST_CACHE_APK = "manifest_cache.apk";
 
     private static final String MIME_XML = "text/xml";
     private static final int RESULT_CODE_EXPORT = 849;
@@ -53,31 +59,49 @@ public class ManifestViewerActivity extends AppCompatActivity {
     private boolean isWrapped = true;  // Wrap by default
     private AppCompatEditText container;
     private SpannableString formattedContent;
-    private String filePath;
+    private String archiveFilePath;
     private String packageName;
 
+    @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_any_viewer);
         setSupportActionBar(findViewById(R.id.toolbar));
         mProgressIndicator = findViewById(R.id.progress_linear);
-        packageName = getIntent().getStringExtra(EXTRA_PACKAGE_NAME);
-        filePath = null;
-        String applicationLabel = null;
-        try {
-            assert packageName != null;
-            filePath = getPackageManager().getPackageInfo(packageName, 0).applicationInfo.sourceDir;
-            applicationLabel = getPackageManager().getApplicationInfo(packageName, 0).loadLabel(getPackageManager()).toString();
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-            Toast.makeText(this, R.string.app_not_installed, Toast.LENGTH_LONG).show();
-            finish();
-        }
-        setTitle("\u2707 " + applicationLabel);
-        setWrapped();
+        final Intent intent = getIntent();
+        final Uri packageUri = intent.getData();
+        archiveFilePath = null;
+        new Thread(() -> {
+            if (packageUri != null) {
+                final PackageManager pm = getApplicationContext().getPackageManager();
+                PackageInfo packageInfo = null;
+                if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
+                    archiveFilePath = UriUtils.pathUriCache(getApplicationContext(),
+                            packageUri, MANIFEST_CACHE_APK);
+                } else archiveFilePath = packageUri.getPath();
+                if (archiveFilePath != null)
+                    packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
+                if (packageInfo != null) {
+                    packageName = packageInfo.packageName;
+                    final ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+                    applicationInfo.publicSourceDir = archiveFilePath;
+                    applicationInfo.sourceDir = archiveFilePath;
+                    runOnUiThread(() -> {
+                        setTitle(applicationInfo.loadLabel(pm));
+                        setWrapped();
+                    });
+                }
+            }
+        }).start();
 //        new AsyncManifestLoaderPkg(ManifestViewerActivity.this).execute(packageName);
+    }
 
+    @Override
+    protected void onDestroy() {
+        IOUtils.deleteDir(getCodeCacheDir());
+        IOUtils.deleteDir(new File(getFilesDir(), MANIFEST_CACHE_APK));
+        super.onDestroy();
     }
 
     @SuppressLint("RestrictedApi")
@@ -141,7 +165,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
         final int attrValueColor = ContextCompat.getColor(this, R.color.ocean_blue);
         new Thread(() -> {
             if (formattedContent == null) {
-                code = io.github.muntashirakon.AppManager.utils.Utils.getProperXml(AXMLPrinter.getManifestXMLFromAPK(filePath, "AndroidManifest.xml"));
+                code = Utils.getProperXml(AXMLPrinter.getManifestXMLFromAPK(archiveFilePath, "AndroidManifest.xml"));
                 if (code == null) {
                     runOnUiThread(() -> {
                         Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();

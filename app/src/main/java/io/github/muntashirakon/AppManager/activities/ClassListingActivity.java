@@ -3,6 +3,7 @@ package io.github.muntashirakon.AppManager.activities;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -148,32 +149,30 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                     } catch (NoSuchAlgorithmException ignored) {}
 
                     final PackageManager pm = getApplicationContext().getPackageManager();
-                    PackageInfo mPackageInfo = null;
-                    if (intent != null && intent.getAction() != null) {
-                        if (intent.getAction().equals(Intent.ACTION_VIEW)) {
-                            String archiveFilePath = UriUtils.pathUriCache(getApplicationContext(),
+                    PackageInfo packageInfo = null;
+                    String archiveFilePath = null;
+                    if (uriFromIntent != null) {
+                        if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
+                            archiveFilePath = UriUtils.pathUriCache(getApplicationContext(),
                                     uriFromIntent, EXODUS_CACHE_APK);
-                            if (archiveFilePath != null)
-                                mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
-                        }
-                    } else {
-                        if (uriFromIntent != null) {
-                            String archiveFilePath = uriFromIntent.getPath();
-                            if (archiveFilePath != null)
-                                mPackageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
-                        }
+                        } else archiveFilePath = uriFromIntent.getPath();
+                        if (archiveFilePath != null)
+                            packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
                     }
-                    if (mPackageInfo != null) {
-                        packageInfo += apkCert(mPackageInfo);
-                        mPackageName = mPackageInfo.packageName;
-                        mAppName = mPackageInfo.applicationInfo.loadLabel(pm);
+                    if (packageInfo != null) {
+                        this.packageInfo += apkCert(packageInfo);
+                        mPackageName = packageInfo.packageName;
+                        final ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+                        applicationInfo.publicSourceDir = archiveFilePath;
+                        applicationInfo.sourceDir = archiveFilePath;
+                        mAppName = applicationInfo.loadLabel(pm);
                         runOnUiThread(() -> {
                             if (mActionBar != null) {
                                 mActionBar.setTitle(mAppName);
                                 mActionBar.setSubtitle(getString(R.string.tracker_classes));
                             }
                         });
-                    } else packageInfo += "\n<i><b>FAILED to retrieve PackageInfo!</b></i>";
+                    } else this.packageInfo += "\n<i><b>FAILED to retrieve PackageInfo!</b></i>";
                 }).start();
 
                 new FillClassesNamesThread(bytes).start();

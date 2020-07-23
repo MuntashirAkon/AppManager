@@ -364,15 +364,16 @@ public class AppInfoFragment extends Fragment
         // Set manifest
         addToHorizontalLayout(R.string.manifest, R.drawable.ic_tune_black_24dp).setOnClickListener(v -> {
             Intent intent = new Intent(mActivity, ManifestViewerActivity.class);
-            intent.putExtra(ManifestViewerActivity.EXTRA_PACKAGE_NAME, mPackageName);
+            File file = new File(mApplicationInfo.publicSourceDir);
+            intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
             startActivity(intent);
         });
         // Set exodus
         addToHorizontalLayout(R.string.exodus, R.drawable.ic_frost_classysharkexodus_black_24dp).setOnClickListener(v -> {
-            Intent newIntent = new Intent(mActivity, ClassListingActivity.class);
+            Intent intent = new Intent(mActivity, ClassListingActivity.class);
             File file = new File(mApplicationInfo.publicSourceDir);
-            newIntent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-            startActivity(newIntent);
+            intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+            startActivity(intent);
         });
         // Root only features
         if (!mainModel.getIsExternalApk() && AppPref.isRootEnabled()) {
