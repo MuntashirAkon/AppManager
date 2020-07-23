@@ -104,9 +104,9 @@ public final class PackageUtils {
     public static boolean isComponentDisabledByUser(@NonNull PackageManager pm, @NonNull String packageName, @NonNull String componentClassName) {
         ComponentName componentName = new ComponentName(packageName, componentClassName);
         switch (pm.getComponentEnabledSetting(componentName)) {
-            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED: return true;
+            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER: return true;
+            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED:
             case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED:
-            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER:
             case PackageManager.COMPONENT_ENABLED_STATE_ENABLED:
             case PackageManager.COMPONENT_ENABLED_STATE_DEFAULT:
             default: return false;

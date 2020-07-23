@@ -5,8 +5,11 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -59,6 +62,7 @@ public class ImportExportDialogFragment extends DialogFragment {
             intent.setType(MIME_TSV);
             intent.putExtra(Intent.EXTRA_TITLE, fileName);
             startActivityForResult(intent, RESULT_CODE_EXPORT);
+            dismiss();
         });
         view.findViewById(R.id.import_internal).setOnClickListener(v -> {
             Intent intent = new Intent()
@@ -66,7 +70,27 @@ public class ImportExportDialogFragment extends DialogFragment {
                     .setType(MIME_TSV)
                     .setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RESULT_CODE_IMPORT);
+            dismiss();
         });
+        view.findViewById(R.id.import_existing).setOnClickListener(v -> new Thread(() -> {
+            List<String> packageList = new ArrayList<>();
+            Handler handler = new Handler(Looper.getMainLooper());
+            for (ApplicationInfo applicationInfo: requireContext().getPackageManager().getInstalledApplications(0)) {
+                packageList.add(applicationInfo.packageName);
+            }
+            List<String> failedPackages = ExternalComponentsImporter.applyFromExistingBlockList(requireContext(), packageList);
+            dismiss();
+            if (failedPackages.isEmpty()) {
+                handler.post(() -> Toast.makeText(requireContext(), R.string.the_import_was_successful, Toast.LENGTH_SHORT).show());
+            } else {
+                handler.post(() ->
+                        new MaterialAlertDialogBuilder(requireContext(), R.style.AppTheme_AlertDialog)
+                            .setTitle(String.format(getString(R.string.failed_to_import_files), failedPackages.size()))
+                            .setItems((CharSequence[]) failedPackages.toArray(), null)
+                            .setNegativeButton(android.R.string.ok, null)
+                            .show());
+            }
+        }).start());
         view.findViewById(R.id.import_watt).setOnClickListener(v -> {
             Intent intent = new Intent()
                     .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
@@ -74,6 +98,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                     .setType(MIME_XML)
                     .setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RESULT_CODE_WATT);
+            dismiss();
         });
         view.findViewById(R.id.import_blocker).setOnClickListener(v -> {
             Intent intent = new Intent()
@@ -82,6 +107,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                     .setType(MIME_JSON)
                     .setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RESULT_CODE_BLOCKER);
+            dismiss();
         });
         return new MaterialAlertDialogBuilder(getActivity(), R.style.AppTheme_AlertDialog)
                 .setView(view)

@@ -72,6 +72,37 @@
             android:background="@color/ten_percent_black" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/import_existing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/padding_medium"
+            android:paddingTop="@dimen/padding_small"
+            android:paddingEnd="@dimen/padding_medium"
+            android:paddingBottom="@dimen/padding_small"
+            android:background="?selectableItemBackground"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="?android:attr/textColorPrimary"
+                android:text="@string/pref_import_existing"
+                android:textSize="@dimen/title_font" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pref_import_existing_msg"
+                android:textSize="@dimen/subtitle_font" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/ten_percent_black" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/import_watt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

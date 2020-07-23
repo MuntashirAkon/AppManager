@@ -1,8 +1,6 @@
 package io.github.muntashirakon.AppManager.activities;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.view.MenuItem;
@@ -22,8 +20,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.text.HtmlCompat;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.fragments.ImportExportDialogFragment;
+import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -47,6 +45,7 @@ public class SettingsActivity extends AppCompatActivity {
         final SwitchMaterial usageSwitcher = findViewById(R.id.usage_toggle_btn);
 
         final View blockingView = findViewById(R.id.blocking_view);
+        final View importExportView = findViewById(R.id.import_view);
         final TextView appThemeMsg = findViewById(R.id.app_theme_msg);
 
         // Read pref
@@ -58,6 +57,7 @@ public class SettingsActivity extends AppCompatActivity {
         // Set changed values
         rootSwitcher.setChecked(rootEnabled);
         blockingView.setVisibility(rootEnabled ? View.VISIBLE : View.GONE);
+        importExportView.setVisibility(rootEnabled ? View.VISIBLE : View.GONE);
         blockingSwitcher.setChecked(blockingEnabled);
         usageSwitcher.setChecked(usageEnabled);
         final String[] themes = getResources().getStringArray(R.array.themes);
@@ -82,6 +82,7 @@ public class SettingsActivity extends AppCompatActivity {
         rootSwitcher.setOnCheckedChangeListener((buttonView, isChecked) -> {
             appPref.setPref(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, isChecked);
             blockingView.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            importExportView.setVisibility(isChecked ? View.VISIBLE : View.GONE);
         });
         blockingSwitcher.setOnCheckedChangeListener((buttonView, isChecked) -> {
             appPref.setPref(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL, isChecked);
@@ -93,13 +94,8 @@ public class SettingsActivity extends AppCompatActivity {
                 appPref.setPref(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, isChecked));
 
         // Import/Export
-        if (AppPref.isRootEnabled()) {
-            findViewById(R.id.import_view).setOnClickListener(v ->
-                    (new ImportExportDialogFragment()).show(getSupportFragmentManager(),
-                            ImportExportDialogFragment.TAG));
-        } else {
-            findViewById(R.id.import_view).setVisibility(View.GONE);
-        }
+        importExportView.setOnClickListener(v -> new ImportExportDialogFragment()
+                .show(getSupportFragmentManager(), ImportExportDialogFragment.TAG));
 
         findViewById(R.id.about_view).setOnClickListener(v -> {
             View view = getLayoutInflater().inflate(R.layout.dialog_about, null);
