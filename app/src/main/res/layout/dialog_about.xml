@@ -39,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/subtitle_font"
+            android:textIsSelectable="true"
             tools:text="@tools:sample/lorem[2]" />
 
         <TextView
@@ -54,6 +55,36 @@
             android:layout_height="wrap_content"
             android:text="@string/license_message"
             android:textSize="@dimen/subtitle_font" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_medium"
+            android:text="@string/source_code"
+            android:textSize="@dimen/title_font"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/source_code_links"
+            android:textSize="@dimen/subtitle_font"
+            android:autoLink="web" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_medium"
+            android:text="@string/community"
+            android:textSize="@dimen/title_font"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/community_links"
+            android:textSize="@dimen/subtitle_font"
+            android:autoLink="web" />
 
         <TextView
             android:layout_width="match_parent"

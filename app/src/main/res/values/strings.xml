@@ -509,4 +509,11 @@
     <string name="manifest_viewer">Manifest Viewer</string>
     <string name="scanning_is_still_in_progress">Scanning is still in progress</string>
     <string name="no_of_trackers">%d trackers</string>
+    <string name="source_code">Source Code</string>
+    <string name="source_code_links" translatable="false">Github: https://github.com/MuntashirAkon/AppManager
+        \nGitlab: https://gitlab.com/muntashir/AppManager
+        \nRiseup: https://0xacab.org/muntashir/AppManager</string>
+    <string name="community">Telegram Community</string>
+    <string name="community_links" translatable="false">Update Channel: https://t.me/AppManagerChannel
+        \nSupport Group: https://t.me/AppManagerAndroid</string>
 </resources>
