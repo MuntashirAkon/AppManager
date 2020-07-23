@@ -267,10 +267,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         if (isExternalApk) return;
         if (neededProperty == APP_INFO) super.onPrepareOptionsMenu(menu);
-        else if (neededProperty <= PROVIDERS)
+        else if (neededProperty <= PROVIDERS) {
             if (AppPref.isRootEnabled())
                 menu.findItem(sSortMenuItemIdsMap[model.getSortBy()]).setChecked(true);
-        else if (neededProperty <= USES_PERMISSIONS)
+        } else if (neededProperty <= USES_PERMISSIONS)
             menu.findItem(sSortMenuItemIdsMap[model.getSortBy()]).setChecked(true);
     }
 
