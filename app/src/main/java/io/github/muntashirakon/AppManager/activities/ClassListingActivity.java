@@ -64,6 +64,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     private List<String> classList;
     private List<String> classListAll;
     private ListView mListView;
+    private TextView mEmptyView;
     private int totalTrackersFound = 0;
     private int totalClassesScanned = 0;
     private String foundTrackerList = "";
@@ -126,9 +127,11 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         mListView = findViewById(android.R.id.list);
         mListView.setTextFilterEnabled(true);
         mListView.setDividerHeight(0);
-        mListView.setEmptyView(findViewById(android.R.id.empty));
+        mEmptyView = findViewById(android.R.id.empty);
+        mListView.setEmptyView(mEmptyView);
 
         mProgressIndicator = findViewById(R.id.progress_linear);
+        showProgress(true);
 
         new Thread(() -> {
             final Uri uriFromIntent = intent.getData();
@@ -250,6 +253,10 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     }
 
     private void viewScanSummary() {
+        if (mProgressIndicator.isShown()) {
+            Toast.makeText(this, R.string.scanning_is_still_in_progress, Toast.LENGTH_SHORT).show();
+            return;
+        }
         StringBuilder foundTrackersInfo = new StringBuilder();
         if (totalTrackersFound > 0)
             foundTrackersInfo.append("\n").append(getString(R.string.tracker_details)).append(":");
@@ -286,6 +293,16 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                     }
                 })
                 .show();
+    }
+
+    private void showProgress(boolean willShow) {
+        if (willShow) {
+            mProgressIndicator.show();
+            mEmptyView.setText(R.string.loading);
+        } else {
+            mProgressIndicator.hide();
+            mEmptyView.setText(R.string.no_tracker_class);
+        }
     }
 
     private class FillClassesNamesThread extends Thread {
@@ -340,7 +357,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                     mActionBar.setSubtitle(getString(R.string.all_classes));
                 }
                 mListView.setAdapter(mClassListingAdapter);
-                mProgressIndicator.hide();
+                showProgress(false);
                 if (classList.isEmpty() && totalClassesScanned == 0) {
                     // FIXME: Add support for odex (using root)
                     Toast.makeText(ClassListingActivity.this, R.string.system_odex_not_supported, Toast.LENGTH_LONG).show();

@@ -106,16 +106,7 @@ public class IconPickerDialogFragment extends DialogFragment {
                 PackageInfo pack = all_packages.get(i);
                 try {
                     String icon_resource_name = pm.getResourcesForApplication(pack.packageName).getResourceName(pack.applicationInfo.icon);
-                    if (icon_resource_name != null) {
-                        icons.add(icon_resource_name);
-                    }
-                    // FIXME: Get icons for all activities
-//                    for (int j = 0; j < pack.activities.length; ++j) {
-//                        String icon_resource_name = pm.getResourcesForApplication(pack.packageName).getResourceName(pack.activities[i].getIconResource());
-//                        if (icon_resource_name != null) {
-//                            icons.add(icon_resource_name);
-//                        }
-//                    }
+                    if (icon_resource_name != null) icons.add(icon_resource_name);
                 } catch (PackageManager.NameNotFoundException | RuntimeException ignored) {}
             }
 
