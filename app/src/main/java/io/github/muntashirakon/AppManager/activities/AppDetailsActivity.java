@@ -65,16 +65,7 @@ public class AppDetailsActivity extends AppCompatActivity {
         new Thread(() -> {
             if (packageName != null) model.setPackageName(packageName);
             else {
-                try {
-                    model.setPackageUri(apkUri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, getString(R.string.empty_package_name), Toast.LENGTH_LONG).show();
-                        finish();
-                    });
-                    return;
-                }
+                model.setPackageUri(apkUri);
             }
             ApplicationInfo applicationInfo = model.getPackageInfo().applicationInfo;
             runOnUiThread(() -> {

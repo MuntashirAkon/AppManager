@@ -55,6 +55,8 @@ import io.github.muntashirakon.AppManager.utils.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class AppDetailsViewModel extends AndroidViewModel {
+    public static final String APK_FILE = "apk_file.apk";
+
     private PackageManager mPackageManager;
     private PackageInfo packageInfo;
     private String packageName;
@@ -111,13 +113,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
         super.onCleared();
     }
 
-    public void setPackageUri(@NonNull Uri packageUri) throws IOException {
+    public void setPackageUri(@NonNull Uri packageUri) {
         Log.d("ADVM", "Package Uri is being set");
         isExternalApk = true;
         flagSigningInfo = PackageManager.GET_SIGNATURES;  // Fix signature bug of Android
-        String filename = Utils.getName(getApplication().getContentResolver(), packageUri);
-        if (filename == null) throw new IOException("Couldn't get the file name");
-        apkPath = UriUtils.pathUriCache(getApplication(), packageUri, filename);
+        apkPath = UriUtils.pathUriCache(getApplication(), packageUri, APK_FILE);
     }
 
     public void setPackageName(String packageName) {

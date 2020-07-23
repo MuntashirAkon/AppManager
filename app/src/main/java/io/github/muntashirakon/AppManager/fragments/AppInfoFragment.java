@@ -18,7 +18,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.FileUtils;
 import android.os.Process;
 import android.provider.Settings;
 import android.text.format.Formatter;
@@ -38,11 +37,8 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
-import com.google.classysharkandroid.utils.IOUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -72,13 +68,12 @@ import io.github.muntashirakon.AppManager.storage.compontents.TrackerComponentUt
 import io.github.muntashirakon.AppManager.types.ScrollSafeSwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.viewmodels.AppDetailsViewModel;
-
-import static io.github.muntashirakon.AppManager.utils.IOUtils.deleteDir;
 
 public class AppInfoFragment extends Fragment
         implements ScrollSafeSwipeRefreshLayout.OnRefreshListener {
@@ -157,28 +152,23 @@ public class AppInfoFragment extends Fragment
                 mainModel.setIsPackageChanged();
                 return true;
             case R.id.action_share_apk:
-                try {
-                    File apkSource = new File(mApplicationInfo.sourceDir);
-                    File tmpApkSource = File.createTempFile(mApplicationInfo.packageName, ".apk", mActivity.getExternalCacheDir());
-                    FileInputStream apkInputStream = new FileInputStream(apkSource);
-                    FileOutputStream apkOutputStream = new FileOutputStream(tmpApkSource);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        FileUtils.copy(apkInputStream, apkOutputStream);
-                    } else {
-                        IOUtils.copy(apkInputStream, apkOutputStream);
+                new Thread(() -> {
+                    try {
+                        File tmpApkSource = IOUtils.getSharableApk(new File(mApplicationInfo.sourceDir));
+                        runOnUiThread(() -> {
+                            Intent intent = ShareCompat.IntentBuilder.from(mActivity)
+                                    .setStream(FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID + ".provider", tmpApkSource))
+                                    .setType("application/vnd.android.package-archive")
+                                    .getIntent()
+                                    .setAction(Intent.ACTION_SEND)
+                                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            startActivity(intent);
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show());
                     }
-                    apkInputStream.close(); apkOutputStream.close();
-                    Intent intent = ShareCompat.IntentBuilder.from(mActivity)
-                            .setStream(FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID + ".provider", tmpApkSource))
-                            .setType("application/vnd.android.package-archive")
-                            .getIntent()
-                            .setAction(Intent.ACTION_SEND)
-                            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    startActivity(intent);
-                } catch (Exception e) {
-                    Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
-                }
+                }).start();
                 return true;
             case R.id.action_view_settings:
                 Intent infoIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
@@ -243,13 +233,8 @@ public class AppInfoFragment extends Fragment
 
     @Override
     public void onDestroy() {
+        IOUtils.deleteDir(mActivity.getExternalCacheDir());
         super.onDestroy();
-        try {
-            File dir = mActivity.getExternalCacheDir();
-            deleteDir(dir);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -396,7 +381,53 @@ public class AppInfoFragment extends Fragment
                 }
             }  // End root only
         } else {
-            // TODO: Add install/update
+            PackageInfo packageInfo = null;
+            try {
+                packageInfo = mPackageManager.getPackageInfo(mPackageName, 0);
+            } catch (PackageManager.NameNotFoundException ignore) {}
+            if (packageInfo == null) {
+                // App not installed
+                addToHorizontalLayout(R.string.install, R.drawable.ic_baseline_get_app_24)
+                        .setOnClickListener(v -> new Thread(() -> {
+                    try {
+                        File tmpApkSource = IOUtils.getSharableApk(new File(mApplicationInfo.sourceDir));
+                        runOnUiThread(() -> {
+                            Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            intent.setDataAndType(FileProvider.getUriForFile(mActivity,
+                                    BuildConfig.APPLICATION_ID + ".provider", tmpApkSource),
+                                    MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+                            startActivity(intent);
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show());
+                    }
+                }).start());
+            } else {
+                // App is installed
+                long installedVersionCode = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? packageInfo.getLongVersionCode() : packageInfo.versionCode;
+                long thisVersionCode = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? mPackageInfo.getLongVersionCode() : mPackageInfo.versionCode;
+                if (installedVersionCode < thisVersionCode) {  // FIXME: Check for signature
+                    addToHorizontalLayout(R.string.update, R.drawable.ic_baseline_get_app_24)
+                            .setOnClickListener(v -> new Thread(() -> {
+                        try {
+                            File tmpApkSource = IOUtils.getSharableApk(new File(mApplicationInfo.sourceDir));
+                            runOnUiThread(() -> {
+                                Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent.setDataAndType(FileProvider.getUriForFile(mActivity,
+                                        BuildConfig.APPLICATION_ID + ".provider", tmpApkSource),
+                                        MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+                                startActivity(intent);
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show());
+                        }
+                    }).start());
+                }
+            }
         }
         // Set manifest
         addToHorizontalLayout(R.string.manifest, R.drawable.ic_tune_black_24dp).setOnClickListener(v -> {
