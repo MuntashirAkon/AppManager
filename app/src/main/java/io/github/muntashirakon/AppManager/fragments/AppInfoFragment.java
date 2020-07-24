@@ -104,7 +104,6 @@ public class AppInfoFragment extends Fragment
     private ChipGroup mTagCloud;
     @SuppressLint("SimpleDateFormat")
     private SimpleDateFormat mDateFormatter = new SimpleDateFormat("EE LLL dd yyyy kk:mm:ss");
-    private ListItemCreator mList;
     private ScrollSafeSwipeRefreshLayout mSwipeRefresh;
     private int mAccentColor;
     private CharSequence mPackageLabel;
@@ -388,6 +387,33 @@ public class AppInfoFragment extends Fragment
                         }
                     }).start());
                 }
+                // Clear data
+                addToHorizontalLayout(R.string.clear_data, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
+                    if (RunnerUtils.clearPackageData(mPackageName).isSuccessful()) {
+                        runOnUiThread(() -> mainModel.setIsPackageChanged());
+                    }
+                });
+                // Clear cache
+                if (AppPref.isRootEnabled()) {
+                    addToHorizontalLayout(R.string.clear_cache, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
+                        StringBuilder command = new StringBuilder(String.format("rm -rf %s/cache %s/code_cache",
+                                mApplicationInfo.dataDir, mApplicationInfo.dataDir));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            if (!mApplicationInfo.dataDir.equals(mApplicationInfo.deviceProtectedDataDir)) {
+                                command.append(String.format(" %s/cache %s/code_cache",
+                                        mApplicationInfo.deviceProtectedDataDir, mApplicationInfo.deviceProtectedDataDir));
+                            }
+                        }
+                        File[] cacheDirs = mActivity.getExternalCacheDirs();
+                        for (File cacheDir : cacheDirs) {
+                            String extCache = cacheDir.getAbsolutePath().replace(mActivity.getPackageName(), mPackageName);
+                            command.append(" ").append(extCache);
+                        }
+                        if (Runner.runCommand(command.toString()).isSuccessful()) {
+                            runOnUiThread(() -> mainModel.setIsPackageChanged());
+                        }
+                    });
+                }
             }  // End root only
         } else {
             PackageInfo packageInfo = null;
@@ -547,7 +573,7 @@ public class AppInfoFragment extends Fragment
     }
 
     private void setPathsAndDirectories() {
-        ListItemCreator creator = new ListItemCreator(mActivity, R.id.layout_paths_and_directories, true);
+        final ListItemCreator creator = new ListItemCreator(mActivity, R.id.layout_paths_and_directories, true);
         // Paths and directories
         creator.addItemWithTitle(getString(R.string.paths_and_directories), true);
         creator.item_title.setTextColor(mAccentColor);
@@ -569,21 +595,23 @@ public class AppInfoFragment extends Fragment
         }
         // External data dirs
         File[] dataDirs = mActivity.getExternalCacheDirs();
-        List<String> extDataDirs = new ArrayList<>();
-        for(File dataDir: dataDirs) {
-            //noinspection ConstantConditions
-            extDataDirs.add((new File(dataDir.getParent())).getParent() + "/" + mPackageName);
-        }
-        if (extDataDirs.size() == 1) {
-            if (new File(extDataDirs.get(0)).exists()) {
-                creator.addItemWithTitleSubtitle(getString(R.string.external_data_dir), extDataDirs.get(0), ListItemCreator.SELECTABLE);
-                openAsFolderInFM(creator, extDataDirs.get(0));
+        if (dataDirs != null) {
+            List<String> extDataDirs = new ArrayList<>();
+            for (File dataDir : dataDirs) {
+                //noinspection ConstantConditions
+                extDataDirs.add((new File(dataDir.getParent())).getParent() + "/" + mPackageName);
             }
-        } else {
-            for(int i = 0; i<extDataDirs.size(); ++i) {
-                if (new File(extDataDirs.get(i)).exists()) {
-                    creator.addItemWithTitleSubtitle(String.format(getString(R.string.external_multiple_data_dir), i), extDataDirs.get(i), ListItemCreator.SELECTABLE);
-                    openAsFolderInFM(creator, extDataDirs.get(i));
+            if (extDataDirs.size() == 1) {
+                if (new File(extDataDirs.get(0)).exists()) {
+                    creator.addItemWithTitleSubtitle(getString(R.string.external_data_dir), extDataDirs.get(0), ListItemCreator.SELECTABLE);
+                    openAsFolderInFM(creator, extDataDirs.get(0));
+                }
+            } else {
+                for (int i = 0; i < extDataDirs.size(); ++i) {
+                    if (new File(extDataDirs.get(i)).exists()) {
+                        creator.addItemWithTitleSubtitle(String.format(getString(R.string.external_multiple_data_dir), i), extDataDirs.get(i), ListItemCreator.SELECTABLE);
+                        openAsFolderInFM(creator, extDataDirs.get(i));
+                    }
                 }
             }
         }
@@ -597,53 +625,17 @@ public class AppInfoFragment extends Fragment
     }
 
     private void setMoreInfo() {
-        mList.addItemWithTitleSubtitle(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime), ListItemCreator.NO_ACTION);
-        mList.addItemWithTitleSubtitle(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime), ListItemCreator.NO_ACTION);
-        if(!mPackageName.equals(mApplicationInfo.processName))
-            mList.addItemWithTitleSubtitle(getString(R.string.process_name), mApplicationInfo.processName, ListItemCreator.NO_ACTION);
-        String installerPackageName = null;
-        try {
-            installerPackageName = mPackageManager.getInstallerPackageName(mPackageName);
-        } catch (IllegalArgumentException ignore) {}
-        if (installerPackageName != null) {
-            String applicationLabel = mApplicationInfo.loadLabel(mPackageManager).toString();
-            mList.addItemWithTitleSubtitle(getString(R.string.installer_app), applicationLabel, ListItemCreator.SELECTABLE);
-        }
-        mList.addItemWithTitleSubtitle(getString(R.string.user_id), Integer.toString(mApplicationInfo.uid), ListItemCreator.SELECTABLE);
-        if (mPackageInfo.sharedUserId != null)
-            mList.addItemWithTitleSubtitle(getString(R.string.shared_user_id), mPackageInfo.sharedUserId, ListItemCreator.SELECTABLE);
-        // Main activity
-        final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
-        if (launchIntentForPackage != null) {
-            final ComponentName launchComponentName = launchIntentForPackage.getComponent();
-            if (launchComponentName != null) {
-                final String mainActivity = launchIntentForPackage.getComponent().getClassName();
-                mList.addItemWithTitleSubtitle(getString(R.string.main_activity), mainActivity, ListItemCreator.SELECTABLE);
-                mList.setOpen(view -> startActivity(launchIntentForPackage));
-            }
-        }
-        mList.addDivider();
-    }
-
-    private void setVerticalView()  {
-        runOnUiThread(() -> mList.removeAll());
-        // Set paths and directories
-        if (!mainModel.getIsExternalApk()) runOnUiThread(this::setPathsAndDirectories);
-
-        if (mainModel.getIsExternalApk()) return;
-
+        ListItemCreator creator = new ListItemCreator(mActivity, R.id.layout_more_info, true);
         // Set more info
-        runOnUiThread(() -> {
-            mList.addItemWithTitle(getString(R.string.more_info), true);
-            mList.item_title.setTextColor(mAccentColor);
-        });
+        creator.addItemWithTitle(getString(R.string.more_info), true);
+        creator.item_title.setTextColor(mAccentColor);
 
         // SDK
         final StringBuilder sdk = new StringBuilder();
         sdk.append(getString(R.string.sdk_max)).append(": ").append(mApplicationInfo.targetSdkVersion);
         if (Build.VERSION.SDK_INT > 23)
             sdk.append(", ").append(getString(R.string.sdk_min)).append(": ").append(mApplicationInfo.minSdkVersion);
-        runOnUiThread(() -> mList.addItemWithTitleSubtitle(getString(R.string.sdk), sdk.toString(), ListItemCreator.SELECTABLE));
+        creator.addItemWithTitleSubtitle(getString(R.string.sdk), sdk.toString(), ListItemCreator.SELECTABLE);
 
         // Set Flags
         final StringBuilder flags = new StringBuilder();
@@ -657,39 +649,78 @@ public class AppInfoFragment extends Fragment
             flags.append(flags.length() == 0 ? "" : "|").append("FLAG_HARDWARE_ACCELERATED");
 
         if(flags.length() != 0) {
-            mList.addItemWithTitleSubtitle(getString(R.string.sdk_flags), flags, ListItemCreator.SELECTABLE);
-            mList.item_subtitle.setTypeface(Typeface.MONOSPACE);
+            creator.addItemWithTitleSubtitle(getString(R.string.sdk_flags), flags.toString(), ListItemCreator.SELECTABLE);
+            creator.item_subtitle.setTypeface(Typeface.MONOSPACE);
         }
-
         if (isExternalApk) return;
-        runOnUiThread(this::setMoreInfo);
 
-        // Net statistics
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
-                Tuple<Tuple<Long, Long>, Tuple<Long, Long>> dataUsage = AppUsageStatsManager
-                        .getWifiMobileUsageForPackage(mActivity, mPackageName,
-                                io.github.muntashirakon.AppManager.usage.Utils.USAGE_LAST_BOOT);
-                mList.addItemWithTitle(getString(R.string.netstats_msg), true);
-                mList.item_title.setTextColor(mAccentColor);
-                mList.addItemWithTitleSubtitle(getString(R.string.netstats_transmitted),
-                        getReadableSize(dataUsage.getFirst().getFirst() + dataUsage.getSecond().getFirst()), ListItemCreator.SELECTABLE);
-                mList.addItemWithTitleSubtitle(getString(R.string.netstats_received),
-                        getReadableSize(dataUsage.getFirst().getSecond() + dataUsage.getSecond().getSecond()), ListItemCreator.SELECTABLE);
-                mList.addDivider();
-            }
-        } else {
-            mList.addItemWithTitle(getString(R.string.netstats_msg), true);
-            mList.item_title.setTextColor(mAccentColor);
-            Tuple<String, String> uidNetStats = getNetStats(mApplicationInfo.uid);
-            mList.addItemWithTitleSubtitle(getString(R.string.netstats_transmitted), uidNetStats.getFirst(), ListItemCreator.SELECTABLE);
-            mList.addItemWithTitleSubtitle(getString(R.string.netstats_received), uidNetStats.getSecond(), ListItemCreator.SELECTABLE);
-            mList.addDivider();
-            runOnUiThread(() -> {
-                mList.addItemWithTitleSubtitle(getString(R.string.sdk_flags), flags.toString(), ListItemCreator.SELECTABLE);
-                mList.item_subtitle.setTypeface(Typeface.MONOSPACE);
-            });
+        creator.addItemWithTitleSubtitle(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime), ListItemCreator.NO_ACTION);
+        creator.addItemWithTitleSubtitle(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime), ListItemCreator.NO_ACTION);
+        if(!mPackageName.equals(mApplicationInfo.processName))
+            creator.addItemWithTitleSubtitle(getString(R.string.process_name), mApplicationInfo.processName, ListItemCreator.NO_ACTION);
+        String installerPackageName = null;
+        try {
+            installerPackageName = mPackageManager.getInstallerPackageName(mPackageName);
+        } catch (IllegalArgumentException ignore) {}
+        if (installerPackageName != null) {
+            String applicationLabel = mApplicationInfo.loadLabel(mPackageManager).toString();
+            creator.addItemWithTitleSubtitle(getString(R.string.installer_app), applicationLabel, ListItemCreator.SELECTABLE);
         }
+        creator.addItemWithTitleSubtitle(getString(R.string.user_id), Integer.toString(mApplicationInfo.uid), ListItemCreator.SELECTABLE);
+        if (mPackageInfo.sharedUserId != null)
+            creator.addItemWithTitleSubtitle(getString(R.string.shared_user_id), mPackageInfo.sharedUserId, ListItemCreator.SELECTABLE);
+        // Main activity
+        final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
+        if (launchIntentForPackage != null) {
+            final ComponentName launchComponentName = launchIntentForPackage.getComponent();
+            if (launchComponentName != null) {
+                final String mainActivity = launchIntentForPackage.getComponent().getClassName();
+                creator.addItemWithTitleSubtitle(getString(R.string.main_activity), mainActivity, ListItemCreator.SELECTABLE);
+                creator.setOpen(view -> startActivity(launchIntentForPackage));
+            }
+        }
+        creator.addDivider();
+    }
+
+    private void setDataUsage() {
+        try {
+            // Net statistics
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
+                    final Tuple<Tuple<Long, Long>, Tuple<Long, Long>> dataUsage = AppUsageStatsManager
+                            .getWifiMobileUsageForPackage(mActivity, mPackageName,
+                                    io.github.muntashirakon.AppManager.usage.Utils.USAGE_LAST_BOOT);
+                    runOnUiThread(() -> {
+                        ListItemCreator creator = new ListItemCreator(mActivity, R.id.layout_data_usage, true);
+                        creator.addItemWithTitle(getString(R.string.netstats_msg), true);
+                        creator.item_title.setTextColor(mAccentColor);
+                        creator.addInlineItem(getString(R.string.netstats_transmitted), getReadableSize(dataUsage.getFirst().getFirst() + dataUsage.getSecond().getFirst()));
+                        creator.addInlineItem(getString(R.string.netstats_received), getReadableSize(dataUsage.getFirst().getSecond() + dataUsage.getSecond().getSecond()));
+                        creator.addDivider();
+                    });
+                }
+            } else {
+                final Tuple<String, String> uidNetStats = getNetStats(mApplicationInfo.uid);
+                runOnUiThread(() -> {
+                    ListItemCreator creator = new ListItemCreator(mActivity, R.id.layout_data_usage, true);
+                    creator.addItemWithTitle(getString(R.string.netstats_msg), true);
+                    creator.item_title.setTextColor(mAccentColor);
+                    creator.addInlineItem(getString(R.string.netstats_transmitted), uidNetStats.getFirst());
+                    creator.addInlineItem(getString(R.string.netstats_received), uidNetStats.getSecond());
+                    creator.addDivider();
+                });
+            }
+        } catch (Exception e) {
+            runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_get_data_usage_information, Toast.LENGTH_LONG).show());
+            e.printStackTrace();
+        }
+    }
+
+    private void setVerticalView()  {
+        runOnUiThread(this::setMoreInfo);
+        if (isExternalApk) return;
+        runOnUiThread(this::setPathsAndDirectories);
+        setDataUsage();
         // Storage and Cache
         if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) setStorageAndCache();
     }
@@ -790,58 +821,22 @@ public class AppInfoFragment extends Fragment
     }
 
     private void setStorageInfo(long codeSize, long dataSize, long cacheSize, long obbSize, long mediaSize) {
-        mList.addItemWithTitle(getString(R.string.storage_and_cache), true);
-        mList.item_title.setTextColor(mAccentColor);
+        ListItemCreator creator = new ListItemCreator(mActivity, R.id.layout_storage_and_cache, true);
+        creator.addItemWithTitle(getString(R.string.storage_and_cache), true);
+        creator.item_title.setTextColor(mAccentColor);
         // Code size
-        mList.addItemWithTitleSubtitle(getString(R.string.app_size), getReadableSize(codeSize),
-                ListItemCreator.SELECTABLE);
+        creator.addInlineItem(getString(R.string.app_size), getReadableSize(codeSize));
         // Data size
-        mList.addItemWithTitleSubtitle(getString(R.string.data_size), getReadableSize(dataSize),
-                ListItemCreator.SELECTABLE);
-        if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
-            mList.setOpen(v -> new Thread(() -> {
-                // Clear data
-                if (RunnerUtils.clearPackageData(mPackageName).isSuccessful()) {
-                    runOnUiThread(() -> mainModel.setIsPackageChanged());
-                }
-            }).start());
-            mList.item_open.setImageDrawable(mActivity.getDrawable(R.drawable.ic_delete_black_24dp));
-        }
+        creator.addInlineItem(getString(R.string.data_size), getReadableSize(dataSize));
         // Cache size
-        mList.addItemWithTitleSubtitle(getString(R.string.cache_size), getReadableSize(cacheSize),
-                ListItemCreator.SELECTABLE);
-        if (AppPref.isRootEnabled()) {
-            mList.setOpen(v -> new Thread(() -> {
-                StringBuilder command = new StringBuilder(String.format("rm -rf %s/cache %s/code_cache",
-                        mApplicationInfo.dataDir, mApplicationInfo.dataDir));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    if (!mApplicationInfo.dataDir.equals(mApplicationInfo.deviceProtectedDataDir)) {
-                        command.append(String.format(" %s/cache %s/code_cache",
-                                mApplicationInfo.deviceProtectedDataDir, mApplicationInfo.deviceProtectedDataDir));
-                    }
-                }
-                File[] cacheDirs = mActivity.getExternalCacheDirs();
-                for (File cacheDir : cacheDirs) {
-                    String extCache = cacheDir.getAbsolutePath().replace(mActivity.getPackageName(), mPackageName);
-                    command.append(" ").append(extCache);
-                }
-                if (Runner.runCommand(command.toString()).isSuccessful()) {
-                    runOnUiThread(() -> mainModel.setIsPackageChanged());
-                }
-            }).start());
-            mList.item_open.setImageDrawable(mActivity.getDrawable(R.drawable.ic_delete_black_24dp));
-        }
+        creator.addInlineItem(getString(R.string.cache_size), getReadableSize(cacheSize));
         // OBB size
-        if (obbSize != 0)
-            mList.addItemWithTitleSubtitle(getString(R.string.obb_size), getReadableSize(obbSize),
-                    ListItemCreator.SELECTABLE);
+        if (obbSize != 0) creator.addInlineItem(getString(R.string.obb_size), getReadableSize(obbSize));
         // Media size
-        if (mediaSize != 0)
-            mList.addItemWithTitleSubtitle(getString(R.string.media_size), getReadableSize(mediaSize),
-                    ListItemCreator.SELECTABLE);
-        mList.addItemWithTitleSubtitle(getString(R.string.total_size), getReadableSize(codeSize
-                + dataSize + cacheSize + obbSize + mediaSize), ListItemCreator.SELECTABLE);
-        mList.addDivider();
+        if (mediaSize != 0) creator.addInlineItem(getString(R.string.media_size), getReadableSize(mediaSize));
+        creator.addInlineItem(getString(R.string.total_size), getReadableSize(codeSize
+                + dataSize + cacheSize + obbSize + mediaSize));
+        creator.addDivider();
     }
 
     /**
@@ -850,17 +845,14 @@ public class AppInfoFragment extends Fragment
     private void getPackageInfo() {
         mProgressIndicator.show();
         new Thread(() -> {
+            mPackageName = mainModel.getPackageName();
             mPackageInfo = mainModel.getPackageInfo();
             if (mPackageInfo == null) return;
             mApplicationInfo = mPackageInfo.applicationInfo;
             mPackageLabel = mApplicationInfo.loadLabel(mPackageManager);
-            runOnUiThread(() -> {
-                // ListItemCreator instance
-                mList = new ListItemCreator(mActivity, R.id.details_container, true);
-            });
             // (Re)load views
             runOnUiThread(this::setHorizontalView);
-            runOnUiThread(this::setVerticalView);
+            setVerticalView();
             setHeaders();
             runOnUiThread(() -> mProgressIndicator.hide());
         }).start();

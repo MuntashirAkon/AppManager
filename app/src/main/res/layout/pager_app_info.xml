@@ -116,7 +116,19 @@
                 android:orientation="vertical" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/details_container"
+                android:id="@+id/layout_data_usage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/layout_storage_and_cache"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/layout_more_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
