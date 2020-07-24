@@ -522,4 +522,15 @@
     <string name="pref_import_existing_msg">Add currently disabled components to App Manager, this currently doesn\'t include MAT\'s IFW blocking rules</string>
     <string name="failed_to_get_data_usage_information">Failed to get data usage information</string>
     <string name="clear_cache">Clear Cache</string>
+    <string name="block_trackers_description">Block ad and tracking components from all the installed apps</string>
+    <string name="block_components_dots">Block components…</string>
+    <string name="block_components_description">Block all components identified by the given signature(s)</string>
+    <string name="deny_app_ops_dots">Deny app ops…</string>
+    <string name="deny_app_ops_description">Deny given app operations identified by the constant values, ie. 63 means RUN_IN_BACKGROUND</string>
+    <string name="clear_data_from_uninstalled_apps">Clear data from uninstalled apps</string>
+    <string name="clear_data_from_uninstalled_apps_description">Clear data from apps that are uninstalled with DONT_DELETE_DATA flag</string>
+    <string name="clear_app_cache">Clear app cache</string>
+    <string name="clear_app_cache_description">Clear cache from all the applications</string>
+    <string name="no_tracker_found">No tracker found</string>
+    <string name="failed_packages">Failed packages</string>
 </resources>

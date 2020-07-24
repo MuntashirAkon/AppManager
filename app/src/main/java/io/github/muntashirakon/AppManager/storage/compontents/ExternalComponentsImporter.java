@@ -19,6 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,7 +34,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
  */
 public class ExternalComponentsImporter {
     @NonNull
-    public static List<String> applyFromTrackingComponents(@NonNull Context context, @NonNull List<String> packageNames) {
+    public static List<String> applyFromTrackingComponents(@NonNull Context context, @NonNull Collection<String> packageNames) {
         List<String> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
         for (String packageName: packageNames) {
