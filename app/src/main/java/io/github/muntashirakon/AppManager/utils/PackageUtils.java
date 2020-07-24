@@ -24,6 +24,7 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
 
 public final class PackageUtils {
+    @SuppressWarnings("RegExpRedundantEscape")
     private static final Pattern SERVICE_REGEX = Pattern.compile("ServiceRecord\\{.*/([^\\}]+)\\}");
 
     @NonNull
@@ -145,5 +146,10 @@ public final class PackageUtils {
             }
         }
         return runningServices;
+    }
+
+    public static long getVersionCode(PackageInfo packageInfo) {
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? packageInfo.getLongVersionCode()
+                : packageInfo.versionCode);
     }
 }

@@ -87,10 +87,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?android:attr/listDivider" />
+                <include layout="@layout/item_divider_horizontal" />
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -108,11 +105,15 @@
 
                 </HorizontalScrollView>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?android:attr/listDivider" />
+                <include layout="@layout/item_divider_horizontal" />
+
             </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/layout_paths_and_directories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/details_container"

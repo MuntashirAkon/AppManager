@@ -58,6 +58,10 @@ public class ListItemCreator {
         mActivity = activity;
     }
 
+    public void removeAll() {
+        mListContainer.removeAllViews();
+    }
+
     public void addDivider() {
         View divider = mLayoutInflater.inflate(R.layout.item_divider_horizontal, mListContainer, false);
         mListContainer.addView(divider);

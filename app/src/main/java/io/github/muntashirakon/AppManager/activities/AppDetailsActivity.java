@@ -45,9 +45,11 @@ public class AppDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        model = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(AppDetailsViewModel.class);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_details);
         setSupportActionBar(findViewById(R.id.toolbar));
+        // Get model
         Intent intent = getIntent();
         // Check for package name
         final String packageName = intent.getStringExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME);
@@ -60,8 +62,6 @@ public class AppDetailsActivity extends AppCompatActivity {
             finish();
             return;
         }
-        // Get model
-        model = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(AppDetailsViewModel.class);
         new Thread(() -> {
             if (packageName != null) model.setPackageName(packageName);
             else {
@@ -104,9 +104,9 @@ public class AppDetailsActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    public void finish() {
         model.onCleared();
-        super.onDestroy();
+        super.finish();
     }
 
     @SuppressLint("RestrictedApi")

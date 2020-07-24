@@ -15,6 +15,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -70,6 +71,7 @@ import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -109,6 +111,12 @@ public class AppInfoFragment extends Fragment
     private ProgressIndicator mProgressIndicator;
     private AppDetailsViewModel mainModel;
     private View view;
+    // Headers
+    private TextView labelView;
+    private TextView packageNameView;
+    private ImageView iconView;
+    private TextView versionView;
+    private boolean isExternalApk;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,6 +129,7 @@ public class AppInfoFragment extends Fragment
             mainModel.setPackageInfo(false);
             mPackageName = mainModel.getPackageName();
         }
+        isExternalApk = mainModel.getIsExternalApk();
         mPackageManager = mActivity.getPackageManager();
         mAccentColor = Utils.getThemeColor(mActivity, android.R.attr.colorAccent);
     }
@@ -129,13 +138,20 @@ public class AppInfoFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.pager_app_info, container, false);
+        // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setColorSchemeColors(mAccentColor);
         mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(mActivity, android.R.attr.colorPrimary));
         mSwipeRefresh.setOnRefreshListener(this);
         mHorizontalLayout = view.findViewById(R.id.horizontal_layout);
-        mTagCloud = view.findViewById(R.id.tag_cloud);
+        // Progress indicator
         mProgressIndicator = view.findViewById(R.id.progress_linear);
+        // Header
+        mTagCloud = view.findViewById(R.id.tag_cloud);
+        labelView = view.findViewById(R.id.label);
+        packageNameView = view.findViewById(R.id.packageName);
+        iconView = view.findViewById(R.id.icon);
+        versionView = view.findViewById(R.id.version);
         return view;
     }
 
@@ -240,77 +256,70 @@ public class AppInfoFragment extends Fragment
     /**
      * Set views up to details_container.
      */
-    private void setHeaderView() {
+    private void setHeaders() {
         // Set Application Name, aka Label
-        TextView labelView = view.findViewById(R.id.label);
-        labelView.setText(mPackageLabel);
+        runOnUiThread(() -> labelView.setText(mPackageLabel));
 
         // Set Package Name
-        TextView packageNameView = view.findViewById(R.id.packageName);
-        packageNameView.setText(mPackageName);
+        runOnUiThread(() -> packageNameView.setText(mPackageName));
 
         // Set App Icon
-        ImageView iconView = view.findViewById(R.id.icon);
-        iconView.setImageDrawable(mApplicationInfo.loadIcon(mPackageManager));
+        final Drawable appIcon = mApplicationInfo.loadIcon(mPackageManager);
+        runOnUiThread(() -> iconView.setImageDrawable(appIcon));
 
         // Set App Version
-        TextView versionView = view.findViewById(R.id.version);
-        versionView.setText(String.format(getString(R.string.version_name_with_code), mPackageInfo.versionName,
-                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ?
-                        mPackageInfo.getLongVersionCode() : mPackageInfo.versionCode)));
+        runOnUiThread(() -> versionView.setText(String.format(getString(R.string.version_name_with_code), mPackageInfo.versionName, PackageUtils.getVersionCode(mPackageInfo))));
 
         // Tag cloud //
-        new Thread(() -> {
-            List<String> componentList = new ArrayList<>();
-            // Add activities
-            if (mPackageInfo.activities != null) {
-                String activityName;
-                for (ActivityInfo activityInfo : mPackageInfo.activities) {
-                    if (activityInfo.targetActivity != null) activityName = activityInfo.targetActivity;
-                    else activityName = activityInfo.name;
-                    if (TrackerComponentUtils.isTracker(activityName)) componentList.add(activityName);
-                }
+        List<String> componentList = new ArrayList<>();
+        // Add activities
+        if (mPackageInfo.activities != null) {
+            String activityName;
+            for (ActivityInfo activityInfo : mPackageInfo.activities) {
+                if (activityInfo.targetActivity != null) activityName = activityInfo.targetActivity;
+                else activityName = activityInfo.name;
+                if (TrackerComponentUtils.isTracker(activityName)) componentList.add(activityName);
             }
-            // Add others
-            if (mPackageInfo.services != null) {
-                for (ComponentInfo componentInfo : mPackageInfo.services)
-                    if (TrackerComponentUtils.isTracker(componentInfo.name)) componentList.add(componentInfo.name);
+        }
+        // Add others
+        if (mPackageInfo.services != null) {
+            for (ComponentInfo componentInfo : mPackageInfo.services)
+                if (TrackerComponentUtils.isTracker(componentInfo.name)) componentList.add(componentInfo.name);
+        }
+        if (mPackageInfo.receivers != null) {
+            for (ComponentInfo componentInfo : mPackageInfo.receivers)
+                if (TrackerComponentUtils.isTracker(componentInfo.name)) componentList.add(componentInfo.name);
+        }
+        if (mPackageInfo.providers != null) {
+            for (ComponentInfo componentInfo : mPackageInfo.providers)
+                if (TrackerComponentUtils.isTracker(componentInfo.name)) componentList.add(componentInfo.name);
+        }
+        runOnUiThread(() -> {
+            mTagCloud.removeAllViews();
+            // Add tracker chip
+            if (!componentList.isEmpty()) {
+                Chip chip = new Chip(mActivity);
+                chip.setText(String.format(getString(R.string.no_of_trackers), componentList.size()));
+                chip.setChipBackgroundColorResource(R.color.red);
+                mTagCloud.addView(chip);
             }
-            if (mPackageInfo.receivers != null) {
-                for (ComponentInfo componentInfo : mPackageInfo.receivers)
-                    if (TrackerComponentUtils.isTracker(componentInfo.name)) componentList.add(componentInfo.name);
-            }
-            if (mPackageInfo.providers != null) {
-                for (ComponentInfo componentInfo : mPackageInfo.providers)
-                    if (TrackerComponentUtils.isTracker(componentInfo.name)) componentList.add(componentInfo.name);
-            }
-            runOnUiThread(() -> {
-                mTagCloud.removeAllViews();
-                // Add tracker chip
-                if (!componentList.isEmpty()) {
-                    Chip chip = new Chip(mActivity);
-                    chip.setText(String.format(getString(R.string.no_of_trackers), componentList.size()));
-                    chip.setChipBackgroundColorResource(R.color.red);
-                    mTagCloud.addView(chip);
-                }
-                if ((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-                    addChip(R.string.system_app);
-                    if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0)
-                        addChip(R.string.updated_app);
-                } else if (!mainModel.getIsExternalApk()) addChip(R.string.user_app);
-                if ((mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
-                    addChip(R.string.debuggable);
-                if ((mApplicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
-                    addChip(R.string.test_only);
-                if ((mApplicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) == 0)
-                    addChip(R.string.no_code);
-                if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)
-                    addChip(R.string.requested_large_heap, R.color.red);
-                if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0)
-                    addChip(R.string.stopped, R.color.stopped);
-                if (!mApplicationInfo.enabled) addChip(R.string.disabled_app, R.color.disabled_user);
-            });
-        }).start();
+            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+                addChip(R.string.system_app);
+                if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0)
+                    addChip(R.string.updated_app);
+            } else if (!mainModel.getIsExternalApk()) addChip(R.string.user_app);
+            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
+                addChip(R.string.debuggable);
+            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
+                addChip(R.string.test_only);
+            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) == 0)
+                addChip(R.string.no_code);
+            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)
+                addChip(R.string.requested_large_heap, R.color.red);
+            if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0)
+                addChip(R.string.stopped, R.color.stopped);
+            if (!mApplicationInfo.enabled) addChip(R.string.disabled_app, R.color.disabled_user);
+        });
     }
 
     private void setHorizontalView() {
@@ -538,24 +547,25 @@ public class AppInfoFragment extends Fragment
     }
 
     private void setPathsAndDirectories() {
+        ListItemCreator creator = new ListItemCreator(mActivity, R.id.layout_paths_and_directories, true);
         // Paths and directories
-        mList.addItemWithTitle(getString(R.string.paths_and_directories), true);
-        mList.item_title.setTextColor(mAccentColor);
+        creator.addItemWithTitle(getString(R.string.paths_and_directories), true);
+        creator.item_title.setTextColor(mAccentColor);
         // Source directory (apk path)
-        mList.addItemWithTitleSubtitle(getString(R.string.source_dir), mApplicationInfo.sourceDir, ListItemCreator.SELECTABLE);
-        openAsFolderInFM((new File(mApplicationInfo.sourceDir)).getParent());
+        creator.addItemWithTitleSubtitle(getString(R.string.source_dir), mApplicationInfo.sourceDir, ListItemCreator.SELECTABLE);
+        openAsFolderInFM(creator, (new File(mApplicationInfo.sourceDir)).getParent());
         // Public source directory
         if (!mApplicationInfo.publicSourceDir.equals(mApplicationInfo.sourceDir)) {
-            mList.addItemWithTitleSubtitle(getString(R.string.public_source_dir), mApplicationInfo.publicSourceDir, ListItemCreator.SELECTABLE);
-            openAsFolderInFM((new File(mApplicationInfo.publicSourceDir)).getParent());
+            creator.addItemWithTitleSubtitle(getString(R.string.public_source_dir), mApplicationInfo.publicSourceDir, ListItemCreator.SELECTABLE);
+            openAsFolderInFM(creator, (new File(mApplicationInfo.publicSourceDir)).getParent());
         }
         // Data dir
-        mList.addItemWithTitleSubtitle(getString(R.string.data_dir), mApplicationInfo.dataDir, ListItemCreator.SELECTABLE);
-        openAsFolderInFM(mApplicationInfo.dataDir);
+        creator.addItemWithTitleSubtitle(getString(R.string.data_dir), mApplicationInfo.dataDir, ListItemCreator.SELECTABLE);
+        openAsFolderInFM(creator, mApplicationInfo.dataDir);
         // Device-protected data dir
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mList.addItemWithTitleSubtitle(getString(R.string.dev_protected_data_dir), mApplicationInfo.deviceProtectedDataDir, ListItemCreator.NO_ACTION);
-            openAsFolderInFM(mApplicationInfo.deviceProtectedDataDir);
+            creator.addItemWithTitleSubtitle(getString(R.string.dev_protected_data_dir), mApplicationInfo.deviceProtectedDataDir, ListItemCreator.SELECTABLE);
+            openAsFolderInFM(creator, mApplicationInfo.deviceProtectedDataDir);
         }
         // External data dirs
         File[] dataDirs = mActivity.getExternalCacheDirs();
@@ -566,29 +576,27 @@ public class AppInfoFragment extends Fragment
         }
         if (extDataDirs.size() == 1) {
             if (new File(extDataDirs.get(0)).exists()) {
-                mList.addItemWithTitleSubtitle(getString(R.string.external_data_dir), extDataDirs.get(0), ListItemCreator.NO_ACTION);
-                openAsFolderInFM(extDataDirs.get(0));
+                creator.addItemWithTitleSubtitle(getString(R.string.external_data_dir), extDataDirs.get(0), ListItemCreator.SELECTABLE);
+                openAsFolderInFM(creator, extDataDirs.get(0));
             }
         } else {
             for(int i = 0; i<extDataDirs.size(); ++i) {
                 if (new File(extDataDirs.get(i)).exists()) {
-                    mList.addItemWithTitleSubtitle(String.format(getString(R.string.external_multiple_data_dir), i), extDataDirs.get(i), ListItemCreator.NO_ACTION);
-                    openAsFolderInFM(extDataDirs.get(i));
+                    creator.addItemWithTitleSubtitle(String.format(getString(R.string.external_multiple_data_dir), i), extDataDirs.get(i), ListItemCreator.SELECTABLE);
+                    openAsFolderInFM(creator, extDataDirs.get(i));
                 }
             }
         }
         // Native JNI library dir
         File nativeLib = new File(mApplicationInfo.nativeLibraryDir);
         if (nativeLib.exists()) {
-            mList.addItemWithTitleSubtitle(getString(R.string.native_library_dir), mApplicationInfo.nativeLibraryDir, ListItemCreator.NO_ACTION);
-            openAsFolderInFM(mApplicationInfo.nativeLibraryDir);
+            creator.addItemWithTitleSubtitle(getString(R.string.native_library_dir), mApplicationInfo.nativeLibraryDir, ListItemCreator.SELECTABLE);
+            openAsFolderInFM(creator, mApplicationInfo.nativeLibraryDir);
         }
-        mList.addDivider();
+        creator.addDivider();
     }
 
     private void setMoreInfo() {
-        mList.addItemWithTitle(getString(R.string.more_info), true);
-        mList.item_title.setTextColor(mAccentColor);
         mList.addItemWithTitleSubtitle(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime), ListItemCreator.NO_ACTION);
         mList.addItemWithTitleSubtitle(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime), ListItemCreator.NO_ACTION);
         if(!mPackageName.equals(mApplicationInfo.processName))
@@ -618,36 +626,43 @@ public class AppInfoFragment extends Fragment
     }
 
     private void setVerticalView()  {
+        runOnUiThread(() -> mList.removeAll());
         // Set paths and directories
-        if (!mainModel.getIsExternalApk()) setPathsAndDirectories();
+        if (!mainModel.getIsExternalApk()) runOnUiThread(this::setPathsAndDirectories);
+
+        if (mainModel.getIsExternalApk()) return;
+
+        // Set more info
+        runOnUiThread(() -> {
+            mList.addItemWithTitle(getString(R.string.more_info), true);
+            mList.item_title.setTextColor(mAccentColor);
+        });
+
         // SDK
-        mList.addItemWithTitle(getString(R.string.sdk), true);
-        mList.item_title.setTextColor(mAccentColor);
-        mList.addInlineItem(getString(R.string.sdk_max), Integer.toString(mApplicationInfo.targetSdkVersion));
+        final StringBuilder sdk = new StringBuilder();
+        sdk.append(getString(R.string.sdk_max)).append(": ").append(mApplicationInfo.targetSdkVersion);
         if (Build.VERSION.SDK_INT > 23)
-            mList.addInlineItem(getString(R.string.sdk_min), Integer.toString(mApplicationInfo.minSdkVersion));
+            sdk.append(", ").append(getString(R.string.sdk_min)).append(": ").append(mApplicationInfo.minSdkVersion);
+        runOnUiThread(() -> mList.addItemWithTitleSubtitle(getString(R.string.sdk), sdk.toString(), ListItemCreator.SELECTABLE));
 
         // Set Flags
-        String flags = "";
+        final StringBuilder flags = new StringBuilder();
         if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
-            flags += "FLAG_DEBUGGABLE";
+            flags.append("FLAG_DEBUGGABLE");
         if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
-            flags += (flags.length() == 0 ? "" : "|" ) + "FLAG_TEST_ONLY";
+            flags.append(flags.length() == 0 ? "" : "|").append("FLAG_TEST_ONLY");
         if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_MULTIARCH) != 0)
-            flags += (flags.length() == 0 ? "" : "|" ) + "FLAG_MULTIARCH";
+            flags.append(flags.length() == 0 ? "" : "|").append("FLAG_MULTIARCH");
         if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_HARDWARE_ACCELERATED) != 0)
-            flags += (flags.length() == 0 ? "" : "|" ) + "FLAG_HARDWARE_ACCELERATED";
+            flags.append(flags.length() == 0 ? "" : "|").append("FLAG_HARDWARE_ACCELERATED");
 
         if(flags.length() != 0) {
             mList.addItemWithTitleSubtitle(getString(R.string.sdk_flags), flags, ListItemCreator.SELECTABLE);
             mList.item_subtitle.setTypeface(Typeface.MONOSPACE);
         }
-        mList.addDivider();
 
-        if (mainModel.getIsExternalApk()) return;
-
-        // Set more info
-        setMoreInfo();
+        if (isExternalApk) return;
+        runOnUiThread(this::setMoreInfo);
 
         // Net statistics
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -670,11 +685,13 @@ public class AppInfoFragment extends Fragment
             mList.addItemWithTitleSubtitle(getString(R.string.netstats_transmitted), uidNetStats.getFirst(), ListItemCreator.SELECTABLE);
             mList.addItemWithTitleSubtitle(getString(R.string.netstats_received), uidNetStats.getSecond(), ListItemCreator.SELECTABLE);
             mList.addDivider();
+            runOnUiThread(() -> {
+                mList.addItemWithTitleSubtitle(getString(R.string.sdk_flags), flags.toString(), ListItemCreator.SELECTABLE);
+                mList.item_subtitle.setTypeface(Typeface.MONOSPACE);
+            });
         }
-
         // Storage and Cache
-        if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL))
-            getPackageSizeInfo();
+        if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) setStorageAndCache();
     }
 
     private List<String> getSharedPrefs(@NonNull String sourceDir) {
@@ -688,8 +705,8 @@ public class AppInfoFragment extends Fragment
         return Runner.runCommand(String.format("ls %s/*.db", sharedPath.getAbsolutePath())).getOutputAsList();
     }
 
-    private void openAsFolderInFM(String dir) {
-        mList.setOpen(view -> {
+    private void openAsFolderInFM(@NonNull ListItemCreator creator, String dir) {
+        creator.setOpen(view -> {
             Intent openFile = new Intent(Intent.ACTION_VIEW);
             openFile.setDataAndType(Uri.parse(dir), "resource/folder");
             openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -724,7 +741,7 @@ public class AppInfoFragment extends Fragment
     /**
      * Load package sizes and update views if success.
      */
-    private void getPackageSizeInfo() {
+    private void setStorageAndCache() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             try {
                 Method getPackageSizeInfo = mPackageManager.getClass().getMethod(
@@ -748,7 +765,7 @@ public class AppInfoFragment extends Fragment
             }
         } else {
             if (!Utils.checkUsageStatsPermission(mActivity)) {
-                new MaterialAlertDialogBuilder(mActivity, R.style.AppTheme_AlertDialog)
+                runOnUiThread(() -> new MaterialAlertDialogBuilder(mActivity, R.style.AppTheme_AlertDialog)
                         .setTitle(R.string.grant_usage_access)
                         .setMessage(R.string.grant_usage_acess_message)
                         .setPositiveButton(R.string.go, (dialog, which) -> startActivityForResult(new Intent(
@@ -757,7 +774,7 @@ public class AppInfoFragment extends Fragment
                         .setNeutralButton(R.string.never_ask, (dialog, which) ->
                                 AppPref.getInstance().setPref(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, false))
                         .setCancelable(false)
-                        .show();
+                        .show());
                 return;
             }
             try {
@@ -842,9 +859,9 @@ public class AppInfoFragment extends Fragment
                 mList = new ListItemCreator(mActivity, R.id.details_container, true);
             });
             // (Re)load views
-            runOnUiThread(this::setHeaderView);
             runOnUiThread(this::setHorizontalView);
             runOnUiThread(this::setVerticalView);
+            setHeaders();
             runOnUiThread(() -> mProgressIndicator.hide());
         }).start();
     }
@@ -854,7 +871,8 @@ public class AppInfoFragment extends Fragment
      * @param time Unix time
      * @return Formatted time
      */
-    public String getTime(long time) {
+    @NonNull
+    private String getTime(long time) {
         Date date = new Date(time);
         return mDateFormatter.format(date);
     }
