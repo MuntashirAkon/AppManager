@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import androidx.annotation.NonNull;
 import dalvik.system.DexFile;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
 
@@ -63,6 +64,20 @@ public final class PackageUtils {
             }
         } catch (PackageManager.NameNotFoundException ignore) {}
         return componentClasses;
+    }
+
+    @NonNull
+    public static HashMap<String, RulesStorageManager.Type> getFilteredComponents(String packageName, String[] signatures) {
+        HashMap<String, RulesStorageManager.Type> filteredComponents = new HashMap<>();
+        HashMap<String, RulesStorageManager.Type> components = collectComponentClassNames(packageName);
+        for (String componentName: components.keySet()) {
+            for(String signature: signatures) {
+                if (componentName.startsWith(signature) || componentName.contains(signature)) {
+                    filteredComponents.put(componentName, components.get(componentName));
+                }
+            }
+        }
+        return filteredComponents;
     }
 
     @NonNull
