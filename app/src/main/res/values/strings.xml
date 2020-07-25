@@ -534,6 +534,11 @@
     <string name="no_tracker_found">No tracker found</string>
     <string name="failed_packages">Failed packages</string>
     <string name="input_signatures">Input signatures</string>
-    <string name="input_signatures_description">Input signatures (eg., com.facebook.) each separated by a space</string>
+    <string name="input_signatures_description">Input signatures (eg., com.facebook.) each separated by a space.</string>
     <string name="filtered_packages">Filtered packages</string>
+    <string name="input_app_ops">Input app ops</string>
+    <string name="input_app_ops_description">Input app op constants (eg., 63) each separated by a
+        space. You can find app op constants in the app ops tab under the brackets.</string>
+    <string name="only_works_in_root_or_adb_mode">Only works in root or ADB mode</string>
+    <string name="failed_to_parse_some_numbers">Failed to parse some numbers</string>
 </resources>

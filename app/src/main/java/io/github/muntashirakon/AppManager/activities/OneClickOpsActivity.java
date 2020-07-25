@@ -12,10 +12,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,20 +66,22 @@ public class OneClickOpsActivity extends AppCompatActivity {
         }
         mProgressIndicator.show();
         new Thread(() -> {
-            List<ApplicationInfo> applicationInfoList = getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA);
-            HashMap<String, Integer> trackerCount = new HashMap<>();
+            HashMap<ApplicationInfo, Integer> trackerCount = new HashMap<>();
             HashMap<String, RulesStorageManager.Type> trackersPerPackage;
-            for (ApplicationInfo applicationInfo: applicationInfoList) {
+            for (ApplicationInfo applicationInfo:
+                    getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA)) {
                 trackersPerPackage = TrackerComponentUtils.getTrackerComponentsForPackage(applicationInfo.packageName);
                 if (!trackersPerPackage.isEmpty()) {
-                    trackerCount.put(applicationInfo.packageName, trackersPerPackage.size());
+                    trackerCount.put(applicationInfo, trackersPerPackage.size());
                 }
             }
             if (!trackerCount.isEmpty()) {
-                Set<String> selectedPackages = trackerCount.keySet();
+                List<String> selectedPackages = new ArrayList<>();
+                List<ApplicationInfo> applicationInfoList = new ArrayList<>(trackerCount.keySet());
+                for (ApplicationInfo info: applicationInfoList) selectedPackages.add(info.packageName);
                 String[] trackerPackages = selectedPackages.toArray(new String[0]);
                 String[] trackerPackagesWithTrackerCount = new String[trackerCount.size()];
-                for (int i = 0; i<trackerCount.size(); ++i) trackerPackagesWithTrackerCount[i] = "(" + trackerCount.get(trackerPackages[i]) + ") " + trackerPackages[i];
+                for (int i = 0; i<trackerCount.size(); ++i) trackerPackagesWithTrackerCount[i] = "(" + trackerCount.get(applicationInfoList.get(i)) + ") " + getPackageManager().getApplicationLabel(applicationInfoList.get(i));
                 boolean[] checkedItems = new boolean[selectedPackages.size()];
                 Arrays.fill(checkedItems, true);
                 runOnUiThread(() -> {
@@ -137,20 +139,21 @@ public class OneClickOpsActivity extends AppCompatActivity {
                     new Thread(() -> {
                         String[] signatures = signaturesEditable.toString().split("\\s+");
                         if (signatures.length == 0) return;
-                        List<ApplicationInfo> applicationInfoList = getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA);
-                        HashMap<String, Integer> componentsCount = new HashMap<>();
+                        HashMap<ApplicationInfo, Integer> componentsCount = new HashMap<>();
                         HashMap<String, RulesStorageManager.Type> componentsPerPackage;
-                        for (ApplicationInfo applicationInfo: applicationInfoList) {
+                        for (ApplicationInfo applicationInfo:
+                                getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA)) {
                             componentsPerPackage = PackageUtils.getFilteredComponents(applicationInfo.packageName, signatures);
-                            if (!componentsPerPackage.isEmpty()) {
-                                componentsCount.put(applicationInfo.packageName, componentsPerPackage.size());
-                            }
+                            if (!componentsPerPackage.isEmpty())
+                                componentsCount.put(applicationInfo, componentsPerPackage.size());
                         }
                         if (!componentsCount.isEmpty()) {
-                            Set<String> selectedPackages = componentsCount.keySet();
+                            List<String> selectedPackages = new ArrayList<>();
+                            List<ApplicationInfo> applicationInfoList = new ArrayList<>(componentsCount.keySet());
+                            for (ApplicationInfo info: applicationInfoList) selectedPackages.add(info.packageName);
                             String[] filteredPackages = selectedPackages.toArray(new String[0]);
                             String[] filteredPackagesWithComponentCount = new String[componentsCount.size()];
-                            for (int i = 0; i<componentsCount.size(); ++i) filteredPackagesWithComponentCount[i] = "(" + componentsCount.get(filteredPackages[i]) + ") " + filteredPackages[i];
+                            for (int i = 0; i<componentsCount.size(); ++i) filteredPackagesWithComponentCount[i] = "(" + componentsCount.get(applicationInfoList.get(i)) + ") " + getPackageManager().getApplicationLabel(applicationInfoList.get(i));
                             boolean[] checkedItems = new boolean[selectedPackages.size()];
                             Arrays.fill(checkedItems, true);
                             runOnUiThread(() -> {
@@ -193,12 +196,90 @@ public class OneClickOpsActivity extends AppCompatActivity {
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
-        Toast.makeText(this, "Not implemented yet.", Toast.LENGTH_SHORT).show();
     }
 
     private void blockAppOps() {
-        // TODO
-        Toast.makeText(this, "Not implemented yet.", Toast.LENGTH_SHORT).show();
+        if (!AppPref.isRootEnabled() && !AppPref.isAdbEnabled()) {
+            Toast.makeText(this, R.string.only_works_in_root_or_adb_mode, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        View view = getLayoutInflater().inflate(R.layout.dialog_input_app_ops, null);
+        new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                .setTitle(R.string.deny_app_ops_dots)
+                .setView(view)
+                .setPositiveButton(R.string.search, (dialog, which) -> {
+                    final Editable appOpsEditable = ((TextInputEditText) view.findViewById(R.id.input_app_ops)).getText();
+                    if (appOpsEditable == null) return;
+                    mProgressIndicator.show();
+                    new Thread(() -> {
+                        String[] appOpsStr = appOpsEditable.toString().split("\\s+");
+                        if (appOpsStr.length == 0) return;
+                        int[] appOps = new int[appOpsStr.length];
+                        try {
+                            for (int i = 0; i < appOpsStr.length; ++i)
+                                appOps[i] = Integer.parseInt(appOpsStr[i]);
+                        } catch (Exception e) {
+                            runOnUiThread(() -> {
+                                Toast.makeText(this, R.string.failed_to_parse_some_numbers, Toast.LENGTH_SHORT).show();
+                                mProgressIndicator.hide();
+                            });
+                            return;
+                        }
+                        HashMap<ApplicationInfo, Integer> appOpsCount = new HashMap<>();
+                        for (ApplicationInfo applicationInfo:
+                                getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA)) {
+                            int size = PackageUtils.getFilteredAppOps(applicationInfo.packageName, appOps).size();
+                            if (size > 0) appOpsCount.put(applicationInfo, size);
+                        }
+                        if (!appOpsCount.isEmpty()) {
+                            List<String> selectedPackages = new ArrayList<>();
+                            List<ApplicationInfo> applicationInfoList = new ArrayList<>(appOpsCount.keySet());
+                            for (ApplicationInfo info: applicationInfoList) selectedPackages.add(info.packageName);
+                            String[] filteredPackages = selectedPackages.toArray(new String[0]);
+                            String[] filteredPackagesWithAppOpCount = new String[appOpsCount.size()];
+                            for (int i = 0; i<appOpsCount.size(); ++i) filteredPackagesWithAppOpCount[i] = "(" + appOpsCount.get(applicationInfoList.get(i)) + ") " + getPackageManager().getApplicationLabel(applicationInfoList.get(i));
+                            boolean[] checkedItems = new boolean[selectedPackages.size()];
+                            Arrays.fill(checkedItems, true);
+                            runOnUiThread(() -> {
+                                mProgressIndicator.hide();
+                                new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                                        .setMultiChoiceItems(filteredPackagesWithAppOpCount, checkedItems, (dialog1, which1, isChecked) -> {
+                                            if (!isChecked) selectedPackages.remove(filteredPackages[which1]);
+                                            else selectedPackages.add(filteredPackages[which1]);
+                                        })
+                                        .setTitle(R.string.filtered_packages)
+                                        .setPositiveButton(R.string.apply, (dialog1, which1) -> {
+                                            mProgressIndicator.show();
+                                            new Thread(() -> {
+                                                List<String> failedPackages = ExternalComponentsImporter.applyFilteredAppOps(this, selectedPackages, appOps);
+                                                if (!failedPackages.isEmpty()) {
+                                                    runOnUiThread(() -> {
+                                                        new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                                                                .setTitle(R.string.failed_packages)
+                                                                .setItems((CharSequence[]) failedPackages.toArray(), null)
+                                                                .setNegativeButton(android.R.string.ok, null)
+                                                                .show();
+                                                        mProgressIndicator.hide();
+                                                    });
+                                                } else runOnUiThread(() -> {
+                                                    Toast.makeText(this, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
+                                                    mProgressIndicator.hide();
+                                                });
+                                            }).start();
+                                        })
+                                        .setNegativeButton(android.R.string.cancel, (dialog1, which1) -> mProgressIndicator.hide())
+                                        .show();
+                            });
+                        } else {
+                            runOnUiThread(() -> {
+                                Toast.makeText(this, R.string.no_tracker_found, Toast.LENGTH_SHORT).show();
+                                mProgressIndicator.hide();
+                            });
+                        }
+                    }).start();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     private void clearData() {
