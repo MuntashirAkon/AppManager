@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
@@ -61,6 +63,29 @@ public class ExternalComponentsImporter {
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
                 for (String componentName: components.keySet()) {
                     cb.addComponent(componentName, components.get(componentName));
+                }
+                cb.applyRules(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                failedPkgList.add(packageName);
+            }
+        }
+        return failedPkgList;
+    }
+
+    @NonNull
+    public static List<String> applyFilteredAppOps(@NonNull Context context, @NonNull Collection<String> packageNames, int[] appOps) {
+        List<String> failedPkgList = new ArrayList<>();
+        Collection<Integer> appOpList;
+        AppOpsService appOpsService = new AppOpsService(context);
+        for (String packageName: packageNames) {
+            appOpList = PackageUtils.getFilteredAppOps(packageName, appOps);
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
+                for (int appOp: appOpList) {
+                    try {
+                        appOpsService.setMode(appOp, -1, packageName, AppOpsManager.MODE_IGNORED);
+                        cb.setAppOp(String.valueOf(appOp), AppOpsManager.MODE_IGNORED);
+                    } catch (Exception ignore) {}
                 }
                 cb.applyRules(true);
             } catch (Exception e) {

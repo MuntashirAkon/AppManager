@@ -10,6 +10,7 @@ import android.os.Build;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +21,8 @@ import java.util.regex.Pattern;
 import androidx.annotation.NonNull;
 import dalvik.system.DexFile;
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
 
@@ -78,6 +80,22 @@ public final class PackageUtils {
             }
         }
         return filteredComponents;
+    }
+
+    @NonNull
+    public static Collection<Integer> getFilteredAppOps(String packageName, @NonNull int[] appOps) {
+        List<Integer> filteredAppOps = new ArrayList<>();
+        AppOpsService appOpsService = new AppOpsService(AppManager.getContext());
+        for(int appOp: appOps) {
+            try {
+                if (!appOpsService.checkOperation(appOp, -1, packageName).equals(AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED))) {
+                    filteredAppOps.add(appOp);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return filteredAppOps;
     }
 
     @NonNull
