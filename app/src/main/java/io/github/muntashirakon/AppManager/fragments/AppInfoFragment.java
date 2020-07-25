@@ -476,11 +476,10 @@ public class AppInfoFragment extends Fragment
         // Set manifest
         addToHorizontalLayout(R.string.manifest, R.drawable.ic_tune_black_24dp).setOnClickListener(v -> {
             Intent intent = new Intent(mActivity, ManifestViewerActivity.class);
-            if (!mainModel.getIsExternalApk()) intent.putExtra(ManifestViewerActivity.EXTRA_PACKAGE_NAME, mPackageName);
-            else {
+            if (mainModel.getIsExternalApk() || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && mApplicationInfo.splitNames != null)) {
                 File file = new File(mApplicationInfo.publicSourceDir);
                 intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-            }
+            } else intent.putExtra(ManifestViewerActivity.EXTRA_PACKAGE_NAME, mPackageName);
             startActivity(intent);
         });
         // Set exodus

@@ -95,7 +95,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
                             packageUri, MANIFEST_CACHE_APK);
                 } else archiveFilePath = packageUri.getPath();
                 if (archiveFilePath != null)
-                    packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
+                    packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 0);
                 if (packageInfo != null) {
                     packageName = packageInfo.packageName;
                     final ApplicationInfo applicationInfo = packageInfo.applicationInfo;
@@ -105,6 +105,8 @@ public class ManifestViewerActivity extends AppCompatActivity {
                         setTitle(applicationInfo.loadLabel(pm));
                         setWrapped();
                     });
+                } else {  // Possibly a split apk
+                    runOnUiThread(this::setWrapped);
                 }
             } else {
                 runOnUiThread(() -> {
@@ -223,9 +225,9 @@ public class ManifestViewerActivity extends AppCompatActivity {
             Resources mCurResources;
             try {
                 // https://stackoverflow.com/questions/35474016/store-and-extract-map-from-android-resource-file
-                mCurAm = ManifestViewerActivity.this.createPackageContext(packageName,
-                        CONTEXT_IGNORE_SECURITY | CONTEXT_INCLUDE_CODE).getAssets();
-                mCurResources = new Resources(mCurAm, ManifestViewerActivity.this.getResources().getDisplayMetrics(), null);
+                mCurAm = createPackageContext(packageName, CONTEXT_IGNORE_SECURITY
+                        | CONTEXT_INCLUDE_CODE).getAssets();
+                mCurResources = new Resources(mCurAm, getResources().getDisplayMetrics(), null);
                 xml = mCurAm.openXmlResourceParser("AndroidManifest.xml");
                 code = Utils.getProperXml(getXMLText(xml, mCurResources).toString());
             } catch (IOException | PackageManager.NameNotFoundException e) {
