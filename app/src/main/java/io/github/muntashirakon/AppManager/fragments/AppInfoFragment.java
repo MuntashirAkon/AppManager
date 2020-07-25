@@ -116,6 +116,8 @@ public class AppInfoFragment extends Fragment
     private ImageView iconView;
     private TextView versionView;
     private boolean isExternalApk;
+    private boolean isRootEnabled;
+    private boolean isAdbEnabled;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -129,6 +131,8 @@ public class AppInfoFragment extends Fragment
             mPackageName = mainModel.getPackageName();
         }
         isExternalApk = mainModel.getIsExternalApk();
+        isRootEnabled = AppPref.isRootEnabled();
+        isAdbEnabled = AppPref.isAdbEnabled();
         mPackageManager = mActivity.getPackageManager();
         mAccentColor = Utils.getThemeColor(mActivity, android.R.attr.colorAccent);
     }
@@ -330,10 +334,20 @@ public class AppInfoFragment extends Fragment
                 addToHorizontalLayout(R.string.launch_app, R.drawable.ic_open_in_new_black_24dp)
                         .setOnClickListener(v -> startActivity(launchIntentForPackage));
             }
+            // Set disable
+            if (isRootEnabled || isAdbEnabled) {
+                if (mApplicationInfo.enabled) {
+                    addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> new Thread(() -> {
+                        if (!RunnerUtils.disablePackage(mPackageName).isSuccessful()) {
+                            runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_disable), mPackageLabel), Toast.LENGTH_LONG).show());
+                        }
+                    }).start());
+                }
+            }
             // Set uninstall
             addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
                 final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                if (AppPref.isRootEnabled()) {
+                if (isRootEnabled) {
                     new MaterialAlertDialogBuilder(mActivity, R.style.AppTheme_AlertDialog)
                             .setTitle(mPackageLabel)
                             .setMessage(isSystemApp ?
@@ -360,15 +374,8 @@ public class AppInfoFragment extends Fragment
                 }
             });
             // Enable/disable app (root only)
-            if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
-                if (mApplicationInfo.enabled) {
-                    // Disable app
-                    addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> new Thread(() -> {
-                        if (!RunnerUtils.disablePackage(mPackageName).isSuccessful()) {
-                            runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_disable), mPackageLabel), Toast.LENGTH_LONG).show());
-                        }
-                    }).start());
-                } else {
+            if (isRootEnabled || isAdbEnabled) {
+                if (!mApplicationInfo.enabled) {
                     // Enable app
                     addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> new Thread(() -> {
                         if (!RunnerUtils.enablePackage(mPackageName).isSuccessful()) {
@@ -394,7 +401,7 @@ public class AppInfoFragment extends Fragment
                     }
                 });
                 // Clear cache
-                if (AppPref.isRootEnabled()) {
+                if (isRootEnabled) {
                     addToHorizontalLayout(R.string.clear_cache, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
                         StringBuilder command = new StringBuilder(String.format("rm -rf %s/cache %s/code_cache",
                                 mApplicationInfo.dataDir, mApplicationInfo.dataDir));
@@ -482,7 +489,7 @@ public class AppInfoFragment extends Fragment
             startActivity(intent);
         });
         // Root only features
-        if (!mainModel.getIsExternalApk() && AppPref.isRootEnabled()) {
+        if (!mainModel.getIsExternalApk() && isRootEnabled) {
             // Shared prefs (root only)
             List<String> sharedPrefs;
             sharedPrefs = getSharedPrefs(mApplicationInfo.dataDir);
