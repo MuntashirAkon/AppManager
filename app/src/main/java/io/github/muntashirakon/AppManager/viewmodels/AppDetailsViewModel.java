@@ -104,7 +104,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 }
             }
         }).start();
-        getApplication().unregisterReceiver(receiver);
+        if (receiver != null) getApplication().unregisterReceiver(receiver);
         receiver = null;
         if (apkPath != null) {
             //noinspection ResultOfMethodCallIgnored
@@ -447,12 +447,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
     }
 
-    private MutableLiveData<Boolean> isPackageExist;
+    private MutableLiveData<Boolean> isPackageExist = new MutableLiveData<>();
     public LiveData<Boolean> getIsPackageExist() {
-        if (isPackageExist == null) {
-            isPackageExist = new MutableLiveData<>();
-            isPackageExist.setValue(true);
-        }
+        if (isPackageExist.getValue() == null) isPackageExist.setValue(true);
         return isPackageExist;
     }
 

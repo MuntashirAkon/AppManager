@@ -64,8 +64,13 @@ public class AppDetailsActivity extends AppCompatActivity {
         }
         new Thread(() -> {
             if (packageName != null) model.setPackageName(packageName);
-            else {
-                model.setPackageUri(apkUri);
+            else model.setPackageUri(apkUri);
+            if (model.getPackageInfo() == null) {
+                runOnUiThread(() -> {
+                    Toast.makeText(this, getString(R.string.failed_to_fetch_package_info_possibly_a_split_apk), Toast.LENGTH_LONG).show();
+                    finish();
+                });
+                return;
             }
             ApplicationInfo applicationInfo = model.getPackageInfo().applicationInfo;
             runOnUiThread(() -> {
@@ -92,15 +97,15 @@ public class AppDetailsActivity extends AppCompatActivity {
                 }
                 TabLayout tabLayout = findViewById(R.id.tab_layout);
                 tabLayout.setupWithViewPager(viewPager);
+                // Check for the existence of package
+                model.getIsPackageExist().observe(this, isPackageExist -> {
+                    if (!isPackageExist) {
+                        Toast.makeText(this, R.string.app_not_installed, Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                });
             });
         }).start();
-        // Check for the existence of package
-        model.getIsPackageExist().observe(this, isPackageExist -> {
-            if (!isPackageExist) {
-                Toast.makeText(this, packageName + ": " + getString(R.string.app_not_installed), Toast.LENGTH_LONG).show();
-                finish();
-            }
-        });
     }
 
     @Override
