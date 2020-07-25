@@ -541,4 +541,7 @@
         space. You can find app op constants in the app ops tab under the brackets.</string>
     <string name="only_works_in_root_or_adb_mode">Only works in root or ADB mode</string>
     <string name="failed_to_parse_some_numbers">Failed to parse some numbers</string>
+    <string name="no_of_splits">%d splits</string>
+    <string name="split_no">Split#%d: %s</string>
+    <string name="public_split_no">Public Split#%d: %s</string>
 </resources>

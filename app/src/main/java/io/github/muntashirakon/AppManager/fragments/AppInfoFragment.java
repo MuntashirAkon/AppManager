@@ -300,17 +300,19 @@ public class AppInfoFragment extends Fragment
         runOnUiThread(() -> {
             mTagCloud.removeAllViews();
             // Add tracker chip
-            if (!componentList.isEmpty()) {
-                Chip chip = new Chip(mActivity);
-                chip.setText(String.format(getString(R.string.no_of_trackers), componentList.size()));
-                chip.setChipBackgroundColorResource(R.color.red);
-                mTagCloud.addView(chip);
-            }
+            if (!componentList.isEmpty())
+                addChip(String.format(getString(R.string.no_of_trackers), componentList.size()), R.color.red);
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
                 addChip(R.string.system_app);
                 if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0)
                     addChip(R.string.updated_app);
             } else if (!mainModel.getIsExternalApk()) addChip(R.string.user_app);
+            int countSplits = 0;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O
+                    && mApplicationInfo.splitNames != null) {
+                countSplits = mApplicationInfo.splitNames.length;
+            }
+            if (countSplits > 0) addChip(String.format(getString(R.string.no_of_splits), countSplits));
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
                 addChip(R.string.debuggable);
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
@@ -586,11 +588,33 @@ public class AppInfoFragment extends Fragment
         creator.item_title.setTextColor(mAccentColor);
         // Source directory (apk path)
         creator.addItemWithTitleSubtitle(getString(R.string.source_dir), mApplicationInfo.sourceDir, ListItemCreator.SELECTABLE);
-        openAsFolderInFM(creator, (new File(mApplicationInfo.sourceDir)).getParent());
+        openAsFolderInFM(creator, new File(mApplicationInfo.sourceDir).getParent());
+        // Split source directories
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && mApplicationInfo.splitNames != null) {
+            int countSplits = mApplicationInfo.splitNames.length;
+            for (int i = 0; i<countSplits; ++i) {
+                creator.addItemWithTitleSubtitle(String.format(getString(R.string.split_no), (i+1),
+                        mApplicationInfo.splitNames[i]), mApplicationInfo.splitSourceDirs[i],
+                        ListItemCreator.SELECTABLE);
+                openAsFolderInFM(creator, new File(mApplicationInfo.splitSourceDirs[i]).getParent());
+            }
+        }
         // Public source directory
         if (!mApplicationInfo.publicSourceDir.equals(mApplicationInfo.sourceDir)) {
             creator.addItemWithTitleSubtitle(getString(R.string.public_source_dir), mApplicationInfo.publicSourceDir, ListItemCreator.SELECTABLE);
             openAsFolderInFM(creator, (new File(mApplicationInfo.publicSourceDir)).getParent());
+        }
+        // Public split source directories
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && mApplicationInfo.splitNames != null) {
+            int countSplits = mApplicationInfo.splitNames.length;
+            for (int i = 0; i<countSplits; ++i) {
+                if (!mApplicationInfo.splitPublicSourceDirs[i].equals(mApplicationInfo.splitSourceDirs[i])) {
+                    creator.addItemWithTitleSubtitle(String.format(getString(R.string.public_split_no),
+                            (i + 1), mApplicationInfo.splitNames[i]), mApplicationInfo.splitPublicSourceDirs[i],
+                            ListItemCreator.SELECTABLE);
+                    openAsFolderInFM(creator, new File(mApplicationInfo.splitPublicSourceDirs[i]).getParent());
+                }
+            }
         }
         // Data dir
         creator.addItemWithTitleSubtitle(getString(R.string.data_dir), mApplicationInfo.dataDir, ListItemCreator.SELECTABLE);
@@ -760,9 +784,22 @@ public class AppInfoFragment extends Fragment
         mTagCloud.addView(chip);
     }
 
+    private void addChip(CharSequence text, @ColorRes int color) {
+        Chip chip = new Chip(mActivity);
+        chip.setText(text);
+        chip.setChipBackgroundColorResource(color);
+        mTagCloud.addView(chip);
+    }
+
     private void addChip(@StringRes int resId) {
         Chip chip = new Chip(mActivity);
         chip.setText(resId);
+        mTagCloud.addView(chip);
+    }
+
+    private void addChip(CharSequence text) {
+        Chip chip = new Chip(mActivity);
+        chip.setText(text);
         mTagCloud.addView(chip);
     }
 
