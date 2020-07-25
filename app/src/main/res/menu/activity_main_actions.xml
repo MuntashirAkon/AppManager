@@ -83,6 +83,11 @@
         android:title="@string/apk_updater" />
 
     <item
+        android:id="@+id/action_termux"
+        android:icon="@drawable/ic_frost_termux"
+        android:title="@string/termux" />
+
+    <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_baseline_settings_24"
         android:title="@string/app_settings" />

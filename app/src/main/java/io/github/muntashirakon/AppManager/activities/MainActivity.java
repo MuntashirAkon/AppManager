@@ -96,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final String PACKAGE_NAME_APK_UPDATER = "com.apkupdater";
     private static final String ACTIVITY_NAME_APK_UPDATER = "com.apkupdater.activity.MainActivity";
+    private static final String PACKAGE_NAME_TERMUX = "com.termux";
+    private static final String ACTIVITY_NAME_TERMUX = "com.termux.app.TermuxActivity";
 
     private static final String MIME_TSV = "text/tab-separated-values";
 
@@ -325,6 +327,14 @@ public class MainActivity extends AppCompatActivity implements
         } catch (PackageManager.NameNotFoundException e) {
             apkUpdaterMenu.setVisible(false);
         }
+        MenuItem termuxMenu = menu.findItem(R.id.action_termux);
+        try {
+            if(!getPackageManager().getApplicationInfo(PACKAGE_NAME_TERMUX, 0).enabled)
+                throw new PackageManager.NameNotFoundException();
+            termuxMenu.setVisible(true);
+        } catch (PackageManager.NameNotFoundException e) {
+            termuxMenu.setVisible(false);
+        }
         if (menu instanceof MenuBuilder) {
             ((MenuBuilder) menu).setOptionalIconsVisible(true);
         }
@@ -413,10 +423,18 @@ public class MainActivity extends AppCompatActivity implements
                     Intent intent = new Intent();
                     intent.setClassName(PACKAGE_NAME_APK_UPDATER, ACTIVITY_NAME_APK_UPDATER);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    try {
-                        startActivity(intent);
-                    } catch (Exception ignored) {}
-                } catch (PackageManager.NameNotFoundException ignored) {}
+                    startActivity(intent);
+                } catch (Exception ignored) {}
+                return true;
+            case R.id.action_termux:
+                try {
+                    if(!getPackageManager().getApplicationInfo(PACKAGE_NAME_TERMUX, 0).enabled)
+                        throw new PackageManager.NameNotFoundException();
+                    Intent intent = new Intent();
+                    intent.setClassName(PACKAGE_NAME_TERMUX, ACTIVITY_NAME_TERMUX);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } catch (Exception ignored) {}
                 return true;
             case R.id.action_running_apps:
                 Intent runningAppsIntent = new Intent(this, RunningAppsActivity.class);
