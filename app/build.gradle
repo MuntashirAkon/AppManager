@@ -22,6 +22,15 @@ android {
         throw new GradleException("Could not read version.properties!")
     }
 
+    signingConfigs {
+        debug {
+            storeFile file('dev_keystore.jks')
+            storePassword 'kJCp!Bda#PBdN2RLK%yMK@hatq&69E'
+            keyPassword 'kJCp!Bda#PBdN2RLK%yMK@hatq&69E'
+            keyAlias 'key0'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -29,6 +38,7 @@ android {
         }
         debug {
             applicationIdSuffix '.debug'
+            signingConfig signingConfigs.debug
         }
     }
     lintOptions {
@@ -54,5 +64,5 @@ dependencies {
     implementation 'com.jaredrummler:android-shell:1.0.0'
     implementation 'com.tananaev:adblib:1.2'
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 }
