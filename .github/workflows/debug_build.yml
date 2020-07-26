@@ -21,7 +21,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew assembleDebug
     - name: Store generated APK file
-        uses: actions/upload-artifact@v1
-        with:
-          name: AppManager
-          path: ./app/build/outputs/apk/debug/app-debug.apk
+      uses: actions/upload-artifact@v1
+      with:
+        name: AppManager
+        path: ./app/build/outputs/apk/debug/app-debug.apk
