@@ -2,19 +2,25 @@ package io.github.muntashirakon.AppManager.utils;
 
 import android.content.ComponentName;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import android.content.pm.SigningInfo;
 import android.os.Build;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -184,5 +190,62 @@ public final class PackageUtils {
     public static long getVersionCode(PackageInfo packageInfo) {
         return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? packageInfo.getLongVersionCode()
                 : packageInfo.versionCode);
+    }
+
+    @NonNull
+    public static String[] getSourceDirs(@NonNull ApplicationInfo applicationInfo) {
+        ArrayList<String> sourceDirs = new ArrayList<>();
+        sourceDirs.add(new File(applicationInfo.sourceDir).getParent());
+        if (!applicationInfo.sourceDir.equals(applicationInfo.publicSourceDir)) {
+            sourceDirs.add(new File(applicationInfo.publicSourceDir).getParent());
+        }
+        return sourceDirs.toArray(new String[0]);
+    }
+
+    @NonNull
+    public static String[] getDataDirs(@NonNull ApplicationInfo applicationInfo) {
+        ArrayList<String> dataDirs = new ArrayList<>();
+        dataDirs.add(applicationInfo.dataDir);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !applicationInfo.dataDir.equals(applicationInfo.deviceProtectedDataDir)) {
+            dataDirs.add(applicationInfo.deviceProtectedDataDir);
+        }
+        File[] cacheDirs = AppManager.getContext().getExternalCacheDirs();
+        if (cacheDirs != null) {
+            String dataDir;
+            for (File cacheDir : cacheDirs) {
+                //noinspection ConstantConditions
+                dataDir = new File(cacheDir.getParent()).getParent() + File.pathSeparator + applicationInfo.packageName;
+                if (new File(dataDir).exists()) dataDirs.add(dataDir);
+            }
+        }
+        return dataDirs.toArray(new String[0]);
+    }
+
+    @NonNull
+    public static String[] getSigningCertSha256Checksum(PackageInfo packageInfo) {
+        Signature[] signatureArray;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            SigningInfo signingInfo = packageInfo.signingInfo;
+            signatureArray = signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
+                    : signingInfo.getSigningCertificateHistory();
+        } else signatureArray = packageInfo.signatures;
+        ArrayList<String> checksums = new ArrayList<>();
+        for (Signature signature: signatureArray) {
+            try {
+                checksums.add(byteToHexString(MessageDigest.getInstance("sha256").digest(signature.toByteArray())));
+            } catch (NoSuchAlgorithmException e) {
+                checksums.add("");
+            }
+        }
+        return checksums.toArray(new String[0]);
+    }
+
+    @NonNull
+    public static String byteToHexString(@NonNull byte[] digest) {
+        StringBuilder s= new StringBuilder();
+        for (byte b:digest){
+            s.append(String.format("%02X", b).toLowerCase(Locale.ROOT));
+        }
+        return s.toString();
     }
 }
