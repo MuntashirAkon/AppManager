@@ -581,7 +581,7 @@ public class AppInfoFragment extends Fragment
     }
 
     private void setPathsAndDirectories() {
-        final ListItemCreator creator = new ListItemCreator(mActivity, R.id.layout_paths_and_directories, true);
+        final ListItemCreator creator = new ListItemCreator(mActivity, view, R.id.layout_paths_and_directories);
         // Paths and directories
         creator.addItemWithTitle(getString(R.string.paths_and_directories), true);
         creator.item_title.setTextColor(mAccentColor);
@@ -655,7 +655,7 @@ public class AppInfoFragment extends Fragment
     }
 
     private void setMoreInfo() {
-        ListItemCreator creator = new ListItemCreator(mActivity, R.id.layout_more_info, true);
+        ListItemCreator creator = new ListItemCreator(mActivity, view, R.id.layout_more_info);
         // Set more info
         creator.addItemWithTitle(getString(R.string.more_info), true);
         creator.item_title.setTextColor(mAccentColor);
@@ -721,7 +721,7 @@ public class AppInfoFragment extends Fragment
                             .getWifiMobileUsageForPackage(mActivity, mPackageName,
                                     io.github.muntashirakon.AppManager.usage.Utils.USAGE_LAST_BOOT);
                     runOnUiThread(() -> {
-                        ListItemCreator creator = new ListItemCreator(mActivity, R.id.layout_data_usage, true);
+                        ListItemCreator creator = new ListItemCreator(mActivity, view, R.id.layout_data_usage);
                         creator.addItemWithTitle(getString(R.string.netstats_msg), true);
                         creator.item_title.setTextColor(mAccentColor);
                         creator.addInlineItem(getString(R.string.netstats_transmitted), getReadableSize(dataUsage.getFirst().getFirst() + dataUsage.getSecond().getFirst()));
@@ -732,7 +732,7 @@ public class AppInfoFragment extends Fragment
             } else {
                 final Tuple<String, String> uidNetStats = getNetStats(mApplicationInfo.uid);
                 runOnUiThread(() -> {
-                    ListItemCreator creator = new ListItemCreator(mActivity, R.id.layout_data_usage, true);
+                    ListItemCreator creator = new ListItemCreator(mActivity, view, R.id.layout_data_usage);
                     creator.addItemWithTitle(getString(R.string.netstats_msg), true);
                     creator.item_title.setTextColor(mAccentColor);
                     creator.addInlineItem(getString(R.string.netstats_transmitted), uidNetStats.getFirst());
@@ -864,7 +864,7 @@ public class AppInfoFragment extends Fragment
     }
 
     private void setStorageInfo(long codeSize, long dataSize, long cacheSize, long obbSize, long mediaSize) {
-        ListItemCreator creator = new ListItemCreator(mActivity, R.id.layout_storage_and_cache, true);
+        ListItemCreator creator = new ListItemCreator(mActivity, view, R.id.layout_storage_and_cache);
         creator.addItemWithTitle(getString(R.string.storage_and_cache), true);
         creator.item_title.setTextColor(mAccentColor);
         // Code size

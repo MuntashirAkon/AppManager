@@ -33,27 +33,16 @@ public class ListItemCreator {
     public ImageView item_icon;
     public ImageButton item_open;
 
-    /**
-     * Constructor.
-     *
-     * @param activity Caller activity
-     * @param resIdListContainer Resource ID where menu items will be added
-     */
-    public ListItemCreator(@NonNull Activity activity, @IdRes int resIdListContainer) {
-        mListContainer = activity.findViewById(resIdListContainer);
+    public ListItemCreator(@NonNull Activity activity, @IdRes int resIdMenuContainer) {
+        mListContainer = activity.findViewById(resIdMenuContainer);
+        mListContainer.removeAllViews();
         mLayoutInflater = activity.getLayoutInflater();
         mActivity = activity;
     }
 
-    /**
-     * Constructor.
-     *
-     * @param activity Caller activity
-     * @param resIdMenuContainer Resource ID where menu items will be added
-     */
-    public ListItemCreator(@NonNull Activity activity, @IdRes int resIdMenuContainer, boolean removeAllChildren) {
-        mListContainer = activity.findViewById(resIdMenuContainer);
-        if(removeAllChildren) mListContainer.removeAllViews();
+    public ListItemCreator(@NonNull Activity activity, @NonNull View view, @IdRes int resIdMenuContainer) {
+        mListContainer = view.findViewById(resIdMenuContainer);
+        mListContainer.removeAllViews();
         mLayoutInflater = activity.getLayoutInflater();
         mActivity = activity;
     }
