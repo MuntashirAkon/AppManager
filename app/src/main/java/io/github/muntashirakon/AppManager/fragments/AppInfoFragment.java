@@ -688,14 +688,19 @@ public class AppInfoFragment extends Fragment
         creator.addItemWithTitleSubtitle(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime), ListItemCreator.NO_ACTION);
         if(!mPackageName.equals(mApplicationInfo.processName))
             creator.addItemWithTitleSubtitle(getString(R.string.process_name), mApplicationInfo.processName, ListItemCreator.NO_ACTION);
-        String installerPackageName = null;
         try {
-            installerPackageName = mPackageManager.getInstallerPackageName(mPackageName);
+            String installerPackageName = mPackageManager.getInstallerPackageName(mPackageName);
+            if (installerPackageName != null) {
+                String applicationLabel;
+                try {
+                    applicationLabel = mPackageManager.getApplicationInfo(installerPackageName, 0).loadLabel(mPackageManager).toString();
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                    applicationLabel = installerPackageName;
+                }
+                creator.addItemWithTitleSubtitle(getString(R.string.installer_app), applicationLabel, ListItemCreator.SELECTABLE);
+            }
         } catch (IllegalArgumentException ignore) {}
-        if (installerPackageName != null) {
-            String applicationLabel = mApplicationInfo.loadLabel(mPackageManager).toString();
-            creator.addItemWithTitleSubtitle(getString(R.string.installer_app), applicationLabel, ListItemCreator.SELECTABLE);
-        }
         creator.addItemWithTitleSubtitle(getString(R.string.user_id), Integer.toString(mApplicationInfo.uid), ListItemCreator.SELECTABLE);
         if (mPackageInfo.sharedUserId != null)
             creator.addItemWithTitleSubtitle(getString(R.string.shared_user_id), mPackageInfo.sharedUserId, ListItemCreator.SELECTABLE);
