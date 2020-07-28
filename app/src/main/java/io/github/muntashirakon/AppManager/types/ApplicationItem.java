@@ -35,5 +35,5 @@ public class ApplicationItem {
     /**
      * Blocked components count
      */
-    public Integer blockedCount;
+    public Integer blockedCount = 0;
 }

@@ -137,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements
     private MaterialTextView mBottomAppBarCounter;
     private LinearLayoutCompat mMainLayout;
     private MainViewModel mModel;
-    private static @NonNull Set<String> mPackageNames = new HashSet<>();
     private static @NonNull Set<ApplicationItem> mSelectedApplicationItems = new HashSet<>();
     private CoordinatorLayout.LayoutParams mLayoutParamsSelection;
     private CoordinatorLayout.LayoutParams mLayoutParamsTypical;
@@ -214,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements
             ((MenuBuilder) menu).setOptionalIconsVisible(true);
         }
         mBottomAppBar.setNavigationOnClickListener(v -> {
-            mPackageNames.clear();
+            mModel.clearSelection();
             handleSelection();
         });
         mBottomAppBar.setOnMenuItemClickListener(item -> {
@@ -249,11 +248,11 @@ public class MainActivity extends AppCompatActivity implements
                 case R.id.action_backup_apk:
                 case R.id.action_backup_data:
                     Toast.makeText(this, "This operation is not supported yet.", Toast.LENGTH_LONG).show();
-                    mPackageNames.clear();
+                    mModel.clearSelection();
                     handleSelection();
                     return true;
             }
-            mPackageNames.clear();
+            mModel.clearSelection();
             handleSelection();
             return false;
         });
@@ -270,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements
                     Bundle args = new Bundle();
                     args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
                     args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, data.getData());
-                    args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, new ArrayList<>(mPackageNames));
+                    args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, new ArrayList<>(mModel.getSelectedPackages()));
                     dialogFragment.setArguments(args);
                     dialogFragment.show(getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
                 }
@@ -527,13 +526,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void handleSelection() {
-        if (mPackageNames.size() == 0) {
+        if (mModel.getSelectedPackages().size() == 0) {
             mBottomAppBar.setVisibility(View.GONE);
             mMainLayout.setLayoutParams(mLayoutParamsTypical);
             mAdapter.clearSelection();
         } else {
             mBottomAppBar.setVisibility(View.VISIBLE);
-            mBottomAppBarCounter.setText(String.format(getString(R.string.some_items_selected), mPackageNames.size()));
+            mBottomAppBarCounter.setText(String.format(getString(R.string.some_items_selected), mModel.getSelectedPackages().size()));
             mMainLayout.setLayoutParams(mLayoutParamsSelection);
         }
     }
@@ -541,7 +540,7 @@ public class MainActivity extends AppCompatActivity implements
     private void handleBatchOp(@BatchOpsManager.OpType int op, @StringRes int msg) {
         showProgressIndicator(true);
         new Thread(() -> {
-            if (!mBatchOpsManager.performOp(op, new ArrayList<>(mPackageNames)).isSuccessful()) {
+            if (!mBatchOpsManager.performOp(op, new ArrayList<>(mModel.getSelectedPackages())).isSuccessful()) {
                 runOnUiThread(() -> new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
                         .setTitle(msg)
                         .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
@@ -552,7 +551,7 @@ public class MainActivity extends AppCompatActivity implements
                 runOnUiThread(() -> Toast.makeText(this,
                         R.string.the_operation_was_successful, Toast.LENGTH_LONG).show());
             }
-            mPackageNames.clear();
+            mModel.clearSelection();
             runOnUiThread(() -> {
                 handleSelection();
                 showProgressIndicator(false);
@@ -628,7 +627,7 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         void clearSelection() {
-            mPackageNames.clear();
+            mActivity.mModel.clearSelection();
             int itemId;
             for (ApplicationItem applicationItem: mSelectedApplicationItems) {
                 itemId = mAdapterList.indexOf(applicationItem);
@@ -652,7 +651,7 @@ public class MainActivity extends AppCompatActivity implements
             final ApplicationInfo info = item.applicationInfo;
             // Add click listeners
             holder.itemView.setOnClickListener(v -> {
-                if (mPackageNames.size() == 0) {
+                if (mActivity.mModel.getSelectedPackages().size() == 0) {
                     Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
                     appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, info.packageName);
                     mActivity.startActivity(appDetailsIntent);
@@ -663,7 +662,7 @@ public class MainActivity extends AppCompatActivity implements
                 return true;
             });
             // Alternate background colors: selected > disabled > regular
-            if (mPackageNames.contains(info.packageName))
+            if (mActivity.mModel.getSelectedPackages().contains(info.packageName))
                 holder.mainView.setBackgroundColor(mColorHighlight);
             else if (!info.enabled) holder.mainView.setBackgroundColor(mColorDisabled);
             else holder.mainView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
@@ -773,11 +772,11 @@ public class MainActivity extends AppCompatActivity implements
 
         public void toggleSelection(@NonNull ApplicationItem item, int position) {
             ApplicationInfo info = item.applicationInfo;
-            if (mPackageNames.contains(info.packageName)) {
-                mPackageNames.remove(info.packageName);
+            if (mActivity.mModel.getSelectedPackages().contains(info.packageName)) {
+                mActivity.mModel.deselect(item);
                 mSelectedApplicationItems.remove(item);
             } else {
-                mPackageNames.add(info.packageName);
+                mActivity.mModel.select(item);
                 mSelectedApplicationItems.add(item);
             }
             notifyItemChanged(position);

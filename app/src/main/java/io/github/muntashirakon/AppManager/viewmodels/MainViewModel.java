@@ -14,16 +14,21 @@ import android.content.pm.PackageStats;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -42,12 +47,17 @@ public class MainViewModel extends AndroidViewModel {
     private Handler mHandler;
     private @MainActivity.SortOrder int mSortBy;
     private String searchQuery;
+    private List<String> selectedPackages = new LinkedList<>();
+    private int flagSigningInfo;
     public MainViewModel(@NonNull Application application) {
         super(application);
         mPackageManager = application.getPackageManager();
         mHandler = new Handler(application.getMainLooper());
         mPackageObserver = new PackageIntentReceiver(this);
         mSortBy = (int) AppPref.get(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
+        else flagSigningInfo = PackageManager.GET_SIGNATURES;
     }
 
     private MutableLiveData<List<ApplicationItem>> applicationItemsLiveData;
@@ -59,6 +69,22 @@ public class MainViewModel extends AndroidViewModel {
             loadApplicationItems();
         }
         return applicationItemsLiveData;
+    }
+
+    public void deselect(@NonNull ApplicationItem item) {
+        selectedPackages.remove(item.applicationInfo.packageName);
+    }
+
+    public void select(@NonNull ApplicationItem item) {
+        selectedPackages.add(item.applicationInfo.packageName);
+    }
+
+    public void clearSelection() {
+        selectedPackages.clear();
+    }
+
+    public List<String> getSelectedPackages() {
+        return selectedPackages;
     }
 
     public String getSearchQuery() {
@@ -84,64 +110,62 @@ public class MainViewModel extends AndroidViewModel {
     @SuppressLint("PackageManagerGetSignatures")
     public void loadApplicationItems() {
         new Thread(() -> {
-            String pName;
-            int flagSigningInfo;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-                flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
-            else flagSigningInfo = PackageManager.GET_SIGNATURES;
-            applicationItems.clear();
-            if (MainActivity.packageList != null) {
-                String[] aList = MainActivity.packageList.split("[\\r\\n]+");
-                for (String s : aList) {
-                    ApplicationItem item = new ApplicationItem();
-                    if (s.endsWith("*")) {
-                        item.star = true;
-                        pName = s.substring(0, s.length() - 1);
-                    } else pName = s;
-                    try {
-                        PackageInfo packageInfo = mPackageManager.getPackageInfo(pName, PackageManager.GET_META_DATA | flagSigningInfo);
-                        ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+            synchronized (applicationItems) {
+                String pName;
+                applicationItems.clear();
+                if (MainActivity.packageList != null) {
+                    String[] aList = MainActivity.packageList.split("[\\r\\n]+");
+                    for (String s : aList) {
+                        ApplicationItem item = new ApplicationItem();
+                        if (s.endsWith("*")) {
+                            item.star = true;
+                            pName = s.substring(0, s.length() - 1);
+                        } else pName = s;
+                        try {
+                            PackageInfo packageInfo = mPackageManager.getPackageInfo(pName, PackageManager.GET_META_DATA | flagSigningInfo);
+                            ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+                            item.applicationInfo = applicationInfo;
+                            item.label = applicationInfo.loadLabel(mPackageManager).toString();
+                            item.date = packageInfo.lastUpdateTime; // .firstInstallTime;
+                            item.sha = Utils.getIssuerAndAlg(packageInfo);
+                            if (Build.VERSION.SDK_INT >= 26) {
+                                item.size = (long) -1 * applicationInfo.targetSdkVersion;
+                            }
+                            applicationItems.add(item);
+                        } catch (PackageManager.NameNotFoundException ignored) {}
+                    }
+                } else {
+                    List<ApplicationInfo> applicationInfoList = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+                    for (ApplicationInfo applicationInfo : applicationInfoList) {
+                        ApplicationItem item = new ApplicationItem();
                         item.applicationInfo = applicationInfo;
+                        item.star = ((applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0);
                         item.label = applicationInfo.loadLabel(mPackageManager).toString();
-                        item.date = packageInfo.lastUpdateTime; // .firstInstallTime;
-                        item.sha = Utils.getIssuerAndAlg(packageInfo);
                         if (Build.VERSION.SDK_INT >= 26) {
                             item.size = (long) -1 * applicationInfo.targetSdkVersion;
                         }
+                        try {
+                            PackageInfo packageInfo = mPackageManager.getPackageInfo(applicationInfo.packageName, flagSigningInfo);
+                            item.sha = Utils.getIssuerAndAlg(packageInfo);
+                            item.date = packageInfo.lastUpdateTime; // .firstInstallTime;
+                        } catch (PackageManager.NameNotFoundException e) {
+                            item.date = 0L;
+                            item.sha = new Tuple<>("?", "?");
+                        }
+                        item.blockedCount = 0;
                         applicationItems.add(item);
-                    } catch (PackageManager.NameNotFoundException ignored) {}
-                }
-            } else {
-                List<ApplicationInfo> applicationInfoList = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-                for (ApplicationInfo applicationInfo : applicationInfoList) {
-                    ApplicationItem item = new ApplicationItem();
-                    item.applicationInfo = applicationInfo;
-                    item.star = ((applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0);
-                    item.label = applicationInfo.loadLabel(mPackageManager).toString();
-                    if (Build.VERSION.SDK_INT >= 26) {
-                        item.size = (long) -1 * applicationInfo.targetSdkVersion;
                     }
-                    try {
-                        PackageInfo packageInfo = mPackageManager.getPackageInfo(applicationInfo.packageName, flagSigningInfo);
-                        item.sha = Utils.getIssuerAndAlg(packageInfo);
-                        item.date = packageInfo.lastUpdateTime; // .firstInstallTime;
-                    } catch (PackageManager.NameNotFoundException e) {
-                        item.date = 0L;
-                        item.sha = new Tuple<>("?", "?");
-                    }
-                    item.blockedCount = 0;
-                    applicationItems.add(item);
                 }
-            }
-            sortApplicationList(mSortBy);
-            if (!TextUtils.isEmpty(searchQuery)) {
-                if (Build.VERSION.SDK_INT <= 25) loadPackageSize();
-                filterItems();
-            } else {
-                mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
-                if (Build.VERSION.SDK_INT <= 25) {
-                    loadPackageSize();
+                sortApplicationList(mSortBy);
+                if (!TextUtils.isEmpty(searchQuery)) {
+                    if (Build.VERSION.SDK_INT <= 25) loadPackageSize();
+                    filterItems();
+                } else {
                     mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
+                    if (Build.VERSION.SDK_INT <= 25) {
+                        loadPackageSize();
+                        mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
+                    }
                 }
             }
         }).start();
@@ -232,6 +256,102 @@ public class MainViewModel extends AndroidViewModel {
         });
     }
 
+    private void updateInfoForUid(int uid, String action) {
+        Log.d("updateInfoForUid", "Uid: " + uid);
+        String[] packages;
+        if (Intent.ACTION_PACKAGE_REMOVED.equals(action)) packages = getPackagesForUid(uid);
+        else packages = mPackageManager.getPackagesForUid(uid);
+        updateInfoForPackages(packages, action);
+    }
+
+    private void updateInfoForPackages(@Nullable String[] packages, @NonNull String action) {
+        Log.d("updateInfoForPackages", "packages: " + Arrays.toString(packages));
+        if (packages == null || packages.length == 0) return;
+        switch (action) {
+            case Intent.ACTION_PACKAGE_REMOVED:
+            case Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE:
+                for (String packageName: packages) {
+                    try {
+                        mPackageManager.getApplicationInfo(packageName, 0);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        removePackageFromApplicationItems(packageName);
+                    }
+                }
+                mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
+                break;
+            case Intent.ACTION_PACKAGE_CHANGED:
+                for (String packageName: packages) {
+                    ApplicationItem item = getNewApplicationItem(packageName);
+                    if (item != null) insertApplicationItemInApplicationItems(item);
+                }
+                sortApplicationList(mSortBy);
+                mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
+                break;
+            case Intent.ACTION_PACKAGE_ADDED:
+            case Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE:
+                for (String packageName: packages) {
+                    ApplicationItem item = getNewApplicationItem(packageName);
+                    if (item != null) applicationItems.add(item);
+                }
+                sortApplicationList(mSortBy);
+                mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
+        }
+    }
+
+    private void removePackageFromApplicationItems(String packageName) {
+        ApplicationItem item = getApplicationItemFromApplicationItems(packageName);
+        if (item != null) applicationItems.remove(item);
+    }
+
+    private void insertApplicationItemInApplicationItems(ApplicationItem item) {
+        for (int i = 0; i<applicationItems.size(); ++i) {
+            if (applicationItems.get(i).applicationInfo.packageName.equals(item.applicationInfo.packageName)) {
+                applicationItems.set(i, item);
+            }
+        }
+    }
+
+    @Nullable
+    private ApplicationItem getNewApplicationItem(String packageName) {
+        ApplicationItem item = new ApplicationItem();
+        try {
+            PackageInfo packageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA | flagSigningInfo);
+            ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+            item.applicationInfo = applicationInfo;
+            item.label = applicationInfo.loadLabel(mPackageManager).toString();
+            item.star = ((applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0);
+            item.date = packageInfo.lastUpdateTime; // .firstInstallTime;
+            item.sha = Utils.getIssuerAndAlg(packageInfo);
+            if (Build.VERSION.SDK_INT >= 26) {
+                item.size = (long) -1 * applicationInfo.targetSdkVersion;
+            } else {  // 25 or less
+                getSizeForPackage(item);
+            }
+            if (mSortBy == MainActivity.SORT_BY_BLOCKED_COMPONENTS && AppPref.isRootEnabled()) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(getApplication(), packageName, true)) {
+                    item.blockedCount = cb.componentCount();
+                }
+            }
+            return item;
+        } catch (PackageManager.NameNotFoundException ignored) {}
+        return null;
+    }
+
+    @Nullable
+    private ApplicationItem getApplicationItemFromApplicationItems(String packageName) {
+        for (ApplicationItem item: applicationItems) {
+            if (item.applicationInfo.packageName.equals(packageName)) return item;
+        }
+        return null;
+    }
+
+    @NonNull
+    private String[] getPackagesForUid(int uid) {
+        List<String> packages = new LinkedList<>();
+        for (ApplicationItem item: applicationItems)
+            if (item.applicationInfo.uid == uid) packages.add(item.applicationInfo.packageName);
+        return packages.toArray(new String[0]);
+    }
 
     @Override
     protected void onCleared() {
@@ -259,8 +379,21 @@ public class MainViewModel extends AndroidViewModel {
         }
 
         @Override
-        public void onReceive(Context context, Intent intent) {
-            mModel.loadApplicationItems();
+        public void onReceive(Context context, @NonNull Intent intent) {
+            switch (Objects.requireNonNull(intent.getAction())) {
+                case Intent.ACTION_PACKAGE_REMOVED:
+                    if (intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) break;
+                case Intent.ACTION_PACKAGE_ADDED:
+                case Intent.ACTION_PACKAGE_CHANGED:
+                    mModel.updateInfoForUid(intent.getIntExtra(Intent.EXTRA_UID, -1), intent.getAction());
+                    break;
+                case Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE:
+                case Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE:
+                    mModel.updateInfoForPackages(intent.getStringArrayExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST), intent.getAction());
+                    break;
+                case Intent.ACTION_LOCALE_CHANGED:
+                    mModel.loadApplicationItems();
+            }
         }
     }
 }
