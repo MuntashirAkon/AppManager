@@ -24,8 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
@@ -139,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements
     private MaterialTextView mBottomAppBarCounter;
     private LinearLayoutCompat mMainLayout;
     private MainViewModel mModel;
-    private static String mConstraint;
     private static @NonNull Set<String> mPackageNames = new HashSet<>();
     private static @NonNull Set<ApplicationItem> mSelectedApplicationItems = new HashSet<>();
     private CoordinatorLayout.LayoutParams mLayoutParamsSelection;
@@ -475,9 +472,9 @@ public class MainActivity extends AppCompatActivity implements
                 showProgressIndicator(false);
             });
             // Set filter
-            if (mSearchView != null && !TextUtils.isEmpty(mConstraint)) {
+            if (mSearchView != null && !TextUtils.isEmpty(mModel.getSearchQuery())) {
                 mSearchView.setIconified(false);
-                mSearchView.setQuery(mConstraint, false);
+                mSearchView.setQuery(mModel.getSearchQuery(), false);
             }
         }
         // Show/hide app usage menu
@@ -579,10 +576,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onQueryTextChange(String s) {
-        mConstraint = s;
-        if (mAdapter != null)
-            mAdapter.getFilter().filter(mConstraint);
+    public boolean onQueryTextChange(String searchQuery) {
+        mModel.setSearchQuery(searchQuery);
         return true;
     }
 
@@ -591,17 +586,14 @@ public class MainActivity extends AppCompatActivity implements
         return false;
     }
 
-    static class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>
-            implements SectionIndexer, Filterable {
+    static class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder> implements SectionIndexer {
         static final String sections = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         @SuppressLint("SimpleDateFormat")
         static final DateFormat sSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy"); // hh:mm:ss");
 
         private MainActivity mActivity;
         private static PackageManager mPackageManager;
-        private Filter mFilter;
-        private String mConstraint;
-        private List<ApplicationItem> mDefaultList;
+        private String mSearchQuery;
         private List<ApplicationItem> mAdapterList;
 
         private static int mColorTransparent;
@@ -630,11 +622,8 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         void setDefaultList(List<ApplicationItem> list) {
-            mDefaultList = list;
             mAdapterList = list;
-            if(!TextUtils.isEmpty(MainActivity.mConstraint)) {
-                getFilter().filter(MainActivity.mConstraint);
-            }
+            mSearchQuery = mActivity.mModel.getSearchQuery();
             notifyDataSetChanged();
         }
 
@@ -646,47 +635,6 @@ public class MainActivity extends AppCompatActivity implements
                 if (itemId != -1) notifyItemChanged(itemId);
             }
             mSelectedApplicationItems.clear();
-        }
-
-        @Override
-        public Filter getFilter() {
-            if (mFilter == null)
-                mFilter = new Filter() {
-                    @Override
-                    protected FilterResults performFiltering(CharSequence charSequence) {
-                        String constraint = charSequence.toString().toLowerCase(Locale.ROOT);
-                        mConstraint = constraint;
-                        FilterResults filterResults = new FilterResults();
-                        if (constraint.length() == 0 || mDefaultList == null) {
-                            filterResults.count = 0;
-                            filterResults.values = null;
-                            return filterResults;
-                        }
-
-                        List<ApplicationItem> list = new ArrayList<>(mDefaultList.size());
-                        for (ApplicationItem item : mDefaultList) {
-                            if (item.label.toLowerCase(Locale.ROOT).contains(constraint) ||
-                                    item.applicationInfo.packageName.toLowerCase(Locale.ROOT).contains(constraint))
-                                list.add(item);
-                        }
-
-                        filterResults.count = list.size();
-                        filterResults.values = list;
-                        return filterResults;
-                    }
-
-                    @Override
-                    protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                        if (filterResults.values == null) {
-                            mAdapterList = mDefaultList;
-                        } else {
-                            //noinspection unchecked
-                            mAdapterList = (List<ApplicationItem>) filterResults.values;
-                        }
-                        notifyDataSetChanged();
-                    }
-                };
-            return mFilter;
         }
 
         @NonNull
@@ -764,18 +712,18 @@ public class MainActivity extends AppCompatActivity implements
             holder.iconLoader = new IconLoaderThread(holder.icon, info);
             holder.iconLoader.start();
             // Set app label
-            if (!TextUtils.isEmpty(mConstraint) && item.label.toLowerCase(Locale.ROOT).contains(mConstraint)) {
+            if (!TextUtils.isEmpty(mSearchQuery) && item.label.toLowerCase(Locale.ROOT).contains(mSearchQuery)) {
                 // Highlight searched query
-                holder.label.setText(Utils.getHighlightedText(item.label, mConstraint, mColorRed));
+                holder.label.setText(Utils.getHighlightedText(item.label, mSearchQuery, mColorRed));
             } else holder.label.setText(item.label);
             // Set app label color to red if clearing user data not allowed
             if ((info.flags & ApplicationInfo.FLAG_ALLOW_CLEAR_USER_DATA) == 0)
                 holder.label.setTextColor(Color.RED);
             else holder.label.setTextColor(mColorPrimary);
             // Set package name
-            if (!TextUtils.isEmpty(mConstraint) && info.packageName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
+            if (!TextUtils.isEmpty(mSearchQuery) && info.packageName.toLowerCase(Locale.ROOT).contains(mSearchQuery)) {
                 // Highlight searched query
-                holder.packageName.setText(Utils.getHighlightedText(info.packageName, mConstraint, mColorRed));
+                holder.packageName.setText(Utils.getHighlightedText(info.packageName, mSearchQuery, mColorRed));
             } else holder.packageName.setText(info.packageName);
             // Set package name color to dark cyan if the app is in stopped/force closed state
             if ((info.flags & ApplicationInfo.FLAG_STOPPED) != 0)

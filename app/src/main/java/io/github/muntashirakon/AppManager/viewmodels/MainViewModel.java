@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
 import android.os.Build;
 import android.os.Handler;
+import android.text.TextUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -20,6 +21,7 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -39,6 +41,7 @@ public class MainViewModel extends AndroidViewModel {
     private PackageIntentReceiver mPackageObserver;
     private Handler mHandler;
     private @MainActivity.SortOrder int mSortBy;
+    private String searchQuery;
     public MainViewModel(@NonNull Application application) {
         super(application);
         mPackageManager = application.getPackageManager();
@@ -58,6 +61,15 @@ public class MainViewModel extends AndroidViewModel {
         return applicationItemsLiveData;
     }
 
+    public String getSearchQuery() {
+        return searchQuery;
+    }
+
+    public void setSearchQuery(String searchQuery) {
+        this.searchQuery = searchQuery;
+        new Thread(this::filterItems).start();
+    }
+
     public void setSortBy(int sortBy) {
         if (mSortBy != sortBy) {
             new Thread(() -> {
@@ -73,12 +85,11 @@ public class MainViewModel extends AndroidViewModel {
     public void loadApplicationItems() {
         new Thread(() -> {
             String pName;
-            final boolean isRootEnabled = AppPref.isRootEnabled();
             int flagSigningInfo;
-            applicationItems.clear();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
                 flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
             else flagSigningInfo = PackageManager.GET_SIGNATURES;
+            applicationItems.clear();
             if (MainActivity.packageList != null) {
                 String[] aList = MainActivity.packageList.split("[\\r\\n]+");
                 for (String s : aList) {
@@ -123,9 +134,27 @@ public class MainViewModel extends AndroidViewModel {
                 }
             }
             sortApplicationList(mSortBy);
-            mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
-            if (Build.VERSION.SDK_INT <= 25) loadPackageSize();
+            if (!TextUtils.isEmpty(searchQuery)) {
+                if (Build.VERSION.SDK_INT <= 25) loadPackageSize();
+                filterItems();
+            } else {
+                mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
+                if (Build.VERSION.SDK_INT <= 25) {
+                    loadPackageSize();
+                    mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
+                }
+            }
         }).start();
+    }
+
+    private void filterItems() {
+        List<ApplicationItem> filteredApplicationItems = new ArrayList<>();
+        for (ApplicationItem item: applicationItems) {
+            if (item.label.toLowerCase(Locale.ROOT).contains(searchQuery)
+                    || item.applicationInfo.packageName.toLowerCase(Locale.ROOT).contains(searchQuery))
+                filteredApplicationItems.add(item);
+        }
+        mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
     }
 
     private void loadBlockingRules() {
@@ -141,7 +170,6 @@ public class MainViewModel extends AndroidViewModel {
     private void loadPackageSize() {
         for (int i = 0; i<applicationItems.size(); ++i)
             applicationItems.set(i, getSizeForPackage(applicationItems.get(i)));
-        mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
     }
 
     private ApplicationItem getSizeForPackage(@NonNull final ApplicationItem item) {
