@@ -70,12 +70,10 @@ import androidx.appcompat.widget.SearchView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.AppManager.MainLoader;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
@@ -85,12 +83,12 @@ import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.types.ScrollSafeSwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.viewmodels.MainViewModel;
 
 import static androidx.appcompat.app.ActionBar.LayoutParams;
 
 public class MainActivity extends AppCompatActivity implements
-        SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<List<ApplicationItem>>,
-        ScrollSafeSwipeRefreshLayout.OnRefreshListener {
+        SearchView.OnQueryTextListener, ScrollSafeSwipeRefreshLayout.OnRefreshListener {
     public static final String EXTRA_PACKAGE_LIST = "EXTRA_PACKAGE_LIST";
     public static final String EXTRA_LIST_NAME = "EXTRA_LIST_NAME";
 
@@ -147,11 +145,11 @@ public class MainActivity extends AppCompatActivity implements
     private int mItemSizeRetrievedCount;
     private SearchView mSearchView;
     private ProgressIndicator mProgressIndicator;
-    private LoaderManager mLoaderManager;
     private ScrollSafeSwipeRefreshLayout mSwipeRefresh;
     private BottomAppBar mBottomAppBar;
     private MaterialTextView mBottomAppBarCounter;
     private LinearLayoutCompat mMainLayout;
+    private MainViewModel mModel;
     private static String mConstraint;
     private static @NonNull Set<String> mPackageNames = new HashSet<>();
     private static @NonNull Set<ApplicationItem> mSelectedApplicationItems = new HashSet<>();
@@ -170,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements
         AppCompatDelegate.setDefaultNightMode((int) AppPref.get(AppPref.PrefKey.PREF_APP_THEME_INT));
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.toolbar));
+        mModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(MainViewModel.class);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
@@ -273,9 +272,6 @@ public class MainActivity extends AppCompatActivity implements
             return false;
         });
         handleSelection();
-
-        mLoaderManager = LoaderManager.getInstance(this);
-        mLoaderManager.initLoader(0, null, this);
     }
 
     @Override
@@ -366,7 +362,10 @@ public class MainActivity extends AppCompatActivity implements
                     t.show();
                     return true;
                 }
-                mLoaderManager.restartLoader(0, null, this);
+                if (mModel != null) {
+                    showProgressIndicator(true);
+                    mModel.loadInBackground();
+                }
                 return true;
             case R.id.action_settings:
                 Intent settingsIntent = new Intent(this, SettingsActivity.class);
@@ -445,39 +444,6 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    @NonNull
-    @Override
-    public Loader<List<ApplicationItem>> onCreateLoader(int id, @Nullable Bundle args) {
-        showProgressIndicator(true);
-        return new MainLoader(this);
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<List<ApplicationItem>> loader, List<ApplicationItem> applicationItems) {
-        mApplicationItems = applicationItems;
-        sortApplicationList(mSortBy);
-        mAdapter.setDefaultList(mApplicationItems);
-        // Set title and subtitle
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(MainActivity.listName.substring(0,
-                    MainActivity.listName.lastIndexOf(".")));
-            actionBar.setSubtitle(MainActivity.listName.substring(
-                    MainActivity.listName.lastIndexOf(".") + 1).toLowerCase(Locale.ROOT));
-        }
-        if (Build.VERSION.SDK_INT <= 25) {
-            startRetrievingPackagesSize();
-        }
-        showProgressIndicator(false);
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<List<ApplicationItem>> loader) {
-        mApplicationItems = null;
-        mAdapter.setDefaultList(null);
-        showProgressIndicator(false);
-    }
-
     @Override
     public void onRefresh() {
         if (mSortBy == SORT_BY_APP_SIZE_OR_SDK && Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
@@ -486,7 +452,8 @@ public class MainActivity extends AppCompatActivity implements
             t.setGravity(Gravity.CENTER , Gravity.CENTER, Gravity.CENTER);
             t.show();
         } else {
-            mLoaderManager.restartLoader(0, null, this);
+            showProgressIndicator(true);
+            mModel.loadInBackground();
         }
         mSwipeRefresh.setRefreshing(false);
     }
@@ -508,10 +475,31 @@ public class MainActivity extends AppCompatActivity implements
                 } catch (Exception ignored) {}
             }).start();
         }
-        // Set filter
-        if (mAdapter != null && mSearchView != null && !TextUtils.isEmpty(mConstraint)) {
-            mSearchView.setIconified(false);
-            mSearchView.setQuery(mConstraint, false);
+
+        if (mAdapter != null) {
+            // Set observer
+            mModel.getApplicationItems().observe(this, applicationItems -> {
+                mApplicationItems = applicationItems;
+                sortApplicationList(mSortBy);
+                mAdapter.setDefaultList(mApplicationItems);
+                // Set title and subtitle
+                ActionBar actionBar = getSupportActionBar();
+                if (actionBar != null) {
+                    actionBar.setTitle(MainActivity.listName.substring(0,
+                            MainActivity.listName.lastIndexOf(".")));
+                    actionBar.setSubtitle(MainActivity.listName.substring(
+                            MainActivity.listName.lastIndexOf(".") + 1).toLowerCase(Locale.ROOT));
+                }
+                if (Build.VERSION.SDK_INT <= 25) {
+                    startRetrievingPackagesSize();
+                }
+                showProgressIndicator(false);
+            });
+            // Set filter
+            if (mSearchView != null && !TextUtils.isEmpty(mConstraint)) {
+                mSearchView.setIconified(false);
+                mSearchView.setQuery(mConstraint, false);
+            }
         }
         // Show/hide app usage menu
         if (appUsageMenu != null) {
@@ -551,12 +539,11 @@ public class MainActivity extends AppCompatActivity implements
                                 .setTitle(R.string.changelog)
                                 .setMessage(spannedChangelog)
                                 .setNegativeButton(android.R.string.ok, null)
-                                .setNeutralButton(R.string.instructions, (dialog, which) -> {
-                                    new FullscreenDialog(this)
-                                            .setTitle(R.string.instructions)
-                                            .setView(R.layout.dialog_instructions)
-                                            .show();
-                                })
+                                .setNeutralButton(R.string.instructions, (dialog, which) ->
+                                        new FullscreenDialog(this)
+                                                .setTitle(R.string.instructions)
+                                                .setView(R.layout.dialog_instructions)
+                                                .show())
                                 .show());
             }).start();
             AppPref.getInstance().setPref(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
