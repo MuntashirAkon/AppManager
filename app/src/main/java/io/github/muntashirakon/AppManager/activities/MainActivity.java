@@ -6,10 +6,8 @@ import android.app.Activity;
 import android.app.usage.UsageStatsManager;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageStats;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,8 +37,6 @@ import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.Collator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -140,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private MainActivity.MainRecyclerAdapter mAdapter;
     private List<ApplicationItem> mApplicationItems = new ArrayList<>();
-    private int mItemSizeRetrievedCount;
     private SearchView mSearchView;
     private ProgressIndicator mProgressIndicator;
     private ScrollSafeSwipeRefreshLayout mSwipeRefresh;
@@ -362,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
                 if (mModel != null) {
                     showProgressIndicator(true);
-                    mModel.loadInBackground();
+                    mModel.loadApplicationItems();
                 }
                 return true;
             case R.id.action_settings:
@@ -451,7 +446,7 @@ public class MainActivity extends AppCompatActivity implements
             t.show();
         } else {
             showProgressIndicator(true);
-            mModel.loadInBackground();
+            mModel.loadApplicationItems();
         }
         mSwipeRefresh.setRefreshing(false);
     }
@@ -487,9 +482,6 @@ public class MainActivity extends AppCompatActivity implements
                             MainActivity.listName.lastIndexOf(".")));
                     actionBar.setSubtitle(MainActivity.listName.substring(
                             MainActivity.listName.lastIndexOf(".") + 1).toLowerCase(Locale.ROOT));
-                }
-                if (Build.VERSION.SDK_INT <= 25) {
-                    startRetrievingPackagesSize();
                 }
                 showProgressIndicator(false);
             });
@@ -645,45 +637,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onQueryTextSubmit(String s) {
         return false;
-    }
-
-    private void startRetrievingPackagesSize() {
-        for (ApplicationItem item : mApplicationItems)
-            getItemSize(item);
-    }
-
-    private void getItemSize(@NonNull final ApplicationItem item) {
-        try {
-            @SuppressWarnings("JavaReflectionMemberAccess")
-            Method getPackageSizeInfo = PackageManager.class.getMethod(
-                    "getPackageSizeInfo", String.class, IPackageStatsObserver.class);
-
-            getPackageSizeInfo.invoke(this.getPackageManager(), item.applicationInfo.packageName, new IPackageStatsObserver.Stub() {
-                @Override
-                public void onGetStatsCompleted(final PackageStats pStats, final boolean succeeded) {
-                    MainActivity.this.runOnUiThread(() -> {
-                        if (succeeded)
-                            item.size = pStats.codeSize + pStats.cacheSize + pStats.dataSize
-                                    + pStats.externalCodeSize + pStats.externalCacheSize + pStats.externalDataSize
-                                    + pStats.externalMediaSize + pStats.externalObbSize;
-                        else
-                            item.size = -1L;
-
-                        incrementItemSizeRetrievedCount();
-                    });
-                }
-            });
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-            incrementItemSizeRetrievedCount();
-        }
-    }
-
-    private void incrementItemSizeRetrievedCount() {
-        mItemSizeRetrievedCount++;
-
-        if (mItemSizeRetrievedCount == mApplicationItems.size())
-            mAdapter.notifyDataSetChanged();
     }
 
     static class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>

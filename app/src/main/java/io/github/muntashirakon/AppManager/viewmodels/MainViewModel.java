@@ -7,10 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.IPackageStatsObserver;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageStats;
 import android.os.Build;
 import android.os.Handler;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,22 +41,27 @@ public class MainViewModel extends AndroidViewModel {
         mPackageObserver = new PackageIntentReceiver(this);
     }
 
-    private MutableLiveData<List<ApplicationItem>> applicationItems;
+    private MutableLiveData<List<ApplicationItem>> applicationItemsLiveData;
+    final private List<ApplicationItem> applicationItems = new ArrayList<>();
     @NonNull
     public LiveData<List<ApplicationItem>> getApplicationItems() {
-        if (applicationItems == null) {
-            applicationItems = new MutableLiveData<>();
-            loadInBackground();
+        if (applicationItemsLiveData == null) {
+            applicationItemsLiveData = new MutableLiveData<>();
+            loadApplicationItems();
         }
-        return applicationItems;
+        return applicationItemsLiveData;
     }
 
     @SuppressLint("PackageManagerGetSignatures")
-    public void loadInBackground() {
+    public void loadApplicationItems() {
         new Thread(() -> {
-            List<ApplicationItem> itemList = new ArrayList<>();
             String pName;
             final boolean isRootEnabled = AppPref.isRootEnabled();
+            int flagSigningInfo;
+            applicationItems.clear();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
+            else flagSigningInfo = PackageManager.GET_SIGNATURES;
             if (MainActivity.packageList != null) {
                 String[] aList = MainActivity.packageList.split("[\\r\\n]+");
                 for (String s : aList) {
@@ -61,24 +71,16 @@ public class MainViewModel extends AndroidViewModel {
                         pName = s.substring(0, s.length() - 1);
                     } else pName = s;
                     try {
-                        ApplicationInfo applicationInfo = mPackageManager.getApplicationInfo(pName, PackageManager.GET_META_DATA);
+                        PackageInfo packageInfo = mPackageManager.getPackageInfo(pName, PackageManager.GET_META_DATA | flagSigningInfo);
+                        ApplicationInfo applicationInfo = packageInfo.applicationInfo;
                         item.applicationInfo = applicationInfo;
                         item.label = applicationInfo.loadLabel(mPackageManager).toString();
-                        item.date = mPackageManager.getPackageInfo(applicationInfo.packageName, 0).lastUpdateTime; // .firstInstallTime;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                            item.sha = Utils.getIssuerAndAlg(mPackageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNING_CERTIFICATES));
-                        } else {
-                            item.sha = Utils.getIssuerAndAlg(mPackageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNATURES));
-                        }
+                        item.date = packageInfo.lastUpdateTime; // .firstInstallTime;
+                        item.sha = Utils.getIssuerAndAlg(packageInfo);
                         if (Build.VERSION.SDK_INT >= 26) {
                             item.size = (long) -1 * applicationInfo.targetSdkVersion;
                         }
-                        if (isRootEnabled) {
-                            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(getApplication(), pName, true)) {
-                                item.blockedCount = cb.componentCount();
-                            }
-                        }
-                        itemList.add(item);
+                        applicationItems.add(item);
                     } catch (PackageManager.NameNotFoundException ignored) {}
                 }
             } else {
@@ -92,28 +94,62 @@ public class MainViewModel extends AndroidViewModel {
                         item.size = (long) -1 * applicationInfo.targetSdkVersion;
                     }
                     try {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                            item.sha = Utils.getIssuerAndAlg(mPackageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNING_CERTIFICATES));
-                        } else {
-                            item.sha = Utils.getIssuerAndAlg(mPackageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNATURES));
-                        }
-                        item.date = mPackageManager.getPackageInfo(applicationInfo.packageName, 0).lastUpdateTime; // .firstInstallTime;
+                        PackageInfo packageInfo = mPackageManager.getPackageInfo(applicationInfo.packageName, flagSigningInfo);
+                        item.sha = Utils.getIssuerAndAlg(packageInfo);
+                        item.date = packageInfo.lastUpdateTime; // .firstInstallTime;
                     } catch (PackageManager.NameNotFoundException e) {
                         item.date = 0L;
                         item.sha = new Tuple<>("?", "?");
                     }
-                    if (isRootEnabled) {
-                        try (ComponentsBlocker cb = ComponentsBlocker.getInstance(getApplication(), applicationInfo.packageName, true)) {
-                            item.blockedCount = cb.componentCount();
-                        }
-                    }
-                    itemList.add(item);
+                    item.blockedCount = 0;
+                    applicationItems.add(item);
                 }
             }
-            mHandler.post(() -> applicationItems.postValue(itemList));
+            mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
+            if (isRootEnabled) loadBlockingRules();  // FIXME: Run this if only sort by blocking rules is requested
+            if (Build.VERSION.SDK_INT <= 25) loadPackageSize();
         }).start();
     }
 
+    private void loadBlockingRules() {
+        for (int i = 0; i<applicationItems.size(); ++i) {
+            ApplicationItem applicationItem = applicationItems.get(i);
+            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(getApplication(), applicationItem.applicationInfo.packageName, true)) {
+                applicationItem.blockedCount = cb.componentCount();
+            }
+            applicationItems.set(i, applicationItem);
+        }
+        mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
+    }
+
+    private void loadPackageSize() {
+        for (int i = 0; i<applicationItems.size(); ++i)
+            applicationItems.set(i, getSizeForPackage(applicationItems.get(i)));
+        mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
+    }
+
+    private ApplicationItem getSizeForPackage(@NonNull final ApplicationItem item) {
+        try {
+            @SuppressWarnings("JavaReflectionMemberAccess")
+            Method getPackageSizeInfo = PackageManager.class.getMethod("getPackageSizeInfo",
+                    String.class, IPackageStatsObserver.class);
+
+            getPackageSizeInfo.invoke(mPackageManager, item.applicationInfo.packageName, new IPackageStatsObserver.Stub() {
+                @Override
+                public void onGetStatsCompleted(final PackageStats pStats, final boolean succeeded) {
+                    if (succeeded) {
+                        item.size = pStats.codeSize + pStats.cacheSize + pStats.dataSize
+                                + pStats.externalCodeSize + pStats.externalCacheSize
+                                + pStats.externalDataSize + pStats.externalMediaSize
+                                + pStats.externalObbSize;
+                    } else item.size = -1L;
+                }
+            });
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return item;
+    }
 
     @Override
     protected void onCleared() {
@@ -142,7 +178,7 @@ public class MainViewModel extends AndroidViewModel {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            mModel.loadInBackground();
+            mModel.loadApplicationItems();
         }
     }
 }
