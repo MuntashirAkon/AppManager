@@ -24,6 +24,14 @@
                 android:layout_height="wrap_content"
                 app:indicatorColor="?colorAccent" />
 
+            <ImageView
+                android:id="@+id/banner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                tools:ignore="ContentDescription"
+                tools:srcCompat="@tools:sample/avatars" />
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/details_header"
                 android:layout_width="match_parent"

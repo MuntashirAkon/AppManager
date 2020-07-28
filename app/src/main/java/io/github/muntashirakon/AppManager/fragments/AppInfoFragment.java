@@ -266,6 +266,12 @@ public class AppInfoFragment extends Fragment
         // Set Package Name
         runOnUiThread(() -> packageNameView.setText(mPackageName));
 
+        // Set Banner
+        final Drawable banner = mApplicationInfo.loadBanner(mPackageManager);
+        if (banner != null) {
+            runOnUiThread(() -> ((ImageView) view.findViewById(R.id.banner)).setImageDrawable(banner));
+        }
+
         // Set App Icon
         final Drawable appIcon = mApplicationInfo.loadIcon(mPackageManager);
         runOnUiThread(() -> iconView.setImageDrawable(appIcon));
