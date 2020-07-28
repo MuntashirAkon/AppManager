@@ -37,12 +37,10 @@ import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.io.IOException;
-import java.text.Collator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -103,8 +101,6 @@ public class MainActivity extends AppCompatActivity implements
      * The name of this particular package list
      */
     public static String listName;
-
-    private static Collator sCollator = Collator.getInstance();
 
     private static final int[] sSortMenuItemIdsMap = {R.id.action_sort_by_domain,
             R.id.action_sort_by_app_label, R.id.action_sort_by_package_name,
@@ -283,12 +279,6 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        AppPref.getInstance().setPref(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT, mSortBy);
     }
 
     @SuppressLint("RestrictedApi")
@@ -473,7 +463,6 @@ public class MainActivity extends AppCompatActivity implements
             // Set observer
             mModel.getApplicationItems().observe(this, applicationItems -> {
                 mApplicationItems = applicationItems;
-                sortApplicationList(mSortBy);
                 mAdapter.setDefaultList(mApplicationItems);
                 // Set title and subtitle
                 ActionBar actionBar = getSupportActionBar();
@@ -582,48 +571,11 @@ public class MainActivity extends AppCompatActivity implements
     /**
      * Sort main list if provided value is valid.
      *
-     * @param sort Must be one of SORT_*
+     * @param sortBy Must be one of SORT_*
      */
-    private void setSortBy(@SortOrder int sort) {
-        mSortBy = sort;
-        sortApplicationList(mSortBy);
-        if (mAdapter != null) mAdapter.notifyDataSetChanged();
-    }
-
-    private void sortApplicationList(@SortOrder int sortBy) {
-        final boolean isRootEnabled = AppPref.isRootEnabled();
-        if (sortBy != SORT_BY_APP_LABEL) sortApplicationList(SORT_BY_APP_LABEL);
-        Collections.sort(mApplicationItems, (o1, o2) -> {
-            switch (sortBy) {
-                case SORT_BY_APP_LABEL:
-                    return sCollator.compare(o1.label, o2.label);
-                case SORT_BY_PACKAGE_NAME:
-                    return o1.applicationInfo.packageName.compareTo(o2.applicationInfo.packageName);
-                case SORT_BY_DOMAIN:
-                    boolean isSystem1 = (o1.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                    boolean isSystem2 = (o2.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                    return Utils.compareBooleans(isSystem1, isSystem2);
-                case SORT_BY_LAST_UPDATE:
-                    // Sort in decreasing order
-                    return -o1.date.compareTo(o2.date);
-                case SORT_BY_APP_SIZE_OR_SDK:
-                    return -o1.size.compareTo(o2.size);
-                case SORT_BY_SHARED_ID:
-                    return o2.applicationInfo.uid - o1.applicationInfo.uid;
-                case SORT_BY_SHA:
-                    try {
-                        return o1.sha.compareTo(o2.sha);
-                    } catch (NullPointerException ignored) {}
-                    break;
-                case SORT_BY_BLOCKED_COMPONENTS:
-                    if (isRootEnabled)
-                        return -o1.blockedCount.compareTo(o2.blockedCount);
-                    break;
-                case SORT_BY_DISABLED_APP:
-                    return Utils.compareBooleans(o1.applicationInfo.enabled, o2.applicationInfo.enabled);
-            }
-            return 0;
-        });
+    private void setSortBy(@SortOrder int sortBy) {
+        mSortBy = sortBy;
+        mModel.setSortBy(sortBy);
     }
 
     @Override

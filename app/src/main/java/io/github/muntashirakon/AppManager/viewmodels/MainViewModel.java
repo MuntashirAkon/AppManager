@@ -16,7 +16,9 @@ import android.os.Handler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -31,14 +33,18 @@ import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class MainViewModel extends AndroidViewModel {
+    private static Collator sCollator = Collator.getInstance();
+
     private PackageManager mPackageManager;
     private PackageIntentReceiver mPackageObserver;
     private Handler mHandler;
+    private @MainActivity.SortOrder int mSortBy;
     public MainViewModel(@NonNull Application application) {
         super(application);
         mPackageManager = application.getPackageManager();
         mHandler = new Handler(application.getMainLooper());
         mPackageObserver = new PackageIntentReceiver(this);
+        mSortBy = (int) AppPref.get(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT);
     }
 
     private MutableLiveData<List<ApplicationItem>> applicationItemsLiveData;
@@ -50,6 +56,17 @@ public class MainViewModel extends AndroidViewModel {
             loadApplicationItems();
         }
         return applicationItemsLiveData;
+    }
+
+    public void setSortBy(int sortBy) {
+        if (mSortBy != sortBy) {
+            new Thread(() -> {
+                sortApplicationList(sortBy);
+                mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
+            }).start();
+        }
+        mSortBy = sortBy;
+        AppPref.getInstance().setPref(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT, mSortBy);
     }
 
     @SuppressLint("PackageManagerGetSignatures")
@@ -105,8 +122,8 @@ public class MainViewModel extends AndroidViewModel {
                     applicationItems.add(item);
                 }
             }
+            sortApplicationList(mSortBy);
             mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
-            if (isRootEnabled) loadBlockingRules();  // FIXME: Run this if only sort by blocking rules is requested
             if (Build.VERSION.SDK_INT <= 25) loadPackageSize();
         }).start();
     }
@@ -119,7 +136,6 @@ public class MainViewModel extends AndroidViewModel {
             }
             applicationItems.set(i, applicationItem);
         }
-        mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
     }
 
     private void loadPackageSize() {
@@ -150,6 +166,44 @@ public class MainViewModel extends AndroidViewModel {
         }
         return item;
     }
+
+    private void sortApplicationList(@MainActivity.SortOrder int sortBy) {
+        final boolean isRootEnabled = AppPref.isRootEnabled();
+        if (sortBy != MainActivity.SORT_BY_APP_LABEL) sortApplicationList(MainActivity.SORT_BY_APP_LABEL);
+        if (sortBy == MainActivity.SORT_BY_BLOCKED_COMPONENTS && isRootEnabled) loadBlockingRules();
+        Collections.sort(applicationItems, (o1, o2) -> {
+            switch (sortBy) {
+                case MainActivity.SORT_BY_APP_LABEL:
+                    return sCollator.compare(o1.label, o2.label);
+                case MainActivity.SORT_BY_PACKAGE_NAME:
+                    return o1.applicationInfo.packageName.compareTo(o2.applicationInfo.packageName);
+                case MainActivity.SORT_BY_DOMAIN:
+                    boolean isSystem1 = (o1.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+                    boolean isSystem2 = (o2.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+                    return Utils.compareBooleans(isSystem1, isSystem2);
+                case MainActivity.SORT_BY_LAST_UPDATE:
+                    // Sort in decreasing order
+                    return -o1.date.compareTo(o2.date);
+                case MainActivity.SORT_BY_APP_SIZE_OR_SDK:
+                    return -o1.size.compareTo(o2.size);
+                case MainActivity.SORT_BY_SHARED_ID:
+                    return o2.applicationInfo.uid - o1.applicationInfo.uid;
+                case MainActivity.SORT_BY_SHA:
+                    try {
+                        return o1.sha.compareTo(o2.sha);
+                    } catch (NullPointerException ignored) {}
+                    break;
+                case MainActivity.SORT_BY_BLOCKED_COMPONENTS:
+                    if (isRootEnabled)
+                        return -o1.blockedCount.compareTo(o2.blockedCount);
+                    break;
+                case MainActivity.SORT_BY_DISABLED_APP:
+                    return Utils.compareBooleans(o1.applicationInfo.enabled, o2.applicationInfo.enabled);
+            }
+            return 0;
+        });
+    }
+
 
     @Override
     protected void onCleared() {
