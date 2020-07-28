@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.Formatter;
 import android.view.Gravity;
@@ -25,7 +23,6 @@ import android.widget.Toast;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.ProgressIndicator;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,8 +40,9 @@ import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -245,7 +243,7 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
             MaterialButton killBtn;
             MaterialButton forceStopBtn;
             MaterialButton disableBackgroundRunBtn;
-            IconAsyncTask iconLoader;
+            IconLoaderThread iconLoader;
         }
 
         @Override
@@ -266,14 +264,14 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
-                if (holder.iconLoader != null) holder.iconLoader.cancel(true);
+                if (holder.iconLoader != null) holder.iconLoader.interrupt();
             }
             ProcessItem processItem = mAdapterList.get(position);
             ApplicationInfo applicationInfo = processItem.applicationInfo;
             String processName = processItem.name;
             // Load icon
-            holder.iconLoader = new IconAsyncTask(holder.icon, applicationInfo);
-            holder.iconLoader.execute();
+            holder.iconLoader = new IconLoaderThread(holder.icon, applicationInfo);
+            holder.iconLoader.start();
             // Set process name
             if (mConstraint != null && processName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
@@ -382,48 +380,6 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
                     }
                 };
             return mFilter;
-        }
-
-        private static class IconAsyncTask extends AsyncTask<Void, Integer, Drawable> {
-            private WeakReference<ImageView> imageView = null;
-            ApplicationInfo info;
-
-            private IconAsyncTask(ImageView pImageViewWeakReference, ApplicationInfo info) {
-                link(pImageViewWeakReference);
-                this.info = info;
-            }
-
-            private void link(ImageView pImageViewWeakReference) {
-                imageView = new WeakReference<>(pImageViewWeakReference);
-            }
-
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                if (imageView.get()!=null)
-                    imageView.get().setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            protected Drawable doInBackground(Void... voids) {
-                if (!isCancelled()) {
-                    if (info != null)
-                        return info.loadIcon(mPackageManager);
-                    else return mPackageManager.getDefaultActivityIcon();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Drawable drawable) {
-                super.onPostExecute(drawable);
-                if (imageView.get()!=null){
-                    imageView.get().setImageDrawable(drawable);
-                    imageView.get().setVisibility(View.VISIBLE);
-
-                }
-            }
         }
     }
 

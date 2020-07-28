@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -29,7 +27,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
-import java.lang.ref.WeakReference;
 import java.text.Collator;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -45,6 +42,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fragments.AppUsageDetailsDialogFragment;
+import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.ScrollSafeSwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.Utils.IntervalType;
@@ -329,7 +327,7 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
             MaterialTextView screenTime;
             MaterialTextView percentUsage;
             ProgressIndicator usageIndicator;
-            IconAsyncTask iconLoader;
+            IconLoaderThread iconLoader;
         }
 
         AppUsageAdapter(@NonNull Activity activity) {
@@ -376,7 +374,7 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
-                if(holder.iconLoader != null) holder.iconLoader.cancel(true);
+                if(holder.iconLoader != null) holder.iconLoader.interrupt();
             }
             final AppUsageStatsManager.PackageUS packageUS = mAdapterList.get(position);
             final int percentUsage = (int) (packageUS.screenTime * 100f / totalScreenTime);
@@ -385,8 +383,8 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
                 ApplicationInfo applicationInfo = mPackageManager.getApplicationInfo(packageUS.packageName, 0);
                 holder.appLabel.setText(mPackageManager.getApplicationLabel(applicationInfo));
                 // Set icon
-                holder.iconLoader = new IconAsyncTask(holder.appIcon, applicationInfo);
-                holder.iconLoader.execute();
+                holder.iconLoader = new IconLoaderThread(holder.appIcon, applicationInfo);
+                holder.iconLoader.start();
             } catch (PackageManager.NameNotFoundException e) {
                 holder.appLabel.setText(packageUS.packageName);
                 holder.appIcon.setImageDrawable(mPackageManager.getDefaultActivityIcon());
@@ -424,44 +422,6 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
             holder.percentUsage.setText(String.format(Locale.ROOT, "%d%%", percentUsage));
             holder.usageIndicator.setProgress(percentUsage);
             return convertView;
-        }
-
-        private static class IconAsyncTask extends AsyncTask<Void, Integer, Drawable> {
-            private WeakReference<ImageView> imageView = null;
-            ApplicationInfo info;
-
-            private IconAsyncTask(ImageView pImageViewWeakReference, ApplicationInfo info) {
-                link(pImageViewWeakReference);
-                this.info = info;
-            }
-
-            private void link(ImageView pImageViewWeakReference) {
-                imageView = new WeakReference<>(pImageViewWeakReference);
-            }
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                if (imageView.get() != null)
-                    imageView.get().setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            protected Drawable doInBackground(Void... voids) {
-                if (!isCancelled())
-                    return info.loadIcon(mPackageManager);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Drawable drawable) {
-                super.onPostExecute(drawable);
-                if (imageView.get() != null){
-                    imageView.get().setImageDrawable(drawable);
-                    imageView.get().setVisibility(View.VISIBLE);
-
-                }
-            }
         }
     }
 }
