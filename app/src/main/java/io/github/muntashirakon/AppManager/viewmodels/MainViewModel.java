@@ -22,10 +22,12 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,7 +50,7 @@ public class MainViewModel extends AndroidViewModel {
     private @MainActivity.SortOrder int mSortBy;
     private @MainActivity.Filter int mFilterFlags;
     private String searchQuery;
-    private List<String> selectedPackages = new LinkedList<>();
+    private Set<String> selectedPackages = new HashSet<>();
     private List<ApplicationItem> selectedApplicationItems = new LinkedList<>();
     private int flagSigningInfo;
     public MainViewModel(@NonNull Application application) {
@@ -107,7 +109,7 @@ public class MainViewModel extends AndroidViewModel {
         selectedApplicationItems.clear();
     }
 
-    public List<String> getSelectedPackages() {
+    public Set<String> getSelectedPackages() {
         return selectedPackages;
     }
 

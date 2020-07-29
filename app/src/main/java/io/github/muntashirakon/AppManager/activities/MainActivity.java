@@ -230,6 +230,9 @@ public class MainActivity extends AppCompatActivity implements
         });
         mBottomAppBar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
+                case R.id.action_select_all:
+                    mAdapter.selectAll();
+                    return true;
                 case R.id.action_block_trackers:
                     handleBatchOp(BatchOpsManager.OP_BLOCK_TRACKERS, R.string.alert_failed_to_disable_trackers);
                     return true;
@@ -641,7 +644,7 @@ public class MainActivity extends AppCompatActivity implements
         private MainActivity mActivity;
         private PackageManager mPackageManager;
         private String mSearchQuery;
-        private List<ApplicationItem> mAdapterList;
+        private final List<ApplicationItem> mAdapterList = new ArrayList<>();
 
         private static int mColorTransparent;
         private static int mColorSemiTransparent;
@@ -669,21 +672,36 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         void setDefaultList(List<ApplicationItem> list) {
-            mAdapterList = list;
-            mSearchQuery = mActivity.mModel.getSearchQuery();
-            notifyDataSetChanged();
+            synchronized (mAdapterList) {
+                mAdapterList.clear();
+                mAdapterList.addAll(list);
+                mSearchQuery = mActivity.mModel.getSearchQuery();
+                notifyDataSetChanged();
+            }
         }
 
         void clearSelection() {
-            final AtomicInteger itemId = new AtomicInteger();
-            for (ApplicationItem applicationItem: mActivity.mModel.getSelectedApplicationItems()) {
-                itemId.set(mAdapterList.indexOf(applicationItem));
-                if (itemId.get() == -1) continue;
-                applicationItem.isSelected = false;
-                mAdapterList.set(itemId.get(), applicationItem);
-                mActivity.runOnUiThread(() -> notifyItemChanged(itemId.get()));
+            synchronized (mAdapterList) {
+                final AtomicInteger itemId = new AtomicInteger();
+                for (ApplicationItem applicationItem : mActivity.mModel.getSelectedApplicationItems()) {
+                    itemId.set(mAdapterList.indexOf(applicationItem));
+                    if (itemId.get() == -1) continue;
+                    applicationItem.isSelected = false;
+                    mAdapterList.set(itemId.get(), applicationItem);
+                    mActivity.runOnUiThread(() -> notifyItemChanged(itemId.get()));
+                }
+                mActivity.mModel.clearSelection();
             }
-            mActivity.mModel.clearSelection();
+        }
+
+        void selectAll() {
+            synchronized (mAdapterList) {
+                for (int i = 0; i < mAdapterList.size(); ++i) {
+                    mAdapterList.set(i, mActivity.mModel.select(mAdapterList.get(i)));
+                    notifyItemChanged(i);
+                }
+                mActivity.handleSelection();
+            }
         }
 
         @NonNull
@@ -836,7 +854,7 @@ public class MainActivity extends AppCompatActivity implements
 
         @Override
         public int getItemCount() {
-            return mAdapterList == null ? 0 : mAdapterList.size();
+            return mAdapterList.size();
         }
 
         @Override

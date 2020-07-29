@@ -571,4 +571,5 @@
     <string name="filter_user_apps">User apps</string>
     <string name="filter_system_apps">System apps</string>
     <string name="filter_apps_with_rules">Apps with rules</string>
+    <string name="select_all">Select All</string>
 </resources>
