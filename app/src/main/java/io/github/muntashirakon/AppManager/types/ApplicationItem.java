@@ -36,4 +36,8 @@ public class ApplicationItem {
      * Blocked components count
      */
     public Integer blockedCount = 0;
+    /**
+     * Whether the item is selected
+     */
+    public boolean isSelected = false;
 }

@@ -48,6 +48,7 @@ public class MainViewModel extends AndroidViewModel {
     private @MainActivity.SortOrder int mSortBy;
     private String searchQuery;
     private List<String> selectedPackages = new LinkedList<>();
+    private List<ApplicationItem> selectedApplicationItems = new LinkedList<>();
     private int flagSigningInfo;
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -71,20 +72,44 @@ public class MainViewModel extends AndroidViewModel {
         return applicationItemsLiveData;
     }
 
-    public void deselect(@NonNull ApplicationItem item) {
+    public ApplicationItem deselect(@NonNull ApplicationItem item) {
+        int i = applicationItems.indexOf(item);
+        if (i == -1) return item;
         selectedPackages.remove(item.applicationInfo.packageName);
+        selectedApplicationItems.remove(item);
+        item.isSelected = false;
+        applicationItems.set(i, item);
+        return item;
     }
 
-    public void select(@NonNull ApplicationItem item) {
+    public ApplicationItem select(@NonNull ApplicationItem item) {
+        int i = applicationItems.indexOf(item);
+        if (i == -1) return item;
         selectedPackages.add(item.applicationInfo.packageName);
+        item.isSelected = true;
+        applicationItems.set(i, item);
+        selectedApplicationItems.add(item);
+        return item;
     }
 
     public void clearSelection() {
         selectedPackages.clear();
+        int i;
+        for (ApplicationItem item: selectedApplicationItems) {
+            i = applicationItems.indexOf(item);
+            if (i == -1) continue;
+            item.isSelected = false;
+            applicationItems.set(i, item);
+        }
+        selectedApplicationItems.clear();
     }
 
     public List<String> getSelectedPackages() {
         return selectedPackages;
+    }
+
+    public List<ApplicationItem> getSelectedApplicationItems() {
+        return selectedApplicationItems;
     }
 
     public String getSearchQuery() {

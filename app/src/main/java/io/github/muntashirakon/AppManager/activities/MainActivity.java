@@ -40,11 +40,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -137,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements
     private MaterialTextView mBottomAppBarCounter;
     private LinearLayoutCompat mMainLayout;
     private MainViewModel mModel;
-    private static @NonNull Set<ApplicationItem> mSelectedApplicationItems = new HashSet<>();
     private CoordinatorLayout.LayoutParams mLayoutParamsSelection;
     private CoordinatorLayout.LayoutParams mLayoutParamsTypical;
     private MenuItem appUsageMenu;
@@ -213,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements
             ((MenuBuilder) menu).setOptionalIconsVisible(true);
         }
         mBottomAppBar.setNavigationOnClickListener(v -> {
-            mModel.clearSelection();
+            if (mAdapter != null) mAdapter.clearSelection();
             handleSelection();
         });
         mBottomAppBar.setOnMenuItemClickListener(item -> {
@@ -248,11 +246,11 @@ public class MainActivity extends AppCompatActivity implements
                 case R.id.action_backup_apk:
                 case R.id.action_backup_data:
                     Toast.makeText(this, "This operation is not supported yet.", Toast.LENGTH_LONG).show();
-                    mModel.clearSelection();
+                    mAdapter.clearSelection();
                     handleSelection();
                     return true;
             }
-            mModel.clearSelection();
+            mAdapter.clearSelection();
             handleSelection();
             return false;
         });
@@ -272,6 +270,8 @@ public class MainActivity extends AppCompatActivity implements
                     args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, new ArrayList<>(mModel.getSelectedPackages()));
                     dialogFragment.setArguments(args);
                     dialogFragment.show(getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+                    mAdapter.clearSelection();
+                    handleSelection();
                 }
             }
         }
@@ -551,7 +551,7 @@ public class MainActivity extends AppCompatActivity implements
                 runOnUiThread(() -> Toast.makeText(this,
                         R.string.the_operation_was_successful, Toast.LENGTH_LONG).show());
             }
-            mModel.clearSelection();
+            mAdapter.clearSelection();
             runOnUiThread(() -> {
                 handleSelection();
                 showProgressIndicator(false);
@@ -591,7 +591,7 @@ public class MainActivity extends AppCompatActivity implements
         static final DateFormat sSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy"); // hh:mm:ss");
 
         private MainActivity mActivity;
-        private static PackageManager mPackageManager;
+        private PackageManager mPackageManager;
         private String mSearchQuery;
         private List<ApplicationItem> mAdapterList;
 
@@ -627,13 +627,15 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         void clearSelection() {
-            mActivity.mModel.clearSelection();
-            int itemId;
-            for (ApplicationItem applicationItem: mSelectedApplicationItems) {
-                itemId = mAdapterList.indexOf(applicationItem);
-                if (itemId != -1) notifyItemChanged(itemId);
+            final AtomicInteger itemId = new AtomicInteger();
+            for (ApplicationItem applicationItem: mActivity.mModel.getSelectedApplicationItems()) {
+                itemId.set(mAdapterList.indexOf(applicationItem));
+                if (itemId.get() == -1) continue;
+                applicationItem.isSelected = false;
+                mAdapterList.set(itemId.get(), applicationItem);
+                mActivity.runOnUiThread(() -> notifyItemChanged(itemId.get()));
             }
-            mSelectedApplicationItems.clear();
+            mActivity.mModel.clearSelection();
         }
 
         @NonNull
@@ -662,8 +664,7 @@ public class MainActivity extends AppCompatActivity implements
                 return true;
             });
             // Alternate background colors: selected > disabled > regular
-            if (mActivity.mModel.getSelectedPackages().contains(info.packageName))
-                holder.mainView.setBackgroundColor(mColorHighlight);
+            if (item.isSelected) holder.mainView.setBackgroundColor(mColorHighlight);
             else if (!info.enabled) holder.mainView.setBackgroundColor(mColorDisabled);
             else holder.mainView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
             // Add yellow star if the app is in debug mode
@@ -773,11 +774,9 @@ public class MainActivity extends AppCompatActivity implements
         public void toggleSelection(@NonNull ApplicationItem item, int position) {
             ApplicationInfo info = item.applicationInfo;
             if (mActivity.mModel.getSelectedPackages().contains(info.packageName)) {
-                mActivity.mModel.deselect(item);
-                mSelectedApplicationItems.remove(item);
+                mAdapterList.set(position, mActivity.mModel.deselect(item));
             } else {
-                mActivity.mModel.select(item);
-                mSelectedApplicationItems.add(item);
+                mAdapterList.set(position, mActivity.mModel.select(item));
             }
             notifyItemChanged(position);
             mActivity.handleSelection();
