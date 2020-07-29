@@ -46,16 +46,19 @@ public class MainViewModel extends AndroidViewModel {
     private PackageIntentReceiver mPackageObserver;
     private Handler mHandler;
     private @MainActivity.SortOrder int mSortBy;
+    private @MainActivity.Filter int mFilterFlags;
     private String searchQuery;
     private List<String> selectedPackages = new LinkedList<>();
     private List<ApplicationItem> selectedApplicationItems = new LinkedList<>();
     private int flagSigningInfo;
     public MainViewModel(@NonNull Application application) {
         super(application);
+        Log.d("MVM", "New instance created");
         mPackageManager = application.getPackageManager();
         mHandler = new Handler(application.getMainLooper());
         mPackageObserver = new PackageIntentReceiver(this);
         mSortBy = (int) AppPref.get(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT);
+        mFilterFlags = (int) AppPref.get(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
             flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
         else flagSigningInfo = PackageManager.GET_SIGNATURES;
@@ -118,38 +121,60 @@ public class MainViewModel extends AndroidViewModel {
 
     public void setSearchQuery(String searchQuery) {
         this.searchQuery = searchQuery;
-        new Thread(this::filterItems).start();
+        new Thread(this::filterItemsByFlags).start();
     }
 
     public void setSortBy(int sortBy) {
         if (mSortBy != sortBy) {
             new Thread(() -> {
                 sortApplicationList(sortBy);
-                mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
+                filterItemsByFlags();
             }).start();
         }
         mSortBy = sortBy;
         AppPref.getInstance().setPref(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT, mSortBy);
     }
 
+    public int getFilterFlags() {
+        return mFilterFlags;
+    }
+
+    public void addFilterFlag(@MainActivity.Filter int filterFlag) {
+        mFilterFlags |= filterFlag;
+        AppPref.getInstance().setPref(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT, mFilterFlags);
+        new Thread(() -> {
+            synchronized (applicationItems) {
+                filterItemsByFlags();
+            }
+        }).start();
+    }
+
+    public void removeFilterFlag(@MainActivity.Filter int filterFlag) {
+        mFilterFlags &= ~filterFlag;
+        AppPref.getInstance().setPref(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT, mFilterFlags);
+        new Thread(() -> {
+            synchronized (applicationItems) {
+                filterItemsByFlags();
+            }
+        }).start();
+    }
+
     @SuppressLint("PackageManagerGetSignatures")
     public void loadApplicationItems() {
         new Thread(() -> {
             synchronized (applicationItems) {
-                String pName;
                 applicationItems.clear();
                 if (MainActivity.packageList != null) {
-                    String[] aList = MainActivity.packageList.split("[\\r\\n]+");
-                    for (String s : aList) {
+                    String[] packageList = MainActivity.packageList.split("[\\r\\n]+");
+                    for (String packageName : packageList) {
                         ApplicationItem item = new ApplicationItem();
-                        if (s.endsWith("*")) {
-                            item.star = true;
-                            pName = s.substring(0, s.length() - 1);
-                        } else pName = s;
                         try {
-                            PackageInfo packageInfo = mPackageManager.getPackageInfo(pName, PackageManager.GET_META_DATA | flagSigningInfo);
+                            PackageInfo packageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA | flagSigningInfo);
                             ApplicationInfo applicationInfo = packageInfo.applicationInfo;
                             item.applicationInfo = applicationInfo;
+                            item.star = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+                            item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
+                            item.isDisabled = !applicationInfo.enabled;
                             item.label = applicationInfo.loadLabel(mPackageManager).toString();
                             item.date = packageInfo.lastUpdateTime; // .firstInstallTime;
                             item.sha = Utils.getIssuerAndAlg(packageInfo);
@@ -164,7 +189,9 @@ public class MainViewModel extends AndroidViewModel {
                     for (ApplicationInfo applicationInfo : applicationInfoList) {
                         ApplicationItem item = new ApplicationItem();
                         item.applicationInfo = applicationInfo;
-                        item.star = ((applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0);
+                        item.star = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+                        item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
+                        item.isDisabled = !applicationInfo.enabled;
                         item.label = applicationInfo.loadLabel(mPackageManager).toString();
                         if (Build.VERSION.SDK_INT >= 26) {
                             item.size = (long) -1 * applicationInfo.targetSdkVersion;
@@ -181,22 +208,14 @@ public class MainViewModel extends AndroidViewModel {
                         applicationItems.add(item);
                     }
                 }
+                if (Build.VERSION.SDK_INT <= 25) loadPackageSize();
                 sortApplicationList(mSortBy);
-                if (!TextUtils.isEmpty(searchQuery)) {
-                    if (Build.VERSION.SDK_INT <= 25) loadPackageSize();
-                    filterItems();
-                } else {
-                    mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
-                    if (Build.VERSION.SDK_INT <= 25) {
-                        loadPackageSize();
-                        mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
-                    }
-                }
+                filterItemsByFlags();
             }
         }).start();
     }
 
-    private void filterItems() {
+    private void filterItemsByQuery(@NonNull List<ApplicationItem> applicationItems) {
         List<ApplicationItem> filteredApplicationItems = new ArrayList<>();
         for (ApplicationItem item: applicationItems) {
             if (item.label.toLowerCase(Locale.ROOT).contains(searchQuery)
@@ -204,6 +223,37 @@ public class MainViewModel extends AndroidViewModel {
                 filteredApplicationItems.add(item);
         }
         mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
+    }
+
+    private void filterItemsByFlags() {
+        if (mFilterFlags == MainActivity.FILTER_NO_FILTER) {
+            if (!TextUtils.isEmpty(searchQuery)) {
+                filterItemsByQuery(applicationItems);
+            } else {
+                mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
+            }
+        } else {
+            List<ApplicationItem> filteredApplicationItems = new ArrayList<>();
+            if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_RULES) != 0) {
+                loadBlockingRules();
+            }
+            for (ApplicationItem item : applicationItems) {
+                if ((mFilterFlags & MainActivity.FILTER_USER_APPS) != 0 && item.isUser) {
+                    filteredApplicationItems.add(item);
+                } else if ((mFilterFlags & MainActivity.FILTER_SYSTEM_APPS) != 0 && !item.isUser) {
+                    filteredApplicationItems.add(item);
+                } else if ((mFilterFlags & MainActivity.FILTER_DISABLED_APPS) != 0 && item.isDisabled) {
+                    filteredApplicationItems.add(item);
+                } else if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_RULES) != 0 && item.blockedCount > 0) {
+                    filteredApplicationItems.add(item);
+                }
+            }
+            if (!TextUtils.isEmpty(searchQuery)) {
+                filterItemsByQuery(filteredApplicationItems);
+            } else {
+                mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
+            }
+        }
     }
 
     private void loadBlockingRules() {
@@ -302,7 +352,7 @@ public class MainViewModel extends AndroidViewModel {
                         removePackageFromApplicationItems(packageName);
                     }
                 }
-                mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
+                filterItemsByFlags();
                 break;
             case Intent.ACTION_PACKAGE_CHANGED:
                 for (String packageName: packages) {
@@ -310,7 +360,7 @@ public class MainViewModel extends AndroidViewModel {
                     if (item != null) insertApplicationItemInApplicationItems(item);
                 }
                 sortApplicationList(mSortBy);
-                mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
+                filterItemsByFlags();
                 break;
             case Intent.ACTION_PACKAGE_ADDED:
             case Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE:
@@ -319,7 +369,7 @@ public class MainViewModel extends AndroidViewModel {
                     if (item != null) applicationItems.add(item);
                 }
                 sortApplicationList(mSortBy);
-                mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
+                filterItemsByFlags();
         }
     }
 
@@ -344,7 +394,9 @@ public class MainViewModel extends AndroidViewModel {
             ApplicationInfo applicationInfo = packageInfo.applicationInfo;
             item.applicationInfo = applicationInfo;
             item.label = applicationInfo.loadLabel(mPackageManager).toString();
-            item.star = ((applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0);
+            item.star = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+            item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
+            item.isDisabled = !applicationInfo.enabled;
             item.date = packageInfo.lastUpdateTime; // .firstInstallTime;
             item.sha = Utils.getIssuerAndAlg(packageInfo);
             if (Build.VERSION.SDK_INT >= 26) {

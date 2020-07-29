@@ -37,6 +37,14 @@ public class ApplicationItem {
      */
     public Integer blockedCount = 0;
     /**
+     * Whether the item is a user app (or system app)
+     */
+    public boolean isUser;
+    /**
+     * Whether the app is disabled
+     */
+    public boolean isDisabled;
+    /**
      * Whether the item is selected
      */
     public boolean isSelected = false;

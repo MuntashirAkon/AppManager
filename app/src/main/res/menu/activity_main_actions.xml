@@ -57,6 +57,35 @@
     </item>
 
     <item
+        android:icon="@drawable/ic_baseline_outlined_flag_24"
+        android:title="@string/filter"
+        app:showAsAction="never">
+        <menu>
+            <group
+                android:checkableBehavior="all"
+                android:menuCategory="container">
+
+                <item
+                    android:id="@+id/action_filter_user_apps"
+                    android:title="@string/filter_user_apps" />
+
+                <item
+                    android:id="@+id/action_filter_system_apps"
+                    android:title="@string/filter_system_apps" />
+
+                <item
+                    android:id="@+id/action_filter_disabled_apps"
+                    android:title="@string/sort_by_package_name" />
+
+                <item
+                    android:id="@+id/action_filter_apps_with_rules"
+                    android:title="@string/filter_apps_with_rules" />
+
+            </group>
+        </menu>
+    </item>
+
+    <item
         android:id="@+id/action_refresh"
         android:icon="@drawable/ic_refresh_black_24dp"
         android:title="@string/refresh"

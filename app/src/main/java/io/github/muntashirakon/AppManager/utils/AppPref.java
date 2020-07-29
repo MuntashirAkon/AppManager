@@ -27,6 +27,7 @@ public class AppPref {
         PREF_ENABLE_KILL_FOR_SYSTEM_BOOL,
         PREF_GLOBAL_BLOCKING_ENABLED_BOOL,
         PREF_LAST_VERSION_CODE_LONG,
+        PREF_MAIN_WINDOW_FILTER_FLAGS_INT,
         PREF_MAIN_WINDOW_SORT_ORDER_INT,
         PREF_ROOT_MODE_ENABLED_BOOL,
         PREF_USAGE_ACCESS_ENABLED_BOOL;
@@ -170,6 +171,7 @@ public class AppPref {
             case PREF_GLOBAL_BLOCKING_ENABLED_BOOL: return false;
             case PREF_LAST_VERSION_CODE_LONG: return 0L;
             case PREF_APP_THEME_INT: return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+            case PREF_MAIN_WINDOW_FILTER_FLAGS_INT: return MainActivity.FILTER_NO_FILTER;
             case PREF_MAIN_WINDOW_SORT_ORDER_INT: return MainActivity.SORT_BY_APP_LABEL;
         }
         throw new IllegalArgumentException("Pref key not found.");

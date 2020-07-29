@@ -567,4 +567,8 @@
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully">%s is installed successfully</string>
     <string name="failed_to_install_package_name">Failed to install %s</string>
+    <string name="filter">Filter</string>
+    <string name="filter_user_apps">User apps</string>
+    <string name="filter_system_apps">System apps</string>
+    <string name="filter_apps_with_rules">Apps with rules</string>
 </resources>

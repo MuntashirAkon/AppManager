@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final int REQUEST_CODE_BATCH_EXPORT = 441;
 
     /**
-     * A list of packages separated by \r\n. Debug apps should have a * after their package names.
+     * A list of packages separated by \r\n.
      */
     public static String packageList;
     /**
@@ -126,6 +126,20 @@ public class MainActivity extends AppCompatActivity implements
     public static final int SORT_BY_SHA = 6;  // Signature
     public static final int SORT_BY_DISABLED_APP = 7;
     public static final int SORT_BY_BLOCKED_COMPONENTS = 8;
+
+    @IntDef(flag = true, value = {
+            FILTER_NO_FILTER,
+            FILTER_USER_APPS,
+            FILTER_SYSTEM_APPS,
+            FILTER_DISABLED_APPS,
+            FILTER_APPS_WITH_RULES
+    })
+    public @interface Filter {}
+    public static final int FILTER_NO_FILTER = 0;
+    public static final int FILTER_USER_APPS = 1;
+    public static final int FILTER_SYSTEM_APPS = 1 << 1;
+    public static final int FILTER_DISABLED_APPS = 1 << 2;
+    public static final int FILTER_APPS_WITH_RULES = 1 << 3;
 
     private MainActivity.MainRecyclerAdapter mAdapter;
     private List<ApplicationItem> mApplicationItems = new ArrayList<>();
@@ -320,6 +334,18 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(sSortMenuItemIdsMap[mSortBy]).setChecked(true);
+        if (mModel != null) {
+            int flags = mModel.getFilterFlags();
+            if ((flags & MainActivity.FILTER_USER_APPS) != 0) {
+                menu.findItem(R.id.action_filter_user_apps).setChecked(true);
+            } else if ((flags & MainActivity.FILTER_SYSTEM_APPS) != 0) {
+                menu.findItem(R.id.action_filter_system_apps).setChecked(true);
+            } else if ((flags & MainActivity.FILTER_DISABLED_APPS) != 0) {
+                menu.findItem(R.id.action_filter_disabled_apps).setChecked(true);
+            } else if ((flags & MainActivity.FILTER_APPS_WITH_RULES) != 0) {
+                menu.findItem(R.id.action_filter_apps_with_rules).setChecked(true);
+            }
+        }
         return true;
     }
 
@@ -350,6 +376,7 @@ public class MainActivity extends AppCompatActivity implements
                 Intent settingsIntent = new Intent(this, SettingsActivity.class);
                 startActivity(settingsIntent);
                 return true;
+            // Sort
             case R.id.action_sort_by_app_label:
                 setSortBy(SORT_BY_APP_LABEL);
                 item.setChecked(true);
@@ -385,6 +412,27 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.action_sort_by_blocked_components:
                 setSortBy(SORT_BY_BLOCKED_COMPONENTS);
                 item.setChecked(true);
+                return true;
+            // Filter
+            case R.id.action_filter_user_apps:
+                if (!item.isChecked()) mModel.addFilterFlag(FILTER_USER_APPS);
+                else mModel.removeFilterFlag(FILTER_USER_APPS);
+                item.setChecked(!item.isChecked());
+                return true;
+            case R.id.action_filter_system_apps:
+                if (!item.isChecked()) mModel.addFilterFlag(FILTER_SYSTEM_APPS);
+                else mModel.removeFilterFlag(FILTER_SYSTEM_APPS);
+                item.setChecked(!item.isChecked());
+                return true;
+            case R.id.action_filter_disabled_apps:
+                if (!item.isChecked()) mModel.addFilterFlag(FILTER_DISABLED_APPS);
+                else mModel.removeFilterFlag(FILTER_DISABLED_APPS);
+                item.setChecked(!item.isChecked());
+                return true;
+            case R.id.action_filter_apps_with_rules:
+                if (!item.isChecked()) mModel.addFilterFlag(FILTER_APPS_WITH_RULES);
+                else mModel.removeFilterFlag(FILTER_APPS_WITH_RULES);
+                item.setChecked(!item.isChecked());
                 return true;
             case R.id.action_app_usage:
                 Intent usageIntent = new Intent(this, AppUsageActivity.class);
