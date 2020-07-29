@@ -121,6 +121,10 @@ public class RulesStorageManager implements Closeable {
         return false;
     }
 
+    public int entryCount() {
+        return entries.size();
+    }
+
     public void removeEntry(Entry entry) {
         entries.remove(entry);
     }
