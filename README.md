@@ -21,8 +21,9 @@ Yet another android package manager and viewer but...
 - Apk files can be shared (hence the use of a provider)
 - It can be used to clear app data or app cache (requires root/ADB)
 - Batch operations: clear app data, disable run in background, disable/kill/uninstall apps
+- One-click operations: block ads/tracker components, block components by signature, block multiple app ops
 
-...and other minor features such as uninstalling/enabling/disabling apps, displaying app installation info, opening on F-Droid, Aurora Droid or Aurora Store.
+...and other minor features such as installing/uninstalling/updating/enabling/disabling apps, displaying app installation info, opening on F-Droid, Aurora Droid or Aurora Store.
 
 It basically combines the features of 5 or 6 apps that any tech-savvy person needs to use in order to have a life.
 

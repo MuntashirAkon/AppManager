@@ -75,7 +75,7 @@
 
                 <item
                     android:id="@+id/action_filter_disabled_apps"
-                    android:title="@string/sort_by_package_name" />
+                    android:title="@string/filter_disabled_apps" />
 
                 <item
                     android:id="@+id/action_filter_apps_with_rules"

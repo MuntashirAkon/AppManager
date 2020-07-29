@@ -16,6 +16,13 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/instructions_header"
+            android:textStyle="italic"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/adb_over_tcp"
             android:textSize="@dimen/title_font"
             android:textColor="?android:attr/textColorPrimary" />
@@ -94,6 +101,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/settings_window_description"
+            android:textSize="@dimen/subtitle_font" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_medium"
+            android:text="@string/miscellany"
+            android:textSize="@dimen/title_font"
+            android:textColor="?android:attr/textColorPrimary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/miscellany_description"
             android:textSize="@dimen/subtitle_font" />
 
     </LinearLayout>

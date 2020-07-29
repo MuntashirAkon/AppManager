@@ -319,6 +319,8 @@
     <string name="current_theme">Current theme: %s</string>
     <string name="pref_about_msg">App Manager version, license, credits, etc.</string>
     <string name="version">Version</string>
+    <string name="instructions_header">[There might be some features that are completely new to you.
+    If that is the case, you should search the Internet to understand more about it.]</string>
     <string name="adb_over_tcp">ADB over TCP</string>
     <string name="adb_over_tcp_description">Many root-only features can still be used by enabling
         ADB over TCP. To do that, a PC or Mac is required with ADB tools installed, and an Android
@@ -339,8 +341,10 @@
     <string name="main_window">Main Window</string>
     <string name="main_window_description">Main window lists all the installed apps (or a list of
         apps supplied by any third-party application). A single click on any app item opens the
-        respective <b>App Details</b> window. Using the sort option from the menu, the app items can
-        be sorted in various ways and preserved on close.
+        respective <b>App Details</b> window. Using the <i>sort</i> option from the menu, the app
+        items can be sorted in various ways and preserved on close. It also possible to filter items
+        based on your needs using the <i>Filter</i> option in the menu. You can filter using more
+        than one options.
 
         \n\nBatch operations or operation on multiple apps are also available within this window
         (most these operations require root or ADB). To enable multiple selection mode, click on any
@@ -389,6 +393,9 @@
 
         \n\nIf you have the app <b>APK Updater</b> installed, there is link in the menu which can be
         used to open the app directly.
+
+        \n\nIf you have <b>Termux</b> installed, you can directly go to the currently running or new
+        session using the <i>Termux</i> option in the menu.
     </string>
     <string name="app_details_window">App Details Window</string>
     <string name="app_details_window_description">App Info tab contains general information about the
@@ -396,10 +403,12 @@
         installer app, data usage, app size, data size, cache size (some of these information
         require <i>Usage Access</i> permission). It also has the ability to perform many actions,
         some of which are listed below:
-        \n\u2022 Launch/uninstall/enable/disable/force-stop (some operations require root or ADB)
+        \n\u2022 Launch/install/uninstall/update/enable/disable/force-stop (some operations require root or ADB)
         \n\u2022 View dynamic manifest
         \n\u2022 View shared preferences: clicking on a preference opens the <b>Shared Preferences
             Editor</b> window (requires root)
+        \n\u2022 View split apk (bundled app) info
+        \n\u2022 View number of tracking components
         \n\u2022 Scan for trackers using \u03b5xodus
         \n\u2022 Open paths and directories with external app
         \n\u2022 Delete app cache or app data (requires root or ADB)
@@ -492,6 +501,10 @@
         a single app, use the respective <b>App Details</b> window to export rules, or for multiple
         apps, use the batch operation available in the main window.
     </string>
+    <string name="miscellany">Miscellany</string>
+    <string name="miscellany_description">It is also possible to view apk info, manifest or scan
+    for trackers using \u03b5xodus from an external app or file manager. To do that, open the apk
+    with App Manager.</string>
     <string name="sort_by_wifi_data">Wifi data</string>
     <string name="block_trackers">Block trackers</string>
     <string name="sort_by_component_name">Component name</string>
@@ -572,4 +585,5 @@
     <string name="filter_system_apps">System apps</string>
     <string name="filter_apps_with_rules">Apps with rules</string>
     <string name="select_all">Select All</string>
+    <string name="filter_disabled_apps">Disabled apps</string>
 </resources>
