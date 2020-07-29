@@ -146,8 +146,12 @@ public class AppUsageStatsManager {
         Map<String, Tuple<Long, Long>> wifiData = new HashMap<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             NetworkStatsManager networkStatsManager = (NetworkStatsManager) context.getSystemService(Context.NETWORK_STATS_SERVICE);
-            mobileData = getMobileData(networkStatsManager, usage_interval);
-            wifiData = getWifiData(networkStatsManager, usage_interval);
+            try {
+                mobileData = getMobileData(networkStatsManager, usage_interval);
+            } catch (Exception ignore) {}
+            try {
+                wifiData = getWifiData(networkStatsManager, usage_interval);
+            } catch (Exception ignore) {}
         }
         for(String packageName: screenTimes.keySet()) {
             // Skip not installed packages
@@ -167,17 +171,6 @@ public class AppUsageStatsManager {
                 else packageUS.wifiData = new Tuple<>(0L, 0L);
             }
             screenTimeList.add(packageUS);
-        }
-        // TODO: Move them to AppUsageActivity
-        // Sort by usage time
-        if (sort == 0) {
-            Collections.sort(screenTimeList, (o1, o2) -> (int) (o2.screenTime - o1.screenTime));
-        } else if (sort == 1) {
-            Collections.sort(screenTimeList, (o1, o2) -> (int) (o2.lastUsageTime - o1.lastUsageTime));
-        } else if (sort == 2) {
-            Collections.sort(screenTimeList, (o1, o2) -> o2.timesOpened - o1.timesOpened);
-        } else {
-            Collections.sort(screenTimeList, (o1, o2) -> o1.mobileData.compareTo(o2.mobileData));
         }
 //        Log.d("US", getUsageStatsForPackage(context.getPackageName(), usage_interval).toString());
         return screenTimeList;

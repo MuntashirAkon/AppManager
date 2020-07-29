@@ -748,17 +748,24 @@ public class AppInfoFragment extends Fragment
             // Net statistics
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
-                    final Tuple<Tuple<Long, Long>, Tuple<Long, Long>> dataUsage = AppUsageStatsManager
-                            .getWifiMobileUsageForPackage(mActivity, mPackageName,
-                                    io.github.muntashirakon.AppManager.usage.Utils.USAGE_LAST_BOOT);
-                    runOnUiThread(() -> {
-                        ListItemCreator creator = new ListItemCreator(mActivity, view, R.id.layout_data_usage);
-                        creator.addItemWithTitle(getString(R.string.netstats_msg), true);
-                        creator.item_title.setTextColor(mAccentColor);
-                        creator.addInlineItem(getString(R.string.netstats_transmitted), getReadableSize(dataUsage.getFirst().getFirst() + dataUsage.getSecond().getFirst()));
-                        creator.addInlineItem(getString(R.string.netstats_received), getReadableSize(dataUsage.getFirst().getSecond() + dataUsage.getSecond().getSecond()));
-                        creator.addDivider();
-                    });
+                    try {
+                        final Tuple<Tuple<Long, Long>, Tuple<Long, Long>> dataUsage = AppUsageStatsManager
+                                .getWifiMobileUsageForPackage(mActivity, mPackageName,
+                                        io.github.muntashirakon.AppManager.usage.Utils.USAGE_LAST_BOOT);
+                        runOnUiThread(() -> {
+                            ListItemCreator creator = new ListItemCreator(mActivity, view, R.id.layout_data_usage);
+                            creator.addItemWithTitle(getString(R.string.netstats_msg), true);
+                            creator.item_title.setTextColor(mAccentColor);
+                            creator.addInlineItem(getString(R.string.netstats_transmitted), getReadableSize(dataUsage.getFirst().getFirst() + dataUsage.getSecond().getFirst()));
+                            creator.addInlineItem(getString(R.string.netstats_received), getReadableSize(dataUsage.getFirst().getSecond() + dataUsage.getSecond().getSecond()));
+                            creator.addDivider();
+                        });
+                    } catch (SecurityException e) {
+                        runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_get_data_usage_information, Toast.LENGTH_SHORT).show());
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             } else {
                 final Tuple<String, String> uidNetStats = getNetStats(mApplicationInfo.uid);

@@ -54,7 +54,8 @@ import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_TODAY;
 import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_WEEKLY;
 import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_YESTERDAY;
 
-public class AppUsageActivity extends AppCompatActivity implements ListView.OnItemClickListener, ScrollSafeSwipeRefreshLayout.OnRefreshListener {
+public class AppUsageActivity extends AppCompatActivity implements ListView.OnItemClickListener,
+        ScrollSafeSwipeRefreshLayout.OnRefreshListener {
     @IntDef(value = {
             SORT_BY_APP_LABEL,
             SORT_BY_LAST_USED,
