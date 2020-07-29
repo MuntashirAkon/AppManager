@@ -93,6 +93,7 @@ public class AppInfoFragment extends Fragment
     private static final String MIME_TSV = "text/tab-separated-values";
 
     private static final int REQUEST_CODE_BATCH_EXPORT = 441;
+    private static final int REQUEST_CODE_INSTALL_PKG  = 815;
 
     private PackageManager mPackageManager;
     private String mPackageName;
@@ -210,19 +211,23 @@ public class AppInfoFragment extends Fragment
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_CODE_BATCH_EXPORT) {
-                if (data != null) {
-                    RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
-                    Bundle args = new Bundle();
-                    ArrayList<String> packages = new ArrayList<>();
-                    packages.add(mPackageName);
-                    args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
-                    args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, data.getData());
-                    args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, packages);
-                    dialogFragment.setArguments(args);
-                    dialogFragment.show(mActivity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-                }
+        if (requestCode == REQUEST_CODE_BATCH_EXPORT && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
+                Bundle args = new Bundle();
+                ArrayList<String> packages = new ArrayList<>();
+                packages.add(mPackageName);
+                args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
+                args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, data.getData());
+                args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, packages);
+                dialogFragment.setArguments(args);
+                dialogFragment.show(mActivity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+            }
+        } else if (requestCode == REQUEST_CODE_INSTALL_PKG) {
+            if (resultCode == Activity.RESULT_OK) {
+                Toast.makeText(mActivity, String.format(getString(R.string.package_name_is_installed_successfully), mPackageLabel), Toast.LENGTH_SHORT).show();
+            } else if (resultCode == Activity.RESULT_FIRST_USER) {
+                Toast.makeText(mActivity, String.format(getString(R.string.failed_to_install_package_name), mPackageLabel), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -442,12 +447,20 @@ public class AppInfoFragment extends Fragment
                     try {
                         File tmpApkSource = IOUtils.getSharableApk(new File(mApplicationInfo.sourceDir));
                         runOnUiThread(() -> {
+                            // TODO: Replace with installer session for >= M
                             Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
-                            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            intent.setDataAndType(FileProvider.getUriForFile(mActivity,
-                                    BuildConfig.APPLICATION_ID + ".provider", tmpApkSource),
-                                    MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-                            startActivity(intent);
+                            intent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
+                            intent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
+                            intent.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, BuildConfig.APPLICATION_ID);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent.setDataAndType(FileProvider.getUriForFile(mActivity,
+                                        BuildConfig.APPLICATION_ID + ".provider", tmpApkSource),
+                                        MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+                            } else {
+                                intent.setDataAndType(Uri.fromFile(tmpApkSource), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+                            }
+                            startActivityForResult(intent, REQUEST_CODE_INSTALL_PKG);
                         });
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -465,11 +478,18 @@ public class AppInfoFragment extends Fragment
                             File tmpApkSource = IOUtils.getSharableApk(new File(mApplicationInfo.sourceDir));
                             runOnUiThread(() -> {
                                 Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
-                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                intent.setDataAndType(FileProvider.getUriForFile(mActivity,
-                                        BuildConfig.APPLICATION_ID + ".provider", tmpApkSource),
-                                        MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-                                startActivity(intent);
+                                intent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
+                                intent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
+                                intent.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, BuildConfig.APPLICATION_ID);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                    intent.setDataAndType(FileProvider.getUriForFile(mActivity,
+                                            BuildConfig.APPLICATION_ID + ".provider", tmpApkSource),
+                                            MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+                                } else {
+                                    intent.setDataAndType(Uri.fromFile(tmpApkSource), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+                                }
+                                startActivityForResult(intent, REQUEST_CODE_INSTALL_PKG);
                             });
                         } catch (Exception e) {
                             e.printStackTrace();
