@@ -1,4 +1,5 @@
 # App Manager
+![Debug Build](https://github.com/MuntashirAkon/AppManager/workflows/Debug%20Build/badge.svg)
 
 Yet another android package manager and viewer but...
 
@@ -34,6 +35,8 @@ Until it is available in the official repo,
 Telegram Support Group: https://t.me/AppManagerAndroid
 
 Telegram Update Channel: https://t.me/AppManagerChannel
+
+Help us translate App Manager at Crowdin: https://crwd.in/android-app-manager
 
 ### Mirrors
 
