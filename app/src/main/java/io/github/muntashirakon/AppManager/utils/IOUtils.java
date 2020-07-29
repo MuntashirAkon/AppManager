@@ -1,19 +1,28 @@
 package io.github.muntashirakon.AppManager.utils;
 
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.FileUtils;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.zip.CRC32;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.storage.splitapk.SplitApkExporter;
 
 public final class IOUtils {
 
@@ -64,6 +73,31 @@ public final class IOUtils {
         return output;
     }
 
+    public static long copy(InputStream inputStream, OutputStream outputStream) throws IOException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return FileUtils.copy(inputStream, outputStream);
+        } else {
+            long count = copyLarge(inputStream, outputStream);
+            if (count > Integer.MAX_VALUE) return -1;
+            return count;
+        }
+    }
+
+    private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
+
+    static long copyLarge(@NonNull InputStream inputStream, OutputStream outputStream) throws IOException {
+        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+        long count = 0;
+        int n;
+        while (-1 != (n = inputStream.read(buffer))) {
+            outputStream.write(buffer, 0, n);
+            count += n;
+        }
+        inputStream.close();
+        if (outputStream != null) outputStream.close();
+        return count;
+    }
+
     /**
      * Delete a directory by recursively deleting its children
      * @param dir The directory to delete
@@ -84,14 +118,57 @@ public final class IOUtils {
     }
 
     @NonNull
-    public static File getSharableApk(@NonNull File privateApkFile) throws IOException {
-        File tmpApkSource = File.createTempFile(privateApkFile.getName(), ".apk", AppManager.getContext().getExternalCacheDir());
-        try (FileInputStream apkInputStream = new FileInputStream(privateApkFile);
-             FileOutputStream apkOutputStream = new FileOutputStream(tmpApkSource)) {
+    public static Bitmap getBitmapFromDrawable(@NonNull Drawable drawable) {
+        final Bitmap bmp = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(bmp);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bmp;
+    }
+
+    @NonNull
+    public static File getSharableFile(@NonNull File privateFile, String suffix) throws IOException {
+        File tmpPublicSource = File.createTempFile(privateFile.getName(), suffix, AppManager.getContext().getExternalCacheDir());
+        try (FileInputStream apkInputStream = new FileInputStream(privateFile);
+             FileOutputStream apkOutputStream = new FileOutputStream(tmpPublicSource)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 FileUtils.copy(apkInputStream, apkOutputStream);
-            } else com.google.classysharkandroid.utils.IOUtils.copy(apkInputStream, apkOutputStream);
+            } else copy(apkInputStream, apkOutputStream);
         }
-        return tmpApkSource;
+        return tmpPublicSource;
+    }
+
+    public static File getSharableApkFile(@NonNull PackageInfo packageInfo) throws Exception {
+        ApplicationInfo info = packageInfo.applicationInfo;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && info.splitNames != null) {
+            // Split apk
+            File tmpPublicSource = File.createTempFile(info.packageName, ".apks", AppManager.getContext().getExternalCacheDir());
+            SplitApkExporter.saveApks(packageInfo, tmpPublicSource);
+            return tmpPublicSource;
+        } else {
+            // Regular apk
+            return getSharableFile(new File(info.publicSourceDir), ".apk");
+        }
+    }
+
+    public static long calculateFileCrc32(File file) throws IOException {
+        return calculateCrc32(new FileInputStream(file));
+    }
+
+    public static long calculateBytesCrc32(byte[] bytes) throws IOException {
+        return calculateCrc32(new ByteArrayInputStream(bytes));
+    }
+
+    public static long calculateCrc32(InputStream inputStream) throws IOException {
+        try (InputStream in = inputStream) {
+            CRC32 crc32 = new CRC32();
+            byte[] buffer = new byte[1024 * 1024];
+            int read;
+
+            while ((read = in.read(buffer)) > 0)
+                crc32.update(buffer, 0, read);
+
+            return crc32.getValue();
+        }
     }
 }

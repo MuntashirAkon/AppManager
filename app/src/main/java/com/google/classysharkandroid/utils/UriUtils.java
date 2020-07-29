@@ -27,6 +27,7 @@ import java.io.InputStream;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 public class UriUtils {
 
@@ -46,7 +47,7 @@ public class UriUtils {
             FileOutputStream fos = new FileOutputStream(f);
             InputStream is = context.getContentResolver().openInputStream(uri);
             if (is == null) return null;
-            IOUtils.copyLarge(is, fos);
+            IOUtils.copy(is, fos);
             return f.getPath();
         } catch (IOException e) {
             return null;
