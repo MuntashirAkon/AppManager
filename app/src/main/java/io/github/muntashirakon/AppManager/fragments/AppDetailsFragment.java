@@ -758,7 +758,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             holder.iconLoader.start();
             // TaskAffinity
             holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.taskAffinity), activityInfo.taskAffinity));
+                    getString(R.string.task_affinity), activityInfo.taskAffinity));
             // LaunchMode
             holder.textView4.setText(String.format(Locale.ROOT, "%s: %s | %s: %s",
                     getString(R.string.launch_mode), Utils.getLaunchMode(activityInfo.launchMode),
@@ -767,7 +767,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             holder.textView5.setText(Utils.getActivitiesFlagsString(activityInfo.flags));
             // SoftInput
             holder.textView6.setText(String.format(Locale.ROOT, "%s: %s | %s",
-                    getString(R.string.softInput), Utils.getSoftInputString(activityInfo.softInputMode),
+                    getString(R.string.soft_input), Utils.getSoftInputString(activityInfo.softInputMode),
                     (activityInfo.permission == null ? getString(R.string.require_no_permission) : activityInfo.permission)));
             // Label
             Button launch = holder.launchBtn;
@@ -911,7 +911,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             holder.iconLoader.start();
             // TaskAffinity
             holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.taskAffinity), activityInfo.taskAffinity));
+                    getString(R.string.task_affinity), activityInfo.taskAffinity));
             // LaunchMode
             holder.textView4.setText(String.format(Locale.ROOT, "%s: %s | %s: %s",
                     getString(R.string.launch_mode), Utils.getLaunchMode(activityInfo.launchMode),
@@ -920,7 +920,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             holder.textView5.setText(activityInfo.permission == null ? getString(R.string.require_no_permission) : activityInfo.permission);
             // SoftInput
             holder.textView6.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.softInput), Utils.getSoftInputString(activityInfo.softInputMode)));
+                    getString(R.string.soft_input), Utils.getSoftInputString(activityInfo.softInputMode)));
             // Blocking
             if (isRootEnabled && !isExternalApk) {
                 if (appDetailsItem.isBlocked) {

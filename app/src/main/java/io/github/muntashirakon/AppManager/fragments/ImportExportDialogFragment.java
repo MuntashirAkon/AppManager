@@ -85,7 +85,7 @@ public class ImportExportDialogFragment extends DialogFragment {
             } else {
                 handler.post(() ->
                         new MaterialAlertDialogBuilder(requireContext(), R.style.AppTheme_AlertDialog)
-                            .setTitle(String.format(getString(R.string.failed_to_import_files), failedPackages.size()))
+                            .setTitle(getResources().getQuantityString(R.plurals.failed_to_import_files, failedPackages.size(), failedPackages.size()))
                             .setItems((CharSequence[]) failedPackages.toArray(), null)
                             .setNegativeButton(android.R.string.ok, null)
                             .show());
@@ -134,9 +134,9 @@ public class ImportExportDialogFragment extends DialogFragment {
                         Toast.makeText(getContext(), R.string.the_import_was_successful,
                                 Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(getContext(), String.format(Locale.getDefault(),
-                                getString(R.string.failed_to_import_files), status.getSecond()),
-                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), getResources().getQuantityString(
+                                R.plurals.failed_to_import_files, status.getSecond(), status
+                                        .getSecond()), Toast.LENGTH_LONG).show();
                     }
                     if (getDialog() != null) getDialog().cancel();
                 }
@@ -154,9 +154,9 @@ public class ImportExportDialogFragment extends DialogFragment {
                         Toast.makeText(getContext(), R.string.the_import_was_successful,
                                 Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(getContext(), String.format(Locale.getDefault(),
-                                getString(R.string.failed_to_import_files), status.getSecond()),
-                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), getResources().getQuantityString(
+                                R.plurals.failed_to_import_files, status.getSecond(), status
+                                        .getSecond()), Toast.LENGTH_LONG).show();
                     }
                     if (getDialog() != null) getDialog().cancel();
                 }

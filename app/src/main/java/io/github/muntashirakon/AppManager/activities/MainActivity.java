@@ -680,9 +680,8 @@ public class MainActivity extends AppCompatActivity implements
                 else {
                     long days = TimeUnit.DAYS.convert(packageInfo.lastUpdateTime
                             - packageInfo.firstInstallTime, TimeUnit.MILLISECONDS);
-                    SpannableString ssDate = new SpannableString(
-                            String.format(mActivity.getString(R.string.main_list_date_days),
-                                    lastUpdateDate, days));
+                    SpannableString ssDate = new SpannableString(mActivity.getResources()
+                            .getQuantityString(R.plurals.main_list_date_days, (int) days, lastUpdateDate, days));
                     ssDate.setSpan(new RelativeSizeSpan(.8f), 10, ssDate.length(),
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     holder.date.setText(ssDate);

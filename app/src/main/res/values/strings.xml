@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">App Manager</string>
+    <string name="app_name" translatable="false">App Manager</string>
     <string name="uninstall">Uninstall</string>
     <string name="permissions">Uses permissions</string>
     <string name="require_no_permission">No permission required</string>
@@ -13,20 +13,20 @@
     <string name="providers">Providers</string>
     <string name="no_providers">No providers</string>
     <string name="launch_mode">Launch mode</string>
-    <string name="taskAffinity">Task affinity</string>
+    <string name="task_affinity">Task affinity</string>
     <string name="sort_by_last_update">Last update</string>
     <string name="authority">Authority</string>
     <string name="service">Services</string>
     <string name="no_service">No services</string>
     <string name="orientation">Orientation</string>
-    <string name="softInput">Soft input mode</string>
+    <string name="soft_input">Soft input mode</string>
     <string name="flags">Flags</string>
     <string name="grant_uri_permission">Grant URI permissions</string>
     <string name="path_permissions">Path permissions</string>
     <string name="read">Read</string>
     <string name="write">Write</string>
     <string name="patterns_allowed">Patterns allowed</string>
-    <string name="declared_premission">Permissions</string>
+    <string name="declared_permission">Permissions</string>
     <string name="shared_libs">Shared libs</string>
     <string name="group">Group</string>
     <string name="protection_level">Protection level</string>
@@ -43,15 +43,15 @@
     <string name="input_features">Input features</string>
     <string name="manifest">Manifest</string>
     <string name="error">Error</string>
-    <string name="loading">Loading &#8230;</string> <!-- &#8230; = ... -->
+    <string name="loading">Loading …</string> <!-- &#8230; = ... -->
     <string name="sort_by_app_label">App label</string>
     <string name="sort_by_package_name">Package name</string>
     <string name="sort_by_domain">User app first</string>
     <string name="sort_by_app_size">App size/sdk</string>
-    <string name="sdk">SDK</string>
-    <string name="netstats_received">Data received</string>
-    <string name="netstats_transmitted">Data transmitted</string>
-    <string name="netstats_msg">Data Usage Since Last Boot</string>
+    <string name="sdk" translatable="false">SDK</string>
+    <string name="data_received">Data received</string>
+    <string name="data_transmitted">Data transmitted</string>
+    <string name="data_usage_msg">Data Usage Since Last Boot</string>
     <string name="about">About</string>
     <string name="data_size">Data</string>
     <string name="cache_size">Cache</string>
@@ -63,8 +63,8 @@
     <string name="sort">Sort</string>
     <string name="version_name_with_code">Version %s (%d)</string>
     <string name="app_info">App Info</string>
-    <string name="exodus">\u03b5xodus</string>
-    <string name="fdroid">F-Droid</string>
+    <string name="exodus" translatable="false">\u03b5xodus</string>
+    <string name="fdroid" translatable="false">F-Droid</string>
     <string name="system_app">System App</string>
     <string name="user_app">User App</string>
     <string name="paths_and_directories">Paths &amp; Directories</string>
@@ -134,7 +134,10 @@
     <string name="tracker_details">Tracker details</string>
     <string name="tracker_classes">Tracker classes</string>
     <string name="all_classes">All classes</string>
-    <string name="main_list_date_days">%s %d days</string>
+    <plurals name="main_list_date_days">
+        <item quantity="one">%s %d day</item>
+        <item quantity="other">%s %d days</item>
+    </plurals>
     <string name="no_shared_libs">No shared libraries</string>
     <string name="no_tracker_class">No tracker class</string>
     <string name="app_usage">App Usage</string>
@@ -145,11 +148,18 @@
     <string name="usage_7_days">Last 7 days</string>
     <string name="usage_30_days">Last 30 days</string>
     <string name="usage_365_days">Last 365 days</string>
-    <string name="usage_month">%d month</string>
-    <string name="usage_months">%d mos</string>
-    <string name="usage_day">%d day</string>
-    <string name="usage_days">%d days</string>
-    <string name="usage_hour">%d hr</string>
+    <plurals name="usage_months">
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d mos</item>
+    </plurals>
+    <plurals name="usage_days">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+    <plurals name="usage_hours">
+        <item quantity="one">%d hr</item>
+        <item quantity="other">%d hrs</item>
+    </plurals>
     <string name="usage_min">%d min</string>
     <string name="usage_less_than_a_minute">Less than a minute</string>
     <string name="usage_last_used">Last used:</string>
@@ -236,10 +246,10 @@
     <string name="sort_by_blocked_components">Blocked first</string>
     <string name="external_data_dir">External Data Directory</string>
     <string name="external_multiple_data_dir">External Data Directory %d</string>
-    <string name="no_of_times_opened">%d times</string>
-    <string name="one_time_opened">%d time</string>
-    <string name="one_notification_received">%d notification</string>
-    <string name="no_of_notification_received">%d notifications</string>
+    <plurals name="no_of_times_opened">
+        <item quantity="one">%d time</item>
+        <item quantity="other">%d times</item>
+    </plurals>
     <string name="sort_by_last_used">Last used</string>
     <string name="sort_by_screen_time">Screen time</string>
     <string name="sort_by_times_opened">Times opened</string>
@@ -251,7 +261,10 @@
     <string name="select_files">Select file(s)</string>
     <string name="the_import_was_successful">The import was successful</string>
     <string name="the_export_was_successful">The export was successful</string>
-    <string name="failed_to_import_files">Failed to import %d files.</string>
+    <plurals name="failed_to_import_files">
+        <item quantity="one">Failed to import %d file.</item>
+        <item quantity="other">Failed to import %d files.</item>
+    </plurals>
     <string name="apk_updater">APK Updater</string>
     <string name="store">Store</string>
     <string name="running_apps">Running Apps</string>
@@ -273,7 +286,7 @@
     <string name="alert_failed_to_disable_background">Failed to disable run in background for some packages</string>
     <string name="the_operation_was_successful">The operation was successful</string>
     <string name="alert_failed_to_kill">Failed to kill some processes</string>
-    <string name="toggle_kill_for_system_apps">Toogle kill for system apps</string>
+    <string name="toggle_kill_for_system_apps">Toggle kill for system apps</string>
     <string name="app_op_cannot_be_enabled">This app op cannot be enabled, possibly a read-only app op depended on another app op.</string>
     <string name="app_op_cannot_be_disabled">This app op cannot be disabled, possibly a read-only app op depended on another app op.</string>
     <string name="permission_name">Permission Name</string>
@@ -508,7 +521,10 @@
     <string name="external_apk_no_app_op">External apk does not have any app operation</string>
     <string name="manifest_viewer">Manifest Viewer</string>
     <string name="scanning_is_still_in_progress">Scanning is still in progress</string>
-    <string name="no_of_trackers">%d trackers</string>
+    <plurals name="no_of_trackers">
+        <item quantity="one">%d tracker</item>
+        <item quantity="other">%d trackers</item>
+    </plurals>
     <string name="install">Install</string>
     <string name="update">Update</string>
     <string name="source_code">Source Code</string>
@@ -516,7 +532,7 @@
         \nGitlab: https://gitlab.com/muntashir/AppManager
         \nRiseup: https://0xacab.org/muntashir/AppManager</string>
     <string name="community">Telegram Community</string>
-    <string name="community_links" translatable="false">Update Channel: https://t.me/AppManagerChannel
+    <string name="community_links">Update Channel: https://t.me/AppManagerChannel
         \nSupport Group: https://t.me/AppManagerAndroid</string>
     <string name="pref_import_existing">Import existing rules</string>
     <string name="pref_import_existing_msg">Add currently disabled components to App Manager, this currently doesn\'t include MAT\'s IFW blocking rules</string>
@@ -541,7 +557,10 @@
         space. You can find app op constants in the app ops tab under the brackets.</string>
     <string name="only_works_in_root_or_adb_mode">Only works in root or ADB mode</string>
     <string name="failed_to_parse_some_numbers">Failed to parse some numbers</string>
-    <string name="no_of_splits">%d splits</string>
+    <plurals name="no_of_splits">
+        <item quantity="one">%d split</item>
+        <item quantity="other">%d splits</item>
+    </plurals>
     <string name="split_no">Split#%d: %s</string>
     <string name="public_split_no">Public Split#%d: %s</string>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">Failed to fetch package info, possibly a split apk</string>

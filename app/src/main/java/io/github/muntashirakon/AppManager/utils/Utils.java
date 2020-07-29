@@ -613,16 +613,15 @@ public class Utils {
         min = time % 60;
         int count = 0;
         if (month != 0){
-            fTime += String.format(context.getString(month > 0 ? R.string.usage_months : R.string.usage_month), month);
+            fTime += context.getResources().getQuantityString(R.plurals.usage_months, (int) month, month);
             ++count;
         }
         if (day != 0) {
-            fTime += (count > 0 ? " " : "") + String.format(context.getString(
-                    day > 1 ? R.string.usage_days : R.string.usage_day), day);
+            fTime += (count > 0 ? " " : "") + context.getResources().getQuantityString(R.plurals.usage_days, (int) day, day);
             ++count;
         }
         if (hour != 0) {
-            fTime += (count > 0 ? " " : "") + String.format(context.getString(R.string.usage_hour), hour);
+            fTime += (count > 0 ? " " : "") + context.getResources().getQuantityString(R.plurals.usage_hours, (int) hour, hour);
             ++count;
         }
         if (min != 0) {

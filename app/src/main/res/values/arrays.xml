@@ -8,7 +8,7 @@
         <item>@string/providers</item>
         <item>@string/app_ops</item>
         <item>@string/permissions</item>
-        <item>@string/declared_premission</item>
+        <item>@string/declared_permission</item>
         <item>@string/uses_feature</item>
         <item>@string/configurations</item>
         <item>@string/signatures</item>

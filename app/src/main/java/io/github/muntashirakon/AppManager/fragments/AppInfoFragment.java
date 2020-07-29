@@ -312,7 +312,7 @@ public class AppInfoFragment extends Fragment
             mTagCloud.removeAllViews();
             // Add tracker chip
             if (!componentList.isEmpty())
-                addChip(String.format(getString(R.string.no_of_trackers), componentList.size()), R.color.red);
+                addChip(getResources().getQuantityString(R.plurals.no_of_trackers, componentList.size(), componentList.size()), R.color.red);
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
                 addChip(R.string.system_app);
                 if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0)
@@ -323,7 +323,7 @@ public class AppInfoFragment extends Fragment
                     && mApplicationInfo.splitNames != null) {
                 countSplits = mApplicationInfo.splitNames.length;
             }
-            if (countSplits > 0) addChip(String.format(getString(R.string.no_of_splits), countSplits));
+            if (countSplits > 0) addChip(getResources().getQuantityString(R.plurals.no_of_trackers, countSplits, countSplits));
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
                 addChip(R.string.debuggable);
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
@@ -754,10 +754,10 @@ public class AppInfoFragment extends Fragment
                                         io.github.muntashirakon.AppManager.usage.Utils.USAGE_LAST_BOOT);
                         runOnUiThread(() -> {
                             ListItemCreator creator = new ListItemCreator(mActivity, view, R.id.layout_data_usage);
-                            creator.addItemWithTitle(getString(R.string.netstats_msg), true);
+                            creator.addItemWithTitle(getString(R.string.data_usage_msg), true);
                             creator.item_title.setTextColor(mAccentColor);
-                            creator.addInlineItem(getString(R.string.netstats_transmitted), getReadableSize(dataUsage.getFirst().getFirst() + dataUsage.getSecond().getFirst()));
-                            creator.addInlineItem(getString(R.string.netstats_received), getReadableSize(dataUsage.getFirst().getSecond() + dataUsage.getSecond().getSecond()));
+                            creator.addInlineItem(getString(R.string.data_transmitted), getReadableSize(dataUsage.getFirst().getFirst() + dataUsage.getSecond().getFirst()));
+                            creator.addInlineItem(getString(R.string.data_received), getReadableSize(dataUsage.getFirst().getSecond() + dataUsage.getSecond().getSecond()));
                             creator.addDivider();
                         });
                     } catch (SecurityException e) {
@@ -771,10 +771,10 @@ public class AppInfoFragment extends Fragment
                 final Tuple<String, String> uidNetStats = getNetStats(mApplicationInfo.uid);
                 runOnUiThread(() -> {
                     ListItemCreator creator = new ListItemCreator(mActivity, view, R.id.layout_data_usage);
-                    creator.addItemWithTitle(getString(R.string.netstats_msg), true);
+                    creator.addItemWithTitle(getString(R.string.data_usage_msg), true);
                     creator.item_title.setTextColor(mAccentColor);
-                    creator.addInlineItem(getString(R.string.netstats_transmitted), uidNetStats.getFirst());
-                    creator.addInlineItem(getString(R.string.netstats_received), uidNetStats.getSecond());
+                    creator.addInlineItem(getString(R.string.data_transmitted), uidNetStats.getFirst());
+                    creator.addInlineItem(getString(R.string.data_received), uidNetStats.getSecond());
                     creator.addDivider();
                 });
             }

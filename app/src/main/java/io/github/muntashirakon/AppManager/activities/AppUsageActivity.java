@@ -399,9 +399,7 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
             }
             String screenTimesWithTimesOpened;
             // Set times opened
-            screenTimesWithTimesOpened = String.format(packageUS.timesOpened == 1 ?
-                    mActivity.getString(R.string.one_time_opened)
-                    : mActivity.getString(R.string.no_of_times_opened), packageUS.timesOpened);
+            screenTimesWithTimesOpened = mActivity.getResources().getQuantityString(R.plurals.no_of_times_opened, packageUS.timesOpened, packageUS.timesOpened);
             // Set screen time
             screenTimesWithTimesOpened += ", " + Utils.getFormattedDuration(mActivity, packageUS.screenTime);
             holder.screenTime.setText(screenTimesWithTimesOpened);
