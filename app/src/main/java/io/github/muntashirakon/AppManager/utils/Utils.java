@@ -662,7 +662,7 @@ public class Utils {
             ++count;
         }
         if (min != 0) {
-            fTime += (count > 0 ? " " : "") + String.format(context.getString(R.string.usage_min), min);
+            fTime += (count > 0 ? " " : "") + context.getString(R.string.usage_min, min);
         } else {
             if (count == 0) fTime = context.getString(R.string.usage_less_than_a_minute);
         }

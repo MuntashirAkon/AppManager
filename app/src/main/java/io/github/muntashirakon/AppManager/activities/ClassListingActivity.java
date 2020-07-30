@@ -237,7 +237,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                     statsMsg.append(tracker_names[i]).append("\n"); j++;
                 }
                 new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
-                        .setTitle(String.format(getString(R.string.trackers_and_classes), j, tracker_names.length))
+                        .setTitle(getString(R.string.trackers_and_classes, j, tracker_names.length))
                         .setNegativeButton(android.R.string.ok, null)
                         .setMessage(statsMsg.toString()).show();
                 return true;
@@ -274,14 +274,13 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
         TextView showText = new TextView(this);
         int paddingSize = getResources().getDimensionPixelSize(R.dimen.padding_medium);
         showText.setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
-        showText.setText(HtmlCompat.fromHtml(String.format(getString(R.string.tested_signatures_on_classes_and_time_taken),
+        showText.setText(HtmlCompat.fromHtml(getString(R.string.tested_signatures_on_classes_and_time_taken,
                 signatures.length, totalClassesScanned, totalTimeTaken, totalIteration, foundTrackerList + foundTrackersInfo + packageInfo)
                 .replaceAll(" ", "&nbsp;").replaceAll("\n", "<br/>"), HtmlCompat.FROM_HTML_MODE_LEGACY));
         showText.setMovementMethod(new ScrollingMovementMethod());
         showText.setTextIsSelectable(true);
         new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
-                .setTitle(String.format(getString(R.string.trackers_and_classes),
-                        totalTrackersFound, classList.size()))
+                .setTitle(getString(R.string.trackers_and_classes, totalTrackersFound, classList.size()))
                 .setView(showText)
                 .setIcon(R.drawable.ic_frost_classysharkexodus_black_24dp)
                 .setNegativeButton(android.R.string.ok, null)

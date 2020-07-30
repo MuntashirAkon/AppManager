@@ -586,4 +586,5 @@
     <string name="filter_apps_with_rules">Apps with rules</string>
     <string name="select_all">Select All</string>
     <string name="filter_disabled_apps">Disabled apps</string>
+    <string name="installed_version">Installed Version</string>
 </resources>

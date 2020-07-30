@@ -583,7 +583,7 @@ public class MainActivity extends AppCompatActivity implements
             mAdapter.clearSelection();
         } else {
             mBottomAppBar.setVisibility(View.VISIBLE);
-            mBottomAppBarCounter.setText(String.format(getString(R.string.some_items_selected), mModel.getSelectedPackages().size()));
+            mBottomAppBarCounter.setText(getString(R.string.some_items_selected, mModel.getSelectedPackages().size()));
             mMainLayout.setLayoutParams(mLayoutParamsSelection);
         }
     }

@@ -70,7 +70,7 @@ public class LauncherIconCreator {
      */
     public static void launchActivity(Context context, ActivityInfo activityInfo) {
         Intent intent = getActivityIntent(activityInfo.packageName, activityInfo.name);
-        Toast.makeText(context, String.format(context.getString(R.string.starting_activity), activityInfo.name), Toast.LENGTH_LONG).show();
+        Toast.makeText(context, context.getString(R.string.starting_activity, activityInfo.name), Toast.LENGTH_LONG).show();
         try {
             context.startActivity(intent);
         } catch (Exception e) {

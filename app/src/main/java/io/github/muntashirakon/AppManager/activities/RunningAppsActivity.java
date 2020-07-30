@@ -285,11 +285,11 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
                 holder.packageName.setText(applicationInfo.packageName);
             } else holder.packageName.setVisibility(View.GONE);
             // Set process IDs
-            holder.processIds.setText(String.format(mActivity.getString(R.string.pid_and_ppid), processItem.pid, processItem.ppid));
+            holder.processIds.setText(mActivity.getString(R.string.pid_and_ppid, processItem.pid, processItem.ppid));
             // Set memory usage
-            holder.memoryUsage.setText(String.format(mActivity.getString(R.string.memory_virtual_memory), Formatter.formatFileSize(mActivity, processItem.rss), Formatter.formatFileSize(mActivity, processItem.vsz)));
+            holder.memoryUsage.setText(mActivity.getString(R.string.memory_virtual_memory, Formatter.formatFileSize(mActivity, processItem.rss), Formatter.formatFileSize(mActivity, processItem.vsz)));
             // Set user info
-            holder.userInfo.setText(String.format(mActivity.getString(R.string.user_and_uid), processItem.user, processItem.uid));
+            holder.userInfo.setText(mActivity.getString(R.string.user_and_uid, processItem.user, processItem.uid));
             // Buttons
             if (applicationInfo != null) {
                 holder.forceStopBtn.setVisibility(View.VISIBLE);
@@ -297,7 +297,7 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
                     if (Runner.runCommand(String.format("am force-stop %s", applicationInfo.packageName)).isSuccessful()) {
                         mActivity.runOnUiThread(() -> mActivity.refresh());
                     } else {
-                        mActivity.runOnUiThread(() -> Toast.makeText(mActivity, String.format(mActivity.getString(R.string.failed_to_stop), processName), Toast.LENGTH_LONG).show());
+                        mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_stop, processName), Toast.LENGTH_LONG).show());
                     }
                 }).start());
                 new Thread(() -> {
@@ -334,7 +334,7 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
                     if (Runner.runCommand(String.format(Locale.ROOT, "kill -9 %d", processItem.pid)).isSuccessful()) {
                         mActivity.runOnUiThread(() -> mActivity.refresh());
                     } else {
-                        mActivity.runOnUiThread(() -> Toast.makeText(mActivity, String.format(mActivity.getString(R.string.failed_to_stop), processName), Toast.LENGTH_LONG).show());
+                        mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_stop, processName), Toast.LENGTH_LONG).show());
                     }
                 }).start());
             } else holder.killBtn.setVisibility(View.GONE);

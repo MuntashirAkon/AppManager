@@ -102,6 +102,7 @@ public class AppInfoFragment extends Fragment
     private PackageManager mPackageManager;
     private String mPackageName;
     private PackageInfo mPackageInfo;
+    private PackageInfo mInstalledPackageInfo;
     private AppDetailsActivity mActivity;
     private ApplicationInfo mApplicationInfo;
     private LinearLayout mHorizontalLayout;
@@ -238,9 +239,9 @@ public class AppInfoFragment extends Fragment
             }
         } else if (requestCode == REQUEST_CODE_INSTALL_PKG) {
             if (resultCode == Activity.RESULT_OK) {
-                Toast.makeText(mActivity, String.format(getString(R.string.package_name_is_installed_successfully), mPackageLabel), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, getString(R.string.package_name_is_installed_successfully, mPackageLabel), Toast.LENGTH_SHORT).show();
             } else if (resultCode == Activity.RESULT_FIRST_USER) {
-                Toast.makeText(mActivity, String.format(getString(R.string.failed_to_install_package_name), mPackageLabel), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, getString(R.string.failed_to_install_package_name, mPackageLabel), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -292,7 +293,7 @@ public class AppInfoFragment extends Fragment
         runOnUiThread(() -> iconView.setImageDrawable(appIcon));
 
         // Set App Version
-        runOnUiThread(() -> versionView.setText(String.format(getString(R.string.version_name_with_code), mPackageInfo.versionName, PackageUtils.getVersionCode(mPackageInfo))));
+        runOnUiThread(() -> versionView.setText(getString(R.string.version_name_with_code, mPackageInfo.versionName, PackageUtils.getVersionCode(mPackageInfo))));
 
         // Tag cloud //
         List<String> componentList = new ArrayList<>();
@@ -362,7 +363,7 @@ public class AppInfoFragment extends Fragment
                 if (mApplicationInfo.enabled) {
                     addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> new Thread(() -> {
                         if (!RunnerUtils.disablePackage(mPackageName).isSuccessful()) {
-                            runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_disable), mPackageLabel), Toast.LENGTH_LONG).show());
+                            runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_disable, mPackageLabel), Toast.LENGTH_LONG).show());
                         }
                     }).start());
                 }
@@ -379,11 +380,11 @@ public class AppInfoFragment extends Fragment
                                 // Try without root first then with root
                                 if (RunnerUtils.uninstallPackage(mPackageName).isSuccessful()) {
                                     runOnUiThread(() -> {
-                                        Toast.makeText(mActivity, String.format(getString(R.string.uninstalled_successfully), mPackageLabel), Toast.LENGTH_LONG).show();
+                                        Toast.makeText(mActivity, getString(R.string.uninstalled_successfully, mPackageLabel), Toast.LENGTH_LONG).show();
                                         mActivity.finish();
                                     });
                                 } else {
-                                    runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_uninstall), mPackageLabel), Toast.LENGTH_LONG).show());
+                                    runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_uninstall, mPackageLabel), Toast.LENGTH_LONG).show());
                                 }
                             }).start())
                             .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
@@ -402,7 +403,7 @@ public class AppInfoFragment extends Fragment
                     // Enable app
                     addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> new Thread(() -> {
                         if (!RunnerUtils.enablePackage(mPackageName).isSuccessful()) {
-                            runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_enable), mPackageLabel), Toast.LENGTH_LONG).show());
+                            runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_enable, mPackageLabel), Toast.LENGTH_LONG).show());
                         }
                     }).start());
                 }
@@ -413,7 +414,7 @@ public class AppInfoFragment extends Fragment
                             // Refresh
                             runOnUiThread(() -> mainModel.setIsPackageChanged());
                         } else {
-                            runOnUiThread(() -> Toast.makeText(mActivity, String.format(getString(R.string.failed_to_stop), mPackageLabel), Toast.LENGTH_LONG).show());
+                            runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_stop, mPackageLabel), Toast.LENGTH_LONG).show());
                         }
                     }).start());
                 }
@@ -446,11 +447,7 @@ public class AppInfoFragment extends Fragment
                 }
             }  // End root only
         } else {
-            PackageInfo packageInfo = null;
-            try {
-                packageInfo = mPackageManager.getPackageInfo(mPackageName, 0);
-            } catch (PackageManager.NameNotFoundException ignore) {}
-            if (packageInfo == null) {
+            if (mInstalledPackageInfo == null) {
                 // App not installed
                 addToHorizontalLayout(R.string.install, R.drawable.ic_baseline_get_app_24)
                         .setOnClickListener(v -> new Thread(() -> {
@@ -480,8 +477,8 @@ public class AppInfoFragment extends Fragment
                 }).start());
             } else {
                 // App is installed
-                long installedVersionCode = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? packageInfo.getLongVersionCode() : packageInfo.versionCode;
-                long thisVersionCode = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? mPackageInfo.getLongVersionCode() : mPackageInfo.versionCode;
+                long installedVersionCode = PackageUtils.getVersionCode(mInstalledPackageInfo);
+                long thisVersionCode = PackageUtils.getVersionCode(mPackageInfo);
                 if (installedVersionCode < thisVersionCode) {  // FIXME: Check for signature
                     addToHorizontalLayout(R.string.update, R.drawable.ic_baseline_get_app_24)
                             .setOnClickListener(v -> new Thread(() -> {
@@ -690,6 +687,19 @@ public class AppInfoFragment extends Fragment
     private void setMoreInfo() {
         // Set more info
         mListItems.add(ListItem.getGroupHeader(getString(R.string.more_info)));
+
+        // Set installer version info
+        if (isExternalApk && mInstalledPackageInfo != null) {
+            ListItem listItem = ListItem.getSelectableRegularItem(getString(R.string.installed_version),
+                    getString(R.string.version_name_with_code, mInstalledPackageInfo.versionName,
+                            PackageUtils.getVersionCode(mInstalledPackageInfo)), v -> {
+                Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
+                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, mPackageName);
+                mActivity.startActivity(appDetailsIntent);
+            });
+            listItem.actionIcon = R.drawable.ic_info_outline_black_24dp;
+            mListItems.add(listItem);
+        }
 
         // SDK
         final StringBuilder sdk = new StringBuilder();
@@ -927,6 +937,23 @@ public class AppInfoFragment extends Fragment
             mPackageName = mainModel.getPackageName();
             mPackageInfo = mainModel.getPackageInfo();
             if (mPackageInfo == null) return;
+            if (isExternalApk) {
+                try {
+                    int flagSigningInfo, flagDisabledComponents;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                        flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
+                    else flagSigningInfo = PackageManager.GET_SIGNATURES;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                        flagDisabledComponents = PackageManager.MATCH_DISABLED_COMPONENTS;
+                    else flagDisabledComponents = PackageManager.GET_DISABLED_COMPONENTS;
+                    mInstalledPackageInfo = mPackageManager.getPackageInfo(mPackageName,
+                            PackageManager.GET_PERMISSIONS | PackageManager.GET_ACTIVITIES
+                            | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
+                            | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
+                            | flagDisabledComponents | flagSigningInfo | PackageManager.GET_CONFIGURATIONS
+                            | PackageManager.GET_SHARED_LIBRARY_FILES);
+                } catch (PackageManager.NameNotFoundException ignore) {}
+            }
             mApplicationInfo = mPackageInfo.applicationInfo;
             mPackageLabel = mApplicationInfo.loadLabel(mPackageManager);
             // (Re)load views
