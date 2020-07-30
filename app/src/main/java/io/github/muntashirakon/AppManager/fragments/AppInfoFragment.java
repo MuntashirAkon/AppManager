@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Process;
 import android.provider.Settings;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -52,12 +53,16 @@ import java.util.Objects;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
@@ -70,7 +75,6 @@ import io.github.muntashirakon.AppManager.types.ScrollSafeSwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
@@ -98,7 +102,6 @@ public class AppInfoFragment extends Fragment
     private PackageManager mPackageManager;
     private String mPackageName;
     private PackageInfo mPackageInfo;
-    private PackageStats mPackageStats;
     private AppDetailsActivity mActivity;
     private ApplicationInfo mApplicationInfo;
     private LinearLayout mHorizontalLayout;
@@ -110,15 +113,18 @@ public class AppInfoFragment extends Fragment
     private CharSequence mPackageLabel;
     private ProgressIndicator mProgressIndicator;
     private AppDetailsViewModel mainModel;
-    private View view;
+    private AppInfoRecyclerAdapter adapter;
     // Headers
     private TextView labelView;
     private TextView packageNameView;
     private ImageView iconView;
     private TextView versionView;
+
     private boolean isExternalApk;
     private boolean isRootEnabled;
     private boolean isAdbEnabled;
+
+    private final List<ListItem> mListItems = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -141,12 +147,19 @@ public class AppInfoFragment extends Fragment
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.pager_app_info, container, false);
+        View view = inflater.inflate(R.layout.pager_app_info, container, false);
         // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setColorSchemeColors(mAccentColor);
         mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(mActivity, android.R.attr.colorPrimary));
         mSwipeRefresh.setOnRefreshListener(this);
+        // Recycler view
+        RecyclerView recyclerView = view.findViewById(android.R.id.list);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        adapter = new AppInfoRecyclerAdapter();
+        recyclerView.setAdapter(adapter);
+        // Horizontal view
         mHorizontalLayout = view.findViewById(R.id.horizontal_layout);
         // Progress indicator
         mProgressIndicator = view.findViewById(R.id.progress_linear);
@@ -237,7 +250,10 @@ public class AppInfoFragment extends Fragment
         super.onStart();
         mainModel.getIsPackageChanged().observe(this, isPackageChanged -> {
             //noinspection ConstantConditions
-            if (isPackageChanged && mainModel.getIsPackageExist().getValue()) getPackageInfo();
+            if (isPackageChanged && mainModel.getIsPackageExist().getValue()) {
+                Log.e("AppInfo", "Package Changed");
+                getPackageInfo();
+            }
         });
         // First load
         mainModel.setIsPackageChanged();
@@ -270,12 +286,6 @@ public class AppInfoFragment extends Fragment
 
         // Set Package Name
         runOnUiThread(() -> packageNameView.setText(mPackageName));
-
-        // Set Banner
-        final Drawable banner = mApplicationInfo.loadBanner(mPackageManager);
-        if (banner != null) {
-            runOnUiThread(() -> ((ImageView) view.findViewById(R.id.banner)).setImageDrawable(banner));
-        }
 
         // Set App Icon
         final Drawable appIcon = mApplicationInfo.loadIcon(mPackageManager);
@@ -607,47 +617,43 @@ public class AppInfoFragment extends Fragment
     }
 
     private void setPathsAndDirectories() {
-        final ListItemCreator creator = new ListItemCreator(mActivity, view, R.id.layout_paths_and_directories);
         // Paths and directories
-        creator.addItemWithTitle(getString(R.string.paths_and_directories), true);
-        creator.item_title.setTextColor(mAccentColor);
+        mListItems.add(ListItem.getGroupHeader(getString(R.string.paths_and_directories)));
         // Source directory (apk path)
-        creator.addItemWithTitleSubtitle(getString(R.string.source_dir), mApplicationInfo.sourceDir, ListItemCreator.SELECTABLE);
-        openAsFolderInFM(creator, new File(mApplicationInfo.sourceDir).getParent());
+        mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.source_dir), mApplicationInfo.sourceDir,
+                openAsFolderInFM(new File(mApplicationInfo.sourceDir).getParent())));
         // Split source directories
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && mApplicationInfo.splitNames != null) {
             int countSplits = mApplicationInfo.splitNames.length;
             for (int i = 0; i<countSplits; ++i) {
-                creator.addItemWithTitleSubtitle(String.format(getString(R.string.split_no), (i+1),
+                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.split_no, (i+1),
                         mApplicationInfo.splitNames[i]), mApplicationInfo.splitSourceDirs[i],
-                        ListItemCreator.SELECTABLE);
-                openAsFolderInFM(creator, new File(mApplicationInfo.splitSourceDirs[i]).getParent());
+                        openAsFolderInFM(new File(mApplicationInfo.splitSourceDirs[i]).getParent())));
             }
         }
         // Public source directory
         if (!mApplicationInfo.publicSourceDir.equals(mApplicationInfo.sourceDir)) {
-            creator.addItemWithTitleSubtitle(getString(R.string.public_source_dir), mApplicationInfo.publicSourceDir, ListItemCreator.SELECTABLE);
-            openAsFolderInFM(creator, (new File(mApplicationInfo.publicSourceDir)).getParent());
+            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.public_source_dir),
+                    mApplicationInfo.publicSourceDir, openAsFolderInFM((new File(
+                            mApplicationInfo.publicSourceDir)).getParent())));
         }
         // Public split source directories
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && mApplicationInfo.splitNames != null) {
             int countSplits = mApplicationInfo.splitNames.length;
             for (int i = 0; i<countSplits; ++i) {
                 if (!mApplicationInfo.splitPublicSourceDirs[i].equals(mApplicationInfo.splitSourceDirs[i])) {
-                    creator.addItemWithTitleSubtitle(String.format(getString(R.string.public_split_no),
+                    mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.public_split_no,
                             (i + 1), mApplicationInfo.splitNames[i]), mApplicationInfo.splitPublicSourceDirs[i],
-                            ListItemCreator.SELECTABLE);
-                    openAsFolderInFM(creator, new File(mApplicationInfo.splitPublicSourceDirs[i]).getParent());
+                            openAsFolderInFM(new File(mApplicationInfo.splitPublicSourceDirs[i]).getParent())));
                 }
             }
         }
         // Data dir
-        creator.addItemWithTitleSubtitle(getString(R.string.data_dir), mApplicationInfo.dataDir, ListItemCreator.SELECTABLE);
-        openAsFolderInFM(creator, mApplicationInfo.dataDir);
+        mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.data_dir), mApplicationInfo.dataDir, openAsFolderInFM(mApplicationInfo.dataDir)));
         // Device-protected data dir
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            creator.addItemWithTitleSubtitle(getString(R.string.dev_protected_data_dir), mApplicationInfo.deviceProtectedDataDir, ListItemCreator.SELECTABLE);
-            openAsFolderInFM(creator, mApplicationInfo.deviceProtectedDataDir);
+            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.dev_protected_data_dir),
+                    mApplicationInfo.deviceProtectedDataDir, openAsFolderInFM(mApplicationInfo.deviceProtectedDataDir)));
         }
         // External data dirs
         File[] dataDirs = mActivity.getExternalCacheDirs();
@@ -659,14 +665,14 @@ public class AppInfoFragment extends Fragment
             }
             if (extDataDirs.size() == 1) {
                 if (new File(extDataDirs.get(0)).exists()) {
-                    creator.addItemWithTitleSubtitle(getString(R.string.external_data_dir), extDataDirs.get(0), ListItemCreator.SELECTABLE);
-                    openAsFolderInFM(creator, extDataDirs.get(0));
+                    mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.external_data_dir),
+                            extDataDirs.get(0), openAsFolderInFM(extDataDirs.get(0))));
                 }
             } else {
                 for (int i = 0; i < extDataDirs.size(); ++i) {
                     if (new File(extDataDirs.get(i)).exists()) {
-                        creator.addItemWithTitleSubtitle(String.format(getString(R.string.external_multiple_data_dir), i), extDataDirs.get(i), ListItemCreator.SELECTABLE);
-                        openAsFolderInFM(creator, extDataDirs.get(i));
+                        mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.external_multiple_data_dir, i),
+                                extDataDirs.get(i), openAsFolderInFM(extDataDirs.get(i))));
                     }
                 }
             }
@@ -674,24 +680,22 @@ public class AppInfoFragment extends Fragment
         // Native JNI library dir
         File nativeLib = new File(mApplicationInfo.nativeLibraryDir);
         if (nativeLib.exists()) {
-            creator.addItemWithTitleSubtitle(getString(R.string.native_library_dir), mApplicationInfo.nativeLibraryDir, ListItemCreator.SELECTABLE);
-            openAsFolderInFM(creator, mApplicationInfo.nativeLibraryDir);
+            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.native_library_dir),
+                    mApplicationInfo.nativeLibraryDir, openAsFolderInFM(mApplicationInfo.nativeLibraryDir)));
         }
-        creator.addDivider();
+        mListItems.add(ListItem.getGroupDivider());
     }
 
     private void setMoreInfo() {
-        ListItemCreator creator = new ListItemCreator(mActivity, view, R.id.layout_more_info);
         // Set more info
-        creator.addItemWithTitle(getString(R.string.more_info), true);
-        creator.item_title.setTextColor(mAccentColor);
+        mListItems.add(ListItem.getGroupHeader(getString(R.string.more_info)));
 
         // SDK
         final StringBuilder sdk = new StringBuilder();
         sdk.append(getString(R.string.sdk_max)).append(": ").append(mApplicationInfo.targetSdkVersion);
         if (Build.VERSION.SDK_INT > 23)
             sdk.append(", ").append(getString(R.string.sdk_min)).append(": ").append(mApplicationInfo.minSdkVersion);
-        creator.addItemWithTitleSubtitle(getString(R.string.sdk), sdk.toString(), ListItemCreator.SELECTABLE);
+        mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.sdk), sdk.toString()));
 
         // Set Flags
         final StringBuilder flags = new StringBuilder();
@@ -705,15 +709,16 @@ public class AppInfoFragment extends Fragment
             flags.append(flags.length() == 0 ? "" : "|").append("FLAG_HARDWARE_ACCELERATED");
 
         if(flags.length() != 0) {
-            creator.addItemWithTitleSubtitle(getString(R.string.sdk_flags), flags.toString(), ListItemCreator.SELECTABLE);
-            creator.item_subtitle.setTypeface(Typeface.MONOSPACE);
+            ListItem flagsItem = ListItem.getSelectableRegularItem(getString(R.string.sdk_flags), flags.toString());
+            flagsItem.flags |= LIST_ITEM_FLAG_MONOSPACE;
+            mListItems.add(flagsItem);
         }
         if (isExternalApk) return;
 
-        creator.addItemWithTitleSubtitle(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime), ListItemCreator.NO_ACTION);
-        creator.addItemWithTitleSubtitle(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime), ListItemCreator.NO_ACTION);
+        mListItems.add(ListItem.getRegularItem(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime)));
+        mListItems.add(ListItem.getRegularItem(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime)));
         if(!mPackageName.equals(mApplicationInfo.processName))
-            creator.addItemWithTitleSubtitle(getString(R.string.process_name), mApplicationInfo.processName, ListItemCreator.NO_ACTION);
+            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.process_name), mApplicationInfo.processName));
         try {
             String installerPackageName = mPackageManager.getInstallerPackageName(mPackageName);
             if (installerPackageName != null) {
@@ -724,23 +729,23 @@ public class AppInfoFragment extends Fragment
                     e.printStackTrace();
                     applicationLabel = installerPackageName;
                 }
-                creator.addItemWithTitleSubtitle(getString(R.string.installer_app), applicationLabel, ListItemCreator.SELECTABLE);
+                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.installer_app), applicationLabel));
             }
         } catch (IllegalArgumentException ignore) {}
-        creator.addItemWithTitleSubtitle(getString(R.string.user_id), Integer.toString(mApplicationInfo.uid), ListItemCreator.SELECTABLE);
+        mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.user_id), Integer.toString(mApplicationInfo.uid)));
         if (mPackageInfo.sharedUserId != null)
-            creator.addItemWithTitleSubtitle(getString(R.string.shared_user_id), mPackageInfo.sharedUserId, ListItemCreator.SELECTABLE);
+            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.shared_user_id), mPackageInfo.sharedUserId));
         // Main activity
         final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
         if (launchIntentForPackage != null) {
             final ComponentName launchComponentName = launchIntentForPackage.getComponent();
             if (launchComponentName != null) {
                 final String mainActivity = launchIntentForPackage.getComponent().getClassName();
-                creator.addItemWithTitleSubtitle(getString(R.string.main_activity), mainActivity, ListItemCreator.SELECTABLE);
-                creator.setOpen(view -> startActivity(launchIntentForPackage));
+                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.main_activity),
+                        mainActivity, view -> startActivity(launchIntentForPackage)));
             }
         }
-        creator.addDivider();
+        mListItems.add(ListItem.getGroupDivider());
     }
 
     private void setDataUsage() {
@@ -752,14 +757,8 @@ public class AppInfoFragment extends Fragment
                         final Tuple<Tuple<Long, Long>, Tuple<Long, Long>> dataUsage = AppUsageStatsManager
                                 .getWifiMobileUsageForPackage(mActivity, mPackageName,
                                         io.github.muntashirakon.AppManager.usage.Utils.USAGE_LAST_BOOT);
-                        runOnUiThread(() -> {
-                            ListItemCreator creator = new ListItemCreator(mActivity, view, R.id.layout_data_usage);
-                            creator.addItemWithTitle(getString(R.string.data_usage_msg), true);
-                            creator.item_title.setTextColor(mAccentColor);
-                            creator.addInlineItem(getString(R.string.data_transmitted), getReadableSize(dataUsage.getFirst().getFirst() + dataUsage.getSecond().getFirst()));
-                            creator.addInlineItem(getString(R.string.data_received), getReadableSize(dataUsage.getFirst().getSecond() + dataUsage.getSecond().getSecond()));
-                            creator.addDivider();
-                        });
+                        setDataUsageHelper(getReadableSize(dataUsage.getFirst().getFirst() + dataUsage.getSecond().getFirst()),
+                                getReadableSize(dataUsage.getFirst().getSecond() + dataUsage.getSecond().getSecond()));
                     } catch (SecurityException e) {
                         runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_get_data_usage_information, Toast.LENGTH_SHORT).show());
                         e.printStackTrace();
@@ -769,14 +768,7 @@ public class AppInfoFragment extends Fragment
                 }
             } else {
                 final Tuple<String, String> uidNetStats = getNetStats(mApplicationInfo.uid);
-                runOnUiThread(() -> {
-                    ListItemCreator creator = new ListItemCreator(mActivity, view, R.id.layout_data_usage);
-                    creator.addItemWithTitle(getString(R.string.data_usage_msg), true);
-                    creator.item_title.setTextColor(mAccentColor);
-                    creator.addInlineItem(getString(R.string.data_transmitted), uidNetStats.getFirst());
-                    creator.addInlineItem(getString(R.string.data_received), uidNetStats.getSecond());
-                    creator.addDivider();
-                });
+                setDataUsageHelper(uidNetStats.getFirst(), uidNetStats.getSecond());
             }
         } catch (Exception e) {
             runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_get_data_usage_information, Toast.LENGTH_LONG).show());
@@ -784,13 +776,26 @@ public class AppInfoFragment extends Fragment
         }
     }
 
+    private void setDataUsageHelper(String txData, String rxData) {
+        mListItems.add(ListItem.getGroupHeader(getString(R.string.data_usage_msg)));
+        mListItems.add(ListItem.getInlineItem(getString(R.string.data_transmitted), txData));
+        mListItems.add(ListItem.getInlineItem(getString(R.string.data_received), rxData));
+        mListItems.add(ListItem.getGroupDivider());
+    }
+
     private void setVerticalView()  {
-        runOnUiThread(this::setMoreInfo);
-        if (isExternalApk) return;
-        runOnUiThread(this::setPathsAndDirectories);
-        setDataUsage();
-        // Storage and Cache
-        if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) setStorageAndCache();
+        synchronized (mListItems) {
+            mListItems.clear();
+            if (!isExternalApk) {
+                setPathsAndDirectories();
+                setDataUsage();
+                // Storage and Cache
+                if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL))
+                    setStorageAndCache();
+            }
+            setMoreInfo();
+            runOnUiThread(() -> adapter.setAdapterList(mListItems));
+        }
     }
 
     private List<String> getSharedPrefs(@NonNull String sourceDir) {
@@ -804,14 +809,15 @@ public class AppInfoFragment extends Fragment
         return Runner.runCommand(String.format("ls %s/*.db", sharedPath.getAbsolutePath())).getOutputAsList();
     }
 
-    private void openAsFolderInFM(@NonNull ListItemCreator creator, String dir) {
-        creator.setOpen(view -> {
+    @NonNull
+    private View.OnClickListener openAsFolderInFM(String dir) {
+        return view -> {
             Intent openFile = new Intent(Intent.ACTION_VIEW);
             openFile.setDataAndType(Uri.parse(dir), "resource/folder");
             openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             if (openFile.resolveActivityInfo(mPackageManager, 0) != null)
                 startActivity(openFile);
-        });
+        };
     }
 
     private void addChip(@StringRes int resId, @ColorRes int color) {
@@ -862,14 +868,10 @@ public class AppInfoFragment extends Fragment
                 getPackageSizeInfo.invoke(mPackageManager, mPackageName, new IPackageStatsObserver.Stub() {
                     @Override
                     public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded) {
-                        mActivity.runOnUiThread(() -> {
-                            mPackageStats = pStats;
-                            setStorageInfo(mPackageStats.codeSize
-                                            + mPackageStats.externalCodeSize, mPackageStats.dataSize
-                                            + mPackageStats.externalDataSize, mPackageStats.cacheSize
-                                            + mPackageStats.externalCacheSize, mPackageStats.externalObbSize,
-                                    mPackageStats.externalMediaSize);
-                        });
+                        setStorageInfo(pStats.codeSize + pStats.externalCodeSize,
+                                pStats.dataSize + pStats.externalDataSize,
+                                pStats.cacheSize + pStats.externalCacheSize,
+                                pStats.externalObbSize, pStats.externalMediaSize);
                     }
                 });
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
@@ -894,7 +896,7 @@ public class AppInfoFragment extends Fragment
                 StorageStats storageStats = storageStatsManager.queryStatsForPackage(mApplicationInfo.storageUuid, mPackageName, Process.myUserHandle());
                 // TODO: List obb and media size
                 long cacheSize = storageStats.getCacheBytes();
-                runOnUiThread(() -> setStorageInfo(storageStats.getAppBytes(), storageStats.getDataBytes() - cacheSize, cacheSize, 0, 0));
+                setStorageInfo(storageStats.getAppBytes(), storageStats.getDataBytes() - cacheSize, cacheSize, 0, 0);
             } catch (IOException | PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
@@ -902,22 +904,17 @@ public class AppInfoFragment extends Fragment
     }
 
     private void setStorageInfo(long codeSize, long dataSize, long cacheSize, long obbSize, long mediaSize) {
-        ListItemCreator creator = new ListItemCreator(mActivity, view, R.id.layout_storage_and_cache);
-        creator.addItemWithTitle(getString(R.string.storage_and_cache), true);
-        creator.item_title.setTextColor(mAccentColor);
-        // Code size
-        creator.addInlineItem(getString(R.string.app_size), getReadableSize(codeSize));
-        // Data size
-        creator.addInlineItem(getString(R.string.data_size), getReadableSize(dataSize));
-        // Cache size
-        creator.addInlineItem(getString(R.string.cache_size), getReadableSize(cacheSize));
-        // OBB size
-        if (obbSize != 0) creator.addInlineItem(getString(R.string.obb_size), getReadableSize(obbSize));
-        // Media size
-        if (mediaSize != 0) creator.addInlineItem(getString(R.string.media_size), getReadableSize(mediaSize));
-        creator.addInlineItem(getString(R.string.total_size), getReadableSize(codeSize
-                + dataSize + cacheSize + obbSize + mediaSize));
-        creator.addDivider();
+        mListItems.add(ListItem.getGroupHeader(getString(R.string.storage_and_cache)));
+        mListItems.add(ListItem.getInlineItem(getString(R.string.app_size), getReadableSize(codeSize)));
+        mListItems.add(ListItem.getInlineItem(getString(R.string.data_size), getReadableSize(dataSize)));
+        mListItems.add(ListItem.getInlineItem(getString(R.string.cache_size), getReadableSize(cacheSize)));
+        if (obbSize != 0)
+            mListItems.add(ListItem.getInlineItem(getString(R.string.obb_size), getReadableSize(obbSize)));
+        if (mediaSize != 0)
+            mListItems.add(ListItem.getInlineItem(getString(R.string.media_size), getReadableSize(mediaSize)));
+        mListItems.add(ListItem.getInlineItem(getString(R.string.total_size), getReadableSize(codeSize
+                + dataSize + cacheSize + obbSize + mediaSize)));
+        mListItems.add(ListItem.getGroupDivider());
     }
 
     /**
@@ -932,9 +929,9 @@ public class AppInfoFragment extends Fragment
             mApplicationInfo = mPackageInfo.applicationInfo;
             mPackageLabel = mApplicationInfo.loadLabel(mPackageManager);
             // (Re)load views
+            setHeaders();
             runOnUiThread(this::setHorizontalView);
             setVerticalView();
-            setHeaders();
             runOnUiThread(() -> mProgressIndicator.hide());
         }).start();
     }
@@ -983,5 +980,219 @@ public class AppInfoFragment extends Fragment
 
     private void runOnUiThread(Runnable runnable) {
         mActivity.runOnUiThread(runnable);
+    }
+
+    @IntDef(value = {
+            LIST_ITEM_GROUP_BEGIN,
+            LIST_ITEM_GROUP_END,
+            LIST_ITEM_REGULAR,
+            LIST_ITEM_INLINE
+    })
+    private @interface ListItemType {}
+    private static final int LIST_ITEM_GROUP_BEGIN = 0;  // Group header
+    private static final int LIST_ITEM_GROUP_END = 1;  // Group divider
+    private static final int LIST_ITEM_REGULAR = 2;
+    private static final int LIST_ITEM_INLINE = 3;
+
+    @IntDef(flag = true, value = {
+            LIST_ITEM_FLAG_SELECTABLE,
+            LIST_ITEM_FLAG_MONOSPACE
+    })
+    private @interface ListItemFlag {}
+    private static final int LIST_ITEM_FLAG_SELECTABLE = 1;
+    private static final int LIST_ITEM_FLAG_MONOSPACE = 1 << 1;
+
+    static class ListItem {
+        @ListItemType int type;
+        @ListItemFlag int flags = 0;
+        String title;
+        String subtitle;
+        @DrawableRes int icon = 0;
+        @DrawableRes int actionIcon = 0;
+        View.OnClickListener actionListener;
+        @NonNull
+        static ListItem getGroupHeader(String title) {
+            ListItem listItem = new ListItem();
+            listItem.type = LIST_ITEM_GROUP_BEGIN;
+            listItem.title = title;
+            return listItem;
+        }
+        @NonNull
+        static ListItem getGroupDivider() {
+            ListItem listItem = new ListItem();
+            listItem.type = LIST_ITEM_GROUP_END;
+            return listItem;
+        }
+        @NonNull
+        static ListItem getInlineItem(String title, String subtitle) {
+            ListItem listItem = new ListItem();
+            listItem.type = LIST_ITEM_INLINE;
+            listItem.title = title;
+            listItem.subtitle = subtitle;
+            return listItem;
+        }
+        @NonNull
+        static ListItem getRegularItem(String title, String subtitle) {
+            ListItem listItem = new ListItem();
+            listItem.type = LIST_ITEM_REGULAR;
+            listItem.title = title;
+            listItem.subtitle = subtitle;
+            return listItem;
+        }
+
+        @NonNull
+        static ListItem getSelectableRegularItem(String title, String subtitle) {
+            ListItem listItem = new ListItem();
+            listItem.type = LIST_ITEM_REGULAR;
+            listItem.flags |= LIST_ITEM_FLAG_SELECTABLE;
+            listItem.title = title;
+            listItem.subtitle = subtitle;
+            return listItem;
+        }
+
+        @NonNull
+        static ListItem getSelectableRegularItem(String title, String subtitle, View.OnClickListener actionListener) {
+            ListItem listItem = new ListItem();
+            listItem.type = LIST_ITEM_REGULAR;
+            listItem.flags |= LIST_ITEM_FLAG_SELECTABLE;
+            listItem.title = title;
+            listItem.subtitle = subtitle;
+            listItem.actionListener = actionListener;
+            return listItem;
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return "ListItem{" +
+                    "type=" + type +
+                    ", flags=" + flags +
+                    ", title='" + title + '\'' +
+                    ", subtitle='" + subtitle + '\'' +
+                    '}';
+        }
+    }
+
+    class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter.ViewHolder> {
+        private List<ListItem> mAdapterList;
+        AppInfoRecyclerAdapter() {
+            mAdapterList = new ArrayList<>();
+        }
+
+        void setAdapterList(@NonNull List<ListItem> list) {
+            mAdapterList = list;
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public @ListItemType int getItemViewType(int position) {
+            return mAdapterList.get(position).type;
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, @ListItemType int viewType) {
+            final View view;
+            switch (viewType) {
+                case AppInfoFragment.LIST_ITEM_GROUP_BEGIN:
+                case AppInfoFragment.LIST_ITEM_REGULAR:
+                default:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_icon_title_subtitle, parent, false);
+                    break;
+                case AppInfoFragment.LIST_ITEM_GROUP_END:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_divider_horizontal, parent, false);
+                    break;
+                case AppInfoFragment.LIST_ITEM_INLINE:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_title_subtitle_inline, parent, false);
+                    break;
+            }
+            return new ViewHolder(view, viewType);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            ListItem listItem = mAdapterList.get(position);
+            holder.itemView.setClickable(false);
+            holder.itemView.setFocusable(false);
+            switch (listItem.type) {
+                case AppInfoFragment.LIST_ITEM_GROUP_BEGIN:
+                    holder.title.setText(listItem.title);
+                    holder.title.setAllCaps(true);
+                    holder.title.setTextSize(12f);
+                    holder.title.setTextColor(mAccentColor);
+                    int padding_small = mActivity.getResources().getDimensionPixelOffset(R.dimen.padding_small);
+                    int padding_very_small = mActivity.getResources().getDimensionPixelOffset(R.dimen.padding_very_small);
+                    int padding_medium = mActivity.getResources().getDimensionPixelOffset(R.dimen.padding_medium);
+                    LinearLayoutCompat item_layout = holder.itemView.findViewById(R.id.item_layout);
+                    item_layout.setPadding(padding_medium, padding_small, padding_medium, padding_very_small);
+                    break;
+                case AppInfoFragment.LIST_ITEM_GROUP_END:
+                    break;
+                case AppInfoFragment.LIST_ITEM_INLINE:
+                    holder.title.setText(listItem.title);
+                    holder.subtitle.setText(listItem.subtitle);
+                    if ((listItem.flags & AppInfoFragment.LIST_ITEM_FLAG_SELECTABLE) != 0)
+                        holder.subtitle.setTextIsSelectable(true);
+                    else holder.subtitle.setTextIsSelectable(false);
+                    if ((listItem.flags & AppInfoFragment.LIST_ITEM_FLAG_MONOSPACE) != 0)
+                        holder.subtitle.setTypeface(Typeface.MONOSPACE);
+                    else holder.subtitle.setTypeface(Typeface.DEFAULT);
+                    break;
+                case AppInfoFragment.LIST_ITEM_REGULAR:
+                    holder.title.setText(listItem.title);
+                    holder.subtitle.setText(listItem.subtitle);
+                    if ((listItem.flags & AppInfoFragment.LIST_ITEM_FLAG_SELECTABLE) != 0)
+                        holder.subtitle.setTextIsSelectable(true);
+                    else holder.subtitle.setTextIsSelectable(false);
+                    if ((listItem.flags & AppInfoFragment.LIST_ITEM_FLAG_MONOSPACE) != 0)
+                        holder.subtitle.setTypeface(Typeface.MONOSPACE);
+                    else holder.subtitle.setTypeface(Typeface.DEFAULT);
+                    // FIXME: Load icon in background
+                    if (listItem.icon != 0) holder.icon.setImageResource(listItem.icon);
+                    // FIXME: Load action icon in background
+                    if (listItem.actionIcon != 0) holder.actionIcon.setImageResource(listItem.actionIcon);
+                    if (listItem.actionListener != null) {
+                        holder.actionIcon.setVisibility(View.VISIBLE);
+                        holder.actionIcon.setOnClickListener(listItem.actionListener);
+                    } else holder.actionIcon.setVisibility(View.GONE);
+                    break;
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return mAdapterList.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            TextView title;
+            TextView subtitle;
+            ImageView icon;
+            ImageView actionIcon;
+            public ViewHolder(@NonNull View itemView, @ListItemType int viewType) {
+                super(itemView);
+                switch (viewType) {
+                    case AppInfoFragment.LIST_ITEM_GROUP_BEGIN:
+                        title = itemView.findViewById(R.id.item_title);
+                        itemView.findViewById(R.id.item_subtitle).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.item_open).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.item_icon).setVisibility(View.INVISIBLE);
+                        break;
+                    case AppInfoFragment.LIST_ITEM_REGULAR:
+                        title = itemView.findViewById(R.id.item_title);
+                        subtitle = itemView.findViewById(R.id.item_subtitle);
+                        actionIcon = itemView.findViewById(R.id.item_open);
+                        icon = itemView.findViewById(R.id.item_icon);
+                        break;
+                    case AppInfoFragment.LIST_ITEM_GROUP_END:
+                    default:
+                        break;
+                    case AppInfoFragment.LIST_ITEM_INLINE:
+                        title = itemView.findViewById(R.id.item_title);
+                        subtitle = itemView.findViewById(R.id.item_subtitle);
+                        break;
+                }
+            }
+        }
     }
 }
