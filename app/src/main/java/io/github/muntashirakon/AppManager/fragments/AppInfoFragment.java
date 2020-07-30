@@ -174,7 +174,7 @@ public class AppInfoFragment extends Fragment
             case R.id.action_share_apk:
                 new Thread(() -> {
                     try {
-                        File tmpApkSource = IOUtils.getSharableApk(new File(mApplicationInfo.sourceDir));
+                        File tmpApkSource = IOUtils.getSharableApkFile(mPackageInfo);
                         runOnUiThread(() -> {
                             Intent intent = ShareCompat.IntentBuilder.from(mActivity)
                                     .setStream(FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID + ".provider", tmpApkSource))
@@ -445,7 +445,8 @@ public class AppInfoFragment extends Fragment
                 addToHorizontalLayout(R.string.install, R.drawable.ic_baseline_get_app_24)
                         .setOnClickListener(v -> new Thread(() -> {
                     try {
-                        File tmpApkSource = IOUtils.getSharableApk(new File(mApplicationInfo.sourceDir));
+                        // TODO: Add support for split apk
+                        File tmpApkSource = IOUtils.getSharableFile(new File(mApplicationInfo.sourceDir), ".apk");
                         runOnUiThread(() -> {
                             // TODO: Replace with installer session for >= M
                             Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
@@ -475,7 +476,7 @@ public class AppInfoFragment extends Fragment
                     addToHorizontalLayout(R.string.update, R.drawable.ic_baseline_get_app_24)
                             .setOnClickListener(v -> new Thread(() -> {
                         try {
-                            File tmpApkSource = IOUtils.getSharableApk(new File(mApplicationInfo.sourceDir));
+                            File tmpApkSource = IOUtils.getSharableFile(new File(mApplicationInfo.sourceDir), ".apk");
                             runOnUiThread(() -> {
                                 Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
                                 intent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
