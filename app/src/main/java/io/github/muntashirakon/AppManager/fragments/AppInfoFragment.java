@@ -323,7 +323,7 @@ public class AppInfoFragment extends Fragment
                     && mApplicationInfo.splitNames != null) {
                 countSplits = mApplicationInfo.splitNames.length;
             }
-            if (countSplits > 0) addChip(getResources().getQuantityString(R.plurals.no_of_trackers, countSplits, countSplits));
+            if (countSplits > 0) addChip(getResources().getQuantityString(R.plurals.no_of_splits, countSplits, countSplits));
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
                 addChip(R.string.debuggable);
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
