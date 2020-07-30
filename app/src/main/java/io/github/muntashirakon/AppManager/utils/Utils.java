@@ -14,6 +14,7 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -65,7 +66,6 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
 
-@SuppressWarnings("unused")
 public class Utils {
     static final Spannable.Factory sSpannableFactory = Spannable.Factory.getInstance();
 
@@ -482,6 +482,43 @@ public class Utils {
         if ((flag & ConfigurationInfo.INPUT_FEATURE_HARD_KEYBOARD) != 0)
             string += (string.length() == 0 ? "" : "|") + "Hard keyboard";
         return string.length() == 0 ? "null" : string;
+    }
+
+    // FIXME Add translation support
+    @NonNull
+    public static String getKeyboardTypeString(int KbType) {
+        switch (KbType) {
+            case Configuration.KEYBOARD_UNDEFINED: return "Undefined";
+            case Configuration.KEYBOARD_NOKEYS: return "No keys";
+            case Configuration.KEYBOARD_QWERTY: return "Qwerty";
+            case Configuration.KEYBOARD_12KEY: return "12 key";
+        }
+        return String.valueOf(KbType);
+    }
+
+    // FIXME Add translation support
+    @NonNull
+    public static String getNavigationString(int navId) {
+        switch (navId) {
+            case Configuration.NAVIGATION_UNDEFINED: return "Undefined";
+            case Configuration.NAVIGATION_NONAV: return "No nav";
+            case Configuration.NAVIGATION_DPAD: return "Dial pad";
+            case Configuration.NAVIGATION_TRACKBALL: return "Trackball";
+            case Configuration.NAVIGATION_WHEEL: return "Wheel";
+        }
+        return String.valueOf(navId);
+    }
+
+    // FIXME Add translation support
+    @NonNull
+    public static String getTouchScreenString(int touchId) {
+        switch (touchId) {
+            case Configuration.TOUCHSCREEN_UNDEFINED: return "Undefined";
+            case Configuration.TOUCHSCREEN_NOTOUCH: return "No touch";
+            case Configuration.TOUCHSCREEN_STYLUS: return "Stylus";
+            case Configuration.TOUCHSCREEN_FINGER: return "Finger";
+        }
+        return String.valueOf(touchId);
     }
 
     public static void checkStringBuilderEnd(@NonNull StringBuilder builder) {

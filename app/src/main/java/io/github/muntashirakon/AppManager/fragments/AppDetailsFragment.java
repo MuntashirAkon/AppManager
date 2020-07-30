@@ -1261,7 +1261,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     + (Build.VERSION.SDK_INT >= 24 && featureInfo.version != 0 ? " | minV%:" + featureInfo.version : "")));
             // GLES ver
             holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.gles_ver), (bFi && !featureInfo.name.equals("_MAJOR") ? "_"
+                    getString(R.string.gles_ver), (bFi && !featureInfo.name.equals("OpenGL ES") ? "_"
                             : Utils.getOpenGL(featureInfo.reqGlEsVersion))));
         }
 
@@ -1272,18 +1272,18 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             View view = holder.itemView;
             final ConfigurationInfo configurationInfo = (ConfigurationInfo) mAdapterList.get(index).vanillaItem;
             view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            // GLES ver
+            // GL ES ver
             holder.textView1.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.gles_ver), Utils.getOpenGL(configurationInfo.reqGlEsVersion)));
             // Flag & others
-            holder.textView2.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.input_features), configurationInfo.reqInputFeatures));
-            holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.keyboard_type), configurationInfo.reqKeyboardType));
-            holder.textView4.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.navigation), configurationInfo.reqNavigation));
-            holder.textView5.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.touchscreen), configurationInfo.reqTouchScreen));
+            holder.textView2.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.input_features),
+                    Utils.getInputFeaturesString(configurationInfo.reqInputFeatures)));
+            holder.textView3.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.keyboard_type),
+                    Utils.getKeyboardTypeString(configurationInfo.reqKeyboardType)));
+            holder.textView4.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.navigation),
+                    Utils.getNavigationString(configurationInfo.reqNavigation)));
+            holder.textView5.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.touchscreen),
+                    Utils.getTouchScreenString(configurationInfo.reqTouchScreen)));
         }
 
         /**

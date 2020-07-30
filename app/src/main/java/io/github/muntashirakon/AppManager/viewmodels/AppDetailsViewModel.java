@@ -876,7 +876,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     Arrays.sort(packageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
                 } catch (NullPointerException e) {
                     for (FeatureInfo fi : packageInfo.reqFeatures) {
-                        if (fi.name == null) fi.name = "_MAJOR";
+                        if (fi.name == null) fi.name = "OpenGL ES";
                         bFi = true;
                     }
                     Arrays.sort(packageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));

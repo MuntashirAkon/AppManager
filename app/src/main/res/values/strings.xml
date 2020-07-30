@@ -31,7 +31,7 @@
     <string name="group">Group</string>
     <string name="protection_level">Protection level</string>
     <string name="uses_feature">Uses features</string>
-    <string name="gles_ver">Req. Gles ver.</string>
+    <string name="gles_ver">Req. GL ES version</string>
     <string name="no_feature">No features</string>
     <string name="sort_by_shared_user_id">Shared User ID</string>
     <string name="shared_user_id">Shared User ID</string>
