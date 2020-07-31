@@ -38,39 +38,44 @@ public final class PackageUtils {
 
     @NonNull
     public static HashMap<String, RulesStorageManager.Type> collectComponentClassNames(String packageName) {
-        HashMap<String, RulesStorageManager.Type> componentClasses = new HashMap<>();
-        PackageManager packageManager = AppManager.getContext().getPackageManager();
-        PackageInfo packageInfo;
         try {
             int apiCompatFlags;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                 apiCompatFlags = PackageManager.MATCH_DISABLED_COMPONENTS;
             else apiCompatFlags = PackageManager.GET_DISABLED_COMPONENTS;
-            packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES
-                    | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS | apiCompatFlags
-                    | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS);
-            // Add activities
-            if (packageInfo.activities != null) {
-                for (ActivityInfo activityInfo : packageInfo.activities) {
-                    if (activityInfo.targetActivity != null)
-                        componentClasses.put(activityInfo.targetActivity, RulesStorageManager.Type.ACTIVITY);
-                    else componentClasses.put(activityInfo.name, RulesStorageManager.Type.ACTIVITY);
-                }
-            }
-            // Add others
-            if (packageInfo.services != null) {
-                for (ComponentInfo componentInfo : packageInfo.services)
-                    componentClasses.put(componentInfo.name, RulesStorageManager.Type.SERVICE);
-            }
-            if (packageInfo.receivers != null) {
-                for (ComponentInfo componentInfo : packageInfo.receivers)
-                    componentClasses.put(componentInfo.name, RulesStorageManager.Type.RECEIVER);
-            }
-            if (packageInfo.providers != null) {
-                for (ComponentInfo componentInfo : packageInfo.providers)
-                    componentClasses.put(componentInfo.name, RulesStorageManager.Type.PROVIDER);
-            }
+            PackageInfo packageInfo = AppManager.getContext().getPackageManager().getPackageInfo(packageName,
+                    PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
+                    | PackageManager.GET_PROVIDERS | apiCompatFlags | PackageManager.GET_SERVICES
+                    | PackageManager.GET_URI_PERMISSION_PATTERNS);
+            return collectComponentClassNames(packageInfo);
         } catch (PackageManager.NameNotFoundException ignore) {}
+        return new HashMap<>();
+    }
+
+    @NonNull
+    public static HashMap<String, RulesStorageManager.Type> collectComponentClassNames(@NonNull PackageInfo packageInfo) {
+        HashMap<String, RulesStorageManager.Type> componentClasses = new HashMap<>();
+        // Add activities
+        if (packageInfo.activities != null) {
+            for (ActivityInfo activityInfo : packageInfo.activities) {
+                if (activityInfo.targetActivity != null)
+                    componentClasses.put(activityInfo.targetActivity, RulesStorageManager.Type.ACTIVITY);
+                else componentClasses.put(activityInfo.name, RulesStorageManager.Type.ACTIVITY);
+            }
+        }
+        // Add others
+        if (packageInfo.services != null) {
+            for (ComponentInfo componentInfo : packageInfo.services)
+                componentClasses.put(componentInfo.name, RulesStorageManager.Type.SERVICE);
+        }
+        if (packageInfo.receivers != null) {
+            for (ComponentInfo componentInfo : packageInfo.receivers)
+                componentClasses.put(componentInfo.name, RulesStorageManager.Type.RECEIVER);
+        }
+        if (packageInfo.providers != null) {
+            for (ComponentInfo componentInfo : packageInfo.providers)
+                componentClasses.put(componentInfo.name, RulesStorageManager.Type.PROVIDER);
+        }
         return componentClasses;
     }
 

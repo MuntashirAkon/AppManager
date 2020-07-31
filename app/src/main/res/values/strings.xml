@@ -587,4 +587,8 @@
     <string name="select_all">Select All</string>
     <string name="filter_disabled_apps">Disabled apps</string>
     <string name="installed_version">Installed Version</string>
+    <string name="trackers">Trackers</string>
+    <string name="components">Components</string>
+    <string name="features">Features</string>
+    <string name="whats_new">What\'s New</string>
 </resources>

@@ -480,6 +480,15 @@ public class AppInfoFragment extends Fragment
                 long installedVersionCode = PackageUtils.getVersionCode(mInstalledPackageInfo);
                 long thisVersionCode = PackageUtils.getVersionCode(mPackageInfo);
                 if (installedVersionCode < thisVersionCode) {  // FIXME: Check for signature
+                    addToHorizontalLayout(R.string.whats_new, R.drawable.ic_info_outline_black_24dp)
+                            .setOnClickListener(v -> {
+                                Bundle args = new Bundle();
+                                args.putParcelable(WhatsNewDialogFragment.ARG_NEW_PKG_INFO, mPackageInfo);
+                                args.putParcelable(WhatsNewDialogFragment.ARG_OLD_PKG_INFO, mInstalledPackageInfo);
+                                WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
+                                dialogFragment.setArguments(args);
+                                dialogFragment.show(mActivity.getSupportFragmentManager(), WhatsNewDialogFragment.TAG);
+                            });
                     addToHorizontalLayout(R.string.update, R.drawable.ic_baseline_get_app_24)
                             .setOnClickListener(v -> new Thread(() -> {
                         try {

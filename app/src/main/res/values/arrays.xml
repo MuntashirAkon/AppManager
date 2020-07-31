@@ -40,6 +40,16 @@
         <item>@string/usage_yesterday</item>
         <item>@string/usage_weekly</item>
     </string-array>
+    <string-array name="whats_new_titles">
+        <item>@string/version</item>
+        <item>@string/trackers</item>
+        <item>@string/signatures</item>
+        <item>@string/declared_permission</item>
+        <item>@string/components</item>
+        <item>@string/features</item>
+        <item>@string/shared_libs</item>
+        <item>@string/sdk</item>
+    </string-array>
     <string-array name="tracker_signatures">
         <item>com.facebook.accountkit</item>
         <item>com.ad4screen.sdk</item>
