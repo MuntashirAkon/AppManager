@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -37,10 +38,9 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        if (getActivity() == null || getContext() == null || getArguments() == null)
-            return super.onCreateDialog(savedInstanceState);
-        AppUsageStatsManager.PackageUS packageUS = getArguments().getParcelable(ARG_PACKAGE_US);
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        FragmentActivity activity = requireActivity();
+        AppUsageStatsManager.PackageUS packageUS = requireArguments().getParcelable(ARG_PACKAGE_US);
+        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (packageUS == null || inflater == null) return super.onCreateDialog(savedInstanceState);
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.dialog_app_usage_details, null);
@@ -48,17 +48,17 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
         listView.setDividerHeight(0);
         TextView emptyView = view.findViewById(android.R.id.empty);
         listView.setEmptyView(emptyView);
-        AppUsageDetailsAdapter adapter = new AppUsageDetailsAdapter(getActivity());
+        AppUsageDetailsAdapter adapter = new AppUsageDetailsAdapter(activity);
         listView.setAdapter(adapter);
         adapter.setDefaultList(packageUS.entries);
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext(), R.style.AppTheme_AlertDialog)
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
                 .setTitle(packageUS.packageName)
                 .setView(view)
                 .setNegativeButton(android.R.string.ok, (dialog, which) -> {
                     if (getDialog() == null) dismiss();
                 });
         try {
-            PackageManager packageManager = getActivity().getPackageManager();
+            PackageManager packageManager = activity.getPackageManager();
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageUS.packageName, PackageManager.GET_META_DATA);
             builder.setIcon(applicationInfo.loadIcon(packageManager));
             builder.setTitle(applicationInfo.loadLabel(packageManager));

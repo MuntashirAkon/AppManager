@@ -45,9 +45,8 @@ public class EditShortcutDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        if (getArguments() == null) return super.onCreateDialog(savedInstanceState);
         final FragmentActivity activity = requireActivity();
-        mActivityInfo = getArguments().getParcelable(ARG_ACTIVITY_INFO);
+        mActivityInfo = requireArguments().getParcelable(ARG_ACTIVITY_INFO);
         mPackageManager = activity.getPackageManager();
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (inflater == null) return super.onCreateDialog(savedInstanceState);

@@ -20,7 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,9 +46,7 @@ public class ImportExportDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        if (getActivity() == null) return super.onCreateDialog(savedInstanceState);
-        if (getFragmentManager() == null) return super.onCreateDialog(savedInstanceState);
-        activity = getActivity();
+        activity = requireActivity();
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
         @SuppressLint("InflateParams")
@@ -109,12 +106,11 @@ public class ImportExportDialogFragment extends DialogFragment {
             startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RESULT_CODE_BLOCKER);
             dismiss();
         });
-        return new MaterialAlertDialogBuilder(getActivity(), R.style.AppTheme_AlertDialog)
+        return new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
                 .setView(view)
                 .setTitle(R.string.pref_import_export_blocking_rules)
-                .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                    if (getDialog() != null) getDialog().cancel();
-                }).create();
+                .setNegativeButton(android.R.string.cancel, null)
+                .create();
     }
 
     @Override

@@ -35,12 +35,10 @@ public class IconPickerDialogFragment extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context activity) {
         super.onAttach(activity);
-        this.adapter = new IconListingAdapter(activity);
+        adapter = new IconListingAdapter(activity);
         new Thread(() -> {
-            IconPickerDialogFragment.this.adapter.resolve();
-            if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> IconPickerDialogFragment.this.adapter.notifyDataSetChanged());
-            }
+            adapter.resolve();
+            requireActivity().runOnUiThread(() -> adapter.notifyDataSetChanged());
         }).start();
     }
 
@@ -52,8 +50,7 @@ public class IconPickerDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        if (getActivity() == null) return super.onCreateDialog(savedInstanceState);
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) requireActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
         GridView grid = (GridView) inflater.inflate(R.layout.dialog_icon_picker, null);
         grid.setAdapter(adapter);
@@ -63,7 +60,7 @@ public class IconPickerDialogFragment extends DialogFragment {
                 if (getDialog() != null) getDialog().dismiss();
             }
         });
-        return new MaterialAlertDialogBuilder(getActivity(), R.style.AppTheme_AlertDialog)
+        return new MaterialAlertDialogBuilder(requireActivity(), R.style.AppTheme_AlertDialog)
                 .setTitle(R.string.icon_picker)
                 .setView(grid)
                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> {

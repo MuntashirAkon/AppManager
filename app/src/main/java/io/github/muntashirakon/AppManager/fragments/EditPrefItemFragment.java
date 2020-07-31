@@ -23,6 +23,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
 
 public class EditPrefItemFragment extends DialogFragment {
@@ -99,18 +100,17 @@ public class EditPrefItemFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        if (getActivity() == null) return super.onCreateDialog(savedInstanceState);
-        if (getArguments() == null) return super.onCreateDialog(savedInstanceState);
+        FragmentActivity activity = requireActivity();
+        Bundle args = requireArguments();
+        PrefItem prefItem = args.getParcelable(ARG_PREF_ITEM);
+        @Mode int mode = args.getInt(ARG_MODE);
 
-        PrefItem prefItem = getArguments().getParcelable(ARG_PREF_ITEM);
-        @Mode int mode = getArguments().getInt(ARG_MODE);
-
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.dialog_edit_pref_item, null);
         Spinner spinner = view.findViewById(R.id.type_selector_spinner);
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(),
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(activity,
                 R.array.shared_pref_types, android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -171,8 +171,8 @@ public class EditPrefItemFragment extends DialogFragment {
                 spinner.setSelection(TYPE_STRING);
             }
         }
-        interfaceCommunicator = (InterfaceCommunicator) getActivity();
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity(), R.style.AppTheme_AlertDialog);
+        interfaceCommunicator = (InterfaceCommunicator) activity;
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog);
         builder.setView(view)
                 .setPositiveButton(mode == MODE_CREATE ? R.string.add_item : R.string.done, (dialog, which) -> {
                     PrefItem newPrefItem;

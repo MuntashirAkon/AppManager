@@ -53,14 +53,14 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        if (getActivity() == null) return super.onCreateDialog(savedInstanceState);
-        if (getArguments() == null) return super.onCreateDialog(savedInstanceState);
-        activity = getActivity();
-        @Mode int mode = getArguments().getInt(ARG_MODE, MODE_EXPORT);
-        mPackages = getArguments().getStringArrayList(ARG_PKG);
-        mUri = (Uri) getArguments().get(ARG_URI);
+        activity = requireActivity();
+        Bundle args = requireArguments();
+        @Mode int mode = args.getInt(ARG_MODE, MODE_EXPORT);
+        mPackages = args.getStringArrayList(ARG_PKG);
+        mUri = (Uri) args.get(ARG_URI);
         if (mUri == null) return super.onCreateDialog(savedInstanceState);
-        final boolean[] checkedItems = {true, true, true, true, true, true};
+        final boolean[] checkedItems = new boolean[6];
+        Arrays.fill(checkedItems, true);
         mSelectedTypes = new HashSet<>(Arrays.asList(RulesStorageManager.Type.values()));
         return new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
                 .setTitle(mode == MODE_IMPORT ? R.string.import_options : R.string.export_options)
