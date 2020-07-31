@@ -170,8 +170,12 @@ public class ApkWhatsNewFinder {
         if (Build.VERSION.SDK_INT > 23)
             oldSdk.append(", ").append(context.getString(R.string.sdk_min)).append(": ").append(oldAppInfo.minSdkVersion);
         if (!newSdk.toString().equals(oldSdk.toString())) {
-            //
-        } else changes[SHARED_LIBRARIES] = new Change[0];
+            changes[SDK_INFO] = new Change[]{
+                    new Change(CHANGE_INFO, componentInfo[SHARED_LIBRARIES]),
+                    new Change(CHANGE_ADD, newSdk.toString()),
+                    new Change(CHANGE_REMOVED, oldSdk.toString())
+            };
+        } else changes[SDK_INFO] = new Change[0];
         return changes;
     }
 
