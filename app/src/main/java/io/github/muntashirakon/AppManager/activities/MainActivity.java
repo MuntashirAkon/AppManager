@@ -61,6 +61,7 @@ import androidx.core.text.HtmlCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
@@ -69,7 +70,6 @@ import io.github.muntashirakon.AppManager.fragments.RulesTypeSelectionDialogFrag
 import io.github.muntashirakon.AppManager.types.ApplicationItem;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
-import io.github.muntashirakon.AppManager.types.ScrollSafeSwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.viewmodels.MainViewModel;
@@ -77,7 +77,7 @@ import io.github.muntashirakon.AppManager.viewmodels.MainViewModel;
 import static androidx.appcompat.app.ActionBar.LayoutParams;
 
 public class MainActivity extends AppCompatActivity implements
-        SearchView.OnQueryTextListener, ScrollSafeSwipeRefreshLayout.OnRefreshListener {
+        SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
     public static final String EXTRA_PACKAGE_LIST = "EXTRA_PACKAGE_LIST";
     public static final String EXTRA_LIST_NAME = "EXTRA_LIST_NAME";
 
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements
     private List<ApplicationItem> mApplicationItems = new ArrayList<>();
     private SearchView mSearchView;
     private ProgressIndicator mProgressIndicator;
-    private ScrollSafeSwipeRefreshLayout mSwipeRefresh;
+    private SwipeRefreshLayout mSwipeRefresh;
     private BottomAppBar mBottomAppBar;
     private MaterialTextView mBottomAppBarCounter;
     private LinearLayoutCompat mMainLayout;

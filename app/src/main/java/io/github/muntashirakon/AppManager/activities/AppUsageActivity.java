@@ -40,10 +40,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fragments.AppUsageDetailsDialogFragment;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
-import io.github.muntashirakon.AppManager.types.ScrollSafeSwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.Utils.IntervalType;
 import io.github.muntashirakon.AppManager.utils.Tuple;
@@ -55,7 +55,7 @@ import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_WEEKLY;
 import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_YESTERDAY;
 
 public class AppUsageActivity extends AppCompatActivity implements ListView.OnItemClickListener,
-        ScrollSafeSwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener {
     @IntDef(value = {
             SORT_BY_APP_LABEL,
             SORT_BY_LAST_USED,
@@ -81,7 +81,7 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
             R.id.action_sort_by_wifi_data};
 
     private ProgressIndicator mProgressIndicator;
-    private ScrollSafeSwipeRefreshLayout mSwipeRefresh;
+    private SwipeRefreshLayout mSwipeRefresh;
     private AppUsageAdapter mAppUsageAdapter;
     List<AppUsageStatsManager.PackageUS> mPackageUSList;
     private static long totalScreenTime;

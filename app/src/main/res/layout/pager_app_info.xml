@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<io.github.muntashirakon.AppManager.types.ScrollSafeSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipe_refresh"
@@ -111,4 +112,4 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-</io.github.muntashirakon.AppManager.types.ScrollSafeSwipeRefreshLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

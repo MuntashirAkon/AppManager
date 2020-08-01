@@ -63,6 +63,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
@@ -71,7 +72,6 @@ import io.github.muntashirakon.AppManager.activities.ManifestViewerActivity;
 import io.github.muntashirakon.AppManager.activities.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.compontents.TrackerComponentUtils;
-import io.github.muntashirakon.AppManager.types.ScrollSafeSwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
@@ -82,7 +82,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.viewmodels.AppDetailsViewModel;
 
 public class AppInfoFragment extends Fragment
-        implements ScrollSafeSwipeRefreshLayout.OnRefreshListener {
+        implements SwipeRefreshLayout.OnRefreshListener {
     private static final String UID_STATS_PATH = "/proc/uid_stat/";
     private static final String UID_STATS_TR = "tcp_rcv";
     private static final String UID_STATS_RC = "tcp_snd";
@@ -109,7 +109,7 @@ public class AppInfoFragment extends Fragment
     private ChipGroup mTagCloud;
     @SuppressLint("SimpleDateFormat")
     private SimpleDateFormat mDateFormatter = new SimpleDateFormat("EE LLL dd yyyy kk:mm:ss");
-    private ScrollSafeSwipeRefreshLayout mSwipeRefresh;
+    private SwipeRefreshLayout mSwipeRefresh;
     private int mAccentColor;
     private CharSequence mPackageLabel;
     private ProgressIndicator mProgressIndicator;
