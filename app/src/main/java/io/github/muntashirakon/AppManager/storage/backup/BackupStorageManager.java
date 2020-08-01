@@ -115,10 +115,10 @@ public class BackupStorageManager implements AutoCloseable {
             StringBuilder sb = new StringBuilder("tar -czf \"").append(backupFile.getAbsolutePath()).append("\" \"")
                     .append(metadataV1.dataDirs[i]).append("\"");
             if ((flags & BACKUP_EXCLUDE_CACHE) != 0) {
-                sb.append(" --exclude=\"").append(metadataV1.dataDirs[i]).append(File.separatorChar)
-                        .append("cache").append("\"");
-                sb.append(" --exclude=\"").append(metadataV1.dataDirs[i]).append(File.separatorChar)
-                        .append("code_cache").append("\"");
+                sb.append(" --exclude=\"").append(metadataV1.dataDirs[i].substring(1))
+                        .append(File.separatorChar).append("cache").append("\"");
+                sb.append(" --exclude=\"").append(metadataV1.dataDirs[i].substring(1))
+                        .append(File.separatorChar).append("code_cache").append("\"");
             }
             if (!RootShellRunner.runCommand(sb.toString()).isSuccessful()) {
                 return false;
