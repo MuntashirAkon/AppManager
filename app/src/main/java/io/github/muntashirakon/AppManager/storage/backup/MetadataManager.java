@@ -6,13 +6,14 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,29 +22,32 @@ import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class MetadataManager implements Closeable {
     public static final String META_FILE = "meta.am.v1";
 
     // For an extended documentation, see https://github.com/MuntashirAkon/AppManager/issues/30
+    // All the attributes must be non-null
     public static class MetadataV1 implements Serializable {
         private static final long serialVersionUID = 974L;
-        public String label;
-        public String packageName;
-        public String versionName;
-        public long versionCode;
-        public String[] sourceDirs;
-        public String[] dataDirs;
-        public boolean isSystem;
-        public boolean isSplitApk;
-        public String[] splitNames;
-        public String[] splitSources;  // 2 * splitNames.length if public source is different, same index order as splitNames
-        public boolean hasRules;
-        public long backupTime;
-        public String[] certSha256Checksum;
-        public String[] sourceDirsSha256Checksum;
-        public String[] dataDirsSha256Checksum;
-        public int mode = 0;
+        public String label;  // label
+        public String packageName;  // package_name
+        public String versionName;  // version_name
+        public long versionCode;  // version_code
+        public String[] sourceDirs;  // source_dirs
+        public String[] dataDirs;  // data_dirs
+        public boolean isSystem;  // is_system
+        public boolean isSplitApk;  // is_split_apk
+        public String[] splitNames;  // split_names
+        public String[] splitSources;  // split_sources, 2 * splitNames.length if public source is different, same index order as splitNames
+        public boolean hasRules;  // has_rules
+        public long backupTime;  // backup_time
+        public String[] certSha256Checksum;  // cert_sha256_checksum
+        public String[] sourceDirsSha256Checksum;  // source_dirs_sha256_checksum
+        public String[] dataDirsSha256Checksum;  // data_dirs_sha256_checksum
+        public int mode = 0;  // mode
+        public int version = 1;  // version
     }
 
     private static MetadataManager metadataManager;
@@ -75,22 +79,68 @@ public class MetadataManager implements Closeable {
         this.metadataV1 = metadataV1;
     }
 
-    synchronized public void readMetadata() throws IOException, ClassNotFoundException {
+    synchronized public void readMetadata() throws JSONException {
         File metadataFile = getMetadataFile();
-        try (FileInputStream fileInputStream = new FileInputStream(metadataFile);
-             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-            metadataV1 = (MetadataV1) objectInputStream.readObject();
+        String metadata = Utils.getFileContent(metadataFile);
+        JSONObject rootObject = new JSONObject(metadata);
+        metadataV1 = new MetadataV1();
+        metadataV1.label = rootObject.getString("label");
+        metadataV1.packageName = rootObject.getString("package_name");
+        metadataV1.versionName = rootObject.getString("version_name");
+        metadataV1.versionCode = rootObject.getLong("version_code");
+        metadataV1.sourceDirs = getArrayFromJSONArray(rootObject.getJSONArray("source_dirs"));
+        metadataV1.dataDirs = getArrayFromJSONArray(rootObject.getJSONArray("data_dirs"));
+        metadataV1.isSystem = rootObject.getBoolean("is_system");
+        metadataV1.isSplitApk = rootObject.getBoolean("is_split_apk");
+        metadataV1.splitNames = getArrayFromJSONArray(rootObject.getJSONArray("split_names"));
+        metadataV1.splitSources = getArrayFromJSONArray(rootObject.getJSONArray("split_sources"));
+        metadataV1.hasRules = rootObject.getBoolean("has_rules");
+        metadataV1.backupTime = rootObject.getLong("backup_time");
+        metadataV1.certSha256Checksum = getArrayFromJSONArray(rootObject.getJSONArray("cert_sha256_checksum"));
+        metadataV1.sourceDirsSha256Checksum = getArrayFromJSONArray(rootObject.getJSONArray("source_dirs_sha256_checksum"));
+        metadataV1.dataDirsSha256Checksum = getArrayFromJSONArray(rootObject.getJSONArray("data_dirs_sha256_checksum"));
+        metadataV1.mode = rootObject.getInt("mode");
+        metadataV1.version = rootObject.getInt("version");
+    }
+
+    synchronized public void writeMetadata() throws IOException, JSONException {
+        if (metadataV1 == null) throw new RuntimeException("Metadata is not set.");
+        File metadataFile = getMetadataFile();
+        try (FileOutputStream fileOutputStream = new FileOutputStream(metadataFile)) {
+            JSONObject rootObject = new JSONObject();
+            rootObject.put("label", metadataV1.label);
+            rootObject.put("package_name", metadataV1.packageName);
+            rootObject.put("version_name", metadataV1.versionName);
+            rootObject.put("version_code", metadataV1.versionCode);
+            rootObject.put("source_dirs", getJSONArrayFromArray(metadataV1.sourceDirs));
+            rootObject.put("data_dirs", getJSONArrayFromArray(metadataV1.dataDirs));
+            rootObject.put("is_system", metadataV1.isSystem);
+            rootObject.put("is_split_apk", metadataV1.isSplitApk);
+            rootObject.put("split_names", getJSONArrayFromArray(metadataV1.splitNames));
+            rootObject.put("split_sources", getJSONArrayFromArray(metadataV1.splitSources));
+            rootObject.put("has_rules", metadataV1.hasRules);
+            rootObject.put("backup_time", metadataV1.backupTime);
+            rootObject.put("cert_sha256_checksum", getJSONArrayFromArray(metadataV1.certSha256Checksum));
+            rootObject.put("source_dirs_sha256_checksum", getJSONArrayFromArray(metadataV1.sourceDirsSha256Checksum));
+            rootObject.put("data_dirs_sha256_checksum", getJSONArrayFromArray(metadataV1.dataDirsSha256Checksum));
+            rootObject.put("mode", metadataV1.mode);
+            rootObject.put("version", metadataV1.version);
+            fileOutputStream.write(rootObject.toString().getBytes());
         }
     }
 
-    synchronized public void writeMetadata() {
-        File metadataFile = getMetadataFile();
-        try (FileOutputStream fileOutputStream = new FileOutputStream(metadataFile);
-             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
-            objectOutputStream.writeObject(metadataV1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @NonNull
+    private static JSONArray getJSONArrayFromArray(@NonNull final String[] stringArray) {
+        JSONArray jsonArray = new JSONArray();
+        for (String string: stringArray) jsonArray.put(string);
+        return jsonArray;
+    }
+
+    @NonNull
+    private static String[] getArrayFromJSONArray(@NonNull final JSONArray jsonArray) throws JSONException {
+        String[] stringArray = new String[jsonArray.length()];
+        for (int i = 0; i<jsonArray.length(); ++i) stringArray[i] = (String) jsonArray.get(i);
+        return stringArray;
     }
 
     public MetadataV1 setupMetadata(@BackupStorageManager.BackupFlags int flags) throws PackageManager.NameNotFoundException {
@@ -129,6 +179,8 @@ public class MetadataManager implements Closeable {
                 metadataV1.splitSources = splitSources.toArray(new String[0]);
             }
         }
+        if (metadataV1.splitNames == null) metadataV1.splitNames = new String[0];
+        if (metadataV1.splitSources == null) metadataV1.splitSources = new String[0];
         metadataV1.hasRules = false;
         if ((flags & BackupStorageManager.BACKUP_RULES) != 0) {
             try (ComponentsBlocker cb = ComponentsBlocker.getInstance(appManager, packageName)) {
@@ -143,6 +195,7 @@ public class MetadataManager implements Closeable {
         return metadataV1;
     }
 
+    @NonNull
     private File getMetadataFile() {
         return new File(BackupStorageManager.getBackupPath(packageName), META_FILE);
     }

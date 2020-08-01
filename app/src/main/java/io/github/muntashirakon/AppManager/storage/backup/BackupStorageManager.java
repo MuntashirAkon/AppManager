@@ -3,6 +3,8 @@ package io.github.muntashirakon.AppManager.storage.backup;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 
+import org.json.JSONException;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -141,7 +143,12 @@ public class BackupStorageManager implements AutoCloseable {
         metadataV1.backupTime = System.currentTimeMillis();
         // Write modified metadata
         metadataManager.setMetadataV1(metadataV1);
-        metadataManager.writeMetadata();
+        try {
+            metadataManager.writeMetadata();
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
         return true;
     }
 
