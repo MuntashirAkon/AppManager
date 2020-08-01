@@ -4,12 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Objects;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -37,15 +34,15 @@ public class BackupStorageManager implements AutoCloseable {
     public static final int BACKUP_EXCLUDE_CACHE = 1 << 4;
     public static final int BACKUP_RULES = 1 << 5;
 
-    @SuppressLint("SdCardPath")
     private static final String SOURCE_PREFIX = "source";
     private static final String DATA_PREFIX = "data";
     private static final String BACKUP_FILE_PREFIX = ".tar.gz";
     private static final String RULES_TSV = "rules.tsv";
-    private static final String DEFAULT_BACKUP_PATH = "/sdcard/AppManager";
+    @SuppressLint("SdCardPath")
+    private static final File DEFAULT_BACKUP_PATH = new File("/sdcard/AppManager");
 
     private static BackupStorageManager instance;
-    public static BackupStorageManager getInstance(String packageName) throws Exception {
+    public static BackupStorageManager getInstance(String packageName) {
         if (instance == null) instance = new BackupStorageManager(packageName);
         else if (!instance.packageName.equals(packageName)) {
             instance.close();
@@ -54,22 +51,29 @@ public class BackupStorageManager implements AutoCloseable {
         return instance;
     }
 
+    @NonNull
     public static File getBackupPath(String packageName) {
-        // TODO: Add custom path
-        return new File(DEFAULT_BACKUP_PATH + File.separatorChar + packageName);
+        return new File(DEFAULT_BACKUP_PATH, packageName);
     }
 
     private @NonNull String packageName;
     private @NonNull MetadataManager metadataManager;
     private @NonNull File backupPath;
     private @BackupFlags int flags;
-    protected BackupStorageManager(@NonNull String packageName)
-            throws IOException, ClassNotFoundException {
+    protected BackupStorageManager(@NonNull String packageName) {
         this.packageName = packageName;
         metadataManager = MetadataManager.getInstance(packageName);
         backupPath = getBackupPath(packageName);
         flags = BACKUP_NOTHING;
-        if (backupPath.exists()) metadataManager.readMetadata();
+        if (backupPath.exists()) {
+            try {
+                metadataManager.readMetadata();
+            } catch (Exception e) {
+                e.printStackTrace();
+                // It was a malformed backup, delete it
+                delete_backup();
+            }
+        }
     }
 
     public void setFlags(int flags) {
@@ -88,13 +92,15 @@ public class BackupStorageManager implements AutoCloseable {
         }
         // Delete old backup
         delete_backup();
+        if (!backupPath.exists()) {
+            if (!backupPath.mkdirs()) return false;
+        }
         // Backup sources
         for (int i = 0; i<metadataV1.sourceDirs.length; ++i) {
             // /sdcard/AppManager/source0.tar.gz
-            File backupFile = new File(backupPath.getAbsolutePath() + File.separatorChar + SOURCE_PREFIX + i + BACKUP_FILE_PREFIX);
-            if (!RootShellRunner.runCommand(String.format("tar -czf \"%s\" \"%s\"; chmod 0666 \"%s\"",
-                    backupFile, metadataV1.sourceDirs[i], backupFile.getAbsolutePath()))
-                    .isSuccessful()) {
+            File backupFile = new File(backupPath, SOURCE_PREFIX + i + BACKUP_FILE_PREFIX);
+            if (!RootShellRunner.runCommand(String.format("/system/bin/tar -czf \"%s\" \"%s\"",
+                    backupFile.getAbsolutePath(), metadataV1.sourceDirs[i])).isSuccessful()) {
                 return false;
             }
             if (backupFile.exists()) {
@@ -103,7 +109,7 @@ public class BackupStorageManager implements AutoCloseable {
         }
         // Backup data
         for (int i = 0; i<metadataV1.dataDirs.length; ++i) {
-            File backupFile = new File(backupPath.getAbsolutePath() + File.separatorChar + DATA_PREFIX + i + BACKUP_FILE_PREFIX);
+            File backupFile = new File(backupPath, DATA_PREFIX + i + BACKUP_FILE_PREFIX);
             StringBuilder sb = new StringBuilder("tar -czf \"").append(backupFile.getAbsolutePath()).append("\" \"")
                     .append(metadataV1.dataDirs[i]).append("\"");
             if ((flags & BACKUP_EXCLUDE_CACHE) != 0) {
@@ -116,7 +122,7 @@ public class BackupStorageManager implements AutoCloseable {
                 return false;
             }
             if (backupFile.exists()) {
-                metadataV1.sourceDirsSha256Checksum[i] = PackageUtils.getSha256Checksum(backupFile);
+                metadataV1.dataDirsSha256Checksum[i] = PackageUtils.getSha256Checksum(backupFile);
             } else return false;
         }
         // Export rules

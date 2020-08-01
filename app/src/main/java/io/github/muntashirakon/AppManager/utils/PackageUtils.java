@@ -254,10 +254,12 @@ public final class PackageUtils {
     public static String getSha256Checksum(File file) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("sha256");
-            try (DigestInputStream inputStream = new DigestInputStream(new FileInputStream(file), messageDigest)) {
+            try (FileInputStream fileInputStream = new FileInputStream(file);
+                 DigestInputStream digestInputStream = new DigestInputStream(fileInputStream, messageDigest)) {
+                byte[] buffer = new byte[1024 * 8];
                 //noinspection StatementWithEmptyBody
-                while (inputStream.read() != -1);
-                return byteToHexString(inputStream.getMessageDigest().digest());
+                while (digestInputStream.read(buffer) != -1) {}
+                return byteToHexString(messageDigest.digest());
             }
         } catch (NoSuchAlgorithmException | IOException e) {
             e.printStackTrace();

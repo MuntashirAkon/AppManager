@@ -591,4 +591,9 @@
     <string name="components">Components</string>
     <string name="features">Features</string>
     <string name="whats_new">What\'s New</string>
+    <string name="blocking_rules">Blocking rules</string>
+    <string name="exclude_cache">Exclude cache</string>
+    <string name="external_data">External data</string>
+    <string name="data">Data</string>
+    <string name="apk">APK</string>
 </resources>
