@@ -11,7 +11,10 @@ import android.content.pm.SigningInfo;
 import android.os.Build;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -208,19 +211,21 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static String[] getDataDirs(@NonNull ApplicationInfo applicationInfo) {
+    public static String[] getDataDirs(@NonNull ApplicationInfo applicationInfo, boolean loadExternal) {
         ArrayList<String> dataDirs = new ArrayList<>();
         dataDirs.add(applicationInfo.dataDir);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !applicationInfo.dataDir.equals(applicationInfo.deviceProtectedDataDir)) {
             dataDirs.add(applicationInfo.deviceProtectedDataDir);
         }
-        File[] cacheDirs = AppManager.getContext().getExternalCacheDirs();
-        if (cacheDirs != null) {
-            String dataDir;
-            for (File cacheDir : cacheDirs) {
-                //noinspection ConstantConditions
-                dataDir = new File(cacheDir.getParent()).getParent() + File.pathSeparator + applicationInfo.packageName;
-                if (new File(dataDir).exists()) dataDirs.add(dataDir);
+        if (loadExternal) {
+            File[] cacheDirs = AppManager.getContext().getExternalCacheDirs();
+            if (cacheDirs != null) {
+                String dataDir;
+                for (File cacheDir : cacheDirs) {
+                    //noinspection ConstantConditions
+                    dataDir = new File(cacheDir.getParent()).getParent() + File.pathSeparator + applicationInfo.packageName;
+                    if (new File(dataDir).exists()) dataDirs.add(dataDir);
+                }
             }
         }
         return dataDirs.toArray(new String[0]);
@@ -243,6 +248,21 @@ public final class PackageUtils {
             }
         }
         return checksums.toArray(new String[0]);
+    }
+
+    @NonNull
+    public static String getSha256Checksum(File file) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("sha256");
+            try (DigestInputStream inputStream = new DigestInputStream(new FileInputStream(file), messageDigest)) {
+                //noinspection StatementWithEmptyBody
+                while (inputStream.read() != -1);
+                return byteToHexString(inputStream.getMessageDigest().digest());
+            }
+        } catch (NoSuchAlgorithmException | IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     @NonNull

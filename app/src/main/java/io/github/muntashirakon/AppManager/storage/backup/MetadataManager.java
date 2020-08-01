@@ -23,6 +23,8 @@ import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class MetadataManager implements Closeable {
+    public static final String META_FILE = "meta.am.v1";
+
     // For an extended documentation, see https://github.com/MuntashirAkon/AppManager/issues/30
     public static class MetadataV1 implements Serializable {
         private static final long serialVersionUID = 974L;
@@ -55,18 +57,14 @@ public class MetadataManager implements Closeable {
     }
 
     @Override
-    public void close() {
-        if (dataChanged) writeMetadata();
-    }
+    public void close() {}
 
     private @NonNull String packageName;
     private MetadataV1 metadataV1;
     private AppManager appManager;
-    private boolean dataChanged;
     private MetadataManager(@NonNull String packageName) {
         this.packageName = packageName;
         this.appManager = AppManager.getInstance();
-        dataChanged = false;
     }
 
     public MetadataV1 getMetadataV1() {
@@ -75,31 +73,27 @@ public class MetadataManager implements Closeable {
 
     public void setMetadataV1(MetadataV1 metadataV1) {
         this.metadataV1 = metadataV1;
-        dataChanged = true;
     }
 
-    synchronized private void readMetadata() {
+    synchronized public void readMetadata() throws IOException, ClassNotFoundException {
         File metadataFile = getMetadataFile();
         try (FileInputStream fileInputStream = new FileInputStream(metadataFile);
              ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
             metadataV1 = (MetadataV1) objectInputStream.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
         }
     }
 
-    synchronized private void writeMetadata() {
+    synchronized public void writeMetadata() {
         File metadataFile = getMetadataFile();
         try (FileOutputStream fileOutputStream = new FileOutputStream(metadataFile);
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
             objectOutputStream.writeObject(metadataV1);
-            dataChanged = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public MetadataV1 setupMetadata() throws PackageManager.NameNotFoundException {
+    public MetadataV1 setupMetadata(@BackupStorageManager.BackupFlags int flags) throws PackageManager.NameNotFoundException {
         PackageManager pm = appManager.getPackageManager();
         int flagSigningInfo;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
@@ -113,8 +107,13 @@ public class MetadataManager implements Closeable {
         metadataV1.packageName = packageName;
         metadataV1.versionName = packageInfo.versionName;
         metadataV1.versionCode = PackageUtils.getVersionCode(packageInfo);
-        metadataV1.sourceDirs = PackageUtils.getSourceDirs(applicationInfo);
-        metadataV1.dataDirs = PackageUtils.getDataDirs(applicationInfo);
+        if ((flags & BackupStorageManager.BACKUP_APK) != 0)
+            metadataV1.sourceDirs = PackageUtils.getSourceDirs(applicationInfo);
+        else metadataV1.sourceDirs = new String[0];
+        if ((flags & BackupStorageManager.BACKUP_DATA) != 0) {
+            metadataV1.dataDirs = PackageUtils.getDataDirs(applicationInfo,
+                    (flags & BackupStorageManager.BACKUP_EXT_DATA) != 0);
+        } else metadataV1.dataDirs = new  String[0];
         metadataV1.isSystem = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         metadataV1.isSplitApk = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -131,8 +130,10 @@ public class MetadataManager implements Closeable {
             }
         }
         metadataV1.hasRules = false;
-        try (ComponentsBlocker cb = ComponentsBlocker.getInstance(appManager, packageName)) {
-            metadataV1.hasRules = cb.entryCount() > 0;
+        if ((flags & BackupStorageManager.BACKUP_RULES) != 0) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(appManager, packageName)) {
+                metadataV1.hasRules = cb.entryCount() > 0;
+            }
         }
         metadataV1.backupTime = 0;
         metadataV1.certSha256Checksum = PackageUtils.getSigningCertSha256Checksum(packageInfo);
@@ -143,7 +144,6 @@ public class MetadataManager implements Closeable {
     }
 
     private File getMetadataFile() {
-        // TODO: Name: meta.am.mv1
-        return null;
+        return new File(BackupStorageManager.getBackupPath(packageName), META_FILE);
     }
 }
