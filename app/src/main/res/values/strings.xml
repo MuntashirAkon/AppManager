@@ -596,4 +596,8 @@
     <string name="external_data">External data</string>
     <string name="data">Data</string>
     <string name="apk">APK</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
+    <string name="delete_backup">Delete backup</string>
+    <string name="backup_options">Backup Options</string>
 </resources>

@@ -30,11 +30,11 @@ public class BackupStorageManager implements AutoCloseable {
     })
     public @interface BackupFlags {}
     public static final int BACKUP_NOTHING = 0;
-    public static final int BACKUP_APK = 1;
-    public static final int BACKUP_DATA = 1 << 2;
-    public static final int BACKUP_EXT_DATA = 1 << 3;
-    public static final int BACKUP_EXCLUDE_CACHE = 1 << 4;
-    public static final int BACKUP_RULES = 1 << 5;
+    public static final int BACKUP_APK = 1 << 0;
+    public static final int BACKUP_DATA = 1 << 1;
+    public static final int BACKUP_EXT_DATA = 1 << 2;
+    public static final int BACKUP_EXCLUDE_CACHE = 1 << 3;
+    public static final int BACKUP_RULES = 1 << 4;
 
     private static final String SOURCE_PREFIX = "source";
     private static final String DATA_PREFIX = "data";
