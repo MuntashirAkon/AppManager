@@ -39,7 +39,7 @@ public class BackupStorageManager implements AutoCloseable {
     private static final String SOURCE_PREFIX = "source";
     private static final String DATA_PREFIX = "data";
     private static final String BACKUP_FILE_PREFIX = ".tar.gz";
-    private static final String RULES_TSV = "rules.tsv";
+    private static final String RULES_TSV = "rules.am.tsv";
     @SuppressLint("SdCardPath")
     private static final File DEFAULT_BACKUP_PATH = new File("/sdcard/AppManager");
 

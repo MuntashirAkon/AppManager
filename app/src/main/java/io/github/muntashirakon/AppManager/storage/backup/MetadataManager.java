@@ -14,7 +14,6 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -29,8 +28,7 @@ public class MetadataManager implements Closeable {
 
     // For an extended documentation, see https://github.com/MuntashirAkon/AppManager/issues/30
     // All the attributes must be non-null
-    public static class MetadataV1 implements Serializable {
-        private static final long serialVersionUID = 974L;
+    public static class MetadataV1 {
         public String label;  // label
         public String packageName;  // package_name
         public String versionName;  // version_name

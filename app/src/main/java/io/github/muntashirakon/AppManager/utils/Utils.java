@@ -62,8 +62,13 @@ import javax.xml.xpath.XPathFactory;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.misc.RequestCodes;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
 
 public class Utils {
@@ -718,5 +723,21 @@ public class Utils {
 
     public static boolean isAppInstalled() { // or data cleared
         return (long) AppPref.get(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG) == 0;
+    }
+
+    public static boolean requestExternalStoragePermissions(FragmentActivity activity) {
+        List<String> permissions = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (permissions.size() > 0) {
+            ActivityCompat.requestPermissions(activity, permissions.toArray(new String[0]), RequestCodes.REQUEST_CODE_EXTERNAL_STORAGE_PERMISSIONS);
+            return false;  // Need to receive the results
+        }
+        return true;  // Permissions given
     }
 }
