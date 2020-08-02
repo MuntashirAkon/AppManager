@@ -3,9 +3,12 @@ package io.github.muntashirakon.AppManager.fragments;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.storage.backup.BackupStorageManager;
 
 import static io.github.muntashirakon.AppManager.usage.Utils.getPackageLabel;
@@ -28,19 +32,22 @@ public class BackupDialogFragment extends DialogFragment {
             MODE_RESTORE,
             MODE_DELETE
     })
-    private @interface ActionMode {}
-    private static final int MODE_BACKUP = 864;
-    private static final int MODE_RESTORE = 169;
-    private static final int MODE_DELETE = 642;
+    public @interface ActionMode {}
+    public static final int MODE_BACKUP = 864;
+    public static final int MODE_RESTORE = 169;
+    public static final int MODE_DELETE = 642;
 
-    private @BackupStorageManager.BackupFlags int flags = BackupStorageManager.BACKUP_NOTHING;
+    private @BackupStorageManager.BackupFlags int flags = BackupStorageManager.BACKUP_APK
+            | BackupStorageManager.BACKUP_DATA | BackupStorageManager.BACKUP_EXCLUDE_CACHE
+            | BackupStorageManager.BACKUP_RULES;
     private @ActionMode int mode = MODE_BACKUP;
     private List<String> packageNames;
+    FragmentActivity activity;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        FragmentActivity activity = requireActivity();
+        activity = requireActivity();
         Bundle args = requireArguments();
         packageNames = args.getStringArrayList(ARG_PACKAGES);
         if (packageNames == null) return super.onCreateDialog(savedInstanceState);
@@ -90,14 +97,53 @@ public class BackupDialogFragment extends DialogFragment {
     }
 
     public void handleBackup() {
-        // TODO Handle backup with flags
+        BatchOpsManager batchOpsManager = new BatchOpsManager(activity);
+        batchOpsManager.setFlags(flags);
+        new Thread(() -> {
+            if (!batchOpsManager.performOp(BatchOpsManager.OP_BACKUP, new ArrayList<>(packageNames)).isSuccessful()) {
+                final List<String> failedPackages = batchOpsManager.getLastResult().failedPackages();
+                activity.runOnUiThread(() -> new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
+                        .setTitle(getResources().getQuantityString(R.plurals.alert_failed_to_backup, failedPackages.size(), failedPackages.size()))
+                        .setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, failedPackages), null)
+                        .setNegativeButton(android.R.string.ok, null)
+                        .show());
+            } else {
+                activity.runOnUiThread(() -> Toast.makeText(activity, R.string.the_operation_was_successful, Toast.LENGTH_LONG).show());
+            }
+        }).start();
     }
 
     public void handleRestore() {
-        // TODO Handle restore
+        BatchOpsManager batchOpsManager = new BatchOpsManager(activity);
+        batchOpsManager.setFlags(flags);
+        new Thread(() -> {
+            if (!batchOpsManager.performOp(BatchOpsManager.OP_RESTORE_BACKUP, new ArrayList<>(packageNames)).isSuccessful()) {
+                final List<String> failedPackages = batchOpsManager.getLastResult().failedPackages();
+                activity.runOnUiThread(() -> new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
+                        .setTitle(getResources().getQuantityString(R.plurals.alert_failed_to_restore, failedPackages.size(), failedPackages.size()))
+                        .setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, failedPackages), null)
+                        .setNegativeButton(android.R.string.ok, null)
+                        .show());
+            } else {
+                activity.runOnUiThread(() -> Toast.makeText(activity, R.string.the_operation_was_successful, Toast.LENGTH_LONG).show());
+            }
+        }).start();
     }
 
     public void handleDelete() {
-        // TODO Handle delete
+        BatchOpsManager batchOpsManager = new BatchOpsManager(activity);
+        batchOpsManager.setFlags(flags);
+        new Thread(() -> {
+            if (!batchOpsManager.performOp(BatchOpsManager.OP_DELETE_BACKUP, new ArrayList<>(packageNames)).isSuccessful()) {
+                final List<String> failedPackages = batchOpsManager.getLastResult().failedPackages();
+                activity.runOnUiThread(() -> new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
+                        .setTitle(getResources().getQuantityString(R.plurals.alert_failed_to_delete_backup, failedPackages.size(), failedPackages.size()))
+                        .setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, failedPackages), null)
+                        .setNegativeButton(android.R.string.ok, null)
+                        .show());
+            } else {
+                activity.runOnUiThread(() -> Toast.makeText(activity, R.string.the_operation_was_successful, Toast.LENGTH_LONG).show());
+            }
+        }).start();
     }
 }

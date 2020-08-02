@@ -97,21 +97,21 @@ public class BackupStorageManager implements AutoCloseable {
         if (!backupPath.exists()) {
             if (!backupPath.mkdirs()) return false;
         }
-        // Backup sources
-        for (int i = 0; i<metadataV1.sourceDirs.length; ++i) {
-            // /sdcard/AppManager/source0.tar.gz
-            File backupFile = new File(backupPath, SOURCE_PREFIX + i + BACKUP_FILE_PREFIX);
-            if (!RootShellRunner.runCommand(String.format("/system/bin/tar -czf \"%s\" \"%s\"",
-                    backupFile.getAbsolutePath(), metadataV1.sourceDirs[i])).isSuccessful()) {
+        // Backup source
+        File backupFile = new File(backupPath, SOURCE_PREFIX + BACKUP_FILE_PREFIX);
+        if (!metadataV1.sourceDir.equals("")) {
+            // FIXME: cd to the directory first (only for source)
+            if (!RootShellRunner.runCommand(String.format("tar -czf \"%s\" \"%s\"",
+                    backupFile.getAbsolutePath(), metadataV1.sourceDir)).isSuccessful()) {
                 return false;
             }
             if (backupFile.exists()) {
-                metadataV1.sourceDirsSha256Checksum[i] = PackageUtils.getSha256Checksum(backupFile);
+                metadataV1.sourceDirSha256Checksum = PackageUtils.getSha256Checksum(backupFile);
             } else return false;
         }
         // Backup data
         for (int i = 0; i<metadataV1.dataDirs.length; ++i) {
-            File backupFile = new File(backupPath, DATA_PREFIX + i + BACKUP_FILE_PREFIX);
+            backupFile = new File(backupPath, DATA_PREFIX + i + BACKUP_FILE_PREFIX);
             StringBuilder sb = new StringBuilder("tar -czf \"").append(backupFile.getAbsolutePath()).append("\" \"")
                     .append(metadataV1.dataDirs[i]).append("\"");
             if ((flags & BACKUP_EXCLUDE_CACHE) != 0) {
@@ -152,8 +152,9 @@ public class BackupStorageManager implements AutoCloseable {
         return true;
     }
 
-    public void restore() {
+    public boolean restore() {
         // TODO Handle system apps
+        return false;
     }
 
     public boolean delete_backup() {

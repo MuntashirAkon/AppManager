@@ -33,16 +33,16 @@ public class MetadataManager implements Closeable {
         public String packageName;  // package_name
         public String versionName;  // version_name
         public long versionCode;  // version_code
-        public String[] sourceDirs;  // source_dirs
+        public String sourceDir;  // source_dir
         public String[] dataDirs;  // data_dirs
         public boolean isSystem;  // is_system
         public boolean isSplitApk;  // is_split_apk
         public String[] splitNames;  // split_names
-        public String[] splitSources;  // split_sources, 2 * splitNames.length if public source is different, same index order as splitNames
+        public String[] splitSources;  // split_sources
         public boolean hasRules;  // has_rules
         public long backupTime;  // backup_time
         public String[] certSha256Checksum;  // cert_sha256_checksum
-        public String[] sourceDirsSha256Checksum;  // source_dirs_sha256_checksum
+        public String sourceDirSha256Checksum;  // source_dir_sha256_checksum
         public String[] dataDirsSha256Checksum;  // data_dirs_sha256_checksum
         public int mode = 0;  // mode
         public int version = 1;  // version
@@ -86,7 +86,7 @@ public class MetadataManager implements Closeable {
         metadataV1.packageName = rootObject.getString("package_name");
         metadataV1.versionName = rootObject.getString("version_name");
         metadataV1.versionCode = rootObject.getLong("version_code");
-        metadataV1.sourceDirs = getArrayFromJSONArray(rootObject.getJSONArray("source_dirs"));
+        metadataV1.sourceDir = rootObject.getString("source_dir");
         metadataV1.dataDirs = getArrayFromJSONArray(rootObject.getJSONArray("data_dirs"));
         metadataV1.isSystem = rootObject.getBoolean("is_system");
         metadataV1.isSplitApk = rootObject.getBoolean("is_split_apk");
@@ -95,7 +95,7 @@ public class MetadataManager implements Closeable {
         metadataV1.hasRules = rootObject.getBoolean("has_rules");
         metadataV1.backupTime = rootObject.getLong("backup_time");
         metadataV1.certSha256Checksum = getArrayFromJSONArray(rootObject.getJSONArray("cert_sha256_checksum"));
-        metadataV1.sourceDirsSha256Checksum = getArrayFromJSONArray(rootObject.getJSONArray("source_dirs_sha256_checksum"));
+        metadataV1.sourceDirSha256Checksum = rootObject.getString("source_dir_sha256_checksum");
         metadataV1.dataDirsSha256Checksum = getArrayFromJSONArray(rootObject.getJSONArray("data_dirs_sha256_checksum"));
         metadataV1.mode = rootObject.getInt("mode");
         metadataV1.version = rootObject.getInt("version");
@@ -110,7 +110,7 @@ public class MetadataManager implements Closeable {
             rootObject.put("package_name", metadataV1.packageName);
             rootObject.put("version_name", metadataV1.versionName);
             rootObject.put("version_code", metadataV1.versionCode);
-            rootObject.put("source_dirs", getJSONArrayFromArray(metadataV1.sourceDirs));
+            rootObject.put("source_dir", metadataV1.sourceDir);
             rootObject.put("data_dirs", getJSONArrayFromArray(metadataV1.dataDirs));
             rootObject.put("is_system", metadataV1.isSystem);
             rootObject.put("is_split_apk", metadataV1.isSplitApk);
@@ -119,7 +119,7 @@ public class MetadataManager implements Closeable {
             rootObject.put("has_rules", metadataV1.hasRules);
             rootObject.put("backup_time", metadataV1.backupTime);
             rootObject.put("cert_sha256_checksum", getJSONArrayFromArray(metadataV1.certSha256Checksum));
-            rootObject.put("source_dirs_sha256_checksum", getJSONArrayFromArray(metadataV1.sourceDirsSha256Checksum));
+            rootObject.put("source_dir_sha256_checksum", metadataV1.sourceDirSha256Checksum);
             rootObject.put("data_dirs_sha256_checksum", getJSONArrayFromArray(metadataV1.dataDirsSha256Checksum));
             rootObject.put("mode", metadataV1.mode);
             rootObject.put("version", metadataV1.version);
@@ -156,8 +156,8 @@ public class MetadataManager implements Closeable {
         metadataV1.versionName = packageInfo.versionName;
         metadataV1.versionCode = PackageUtils.getVersionCode(packageInfo);
         if ((flags & BackupStorageManager.BACKUP_APK) != 0)
-            metadataV1.sourceDirs = PackageUtils.getSourceDirs(applicationInfo);
-        else metadataV1.sourceDirs = new String[0];
+            metadataV1.sourceDir = PackageUtils.getSourceDir(applicationInfo);
+        else metadataV1.sourceDir = "";
         if ((flags & BackupStorageManager.BACKUP_DATA) != 0) {
             metadataV1.dataDirs = PackageUtils.getDataDirs(applicationInfo,
                     (flags & BackupStorageManager.BACKUP_EXT_DATA) != 0);
@@ -168,13 +168,7 @@ public class MetadataManager implements Closeable {
             metadataV1.splitNames = applicationInfo.splitNames;
             if (metadataV1.splitNames != null) {
                 metadataV1.isSplitApk = true;
-                ArrayList<String> splitSources = new ArrayList<>(Arrays.asList(applicationInfo.splitSourceDirs));
-                for (int i = 0; i< metadataV1.splitNames.length; ++i) {
-                    if (!applicationInfo.splitSourceDirs[i].equals(applicationInfo.splitPublicSourceDirs[i])) {
-                        splitSources.add(applicationInfo.splitPublicSourceDirs[i]);
-                    }
-                }
-                metadataV1.splitSources = splitSources.toArray(new String[0]);
+                metadataV1.splitSources = applicationInfo.splitPublicSourceDirs;
             }
         }
         if (metadataV1.splitNames == null) metadataV1.splitNames = new String[0];
@@ -188,7 +182,7 @@ public class MetadataManager implements Closeable {
         metadataV1.backupTime = 0;
         metadataV1.certSha256Checksum = PackageUtils.getSigningCertSha256Checksum(packageInfo);
         // Initialize checksums
-        metadataV1.sourceDirsSha256Checksum = new String[metadataV1.sourceDirs.length];
+        metadataV1.sourceDirSha256Checksum = "";
         metadataV1.dataDirsSha256Checksum = new String[metadataV1.dataDirs.length];
         return metadataV1;
     }

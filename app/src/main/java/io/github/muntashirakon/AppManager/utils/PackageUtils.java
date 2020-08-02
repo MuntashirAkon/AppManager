@@ -201,13 +201,10 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static String[] getSourceDirs(@NonNull ApplicationInfo applicationInfo) {
-        ArrayList<String> sourceDirs = new ArrayList<>();
-        sourceDirs.add(new File(applicationInfo.sourceDir).getParent());
-        if (!applicationInfo.sourceDir.equals(applicationInfo.publicSourceDir)) {
-            sourceDirs.add(new File(applicationInfo.publicSourceDir).getParent());
-        }
-        return sourceDirs.toArray(new String[0]);
+    public static String getSourceDir(@NonNull ApplicationInfo applicationInfo) {
+        String sourceDir = new File(applicationInfo.publicSourceDir).getParent(); // or applicationInfo.sourceDir
+        if (sourceDir == null) throw new RuntimeException("Application source directory cannot be empty");
+        return sourceDir;
     }
 
     @NonNull

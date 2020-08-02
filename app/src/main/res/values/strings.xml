@@ -600,4 +600,16 @@
     <string name="restore">Restore</string>
     <string name="delete_backup">Delete backup</string>
     <string name="backup_options">Backup Options</string>
+    <plurals name="alert_failed_to_backup">
+        <item quantity="one">Failed to backup %d app</item>
+        <item quantity="other">Failed to backup %d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_restore">
+        <item quantity="one">Failed to restore %d app</item>
+        <item quantity="other">Failed to restore %d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_delete_backup">
+        <item quantity="one">Failed to delete backup %d app</item>
+        <item quantity="other">Failed to delete backup %d apps</item>
+    </plurals>
 </resources>
