@@ -589,4 +589,8 @@
     <string name="components">Components</string>
     <string name="features">Features</string>
     <string name="whats_new">What\'s New</string>
+    <string name="apply_to_system_apps">Apply to system apps</string>
+    <string name="apply_to_system_apps_question">Apply to system apps as well? Select no if unsure.</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
 </resources>
