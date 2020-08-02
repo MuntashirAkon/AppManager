@@ -453,7 +453,7 @@ public class AppInfoFragment extends Fragment
                         .setOnClickListener(v -> new Thread(() -> {
                     try {
                         // TODO: Add support for split apk
-                        File tmpApkSource = IOUtils.getSharableFile(new File(mApplicationInfo.sourceDir), ".apk");
+                        File tmpApkSource = IOUtils.getSharableFile(new File(mApplicationInfo.publicSourceDir), ".apk");
                         runOnUiThread(() -> {
                             // TODO: Replace with installer session for >= M
                             Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
@@ -492,7 +492,7 @@ public class AppInfoFragment extends Fragment
                     addToHorizontalLayout(R.string.update, R.drawable.ic_baseline_get_app_24)
                             .setOnClickListener(v -> new Thread(() -> {
                         try {
-                            File tmpApkSource = IOUtils.getSharableFile(new File(mApplicationInfo.sourceDir), ".apk");
+                            File tmpApkSource = IOUtils.getSharableFile(new File(mApplicationInfo.publicSourceDir), ".apk");
                             runOnUiThread(() -> {
                                 Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
                                 intent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
@@ -627,8 +627,8 @@ public class AppInfoFragment extends Fragment
         // Paths and directories
         mListItems.add(ListItem.getGroupHeader(getString(R.string.paths_and_directories)));
         // Source directory (apk path)
-        mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.source_dir), mApplicationInfo.sourceDir,
-                openAsFolderInFM(new File(mApplicationInfo.sourceDir).getParent())));
+        mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.source_dir), mApplicationInfo.publicSourceDir,
+                openAsFolderInFM(new File(mApplicationInfo.publicSourceDir).getParent())));
         // Split source directories
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && mApplicationInfo.splitNames != null) {
             int countSplits = mApplicationInfo.splitNames.length;
@@ -636,23 +636,6 @@ public class AppInfoFragment extends Fragment
                 mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.split_no, (i+1),
                         mApplicationInfo.splitNames[i]), mApplicationInfo.splitSourceDirs[i],
                         openAsFolderInFM(new File(mApplicationInfo.splitSourceDirs[i]).getParent())));
-            }
-        }
-        // Public source directory
-        if (!mApplicationInfo.publicSourceDir.equals(mApplicationInfo.sourceDir)) {
-            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.public_source_dir),
-                    mApplicationInfo.publicSourceDir, openAsFolderInFM((new File(
-                            mApplicationInfo.publicSourceDir)).getParent())));
-        }
-        // Public split source directories
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && mApplicationInfo.splitNames != null) {
-            int countSplits = mApplicationInfo.splitNames.length;
-            for (int i = 0; i<countSplits; ++i) {
-                if (!mApplicationInfo.splitPublicSourceDirs[i].equals(mApplicationInfo.splitSourceDirs[i])) {
-                    mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.public_split_no,
-                            (i + 1), mApplicationInfo.splitNames[i]), mApplicationInfo.splitPublicSourceDirs[i],
-                            openAsFolderInFM(new File(mApplicationInfo.splitPublicSourceDirs[i]).getParent())));
-                }
             }
         }
         // Data dir
