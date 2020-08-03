@@ -36,5 +36,11 @@
             android:layout_height="wrap_content"
             android:text="@string/input_app_ops_description" />
 
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/checkbox_system_apps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/apply_to_system_apps" />
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 </ScrollView>

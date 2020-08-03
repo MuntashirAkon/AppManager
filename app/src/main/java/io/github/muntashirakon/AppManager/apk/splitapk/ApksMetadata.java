@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.storage.splitapk;
+package io.github.muntashirakon.AppManager.apk.splitapk;
 
 import android.content.pm.PackageInfo;
 import android.os.Build;

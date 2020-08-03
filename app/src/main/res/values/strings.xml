@@ -175,7 +175,6 @@
     <string name="aurora">Aurora</string>
     <string name="dev_protected_data_dir">Device-protected Data Directory</string>
     <string name="native_library_dir">Native JNI Library Directory</string>
-    <string name="public_source_dir">Public Source Directory</string>
     <string name="process_name">Process Name</string>
     <string name="no_code">No code</string>
     <string name="requested_large_heap">Large heap</string>
@@ -575,7 +574,6 @@
         <item quantity="other">%d splits</item>
     </plurals>
     <string name="split_no">Split#%d: %s</string>
-    <string name="public_split_no">Public Split#%d: %s</string>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">Failed to fetch package info, possibly a split apk</string>
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully">%s is installed successfully</string>
@@ -613,4 +611,8 @@
         <item quantity="one">Failed to delete backup %d app</item>
         <item quantity="other">Failed to delete backup %d apps</item>
     </plurals>
+    <string name="apply_to_system_apps">Apply to system apps</string>
+    <string name="apply_to_system_apps_question">Apply to system apps as well? Select no if unsure.</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
 </resources>

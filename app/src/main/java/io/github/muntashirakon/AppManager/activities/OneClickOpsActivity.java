@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
@@ -43,7 +44,14 @@ public class OneClickOpsActivity extends AppCompatActivity {
     private void setItems() {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_trackers),
                 getString(R.string.block_trackers_description))
-                .setOnClickListener(v -> blockTrackers());
+                .setOnClickListener(v -> {
+                    new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                            .setTitle(R.string.block_trackers)
+                            .setMessage(R.string.apply_to_system_apps_question)
+                            .setPositiveButton(R.string.no, (dialog, which) -> blockTrackers(false))
+                            .setNegativeButton(R.string.yes, ((dialog, which) -> blockTrackers(true)))
+                            .show();
+                });
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_components_dots),
                 getString(R.string.block_components_description))
                 .setOnClickListener(v -> blockComponents());
@@ -59,7 +67,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
         mProgressIndicator.hide();
     }
 
-    private void blockTrackers() {
+    private void blockTrackers(boolean systemApps) {
         if (!AppPref.isRootEnabled()) {
             Toast.makeText(this, R.string.only_works_in_root_mode, Toast.LENGTH_SHORT).show();
             return;
@@ -70,6 +78,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
             HashMap<String, RulesStorageManager.Type> trackersPerPackage;
             for (ApplicationInfo applicationInfo:
                     getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA)) {
+                if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
                 trackersPerPackage = TrackerComponentUtils.getTrackerComponentsForPackage(applicationInfo.packageName);
                 if (!trackersPerPackage.isEmpty()) {
                     trackerCount.put(applicationInfo, trackersPerPackage.size());
@@ -134,6 +143,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
                 .setView(view)
                 .setPositiveButton(R.string.search, (dialog, which) -> {
                     final Editable signaturesEditable = ((TextInputEditText) view.findViewById(R.id.input_signatures)).getText();
+                    final boolean systemApps = ((MaterialCheckBox) view.findViewById(R.id.checkbox_system_apps)).isChecked();
                     if (signaturesEditable == null) return;
                     mProgressIndicator.show();
                     new Thread(() -> {
@@ -143,6 +153,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
                         HashMap<String, RulesStorageManager.Type> componentsPerPackage;
                         for (ApplicationInfo applicationInfo:
                                 getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA)) {
+                            if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
                             componentsPerPackage = PackageUtils.getFilteredComponents(applicationInfo.packageName, signatures);
                             if (!componentsPerPackage.isEmpty())
                                 componentsCount.put(applicationInfo, componentsPerPackage.size());
@@ -209,6 +220,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
                 .setView(view)
                 .setPositiveButton(R.string.search, (dialog, which) -> {
                     final Editable appOpsEditable = ((TextInputEditText) view.findViewById(R.id.input_app_ops)).getText();
+                    final boolean systemApps = ((MaterialCheckBox) view.findViewById(R.id.checkbox_system_apps)).isChecked();
                     if (appOpsEditable == null) return;
                     mProgressIndicator.show();
                     new Thread(() -> {
@@ -228,6 +240,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
                         HashMap<ApplicationInfo, Integer> appOpsCount = new HashMap<>();
                         for (ApplicationInfo applicationInfo:
                                 getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA)) {
+                            if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
                             int size = PackageUtils.getFilteredAppOps(applicationInfo.packageName, appOps).size();
                             if (size > 0) appOpsCount.put(applicationInfo, size);
                         }

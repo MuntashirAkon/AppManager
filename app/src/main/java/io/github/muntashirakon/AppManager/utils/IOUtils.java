@@ -1,7 +1,5 @@
 package io.github.muntashirakon.AppManager.utils;
 
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -22,7 +20,6 @@ import java.util.zip.CRC32;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.storage.splitapk.SplitApkExporter;
 
 public final class IOUtils {
 
@@ -136,19 +133,6 @@ public final class IOUtils {
             } else copy(apkInputStream, apkOutputStream);
         }
         return tmpPublicSource;
-    }
-
-    public static File getSharableApkFile(@NonNull PackageInfo packageInfo) throws Exception {
-        ApplicationInfo info = packageInfo.applicationInfo;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && info.splitNames != null) {
-            // Split apk
-            File tmpPublicSource = File.createTempFile(info.packageName, ".apks", AppManager.getContext().getExternalCacheDir());
-            SplitApkExporter.saveApks(packageInfo, tmpPublicSource);
-            return tmpPublicSource;
-        } else {
-            // Regular apk
-            return getSharableFile(new File(info.publicSourceDir), ".apk");
-        }
     }
 
     public static long calculateFileCrc32(File file) throws IOException {

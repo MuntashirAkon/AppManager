@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.storage.splitapk;
+package io.github.muntashirakon.AppManager.apk.splitapk;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -28,7 +28,7 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
  * label (string), meta_version (long), min_sdk (long), package (string), target_sdk (long),
  * version_code (long), version_name (string), backup_components [ size (long), type (string) ]
  */
-public class SplitApkExporter {
+public final class SplitApkExporter {
     public static void saveApks(PackageInfo packageInfo, File apksFile) throws Exception {
         try (OutputStream outputStream = new FileOutputStream(apksFile);
              ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {

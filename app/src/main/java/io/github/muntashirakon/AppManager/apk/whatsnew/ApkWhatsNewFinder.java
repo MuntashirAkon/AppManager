@@ -1,9 +1,10 @@
-package io.github.muntashirakon.AppManager.utils;
+package io.github.muntashirakon.AppManager.apk.whatsnew;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.Signature;
 import android.os.Build;
@@ -23,6 +24,8 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
 import io.github.muntashirakon.AppManager.storage.compontents.TrackerComponentUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class ApkWhatsNewFinder {
     @IntDef(value = {
@@ -55,11 +58,15 @@ public class ApkWhatsNewFinder {
     }
 
     /**
-     * Get changes for two package info, each PackageInfo must have the follow flags:
-     * GET_METADATA, GET_SIGNING_INFO/GET_SIGNATURES, GET_PERMISSIONS, GET_CONFIGURATIONS,
-     * GET_SHARED_LIBRARY_FILES
-     * @param newPkgInfo The external, new apk info (it has only GET_SIGNATURES flag)
-     * @param oldPkgInfo The installed, old apk info
+     * Get changes between two packages: one is the apk file and other is the installed app
+     * @param newPkgInfo Package info fetched with {@link PackageManager#getPackageArchiveInfo(String, int)}
+     *                   with the following flags: {@link PackageManager#GET_META_DATA}, {@link PackageManager#GET_SIGNATURES}
+     *                   {@link PackageManager#GET_PERMISSIONS}, {@link PackageManager#GET_CONFIGURATIONS},
+     *                   {@link PackageManager#GET_SHARED_LIBRARY_FILES}
+     * @param oldPkgInfo Package info fetched with {@link PackageManager#getPackageInfo(String, int)}
+     *                   with the following flags: {@link PackageManager#GET_META_DATA}, {@link PackageManager#GET_SIGNATURES} or
+     *                   {@link PackageManager#GET_SIGNING_CERTIFICATES}, {@link PackageManager#GET_PERMISSIONS},
+     *                   {@link PackageManager#GET_CONFIGURATIONS}, {@link PackageManager#GET_SHARED_LIBRARY_FILES}
      * @return Changes
      */
     @NonNull
