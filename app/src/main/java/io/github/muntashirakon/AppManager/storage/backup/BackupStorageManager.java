@@ -30,6 +30,7 @@ public class BackupStorageManager implements AutoCloseable {
     })
     public @interface BackupFlags {}
     public static final int BACKUP_NOTHING = 0;
+    @SuppressWarnings("PointlessBitwiseExpression")
     public static final int BACKUP_APK = 1 << 0;
     public static final int BACKUP_DATA = 1 << 1;
     public static final int BACKUP_EXT_DATA = 1 << 2;
@@ -40,6 +41,7 @@ public class BackupStorageManager implements AutoCloseable {
     private static final String DATA_PREFIX = "data";
     private static final String BACKUP_FILE_PREFIX = ".tar.gz";
     private static final String RULES_TSV = "rules.am.tsv";
+    private static final String TMP_BACKUP_SUFFIX = "~";
     @SuppressLint("SdCardPath")
     private static final File DEFAULT_BACKUP_PATH = new File("/sdcard/AppManager");
 
@@ -54,9 +56,15 @@ public class BackupStorageManager implements AutoCloseable {
     }
 
     @NonNull
-    public static File getBackupPath(String packageName) {
+    public static File getBackupPath(@NonNull String packageName) {
         return new File(DEFAULT_BACKUP_PATH, packageName);
     }
+
+    @NonNull
+    public static File getTemporaryBackupPath(@NonNull String packageName) {
+        return new File(DEFAULT_BACKUP_PATH, packageName + TMP_BACKUP_SUFFIX);
+    }
+
 
     private @NonNull String packageName;
     private @NonNull MetadataManager metadataManager;
@@ -67,14 +75,9 @@ public class BackupStorageManager implements AutoCloseable {
         metadataManager = MetadataManager.getInstance(packageName);
         backupPath = getBackupPath(packageName);
         flags = BACKUP_NOTHING;
-        if (backupPath.exists()) {
-            try {
-                metadataManager.readMetadata();
-            } catch (Exception e) {
-                e.printStackTrace();
-                // It was a malformed backup, delete it
-                delete_backup();
-            }
+        if (!backupPath.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            backupPath.mkdirs();
         }
     }
 
@@ -92,26 +95,25 @@ public class BackupStorageManager implements AutoCloseable {
             e.printStackTrace();
             return false;
         }
-        // Delete old backup
-        delete_backup();
-        if (!backupPath.exists()) {
-            if (!backupPath.mkdirs()) return false;
+        // Create a new temporary directory
+        File tmpBackupPath = getTemporaryBackupPath(packageName);
+        if (!tmpBackupPath.exists()) {
+            if (!tmpBackupPath.mkdirs()) return false;
         }
         // Backup source
-        File backupFile = new File(backupPath, SOURCE_PREFIX + BACKUP_FILE_PREFIX);
+        File backupFile = new File(tmpBackupPath, SOURCE_PREFIX + BACKUP_FILE_PREFIX);
         if (!metadataV1.sourceDir.equals("")) {
-            // FIXME: cd to the directory first (only for source)
-            if (!RootShellRunner.runCommand(String.format("tar -czf \"%s\" \"%s\"",
-                    backupFile.getAbsolutePath(), metadataV1.sourceDir)).isSuccessful()) {
-                return false;
+            if (!RootShellRunner.runCommand(String.format("cd \"%s\" && tar -czf \"%s\" .",
+                    metadataV1.sourceDir, backupFile.getAbsolutePath())).isSuccessful()) {
+                return cleanup(tmpBackupPath);
             }
             if (backupFile.exists()) {
                 metadataV1.sourceDirSha256Checksum = PackageUtils.getSha256Checksum(backupFile);
-            } else return false;
+            } else return cleanup(tmpBackupPath);
         }
         // Backup data
         for (int i = 0; i<metadataV1.dataDirs.length; ++i) {
-            backupFile = new File(backupPath, DATA_PREFIX + i + BACKUP_FILE_PREFIX);
+            backupFile = new File(tmpBackupPath, DATA_PREFIX + i + BACKUP_FILE_PREFIX);
             StringBuilder sb = new StringBuilder("tar -czf \"").append(backupFile.getAbsolutePath()).append("\" \"")
                     .append(metadataV1.dataDirs[i]).append("\"");
             if ((flags & BACKUP_EXCLUDE_CACHE) != 0) {
@@ -121,23 +123,23 @@ public class BackupStorageManager implements AutoCloseable {
                         .append(File.separatorChar).append("code_cache").append("\"");
             }
             if (!RootShellRunner.runCommand(sb.toString()).isSuccessful()) {
-                return false;
+                return cleanup(tmpBackupPath);
             }
             if (backupFile.exists()) {
                 metadataV1.dataDirsSha256Checksum[i] = PackageUtils.getSha256Checksum(backupFile);
-            } else return false;
+            } else return cleanup(tmpBackupPath);
         }
         // Export rules
         if (metadataV1.hasRules) {
-            String rulesFile = backupPath.getAbsolutePath() + File.separatorChar + RULES_TSV;
-            try (OutputStream outputStream = new FileOutputStream(new File(rulesFile));
+            File rulesFile = new File(tmpBackupPath, RULES_TSV);
+            try (OutputStream outputStream = new FileOutputStream(rulesFile);
                  ComponentsBlocker cb = ComponentsBlocker.getInstance(AppManager.getContext(), packageName)) {
                 for (RulesStorageManager.Entry entry: cb.getAll()) {
                     outputStream.write(String.format("%s\t%s\t%s\t%s\n", packageName, entry.name, entry.type.name(), entry.extra).getBytes());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                return false;
+                return cleanup(tmpBackupPath);
             }
         }
         metadataV1.backupTime = System.currentTimeMillis();
@@ -147,9 +149,14 @@ public class BackupStorageManager implements AutoCloseable {
             metadataManager.writeMetadata();
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-            return false;
+            return cleanup(tmpBackupPath);
         }
-        return true;
+        // Replace current backup:
+        // There's hardly any chance of getting a false here but checks are done anyway.
+        if (delete_backup() && tmpBackupPath.renameTo(backupPath)) {
+            return true;
+        }
+        return cleanup(tmpBackupPath);
     }
 
     public boolean restore() {
@@ -165,5 +172,10 @@ public class BackupStorageManager implements AutoCloseable {
     @Override
     public void close() {
         metadataManager.close();
+    }
+
+    private boolean cleanup(@NonNull File backupPath) {
+        if (backupPath.exists()) IOUtils.deleteDir(backupPath);
+        return false;
     }
 }

@@ -14,8 +14,6 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
@@ -78,7 +76,7 @@ public class MetadataManager implements Closeable {
     }
 
     synchronized public void readMetadata() throws JSONException {
-        File metadataFile = getMetadataFile();
+        File metadataFile = getMetadataFile(false);
         String metadata = Utils.getFileContent(metadataFile);
         JSONObject rootObject = new JSONObject(metadata);
         metadataV1 = new MetadataV1();
@@ -103,7 +101,7 @@ public class MetadataManager implements Closeable {
 
     synchronized public void writeMetadata() throws IOException, JSONException {
         if (metadataV1 == null) throw new RuntimeException("Metadata is not set.");
-        File metadataFile = getMetadataFile();
+        File metadataFile = getMetadataFile(true);
         try (FileOutputStream fileOutputStream = new FileOutputStream(metadataFile)) {
             JSONObject rootObject = new JSONObject();
             rootObject.put("label", metadataV1.label);
@@ -188,7 +186,8 @@ public class MetadataManager implements Closeable {
     }
 
     @NonNull
-    private File getMetadataFile() {
-        return new File(BackupStorageManager.getBackupPath(packageName), META_FILE);
+    private File getMetadataFile(boolean temporary) {
+        if (temporary) return new File(BackupStorageManager.getTemporaryBackupPath(packageName), META_FILE);
+        else return new File(BackupStorageManager.getBackupPath(packageName), META_FILE);
     }
 }
