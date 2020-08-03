@@ -65,8 +65,7 @@ public class BatchOpsManager {
         this.runner.clear();
         this.packageNames = packageNames;
         switch (op) {
-            case OP_BACKUP_APK:
-                break;
+            case OP_BACKUP_APK: return opBackupApk();
             case OP_BACKUP: return opBackupRestore(BackupDialogFragment.MODE_BACKUP);
             case OP_BLOCK_TRACKERS: return opBlockTrackers();
             case OP_CLEAR_DATA: return opClearData();
@@ -95,6 +94,26 @@ public class BatchOpsManager {
 
     public Result getLastResult() {
         return lastResult;
+    }
+
+    private Result opBackupApk() {
+        List<String> failedPackages = new ArrayList<>();
+        for (String packageName: packageNames) {
+            if (!BackupStorageManager.backupApk(packageName))
+                failedPackages.add(packageName);
+        }
+        return lastResult = new Result() {
+            @Override
+            public boolean isSuccessful() {
+                return failedPackages.size() == 0;
+            }
+
+            @NonNull
+            @Override
+            public List<String> failedPackages() {
+                return failedPackages;
+            }
+        };
     }
 
     private Result opBackupRestore(@BackupDialogFragment.ActionMode int mode) {

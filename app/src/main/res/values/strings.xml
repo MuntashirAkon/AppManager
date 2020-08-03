@@ -600,6 +600,7 @@
     <string name="restore">Restore</string>
     <string name="delete_backup">Delete backup</string>
     <string name="backup_options">Backup Options</string>
+    <string name="failed_to_backup_some_apk_files">Failed to backup some apk files</string>
     <plurals name="alert_failed_to_backup">
         <item quantity="one">Failed to backup %d app</item>
         <item quantity="other">Failed to backup %d apps</item>

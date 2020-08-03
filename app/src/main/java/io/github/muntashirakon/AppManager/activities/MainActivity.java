@@ -233,6 +233,9 @@ public class MainActivity extends AppCompatActivity implements
                 case R.id.action_select_all:
                     mAdapter.selectAll();
                     return true;
+                case R.id.action_backup_apk:
+                    handleBatchOp(BatchOpsManager.OP_BACKUP_APK, R.string.failed_to_backup_some_apk_files);
+                    return true;
                 case R.id.action_block_trackers:
                     handleBatchOp(BatchOpsManager.OP_BLOCK_TRACKERS, R.string.alert_failed_to_disable_trackers);
                     return true;
@@ -260,7 +263,6 @@ public class MainActivity extends AppCompatActivity implements
                 case R.id.action_uninstall:
                     handleBatchOp(BatchOpsManager.OP_UNINSTALL, R.string.alert_failed_to_uninstall);
                     return true;
-                case R.id.action_backup_apk:
                 case R.id.action_backup_data:
                     Toast.makeText(this, "This operation is not supported yet.", Toast.LENGTH_LONG).show();
                     mAdapter.clearSelection();
