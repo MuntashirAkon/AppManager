@@ -378,7 +378,7 @@ public class AppInfoFragment extends Fragment
                                     R.string.uninstall_system_app_message : R.string.uninstall_app_message)
                             .setPositiveButton(R.string.uninstall, (dialog, which) -> new Thread(() -> {
                                 // Try without root first then with root
-                                if (RunnerUtils.uninstallPackage(mPackageName).isSuccessful()) {
+                                if (RunnerUtils.uninstallPackageWithData(mPackageName).isSuccessful()) {
                                     runOnUiThread(() -> {
                                         Toast.makeText(mActivity, getString(R.string.uninstalled_successfully, mPackageLabel), Toast.LENGTH_LONG).show();
                                         mActivity.finish();

@@ -210,6 +210,8 @@ public final class PackageUtils {
     @NonNull
     public static String[] getDataDirs(@NonNull ApplicationInfo applicationInfo, boolean loadExternal) {
         ArrayList<String> dataDirs = new ArrayList<>();
+        if (applicationInfo.dataDir == null)
+            throw new RuntimeException("Data directory cannot be empty.");
         dataDirs.add(applicationInfo.dataDir);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !applicationInfo.dataDir.equals(applicationInfo.deviceProtectedDataDir)) {
             dataDirs.add(applicationInfo.deviceProtectedDataDir);
