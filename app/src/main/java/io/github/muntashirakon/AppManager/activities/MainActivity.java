@@ -43,7 +43,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -684,14 +683,16 @@ public class MainActivity extends AppCompatActivity implements
 
         void clearSelection() {
             synchronized (mAdapterList) {
-                final AtomicInteger itemId = new AtomicInteger();
+                final List<Integer> itemIds = new ArrayList<>();
+                int itemId;
                 for (ApplicationItem applicationItem : mActivity.mModel.getSelectedApplicationItems()) {
-                    itemId.set(mAdapterList.indexOf(applicationItem));
-                    if (itemId.get() == -1) continue;
+                    itemId = mAdapterList.indexOf(applicationItem);
+                    if (itemId == -1) continue;
                     applicationItem.isSelected = false;
-                    mAdapterList.set(itemId.get(), applicationItem);
-                    mActivity.runOnUiThread(() -> notifyItemChanged(itemId.get()));
+                    mAdapterList.set(itemId, applicationItem);
+                    itemIds.add(itemId);
                 }
+                mActivity.runOnUiThread(() -> {for (int id: itemIds) notifyItemChanged(id);});
                 mActivity.mModel.clearSelection();
             }
         }
