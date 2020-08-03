@@ -70,6 +70,7 @@ import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.activities.ClassListingActivity;
 import io.github.muntashirakon.AppManager.activities.ManifestViewerActivity;
 import io.github.muntashirakon.AppManager.activities.SharedPrefsActivity;
+import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.compontents.TrackerComponentUtils;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
@@ -80,6 +81,7 @@ import io.github.muntashirakon.AppManager.utils.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.viewmodels.AppDetailsViewModel;
+import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 
 public class AppInfoFragment extends Fragment
         implements SwipeRefreshLayout.OnRefreshListener {
@@ -188,7 +190,7 @@ public class AppInfoFragment extends Fragment
             case R.id.action_share_apk:
                 new Thread(() -> {
                     try {
-                        File tmpApkSource = IOUtils.getSharableApkFile(mPackageInfo);
+                        File tmpApkSource = ApkUtils.getSharableApkFile(mPackageInfo);
                         runOnUiThread(() -> {
                             Intent intent = ShareCompat.IntentBuilder.from(mActivity)
                                     .setStream(FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID + ".provider", tmpApkSource))

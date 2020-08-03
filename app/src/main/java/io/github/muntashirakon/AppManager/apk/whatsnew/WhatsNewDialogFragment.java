@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.fragments;
+package io.github.muntashirakon.AppManager.apk.whatsnew;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -25,7 +25,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.ApkWhatsNewFinder;
 
 public class WhatsNewDialogFragment extends DialogFragment {
     public static final String TAG = "WhatsNewDialogFragment";
