@@ -50,6 +50,14 @@
         <item>@string/shared_libs</item>
         <item>@string/sdk</item>
     </string-array>
+    <string-array name="backup_flags">
+        <!-- Must be aligned with BackupStorageManager#BackupFlags, starting from 1 -->
+        <item>@string/apk</item>
+        <item>@string/data</item>
+        <item>@string/external_data</item>
+        <item>@string/exclude_cache</item>
+        <item>@string/blocking_rules</item>
+    </string-array>
     <string-array name="tracker_signatures">
         <item>com.facebook.accountkit</item>
         <item>com.ad4screen.sdk</item>

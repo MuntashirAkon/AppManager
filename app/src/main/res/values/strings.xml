@@ -589,6 +589,28 @@
     <string name="components">Components</string>
     <string name="features">Features</string>
     <string name="whats_new">What\'s New</string>
+    <string name="blocking_rules">Blocking rules</string>
+    <string name="exclude_cache">Exclude cache</string>
+    <string name="external_data">External data</string>
+    <string name="data">Data</string>
+    <string name="apk">APK</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
+    <string name="delete_backup">Delete backup</string>
+    <string name="backup_options">Backup Options</string>
+    <string name="failed_to_backup_some_apk_files">Failed to backup some apk files</string>
+    <plurals name="alert_failed_to_backup">
+        <item quantity="one">Failed to backup %d app</item>
+        <item quantity="other">Failed to backup %d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_restore">
+        <item quantity="one">Failed to restore %d app</item>
+        <item quantity="other">Failed to restore %d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_delete_backup">
+        <item quantity="one">Failed to delete backup %d app</item>
+        <item quantity="other">Failed to delete backup %d apps</item>
+    </plurals>
     <string name="apply_to_system_apps">Apply to system apps</string>
     <string name="apply_to_system_apps_question">Apply to system apps as well? Select no if unsure.</string>
     <string name="no">No</string>
