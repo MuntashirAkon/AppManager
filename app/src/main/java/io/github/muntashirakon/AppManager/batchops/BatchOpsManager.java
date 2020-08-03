@@ -9,6 +9,7 @@ import java.util.Locale;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.fragments.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.storage.backup.BackupStorageManager;
@@ -99,8 +100,7 @@ public class BatchOpsManager {
     private Result opBackupApk() {
         List<String> failedPackages = new ArrayList<>();
         for (String packageName: packageNames) {
-            if (!BackupStorageManager.backupApk(packageName))
-                failedPackages.add(packageName);
+            if (!ApkUtils.backupApk(packageName)) failedPackages.add(packageName);
         }
         return lastResult = new Result() {
             @Override

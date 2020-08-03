@@ -20,8 +20,8 @@ import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.storage.backup.BackupStorageManager;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
-import static io.github.muntashirakon.AppManager.usage.Utils.getPackageLabel;
 import static io.github.muntashirakon.AppManager.utils.Utils.requestExternalStoragePermissions;
 
 public class BackupDialogFragment extends DialogFragment {
@@ -56,7 +56,7 @@ public class BackupDialogFragment extends DialogFragment {
         // Set external data to false
         checkedItems[2] = false;
         return new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
-                .setTitle(packageNames.size() == 1 ? getPackageLabel(activity
+                .setTitle(packageNames.size() == 1 ? PackageUtils.getPackageLabel(activity
                         .getPackageManager(), packageNames.get(0)) : getString(R.string.backup_options))
                 .setMultiChoiceItems(R.array.backup_flags, checkedItems, (dialog, which, isChecked) -> {
                     if (isChecked) flags |= (1 << which);

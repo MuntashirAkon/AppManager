@@ -16,7 +16,6 @@ import android.os.RemoteException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +25,7 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 
 public class AppUsageStatsManager {
@@ -54,12 +54,12 @@ public class AppUsageStatsManager {
         }
     }
 
-    public PackageUS getUsageStatsForPackage(@NonNull String packageName, @Utils.IntervalType int usage_interval) {
+    public PackageUS getUsageStatsForPackage(@NonNull String packageName, @UsageUtils.IntervalType int usage_interval) {
         PackageUS packageUS = new PackageUS(packageName);
-        packageUS.appLabel = Utils.getPackageLabel(mPackageManager, packageName);
+        packageUS.appLabel = PackageUtils.getPackageLabel(mPackageManager, packageName);
         if (mUsageStatsManager == null) return packageUS;
 
-        Tuple<Long, Long> range = Utils.getTimeInterval(usage_interval);
+        Tuple<Long, Long> range = UsageUtils.getTimeInterval(usage_interval);
         UsageEvents events = mUsageStatsManager.queryEvents(range.getFirst(), range.getSecond());
         UsageEvents.Event event = new UsageEvents.Event();
         List<USEntry> usEntries = new ArrayList<>();
@@ -91,18 +91,17 @@ public class AppUsageStatsManager {
      * a running application. This is a valid assumption since <code>Activity#onPause()</code> is
      * called whenever an app goes to background and <code>Activity#onResume</code> is called
      * whenever an app appears in foreground.
-     * @param sort Sorting order TODO
      * @param usage_interval Usage interval
      * @return A list of package usage
      */
-    public List<PackageUS> getUsageStats(int sort, @Utils.IntervalType int usage_interval) {
+    public List<PackageUS> getUsageStats(@UsageUtils.IntervalType int usage_interval) {
         List<PackageUS> screenTimeList = new ArrayList<>();
         if (mUsageStatsManager == null) return screenTimeList;
         Map<String, Long> screenTimes = new HashMap<>();
         Map<String, Long> lastUse = new HashMap<>();
         Map<String, Integer> accessCount = new HashMap<>();
         // Get events
-        Tuple<Long, Long> interval = Utils.getTimeInterval(usage_interval);
+        Tuple<Long, Long> interval = UsageUtils.getTimeInterval(usage_interval);
         UsageEvents events = mUsageStatsManager.queryEvents(interval.getFirst(), interval.getSecond());
         UsageEvents.Event event = new UsageEvents.Event();
         long startTime;
@@ -155,14 +154,14 @@ public class AppUsageStatsManager {
         }
         for(String packageName: screenTimes.keySet()) {
             // Skip not installed packages
-            if (!Utils.isInstalled(mPackageManager, packageName)) continue;
+            if (!PackageUtils.isInstalled(mPackageManager, packageName)) continue;
             PackageUS packageUS = new PackageUS(packageName);
-            packageUS.appLabel = Utils.getPackageLabel(mPackageManager, packageName);
+            packageUS.appLabel = PackageUtils.getPackageLabel(mPackageManager, packageName);
             packageUS.timesOpened = accessCount.get(packageName);
             packageUS.lastUsageTime = lastUse.get(packageName);
             packageUS.screenTime = screenTimes.get(packageName);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                String key = "u" + Utils.getAppUid(mPackageManager, packageName);
+                String key = "u" + PackageUtils.getAppUid(mPackageManager, packageName);
                 if (mobileData.containsKey(key))
                     packageUS.mobileData = mobileData.get(key);
                 else packageUS.mobileData = new Tuple<>(0L, 0L);
@@ -178,9 +177,9 @@ public class AppUsageStatsManager {
 
     @TargetApi(23)
     @NonNull
-    private Map<String, Tuple<Long, Long>> getMobileData(@NonNull NetworkStatsManager nsm, @Utils.IntervalType int usage_interval) {
+    private Map<String, Tuple<Long, Long>> getMobileData(@NonNull NetworkStatsManager nsm, @UsageUtils.IntervalType int usage_interval) {
         Map<String, Tuple<Long, Long>> result = new HashMap<>();
-        Tuple<Long, Long> range  = Utils.getTimeInterval(usage_interval);
+        Tuple<Long, Long> range  = UsageUtils.getTimeInterval(usage_interval);
         Map<String, Long> txData = new HashMap<>();
         Map<String, Long> rxData = new HashMap<>();
         NetworkStats networkStats;
@@ -212,9 +211,9 @@ public class AppUsageStatsManager {
 
     @TargetApi(23)
     @NonNull
-    private Map<String, Tuple<Long, Long>> getWifiData(@NonNull NetworkStatsManager nsm, @Utils.IntervalType int usage_interval) {
+    private Map<String, Tuple<Long, Long>> getWifiData(@NonNull NetworkStatsManager nsm, @UsageUtils.IntervalType int usage_interval) {
         Map<String, Tuple<Long, Long>> result = new HashMap<>();
-        Tuple<Long, Long> range  = Utils.getTimeInterval(usage_interval);
+        Tuple<Long, Long> range  = UsageUtils.getTimeInterval(usage_interval);
         Map<String, Long> txData = new HashMap<>();
         Map<String, Long> rxData = new HashMap<>();
         NetworkStats networkStats;
@@ -246,14 +245,14 @@ public class AppUsageStatsManager {
     @TargetApi(23)
     @NonNull
     public static Tuple<Tuple<Long, Long>, Tuple<Long, Long>> getWifiMobileUsageForPackage(
-            @NonNull Context context, String mPackageName, @Utils.IntervalType int usage_interval) {
+            @NonNull Context context, String mPackageName, @UsageUtils.IntervalType int usage_interval) {
         long totalWifiTx = 0;
         long totalWifiRx = 0;
         long totalMobileTx = 0;
         long totalMobileRx = 0;
         NetworkStatsManager networkStatsManager = (NetworkStatsManager) context.getSystemService(Context.NETWORK_STATS_SERVICE);
-        int targetUid = Utils.getAppUid(context.getPackageManager(), mPackageName);
-        Tuple<Long, Long> range = Utils.getTimeInterval(usage_interval);
+        int targetUid = PackageUtils.getAppUid(context.getPackageManager(), mPackageName);
+        Tuple<Long, Long> range = UsageUtils.getTimeInterval(usage_interval);
         try {
             if (networkStatsManager != null) {
                 NetworkStats networkStats = networkStatsManager.querySummary(NetworkCapabilities.TRANSPORT_WIFI, null, range.getFirst(), range.getSecond());

@@ -1,7 +1,5 @@
 package io.github.muntashirakon.AppManager.usage;
 
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.os.SystemClock;
 
 import java.util.Calendar;
@@ -11,7 +9,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 
-public class Utils {
+public final class UsageUtils {
     public static final int ONE_DAY = 86400000;
 
     @IntDef(value = {
@@ -25,33 +23,6 @@ public class Utils {
     public static final int USAGE_YESTERDAY = 1;
     public static final int USAGE_WEEKLY = 2;
     public static final int USAGE_LAST_BOOT = 5;
-
-    @NonNull
-    public static String getPackageLabel(@NonNull PackageManager packageManager, String packageName) {
-        try {
-            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName,
-                    PackageManager.GET_META_DATA);
-            return packageManager.getApplicationLabel(applicationInfo).toString();
-        } catch (PackageManager.NameNotFoundException ignore) {}
-        return packageName;
-    }
-
-    public static boolean isInstalled(@NonNull PackageManager packageManager, String packageName) {
-        ApplicationInfo applicationInfo = null;
-        try {
-            applicationInfo = packageManager.getApplicationInfo(packageName, 0);
-        } catch (PackageManager.NameNotFoundException ignore) {}
-        return applicationInfo != null;
-    }
-
-    public static int getAppUid(@NonNull PackageManager packageManager, String packageName) {
-        ApplicationInfo applicationInfo;
-        try {
-            applicationInfo = packageManager.getApplicationInfo(packageName, 0);
-            return applicationInfo.uid;
-        } catch (PackageManager.NameNotFoundException ignore) {}
-        return 0;
-    }
 
     @NonNull
     public static Tuple<Long, Long> getTimeInterval(@IntervalType int sort) {

@@ -1,17 +1,14 @@
 package io.github.muntashirakon.AppManager.storage.backup;
 
 import android.annotation.SuppressLint;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.FileUtils;
 
 import org.json.JSONException;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -22,7 +19,6 @@ import java.util.List;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
 import io.github.muntashirakon.AppManager.storage.RulesImporter;
 import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
@@ -102,42 +98,6 @@ public class BackupStorageManager implements AutoCloseable {
 
     public void setFlags(int flags) {
         this.flags = flags;
-    }
-
-    /**
-     * Backup the given apk (both root and non root). This is similar to apk sharing feature except
-     * that these are saved at /sdcard/AppManager/apks
-     * @return true on success, false on failure
-     */
-    public static boolean backupApk(String packageName) {
-        File backupPath = getApkBackupDirectory();
-        if (!backupPath.exists()) {
-            if (!backupPath.mkdirs()) return false;
-        }
-        // Fetch package info
-        try {
-            PackageInfo packageInfo = AppManager.getContext().getPackageManager().getPackageInfo(packageName, 0);
-            ApplicationInfo info = packageInfo.applicationInfo;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && info.splitNames != null) {
-                // Split apk
-                File tmpPublicSource = new File(backupPath, info.packageName + ".apks");
-                SplitApkExporter.saveApks(packageInfo, tmpPublicSource);
-                return true;
-            } else {
-                // Regular apk
-                File tmpPublicSource = new File(backupPath, info.packageName + ".apk");
-                try (FileInputStream apkInputStream = new FileInputStream(info.publicSourceDir);
-                     FileOutputStream apkOutputStream = new FileOutputStream(tmpPublicSource)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        FileUtils.copy(apkInputStream, apkOutputStream);
-                    } else IOUtils.copy(apkInputStream, apkOutputStream);
-                }
-                return true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     public boolean backup() {

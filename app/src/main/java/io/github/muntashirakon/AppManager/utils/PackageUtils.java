@@ -195,6 +195,33 @@ public final class PackageUtils {
         return runningServices;
     }
 
+    @NonNull
+    public static String getPackageLabel(@NonNull PackageManager packageManager, String packageName) {
+        try {
+            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName,
+                    PackageManager.GET_META_DATA);
+            return packageManager.getApplicationLabel(applicationInfo).toString();
+        } catch (PackageManager.NameNotFoundException ignore) {}
+        return packageName;
+    }
+
+    public static boolean isInstalled(@NonNull PackageManager packageManager, String packageName) {
+        ApplicationInfo applicationInfo = null;
+        try {
+            applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+        } catch (PackageManager.NameNotFoundException ignore) {}
+        return applicationInfo != null;
+    }
+
+    public static int getAppUid(@NonNull PackageManager packageManager, String packageName) {
+        ApplicationInfo applicationInfo;
+        try {
+            applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+            return applicationInfo.uid;
+        } catch (PackageManager.NameNotFoundException ignore) {}
+        return 0;
+    }
+
     public static long getVersionCode(PackageInfo packageInfo) {
         return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? packageInfo.getLongVersionCode()
                 : packageInfo.versionCode);

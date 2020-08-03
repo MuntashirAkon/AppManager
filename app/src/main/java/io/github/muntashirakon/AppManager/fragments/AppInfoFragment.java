@@ -74,6 +74,7 @@ import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.storage.compontents.TrackerComponentUtils;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
+import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -759,11 +760,12 @@ public class AppInfoFragment extends Fragment
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
                     try {
-                        final Tuple<Tuple<Long, Long>, Tuple<Long, Long>> dataUsage = AppUsageStatsManager
-                                .getWifiMobileUsageForPackage(mActivity, mPackageName,
-                                        io.github.muntashirakon.AppManager.usage.Utils.USAGE_LAST_BOOT);
-                        setDataUsageHelper(getReadableSize(dataUsage.getFirst().getFirst() + dataUsage.getSecond().getFirst()),
-                                getReadableSize(dataUsage.getFirst().getSecond() + dataUsage.getSecond().getSecond()));
+                        final Tuple<Tuple<Long, Long>, Tuple<Long, Long>> dataUsage;
+                        dataUsage = AppUsageStatsManager.getWifiMobileUsageForPackage(mActivity,
+                                mPackageName, UsageUtils.USAGE_LAST_BOOT);
+                        setDataUsageHelper(getReadableSize(dataUsage.getFirst().getFirst() +
+                                dataUsage.getSecond().getFirst()), getReadableSize(dataUsage
+                                .getFirst().getSecond() + dataUsage.getSecond().getSecond()));
                     } catch (SecurityException e) {
                         runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_get_data_usage_information, Toast.LENGTH_SHORT).show());
                         e.printStackTrace();

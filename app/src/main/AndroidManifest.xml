@@ -36,7 +36,7 @@
             android:name=".activities.SharedPrefsActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.AppUsageActivity"
+            android:name=".usage.AppUsageActivity"
             android:exported="false"
             android:permission="android.permission.PACKAGE_USAGE_STATS" />
         <activity

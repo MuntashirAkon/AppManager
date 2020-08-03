@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.activities;
+package io.github.muntashirakon.AppManager.usage;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -44,15 +44,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fragments.AppUsageDetailsDialogFragment;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
-import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
-import io.github.muntashirakon.AppManager.usage.Utils.IntervalType;
+import io.github.muntashirakon.AppManager.usage.UsageUtils.IntervalType;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_LAST_BOOT;
-import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_TODAY;
-import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_WEEKLY;
-import static io.github.muntashirakon.AppManager.usage.Utils.USAGE_YESTERDAY;
+import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_LAST_BOOT;
+import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_TODAY;
+import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_WEEKLY;
+import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_YESTERDAY;
 
 public class AppUsageActivity extends AppCompatActivity implements ListView.OnItemClickListener,
         SwipeRefreshLayout.OnRefreshListener {
@@ -267,7 +266,7 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
         new Thread(() -> {
             int _try = 5; // try to get usage stat 5 times
             do {
-                mPackageUSList = AppUsageStatsManager.getInstance(this).getUsageStats(0, current_interval);
+                mPackageUSList = AppUsageStatsManager.getInstance(this).getUsageStats(current_interval);
             } while (0 != --_try && mPackageUSList.size() == 0);
             totalScreenTime = 0;
             for (AppUsageStatsManager.PackageUS appItem : mPackageUSList)
