@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.storage.compontents;
+package io.github.muntashirakon.AppManager.rules.compontents;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -20,9 +20,9 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.RunnerUtils;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
 /**
  * Block application components: activities, broadcasts, services and providers.

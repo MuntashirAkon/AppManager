@@ -13,10 +13,10 @@ import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.fragments.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.storage.backup.BackupStorageManager;
-import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.storage.compontents.ExternalComponentsImporter;
-import io.github.muntashirakon.AppManager.utils.RunnerUtils;
+import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
 // TODO: Will be converted to service one day
 public class BatchOpsManager {

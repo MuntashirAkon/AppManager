@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.fragments;
+package io.github.muntashirakon.AppManager.sharedpref;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;

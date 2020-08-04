@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.storage;
+package io.github.muntashirakon.AppManager.rules;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -14,7 +14,7 @@ import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 
 /**
  * Export rules to external directory either for a single package or multiple packages.

@@ -20,9 +20,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.storage.RulesExporter;
-import io.github.muntashirakon.AppManager.storage.RulesImporter;
-import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RulesExporter;
+import io.github.muntashirakon.AppManager.rules.RulesImporter;
+import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 
 public class RulesTypeSelectionDialogFragment extends DialogFragment {
     public static final String TAG = "RulesTypeSelectionDialogFragment";
@@ -71,6 +72,9 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
                 .setPositiveButton(getResources().getString(mode == MODE_IMPORT ?
                         R.string.pref_import : R.string.pref_export), (dialog1, which) -> {
                     Log.d("TestImportExport", "Types: " + mSelectedTypes.toString() + "\nURI: " + mUri.toString());
+                    if (activity instanceof SettingsActivity) {
+                        ((SettingsActivity) activity).progressIndicator.show();
+                    }
                     if (mode == MODE_IMPORT) handleImport();
                     else handleExport();
                 })
@@ -87,6 +91,9 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
             } catch (IOException e) {
                 activity.runOnUiThread(() -> Toast.makeText(activity, R.string.export_failed, Toast.LENGTH_LONG).show());
             }
+            if (activity instanceof SettingsActivity) {
+                activity.runOnUiThread(() -> ((SettingsActivity) activity).progressIndicator.hide());
+            }
         }).start();
     }
 
@@ -99,6 +106,9 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
                 activity.runOnUiThread(() -> Toast.makeText(activity, R.string.the_import_was_successful, Toast.LENGTH_LONG).show());
             } catch (IOException e) {
                 activity.runOnUiThread(() -> Toast.makeText(activity, R.string.import_failed, Toast.LENGTH_LONG).show());
+            }
+            if (activity instanceof SettingsActivity) {
+                activity.runOnUiThread(() -> ((SettingsActivity) activity).progressIndicator.hide());
             }
         }).start();
     }

@@ -1,9 +1,8 @@
-package io.github.muntashirakon.AppManager.utils;
+package io.github.muntashirakon.AppManager.runner;
 
 import android.os.Build;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.AppManager.runner.Runner;
 
 public final class RunnerUtils {
     public static final String CMD_PM = Build.VERSION.SDK_INT >= 28 ? "cmd package" : "pm";

@@ -22,8 +22,8 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
-import io.github.muntashirakon.AppManager.storage.compontents.TrackerComponentUtils;
+import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.compontents.TrackerComponentUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 

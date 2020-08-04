@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.activities;
+package io.github.muntashirakon.AppManager.details;
 
 // NOTE: Commented lines were taken from View2ManifestActivity.java
 

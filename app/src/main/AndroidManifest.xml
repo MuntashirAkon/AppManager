@@ -30,20 +30,20 @@
             android:exported="false"
             android:label="@string/running_apps" />
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.SharedPrefsActivity"
+            android:name=".sharedpref.SharedPrefsActivity"
             android:exported="false" />
         <activity
             android:name=".usage.AppUsageActivity"
             android:exported="false"
             android:permission="android.permission.PACKAGE_USAGE_STATS" />
         <activity
-            android:name=".activities.ClassViewerActivity"
+            android:name=".details.ClassViewerActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.ClassListingActivity"
+            android:name=".details.ClassListingActivity"
             android:exported="true"
             android:label="@string/exodus">
             <intent-filter>
@@ -69,7 +69,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.AppDetailsActivity"
+            android:name=".details.AppDetailsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:label="@string/app_info" >
@@ -84,7 +84,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.ManifestViewerActivity"
+            android:name=".details.ManifestViewerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:label="@string/manifest_viewer">

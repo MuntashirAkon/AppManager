@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.fragments;
+package io.github.muntashirakon.AppManager.details;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -66,22 +66,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
-import io.github.muntashirakon.AppManager.activities.ClassListingActivity;
-import io.github.muntashirakon.AppManager.activities.ManifestViewerActivity;
-import io.github.muntashirakon.AppManager.activities.SharedPrefsActivity;
+import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
+import io.github.muntashirakon.AppManager.fragments.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.storage.compontents.TrackerComponentUtils;
+import io.github.muntashirakon.AppManager.rules.compontents.TrackerComponentUtils;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.RunnerUtils;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
-import io.github.muntashirakon.AppManager.viewmodels.AppDetailsViewModel;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 
 public class AppInfoFragment extends Fragment

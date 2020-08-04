@@ -35,7 +35,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import io.github.muntashirakon.AppManager.activities.MainActivity;
-import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.types.ApplicationItem;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Tuple;

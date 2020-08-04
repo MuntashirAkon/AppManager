@@ -1,7 +1,7 @@
-package io.github.muntashirakon.AppManager.viewmodels;
+package io.github.muntashirakon.AppManager.details;
 
 import androidx.lifecycle.ViewModel;
-import io.github.muntashirakon.AppManager.fragments.AppDetailsFragment;
+import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 
 public class AppDetailsFragmentViewModel extends ViewModel {
     private @AppDetailsFragment.Property int neededProperty = 0;  // ACTIVITY

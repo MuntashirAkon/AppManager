@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.fragments;
+package io.github.muntashirakon.AppManager.settings;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -26,7 +26,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.storage.compontents.ExternalComponentsImporter;
+import io.github.muntashirakon.AppManager.fragments.RulesTypeSelectionDialogFragment;
+import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 
 public class ImportExportDialogFragment extends DialogFragment {
@@ -41,12 +42,12 @@ public class ImportExportDialogFragment extends DialogFragment {
     private static final int RESULT_CODE_WATT = 711;
     private static final int RESULT_CODE_BLOCKER = 459;
 
-    private FragmentActivity activity;
+    private SettingsActivity activity;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        activity = requireActivity();
+        activity = (SettingsActivity) requireActivity();
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
         @SuppressLint("InflateParams")
@@ -59,7 +60,6 @@ public class ImportExportDialogFragment extends DialogFragment {
             intent.setType(MIME_TSV);
             intent.putExtra(Intent.EXTRA_TITLE, fileName);
             startActivityForResult(intent, RESULT_CODE_EXPORT);
-            dismiss();
         });
         view.findViewById(R.id.import_internal).setOnClickListener(v -> {
             Intent intent = new Intent()
@@ -67,7 +67,6 @@ public class ImportExportDialogFragment extends DialogFragment {
                     .setType(MIME_TSV)
                     .setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RESULT_CODE_IMPORT);
-            dismiss();
         });
         view.findViewById(R.id.import_existing).setOnClickListener(v -> new Thread(() -> {
             List<String> packageList = new ArrayList<>();
@@ -76,7 +75,6 @@ public class ImportExportDialogFragment extends DialogFragment {
                 packageList.add(applicationInfo.packageName);
             }
             List<String> failedPackages = ExternalComponentsImporter.applyFromExistingBlockList(requireContext(), packageList);
-            dismiss();
             if (failedPackages.isEmpty()) {
                 handler.post(() -> Toast.makeText(requireContext(), R.string.the_import_was_successful, Toast.LENGTH_SHORT).show());
             } else {
@@ -95,7 +93,6 @@ public class ImportExportDialogFragment extends DialogFragment {
                     .setType(MIME_XML)
                     .setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RESULT_CODE_WATT);
-            dismiss();
         });
         view.findViewById(R.id.import_blocker).setOnClickListener(v -> {
             Intent intent = new Intent()
@@ -104,7 +101,6 @@ public class ImportExportDialogFragment extends DialogFragment {
                     .setType(MIME_JSON)
                     .setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RESULT_CODE_BLOCKER);
-            dismiss();
         });
         return new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
                 .setView(view)
@@ -166,6 +162,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                     dialogFragment.setArguments(args);
                     activity.getSupportFragmentManager().popBackStackImmediate();
                     dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+                    if (getDialog() != null) getDialog().cancel();
                 }
             } else if (requestCode == RESULT_CODE_IMPORT) {
                 if (data != null) {
@@ -177,6 +174,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                     dialogFragment.setArguments(args);
                     activity.getSupportFragmentManager().popBackStackImmediate();
                     dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+                    if (getDialog() != null) getDialog().cancel();
                 }
             }
         }

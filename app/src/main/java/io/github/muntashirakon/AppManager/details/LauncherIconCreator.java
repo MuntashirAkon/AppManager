@@ -3,12 +3,11 @@
 // and was authored by Adam M. Szalkowski with ISC License.
 // All derivative works are licensed under GPLv3.0.
 
-package io.github.muntashirakon.AppManager.utils;
+package io.github.muntashirakon.AppManager.details;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ShortcutInfo;

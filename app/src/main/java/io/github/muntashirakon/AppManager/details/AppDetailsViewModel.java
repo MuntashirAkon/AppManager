@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.viewmodels;
+package io.github.muntashirakon.AppManager.details;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
@@ -26,7 +26,6 @@ import android.util.Log;
 import com.google.classysharkandroid.utils.UriUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,15 +42,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.fragments.AppDetailsFragment;
-import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
-import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.storage.compontents.TrackerComponentUtils;
-import io.github.muntashirakon.AppManager.types.AppDetailsComponentItem;
-import io.github.muntashirakon.AppManager.types.AppDetailsItem;
-import io.github.muntashirakon.AppManager.types.AppDetailsPermissionItem;
+import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.rules.compontents.TrackerComponentUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.RunnerUtils;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class AppDetailsViewModel extends AndroidViewModel {

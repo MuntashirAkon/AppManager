@@ -12,7 +12,6 @@ import android.os.Build;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
@@ -33,7 +32,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 
 public final class PackageUtils {
     @SuppressWarnings("RegExpRedundantEscape")

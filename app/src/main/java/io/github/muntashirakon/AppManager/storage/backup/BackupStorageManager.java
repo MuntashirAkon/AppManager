@@ -20,12 +20,12 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
-import io.github.muntashirakon.AppManager.storage.RulesImporter;
-import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
-import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.rules.RulesImporter;
+import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.RunnerUtils;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
 public class BackupStorageManager implements AutoCloseable {
     @IntDef(flag = true, value = {

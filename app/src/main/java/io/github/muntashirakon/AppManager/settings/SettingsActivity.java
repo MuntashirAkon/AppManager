@@ -1,5 +1,6 @@
-package io.github.muntashirakon.AppManager.activities;
+package io.github.muntashirakon.AppManager.settings;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spanned;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.Arrays;
@@ -20,8 +22,8 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.text.HtmlCompat;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.fragments.ImportExportDialogFragment;
-import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.activities.MainActivity;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -31,13 +33,15 @@ public class SettingsActivity extends AppCompatActivity {
 
     private AppPref appPref;
     private int currentTheme;
+    public ProgressIndicator progressIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         setSupportActionBar(findViewById(R.id.toolbar));
-        findViewById(R.id.progress_linear).setVisibility(View.GONE);
+        progressIndicator = findViewById(R.id.progress_linear);
+        progressIndicator.hide();
         appPref = AppPref.getInstance();
 
         final SwitchMaterial rootSwitcher = findViewById(R.id.root_toggle_btn);
@@ -98,6 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
                 .show(getSupportFragmentManager(), ImportExportDialogFragment.TAG));
 
         findViewById(R.id.about_view).setOnClickListener(v -> {
+            @SuppressLint("InflateParams")
             View view = getLayoutInflater().inflate(R.layout.dialog_about, null);
             ((TextView) view.findViewById(R.id.version)).setText(String.format(Locale.ROOT,
                     "%s (%d)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));

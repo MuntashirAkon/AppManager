@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.activities;
+package io.github.muntashirakon.AppManager.details;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -15,8 +15,6 @@ import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
-import java.io.IOException;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -29,10 +27,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.fragments.AppDetailsFragment;
-import io.github.muntashirakon.AppManager.fragments.AppInfoFragment;
 import io.github.muntashirakon.AppManager.utils.Utils;
-import io.github.muntashirakon.AppManager.viewmodels.AppDetailsViewModel;
 
 public class AppDetailsActivity extends AppCompatActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";

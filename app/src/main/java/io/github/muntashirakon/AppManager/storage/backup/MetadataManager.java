@@ -17,7 +17,7 @@ import java.io.IOException;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.storage.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 

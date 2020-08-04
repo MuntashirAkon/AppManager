@@ -42,7 +42,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.fragments.AppUsageDetailsDialogFragment;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.usage.UsageUtils.IntervalType;
 import io.github.muntashirakon.AppManager.utils.Tuple;

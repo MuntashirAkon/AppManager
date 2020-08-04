@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.storage;
+package io.github.muntashirakon.AppManager.rules;
 
 import android.content.Context;
 
@@ -20,7 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.utils.RunnerUtils;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
 public class RulesStorageManager implements Closeable {
     @StringDef(value = {

@@ -3,7 +3,7 @@
 // and was authored by Adam M. Szalkowski with ISC License.
 // All derivative works are licensed under GPLv3.0.
 
-package io.github.muntashirakon.AppManager.fragments;
+package io.github.muntashirakon.AppManager.details;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -30,7 +30,6 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
 
 public class EditShortcutDialogFragment extends DialogFragment {
     static final String ARG_ACTIVITY_INFO = "activityInfo";

@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.types;
+package io.github.muntashirakon.AppManager.details;
 
 import android.content.pm.PermissionInfo;
 

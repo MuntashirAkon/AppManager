@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.fragments;
+package io.github.muntashirakon.AppManager.details;
 
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
@@ -52,21 +52,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.activities.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
-import io.github.muntashirakon.AppManager.storage.compontents.ExternalComponentsImporter;
-import io.github.muntashirakon.AppManager.types.AppDetailsComponentItem;
-import io.github.muntashirakon.AppManager.types.AppDetailsItem;
-import io.github.muntashirakon.AppManager.types.AppDetailsPermissionItem;
+import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
-import io.github.muntashirakon.AppManager.viewmodels.AppDetailsFragmentViewModel;
-import io.github.muntashirakon.AppManager.viewmodels.AppDetailsViewModel;
 
 public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener {

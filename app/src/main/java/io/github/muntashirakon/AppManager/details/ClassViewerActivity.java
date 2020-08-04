@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.activities;
+package io.github.muntashirakon.AppManager.details;
 
 // NOTE: Patterns here are taken from https://github.com/billthefarmer/editor
 // Some of them might be slightly modified

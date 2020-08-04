@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.fragments;
+package io.github.muntashirakon.AppManager.usage;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -28,7 +28,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class AppUsageDetailsDialogFragment extends DialogFragment {

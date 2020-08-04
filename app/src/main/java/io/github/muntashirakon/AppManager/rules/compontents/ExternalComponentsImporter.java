@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.storage.compontents;
+package io.github.muntashirakon.AppManager.rules.compontents;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -26,7 +26,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;

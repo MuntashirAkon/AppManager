@@ -1,10 +1,10 @@
-package io.github.muntashirakon.AppManager.storage.compontents;
+package io.github.muntashirakon.AppManager.rules.compontents;
 
 import java.util.HashMap;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.StaticDataset;
-import io.github.muntashirakon.AppManager.storage.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public final class TrackerComponentUtils {

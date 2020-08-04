@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.activities;
+package io.github.muntashirakon.AppManager.sharedpref;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -44,7 +44,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.fragments.EditPrefItemFragment;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
