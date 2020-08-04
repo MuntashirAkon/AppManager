@@ -66,6 +66,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.misc.RequestCodes;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.fragments.RulesTypeSelectionDialogFragment;
@@ -95,9 +96,6 @@ public class AppInfoFragment extends Fragment
     private static final String ACTIVITY_NAME_AURORA_STORE = "com.aurora.store.ui.details.DetailsActivity";
 
     private static final String MIME_TSV = "text/tab-separated-values";
-
-    private static final int REQUEST_CODE_BATCH_EXPORT = 441;
-    private static final int REQUEST_CODE_INSTALL_PKG  = 815;
 
     private PackageManager mPackageManager;
     private String mPackageName;
@@ -217,7 +215,7 @@ public class AppInfoFragment extends Fragment
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType(MIME_TSV);
                 intent.putExtra(Intent.EXTRA_TITLE, fileName);
-                startActivityForResult(intent, REQUEST_CODE_BATCH_EXPORT);
+                startActivityForResult(intent, RequestCodes.REQUEST_CODE_BATCH_EXPORT);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -225,7 +223,7 @@ public class AppInfoFragment extends Fragment
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == REQUEST_CODE_BATCH_EXPORT && resultCode == Activity.RESULT_OK) {
+        if (requestCode == RequestCodes.REQUEST_CODE_BATCH_EXPORT && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
                 Bundle args = new Bundle();
@@ -237,7 +235,7 @@ public class AppInfoFragment extends Fragment
                 dialogFragment.setArguments(args);
                 dialogFragment.show(mActivity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
             }
-        } else if (requestCode == REQUEST_CODE_INSTALL_PKG) {
+        } else if (requestCode == RequestCodes.REQUEST_CODE_INSTALL_PKG) {
             if (resultCode == Activity.RESULT_OK) {
                 Toast.makeText(mActivity, getString(R.string.package_name_is_installed_successfully, mPackageLabel), Toast.LENGTH_SHORT).show();
             } else if (resultCode == Activity.RESULT_FIRST_USER) {
@@ -468,7 +466,7 @@ public class AppInfoFragment extends Fragment
                             } else {
                                 intent.setDataAndType(Uri.fromFile(tmpApkSource), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
                             }
-                            startActivityForResult(intent, REQUEST_CODE_INSTALL_PKG);
+                            startActivityForResult(intent, RequestCodes.REQUEST_CODE_INSTALL_PKG);
                         });
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -506,7 +504,7 @@ public class AppInfoFragment extends Fragment
                                 } else {
                                     intent.setDataAndType(Uri.fromFile(tmpApkSource), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
                                 }
-                                startActivityForResult(intent, REQUEST_CODE_INSTALL_PKG);
+                                startActivityForResult(intent, RequestCodes.REQUEST_CODE_INSTALL_PKG);
                             });
                         } catch (Exception e) {
                             e.printStackTrace();

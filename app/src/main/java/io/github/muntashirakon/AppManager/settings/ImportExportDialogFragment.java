@@ -24,9 +24,9 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fragments.RulesTypeSelectionDialogFragment;
+import io.github.muntashirakon.AppManager.misc.RequestCodes;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 
@@ -36,11 +36,6 @@ public class ImportExportDialogFragment extends DialogFragment {
     private static final String MIME_JSON = "application/json";
     private static final String MIME_TSV = "text/tab-separated-values";
     private static final String MIME_XML = "text/xml";
-
-    private static final int RESULT_CODE_EXPORT = 849;
-    private static final int RESULT_CODE_IMPORT = 247;
-    private static final int RESULT_CODE_WATT = 711;
-    private static final int RESULT_CODE_BLOCKER = 459;
 
     private SettingsActivity activity;
 
@@ -59,14 +54,14 @@ public class ImportExportDialogFragment extends DialogFragment {
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType(MIME_TSV);
             intent.putExtra(Intent.EXTRA_TITLE, fileName);
-            startActivityForResult(intent, RESULT_CODE_EXPORT);
+            startActivityForResult(intent, RequestCodes.REQUEST_CODE_EXPORT);
         });
         view.findViewById(R.id.import_internal).setOnClickListener(v -> {
             Intent intent = new Intent()
                     .addCategory(Intent.CATEGORY_OPENABLE)
                     .setType(MIME_TSV)
                     .setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RESULT_CODE_IMPORT);
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RequestCodes.REQUEST_CODE_IMPORT);
         });
         view.findViewById(R.id.import_existing).setOnClickListener(v -> new Thread(() -> {
             List<String> packageList = new ArrayList<>();
@@ -92,7 +87,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                     .addCategory(Intent.CATEGORY_OPENABLE)
                     .setType(MIME_XML)
                     .setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RESULT_CODE_WATT);
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RequestCodes.REQUEST_CODE_WATT);
         });
         view.findViewById(R.id.import_blocker).setOnClickListener(v -> {
             Intent intent = new Intent()
@@ -100,7 +95,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                     .addCategory(Intent.CATEGORY_OPENABLE)
                     .setType(MIME_JSON)
                     .setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RESULT_CODE_BLOCKER);
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RequestCodes.REQUEST_CODE_BLOCKER);
         });
         return new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
                 .setView(view)
@@ -112,7 +107,7 @@ public class ImportExportDialogFragment extends DialogFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == RESULT_CODE_WATT) {
+            if (requestCode == RequestCodes.REQUEST_CODE_WATT) {
                 if (data != null) {
                     List<Uri> uriList = new ArrayList<>();
                     if (data.getClipData() != null) {
@@ -132,7 +127,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                     }
                     if (getDialog() != null) getDialog().cancel();
                 }
-            } else if (requestCode == RESULT_CODE_BLOCKER) {
+            } else if (requestCode == RequestCodes.REQUEST_CODE_BLOCKER) {
                 if (data != null) {
                     List<Uri> uriList = new ArrayList<>();
                     if (data.getClipData() != null) {
@@ -152,7 +147,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                     }
                     if (getDialog() != null) getDialog().cancel();
                 }
-            } else if (requestCode == RESULT_CODE_EXPORT) {
+            } else if (requestCode == RequestCodes.REQUEST_CODE_EXPORT) {
                 if (data != null) {
                     RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
                     Bundle args = new Bundle();
@@ -164,7 +159,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                     dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
                     if (getDialog() != null) getDialog().cancel();
                 }
-            } else if (requestCode == RESULT_CODE_IMPORT) {
+            } else if (requestCode == RequestCodes.REQUEST_CODE_IMPORT) {
                 if (data != null) {
                     RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
                     Bundle args = new Bundle();

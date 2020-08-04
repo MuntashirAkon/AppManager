@@ -67,6 +67,7 @@ import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.fragments.RulesTypeSelectionDialogFragment;
+import io.github.muntashirakon.AppManager.misc.RequestCodes;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.types.ApplicationItem;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
@@ -89,8 +90,6 @@ public class MainActivity extends AppCompatActivity implements
     private static final String ACTIVITY_NAME_TERMUX = "com.termux.app.TermuxActivity";
 
     private static final String MIME_TSV = "text/tab-separated-values";
-
-    private static final int REQUEST_CODE_BATCH_EXPORT = 441;
 
     /**
      * A list of packages separated by \r\n.
@@ -257,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements
                     intent.addCategory(Intent.CATEGORY_OPENABLE);
                     intent.setType(MIME_TSV);
                     intent.putExtra(Intent.EXTRA_TITLE, fileName);
-                    startActivityForResult(intent, REQUEST_CODE_BATCH_EXPORT);
+                    startActivityForResult(intent, RequestCodes.REQUEST_CODE_BATCH_EXPORT);
                     return true;
                 case R.id.action_kill_process:
                     handleBatchOp(BatchOpsManager.OP_KILL, R.string.alert_failed_to_kill);
@@ -282,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_CODE_BATCH_EXPORT) {
+            if (requestCode == RequestCodes.REQUEST_CODE_BATCH_EXPORT) {
                 if (data != null) {
                     RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
                     Bundle args = new Bundle();
