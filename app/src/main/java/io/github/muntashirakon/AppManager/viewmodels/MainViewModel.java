@@ -219,7 +219,9 @@ public class MainViewModel extends AndroidViewModel {
 
     private void filterItemsByQuery(@NonNull List<ApplicationItem> applicationItems) {
         List<ApplicationItem> filteredApplicationItems = new ArrayList<>();
-        for (ApplicationItem item: applicationItems) {
+        ApplicationItem item;
+        for (int i = 0; i <applicationItems.size(); ++i) {
+            item = applicationItems.get(i);
             if (item.label.toLowerCase(Locale.ROOT).contains(searchQuery)
                     || item.applicationInfo.packageName.toLowerCase(Locale.ROOT).contains(searchQuery))
                 filteredApplicationItems.add(item);
@@ -239,7 +241,9 @@ public class MainViewModel extends AndroidViewModel {
             if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_RULES) != 0) {
                 loadBlockingRules();
             }
-            for (ApplicationItem item : applicationItems) {
+            ApplicationItem item;
+            for (int i = 0; i <applicationItems.size(); ++i) {
+                item = applicationItems.get(i);
                 if ((mFilterFlags & MainActivity.FILTER_USER_APPS) != 0 && item.isUser) {
                     filteredApplicationItems.add(item);
                 } else if ((mFilterFlags & MainActivity.FILTER_SYSTEM_APPS) != 0 && !item.isUser) {
@@ -418,7 +422,9 @@ public class MainViewModel extends AndroidViewModel {
 
     @Nullable
     private ApplicationItem getApplicationItemFromApplicationItems(String packageName) {
-        for (ApplicationItem item: applicationItems) {
+        ApplicationItem item;
+        for (int i = 0; i<applicationItems.size(); ++i) {
+            item = applicationItems.get(i);
             if (item.applicationInfo.packageName.equals(packageName)) return item;
         }
         return null;
@@ -427,8 +433,11 @@ public class MainViewModel extends AndroidViewModel {
     @NonNull
     private String[] getPackagesForUid(int uid) {
         List<String> packages = new LinkedList<>();
-        for (ApplicationItem item: applicationItems)
+        ApplicationItem item;
+        for (int i = 0; i<applicationItems.size(); ++i) {
+            item = applicationItems.get(i);
             if (item.applicationInfo.uid == uid) packages.add(item.applicationInfo.packageName);
+        }
         return packages.toArray(new String[0]);
     }
 
