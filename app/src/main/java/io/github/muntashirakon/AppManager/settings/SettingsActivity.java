@@ -22,7 +22,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.text.HtmlCompat;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.activities.MainActivity;
+import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.utils.AppPref;

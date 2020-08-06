@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.viewmodels;
+package io.github.muntashirakon.AppManager.main;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
@@ -34,9 +34,8 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import io.github.muntashirakon.AppManager.activities.MainActivity;
+import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.types.ApplicationItem;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -50,6 +49,7 @@ public class MainViewModel extends AndroidViewModel {
     private @MainActivity.SortOrder int mSortBy;
     private @MainActivity.Filter int mFilterFlags;
     private String searchQuery;
+    private List<String> backupApplications;
     private Set<String> selectedPackages = new HashSet<>();
     private List<ApplicationItem> selectedApplicationItems = new LinkedList<>();
     private int flagSigningInfo;
@@ -80,7 +80,7 @@ public class MainViewModel extends AndroidViewModel {
     public ApplicationItem deselect(@NonNull ApplicationItem item) {
         int i = applicationItems.indexOf(item);
         if (i == -1) return item;
-        selectedPackages.remove(item.applicationInfo.packageName);
+        selectedPackages.remove(item.packageName);
         selectedApplicationItems.remove(item);
         item.isSelected = false;
         applicationItems.set(i, item);
@@ -90,7 +90,7 @@ public class MainViewModel extends AndroidViewModel {
     public ApplicationItem select(@NonNull ApplicationItem item) {
         int i = applicationItems.indexOf(item);
         if (i == -1) return item;
-        selectedPackages.add(item.applicationInfo.packageName);
+        selectedPackages.add(item.packageName);
         item.isSelected = true;
         applicationItems.set(i, item);
         selectedApplicationItems.add(item);
@@ -166,19 +166,26 @@ public class MainViewModel extends AndroidViewModel {
         new Thread(() -> {
             synchronized (applicationItems) {
                 applicationItems.clear();
+                backupApplications = BackupUtils.getBackupApplications();
+                Log.d("backupApplications", backupApplications.toString());
                 if (MainActivity.packageList != null) {
                     String[] packageList = MainActivity.packageList.split("[\\r\\n]+");
                     for (String packageName : packageList) {
-                        ApplicationItem item = new ApplicationItem();
                         try {
                             PackageInfo packageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA | flagSigningInfo);
                             ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-                            item.applicationInfo = applicationInfo;
-                            item.star = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+                            ApplicationItem item = new ApplicationItem(applicationInfo);
+                            if (backupApplications.contains(packageName)) {
+                                item.metadataV1 = BackupUtils.getBackupInfo(packageName);
+                                backupApplications.remove(packageName);
+                            }
+                            item.flags = applicationInfo.flags;
+                            item.uid = applicationInfo.uid;
+                            item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
                             item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
                             item.isDisabled = !applicationInfo.enabled;
                             item.label = applicationInfo.loadLabel(mPackageManager).toString();
-                            item.date = packageInfo.lastUpdateTime; // .firstInstallTime;
+                            item.lastUpdateTime = packageInfo.lastUpdateTime; // .firstInstallTime;
                             item.sha = Utils.getIssuerAndAlg(packageInfo);
                             if (Build.VERSION.SDK_INT >= 26) {
                                 item.size = (long) -1 * applicationInfo.targetSdkVersion;
@@ -189,9 +196,14 @@ public class MainViewModel extends AndroidViewModel {
                 } else {
                     List<ApplicationInfo> applicationInfoList = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
                     for (ApplicationInfo applicationInfo : applicationInfoList) {
-                        ApplicationItem item = new ApplicationItem();
-                        item.applicationInfo = applicationInfo;
-                        item.star = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+                        ApplicationItem item = new ApplicationItem(applicationInfo);
+                        if (backupApplications.contains(applicationInfo.packageName)) {
+                            item.metadataV1 = BackupUtils.getBackupInfo(applicationInfo.packageName);
+                            backupApplications.remove(applicationInfo.packageName);
+                        }
+                        item.flags = applicationInfo.flags;
+                        item.uid = applicationInfo.uid;
+                        item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
                         item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
                         item.isDisabled = !applicationInfo.enabled;
                         item.label = applicationInfo.loadLabel(mPackageManager).toString();
@@ -201,14 +213,26 @@ public class MainViewModel extends AndroidViewModel {
                         try {
                             PackageInfo packageInfo = mPackageManager.getPackageInfo(applicationInfo.packageName, flagSigningInfo);
                             item.sha = Utils.getIssuerAndAlg(packageInfo);
-                            item.date = packageInfo.lastUpdateTime; // .firstInstallTime;
+                            item.lastUpdateTime = packageInfo.lastUpdateTime; // .firstInstallTime;
                         } catch (PackageManager.NameNotFoundException e) {
-                            item.date = 0L;
+                            item.lastUpdateTime = 0L;
                             item.sha = new Tuple<>("?", "?");
                         }
                         item.blockedCount = 0;
                         applicationItems.add(item);
                     }
+                }
+                for (String packageName: backupApplications) {
+                    ApplicationItem item = new ApplicationItem();
+                    item.packageName = packageName;
+                    item.metadataV1 = BackupUtils.getBackupInfo(packageName);
+                    if (item.metadataV1 == null) continue;
+                    item.label = item.metadataV1.label;
+                    item.lastUpdateTime = item.metadataV1.backupTime;
+                    item.isUser = !item.metadataV1.isSystem;
+                    item.isDisabled = false;
+                    item.isInstalled = false;
+                    applicationItems.add(item);
                 }
                 if (Build.VERSION.SDK_INT <= 25) loadPackageSize();
                 sortApplicationList(mSortBy);
@@ -223,7 +247,7 @@ public class MainViewModel extends AndroidViewModel {
         for (int i = 0; i <applicationItems.size(); ++i) {
             item = applicationItems.get(i);
             if (item.label.toLowerCase(Locale.ROOT).contains(searchQuery)
-                    || item.applicationInfo.packageName.toLowerCase(Locale.ROOT).contains(searchQuery))
+                    || item.packageName.toLowerCase(Locale.ROOT).contains(searchQuery))
                 filteredApplicationItems.add(item);
         }
         mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
@@ -265,7 +289,7 @@ public class MainViewModel extends AndroidViewModel {
     private void loadBlockingRules() {
         for (int i = 0; i<applicationItems.size(); ++i) {
             ApplicationItem applicationItem = applicationItems.get(i);
-            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(getApplication(), applicationItem.applicationInfo.packageName, true)) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(getApplication(), applicationItem.packageName, true)) {
                 applicationItem.blockedCount = cb.componentCount();
             }
             applicationItems.set(i, applicationItem);
@@ -277,13 +301,15 @@ public class MainViewModel extends AndroidViewModel {
             applicationItems.set(i, getSizeForPackage(applicationItems.get(i)));
     }
 
+    @NonNull
     private ApplicationItem getSizeForPackage(@NonNull final ApplicationItem item) {
+        if (!item.isInstalled) return item;
         try {
             @SuppressWarnings("JavaReflectionMemberAccess")
             Method getPackageSizeInfo = PackageManager.class.getMethod("getPackageSizeInfo",
                     String.class, IPackageStatsObserver.class);
 
-            getPackageSizeInfo.invoke(mPackageManager, item.applicationInfo.packageName, new IPackageStatsObserver.Stub() {
+            getPackageSizeInfo.invoke(mPackageManager, item.packageName, new IPackageStatsObserver.Stub() {
                 @Override
                 public void onGetStatsCompleted(final PackageStats pStats, final boolean succeeded) {
                     if (succeeded) {
@@ -309,29 +335,34 @@ public class MainViewModel extends AndroidViewModel {
                 case MainActivity.SORT_BY_APP_LABEL:
                     return sCollator.compare(o1.label, o2.label);
                 case MainActivity.SORT_BY_PACKAGE_NAME:
-                    return o1.applicationInfo.packageName.compareTo(o2.applicationInfo.packageName);
+                    return o1.packageName.compareTo(o2.packageName);
                 case MainActivity.SORT_BY_DOMAIN:
-                    boolean isSystem1 = (o1.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                    boolean isSystem2 = (o2.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+                    boolean isSystem1 = (o1.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+                    boolean isSystem2 = (o2.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
                     return Utils.compareBooleans(isSystem1, isSystem2);
                 case MainActivity.SORT_BY_LAST_UPDATE:
                     // Sort in decreasing order
-                    return -o1.date.compareTo(o2.date);
+                    return -o1.lastUpdateTime.compareTo(o2.lastUpdateTime);
                 case MainActivity.SORT_BY_APP_SIZE_OR_SDK:
                     return -o1.size.compareTo(o2.size);
                 case MainActivity.SORT_BY_SHARED_ID:
-                    return o2.applicationInfo.uid - o1.applicationInfo.uid;
+                    return o2.uid - o1.uid;
                 case MainActivity.SORT_BY_SHA:
-                    try {
-                        return o1.sha.compareTo(o2.sha);
-                    } catch (NullPointerException ignored) {}
+                    if (o1.sha == null && o2.sha != null) return 0;
+                    else if (o1.sha == null) return -1;
+                    else if (o2.sha == null) return +1;
+                    else {
+                        try {
+                            return o1.sha.compareTo(o2.sha);
+                        } catch (NullPointerException ignored) {}
+                    }
                     break;
                 case MainActivity.SORT_BY_BLOCKED_COMPONENTS:
                     if (isRootEnabled)
                         return -o1.blockedCount.compareTo(o2.blockedCount);
                     break;
                 case MainActivity.SORT_BY_DISABLED_APP:
-                    return Utils.compareBooleans(o1.applicationInfo.enabled, o2.applicationInfo.enabled);
+                    return Utils.compareBooleans(!o1.isDisabled, !o2.isDisabled);
             }
             return 0;
         });
@@ -386,7 +417,7 @@ public class MainViewModel extends AndroidViewModel {
 
     private void insertApplicationItemInApplicationItems(ApplicationItem item) {
         for (int i = 0; i<applicationItems.size(); ++i) {
-            if (applicationItems.get(i).applicationInfo.packageName.equals(item.applicationInfo.packageName)) {
+            if (applicationItems.get(i).packageName.equals(item.packageName)) {
                 applicationItems.set(i, item);
             }
         }
@@ -394,16 +425,18 @@ public class MainViewModel extends AndroidViewModel {
 
     @Nullable
     private ApplicationItem getNewApplicationItem(String packageName) {
-        ApplicationItem item = new ApplicationItem();
         try {
             PackageInfo packageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA | flagSigningInfo);
             ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-            item.applicationInfo = applicationInfo;
+            ApplicationItem item = new ApplicationItem(applicationInfo);
+            item.metadataV1 = BackupUtils.getBackupInfo(packageName);
+            item.flags = applicationInfo.flags;
+            item.uid = applicationInfo.uid;
             item.label = applicationInfo.loadLabel(mPackageManager).toString();
-            item.star = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+            item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
             item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
             item.isDisabled = !applicationInfo.enabled;
-            item.date = packageInfo.lastUpdateTime; // .firstInstallTime;
+            item.lastUpdateTime = packageInfo.lastUpdateTime; // .firstInstallTime;
             item.sha = Utils.getIssuerAndAlg(packageInfo);
             if (Build.VERSION.SDK_INT >= 26) {
                 item.size = (long) -1 * applicationInfo.targetSdkVersion;
@@ -425,7 +458,7 @@ public class MainViewModel extends AndroidViewModel {
         ApplicationItem item;
         for (int i = 0; i<applicationItems.size(); ++i) {
             item = applicationItems.get(i);
-            if (item.applicationInfo.packageName.equals(packageName)) return item;
+            if (item.packageName.equals(packageName)) return item;
         }
         return null;
     }
@@ -436,7 +469,7 @@ public class MainViewModel extends AndroidViewModel {
         ApplicationItem item;
         for (int i = 0; i<applicationItems.size(); ++i) {
             item = applicationItems.get(i);
-            if (item.applicationInfo.uid == uid) packages.add(item.applicationInfo.packageName);
+            if (item.uid == uid) packages.add(item.packageName);
         }
         return packages.toArray(new String[0]);
     }

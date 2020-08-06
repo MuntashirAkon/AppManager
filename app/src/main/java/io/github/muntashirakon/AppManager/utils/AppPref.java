@@ -13,7 +13,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.activities.MainActivity;
+import io.github.muntashirakon.AppManager.main.MainActivity;
 
 public class AppPref {
     private static final String PREF_NAME = "preferences";

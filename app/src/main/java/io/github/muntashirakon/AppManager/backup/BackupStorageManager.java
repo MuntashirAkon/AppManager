@@ -52,7 +52,7 @@ public class BackupStorageManager implements AutoCloseable {
     private static final String BACKUP_FILE_PREFIX = ".tar.gz";
     private static final String RULES_TSV = "rules.am.tsv";
     private static final String TMP_BACKUP_SUFFIX = "~";
-    private static final String APK_SAVING_DIRECTORY = "apks";
+    static final String APK_SAVING_DIRECTORY = "apks";
     @SuppressLint("SdCardPath")
     private static final File DEFAULT_BACKUP_PATH = new File("/sdcard/AppManager");
 
@@ -66,19 +66,23 @@ public class BackupStorageManager implements AutoCloseable {
         return instance;
     }
 
+    public static File getBackupDirectory() {
+        return DEFAULT_BACKUP_PATH;
+    }
+
     @NonNull
     public static File getBackupPath(@NonNull String packageName) {
-        return new File(DEFAULT_BACKUP_PATH, packageName);
+        return new File(getBackupDirectory(), packageName);
     }
 
     @NonNull
     public static File getTemporaryBackupPath(@NonNull String packageName) {
-        return new File(DEFAULT_BACKUP_PATH, packageName + TMP_BACKUP_SUFFIX);
+        return new File(getBackupDirectory(), packageName + TMP_BACKUP_SUFFIX);
     }
 
     @NonNull
     public static File getApkBackupDirectory() {
-        return new File(DEFAULT_BACKUP_PATH, APK_SAVING_DIRECTORY);
+        return new File(getBackupDirectory(), APK_SAVING_DIRECTORY);
     }
 
     private @NonNull String packageName;

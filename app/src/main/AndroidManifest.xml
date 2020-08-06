@@ -57,7 +57,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".main.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round">

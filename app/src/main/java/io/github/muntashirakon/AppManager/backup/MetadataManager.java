@@ -5,6 +5,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,7 +22,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-public class MetadataManager implements Closeable {
+public final class MetadataManager implements Closeable {
     public static final String META_FILE = "meta.am.v1";
 
     // For an extended documentation, see https://github.com/MuntashirAkon/AppManager/issues/30
@@ -56,13 +57,17 @@ public class MetadataManager implements Closeable {
         return metadataManager;
     }
 
+    public static boolean hasMetadata(String packageName) {
+        return new File(BackupStorageManager.getBackupPath(packageName), META_FILE).exists();
+    }
+
     @Override
     public void close() {}
 
     private @NonNull String packageName;
     private MetadataV1 metadataV1;
     private AppManager appManager;
-    private MetadataManager(@NonNull String packageName) {
+    MetadataManager(@NonNull String packageName) {
         this.packageName = packageName;
         this.appManager = AppManager.getInstance();
     }
@@ -78,6 +83,7 @@ public class MetadataManager implements Closeable {
     synchronized public void readMetadata() throws JSONException {
         File metadataFile = getMetadataFile(false);
         String metadata = Utils.getFileContent(metadataFile);
+        if (TextUtils.isEmpty(metadata)) throw new JSONException("Empty JSON string");
         JSONObject rootObject = new JSONObject(metadata);
         metadataV1 = new MetadataV1();
         metadataV1.label = rootObject.getString("label");
