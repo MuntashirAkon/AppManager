@@ -14,7 +14,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
-import static io.github.muntashirakon.AppManager.storage.backup.BackupStorageManager.getApkBackupDirectory;
+import static io.github.muntashirakon.AppManager.backup.BackupStorageManager.getApkBackupDirectory;
 import static io.github.muntashirakon.AppManager.utils.IOUtils.copy;
 
 public final class ApkUtils {

@@ -69,7 +69,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.RequestCodes;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
-import io.github.muntashirakon.AppManager.fragments.RulesTypeSelectionDialogFragment;
+import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.rules.compontents.TrackerComponentUtils;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;

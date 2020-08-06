@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.storage.backup;
+package io.github.muntashirakon.AppManager.backup;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ApplicationInfo;

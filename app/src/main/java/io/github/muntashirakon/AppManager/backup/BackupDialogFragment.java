@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.fragments;
+package io.github.muntashirakon.AppManager.backup;
 
 import android.app.Dialog;
 import android.content.pm.PackageManager;
@@ -17,7 +17,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
-import io.github.muntashirakon.AppManager.storage.backup.BackupStorageManager;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 import static io.github.muntashirakon.AppManager.utils.Utils.requestExternalStoragePermissions;

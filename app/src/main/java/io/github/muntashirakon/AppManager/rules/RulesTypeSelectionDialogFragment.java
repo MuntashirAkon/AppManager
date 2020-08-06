@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.fragments;
+package io.github.muntashirakon.AppManager.rules;
 
 import android.app.Dialog;
 import android.net.Uri;
@@ -20,9 +20,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.rules.RulesExporter;
-import io.github.muntashirakon.AppManager.rules.RulesImporter;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 
 public class RulesTypeSelectionDialogFragment extends DialogFragment {
