@@ -257,7 +257,7 @@ public class BackupStorageManager implements AutoCloseable {
             }
             if (packageInfo == null) return false;  // Failed to (re)install package
             // Restore source: Get installed source directory and copy backups directly
-            String sourceDir = packageInfo.applicationInfo.publicSourceDir;
+            String sourceDir = new File(packageInfo.applicationInfo.publicSourceDir).getParent();
             // TODO: Handle split apk
             if (!RootShellRunner.runCommand(String.format("tar -xzf \"%s\" -C \"%s\"",
                     backupSourceFile, sourceDir)).isSuccessful()) {
