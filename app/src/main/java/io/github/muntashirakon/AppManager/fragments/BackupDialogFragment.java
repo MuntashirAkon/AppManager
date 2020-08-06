@@ -3,8 +3,6 @@ package io.github.muntashirakon.AppManager.fragments;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -25,6 +23,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import static io.github.muntashirakon.AppManager.utils.Utils.requestExternalStoragePermissions;
 
 public class BackupDialogFragment extends DialogFragment {
+    public static final String TAG = "BackupDialogFragment";
     public static final String ARG_PACKAGES = "ARG_PACKAGES";
 
     @IntDef(value = {
@@ -43,6 +42,16 @@ public class BackupDialogFragment extends DialogFragment {
     private @ActionMode int mode = MODE_BACKUP;
     private List<String> packageNames;
     FragmentActivity activity;
+
+    public interface ActionCompleteInterface {
+        void onActionComplete(@ActionMode int mode, @NonNull String[] failedPackages);
+    }
+
+    private @Nullable ActionCompleteInterface listener;
+
+    public void setOnActionCompleteListener(@NonNull ActionCompleteInterface actionCompleteListener) {
+        this.listener = actionCompleteListener;
+    }
 
     @NonNull
     @Override
@@ -65,19 +74,19 @@ public class BackupDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.backup, (dialog, which) -> {
                     mode = MODE_BACKUP;
                     if (requestExternalStoragePermissions(activity)) {
-                        handleBackup();
+                        handleMode();
                     }
                 })
                 .setNegativeButton(R.string.restore, (dialog, which) -> {
                     mode = MODE_RESTORE;
                     if (requestExternalStoragePermissions(activity)) {
-                        handleRestore();
+                        handleMode();
                     }
                 })
                 .setNeutralButton(R.string.delete_backup, (dialog, which) -> {
                     mode = MODE_DELETE;
                     if (requestExternalStoragePermissions(activity)) {
-                        handleDelete();
+                        handleMode();
                     }
                 })
                 .create();
@@ -87,62 +96,24 @@ public class BackupDialogFragment extends DialogFragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-            switch (mode) {
-                case MODE_BACKUP: handleBackup(); break;
-                case MODE_DELETE: handleDelete(); break;
-                case MODE_RESTORE: handleRestore(); break;
-            }
+                && grantResults[1] == PackageManager.PERMISSION_GRANTED) handleMode();
+    }
+
+    public void handleMode() {
+        BatchOpsManager batchOpsManager = new BatchOpsManager(activity);
+        batchOpsManager.setFlags(flags);
+        @BatchOpsManager.OpType int op;
+        switch (mode) {
+            case MODE_DELETE: op = BatchOpsManager.OP_DELETE_BACKUP; break;
+            case MODE_RESTORE: op = BatchOpsManager.OP_RESTORE_BACKUP; break;
+            case MODE_BACKUP:
+            default: op = BatchOpsManager.OP_BACKUP;
         }
-    }
-
-    public void handleBackup() {
-        BatchOpsManager batchOpsManager = new BatchOpsManager(activity);
-        batchOpsManager.setFlags(flags);
         new Thread(() -> {
-            if (!batchOpsManager.performOp(BatchOpsManager.OP_BACKUP, new ArrayList<>(packageNames)).isSuccessful()) {
-                final List<String> failedPackages = batchOpsManager.getLastResult().failedPackages();
-                activity.runOnUiThread(() -> new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
-                        .setTitle(getResources().getQuantityString(R.plurals.alert_failed_to_backup, failedPackages.size(), failedPackages.size()))
-                        .setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, failedPackages), null)
-                        .setNegativeButton(android.R.string.ok, null)
-                        .show());
-            } else {
-                activity.runOnUiThread(() -> Toast.makeText(activity, R.string.the_operation_was_successful, Toast.LENGTH_LONG).show());
-            }
-        }).start();
-    }
-
-    public void handleRestore() {
-        BatchOpsManager batchOpsManager = new BatchOpsManager(activity);
-        batchOpsManager.setFlags(flags);
-        new Thread(() -> {
-            if (!batchOpsManager.performOp(BatchOpsManager.OP_RESTORE_BACKUP, new ArrayList<>(packageNames)).isSuccessful()) {
-                final List<String> failedPackages = batchOpsManager.getLastResult().failedPackages();
-                activity.runOnUiThread(() -> new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
-                        .setTitle(getResources().getQuantityString(R.plurals.alert_failed_to_restore, failedPackages.size(), failedPackages.size()))
-                        .setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, failedPackages), null)
-                        .setNegativeButton(android.R.string.ok, null)
-                        .show());
-            } else {
-                activity.runOnUiThread(() -> Toast.makeText(activity, R.string.the_operation_was_successful, Toast.LENGTH_LONG).show());
-            }
-        }).start();
-    }
-
-    public void handleDelete() {
-        BatchOpsManager batchOpsManager = new BatchOpsManager(activity);
-        batchOpsManager.setFlags(flags);
-        new Thread(() -> {
-            if (!batchOpsManager.performOp(BatchOpsManager.OP_DELETE_BACKUP, new ArrayList<>(packageNames)).isSuccessful()) {
-                final List<String> failedPackages = batchOpsManager.getLastResult().failedPackages();
-                activity.runOnUiThread(() -> new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
-                        .setTitle(getResources().getQuantityString(R.plurals.alert_failed_to_delete_backup, failedPackages.size(), failedPackages.size()))
-                        .setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, failedPackages), null)
-                        .setNegativeButton(android.R.string.ok, null)
-                        .show());
-            } else {
-                activity.runOnUiThread(() -> Toast.makeText(activity, R.string.the_operation_was_successful, Toast.LENGTH_LONG).show());
+            batchOpsManager.performOp(op, new ArrayList<>(packageNames));
+            if (listener != null) {
+                activity.runOnUiThread(() -> listener.onActionComplete(mode,
+                        batchOpsManager.getLastResult().failedPackages().toArray(new String[0])));
             }
         }).start();
     }

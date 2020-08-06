@@ -35,8 +35,8 @@
         android:icon="@drawable/ic_baseline_clear_24"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_backup_data"
-        android:title="@string/backup_data"
+        android:id="@+id/action_backup"
+        android:title="@string/backup_restore"
         android:icon="@drawable/ic_baseline_save_24"
         app:showAsAction="never" />
     <item

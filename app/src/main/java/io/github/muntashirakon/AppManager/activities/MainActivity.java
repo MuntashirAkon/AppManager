@@ -47,6 +47,7 @@ import java.util.concurrent.TimeUnit;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.PluralsRes;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,6 +67,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
+import io.github.muntashirakon.AppManager.fragments.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.fragments.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.misc.RequestCodes;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
@@ -234,6 +236,37 @@ public class MainActivity extends AppCompatActivity implements
                 case R.id.action_select_all:
                     mAdapter.selectAll();
                     return true;
+                case R.id.action_backup:
+                    BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
+                    Bundle args = new Bundle();
+                    args.putStringArrayList(BackupDialogFragment.ARG_PACKAGES, new ArrayList<>(mModel.getSelectedPackages()));
+                    backupDialogFragment.setArguments(args);
+                    backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> {
+                        if (failedPackages.length > 0) {
+                            @PluralsRes int desiredString;
+                            switch (mode) {
+                                case BackupDialogFragment.MODE_DELETE:
+                                    desiredString = R.plurals.alert_failed_to_delete_backup;
+                                    break;
+                                case BackupDialogFragment.MODE_RESTORE:
+                                    desiredString = R.plurals.alert_failed_to_restore;
+                                    break;
+                                default:
+                                    desiredString = R.plurals.alert_failed_to_backup;
+                            }
+                            new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                                    .setTitle(getResources().getQuantityString(desiredString, failedPackages.length, failedPackages.length))
+                                    .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, failedPackages), null)
+                                    .setNegativeButton(android.R.string.ok, null)
+                                    .show();
+                        } else {
+                            Toast.makeText(this, R.string.the_operation_was_successful, Toast.LENGTH_LONG).show();
+                        }
+                        mAdapter.clearSelection();
+                        handleSelection();
+                    });
+                    backupDialogFragment.show(getSupportFragmentManager(), BackupDialogFragment.TAG);
+                    return true;
                 case R.id.action_backup_apk:
                     handleBatchOp(BatchOpsManager.OP_BACKUP_APK, R.string.failed_to_backup_some_apk_files);
                     return true;
@@ -263,11 +296,6 @@ public class MainActivity extends AppCompatActivity implements
                     return true;
                 case R.id.action_uninstall:
                     handleBatchOp(BatchOpsManager.OP_UNINSTALL, R.string.alert_failed_to_uninstall);
-                    return true;
-                case R.id.action_backup_data:
-                    Toast.makeText(this, "This operation is not supported yet.", Toast.LENGTH_LONG).show();
-                    mAdapter.clearSelection();
-                    handleSelection();
                     return true;
             }
             mAdapter.clearSelection();

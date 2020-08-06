@@ -87,8 +87,7 @@ public class EditShortcutDialogFragment extends DialogFragment {
                 text_icon.setText(icon);
                 image_icon.setImageDrawable(getIcon(icon));
             });
-            if (getFragmentManager() != null)
-                dialog.show(getFragmentManager(), IconPickerDialogFragment.TAG);
+            dialog.show(requireFragmentManager(), IconPickerDialogFragment.TAG);
         });
 
         return new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)

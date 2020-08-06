@@ -275,7 +275,7 @@
     <string name="user_and_uid">User: %s (%d)</string>
     <string name="clear_data">Clear Data</string>
     <string name="backup_apk">Backup APK</string>
-    <string name="backup_data">Backup Data</string>
+    <string name="backup_restore">Backup/Restore</string>
     <string name="disable_background">Disable Background</string>
     <string name="export_blocking_rules">Export Blocking Rules</string>
     <string name="some_items_selected">%d selected</string>
