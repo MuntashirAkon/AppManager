@@ -65,7 +65,15 @@ public class BackupDialogFragment extends DialogFragment {
         checkedItems[2] = false;
         // Set skip signature checks to false
         checkedItems[5] = false;
-        return new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
+        // Check if backup exists for all apps
+        boolean backupExists = true;
+        for (String packageName: packageNames) {
+            if (!MetadataManager.hasMetadata(packageName)) {
+                backupExists = false;
+                break;
+            }
+        }
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
                 .setTitle(packageNames.size() == 1 ? PackageUtils.getPackageLabel(activity
                         .getPackageManager(), packageNames.get(0)) : getString(R.string.backup_options))
                 .setMultiChoiceItems(R.array.backup_flags, checkedItems, (dialog, which, isChecked) -> {
@@ -77,20 +85,21 @@ public class BackupDialogFragment extends DialogFragment {
                     if (requestExternalStoragePermissions(activity)) {
                         handleMode();
                     }
-                })
-                .setNegativeButton(R.string.restore, (dialog, which) -> {
-                    mode = MODE_RESTORE;
-                    if (requestExternalStoragePermissions(activity)) {
-                        handleMode();
-                    }
-                })
-                .setNeutralButton(R.string.delete_backup, (dialog, which) -> {
-                    mode = MODE_DELETE;
-                    if (requestExternalStoragePermissions(activity)) {
-                        handleMode();
-                    }
-                })
-                .create();
+                });
+        if (backupExists) {
+            builder.setNegativeButton(R.string.restore, (dialog, which) -> {
+                mode = MODE_RESTORE;
+                if (requestExternalStoragePermissions(activity)) {
+                    handleMode();
+                }
+            }).setNeutralButton(R.string.delete_backup, (dialog, which) -> {
+                mode = MODE_DELETE;
+                if (requestExternalStoragePermissions(activity)) {
+                    handleMode();
+                }
+            });
+        }
+        return builder.create();
     }
 
     @Override
