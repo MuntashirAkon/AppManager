@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_very_small"
+        android:paddingEnd="@dimen/padding_medium"
+        android:paddingBottom="@dimen/padding_very_small">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/padding_small"
+            android:paddingBottom="@dimen/padding_small"
+            android:gravity="center_horizontal"
+            android:text="@string/disclaimer_header"
+            android:textStyle="bold"
+            android:textSize="@dimen/title_font" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/disclaimer_body"
+            android:textSize="@dimen/subtitle_font" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/padding_medium"
+            android:text="@string/disclaimer_footer"
+            android:textSize="@dimen/subtitle_font" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/agree_forever"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/disclaimer_agree_forever" />
+
+    </LinearLayout>
+
+</ScrollView>

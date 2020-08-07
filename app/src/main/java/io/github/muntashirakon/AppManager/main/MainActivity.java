@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
@@ -217,8 +218,25 @@ public class MainActivity extends AppCompatActivity implements
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
 
-        checkFirstRun();
-        checkAppUpdate();
+        if ((boolean) AppPref.get(AppPref.PrefKey.PREF_SHOW_DISCLAIMER_BOOL)) {
+            @SuppressLint("InflateParams")
+            View view = getLayoutInflater().inflate(R.layout.dialog_disclaimer, null);
+            new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                    .setView(view)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.disclaimer_agree, (dialog, which) -> {
+                        if (((MaterialCheckBox) view.findViewById(R.id.agree_forever)).isChecked()) {
+                            AppPref.getInstance().setPref(AppPref.PrefKey.PREF_SHOW_DISCLAIMER_BOOL, false);
+                        }
+                        checkFirstRun();
+                        checkAppUpdate();
+                    })
+                    .setNegativeButton(R.string.disclaimer_exit, (dialog, which) -> finishAndRemoveTask())
+                    .show();
+        } else {
+            checkFirstRun();
+            checkAppUpdate();
+        }
 
         mBatchOpsManager = new BatchOpsManager(this);
 

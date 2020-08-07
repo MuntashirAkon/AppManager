@@ -30,6 +30,7 @@ public class AppPref {
         PREF_MAIN_WINDOW_FILTER_FLAGS_INT,
         PREF_MAIN_WINDOW_SORT_ORDER_INT,
         PREF_ROOT_MODE_ENABLED_BOOL,
+        PREF_SHOW_DISCLAIMER_BOOL,
         PREF_USAGE_ACCESS_ENABLED_BOOL;
 
         public static final String[] keys = new String[values().length];
@@ -165,7 +166,8 @@ public class AppPref {
     private @NonNull Object getDefaultValue(@NonNull PrefKey key) {
         switch (key) {
             case PREF_ROOT_MODE_ENABLED_BOOL:
-            case PREF_USAGE_ACCESS_ENABLED_BOOL: return true;
+            case PREF_USAGE_ACCESS_ENABLED_BOOL:
+            case PREF_SHOW_DISCLAIMER_BOOL: return true;
             case PREF_ADB_MODE_ENABLED_BOOL:
             case PREF_ENABLE_KILL_FOR_SYSTEM_BOOL:
             case PREF_GLOBAL_BLOCKING_ENABLED_BOOL: return false;
