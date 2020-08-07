@@ -59,10 +59,12 @@ public class BackupDialogFragment extends DialogFragment {
         Bundle args = requireArguments();
         packageNames = args.getStringArrayList(ARG_PACKAGES);
         if (packageNames == null) return super.onCreateDialog(savedInstanceState);
-        boolean[] checkedItems = new boolean[5];
+        boolean[] checkedItems = new boolean[6];
         Arrays.fill(checkedItems, true);
         // Set external data to false
         checkedItems[2] = false;
+        // Set skip signature checks to false
+        checkedItems[5] = false;
         return new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
                 .setTitle(packageNames.size() == 1 ? PackageUtils.getPackageLabel(activity
                         .getPackageManager(), packageNames.get(0)) : getString(R.string.backup_options))

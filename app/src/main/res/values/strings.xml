@@ -430,4 +430,5 @@
     <string name="apply_to_system_apps_question">Apply to system apps as well? Select no if unsure.</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
+    <string name="skip_signature_checks">Skip signature checks</string>
 </resources>

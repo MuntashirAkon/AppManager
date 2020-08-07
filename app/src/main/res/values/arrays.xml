@@ -57,6 +57,7 @@
         <item>@string/external_data</item>
         <item>@string/exclude_cache</item>
         <item>@string/blocking_rules</item>
+        <item>@string/skip_signature_checks</item>
     </string-array>
     <string-array name="tracker_signatures">
         <item>com.facebook.accountkit</item>
