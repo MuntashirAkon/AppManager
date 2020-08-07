@@ -37,6 +37,7 @@ import androidx.lifecycle.MutableLiveData;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -172,20 +173,25 @@ public class MainViewModel extends AndroidViewModel {
                     String[] packageList = MainActivity.packageList.split("[\\r\\n]+");
                     for (String packageName : packageList) {
                         try {
-                            PackageInfo packageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA | flagSigningInfo);
+                            PackageInfo packageInfo = mPackageManager.getPackageInfo(packageName,
+                                    PackageManager.GET_META_DATA | flagSigningInfo);
                             ApplicationInfo applicationInfo = packageInfo.applicationInfo;
                             ApplicationItem item = new ApplicationItem(applicationInfo);
+                            item.versionName = packageInfo.versionName;
+                            item.versionCode = PackageUtils.getVersionCode(packageInfo);
                             if (backupApplications.contains(packageName)) {
                                 item.metadataV1 = BackupUtils.getBackupInfo(packageName);
                                 backupApplications.remove(packageName);
                             }
                             item.flags = applicationInfo.flags;
                             item.uid = applicationInfo.uid;
+                            item.sharedUserId = packageInfo.sharedUserId;
                             item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
                             item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
                             item.isDisabled = !applicationInfo.enabled;
                             item.label = applicationInfo.loadLabel(mPackageManager).toString();
-                            item.lastUpdateTime = packageInfo.lastUpdateTime; // .firstInstallTime;
+                            item.firstInstallTime = packageInfo.firstInstallTime;
+                            item.lastUpdateTime = packageInfo.lastUpdateTime;
                             item.sha = Utils.getIssuerAndAlg(packageInfo);
                             if (Build.VERSION.SDK_INT >= 26) {
                                 item.size = (long) -1 * applicationInfo.targetSdkVersion;
@@ -212,8 +218,12 @@ public class MainViewModel extends AndroidViewModel {
                         }
                         try {
                             PackageInfo packageInfo = mPackageManager.getPackageInfo(applicationInfo.packageName, flagSigningInfo);
+                            item.versionName = packageInfo.versionName;
+                            item.versionCode = PackageUtils.getVersionCode(packageInfo);
+                            item.sharedUserId = packageInfo.sharedUserId;
                             item.sha = Utils.getIssuerAndAlg(packageInfo);
-                            item.lastUpdateTime = packageInfo.lastUpdateTime; // .firstInstallTime;
+                            item.firstInstallTime = packageInfo.firstInstallTime;
+                            item.lastUpdateTime = packageInfo.lastUpdateTime;
                         } catch (PackageManager.NameNotFoundException e) {
                             item.lastUpdateTime = 0L;
                             item.sha = new Tuple<>("?", "?");
@@ -227,7 +237,11 @@ public class MainViewModel extends AndroidViewModel {
                     item.packageName = packageName;
                     item.metadataV1 = BackupUtils.getBackupInfo(packageName);
                     if (item.metadataV1 == null) continue;
+                    item.versionName = item.metadataV1.versionName;
+                    item.versionCode = item.metadataV1.versionCode;
                     item.label = item.metadataV1.label;
+                    Log.e("MVM", item.label);
+                    item.firstInstallTime = item.metadataV1.backupTime;
                     item.lastUpdateTime = item.metadataV1.backupTime;
                     item.isUser = !item.metadataV1.isSystem;
                     item.isDisabled = false;
@@ -429,14 +443,18 @@ public class MainViewModel extends AndroidViewModel {
             PackageInfo packageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA | flagSigningInfo);
             ApplicationInfo applicationInfo = packageInfo.applicationInfo;
             ApplicationItem item = new ApplicationItem(applicationInfo);
+            item.versionName = packageInfo.versionName;
+            item.versionCode = PackageUtils.getVersionCode(packageInfo);
             item.metadataV1 = BackupUtils.getBackupInfo(packageName);
             item.flags = applicationInfo.flags;
             item.uid = applicationInfo.uid;
+            item.sharedUserId = packageInfo.sharedUserId;
             item.label = applicationInfo.loadLabel(mPackageManager).toString();
             item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
             item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
             item.isDisabled = !applicationInfo.enabled;
-            item.lastUpdateTime = packageInfo.lastUpdateTime; // .firstInstallTime;
+            item.firstInstallTime = packageInfo.firstInstallTime;
+            item.lastUpdateTime = packageInfo.lastUpdateTime;
             item.sha = Utils.getIssuerAndAlg(packageInfo);
             if (Build.VERSION.SDK_INT >= 26) {
                 item.size = (long) -1 * applicationInfo.targetSdkVersion;

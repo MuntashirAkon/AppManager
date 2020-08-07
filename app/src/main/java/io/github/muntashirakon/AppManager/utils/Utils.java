@@ -34,7 +34,7 @@ import org.xml.sax.InputSource;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -48,7 +48,6 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -65,7 +64,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.RequestCodes;
@@ -189,30 +187,33 @@ public class Utils {
         return getFileContent(file, "");
     }
 
+    /**
+     * Read the full content of a file.
+     * @param file The file to be read
+     * @param emptyValue Empty value if no content has been found
+     * @return File content as string
+     */
     @NonNull
     public static String getFileContent(@NonNull File file, @NonNull String emptyValue) {
-        if (file.isDirectory()) return emptyValue;
-        try (Scanner scanner = new Scanner(file)){
-            StringBuilder result = new StringBuilder();
-            while (scanner.hasNext()) result.append(scanner.next());
-            return result.toString();
-        } catch (FileNotFoundException e) {
+        if (!file.exists() || file.isDirectory()) return emptyValue;
+        try {
+            return getInputStreamContent(new FileInputStream(file));
+        } catch (IOException e) {
+            e.printStackTrace();
             return emptyValue;
         }
+    }
+
+    @NonNull
+    public static String getInputStreamContent(@NonNull InputStream inputStream) throws IOException {
+        return new String(IOUtils.readFully(inputStream, -1, true), Charset.defaultCharset());
     }
 
     @NonNull
     public static String getContentFromAssets(@NonNull Context context, String fileName) {
         try {
             InputStream inputStream = context.getResources().getAssets().open(fileName);
-            byte[] buffer = new byte[1024];
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            for (int length = inputStream.read(buffer); length != -1; length = inputStream.read(buffer)) {
-                outputStream.write(buffer, 0, length);
-            }
-            inputStream.close();
-            outputStream.close();
-            return new String(outputStream.toByteArray());
+            return getInputStreamContent(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -221,13 +222,10 @@ public class Utils {
 
     @NonNull
     public static String getFileContent(@NonNull ContentResolver contentResolver, @NonNull Uri file)
-            throws FileNotFoundException {
+            throws IOException {
         InputStream inputStream = contentResolver.openInputStream(file);
-        Scanner scanner = new Scanner(inputStream);
-        StringBuilder result = new StringBuilder();
-        while (scanner.hasNext())
-            result.append(scanner.next());
-        return result.toString();
+        if (inputStream == null) throw new IOException("Failed to open " + file.toString());
+        return getInputStreamContent(inputStream);
     }
 
     @NonNull
@@ -520,7 +518,7 @@ public class Utils {
         switch (touchId) {
             case Configuration.TOUCHSCREEN_UNDEFINED: return "Undefined";
             case Configuration.TOUCHSCREEN_NOTOUCH: return "No touch";
-            case Configuration.TOUCHSCREEN_STYLUS: return "Stylus";
+            case 2: return "Stylus";  // Configuration.TOUCHSCREEN_STYLUS
             case Configuration.TOUCHSCREEN_FINGER: return "Finger";
         }
         return String.valueOf(touchId);

@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.app.usage.UsageStatsManager;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -67,11 +66,11 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.activities.OneClickOpsActivity;
 import io.github.muntashirakon.AppManager.activities.RunningAppsActivity;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
+import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
-import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
-import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.misc.RequestCodes;
+import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
@@ -744,50 +743,58 @@ public class MainActivity extends AppCompatActivity implements
             final ApplicationItem item = mAdapterList.get(position);
             // Add click listeners
             holder.itemView.setOnClickListener(v -> {
+                // Click listener: 1) If app not installed, display a toast message saying that it's
+                // not installed, 2) If installed, load the App Details page, 3) If selection mode
+                // is on, select/deselect the current item instead of 1 & 2.
                 if (mActivity.mModel.getSelectedPackages().size() == 0) {
-                    Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
-                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, item.packageName);
-                    mActivity.startActivity(appDetailsIntent);
+                    if (!item.isInstalled)
+                        Toast.makeText(mActivity, R.string.app_not_installed, Toast.LENGTH_SHORT).show();
+                    else {
+                        Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
+                        appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, item.packageName);
+                        mActivity.startActivity(appDetailsIntent);
+                    }
                 } else toggleSelection(item, position);
             });
             holder.itemView.setOnLongClickListener(v -> {
+                // Long click listener: Select/deselect an app. Turn selection mode on if this is
+                // the first item in the selection list
                 toggleSelection(item, position);
                 return true;
             });
+            holder.icon.setOnClickListener(v -> toggleSelection(item, position));
             // Alternate background colors: selected > disabled > regular
             if (item.isSelected) holder.mainView.setBackgroundColor(mColorHighlight);
             else if (item.isDisabled) holder.mainView.setBackgroundColor(mColorDisabled);
             else holder.mainView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
             // Add yellow star if the app is in debug mode
             holder.favorite_icon.setVisibility(item.debuggable ? View.VISIBLE : View.INVISIBLE);
-            try {
-                PackageInfo packageInfo = mPackageManager.getPackageInfo(item.packageName, 0);
-                // Set version name
-                holder.version.setText(packageInfo.versionName);
-                // Set date and (if available,) days between first install and last update
-                String lastUpdateDate = sSimpleDateFormat.format(new Date(packageInfo.lastUpdateTime));
-                if (packageInfo.firstInstallTime == packageInfo.lastUpdateTime)
-                    holder.date.setText(lastUpdateDate);
-                else {
-                    long days = TimeUnit.DAYS.convert(packageInfo.lastUpdateTime
-                            - packageInfo.firstInstallTime, TimeUnit.MILLISECONDS);
-                    SpannableString ssDate = new SpannableString(mActivity.getResources()
-                            .getQuantityString(R.plurals.main_list_date_days, (int) days, lastUpdateDate, days));
-                    ssDate.setSpan(new RelativeSizeSpan(.8f), 10, ssDate.length(),
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    holder.date.setText(ssDate);
-                }
-                // Set date color to orange if app can read logs (and accepted)
-                if (mPackageManager.checkPermission(Manifest.permission.READ_LOGS,item.packageName)
-                        == PackageManager.PERMISSION_GRANTED)
-                    holder.date.setTextColor(mColorOrange);
-                else holder.date.setTextColor(mColorSecondary);
+            // Set version name
+            holder.version.setText(item.versionName);
+            // Set date and (if available,) days between first install and last update
+            String lastUpdateDate = sSimpleDateFormat.format(new Date(item.lastUpdateTime));
+            if (item.firstInstallTime == item.lastUpdateTime)
+                holder.date.setText(lastUpdateDate);
+            else {
+                long days = TimeUnit.DAYS.convert(item.lastUpdateTime - item.firstInstallTime, TimeUnit.MILLISECONDS);
+                SpannableString ssDate = new SpannableString(mActivity.getResources()
+                        .getQuantityString(R.plurals.main_list_date_days, (int) days, lastUpdateDate, days));
+                ssDate.setSpan(new RelativeSizeSpan(.8f), 10, ssDate.length(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.date.setText(ssDate);
+            }
+            // Set date color to orange if app can read logs (and accepted)
+            if (mPackageManager.checkPermission(Manifest.permission.READ_LOGS, item.packageName)
+                    == PackageManager.PERMISSION_GRANTED)
+                holder.date.setTextColor(mColorOrange);
+            else holder.date.setTextColor(mColorSecondary);
+            if (item.isInstalled) {
                 // Set kernel user ID
-                if (item.isInstalled) holder.sharedId.setText(String.valueOf(item.uid));
+                holder.sharedId.setText(String.valueOf(item.uid));
                 // Set kernel user ID text color to orange if the package is shared
-                if (packageInfo.sharedUserId != null) holder.sharedId.setTextColor(mColorOrange);
+                if (item.sharedUserId != null) holder.sharedId.setTextColor(mColorOrange);
                 else holder.sharedId.setTextColor(mColorSecondary);
-            } catch (PackageManager.NameNotFoundException | NullPointerException ignored) {}
+            } else holder.sharedId.setText("");
             if (item.sha != null) {
                 // Set issuer
                 String issuer;
@@ -814,7 +821,7 @@ public class MainActivity extends AppCompatActivity implements
                 holder.label.setText(Utils.getHighlightedText(item.label, mSearchQuery, mColorRed));
             } else holder.label.setText(item.label);
             // Set app label color to red if clearing user data not allowed
-            if ((item.flags & ApplicationInfo.FLAG_ALLOW_CLEAR_USER_DATA) == 0)
+            if (item.isInstalled && (item.flags & ApplicationInfo.FLAG_ALLOW_CLEAR_USER_DATA) == 0)
                 holder.label.setTextColor(Color.RED);
             else holder.label.setTextColor(mColorPrimary);
             // Set package name
@@ -828,7 +835,8 @@ public class MainActivity extends AppCompatActivity implements
             else holder.packageName.setTextColor(mColorSecondary);
             // Set version (along with HW accelerated, debug and test only flags)
             CharSequence version = holder.version.getText();
-            if ((item.flags & ApplicationInfo.FLAG_HARDWARE_ACCELERATED) == 0) version = "_" + version;
+            if (item.isInstalled && (item.flags & ApplicationInfo.FLAG_HARDWARE_ACCELERATED) == 0)
+                version = "_" + version;
             if ((item.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0) version = "debug" + version;
             if ((item.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0) version = "~" + version;
             holder.version.setText(version);
@@ -843,29 +851,36 @@ public class MainActivity extends AppCompatActivity implements
             // Set app type: system or user app (along with large heap, suspended, multi-arch,
             // has code, vm safe mode)
             String isSystemApp;
-            if ((item.flags & ApplicationInfo.FLAG_SYSTEM) != 0) isSystemApp = mActivity.getString(R.string.system);
-            else isSystemApp = mActivity.getString(R.string.user);
-            if ((item.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0) isSystemApp += "#";
-            if ((item.flags & ApplicationInfo.FLAG_SUSPENDED) != 0) isSystemApp += "°";
-            if ((item.flags & ApplicationInfo.FLAG_MULTIARCH) != 0) isSystemApp += "X";
-            if ((item.flags & ApplicationInfo.FLAG_HAS_CODE) == 0) isSystemApp += "0";
-            if ((item.flags & ApplicationInfo.FLAG_VM_SAFE_MODE) != 0) isSystemApp += "?";
-            holder.isSystemApp.setText(isSystemApp);
-            // Set app type text color to magenta if the app is persistent
-            if ((item.flags & ApplicationInfo.FLAG_PERSISTENT) != 0)
-                holder.isSystemApp.setTextColor(Color.MAGENTA);
-            else holder.isSystemApp.setTextColor(mColorSecondary);
-            // Set SDK
-            if (Build.VERSION.SDK_INT >= 26) {
-                holder.size.setText(String.format(Locale.getDefault(), "SDK %d", -item.size));
-            } else if (item.size != -1L) {
-                holder.size.setText(Formatter.formatFileSize(mActivity, item.size));
+            if (item.isInstalled) {
+                if ((item.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
+                    isSystemApp = mActivity.getString(R.string.system);
+                else isSystemApp = mActivity.getString(R.string.user);
+                if ((item.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0) isSystemApp += "#";
+                if ((item.flags & ApplicationInfo.FLAG_SUSPENDED) != 0) isSystemApp += "°";
+                if ((item.flags & ApplicationInfo.FLAG_MULTIARCH) != 0) isSystemApp += "X";
+                if ((item.flags & ApplicationInfo.FLAG_HAS_CODE) == 0) isSystemApp += "0";
+                if ((item.flags & ApplicationInfo.FLAG_VM_SAFE_MODE) != 0) isSystemApp += "?";
+                holder.isSystemApp.setText(isSystemApp);
+                // Set app type text color to magenta if the app is persistent
+                if ((item.flags & ApplicationInfo.FLAG_PERSISTENT) != 0)
+                    holder.isSystemApp.setTextColor(Color.MAGENTA);
+                else holder.isSystemApp.setTextColor(mColorSecondary);
+            } else {
+                holder.isSystemApp.setText("-");
+                holder.isSystemApp.setTextColor(mColorSecondary);
             }
+            // Set SDK
+            if (item.isInstalled) {
+                if (Build.VERSION.SDK_INT >= 26) {
+                    holder.size.setText(String.format(Locale.getDefault(), "SDK %d", -item.size));
+                } else if (item.size != -1L) {
+                    holder.size.setText(Formatter.formatFileSize(mActivity, item.size));
+                }
+            } else holder.size.setText("-");
             // Set SDK color to orange if the app is using cleartext (e.g. HTTP) traffic
             if ((item.flags & ApplicationInfo.FLAG_USES_CLEARTEXT_TRAFFIC) !=0)
                 holder.size.setTextColor(mColorOrange);
             else holder.size.setTextColor(mColorSecondary);
-            holder.icon.setOnClickListener(v -> toggleSelection(item, position));
         }
 
         public void toggleSelection(@NonNull ApplicationItem item, int position) {

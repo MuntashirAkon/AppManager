@@ -255,6 +255,7 @@ public class BackupStorageManager implements AutoCloseable {
             // Get package info
             try {
                 packageInfo = AppManager.getContext().getPackageManager().getPackageInfo(packageName, flagSigningInfo);
+                isInstalled = packageInfo != null;
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
                 return false;  // Failed to (re)install package
