@@ -347,7 +347,7 @@ public class AppInfoFragment extends Fragment
         });
     }
 
-    private void setHorizontalView() {
+    private void setHorizontalActions() {
         mHorizontalLayout.removeAllViews();
         if (!mainModel.getIsExternalApk()) {
             // Set open
@@ -417,11 +417,18 @@ public class AppInfoFragment extends Fragment
                     }).start());
                 }
                 // Clear data
-                addToHorizontalLayout(R.string.clear_data, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
-                    if (RunnerUtils.clearPackageData(mPackageName).isSuccessful()) {
-                        runOnUiThread(() -> mainModel.setIsPackageChanged());
-                    }
-                });
+                addToHorizontalLayout(R.string.clear_data, R.drawable.ic_delete_black_24dp)
+                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity, R.style.AppTheme_AlertDialog)
+                                .setTitle(mPackageLabel)
+                                .setMessage(R.string.clear_data_message)
+                                .setPositiveButton(R.string.clear, (dialog, which) ->
+                                        new Thread(() -> {
+                                            if (RunnerUtils.clearPackageData(mPackageName).isSuccessful()) {
+                                                runOnUiThread(() -> mainModel.setIsPackageChanged());
+                                            }
+                                        }).start())
+                                .setNegativeButton(android.R.string.cancel, null)
+                                .show());
                 // Clear cache
                 if (isRootEnabled) {
                     addToHorizontalLayout(R.string.clear_cache, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
@@ -951,7 +958,7 @@ public class AppInfoFragment extends Fragment
             mPackageLabel = mApplicationInfo.loadLabel(mPackageManager);
             // (Re)load views
             setHeaders();
-            runOnUiThread(this::setHorizontalView);
+            runOnUiThread(this::setHorizontalActions);
             setVerticalView();
             runOnUiThread(() -> mProgressIndicator.hide());
         }).start();

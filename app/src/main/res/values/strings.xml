@@ -431,4 +431,6 @@
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="skip_signature_checks">Skip signature checks</string>
+    <string name="clear_data_message">Are you sure want to clear data from this app?</string>
+    <string name="clear">Clear</string>
 </resources>
