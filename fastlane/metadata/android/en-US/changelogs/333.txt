@@ -1,0 +1,13 @@
+- [Feature] Added experimental support for app data backup. Please test only on apps you don't need. (root only)
+- [Feature] Added sharing split apk files as apks (can be installed via SAI).
+- [Feature] Implemented saving apk files in batch selection mode.
+- [Feature] Added what's new for apk file that needs an update (when opening external apk files).
+- [Feature] Added an option to apply 1-click ops to system apps (disabled by default).
+- [Feature] Added installed app version info in the App Info tab. Clicking the <i>i</i> icon opens the installed App Info tab.
+- [Feature] New on-demand permissions <tt>READ_EXTERNAL_STORAGE</tt> &amp; <tt>WRITE_EXTERNAL_STORAGE</tt> for app backup support
+- [Feature] Display apps that are uninstalled but have backups in the main window
+- [Feature] Added a disclaimer
+- [Fix] Fixed selections being not cleared after the task is completed in the main window
+- [Fix] Convert various info in the configurations and features tab to text to improve readability
+- [Fix] Fix crash in the main window while filtering apps by search query
+- [Fix] Fix crash in the App Info tab when existence of external data directory has false-positive result

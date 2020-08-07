@@ -20,7 +20,8 @@
             android:gravity="center_horizontal"
             android:text="@string/disclaimer_header"
             android:textStyle="bold"
-            android:textSize="@dimen/title_font" />
+            android:textSize="@dimen/title_font"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:layout_width="match_parent"
@@ -39,7 +40,8 @@
             android:id="@+id/agree_forever"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/disclaimer_agree_forever" />
+            android:text="@string/disclaimer_agree_forever"
+            android:textColor="?android:attr/textColorSecondary" />
 
     </LinearLayout>
 
