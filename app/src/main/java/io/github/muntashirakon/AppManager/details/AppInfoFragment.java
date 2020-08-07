@@ -647,9 +647,11 @@ public class AppInfoFragment extends Fragment
         File[] dataDirs = mActivity.getExternalCacheDirs();
         if (dataDirs != null) {
             List<String> extDataDirs = new ArrayList<>();
+            String tmpDataDir;
             for (File dataDir : dataDirs) {
-                //noinspection ConstantConditions
-                extDataDirs.add((new File(dataDir.getParent())).getParent() + "/" + mPackageName);
+                tmpDataDir = dataDir.getParent();
+                if (tmpDataDir != null) tmpDataDir = new File(tmpDataDir).getParent();
+                if (tmpDataDir != null) extDataDirs.add(tmpDataDir + File.separatorChar + mPackageName);
             }
             if (extDataDirs.size() == 1) {
                 if (new File(extDataDirs.get(0)).exists()) {
