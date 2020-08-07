@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 
 import org.json.JSONException;
 
@@ -53,8 +54,7 @@ public class BackupStorageManager implements AutoCloseable {
     private static final String RULES_TSV = "rules.am.tsv";
     private static final String TMP_BACKUP_SUFFIX = "~";
     static final String APK_SAVING_DIRECTORY = "apks";
-    @SuppressLint("SdCardPath")
-    private static final File DEFAULT_BACKUP_PATH = new File("/sdcard/AppManager");
+    private static final File DEFAULT_BACKUP_PATH = new File(Environment.getExternalStorageDirectory(), "AppManager");
 
     private static BackupStorageManager instance;
     public static BackupStorageManager getInstance(String packageName) {
