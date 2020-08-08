@@ -15,9 +15,14 @@
         <item name="actionOverflowButtonStyle">@style/AppTheme.ActionButton.Overflow</item>
         <item name="navigationIcon">@drawable/ic_keyboard_backspace_black_24dp</item>
         <item name="actionOverflowMenuStyle">@style/AppTheme.PopupMenu.Overflow</item>
+        <item name="appBarLayoutStyle">@style/AppTheme.AppBarLayout</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
+    </style>
+    <style name="AppTheme.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Primary">
+        <item name="android:backgroundTintMode">add</item>
+        <item name="android:backgroundTint">#000</item>
     </style>
     <style name="AppTheme.BottomAppBar" parent="Widget.MaterialComponents.BottomAppBar.Colored">
         <item name="materialThemeOverlay">@style/AppTheme.BottomAppBarOverlay</item>
