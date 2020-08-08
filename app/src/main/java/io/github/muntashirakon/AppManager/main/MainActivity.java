@@ -145,7 +145,6 @@ public class MainActivity extends AppCompatActivity implements
     public static final int FILTER_APPS_WITH_RULES = 1 << 3;
 
     private MainActivity.MainRecyclerAdapter mAdapter;
-    private List<ApplicationItem> mApplicationItems = new ArrayList<>();
     private SearchView mSearchView;
     private ProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
@@ -552,17 +551,15 @@ public class MainActivity extends AppCompatActivity implements
         if (mAdapter != null) {
             // Set observer
             mModel.getApplicationItems().observe(this, applicationItems -> {
-                mApplicationItems = applicationItems;
-                mAdapter.setDefaultList(mApplicationItems);
+                mAdapter.setDefaultList(applicationItems);
+                showProgressIndicator(false);
                 // Set title and subtitle
                 ActionBar actionBar = getSupportActionBar();
                 if (actionBar != null) {
-                    actionBar.setTitle(MainActivity.listName.substring(0,
-                            MainActivity.listName.lastIndexOf(".")));
-                    actionBar.setSubtitle(MainActivity.listName.substring(
-                            MainActivity.listName.lastIndexOf(".") + 1).toLowerCase(Locale.ROOT));
+                    actionBar.setTitle(listName.substring(0, listName.lastIndexOf(".")));
+                    actionBar.setSubtitle(MainActivity.listName.substring(listName
+                            .lastIndexOf(".") + 1).toLowerCase(Locale.ROOT));
                 }
-                showProgressIndicator(false);
             });
             // Set filter
             if (mSearchView != null && !TextUtils.isEmpty(mModel.getSearchQuery())) {
@@ -715,12 +712,14 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         void setDefaultList(List<ApplicationItem> list) {
-            synchronized (mAdapterList) {
-                mAdapterList.clear();
-                mAdapterList.addAll(list);
-                mSearchQuery = mActivity.mModel.getSearchQuery();
-                notifyDataSetChanged();
-            }
+            new Thread(() -> {
+                synchronized (mAdapterList) {
+                    mAdapterList.clear();
+                    mAdapterList.addAll(list);
+                    mSearchQuery = mActivity.mModel.getSearchQuery();
+                    mActivity.runOnUiThread(this::notifyDataSetChanged);
+                }
+            }).start();
         }
 
         void clearSelection() {
