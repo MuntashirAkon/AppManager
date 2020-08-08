@@ -65,7 +65,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
-import io.github.muntashirakon.AppManager.activities.RunningAppsActivity;
+import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;

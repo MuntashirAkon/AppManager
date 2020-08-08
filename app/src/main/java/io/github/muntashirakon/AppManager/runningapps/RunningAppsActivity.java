@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.activities;
+package io.github.muntashirakon.AppManager.runningapps;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ApplicationInfo;

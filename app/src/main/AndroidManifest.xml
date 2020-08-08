@@ -28,7 +28,7 @@
             android:exported="false"
             android:label="@string/one_click_ops" />
         <activity
-            android:name=".activities.RunningAppsActivity"
+            android:name=".runningapps.RunningAppsActivity"
             android:exported="false"
             android:label="@string/running_apps" />
         <activity
