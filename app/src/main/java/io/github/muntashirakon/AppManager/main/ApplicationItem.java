@@ -4,6 +4,8 @@ import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 
+import java.util.Objects;
+
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.utils.Tuple;
@@ -100,5 +102,18 @@ public class ApplicationItem extends PackageItemInfo {
             } catch (PackageManager.NameNotFoundException ignore) {}
         }
         return pm.getDefaultActivityIcon();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ApplicationItem)) return false;
+        ApplicationItem item = (ApplicationItem) o;
+        return packageName.equals(item.packageName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(packageName);
     }
 }
