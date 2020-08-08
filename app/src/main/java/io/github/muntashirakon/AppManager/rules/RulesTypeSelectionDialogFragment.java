@@ -60,7 +60,7 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
         final boolean[] checkedItems = new boolean[6];
         Arrays.fill(checkedItems, true);
         mSelectedTypes = new HashSet<>(Arrays.asList(RulesStorageManager.Type.values()));
-        return new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
+        return new MaterialAlertDialogBuilder(activity)
                 .setTitle(mode == MODE_IMPORT ? R.string.import_options : R.string.export_options)
                 .setMultiChoiceItems(R.array.rule_types, checkedItems, (dialog, which, isChecked) -> {
                     if (isChecked) mSelectedTypes.add(types[which]);

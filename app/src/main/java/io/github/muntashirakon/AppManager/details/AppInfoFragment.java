@@ -399,7 +399,7 @@ public class AppInfoFragment extends Fragment
             addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
                 final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
                 if (isRootEnabled) {
-                    new MaterialAlertDialogBuilder(mActivity, R.style.AppTheme_AlertDialog)
+                    new MaterialAlertDialogBuilder(mActivity)
                             .setTitle(mPackageLabel)
                             .setMessage(isSystemApp ?
                                     R.string.uninstall_system_app_message : R.string.uninstall_app_message)
@@ -447,7 +447,7 @@ public class AppInfoFragment extends Fragment
                 }
                 // Clear data
                 addToHorizontalLayout(R.string.clear_data, R.drawable.ic_delete_black_24dp)
-                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity, R.style.AppTheme_AlertDialog)
+                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                                 .setTitle(mPackageLabel)
                                 .setMessage(R.string.clear_data_message)
                                 .setPositiveButton(R.string.clear, (dialog, which) ->
@@ -580,7 +580,7 @@ public class AppInfoFragment extends Fragment
                     sharedPrefs2[i] = new File(sharedPrefs.get(i)).getName();
                 }
                 addToHorizontalLayout(R.string.shared_prefs, R.drawable.ic_view_list_black_24dp)
-                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity, R.style.AppTheme_AlertDialog)
+                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                                 .setTitle(R.string.shared_prefs)
                                 .setItems(sharedPrefs2, (dialog, which) -> {
                                     Intent intent = new Intent(mActivity, SharedPrefsActivity.class);
@@ -603,7 +603,7 @@ public class AppInfoFragment extends Fragment
                     databases2[i] = databases.get(i);
                 }
                 addToHorizontalLayout(R.string.databases, R.drawable.ic_assignment_black_24dp)
-                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity, R.style.AppTheme_AlertDialog)
+                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                                 .setTitle(R.string.databases)
                                 .setItems(databases2, null)  // TODO
                                 .setNegativeButton(android.R.string.ok, null)
@@ -920,7 +920,7 @@ public class AppInfoFragment extends Fragment
             }
         } else {
             if (!Utils.checkUsageStatsPermission(mActivity)) {
-                runOnUiThread(() -> new MaterialAlertDialogBuilder(mActivity, R.style.AppTheme_AlertDialog)
+                runOnUiThread(() -> new MaterialAlertDialogBuilder(mActivity)
                         .setTitle(R.string.grant_usage_access)
                         .setMessage(R.string.grant_usage_acess_message)
                         .setPositiveButton(R.string.go, (dialog, which) -> startActivityForResult(new Intent(

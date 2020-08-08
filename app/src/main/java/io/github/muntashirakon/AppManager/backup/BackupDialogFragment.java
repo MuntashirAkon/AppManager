@@ -82,7 +82,7 @@ public class BackupDialogFragment extends DialogFragment {
                 break;
             }
         }
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
                 .setTitle(packageNames.size() == 1 ? PackageUtils.getPackageLabel(activity
                         .getPackageManager(), packageNames.get(0)) : getString(R.string.backup_options))
                 .setMultiChoiceItems(R.array.backup_flags, checkedItems, (dialog, which, isChecked) -> {

@@ -69,7 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Set listeners
         findViewById(R.id.app_theme).setOnClickListener(v ->
-                new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                new MaterialAlertDialogBuilder(this)
                         .setTitle(R.string.select_theme)
                         .setSingleChoiceItems(themes, themeConst.indexOf(currentTheme),
                                 (dialog, which) -> currentTheme = themeConst.get(which))
@@ -112,7 +112,7 @@ public class SettingsActivity extends AppCompatActivity {
         findViewById(R.id.changelog_view).setOnClickListener(v -> new Thread(() -> {
             final Spanned spannedChangelog = HtmlCompat.fromHtml(Utils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
             runOnUiThread(() ->
-                    new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                    new MaterialAlertDialogBuilder(this)
                             .setTitle(R.string.changelog)
                             .setMessage(spannedChangelog)
                             .setNegativeButton(android.R.string.ok, null)

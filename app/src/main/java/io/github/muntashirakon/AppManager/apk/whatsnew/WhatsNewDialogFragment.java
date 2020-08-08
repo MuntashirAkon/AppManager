@@ -58,7 +58,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
             }
             activity.runOnUiThread(() -> adapter.setAdapterList(changeList));
         }).start();
-        return new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
+        return new MaterialAlertDialogBuilder(activity)
                 .setTitle(R.string.whats_new)
                 .setView(view)
                 .setNegativeButton(android.R.string.ok, null)

@@ -1,4 +1,4 @@
-package io.github.muntashirakon.AppManager.activities;
+package io.github.muntashirakon.AppManager.oneclickops;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -44,14 +44,12 @@ public class OneClickOpsActivity extends AppCompatActivity {
     private void setItems() {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_trackers),
                 getString(R.string.block_trackers_description))
-                .setOnClickListener(v -> {
-                    new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
-                            .setTitle(R.string.block_trackers)
-                            .setMessage(R.string.apply_to_system_apps_question)
-                            .setPositiveButton(R.string.no, (dialog, which) -> blockTrackers(false))
-                            .setNegativeButton(R.string.yes, ((dialog, which) -> blockTrackers(true)))
-                            .show();
-                });
+                .setOnClickListener(v -> new MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string.block_trackers)
+                        .setMessage(R.string.apply_to_system_apps_question)
+                        .setPositiveButton(R.string.no, (dialog, which) -> blockTrackers(false))
+                        .setNegativeButton(R.string.yes, ((dialog, which) -> blockTrackers(true)))
+                        .show());
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_components_dots),
                 getString(R.string.block_components_description))
                 .setOnClickListener(v -> blockComponents());
@@ -95,7 +93,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
                 Arrays.fill(checkedItems, true);
                 runOnUiThread(() -> {
                     mProgressIndicator.hide();
-                    new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                    new MaterialAlertDialogBuilder(this)
                             .setMultiChoiceItems(trackerPackagesWithTrackerCount, checkedItems, (dialog, which, isChecked) -> {
                                 if (!isChecked) selectedPackages.remove(trackerPackages[which]);
                                 else selectedPackages.add(trackerPackages[which]);
@@ -107,7 +105,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
                                     List<String> failedPackages = ExternalComponentsImporter.applyFromTrackingComponents(this, selectedPackages);
                                     if (!failedPackages.isEmpty()) {
                                         runOnUiThread(() -> {
-                                            new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                                            new MaterialAlertDialogBuilder(this)
                                                     .setTitle(R.string.failed_packages)
                                                     .setItems((CharSequence[]) failedPackages.toArray(), null)
                                                     .setNegativeButton(android.R.string.ok, null)
@@ -138,7 +136,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
             return;
         }
         View view = getLayoutInflater().inflate(R.layout.dialog_input_signatures, null);
-        new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.block_components_dots)
                 .setView(view)
                 .setPositiveButton(R.string.search, (dialog, which) -> {
@@ -169,7 +167,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
                             Arrays.fill(checkedItems, true);
                             runOnUiThread(() -> {
                                 mProgressIndicator.hide();
-                                new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                                new MaterialAlertDialogBuilder(this)
                                         .setMultiChoiceItems(filteredPackagesWithComponentCount, checkedItems, (dialog1, which1, isChecked) -> {
                                             if (!isChecked) selectedPackages.remove(filteredPackages[which1]);
                                             else selectedPackages.add(filteredPackages[which1]);
@@ -181,7 +179,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
                                                 List<String> failedPackages = ExternalComponentsImporter.applyFilteredComponents(this, selectedPackages, signatures);
                                                 if (!failedPackages.isEmpty()) {
                                                     runOnUiThread(() -> {
-                                                        new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                                                        new MaterialAlertDialogBuilder(this)
                                                                 .setTitle(R.string.failed_packages)
                                                                 .setItems((CharSequence[]) failedPackages.toArray(), null)
                                                                 .setNegativeButton(android.R.string.ok, null)
@@ -215,7 +213,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
             return;
         }
         View view = getLayoutInflater().inflate(R.layout.dialog_input_app_ops, null);
-        new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.deny_app_ops_dots)
                 .setView(view)
                 .setPositiveButton(R.string.search, (dialog, which) -> {
@@ -255,7 +253,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
                             Arrays.fill(checkedItems, true);
                             runOnUiThread(() -> {
                                 mProgressIndicator.hide();
-                                new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                                new MaterialAlertDialogBuilder(this)
                                         .setMultiChoiceItems(filteredPackagesWithAppOpCount, checkedItems, (dialog1, which1, isChecked) -> {
                                             if (!isChecked) selectedPackages.remove(filteredPackages[which1]);
                                             else selectedPackages.add(filteredPackages[which1]);
@@ -267,7 +265,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
                                                 List<String> failedPackages = ExternalComponentsImporter.applyFilteredAppOps(this, selectedPackages, appOps);
                                                 if (!failedPackages.isEmpty()) {
                                                     runOnUiThread(() -> {
-                                                        new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                                                        new MaterialAlertDialogBuilder(this)
                                                                 .setTitle(R.string.failed_packages)
                                                                 .setItems((CharSequence[]) failedPackages.toArray(), null)
                                                                 .setNegativeButton(android.R.string.ok, null)

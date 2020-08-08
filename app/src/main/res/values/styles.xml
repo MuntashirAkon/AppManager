@@ -16,6 +16,7 @@
         <item name="navigationIcon">@drawable/ic_keyboard_backspace_black_24dp</item>
         <item name="actionOverflowMenuStyle">@style/AppTheme.PopupMenu.Overflow</item>
         <item name="appBarLayoutStyle">@style/AppTheme.AppBarLayout</item>
+        <item name="materialAlertDialogTheme">@style/AppTheme.AlertDialog</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>

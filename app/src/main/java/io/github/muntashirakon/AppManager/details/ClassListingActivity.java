@@ -236,7 +236,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                     if (tracker_names[i - 1].equals(tracker_names[i])) continue;
                     statsMsg.append(tracker_names[i]).append("\n"); j++;
                 }
-                new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                new MaterialAlertDialogBuilder(this)
                         .setTitle(getString(R.string.trackers_and_classes, j, tracker_names.length))
                         .setNegativeButton(android.R.string.ok, null)
                         .setMessage(statsMsg.toString()).show();
@@ -279,7 +279,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
                 .replaceAll(" ", "&nbsp;").replaceAll("\n", "<br/>"), HtmlCompat.FROM_HTML_MODE_LEGACY));
         showText.setMovementMethod(new ScrollingMovementMethod());
         showText.setTextIsSelectable(true);
-        new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle(getString(R.string.trackers_and_classes, totalTrackersFound, classList.size()))
                 .setView(showText)
                 .setIcon(R.drawable.ic_frost_classysharkexodus_black_24dp)

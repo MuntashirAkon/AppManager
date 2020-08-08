@@ -74,7 +74,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                 handler.post(() -> Toast.makeText(requireContext(), R.string.the_import_was_successful, Toast.LENGTH_SHORT).show());
             } else {
                 handler.post(() ->
-                        new MaterialAlertDialogBuilder(requireContext(), R.style.AppTheme_AlertDialog)
+                        new MaterialAlertDialogBuilder(requireContext())
                             .setTitle(getResources().getQuantityString(R.plurals.failed_to_import_files, failedPackages.size(), failedPackages.size()))
                             .setItems((CharSequence[]) failedPackages.toArray(), null)
                             .setNegativeButton(android.R.string.ok, null)
@@ -97,7 +97,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                     .setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RequestCodes.REQUEST_CODE_BLOCKER);
         });
-        return new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog)
+        return new MaterialAlertDialogBuilder(activity)
                 .setView(view)
                 .setTitle(R.string.pref_import_export_blocking_rules)
                 .setNegativeButton(android.R.string.cancel, null)

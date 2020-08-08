@@ -172,7 +172,7 @@ public class EditPrefItemFragment extends DialogFragment {
             }
         }
         interfaceCommunicator = (InterfaceCommunicator) activity;
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity, R.style.AppTheme_AlertDialog);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity);
         builder.setView(view)
                 .setPositiveButton(mode == MODE_CREATE ? R.string.add_item : R.string.done, (dialog, which) -> {
                     PrefItem newPrefItem;

@@ -280,7 +280,7 @@ public class AppUsageActivity extends AppCompatActivity implements ListView.OnIt
     }
 
     private void promptForUsageStatsPermission() {
-        new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.grant_usage_access)
                 .setMessage(R.string.grant_usage_acess_message)
                 .setPositiveButton(R.string.go, (dialog, which) -> startActivity(new Intent(

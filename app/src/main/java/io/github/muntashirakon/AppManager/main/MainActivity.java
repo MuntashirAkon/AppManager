@@ -64,7 +64,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.activities.OneClickOpsActivity;
+import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
 import io.github.muntashirakon.AppManager.activities.RunningAppsActivity;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements
         if ((boolean) AppPref.get(AppPref.PrefKey.PREF_SHOW_DISCLAIMER_BOOL)) {
             @SuppressLint("InflateParams")
             View view = getLayoutInflater().inflate(R.layout.dialog_disclaimer, null);
-            new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+            new MaterialAlertDialogBuilder(this)
                     .setView(view)
                     .setCancelable(false)
                     .setPositiveButton(R.string.disclaimer_agree, (dialog, which) -> {
@@ -271,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements
                                 default:
                                     desiredString = R.plurals.alert_failed_to_backup;
                             }
-                            new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                            new MaterialAlertDialogBuilder(this)
                                     .setTitle(getResources().getQuantityString(desiredString, failedPackages.length, failedPackages.length))
                                     .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, failedPackages), null)
                                     .setNegativeButton(android.R.string.ok, null)
@@ -587,7 +587,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void checkFirstRun() {
         if (Utils.isAppInstalled()) {
-            new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+            new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.instructions)
                     .setView(R.layout.dialog_instructions)
                     .setNegativeButton(android.R.string.ok, null)
@@ -601,7 +601,7 @@ public class MainActivity extends AppCompatActivity implements
             new Thread(() -> {
                 final Spanned spannedChangelog = HtmlCompat.fromHtml(Utils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
                 runOnUiThread(() ->
-                        new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                        new MaterialAlertDialogBuilder(this)
                                 .setTitle(R.string.changelog)
                                 .setMessage(spannedChangelog)
                                 .setNegativeButton(android.R.string.ok, null)
@@ -632,7 +632,7 @@ public class MainActivity extends AppCompatActivity implements
         showProgressIndicator(true);
         new Thread(() -> {
             if (!mBatchOpsManager.performOp(op, new ArrayList<>(mModel.getSelectedPackages())).isSuccessful()) {
-                runOnUiThread(() -> new MaterialAlertDialogBuilder(this, R.style.AppTheme_AlertDialog)
+                runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
                         .setTitle(msg)
                         .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
                                 mBatchOpsManager.getLastResult().failedPackages()), null)

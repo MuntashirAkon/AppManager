@@ -24,7 +24,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="UnusedAttribute">
         <activity
-            android:name=".activities.OneClickOpsActivity"
+            android:name=".oneclickops.OneClickOpsActivity"
             android:exported="false"
             android:label="@string/one_click_ops" />
         <activity
