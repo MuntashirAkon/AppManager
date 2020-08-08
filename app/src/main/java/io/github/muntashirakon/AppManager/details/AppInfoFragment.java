@@ -30,7 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -58,7 +57,6 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.PluralsRes;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.app.ShareCompat;
@@ -69,22 +67,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.ApkUtils;
+import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.misc.RequestCodes;
-import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
-import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
-import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.rules.compontents.TrackerComponentUtils;
+import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
-import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 
 public class AppInfoFragment extends Fragment
         implements SwipeRefreshLayout.OnRefreshListener {
@@ -687,6 +685,7 @@ public class AppInfoFragment extends Fragment
             List<String> extDataDirs = new ArrayList<>();
             String tmpDataDir;
             for (File dataDir : dataDirs) {
+                if (dataDir == null) continue;
                 tmpDataDir = dataDir.getParent();
                 if (tmpDataDir != null) tmpDataDir = new File(tmpDataDir).getParent();
                 if (tmpDataDir != null) extDataDirs.add(tmpDataDir + File.separatorChar + mPackageName);
