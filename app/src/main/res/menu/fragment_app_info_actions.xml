@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_share_apk"
+        android:icon="@drawable/ic_share_black_24dp"
+        android:title="@string/share_apk"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_refresh_detail"
         android:icon="@drawable/ic_refresh_black_24dp"
@@ -11,9 +18,9 @@
         android:title="@string/view_in_settings"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_share_apk"
-        android:icon="@drawable/ic_share_black_24dp"
-        android:title="@string/share_apk"
+        android:id="@+id/action_backup"
+        android:icon="@drawable/ic_baseline_save_24"
+        android:title="@string/backup_restore"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_export_blocking_rules"

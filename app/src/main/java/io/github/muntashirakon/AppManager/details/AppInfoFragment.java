@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,6 +48,7 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -56,6 +58,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.PluralsRes;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.app.ShareCompat;
@@ -66,6 +69,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.misc.RequestCodes;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
@@ -201,6 +205,33 @@ public class AppInfoFragment extends Fragment
                         runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show());
                     }
                 }).start();
+                return true;
+            case R.id.action_backup:
+                BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
+                Bundle args = new Bundle();
+                args.putStringArrayList(BackupDialogFragment.ARG_PACKAGES, new ArrayList<>(Collections.singleton(mPackageName)));
+                backupDialogFragment.setArguments(args);
+                backupDialogFragment.setOnActionBeginListener(mode -> mProgressIndicator.show());
+                backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> {
+                    if (failedPackages.length > 0) {
+                        @StringRes int desiredString;
+                        switch (mode) {
+                            case BackupDialogFragment.MODE_DELETE:
+                                desiredString = R.string.failed_to_delete_backup;
+                                break;
+                            case BackupDialogFragment.MODE_RESTORE:
+                                desiredString = R.string.failed_to_restore_backup;
+                                break;
+                            default:
+                                desiredString = R.string.failed_to_backup;
+                        }
+                        Toast.makeText(mActivity, desiredString, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mActivity, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
+                    }
+                    mProgressIndicator.hide();
+                });
+                backupDialogFragment.show(mActivity.getSupportFragmentManager(), BackupDialogFragment.TAG);
                 return true;
             case R.id.action_view_settings:
                 Intent infoIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);

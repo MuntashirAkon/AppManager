@@ -426,6 +426,8 @@
         <item quantity="one">Failed to delete backup %d app</item>
         <item quantity="other">Failed to delete backup %d apps</item>
     </plurals>
+    <string name="failed_to_delete_backup">Failed to delete backup</string>
+    <string name="failed_to_restore_backup">Failed to restore backup</string>
     <string name="apply_to_system_apps">Apply to system apps</string>
     <string name="apply_to_system_apps_question">Apply to system apps as well? Select no if unsure.</string>
     <string name="no">No</string>
@@ -433,4 +435,5 @@
     <string name="skip_signature_checks">Skip signature checks</string>
     <string name="clear_data_message">Are you sure want to clear data from this app?</string>
     <string name="clear">Clear</string>
+    <string name="failed_to_backup">Failed to create backup</string>
 </resources>

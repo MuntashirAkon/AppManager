@@ -258,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements
                     Bundle args = new Bundle();
                     args.putStringArrayList(BackupDialogFragment.ARG_PACKAGES, new ArrayList<>(mModel.getSelectedPackages()));
                     backupDialogFragment.setArguments(args);
+                    backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
                     backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> {
                         if (failedPackages.length > 0) {
                             @PluralsRes int desiredString;
@@ -281,6 +282,7 @@ public class MainActivity extends AppCompatActivity implements
                         }
                         mAdapter.clearSelection();
                         handleSelection();
+                        showProgressIndicator(false);
                     });
                     backupDialogFragment.show(getSupportFragmentManager(), BackupDialogFragment.TAG);
                     return true;

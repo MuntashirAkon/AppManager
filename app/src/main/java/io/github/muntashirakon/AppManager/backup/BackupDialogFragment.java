@@ -46,10 +46,19 @@ public class BackupDialogFragment extends DialogFragment {
         void onActionComplete(@ActionMode int mode, @NonNull String[] failedPackages);
     }
 
-    private @Nullable ActionCompleteInterface listener;
+    public interface ActionBeginInterface {
+        void onActionBegin(@ActionMode int mode);
+    }
 
-    public void setOnActionCompleteListener(@NonNull ActionCompleteInterface actionCompleteListener) {
-        this.listener = actionCompleteListener;
+    private @Nullable ActionCompleteInterface actionCompleteInterface;
+    private @Nullable ActionBeginInterface actionBeginInterface;
+
+    public void setOnActionCompleteListener(@NonNull ActionCompleteInterface actionCompleteInterface) {
+        this.actionCompleteInterface = actionCompleteInterface;
+    }
+
+    public void setOnActionBeginListener(@NonNull ActionBeginInterface actionBeginInterface) {
+        this.actionBeginInterface = actionBeginInterface;
     }
 
     @NonNull
@@ -119,10 +128,11 @@ public class BackupDialogFragment extends DialogFragment {
             case MODE_BACKUP:
             default: op = BatchOpsManager.OP_BACKUP;
         }
+        if (actionBeginInterface != null) actionBeginInterface.onActionBegin(mode);
         new Thread(() -> {
             batchOpsManager.performOp(op, new ArrayList<>(packageNames));
-            if (listener != null) {
-                activity.runOnUiThread(() -> listener.onActionComplete(mode,
+            if (actionCompleteInterface != null) {
+                activity.runOnUiThread(() -> actionCompleteInterface.onActionComplete(mode,
                         batchOpsManager.getLastResult().failedPackages().toArray(new String[0])));
             }
         }).start();
