@@ -23,8 +23,7 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
     <style name="AppTheme.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Primary">
-        <item name="android:backgroundTintMode">add</item>
-        <item name="android:backgroundTint">#000</item>
+        <item name="elevation">4dp</item>
     </style>
     <style name="AppTheme.BottomAppBar" parent="Widget.MaterialComponents.BottomAppBar.Colored">
         <item name="materialThemeOverlay">@style/AppTheme.BottomAppBarOverlay</item>
