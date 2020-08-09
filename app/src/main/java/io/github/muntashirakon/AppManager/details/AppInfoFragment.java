@@ -183,7 +183,7 @@ public class AppInfoFragment extends Fragment
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh_detail:
-                mainModel.setIsPackageChanged();
+                refreshDetails();
                 return true;
             case R.id.action_share_apk:
                 new Thread(() -> {
@@ -288,8 +288,8 @@ public class AppInfoFragment extends Fragment
 
     @Override
     public void onRefresh() {
-        mainModel.setIsPackageChanged();
         mSwipeRefresh.setRefreshing(false);
+        refreshDetails();
     }
 
     @Override
@@ -302,6 +302,11 @@ public class AppInfoFragment extends Fragment
     public void onDestroy() {
         IOUtils.deleteDir(mActivity.getExternalCacheDir());
         super.onDestroy();
+    }
+
+    private void refreshDetails() {
+        mProgressIndicator.show();
+        mainModel.setIsPackageChanged();
     }
 
     /**
@@ -438,7 +443,7 @@ public class AppInfoFragment extends Fragment
                     addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> new Thread(() -> {
                         if (RunnerUtils.forceStopPackage(mPackageName).isSuccessful()) {
                             // Refresh
-                            runOnUiThread(() -> mainModel.setIsPackageChanged());
+                            runOnUiThread(this::refreshDetails);
                         } else {
                             runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_stop, mPackageLabel), Toast.LENGTH_LONG).show());
                         }
@@ -452,7 +457,7 @@ public class AppInfoFragment extends Fragment
                                 .setPositiveButton(R.string.clear, (dialog, which) ->
                                         new Thread(() -> {
                                             if (RunnerUtils.clearPackageData(mPackageName).isSuccessful()) {
-                                                runOnUiThread(() -> mainModel.setIsPackageChanged());
+                                                runOnUiThread(this::refreshDetails);
                                             }
                                         }).start())
                                 .setNegativeButton(android.R.string.cancel, null)
@@ -474,7 +479,7 @@ public class AppInfoFragment extends Fragment
                             command.append(" ").append(extCache);
                         }
                         if (Runner.runCommand(command.toString()).isSuccessful()) {
-                            runOnUiThread(() -> mainModel.setIsPackageChanged());
+                            runOnUiThread(this::refreshDetails);
                         }
                     });
                 }

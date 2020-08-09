@@ -282,7 +282,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     } else {
                         runOnUiThread(() -> {
                             Toast.makeText(mActivity, R.string.trackers_disabled_successfully, Toast.LENGTH_SHORT).show();
-                            if (mAdapter != null) mainModel.setIsPackageChanged();
+                            refreshDetails();
                         });
                     }
                     runOnUiThread(() -> mainModel.setRuleApplicationStatus());
@@ -301,7 +301,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     if (mainModel == null || !mainModel.ignoreDangerousAppOps()) {
                         runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_deny_dangerous_app_ops, Toast.LENGTH_SHORT).show());
                     }
-                    runOnUiThread(() -> mainModel.setIsPackageChanged());
+                    runOnUiThread(this::refreshDetails);
                 }).start();
                 return true;
             case R.id.action_deny_dangerous_permissions:  // permissions
@@ -310,7 +310,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     if (mainModel == null || !mainModel.revokeDangerousPermissions()) {
                         runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_deny_dangerous_perms, Toast.LENGTH_SHORT).show());
                     }
-                    runOnUiThread(() -> mainModel.setIsPackageChanged());
+                    runOnUiThread(this::refreshDetails);
                 }).start();
                 return true;
             // Sorting
@@ -353,7 +353,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         if (mPackageName == null) mPackageName = mainModel.getPackageName();
         mainModel.get(neededProperty).observe(mActivity, appDetailsItems -> {
             if (neededProperty == FEATURES) bFi = mainModel.isbFi();
-            mAdapter.setDefaultList(appDetailsItems);
+            if (mAdapter != null) mAdapter.setDefaultList(appDetailsItems);
         });
         mainModel.getRuleApplicationStatus().observe(mActivity, status -> {
             if (neededProperty > APP_INFO && neededProperty <= PROVIDERS) {
@@ -422,10 +422,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     private void refreshDetails() {
-        if (mAdapter != null) {
-            showProgressIndicator(true);
-            mainModel.setIsPackageChanged();
-        }
+        showProgressIndicator(true);
+        mainModel.setIsPackageChanged();
     }
 
     /**
