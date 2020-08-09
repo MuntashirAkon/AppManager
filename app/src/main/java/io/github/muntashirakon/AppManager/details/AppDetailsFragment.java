@@ -350,9 +350,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     public void onStart() {
         super.onStart();
         if (mainModel == null) return;
+        if (mPackageName == null) mPackageName = mainModel.getPackageName();
         mainModel.get(neededProperty).observe(mActivity, appDetailsItems -> {
-            mAdapter.setDefaultList(appDetailsItems);
             if (neededProperty == FEATURES) bFi = mainModel.isbFi();
+            mAdapter.setDefaultList(appDetailsItems);
         });
         mainModel.getRuleApplicationStatus().observe(mActivity, status -> {
             if (neededProperty > APP_INFO && neededProperty <= PROVIDERS) {
@@ -370,10 +371,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     public void onResume() {
         super.onResume();
         mSwipeRefresh.setEnabled(true);
-        if (neededProperty > APP_INFO && neededProperty <= PERMISSIONS) {
-            mActivity.searchView.setVisibility(View.VISIBLE);
-            mActivity.searchView.setOnQueryTextListener(this);
-        } else mActivity.searchView.setVisibility(View.GONE);
+        if (mActivity.searchView != null) {
+            if (neededProperty > APP_INFO && neededProperty <= PERMISSIONS) {
+                mActivity.searchView.setVisibility(View.VISIBLE);
+                mActivity.searchView.setOnQueryTextListener(this);
+            } else mActivity.searchView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -503,18 +506,20 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         }
 
         void setDefaultList(List<AppDetailsItem> list) {
-            isRootEnabled = AppPref.isRootEnabled();
-            isADBEnabled = AppPref.isAdbEnabled();
-            requestedProperty = neededProperty;
-            mConstraint = mainModel.getSearchQuery();
-            mAdapterList.clear();
-            mAdapterList.addAll(list);
-            showProgressIndicator(false);
-            notifyDataSetChanged();
             new Thread(() -> {
+                isRootEnabled = AppPref.isRootEnabled();
+                isADBEnabled = AppPref.isAdbEnabled();
+                requestedProperty = neededProperty;
+                mConstraint = mainModel.getSearchQuery();
+                mAdapterList.clear();
+                mAdapterList.addAll(list);
                 if (requestedProperty == SERVICES && (isRootEnabled || isADBEnabled) && !isExternalApk ) {
                     runningServices = PackageUtils.getRunningServicesForPackage(mPackageName);
                 }
+                runOnUiThread(() -> {
+                    showProgressIndicator(false);
+                    notifyDataSetChanged();
+                });
             }).start();
         }
 

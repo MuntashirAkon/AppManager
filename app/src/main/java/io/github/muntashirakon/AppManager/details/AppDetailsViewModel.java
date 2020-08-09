@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -459,7 +460,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     public void setIsPackageChanged() {
         setPackageInfo(true);
-        isPackageChanged.postValue(true);
     }
 
     public boolean getIsExternalApk() {
@@ -523,6 +523,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 setPackageInfo(true);
             }
         }
+        if (isPackageChanged == null) isPackageChanged = new MutableLiveData<>();
+        isPackageChanged.postValue(true);
     }
 
     public PackageInfo getPackageInfo() {
@@ -990,7 +992,27 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            model.setIsPackageChanged();
+            if (model.isExternalApk) return;
+            switch (Objects.requireNonNull(intent.getAction())) {
+                case Intent.ACTION_PACKAGE_REMOVED:
+                    if (intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) break;
+                case Intent.ACTION_PACKAGE_ADDED:
+                case Intent.ACTION_PACKAGE_CHANGED:
+                    int uid = intent.getIntExtra(Intent.EXTRA_UID, -1);
+                    if (model.getPackageInfo().applicationInfo.uid == uid)
+                        model.setIsPackageChanged();
+                    break;
+                case Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE:
+                case Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE:
+                    String[] packages = intent.getStringArrayExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST);
+                    if (packages != null) {
+                        for (String packageName: packages)
+                            if (packageName.equals(model.packageName)) model.setIsPackageChanged();
+                    }
+                    break;
+                case Intent.ACTION_LOCALE_CHANGED:
+                    model.setIsPackageChanged();
+            }
         }
     }
 }

@@ -57,6 +57,23 @@ public class AppDetailsActivity extends AppCompatActivity {
             finish();
             return;
         }
+        // Set search
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            searchView = new SearchView(actionBar.getThemedContext());
+            actionBar.setDisplayShowCustomEnabled(true);
+            searchView.setQueryHint(getString(R.string.search));
+
+            ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_button))
+                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
+            ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn))
+                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
+
+            ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.gravity = Gravity.END;
+            actionBar.setCustomView(searchView, layoutParams);
+        }
         new Thread(() -> {
             if (packageName != null) model.setPackageName(packageName);
             else model.setPackageUri(apkUri);
@@ -74,22 +91,7 @@ public class AppDetailsActivity extends AppCompatActivity {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 ViewPager viewPager = findViewById(R.id.pager);
                 viewPager.setAdapter(new AppDetailsFragmentPagerAdapter(fragmentManager));
-                ActionBar actionBar = getSupportActionBar();
-                if (actionBar != null) {
-                    searchView = new SearchView(actionBar.getThemedContext());
-                    actionBar.setDisplayShowCustomEnabled(true);
-                    searchView.setQueryHint(getString(R.string.search));
 
-                    ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_button))
-                            .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
-                    ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn))
-                            .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
-
-                    ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT);
-                    layoutParams.gravity = Gravity.END;
-                    actionBar.setCustomView(searchView, layoutParams);
-                }
                 TabLayout tabLayout = findViewById(R.id.tab_layout);
                 tabLayout.setupWithViewPager(viewPager);
                 // Check for the existence of package

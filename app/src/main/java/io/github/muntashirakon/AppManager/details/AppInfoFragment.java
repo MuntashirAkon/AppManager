@@ -276,6 +276,7 @@ public class AppInfoFragment extends Fragment
     @Override
     public void onStart() {
         super.onStart();
+        if (mActivity.searchView != null) mActivity.searchView.setVisibility(View.GONE);
         mainModel.getIsPackageChanged().observe(this, isPackageChanged -> {
             //noinspection ConstantConditions
             if (isPackageChanged && mainModel.getIsPackageExist().getValue()) {
@@ -283,8 +284,6 @@ public class AppInfoFragment extends Fragment
                 getPackageInfo();
             }
         });
-        // First load
-        mainModel.setIsPackageChanged();
     }
 
     @Override
