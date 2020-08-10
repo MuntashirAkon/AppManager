@@ -29,9 +29,12 @@ It basically combines the features of 5 or 6 apps that any tech-savvy person nee
 
 See the instructions page within the app for more information on how to use the app.
 
-Until it is available in the official repo,
-
-<a href="https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid" width="200dp" /></a>
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+alt="Get it on F-Droid"
+height="80" />](https://f-droid.org/packages/io.github.muntashirakon.AppManager)
+[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png"
+alt="Get it on IzzyOnDroid"
+height="80" />](https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager)
 
 Telegram Support Group: https://t.me/AppManagerAndroid
 
