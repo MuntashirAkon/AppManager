@@ -8,16 +8,12 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:elevation="0dp">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:paddingEnd="16dp"
-            android:paddingStart="6dp"
-            app:contentInsetStartWithNavigation="0dp"
+            android:layout_height="wrap_content"
             app:navigationIcon="@drawable/ic_baseline_clear_24" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -54,8 +50,6 @@
     <FrameLayout android:id="@+id/custom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dip"
-        android:paddingBottom="5dip"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
