@@ -209,7 +209,7 @@ public class AppInfoFragment extends Fragment
                 Bundle args = new Bundle();
                 args.putStringArrayList(BackupDialogFragment.ARG_PACKAGES, new ArrayList<>(Collections.singleton(mPackageName)));
                 backupDialogFragment.setArguments(args);
-                backupDialogFragment.setOnActionBeginListener(mode -> mProgressIndicator.show());
+                backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
                 backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> {
                     if (failedPackages.length > 0) {
                         @StringRes int desiredString;
@@ -227,7 +227,7 @@ public class AppInfoFragment extends Fragment
                     } else {
                         Toast.makeText(mActivity, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
                     }
-                    mProgressIndicator.hide();
+                    showProgressIndicator(false);
                 });
                 backupDialogFragment.show(mActivity.getSupportFragmentManager(), BackupDialogFragment.TAG);
                 return true;
@@ -277,10 +277,12 @@ public class AppInfoFragment extends Fragment
     public void onStart() {
         super.onStart();
         if (mActivity.searchView != null) mActivity.searchView.setVisibility(View.GONE);
-        mainModel.getIsPackageChanged().observe(this, isPackageChanged -> {
-            //noinspection ConstantConditions
-            if (isPackageChanged && mainModel.getIsPackageExist().getValue()) {
-                Log.e("AppInfo", "Package Changed");
+        mainModel.get(AppDetailsFragment.APP_INFO).observe(this, appDetailsItems -> {
+            if (!appDetailsItems.isEmpty()) {
+                AppDetailsItem appDetailsItem = appDetailsItems.get(0);
+                mPackageInfo = (PackageInfo) appDetailsItem.vanillaItem;
+                mPackageName = appDetailsItem.name;
+                showProgressIndicator(true);
                 getPackageInfo();
             }
         });
@@ -305,7 +307,7 @@ public class AppInfoFragment extends Fragment
     }
 
     private void refreshDetails() {
-        mProgressIndicator.show();
+        showProgressIndicator(true);
         mainModel.setIsPackageChanged();
     }
 
@@ -966,11 +968,11 @@ public class AppInfoFragment extends Fragment
      * Get package info.
      */
     private void getPackageInfo() {
-        mProgressIndicator.show();
         new Thread(() -> {
-            mPackageName = mainModel.getPackageName();
-            mPackageInfo = mainModel.getPackageInfo();
-            if (mPackageInfo == null) return;
+            if (mPackageInfo == null) {
+                runOnUiThread(() -> showProgressIndicator(false));
+                return;
+            }
             if (isExternalApk) {
                 try {
                     int flagSigningInfo, flagDisabledComponents;
@@ -994,7 +996,7 @@ public class AppInfoFragment extends Fragment
             setHeaders();
             runOnUiThread(this::setHorizontalActions);
             setVerticalView();
-            runOnUiThread(() -> mProgressIndicator.hide());
+            runOnUiThread(() -> showProgressIndicator(false));
         }).start();
     }
 
@@ -1038,6 +1040,17 @@ public class AppInfoFragment extends Fragment
      */
     private String getReadableSize(long size) {
         return Formatter.formatFileSize(mActivity, size);
+    }
+
+    private void showProgressIndicator(boolean show) {
+        if (mProgressIndicator == null) return;
+        if (show) {
+            mProgressIndicator.setVisibility(View.VISIBLE);
+            mProgressIndicator.show();
+        } else {
+            mProgressIndicator.hide();
+            mProgressIndicator.setVisibility(View.GONE);
+        }
     }
 
     private void runOnUiThread(Runnable runnable) {

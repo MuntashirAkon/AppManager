@@ -351,19 +351,15 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         super.onStart();
         if (mainModel == null) return;
         if (mPackageName == null) mPackageName = mainModel.getPackageName();
-        mainModel.get(neededProperty).observe(mActivity, appDetailsItems -> {
+        mainModel.get(neededProperty).observe(this, appDetailsItems -> {
             if (neededProperty == FEATURES) bFi = mainModel.isbFi();
             if (mAdapter != null) mAdapter.setDefaultList(appDetailsItems);
         });
-        mainModel.getRuleApplicationStatus().observe(mActivity, status -> {
+        mainModel.getRuleApplicationStatus().observe(this, status -> {
             if (neededProperty > APP_INFO && neededProperty <= PROVIDERS) {
                 mRulesNotAppliedMsg.setVisibility(status != AppDetailsViewModel.RULE_NOT_APPLIED ?
                         View.GONE : View.VISIBLE);
             }
-        });
-        mainModel.getIsPackageChanged().observe(this, isPackageChanged -> {
-            //noinspection ConstantConditions
-            if (isPackageChanged && mainModel.getIsPackageExist().getValue()) mainModel.load(neededProperty);
         });
     }
 
@@ -492,7 +488,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsRecyclerAdapter.ViewHolder> {
-        private final List<AppDetailsItem> mAdapterList;
+        private @NonNull List<AppDetailsItem> mAdapterList;
         private @Property int requestedProperty;
         private String mConstraint;
         private Boolean isRootEnabled = true;
@@ -503,14 +499,13 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             mAdapterList = new ArrayList<>();
         }
 
-        void setDefaultList(List<AppDetailsItem> list) {
+        void setDefaultList(@NonNull List<AppDetailsItem> list) {
             new Thread(() -> {
                 isRootEnabled = AppPref.isRootEnabled();
                 isADBEnabled = AppPref.isAdbEnabled();
                 requestedProperty = neededProperty;
                 mConstraint = mainModel.getSearchQuery();
-                mAdapterList.clear();
-                mAdapterList.addAll(list);
+                mAdapterList = list;
                 if (requestedProperty == SERVICES && (isRootEnabled || isADBEnabled) && !isExternalApk ) {
                     runningServices = PackageUtils.getRunningServicesForPackage(mPackageName);
                 }

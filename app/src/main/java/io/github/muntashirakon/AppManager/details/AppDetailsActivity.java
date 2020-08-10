@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ public class AppDetailsActivity extends AppCompatActivity {
     public AppDetailsViewModel model;
     public SearchView searchView;
 
+    private ViewPager viewPager;
     private TypedArray mTabTitleIds;
     private Fragment[] fragments;
 
@@ -74,6 +76,12 @@ public class AppDetailsActivity extends AppCompatActivity {
             layoutParams.gravity = Gravity.END;
             actionBar.setCustomView(searchView, layoutParams);
         }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        viewPager = findViewById(R.id.pager);
+        viewPager.setAdapter(new AppDetailsFragmentPagerAdapter(fragmentManager));
+
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
         new Thread(() -> {
             if (packageName != null) model.setPackageName(packageName);
             else model.setPackageUri(apkUri);
@@ -88,12 +96,6 @@ public class AppDetailsActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 // Set title
                 setTitle(applicationInfo.loadLabel(getPackageManager()));
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                ViewPager viewPager = findViewById(R.id.pager);
-                viewPager.setAdapter(new AppDetailsFragmentPagerAdapter(fragmentManager));
-
-                TabLayout tabLayout = findViewById(R.id.tab_layout);
-                tabLayout.setupWithViewPager(viewPager);
                 // Check for the existence of package
                 model.getIsPackageExist().observe(this, isPackageExist -> {
                     if (!isPackageExist) {
@@ -103,6 +105,19 @@ public class AppDetailsActivity extends AppCompatActivity {
                 });
             });
         }).start();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        model.getIsPackageChanged().observe(this, isPackageChanged -> {
+            //noinspection ConstantConditions
+            if (isPackageChanged && model.getIsPackageExist().getValue()) {
+                @AppDetailsFragment.Property int id = viewPager.getCurrentItem();
+                Log.e("ADA - " + mTabTitleIds.getText(id), "isPackageChanged called");
+                for (int i = 0; i<mTabTitleIds.length(); ++i) model.load(i);
+            }
+        });
     }
 
     @Override

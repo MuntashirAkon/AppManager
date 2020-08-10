@@ -19,7 +19,6 @@ import android.content.pm.SigningInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.DeadSystemException;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -46,8 +45,8 @@ import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.compontents.TrackerComponentUtils;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class AppDetailsViewModel extends AndroidViewModel {
@@ -56,7 +55,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private PackageManager mPackageManager;
     private PackageInfo packageInfo;
     private String packageName;
-    private Handler handler;
     private ComponentsBlocker blocker;
     private PackageIntentReceiver receiver;
     private String apkPath;
@@ -77,7 +75,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
         Log.d("ADVM", "New constructor called.");
         mPackageManager = application.getPackageManager();
         receiver = new PackageIntentReceiver(this);
-        handler = new Handler(application.getMainLooper());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
             flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
         else flagSigningInfo = PackageManager.GET_SIGNATURES;
@@ -179,7 +176,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public void setRuleApplicationStatus() {
         if (packageName == null) return;
         if (isExternalApk) {
-            handler.post(() -> ruleApplicationStatus.postValue(RULE_NO_RULE));
+            ruleApplicationStatus.postValue(RULE_NO_RULE);
             return;
         }
         synchronized (ComponentsBlocker.class) {
@@ -187,7 +184,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             final AtomicInteger newRuleApplicationStatus = new AtomicInteger();
             newRuleApplicationStatus.set(blocker.isRulesApplied() ? RULE_APPLIED : RULE_NOT_APPLIED);
             if (blocker.componentCount() == 0) newRuleApplicationStatus.set(RULE_NO_RULE);
-            handler.post(() -> ruleApplicationStatus.postValue(newRuleApplicationStatus.get()));
+            ruleApplicationStatus.postValue(newRuleApplicationStatus.get());
         }
     }
 
@@ -418,8 +415,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
             case AppDetailsFragment.CONFIGURATIONS: return getConfigurations();
             case AppDetailsFragment.SIGNATURES: return getSignatures();
             case AppDetailsFragment.SHARED_LIBRARIES: return getSharedLibraries();
+            case AppDetailsFragment.APP_INFO: return getAppInfo();
             case AppDetailsFragment.NONE:
-            case AppDetailsFragment.APP_INFO:
         }
         return null;
     }
@@ -437,8 +434,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
             case AppDetailsFragment.CONFIGURATIONS: loadConfigurations(); break;
             case AppDetailsFragment.SIGNATURES: loadSignatures(); break;
             case AppDetailsFragment.SHARED_LIBRARIES: loadSharedLibraries(); break;
+            case AppDetailsFragment.APP_INFO: loadAppInfo();
             case AppDetailsFragment.NONE:
-            case AppDetailsFragment.APP_INFO:
                 break;
         }
     }
@@ -449,10 +446,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return isPackageExist;
     }
 
-    private MutableLiveData<Boolean> isPackageChanged;
+    private @NonNull MutableLiveData<Boolean> isPackageChanged = new MutableLiveData<>();
     public LiveData<Boolean> getIsPackageChanged() {
-        if (isPackageChanged == null) {
-            isPackageChanged = new MutableLiveData<>();
+        if (isPackageChanged.getValue() == null) {
             isPackageChanged.setValue(false);
         }
         return isPackageChanged;
@@ -479,12 +475,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     private void reloadComponents() {
-        handler.post(() -> {
-            loadActivities();
-            loadServices();
-            loadReceivers();
-            loadProviders();
-        });
+        loadActivities();
+        loadServices();
+        loadReceivers();
+        loadProviders();
     }
 
     public void setPackageInfo(boolean reload) {
@@ -520,16 +514,36 @@ public class AppDetailsViewModel extends AndroidViewModel {
             //noinspection ConstantConditions
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && e instanceof DeadSystemException) {
                 // For some packages this exception might occur
-                setPackageInfo(true);
+                setPackageInfo(false);
+                return;
             }
         }
-        if (isPackageChanged == null) isPackageChanged = new MutableLiveData<>();
         isPackageChanged.postValue(true);
     }
 
     public PackageInfo getPackageInfo() {
         if (packageInfo == null) setPackageInfo(false);
         return packageInfo;
+    }
+
+    private MutableLiveData<List<AppDetailsItem>> appInfo;
+    private LiveData<List<AppDetailsItem>> getAppInfo() {
+        if (appInfo == null) {
+            appInfo = new MutableLiveData<>();
+            loadAppInfo();
+        }
+        return appInfo;
+    }
+
+    private void loadAppInfo() {
+        new Thread(() -> {
+            setPackageInfo(false);
+            if (packageInfo == null || appInfo == null) return;
+            AppDetailsItem appDetailsItem = new AppDetailsItem(packageInfo);
+            appDetailsItem.name = packageName;
+            List<AppDetailsItem> appDetailsItems = Collections.singletonList(appDetailsItem);
+            appInfo.postValue(appDetailsItems);
+        }).start();
     }
 
     MutableLiveData<List<AppDetailsItem>> activities;
@@ -545,7 +559,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (activities == null) return;
         new Thread(() -> {
             setPackageInfo(false);
-            if (packageInfo == null) return;
+            if (packageInfo == null || activities == null) return;
             List<AppDetailsItem> appDetailsItems = new ArrayList<>();
             if (packageInfo.activities != null) {
                 for (ActivityInfo activityInfo : packageInfo.activities) {
@@ -559,7 +573,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 }
             }
             sortComponents(appDetailsItems);
-            handler.post(() -> activities.postValue(appDetailsItems));
+            activities.postValue(appDetailsItems);
         }).start();
     }
 
@@ -576,7 +590,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (services == null) return;
         new Thread(() -> {
             setPackageInfo(false);
-            if (packageInfo == null) return;
+            if (packageInfo == null || services == null) return;
             List<AppDetailsItem> appDetailsItems = new ArrayList<>();
             if (packageInfo.services != null) {
                 for (ServiceInfo serviceInfo : packageInfo.services) {
@@ -590,7 +604,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 }
             }
             sortComponents(appDetailsItems);
-            handler.post(() -> services.postValue(appDetailsItems));
+            services.postValue(appDetailsItems);
         }).start();
     }
 
@@ -607,7 +621,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (receivers == null) return;
         new Thread(() -> {
             setPackageInfo(false);
-            if (packageInfo == null) return;
+            if (packageInfo == null || receivers == null) return;
             List<AppDetailsItem> appDetailsItems = new ArrayList<>();
             if (packageInfo.receivers != null) {
                 for (ActivityInfo activityInfo : packageInfo.receivers) {
@@ -621,7 +635,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 }
             }
             sortComponents(appDetailsItems);
-            handler.post(() -> receivers.postValue(appDetailsItems));
+            receivers.postValue(appDetailsItems);
         }).start();
     }
 
@@ -638,7 +652,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (providers == null) return;
         new Thread(() -> {
             setPackageInfo(false);
-            if (packageInfo == null) return;
+            if (packageInfo == null || providers == null) return;
             List<AppDetailsItem> appDetailsItems = new ArrayList<>();
             if (packageInfo.providers != null) {
                 for (ProviderInfo providerInfo : packageInfo.providers) {
@@ -652,7 +666,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 }
             }
             sortComponents(appDetailsItems);
-            handler.post(() -> providers.postValue(appDetailsItems));
+            providers.postValue(appDetailsItems);
         }).start();
     }
 
@@ -697,7 +711,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @SuppressLint("SwitchIntDef")
     private void loadAppOps() {
         new Thread(() -> {
-            if (packageName == null) return;
+            if (packageName == null || appOps == null) return;
             if (appOpItems == null) {
                 appOpItems = new ArrayList<>();
                 if (!isExternalApk && (AppPref.isRootEnabled() || AppPref.isAdbEnabled())) {
@@ -743,7 +757,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 }
                 return 0;
             });
-            handler.post(() -> appOps.postValue(appDetailsItems));
+            appOps.postValue(appDetailsItems);
         }).start();
     }
 
@@ -775,7 +789,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private void loadUsesPermissions() {
         new Thread(() -> {
             setPackageInfo(false);
-            if (packageInfo == null) return;
+            if (packageInfo == null || usesPermissions == null) return;
             if (usesPermissionItems == null) {
                 usesPermissionItems = new CopyOnWriteArrayList<>();
                 if (packageInfo.requestedPermissions != null) {
@@ -817,7 +831,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 }
                 return 0;
             });
-            handler.post(() -> usesPermissions.postValue(appDetailsItems));
+            usesPermissions.postValue(appDetailsItems);
         }).start();
     }
 
@@ -833,7 +847,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private void loadPermissions() {
         new Thread(() -> {
             setPackageInfo(false);
-            if (packageInfo == null) return;
+            if (packageInfo == null || permissions == null) return;
             List<AppDetailsItem> appDetailsItems = new ArrayList<>();
             if (packageInfo.permissions != null) {
                 for(PermissionInfo permissionInfo: packageInfo.permissions) {
@@ -845,7 +859,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 }
                 Collections.sort(appDetailsItems, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
             }
-            handler.post(() -> permissions.postValue(appDetailsItems));
+            permissions.postValue(appDetailsItems);
         }).start();
     }
 
@@ -866,7 +880,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private void loadFeatures() {
         new Thread(() -> {
             setPackageInfo(false);
-            if (packageInfo == null) return;
+            if (packageInfo == null || features == null) return;
             List<AppDetailsItem> appDetailsItems = new ArrayList<>();
             if (packageInfo.reqFeatures != null) {
                 try {
@@ -884,7 +898,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     appDetailsItems.add(appDetailsItem);
                 }
             }
-            handler.post(() -> features.postValue(appDetailsItems));
+            features.postValue(appDetailsItems);
         }).start();
     }
 
@@ -900,7 +914,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private void loadConfigurations() {
         new Thread(() -> {
             setPackageInfo(false);
-            if (packageInfo == null) return;
+            if (packageInfo == null || configurations == null) return;
             List<AppDetailsItem> appDetailsItems = new ArrayList<>();
             if (packageInfo.configPreferences != null) {
                 for(ConfigurationInfo configurationInfo: packageInfo.configPreferences) {
@@ -908,7 +922,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     appDetailsItems.add(appDetailsItem);
                 }
             }
-            handler.post(() -> configurations.postValue(appDetailsItems));
+            configurations.postValue(appDetailsItems);
         }).start();
     }
 
@@ -924,7 +938,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private void loadSignatures() {
         new Thread(() -> {
             setPackageInfo(false);
-            if (packageInfo == null) return;
+            if (packageInfo == null || signatures == null) return;
             List<AppDetailsItem> appDetailsItems = new ArrayList<>();
             Signature[] signatureArray;
             if (!isExternalApk && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -938,7 +952,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     appDetailsItems.add(appDetailsItem);
                 }
             }
-            handler.post(() -> signatures.postValue(appDetailsItems));
+            signatures.postValue(appDetailsItems);
         }).start();
     }
 
@@ -954,7 +968,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private void loadSharedLibraries() {
         new Thread(() -> {
             setPackageInfo(false);
-            if (packageInfo == null) return;
+            if (packageInfo == null || sharedLibraries == null) return;
             List<AppDetailsItem> appDetailsItems = new ArrayList<>();
             if (packageInfo.applicationInfo.sharedLibraryFiles != null) {
                 for(String sharedLibrary: packageInfo.applicationInfo.sharedLibraryFiles) {
@@ -963,7 +977,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     appDetailsItems.add(appDetailsItem);
                 }
             }
-            handler.post(() -> sharedLibraries.postValue(appDetailsItems));
+            sharedLibraries.postValue(appDetailsItems);
         }).start();
     }
 
@@ -999,18 +1013,25 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 case Intent.ACTION_PACKAGE_ADDED:
                 case Intent.ACTION_PACKAGE_CHANGED:
                     int uid = intent.getIntExtra(Intent.EXTRA_UID, -1);
-                    if (model.getPackageInfo().applicationInfo.uid == uid)
+                    if (model.packageInfo.applicationInfo.uid == uid) {
+                        Log.d("ADVM", "Package is changed.");
                         model.setIsPackageChanged();
+                    }
                     break;
                 case Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE:
                 case Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE:
                     String[] packages = intent.getStringArrayExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST);
                     if (packages != null) {
-                        for (String packageName: packages)
-                            if (packageName.equals(model.packageName)) model.setIsPackageChanged();
+                        for (String packageName: packages) {
+                            if (packageName.equals(model.packageName)) {
+                                Log.d("ADVM", "Package availability changed.");
+                                model.setIsPackageChanged();
+                            }
+                        }
                     }
                     break;
                 case Intent.ACTION_LOCALE_CHANGED:
+                    Log.d("ADVM", "Locale changed.");
                     model.setIsPackageChanged();
             }
         }
