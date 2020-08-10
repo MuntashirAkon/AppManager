@@ -466,24 +466,12 @@ public class AppInfoFragment extends Fragment
                                 .show());
                 // Clear cache
                 if (isRootEnabled) {
-                    addToHorizontalLayout(R.string.clear_cache, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
-                        StringBuilder command = new StringBuilder(String.format("rm -rf %s/cache %s/code_cache",
-                                mApplicationInfo.dataDir, mApplicationInfo.dataDir));
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            if (!mApplicationInfo.dataDir.equals(mApplicationInfo.deviceProtectedDataDir)) {
-                                command.append(String.format(" %s/cache %s/code_cache",
-                                        mApplicationInfo.deviceProtectedDataDir, mApplicationInfo.deviceProtectedDataDir));
-                            }
-                        }
-                        File[] cacheDirs = mActivity.getExternalCacheDirs();
-                        for (File cacheDir : cacheDirs) {
-                            String extCache = cacheDir.getAbsolutePath().replace(mActivity.getPackageName(), mPackageName);
-                            command.append(" ").append(extCache);
-                        }
-                        if (Runner.runCommand(command.toString()).isSuccessful()) {
-                            runOnUiThread(this::refreshDetails);
-                        }
-                    });
+                    addToHorizontalLayout(R.string.clear_cache, R.drawable.ic_delete_black_24dp)
+                            .setOnClickListener(v -> new Thread(() -> {
+                                if (RunnerUtils.clearPackageCache(mPackageName).isSuccessful()) {
+                                    runOnUiThread(this::refreshDetails);
+                                }
+                            }).start());
                 }
             }  // End root only
         } else {
