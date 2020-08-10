@@ -78,7 +78,6 @@ public class AppDetailsActivity extends AppCompatActivity {
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         viewPager = findViewById(R.id.pager);
-        viewPager.setAdapter(new AppDetailsFragmentPagerAdapter(fragmentManager));
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
@@ -97,6 +96,7 @@ public class AppDetailsActivity extends AppCompatActivity {
                 // Set title
                 setTitle(applicationInfo.loadLabel(getPackageManager()));
                 // Check for the existence of package
+                viewPager.setAdapter(new AppDetailsFragmentPagerAdapter(fragmentManager));
                 model.getIsPackageExist().observe(this, isPackageExist -> {
                     if (!isPackageExist) {
                         Toast.makeText(this, R.string.app_not_installed, Toast.LENGTH_LONG).show();
