@@ -115,7 +115,8 @@ public class AppDetailsActivity extends AppCompatActivity {
             if (isPackageChanged && model.getIsPackageExist().getValue()) {
                 @AppDetailsFragment.Property int id = viewPager.getCurrentItem();
                 Log.e("ADA - " + mTabTitleIds.getText(id), "isPackageChanged called");
-                for (int i = 0; i<mTabTitleIds.length(); ++i) model.load(i);
+                if (model.getIsExternalApk()) model.load(AppDetailsFragment.APP_INFO);
+                else for (int i = 0; i<mTabTitleIds.length(); ++i) model.load(i);
             }
         });
     }

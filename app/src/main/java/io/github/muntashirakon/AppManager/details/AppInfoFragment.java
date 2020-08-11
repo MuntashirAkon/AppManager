@@ -976,7 +976,9 @@ public class AppInfoFragment extends Fragment
                             | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
                             | flagDisabledComponents | flagSigningInfo | PackageManager.GET_CONFIGURATIONS
                             | PackageManager.GET_SHARED_LIBRARY_FILES);
-                } catch (PackageManager.NameNotFoundException ignore) {}
+                } catch (PackageManager.NameNotFoundException e) {
+                    mInstalledPackageInfo = null;
+                }
             }
             mApplicationInfo = mPackageInfo.applicationInfo;
             mPackageLabel = mApplicationInfo.loadLabel(mPackageManager);

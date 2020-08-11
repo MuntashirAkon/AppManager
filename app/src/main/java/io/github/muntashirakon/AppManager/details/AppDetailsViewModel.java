@@ -1005,15 +1005,14 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
 
         @Override
-        public void onReceive(Context context, Intent intent) {
-            if (model.isExternalApk) return;
+        public void onReceive(Context context, @NonNull Intent intent) {
             switch (Objects.requireNonNull(intent.getAction())) {
                 case Intent.ACTION_PACKAGE_REMOVED:
                     if (intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) break;
                 case Intent.ACTION_PACKAGE_ADDED:
                 case Intent.ACTION_PACKAGE_CHANGED:
                     int uid = intent.getIntExtra(Intent.EXTRA_UID, -1);
-                    if (model.packageInfo.applicationInfo.uid == uid) {
+                    if (model.packageInfo.applicationInfo.uid == uid || model.isExternalApk) {
                         Log.d("ADVM", "Package is changed.");
                         model.setIsPackageChanged();
                     }
