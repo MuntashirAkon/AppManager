@@ -152,7 +152,7 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
     @Override
     public boolean onQueryTextChange(String newText) {
         mConstraint = newText;
-        if (mAdapter != null) mAdapter.getFilter().filter(newText);
+        if (mAdapter != null) mAdapter.getFilter().filter(newText.toLowerCase());
         return true;
     }
 

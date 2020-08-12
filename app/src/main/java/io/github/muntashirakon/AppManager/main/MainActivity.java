@@ -667,7 +667,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onQueryTextChange(String searchQuery) {
-        mModel.setSearchQuery(searchQuery);
+        mModel.setSearchQuery(searchQuery.toLowerCase());
         return true;
     }
 

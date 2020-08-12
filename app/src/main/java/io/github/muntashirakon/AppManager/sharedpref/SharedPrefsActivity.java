@@ -217,9 +217,7 @@ public class SharedPrefsActivity extends AppCompatActivity implements
     @Override
     public boolean onQueryTextChange(String newText) {
         mConstraint = newText;
-        if (mAdapter != null) {
-            mAdapter.getFilter().filter(newText);
-        }
+        if (mAdapter != null) mAdapter.getFilter().filter(newText.toLowerCase());
         return true;
     }
 

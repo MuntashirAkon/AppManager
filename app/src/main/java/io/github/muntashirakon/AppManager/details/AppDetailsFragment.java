@@ -391,7 +391,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public boolean onQueryTextChange(String searchQuery) {
         if (mainModel != null) {
-            mainModel.setSearchQuery(searchQuery);
+            mainModel.setSearchQuery(searchQuery.toLowerCase());
             mainModel.load(neededProperty);
         }
         return true;

@@ -204,7 +204,7 @@ public class ClassListingActivity extends AppCompatActivity implements SearchVie
     public boolean onQueryTextChange(String newText) {
         mConstraint = newText;
         if (mClassListingAdapter != null)
-            mClassListingAdapter.getFilter().filter(newText);
+            mClassListingAdapter.getFilter().filter(newText.toLowerCase());
         return true;
     }
 
