@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +19,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -25,9 +27,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.misc.RequestCodes;
+import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
+import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
+import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 
 public class ImportExportDialogFragment extends DialogFragment {
@@ -63,24 +68,13 @@ public class ImportExportDialogFragment extends DialogFragment {
                     .setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RequestCodes.REQUEST_CODE_IMPORT);
         });
-        view.findViewById(R.id.import_existing).setOnClickListener(v -> new Thread(() -> {
-            List<String> packageList = new ArrayList<>();
-            Handler handler = new Handler(Looper.getMainLooper());
-            for (ApplicationInfo applicationInfo: requireContext().getPackageManager().getInstalledApplications(0)) {
-                packageList.add(applicationInfo.packageName);
-            }
-            List<String> failedPackages = ExternalComponentsImporter.applyFromExistingBlockList(requireContext(), packageList);
-            if (failedPackages.isEmpty()) {
-                handler.post(() -> Toast.makeText(requireContext(), R.string.the_import_was_successful, Toast.LENGTH_SHORT).show());
-            } else {
-                handler.post(() ->
-                        new MaterialAlertDialogBuilder(requireContext())
-                            .setTitle(getResources().getQuantityString(R.plurals.failed_to_import_files, failedPackages.size(), failedPackages.size()))
-                            .setItems((CharSequence[]) failedPackages.toArray(), null)
-                            .setNegativeButton(android.R.string.ok, null)
-                            .show());
-            }
-        }).start());
+        view.findViewById(R.id.import_existing).setOnClickListener(v ->
+                new MaterialAlertDialogBuilder(activity)
+                        .setTitle(R.string.pref_import_existing)
+                        .setMessage(R.string.apply_to_system_apps_question)
+                        .setPositiveButton(R.string.no, (dialog, which) -> importExistingRules(false))
+                        .setNegativeButton(R.string.yes, ((dialog, which) -> importExistingRules(true)))
+                        .show());
         view.findViewById(R.id.import_watt).setOnClickListener(v -> {
             Intent intent = new Intent()
                     .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
@@ -173,5 +167,74 @@ public class ImportExportDialogFragment extends DialogFragment {
                 }
             }
         }
+    }
+
+    private void importExistingRules(final boolean systemApps) {
+        if (!AppPref.isRootEnabled()) {
+            Toast.makeText(activity, R.string.only_works_in_root_mode, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        activity.progressIndicator.show();
+        final Handler handler = new Handler(Looper.getMainLooper());
+        final PackageManager pm = activity.getPackageManager();
+        new Thread(() -> {
+            final List<ItemCount> itemCounts = new ArrayList<>();
+            ItemCount trackerCount;
+            for (ApplicationInfo applicationInfo: pm.getInstalledApplications(0)) {
+                if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
+                trackerCount = new ItemCount();
+                trackerCount.packageName = applicationInfo.packageName;
+                trackerCount.packageLabel = applicationInfo.loadLabel(pm).toString();
+                trackerCount.count = PackageUtils.getUserDisabledComponentsForPackage(applicationInfo.packageName).size();
+                if (trackerCount.count > 0) itemCounts.add(trackerCount);
+            }
+            if (!itemCounts.isEmpty()) {
+                final List<String> selectedPackages = new ArrayList<>();
+                final String[] packagesWithItemCounts = new String[itemCounts.size()];
+                for (int i = 0; i<itemCounts.size(); ++i) {
+                    trackerCount = itemCounts.get(i);
+                    selectedPackages.add(trackerCount.packageName);
+                    packagesWithItemCounts[i] = "(" + trackerCount.count + ") " + trackerCount.packageLabel;
+                }
+                final String[] trackerPackages = selectedPackages.toArray(new String[0]);
+                final boolean[] checkedItems = new boolean[trackerPackages.length];
+                Arrays.fill(checkedItems, false);
+                handler.post(() -> {
+                    activity.progressIndicator.hide();
+                    new MaterialAlertDialogBuilder(activity)
+                            .setMultiChoiceItems(packagesWithItemCounts, checkedItems, (dialog, which, isChecked) -> {
+                                if (!isChecked) selectedPackages.remove(trackerPackages[which]);
+                                else selectedPackages.add(trackerPackages[which]);
+                            })
+                            .setTitle(R.string.filtered_packages)
+                            .setPositiveButton(R.string.apply, (dialog, which) -> {
+                                activity.progressIndicator.show();
+                                new Thread(() -> {
+                                    List<String> failedPackages = ExternalComponentsImporter.applyFromExistingBlockList(activity, selectedPackages);
+                                    if (!failedPackages.isEmpty()) {
+                                        handler.post(() -> {
+                                            new MaterialAlertDialogBuilder(activity)
+                                                    .setTitle(R.string.failed_packages)
+                                                    .setItems((CharSequence[]) failedPackages.toArray(), null)
+                                                    .setNegativeButton(android.R.string.ok, null)
+                                                    .show();
+                                            activity.progressIndicator.hide();
+                                        });
+                                    } else handler.post(() -> {
+                                        Toast.makeText(activity, R.string.the_import_was_successful, Toast.LENGTH_SHORT).show();
+                                        activity.progressIndicator.hide();
+                                    });
+                                }).start();
+                            })
+                            .setNegativeButton(android.R.string.cancel, (dialog, which) -> activity.progressIndicator.hide())
+                            .show();
+                });
+            } else {
+                handler.post(() -> {
+                    Toast.makeText(activity, R.string.no_matching_package_found, Toast.LENGTH_SHORT).show();
+                    activity.progressIndicator.hide();
+                });
+            }
+        }).start();
     }
 }

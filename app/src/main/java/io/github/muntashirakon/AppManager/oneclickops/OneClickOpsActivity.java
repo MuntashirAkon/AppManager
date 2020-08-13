@@ -216,7 +216,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
                             });
                         } else {
                             runOnUiThread(() -> {
-                                Toast.makeText(this, R.string.no_tracker_found, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, R.string.no_matching_package_found, Toast.LENGTH_SHORT).show();
                                 mProgressIndicator.hide();
                             });
                         }
@@ -308,7 +308,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
                             });
                         } else {
                             runOnUiThread(() -> {
-                                Toast.makeText(this, R.string.no_tracker_found, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, R.string.no_matching_package_found, Toast.LENGTH_SHORT).show();
                                 mProgressIndicator.hide();
                             });
                         }

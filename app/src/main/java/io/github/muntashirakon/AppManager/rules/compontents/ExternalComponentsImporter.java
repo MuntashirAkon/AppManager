@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.runner.RootShellRunner;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -65,6 +66,8 @@ public class ExternalComponentsImporter {
                 for (String componentName: components.keySet()) {
                     cb.addComponent(componentName, components.get(componentName));
                 }
+                // Remove IFW blocking rules if exists
+                RootShellRunner.runCommand(String.format("rm %s/%s*.xml", ComponentsBlocker.SYSTEM_RULES_PATH, packageName));
                 cb.applyRules(true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -138,7 +141,7 @@ public class ExternalComponentsImporter {
      * @param context Application context
      * @param uri File URI
      */
-    public static void applyFromBlocker(@NonNull Context context, Uri uri)
+    private static void applyFromBlocker(@NonNull Context context, Uri uri)
             throws Exception {
         try {
             String jsonString = Utils.getFileContent(context.getContentResolver(), uri);

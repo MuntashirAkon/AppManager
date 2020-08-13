@@ -362,7 +362,8 @@
     <string name="community_links">Update Channel: https://t.me/AppManagerChannel
         \nSupport Group: https://t.me/AppManagerAndroid</string>
     <string name="pref_import_existing">Import existing rules</string>
-    <string name="pref_import_existing_msg">Add currently disabled components to App Manager, this currently doesn\'t include MAT\'s IFW blocking rules</string>
+    <string name="pref_import_existing_msg">Add components disabled by others apps to App Manager.
+        Be careful when using this tool as there can be many false positives. Choose only the apps that you\'re certain about</string>
     <string name="failed_to_get_data_usage_information">Failed to get data usage information</string>
     <string name="clear_cache">Clear Cache</string>
     <string name="block_unblock_trackers_description">Block or unblock ad and tracking components from all the installed apps</string>
@@ -439,4 +440,5 @@
     <string name="block">Block</string>
     <string name="unblock">Unblock</string>
     <string name="block_unblock_trackers">Block/unblock trackers</string>
+    <string name="no_matching_package_found">No matching package found</string>
 </resources>
