@@ -182,6 +182,7 @@ public final class ComponentUtils {
                             int divider = fullKey.indexOf('/');
                             String pkgName = fullKey.substring(0, divider);
                             String componentName = fullKey.substring(divider + 1);
+                            if (componentName.startsWith(".")) componentName = packageName + componentName;
                             if (pkgName.equals(packageName)) {
                                 rules.put(componentName, componentType);
                             }
