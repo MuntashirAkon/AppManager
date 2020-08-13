@@ -365,7 +365,7 @@
     <string name="pref_import_existing_msg">Add currently disabled components to App Manager, this currently doesn\'t include MAT\'s IFW blocking rules</string>
     <string name="failed_to_get_data_usage_information">Failed to get data usage information</string>
     <string name="clear_cache">Clear Cache</string>
-    <string name="block_trackers_description">Block ad and tracking components from all the installed apps</string>
+    <string name="block_unblock_trackers_description">Block or unblock ad and tracking components from all the installed apps</string>
     <string name="block_components_dots">Block components…</string>
     <string name="block_components_description">Block all components identified by the given signature(s)</string>
     <string name="deny_app_ops_dots">Deny app ops…</string>
@@ -436,4 +436,7 @@
     <string name="clear_data_message">Are you sure want to clear data from this app?</string>
     <string name="clear">Clear</string>
     <string name="failed_to_backup">Failed to create backup</string>
+    <string name="block">Block</string>
+    <string name="unblock">Unblock</string>
+    <string name="block_unblock_trackers">Block/unblock trackers</string>
 </resources>

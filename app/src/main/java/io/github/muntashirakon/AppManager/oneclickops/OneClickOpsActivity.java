@@ -15,13 +15,11 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.rules.compontents.TrackerComponentUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -42,10 +40,10 @@ public class OneClickOpsActivity extends AppCompatActivity {
     }
 
     private void setItems() {
-        mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_trackers),
-                getString(R.string.block_trackers_description))
+        mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_unblock_trackers),
+                getString(R.string.block_unblock_trackers_description))
                 .setOnClickListener(v -> new MaterialAlertDialogBuilder(this)
-                        .setTitle(R.string.block_trackers)
+                        .setTitle(R.string.block_unblock_trackers)
                         .setMessage(R.string.apply_to_system_apps_question)
                         .setPositiveButton(R.string.no, (dialog, which) -> blockTrackers(false))
                         .setNegativeButton(R.string.yes, ((dialog, which) -> blockTrackers(true)))
@@ -65,31 +63,30 @@ public class OneClickOpsActivity extends AppCompatActivity {
         mProgressIndicator.hide();
     }
 
-    private void blockTrackers(boolean systemApps) {
+    private void blockTrackers(final boolean systemApps) {
         if (!AppPref.isRootEnabled()) {
             Toast.makeText(this, R.string.only_works_in_root_mode, Toast.LENGTH_SHORT).show();
             return;
         }
         mProgressIndicator.show();
         new Thread(() -> {
-            HashMap<ApplicationInfo, Integer> trackerCount = new HashMap<>();
-            HashMap<String, RulesStorageManager.Type> trackersPerPackage;
-            for (ApplicationInfo applicationInfo:
-                    getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA)) {
+            final List<ItemCount> trackerCounts = new ArrayList<>();
+            ItemCount trackerCount;
+            for (ApplicationInfo applicationInfo: getPackageManager().getInstalledApplications(0)) {
                 if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
-                trackersPerPackage = TrackerComponentUtils.getTrackerComponentsForPackage(applicationInfo.packageName);
-                if (!trackersPerPackage.isEmpty()) {
-                    trackerCount.put(applicationInfo, trackersPerPackage.size());
-                }
+                trackerCount = TrackerComponentUtils.getTrackerCountForApp(applicationInfo);
+                if (trackerCount.count > 0) trackerCounts.add(trackerCount);
             }
-            if (!trackerCount.isEmpty()) {
-                List<String> selectedPackages = new ArrayList<>();
-                List<ApplicationInfo> applicationInfoList = new ArrayList<>(trackerCount.keySet());
-                for (ApplicationInfo info: applicationInfoList) selectedPackages.add(info.packageName);
-                String[] trackerPackages = selectedPackages.toArray(new String[0]);
-                String[] trackerPackagesWithTrackerCount = new String[trackerCount.size()];
-                for (int i = 0; i<trackerCount.size(); ++i) trackerPackagesWithTrackerCount[i] = "(" + trackerCount.get(applicationInfoList.get(i)) + ") " + getPackageManager().getApplicationLabel(applicationInfoList.get(i));
-                boolean[] checkedItems = new boolean[selectedPackages.size()];
+            if (!trackerCounts.isEmpty()) {
+                final List<String> selectedPackages = new ArrayList<>();
+                final String[] trackerPackagesWithTrackerCount = new String[trackerCounts.size()];
+                for (int i = 0; i<trackerCounts.size(); ++i) {
+                    trackerCount = trackerCounts.get(i);
+                    selectedPackages.add(trackerCount.packageName);
+                    trackerPackagesWithTrackerCount[i] = "(" + trackerCount.count + ") " + trackerCount.packageLabel;
+                }
+                final String[] trackerPackages = selectedPackages.toArray(new String[0]);
+                final boolean[] checkedItems = new boolean[trackerPackages.length];
                 Arrays.fill(checkedItems, true);
                 runOnUiThread(() -> {
                     mProgressIndicator.hide();
@@ -99,10 +96,29 @@ public class OneClickOpsActivity extends AppCompatActivity {
                                 else selectedPackages.add(trackerPackages[which]);
                             })
                             .setTitle(R.string.found_trackers)
-                            .setPositiveButton(R.string.apply, (dialog, which) -> {
+                            .setPositiveButton(R.string.block, (dialog, which) -> {
                                 mProgressIndicator.show();
                                 new Thread(() -> {
                                     List<String> failedPackages = ExternalComponentsImporter.applyFromTrackingComponents(this, selectedPackages);
+                                    if (!failedPackages.isEmpty()) {
+                                        runOnUiThread(() -> {
+                                            new MaterialAlertDialogBuilder(this)
+                                                    .setTitle(R.string.failed_packages)
+                                                    .setItems((CharSequence[]) failedPackages.toArray(), null)
+                                                    .setNegativeButton(android.R.string.ok, null)
+                                                    .show();
+                                            mProgressIndicator.hide();
+                                        });
+                                    } else runOnUiThread(() -> {
+                                        Toast.makeText(this, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
+                                        mProgressIndicator.hide();
+                                    });
+                                }).start();
+                            })
+                            .setNeutralButton(R.string.unblock, (dialog, which) -> {
+                                mProgressIndicator.show();
+                                new Thread(() -> {
+                                    List<String> failedPackages = TrackerComponentUtils.unblockTrackingComponents(this, selectedPackages);
                                     if (!failedPackages.isEmpty()) {
                                         runOnUiThread(() -> {
                                             new MaterialAlertDialogBuilder(this)
@@ -147,23 +163,26 @@ public class OneClickOpsActivity extends AppCompatActivity {
                     new Thread(() -> {
                         String[] signatures = signaturesEditable.toString().split("\\s+");
                         if (signatures.length == 0) return;
-                        HashMap<ApplicationInfo, Integer> componentsCount = new HashMap<>();
-                        HashMap<String, RulesStorageManager.Type> componentsPerPackage;
-                        for (ApplicationInfo applicationInfo:
-                                getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA)) {
+                        final List<ItemCount> componentCounts = new ArrayList<>();
+                        for (ApplicationInfo applicationInfo: getPackageManager().getInstalledApplications(0)) {
                             if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
-                            componentsPerPackage = PackageUtils.getFilteredComponents(applicationInfo.packageName, signatures);
-                            if (!componentsPerPackage.isEmpty())
-                                componentsCount.put(applicationInfo, componentsPerPackage.size());
+                            ItemCount componentCount = new ItemCount();
+                            componentCount.packageName = applicationInfo.packageName;
+                            componentCount.packageLabel = applicationInfo.loadLabel(getPackageManager()).toString();
+                            componentCount.count = PackageUtils.getFilteredComponents(applicationInfo.packageName, signatures).size();
+                            if (componentCount.count > 0) componentCounts.add(componentCount);
                         }
-                        if (!componentsCount.isEmpty()) {
-                            List<String> selectedPackages = new ArrayList<>();
-                            List<ApplicationInfo> applicationInfoList = new ArrayList<>(componentsCount.keySet());
-                            for (ApplicationInfo info: applicationInfoList) selectedPackages.add(info.packageName);
-                            String[] filteredPackages = selectedPackages.toArray(new String[0]);
-                            String[] filteredPackagesWithComponentCount = new String[componentsCount.size()];
-                            for (int i = 0; i<componentsCount.size(); ++i) filteredPackagesWithComponentCount[i] = "(" + componentsCount.get(applicationInfoList.get(i)) + ") " + getPackageManager().getApplicationLabel(applicationInfoList.get(i));
-                            boolean[] checkedItems = new boolean[selectedPackages.size()];
+                        if (!componentCounts.isEmpty()) {
+                            ItemCount componentCount;
+                            final List<String> selectedPackages = new ArrayList<>();
+                            final String[] filteredPackagesWithComponentCount = new String[componentCounts.size()];
+                            for (int i = 0; i<componentCounts.size(); ++i) {
+                                componentCount = componentCounts.get(i);
+                                selectedPackages.add(componentCount.packageName);
+                                filteredPackagesWithComponentCount[i] = "(" + componentCount.count + ") " + componentCount.packageLabel;
+                            }
+                            final String[] filteredPackages = selectedPackages.toArray(new String[0]);
+                            final boolean[] checkedItems = new boolean[selectedPackages.size()];
                             Arrays.fill(checkedItems, true);
                             runOnUiThread(() -> {
                                 mProgressIndicator.hide();
@@ -235,21 +254,27 @@ public class OneClickOpsActivity extends AppCompatActivity {
                             });
                             return;
                         }
-                        HashMap<ApplicationInfo, Integer> appOpsCount = new HashMap<>();
+                        final List<ItemCount> appOpCounts = new ArrayList<>();
                         for (ApplicationInfo applicationInfo:
                                 getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA)) {
                             if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
-                            int size = PackageUtils.getFilteredAppOps(applicationInfo.packageName, appOps).size();
-                            if (size > 0) appOpsCount.put(applicationInfo, size);
+                            ItemCount appOpCount = new ItemCount();
+                            appOpCount.packageName = applicationInfo.packageName;
+                            appOpCount.packageLabel = applicationInfo.loadLabel(getPackageManager()).toString();
+                            appOpCount.count = PackageUtils.getFilteredAppOps(applicationInfo.packageName, appOps).size();
+                            if (appOpCount.count > 0) appOpCounts.add(appOpCount);
                         }
-                        if (!appOpsCount.isEmpty()) {
-                            List<String> selectedPackages = new ArrayList<>();
-                            List<ApplicationInfo> applicationInfoList = new ArrayList<>(appOpsCount.keySet());
-                            for (ApplicationInfo info: applicationInfoList) selectedPackages.add(info.packageName);
-                            String[] filteredPackages = selectedPackages.toArray(new String[0]);
-                            String[] filteredPackagesWithAppOpCount = new String[appOpsCount.size()];
-                            for (int i = 0; i<appOpsCount.size(); ++i) filteredPackagesWithAppOpCount[i] = "(" + appOpsCount.get(applicationInfoList.get(i)) + ") " + getPackageManager().getApplicationLabel(applicationInfoList.get(i));
-                            boolean[] checkedItems = new boolean[selectedPackages.size()];
+                        if (!appOpCounts.isEmpty()) {
+                            ItemCount appOpCount;
+                            final List<String> selectedPackages = new ArrayList<>();
+                            final String[] filteredPackagesWithAppOpCount = new String[appOpCounts.size()];
+                            for (int i = 0; i<appOpCounts.size(); ++i) {
+                                appOpCount = appOpCounts.get(i);
+                                selectedPackages.add(appOpCount.packageName);
+                                filteredPackagesWithAppOpCount[i] = "(" + appOpCount.count + ") " + appOpCount.packageLabel;
+                            }
+                            final String[] filteredPackages = selectedPackages.toArray(new String[0]);
+                            final boolean[] checkedItems = new boolean[selectedPackages.size()];
                             Arrays.fill(checkedItems, true);
                             runOnUiThread(() -> {
                                 mProgressIndicator.hide();
