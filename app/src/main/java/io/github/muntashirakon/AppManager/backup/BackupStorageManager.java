@@ -20,6 +20,7 @@ import java.util.List;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import dalvik.system.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
@@ -48,6 +49,19 @@ public class BackupStorageManager implements AutoCloseable {
     public static final int BACKUP_EXCLUDE_CACHE = 1 << 3;
     public static final int BACKUP_RULES = 1 << 4;
     public static final int BACKUP_NO_SIGNATURE_CHECK = 1 << 5;
+
+    private static final File DIR_ANDROID_DATA = getDirectory("ANDROID_DATA", "/data");
+
+    @NonNull
+    static File getDirectory(String variableName, String defaultPath) {
+        String path = System.getenv(variableName);
+        return path == null ? new File(defaultPath) : new File(path);
+    }
+
+    @NonNull
+    public static File getDataAppDirectory() {
+        return new File(DIR_ANDROID_DATA, "app");
+    }
 
     private static final String CMD_SOURCE_DIR_BACKUP = "cd \"%s\" && tar -czf - . | split -b 1G - \"%s\"";  // src, dest
     private static final String CMD_DATA_DIR_BACKUP = "tar -czf - \"%s\" %s | split -b 1G - \"%s\"";  // src, exclude, dest
@@ -123,10 +137,16 @@ public class BackupStorageManager implements AutoCloseable {
             if (!tmpBackupPath.mkdirs()) return false;
         }
         // Backup source
+        File dataAppPath = getDataAppDirectory();
         File backupFile = new File(tmpBackupPath, SOURCE_PREFIX + BACKUP_FILE_SUFFIX + ".");
         if (!metadataV1.sourceDir.equals("")) {
+            String sourceDir = metadataV1.sourceDir;
+            if (dataAppPath.getAbsolutePath().equals(sourceDir)) {
+                // Backup only the apk file (no split apk support for this type of apk)
+                sourceDir = new File(sourceDir, metadataV1.apkName).getAbsolutePath();
+            }
             if (!RootShellRunner.runCommand(String.format(CMD_SOURCE_DIR_BACKUP,
-                    metadataV1.sourceDir, backupFile.getAbsolutePath())).isSuccessful()) {
+                    sourceDir, backupFile.getAbsolutePath())).isSuccessful()) {
                 return cleanup(tmpBackupPath);
             }
             File[] sourceFiles = getSourceFiles(tmpBackupPath);
@@ -193,6 +213,9 @@ public class BackupStorageManager implements AutoCloseable {
             e.printStackTrace();
             return false;
         }
+        // Get instruction set
+        String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);
+        File dataAppPath = getDataAppDirectory();
         // Get package info
         PackageInfo packageInfo = null;
         int flagSigningInfo;
@@ -248,12 +271,12 @@ public class BackupStorageManager implements AutoCloseable {
             // Extract the package
             File packageStagingDirectory = new File("/data/local/tmp");
             if (!packageStagingDirectory.exists()) packageStagingDirectory = backupPath;
-            File baseApk = new File(packageStagingDirectory, "base.apk");  // FIXME: Remove hardcoded base.apk
+            File baseApk = new File(packageStagingDirectory, metadataV1.apkName);
             if (baseApk.exists()) //noinspection ResultOfMethodCallIgnored
                 baseApk.delete();
             // TODO: Handle split apk
-            if (!RootShellRunner.runCommand(String.format("cat %s | tar -xzf - ./base.apk -C \"%s\"",
-                    cmdSources, packageStagingDirectory.getAbsolutePath())).isSuccessful()) {
+            if (!RootShellRunner.runCommand(String.format("cat %s | tar -xzf - ./%s -C \"%s\"",
+                    cmdSources, metadataV1.apkName, packageStagingDirectory.getAbsolutePath())).isSuccessful()) {
                 return false;
             }
             // A normal update will do it now
@@ -268,11 +291,14 @@ public class BackupStorageManager implements AutoCloseable {
                 return false;  // Failed to (re)install package
             }
             if (packageInfo == null) return false;  // Failed to (re)install package
-            // Restore source: Get installed source directory and copy backups directly
+            // Restore source directory only if instruction set is matched or app path is not /data/app
             String sourceDir = new File(packageInfo.applicationInfo.publicSourceDir).getParent();
-            if (!RootShellRunner.runCommand(String.format("cat %s | tar -xzf - -C \"%s\"",
-                    cmdSources, sourceDir)).isSuccessful()) {
-                return false;  // Failed to restore source files
+            if (metadataV1.instructionSet.equals(instructionSet) && !dataAppPath.getAbsolutePath().equals(sourceDir)) {
+                // Restore source: Get installed source directory and copy backups directly
+                if (!RootShellRunner.runCommand(String.format("cat %s | tar -xzf - -C \"%s\"",
+                        cmdSources, sourceDir)).isSuccessful()) {
+                    return false;  // Failed to restore source files
+                }
             }
         }
         if ((flags & BACKUP_DATA) != 0) {

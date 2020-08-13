@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import androidx.annotation.NonNull;
+import dalvik.system.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -45,6 +46,8 @@ public final class MetadataManager implements Closeable {
         public String[] dataDirsSha256Checksum;  // data_dirs_sha256_checksum
         public int mode = 0;  // mode
         public int version = 1;  // version
+        public String apkName;  // apk_name
+        public String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);  // instruction_set
     }
 
     private static MetadataManager metadataManager;
@@ -103,6 +106,17 @@ public final class MetadataManager implements Closeable {
         metadataV1.dataDirsSha256Checksum = getArrayFromJSONArray(rootObject.getJSONArray("data_dirs_sha256_checksum"));
         metadataV1.mode = rootObject.getInt("mode");
         metadataV1.version = rootObject.getInt("version");
+        try {
+            metadataV1.apkName = rootObject.getString("apk_name");
+        } catch (JSONException e) {
+            metadataV1.apkName = "base.apk";
+        }
+        try {
+            metadataV1.instructionSet = rootObject.getString("instruction_set");
+        } catch (JSONException e) {
+            // Add "-unknown" suffix to the current platform (to skip restoring)
+            metadataV1.instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]) + "-unknown";
+        }
     }
 
     synchronized public void writeMetadata() throws IOException, JSONException {
@@ -127,6 +141,8 @@ public final class MetadataManager implements Closeable {
             rootObject.put("data_dirs_sha256_checksum", getJSONArrayFromArray(metadataV1.dataDirsSha256Checksum));
             rootObject.put("mode", metadataV1.mode);
             rootObject.put("version", metadataV1.version);
+            rootObject.put("apk_name", metadataV1.apkName);
+            rootObject.put("instruction_set", metadataV1.instructionSet);
             fileOutputStream.write(rootObject.toString().getBytes());
         }
     }
@@ -162,6 +178,7 @@ public final class MetadataManager implements Closeable {
         if ((flags & BackupStorageManager.BACKUP_APK) != 0)
             metadataV1.sourceDir = PackageUtils.getSourceDir(applicationInfo);
         else metadataV1.sourceDir = "";
+        metadataV1.apkName = new File(applicationInfo.sourceDir).getName();
         if ((flags & BackupStorageManager.BACKUP_DATA) != 0) {
             metadataV1.dataDirs = PackageUtils.getDataDirs(applicationInfo,
                     (flags & BackupStorageManager.BACKUP_EXT_DATA) != 0);
