@@ -19,14 +19,15 @@ import java.util.List;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.runner.RootShellRunner;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.runner.RootShellRunner;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
 public class BackupStorageManager implements AutoCloseable {
     @IntDef(flag = true, value = {
@@ -48,9 +49,11 @@ public class BackupStorageManager implements AutoCloseable {
     public static final int BACKUP_RULES = 1 << 4;
     public static final int BACKUP_NO_SIGNATURE_CHECK = 1 << 5;
 
+    private static final String CMD_SOURCE_DIR_BACKUP = "cd \"%s\" && tar -czf - . | split -b 1G - \"%s\"";  // src, dest
+    private static final String CMD_DATA_DIR_BACKUP = "tar -czf - \"%s\" %s | split -b 1G - \"%s\"";  // src, exclude, dest
     private static final String SOURCE_PREFIX = "source";
     private static final String DATA_PREFIX = "data";
-    private static final String BACKUP_FILE_PREFIX = ".tar.gz";
+    private static final String BACKUP_FILE_SUFFIX = ".tar.gz";
     private static final String RULES_TSV = "rules.am.tsv";
     private static final String TMP_BACKUP_SUFFIX = "~";
     static final String APK_SAVING_DIRECTORY = "apks";
@@ -120,33 +123,34 @@ public class BackupStorageManager implements AutoCloseable {
             if (!tmpBackupPath.mkdirs()) return false;
         }
         // Backup source
-        File backupFile = new File(tmpBackupPath, SOURCE_PREFIX + BACKUP_FILE_PREFIX);
+        File backupFile = new File(tmpBackupPath, SOURCE_PREFIX + BACKUP_FILE_SUFFIX + ".");
         if (!metadataV1.sourceDir.equals("")) {
-            if (!RootShellRunner.runCommand(String.format("cd \"%s\" && tar -czf \"%s\" .",
+            if (!RootShellRunner.runCommand(String.format(CMD_SOURCE_DIR_BACKUP,
                     metadataV1.sourceDir, backupFile.getAbsolutePath())).isSuccessful()) {
                 return cleanup(tmpBackupPath);
             }
-            if (backupFile.exists()) {
-                metadataV1.sourceDirSha256Checksum = PackageUtils.getSha256Checksum(backupFile);
-            } else return cleanup(tmpBackupPath);
+            File[] sourceFiles = getSourceFiles(tmpBackupPath);
+            if (sourceFiles == null) return cleanup(tmpBackupPath);
+            metadataV1.sourceDirSha256Checksum = getSha256Sum(sourceFiles);
         }
         // Backup data
         for (int i = 0; i<metadataV1.dataDirs.length; ++i) {
-            backupFile = new File(tmpBackupPath, DATA_PREFIX + i + BACKUP_FILE_PREFIX);
-            StringBuilder sb = new StringBuilder("tar -czf \"").append(backupFile.getAbsolutePath()).append("\" \"")
-                    .append(metadataV1.dataDirs[i]).append("\"");
+            backupFile = new File(tmpBackupPath, DATA_PREFIX + i + BACKUP_FILE_SUFFIX + ".");
+            StringBuilder excludePaths = new StringBuilder();
             if ((flags & BACKUP_EXCLUDE_CACHE) != 0) {
-                sb.append(" --exclude=\"").append(metadataV1.dataDirs[i].substring(1))
+                excludePaths.append(" --exclude=\"").append(metadataV1.dataDirs[i].substring(1))
                         .append(File.separatorChar).append("cache").append("\"");
-                sb.append(" --exclude=\"").append(metadataV1.dataDirs[i].substring(1))
+                excludePaths.append(" --exclude=\"").append(metadataV1.dataDirs[i].substring(1))
                         .append(File.separatorChar).append("code_cache").append("\"");
             }
-            if (!RootShellRunner.runCommand(sb.toString()).isSuccessful()) {
+            if (!RootShellRunner.runCommand(String.format(CMD_DATA_DIR_BACKUP,
+                    metadataV1.dataDirs[i], excludePaths.toString(), backupFile.getAbsolutePath()))
+                    .isSuccessful()) {
                 return cleanup(tmpBackupPath);
             }
-            if (backupFile.exists()) {
-                metadataV1.dataDirsSha256Checksum[i] = PackageUtils.getSha256Checksum(backupFile);
-            } else return cleanup(tmpBackupPath);
+            File[] dataFiles = getDataFiles(tmpBackupPath, i);
+            if (dataFiles == null) return cleanup(tmpBackupPath);
+            metadataV1.dataDirsSha256Checksum[i] = getSha256Sum(dataFiles);
         }
         // Export rules
         if (metadataV1.hasRules) {
@@ -205,7 +209,10 @@ public class BackupStorageManager implements AutoCloseable {
         if ((flags & BACKUP_APK) != 0) {
             // Restoring apk requested
             boolean reinstallNeeded = false;
-            File backupSourceFile = new File(backupPath, SOURCE_PREFIX + BACKUP_FILE_PREFIX);
+            File[] backupSourceFiles = getSourceFiles(backupPath);
+            if (backupSourceFiles == null) return false;  // No source backup found
+            StringBuilder cmdSources = new StringBuilder();
+            for (File file: backupSourceFiles) cmdSources.append(" \"").append(file.getAbsolutePath()).append("\"");
             if (isInstalled) {
                 // Check signature if installed: Should be checked before calling this method if it is enabled
                 List<String> certChecksum = Arrays.asList(PackageUtils.getSigningCertSha256Checksum(packageInfo));
@@ -228,8 +235,7 @@ public class BackupStorageManager implements AutoCloseable {
             if (!noChecksumCheck) {
                 // Check integrity of source
                 if (metadataV1.sourceDir.equals("")) return false;  // Source cannot be empty
-                if (!backupSourceFile.exists()) return false;  // No source backup found
-                String checksum = PackageUtils.getSha256Checksum(backupSourceFile);
+                String checksum = getSha256Sum(backupSourceFiles);
                 if (!checksum.equals(metadataV1.sourceDirSha256Checksum))
                     return false;  // Checksum mismatched
             }
@@ -245,8 +251,9 @@ public class BackupStorageManager implements AutoCloseable {
             File baseApk = new File(packageStagingDirectory, "base.apk");  // FIXME: Remove hardcoded base.apk
             if (baseApk.exists()) //noinspection ResultOfMethodCallIgnored
                 baseApk.delete();
-            if (!RootShellRunner.runCommand(String.format("tar -xzf \"%s\" ./base.apk -C \"%s\"",
-                    backupSourceFile, packageStagingDirectory.getAbsolutePath())).isSuccessful()) {
+            // TODO: Handle split apk
+            if (!RootShellRunner.runCommand(String.format("cat %s | tar -xzf - ./base.apk -C \"%s\"",
+                    cmdSources, packageStagingDirectory.getAbsolutePath())).isSuccessful()) {
                 return false;
             }
             // A normal update will do it now
@@ -263,9 +270,8 @@ public class BackupStorageManager implements AutoCloseable {
             if (packageInfo == null) return false;  // Failed to (re)install package
             // Restore source: Get installed source directory and copy backups directly
             String sourceDir = new File(packageInfo.applicationInfo.publicSourceDir).getParent();
-            // TODO: Handle split apk
-            if (!RootShellRunner.runCommand(String.format("tar -xzf \"%s\" -C \"%s\"",
-                    backupSourceFile, sourceDir)).isSuccessful()) {
+            if (!RootShellRunner.runCommand(String.format("cat %s | tar -xzf - -C \"%s\"",
+                    cmdSources, sourceDir)).isSuccessful()) {
                 return false;  // Failed to restore source files
             }
         }
@@ -273,12 +279,14 @@ public class BackupStorageManager implements AutoCloseable {
             // Data restore is requested: Data restore is only possible if the app is actually
             // installed. So, check if it's installed first.
             if (!isInstalled) return false;
-            String backupDataFile = backupPath.getAbsolutePath() + File.separatorChar + DATA_PREFIX + "%d" + BACKUP_FILE_PREFIX;
+            File[] dataFiles;
             if (!noChecksumCheck) {
                 // Verify integrity of the data backups
                 String checksum;
                 for (int i = 0; i < metadataV1.dataDirs.length; ++i) {
-                    checksum = PackageUtils.getSha256Checksum(new File(String.format(backupDataFile, i)));
+                    dataFiles = getDataFiles(backupPath, i);
+                    if (dataFiles == null) return false;
+                    checksum = getSha256Sum(dataFiles);
                     if (!checksum.equals(metadataV1.dataDirsSha256Checksum[i])) return false;
                 }
             }
@@ -288,9 +296,14 @@ public class BackupStorageManager implements AutoCloseable {
             String dataSource;
             for (int i = 0; i<metadataV1.dataDirs.length; ++i) {
                 dataSource = metadataV1.dataDirs[i];
+                dataFiles = getDataFiles(backupPath, i);
+                if (dataFiles == null) return false;
+                StringBuilder cmdData = new StringBuilder();
+                // FIXME: Fix API 23 external storage issue
+                for (File file: dataFiles) cmdData.append(" \"").append(file.getAbsolutePath()).append("\"");
                 // Skip restoring external data if requested
                 if ((flags & BACKUP_EXT_DATA) == 0 && dataSource.startsWith("/storage") && dataSource.startsWith("/sdcard")) continue;
-                if (!RootShellRunner.runCommand(String.format("tar -xzf \"%s\" -C /", String.format(backupDataFile, i))).isSuccessful()) {
+                if (!RootShellRunner.runCommand(String.format("cat %s | tar -xzf - -C /", cmdData.toString())).isSuccessful()) {
                     return false;
                 }
                 if ((flags & BACKUP_EXCLUDE_CACHE) != 0) {
@@ -331,5 +344,28 @@ public class BackupStorageManager implements AutoCloseable {
     private boolean cleanup(@NonNull File backupPath) {
         if (backupPath.exists()) IOUtils.deleteDir(backupPath);
         return false;
+    }
+
+    @Nullable
+    private File[] getSourceFiles(@NonNull File backupPath) {
+        return backupPath.listFiles((dir, name) -> name.startsWith(SOURCE_PREFIX));
+    }
+
+    @Nullable
+    private File[] getDataFiles(@NonNull File backupPath, int index) {
+        final String dataPrefix = DATA_PREFIX + index;
+        return backupPath.listFiles((dir, name) -> name.startsWith(dataPrefix));
+    }
+
+    @NonNull
+    private String getSha256Sum(@NonNull File[] files) {
+        if (files.length == 1) return PackageUtils.getSha256Checksum(files[0]);
+
+        StringBuilder checksums = new StringBuilder();
+        for (File file : files) {
+            String checksum = PackageUtils.getSha256Checksum(file);
+            checksums.append(checksum);
+        }
+        return PackageUtils.getSha256Checksum(checksums.toString().getBytes());
     }
 }

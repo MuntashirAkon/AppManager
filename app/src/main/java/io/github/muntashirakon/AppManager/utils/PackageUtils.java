@@ -266,24 +266,31 @@ public final class PackageUtils {
         } else signatureArray = packageInfo.signatures;
         ArrayList<String> checksums = new ArrayList<>();
         for (Signature signature: signatureArray) {
-            try {
-                checksums.add(byteToHexString(MessageDigest.getInstance("sha256").digest(signature.toByteArray())));
-            } catch (NoSuchAlgorithmException e) {
-                checksums.add("");
-            }
+            checksums.add(getSha256Checksum(signature.toByteArray()));
         }
         return checksums.toArray(new String[0]);
+    }
+
+    @NonNull
+    public static String getSha256Checksum(byte[] input) {
+        try {
+            return byteToHexString(MessageDigest.getInstance("sha256").digest(input));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     @NonNull
     public static String getSha256Checksum(File file) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("sha256");
-            try (FileInputStream fileInputStream = new FileInputStream(file);
-                 DigestInputStream digestInputStream = new DigestInputStream(fileInputStream, messageDigest)) {
+            try (FileInputStream fileInputStream = new FileInputStream(file)) {
+                DigestInputStream digestInputStream = new DigestInputStream(fileInputStream, messageDigest);
                 byte[] buffer = new byte[1024 * 8];
                 //noinspection StatementWithEmptyBody
                 while (digestInputStream.read(buffer) != -1) {}
+                digestInputStream.close();
                 return byteToHexString(messageDigest.digest());
             }
         } catch (NoSuchAlgorithmException | IOException e) {
