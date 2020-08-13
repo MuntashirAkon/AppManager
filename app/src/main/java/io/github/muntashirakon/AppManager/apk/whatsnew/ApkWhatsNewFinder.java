@@ -23,7 +23,7 @@ import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
-import io.github.muntashirakon.AppManager.rules.compontents.TrackerComponentUtils;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -93,7 +93,7 @@ public class ApkWhatsNewFinder {
         int newTrackerCount = 0;
         int oldTrackerCount = 0;
         for (Change component: componentChanges) {
-            if (TrackerComponentUtils.isTracker(component.value)) {
+            if (ComponentUtils.isTracker(component.value)) {
                 if (component.changeType == CHANGE_ADD) ++newTrackerCount;
                 else if (component.changeType == CHANGE_REMOVED) ++oldTrackerCount;
             }

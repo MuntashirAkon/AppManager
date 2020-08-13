@@ -14,8 +14,8 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
 // TODO: Will be converted to service one day
@@ -149,7 +149,7 @@ public class BatchOpsManager {
     }
 
     private Result opBlockTrackers() {
-        final List<String> failedPkgList = ExternalComponentsImporter.applyFromTrackingComponents(context, packageNames);
+        final List<String> failedPkgList = ComponentUtils.blockTrackingComponents(context, packageNames);
         return lastResult = new Result() {
             @Override
             public boolean isSuccessful() {

@@ -21,7 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
-import io.github.muntashirakon.AppManager.rules.compontents.TrackerComponentUtils;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -74,7 +74,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
             ItemCount trackerCount;
             for (ApplicationInfo applicationInfo: getPackageManager().getInstalledApplications(0)) {
                 if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
-                trackerCount = TrackerComponentUtils.getTrackerCountForApp(applicationInfo);
+                trackerCount = ComponentUtils.getTrackerCountForApp(applicationInfo);
                 if (trackerCount.count > 0) trackerCounts.add(trackerCount);
             }
             if (!trackerCounts.isEmpty()) {
@@ -99,7 +99,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
                             .setPositiveButton(R.string.block, (dialog, which) -> {
                                 mProgressIndicator.show();
                                 new Thread(() -> {
-                                    List<String> failedPackages = ExternalComponentsImporter.applyFromTrackingComponents(this, selectedPackages);
+                                    List<String> failedPackages = ComponentUtils.blockTrackingComponents(this, selectedPackages);
                                     if (!failedPackages.isEmpty()) {
                                         runOnUiThread(() -> {
                                             new MaterialAlertDialogBuilder(this)
@@ -118,7 +118,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
                             .setNeutralButton(R.string.unblock, (dialog, which) -> {
                                 mProgressIndicator.show();
                                 new Thread(() -> {
-                                    List<String> failedPackages = TrackerComponentUtils.unblockTrackingComponents(this, selectedPackages);
+                                    List<String> failedPackages = ComponentUtils.unblockTrackingComponents(this, selectedPackages);
                                     if (!failedPackages.isEmpty()) {
                                         runOnUiThread(() -> {
                                             new MaterialAlertDialogBuilder(this)

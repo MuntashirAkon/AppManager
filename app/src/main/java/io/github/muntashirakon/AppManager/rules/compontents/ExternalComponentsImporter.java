@@ -36,25 +36,6 @@ import io.github.muntashirakon.AppManager.utils.Utils;
  */
 public class ExternalComponentsImporter {
     @NonNull
-    public static List<String> applyFromTrackingComponents(@NonNull Context context, @NonNull Collection<String> packageNames) {
-        List<String> failedPkgList = new ArrayList<>();
-        HashMap<String, RulesStorageManager.Type> components;
-        for (String packageName: packageNames) {
-            components = TrackerComponentUtils.getTrackerComponentsForPackage(packageName);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
-                for (String componentName: components.keySet()) {
-                    cb.addComponent(componentName, components.get(componentName));
-                }
-                cb.applyRules(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-                failedPkgList.add(packageName);
-            }
-        }
-        return failedPkgList;
-    }
-
-    @NonNull
     public static List<String> applyFilteredComponents(@NonNull Context context, @NonNull Collection<String> packageNames, String[] signatures) {
         List<String> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;

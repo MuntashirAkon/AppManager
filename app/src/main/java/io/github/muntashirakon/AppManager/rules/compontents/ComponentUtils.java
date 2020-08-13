@@ -16,7 +16,7 @@ import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
-public final class TrackerComponentUtils {
+public final class ComponentUtils {
     public static boolean isTracker(String componentName) {
         for(String signature: StaticDataset.getTrackerCodeSignatures()) {
             if (componentName.startsWith(signature) || componentName.contains(signature)) {
@@ -35,6 +35,25 @@ public final class TrackerComponentUtils {
                 trackers.put(componentName, components.get(componentName));
         }
         return trackers;
+    }
+
+    @NonNull
+    public static List<String> blockTrackingComponents(@NonNull Context context, @NonNull Collection<String> packageNames) {
+        List<String> failedPkgList = new ArrayList<>();
+        HashMap<String, RulesStorageManager.Type> components;
+        for (String packageName: packageNames) {
+            components = ComponentUtils.getTrackerComponentsForPackage(packageName);
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
+                for (String componentName: components.keySet()) {
+                    cb.addComponent(componentName, components.get(componentName));
+                }
+                cb.applyRules(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                failedPkgList.add(packageName);
+            }
+        }
+        return failedPkgList;
     }
 
     @NonNull

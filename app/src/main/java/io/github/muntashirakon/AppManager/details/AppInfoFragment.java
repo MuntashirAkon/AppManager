@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.os.Process;
 import android.provider.Settings;
 import android.text.format.Formatter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -72,7 +71,7 @@ import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.misc.RequestCodes;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
-import io.github.muntashirakon.AppManager.rules.compontents.TrackerComponentUtils;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
@@ -336,21 +335,21 @@ public class AppInfoFragment extends Fragment
             for (ActivityInfo activityInfo : mPackageInfo.activities) {
                 if (activityInfo.targetActivity != null) activityName = activityInfo.targetActivity;
                 else activityName = activityInfo.name;
-                if (TrackerComponentUtils.isTracker(activityName)) componentList.add(activityName);
+                if (ComponentUtils.isTracker(activityName)) componentList.add(activityName);
             }
         }
         // Add others
         if (mPackageInfo.services != null) {
             for (ComponentInfo componentInfo : mPackageInfo.services)
-                if (TrackerComponentUtils.isTracker(componentInfo.name)) componentList.add(componentInfo.name);
+                if (ComponentUtils.isTracker(componentInfo.name)) componentList.add(componentInfo.name);
         }
         if (mPackageInfo.receivers != null) {
             for (ComponentInfo componentInfo : mPackageInfo.receivers)
-                if (TrackerComponentUtils.isTracker(componentInfo.name)) componentList.add(componentInfo.name);
+                if (ComponentUtils.isTracker(componentInfo.name)) componentList.add(componentInfo.name);
         }
         if (mPackageInfo.providers != null) {
             for (ComponentInfo componentInfo : mPackageInfo.providers)
-                if (TrackerComponentUtils.isTracker(componentInfo.name)) componentList.add(componentInfo.name);
+                if (ComponentUtils.isTracker(componentInfo.name)) componentList.add(componentInfo.name);
         }
         runOnUiThread(() -> {
             mTagCloud.removeAllViews();

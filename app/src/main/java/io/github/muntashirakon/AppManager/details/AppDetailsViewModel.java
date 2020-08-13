@@ -44,7 +44,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.rules.compontents.TrackerComponentUtils;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -566,7 +566,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
                     appDetailsItem.name = activityInfo.targetActivity == null ? activityInfo.name : activityInfo.targetActivity;
                     if (!isExternalApk) appDetailsItem.isBlocked = blocker.hasComponent(activityInfo.name);
-                    appDetailsItem.isTracker = TrackerComponentUtils.isTracker(activityInfo.name);
+                    appDetailsItem.isTracker = ComponentUtils.isTracker(activityInfo.name);
                     if (TextUtils.isEmpty(searchQuery)
                             || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
                         appDetailsItems.add(appDetailsItem);
@@ -597,7 +597,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(serviceInfo);
                     appDetailsItem.name = serviceInfo.name;
                     if (!isExternalApk) appDetailsItem.isBlocked = blocker.hasComponent(serviceInfo.name);
-                    appDetailsItem.isTracker = TrackerComponentUtils.isTracker(serviceInfo.name);
+                    appDetailsItem.isTracker = ComponentUtils.isTracker(serviceInfo.name);
                     if (TextUtils.isEmpty(searchQuery)
                             || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
                         appDetailsItems.add(appDetailsItem);
@@ -628,7 +628,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
                     appDetailsItem.name = activityInfo.name;
                     if (!isExternalApk) appDetailsItem.isBlocked = blocker.hasComponent(activityInfo.name);
-                    appDetailsItem.isTracker = TrackerComponentUtils.isTracker(activityInfo.name);
+                    appDetailsItem.isTracker = ComponentUtils.isTracker(activityInfo.name);
                     if (TextUtils.isEmpty(searchQuery)
                             || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
                         appDetailsItems.add(appDetailsItem);
@@ -659,7 +659,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(providerInfo);
                     appDetailsItem.name = providerInfo.name;
                     if (!isExternalApk) appDetailsItem.isBlocked = blocker.hasComponent(providerInfo.name);
-                    appDetailsItem.isTracker = TrackerComponentUtils.isTracker(providerInfo.name);
+                    appDetailsItem.isTracker = ComponentUtils.isTracker(providerInfo.name);
                     if (TextUtils.isEmpty(searchQuery)
                             || appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))
                         appDetailsItems.add(appDetailsItem);
