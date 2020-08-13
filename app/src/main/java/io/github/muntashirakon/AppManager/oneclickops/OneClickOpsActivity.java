@@ -195,7 +195,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
                                         .setPositiveButton(R.string.apply, (dialog1, which1) -> {
                                             mProgressIndicator.show();
                                             new Thread(() -> {
-                                                List<String> failedPackages = ExternalComponentsImporter.applyFilteredComponents(this, selectedPackages, signatures);
+                                                List<String> failedPackages = ComponentUtils.blockFilteredComponents(this, selectedPackages, signatures);
                                                 if (!failedPackages.isEmpty()) {
                                                     runOnUiThread(() -> {
                                                         new MaterialAlertDialogBuilder(this)
@@ -287,7 +287,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
                                         .setPositiveButton(R.string.apply, (dialog1, which1) -> {
                                             mProgressIndicator.show();
                                             new Thread(() -> {
-                                                List<String> failedPackages = ExternalComponentsImporter.applyFilteredAppOps(this, selectedPackages, appOps);
+                                                List<String> failedPackages = ExternalComponentsImporter.denyFilteredAppOps(this, selectedPackages, appOps);
                                                 if (!failedPackages.isEmpty()) {
                                                     runOnUiThread(() -> {
                                                         new MaterialAlertDialogBuilder(this)

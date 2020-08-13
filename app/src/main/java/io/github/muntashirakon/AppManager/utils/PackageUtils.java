@@ -31,6 +31,7 @@ import dalvik.system.DexFile;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 
@@ -144,7 +145,7 @@ public final class PackageUtils {
             if (isComponentDisabledByUser(pm, packageName, componentName))
                 disabledComponents.put(componentName, componentClasses.get(componentName));
         }
-        // FIXME: get components disabled by IFW
+        disabledComponents.putAll(ComponentUtils.getIFWRulesForPackage(packageName));
         return disabledComponents;
     }
 

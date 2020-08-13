@@ -3,10 +3,6 @@ package io.github.muntashirakon.AppManager.rules.compontents;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Xml;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,10 +15,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 
 /**
  * Block application components: activities, broadcasts, services and providers.
@@ -43,12 +39,9 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
  * @see <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/services/core/java/com/android/server/firewall/IntentFirewall.java">IntentFirewall.java</a>
  */
 public class ComponentsBlocker extends RulesStorageManager {
-    public static final String TAG_ACTIVITY = "activity";
-    public static final String TAG_RECEIVER = "broadcast";
-    public static final String TAG_SERVICE = "service";
 
-    private static final String SYSTEM_RULES_PATH = "/data/system/ifw/";
     private static String LOCAL_RULES_PATH;
+    static final String SYSTEM_RULES_PATH = "/data/system/ifw/";
 
     private static @NonNull HashMap<String, ComponentsBlocker> componentsBlockers = new HashMap<>();
 
@@ -143,8 +136,7 @@ public class ComponentsBlocker extends RulesStorageManager {
     public static void addAllLocalRules(@NonNull Context context) {
         try {
             String ifwPath = getLocalIfwRulesPath(context);
-            Runner.runCommand(String.format("ls %s/*.xml", ifwPath));
-            if (Runner.getLastResult().isSuccessful()) {
+            if (Runner.runCommand(String.format("ls %s/*.xml", ifwPath)).isSuccessful()) {
                 // Get packages
                 List<String> packageNames = Runner.getLastResult().getOutputAsList();
                 for (int i = 0; i<packageNames.size(); ++i) {
@@ -319,47 +311,22 @@ public class ComponentsBlocker extends RulesStorageManager {
                     SYSTEM_RULES_PATH, packageName, LOCAL_RULES_PATH, LOCAL_RULES_PATH, packageName));
         }
         retrieveDisabledProviders();
-        try {
-            if (!localRulesFile.exists()) {
-                for (RulesStorageManager.Entry entry: getAllComponents()) {
-                    setComponent(entry.name, entry.type, COMPONENT_TO_BE_BLOCKED);
-                }
-                return;
+        if (!localRulesFile.exists()) {
+            for (RulesStorageManager.Entry entry: getAllComponents()) {
+                setComponent(entry.name, entry.type, COMPONENT_TO_BE_BLOCKED);
             }
+            return;
+        }
+        try {
             try (FileInputStream rulesStream = new FileInputStream(localRulesFile)) {
-                XmlPullParser parser = Xml.newPullParser();
-                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-                parser.setInput(rulesStream, null);
-                parser.nextTag();
-                parser.require(XmlPullParser.START_TAG, null, "rules");
-                int event = parser.nextTag();
-                RulesStorageManager.Type componentType = RulesStorageManager.Type.UNKNOWN;
-                while (event != XmlPullParser.END_DOCUMENT) {
-                    String name = parser.getName();
-                    switch (event) {
-                        case XmlPullParser.START_TAG:
-                            if (name.equals(TAG_ACTIVITY) || name.equals(TAG_RECEIVER) || name.equals(TAG_SERVICE)) {
-                                componentType = getComponentType(name);
-                            }
-                            break;
-                        case XmlPullParser.END_TAG:
-                            if (name.equals("component-filter")) {
-                                String fullKey = parser.getAttributeValue(null, "name");
-                                int divider = fullKey.indexOf('/');
-                                String pkgName = fullKey.substring(0, divider);
-                                String componentName = fullKey.substring(divider + 1);
-                                if (pkgName.equals(packageName)) {
-                                    // Overwrite rules if exists
-                                    setComponent(componentName, componentType, COMPONENT_BLOCKED);
-                                }
-                            }
-                    }
-                    event = parser.nextTag();
+                HashMap<String, Type> components = ComponentUtils.readIFWRules(rulesStream, packageName);
+                for (String componentName: components.keySet()) {
+                    setComponent(componentName, components.get(componentName), COMPONENT_BLOCKED);
                 }
             }
             //noinspection ResultOfMethodCallIgnored
             localRulesFile.delete();
-        } catch (IOException | XmlPullParserException ignored) {}
+        } catch (IOException ignored) {}
     }
 
     /**
@@ -382,20 +349,6 @@ public class ComponentsBlocker extends RulesStorageManager {
                 //noinspection ResultOfMethodCallIgnored
                 localProvidersFile.delete();
             }
-        }
-    }
-
-    /**
-     * Get component type from TAG_* constants
-     * @param componentName Name of the constant: one of the TAG_*
-     * @return One of the {@link RulesStorageManager.Type}
-     */
-    RulesStorageManager.Type getComponentType(@NonNull String componentName) {
-        switch (componentName) {
-            case TAG_ACTIVITY: return RulesStorageManager.Type.ACTIVITY;
-            case TAG_RECEIVER: return RulesStorageManager.Type.RECEIVER;
-            case TAG_SERVICE: return RulesStorageManager.Type.SERVICE;
-            default: return RulesStorageManager.Type.UNKNOWN;
         }
     }
 }

@@ -8,12 +8,9 @@ import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Xml;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,26 +33,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
  */
 public class ExternalComponentsImporter {
     @NonNull
-    public static List<String> applyFilteredComponents(@NonNull Context context, @NonNull Collection<String> packageNames, String[] signatures) {
-        List<String> failedPkgList = new ArrayList<>();
-        HashMap<String, RulesStorageManager.Type> components;
-        for (String packageName: packageNames) {
-            components = PackageUtils.getFilteredComponents(packageName, signatures);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
-                for (String componentName: components.keySet()) {
-                    cb.addComponent(componentName, components.get(componentName));
-                }
-                cb.applyRules(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-                failedPkgList.add(packageName);
-            }
-        }
-        return failedPkgList;
-    }
-
-    @NonNull
-    public static List<String> applyFilteredAppOps(@NonNull Context context, @NonNull Collection<String> packageNames, int[] appOps) {
+    public static List<String> denyFilteredAppOps(@NonNull Context context, @NonNull Collection<String> packageNames, int[] appOps) {
         List<String> failedPkgList = new ArrayList<>();
         Collection<Integer> appOpList;
         AppOpsService appOpsService = new AppOpsService(context);
@@ -139,43 +117,18 @@ public class ExternalComponentsImporter {
         if (filename == null) throw new FileNotFoundException("The requested content is not found.");
         try {
             try (InputStream rulesStream = context.getContentResolver().openInputStream(fileUri)) {
-                XmlPullParser parser = Xml.newPullParser();
-                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-                parser.setInput(rulesStream, null);
-                parser.nextTag();
-                parser.require(XmlPullParser.START_TAG, null, "rules");
-                int event = parser.nextTag();
-                RulesStorageManager.Type componentType = RulesStorageManager.Type.UNKNOWN;
+                if (rulesStream == null) throw new IOException("Failed to open input stream.");
                 String packageName = Utils.trimExtension(filename);
                 try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
-                    String name;
-                    while (!(name = parser.getName()).equals("rules")) {
-                        switch (event) {
-                            case XmlPullParser.START_TAG:
-                                if (name.equals(ComponentsBlocker.TAG_ACTIVITY)
-                                        || name.equals(ComponentsBlocker.TAG_RECEIVER)
-                                        || name.equals(ComponentsBlocker.TAG_SERVICE)) {
-                                    componentType = cb.getComponentType(name);
-                                }
-                                break;
-                            case XmlPullParser.END_TAG:
-                                if (name.equals("component-filter")) {
-                                    String fullKey = parser.getAttributeValue(null, "name");
-                                    int divider = fullKey.indexOf('/');
-                                    String pkgName = fullKey.substring(0, divider);
-                                    String componentName = fullKey.substring(divider + 1);
-                                    if (pkgName.equals(packageName)) {
-                                        // Overwrite rules if exists
-                                        cb.addComponent(componentName, componentType);
-                                    }
-                                }
-                        }
-                        event = parser.nextTag();
+                    HashMap<String, RulesStorageManager.Type> components = ComponentUtils.readIFWRules(rulesStream, packageName);
+                    for (String componentName: components.keySet()) {
+                        // Overwrite rules if exists
+                        cb.addComponent(componentName, components.get(componentName));
                     }
                     cb.applyRules(true);
                 }
             }
-        } catch (IOException|XmlPullParserException e) {
+        } catch (IOException e) {
             throw new FileNotFoundException(e.getMessage());
         }
     }
