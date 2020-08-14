@@ -6,10 +6,12 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class Runner {
+    public static final int FAILED_RET_VAL = -500;  // An impossible value
 
     public interface Result {
         boolean isSuccessful();
@@ -51,6 +53,7 @@ public class Runner {
         commands.clear();
     }
 
+    @WorkerThread
     synchronized public Result runCommand() {
         return null;
     }
