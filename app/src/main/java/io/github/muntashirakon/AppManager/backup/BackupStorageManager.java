@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.text.TextUtils;
+import android.util.Log;
 
 import org.json.JSONException;
 
@@ -110,19 +112,26 @@ public class BackupStorageManager implements AutoCloseable {
     }
 
     public boolean backup() {
-        if (flags == BACKUP_NOTHING) return false;
+        if (flags == BACKUP_NOTHING) {
+            Log.e("BSM - Backup", "Backup is requested without any flags.");
+            return false;
+        }
         MetadataManager.MetadataV1 metadataV1;
         try {
             // Override existing metadata
             metadataV1 = metadataManager.setupMetadata(flags);
         } catch (PackageManager.NameNotFoundException e) {
+            Log.e("BSM - Backup", "Failed to setup metadata.");
             e.printStackTrace();
             return false;
         }
         // Create a new temporary directory
         File tmpBackupPath = getTemporaryBackupPath(packageName);
         if (!tmpBackupPath.exists()) {
-            if (!tmpBackupPath.mkdirs()) return false;
+            if (!tmpBackupPath.mkdirs()) {
+                Log.e("BSM - Backup", "Failed to create temporary path at " + tmpBackupPath);
+                return false;
+            }
         }
         // Backup source
         File dataAppPath = OsEnvironment.getDataAppDirectory();
@@ -133,12 +142,16 @@ public class BackupStorageManager implements AutoCloseable {
                 // Backup only the apk file (no split apk support for this type of apk)
                 sourceDir = new File(sourceDir, metadataV1.apkName).getAbsolutePath();
             }
-            if (!RootShellRunner.runCommand(String.format(CMD_SOURCE_DIR_BACKUP,
-                    sourceDir, backupFile.getAbsolutePath())).isSuccessful()) {
+            String command = String.format(CMD_SOURCE_DIR_BACKUP, sourceDir, backupFile.getAbsolutePath());
+            if (!RootShellRunner.runCommand(command).isSuccessful()) {
+                Log.e("BSM - Backup", "Failed to backup source directory. " + RootShellRunner.getLastResult().getOutput());
                 return cleanup(tmpBackupPath);
             }
             File[] sourceFiles = getSourceFiles(tmpBackupPath);
-            if (sourceFiles == null) return cleanup(tmpBackupPath);
+            if (sourceFiles == null) {
+                Log.e("BSM - Backup", "Source backup is requested but no source directory has been backed up.");
+                return cleanup(tmpBackupPath);
+            }
             metadataV1.sourceDirSha256Checksum = getSha256Sum(sourceFiles);
         }
         // Backup data
@@ -154,10 +167,14 @@ public class BackupStorageManager implements AutoCloseable {
             if (!RootShellRunner.runCommand(String.format(CMD_DATA_DIR_BACKUP,
                     metadataV1.dataDirs[i], excludePaths.toString(), backupFile.getAbsolutePath()))
                     .isSuccessful()) {
+                Log.e("BSM - Backup", "Failed to backup data directory at " + metadataV1.dataDirs[i]);
                 return cleanup(tmpBackupPath);
             }
             File[] dataFiles = getDataFiles(tmpBackupPath, i);
-            if (dataFiles == null) return cleanup(tmpBackupPath);
+            if (dataFiles == null) {
+                Log.e("BSM - Backup", "Data backup is requested but no data directory has been backed up.");
+                return cleanup(tmpBackupPath);
+            }
             metadataV1.dataDirsSha256Checksum[i] = getSha256Sum(dataFiles);
         }
         // Export rules
@@ -169,6 +186,7 @@ public class BackupStorageManager implements AutoCloseable {
                     outputStream.write(String.format("%s\t%s\t%s\t%s\n", packageName, entry.name, entry.type.name(), entry.extra).getBytes());
                 }
             } catch (IOException e) {
+                Log.e("BSM - Backup", "Rules backup is requested but encountered an error during fetching rules.");
                 e.printStackTrace();
                 return cleanup(tmpBackupPath);
             }
@@ -179,6 +197,7 @@ public class BackupStorageManager implements AutoCloseable {
         try {
             metadataManager.writeMetadata();
         } catch (IOException | JSONException e) {
+            Log.e("BSM - Backup", "Failed to write metadata due to " + e.toString());
             e.printStackTrace();
             return cleanup(tmpBackupPath);
         }
@@ -187,17 +206,22 @@ public class BackupStorageManager implements AutoCloseable {
         if (delete_backup() && tmpBackupPath.renameTo(backupPath)) {
             return true;
         }
+        Log.e("BSM - Backup", "Unknown error occurred. This message should never be printed.");
         return cleanup(tmpBackupPath);
     }
 
     @SuppressLint("SdCardPath")
     public boolean restore() {
-        if (flags == BACKUP_NOTHING) return false;
+        if (flags == BACKUP_NOTHING) {
+            Log.e("BSM - Restore", "Restore is requested without any flags.");
+            return false;
+        }
         MetadataManager.MetadataV1 metadataV1;
         try {
             metadataManager.readMetadata();
             metadataV1 = metadataManager.getMetadataV1();
         } catch (JSONException e) {
+            Log.e("BSM - Restore", "Failed to read metadata. Possibly due to malformed json file.");
             e.printStackTrace();
             return false;
         }
@@ -221,7 +245,11 @@ public class BackupStorageManager implements AutoCloseable {
             // Restoring apk requested
             boolean reinstallNeeded = false;
             File[] backupSourceFiles = getSourceFiles(backupPath);
-            if (backupSourceFiles == null) return false;  // No source backup found
+            if (backupSourceFiles == null) {
+                // No source backup found
+                Log.e("BSM - Restore", "Source restore is requested but there are no source files.");
+                return false;
+            }
             StringBuilder cmdSources = new StringBuilder();
             for (File file: backupSourceFiles) cmdSources.append(" \"").append(file.getAbsolutePath()).append("\"");
             if (isInstalled) {
@@ -231,7 +259,12 @@ public class BackupStorageManager implements AutoCloseable {
                 for (String checksum : metadataV1.certSha256Checksum) {
                     if (certChecksum.contains(checksum)) continue;
                     isVerified = false;
-                    if (!noChecksumCheck) return false;
+                    if (!noChecksumCheck) {
+                        Log.e("BSM - Restore", "Signing info verification failed." +
+                                "\nInstalled: " + certChecksum.toString() +
+                                "\nBackup: " + Arrays.toString(metadataV1.certSha256Checksum));
+                        return false;
+                    }
                 }
                 if (!isVerified) {
                     // Signature verification failed but still here because signature check is disabled.
@@ -245,16 +278,25 @@ public class BackupStorageManager implements AutoCloseable {
             }
             if (!noChecksumCheck) {
                 // Check integrity of source
-                if (metadataV1.sourceDir.equals("")) return false;  // Source cannot be empty
+                if (TextUtils.isEmpty(metadataV1.sourceDir)) {
+                    Log.e("BSM - Restore", "Source restore is requested but source_dir metadata is empty.");
+                    return false;
+                }
                 String checksum = getSha256Sum(backupSourceFiles);
-                if (!checksum.equals(metadataV1.sourceDirSha256Checksum))
-                    return false;  // Checksum mismatched
+                if (!checksum.equals(metadataV1.sourceDirSha256Checksum)) {
+                    Log.e("BSM - Restore", "Source file verification failed." +
+                            "\nFiles: " + checksum +
+                            "\nMetadata: " + metadataV1.sourceDirSha256Checksum);
+                    return false;
+                }
             }
             if (reinstallNeeded) {
                 // A complete reinstall needed, first uninstall the package with -k and then install
                 // the package again with -r
-                if (!RunnerUtils.uninstallPackageWithoutData(packageName).isSuccessful())
-                    return false;  // Failed to uninstall package
+                if (!RunnerUtils.uninstallPackageWithoutData(packageName).isSuccessful()) {
+                    Log.e("BSM - Restore", "An uninstall was necessary but couldn't perform it.");
+                    return false;
+                }
             }
             // Extract the package
             File packageStagingDirectory = new File("/data/local/tmp");
@@ -265,43 +307,62 @@ public class BackupStorageManager implements AutoCloseable {
             // TODO: Handle split apk
             if (!RootShellRunner.runCommand(String.format("cat %s | tar -xzf - ./%s -C \"%s\"",
                     cmdSources, metadataV1.apkName, packageStagingDirectory.getAbsolutePath())).isSuccessful()) {
+                Log.e("BSM - Restore", "Failed to extract the apk file(s).");
                 return false;
             }
             // A normal update will do it now
-            if (!RunnerUtils.installPackage(baseApk.getAbsolutePath()).isSuccessful())
-                return false;  // Failed to (re)install package
+            if (!RunnerUtils.installPackage(baseApk.getAbsolutePath()).isSuccessful()) {
+                Log.e("BSM - Restore", "A (re)install was necessary but couldn't perform it.");
+                return false;
+            }
             // Get package info
             try {
                 packageInfo = AppManager.getContext().getPackageManager().getPackageInfo(packageName, flagSigningInfo);
                 isInstalled = packageInfo != null;
             } catch (PackageManager.NameNotFoundException e) {
+                Log.e("BSM - Restore", "Apparently the install wasn't complete in the previous section.");
                 e.printStackTrace();
-                return false;  // Failed to (re)install package
+                return false;
             }
-            if (packageInfo == null) return false;  // Failed to (re)install package
+            if (packageInfo == null) {
+                Log.e("BSM - Restore", "Apparently the install wasn't complete in the previous section.");
+                return false;
+            }
             // Restore source directory only if instruction set is matched or app path is not /data/app
             String sourceDir = new File(packageInfo.applicationInfo.publicSourceDir).getParent();
             if (metadataV1.instructionSet.equals(instructionSet) && !dataAppPath.getAbsolutePath().equals(sourceDir)) {
                 // Restore source: Get installed source directory and copy backups directly
                 if (!RootShellRunner.runCommand(String.format("cat %s | tar -xzf - -C \"%s\"",
                         cmdSources, sourceDir)).isSuccessful()) {
+                    Log.e("BSM - Restore", "Failed to restore the source files.");
                     return false;  // Failed to restore source files
                 }
-            }
+            } else Log.e("BSM - Restore", "Skipped restoring files due to mismatched architecture or the path is /data/app");
         }
         if ((flags & BACKUP_DATA) != 0) {
             // Data restore is requested: Data restore is only possible if the app is actually
             // installed. So, check if it's installed first.
-            if (!isInstalled) return false;
+            if (!isInstalled) {
+                Log.e("BSM - Restore", "Data restore is requested but the app isn't installed.");
+                return false;
+            }
             File[] dataFiles;
             if (!noChecksumCheck) {
                 // Verify integrity of the data backups
                 String checksum;
                 for (int i = 0; i < metadataV1.dataDirs.length; ++i) {
                     dataFiles = getDataFiles(backupPath, i);
-                    if (dataFiles == null) return false;
+                    if (dataFiles == null) {
+                        Log.e("BSM - Restore", "Data restore is requested but there are no data files for index " + i + ".");
+                        return false;
+                    }
                     checksum = getSha256Sum(dataFiles);
-                    if (!checksum.equals(metadataV1.dataDirsSha256Checksum[i])) return false;
+                    if (!checksum.equals(metadataV1.dataDirsSha256Checksum[i])) {
+                        Log.e("BSM - Restore", "Data file verification failed for index " + i + "." +
+                                "\nFiles: " + checksum +
+                                "\nMetadata: " + metadataV1.dataDirsSha256Checksum[i]);
+                        return false;
+                    }
                 }
             }
             // Force stop app before restoring backups
@@ -311,13 +372,17 @@ public class BackupStorageManager implements AutoCloseable {
             for (int i = 0; i<metadataV1.dataDirs.length; ++i) {
                 dataSource = metadataV1.dataDirs[i];
                 dataFiles = getDataFiles(backupPath, i);
-                if (dataFiles == null) return false;
+                if (dataFiles == null) {
+                    Log.e("BSM - Restore", "Data restore is requested but there are no data files for index " + i + ".");
+                    return false;
+                }
                 StringBuilder cmdData = new StringBuilder();
                 // FIXME: Fix API 23 external storage issue
                 for (File file: dataFiles) cmdData.append(" \"").append(file.getAbsolutePath()).append("\"");
                 // Skip restoring external data if requested
                 if ((flags & BACKUP_EXT_DATA) == 0 && dataSource.startsWith("/storage") && dataSource.startsWith("/sdcard")) continue;
                 if (!RootShellRunner.runCommand(String.format("cat %s | tar -xzf - -C /", cmdData.toString())).isSuccessful()) {
+                    Log.e("BSM - Restore", "Failed to restore data files for index " + i + ".");
                     return false;
                 }
                 if ((flags & BACKUP_EXCLUDE_CACHE) != 0) {
@@ -328,7 +393,10 @@ public class BackupStorageManager implements AutoCloseable {
         }
         if ((flags & BACKUP_RULES) != 0) {
             // Apply rules
-            if (!isInstalled) return false;
+            if (!isInstalled) {
+                Log.e("BSM - Restore", "Rules restore is requested but the app isn't installed.");
+                return false;
+            }
             File rulesFile = new File(backupPath, RULES_TSV);
             if (rulesFile.exists()) {
                 try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()))) {
@@ -336,10 +404,13 @@ public class BackupStorageManager implements AutoCloseable {
                     importer.setPackagesToImport(Collections.singletonList(packageName));
                     importer.applyRules();
                 } catch (IOException e) {
-                    // Failed to import rules
+                    Log.e("BSM - Restore", "Failed to restore rules file.");
                     e.printStackTrace();
                     return false;
                 }
+            } else if (metadataV1.hasRules) {
+                Log.e("BSM - Restore", "Rules file is missing.");
+                return false;
             } // else there are no rules, just skip instead of returning false
         }
         return true;
