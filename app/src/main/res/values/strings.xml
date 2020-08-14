@@ -441,4 +441,5 @@
     <string name="unblock">Unblock</string>
     <string name="block_unblock_trackers">Block/unblock trackers</string>
     <string name="no_matching_package_found">No matching package found</string>
+    <string name="export_icon">Extract Icon</string>
 </resources>

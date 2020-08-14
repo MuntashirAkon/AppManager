@@ -1,7 +1,5 @@
 package io.github.muntashirakon.AppManager.details;
 
-// NOTE: Commented lines were taken from View2ManifestActivity.java
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -45,12 +43,13 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.xmlapkparser.AXMLPrinter;
 
+import static io.github.muntashirakon.AppManager.misc.RequestCodes.REQUEST_CODE_EXPORT;
+
 public class ManifestViewerActivity extends AppCompatActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
 
     private static final String MANIFEST_CACHE_APK = "manifest_cache.apk";
     private static final String MIME_XML = "text/xml";
-    private static final int RESULT_CODE_EXPORT = 849;
 
     private static final Pattern QUOTATIONS = Pattern.compile("\"([^\"]*)\"", Pattern.MULTILINE);
     private static final Pattern MANIFEST_TAGS = Pattern.compile
@@ -149,7 +148,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType(MIME_XML);
                 intent.putExtra(Intent.EXTRA_TITLE, fileName);
-                startActivityForResult(intent, RESULT_CODE_EXPORT);
+                startActivityForResult(intent, REQUEST_CODE_EXPORT);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -158,7 +157,7 @@ public class ManifestViewerActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != Activity.RESULT_OK) return;
-        if (requestCode != RESULT_CODE_EXPORT) return;
+        if (requestCode != REQUEST_CODE_EXPORT) return;
         if (data == null) return;
         Uri uri = data.getData();
         if(uri == null) return;

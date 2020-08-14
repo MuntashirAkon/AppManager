@@ -14,6 +14,7 @@ import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -41,6 +42,7 @@ import com.google.android.material.progressindicator.ProgressIndicator;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -83,6 +85,8 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
+import static io.github.muntashirakon.AppManager.misc.RequestCodes.REQUEST_CODE_EXTRACT_ICON;
+
 public class AppInfoFragment extends Fragment
         implements SwipeRefreshLayout.OnRefreshListener {
     private static final String UID_STATS_PATH = "/proc/uid_stat/";
@@ -97,6 +101,7 @@ public class AppInfoFragment extends Fragment
     private static final String ACTIVITY_NAME_AURORA_STORE = "com.aurora.store.ui.details.DetailsActivity";
 
     private static final String MIME_TSV = "text/tab-separated-values";
+    private static final String MIME_PNG = "image/png";
 
     private PackageManager mPackageManager;
     private String mPackageName;
@@ -245,6 +250,13 @@ public class AppInfoFragment extends Fragment
                 intent.putExtra(Intent.EXTRA_TITLE, fileName);
                 startActivityForResult(intent, RequestCodes.REQUEST_CODE_BATCH_EXPORT);
                 return true;
+            case R.id.action_extract_icon:
+                String iconName = mPackageName +  "_icon.png";
+                Intent iconIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                iconIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                iconIntent.setType(MIME_PNG);
+                iconIntent.putExtra(Intent.EXTRA_TITLE, iconName);
+                startActivityForResult(iconIntent, REQUEST_CODE_EXTRACT_ICON);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -268,6 +280,24 @@ public class AppInfoFragment extends Fragment
                 Toast.makeText(mActivity, getString(R.string.package_name_is_installed_successfully, mPackageLabel), Toast.LENGTH_SHORT).show();
             } else if (resultCode == Activity.RESULT_FIRST_USER) {
                 Toast.makeText(mActivity, getString(R.string.failed_to_install_package_name, mPackageLabel), Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == REQUEST_CODE_EXTRACT_ICON) {
+            if (data != null) {
+                Uri uri = data.getData();
+                try {
+                    if (uri == null) throw new IOException("Empty Uri.");
+                    try (OutputStream outputStream = mActivity.getContentResolver().openOutputStream(uri)) {
+                        if (outputStream == null)
+                            throw new IOException("Unable to open output stream.");
+                        Bitmap bitmap = IOUtils.getBitmapFromDrawable(mApplicationInfo.loadIcon(mPackageManager));
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                        outputStream.flush();
+                        Toast.makeText(mActivity, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(mActivity, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

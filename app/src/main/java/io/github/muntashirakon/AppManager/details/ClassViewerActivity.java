@@ -32,13 +32,14 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.R;
 
+import static io.github.muntashirakon.AppManager.misc.RequestCodes.REQUEST_CODE_EXPORT;
+
 public class ClassViewerActivity extends AppCompatActivity {
     public static final String EXTRA_APP_NAME = "app_name";
     public static final String EXTRA_CLASS_NAME = "class_name";
     public static final String EXTRA_CLASS_DUMP = "class_dump";
 
     private static final String MIME_JAVA = "text/x-java-source";
-    private static final int RESULT_CODE_EXPORT = 849;
 
     private static final Pattern KEYWORDS = Pattern.compile
             ("\\b(abstract|and|arguments|as(m|sert|sociativity)?|auto|break|" +
@@ -170,7 +171,7 @@ public class ClassViewerActivity extends AppCompatActivity {
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType(MIME_JAVA);
                 intent.putExtra(Intent.EXTRA_TITLE, fileName);
-                startActivityForResult(intent, RESULT_CODE_EXPORT);
+                startActivityForResult(intent, REQUEST_CODE_EXPORT);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -179,7 +180,7 @@ public class ClassViewerActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != Activity.RESULT_OK) return;
-        if (requestCode != RESULT_CODE_EXPORT) return;
+        if (requestCode != REQUEST_CODE_EXPORT) return;
         if (data == null) return;
         Uri uri = data.getData();
         if(uri == null) return;
