@@ -60,6 +60,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
@@ -86,6 +87,8 @@ import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.misc.RequestCodes.REQUEST_CODE_EXTRACT_ICON;
+import static io.github.muntashirakon.AppManager.misc.RequestCodes.REQUEST_CODE_TERMUX_PERM_OPEN_IN;
+import static io.github.muntashirakon.AppManager.misc.RequestCodes.REQUEST_CODE_TERMUX_PERM_RUN_AS;
 
 public class AppInfoFragment extends Fragment
         implements SwipeRefreshLayout.OnRefreshListener {
@@ -180,7 +183,16 @@ public class AppInfoFragment extends Fragment
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         if (!mainModel.getIsExternalApk()) inflater.inflate(R.menu.fragment_app_info_actions, menu);
-        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        if (isExternalApk) return;
+        menu.findItem(R.id.action_open_in_termux).setVisible(isRootEnabled);
+        boolean isDebuggable = false;
+        if (mApplicationInfo != null)
+            isDebuggable = (mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+        menu.findItem(R.id.action_run_in_termux).setVisible(isDebuggable);
     }
 
     @Override
@@ -250,6 +262,16 @@ public class AppInfoFragment extends Fragment
                 intent.putExtra(Intent.EXTRA_TITLE, fileName);
                 startActivityForResult(intent, RequestCodes.REQUEST_CODE_BATCH_EXPORT);
                 return true;
+            case R.id.action_open_in_termux:
+                if (Utils.requestTermuxPermission(mActivity, REQUEST_CODE_TERMUX_PERM_OPEN_IN)) {
+                    openInTermux();
+                }
+                return true;
+            case R.id.action_run_in_termux:
+                if (Utils.requestTermuxPermission(mActivity, REQUEST_CODE_TERMUX_PERM_RUN_AS)) {
+                    runInTermux();
+                }
+                return true;
             case R.id.action_extract_icon:
                 String iconName = mPackageName +  "_icon.png";
                 Intent iconIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
@@ -257,8 +279,21 @@ public class AppInfoFragment extends Fragment
                 iconIntent.setType(MIME_PNG);
                 iconIntent.putExtra(Intent.EXTRA_TITLE, iconName);
                 startActivityForResult(iconIntent, REQUEST_CODE_EXTRACT_ICON);
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (requestCode == REQUEST_CODE_TERMUX_PERM_OPEN_IN) {
+                openInTermux();
+            } else if (requestCode == REQUEST_CODE_TERMUX_PERM_RUN_AS) {
+                runInTermux();
+            }
+        }
     }
 
     @Override
@@ -333,6 +368,34 @@ public class AppInfoFragment extends Fragment
     public void onDestroy() {
         IOUtils.deleteDir(mActivity.getExternalCacheDir());
         super.onDestroy();
+    }
+
+    private void openInTermux() {
+        Intent intent = new Intent();
+        intent.setClassName("com.termux", "com.termux.app.RunCommandService");
+        intent.setAction("com.termux.RUN_COMMAND");
+        intent.putExtra("com.termux.RUN_COMMAND_PATH", Utils.TERMUX_LOGIN_PATH);
+        intent.putExtra("com.termux.RUN_COMMAND_ARGUMENTS", new String[]{"su", "-", String.valueOf(mApplicationInfo.uid)});
+        intent.putExtra("com.termux.RUN_COMMAND_BACKGROUND", false);
+        try {
+            ActivityCompat.startForegroundService(mActivity, intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void runInTermux() {
+        Intent intent = new Intent();
+        intent.setClassName("com.termux", "com.termux.app.RunCommandService");
+        intent.setAction("com.termux.RUN_COMMAND");
+        intent.putExtra("com.termux.RUN_COMMAND_PATH", Utils.TERMUX_LOGIN_PATH);
+        intent.putExtra("com.termux.RUN_COMMAND_ARGUMENTS", new String[]{"run-as", mPackageName});
+        intent.putExtra("com.termux.RUN_COMMAND_BACKGROUND", false);
+        try {
+            ActivityCompat.startForegroundService(mActivity, intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void refreshDetails() {

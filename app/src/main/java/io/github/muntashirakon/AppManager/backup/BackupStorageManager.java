@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import dalvik.system.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -49,19 +50,6 @@ public class BackupStorageManager implements AutoCloseable {
     public static final int BACKUP_EXCLUDE_CACHE = 1 << 3;
     public static final int BACKUP_RULES = 1 << 4;
     public static final int BACKUP_NO_SIGNATURE_CHECK = 1 << 5;
-
-    private static final File DIR_ANDROID_DATA = getDirectory("ANDROID_DATA", "/data");
-
-    @NonNull
-    static File getDirectory(String variableName, String defaultPath) {
-        String path = System.getenv(variableName);
-        return path == null ? new File(defaultPath) : new File(path);
-    }
-
-    @NonNull
-    public static File getDataAppDirectory() {
-        return new File(DIR_ANDROID_DATA, "app");
-    }
 
     private static final String CMD_SOURCE_DIR_BACKUP = "cd \"%s\" && tar -czf - . | split -b 1G - \"%s\"";  // src, dest
     private static final String CMD_DATA_DIR_BACKUP = "tar -czf - \"%s\" %s | split -b 1G - \"%s\"";  // src, exclude, dest
@@ -137,7 +125,7 @@ public class BackupStorageManager implements AutoCloseable {
             if (!tmpBackupPath.mkdirs()) return false;
         }
         // Backup source
-        File dataAppPath = getDataAppDirectory();
+        File dataAppPath = OsEnvironment.getDataAppDirectory();
         File backupFile = new File(tmpBackupPath, SOURCE_PREFIX + BACKUP_FILE_SUFFIX + ".");
         if (!metadataV1.sourceDir.equals("")) {
             String sourceDir = metadataV1.sourceDir;
@@ -215,7 +203,7 @@ public class BackupStorageManager implements AutoCloseable {
         }
         // Get instruction set
         String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);
-        File dataAppPath = getDataAppDirectory();
+        File dataAppPath = OsEnvironment.getDataAppDirectory();
         // Get package info
         PackageInfo packageInfo = null;
         int flagSigningInfo;

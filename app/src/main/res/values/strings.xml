@@ -442,4 +442,6 @@
     <string name="block_unblock_trackers">Block/unblock trackers</string>
     <string name="no_matching_package_found">No matching package found</string>
     <string name="export_icon">Extract Icon</string>
+    <string name="open_in_termux">Open in Termux</string>
+    <string name="run_in_termux">Run in Termux</string>
 </resources>

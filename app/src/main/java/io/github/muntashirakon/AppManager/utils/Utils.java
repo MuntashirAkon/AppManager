@@ -32,7 +32,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -66,6 +65,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.misc.RequestCodes;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
 
@@ -737,5 +737,25 @@ public class Utils {
             return false;  // Need to receive the results
         }
         return true;  // Permissions given
+    }
+
+    public static final String TERMUX_LOGIN_PATH = OsEnvironment.getDataDataDirectory() + "/com.termux/files/usr/bin/login";
+    public static final String TERMUX_PERM_RUN_COMMAND = "com.termux.permission.RUN_COMMAND";
+    /**
+     * Request permissions for running arbitrary command in Termux. In addition to this, user needs
+     * to set {@code allow-external-apps=true} in ~/.termux/termux.properties.
+     * @param activity The fragment or activity that requested the permission
+     * @param requestCode {@link RequestCodes#REQUEST_CODE_TERMUX_PERM_OPEN_IN} or
+     *      {@link RequestCodes#REQUEST_CODE_TERMUX_PERM_RUN_AS}
+     * @return {@code true} if the permission is given, {@code false} otherwise. If the result is
+     *      {@code false}, user need to check for {@link RequestCodes#REQUEST_CODE_TERMUX_PERM_OPEN_IN}
+     *      or {@link RequestCodes#REQUEST_CODE_TERMUX_PERM_RUN_AS} to see if the permission is granted.
+     */
+    public static boolean requestTermuxPermission(FragmentActivity activity, int requestCode) {
+        if (ContextCompat.checkSelfPermission(activity, TERMUX_PERM_RUN_COMMAND) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[]{TERMUX_PERM_RUN_COMMAND}, requestCode);
+            return false;
+        }
+        return true;
     }
 }

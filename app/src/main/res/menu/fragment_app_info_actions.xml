@@ -33,6 +33,18 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_open_in_termux"
+        android:icon="@drawable/ic_frost_termux"
+        android:title="@string/open_in_termux"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_run_in_termux"
+        android:icon="@drawable/ic_frost_termux"
+        android:title="@string/run_in_termux"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_extract_icon"
         android:icon="@drawable/ic_open_in_new_black_24dp"
         android:title="@string/export_icon"
