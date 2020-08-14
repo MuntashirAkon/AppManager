@@ -17,6 +17,7 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ import dalvik.system.DexFile;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
@@ -244,14 +246,13 @@ public final class PackageUtils {
             dataDirs.add(applicationInfo.deviceProtectedDataDir);
         }
         if (loadExternal) {
-            File[] cacheDirs = AppManager.getContext().getExternalCacheDirs();
-            if (cacheDirs != null) {
-                String dataDir;
-                for (File cacheDir : cacheDirs) {
-                    //noinspection ConstantConditions
-                    dataDir = new File(cacheDir.getParent()).getParent() + File.pathSeparator + applicationInfo.packageName;
-                    if (new File(dataDir).exists()) dataDirs.add(dataDir);
-                }
+            List<File> externalFiles = new ArrayList<>();
+            externalFiles.addAll(Arrays.asList(OsEnvironment.buildExternalStorageAppDataDirs(applicationInfo.packageName)));
+            externalFiles.addAll(Arrays.asList(OsEnvironment.buildExternalStorageAppMediaDirs(applicationInfo.packageName)));
+            externalFiles.addAll(Arrays.asList(OsEnvironment.buildExternalStorageAppObbDirs(applicationInfo.packageName)));
+            for (File externalFile : externalFiles) {
+                if (externalFile != null && externalFile.exists())
+                    dataDirs.add(externalFile.getAbsolutePath());
             }
         }
         return dataDirs.toArray(new String[0]);
