@@ -100,7 +100,7 @@ public class AppInfoFragment extends Fragment
     private static final String PACKAGE_NAME_AURORA_DROID = "com.aurora.adroid";
     private static final String PACKAGE_NAME_AURORA_STORE = "com.aurora.store";
     private static final String ACTIVITY_NAME_FDROID = "org.fdroid.fdroid.views.AppDetailsActivity";
-    private static final String ACTIVITY_NAME_AURORA_DROID = "com.aurora.adroid.ui.activity.DetailsActivity";
+    private static final String ACTIVITY_NAME_AURORA_DROID = "com.aurora.adroid.ui.details.DetailsActivity";
     private static final String ACTIVITY_NAME_AURORA_STORE = "com.aurora.store.ui.details.DetailsActivity";
 
     private static final String MIME_TSV = "text/tab-separated-values";
