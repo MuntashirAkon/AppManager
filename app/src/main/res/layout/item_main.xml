@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?selectableItemBackground">
+    android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/main_view"
@@ -16,13 +15,31 @@
         android:paddingStart="@dimen/padding_small"
         android:paddingTop="@dimen/padding_small">
 
-        <ImageView
-            android:id="@+id/icon"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="@dimen/icon_size"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:layout_marginEnd="@dimen/padding_small"
-            tools:srcCompat="@tools:sample/avatars"
-            android:contentDescription="@string/str_logo" />
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                tools:srcCompat="@tools:sample/avatars"
+                android:contentDescription="@string/str_logo" />
+
+            <TextView
+                android:id="@+id/backup_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="11sp"
+                android:text="@string/backup" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -94,6 +111,15 @@
                     tools:text="@tools:sample/lorem"
                     tools:ignore="SmallSp" />
 
+                <TextView
+                    android:id="@+id/backup_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textSize="12sp"
+                    tools:text="@tools:sample/lorem"
+                    tools:ignore="SmallSp" />
+
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </FrameLayout>
@@ -136,8 +162,17 @@
                 tools:text="@tools:sample/lorem"
                 tools:ignore="SmallSp" />
 
+            <TextView
+                android:id="@+id/backup_info_ext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textSize="12sp"
+                tools:text="@tools:sample/lorem"
+                tools:ignore="SmallSp" />
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-</RelativeLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

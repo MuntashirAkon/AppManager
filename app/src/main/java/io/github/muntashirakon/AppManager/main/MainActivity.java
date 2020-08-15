@@ -64,6 +64,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
@@ -900,6 +901,35 @@ public class MainActivity extends AppCompatActivity implements
             if ((item.flags & ApplicationInfo.FLAG_USES_CLEARTEXT_TRAFFIC) !=0)
                 holder.size.setTextColor(mColorOrange);
             else holder.size.setTextColor(mColorSecondary);
+            // Check for backup
+            if (item.metadataV1 != null) {
+                holder.backupIndicator.setVisibility(View.VISIBLE);
+                holder.backupInfo.setVisibility(View.VISIBLE);
+                holder.backupInfoExt.setVisibility(View.VISIBLE);
+                holder.backupIndicator.setText(R.string.backup);
+                MetadataManager.MetadataV1 metadataV1 = item.metadataV1;
+                long days = TimeUnit.DAYS.convert(System.currentTimeMillis() -
+                        metadataV1.backupTime, TimeUnit.MILLISECONDS);
+                holder.backupInfo.setText(String.format("%s: %s, %s %s",
+                        mActivity.getString(R.string.backup), mActivity.getResources()
+                                .getQuantityString(R.plurals.usage_days, (int) days, days),
+                        mActivity.getString(R.string.version), metadataV1.versionName));
+                StringBuilder extBulder = new StringBuilder();
+                if (!TextUtils.isEmpty(metadataV1.sourceDir)) extBulder.append("apk");
+                if (metadataV1.dataDirs.length > 0) {
+                    if (extBulder.length() > 0) extBulder.append("+");
+                    extBulder.append("data");
+                }
+                if (metadataV1.hasRules) {
+                    if (extBulder.length() > 0) extBulder.append("+");
+                    extBulder.append("rules");
+                }
+                holder.backupInfoExt.setText(extBulder.toString());
+            } else {
+                holder.backupIndicator.setVisibility(View.GONE);
+                holder.backupInfo.setVisibility(View.GONE);
+                holder.backupInfoExt.setVisibility(View.GONE);
+            }
         }
 
         public void toggleSelection(@NonNull ApplicationItem item, int position) {
@@ -961,6 +991,9 @@ public class MainActivity extends AppCompatActivity implements
             TextView sharedId;
             TextView issuer;
             TextView sha;
+            TextView backupIndicator;
+            TextView backupInfo;
+            TextView backupInfoExt;
             IconLoaderThread iconLoader;
 
             public ViewHolder(@NonNull View itemView) {
@@ -977,6 +1010,9 @@ public class MainActivity extends AppCompatActivity implements
                 sharedId = itemView.findViewById(R.id.shareid);
                 issuer = itemView.findViewById(R.id.issuer);
                 sha = itemView.findViewById(R.id.sha);
+                backupIndicator = itemView.findViewById(R.id.backup_indicator);
+                backupInfo = itemView.findViewById(R.id.backup_info);
+                backupInfoExt = itemView.findViewById(R.id.backup_info_ext);
             }
         }
     }
