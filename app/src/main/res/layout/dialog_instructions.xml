@@ -15,6 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autoLink="web"
             android:text="@string/instructions_header"
             android:textStyle="italic"
             android:textSize="12sp" />

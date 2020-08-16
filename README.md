@@ -1,11 +1,11 @@
 # App Manager
 ![Debug Build](https://github.com/MuntashirAkon/AppManager/workflows/Debug%20Build/badge.svg)
-![GitHub Release](https://img.shields.io/github/v/release/MuntashirAkon/AppManager)
-![F-Droid](https://img.shields.io/f-droid/v/io.github.muntashirakon.AppManager)
+[![GitHub Release](https://img.shields.io/github/v/release/MuntashirAkon/AppManager)](https://github.com/MuntashirAkon/AppManager/releases/latest)
+[![F-Droid](https://img.shields.io/f-droid/v/io.github.muntashirakon.AppManager)](https://f-droid.org/packages/io.github.muntashirakon.AppManager)
 ![GitHub Repo Size](https://img.shields.io/github/repo-size/MuntashirAkon/AppManager)
 ![GitHub Commit per Week](https://img.shields.io/github/commit-activity/w/MuntashirAkon/AppManager)
-![TG Group](https://img.shields.io/badge/TG-Group-blue?logo=telegram&link=https://t.me/AppManagerAndroid)
-![TG Channel](https://img.shields.io/badge/TG-Channel-blue?logo=telegram&link=https://t.me/AppManagerChannel)
+[![TG Group](https://img.shields.io/badge/TG-Group-blue?logo=telegram)](https://t.me/AppManagerAndroid)
+[![TG Channel](https://img.shields.io/badge/TG-Channel-blue?logo=telegram)](https://t.me/AppManagerChannel)
 
 Yet another android package manager and viewer but...
 
@@ -33,14 +33,14 @@ Yet another android package manager and viewer but...
 
 It basically combines the features of 5 or 6 apps that any tech-savvy person needs to use in order to have a life.
 
-See the instructions page within the app for more information on how to use the app.
-
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
 alt="Get it on F-Droid"
 height="80" />](https://f-droid.org/packages/io.github.muntashirakon.AppManager)
 [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png"
 alt="Get it on IzzyOnDroid"
 height="80" />](https://apt.izzysoft.de/fdroid/index/apk/io.github.muntashirakon.AppManager)
+
+App Manager Docs: https://muntashirakon.github.io/AppManager
 
 Telegram Support Group: https://t.me/AppManagerAndroid
 

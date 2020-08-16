@@ -23,3 +23,6 @@ git push -f $pages_repo master:$pages_branch
 
 cd -
 
+# Delete the output directory
+rm -rf "${base_dist}"
+

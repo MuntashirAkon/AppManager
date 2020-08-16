@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="instructions_header">[There might be some features that are completely new to you.
-    If that is the case, you should search the Internet to understand more about it.]</string>
+    <string name="instructions_header">[These instructions are outdated and will no longer be
+        updated. Visit the official docs site (https://muntashirakon.github.io/AppManager) to get
+        up-to-date information]</string>
     <string name="adb_over_tcp">ADB over TCP</string>
     <string name="adb_over_tcp_description">Many root-only features can still be used by enabling
         ADB over TCP. To do that, a PC or Mac is required with ADB tools installed, and an Android
