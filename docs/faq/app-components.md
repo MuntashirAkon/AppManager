@@ -1,6 +1,6 @@
 ---
 prev: ./
-next: false
+next: ./misc
 sidebarDepth: 2
 ---
 # App Components

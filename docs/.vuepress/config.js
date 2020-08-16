@@ -64,6 +64,7 @@ module.exports = {
         collapsable: false,
         children: [
           '/faq/app-components',
+          '/faq/misc',
         ]
       },
       {
