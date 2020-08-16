@@ -36,6 +36,8 @@ Turning off this option disables the **App Usage** page as well as _data usage_ 
 ## Import/Export Blocking Rules
 It is possible to import or export blocking rules within App Manager for all apps. There is a choice to export or import only certain rules (components, app ops or permissions) instead of all of them. It is also possible to import blocking rules from [Blocker][4] and [Watt][5]. If it is necessary to export blocking rules for a single app, use the corresponding [App Details][2] page to export rules, or for multiple apps, use [batch operations][6].
 
+_See also: [App Manager: Rules Specification][rules_spec]_
+
 ### Export
 Export blocking rules for all apps configured within App Manager. This may include [app components][what_are_components], app ops and permissions based on what options is/are selected in the multichoice options.
 
@@ -67,3 +69,4 @@ Import blocking rules from [Blocker][4], each file containing rules for a single
 [6]: ./main-page.md#batch-operations
 [7]: ../faq/app-components.md#what-is-global-component-blocking
 [what_are_components]: ../faq/app-components.md#what-are-the-app-components
+[rules_spec]: ../tech/rules-specification.md

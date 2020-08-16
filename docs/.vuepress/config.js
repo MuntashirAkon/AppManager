@@ -72,6 +72,7 @@ module.exports = {
         collapsable: false,
         children: [
           '/tech/AppOps',
+          '/tech/rules-specification',
         ]
       },
     ],
