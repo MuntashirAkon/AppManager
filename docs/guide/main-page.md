@@ -89,10 +89,11 @@ If you have the app [APK Updater][3] installed, you can use the corresponding op
 If you have [Termux][2] installed, you can directly go to the running session or open a new session using the **Termux** option in the menu.
 
 ### Settings
-You can go to in-app **Settings** by clicking on the corresponding option.
+You can go to in-app [Settings][settings] by clicking on the corresponding option.
 
 [1]: ./adb-over-tcp.md
 [2]: https://github.com/termux/termux-app
 [3]: https://github.com/rumboalla/apkupdater
 [4]: ./app-details-page.md
 [5]: ./one-click-ops-page.md
+[settings]: ./settings-page.md

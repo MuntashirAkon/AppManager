@@ -9,6 +9,9 @@ sidebarDepth: 2
 [[toc]]
 :::
 
+## What are the app components?
+Activities, services, broadcast receivers (also known as receivers) and content providers (also known as providers) are combinedly called app components. More technically, they all inherit the `ComponentInfo` class.
+
 ## Why are the components blocked by AM not detected by other related apps?
 It is because of the blocking method I'm using. This method is called [Intent Firewall][1] (IFW) and is compatible with [Watt][2] and [Blocker][3]. [MyAndroidTool][4] (MAT) supports IFW but it uses a different format. There are other methods for blocking app components such as _pm_ and [Shizuku][5]. If an app component is blocked using these latter methods, the affected app can identify it and can unblock it as it has full access to its own components. Many deceptive apps actually exploit this in order to keep the tracker components unblocked.
 
@@ -34,5 +37,5 @@ Some apps may misbehave due to their dependency to tracker components blocked by
 [6]: ../guide/app-details-page.md
 [7]: ../guide/settings-page.md#global-component-blocking
 [8]: ../guide/one-click-ops-page.md
-[9]: ../guide/settings-page.md#import-export-blocking-rules
+[9]: ../guide/settings-page.md#import-existing-rules
 [10]: ../guide/app-details-page.md#color-codes

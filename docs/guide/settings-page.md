@@ -36,6 +36,29 @@ Turning off this option disables the **App Usage** page as well as _data usage_ 
 ## Import/Export Blocking Rules
 It is possible to import or export blocking rules within App Manager for all apps. There is a choice to export or import only certain rules (components, app ops or permissions) instead of all of them. It is also possible to import blocking rules from [Blocker][4] and [Watt][5]. If it is necessary to export blocking rules for a single app, use the corresponding [App Details][2] page to export rules, or for multiple apps, use [batch operations][6].
 
+### Export
+Export blocking rules for all apps configured within App Manager. This may include [app components][what_are_components], app ops and permissions based on what options is/are selected in the multichoice options.
+
+### Import
+Import previously exported blocking rules from App Manager. Similar to export, this may include [app components][what_are_components], app ops and permissions based on what options is/are selected in the multichoice options.
+
+### Import Existing Rules
+Add components disabled by other apps to App Manager. App Manager only keeps track of component disabled within App Manager. If you use other tools to block app components, you can use this tools to import these disabled components. Clicking on this option triggers a search for disabled components and will lists apps with components disabled by user. For safety, all the apps are unselected by default. You can manually select the apps in the list and re-apply the blocking through App Manager.
+
+::: danger Caution
+Becareful when using this tool as there can be many false positives. Choose only the apps that you are certain about.
+:::
+
+### Import from Watt
+Import configuration files from [Watt][5], each file containing rules for a single package and file name being the name of the package with `.xml` extension.
+
+::: tip
+Location of configuration files in Watt: <tt>/sdcard/Android/data/com.tuyafeng.watt/files/ifw</tt>
+:::
+
+### Import from Blocker
+Import blocking rules from [Blocker][4], each file containing rules for a single package. These files have a `.json` extension.
+
 [1]: ./adb-over-tcp.md
 [2]: ./app-details-page.md
 [3]: ./app-details-page.md#app-info-tab
@@ -43,3 +66,4 @@ It is possible to import or export blocking rules within App Manager for all app
 [5]: https://github.com/tuyafeng/Watt
 [6]: ./main-page.md#batch-operations
 [7]: ../faq/app-components.md#what-is-global-component-blocking
+[what_are_components]: ../faq/app-components.md#what-are-the-app-components
