@@ -82,7 +82,7 @@ public class AdbShell {
         final String retCode = Utils.getFileContent(retCodePath);
         int returnCode = -1;
         try {
-            returnCode = Integer.parseInt(retCode);
+            returnCode = Integer.parseInt(retCode.trim());
         } catch (Exception ignored) {}
         // Read standard output
         List<String> stdout = new ArrayList<>();
