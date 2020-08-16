@@ -11,6 +11,7 @@
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
         <item name="navigationIcon">@drawable/ic_keyboard_backspace_black_24dp</item>
         <item name="actionOverflowButtonStyle">@style/AppTheme.ActionButton.Overflow</item>
+        <item name="actionOverflowMenuStyle">@style/AppTheme.PopupMenu.Overflow</item>
         <item name="appBarLayoutStyle">@style/AppTheme.AppBarLayout</item>
         <item name="materialAlertDialogTheme">@style/AppTheme.AlertDialog</item>
         <item name="android:windowContentTransitions">true</item>
@@ -33,6 +34,9 @@
     </style>
     <style name="AppTheme.ActionButton.Overflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_more_vert_black_24dp</item>
+    </style>
+    <style name="AppTheme.PopupMenu.Overflow" parent="Widget.MaterialComponents.PopupMenu.Overflow">
+        <item name="android:popupBackground">@color/colorPrimaryDark</item>
     </style>
     <style name="AppTheme.AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="colorPrimary">@color/colorAccent</item>
