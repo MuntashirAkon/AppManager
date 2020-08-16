@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.textview.MaterialTextView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -111,12 +112,15 @@ public class SettingsActivity extends AppCompatActivity {
 
         findViewById(R.id.changelog_view).setOnClickListener(v -> new Thread(() -> {
             final Spanned spannedChangelog = HtmlCompat.fromHtml(Utils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
-            runOnUiThread(() ->
-                    new MaterialAlertDialogBuilder(this)
-                            .setTitle(R.string.changelog)
-                            .setMessage(spannedChangelog)
-                            .setNegativeButton(android.R.string.ok, null)
-                            .show());
+            runOnUiThread(() -> {
+                View view = getLayoutInflater().inflate(R.layout.dialog_changelog, null);
+                ((MaterialTextView) view.findViewById(R.id.content)).setText(spannedChangelog);
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string.changelog)
+                        .setView(view)
+                        .setNegativeButton(android.R.string.ok, null)
+                        .show();
+            });
         }).start());
     }
 

@@ -615,17 +615,20 @@ public class MainActivity extends AppCompatActivity implements
         if (Utils.isAppUpdated()) {
             new Thread(() -> {
                 final Spanned spannedChangelog = HtmlCompat.fromHtml(Utils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
-                runOnUiThread(() ->
-                        new MaterialAlertDialogBuilder(this)
-                                .setTitle(R.string.changelog)
-                                .setMessage(spannedChangelog)
-                                .setNegativeButton(android.R.string.ok, null)
-                                .setNeutralButton(R.string.instructions, (dialog, which) ->
-                                        new FullscreenDialog(this)
-                                                .setTitle(R.string.instructions)
-                                                .setView(R.layout.dialog_instructions)
-                                                .show())
-                                .show());
+                runOnUiThread(() -> {
+                    View view = getLayoutInflater().inflate(R.layout.dialog_changelog, null);
+                    ((MaterialTextView) view.findViewById(R.id.content)).setText(spannedChangelog);
+                    new MaterialAlertDialogBuilder(this)
+                            .setTitle(R.string.changelog)
+                            .setView(view)
+                            .setNegativeButton(android.R.string.ok, null)
+                            .setNeutralButton(R.string.instructions, (dialog, which) ->
+                                    new FullscreenDialog(this)
+                                            .setTitle(R.string.instructions)
+                                            .setView(R.layout.dialog_instructions)
+                                            .show())
+                            .show();
+                });
             }).start();
             AppPref.getInstance().setPref(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
         }
