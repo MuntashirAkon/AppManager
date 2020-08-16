@@ -81,6 +81,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static androidx.appcompat.app.ActionBar.LayoutParams;
+import static io.github.muntashirakon.AppManager.utils.Utils.requestExternalStoragePermissions;
 
 public class MainActivity extends AppCompatActivity implements
         SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
@@ -287,7 +288,9 @@ public class MainActivity extends AppCompatActivity implements
                     backupDialogFragment.show(getSupportFragmentManager(), BackupDialogFragment.TAG);
                     return true;
                 case R.id.action_backup_apk:
-                    handleBatchOp(BatchOpsManager.OP_BACKUP_APK, R.string.failed_to_backup_some_apk_files);
+                    if (requestExternalStoragePermissions(this)) {
+                        handleBatchOp(BatchOpsManager.OP_BACKUP_APK, R.string.failed_to_backup_some_apk_files);
+                    }
                     return true;
                 case R.id.action_block_trackers:
                     handleBatchOp(BatchOpsManager.OP_BLOCK_TRACKERS, R.string.alert_failed_to_disable_trackers);
@@ -340,6 +343,17 @@ public class MainActivity extends AppCompatActivity implements
                     mAdapter.clearSelection();
                     handleSelection();
                 }
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == RequestCodes.REQUEST_CODE_EXTERNAL_STORAGE_PERMISSIONS) {
+            if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                handleBatchOp(BatchOpsManager.OP_BACKUP_APK, R.string.failed_to_backup_some_apk_files);
             }
         }
     }
