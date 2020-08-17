@@ -79,7 +79,7 @@ public class RulesImporter implements Closeable {
                     else throw new IOException("Malformed file.");
                     if (mComponentsBlockers.get(packageName) == null) {
                         // Get a read-only instance, commit will be called manually
-                        mComponentsBlockers.put(packageName, ComponentsBlocker.getInstance(mContext, packageName));
+                        mComponentsBlockers.put(packageName, ComponentsBlocker.getInstance(packageName));
                     }
                     if (mTypesToImport.contains(entry.type))
                         Objects.requireNonNull(mComponentsBlockers.get(packageName)).addEntry(entry);

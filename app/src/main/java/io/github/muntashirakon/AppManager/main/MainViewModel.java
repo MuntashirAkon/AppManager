@@ -320,7 +320,7 @@ public class MainViewModel extends AndroidViewModel {
     private void loadBlockingRules() {
         for (int i = 0; i<applicationItems.size(); ++i) {
             ApplicationItem applicationItem = applicationItems.get(i);
-            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(getApplication(), applicationItem.packageName, true)) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(applicationItem.packageName, true)) {
                 applicationItem.blockedCount = cb.componentCount();
             }
             applicationItems.set(i, applicationItem);
@@ -479,7 +479,7 @@ public class MainViewModel extends AndroidViewModel {
                 getSizeForPackage(item);
             }
             if (mSortBy == MainActivity.SORT_BY_BLOCKED_COMPONENTS && AppPref.isRootEnabled()) {
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(getApplication(), packageName, true)) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, true)) {
                     item.blockedCount = cb.componentCount();
                 }
             }

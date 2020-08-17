@@ -213,7 +213,7 @@ public final class MetadataManager implements Closeable {
         if (metadataV1.splitSources == null) metadataV1.splitSources = new String[0];
         metadataV1.hasRules = false;
         if ((flags & BackupStorageManager.BACKUP_RULES) != 0) {
-            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(appManager, packageName)) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName)) {
                 metadataV1.hasRules = cb.entryCount() > 0;
             }
         }

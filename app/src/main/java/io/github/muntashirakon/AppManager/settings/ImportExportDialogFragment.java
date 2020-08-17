@@ -227,7 +227,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                             .setPositiveButton(R.string.apply, (dialog, which) -> {
                                 activity.progressIndicator.show();
                                 new Thread(() -> {
-                                    List<String> failedPackages = ExternalComponentsImporter.applyFromExistingBlockList(activity, selectedPackages);
+                                    List<String> failedPackages = ExternalComponentsImporter.applyFromExistingBlockList(selectedPackages);
                                     if (!failedPackages.isEmpty()) {
                                         handler.post(() -> {
                                             new MaterialAlertDialogBuilder(activity)

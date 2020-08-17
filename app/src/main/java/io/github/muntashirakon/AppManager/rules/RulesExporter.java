@@ -54,7 +54,7 @@ public class RulesExporter {
         try (OutputStream outputStream = mContext.getContentResolver().openOutputStream(uri)) {
             for (String packageName: mPackagesToExport) {
                 // Get a read-only instance
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(mContext, packageName)) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName)) {
                     for (RulesStorageManager.Entry entry: cb.getAll()) {
                         if (mTypesToExport.contains(entry.type)) {
                             Objects.requireNonNull(outputStream).write(String.format("%s\t%s\t%s\t%s\n", packageName, entry.name, entry.type.name(), entry.extra).getBytes());

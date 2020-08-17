@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
@@ -63,23 +64,23 @@ public class ComponentsBlocker extends RulesStorageManager {
     private static @NonNull HashMap<String, ComponentsBlocker> componentsBlockers = new HashMap<>();
 
     @NonNull
-    public static ComponentsBlocker getInstance(@NonNull Context context, @NonNull String packageName) {
-        return getInstance(context, packageName, false);
+    public static ComponentsBlocker getInstance(@NonNull String packageName) {
+        return getInstance(packageName, false);
     }
 
     @NonNull
-    public static ComponentsBlocker getMutableInstance(@NonNull Context context, @NonNull String packageName) {
-        ComponentsBlocker componentsBlocker = getInstance(context, packageName, true);
+    public static ComponentsBlocker getMutableInstance(@NonNull String packageName) {
+        ComponentsBlocker componentsBlocker = getInstance(packageName, true);
         componentsBlocker.readOnly = false;
         return componentsBlocker;
     }
 
     @NonNull
-    public static ComponentsBlocker getInstance(@NonNull Context context, @NonNull String packageName, boolean noLoadFromDisk) {
+    public static ComponentsBlocker getInstance(@NonNull String packageName, boolean noLoadFromDisk) {
         if (!componentsBlockers.containsKey(packageName)) {
             try {
-                getLocalIfwRulesPath(context);
-                componentsBlockers.put(packageName, new ComponentsBlocker(context, packageName));
+                getLocalIfwRulesPath();
+                componentsBlockers.put(packageName, new ComponentsBlocker(AppManager.getContext(), packageName));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 throw new AssertionError();
@@ -94,8 +95,8 @@ public class ComponentsBlocker extends RulesStorageManager {
     }
 
     @NonNull
-    public static String getLocalIfwRulesPath(@NonNull Context context)
-            throws FileNotFoundException {
+    public static String getLocalIfwRulesPath() throws FileNotFoundException {
+        Context context = AppManager.getContext();
         // FIXME: Move from getExternalFilesDir to getCacheDir
         if (LOCAL_RULES_PATH == null) {
             File file = context.getExternalFilesDir("ifw");
@@ -136,7 +137,7 @@ public class ComponentsBlocker extends RulesStorageManager {
             }
             // Apply rules for each package
             for (String packageName: packageNames) {
-                try (ComponentsBlocker cb = getMutableInstance(context, packageName)) {
+                try (ComponentsBlocker cb = getMutableInstance(packageName)) {
                     cb.applyRules(true);
                 }
             }
@@ -152,7 +153,7 @@ public class ComponentsBlocker extends RulesStorageManager {
     @Deprecated
     public static void addAllLocalRules(@NonNull Context context) {
         try {
-            String ifwPath = getLocalIfwRulesPath(context);
+            String ifwPath = getLocalIfwRulesPath();
             if (Runner.runCommand(String.format("ls %s/*.xml", ifwPath)).isSuccessful()) {
                 // Get packages
                 List<String> packageNames = Runner.getLastResult().getOutputAsList();
@@ -162,7 +163,7 @@ public class ComponentsBlocker extends RulesStorageManager {
                 }
                 // Apply rules for each package
                 for (String packageName: packageNames) {
-                    try (ComponentsBlocker cb = getInstance(context, packageName)) {
+                    try (ComponentsBlocker cb = getInstance(packageName)) {
                         // Make the instance mutable
                         cb.readOnly = false;
                     }

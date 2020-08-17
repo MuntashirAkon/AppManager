@@ -144,7 +144,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     blocker.setReadOnly();
                     blocker.close();
                 }
-                blocker = ComponentsBlocker.getInstance(getApplication(), packageName);
+                blocker = ComponentsBlocker.getInstance(packageName);
                 waitForBlocker = false;
                 ComponentsBlocker.class.notifyAll();
             }
@@ -291,7 +291,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     AppOpsService mAppOpsService;
     public boolean setAppOp(int op, int mode) {
         if (isExternalApk) return false;
-        if (mAppOpsService == null) mAppOpsService = new AppOpsService(getApplication());
+        if (mAppOpsService == null) mAppOpsService = new AppOpsService();
         try {
             // Set mode
             mAppOpsService.setMode(op, -1, packageName, mode);
@@ -352,7 +352,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         final List<Integer> opItems = new ArrayList<>();
         final String modeName = AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED);
         boolean isSuccessful = true;
-        if (mAppOpsService == null) mAppOpsService = new AppOpsService(getApplication());
+        if (mAppOpsService == null) mAppOpsService = new AppOpsService();
         for (int i = 0; i<appOpItems.size(); ++i) {
             appDetailsItem = appOpItems.get(i);
             opEntry = (AppOpsManager.OpEntry) appDetailsItem.vanillaItem;
@@ -732,7 +732,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             if (appOpItems == null) {
                 appOpItems = new ArrayList<>();
                 if (!isExternalApk && (AppPref.isRootEnabled() || AppPref.isAdbEnabled())) {
-                    if (mAppOpsService == null) mAppOpsService = new AppOpsService(getApplication());
+                    if (mAppOpsService == null) mAppOpsService = new AppOpsService();
                     try {
                         List<AppOpsManager.PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(-1, packageName, null);
                         List<AppOpsManager.OpEntry> opEntries = new ArrayList<>();

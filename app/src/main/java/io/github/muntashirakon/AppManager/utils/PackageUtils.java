@@ -118,7 +118,7 @@ public final class PackageUtils {
     @NonNull
     public static Collection<Integer> getFilteredAppOps(String packageName, @NonNull int[] appOps) {
         List<Integer> filteredAppOps = new ArrayList<>();
-        AppOpsService appOpsService = new AppOpsService(AppManager.getContext());
+        AppOpsService appOpsService = new AppOpsService();
         for(int appOp: appOps) {
             try {
                 if (!appOpsService.checkOperation(appOp, -1, packageName).equals(AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED))) {

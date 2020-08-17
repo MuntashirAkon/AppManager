@@ -320,7 +320,7 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
                 new Thread(() -> {
                     String mode = AppOpsManager.modeToName(AppOpsManager.MODE_DEFAULT);
                     try {
-                        mode = new AppOpsService(mActivity).checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName);
+                        mode = new AppOpsService().checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName);
                     } catch (Exception ignore) {}
                     String finalMode = mode;
                     mActivity.runOnUiThread(() -> {
@@ -328,9 +328,9 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
                             holder.disableBackgroundRunBtn.setVisibility(View.VISIBLE);
                             holder.disableBackgroundRunBtn.setOnClickListener(v -> new Thread(() -> {
                                 try {
-                                    new AppOpsService(mActivity).setMode(AppOpsManager.OP_RUN_IN_BACKGROUND,
+                                    new AppOpsService().setMode(AppOpsManager.OP_RUN_IN_BACKGROUND,
                                             applicationInfo.uid, applicationInfo.packageName, AppOpsManager.MODE_IGNORED);
-                                    try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mActivity, applicationInfo.packageName)) {
+                                    try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(applicationInfo.packageName)) {
                                         cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
                                     }
                                     mActivity.runOnUiThread(() -> mActivity.refresh());

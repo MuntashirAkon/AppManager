@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.appops;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -52,10 +51,6 @@ class AppOpsService implements IAppOpsService {
 
     private boolean isSuccessful = false;
     private List<String> output = null;
-    private Context context;
-    public AppOpsService(Context context) {
-        this.context = context;
-    }
 
     /**
      * Get the mode of operation of the given package or uid.

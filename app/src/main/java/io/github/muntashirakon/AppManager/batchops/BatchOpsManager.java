@@ -166,7 +166,7 @@ public class BatchOpsManager {
     }
 
     private Result opBlockTrackers() {
-        final List<String> failedPkgList = ComponentUtils.blockTrackingComponents(context, packageNames);
+        final List<String> failedPkgList = ComponentUtils.blockTrackingComponents(packageNames);
         return lastResult = new Result() {
             @Override
             public boolean isSuccessful() {
@@ -206,7 +206,7 @@ public class BatchOpsManager {
         List<String> failedPackages = result.failedPackages();
         for (String packageName: packageNames) {
             if (!failedPackages.contains(packageName)) {
-                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
                     cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
                 }
             }

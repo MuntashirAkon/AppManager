@@ -198,7 +198,7 @@ public class BackupStorageManager implements AutoCloseable {
         if (metadataV1.hasRules) {
             File rulesFile = new File(tmpBackupPath, RULES_TSV);
             try (OutputStream outputStream = new FileOutputStream(rulesFile);
-                 ComponentsBlocker cb = ComponentsBlocker.getInstance(AppManager.getContext(), packageName)) {
+                 ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName)) {
                 for (RulesStorageManager.Entry entry: cb.getAll()) {
                     outputStream.write(String.format("%s\t%s\t%s\t%s\n", packageName, entry.name, entry.type.name(), entry.extra).getBytes());
                 }

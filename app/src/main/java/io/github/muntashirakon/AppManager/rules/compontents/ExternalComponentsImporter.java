@@ -51,13 +51,13 @@ import io.github.muntashirakon.AppManager.utils.Utils;
  */
 public class ExternalComponentsImporter {
     @NonNull
-    public static List<String> denyFilteredAppOps(@NonNull Context context, @NonNull Collection<String> packageNames, int[] appOps) {
+    public static List<String> denyFilteredAppOps(@NonNull Collection<String> packageNames, int[] appOps) {
         List<String> failedPkgList = new ArrayList<>();
         Collection<Integer> appOpList;
-        AppOpsService appOpsService = new AppOpsService(context);
+        AppOpsService appOpsService = new AppOpsService();
         for (String packageName: packageNames) {
             appOpList = PackageUtils.getFilteredAppOps(packageName, appOps);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
                 for (int appOp: appOpList) {
                     try {
                         appOpsService.setMode(appOp, -1, packageName, AppOpsManager.MODE_IGNORED);
@@ -74,12 +74,12 @@ public class ExternalComponentsImporter {
     }
 
     @NonNull
-    public static List<String> applyFromExistingBlockList(@NonNull Context context, @NonNull List<String> packageNames) {
+    public static List<String> applyFromExistingBlockList(@NonNull List<String> packageNames) {
         List<String> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
         for (String packageName: packageNames) {
             components = PackageUtils.getUserDisabledComponentsForPackage(packageName);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
                 for (String componentName: components.keySet()) {
                     cb.addComponent(componentName, components.get(componentName));
                 }
@@ -139,7 +139,7 @@ public class ExternalComponentsImporter {
             try (InputStream rulesStream = context.getContentResolver().openInputStream(fileUri)) {
                 if (rulesStream == null) throw new IOException("Failed to open input stream.");
                 String packageName = Utils.trimExtension(filename);
-                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
                     HashMap<String, RulesStorageManager.Type> components = ComponentUtils.readIFWRules(rulesStream, packageName);
                     for (String componentName: components.keySet()) {
                         // Overwrite rules if exists
@@ -191,7 +191,7 @@ public class ExternalComponentsImporter {
                     HashMap<String, RulesStorageManager.Type> disabledComponents = packageComponents.get(packageName);
                     //noinspection ConstantConditions
                     if (disabledComponents.size() > 0) {
-                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)){
+                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)){
                             for (String component: disabledComponents.keySet()) {
                                 cb.addComponent(component, disabledComponents.get(component));
                             }

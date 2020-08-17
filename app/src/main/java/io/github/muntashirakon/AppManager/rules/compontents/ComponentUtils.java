@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.rules.compontents;
 
-import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.util.Xml;
@@ -64,12 +63,12 @@ public final class ComponentUtils {
     }
 
     @NonNull
-    public static List<String> blockTrackingComponents(@NonNull Context context, @NonNull Collection<String> packageNames) {
+    public static List<String> blockTrackingComponents(@NonNull Collection<String> packageNames) {
         List<String> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
         for (String packageName: packageNames) {
             components = ComponentUtils.getTrackerComponentsForPackage(packageName);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
                 for (String componentName: components.keySet()) {
                     cb.addComponent(componentName, components.get(componentName));
                 }
@@ -83,12 +82,12 @@ public final class ComponentUtils {
     }
 
     @NonNull
-    public static List<String> unblockTrackingComponents(@NonNull Context context, @NonNull Collection<String> packageNames) {
+    public static List<String> unblockTrackingComponents(@NonNull Collection<String> packageNames) {
         List<String> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
         for (String packageName: packageNames) {
             components = getTrackerComponentsForPackage(packageName);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
                 for (String componentName: components.keySet()) {
                     cb.removeComponent(componentName);
                 }
@@ -102,12 +101,12 @@ public final class ComponentUtils {
     }
 
     @NonNull
-    public static List<String> blockFilteredComponents(@NonNull Context context, @NonNull Collection<String> packageNames, String[] signatures) {
+    public static List<String> blockFilteredComponents(@NonNull Collection<String> packageNames, String[] signatures) {
         List<String> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
         for (String packageName: packageNames) {
             components = PackageUtils.getFilteredComponents(packageName, signatures);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(context, packageName)) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
                 for (String componentName: components.keySet()) {
                     cb.addComponent(componentName, components.get(componentName));
                 }

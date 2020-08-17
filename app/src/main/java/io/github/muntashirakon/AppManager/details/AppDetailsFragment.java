@@ -293,7 +293,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 return true;
             case R.id.action_block_trackers:  // Components
                 new Thread(() -> {
-                    List<String> failedPkgList = ComponentUtils.blockTrackingComponents(mActivity, Collections.singletonList(mPackageName));
+                    List<String> failedPkgList = ComponentUtils.blockTrackingComponents(Collections.singletonList(mPackageName));
                     if (failedPkgList.contains(mPackageName)) {
                         runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_disable_trackers, Toast.LENGTH_SHORT).show());
                     } else {
