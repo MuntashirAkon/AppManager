@@ -4,22 +4,12 @@ android {
     compileSdkVersion 29
     buildToolsVersion '30.0.0'
 
-    def versionPropsFile = file('version.properties')
-    if (versionPropsFile.canRead()) {
-        Properties versionProps = new Properties()
-        versionProps.load(new FileInputStream(versionPropsFile))
-        def name = versionProps['VERSION_NAME']
-        def code = versionProps['VERSION_CODE'].toInteger()
-
-        defaultConfig {
-            applicationId 'io.github.muntashirakon.AppManager'
-            minSdkVersion 21
-            targetSdkVersion 29
-            versionCode code
-            versionName name
-        }
-    } else {
-        throw new GradleException("Could not read version.properties!")
+    defaultConfig {
+        applicationId 'io.github.muntashirakon.AppManager'
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 342
+        versionName "2.5.13"
     }
 
     signingConfigs {
