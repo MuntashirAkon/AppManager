@@ -41,7 +41,7 @@ public final class RunnerUtils {
     public static final String CMD_FORCE_STOP_PACKAGE  = CMD_AM + " force-stop %s";
     public static final String CMD_UNINSTALL_PACKAGE = CMD_PM + " uninstall -k --user 0 %s";
     public static final String CMD_UNINSTALL_PACKAGE_WITH_DATA = CMD_PM + " uninstall --user 0 %s";
-    public static final String CMD_INSTALL_PACKAGE = CMD_PM + " install -r -i " + BuildConfig.APPLICATION_ID + " %s";
+    public static final String CMD_INSTALL_PACKAGE = CMD_PM + " install --user 0 -r -i " + BuildConfig.APPLICATION_ID + " %s";
 
     public static final String CMD_COMPONENT_ENABLE = CMD_PM + " default-state %s/%s";  // default-state is more safe than enable
     public static final String CMD_COMPONENT_DISABLE = CMD_PM + " disable %s/%s";
