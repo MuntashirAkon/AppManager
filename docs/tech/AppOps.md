@@ -18,7 +18,7 @@ sidebarDepth: 2
 
 ## Introduction to App Ops
 
-![How AppOps Works](/assets/how_app_ops_work.png)
+<img :src="$withBase('/assets/how_app_ops_work.png')" alt="How AppOps Works">
 
 The figure (taken from [this article][3]) above describes the process of changing and processing permission. [**AppOpsManager**](#appopsmanager) can be used to manage permissions in Settings app. **AppOpsManager** is also useful in determining if a certain permission (or operation) is granted to the application. Most of the methods of **AppOpsManager** are accessible to the user app but unlike a system app, it can only be used to check permissions for any app or for the app itself and start or terminating certain operations. Moreover, not all operations are actually accessible from this Java class. **AppOpsManager** holds all the necessary constants such as [_OP\_*_](#op-constants), `OPSTR_*`, [_MODE\_*_](#mode-constants) which describes operation code, operation string and mode of operations respectively. It also holds necessary data stuctures such as [**PackageOps**](#packageops) and **OpEntry**. **PackageOps** holds **OpEntry** for a package, and **OpEntry**, as the name suggests, describes each operation. Under the hood, **AppOpsManager** calls **AppOpsService** to perform any real work.
 
