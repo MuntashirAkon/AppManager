@@ -29,6 +29,18 @@ _See also: [Global Component Blocking][7]_
 ## How to unblock the tracker components blocked using 1-Click Ops or Batch Ops?
 Some apps may misbehave due to their dependency to tracker components blocked by AM. From v2.5.12, there is an option to unblock tracker components in the [1-Click Ops][8] page. However, in previous versions, there is no such options. To unblock these tracker, first go to the [App Details][6] page of the misbehaving app. Then, switching to the _Activities_ tab, click on the _Remove rules_ options in the top-right menu. All the blocking rules related to the components of the app will be removed immediately. Alternatively, If you have found the component that is causing the issue, you can unblock the component by clicking on the _unblock_ button next to the component name. If you have enabled _global component blocking_ in Settings, disable it first as _Remove rules_ option will not be visible when it is enabled.
 
+If you have **Google Play Services** (`com.google.android.gms`) installed, unblocking the following [services][services] may fix the problem:
+- **Ad Request Broker Service**<br />
+  `.ads.AdRequestBrokerService`
+- **Cache Broker Service**<br />
+  `.ads.cache.CacheBrokerService`
+- **Gservices Value Broker Service**<br />
+  `.ads.GservicesValueBrokerService`
+- **Advertising Id Notification Service**<br />
+  `.ads.identifier.service.AdvertisingIdNotificationService`
+- **Advertising Id Service**<br />
+  `.ads.identifier.service.AdvertisingIdService`
+
 [1]: https://carteryagemann.com/pages/android-intent-firewall.html
 [2]: https://github.com/tuyafeng/Watt
 [3]: https://github.com/lihenggui/blocker
@@ -39,3 +51,4 @@ Some apps may misbehave due to their dependency to tracker components blocked by
 [8]: ../guide/one-click-ops-page.md
 [9]: ../guide/settings-page.md#import-existing-rules
 [10]: ../guide/app-details-page.md#color-codes
+[services]: ../guide/app-details-page.md#services

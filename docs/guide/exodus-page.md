@@ -1,8 +1,13 @@
 ---
 sidebarDepth: 2
+tags:
+  - exodus
+  - tracker
+  - ad
+  - blocking
 ---
 # εxodus Page
-εxodus page appears after clicking on the _εxodus_ button in the [App Info tab][1] in the [App Details][2] page. It scans for trackers and displays a list of trackers and their classes as a summary. A list of tracker classes for the given app is also displayed. All the classes of the app can also be viewed by clicking on the _Toggle Class Listing_ menu. A sneak-peek of each class can be viewed by simply clicking on any class item. The tracker names has some prefixes, and although they are not properly documented in the [original repository][3], a list is given below:
+εxodus page appears after clicking on the _εxodus_ button in the [App Info tab][1] in the [App Details][2] page. It scans for trackers and displays a list of trackers and their classes as a summary. A list of tracker classes for the given app is also displayed. All the classes of the app can also be viewed by clicking on the _Toggle Class Listing_ menu. A sneak-peek of each class can be viewed by simply clicking on any class item. The tracker names have some prefixes, and although they are not properly documented in the [original repository][3], a list is given below:
 - `°` - Missing in εxodus' list
 - `²` - [ETIP][4] stand-by
 - `µ` - Micro non-intrusive
