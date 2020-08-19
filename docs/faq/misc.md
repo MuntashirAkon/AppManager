@@ -2,7 +2,7 @@
 next: false
 sidebarDepth: 2
 ---
-# Miscellany
+# Miscellanea
 
 ::: details Table of Contents
 [[toc]]

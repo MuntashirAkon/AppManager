@@ -11,7 +11,7 @@ sidebarDepth: 2
 ## Color Codes
 List of background colors used in this page and their meaning:
 - <code style="background-color: #FF0000; color: #000">Red (day)</code> or <code style="background-color: #790D0D; color: #FFF">dark red (night)</code> - Any app op or permission that has the dangerous flag is marked as red. Components that are blocked within App Manager are also marked as red
-- <code style="background-color: #FF8A80; color: #000">Light red (day)</code> or <code style="background-color: #4F1C14; color: #FFF">very dark red (night)</code> - Components that are disabled outside App Manager have these colors. It should be noted that a component that is marked as disabled does not always mean that it is disabled by the user: It could be disabled by the system as well or marked as disabled in the app manifest. Also, all components of a disabled app are also considered disabled by the system (and by the App Manager as well)
+- <code style="background-color: #FF8A80; color: #000">Light red (day)</code> or <code style="background-color: #4F1C14; color: #FFF">very dark red (night)</code> - Components that are disabled outside App Manager have these colors. It should be noted that a component that is marked as disabled does not always mean that it is disabled by the user: It could be disabled by the system as well or marked as disabled in the app manifest. Also, all components of a disabled app are considered disabled by the system (and by App Manager as well)
 - <code style="background-color: #FF8017; color: #000">Vivid orange (day)</code> or <code style="background-color: #FF8017; color: #FFF">very dark orange (night)</code> - Tracker or ad components
 - <code style="background-color: #EA80FC; color: #000">Soft magenta (day)</code> or <code style="background-color: #431C5D; color: #FFF">very dark violet (night)</code> - Currently running services
 
@@ -19,7 +19,7 @@ List of background colors used in this page and their meaning:
 **App Info** tab contains general information about the app such as _app directories_, _data directories_, _split apk info_, _sdk versions_, _install date_, _last update date_, _installer app_, _data usage_, _app size_, _data size_, _cache size_, _number of tracking components_ (some of these information require _Usage Access_ permission). Many actions can also be performed here which are described below.
 
 ### Actions in App Info Tab
-App Info tab has an horizontally-scrollable action panel where various actions are listed. Some actions are also available beside an info item such as paths and directories. Other actions are also avalable in the menu on the top-right corner. These actions include:
+App Info tab has a horizontally-scrollable action panel where various actions are listed. Some actions are also available beside an info item such as paths and directories. Other actions are also avalable in the menu on the top-right corner. These actions include:
 - Launch/install/uninstall/update/enable/disable/force-stop (some operations require root or [ADB][2])
 - View app manifest
 - View or edit shared preferences - Clicking on a preference opens the [Shared Preferences Editor][3] page (requires root)
@@ -50,7 +50,7 @@ App Info tab has an horizontally-scrollable action panel where various actions a
 Activities which are _exportable_ can usually be opened by any third-party apps (some activities require permissions, if that is the case, only an app having those permissions can open them). In the _Activities_ tab, the name of the activity (on top of each list item) is actually a button. It is enabled for the _exportable_ activities and disabled for others. You can use this to open the activity directly using App Manager.
 
 ::: warning Notice
-If you are not able to open any acitivity, chances are it has certain dependencies which are not met, e.g., you cannot open  _App Details Activity_ because it requires that you at least supply a package name. These dependencies cannot always be inferred programmatically. Therefore, you cannot open them using App Manager.
+If you are not able to open any activity, chances are it has certain dependencies which are not met, e.g., you cannot open  _App Details Activity_ because it requires that you at least supply a package name. These dependencies cannot always be inferred programmatically. Therefore, you cannot open them using App Manager.
 :::
 
 You can also create shortcut for these _exportable_ activites (using the dedicated button), and if you want, you can edit the shortcut as well using the _Edit Shortcut_ button.
@@ -67,7 +67,7 @@ When you close an activity, it usually gets destroyed immediately (depending on 
 By the way, both activities and services are run in the same looper called the main [looper][looper], which means the services are not really run in the background. It's the application authors job to ensure that. How do application communicate with services? They use [broadcast receivers](#receivers).
 
 ### Receivers
-**Receivers** (also called _broadcast receivers_) can be used to trigger execution of certain tasks for certain events. These components are called broadcast receivers because they are executed as soon as a broadcast message is received. These broadcast messages are sent using a method called intent. Intent is a special feature for Android which can be used to open applications, activities, services and send broadcast messages. Therefore, like [activities](#activities), broadcast receivers use intent filters to receive only the desired broadcast message(s). Broadcast messages can be sent by either system or the app itself. When a broadcast message is sent, the corresponding receivers are awaken by the system so that they can execute tasks. For example, if you have low memory, your phone may freeze or experience lags for a moment after you enable mobile data or connect to the Wifi. Ever wondered why? This is because broadcast receivers that can receive `android.net.conn.CONNECTIVITY_CHANGE` are awaken by the system as soon as you enable data connection. Since many app use this intent filter, all of these apps are awaken almost immediately by the system which causes the freeze or lags. That's being said, receivers can be used for inter-process communication (IPC), i.e., it helps you communicate between different apps (provided you have the necessary permissions) or even different components of a single app.
+**Receivers** (also called _broadcast receivers_) can be used to trigger execution of certain tasks for certain events. These components are called broadcast receivers because they are executed as soon as a broadcast message is received. These broadcast messages are sent using a method called intent. Intent is a special feature for Android which can be used to open applications, activities, services and send broadcast messages. Therefore, like [activities](#activities), broadcast receivers use intent filters to receive only the desired broadcast message(s). Broadcast messages can be sent by either system or the app itself. When a broadcast message is sent, the corresponding receivers are awaken by the system so that they can execute tasks. For example, if you have low memory, your phone may freeze or experience lags for a moment after you enable mobile data or connect to the Wifi. Ever wondered why? This is because broadcast receivers that can receive `android.net.conn.CONNECTIVITY_CHANGE` are awaken by the system as soon as you enable data connection. Since many apps use this intent filter, all of these apps are awaken almost immediately by the system which causes the freeze or lags. That being said, receivers can be used for inter-process communication (IPC), i.e., it helps you communicate between different apps (provided you have the necessary permissions) or even different components of a single app.
 
 ### Providers
 **Providers** (also called _content providers_) are used for data management. For example, when you save an apk file or export rules in App Manager, it uses a content provider called `androidx.core.content.FileProvider` to save the apk or export the rules. There are other content providers or even custom ones to manage various content-related tasks such as database management, tracking, searching, etc. Each content provider has a field called _Authority_ which is unique to that particular app in the entire Android eco-system just like the package name.
@@ -99,7 +99,7 @@ _See also:_
 Contents of this tab are only visible to the root and [ADB][2] users.
 :::
 
-There is a toggle button next to each app op item which can be used to allow or deny (ignore) the app op. You can also reset your changes using the _Reset to default_ option or deny all dangerous app ops using the corresponding option in the menu. You can also sort them in ascending order by app op names and the associated unique numbers (or values). You can also list the denied app ops first using the corresponding sort option.
+There is a toggle button next to each app op item which can be used to allow or deny (ignore) the app op. You can also reset your changes using the _Reset to default_ option or deny all dangerous app ops using the corresponding option in the menu. You can also sort them in ascending order by app op names and the associated unique numbers (or values). You can also list the denied app ops first using the corresponding sorting option.
 
 ::: warning
 Denying an app op may cause the app to misbehave. Use the _reset to default_ option if that is the case.
@@ -110,7 +110,7 @@ _See also: [Technical Info: App Ops][1]_
 ### Uses Permissions
 **Uses Permissions** are the permissions used by the application. This is named so because they are declared in the manifest using `uses-permission` tags. Informations such as _flags_, _permission name_, _permission description_, _package name_, _group_ are taken from the associated [permission](#permissions).
 
-**Root and [ADB][2] users** can grant or revoke the _dangerous_ and _development_ permissions using the toggle button on the right side of each permission item. They can also revoke dangerous permissions all at once using the corresponding option in the menu. Only these two types of permissions can be revoked because Android doesn't allow modifiying _normal_ permissions (which most of them are). The only alternative is to edit the app manifest and remove these permissions.
+**Root and [ADB][2] users** can grant or revoke the _dangerous_ and _development_ permissions using the toggle button on the right side of each permission item. They can also revoke dangerous permissions all at once using the corresponding option in the menu. Only these two types of permissions can be revoked because Android doesn't allow modifiying _normal_ permissions (which most of them are). The only alternative is to edit the app manifest and remove these permissions from there.
 
 ::: tip Info
 Since dangerous permissions are revoked by default by the system, revoking all dangerous permissions is the same as resetting all permissions.
@@ -121,9 +121,9 @@ Users can sort the permissions by permission name (in ascending order) or choose
 ### Permissions
 **Permissions** are usually custom permissions defined by the app itself. It could contain regular permissions as well, mostly in old applications. Here's a complete description of each item that is displayed there:
 - **Name.** Each permission has a unique name like `android.permission.INTERNET` but multiple app can request the permission.
-- **Icon.** Each permission can have custom icons. The other permission tabs do not have any icon because they do not contain any icon in the app manifest.
+- **Icon.** Each permission can have a custom icon. The other permission tabs do not have any icon because they do not contain any icon in the app manifest.
 - **Description.** This optional field describes the permission. If there isn't any description associated with the permission, the field is not displayed.
-- **Flags.** (Uses ⚑ symbol or **Protection Level** name) This describes various permission flags such as _normal_, _developement_, _dangerous_, _instant_, _granted_, _revoked_, _signature_, _privileged_, etc.
+- **Flags.** (Uses ⚑ symbol or **Protection Level** name) This describes various permission flags such as _normal_, _development_, _dangerous_, _instant_, _granted_, _revoked_, _signature_, _privileged_, etc.
 - **Package Name.** Denotes the package name associated with the permission, i.e., the package that defined the permission.
 - **Group.** The group name associated with the permission (if any). Newer Androids do not seem to use group names which is why you'll usually see `android.permission-group.UNDEFINED` or no group name at all.
 

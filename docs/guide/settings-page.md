@@ -48,7 +48,7 @@ Import previously exported blocking rules from App Manager. Similar to export, t
 Add components disabled by other apps to App Manager. App Manager only keeps track of component disabled within App Manager. If you use other tools to block app components, you can use this tools to import these disabled components. Clicking on this option triggers a search for disabled components and will lists apps with components disabled by user. For safety, all the apps are unselected by default. You can manually select the apps in the list and re-apply the blocking through App Manager.
 
 ::: danger Caution
-Becareful when using this tool as there can be many false positives. Choose only the apps that you are certain about.
+Be careful when using this tool as there can be many false positives. Choose only the apps that you are certain about.
 :::
 
 ### Import from Watt
