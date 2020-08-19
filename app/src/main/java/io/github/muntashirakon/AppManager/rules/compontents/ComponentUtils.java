@@ -25,6 +25,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -36,10 +37,14 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 public final class ComponentUtils {
     public static boolean isTracker(String componentName) {
@@ -146,6 +151,45 @@ public final class ComponentUtils {
         trackerCount.packageLabel = applicationInfo.loadLabel(pm).toString();
         trackerCount.count = getTrackerComponentsForPackage(applicationInfo.packageName).size();
         return trackerCount;
+    }
+
+    @NonNull
+    public static List<String> getAllPackagesWithRules() {
+        List<String> packages = new ArrayList<>();
+        File confDir = RulesStorageManager.getConfDir();
+        String[] names = confDir.list((dir, name) -> name.endsWith(".tsv"));
+        if (names != null) {
+            for (String name: names) {
+                packages.add(Utils.trimExtension(name));
+            }
+        }
+        return packages;
+    }
+
+    public static void removeAllRules(@NonNull String packageName) {
+        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
+            // Remove all blocking rules
+            for (RulesStorageManager.Entry entry: cb.getAllComponents()) {
+                cb.removeComponent(entry.name);
+            }
+            cb.applyRules(true);
+            // Reset configured app ops
+            AppOpsService appOpsService = new AppOpsService();
+            for (RulesStorageManager.Entry entry: cb.getAll(RulesStorageManager.Type.APP_OP)) {
+                try {
+                    appOpsService.setMode((Integer) entry.extra, -1, packageName, AppOpsManager.MODE_DEFAULT);
+                    cb.removeEntry(entry);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            // Grant configured permissions
+            for (RulesStorageManager.Entry entry: cb.getAll(RulesStorageManager.Type.PERMISSION)) {
+                if (RunnerUtils.grantPermission(packageName, entry.name).isSuccessful()) {
+                    cb.removeEntry(entry);
+                }
+            }
+        }
     }
 
     @NonNull

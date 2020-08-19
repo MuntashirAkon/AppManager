@@ -35,6 +35,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
@@ -117,7 +118,7 @@ public class RulesStorageManager implements Closeable {
         return newEntries;
     }
 
-    protected List<Entry> getAllComponents() {
+    public List<Entry> getAllComponents() {
         List<Entry> newEntries = new ArrayList<>();
         for (Entry entry: entries) {
             if (entry.type.equals(Type.ACTIVITY)
@@ -269,12 +270,17 @@ public class RulesStorageManager implements Closeable {
     }
 
     @NonNull
+    public static File getConfDir() {
+        return new File(AppManager.getContext().getFilesDir(), "conf");
+    }
+
+    @NonNull
     protected File getDesiredFile() throws FileNotFoundException {
-        File file = new File(context.getFilesDir(), "conf");
-        if (!file.exists() && !file.mkdirs()) {
+        File confDir = getConfDir();
+        if (!confDir.exists() && !confDir.mkdirs()) {
             throw new FileNotFoundException("Can not get correct path to save ifw rules");
         }
-        return new File(file, packageName + ".tsv");
+        return new File(confDir, packageName + ".tsv");
     }
 
     @Nullable

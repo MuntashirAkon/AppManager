@@ -24,6 +24,7 @@ import android.text.Spanned;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
@@ -41,6 +42,7 @@ import androidx.core.text.HtmlCompat;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.main.MainActivity;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -66,26 +68,30 @@ public class SettingsActivity extends AppCompatActivity {
         final SwitchMaterial blockingSwitcher = findViewById(R.id.blocking_toggle_btn);
         final SwitchMaterial usageSwitcher = findViewById(R.id.usage_toggle_btn);
 
-        final View blockingView = findViewById(R.id.blocking_view);
+        final View globalBlockingView = findViewById(R.id.blocking_view);
         final View importExportView = findViewById(R.id.import_view);
+        final View removeAllView = findViewById(R.id.remove_all_rules);
         final TextView appThemeMsg = findViewById(R.id.app_theme_msg);
 
         // Read pref
         boolean rootEnabled = appPref.getBoolean(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL);
+        boolean adbEnabled = appPref.getBoolean(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL);
         boolean blockingEnabled = appPref.getBoolean(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL);
         boolean usageEnabled = appPref.getBoolean(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL);
         currentTheme = appPref.getInt(AppPref.PrefKey.PREF_APP_THEME_INT);
 
         // Set changed values
         rootSwitcher.setChecked(rootEnabled);
-        blockingView.setVisibility(rootEnabled ? View.VISIBLE : View.GONE);
-        importExportView.setVisibility(rootEnabled ? View.VISIBLE : View.GONE);
+        globalBlockingView.setVisibility(rootEnabled ? View.VISIBLE : View.GONE);
+        importExportView.setVisibility(rootEnabled || adbEnabled ? View.VISIBLE : View.GONE);
+        removeAllView.setVisibility(rootEnabled || adbEnabled ? View.VISIBLE : View.GONE);
         blockingSwitcher.setChecked(blockingEnabled);
         usageSwitcher.setChecked(usageEnabled);
         final String[] themes = getResources().getStringArray(R.array.themes);
         appThemeMsg.setText(String.format(Locale.getDefault(), getString(R.string.current_theme), themes[themeConst.indexOf(currentTheme)]));
 
         // Set listeners
+        // App theme
         findViewById(R.id.app_theme).setOnClickListener(v ->
                 new MaterialAlertDialogBuilder(this)
                         .setTitle(R.string.select_theme)
@@ -101,24 +107,48 @@ public class SettingsActivity extends AppCompatActivity {
                         .setNegativeButton(android.R.string.cancel, null)
                         .create()
                         .show());
+        // Root mode switcher
         rootSwitcher.setOnCheckedChangeListener((buttonView, isChecked) -> {
             appPref.setPref(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, isChecked);
-            blockingView.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-            importExportView.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            // Toggle GCB view based on root status
+            globalBlockingView.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            importExportView.setVisibility(isChecked || adbEnabled ? View.VISIBLE : View.GONE);
+            removeAllView.setVisibility(isChecked || adbEnabled ? View.VISIBLE : View.GONE);
         });
+        // GCB switcher
         blockingSwitcher.setOnCheckedChangeListener((buttonView, isChecked) -> {
             appPref.setPref(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL, isChecked);
             if (AppPref.isRootEnabled() && isChecked) {
+                // Apply all rules immediately if GCB is true
                 ComponentsBlocker.applyAllRules(this);
             }
         });
+        // App usage permission toggle
         usageSwitcher.setOnCheckedChangeListener((buttonView, isChecked) ->
                 appPref.setPref(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, isChecked));
-
-        // Import/Export
+        // Import/Export view
         importExportView.setOnClickListener(v -> new ImportExportDialogFragment()
                 .show(getSupportFragmentManager(), ImportExportDialogFragment.TAG));
-
+        // Remove all rules view
+        removeAllView.setOnClickListener(v -> new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.pref_remove_all_rules)
+                .setMessage(R.string.are_you_sure)
+                .setPositiveButton(R.string.yes, (dialog, which) -> {
+                    progressIndicator.show();
+                    new Thread(() -> {
+                        List<String> packages = ComponentUtils.getAllPackagesWithRules();
+                        for (String packageName: packages) {
+                            ComponentUtils.removeAllRules(packageName);
+                        }
+                        runOnUiThread(() -> {
+                            progressIndicator.hide();
+                            Toast.makeText(this, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
+                        });
+                    }).start();
+                })
+                .setNegativeButton(R.string.no, null)
+                .show());
+        // About
         findViewById(R.id.about_view).setOnClickListener(v -> {
             @SuppressLint("InflateParams")
             View view = getLayoutInflater().inflate(R.layout.dialog_about, null);
@@ -126,7 +156,7 @@ public class SettingsActivity extends AppCompatActivity {
                     "%s (%d)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
             new FullscreenDialog(this).setTitle(R.string.about).setView(view).show();
             });
-
+        // Changelog
         findViewById(R.id.changelog_view).setOnClickListener(v -> new Thread(() -> {
             final Spanned spannedChangelog = HtmlCompat.fromHtml(Utils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
             runOnUiThread(() -> {

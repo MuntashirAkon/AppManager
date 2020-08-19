@@ -225,6 +225,34 @@
                 android:background="@color/ten_percent_black" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/remove_all_rules"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_medium"
+                android:background="?selectableItemBackground"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:text="@string/pref_remove_all_rules"
+                    android:textSize="@dimen/title_font" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pref_remove_all_rules_msg"
+                    android:textSize="@dimen/subtitle_font" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/ten_percent_black" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/about_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
