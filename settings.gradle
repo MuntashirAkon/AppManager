@@ -1,1 +1,3 @@
+include ':HiddenApi'
+include ':AppManagerServer'
 include ':app'

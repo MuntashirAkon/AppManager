@@ -11,6 +11,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/AppManagerServer" />
+            <option value="$PROJECT_DIR$/HiddenApi" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>

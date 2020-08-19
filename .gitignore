@@ -7,6 +7,8 @@
 .DS_Store
 /build
 /app/release
+/app/libs/am-common.jar
+/app/src/main/assets/am.jar
 pids
 logs
 node_modules

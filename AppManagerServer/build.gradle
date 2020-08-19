@@ -1,0 +1,176 @@
+/*
+ * Copyright (C) 2020 Muntashir Al-Islam
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "30.0.0"
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    compileOnly project(path: ':HiddenApi')
+    implementation 'androidx.annotation:annotation:1.1.0'
+}
+
+static def toPath(String s) {
+    if (isWin()) {
+        return s.replace('/', '\\')
+    } else {
+        return s
+    }
+}
+
+static def isWin() {
+    return org.gradle.internal.os.OperatingSystem.current().isWindows()
+}
+
+String.metaClass.toPath = { -> toPath(delegate) }
+
+ext {
+    debugClassDir = project.buildDir.absolutePath + '/intermediates/javac/debug/classes'.toPath()
+    commonJar = project.buildDir.absolutePath + '/am-common.jar'.toPath()
+    amJar = project.buildDir.absolutePath + '/am.jar'.toPath()
+    amOriginalJar = project.buildDir.absolutePath + '/am-orig.jar'.toPath()
+}
+
+build.doLast {
+    println("Build success, creating jar files...")
+    // Create am-orig.jar
+    def pkgDir = ["io/github/muntashirakon/AppManager/server/"]
+    createJarFile(amOriginalJar, pkgDir)
+    // Create am-common.jar, and copy to the main project
+    pkgDir = ["io/github/muntashirakon/AppManager/server/common/"]
+    createJarFile(commonJar, pkgDir)
+    // Apply dex optimization
+    jar2dex()
+}
+
+def createJarFile(String jar, List pkgDirPath) {
+    def buildArgs = ['-cvf', jar]
+    buildArgs.addAll(get_args(debugClassDir, pkgDirPath))
+    exec {
+        workingDir = debugClassDir
+        executable = 'jar'
+        args = buildArgs
+    }
+    println("Created ${jar}, dir: ${pkgDirPath}")
+}
+
+def get_args(String path, List pkgPath) {
+    def ret = []
+    pkgPath.forEach {
+        it ->
+            def file = file(path + File.separator + it.toPath())
+            loadClsFiles(file, ret, path + File.separator)
+    }
+    return ret
+}
+
+def loadClsFiles(File f, List paths, String ignorePrefix) {
+    File[] files = f.listFiles()
+    if (files != null) {
+        files.each {
+            file ->
+                if (file.file) {
+                    if (file.name.endsWith(".class")) {
+                        paths.add(file.path.replace(ignorePrefix, ""))
+                    }
+                } else {
+                    loadClsFiles(file, paths, ignorePrefix)
+                }
+        }
+    }
+}
+
+def findSdkHome() {
+    def sdkHome = null
+    def pFile = project.rootProject.file("local.properties")
+    if (pFile.exists()) {
+        def myProp = new Properties()
+        pFile.withReader {
+            r -> myProp.load(r)
+        }
+        sdkHome = myProp.getProperty("sdk.dir")
+    }
+
+    if (sdkHome == null) {
+        sdkHome = System.getenv("ANDROID_HOME")
+    }
+
+    if (sdkHome?.trim()?.isEmpty()) {
+        throw new RuntimeException("not found android sdk environment !")
+    }
+    return sdkHome
+}
+
+def jar2dex() {
+    // Java jar to dex file
+    println("------jar2dex------")
+    // Find sdk home dir.
+    def sdkHome = findSdkHome()
+
+    println("Android sdk home: ${sdkHome}")
+    def dxFile = file("${sdkHome}/build-tools/${android.buildToolsVersion}/dx${isWin() ? '.bat' : ''}".toPath())
+
+    if (dxFile.exists()) {
+        dxFile.setExecutable(true)
+    } else {
+        throw new RuntimeException("not found dx executable file in path ${dxFile}")
+    }
+
+    println("dx binary file: ${dxFile}")
+
+    def cmdArgs = ['--dex', "--output=$amJar", amOriginalJar]
+
+    def libsDir = file("${rootProject.projectDir.absolutePath}/app/libs")
+    def assetsDir = file("${rootProject.projectDir.absolutePath}/app/src/main/assets")
+    // Create directories if not exist
+    libsDir.mkdirs()
+    assetsDir.mkdirs()
+    // Run jar to dex conversion
+    exec {
+        workingDir = project.buildDir.absolutePath
+        executable = dxFile
+        args = cmdArgs
+    }
+    // Copy files
+    copy {
+        from commonJar
+        into libsDir
+    }
+    copy {
+        from amJar
+        into assetsDir
+    }
+    println("----jar2dex success, exec end----")
+}
