@@ -19,25 +19,24 @@ package io.github.muntashirakon.AppManager.server.common;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import java.util.List;
 
 import androidx.annotation.NonNull;
 
-/**
- * Created by zl on 2016/11/8.
- */
-
 public class OpsResult implements Parcelable {
-
     private Throwable exception;
     private List<PackageOps> list;
+    private int mode;
 
     public OpsResult(List<PackageOps> list, Throwable exception) {
-        this.exception = exception;
         this.list = list;
+        this.exception = exception;
     }
 
+    public OpsResult(int mode, Throwable exception) {
+        this.mode = mode;
+        this.exception = exception;
+    }
 
     public Throwable getException() {
         return exception;
@@ -45,6 +44,10 @@ public class OpsResult implements Parcelable {
 
     public List<PackageOps> getList() {
         return list;
+    }
+
+    public int getMode() {
+        return mode;
     }
 
     @Override
@@ -56,11 +59,13 @@ public class OpsResult implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeSerializable(this.exception);
         dest.writeTypedList(this.list);
+        dest.writeInt(this.mode);
     }
 
     protected OpsResult(@NonNull Parcel in) {
         this.exception = (Exception) in.readSerializable();
         this.list = in.createTypedArrayList(PackageOps.CREATOR);
+        this.mode = in.readInt();
     }
 
     public static final Parcelable.Creator<OpsResult> CREATOR = new Parcelable.Creator<OpsResult>() {
@@ -83,6 +88,7 @@ public class OpsResult implements Parcelable {
         return "OpsResult{" +
                 "exception=" + exception +
                 ", list=" + list +
+                ", mode=" + mode +
                 '}';
     }
 }

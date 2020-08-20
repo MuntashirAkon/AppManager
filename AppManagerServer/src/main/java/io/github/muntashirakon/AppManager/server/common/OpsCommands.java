@@ -20,17 +20,13 @@ package io.github.muntashirakon.AppManager.server.common;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.List;
-
 import androidx.annotation.NonNull;
 
+@SuppressWarnings("unused")
 public class OpsCommands {
     public static final String ACTION_GET = "get";
     public static final String ACTION_SET = "set";
+    public static final String ACTION_CHECK = "check";
     public static final String ACTION_RESET = "reset";
     public static final String ACTION_GET_FOR_OPS = "get_f_ops";
     public static final String ACTION_GET_APPS = "get_apps";

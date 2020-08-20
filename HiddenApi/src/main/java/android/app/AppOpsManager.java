@@ -6,10 +6,6 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by zl on 2016/11/5.
- */
-
 public class AppOpsManager {
     public static final int MODE_ALLOWED = 0;
     public static final int MODE_IGNORED = 1;

@@ -20,6 +20,18 @@ package io.github.muntashirakon.AppManager.server.common;
 import android.content.Context;
 import android.os.Bundle;
 
+/**
+ * Process class calls using reflection. You can extend this class to create new class handlers. All
+ * you have to do is override the {@link #proxyInvoke(Bundle args)} method. Since the inherited
+ * classes run in privileged environment, any system API calls are acceptable.
+ *
+ * <h3>How it works</h3>
+ * The <code>args</code> parameter in the {@link #proxyInvoke(Bundle args)} can be used to send any
+ * arguments in the class. This parameter is identical to the third parameter in
+ * {@link ClassCaller#ClassCaller(String, String, Bundle)} and the associated class must be called
+ * via this method (where the second parameter is the class name in string).
+ */
+@SuppressWarnings("unused")
 public abstract class ClassCallerProcessor {
     private Context mPackageContext;
     private Context mSystemContext;
@@ -55,6 +67,8 @@ public abstract class ClassCallerProcessor {
      * <p>
      *     <strong>Note:</strong> This method should only be invoked on root process.
      * </p>
+     *
+     * Source: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/reflect/InvocationHandler.html
      *
      * @param args Arguments
      * @return Resultant bundle

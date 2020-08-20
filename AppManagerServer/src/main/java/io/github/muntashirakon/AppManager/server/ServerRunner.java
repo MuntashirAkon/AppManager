@@ -227,7 +227,7 @@ public final class ServerRunner {
             serverHandler.start();
         } catch (DataTransmission.ProtocolVersionException e) {
             // Using an old protocol version, restart using custom script
-            Runtime.getRuntime().exec("sh /sdcard/Android/data/" + PACKAGE_NAME + "/run_server.sh " + Process.myPid());
+            Runtime.getRuntime().exec("sh /sdcard/Android/data/" + PACKAGE_NAME + "/files/run_server.sh " + Process.myPid());
             SystemClock.sleep(1000);
         } catch (Throwable throwable) {
             FLog.log(throwable);

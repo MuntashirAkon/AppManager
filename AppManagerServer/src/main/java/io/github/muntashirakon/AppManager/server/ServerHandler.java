@@ -323,7 +323,7 @@ class ServerHandler implements DataTransmission.OnReceiveCallback, AutoCloseable
                 FLog.log("------new object " + o + "  params " + Arrays.toString(params) + "    " + clazz);
 
                 Object ret = MethodUtils.invokeExactMethod(o, "proxyInvoke", params, new Class[]{Bundle.class});
-                if (ret != null && ret instanceof Bundle) {
+                if (ret instanceof Bundle) {
                     writeResult(result, ret);
                 } else {
                     writeResult(result, Bundle.EMPTY);

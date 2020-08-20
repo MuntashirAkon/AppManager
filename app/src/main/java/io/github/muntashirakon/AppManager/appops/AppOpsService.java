@@ -27,7 +27,11 @@ import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.server.common.OpsResult;
+import io.github.muntashirakon.AppManager.server.common.PackageOps;
+import io.github.muntashirakon.AppManager.servermanager.AppOps;
 
 @SuppressLint("DefaultLocale")
 public
@@ -51,6 +55,11 @@ class AppOpsService implements IAppOpsService {
 
     private boolean isSuccessful = false;
     private List<String> output = null;
+    private io.github.muntashirakon.AppManager.servermanager.AppOpsManager appOpsManager;
+
+    public AppOpsService() {
+        appOpsManager = AppOps.getInstance(AppManager.getContext());
+    }
 
     /**
      * Get the mode of operation of the given package or uid.
@@ -65,18 +74,26 @@ class AppOpsService implements IAppOpsService {
      * an invalid operation name or mode name or there's an error parsing the output
      */
     @Override
-    public String checkOperation(int op, int uid, @Nullable String packageName)
+    public int checkOperation(int op, int uid, String packageName)
+            throws Exception {
+        OpsResult opsResult = appOpsManager.checkOperation(op, packageName);
+        if (opsResult == null) throw new Exception("OpsResult is null");
+        if (opsResult.getException() != null) throw new Exception(opsResult.getException());
+        return opsResult.getMode();
+    }
+
+    public String checkOperationCmd(int op, int uid, @Nullable String packageName)
             throws Exception {
         String opStr = AppOpsManager.opToName(op);
         try {
             // Check among all
-            AppOpsManager.PackageOps packageOps = getOpsForPackage(uid, packageName, null).get(0);
+            AppOpsManager.PackageOps packageOps = getOpsForPackageCmd(uid, packageName, null).get(0);
             List<AppOpsManager.OpEntry> entries = packageOps.getOps();
             // Iterate in backward direction to get only the last value of the duplicate app ops
             for (int i = entries.size()-1; i>=0; --i) {
                 if (entries.get(i).getOp() == op) return entries.get(i).getMode();
             }
-            packageOps = getOpsForPackage(uid, packageName, new int[]{op}).get(0);
+            packageOps = getOpsForPackageCmd(uid, packageName, new int[]{op}).get(0);
             entries = packageOps.getOps();
             if (entries.size() == 1) return entries.get(0).getMode();
         } catch (Exception ignore) {}
@@ -84,7 +101,21 @@ class AppOpsService implements IAppOpsService {
     }
 
     @Override
-    public List<AppOpsManager.PackageOps> getOpsForPackage(int uid, String packageName, int[] ops)
+    public List<PackageOps> getOpsForPackage(int uid, String packageName, int[] ops)
+            throws Exception {
+        List<PackageOps> packageOpsList = new ArrayList<>();
+        OpsResult opsResult = appOpsManager.getOpsForPackage(uid, packageName, ops);
+        if (opsResult != null) {
+            if (opsResult.getException() == null) {
+                packageOpsList = opsResult.getList();
+            } else {
+                throw new Exception(opsResult.getException());
+            }
+        }
+        return packageOpsList;
+    }
+
+    public List<AppOpsManager.PackageOps> getOpsForPackageCmd(int uid, String packageName, int[] ops)
             throws Exception {
         List<AppOpsManager.PackageOps> packageOpsList = new ArrayList<>();
         List<String> lines = new ArrayList<>();
@@ -126,6 +157,11 @@ class AppOpsService implements IAppOpsService {
 
     @Override
     public void setMode(int op, int uid, String packageName, int mode) throws Exception {
+        OpsResult opsResult = appOpsManager.setOpsMode(packageName, op, mode);
+        if (opsResult.getException() != null) throw new Exception(opsResult.getException());
+    }
+
+    public void setModeCmd(int op, int uid, String packageName, int mode) throws Exception {
         String modeStr = AppOpsManager.modeToName(mode);
         if (uid >= 0)
             runCommand(String.format("appops set --uid %d %d %s", uid, op, modeStr));
@@ -138,6 +174,15 @@ class AppOpsService implements IAppOpsService {
 
     @Override
     public void resetAllModes(int reqUserId, @NonNull String reqPackageName) throws Exception {
+        appOpsManager.resetAllModes(reqPackageName);
+//        if (reqUserId < 0)
+//            runCommand(String.format("appops reset %s", reqPackageName));
+//        else
+//            runCommand(String.format("appops reset --user %d %s", reqUserId, reqPackageName));
+//        if (!isSuccessful) throw new Exception("Error resetting all modes for package " + reqPackageName);
+    }
+
+    public void resetAllModesCmd(int reqUserId, @NonNull String reqPackageName) throws Exception {
         if (reqUserId < 0)
             runCommand(String.format("appops reset %s", reqPackageName));
         else

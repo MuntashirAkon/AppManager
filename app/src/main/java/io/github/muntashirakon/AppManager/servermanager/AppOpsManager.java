@@ -16,10 +16,6 @@ import io.github.muntashirakon.AppManager.server.common.OpsCommands;
 import io.github.muntashirakon.AppManager.server.common.OpsResult;
 import io.github.muntashirakon.AppManager.server.common.PackageOps;
 
-/**
- * Created by zl on 2016/11/13.
- */
-
 public class AppOpsManager {
     private static final String TAG = "AppOpsManager";
 
@@ -37,7 +33,7 @@ public class AppOpsManager {
     public AppOpsManager(Context context, @NonNull Config config) {
         mContext = context;
         config.context = mContext;
-        mUserHandleId = Process.myUid() / 100000; //android.os.UserHandle.myUserId()
+        mUserHandleId = Process.myUid() / 100000; // android.os.UserHandle.myUserId()
         ServerConfig.init(context, mUserHandleId);
         userId = mUserHandleId;
         mLocalServerManager = LocalServerManager.getInstance(config);
@@ -59,7 +55,6 @@ public class AppOpsManager {
     }
 
     private void checkFile() {
-        //AssetsUtils.copyFile(mContext,"appopsx",new File(mContext.getDir(DIR_NAME,Context.MODE_PRIVATE),"appopsx"),false);
         AssetsUtils.copyFile(mContext, ServerConfig.JAR_NAME, ServerConfig.getDestJarFile(), BuildConfig.DEBUG);
         AssetsUtils.writeScript(getConfig());
     }
@@ -68,20 +63,20 @@ public class AppOpsManager {
         mLocalServerManager.start();
     }
 
-    public OpsResult getOpsForPackage(final String packageName) throws Exception {
+    public OpsResult getOpsForPackage(int uid, String packageName, int[] ops) throws Exception {
         checkConnect();
         OpsCommands.Builder builder = new OpsCommands.Builder();
         builder.setAction(OpsCommands.ACTION_GET);
         builder.setPackageName(packageName);
+        builder.setOps(ops);
         builder.setUserHandleId(userId);
         return wrapOps(builder);
     }
 
-
     private OpsResult wrapOps(OpsCommands.Builder builder) throws Exception {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("args", builder);
-        ClassCaller classCaller = new ClassCaller(pkgName, AppOpsHandler.class.getName(), bundle);
+        Bundle args = new Bundle();
+        args.putParcelable("args", builder);
+        ClassCaller classCaller = new ClassCaller(pkgName, AppOpsHandler.class.getName(), args);
         CallerResult result = mLocalServerManager.execNew(classCaller);
         Bundle replyBundle = result.getReplyBundle();
         return replyBundle.getParcelable("return");
@@ -97,13 +92,13 @@ public class AppOpsManager {
         return wrapOps(builder);
     }
 
-    public OpsResult setOpsMode(String packageName, int opInt, int modeInt) throws Exception {
+    public OpsResult setOpsMode(String packageName, int op, int mode) throws Exception {
         checkConnect();
         OpsCommands.Builder builder = new OpsCommands.Builder();
         builder.setAction(OpsCommands.ACTION_SET);
         builder.setPackageName(packageName);
-        builder.setOpInt(opInt);
-        builder.setModeInt(modeInt);
+        builder.setOpInt(op);
+        builder.setModeInt(mode);
         builder.setUserHandleId(userId);
         return wrapOps(builder);
     }
@@ -116,6 +111,14 @@ public class AppOpsManager {
         return wrapOps(builder);
     }
 
+    public OpsResult checkOperation(int op, String packageName) throws Exception {
+        OpsCommands.Builder builder = new OpsCommands.Builder();
+        builder.setAction(OpsCommands.ACTION_CHECK);
+        builder.setPackageName(packageName);
+        builder.setOpInt(op);
+        builder.setUserHandleId(userId);
+        return wrapOps(builder);
+    }
 
     public ApiSupporter getApiSupporter() {
         return apiSupporter;
@@ -132,7 +135,7 @@ public class AppOpsManager {
     }
 
     public OpsResult disableAllPermission(final String packageName) throws Exception {
-        OpsResult opsForPackage = getOpsForPackage(packageName);
+        OpsResult opsForPackage = getOpsForPackage(-1, packageName, null);
         if (opsForPackage != null) {
             if (opsForPackage.getException() == null) {
                 List<PackageOps> list = opsForPackage.getList();

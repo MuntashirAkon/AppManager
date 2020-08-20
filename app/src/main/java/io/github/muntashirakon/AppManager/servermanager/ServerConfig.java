@@ -10,8 +10,8 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 
 class ServerConfig {
     static String SOCKET_PATH = "am_socket";
-    private static String DEFAULT_ADB_HOST = "127.0.0.1";
-    private static int DEFAULT_ADB_PORT = 52053;
+    private static final String DEFAULT_ADB_HOST = "127.0.0.1";
+    private static int DEFAULT_ADB_PORT = 60001;
     private static final String LOCAL_TOKEN = "l_token";
 
     static final String JAR_NAME = "am.jar";

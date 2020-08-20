@@ -121,7 +121,7 @@ public final class PackageUtils {
         AppOpsService appOpsService = new AppOpsService();
         for(int appOp: appOps) {
             try {
-                if (!appOpsService.checkOperation(appOp, -1, packageName).equals(AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED))) {
+                if (appOpsService.checkOperation(appOp, -1, packageName) != AppOpsManager.MODE_IGNORED) {
                     filteredAppOps.add(appOp);
                 }
             } catch (Exception e) {

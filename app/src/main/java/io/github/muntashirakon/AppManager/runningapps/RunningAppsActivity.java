@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -318,13 +319,12 @@ public class RunningAppsActivity extends AppCompatActivity implements SearchView
                     }
                 }).start());
                 new Thread(() -> {
-                    String mode = AppOpsManager.modeToName(AppOpsManager.MODE_DEFAULT);
+                    final AtomicInteger mode = new AtomicInteger(AppOpsManager.MODE_DEFAULT);
                     try {
-                        mode = new AppOpsService().checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName);
+                        mode.set(new AppOpsService().checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName));
                     } catch (Exception ignore) {}
-                    String finalMode = mode;
                     mActivity.runOnUiThread(() -> {
-                        if (!finalMode.equals(AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED))) {
+                        if (mode.get() != AppOpsManager.MODE_IGNORED) {
                             holder.disableBackgroundRunBtn.setVisibility(View.VISIBLE);
                             holder.disableBackgroundRunBtn.setOnClickListener(v -> new Thread(() -> {
                                 try {

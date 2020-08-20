@@ -72,6 +72,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.server.common.OpEntry;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -1029,7 +1030,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
          */
         private void getAppOpsView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
-            AppOpsManager.OpEntry opEntry = (AppOpsManager.OpEntry) mAdapterList.get(index).vanillaItem;
+            AppDetailsItem item = mAdapterList.get(index);
+            OpEntry opEntry = (OpEntry) item.vanillaItem;
             final String opStr = mAdapterList.get(index).name;
             boolean isDangerousOp = false;
             PermissionInfo permissionInfo = null;
@@ -1040,7 +1042,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } catch (PackageManager.NameNotFoundException | IllegalArgumentException | IndexOutOfBoundsException ignore) {}
             // Set op name
             SpannableStringBuilder opName = new SpannableStringBuilder("(" + opEntry.getOp() + ") ");
-            if (opEntry.getOpStr().equals(String.valueOf(opEntry))) {
+            if (item.name.equals(String.valueOf(opEntry.getOp()))) {
                 opName.append(getString(R.string.unknown_op));
             } else {
                 if (mConstraint != null && opStr.toLowerCase(Locale.ROOT).contains(mConstraint)) {
@@ -1050,22 +1052,23 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
             holder.textView1.setText(opName);
             // Set op mode, running and duration
-            String opRunningInfo = mActivity.getString(R.string.mode) + ": " + opEntry.getMode();
+            String opRunningInfo = mActivity.getString(R.string.mode) + ": " + AppOpsManager.modeToName(opEntry.getMode());
             if (opEntry.isRunning()) opRunningInfo += ", " + mActivity.getString(R.string.running);
             if (opEntry.getDuration() != 0)
                 opRunningInfo += ", " + mActivity.getString(R.string.duration) + ": " +
                         Utils.getFormattedDuration(mActivity, opEntry.getDuration(), true);
             holder.textView7.setText(opRunningInfo);
             // Set accept time and/or reject time
+            long currentTime = System.currentTimeMillis();
             if (opEntry.getTime() != 0 || opEntry.getRejectTime() != 0) {
                 String opTime = "";
                 if (opEntry.getTime() != 0)
                     opTime = mActivity.getString(R.string.accept_time) + ": " +
-                            Utils.getFormattedDuration(mActivity, opEntry.getTime())
+                            Utils.getFormattedDuration(mActivity, currentTime - opEntry.getTime())
                             + " " + mActivity.getString(R.string.ago);
                 if (opEntry.getRejectTime() != 0)
                     opTime += (opTime.equals("") ? "" : "\n") + mActivity.getString(R.string.reject_time)
-                            + ": " + Utils.getFormattedDuration(mActivity, opEntry.getRejectTime())
+                            + ": " + Utils.getFormattedDuration(mActivity, currentTime - opEntry.getRejectTime())
                             + " " + mActivity.getString(R.string.ago);
                 holder.textView8.setVisibility(View.VISIBLE);
                 holder.textView8.setText(opTime);
@@ -1110,7 +1113,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             else view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // Op Switch
             holder.toggleSwitch.setVisibility(View.VISIBLE);
-            if (opEntry.getMode().equals(AppOpsManager.modeToName(AppOpsManager.MODE_ALLOWED))) {
+            if (opEntry.getMode() == AppOpsManager.MODE_ALLOWED) {
                 // op granted
                 holder.toggleSwitch.setChecked(true);
             } else holder.toggleSwitch.setChecked(false);
@@ -1119,12 +1122,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     new Thread(() -> {
                         int opMode = isChecked ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED;
                         if (mainModel.setAppOp(opEntry.getOp(), opMode)) {
-                            AppOpsManager.OpEntry opEntry1 = new AppOpsManager.OpEntry(opEntry.getOp(),
-                                    opEntry.getOpStr(), opEntry.isRunning(), AppOpsManager.modeToName(opMode), opEntry.getTime(),
+                            OpEntry opEntry1 = new OpEntry(opEntry.getOp(), opMode, opEntry.getTime(),
                                     opEntry.getRejectTime(), opEntry.getDuration(),
                                     opEntry.getProxyUid(), opEntry.getProxyPackageName());
                             AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
-                            appDetailsItem.name = opEntry1.getOpStr();
+                            appDetailsItem.name = item.name;
                             runOnUiThread(() -> set(index, appDetailsItem));
                         } else {
                             runOnUiThread(() -> {

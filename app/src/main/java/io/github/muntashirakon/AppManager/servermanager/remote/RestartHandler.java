@@ -21,6 +21,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Process;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.server.common.ClassCallerProcessor;
 import io.github.muntashirakon.AppManager.server.common.FLog;
 
@@ -35,7 +36,8 @@ public class RestartHandler extends ClassCallerProcessor {
 
   @Override
   public Bundle proxyInvoke(Bundle bundle) throws Throwable {
-    Runtime.getRuntime().exec("sh /sdcard/Android/data/com.zzzmode.appopsx/opsx.sh "+Process.myPid());
+    Runtime.getRuntime().exec("sh /sdcard/Android/data/" + BuildConfig.APPLICATION_ID +
+            "/files/run_server.sh " + Process.myPid());
     FLog.log("RestartHandler -----------exec  --- ");
     return bundle;
   }

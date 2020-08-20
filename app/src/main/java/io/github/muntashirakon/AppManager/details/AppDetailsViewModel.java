@@ -63,6 +63,8 @@ import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.server.common.OpEntry;
+import io.github.muntashirakon.AppManager.server.common.PackageOps;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -295,9 +297,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
         try {
             // Set mode
             mAppOpsService.setMode(op, -1, packageName, mode);
-            // Verify changes
-            if (!mAppOpsService.checkOperation(op, -1, packageName).equals(AppOpsManager.modeToName(mode)))
-                return false;
             new Thread(() -> {
                 synchronized (ComponentsBlocker.class) {
                     waitForBlockerOrExit();
@@ -347,7 +346,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public boolean ignoreDangerousAppOps() {
         if (isExternalApk) return false;
         AppDetailsItem appDetailsItem;
-        AppOpsManager.OpEntry opEntry;
+        OpEntry opEntry;
         String permName;
         final List<Integer> opItems = new ArrayList<>();
         final String modeName = AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED);
@@ -355,7 +354,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (mAppOpsService == null) mAppOpsService = new AppOpsService();
         for (int i = 0; i<appOpItems.size(); ++i) {
             appDetailsItem = appOpItems.get(i);
-            opEntry = (AppOpsManager.OpEntry) appDetailsItem.vanillaItem;
+            opEntry = (OpEntry) appDetailsItem.vanillaItem;
             try {
                 permName = AppOpsManager.opToPermission(opEntry.getOp());
                 if (permName != null) {
@@ -370,13 +369,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         // Set mode
                         try {
                             mAppOpsService.setMode(opEntry.getOp(), -1, packageName, AppOpsManager.MODE_IGNORED);
-                            // Verify changes
-                            if (!mAppOpsService.checkOperation(opEntry.getOp(), -1, packageName).equals(modeName))
-                                throw new Exception();
                             opItems.add(opEntry.getOp());
-                            appDetailsItem.vanillaItem = new AppOpsManager.OpEntry(opEntry.getOp(),
-                                    opEntry.getOpStr(), opEntry.isRunning(), modeName,
-                                    opEntry.getTime(), opEntry.getRejectTime(), opEntry.getDuration(),
+                            appDetailsItem.vanillaItem = new OpEntry(opEntry.getOp(),
+                                    AppOpsManager.MODE_IGNORED, opEntry.getTime(),
+                                    opEntry.getRejectTime(), opEntry.getDuration(),
                                     opEntry.getProxyUid(), opEntry.getProxyPackageName());
                             appOpItems.set(i, appDetailsItem);
                         } catch (Exception e) {
@@ -734,20 +730,28 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 if (!isExternalApk && (AppPref.isRootEnabled() || AppPref.isAdbEnabled())) {
                     if (mAppOpsService == null) mAppOpsService = new AppOpsService();
                     try {
-                        List<AppOpsManager.PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(-1, packageName, null);
-                        List<AppOpsManager.OpEntry> opEntries = new ArrayList<>();
+                        List<PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(-1, packageName, null);
+                        List<OpEntry> opEntries = new ArrayList<>();
                         if (packageOpsList.size() == 1)
                             opEntries.addAll(packageOpsList.get(0).getOps());
-                        packageOpsList = mAppOpsService.getOpsForPackage(-1, packageName, AppOpsManager.sAlwaysShownOp);
-                        if (packageOpsList.size() == 1)
-                            opEntries.addAll(packageOpsList.get(0).getOps());
+                        // Include defaults
+                        final int[] ops = {2, 11, 12, 15, 22, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 42, 44, 45,
+                                46, 47, 48, 49, 50, 58, 61, 63, 65, 69};
+                        for (int op : ops) {
+                            opEntries.add(new OpEntry(op, android.app.AppOpsManager.MODE_ALLOWED,
+                                    0, 0, 0, 0, null));
+                        }
+//                        packageOpsList = mAppOpsService.getOpsForPackage(-1, packageName, AppOpsManager.sAlwaysShownOp);
+//                        if (packageOpsList.size() == 1)
+//                            opEntries.addAll(packageOpsList.get(0).getOps());
                         if (opEntries.size() > 0) {
                             Set<String> uniqueSet = new HashSet<>();
-                            for (AppOpsManager.OpEntry opEntry : opEntries) {
-                                if (uniqueSet.contains(opEntry.getOpStr())) continue;
+                            for (OpEntry opEntry : opEntries) {
+                                String opName = AppOpsManager.opToName(opEntry.getOp());
+                                if (uniqueSet.contains(opName)) continue;
                                 AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry);
-                                appDetailsItem.name = opEntry.getOpStr();
-                                uniqueSet.add(opEntry.getOpStr());
+                                appDetailsItem.name = opName;
+                                uniqueSet.add(opName);
                                 appOpItems.add(appDetailsItem);
                             }
                         }
@@ -765,12 +769,14 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     case AppDetailsFragment.SORT_BY_NAME:
                         return o1.name.compareToIgnoreCase(o2.name);
                     case AppDetailsFragment.SORT_BY_APP_OP_VALUES:
-                        Integer o1Op = ((AppOpsManager.OpEntry) o1.vanillaItem).getOp();
-                        Integer o2Op = ((AppOpsManager.OpEntry) o2.vanillaItem).getOp();
+                        Integer o1Op = ((OpEntry) o1.vanillaItem).getOp();
+                        Integer o2Op = ((OpEntry) o2.vanillaItem).getOp();
                         return o1Op.compareTo(o2Op);
                     case AppDetailsFragment.SORT_BY_DENIED_APP_OPS:
                         // A slight hack to sort it this way: ignore > foreground > deny > default[ > ask] > allow
-                        return -((AppOpsManager.OpEntry) o1.vanillaItem).getMode().compareToIgnoreCase(((AppOpsManager.OpEntry) o2.vanillaItem).getMode());
+                        Integer o1Mode = ((OpEntry) o1.vanillaItem).getMode();
+                        Integer o2Mode = ((OpEntry) o2.vanillaItem).getMode();
+                        return -o1Mode.compareTo(o2Mode);
                 }
                 return 0;
             });

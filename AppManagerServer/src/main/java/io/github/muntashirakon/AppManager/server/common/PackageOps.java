@@ -27,7 +27,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 
 public class PackageOps implements Parcelable {
-
     private final String mPackageName;
     private final int mUid;
     private final List<OpEntry> mEntries;

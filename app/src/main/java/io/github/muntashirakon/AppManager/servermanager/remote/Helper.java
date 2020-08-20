@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.servermanager.remote;
 
 import android.app.ActivityThread;
-import android.app.AppOpsManager;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
