@@ -381,18 +381,8 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main_actions, menu);
         appUsageMenu = menu.findItem(R.id.action_app_usage);
-        if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
-            appUsageMenu.setVisible(true);
-        } else appUsageMenu.setVisible(false);
         runningAppsMenu = menu.findItem(R.id.action_running_apps);
         sortByBlockedComponentMenu = menu.findItem(R.id.action_sort_by_blocked_components);
-        if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
-            runningAppsMenu.setVisible(true);
-            sortByBlockedComponentMenu.setVisible(true);
-        } else {
-            runningAppsMenu.setVisible(false);
-            sortByBlockedComponentMenu.setVisible(false);
-        }
         MenuItem apkUpdaterMenu = menu.findItem(R.id.action_apk_updater);
         try {
             if(!getPackageManager().getApplicationInfo(PACKAGE_NAME_APK_UPDATER, 0).enabled)
@@ -431,6 +421,16 @@ public class MainActivity extends AppCompatActivity implements
                 menu.findItem(R.id.action_filter_apps_with_rules).setChecked(true);
             }
         }
+        if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
+            runningAppsMenu.setVisible(true);
+            sortByBlockedComponentMenu.setVisible(true);
+        } else {
+            runningAppsMenu.setVisible(false);
+            sortByBlockedComponentMenu.setVisible(false);
+        }
+        if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
+            appUsageMenu.setVisible(true);
+        } else appUsageMenu.setVisible(false);
         return true;
     }
 
@@ -570,12 +570,15 @@ public class MainActivity extends AppCompatActivity implements
         AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
         if (!Utils.isRootGiven()) {
             AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+            AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
             // Check for adb
             new Thread(() -> {
                 try {
                     AdbShell.CommandResult result = AdbShell.run("id");
-                    if (!result.isSuccessful()) throw new IOException("Adb not available");
-                    AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
+                    if (!result.isSuccessful()) {
+                        AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
+                        throw new IOException("Adb not available");
+                    }
                     AppOps.updateConfig(this);
                     runOnUiThread(() -> Toast.makeText(this, "Working on ADB mode", Toast.LENGTH_SHORT).show());
                 } catch (Exception ignored) {}

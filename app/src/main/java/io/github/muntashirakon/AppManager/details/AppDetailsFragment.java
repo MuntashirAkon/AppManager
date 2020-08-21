@@ -814,13 +814,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             activityInfo.loadIcon(mPackageManager), iconResourceName);
                 });
                 holder.editBtn.setOnClickListener(v -> {
-                    if (getFragmentManager() != null) {
-                        DialogFragment dialog = new EditShortcutDialogFragment();
-                        Bundle args = new Bundle();
-                        args.putParcelable(EditShortcutDialogFragment.ARG_ACTIVITY_INFO, activityInfo);
-                        dialog.setArguments(args);
-                        dialog.show(getFragmentManager(), EditShortcutDialogFragment.TAG);
-                    }
+                    DialogFragment dialog = new EditShortcutDialogFragment();
+                    Bundle args = new Bundle();
+                    args.putParcelable(EditShortcutDialogFragment.ARG_ACTIVITY_INFO, activityInfo);
+                    dialog.setArguments(args);
+                    dialog.show(getParentFragmentManager(), EditShortcutDialogFragment.TAG);
                 });
                 holder.createBtn.setVisibility(View.VISIBLE);
                 holder.editBtn.setVisibility(View.VISIBLE);
