@@ -1,5 +1,6 @@
 # App Manager
 ![Debug Build](https://github.com/MuntashirAkon/AppManager/workflows/Debug%20Build/badge.svg)
+[![Crowdin](https://badges.crowdin.net/android-app-manager/localized.svg)](https://crowdin.com/project/android-app-manager)
 [![GitHub Release](https://img.shields.io/github/v/release/MuntashirAkon/AppManager)](https://github.com/MuntashirAkon/AppManager/releases/latest)
 [![F-Droid](https://img.shields.io/f-droid/v/io.github.muntashirakon.AppManager)](https://f-droid.org/packages/io.github.muntashirakon.AppManager)
 ![GitHub Repo Size](https://img.shields.io/github/repo-size/MuntashirAkon/AppManager)

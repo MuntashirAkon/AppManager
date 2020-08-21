@@ -71,6 +71,7 @@ public class MainViewModel extends AndroidViewModel {
     private Set<String> selectedPackages = new HashSet<>();
     private List<ApplicationItem> selectedApplicationItems = new LinkedList<>();
     private int flagSigningInfo;
+    private int flagDisabledComponents;
     public MainViewModel(@NonNull Application application) {
         super(application);
         Log.d("MVM", "New instance created");
@@ -82,6 +83,9 @@ public class MainViewModel extends AndroidViewModel {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
             flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
         else flagSigningInfo = PackageManager.GET_SIGNATURES;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            flagDisabledComponents = PackageManager.MATCH_DISABLED_COMPONENTS;
+        else flagDisabledComponents = PackageManager.GET_DISABLED_COMPONENTS;
     }
 
     private MutableLiveData<List<ApplicationItem>> applicationItemsLiveData;
@@ -191,7 +195,8 @@ public class MainViewModel extends AndroidViewModel {
                     for (String packageName : packageList) {
                         try {
                             PackageInfo packageInfo = mPackageManager.getPackageInfo(packageName,
-                                    PackageManager.GET_META_DATA | flagSigningInfo);
+                                    PackageManager.GET_META_DATA | flagSigningInfo |
+                                            PackageManager.GET_ACTIVITIES | flagDisabledComponents);
                             ApplicationInfo applicationInfo = packageInfo.applicationInfo;
                             ApplicationItem item = new ApplicationItem(applicationInfo);
                             item.versionName = packageInfo.versionName;
@@ -206,6 +211,7 @@ public class MainViewModel extends AndroidViewModel {
                             item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
                             item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
                             item.isDisabled = !applicationInfo.enabled;
+                            item.hasActivities = packageInfo.activities != null;
                             item.label = applicationInfo.loadLabel(mPackageManager).toString();
                             item.firstInstallTime = packageInfo.firstInstallTime;
                             item.lastUpdateTime = packageInfo.lastUpdateTime;
@@ -234,13 +240,16 @@ public class MainViewModel extends AndroidViewModel {
                             item.size = (long) -1 * applicationInfo.targetSdkVersion;
                         }
                         try {
-                            PackageInfo packageInfo = mPackageManager.getPackageInfo(applicationInfo.packageName, flagSigningInfo);
+                            PackageInfo packageInfo = mPackageManager.getPackageInfo(
+                                    applicationInfo.packageName, flagSigningInfo |
+                                            PackageManager.GET_ACTIVITIES | flagDisabledComponents);
                             item.versionName = packageInfo.versionName;
                             item.versionCode = PackageUtils.getVersionCode(packageInfo);
                             item.sharedUserId = packageInfo.sharedUserId;
                             item.sha = Utils.getIssuerAndAlg(packageInfo);
                             item.firstInstallTime = packageInfo.firstInstallTime;
                             item.lastUpdateTime = packageInfo.lastUpdateTime;
+                            item.hasActivities = packageInfo.activities != null;
                         } catch (PackageManager.NameNotFoundException e) {
                             item.lastUpdateTime = 0L;
                             item.sha = new Tuple<>("?", "?");
@@ -299,15 +308,21 @@ public class MainViewModel extends AndroidViewModel {
             ApplicationItem item;
             for (int i = 0; i <applicationItems.size(); ++i) {
                 item = applicationItems.get(i);
-                if ((mFilterFlags & MainActivity.FILTER_USER_APPS) != 0 && item.isUser) {
-                    filteredApplicationItems.add(item);
-                } else if ((mFilterFlags & MainActivity.FILTER_SYSTEM_APPS) != 0 && !item.isUser) {
-                    filteredApplicationItems.add(item);
-                } else if ((mFilterFlags & MainActivity.FILTER_DISABLED_APPS) != 0 && item.isDisabled) {
-                    filteredApplicationItems.add(item);
-                } else if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_RULES) != 0 && item.blockedCount > 0) {
-                    filteredApplicationItems.add(item);
+                // Filter user and system apps first (if requested)
+                if ((mFilterFlags & MainActivity.FILTER_USER_APPS) != 0 && !item.isUser) {
+                    continue;
+                } else if ((mFilterFlags & MainActivity.FILTER_SYSTEM_APPS) != 0 && item.isUser) {
+                    continue;
                 }
+                // Filter rests
+                if ((mFilterFlags & MainActivity.FILTER_DISABLED_APPS) != 0 && !item.isDisabled) {
+                    continue;
+                } else if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_RULES) != 0 && item.blockedCount <= 0) {
+                    continue;
+                } else if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_ACTIVITIES) != 0 && !item.hasActivities) {
+                    continue;
+                }
+                filteredApplicationItems.add(item);
             }
             if (!TextUtils.isEmpty(searchQuery)) {
                 filterItemsByQuery(filteredApplicationItems);
@@ -457,7 +472,9 @@ public class MainViewModel extends AndroidViewModel {
     @Nullable
     private ApplicationItem getNewApplicationItem(String packageName) {
         try {
-            PackageInfo packageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA | flagSigningInfo);
+            PackageInfo packageInfo = mPackageManager.getPackageInfo(packageName,
+                    PackageManager.GET_META_DATA | flagSigningInfo |
+                            PackageManager.GET_ACTIVITIES | flagDisabledComponents);
             ApplicationInfo applicationInfo = packageInfo.applicationInfo;
             ApplicationItem item = new ApplicationItem(applicationInfo);
             item.versionName = packageInfo.versionName;
@@ -470,6 +487,7 @@ public class MainViewModel extends AndroidViewModel {
             item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
             item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
             item.isDisabled = !applicationInfo.enabled;
+            item.hasActivities = packageInfo.activities != null;
             item.firstInstallTime = packageInfo.firstInstallTime;
             item.lastUpdateTime = packageInfo.lastUpdateTime;
             item.sha = Utils.getIssuerAndAlg(packageInfo);

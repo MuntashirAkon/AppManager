@@ -99,6 +99,10 @@ public class ApplicationItem extends PackageItemInfo {
      */
     public boolean isInstalled = true;
     /**
+     * Whether the app has any activities
+     */
+    public boolean hasActivities = false;
+    /**
      * Whether the item is selected
      */
     public boolean isSelected = false;

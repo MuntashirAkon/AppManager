@@ -155,7 +155,8 @@ public class MainActivity extends AppCompatActivity implements
             FILTER_USER_APPS,
             FILTER_SYSTEM_APPS,
             FILTER_DISABLED_APPS,
-            FILTER_APPS_WITH_RULES
+            FILTER_APPS_WITH_RULES,
+            FILTER_APPS_WITH_ACTIVITIES
     })
     public @interface Filter {}
     public static final int FILTER_NO_FILTER = 0;
@@ -163,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements
     public static final int FILTER_SYSTEM_APPS = 1 << 1;
     public static final int FILTER_DISABLED_APPS = 1 << 2;
     public static final int FILTER_APPS_WITH_RULES = 1 << 3;
+    public static final int FILTER_APPS_WITH_ACTIVITIES = 1 << 4;
 
     private MainActivity.MainRecyclerAdapter mAdapter;
     private SearchView mSearchView;
@@ -413,12 +415,18 @@ public class MainActivity extends AppCompatActivity implements
             int flags = mModel.getFilterFlags();
             if ((flags & MainActivity.FILTER_USER_APPS) != 0) {
                 menu.findItem(R.id.action_filter_user_apps).setChecked(true);
-            } else if ((flags & MainActivity.FILTER_SYSTEM_APPS) != 0) {
+            }
+            if ((flags & MainActivity.FILTER_SYSTEM_APPS) != 0) {
                 menu.findItem(R.id.action_filter_system_apps).setChecked(true);
-            } else if ((flags & MainActivity.FILTER_DISABLED_APPS) != 0) {
+            }
+            if ((flags & MainActivity.FILTER_DISABLED_APPS) != 0) {
                 menu.findItem(R.id.action_filter_disabled_apps).setChecked(true);
-            } else if ((flags & MainActivity.FILTER_APPS_WITH_RULES) != 0) {
+            }
+            if ((flags & MainActivity.FILTER_APPS_WITH_RULES) != 0) {
                 menu.findItem(R.id.action_filter_apps_with_rules).setChecked(true);
+            }
+            if ((flags & MainActivity.FILTER_APPS_WITH_ACTIVITIES) != 0) {
+                menu.findItem(R.id.action_filter_apps_with_activities).setChecked(true);
             }
         }
         if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
@@ -510,6 +518,11 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.action_filter_apps_with_rules:
                 if (!item.isChecked()) mModel.addFilterFlag(FILTER_APPS_WITH_RULES);
                 else mModel.removeFilterFlag(FILTER_APPS_WITH_RULES);
+                item.setChecked(!item.isChecked());
+                return true;
+            case R.id.action_filter_apps_with_activities:
+                if (!item.isChecked()) mModel.addFilterFlag(FILTER_APPS_WITH_ACTIVITIES);
+                else mModel.removeFilterFlag(FILTER_APPS_WITH_ACTIVITIES);
                 item.setChecked(!item.isChecked());
                 return true;
             case R.id.action_app_usage:
