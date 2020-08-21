@@ -58,7 +58,7 @@ public class AdbShellRunner extends Runner {
                 }
             };
             return lastResult;
-        } catch (InterruptedException | IOException | NoSuchAlgorithmException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
