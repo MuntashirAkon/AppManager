@@ -18,7 +18,6 @@ import java.security.spec.InvalidKeySpecException;
 import androidx.annotation.NonNull;
 
 public final class AdbConnector {
-
     private static final String TAG = "AdbConnector";
 
     @NonNull

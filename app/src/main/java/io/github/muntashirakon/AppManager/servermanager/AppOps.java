@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class AppOps {
 
@@ -60,11 +61,11 @@ public class AppOps {
     }
 
     private static void updateConfig(Context context, @NonNull AppOpsManager.Config config) {
+        // FIXME: Use AppPref instead of SharedPreferences
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-
         config.allowBgRunning = sp.getBoolean("allow_bg_remote", true);
         config.logFile = context.getFileStreamPath(LOG_FILE).getAbsolutePath();
-        config.useAdb = sp.getBoolean("use_adb", false);
+        config.useAdb = AppPref.isAdbEnabled() && !AppPref.isRootEnabled();
         config.adbPort = sp.getInt("use_adb_port", 5555);
         config.rootOverAdb = sp.getBoolean("allow_root_over_adb", false);
         Log.e("test", "buildConfig --> " + context.getFileStreamPath(LOG_FILE).getAbsolutePath());

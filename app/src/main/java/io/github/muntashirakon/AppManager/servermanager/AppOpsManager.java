@@ -15,6 +15,7 @@ import io.github.muntashirakon.AppManager.server.common.OpEntry;
 import io.github.muntashirakon.AppManager.server.common.OpsCommands;
 import io.github.muntashirakon.AppManager.server.common.OpsResult;
 import io.github.muntashirakon.AppManager.server.common.PackageOps;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class AppOpsManager {
     private static final String TAG = "AppOpsManager";
@@ -175,7 +176,7 @@ public class AppOpsManager {
         public boolean allowBgRunning = false;
         public String logFile;
         public boolean printLog = false;
-        public boolean useAdb = false;
+        public boolean useAdb = AppPref.isAdbEnabled() && !AppPref.isRootEnabled();;
         public boolean rootOverAdb = false;
         public String adbHost = "127.0.0.1";
         public int adbPort = 5555;
