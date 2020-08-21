@@ -40,6 +40,7 @@ public class AppPref {
     public enum PrefKey {
         // Keep this in sync with getDefaultValue(PrefKey)
         PREF_ADB_MODE_ENABLED_BOOL,
+        PREF_APP_OP_SHOW_DEFAULT_BOOL,
         PREF_APP_THEME_INT,
         PREF_ENABLE_KILL_FOR_SYSTEM_BOOL,
         PREF_GLOBAL_BLOCKING_ENABLED_BOOL,
@@ -182,6 +183,7 @@ public class AppPref {
 
     private @NonNull Object getDefaultValue(@NonNull PrefKey key) {
         switch (key) {
+            case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_ROOT_MODE_ENABLED_BOOL:
             case PREF_USAGE_ACCESS_ENABLED_BOOL:
             case PREF_SHOW_DISCLAIMER_BOOL: return true;

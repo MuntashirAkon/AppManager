@@ -38,6 +38,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_toggle_default_app_ops"
+        android:icon="@drawable/ic_view_list_black_24dp"
+        android:title="@string/toggle_default_app_ops"
+        app:showAsAction="never" />
+
+    <item
         android:icon="@drawable/ic_sort_black_24dp"
         android:title="@string/sort"
         app:showAsAction="never">

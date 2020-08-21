@@ -468,4 +468,5 @@
     <string name="pref_remove_all_rules_msg">All configured blocked components will be enabled, app ops will be set default values and permissions will be granted</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="filter_apps_with_activities">Apps with activities</string>
+    <string name="toggle_default_app_ops">Toggle default app ops</string>
 </resources>

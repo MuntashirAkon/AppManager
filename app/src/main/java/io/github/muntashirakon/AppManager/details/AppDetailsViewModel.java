@@ -349,7 +349,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
         OpEntry opEntry;
         String permName;
         final List<Integer> opItems = new ArrayList<>();
-        final String modeName = AppOpsManager.modeToName(AppOpsManager.MODE_IGNORED);
         boolean isSuccessful = true;
         if (mAppOpsService == null) mAppOpsService = new AppOpsService();
         for (int i = 0; i<appOpItems.size(); ++i) {
@@ -710,6 +709,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return appOps;
     }
 
+    public void resetAppOpItems() {
+        appOpItems.clear();
+        appOpItems = null;
+    }
+
     public void setAppOp(AppDetailsItem appDetailsItem) {
         new Thread(() -> {
             for (int i = 0; i < appOpItems.size(); ++i) {
@@ -735,15 +739,14 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         if (packageOpsList.size() == 1)
                             opEntries.addAll(packageOpsList.get(0).getOps());
                         // Include defaults
-                        final int[] ops = {2, 11, 12, 15, 22, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 42, 44, 45,
-                                46, 47, 48, 49, 50, 58, 61, 63, 65, 69};
-                        for (int op : ops) {
-                            opEntries.add(new OpEntry(op, android.app.AppOpsManager.MODE_ALLOWED,
-                                    0, 0, 0, 0, null));
+                        if ((boolean) AppPref.get(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL)) {
+                            final int[] ops = {2, 11, 12, 15, 22, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 42, 44, 45,
+                                    46, 47, 48, 49, 50, 58, 61, 63, 65, 69};
+                            for (int op : ops) {
+                                opEntries.add(new OpEntry(op, android.app.AppOpsManager.MODE_ALLOWED,
+                                        0, 0, 0, 0, null));
+                            }
                         }
-//                        packageOpsList = mAppOpsService.getOpsForPackage(-1, packageName, AppOpsManager.sAlwaysShownOp);
-//                        if (packageOpsList.size() == 1)
-//                            opEntries.addAll(packageOpsList.get(0).getOps());
                         if (opEntries.size() > 0) {
                             Set<String> uniqueSet = new HashSet<>();
                             for (OpEntry opEntry : opEntries) {
