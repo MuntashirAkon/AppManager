@@ -17,6 +17,9 @@
 
 package io.github.muntashirakon.AppManager.server.common;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.EOFException;
@@ -30,6 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.NonNull;
 
+@SuppressWarnings("unused")
 public final class Shell {
     private final static String TAG = "Shell";
     private static final String TOKEN = "ZL@LOVE^TYS"; //U+1F430 U+2764 U+1F431
@@ -414,9 +418,30 @@ public final class Shell {
 
     }
 
-    public static class Result {
+    public static class Result implements Parcelable {
         private String message;
         private int statusCode = -1;
+
+        Result() {}
+
+        protected Result(@NonNull Parcel in) {
+            message = in.readString();
+            statusCode = in.readInt();
+        }
+
+        public static final Creator<Result> CREATOR = new Creator<Result>() {
+            @NonNull
+            @Override
+            public Result createFromParcel(Parcel in) {
+                return new Result(in);
+            }
+
+            @NonNull
+            @Override
+            public Result[] newArray(int size) {
+                return new Result[size];
+            }
+        };
 
         public String getMessage() {
             return message;
@@ -426,6 +451,16 @@ public final class Shell {
             return statusCode;
         }
 
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(@NonNull Parcel dest, int flags) {
+            dest.writeString(message);
+            dest.writeInt(statusCode);
+        }
     }
 
 

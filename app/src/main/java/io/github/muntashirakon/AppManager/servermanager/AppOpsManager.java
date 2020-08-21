@@ -8,14 +8,15 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.AppManager.servermanager.remote.AppOpsHandler;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.ClassCaller;
 import io.github.muntashirakon.AppManager.server.common.OpEntry;
 import io.github.muntashirakon.AppManager.server.common.OpsCommands;
 import io.github.muntashirakon.AppManager.server.common.OpsResult;
 import io.github.muntashirakon.AppManager.server.common.PackageOps;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.server.common.Shell;
+import io.github.muntashirakon.AppManager.servermanager.remote.AppOpsHandler;
+import io.github.muntashirakon.AppManager.servermanager.remote.ShellCommandHandler;
 
 public class AppOpsManager {
     private static final String TAG = "AppOpsManager";
@@ -28,10 +29,10 @@ public class AppOpsManager {
     private ApiSupporter apiSupporter;
 
     public AppOpsManager(Context context) {
-        this(context, new Config());
+        this(context, new AppOps.Config());
     }
 
-    public AppOpsManager(Context context, @NonNull Config config) {
+    public AppOpsManager(Context context, @NonNull AppOps.Config config) {
         mContext = context;
         config.context = mContext;
         mUserHandleId = Process.myUid() / 100000; // android.os.UserHandle.myUserId()
@@ -47,11 +48,11 @@ public class AppOpsManager {
         this.userId = uid;
     }
 
-    public void updateConfig(Config config) {
+    public void updateConfig(AppOps.Config config) {
         mLocalServerManager.updateConfig(config);
     }
 
-    public Config getConfig() {
+    public AppOps.Config getConfig() {
         return mLocalServerManager.getConfig();
     }
 
@@ -62,6 +63,15 @@ public class AppOpsManager {
 
     private synchronized void checkConnect() throws Exception {
         mLocalServerManager.start();
+    }
+
+    public Shell.Result runCommand(String command) throws Exception {
+        Bundle args = new Bundle();
+        args.putString("command", command);
+        ClassCaller classCaller = new ClassCaller(pkgName, ShellCommandHandler.class.getName(), args);
+        CallerResult result = mLocalServerManager.execNew(classCaller);
+        Bundle replyBundle = result.getReplyBundle();
+        return replyBundle.getParcelable("return");
     }
 
     public OpsResult getOpsForPackage(int uid, String packageName, int[] ops) throws Exception {
@@ -170,16 +180,5 @@ public class AppOpsManager {
 
     public static boolean isEnableSELinux() {
         return AssetsUtils.isEnableSELinux();
-    }
-
-    public static class Config {
-        public boolean allowBgRunning = false;
-        public String logFile;
-        public boolean printLog = false;
-        public boolean useAdb = AppPref.isAdbEnabled() && !AppPref.isRootEnabled();;
-        public boolean rootOverAdb = false;
-        public String adbHost = "127.0.0.1";
-        public int adbPort = 5555;
-        Context context;
     }
 }

@@ -19,10 +19,12 @@ package io.github.muntashirakon.AppManager.adb;
 
 import android.content.Context;
 import android.util.Base64;
+import android.util.Log;
 
 import com.tananaev.adblib.AdbBase64;
 import com.tananaev.adblib.AdbConnection;
 import com.tananaev.adblib.AdbCrypto;
+import com.tananaev.adblib.AdbStream;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,19 +72,29 @@ public class AdbConnectionManager {
     }
 
     @NonNull
-    public static AdbConnection connect(@NonNull Context context, String host, int port)
-            throws IOException, NoSuchAlgorithmException, InterruptedException {
+    public static AdbConnection buildConnect(@NonNull Context context, String host, int port)
+            throws IOException, NoSuchAlgorithmException {
         // Setup the crypto object required for the AdbConnection
         String path = context.getCacheDir().getAbsolutePath();
         String publicKey = path + File.separatorChar + "pub.key";
         String privateKey = path + File.separatorChar + "priv.key";
         AdbCrypto crypto = setupCrypto(publicKey, privateKey);
-
         // Connect the socket to the remote host
         Socket sock = new Socket(host, port);
         // Construct the AdbConnection object
-        AdbConnection adbConnection = AdbConnection.create(sock, crypto);
+        return AdbConnection.create(sock, crypto);
+    }
+
+    @NonNull
+    public static AdbConnection connect(@NonNull Context context, String host, int port)
+            throws IOException, NoSuchAlgorithmException, InterruptedException {
+        AdbConnection adbConnection = buildConnect(context, host, port);
         adbConnection.connect();
         return adbConnection;
+    }
+
+    public static AdbStream openShell(Context context, String host, int port) throws Exception {
+        AdbConnection connection = connect(context, host, port);
+        return connection.open("shell:");
     }
 }

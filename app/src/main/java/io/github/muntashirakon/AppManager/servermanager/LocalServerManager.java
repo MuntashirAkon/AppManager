@@ -43,7 +43,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.AppManager.adb.AdbConnector;
+import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.adb.LineReader;
 import io.github.muntashirakon.AppManager.server.common.BaseCaller;
 import io.github.muntashirakon.AppManager.server.common.Caller;
@@ -56,7 +56,7 @@ class LocalServerManager {
 
     private static LocalServerManager sLocalServerManager;
 
-    static LocalServerManager getInstance(AppOpsManager.Config config) {
+    static LocalServerManager getInstance(AppOps.Config config) {
         if (sLocalServerManager == null) {
             synchronized (LocalServerManager.class) {
                 if (sLocalServerManager == null) {
@@ -68,9 +68,9 @@ class LocalServerManager {
     }
 
     private ClientSession mSession = null;
-    private AppOpsManager.Config mConfig;
+    private AppOps.Config mConfig;
 
-    private LocalServerManager(AppOpsManager.Config config) {
+    private LocalServerManager(AppOps.Config config) {
         mConfig = config;
     }
 
@@ -78,13 +78,13 @@ class LocalServerManager {
      * Update preferences
      * @param config The new preferences
      */
-    void updateConfig(AppOpsManager.Config config) {
+    void updateConfig(AppOps.Config config) {
         if (config != null) {
             mConfig = config;
         }
     }
 
-    AppOpsManager.Config getConfig() {
+    AppOps.Config getConfig() {
         return mConfig;
     }
 
@@ -208,7 +208,7 @@ class LocalServerManager {
         }
 
         final AtomicBoolean connResult = new AtomicBoolean(false);
-        connection = AdbConnector.buildConnect(mConfig.context, mConfig.adbHost, mConfig.adbPort);
+        connection = AdbConnectionManager.buildConnect(mConfig.context, mConfig.adbHost, mConfig.adbPort);
 
         Thread thread = new Thread(() -> {
             try {

@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.servermanager;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -36,13 +37,14 @@ public class AppOps {
 
     private static final String LOG_FILE = "am.log";
 
+    @SuppressLint("StaticFieldLeak")
     private static AppOpsManager sManager;
 
     public static AppOpsManager getInstance(Context context) {
         if (sManager == null) {
             synchronized (AppOps.class) {
                 if (sManager == null) {
-                    AppOpsManager.Config config = new AppOpsManager.Config();
+                    Config config = new Config();
                     updateConfig(context, config);
                     sManager = new AppOpsManager(context.getApplicationContext(), config);
                 }
@@ -53,14 +55,14 @@ public class AppOps {
 
     public static void updateConfig(Context context) {
         if (sManager != null) {
-            AppOpsManager.Config config = sManager.getConfig();
+            Config config = sManager.getConfig();
             if (config != null) {
                 updateConfig(context, config);
             }
         }
     }
 
-    private static void updateConfig(Context context, @NonNull AppOpsManager.Config config) {
+    private static void updateConfig(Context context, @NonNull Config config) {
         // FIXME: Use AppPref instead of SharedPreferences
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         config.allowBgRunning = sp.getBoolean("allow_bg_remote", true);
@@ -145,5 +147,16 @@ public class AppOps {
             }
         }
         return null;
+    }
+
+    public static class Config {
+        public boolean allowBgRunning = false;
+        public String logFile;
+        public boolean printLog = false;
+        public boolean useAdb = AppPref.isAdbEnabled() && !AppPref.isRootEnabled();;
+        public boolean rootOverAdb = false;
+        public String adbHost = "127.0.0.1";
+        public int adbPort = 5555;
+        Context context;
     }
 }
