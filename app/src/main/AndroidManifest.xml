@@ -119,6 +119,8 @@
             </intent-filter>
         </activity>
 
+        <service android:name=".apk.PackageInstallerService" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

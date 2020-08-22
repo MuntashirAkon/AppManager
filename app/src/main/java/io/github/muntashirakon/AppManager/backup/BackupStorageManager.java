@@ -41,7 +41,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import dalvik.system.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkShellInstaller;
+import io.github.muntashirakon.AppManager.apk.PackageInstallerShell;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
@@ -343,7 +343,7 @@ public class BackupStorageManager implements AutoCloseable {
             // A normal update will do it now
             if (splitApkNames.length > 0) {
                 // Split apk
-                if (!SplitApkShellInstaller.installMultiple(allApks)) {
+                if (!PackageInstallerShell.getInstance().installMultiple(allApks)) {
                     Log.e("BSM - Restore", "A (re)install was necessary but couldn't perform it.");
                     return false;
                 }

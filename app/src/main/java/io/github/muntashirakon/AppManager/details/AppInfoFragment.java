@@ -87,6 +87,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
+import io.github.muntashirakon.AppManager.apk.PackageInstallerNoRoot;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.misc.RequestCodes;
@@ -326,12 +327,6 @@ public class AppInfoFragment extends Fragment
                 args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, packages);
                 dialogFragment.setArguments(args);
                 dialogFragment.show(mActivity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-            }
-        } else if (requestCode == RequestCodes.REQUEST_CODE_INSTALL_PKG) {
-            if (resultCode == Activity.RESULT_OK) {
-                Toast.makeText(mActivity, getString(R.string.package_name_is_installed_successfully, mPackageLabel), Toast.LENGTH_SHORT).show();
-            } else if (resultCode == Activity.RESULT_FIRST_USER) {
-                Toast.makeText(mActivity, getString(R.string.failed_to_install_package_name, mPackageLabel), Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == REQUEST_CODE_EXTRACT_ICON) {
             if (data != null) {
@@ -591,22 +586,9 @@ public class AppInfoFragment extends Fragment
                     try {
                         // TODO: Add support for split apk
                         File tmpApkSource = IOUtils.getSharableFile(new File(mApplicationInfo.publicSourceDir), ".apk");
-                        runOnUiThread(() -> {
-                            // TODO: Replace with installer session for >= M
-                            Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
-                            intent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
-                            intent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
-                            intent.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, BuildConfig.APPLICATION_ID);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                intent.setDataAndType(FileProvider.getUriForFile(mActivity,
-                                        BuildConfig.APPLICATION_ID + ".provider", tmpApkSource),
-                                        MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-                            } else {
-                                intent.setDataAndType(Uri.fromFile(tmpApkSource), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-                            }
-                            startActivityForResult(intent, RequestCodes.REQUEST_CODE_INSTALL_PKG);
-                        });
+                        if (!PackageInstallerNoRoot.getInstance().installMultiple(new File[]{tmpApkSource})) {
+                            throw new Exception("Failed to proceed to the commit.");
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show());
@@ -630,21 +612,9 @@ public class AppInfoFragment extends Fragment
                             .setOnClickListener(v -> new Thread(() -> {
                         try {
                             File tmpApkSource = IOUtils.getSharableFile(new File(mApplicationInfo.publicSourceDir), ".apk");
-                            runOnUiThread(() -> {
-                                Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
-                                intent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
-                                intent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
-                                intent.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, BuildConfig.APPLICATION_ID);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                    intent.setDataAndType(FileProvider.getUriForFile(mActivity,
-                                            BuildConfig.APPLICATION_ID + ".provider", tmpApkSource),
-                                            MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-                                } else {
-                                    intent.setDataAndType(Uri.fromFile(tmpApkSource), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-                                }
-                                startActivityForResult(intent, RequestCodes.REQUEST_CODE_INSTALL_PKG);
-                            });
+                            if (!PackageInstallerNoRoot.getInstance().installMultiple(new File[]{tmpApkSource})) {
+                                throw new Exception("Failed to proceed to the commit.");
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                             runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show());

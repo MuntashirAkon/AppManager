@@ -469,4 +469,13 @@
     <string name="are_you_sure">Are you sure?</string>
     <string name="filter_apps_with_activities">Apps with activities</string>
     <string name="toggle_default_app_ops">Toggle default app ops</string>
+    <string name="installer_error_aborted">Installation was cancelled by user</string>
+    <string name="installer_error_blocked_device">device</string>
+    <string name="installer_error_blocked">Installation was blocked by %s</string>
+    <string name="installer_error_conflict">Unable to install the app because it conflicts with an already installed app with same package name</string>
+    <string name="installer_error_incompatible">Application is incompatible with this device</string>
+    <string name="installer_error_bad_apks">Invalid APK files selected</string>
+    <string name="installer_error_storage">Not enough storage space to install the app</string>
+    <string name="installer_error_generic">Installation failed</string>
+    <string name="installer_error_lidl_rom">Your ROM is incompatible with rootless installer.</string>
 </resources>
