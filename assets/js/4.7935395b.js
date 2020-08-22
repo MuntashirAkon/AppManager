@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[4],{372:function(t,e,n){"use strict";n.r(e);var r=n(25),s=Object(r.a)({},(function(){var t=this.$createElement;return(this._self._c||t)("font",{attrs:{color:"#09868B"}},[this._v("[Feature]")])}),[],!1,null,null,null);e.default=s.exports}}]);
