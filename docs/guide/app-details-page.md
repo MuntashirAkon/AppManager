@@ -16,22 +16,67 @@ List of background colors used in this page and their meaning:
 - <code style="background-color: #EA80FC; color: #000">Soft magenta (day)</code> or <code style="background-color: #431C5D; color: #FFF">very dark violet (night)</code> - Currently running services
 
 ## App Info Tab
-**App Info** tab contains general information about the app such as _app directories_, _data directories_, _split apk info_, _sdk versions_, _install date_, _last update date_, _installer app_, _data usage_, _app size_, _data size_, _cache size_, _number of tracking components_ (some of these information require _Usage Access_ permission). Many actions can also be performed here which are described below.
+**App Info** tab contains general information about an app. It also lists many actions that can be performed within this tab. A complete description is given below:
 
-### Actions in App Info Tab
-App Info tab has a horizontally-scrollable action panel where various actions are listed. Some actions are also available beside an info item such as paths and directories. Other actions are also avalable in the menu on the top-right corner. These actions include:
-- Launch/install/uninstall/update/enable/disable/force-stop (some operations require root or [ADB][2])
-- View app manifest
-- View or edit shared preferences - Clicking on a preference opens the [Shared Preferences Editor][3] page (requires root)
-- Scan for trackers using &#x03b5;xodus
-- Open paths and directories with external app
-- Delete app cache (root-only) or app data (root or [ADB][2])
-- Export blocking rules
-- Backup or restore an app along with its data
-- View app info in system settings
-- Open in F-Droid or Aurora Droid and Aurora Store (if installed)
-- Save or share the apk file as apk, or apks if the app is a bundled app
-- See the most honest **What's New** for apk files that needs update containing changes in application components and trackers, permission changes, etc.
+### General Information
+The list below is in the same order as listed in the App Info tab.
+- **App Icon.** The application icon, if an app doesn't have a icon, the system default icon is displayed.
+- **App Label.** The application label or application name.
+- **Version.** Application version is divided into two parts. The first part is called _version name_, the format of this part varies but it often consists of multiple integers separated by dots. The second part is called _version code_ and it is closed under first brackets. Version code is an integer which is usually used to differentiate between app versions (as version name can often be unreadable by a machine). In general, new version of an app has higher version code than the old ones. For instance, if `123` and `125` are two version codes of an app, we can say that the latter is more updated than the former because the version code of the latter is higher. For applications that depend on platforms (mobile, tabs, desktops, etc.), these version numbers can be misleading as they use prefixes for each platform.
+- **Tags.** (Also known as tag clouds) Tags include the basic, concised and most useful information of an app. Tags contain _tracker info_ (i.e., number of trackers), _app type_ (user app or system app and whether the app is an updated version of the system app), _split apk info_ (i.e., number of splits), _debuggable_ (the app is a debug version), _test only_ (the app is a test only app), _large heap_ (the app has requested a large heap size), _stopped_ (the app is force stopped), _disabled_ (the app is disabled) and _no code_ (the app doesn't have any code associated with it). The importance of including _test only_ and _debuggable_ is that app with these properties can do additional tasks or these apps can be `run-as` without root which can cause potential security problems if these apps store any private information. _large heap_ denotes that the app will be allocated a higher amount of memory (RAM) if needed. While this may not be harmful for most cases, any suspicious apps requesting large heap should be taken seriously.
+- **Horizontal Action Panel.** This is a action panel containing various actions regarding the app. See [below](#horizontal-action-panel) for a complete list of actions available there.
+- **Paths & Directories.** Contains various information regarding application paths including _app directory_ (where the apk files are stored), _data directories_ (internal, device protected and externals), _split apk directories_ (along with the split names), and _native JNI library_ (if present). JNI libraries are used to invoke native codes usually written in C/C++. Use of native library can make the app run faster or help an app use third-pary libraries written using languages other than Java like in most games. You can also open these directories using your favourite file managers (provided they support it and have necessary permissions) by clicking on the launch icon on the right-hand side of each item.
+- **Data Usage Since Last Boot.** A rather self explanatory option. But beware that due to some issues, the results might often be misleading and simply wrong. This part remains hidden if _Usage Access_ permission is not granted in newer devices.
+- **Storage & Cache.** Displays information regarding the size of the app (apk files), data and cache. In older devices, size of external data, cache, media and obb folders are also displayed. This part remains hidden if _Usage Access_ permission is not granted in newer devices.
+- **More Info.** Displays other information such as
+  * **SDK.** Displays information related to the Android SDK. There are two (one in old devices) values: _Max_ denotes the target SDK and _Min_ denotes the minimum SDK (the latter is not available in old devices). It is best practice to use apps with maximum SDK that the platform currently supports. SDK is also known as **API Level**.
+    _See also: [Android Version History][wiki_android_versions]_
+  * **Flags.** The application flags used at the time of building the app. For a complete list of flags and what they do, visit the [official documentation][app_flags].
+  * **Date Installed.** The date when the app was first installed.
+  * **Date Updated.** The date when the app was last updated. This is the same as _Date Installed_ if the app hasn't been updated.
+  * **Installer App.** The app that installed the app. Not all app supply the information used by the package manager to register the installer app. Therefore, this value should not be take for granted.
+  * **User ID.** The unique user ID set by the Android system to the app. For shared applications, same user ID is assigned to multiple applications that have the same _Shared User ID_.
+  * **Shared User ID.** Applicable for applications that are shared together. Although it says ID, this is actually a string value. The shared application must have the same [signatures](#signatures-tab).
+  * **Main Activity.** The main entry point to the app. This is only visible if the app has [activities](#activities) and any of those are openable from the Launcher. There's also launch button on the right-hand side which can be used to launch this activity.
+
+### Horizontal Action Panel
+Horizontal Action Panel, as described in the previous section, consists of various app-related actions, such as —
+- **Launch.** Application that has a launchable [activity](#activities) can be launched using this button.
+- **Disable.** Disable an app. This button is not displayed for already disabled apps or to users who do not have root or [ADB][2]. If you disable an app, the app will not be displayed in your Launcher app. Shortcuts for the app will also be removed. If you disable an user app, you can only enable them via App Manager or any other tool that supports it. There isn't any option in Android Settings to enable a disabled user app.
+- **Uninstall.** Uninstall an app.
+- **Enable.** Enable an app. This button is not displayed for already enabled apps or to users who do not have root or [ADB][2].
+- **Force Stop.** Force-stop an app. When you force stop an app, the app will not be able to run in background unless you explicitly open it first. However, this is not always true.
+- **Clear Data.** Clear data from an app. This includes any information stored in the internal and often the external directories, including accounts (if set by the app), cache, etc. Clearing data from App Manager, for example, removes all the rules (the blocking is not removed though) saved within the app. Which is why you should always take backups of your rules. This button is not displayed to users who do not have root or [ADB][2].
+- **Clear Cache.** Clear app cache only. There is not any Android-way to clear app cache. Therefore, it needs root permission to clear cache from the app's internal storage.
+- **Install.** Install an apk opened using any third-party app. This button is only displayed for an external apk that hasn't been installed.
+- **What's New.** This button is displayed for an apk that has higher version code than the installed one. Clicking on this button displays a dialog consisting of differences in a version control manner. The information it displays include _version_, _trackers_, _permissions_, _components_, _signatures_ (checksum changes), _features_, _shared libraries_ and _sdk_.
+- **Update.** Displayed for an apk that has the higher version code than the installed one.
+- **Manifest.** Clicking on this button displays the app's manifest file in a separate page. The manifest file can be wrapped or unwrapped using the corresponding toggle button (on the top-right side) or can be saved to you shared storage using the save button.
+- **εxodus.** Clicking on this button displays the app's tracker information. At first, it scans the app to extract a list of classes. Then the class list is matched with a number of tracking signatures. After that, a scan summary is displayed in an alert dialog. If you accidentally close this dialog box, you can see it again using the corresponding option in the menu. If the app has tracker classes, they will be displayed as a list within this page. _See also: [εxodus page][exodus_page]_
+- **Shared Prefs.** Clicking on this button displays a list of shared preferences used by the app. Clicking on a preference item in the list opens the [Shared Preferences Editor page][3]. This option is only visible to the root users.
+- **Databases.** Clicking on this button displays a list of databases used by the app. This needs more improvements and a database editor which might be added in future. This option is only visible to the root users.
+- **Aurora.** Opens the app in _Aurora Droid_. The option is only visible if _Aurora Droid_ is installed.
+- **F-Droid.** Opens the app in _F-Droid_. This option is only visible if _F-Droid_ is installed and _Aurora Droid_ is not installed.
+- **Store.** Opens the app in _Aurora Store_. The option is only visible if _Aurora Store_ is installed.
+
+
+### Options Menu
+Options menu is located in the top-right corner of the page. A complete description of the options present there are given below:
+- **Share.** Share button can be used to share the apk file or _apks_ file (if the app is has multiple splits) can be imported into [SAI][sai]. You can share it with your favourite file manager to save the file in your shared storage.
+- **Refresh.** Refreshes the App Info tab.
+- **View in Settings.** Opens the app in Android Settings.
+- **Backup/Restore.** Opens the backup/restore dialog.
+- **Export Blocking Rules.** Export rules configured for this app within App Manager.
+- **Open in Termux.** Opens the app in Termux. This actually runs `su - user_id` where `user_id` denotes the app's kernel user ID (described in the [General Information section](#general-information)). This option is only visible to the root users. See [Termux](#termux) section below to learn how to configure Termux to run commands from third-party applications.
+- **Run in Termux.** Open the app using `run-as package_name` in Termux. This is only applicable for debuggable app and works for non-root users as well. See [Termux](#termux) section below to learn how to configure Termux to run commands from third-party applications.
+- **Extract Icon.** Extract and save the app's icon in your desired location.
+
+### Termux
+By default, Termux does not allow running commands from third-party applications. To enable this option, you have to add `allow-external-apps=true` in <tt>~/.termux/termux.properties</tt> and make sure that you are running Termux v0.96 or later.
+
+::: tip Info
+Enabling this option does not weaken your Termux' security. The third-party apps still need to request the user to allow running arbitrary commands in Termux like any other dangerous permissions.
+:::
 
 ## Component Tabs
 **Activities**, **Services**, **Receivers** (originally _broadcast receivers_) and **Providers** (originally _Content Providers_) are together called the application components. This is because they share similar features in many ways. For example, they all have a _name_ and a _label_. Application components are the building blocks of any application, and most of these have to declared in the application manifest. Application manifest is a file where application specific metadata are stored. The Android operating system learns what to do with an app by reading the metadata. [Colors](#color-codes) used in these tabs are explained above.
@@ -148,3 +193,7 @@ Other tabs list android manifest components such as features, configurations, sh
 [looper]: https://stackoverflow.com/questions/7597742
 [settings_gcb]: ./settings.md#global-component-blocking
 [faq_ac]: ../faq/app-components.md
+[app_flags]: https://developer.android.com/reference/android/content/pm/ApplicationInfo#flags
+[wiki_android_versions]: https://en.wikipedia.org/wiki/Android_version_history#Overview
+[exodus_page]: ./exodus-page.md
+[sai]: https://github.com/Aefyr/SAI
