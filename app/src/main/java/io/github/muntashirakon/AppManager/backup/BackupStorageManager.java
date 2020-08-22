@@ -41,6 +41,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import dalvik.system.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkShellInstaller;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
@@ -315,22 +316,42 @@ public class BackupStorageManager implements AutoCloseable {
                     return false;
                 }
             }
-            // Extract the package
+            // Setup package staging directory
             File packageStagingDirectory = new File("/data/local/tmp");
             if (!packageStagingDirectory.exists()) packageStagingDirectory = backupPath;
+            // Setup apk files, including split apk
             File baseApk = new File(packageStagingDirectory, metadataV1.apkName);
+            String[] splitApkNames = new String[metadataV1.splitSources.length];
+            File[] allApks = new File[splitApkNames.length + 1];
+            allApks[0] = baseApk;
             if (baseApk.exists()) //noinspection ResultOfMethodCallIgnored
                 baseApk.delete();
-            // TODO: Handle split apk
-            if (!RootShellRunner.runCommand(String.format("cat %s | tar -xzf - ./%s -C \"%s\"",
-                    cmdSources, metadataV1.apkName, packageStagingDirectory.getAbsolutePath())).isSuccessful()) {
+            for (int i = 0; i<splitApkNames.length; ++i) {
+                splitApkNames[i] = new File(metadataV1.splitSources[i]).getName();
+                allApks[i+1] = new File(packageStagingDirectory, splitApkNames[i]);
+                if (allApks[i+1].exists()) //noinspection ResultOfMethodCallIgnored
+                    allApks[i+1].delete();
+            }
+            // Extract apk files to the package staging directory
+            StringBuilder sb = new StringBuilder("./").append(metadataV1.apkName);
+            for (String splitName : splitApkNames) sb.append(" ./").append(splitName);
+            if (!RootShellRunner.runCommand(String.format("cat %s | tar -xzf - %s -C \"%s\"",
+                    cmdSources, sb.toString(), packageStagingDirectory.getAbsolutePath())).isSuccessful()) {
                 Log.e("BSM - Restore", "Failed to extract the apk file(s).");
                 return false;
             }
             // A normal update will do it now
-            if (!RunnerUtils.installPackage(baseApk.getAbsolutePath()).isSuccessful()) {
-                Log.e("BSM - Restore", "A (re)install was necessary but couldn't perform it.");
-                return false;
+            if (splitApkNames.length > 0) {
+                // Split apk
+                if (!SplitApkShellInstaller.installMultiple(allApks)) {
+                    Log.e("BSM - Restore", "A (re)install was necessary but couldn't perform it.");
+                    return false;
+                }
+            } else {
+                if (!RunnerUtils.installPackage(baseApk.getAbsolutePath()).isSuccessful()) {
+                    Log.e("BSM - Restore", "A (re)install was necessary but couldn't perform it.");
+                    return false;
+                }
             }
             // Get package info
             try {
