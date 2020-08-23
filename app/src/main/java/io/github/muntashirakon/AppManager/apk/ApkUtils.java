@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.apk;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.FileUtils;
 
@@ -35,17 +36,22 @@ import static io.github.muntashirakon.AppManager.backup.BackupStorageManager.get
 import static io.github.muntashirakon.AppManager.utils.IOUtils.copy;
 
 public final class ApkUtils {
+    public static final String EXT_APK = ".apk";
+    public static final String EXT_APKS = ".apks";
+
     @NonNull
     public static File getSharableApkFile(@NonNull PackageInfo packageInfo) throws Exception {
         ApplicationInfo info = packageInfo.applicationInfo;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && info.splitNames != null) {
+        PackageManager pm = AppManager.getContext().getPackageManager();
+        String outputName = info.loadLabel(pm).toString() + "_" + packageInfo.versionName;
+        if (isSplitApk(info)) {
             // Split apk
-            File tmpPublicSource = File.createTempFile(info.packageName, ".apks", AppManager.getContext().getExternalCacheDir());
+            File tmpPublicSource = new File(AppManager.getContext().getExternalCacheDir(), outputName + EXT_APKS);
             SplitApkExporter.saveApks(packageInfo, tmpPublicSource);
             return tmpPublicSource;
         } else {
             // Regular apk
-            File tmpPublicSource = File.createTempFile(info.packageName, ".apk", AppManager.getContext().getExternalCacheDir());
+            File tmpPublicSource = new File(AppManager.getContext().getExternalCacheDir(), outputName + EXT_APK);
             try (FileInputStream apkInputStream = new FileInputStream(packageInfo.applicationInfo.publicSourceDir);
                  FileOutputStream apkOutputStream = new FileOutputStream(tmpPublicSource)) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -68,16 +74,18 @@ public final class ApkUtils {
         }
         // Fetch package info
         try {
-            PackageInfo packageInfo = AppManager.getContext().getPackageManager().getPackageInfo(packageName, 0);
+            PackageManager pm = AppManager.getContext().getPackageManager();
+            PackageInfo packageInfo = pm.getPackageInfo(packageName, 0);
             ApplicationInfo info = packageInfo.applicationInfo;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && info.splitNames != null) {
+            String outputName = info.loadLabel(pm).toString() + "_" + packageInfo.versionName;
+            if (isSplitApk(info)) {
                 // Split apk
-                File tmpPublicSource = new File(backupPath, info.packageName + ".apks");
+                File tmpPublicSource = new File(backupPath, outputName + EXT_APKS);
                 SplitApkExporter.saveApks(packageInfo, tmpPublicSource);
                 return true;
             } else {
                 // Regular apk
-                File tmpPublicSource = new File(backupPath, info.packageName + ".apk");
+                File tmpPublicSource = new File(backupPath, outputName + EXT_APK);
                 try (FileInputStream apkInputStream = new FileInputStream(info.publicSourceDir);
                      FileOutputStream apkOutputStream = new FileOutputStream(tmpPublicSource)) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -90,5 +98,9 @@ public final class ApkUtils {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static boolean isSplitApk(ApplicationInfo info) {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && info.splitNames != null;
     }
 }
