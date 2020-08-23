@@ -136,7 +136,7 @@ public class BackupDialogFragment extends DialogFragment {
     }
 
     public void handleMode() {
-        BatchOpsManager batchOpsManager = new BatchOpsManager(activity);
+        BatchOpsManager batchOpsManager = new BatchOpsManager();
         batchOpsManager.setFlags(flags);
         @BatchOpsManager.OpType int op;
         switch (mode) {

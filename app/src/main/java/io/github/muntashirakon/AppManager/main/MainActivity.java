@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements
             checkAppUpdate();
         }
 
-        mBatchOpsManager = new BatchOpsManager(this);
+        mBatchOpsManager = new BatchOpsManager();
 
         Menu menu = mBottomAppBar.getMenu();
         if (menu instanceof MenuBuilder) {
@@ -333,8 +333,8 @@ public class MainActivity extends AppCompatActivity implements
                     intent.putExtra(Intent.EXTRA_TITLE, fileName);
                     startActivityForResult(intent, RequestCodes.REQUEST_CODE_BATCH_EXPORT);
                     return true;
-                case R.id.action_kill_process:
-                    handleBatchOp(BatchOpsManager.OP_KILL, R.string.alert_failed_to_kill);
+                case R.id.action_force_stop:
+                    handleBatchOp(BatchOpsManager.OP_FORCE_STOP, R.string.alert_failed_to_kill);
                     return true;
                 case R.id.action_uninstall:
                     handleBatchOp(BatchOpsManager.OP_UNINSTALL, R.string.alert_failed_to_uninstall);

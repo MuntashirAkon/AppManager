@@ -34,8 +34,13 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/action_disable"
-        android:icon="@drawable/ic_baseline_power_settings_new_24"
+        android:icon="@drawable/ic_block_black_24dp"
         android:title="@string/disable"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_force_stop"
+        android:title="@string/force_stop"
+        android:icon="@drawable/ic_baseline_power_settings_new_24"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_clear_data"
@@ -45,11 +50,6 @@
         android:id="@+id/action_backup_apk"
         android:title="@string/backup_apk"
         android:icon="@drawable/ic_baseline_get_app_24"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_kill_process"
-        android:title="@string/kill_process"
-        android:icon="@drawable/ic_baseline_clear_24"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_backup"

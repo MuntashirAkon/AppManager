@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.batchops;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -30,8 +29,8 @@ import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupStorageManager;
-import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
@@ -46,7 +45,7 @@ public class BatchOpsManager {
             OP_DISABLE,
             OP_DISABLE_BACKGROUND,
             OP_EXPORT_RULES,
-            OP_KILL,
+            OP_FORCE_STOP,
             OP_RESTORE_BACKUP,
             OP_UNINSTALL
     })
@@ -59,14 +58,13 @@ public class BatchOpsManager {
     public static final int OP_DISABLE = 5;
     public static final int OP_DISABLE_BACKGROUND = 6;
     public static final int OP_EXPORT_RULES = 7;
-    public static final int OP_KILL = 8;
+    public static final int OP_FORCE_STOP = 8;
     public static final int OP_RESTORE_BACKUP = 9;
     public static final int OP_UNINSTALL = 10;
 
     private Runner runner;
-    private Context context;
-    public BatchOpsManager(Context context) {
-        this.context = context;
+
+    public BatchOpsManager() {
         this.runner = Runner.getInstance();
     }
 
@@ -91,7 +89,7 @@ public class BatchOpsManager {
             case OP_DISABLE: return opDisable();
             case OP_DISABLE_BACKGROUND: return opDisableBackground();
             case OP_EXPORT_RULES: break;  // Done in the main activity
-            case OP_KILL: return opKill();
+            case OP_FORCE_STOP: return opForceStop();
             case OP_RESTORE_BACKUP: return opBackupRestore(BackupDialogFragment.MODE_RESTORE);
             case OP_UNINSTALL: return opUninstall();
         }
@@ -215,17 +213,9 @@ public class BatchOpsManager {
     }
 
     @NonNull
-    private Result opKill() {
+    private Result opForceStop() {
         for (String packageName : packageNames) {
-            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_PID_PACKAGE, packageName), false);
-        }
-        Result result = runOpAndFetchResults();
-        List<String> pidOrPackageNames = result.failedPackages();
-        runner.clear();
-        for (int i = 0; i<packageNames.size(); ++i) {
-            if (!pidOrPackageNames.get(i).equals(packageNames.get(i))) {
-                addCommand(packageNames.get(i), String.format(Locale.ROOT, RunnerUtils.CMD_KILL_SIG9, pidOrPackageNames.get(i)));
-            }
+            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_FORCE_STOP_PACKAGE, packageName), false);
         }
         return runOpAndFetchResults();
     }
