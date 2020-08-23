@@ -13,6 +13,9 @@ pages_branch="pages"
 # Navigate to the build output directory
 cd "${base_dist}"
 
+# Ignore .DS_Store files
+echo "*.DS_Store" > .gitignore
+
 # Commit changes
 git init
 git add -A
