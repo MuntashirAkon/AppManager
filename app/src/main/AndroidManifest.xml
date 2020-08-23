@@ -119,7 +119,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".apk.PackageInstallerService" />
+        <service android:name=".apk.installer.PackageInstallerService" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

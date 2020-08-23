@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager.apk;
+package io.github.muntashirakon.AppManager.apk.installer;
 
 import android.app.PendingIntent;
 import android.content.Context;
