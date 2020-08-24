@@ -148,7 +148,7 @@ public class BatchOpsService extends IntentService {
                     intent.putExtra(EXTRA_FAILURE_MESSAGE, message);
                     intent.putStringArrayListExtra(EXTRA_FAILED_PKG, failedPackages);
                     PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                            0, intent, 0);
+                            0, intent, PendingIntent.FLAG_ONE_SHOT);
                     builder.setContentIntent(pendingIntent);
                     builder.setContentText(message);
                 } else builder.setContentText(getString(R.string.error));

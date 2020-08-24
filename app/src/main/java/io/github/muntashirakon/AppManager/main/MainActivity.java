@@ -623,22 +623,6 @@ public class MainActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         registerReceiver(mBatchOpsBroadCastReceiver, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS));
-        if (getIntent() != null) {
-            // Check for failed batch ops
-            ArrayList<String> failedPackages = getIntent().getStringArrayListExtra(BatchOpsService.EXTRA_FAILED_PKG);
-            String failureMessage = getIntent().getStringExtra(BatchOpsService.EXTRA_FAILURE_MESSAGE);
-            // Failed
-            if (failedPackages != null) {
-                new MaterialAlertDialogBuilder(MainActivity.this)
-                        .setTitle(failureMessage)
-                        .setAdapter(new ArrayAdapter<>(MainActivity.this,
-                                android.R.layout.simple_list_item_1, failedPackages), null)
-                        .setNegativeButton(android.R.string.ok, null)
-                        .show();
-            }
-            getIntent().removeExtra(BatchOpsService.EXTRA_FAILED_PKG);
-            getIntent().removeExtra(BatchOpsService.EXTRA_FAILURE_MESSAGE);
-        }
     }
 
     @Override
