@@ -20,18 +20,21 @@ package io.github.muntashirakon.AppManager.runner;
 import android.text.TextUtils;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
 
 public class AdbShellRunner extends Runner {
+    @WorkerThread
+    @NonNull
     @Override
-    public Result runCommand() {
+    synchronized public Result runCommand() {
         try {
             AdbShell.CommandResult result = AdbShell.run(TextUtils.join("; ", commands));
             clear();
-            lastResult = new Result() {
+            return lastResult = new Result() {
                 @Override
                 public boolean isSuccessful() {
                     return result.isSuccessful();
@@ -57,15 +60,40 @@ public class AdbShellRunner extends Runner {
                     return result.getStdout();
                 }
             };
-            return lastResult;
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            return lastResult = new Result() {
+                @Override
+                public boolean isSuccessful() {
+                    return false;
+                }
+
+                @Override
+                public List<String> getOutputAsList() {
+                    return null;
+                }
+
+                @Override
+                public List<String> getOutputAsList(int first_index) {
+                    return null;
+                }
+
+                @Override
+                public List<String> getOutputAsList(int first_index, int length) {
+                    return null;
+                }
+
+                @Override
+                public String getOutput() {
+                    return null;
+                }
+            };
         }
     }
 
+    @NonNull
     @Override
-    protected Result run(String command) {
+    protected Result run(@NonNull String command) {
         clear();
         addCommand(command);
         return runCommand();

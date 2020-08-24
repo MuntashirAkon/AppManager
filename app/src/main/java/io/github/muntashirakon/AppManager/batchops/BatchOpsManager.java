@@ -242,13 +242,13 @@ public class BatchOpsManager {
         lastResult = new Result() {
             @Override
             public boolean isSuccessful() {
-                return TextUtils.isEmpty(result.getOutput());
+                return result != null && TextUtils.isEmpty(result.getOutput());
             }
 
             @NonNull
             @Override
             public List<String> failedPackages() {
-                return result.getOutputAsList();
+                return result == null ? packageNames : result.getOutputAsList();
             }
         };
         return lastResult;

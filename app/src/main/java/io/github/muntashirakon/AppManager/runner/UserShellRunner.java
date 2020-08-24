@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.runner;
 
-import android.annotation.SuppressLint;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -26,22 +25,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 import eu.chainfire.libsuperuser.Shell;
 
 public class UserShellRunner extends Runner {
-    @SuppressLint("StaticFieldLeak")
     private static UserShellRunner rootShellRunner;
     public static UserShellRunner getInstance() {
         if (rootShellRunner == null) rootShellRunner = new UserShellRunner();
         return rootShellRunner;
     }
 
-    public static Result runCommand(String command) {
+    @NonNull
+    public static Result runCommand(@NonNull String command) {
         return getInstance().run(command);
     }
 
+    @NonNull
+    @WorkerThread
     @Override
-    public Result runCommand() {
+    synchronized public Result runCommand() {
         List<String> stdout = Collections.synchronizedList(new ArrayList<>());
         List<String> stderr = Collections.synchronizedList(new ArrayList<>());
         AtomicInteger retVal = new AtomicInteger(FAILED_RET_VAL);
@@ -52,7 +55,7 @@ public class UserShellRunner extends Runner {
             e.printStackTrace();
         }
         clear();
-        lastResult = new Result() {
+        return lastResult = new Result() {
             @Override
             public boolean isSuccessful() {
                 return retVal.get() == 0;
@@ -78,11 +81,11 @@ public class UserShellRunner extends Runner {
                 return TextUtils.join("\n", stdout);
             }
         };
-        return lastResult;
     }
 
+    @NonNull
     @Override
-    protected Result run(String command) {
+    protected Result run(@NonNull String command) {
         clear();
         addCommand(command);
         return runCommand();
