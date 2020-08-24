@@ -49,6 +49,8 @@ Telegram Update Channel: https://t.me/AppManagerChannel
 
 Help us translate App Manager at Crowdin: https://crwd.in/android-app-manager
 
+Help up translate App Manager Docs at Crowdin: https://crwd.in/app-manager-docs
+
 ### Mirrors
 
 Gitlab: https://gitlab.com/muntashir/AppManager

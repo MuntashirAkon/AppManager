@@ -21,6 +21,7 @@
     package="io.github.muntashirakon.AppManager"
     android:installLocation="auto">
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"
         android:maxSdkVersion="25" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -118,8 +119,17 @@
                 <data android:mimeType="application/vnd.android.package-archive" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".misc.AlertDialogActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.TransparentBackground" />
 
         <service android:name=".apk.installer.PackageInstallerService" />
+
+        <service android:name=".batchops.BatchOpsService" android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

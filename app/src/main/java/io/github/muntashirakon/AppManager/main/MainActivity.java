@@ -21,7 +21,10 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.usage.UsageStatsManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -85,6 +88,7 @@ import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.misc.RequestCodes;
 import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
@@ -179,8 +183,14 @@ public class MainActivity extends AppCompatActivity implements
     private MenuItem appUsageMenu;
     private MenuItem runningAppsMenu;
     private MenuItem sortByBlockedComponentMenu;
-    private BatchOpsManager mBatchOpsManager;
     private @SortOrder int mSortBy;
+
+    private BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            showProgressIndicator(false);
+        }
+    };
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -259,8 +269,6 @@ public class MainActivity extends AppCompatActivity implements
             checkAppUpdate();
         }
 
-        mBatchOpsManager = new BatchOpsManager();
-
         Menu menu = mBottomAppBar.getMenu();
         if (menu instanceof MenuBuilder) {
             ((MenuBuilder) menu).setOptionalIconsVisible(true);
@@ -309,20 +317,20 @@ public class MainActivity extends AppCompatActivity implements
                     return true;
                 case R.id.action_backup_apk:
                     if (requestExternalStoragePermissions(this)) {
-                        handleBatchOp(BatchOpsManager.OP_BACKUP_APK, R.string.failed_to_backup_some_apk_files);
+                        handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
                     }
                     return true;
                 case R.id.action_block_trackers:
-                    handleBatchOp(BatchOpsManager.OP_BLOCK_TRACKERS, R.string.alert_failed_to_disable_trackers);
+                    handleBatchOp(BatchOpsManager.OP_BLOCK_TRACKERS);
                     return true;
                 case R.id.action_clear_data:
-                    handleBatchOp(BatchOpsManager.OP_CLEAR_DATA, R.string.alert_failed_to_clear_data);
+                    handleBatchOp(BatchOpsManager.OP_CLEAR_DATA);
                     return true;
                 case R.id.action_disable:
-                    handleBatchOp(BatchOpsManager.OP_DISABLE, R.string.alert_failed_to_disable);
+                    handleBatchOp(BatchOpsManager.OP_DISABLE);
                     return true;
                 case R.id.action_disable_background:
-                    handleBatchOp(BatchOpsManager.OP_DISABLE_BACKGROUND, R.string.alert_failed_to_disable_background);
+                    handleBatchOp(BatchOpsManager.OP_DISABLE_BACKGROUND);
                     return true;
                 case R.id.action_export_blocking_rules:
                     @SuppressLint("SimpleDateFormat")
@@ -334,10 +342,10 @@ public class MainActivity extends AppCompatActivity implements
                     startActivityForResult(intent, RequestCodes.REQUEST_CODE_BATCH_EXPORT);
                     return true;
                 case R.id.action_force_stop:
-                    handleBatchOp(BatchOpsManager.OP_FORCE_STOP, R.string.alert_failed_to_kill);
+                    handleBatchOp(BatchOpsManager.OP_FORCE_STOP);
                     return true;
                 case R.id.action_uninstall:
-                    handleBatchOp(BatchOpsManager.OP_UNINSTALL, R.string.alert_failed_to_uninstall);
+                    handleBatchOp(BatchOpsManager.OP_UNINSTALL);
                     return true;
             }
             mAdapter.clearSelection();
@@ -373,7 +381,7 @@ public class MainActivity extends AppCompatActivity implements
         if (requestCode == RequestCodes.REQUEST_CODE_EXTERNAL_STORAGE_PERMISSIONS) {
             if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
                     && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                handleBatchOp(BatchOpsManager.OP_BACKUP_APK, R.string.failed_to_backup_some_apk_files);
+                handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
             }
         }
     }
@@ -635,6 +643,34 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mBatchOpsBroadCastReceiver, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS));
+        if (getIntent() != null) {
+            // Check for failed batch ops
+            ArrayList<String> failedPackages = getIntent().getStringArrayListExtra(BatchOpsService.EXTRA_FAILED_PKG);
+            String failureMessage = getIntent().getStringExtra(BatchOpsService.EXTRA_FAILURE_MESSAGE);
+            // Failed
+            if (failedPackages != null) {
+                new MaterialAlertDialogBuilder(MainActivity.this)
+                        .setTitle(failureMessage)
+                        .setAdapter(new ArrayAdapter<>(MainActivity.this,
+                                android.R.layout.simple_list_item_1, failedPackages), null)
+                        .setNegativeButton(android.R.string.ok, null)
+                        .show();
+            }
+            getIntent().removeExtra(BatchOpsService.EXTRA_FAILED_PKG);
+            getIntent().removeExtra(BatchOpsService.EXTRA_FAILURE_MESSAGE);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mBatchOpsBroadCastReceiver);
+    }
+
     private void checkFirstRun() {
         if (Utils.isAppInstalled()) {
             new MaterialAlertDialogBuilder(this)
@@ -681,25 +717,15 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void handleBatchOp(@BatchOpsManager.OpType int op, @StringRes int msg) {
+    private void handleBatchOp(@BatchOpsManager.OpType int op) {
         showProgressIndicator(true);
+        Intent intent = new Intent(this, BatchOpsService.class);
+        intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(mModel.getSelectedPackages()));
+        intent.putExtra(BatchOpsService.EXTRA_OP, op);
+        ContextCompat.startForegroundService(this, intent);
         new Thread(() -> {
-            if (!mBatchOpsManager.performOp(op, new ArrayList<>(mModel.getSelectedPackages())).isSuccessful()) {
-                runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
-                        .setTitle(msg)
-                        .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
-                                mBatchOpsManager.getLastResult().failedPackages()), null)
-                        .setNegativeButton(android.R.string.ok, null)
-                        .show());
-            } else {
-                runOnUiThread(() -> Toast.makeText(this,
-                        R.string.the_operation_was_successful, Toast.LENGTH_LONG).show());
-            }
             mAdapter.clearSelection();
-            runOnUiThread(() -> {
-                handleSelection();
-                showProgressIndicator(false);
-            });
+            runOnUiThread(this::handleSelection);
         }).start();
     }
 

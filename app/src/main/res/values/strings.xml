@@ -302,7 +302,7 @@
     <string name="alert_failed_to_uninstall">Failed to uninstall some packages</string>
     <string name="alert_failed_to_disable_background">Failed to disable run in background for some packages</string>
     <string name="the_operation_was_successful">The operation was successful</string>
-    <string name="alert_failed_to_kill">Failed to kill some processes</string>
+    <string name="alert_failed_to_force_stop">Failed to force stop some apps</string>
     <string name="toggle_kill_for_system_apps">Toggle kill for system apps</string>
     <string name="app_op_cannot_be_enabled">This app op cannot be enabled, possibly a read-only app op depended on another app op.</string>
     <string name="app_op_cannot_be_disabled">This app op cannot be disabled, possibly a read-only app op depended on another app op.</string>
@@ -478,4 +478,6 @@
     <string name="installer_error_storage">Not enough storage space to install the app</string>
     <string name="installer_error_generic">Installation failed</string>
     <string name="installer_error_lidl_rom">Your ROM is incompatible with rootless installer.</string>
+    <string name="failed_to_fetch_package_info">Failed to fetch package info</string>
+    <string name="batch_ops">Batch Operations</string>
 </resources>

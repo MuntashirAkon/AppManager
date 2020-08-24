@@ -39,6 +39,16 @@
         <item name="colorPrimaryDark" tools:targetApi="m">@color/colorPrimaryDark</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
+    <style name="AppTheme.TransparentBackground" parent="@style/AppTheme">
+        <item name="android:background">@null</item>
+        <item name="background">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
     <style name="AppTheme.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Primary">
         <item name="android:backgroundTintMode">add</item>
         <item name="android:backgroundTint">#000</item>
