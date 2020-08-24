@@ -24,10 +24,13 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -35,6 +38,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.misc.AlertDialogActivity;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class BatchOpsService extends IntentService {
     /**
@@ -76,14 +80,17 @@ public class BatchOpsService extends IntentService {
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        int op = -1;
+        if (intent != null) op = intent.getIntExtra(EXTRA_OP, -1);
         createNotificationChannel();
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(getString(R.string.batch_ops))
-                .setContentText(null)  // TODO: Add suitable string based on op value
+                .setContentTitle(getDesiredOpTitle(op))
+                .setContentText(getString(R.string.operation_running))
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSubText(getString(R.string.batch_ops))
                 .setContentIntent(pendingIntent)
                 .build();
         startForeground(NOTIFICATION_ID, notification);
@@ -108,13 +115,13 @@ public class BatchOpsService extends IntentService {
         BatchOpsManager.Result result = batchOpsManager.performOp(op, packages);
         if (result.isSuccessful()) {
             sendResults(op, Activity.RESULT_OK, null);
-        } else sendResults(op, Activity.RESULT_FIRST_USER,
-                new ArrayList<>(result.failedPackages()));
+        } else {
+            sendResults(op, Activity.RESULT_FIRST_USER, packagesToAppLabels(result.failedPackages()));
+        }
     }
 
     private void sendResults(int op, int result, @Nullable ArrayList<String> failedPackages) {
-        Intent intent = new Intent(ACTION_BATCH_OPS);
-        sendBroadcast(intent);
+        sendBroadcast(new Intent(ACTION_BATCH_OPS));
         sendNotification(op, result, failedPackages);
     }
 
@@ -128,13 +135,15 @@ public class BatchOpsService extends IntentService {
     }
 
     private void sendNotification(int op, int result, @Nullable ArrayList<String> failedPackages) {
+        String contentTitle = getDesiredOpTitle(op);
         NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this);
         builder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setTicker(getString(R.string.batch_ops))
-                .setContentTitle(getString(R.string.batch_ops));
+                .setTicker(contentTitle)
+                .setContentTitle(contentTitle)
+                .setSubText(getString(R.string.batch_ops));
         switch (result) {
             case Activity.RESULT_CANCELED:  // Cancelled
                 break;
@@ -142,6 +151,7 @@ public class BatchOpsService extends IntentService {
                 builder.setContentText(getString(R.string.the_operation_was_successful));
                 break;
             case Activity.RESULT_FIRST_USER:  // Failed
+                String detailsMessage = getString(R.string.full_stop_tap_to_see_details);
                 if (failedPackages != null) {
                     String message = getDesiredErrorString(op, failedPackages.size());
                     Intent intent = new Intent(this, AlertDialogActivity.class);
@@ -150,10 +160,48 @@ public class BatchOpsService extends IntentService {
                     PendingIntent pendingIntent = PendingIntent.getActivity(this,
                             0, intent, PendingIntent.FLAG_ONE_SHOT);
                     builder.setContentIntent(pendingIntent);
-                    builder.setContentText(message);
-                } else builder.setContentText(getString(R.string.error));
+                    builder.setContentText(message + detailsMessage);
+                } else builder.setContentText(getString(R.string.error) + detailsMessage);
         }
         NotificationUtils.displayHighPriorityNotification(builder.build());
+    }
+
+    @Nullable
+    private ArrayList<String> packagesToAppLabels(@Nullable List<String> packages) {
+        if (packages == null) return null;
+        ArrayList<String> appLabels = new ArrayList<>();
+        PackageManager pm = getPackageManager();
+        for (String packageName : packages) {
+            appLabels.add(PackageUtils.getPackageLabel(pm, packageName));
+        }
+        return appLabels;
+    }
+
+    @NonNull
+    private String getDesiredOpTitle(@BatchOpsManager.OpType int op) {
+        switch (op) {
+            case BatchOpsManager.OP_BACKUP:
+            case BatchOpsManager.OP_DELETE_BACKUP:
+            case BatchOpsManager.OP_RESTORE_BACKUP:
+                return getString(R.string.backup_restore);
+            case BatchOpsManager.OP_BACKUP_APK:
+                return getString(R.string.backup_apk);
+            case BatchOpsManager.OP_BLOCK_TRACKERS:
+                return getString(R.string.block_trackers);
+            case BatchOpsManager.OP_CLEAR_DATA:
+                return getString(R.string.clear_data);
+            case BatchOpsManager.OP_DISABLE:
+                return getString(R.string.disable);
+            case BatchOpsManager.OP_DISABLE_BACKGROUND:
+                return getString(R.string.disable_background);
+            case BatchOpsManager.OP_EXPORT_RULES:
+                return getString(R.string.export_blocking_rules);
+            case BatchOpsManager.OP_FORCE_STOP:
+                return getString(R.string.force_stop);
+            case BatchOpsManager.OP_UNINSTALL:
+                return getString(R.string.uninstall);
+        }
+        return getString(R.string.batch_ops);
     }
 
     private String getDesiredErrorString(@BatchOpsManager.OpType int op, int failedCount) {

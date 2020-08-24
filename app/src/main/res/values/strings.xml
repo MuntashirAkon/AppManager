@@ -501,4 +501,6 @@
     <string name="installer_error_lidl_rom">Your ROM is incompatible with rootless installer.</string>
     <string name="failed_to_fetch_package_info">Failed to fetch package info</string>
     <string name="batch_ops">Batch Operations</string>
+    <string name="operation_running">Operation running…</string>
+    <string name="full_stop_tap_to_see_details">. Tap to see details.</string>
 </resources>
