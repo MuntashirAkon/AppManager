@@ -74,20 +74,22 @@ public class BatchOpsService extends IntentService {
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.BATCH_OPS";
     public static final int NOTIFICATION_ID = 1;
 
+    private @BatchOpsManager.OpType int op = BatchOpsManager.OP_NONE;
+    private int flags = 0;
+
     public BatchOpsService() {
         super("BatchOpsService");
     }
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        int op = -1;
-        if (intent != null) op = intent.getIntExtra(EXTRA_OP, -1);
+        if (intent != null) op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
         createNotificationChannel();
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(getDesiredOpTitle(op))
+                .setContentTitle(getDesiredOpTitle())
                 .setContentText(getString(R.string.operation_running))
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setSubText(getString(R.string.batch_ops))
@@ -100,29 +102,29 @@ public class BatchOpsService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent == null) {
-            sendResults(-1, Activity.RESULT_CANCELED, null);
+            sendResults(Activity.RESULT_CANCELED, null);
             return;
         }
-        @BatchOpsManager.OpType int op = intent.getIntExtra(EXTRA_OP, -1);
-        int flags = intent.getIntExtra(EXTRA_OP_FLAGS, 0);
+        op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
+        flags = intent.getIntExtra(EXTRA_OP_FLAGS, 0);
         ArrayList<String> packages = intent.getStringArrayListExtra(EXTRA_OP_PKG);
-        if (op == -1 || packages == null) {
-            sendResults(op, Activity.RESULT_CANCELED, null);
+        if (op == BatchOpsManager.OP_NONE || packages == null) {
+            sendResults(Activity.RESULT_CANCELED, null);
             return;
         }
         BatchOpsManager batchOpsManager = new BatchOpsManager();
         batchOpsManager.setFlags(flags);
         BatchOpsManager.Result result = batchOpsManager.performOp(op, packages);
         if (result.isSuccessful()) {
-            sendResults(op, Activity.RESULT_OK, null);
+            sendResults(Activity.RESULT_OK, null);
         } else {
-            sendResults(op, Activity.RESULT_FIRST_USER, packagesToAppLabels(result.failedPackages()));
+            sendResults(Activity.RESULT_FIRST_USER, packagesToAppLabels(result.failedPackages()));
         }
     }
 
-    private void sendResults(int op, int result, @Nullable ArrayList<String> failedPackages) {
+    private void sendResults(int result, @Nullable ArrayList<String> failedPackages) {
         sendBroadcast(new Intent(ACTION_BATCH_OPS));
-        sendNotification(op, result, failedPackages);
+        sendNotification(result, failedPackages);
     }
 
     private void createNotificationChannel() {
@@ -134,8 +136,8 @@ public class BatchOpsService extends IntentService {
         }
     }
 
-    private void sendNotification(int op, int result, @Nullable ArrayList<String> failedPackages) {
-        String contentTitle = getDesiredOpTitle(op);
+    private void sendNotification(int result, @Nullable ArrayList<String> failedPackages) {
+        String contentTitle = getDesiredOpTitle();
         NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this);
         builder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
@@ -153,8 +155,10 @@ public class BatchOpsService extends IntentService {
             case Activity.RESULT_FIRST_USER:  // Failed
                 String detailsMessage = getString(R.string.full_stop_tap_to_see_details);
                 if (failedPackages != null) {
-                    String message = getDesiredErrorString(op, failedPackages.size());
+                    String message = getDesiredErrorString(failedPackages.size());
                     Intent intent = new Intent(this, AlertDialogActivity.class);
+                    intent.putExtra(EXTRA_OP, op);
+                    intent.putExtra(EXTRA_OP_FLAGS, flags);
                     intent.putExtra(EXTRA_FAILURE_MESSAGE, message);
                     intent.putStringArrayListExtra(EXTRA_FAILED_PKG, failedPackages);
                     PendingIntent pendingIntent = PendingIntent.getActivity(this,
@@ -178,7 +182,7 @@ public class BatchOpsService extends IntentService {
     }
 
     @NonNull
-    private String getDesiredOpTitle(@BatchOpsManager.OpType int op) {
+    private String getDesiredOpTitle() {
         switch (op) {
             case BatchOpsManager.OP_BACKUP:
             case BatchOpsManager.OP_DELETE_BACKUP:
@@ -200,11 +204,12 @@ public class BatchOpsService extends IntentService {
                 return getString(R.string.force_stop);
             case BatchOpsManager.OP_UNINSTALL:
                 return getString(R.string.uninstall);
+            case BatchOpsManager.OP_NONE:
         }
         return getString(R.string.batch_ops);
     }
 
-    private String getDesiredErrorString(@BatchOpsManager.OpType int op, int failedCount) {
+    private String getDesiredErrorString(int failedCount) {
         switch (op) {
             case BatchOpsManager.OP_BACKUP:
                 return getResources().getQuantityString(R.plurals.alert_failed_to_backup, failedCount, failedCount);
@@ -228,6 +233,7 @@ public class BatchOpsService extends IntentService {
                 return getResources().getQuantityString(R.plurals.alert_failed_to_force_stop, failedCount, failedCount);
             case BatchOpsManager.OP_UNINSTALL:
                 return getResources().getQuantityString(R.plurals.alert_failed_to_uninstall, failedCount, failedCount);
+            case BatchOpsManager.OP_NONE:
         }
         return getString(R.string.error);
     }

@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.misc;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 
@@ -26,6 +27,9 @@ import java.util.ArrayList;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 
 public class AlertDialogActivity extends AppCompatActivity {
@@ -39,6 +43,8 @@ public class AlertDialogActivity extends AppCompatActivity {
         // Check for failed batch ops
         ArrayList<String> failedPackages = getIntent().getStringArrayListExtra(BatchOpsService.EXTRA_FAILED_PKG);
         String failureMessage = getIntent().getStringExtra(BatchOpsService.EXTRA_FAILURE_MESSAGE);
+        int op = getIntent().getIntExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_NONE);
+        int flags = getIntent().getIntExtra(BatchOpsService.EXTRA_OP_FLAGS, 0);
         // Failed
         if (failedPackages != null) {
             new MaterialAlertDialogBuilder(this)
@@ -46,6 +52,13 @@ public class AlertDialogActivity extends AppCompatActivity {
                     .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
                             failedPackages), null)
                     .setNegativeButton(android.R.string.ok, null)
+                    .setPositiveButton(R.string.try_again, (dialog, which) -> {
+                        Intent intent = new Intent(this, BatchOpsService.class);
+                        intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, failedPackages);
+                        intent.putExtra(BatchOpsService.EXTRA_OP, op);
+                        intent.putExtra(BatchOpsService.EXTRA_OP_FLAGS, flags);
+                        ContextCompat.startForegroundService(this, intent);
+                    })
                     .setOnDismissListener(dialog -> finish())
                     .show();
         }

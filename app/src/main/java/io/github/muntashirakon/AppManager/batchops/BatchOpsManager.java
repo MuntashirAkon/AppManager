@@ -37,6 +37,7 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
 public class BatchOpsManager {
     @IntDef(value = {
+            OP_NONE,
             OP_BACKUP_APK,
             OP_BACKUP,
             OP_BLOCK_TRACKERS,
@@ -49,7 +50,10 @@ public class BatchOpsManager {
             OP_RESTORE_BACKUP,
             OP_UNINSTALL
     })
-    public @interface OpType {}
+    public @interface OpType {
+    }
+
+    public static final int OP_NONE = -1;
     public static final int OP_BACKUP_APK = 0;
     public static final int OP_BACKUP = 1;
     public static final int OP_BLOCK_TRACKERS = 2;
@@ -81,19 +85,31 @@ public class BatchOpsManager {
         this.runner.clear();
         this.packageNames = packageNames;
         switch (op) {
-            case OP_BACKUP_APK: return opBackupApk();
-            case OP_BACKUP: return opBackupRestore(BackupDialogFragment.MODE_BACKUP);
-            case OP_BLOCK_TRACKERS: return opBlockTrackers();
-            case OP_CLEAR_DATA: return opClearData();
-            case OP_DELETE_BACKUP: return opBackupRestore(BackupDialogFragment.MODE_DELETE);
-            case OP_DISABLE: return opDisable();
-            case OP_DISABLE_BACKGROUND: return opDisableBackground();
-            case OP_EXPORT_RULES: break;  // Done in the main activity
-            case OP_FORCE_STOP: return opForceStop();
-            case OP_RESTORE_BACKUP: return opBackupRestore(BackupDialogFragment.MODE_RESTORE);
-            case OP_UNINSTALL: return opUninstall();
+            case OP_BACKUP_APK:
+                return opBackupApk();
+            case OP_BACKUP:
+                return opBackupRestore(BackupDialogFragment.MODE_BACKUP);
+            case OP_BLOCK_TRACKERS:
+                return opBlockTrackers();
+            case OP_CLEAR_DATA:
+                return opClearData();
+            case OP_DELETE_BACKUP:
+                return opBackupRestore(BackupDialogFragment.MODE_DELETE);
+            case OP_DISABLE:
+                return opDisable();
+            case OP_DISABLE_BACKGROUND:
+                return opDisableBackground();
+            case OP_EXPORT_RULES:
+                break;  // Done in the main activity
+            case OP_FORCE_STOP:
+                return opForceStop();
+            case OP_RESTORE_BACKUP:
+                return opBackupRestore(BackupDialogFragment.MODE_RESTORE);
+            case OP_UNINSTALL:
+                return opUninstall();
+            case OP_NONE:
         }
-        lastResult = new Result() {
+        return lastResult = new Result() {
             @Override
             public boolean isSuccessful() {
                 return false;
@@ -105,7 +121,6 @@ public class BatchOpsManager {
                 return new ArrayList<>();
             }
         };
-        return lastResult;
     }
 
     @Nullable
@@ -115,7 +130,7 @@ public class BatchOpsManager {
 
     private Result opBackupApk() {
         List<String> failedPackages = new ArrayList<>();
-        for (String packageName: packageNames) {
+        for (String packageName : packageNames) {
             if (!ApkUtils.backupApk(packageName)) failedPackages.add(packageName);
         }
         return lastResult = new Result() {
@@ -134,7 +149,7 @@ public class BatchOpsManager {
 
     private Result opBackupRestore(@BackupDialogFragment.ActionMode int mode) {
         List<String> failedPackages = new ArrayList<>();
-        for (String packageName: packageNames) {
+        for (String packageName : packageNames) {
             try (BackupStorageManager backupStorageManager = BackupStorageManager.getInstance(packageName)) {
                 backupStorageManager.setFlags(flags);
                 switch (mode) {
@@ -182,7 +197,7 @@ public class BatchOpsManager {
 
     @NonNull
     private Result opClearData() {
-        for (String packageName: packageNames) {
+        for (String packageName : packageNames) {
             addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_CLEAR_PACKAGE_DATA, packageName));
         }
         return runOpAndFetchResults();
@@ -190,7 +205,7 @@ public class BatchOpsManager {
 
     @NonNull
     private Result opDisable() {
-        for (String packageName: packageNames) {
+        for (String packageName : packageNames) {
             addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_DISABLE_PACKAGE, packageName));
         }
         return runOpAndFetchResults();
@@ -198,12 +213,12 @@ public class BatchOpsManager {
 
     @NonNull
     private Result opDisableBackground() {
-        for (String packageName: packageNames) {
+        for (String packageName : packageNames) {
             addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_APP_OPS_SET_MODE_INT, packageName, 63, AppOpsManager.MODE_IGNORED));
         }
         Result result = runOpAndFetchResults();
         List<String> failedPackages = result.failedPackages();
-        for (String packageName: packageNames) {
+        for (String packageName : packageNames) {
             if (!failedPackages.contains(packageName)) {
                 try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
                     cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
@@ -223,7 +238,7 @@ public class BatchOpsManager {
 
     @NonNull
     private Result opUninstall() {
-        for (String packageName: packageNames) {
+        for (String packageName : packageNames) {
             addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_UNINSTALL_PACKAGE, packageName));
         }
         return runOpAndFetchResults();
@@ -257,6 +272,8 @@ public class BatchOpsManager {
 
     public interface Result {
         boolean isSuccessful();
-        @NonNull List<String> failedPackages();
+
+        @NonNull
+        List<String> failedPackages();
     }
 }
