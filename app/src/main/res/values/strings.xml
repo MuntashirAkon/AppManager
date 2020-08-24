@@ -17,6 +17,9 @@
 
 <resources>
     <string name="app_name" translatable="false">App Manager</string>
+    <string name="instructions_header">[These instructions are outdated and will no longer be
+        updated. Visit the official docs site (https://muntashirakon.github.io/AppManager) to get
+        up-to-date information]</string>
     <string name="uninstall">Uninstall</string>
     <string name="permissions">Uses permissions</string>
     <string name="require_no_permission">No permission required</string>
@@ -504,4 +507,5 @@
     <string name="operation_running">Operation running…</string>
     <string name="full_stop_tap_to_see_details">. Tap to see details.</string>
     <string name="try_again">Try again</string>
+    <string name="info">Info</string>
 </resources>
