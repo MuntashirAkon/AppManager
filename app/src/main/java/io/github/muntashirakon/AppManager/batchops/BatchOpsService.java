@@ -29,7 +29,6 @@ import android.os.Build;
 import java.util.ArrayList;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -42,6 +41,10 @@ public class BatchOpsService extends IntentService {
      * Name of the batch operation, integer value.
      */
     public static final String EXTRA_OP = "EXTRA_OP";
+    /**
+     * Flags set for the batch operation
+     */
+    public static final String EXTRA_OP_FLAGS = "EXTRA_OP_FLAGS";
     /**
      * An ArrayList of package names (string value) on which operations will be carried out.
      */
@@ -94,16 +97,19 @@ public class BatchOpsService extends IntentService {
             return;
         }
         @BatchOpsManager.OpType int op = intent.getIntExtra(EXTRA_OP, -1);
+        int flags = intent.getIntExtra(EXTRA_OP_FLAGS, 0);
         ArrayList<String> packages = intent.getStringArrayListExtra(EXTRA_OP_PKG);
         if (op == -1 || packages == null) {
             sendResults(op, Activity.RESULT_CANCELED, null);
             return;
         }
         BatchOpsManager batchOpsManager = new BatchOpsManager();
-        if (batchOpsManager.performOp(op, packages).isSuccessful()) {
+        batchOpsManager.setFlags(flags);
+        BatchOpsManager.Result result = batchOpsManager.performOp(op, packages);
+        if (result.isSuccessful()) {
             sendResults(op, Activity.RESULT_OK, null);
         } else sendResults(op, Activity.RESULT_FIRST_USER,
-                new ArrayList<>(batchOpsManager.getLastResult().failedPackages()));
+                new ArrayList<>(result.failedPackages()));
     }
 
     private void sendResults(int op, int result, @Nullable ArrayList<String> failedPackages) {
@@ -136,41 +142,45 @@ public class BatchOpsService extends IntentService {
                 builder.setContentText(getString(R.string.the_operation_was_successful));
                 break;
             case Activity.RESULT_FIRST_USER:  // Failed
-                String message = getString(getDesiredErrorString(op));
-                Intent intent = new Intent(this, AlertDialogActivity.class);
-                intent.putExtra(EXTRA_FAILURE_MESSAGE, message);
-                intent.putStringArrayListExtra(EXTRA_FAILED_PKG, failedPackages);
-                PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                        0, intent, 0);
-                builder.setContentIntent(pendingIntent);
-                builder.setContentText(getString(getDesiredErrorString(op)));
+                if (failedPackages != null) {
+                    String message = getDesiredErrorString(op, failedPackages.size());
+                    Intent intent = new Intent(this, AlertDialogActivity.class);
+                    intent.putExtra(EXTRA_FAILURE_MESSAGE, message);
+                    intent.putStringArrayListExtra(EXTRA_FAILED_PKG, failedPackages);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                            0, intent, 0);
+                    builder.setContentIntent(pendingIntent);
+                    builder.setContentText(message);
+                } else builder.setContentText(getString(R.string.error));
         }
         NotificationUtils.displayHighPriorityNotification(builder.build());
     }
 
-    private @StringRes
-    int getDesiredErrorString(@BatchOpsManager.OpType int op) {
+    private String getDesiredErrorString(@BatchOpsManager.OpType int op, int failedCount) {
         switch (op) {
             case BatchOpsManager.OP_BACKUP:
+                return getResources().getQuantityString(R.plurals.alert_failed_to_backup, failedCount, failedCount);
             case BatchOpsManager.OP_DELETE_BACKUP:
+                return getResources().getQuantityString(R.plurals.alert_failed_to_delete_backup, failedCount, failedCount);
             case BatchOpsManager.OP_RESTORE_BACKUP:
+                return getResources().getQuantityString(R.plurals.alert_failed_to_restore, failedCount, failedCount);
             case BatchOpsManager.OP_EXPORT_RULES:
                 break;
             case BatchOpsManager.OP_BACKUP_APK:
-                return R.string.failed_to_backup_some_apk_files;
+                return getResources().getQuantityString(R.plurals.failed_to_backup_some_apk_files, failedCount, failedCount);
             case BatchOpsManager.OP_BLOCK_TRACKERS:
-                return R.string.alert_failed_to_disable_trackers;
+                return getResources().getQuantityString(R.plurals.alert_failed_to_disable_trackers, failedCount, failedCount);
             case BatchOpsManager.OP_CLEAR_DATA:
-                return R.string.alert_failed_to_clear_data;
+                return getResources().getQuantityString(R.plurals.alert_failed_to_clear_data, failedCount, failedCount);
             case BatchOpsManager.OP_DISABLE:
-                return R.string.alert_failed_to_disable;
+                return getResources().getQuantityString(R.plurals.alert_failed_to_disable, failedCount, failedCount);
             case BatchOpsManager.OP_DISABLE_BACKGROUND:
-                return R.string.alert_failed_to_disable_background;
+                return getResources().getQuantityString(R.plurals.alert_failed_to_disable_background, failedCount, failedCount);
             case BatchOpsManager.OP_FORCE_STOP:
-                return R.string.alert_failed_to_force_stop;
+                return getResources().getQuantityString(R.plurals.alert_failed_to_force_stop, failedCount, failedCount);
             case BatchOpsManager.OP_UNINSTALL:
-                return R.string.alert_failed_to_uninstall;
+                return getResources().getQuantityString(R.plurals.alert_failed_to_uninstall, failedCount, failedCount);
         }
-        return 0;
+        return getString(R.string.error);
     }
 }

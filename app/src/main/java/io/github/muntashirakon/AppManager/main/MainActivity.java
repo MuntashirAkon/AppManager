@@ -67,8 +67,6 @@ import java.util.concurrent.TimeUnit;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.PluralsRes;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -288,32 +286,10 @@ public class MainActivity extends AppCompatActivity implements
                     args.putStringArrayList(BackupDialogFragment.ARG_PACKAGES, new ArrayList<>(mModel.getSelectedPackages()));
                     backupDialogFragment.setArguments(args);
                     backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
-                    backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> {
-                        if (failedPackages.length > 0) {
-                            @PluralsRes int desiredString;
-                            switch (mode) {
-                                case BackupDialogFragment.MODE_DELETE:
-                                    desiredString = R.plurals.alert_failed_to_delete_backup;
-                                    break;
-                                case BackupDialogFragment.MODE_RESTORE:
-                                    desiredString = R.plurals.alert_failed_to_restore;
-                                    break;
-                                default:
-                                    desiredString = R.plurals.alert_failed_to_backup;
-                            }
-                            new MaterialAlertDialogBuilder(this)
-                                    .setTitle(getResources().getQuantityString(desiredString, failedPackages.length, failedPackages.length))
-                                    .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, failedPackages), null)
-                                    .setNegativeButton(android.R.string.ok, null)
-                                    .show();
-                        } else {
-                            Toast.makeText(this, R.string.the_operation_was_successful, Toast.LENGTH_LONG).show();
-                        }
-                        mAdapter.clearSelection();
-                        handleSelection();
-                        showProgressIndicator(false);
-                    });
+                    backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
                     backupDialogFragment.show(getSupportFragmentManager(), BackupDialogFragment.TAG);
+                    mAdapter.clearSelection();
+                    handleSelection();
                     return true;
                 case R.id.action_backup_apk:
                     if (requestExternalStoragePermissions(this)) {

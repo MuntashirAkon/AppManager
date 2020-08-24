@@ -244,25 +244,7 @@ public class AppInfoFragment extends Fragment
                 args.putStringArrayList(BackupDialogFragment.ARG_PACKAGES, new ArrayList<>(Collections.singleton(mPackageName)));
                 backupDialogFragment.setArguments(args);
                 backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
-                backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> {
-                    if (failedPackages.length > 0) {
-                        @StringRes int desiredString;
-                        switch (mode) {
-                            case BackupDialogFragment.MODE_DELETE:
-                                desiredString = R.string.failed_to_delete_backup;
-                                break;
-                            case BackupDialogFragment.MODE_RESTORE:
-                                desiredString = R.string.failed_to_restore_backup;
-                                break;
-                            default:
-                                desiredString = R.string.failed_to_backup;
-                        }
-                        Toast.makeText(mActivity, desiredString, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(mActivity, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
-                    }
-                    showProgressIndicator(false);
-                });
+                backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
                 backupDialogFragment.show(mActivity.getSupportFragmentManager(), BackupDialogFragment.TAG);
                 return true;
             case R.id.action_view_settings:

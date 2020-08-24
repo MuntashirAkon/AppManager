@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
@@ -34,7 +35,6 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
-// TODO: Will be converted to service one day
 public class BatchOpsManager {
     @IntDef(value = {
             OP_BACKUP_APK,
@@ -108,6 +108,7 @@ public class BatchOpsManager {
         return lastResult;
     }
 
+    @Nullable
     public Result getLastResult() {
         return lastResult;
     }
@@ -242,13 +243,13 @@ public class BatchOpsManager {
         lastResult = new Result() {
             @Override
             public boolean isSuccessful() {
-                return result != null && TextUtils.isEmpty(result.getOutput());
+                return TextUtils.isEmpty(result.getOutput());
             }
 
             @NonNull
             @Override
             public List<String> failedPackages() {
-                return result == null ? packageNames : result.getOutputAsList();
+                return result.getOutputAsList();
             }
         };
         return lastResult;

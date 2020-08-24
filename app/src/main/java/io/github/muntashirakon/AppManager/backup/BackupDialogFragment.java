@@ -18,6 +18,10 @@
 package io.github.muntashirakon.AppManager.backup;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -30,10 +34,12 @@ import java.util.List;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 import static io.github.muntashirakon.AppManager.utils.Utils.requestExternalStoragePermissions;
@@ -57,7 +63,17 @@ public class BackupDialogFragment extends DialogFragment {
             | BackupStorageManager.BACKUP_RULES;
     private @ActionMode int mode = MODE_BACKUP;
     private List<String> packageNames;
-    FragmentActivity activity;
+    private FragmentActivity activity;
+    private BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (actionCompleteInterface != null) {
+                BatchOpsManager.Result result = new BatchOpsManager().getLastResult();
+                actionCompleteInterface.onActionComplete(mode, result != null ? result.failedPackages().toArray(new String[0]) : new String[0]);
+            }
+            activity.unregisterReceiver(mBatchOpsBroadCastReceiver);
+        }
+    };
 
     public interface ActionCompleteInterface {
         void onActionComplete(@ActionMode int mode, @NonNull String[] failedPackages);
@@ -136,8 +152,6 @@ public class BackupDialogFragment extends DialogFragment {
     }
 
     public void handleMode() {
-        BatchOpsManager batchOpsManager = new BatchOpsManager();
-        batchOpsManager.setFlags(flags);
         @BatchOpsManager.OpType int op;
         switch (mode) {
             case MODE_DELETE: op = BatchOpsManager.OP_DELETE_BACKUP; break;
@@ -146,12 +160,12 @@ public class BackupDialogFragment extends DialogFragment {
             default: op = BatchOpsManager.OP_BACKUP;
         }
         if (actionBeginInterface != null) actionBeginInterface.onActionBegin(mode);
-        new Thread(() -> {
-            batchOpsManager.performOp(op, new ArrayList<>(packageNames));
-            if (actionCompleteInterface != null) {
-                activity.runOnUiThread(() -> actionCompleteInterface.onActionComplete(mode,
-                        batchOpsManager.getLastResult().failedPackages().toArray(new String[0])));
-            }
-        }).start();
+        activity.registerReceiver(mBatchOpsBroadCastReceiver, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS));
+        // Start batch ops service
+        Intent intent = new Intent(activity, BatchOpsService.class);
+        intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(packageNames));
+        intent.putExtra(BatchOpsService.EXTRA_OP, op);
+        intent.putExtra(BatchOpsService.EXTRA_OP_FLAGS, flags);
+        ContextCompat.startForegroundService(activity, intent);
     }
 }

@@ -297,12 +297,27 @@
     <string name="disable_background">Disable Background</string>
     <string name="export_blocking_rules">Export Blocking Rules</string>
     <string name="some_items_selected">%d selected</string>
-    <string name="alert_failed_to_clear_data">Failed to clear data of some packages</string>
-    <string name="alert_failed_to_disable">Failed to disable some packages</string>
-    <string name="alert_failed_to_uninstall">Failed to uninstall some packages</string>
-    <string name="alert_failed_to_disable_background">Failed to disable run in background for some packages</string>
+    <plurals name="alert_failed_to_clear_data">
+        <item quantity="one">Failed to clear data from %d app</item>
+        <item quantity="other">Failed to clear data from %d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_disable">
+        <item quantity="one">Failed to disable %d app</item>
+        <item quantity="other">Failed to disable %d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_uninstall">
+        <item quantity="one">Failed to uninstall %d app</item>
+        <item quantity="other">Failed to uninstall %d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_disable_background">
+        <item quantity="one">Failed to disable run in background for %d app</item>
+        <item quantity="other">Failed to disable run in background for %d apps</item>
+    </plurals>
     <string name="the_operation_was_successful">The operation was successful</string>
-    <string name="alert_failed_to_force_stop">Failed to force stop some apps</string>
+    <plurals name="alert_failed_to_force_stop">
+        <item quantity="one">Failed to force stop %d app</item>
+        <item quantity="other">Failed to force stop %d apps</item>
+    </plurals>
     <string name="toggle_kill_for_system_apps">Toggle kill for system apps</string>
     <string name="app_op_cannot_be_enabled">This app op cannot be enabled, possibly a read-only app op depended on another app op.</string>
     <string name="app_op_cannot_be_disabled">This app op cannot be disabled, possibly a read-only app op depended on another app op.</string>
@@ -352,7 +367,10 @@
     <string name="unknown_op">Unknown Operation</string>
     <string name="failed_to_disable_trackers">Failed to disable trackers</string>
     <string name="trackers_disabled_successfully">Trackers are successfully disabled</string>
-    <string name="alert_failed_to_disable_trackers">Failed to disable trackers for some packages</string>
+    <plurals name="alert_failed_to_disable_trackers">
+        <item quantity="one">Failed to disable trackers from %d app</item>
+        <item quantity="other">Failed to disable trackers from %d apps</item>
+    </plurals>
     <string name="failed_to_grant_permission">Failed to grant permission</string>
     <string name="failed_to_revoke_permission">Failed to revoke permission</string>
     <string name="failed_to_reset_app_ops">Failed to reset app ops</string>
@@ -432,7 +450,10 @@
     <string name="restore">Restore</string>
     <string name="delete_backup">Delete backup</string>
     <string name="backup_options">Backup Options</string>
-    <string name="failed_to_backup_some_apk_files">Failed to backup some apk files</string>
+    <plurals name="failed_to_backup_some_apk_files">
+        <item quantity="one">Failed to backup %d app</item>
+        <item quantity="other">Failed to backup %d apps</item>
+    </plurals>
     <plurals name="alert_failed_to_backup">
         <item quantity="one">Failed to backup %d app</item>
         <item quantity="other">Failed to backup %d apps</item>
@@ -442,8 +463,8 @@
         <item quantity="other">Failed to restore %d apps</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="one">Failed to delete backup %d app</item>
-        <item quantity="other">Failed to delete backup %d apps</item>
+        <item quantity="one">Failed to delete %d backup</item>
+        <item quantity="other">Failed to delete %d backups</item>
     </plurals>
     <string name="failed_to_delete_backup">Failed to delete backup</string>
     <string name="failed_to_restore_backup">Failed to restore backup</string>
