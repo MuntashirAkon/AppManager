@@ -9,11 +9,61 @@ sidebar: auto
 ![GitHub Repo Size](https://img.shields.io/github/repo-size/MuntashirAkon/AppManager)
 ![GitHub Commit per Week](https://img.shields.io/github/commit-activity/w/MuntashirAkon/AppManager)
 
-Currently supported versions are [v2.5.12](#v2-5-12-341), [v2.5.11](#v2-5-11-333) and [v2.5.10](#v2-5-10-324). Please update App Manager if you are using a version older than these.
+Currently supported versions are [v2.5.13](#v2-5-13-348), [v2.5.12](#v2-5-12-341), [v2.5.11](#v2-5-11-333) and [v2.5.10](#v2-5-10-324). Please update App Manager if you are using a version older than these.
 
 ::: details Table of Contents
 [[toc]]
 :::
+
+## v2.5.13 (348)
+### Bundled App (Split APK)
+Bundled app formats such as **apks** and **xapk** are now supported. You can install these apps using the regular install buttons. For root and adb users, apps are installed using shell, and for non-root users, the platform default method is used.
+
+**Known Limitations:**
+- Currently _all_ splits apks are installed. But this behaviour is going to change in the next release. If you only need a few splits instead of all, extract the **apks** or **xapk** file, and then, create a new zip file with your desired split apks and replace the **zip** extension with **apks**. Now, open it with AM.
+- There is no progress dialog to display the installation progress.
+
+### Direct Install Support
+You can now install **apk**, **apks** or **xapk** directly from your favourite browser or file manager. For apps that need updates, a **What's New** dialog is displayed showing the changes in the new version.
+
+**Known Limitations:**
+- Downgrade is not yet possible.
+- There is no progress dialog to display the installation progress. If you cannot interact with the current page, wait until the installation is finished.
+
+### Remove All Blocking Rules
+In the Settings page, a new option is added which can be used to remove all blocking rules configured within App Manager.
+
+### App Ops
+- App Ops are now generated using a technique similar to AppOpsX. This should decrease the loading time significantly in the App Ops tab.
+- In the App Ops tab, a menu item is added which can be used to list only active app ops without including the default app ops. This preferences is saved in the shared preferences.
+
+**Kown Limitations:** Often the App Ops tab may not be responsive. If that's the case, restart AM.
+
+### Enhanced ADB Support
+ADB shell commands are now executed using a technique similar to AppOpsX (This is the _free_ alternative of Shizuku.). This should dramatically increase the execution time.
+
+**Known Limitations:** AM can often crash or become not responsive. If that's the case, restart AM.
+
+### Filtering in Main Page
+Add an option to filter apps that has at least one activity.
+
+### Apk Backup/Sharing
+Apk files are now saved as `app name_version.extension` instead of `package.name.extension`.
+
+### Batch Ops
+- Added a foreground service to run batch operations. The result of the operation is displayed in a notification. If an operation has failed for some packages, clicking on the notification will open a dialog box listing the failed packages. There is also a **Try Again** button on the bottom which can be used to perform the operation again for the failed packages.
+- Replaced Linux _kill_ with **force-stop**.
+
+### Translations
+Added German and Portuguese (Brazilian) translations.
+
+**Known Limitations:** Not all translations are verified yet.
+
+### App Data Backup
+Install app only for the current user at the time of restoring backups. Support for split apks is also added.
+
+_Data backup feature is now considered unstable. If you encounter any problem, please report to me without hesitation._
+
 
 ## v2.5.12 (341)
 - <span><TagFeature/></span>  Added support for splitting data backups into 1GB files to circumvent the limitation of FAT32 file system

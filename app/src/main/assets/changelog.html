@@ -18,6 +18,24 @@
 <p>App Manager is now on F-Droid! Link: https://f-droid.org/packages/io.github.muntashirakon.AppManager</p><br />
 <p>Visit App Manager docs here: https://muntashirakon.github.io/AppManager</p><br />
 
+<h5>v2.5.13 (348):</h5>
+&#x2022; <font color="#09868B">[Feature]</font> Split apk install support (apks and xapk)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added an option to install apk (with apks and xapk) directly from FM or Browser<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added a new option to remove all blocking rules in settings page<br />
+&#x2022; <font color="#09868B">[Feature]</font> AppOpsX-like implementation for generating app ops as well as executing shell commands for ADB users. This is the "free" alternative of Shizuku.<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added an option to filter apps with activities in the main page<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added an option to display only the active app ops in the App Ops tab. This option is saved in the preferences<br />
+&#x2022; <font color="#09868B">[Feature]</font> Save apk files as "app name_version.extension"<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added a foreground service to run batch operations, result is displayed in the notifications<br />
+&#x2022; <font color="#09868B">[Feature]</font> Batch operations: Replaced kill with force-stop<br />
+&#x2022; <font color="#09868B">[Feature]</font> Batch operations: Added try again button for failed packages<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added German and Portuguese (Brazilian) translations<br />
+&#x2022; <font color="red">[Fix]</font> Fixed broken ADB support<br />
+&#x2022; <font color="red">[Fix]</font> Install app only for the current user at the time of restoring backups<br />
+
+<p>Data backup feature is now considered unstable. If you encounter any problem, please report to me without hesitation.</p><br />
+<p>Visit https://muntashirakon.github.io/AppManager/changelog.html for a more helpful changelog.</p><br />
+
 <h5>v2.5.12 (341):</h5>
 &#x2022; <font color="#09868B">[Feature]</font> Added support for splitting data backups into 1GB files to circumvent the limitation of FAT32 file system<br />
 &#x2022; <font color="#09868B">[Feature]</font> Added the ability to unblock trackers<br />
@@ -46,7 +64,6 @@
 &#x2022; <font color="red">[Fix]</font> Update external apk info on install/uninstall events<br />
 <p>To use Termux features, make sure you are using Termux v0.96 or later and <tt>allow-external-apps=true</tt> is added in <tt>~/.termux/termux.properties</tt>.</p><br />
 <p>Data backup feature is still considered experimental and please do not rely on it to manage your backups yet.</p><br />
-<p>Visit https://muntashirakon.github.io/AppManager/changelog.html for a more helpful changelog.</p><br />
 
 <h5>v2.5.11 (333):</h5>
 &#x2022; <font color="#09868B">[Feature]</font> Added experimental support for app data backup. Please test only on apps you don't need. (root only)<br />
@@ -135,13 +152,3 @@
 &#x2022; <font color="red">[Fix]</font> Fixed deleting all IFW rules when selecting apply global rules<br />
 &#x2022; <font color="red">[Fix]</font> Fixed various search issues<br />
 <br/>
-
-<h5>v2.5.7 (265):</h5>
-&#x2022; <font color="#09868B">[Feature]</font> Initial support for ADB over TCP (port 5555) for non-root users<br />
-&#x2022; <font color="red">[Fix]</font> Fixed importing rules from Watt and Blocker<br />
-&#x2022; <font color="red">[Fix]</font> Display Aurora Droid in App Info window as a first priority over F-Droid<br />
-&#x2022; <font color="red">[Fix]</font> Improved performance for component blocking<br />
-&#x2022; <font color="red">[Fix]</font> Fixed app op mode detection issue<br />
-<p>
-    <b>For root users:</b> If you've skipped v2.5.6, you may need to apply all rules globally in Settings in order for them to work.
-</p><br/>
