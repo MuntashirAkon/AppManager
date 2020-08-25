@@ -17,8 +17,8 @@
   -->
 
 <resources>
-    <string name="adb_over_tcp">ADB over TCP</string>
-    <string name="adb_over_tcp_description">Many root-only features can still be used by enabling
+    <string name="adb_over_tcp" translatable="false">ADB over TCP</string>
+    <string name="adb_over_tcp_description" translatable="false">Many root-only features can still be used by enabling
         ADB over TCP. To do that, a PC or Mac is required with ADB tools installed, and an Android
         phone with Developer Mode &amp; USB debugging enabled
         (<a href="https://www.xda-developers.com/install-adb-windows-macos-linux/">tutorial</a>).
@@ -34,8 +34,8 @@
         from this computer</i> and click <i>Allow</i>. In some other Android phones, the data cable
         may need to be connected or disconnected in order for it to work.
     </string>
-    <string name="main_window">Main Window</string>
-    <string name="main_window_description">Main window lists all the installed apps (or a list of
+    <string name="main_window" translatable="false">Main Window</string>
+    <string name="main_window_description" translatable="false">Main window lists all the installed apps (or a list of
         apps supplied by any third-party application). A single click on any app item opens the
         respective <b>App Details</b> window. Using the <i>sort</i> option from the menu, the app
         items can be sorted in various ways and preserved on close. It also possible to filter items
@@ -98,8 +98,8 @@
         \n\nIf you have <b>Termux</b> installed, you can directly go to the currently running or new
         session using the <i>Termux</i> option in the menu.
     </string>
-    <string name="app_details_window">App Details Window</string>
-    <string name="app_details_window_description">App Info tab contains general information about the
+    <string name="app_details_window" translatable="false">App Details Window</string>
+    <string name="app_details_window_description" translatable="false">App Info tab contains general information about the
         app such as app directories, data directories, sdk version, install date, last update date,
         installer app, data usage, app size, data size, cache size (some of these information
         require <i>Usage Access</i> permission). It also has the ability to perform many actions,
@@ -165,8 +165,8 @@
         update the app within App Manager. For updates, the <b>What\'s New</b> button can be used to
         see changes in application components, trackers, permissions, etc.
     </string>
-    <string name="one_click_ops_window">1-Click Ops Window</string>
-    <string name="one_click_ops_window_description">This window appears after clicking on the
+    <string name="one_click_ops_window" translatable="false">1-Click Ops Window</string>
+    <string name="one_click_ops_window_description" translatable="false">This window appears after clicking on the
         <b>1-Click Ops</b> option in the main menu. Currently supported operations include:
         \n\u2022 <b>Block Trackers</b>: This option can be used to block ad/tracker components from
         all the installed apps. When clicking on this option, you will be offered to select whether
@@ -194,8 +194,8 @@
         them, you should not use this feature as it may result in boot loop or soft brick and you
         may have to apply factory reset in order to use your OS.
     </string>
-    <string name="exodus_window">\u03b5xodus Window</string>
-    <string name="exodus_window_description">\u03b5xodus window appears after clicking on the
+    <string name="exodus_window" translatable="false">\u03b5xodus Window</string>
+    <string name="exodus_window_description" translatable="false">\u03b5xodus window appears after clicking on the
         <i>\u03b5xodus</i> button in the <b>App Info</b> tab in the <b>App Details</b> window. It
         scans for trackers and displays a list of trackers and their classes as a summary. A list
         of tracker classes for the given app is also displayed. All the classes of the app can also
@@ -209,14 +209,14 @@
         \n\u2022 µ: Micro non-intrusive
         \n\u2022 ?: Unconfirmed
     </string>
-    <string name="shared_prefs_window">Shared Preferences Editor Window</string>
-    <string name="shared_prefs_window_description">Shared preferences can be edited in this window.
+    <string name="shared_prefs_window" translatable="false">Shared Preferences Editor Window</string>
+    <string name="shared_prefs_window_description" translatable="false">Shared preferences can be edited in this window.
         Clicking any item on the list opens the edit dialog where the item can be edited. The
         floating action button on the bottom-right corner can be used to add a new item. To save or
         delete the file, or discard current changes, the respective options in the menu can be used.
     </string>
-    <string name="settings_window">Settings</string>
-    <string name="settings_window_description">Settings can be used to customize the behavior of the
+    <string name="settings_window" translatable="false">Settings</string>
+    <string name="settings_window_description" translatable="false">Settings can be used to customize the behavior of the
         app. These customizations are described below:
         \n\u2022 <b>App theme</b>: Application theme selection
         \n\u2022 <b>Root mode</b>: Enable or disable root mode. To use ADB, root mode has to be
@@ -235,8 +235,8 @@
         a single app, use the respective <b>App Details</b> window to export rules, or for multiple
         apps, use the batch operation available in the main window.
     </string>
-    <string name="miscellany">Miscellany</string>
-    <string name="miscellany_description">It is also possible to view apk info, manifest or scan
+    <string name="miscellany" translatable="false">Miscellany</string>
+    <string name="miscellany_description" translatable="false">It is also possible to view apk info, manifest or scan
     for trackers using \u03b5xodus from an external app or file manager. To do that, open the apk
     with App Manager.</string>
 </resources>
