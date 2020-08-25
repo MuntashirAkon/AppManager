@@ -56,7 +56,8 @@ public final class PackageInstallerShell implements IPackageInstaller {
         }
         // Create install session
         StringBuilder cmd = new StringBuilder(installCmd).append(" install-create -r -S ")
-                .append(totalSize).append(" -i ").append(BuildConfig.APPLICATION_ID);
+                .append(totalSize).append(" -i ").append(BuildConfig.APPLICATION_ID)
+                .append(" --user 0");
         for (File apkFile : apkFiles)
             cmd.append(" \"").append(apkFile.getAbsolutePath()).append("\"");
         Runner.Result result = Runner.runCommand(cmd.toString());

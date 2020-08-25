@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.apk;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 
 import com.google.classysharkandroid.utils.UriUtils;
@@ -111,7 +112,9 @@ public class ApkFile implements AutoCloseable {
             entries.add(baseEntry);
         } else {
             isSplit = true;
-            File destDir = new File(context.getFilesDir(), "apks");
+            File destDir = context.getExternalFilesDir("apks");
+            if (destDir == null || !Environment.getExternalStorageState(destDir).equals(Environment.MEDIA_MOUNTED))
+                throw new RuntimeException("External media not present");
             if (!destDir.exists()) //noinspection ResultOfMethodCallIgnored
                 destDir.mkdirs();
             try (ZipFile zipFile = new ZipFile(filePath)) {
@@ -237,7 +240,8 @@ public class ApkFile implements AutoCloseable {
         public int type;
         @Nullable
         public HashMap<String, String> manifest;
-        @Nullable public String splitSuffix;
+        @Nullable
+        public String splitSuffix;
 
         Entry(@NonNull String name, @NonNull File source, @ApkType int type) throws Exception {
             this.name = name;

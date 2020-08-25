@@ -87,7 +87,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
-import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerNoRoot;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.misc.RequestCodes;
@@ -562,11 +561,7 @@ public class AppInfoFragment extends Fragment
                 addToHorizontalLayout(R.string.install, R.drawable.ic_baseline_get_app_24)
                         .setOnClickListener(v -> new Thread(() -> {
                     try {
-                        // TODO: Add support for split apk
-                        File tmpApkSource = IOUtils.getSharableFile(new File(mApplicationInfo.publicSourceDir), ".apk");
-                        if (!PackageInstallerNoRoot.getInstance().installMultiple(new File[]{tmpApkSource})) {
-                            throw new Exception("Failed to proceed to the commit.");
-                        }
+                        PackageUtils.installApkCompat(mPackageLabel.toString(), mainModel.getApkFiles());
                     } catch (Exception e) {
                         e.printStackTrace();
                         runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show());
@@ -589,9 +584,11 @@ public class AppInfoFragment extends Fragment
                     addToHorizontalLayout(R.string.update, R.drawable.ic_baseline_get_app_24)
                             .setOnClickListener(v -> new Thread(() -> {
                         try {
-                            File tmpApkSource = IOUtils.getSharableFile(new File(mApplicationInfo.publicSourceDir), ".apk");
-                            if (!PackageInstallerNoRoot.getInstance().installMultiple(new File[]{tmpApkSource})) {
-                                throw new Exception("Failed to proceed to the commit.");
+                            try {
+                                PackageUtils.installApkCompat(mPackageLabel.toString(), mainModel.getApkFiles());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show());
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

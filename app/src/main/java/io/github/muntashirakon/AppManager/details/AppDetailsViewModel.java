@@ -40,6 +40,7 @@ import android.os.DeadSystemException;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -151,6 +152,30 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     public String getPackageName() {
         return packageName;
+    }
+
+    @NonNull
+    public File[] getApkFiles() {
+        File[] apkFiles;
+        if (isExternalApk) {
+            List<ApkFile.Entry> entries = apkFile.getEntries();
+            apkFiles = new File[entries.size()];
+            for (int i = 0; i<entries.size(); ++i) {
+                apkFiles[i] = entries.get(i).source;
+            }
+        } else {
+            ApplicationInfo info = packageInfo.applicationInfo;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && info.splitNames != null) {
+                apkFiles = new File[info.splitNames.length + 1];
+                apkFiles[0] = new File(info.publicSourceDir);
+                for (int i = 0; i<info.splitNames.length; ++i) {
+                    apkFiles[i+1] = new File(info.splitPublicSourceDirs[i]);
+                }
+            } else {
+                apkFiles = new File[]{new File(info.publicSourceDir)};
+            }
+        }
+        return apkFiles;
     }
 
     @SuppressLint("SwitchIntDef")

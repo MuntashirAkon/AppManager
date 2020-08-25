@@ -18,6 +18,7 @@ package com.google.classysharkandroid.utils;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Environment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,7 +43,10 @@ public class UriUtils {
 
     @Nullable
     public static String pathUriCache(@NonNull Context context, Uri uri, String nCache) {
-        File f = new File(context.getFilesDir(), nCache);
+        File extStorageDir = context.getExternalFilesDir(null);
+        if (extStorageDir == null || !Environment.getExternalStorageState(extStorageDir).equals(Environment.MEDIA_MOUNTED))
+            throw new RuntimeException("External media not present");
+        File f = new File(extStorageDir, nCache);
         try {
             FileOutputStream fos = new FileOutputStream(f);
             InputStream is = context.getContentResolver().openInputStream(uri);
