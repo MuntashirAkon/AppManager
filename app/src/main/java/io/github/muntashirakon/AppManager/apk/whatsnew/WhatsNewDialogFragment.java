@@ -48,6 +48,15 @@ public class WhatsNewDialogFragment extends DialogFragment {
     public static final String ARG_NEW_PKG_INFO = "ARG_NEW_PKG_INFO";
     public static final String ARG_OLD_PKG_INFO = "ARG_OLD_PKG_INFO";
 
+    public interface InstallInterface {
+        void triggerInstall();
+    }
+
+    public void setOnTriggerInstall(InstallInterface installInterface) {
+        this.installInterface = installInterface;
+    }
+
+    InstallInterface installInterface;
     FragmentActivity activity;
     WhatsNewRecyclerAdapter adapter;
     PackageInfo newPkgInfo;
@@ -75,11 +84,14 @@ public class WhatsNewDialogFragment extends DialogFragment {
             }
             activity.runOnUiThread(() -> adapter.setAdapterList(changeList));
         }).start();
-        return new MaterialAlertDialogBuilder(activity)
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
                 .setTitle(R.string.whats_new)
-                .setView(view)
-                .setNegativeButton(android.R.string.ok, null)
-                .create();
+                .setView(view);
+        if (installInterface != null) {
+            builder.setNegativeButton(android.R.string.cancel, null)
+                    .setPositiveButton(R.string.update, (dialog, which) -> installInterface.triggerInstall());
+        } else builder.setNegativeButton(android.R.string.ok, null);
+        return builder.create();
     }
 
     class WhatsNewRecyclerAdapter extends RecyclerView.Adapter<WhatsNewRecyclerAdapter.ViewHolder> {

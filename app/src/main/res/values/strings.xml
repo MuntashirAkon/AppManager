@@ -508,4 +508,7 @@
     <string name="full_stop_tap_to_see_details">. Tap to see details.</string>
     <string name="try_again">Try again</string>
     <string name="info">Info</string>
+    <string name="install_app_message">Do you want to install this app?</string>
+    <string name="reinstall_app_message">Do you want to reinstall this app?</string>
+    <string name="reinstall">Reinstall</string>
 </resources>
