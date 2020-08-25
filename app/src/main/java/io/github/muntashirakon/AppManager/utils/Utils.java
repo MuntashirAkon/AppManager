@@ -64,6 +64,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.zip.ZipEntry;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -179,6 +180,15 @@ public class Utils {
         String name = returnCursor.getString(nameIndex);
         returnCursor.close();
         return name;
+    }
+
+    @NonNull
+    public static String getFileNameFromZipEntry(@NonNull ZipEntry zipEntry) {
+        String path = zipEntry.getName();
+        int lastIndexOfSeparator = path.lastIndexOf("/");
+        if (lastIndexOfSeparator == -1)
+            return path;
+        return path.substring(lastIndexOfSeparator + 1);
     }
 
     @NonNull

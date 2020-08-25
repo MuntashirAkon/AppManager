@@ -39,9 +39,6 @@ import android.os.DeadSystemException;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.classysharkandroid.utils.UriUtils;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,11 +54,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
-import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.server.common.OpEntry;
 import io.github.muntashirakon.AppManager.server.common.PackageOps;
@@ -69,14 +67,13 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class AppDetailsViewModel extends AndroidViewModel {
-    public static final String APK_FILE = "apk_file.apk";
-
     private PackageManager mPackageManager;
     private PackageInfo packageInfo;
     private String packageName;
     private ComponentsBlocker blocker;
     private PackageIntentReceiver receiver;
     private String apkPath;
+    private ApkFile apkFile;
 
     private int flagSigningInfo;
     private int flagDisabledComponents;
@@ -118,18 +115,16 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }).start();
         if (receiver != null) getApplication().unregisterReceiver(receiver);
         receiver = null;
-        if (apkPath != null) {
-            //noinspection ResultOfMethodCallIgnored
-            new File(apkPath).delete();
-        }
+        if (apkFile != null) apkFile.close();
         super.onCleared();
     }
 
-    public void setPackageUri(@NonNull Uri packageUri) {
+    public void setPackageUri(@NonNull Uri packageUri) throws Exception {
         Log.d("ADVM", "Package Uri is being set");
         isExternalApk = true;
         flagSigningInfo = PackageManager.GET_SIGNATURES;  // Fix signature bug of Android
-        apkPath = UriUtils.pathUriCache(getApplication(), packageUri, APK_FILE);
+        apkFile = new ApkFile(packageUri);
+        apkPath = apkFile.getBaseEntry().source.getAbsolutePath();
     }
 
     public void setPackageName(String packageName) {

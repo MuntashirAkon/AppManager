@@ -100,7 +100,17 @@ public class AppDetailsActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         new Thread(() -> {
             if (packageName != null) model.setPackageName(packageName);
-            else model.setPackageUri(apkUri);
+            else {
+                try {
+                    model.setPackageUri(apkUri);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, getString(R.string.failed_to_fetch_package_info), Toast.LENGTH_LONG).show();
+                        finish();
+                    });
+                }
+            }
             if (model.getPackageInfo() == null) {
                 runOnUiThread(() -> {
                     Toast.makeText(this, getString(R.string.failed_to_fetch_package_info_possibly_a_split_apk), Toast.LENGTH_LONG).show();
