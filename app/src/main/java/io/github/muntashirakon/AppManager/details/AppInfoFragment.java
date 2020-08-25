@@ -448,11 +448,7 @@ public class AppInfoFragment extends Fragment
                 if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0)
                     addChip(R.string.updated_app);
             } else if (!mainModel.getIsExternalApk()) addChip(R.string.user_app);
-            int countSplits = 0;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O
-                    && mApplicationInfo.splitNames != null) {
-                countSplits = mApplicationInfo.splitNames.length;
-            }
+            int countSplits = mainModel.getSplitCount();
             if (countSplits > 0) addChip(getResources().getQuantityString(R.plurals.no_of_splits, countSplits, countSplits));
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
                 addChip(R.string.debuggable);

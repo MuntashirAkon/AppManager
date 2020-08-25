@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.apk;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.google.classysharkandroid.utils.UriUtils;
 
@@ -26,15 +27,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import androidx.annotation.IntDef;
@@ -46,6 +48,8 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class ApkFile implements AutoCloseable {
+    public static final String TAG = "TAG";
+
     @IntDef(value = {
             APK_BASE,
             APK_SPLIT,
@@ -98,12 +102,11 @@ public class ApkFile implements AutoCloseable {
         } catch (IndexOutOfBoundsException e) {
             throw new Exception("Invalid package extension.");
         }
-
+        String filePath = UriUtils.pathUriCache(context, apkUri, APK_FILE);
+        if (filePath == null) throw new Exception("Failed to cache the provided apk file.");
         // Check for splits
         if (extension.equals("apk")) {
             // Cache the apk file
-            String filePath = UriUtils.pathUriCache(context, apkUri, APK_FILE);
-            if (filePath == null) throw new Exception("Failed to cache the provided apk file.");
             baseEntry = new Entry(APK_FILE, new File(filePath), APK_BASE);
             entries.add(baseEntry);
         } else {
@@ -111,17 +114,18 @@ public class ApkFile implements AutoCloseable {
             File destDir = new File(context.getFilesDir(), "apks");
             if (!destDir.exists()) //noinspection ResultOfMethodCallIgnored
                 destDir.mkdirs();
-            try (InputStream fileInputStream = context.getContentResolver().openInputStream(apkUri);
-                 ZipInputStream zipInputStream = new ZipInputStream(fileInputStream)) {
-                ZipEntry zipEntry = zipInputStream.getNextEntry();
+            try (ZipFile zipFile = new ZipFile(filePath)) {
+                Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
                 File apkFile;
                 String fileName;
-                while (zipEntry != null) {
+                while (zipEntries.hasMoreElements()) {
+                    ZipEntry zipEntry = zipEntries.nextElement();
                     if (zipEntry.isDirectory()) continue;
                     fileName = Utils.getFileNameFromZipEntry(zipEntry);
                     if (fileName.endsWith(".apk")) {
                         // Extract the apk file
-                        apkFile = IOUtils.saveZipFile(zipInputStream, destDir, fileName);
+                        apkFile = IOUtils.saveZipFile(zipFile.getInputStream(zipEntry), destDir, fileName);
+                        Log.e(TAG, "Apk File: " + apkFile);
                         try {
                             // Extract manifest file
                             ByteBuffer manifestBytes = getManifestFromApk(apkFile);
@@ -142,8 +146,6 @@ public class ApkFile implements AutoCloseable {
                     } else if (fileName.endsWith(".obb")) {
                         hasObb = true;
                     }
-                    zipInputStream.closeEntry();
-                    zipEntry = zipInputStream.getNextEntry();
                 }
             }
             if (baseEntry == null) throw new Exception("No base apk found.");
@@ -186,7 +188,12 @@ public class ApkFile implements AutoCloseable {
                     continue;
                 }
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                IOUtils.copy(zipInputStream, buffer);
+                byte[] buf = new byte[1024 * 4];
+                int n;
+                while (-1 != (n = zipInputStream.read(buf))) {
+                    buffer.write(buf, 0, n);
+                }
+                zipInputStream.closeEntry();
                 return ByteBuffer.wrap(buffer.toByteArray());
             }
         }
@@ -214,7 +221,7 @@ public class ApkFile implements AutoCloseable {
             }
             eventType = parser.next();
         }
-        if (seenManifestElement) throw new Exception("No manifest found.");
+        if (!seenManifestElement) throw new Exception("No manifest found.");
         return manifestAttrs;
     }
 

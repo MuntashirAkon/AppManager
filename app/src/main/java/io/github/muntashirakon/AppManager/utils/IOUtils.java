@@ -28,14 +28,12 @@ import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.zip.CRC32;
-import java.util.zip.ZipInputStream;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
@@ -115,14 +113,14 @@ public final class IOUtils {
     }
 
     @NonNull
-    public static File saveZipFile(@NonNull ZipInputStream zipInputStream,
+    public static File saveZipFile(@NonNull InputStream zipInputStream,
                                    @NonNull File destinationDirectory, @NonNull String fileName)
             throws IOException {
         File filePath = new File(destinationDirectory, fileName);
         if (filePath.exists()) //noinspection ResultOfMethodCallIgnored
             filePath.delete();
-        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
-        copy(zipInputStream, bos);
+        OutputStream outputStream = new FileOutputStream(filePath);
+        copy(zipInputStream, outputStream);
         return filePath;
     }
 
