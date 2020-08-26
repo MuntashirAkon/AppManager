@@ -469,6 +469,18 @@
         <item quantity="one">Failed to delete %d backup</item>
         <item quantity="other">Failed to delete %d backups</item>
     </plurals>
+    <plurals name="alert_failed_to_unblock_trackers">
+        <item quantity="one">Failed to unblock trackers from %d app</item>
+        <item quantity="other">Failed to unblock trackers from %d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_block_components">
+        <item quantity="one">Failed to block components for %d app</item>
+        <item quantity="other">Failed to block components for %d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_deny_app_ops">
+        <item quantity="one">Failed to deny app ops for %d app</item>
+        <item quantity="other">Failed to deny app ops for %d apps</item>
+    </plurals>
     <string name="failed_to_delete_backup">Failed to delete backup</string>
     <string name="failed_to_restore_backup">Failed to restore backup</string>
     <string name="apply_to_system_apps">Apply to system apps</string>
@@ -511,4 +523,5 @@
     <string name="install_app_message">Do you want to install this app?</string>
     <string name="reinstall_app_message">Do you want to reinstall this app?</string>
     <string name="reinstall">Reinstall</string>
+    <string name="unblock_trackers">Unblock trackers</string>
 </resources>

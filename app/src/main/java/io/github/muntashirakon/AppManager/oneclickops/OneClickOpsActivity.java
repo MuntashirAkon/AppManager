@@ -17,6 +17,10 @@
 
 package io.github.muntashirakon.AppManager.oneclickops;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -36,8 +40,10 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
@@ -46,6 +52,13 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 public class OneClickOpsActivity extends AppCompatActivity {
     private ListItemCreator mItemCreator;
     private ProgressIndicator mProgressIndicator;
+    private BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mProgressIndicator.hide();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +93,19 @@ public class OneClickOpsActivity extends AppCompatActivity {
         mProgressIndicator.hide();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mBatchOpsBroadCastReceiver, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mBatchOpsBroadCastReceiver);
+        mProgressIndicator.hide();
+    }
+
     private void blockTrackers(final boolean systemApps) {
         if (!AppPref.isRootEnabled()) {
             Toast.makeText(this, R.string.only_works_in_root_mode, Toast.LENGTH_SHORT).show();
@@ -89,15 +115,16 @@ public class OneClickOpsActivity extends AppCompatActivity {
         new Thread(() -> {
             final List<ItemCount> trackerCounts = new ArrayList<>();
             ItemCount trackerCount;
-            for (ApplicationInfo applicationInfo: getPackageManager().getInstalledApplications(0)) {
-                if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
+            for (ApplicationInfo applicationInfo : getPackageManager().getInstalledApplications(0)) {
+                if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
+                    continue;
                 trackerCount = ComponentUtils.getTrackerCountForApp(applicationInfo);
                 if (trackerCount.count > 0) trackerCounts.add(trackerCount);
             }
             if (!trackerCounts.isEmpty()) {
-                final List<String> selectedPackages = new ArrayList<>();
+                final ArrayList<String> selectedPackages = new ArrayList<>();
                 final String[] trackerPackagesWithTrackerCount = new String[trackerCounts.size()];
-                for (int i = 0; i<trackerCounts.size(); ++i) {
+                for (int i = 0; i < trackerCounts.size(); ++i) {
                     trackerCount = trackerCounts.get(i);
                     selectedPackages.add(trackerCount.packageName);
                     trackerPackagesWithTrackerCount[i] = "(" + trackerCount.count + ") " + trackerCount.packageLabel;
@@ -115,41 +142,19 @@ public class OneClickOpsActivity extends AppCompatActivity {
                             .setTitle(R.string.found_trackers)
                             .setPositiveButton(R.string.block, (dialog, which) -> {
                                 mProgressIndicator.show();
-                                new Thread(() -> {
-                                    List<String> failedPackages = ComponentUtils.blockTrackingComponents(selectedPackages);
-                                    if (!failedPackages.isEmpty()) {
-                                        runOnUiThread(() -> {
-                                            new MaterialAlertDialogBuilder(this)
-                                                    .setTitle(R.string.failed_packages)
-                                                    .setItems((CharSequence[]) failedPackages.toArray(), null)
-                                                    .setNegativeButton(android.R.string.ok, null)
-                                                    .show();
-                                            mProgressIndicator.hide();
-                                        });
-                                    } else runOnUiThread(() -> {
-                                        Toast.makeText(this, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
-                                        mProgressIndicator.hide();
-                                    });
-                                }).start();
+                                Intent intent = new Intent(this, BatchOpsService.class);
+                                intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedPackages);
+                                intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_BLOCK_TRACKERS);
+                                intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
+                                ContextCompat.startForegroundService(this, intent);
                             })
                             .setNeutralButton(R.string.unblock, (dialog, which) -> {
                                 mProgressIndicator.show();
-                                new Thread(() -> {
-                                    List<String> failedPackages = ComponentUtils.unblockTrackingComponents(selectedPackages);
-                                    if (!failedPackages.isEmpty()) {
-                                        runOnUiThread(() -> {
-                                            new MaterialAlertDialogBuilder(this)
-                                                    .setTitle(R.string.failed_packages)
-                                                    .setItems((CharSequence[]) failedPackages.toArray(), null)
-                                                    .setNegativeButton(android.R.string.ok, null)
-                                                    .show();
-                                            mProgressIndicator.hide();
-                                        });
-                                    } else runOnUiThread(() -> {
-                                        Toast.makeText(this, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
-                                        mProgressIndicator.hide();
-                                    });
-                                }).start();
+                                Intent intent = new Intent(this, BatchOpsService.class);
+                                intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedPackages);
+                                intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_UNBLOCK_TRACKERS);
+                                intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
+                                ContextCompat.startForegroundService(this, intent);
                             })
                             .setNegativeButton(android.R.string.cancel, (dialog, which) -> mProgressIndicator.hide())
                             .show();
@@ -181,8 +186,9 @@ public class OneClickOpsActivity extends AppCompatActivity {
                         String[] signatures = signaturesEditable.toString().split("\\s+");
                         if (signatures.length == 0) return;
                         final List<ItemCount> componentCounts = new ArrayList<>();
-                        for (ApplicationInfo applicationInfo: getPackageManager().getInstalledApplications(0)) {
-                            if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
+                        for (ApplicationInfo applicationInfo : getPackageManager().getInstalledApplications(0)) {
+                            if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
+                                continue;
                             ItemCount componentCount = new ItemCount();
                             componentCount.packageName = applicationInfo.packageName;
                             componentCount.packageLabel = applicationInfo.loadLabel(getPackageManager()).toString();
@@ -191,9 +197,9 @@ public class OneClickOpsActivity extends AppCompatActivity {
                         }
                         if (!componentCounts.isEmpty()) {
                             ItemCount componentCount;
-                            final List<String> selectedPackages = new ArrayList<>();
+                            final ArrayList<String> selectedPackages = new ArrayList<>();
                             final String[] filteredPackagesWithComponentCount = new String[componentCounts.size()];
-                            for (int i = 0; i<componentCounts.size(); ++i) {
+                            for (int i = 0; i < componentCounts.size(); ++i) {
                                 componentCount = componentCounts.get(i);
                                 selectedPackages.add(componentCount.packageName);
                                 filteredPackagesWithComponentCount[i] = "(" + componentCount.count + ") " + componentCount.packageLabel;
@@ -205,28 +211,21 @@ public class OneClickOpsActivity extends AppCompatActivity {
                                 mProgressIndicator.hide();
                                 new MaterialAlertDialogBuilder(this)
                                         .setMultiChoiceItems(filteredPackagesWithComponentCount, checkedItems, (dialog1, which1, isChecked) -> {
-                                            if (!isChecked) selectedPackages.remove(filteredPackages[which1]);
+                                            if (!isChecked)
+                                                selectedPackages.remove(filteredPackages[which1]);
                                             else selectedPackages.add(filteredPackages[which1]);
                                         })
                                         .setTitle(R.string.filtered_packages)
                                         .setPositiveButton(R.string.apply, (dialog1, which1) -> {
                                             mProgressIndicator.show();
-                                            new Thread(() -> {
-                                                List<String> failedPackages = ComponentUtils.blockFilteredComponents(selectedPackages, signatures);
-                                                if (!failedPackages.isEmpty()) {
-                                                    runOnUiThread(() -> {
-                                                        new MaterialAlertDialogBuilder(this)
-                                                                .setTitle(R.string.failed_packages)
-                                                                .setItems((CharSequence[]) failedPackages.toArray(), null)
-                                                                .setNegativeButton(android.R.string.ok, null)
-                                                                .show();
-                                                        mProgressIndicator.hide();
-                                                    });
-                                                } else runOnUiThread(() -> {
-                                                    Toast.makeText(this, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
-                                                    mProgressIndicator.hide();
-                                                });
-                                            }).start();
+                                            Intent intent = new Intent(this, BatchOpsService.class);
+                                            intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedPackages);
+                                            intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_BLOCK_COMPONENTS);
+                                            intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
+                                            Bundle args = new Bundle();
+                                            args.putStringArray(BatchOpsManager.ARG_SIGNATURES, signatures);
+                                            intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
+                                            ContextCompat.startForegroundService(this, intent);
                                         })
                                         .setNegativeButton(android.R.string.cancel, (dialog1, which1) -> mProgressIndicator.hide())
                                         .show();
@@ -272,9 +271,10 @@ public class OneClickOpsActivity extends AppCompatActivity {
                             return;
                         }
                         final List<ItemCount> appOpCounts = new ArrayList<>();
-                        for (ApplicationInfo applicationInfo:
+                        for (ApplicationInfo applicationInfo :
                                 getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA)) {
-                            if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
+                            if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
+                                continue;
                             ItemCount appOpCount = new ItemCount();
                             appOpCount.packageName = applicationInfo.packageName;
                             appOpCount.packageLabel = applicationInfo.loadLabel(getPackageManager()).toString();
@@ -283,9 +283,9 @@ public class OneClickOpsActivity extends AppCompatActivity {
                         }
                         if (!appOpCounts.isEmpty()) {
                             ItemCount appOpCount;
-                            final List<String> selectedPackages = new ArrayList<>();
+                            final ArrayList<String> selectedPackages = new ArrayList<>();
                             final String[] filteredPackagesWithAppOpCount = new String[appOpCounts.size()];
-                            for (int i = 0; i<appOpCounts.size(); ++i) {
+                            for (int i = 0; i < appOpCounts.size(); ++i) {
                                 appOpCount = appOpCounts.get(i);
                                 selectedPackages.add(appOpCount.packageName);
                                 filteredPackagesWithAppOpCount[i] = "(" + appOpCount.count + ") " + appOpCount.packageLabel;
@@ -297,28 +297,21 @@ public class OneClickOpsActivity extends AppCompatActivity {
                                 mProgressIndicator.hide();
                                 new MaterialAlertDialogBuilder(this)
                                         .setMultiChoiceItems(filteredPackagesWithAppOpCount, checkedItems, (dialog1, which1, isChecked) -> {
-                                            if (!isChecked) selectedPackages.remove(filteredPackages[which1]);
+                                            if (!isChecked)
+                                                selectedPackages.remove(filteredPackages[which1]);
                                             else selectedPackages.add(filteredPackages[which1]);
                                         })
                                         .setTitle(R.string.filtered_packages)
                                         .setPositiveButton(R.string.apply, (dialog1, which1) -> {
                                             mProgressIndicator.show();
-                                            new Thread(() -> {
-                                                List<String> failedPackages = ExternalComponentsImporter.denyFilteredAppOps(selectedPackages, appOps);
-                                                if (!failedPackages.isEmpty()) {
-                                                    runOnUiThread(() -> {
-                                                        new MaterialAlertDialogBuilder(this)
-                                                                .setTitle(R.string.failed_packages)
-                                                                .setItems((CharSequence[]) failedPackages.toArray(), null)
-                                                                .setNegativeButton(android.R.string.ok, null)
-                                                                .show();
-                                                        mProgressIndicator.hide();
-                                                    });
-                                                } else runOnUiThread(() -> {
-                                                    Toast.makeText(this, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
-                                                    mProgressIndicator.hide();
-                                                });
-                                            }).start();
+                                            Intent intent = new Intent(this, BatchOpsService.class);
+                                            intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedPackages);
+                                            intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_BLOCK_COMPONENTS);
+                                            intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
+                                            Bundle args = new Bundle();
+                                            args.putIntArray(BatchOpsManager.ARG_APP_OPS, appOps);
+                                            intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
+                                            ContextCompat.startForegroundService(this, intent);
                                         })
                                         .setNegativeButton(android.R.string.cancel, (dialog1, which1) -> mProgressIndicator.hide())
                                         .show();

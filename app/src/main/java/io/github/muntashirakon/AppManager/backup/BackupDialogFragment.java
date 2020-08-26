@@ -165,7 +165,9 @@ public class BackupDialogFragment extends DialogFragment {
         Intent intent = new Intent(activity, BatchOpsService.class);
         intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(packageNames));
         intent.putExtra(BatchOpsService.EXTRA_OP, op);
-        intent.putExtra(BatchOpsService.EXTRA_OP_FLAGS, flags);
+        Bundle args = new Bundle();
+        args.putInt(BatchOpsManager.ARG_FLAGS, flags);
+        intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
         ContextCompat.startForegroundService(activity, intent);
     }
 }

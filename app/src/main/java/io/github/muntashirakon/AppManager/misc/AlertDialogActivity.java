@@ -44,7 +44,7 @@ public class AlertDialogActivity extends AppCompatActivity {
         ArrayList<String> failedPackages = getIntent().getStringArrayListExtra(BatchOpsService.EXTRA_FAILED_PKG);
         String failureMessage = getIntent().getStringExtra(BatchOpsService.EXTRA_FAILURE_MESSAGE);
         int op = getIntent().getIntExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_NONE);
-        int flags = getIntent().getIntExtra(BatchOpsService.EXTRA_OP_FLAGS, 0);
+        Bundle args = getIntent().getBundleExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS);
         // Failed
         if (failedPackages != null) {
             new MaterialAlertDialogBuilder(this)
@@ -56,7 +56,7 @@ public class AlertDialogActivity extends AppCompatActivity {
                         Intent intent = new Intent(this, BatchOpsService.class);
                         intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, failedPackages);
                         intent.putExtra(BatchOpsService.EXTRA_OP, op);
-                        intent.putExtra(BatchOpsService.EXTRA_OP_FLAGS, flags);
+                        intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
                         ContextCompat.startForegroundService(this, intent);
                     })
                     .setOnDismissListener(dialog -> finish())

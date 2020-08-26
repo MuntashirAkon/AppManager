@@ -26,6 +26,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,17 +43,22 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class BatchOpsService extends IntentService {
     /**
+     * The string to be placed in the notification header. Default: "Batch Operations"
+     */
+    public static final String EXTRA_HEADER = "EXTRA_HEADER";
+    /**
      * Name of the batch operation, integer value.
      */
     public static final String EXTRA_OP = "EXTRA_OP";
     /**
-     * Flags set for the batch operation
-     */
-    public static final String EXTRA_OP_FLAGS = "EXTRA_OP_FLAGS";
-    /**
      * An ArrayList of package names (string value) on which operations will be carried out.
      */
-    public static final String EXTRA_OP_PKG = "EXTRA_OP_PKG_ARR";
+    public static final String EXTRA_OP_PKG = "EXTRA_OP_PKG";
+    /**
+     * A {@link Bundle} containing additional arguments, these arguments are unwrapped by
+     * {@link BatchOpsManager} based on necessity.
+     */
+    public static final String EXTRA_OP_EXTRA_ARGS = "EXTRA_OP_EXTRA_ARGS";
     /**
      * An ArrayList of package name (string value) which are failed after the batch operation is
      * complete.
@@ -88,9 +94,10 @@ public class BatchOpsService extends IntentService {
 
     private @BatchOpsManager.OpType
     int op = BatchOpsManager.OP_NONE;
-    private int flags = 0;
     private @Nullable
     ArrayList<String> packages;
+    Bundle args;
+    private String header;
 
     public BatchOpsService() {
         super("BatchOpsService");
@@ -98,7 +105,11 @@ public class BatchOpsService extends IntentService {
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        if (intent != null) op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
+        if (intent != null) {
+            op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
+            header = intent.getStringExtra(EXTRA_HEADER);
+        }
+        if (header == null) header = getString(R.string.batch_ops);
         createNotificationChannel();
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
@@ -107,7 +118,7 @@ public class BatchOpsService extends IntentService {
                 .setContentTitle(getDesiredOpTitle())
                 .setContentText(getString(R.string.operation_running))
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setSubText(getString(R.string.batch_ops))
+                .setSubText(header)
                 .setContentIntent(pendingIntent)
                 .build();
         startForeground(NOTIFICATION_ID, notification);
@@ -121,14 +132,14 @@ public class BatchOpsService extends IntentService {
             return;
         }
         op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
-        flags = intent.getIntExtra(EXTRA_OP_FLAGS, 0);
         packages = intent.getStringArrayListExtra(EXTRA_OP_PKG);
+        args = intent.getBundleExtra(EXTRA_OP_EXTRA_ARGS);
         if (op == BatchOpsManager.OP_NONE || packages == null) {
             sendResults(Activity.RESULT_CANCELED, null);
             return;
         }
         BatchOpsManager batchOpsManager = new BatchOpsManager();
-        batchOpsManager.setFlags(flags);
+        batchOpsManager.setArgs(args);
         BatchOpsManager.Result result = batchOpsManager.performOp(op, packages);
         if (result.isSuccessful()) {
             sendResults(Activity.RESULT_OK, null);
@@ -164,7 +175,7 @@ public class BatchOpsService extends IntentService {
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setTicker(contentTitle)
                 .setContentTitle(contentTitle)
-                .setSubText(getString(R.string.batch_ops));
+                .setSubText(header);
         switch (result) {
             case Activity.RESULT_CANCELED:  // Cancelled
                 break;
@@ -177,7 +188,7 @@ public class BatchOpsService extends IntentService {
                     String message = getDesiredErrorString(failedPackages.size());
                     Intent intent = new Intent(this, AlertDialogActivity.class);
                     intent.putExtra(EXTRA_OP, op);
-                    intent.putExtra(EXTRA_OP_FLAGS, flags);
+                    intent.putExtra(EXTRA_OP_EXTRA_ARGS, args);
                     intent.putExtra(EXTRA_FAILURE_MESSAGE, message);
                     intent.putStringArrayListExtra(EXTRA_FAILED_PKG, failedPackages);
                     PendingIntent pendingIntent = PendingIntent.getActivity(this,
@@ -223,7 +234,14 @@ public class BatchOpsService extends IntentService {
                 return getString(R.string.force_stop);
             case BatchOpsManager.OP_UNINSTALL:
                 return getString(R.string.uninstall);
+            case BatchOpsManager.OP_UNBLOCK_TRACKERS:
+                return getString(R.string.unblock_trackers);
+            case BatchOpsManager.OP_BLOCK_COMPONENTS:
+                return getString(R.string.block_components_dots);
+            case BatchOpsManager.OP_IGNORE_APP_OPS:
+                return getString(R.string.deny_app_ops_dots);
             case BatchOpsManager.OP_NONE:
+                break;
         }
         return getString(R.string.batch_ops);
     }
@@ -252,7 +270,14 @@ public class BatchOpsService extends IntentService {
                 return getResources().getQuantityString(R.plurals.alert_failed_to_force_stop, failedCount, failedCount);
             case BatchOpsManager.OP_UNINSTALL:
                 return getResources().getQuantityString(R.plurals.alert_failed_to_uninstall, failedCount, failedCount);
+            case BatchOpsManager.OP_UNBLOCK_TRACKERS:
+                return getResources().getQuantityString(R.plurals.alert_failed_to_unblock_trackers, failedCount, failedCount);
+            case BatchOpsManager.OP_BLOCK_COMPONENTS:
+                return getResources().getQuantityString(R.plurals.alert_failed_to_block_components, failedCount, failedCount);
+            case BatchOpsManager.OP_IGNORE_APP_OPS:
+                return getResources().getQuantityString(R.plurals.alert_failed_to_deny_app_ops, failedCount, failedCount);
             case BatchOpsManager.OP_NONE:
+                break;
         }
         return getString(R.string.error);
     }

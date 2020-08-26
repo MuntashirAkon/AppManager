@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.batchops;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import java.lang.annotation.Retention;
@@ -34,14 +35,31 @@ import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
 public class BatchOpsManager {
+    // Bundle args
+    /**
+     * {@link Integer} value containing flags
+     */
+    public static final String ARG_FLAGS = "flags";
+    /**
+     * {@link String[]} value containing signatures, e.g., org.acra.
+     */
+    public static final String ARG_SIGNATURES = "signatures";
+    /**
+     * {@link Integer[]} value containing app op values
+     */
+    public static final String ARG_APP_OPS = "app_ops";
+
     @IntDef(value = {
             OP_NONE,
             OP_BACKUP_APK,
             OP_BACKUP,
+            OP_IGNORE_APP_OPS,
+            OP_BLOCK_COMPONENTS,
             OP_BLOCK_TRACKERS,
             OP_CLEAR_DATA,
             OP_DELETE_BACKUP,
@@ -50,12 +68,12 @@ public class BatchOpsManager {
             OP_EXPORT_RULES,
             OP_FORCE_STOP,
             OP_RESTORE_BACKUP,
-            OP_UNINSTALL
+            OP_UNBLOCK_TRACKERS,
+            OP_UNINSTALL,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface OpType {
     }
-
     public static final int OP_NONE = -1;
     public static final int OP_BACKUP_APK = 0;
     public static final int OP_BACKUP = 1;
@@ -67,7 +85,10 @@ public class BatchOpsManager {
     public static final int OP_EXPORT_RULES = 7;
     public static final int OP_FORCE_STOP = 8;
     public static final int OP_RESTORE_BACKUP = 9;
-    public static final int OP_UNINSTALL = 10;
+    public static final int OP_UNBLOCK_TRACKERS = 10;
+    public static final int OP_UNINSTALL = 11;
+    public static final int OP_BLOCK_COMPONENTS = 12;
+    public static final int OP_IGNORE_APP_OPS = 13;
 
     private Runner runner;
 
@@ -76,11 +97,11 @@ public class BatchOpsManager {
     }
 
     private List<String> packageNames;
-    private int flags = 0;  // Currently only for backup/restore
     private Result lastResult;
+    private Bundle args;
 
-    public void setFlags(int flags) {
-        this.flags = flags;
+    public void setArgs(Bundle args) {
+        this.args = args;
     }
 
     @NonNull
@@ -110,7 +131,12 @@ public class BatchOpsManager {
                 return opBackupRestore(BackupDialogFragment.MODE_RESTORE);
             case OP_UNINSTALL:
                 return opUninstall();
+            case OP_UNBLOCK_TRACKERS:
+                return opUnblockTrackers();
+            case OP_BLOCK_COMPONENTS: return opBlockComponents();
+            case OP_IGNORE_APP_OPS: return opIgnoreAppOps();
             case OP_NONE:
+                break;
         }
         return lastResult = new Result() {
             @Override
@@ -154,7 +180,7 @@ public class BatchOpsManager {
         List<String> failedPackages = new ArrayList<>();
         for (String packageName : packageNames) {
             try (BackupStorageManager backupStorageManager = BackupStorageManager.getInstance(packageName)) {
-                backupStorageManager.setFlags(flags);
+                backupStorageManager.setFlags(args.getInt(ARG_FLAGS));
                 switch (mode) {
                     case BackupDialogFragment.MODE_BACKUP:
                         if (!backupStorageManager.backup()) failedPackages.add(packageName);
@@ -178,6 +204,22 @@ public class BatchOpsManager {
             @Override
             public List<String> failedPackages() {
                 return failedPackages;
+            }
+        };
+    }
+
+    private Result opBlockComponents() {
+        final List<String> failedPkgList = ComponentUtils.blockFilteredComponents(packageNames, args.getStringArray(ARG_SIGNATURES));
+        return lastResult = new Result() {
+            @Override
+            public boolean isSuccessful() {
+                return failedPkgList.size() == 0;
+            }
+
+            @NonNull
+            @Override
+            public List<String> failedPackages() {
+                return failedPkgList;
             }
         };
     }
@@ -237,6 +279,38 @@ public class BatchOpsManager {
             addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_FORCE_STOP_PACKAGE, packageName), false);
         }
         return runOpAndFetchResults();
+    }
+
+    private Result opIgnoreAppOps() {
+        final List<String> failedPkgList = ExternalComponentsImporter.denyFilteredAppOps(packageNames, args.getIntArray(ARG_APP_OPS));
+        return lastResult = new Result() {
+            @Override
+            public boolean isSuccessful() {
+                return failedPkgList.size() == 0;
+            }
+
+            @NonNull
+            @Override
+            public List<String> failedPackages() {
+                return failedPkgList;
+            }
+        };
+    }
+
+    private Result opUnblockTrackers() {
+        final List<String> failedPkgList = ComponentUtils.unblockTrackingComponents(packageNames);
+        return lastResult = new Result() {
+            @Override
+            public boolean isSuccessful() {
+                return failedPkgList.size() == 0;
+            }
+
+            @NonNull
+            @Override
+            public List<String> failedPackages() {
+                return failedPkgList;
+            }
+        };
     }
 
     @NonNull
