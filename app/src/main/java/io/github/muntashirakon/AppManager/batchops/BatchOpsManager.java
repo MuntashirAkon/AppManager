@@ -19,6 +19,8 @@ package io.github.muntashirakon.AppManager.batchops;
 
 import android.text.TextUtils;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -50,6 +52,7 @@ public class BatchOpsManager {
             OP_RESTORE_BACKUP,
             OP_UNINSTALL
     })
+    @Retention(RetentionPolicy.SOURCE)
     public @interface OpType {
     }
 

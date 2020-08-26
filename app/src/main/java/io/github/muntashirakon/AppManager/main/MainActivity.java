@@ -42,6 +42,8 @@ import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -121,7 +123,10 @@ public class MainActivity extends AppCompatActivity implements
             SORT_BY_DISABLED_APP,
             SORT_BY_BLOCKED_COMPONENTS
     })
-    public @interface SortOrder {}
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface SortOrder {
+    }
+
     public static final int SORT_BY_DOMAIN = 0;  // User/system app
     public static final int SORT_BY_APP_LABEL = 1;
     public static final int SORT_BY_PACKAGE_NAME = 2;
@@ -140,7 +145,10 @@ public class MainActivity extends AppCompatActivity implements
             FILTER_APPS_WITH_RULES,
             FILTER_APPS_WITH_ACTIVITIES
     })
-    public @interface Filter {}
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Filter {
+    }
+
     public static final int FILTER_NO_FILTER = 0;
     public static final int FILTER_USER_APPS = 1;
     public static final int FILTER_SYSTEM_APPS = 1 << 1;
@@ -162,7 +170,8 @@ public class MainActivity extends AppCompatActivity implements
     private MenuItem appUsageMenu;
     private MenuItem runningAppsMenu;
     private MenuItem sortByBlockedComponentMenu;
-    private @SortOrder int mSortBy;
+    private @SortOrder
+    int mSortBy;
 
     private BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
         @Override
@@ -352,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements
         sortByBlockedComponentMenu = menu.findItem(R.id.action_sort_by_blocked_components);
         MenuItem apkUpdaterMenu = menu.findItem(R.id.action_apk_updater);
         try {
-            if(!getPackageManager().getApplicationInfo(PACKAGE_NAME_APK_UPDATER, 0).enabled)
+            if (!getPackageManager().getApplicationInfo(PACKAGE_NAME_APK_UPDATER, 0).enabled)
                 throw new PackageManager.NameNotFoundException();
             apkUpdaterMenu.setVisible(true);
         } catch (PackageManager.NameNotFoundException e) {
@@ -360,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements
         }
         MenuItem termuxMenu = menu.findItem(R.id.action_termux);
         try {
-            if(!getPackageManager().getApplicationInfo(PACKAGE_NAME_TERMUX, 0).enabled)
+            if (!getPackageManager().getApplicationInfo(PACKAGE_NAME_TERMUX, 0).enabled)
                 throw new PackageManager.NameNotFoundException();
             termuxMenu.setVisible(true);
         } catch (PackageManager.NameNotFoundException e) {
@@ -500,23 +509,25 @@ public class MainActivity extends AppCompatActivity implements
                 return true;
             case R.id.action_apk_updater:
                 try {
-                    if(!getPackageManager().getApplicationInfo(PACKAGE_NAME_APK_UPDATER, 0).enabled)
+                    if (!getPackageManager().getApplicationInfo(PACKAGE_NAME_APK_UPDATER, 0).enabled)
                         throw new PackageManager.NameNotFoundException();
                     Intent intent = new Intent();
                     intent.setClassName(PACKAGE_NAME_APK_UPDATER, ACTIVITY_NAME_APK_UPDATER);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
                 return true;
             case R.id.action_termux:
                 try {
-                    if(!getPackageManager().getApplicationInfo(PACKAGE_NAME_TERMUX, 0).enabled)
+                    if (!getPackageManager().getApplicationInfo(PACKAGE_NAME_TERMUX, 0).enabled)
                         throw new PackageManager.NameNotFoundException();
                     Intent intent = new Intent();
                     intent.setClassName(PACKAGE_NAME_TERMUX, ACTIVITY_NAME_TERMUX);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
                 return true;
             case R.id.action_running_apps:
                 Intent runningAppsIntent = new Intent(this, RunningAppsActivity.class);
@@ -552,7 +563,8 @@ public class MainActivity extends AppCompatActivity implements
                     }
                     AppOps.updateConfig(this);
                     runOnUiThread(() -> Toast.makeText(this, "Working on ADB mode", Toast.LENGTH_SHORT).show());
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }).start();
         }
 

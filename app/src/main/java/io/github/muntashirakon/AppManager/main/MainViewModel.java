@@ -48,6 +48,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -60,14 +62,17 @@ public class MainViewModel extends AndroidViewModel {
     private PackageManager mPackageManager;
     private PackageIntentReceiver mPackageObserver;
     private Handler mHandler;
-    private @MainActivity.SortOrder int mSortBy;
-    private @MainActivity.Filter int mFilterFlags;
+    private @MainActivity.SortOrder
+    int mSortBy;
+    private @MainActivity.Filter
+    int mFilterFlags;
     private String searchQuery;
     private List<String> backupApplications;
     private Set<String> selectedPackages = new HashSet<>();
     private List<ApplicationItem> selectedApplicationItems = new LinkedList<>();
     private int flagSigningInfo;
     private int flagDisabledComponents;
+
     public MainViewModel(@NonNull Application application) {
         super(application);
         Log.d("MVM", "New instance created");
@@ -86,6 +91,7 @@ public class MainViewModel extends AndroidViewModel {
 
     private MutableLiveData<List<ApplicationItem>> applicationItemsLiveData;
     final private List<ApplicationItem> applicationItems = new ArrayList<>();
+
     @NonNull
     public LiveData<List<ApplicationItem>> getApplicationItems() {
         if (applicationItemsLiveData == null) {
@@ -118,7 +124,7 @@ public class MainViewModel extends AndroidViewModel {
     public void clearSelection() {
         selectedPackages.clear();
         int i;
-        for (ApplicationItem item: selectedApplicationItems) {
+        for (ApplicationItem item : selectedApplicationItems) {
             i = applicationItems.indexOf(item);
             if (i == -1) continue;
             item.isSelected = false;
@@ -214,7 +220,8 @@ public class MainViewModel extends AndroidViewModel {
                             item.sha = Utils.getIssuerAndAlg(packageInfo);
                             item.sdk = applicationInfo.targetSdkVersion;
                             applicationItems.add(item);
-                        } catch (PackageManager.NameNotFoundException ignored) {}
+                        } catch (PackageManager.NameNotFoundException ignored) {
+                        }
                     }
                 } else {
                     List<ApplicationInfo> applicationInfoList = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
@@ -250,7 +257,7 @@ public class MainViewModel extends AndroidViewModel {
                         applicationItems.add(item);
                     }
                 }
-                for (String packageName: backupApplications) {
+                for (String packageName : backupApplications) {
                     ApplicationItem item = new ApplicationItem();
                     item.packageName = packageName;
                     item.metadataV1 = BackupUtils.getBackupInfo(packageName);
@@ -275,7 +282,7 @@ public class MainViewModel extends AndroidViewModel {
     private void filterItemsByQuery(@NonNull List<ApplicationItem> applicationItems) {
         List<ApplicationItem> filteredApplicationItems = new ArrayList<>();
         ApplicationItem item;
-        for (int i = 0; i <applicationItems.size(); ++i) {
+        for (int i = 0; i < applicationItems.size(); ++i) {
             item = applicationItems.get(i);
             if (item.label.toLowerCase(Locale.ROOT).contains(searchQuery)
                     || item.packageName.toLowerCase(Locale.ROOT).contains(searchQuery))
@@ -297,7 +304,7 @@ public class MainViewModel extends AndroidViewModel {
                 loadBlockingRules();
             }
             ApplicationItem item;
-            for (int i = 0; i <applicationItems.size(); ++i) {
+            for (int i = 0; i < applicationItems.size(); ++i) {
                 item = applicationItems.get(i);
                 // Filter user and system apps first (if requested)
                 if ((mFilterFlags & MainActivity.FILTER_USER_APPS) != 0 && !item.isUser) {
@@ -324,7 +331,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     private void loadBlockingRules() {
-        for (int i = 0; i<applicationItems.size(); ++i) {
+        for (int i = 0; i < applicationItems.size(); ++i) {
             ApplicationItem applicationItem = applicationItems.get(i);
             try (ComponentsBlocker cb = ComponentsBlocker.getInstance(applicationItem.packageName, true)) {
                 applicationItem.blockedCount = cb.componentCount();
@@ -335,7 +342,8 @@ public class MainViewModel extends AndroidViewModel {
 
     private void sortApplicationList(@MainActivity.SortOrder int sortBy) {
         final boolean isRootEnabled = AppPref.isRootEnabled();
-        if (sortBy != MainActivity.SORT_BY_APP_LABEL) sortApplicationList(MainActivity.SORT_BY_APP_LABEL);
+        if (sortBy != MainActivity.SORT_BY_APP_LABEL)
+            sortApplicationList(MainActivity.SORT_BY_APP_LABEL);
         if (sortBy == MainActivity.SORT_BY_BLOCKED_COMPONENTS && isRootEnabled) loadBlockingRules();
         Collections.sort(applicationItems, (o1, o2) -> {
             switch (sortBy) {
@@ -361,7 +369,8 @@ public class MainViewModel extends AndroidViewModel {
                     else {
                         try {
                             return o1.sha.compareTo(o2.sha);
-                        } catch (NullPointerException ignored) {}
+                        } catch (NullPointerException ignored) {
+                        }
                     }
                     break;
                 case MainActivity.SORT_BY_BLOCKED_COMPONENTS:
@@ -389,45 +398,60 @@ public class MainViewModel extends AndroidViewModel {
         switch (action) {
             case Intent.ACTION_PACKAGE_REMOVED:
             case Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE:
-                for (String packageName: packages) {
+                for (String packageName : packages) {
                     try {
                         mPackageManager.getApplicationInfo(packageName, 0);
                     } catch (PackageManager.NameNotFoundException e) {
-                        removePackageFromApplicationItems(packageName);
+                        removePackageIfNoBackup(packageName);
                     }
                 }
                 filterItemsByFlags();
                 break;
             case Intent.ACTION_PACKAGE_CHANGED:
-                for (String packageName: packages) {
+                for (String packageName : packages) {
                     ApplicationItem item = getNewApplicationItem(packageName);
-                    if (item != null) insertApplicationItemInApplicationItems(item);
+                    if (item != null) insertApplicationItem(item);
                 }
                 sortApplicationList(mSortBy);
                 filterItemsByFlags();
                 break;
             case Intent.ACTION_PACKAGE_ADDED:
             case Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE:
-                for (String packageName: packages) {
+                for (String packageName : packages) {
                     ApplicationItem item = getNewApplicationItem(packageName);
-                    if (item != null) applicationItems.add(item);
+                    if (item != null) insertOrAddApplicationItem(item);
                 }
                 sortApplicationList(mSortBy);
                 filterItemsByFlags();
         }
     }
 
-    private void removePackageFromApplicationItems(String packageName) {
+    private void removePackageIfNoBackup(String packageName) {
         ApplicationItem item = getApplicationItemFromApplicationItems(packageName);
-        if (item != null) applicationItems.remove(item);
-    }
-
-    private void insertApplicationItemInApplicationItems(ApplicationItem item) {
-        for (int i = 0; i<applicationItems.size(); ++i) {
-            if (applicationItems.get(i).packageName.equals(item.packageName)) {
-                applicationItems.set(i, item);
+        if (item != null) {
+            if (item.metadataV1 == null) applicationItems.remove(item);
+            else {
+                ApplicationItem changedItem = getNewApplicationItem(packageName);
+                if (changedItem != null) insertOrAddApplicationItem(changedItem);
             }
         }
+    }
+
+    private void insertOrAddApplicationItem(ApplicationItem item) {
+        if (!insertApplicationItem(item)) {
+            applicationItems.add(item);
+        }
+    }
+
+    private boolean insertApplicationItem(ApplicationItem item) {
+        boolean isInserted = false;
+        for (int i = 0; i < applicationItems.size(); ++i) {
+            if (applicationItems.get(i).equals(item)) {
+                applicationItems.set(i, item);
+                isInserted = true;
+            }
+        }
+        return isInserted;
     }
 
     @Nullable
@@ -459,14 +483,15 @@ public class MainViewModel extends AndroidViewModel {
                 }
             }
             return item;
-        } catch (PackageManager.NameNotFoundException ignored) {}
+        } catch (PackageManager.NameNotFoundException ignored) {
+        }
         return null;
     }
 
     @Nullable
     private ApplicationItem getApplicationItemFromApplicationItems(String packageName) {
         ApplicationItem item;
-        for (int i = 0; i<applicationItems.size(); ++i) {
+        for (int i = 0; i < applicationItems.size(); ++i) {
             item = applicationItems.get(i);
             if (item.packageName.equals(packageName)) return item;
         }
@@ -477,7 +502,7 @@ public class MainViewModel extends AndroidViewModel {
     private String[] getPackagesForUid(int uid) {
         List<String> packages = new LinkedList<>();
         ApplicationItem item;
-        for (int i = 0; i<applicationItems.size(); ++i) {
+        for (int i = 0; i < applicationItems.size(); ++i) {
             item = applicationItems.get(i);
             if (item.uid == uid) packages.add(item.packageName);
         }
@@ -500,13 +525,14 @@ public class MainViewModel extends AndroidViewModel {
             filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
             filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
             filter.addDataScheme("package");
-            mModel.getApplication().registerReceiver(this, filter);
             // Register for events related to sdcard installation.
             IntentFilter sdFilter = new IntentFilter();
             sdFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
             sdFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
             filter.addAction(Intent.ACTION_LOCALE_CHANGED);
+            mModel.getApplication().registerReceiver(this, filter);
             mModel.getApplication().registerReceiver(this, sdFilter);
+            mModel.getApplication().registerReceiver(this, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS));
         }
 
         @Override
@@ -524,6 +550,26 @@ public class MainViewModel extends AndroidViewModel {
                     break;
                 case Intent.ACTION_LOCALE_CHANGED:
                     mModel.loadApplicationItems();
+                    break;
+                case BatchOpsService.ACTION_BATCH_OPS:
+                    // Trigger for all ops except disable, force-stop and uninstall
+                    @BatchOpsManager.OpType int op;
+                    op = intent.getIntExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_NONE);
+                    if (op != BatchOpsManager.OP_NONE && op != BatchOpsManager.OP_DISABLE
+                            && op != BatchOpsManager.OP_UNINSTALL) {
+                        String[] packages = intent.getStringArrayExtra(BatchOpsService.EXTRA_OP_PKG);
+                        String[] failedPackages = intent.getStringArrayExtra(BatchOpsService.EXTRA_FAILED_PKG);
+                        if (packages != null && failedPackages != null) {
+                            List<String> packageList = new ArrayList<>();
+                            List<String> failedPackageList = Arrays.asList(failedPackages);
+                            for (String packageName : packages) {
+                                if (!failedPackageList.contains(packageName))
+                                    packageList.add(packageName);
+                            }
+                            mModel.updateInfoForPackages(packageList.toArray(new String[0]),
+                                    Intent.ACTION_PACKAGE_CHANGED);
+                        }
+                    }
             }
         }
     }

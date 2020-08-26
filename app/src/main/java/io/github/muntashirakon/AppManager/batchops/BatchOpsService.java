@@ -64,7 +64,19 @@ public class BatchOpsService extends IntentService {
     public static final String EXTRA_FAILURE_MESSAGE = "EXTRA_FAILURE_MESSAGE";
 
     /**
-     * Send to the appropriate broadcast receiver denoting that the batch operation is completed
+     * Send to the appropriate broadcast receiver denoting that the batch operation is completed. It
+     * includes the following extras:
+     * <ul>
+     *     <li>
+     *         {@link #EXTRA_OP} is the integer value denoting the type of operation.
+     *     </li>
+     *     <li>
+     *         {@link #EXTRA_OP_PKG} is the array of packages on which operations were carried out. Never null.
+     *     </li>
+     *     <li>
+     *         {@link #EXTRA_FAILED_PKG} is the array of failed packages. Never null.
+     *     </li>
+     * </ul>
      */
     public static final String ACTION_BATCH_OPS = BuildConfig.APPLICATION_ID + ".action.BATCH_OPS";
 
@@ -74,8 +86,11 @@ public class BatchOpsService extends IntentService {
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.BATCH_OPS";
     public static final int NOTIFICATION_ID = 1;
 
-    private @BatchOpsManager.OpType int op = BatchOpsManager.OP_NONE;
+    private @BatchOpsManager.OpType
+    int op = BatchOpsManager.OP_NONE;
     private int flags = 0;
+    private @Nullable
+    ArrayList<String> packages;
 
     public BatchOpsService() {
         super("BatchOpsService");
@@ -107,7 +122,7 @@ public class BatchOpsService extends IntentService {
         }
         op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
         flags = intent.getIntExtra(EXTRA_OP_FLAGS, 0);
-        ArrayList<String> packages = intent.getStringArrayListExtra(EXTRA_OP_PKG);
+        packages = intent.getStringArrayListExtra(EXTRA_OP_PKG);
         if (op == BatchOpsManager.OP_NONE || packages == null) {
             sendResults(Activity.RESULT_CANCELED, null);
             return;
@@ -123,7 +138,11 @@ public class BatchOpsService extends IntentService {
     }
 
     private void sendResults(int result, @Nullable ArrayList<String> failedPackages) {
-        sendBroadcast(new Intent(ACTION_BATCH_OPS));
+        Intent broadcastIntent = new Intent(ACTION_BATCH_OPS);
+        broadcastIntent.putExtra(EXTRA_OP, op);
+        broadcastIntent.putExtra(EXTRA_OP_PKG, packages != null ? packages.toArray(new String[0]) : new String[0]);
+        broadcastIntent.putExtra(EXTRA_FAILED_PKG, failedPackages != null ? failedPackages.toArray(new String[0]) : new String[0]);
+        sendBroadcast(broadcastIntent);
         sendNotification(result, failedPackages);
     }
 
