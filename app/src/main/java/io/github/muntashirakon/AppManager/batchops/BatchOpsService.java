@@ -23,7 +23,10 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -68,6 +71,18 @@ public class BatchOpsService extends IntentService {
      * The failure message
      */
     public static final String EXTRA_FAILURE_MESSAGE = "EXTRA_FAILURE_MESSAGE";
+    /**
+     * The progress message to be used with {@link #ACTION_BATCH_OPS_PROGRESS}
+     */
+    public static final String EXTRA_PROGRESS_MESSAGE = "EXTRA_PROGRESS_MESSAGE";
+    /**
+     * Max value for progress, to be used with {@link #ACTION_BATCH_OPS_PROGRESS}
+     */
+    public static final String EXTRA_PROGRESS_MAX = "EXTRA_PROGRESS_MAX";
+    /**
+     * Current value for progress, to be used with {@link #ACTION_BATCH_OPS_PROGRESS}
+     */
+    public static final String EXTRA_PROGRESS_CURRENT = "EXTRA_PROGRESS_CURRENT";
 
     /**
      * Send to the appropriate broadcast receiver denoting that the batch operation is completed. It
@@ -84,7 +99,25 @@ public class BatchOpsService extends IntentService {
      *     </li>
      * </ul>
      */
-    public static final String ACTION_BATCH_OPS = BuildConfig.APPLICATION_ID + ".action.BATCH_OPS";
+    public static final String ACTION_BATCH_OPS_COMPLETED = BuildConfig.APPLICATION_ID + ".action.BATCH_OPS_COMPLETED";
+    public static final String ACTION_BATCH_OPS_STARTED = BuildConfig.APPLICATION_ID + ".action.BATCH_OPS_STARTED";
+    /**
+     * Send progress info to appropriate broadcast receiver. It includes the following extras:
+     * <ul>
+     *     <li>
+     *         {@link #EXTRA_PROGRESS_MESSAGE} is the message displayed in the progress area, should
+     *         be the app label
+     *     </li>
+     *     <li>
+     *         {@link #EXTRA_PROGRESS_MAX} is the maximum progress (the upper limit), should be
+     *         equal to the package count
+     *     </li>
+     *     <li>
+     *         {@link #EXTRA_PROGRESS_CURRENT} is the current progress
+     *     </li>
+     * </ul>
+     */
+    public static final String ACTION_BATCH_OPS_PROGRESS = BuildConfig.APPLICATION_ID + ".action.BATCH_OPS_PROGRESS";
 
     /**
      * Notification channel ID
@@ -98,6 +131,24 @@ public class BatchOpsService extends IntentService {
     ArrayList<String> packages;
     Bundle args;
     private String header;
+    private NotificationCompat.Builder builder;
+    NotificationManager notificationManager;
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, @NonNull Intent intent) {
+            if (intent.getAction() == null) return;
+            if (ACTION_BATCH_OPS_PROGRESS.equals(intent.getAction())) {
+                if (notificationManager == null) return;
+                int progressMax = intent.getIntExtra(EXTRA_PROGRESS_MAX, 0);
+                String progressMessage = intent.getStringExtra(EXTRA_PROGRESS_MESSAGE);
+                if (progressMessage == null)
+                    progressMessage = getString(R.string.operation_running);
+                builder.setContentText(progressMessage);
+                builder.setProgress(progressMax, intent.getIntExtra(EXTRA_PROGRESS_CURRENT, 0), progressMax == 0);
+                notificationManager.notify(NOTIFICATION_ID, builder.build());
+            }
+        }
+    };
 
     public BatchOpsService() {
         super("BatchOpsService");
@@ -114,14 +165,16 @@ public class BatchOpsService extends IntentService {
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0);
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+        builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(getDesiredOpTitle())
                 .setContentText(getString(R.string.operation_running))
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setSubText(header)
-                .setContentIntent(pendingIntent)
-                .build();
-        startForeground(NOTIFICATION_ID, notification);
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setProgress(0, 0, true)
+                .setContentIntent(pendingIntent);
+        startForeground(NOTIFICATION_ID, builder.build());
+        registerReceiver(broadcastReceiver, new IntentFilter(ACTION_BATCH_OPS_PROGRESS));
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -148,8 +201,14 @@ public class BatchOpsService extends IntentService {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
+    }
+
     private void sendResults(int result, @Nullable ArrayList<String> failedPackages) {
-        Intent broadcastIntent = new Intent(ACTION_BATCH_OPS);
+        Intent broadcastIntent = new Intent(ACTION_BATCH_OPS_COMPLETED);
         broadcastIntent.putExtra(EXTRA_OP, op);
         broadcastIntent.putExtra(EXTRA_OP_PKG, packages != null ? packages.toArray(new String[0]) : new String[0]);
         broadcastIntent.putExtra(EXTRA_FAILED_PKG, failedPackages != null ? failedPackages.toArray(new String[0]) : new String[0]);
@@ -160,8 +219,8 @@ public class BatchOpsService extends IntentService {
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(CHANNEL_ID,
-                    "BatchOpsServiceChannel", NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+                    "BatchOpsServiceChannel", NotificationManager.IMPORTANCE_LOW);
+            notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(serviceChannel);
         }
     }

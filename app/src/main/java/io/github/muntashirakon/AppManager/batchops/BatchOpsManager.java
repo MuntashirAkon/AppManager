@@ -17,7 +17,12 @@
 
 package io.github.muntashirakon.AppManager.batchops;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 
 import java.lang.annotation.Retention;
@@ -29,6 +34,7 @@ import java.util.Locale;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
@@ -38,27 +44,33 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class BatchOpsManager {
     // Bundle args
     /**
-     * {@link Integer} value containing flags
+     * {@link Integer[]} value containing app op values to be used with {@link #OP_IGNORE_APP_OPS}.
+     */
+    public static final String ARG_APP_OPS = "app_ops";
+    /**
+     * {@link Integer} value containing flags to be used with {@link #OP_BACKUP},
+     * {@link #OP_RESTORE_BACKUP} and {@link #OP_DELETE_BACKUP}.
      */
     public static final String ARG_FLAGS = "flags";
     /**
-     * {@link String[]} value containing signatures, e.g., org.acra.
+     * {@link String[]} value containing signatures, e.g., org.acra. To be used with
+     * {@link #OP_BLOCK_COMPONENTS}.
      */
     public static final String ARG_SIGNATURES = "signatures";
     /**
-     * {@link Integer[]} value containing app op values
+     * {@link java.io.File[]} value containing app op values
      */
-    public static final String ARG_APP_OPS = "app_ops";
+    public static final String ARG_FILES = "app_ops";
 
     @IntDef(value = {
             OP_NONE,
             OP_BACKUP_APK,
             OP_BACKUP,
-            OP_IGNORE_APP_OPS,
             OP_BLOCK_COMPONENTS,
             OP_BLOCK_TRACKERS,
             OP_CLEAR_DATA,
@@ -67,6 +79,7 @@ public class BatchOpsManager {
             OP_DISABLE_BACKGROUND,
             OP_EXPORT_RULES,
             OP_FORCE_STOP,
+            OP_IGNORE_APP_OPS,
             OP_RESTORE_BACKUP,
             OP_UNBLOCK_TRACKERS,
             OP_UNINSTALL,
@@ -91,9 +104,11 @@ public class BatchOpsManager {
     public static final int OP_IGNORE_APP_OPS = 13;
 
     private Runner runner;
+    private Handler handler;
 
     public BatchOpsManager() {
         this.runner = Runner.getInstance();
+        this.handler = new Handler(Looper.getMainLooper());
     }
 
     private List<String> packageNames;
@@ -133,8 +148,10 @@ public class BatchOpsManager {
                 return opUninstall();
             case OP_UNBLOCK_TRACKERS:
                 return opUnblockTrackers();
-            case OP_BLOCK_COMPONENTS: return opBlockComponents();
-            case OP_IGNORE_APP_OPS: return opIgnoreAppOps();
+            case OP_BLOCK_COMPONENTS:
+                return opBlockComponents();
+            case OP_IGNORE_APP_OPS:
+                return opIgnoreAppOps();
             case OP_NONE:
                 break;
         }
@@ -159,7 +176,16 @@ public class BatchOpsManager {
 
     private Result opBackupApk() {
         List<String> failedPackages = new ArrayList<>();
+        int max = packageNames.size();
+        int i = 0;
+        Context context = AppManager.getContext();
+        PackageManager pm = context.getPackageManager();
+        // Initial progress
+        sendProgress(context, null, max, 0);
         for (String packageName : packageNames) {
+            // Send progress
+            sendProgress(context, PackageUtils.getPackageLabel(pm, packageName), max, ++i);
+            // Do operation
             if (!ApkUtils.backupApk(packageName)) failedPackages.add(packageName);
         }
         return lastResult = new Result() {
@@ -178,7 +204,16 @@ public class BatchOpsManager {
 
     private Result opBackupRestore(@BackupDialogFragment.ActionMode int mode) {
         List<String> failedPackages = new ArrayList<>();
+        int max = packageNames.size();
+        int i = 0;
+        Context context = AppManager.getContext();
+        PackageManager pm = context.getPackageManager();
+        // Initial progress
+        sendProgress(context, null, max, 0);
         for (String packageName : packageNames) {
+            // Send progress
+            sendProgress(context, PackageUtils.getPackageLabel(pm, packageName), max, ++i);
+            // Do operation
             try (BackupStorageManager backupStorageManager = BackupStorageManager.getInstance(packageName)) {
                 backupStorageManager.setFlags(args.getInt(ARG_FLAGS));
                 switch (mode) {
@@ -319,6 +354,14 @@ public class BatchOpsManager {
             addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_UNINSTALL_PACKAGE, packageName));
         }
         return runOpAndFetchResults();
+    }
+
+    private void sendProgress(@NonNull Context context, String message, int max, int current) {
+        Intent broadcastIntent = new Intent(BatchOpsService.ACTION_BATCH_OPS_PROGRESS);
+        broadcastIntent.putExtra(BatchOpsService.EXTRA_PROGRESS_MESSAGE, message);
+        broadcastIntent.putExtra(BatchOpsService.EXTRA_PROGRESS_MAX, max);
+        broadcastIntent.putExtra(BatchOpsService.EXTRA_PROGRESS_CURRENT, current);
+        handler.post(() -> context.sendBroadcast(broadcastIntent));
     }
 
     private void addCommand(String packageName, String command) {

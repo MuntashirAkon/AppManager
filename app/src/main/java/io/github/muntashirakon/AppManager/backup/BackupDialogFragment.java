@@ -160,7 +160,7 @@ public class BackupDialogFragment extends DialogFragment {
             default: op = BatchOpsManager.OP_BACKUP;
         }
         if (actionBeginInterface != null) actionBeginInterface.onActionBegin(mode);
-        activity.registerReceiver(mBatchOpsBroadCastReceiver, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS));
+        activity.registerReceiver(mBatchOpsBroadCastReceiver, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS_COMPLETED));
         // Start batch ops service
         Intent intent = new Intent(activity, BatchOpsService.class);
         intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(packageNames));

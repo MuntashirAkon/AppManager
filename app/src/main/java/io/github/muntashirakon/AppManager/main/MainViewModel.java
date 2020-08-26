@@ -532,7 +532,7 @@ public class MainViewModel extends AndroidViewModel {
             filter.addAction(Intent.ACTION_LOCALE_CHANGED);
             mModel.getApplication().registerReceiver(this, filter);
             mModel.getApplication().registerReceiver(this, sdFilter);
-            mModel.getApplication().registerReceiver(this, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS));
+            mModel.getApplication().registerReceiver(this, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS_COMPLETED));
         }
 
         @Override
@@ -551,7 +551,7 @@ public class MainViewModel extends AndroidViewModel {
                 case Intent.ACTION_LOCALE_CHANGED:
                     mModel.loadApplicationItems();
                     break;
-                case BatchOpsService.ACTION_BATCH_OPS:
+                case BatchOpsService.ACTION_BATCH_OPS_COMPLETED:
                     // Trigger for all ops except disable, force-stop and uninstall
                     @BatchOpsManager.OpType int op;
                     op = intent.getIntExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_NONE);
