@@ -89,7 +89,7 @@ public class PackageInstallerActivity extends AppCompatActivity {
                                 .setPositiveButton(R.string.install, (dialog, which) -> install(appLabel))
                                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> finish())
                                 .show());
-                    }
+                    } else install(appLabel);
                 } else {
                     // App is installed
                     long installedVersionCode = PackageUtils.getVersionCode(installedPackageInfo);
@@ -114,7 +114,7 @@ public class PackageInstallerActivity extends AppCompatActivity {
                                     .setPositiveButton(R.string.reinstall, (dialog, which) -> install(appLabel))
                                     .setNegativeButton(android.R.string.cancel, (dialog, which) -> finish())
                                     .show());
-                        }
+                        } else install(appLabel);
                     } else {
                         // TODO: Add option to downgrade
                         runOnUiThread(() -> {
