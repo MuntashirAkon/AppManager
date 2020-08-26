@@ -67,7 +67,6 @@
     <string name="sort_by_app_label">Nome do aplicativo</string>
     <string name="sort_by_package_name">Nome do pacote</string>
     <string name="sort_by_domain">Apps do usuário</string>
-    <string name="sort_by_app_size">Tamanho do app/sdk</string>
     <string name="data_received">Dados recebidos</string>
     <string name="data_transmitted">Dados transmitidos</string>
     <string name="data_usage_msg">Uso de dados desde a última inicialização</string>

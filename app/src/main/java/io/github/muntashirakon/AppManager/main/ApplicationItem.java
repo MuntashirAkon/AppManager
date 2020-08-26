@@ -75,9 +75,9 @@ public class ApplicationItem extends PackageItemInfo {
      */
     public Long lastUpdateTime = 0L;
     /**
-     * Target SDK version * -1
+     * Target SDK version
      */
-    public Long size = -1L;
+    public Integer sdk;
     /**
      * Issuer and signature
      */

@@ -65,7 +65,6 @@
     <string name="sort_by_app_label">App-Name</string>
     <string name="sort_by_package_name">Paketname</string>
     <string name="sort_by_domain">Nutzeranwendungen zuerst</string>
-    <string name="sort_by_app_size">App-Größe/-SDK</string>
     <string name="data_received">Daten empfangen</string>
     <string name="data_transmitted">Daten gesendet</string>
     <string name="data_usage_msg">Daten-Verbrauch seit letztem Hochfahren</string>

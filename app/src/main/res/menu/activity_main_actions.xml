@@ -54,8 +54,8 @@
                     android:title="@string/sort_by_shared_user_id" />
 
                 <item
-                    android:id="@+id/action_sort_by_app_size"
-                    android:title="@string/sort_by_app_size" />
+                    android:id="@+id/action_sort_by_target_sdk"
+                    android:title="@string/sort_by_target_sdk" />
 
                 <item
                     android:id="@+id/action_sort_by_sha"

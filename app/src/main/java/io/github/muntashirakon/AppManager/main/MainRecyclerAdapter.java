@@ -28,7 +28,6 @@ import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.format.Formatter;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -269,11 +268,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             }
             // Set SDK
             if (item.isInstalled) {
-                if (Build.VERSION.SDK_INT >= 26) {
-                    holder.size.setText(String.format(Locale.getDefault(), "SDK %d", -item.size));
-                } else if (item.size != -1L) {
-                    holder.size.setText(Formatter.formatFileSize(mActivity, item.size));
-                }
+                holder.size.setText(String.format(Locale.getDefault(), "SDK %d", item.sdk));
             } else holder.size.setText("-");
             // Set SDK color to orange if the app is using cleartext (e.g. HTTP) traffic
             if ((item.flags & ApplicationInfo.FLAG_USES_CLEARTEXT_TRAFFIC) !=0)

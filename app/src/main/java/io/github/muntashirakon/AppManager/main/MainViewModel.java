@@ -24,17 +24,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageStats;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -216,9 +212,7 @@ public class MainViewModel extends AndroidViewModel {
                             item.firstInstallTime = packageInfo.firstInstallTime;
                             item.lastUpdateTime = packageInfo.lastUpdateTime;
                             item.sha = Utils.getIssuerAndAlg(packageInfo);
-                            if (Build.VERSION.SDK_INT >= 26) {
-                                item.size = (long) -1 * applicationInfo.targetSdkVersion;
-                            }
+                            item.sdk = applicationInfo.targetSdkVersion;
                             applicationItems.add(item);
                         } catch (PackageManager.NameNotFoundException ignored) {}
                     }
@@ -236,9 +230,7 @@ public class MainViewModel extends AndroidViewModel {
                         item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
                         item.isDisabled = !applicationInfo.enabled;
                         item.label = applicationInfo.loadLabel(mPackageManager).toString();
-                        if (Build.VERSION.SDK_INT >= 26) {
-                            item.size = (long) -1 * applicationInfo.targetSdkVersion;
-                        }
+                        item.sdk = applicationInfo.targetSdkVersion;
                         try {
                             PackageInfo packageInfo = mPackageManager.getPackageInfo(
                                     applicationInfo.packageName, flagSigningInfo |
@@ -274,7 +266,6 @@ public class MainViewModel extends AndroidViewModel {
                     item.isInstalled = false;
                     applicationItems.add(item);
                 }
-                if (Build.VERSION.SDK_INT <= 25) loadPackageSize();
                 sortApplicationList(mSortBy);
                 filterItemsByFlags();
             }
@@ -342,36 +333,6 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
-    private void loadPackageSize() {
-        for (int i = 0; i<applicationItems.size(); ++i)
-            applicationItems.set(i, getSizeForPackage(applicationItems.get(i)));
-    }
-
-    @NonNull
-    private ApplicationItem getSizeForPackage(@NonNull final ApplicationItem item) {
-        if (!item.isInstalled) return item;
-        try {
-            @SuppressWarnings("JavaReflectionMemberAccess")
-            Method getPackageSizeInfo = PackageManager.class.getMethod("getPackageSizeInfo",
-                    String.class, IPackageStatsObserver.class);
-
-            getPackageSizeInfo.invoke(mPackageManager, item.packageName, new IPackageStatsObserver.Stub() {
-                @Override
-                public void onGetStatsCompleted(final PackageStats pStats, final boolean succeeded) {
-                    if (succeeded) {
-                        item.size = pStats.codeSize + pStats.cacheSize + pStats.dataSize
-                                + pStats.externalCodeSize + pStats.externalCacheSize
-                                + pStats.externalDataSize + pStats.externalMediaSize
-                                + pStats.externalObbSize;
-                    } else item.size = -1L;
-                }
-            });
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return item;
-    }
-
     private void sortApplicationList(@MainActivity.SortOrder int sortBy) {
         final boolean isRootEnabled = AppPref.isRootEnabled();
         if (sortBy != MainActivity.SORT_BY_APP_LABEL) sortApplicationList(MainActivity.SORT_BY_APP_LABEL);
@@ -389,8 +350,8 @@ public class MainViewModel extends AndroidViewModel {
                 case MainActivity.SORT_BY_LAST_UPDATE:
                     // Sort in decreasing order
                     return -o1.lastUpdateTime.compareTo(o2.lastUpdateTime);
-                case MainActivity.SORT_BY_APP_SIZE_OR_SDK:
-                    return -o1.size.compareTo(o2.size);
+                case MainActivity.SORT_BY_TARGET_SDK:
+                    return -o1.sdk.compareTo(o2.sdk);
                 case MainActivity.SORT_BY_SHARED_ID:
                     return o2.uid - o1.uid;
                 case MainActivity.SORT_BY_SHA:
@@ -491,11 +452,7 @@ public class MainViewModel extends AndroidViewModel {
             item.firstInstallTime = packageInfo.firstInstallTime;
             item.lastUpdateTime = packageInfo.lastUpdateTime;
             item.sha = Utils.getIssuerAndAlg(packageInfo);
-            if (Build.VERSION.SDK_INT >= 26) {
-                item.size = (long) -1 * applicationInfo.targetSdkVersion;
-            } else {  // 25 or less
-                getSizeForPackage(item);
-            }
+            item.sdk = applicationInfo.targetSdkVersion;
             if (mSortBy == MainActivity.SORT_BY_BLOCKED_COMPONENTS && AppPref.isRootEnabled()) {
                 try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, true)) {
                     item.blockedCount = cb.componentCount();

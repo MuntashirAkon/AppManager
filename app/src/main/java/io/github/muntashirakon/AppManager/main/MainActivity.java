@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final int[] sSortMenuItemIdsMap = {R.id.action_sort_by_domain,
             R.id.action_sort_by_app_label, R.id.action_sort_by_package_name,
             R.id.action_sort_by_last_update, R.id.action_sort_by_shared_user_id,
-            R.id.action_sort_by_app_size, R.id.action_sort_by_sha, R.id.action_sort_by_disabled_app,
+            R.id.action_sort_by_target_sdk, R.id.action_sort_by_sha, R.id.action_sort_by_disabled_app,
             R.id.action_sort_by_blocked_components};
 
     @IntDef(value = {
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements
             SORT_BY_PACKAGE_NAME,
             SORT_BY_LAST_UPDATE,
             SORT_BY_SHARED_ID,
-            SORT_BY_APP_SIZE_OR_SDK,
+            SORT_BY_TARGET_SDK,
             SORT_BY_SHA,
             SORT_BY_DISABLED_APP,
             SORT_BY_BLOCKED_COMPONENTS
@@ -128,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements
     public static final int SORT_BY_PACKAGE_NAME = 2;
     public static final int SORT_BY_LAST_UPDATE = 3;
     public static final int SORT_BY_SHARED_ID = 4;
-    public static final int SORT_BY_APP_SIZE_OR_SDK = 5;  // App size/sdk
+    public static final int SORT_BY_TARGET_SDK = 5;
     public static final int SORT_BY_SHA = 6;  // Signature
     public static final int SORT_BY_DISABLED_APP = 7;
     public static final int SORT_BY_BLOCKED_COMPONENTS = 8;
@@ -453,8 +452,8 @@ public class MainActivity extends AppCompatActivity implements
                 setSortBy(SORT_BY_SHA);
                 item.setChecked(true);
                 return true;
-            case R.id.action_sort_by_app_size:
-                setSortBy(SORT_BY_APP_SIZE_OR_SDK);
+            case R.id.action_sort_by_target_sdk:
+                setSortBy(SORT_BY_TARGET_SDK);
                 item.setChecked(true);
                 return true;
             case R.id.action_sort_by_disabled_app:
@@ -530,15 +529,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onRefresh() {
-        if (mSortBy == SORT_BY_APP_SIZE_OR_SDK && Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
-            Toast t = Toast.makeText(this, getString(R.string.refresh) + " & " + getString(R.string.sort) + "/" + getString(R.string.sort_by_app_size)
-                    + "\n" + getString(R.string.unsupported), Toast.LENGTH_LONG);
-            t.setGravity(Gravity.CENTER , Gravity.CENTER, Gravity.CENTER);
-            t.show();
-        } else {
-            showProgressIndicator(true);
-            mModel.loadApplicationItems();
-        }
+        showProgressIndicator(true);
+        mModel.loadApplicationItems();
         mSwipeRefresh.setRefreshing(false);
     }
 

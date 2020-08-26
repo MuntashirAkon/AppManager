@@ -67,7 +67,7 @@
     <string name="sort_by_app_label">App label</string>
     <string name="sort_by_package_name">Package name</string>
     <string name="sort_by_domain">User app first</string>
-    <string name="sort_by_app_size">App size/sdk</string>
+    <string name="sort_by_target_sdk">Target SDK</string>
     <string name="sdk" translatable="false">SDK</string>
     <string name="data_received">Data received</string>
     <string name="data_transmitted">Data transmitted</string>
