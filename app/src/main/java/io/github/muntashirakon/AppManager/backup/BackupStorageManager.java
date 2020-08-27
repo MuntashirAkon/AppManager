@@ -25,6 +25,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 
 import org.json.JSONException;
 
@@ -47,6 +48,7 @@ import io.github.muntashirakon.AppManager.rules.RulesImporter;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -419,6 +421,16 @@ public class BackupStorageManager implements AutoCloseable {
                     // Clear cache if exists: return value is not important for us
                     RootShellRunner.runCommand(String.format("rm -rf %s/cache %s/code_cache", dataSource, dataSource));
                 }
+                // Fix UID and GID
+                Pair<String, String> uidAndGid = getUidAndGid(dataSource);
+                if (uidAndGid == null) {
+                    Log.e("BSM - Restore", "Failed to get owner info for index " + i + ".");
+                    return false;
+                }
+                if (!RootShellRunner.runCommand(String.format("chown -R %s:%s \"%s\"", uidAndGid.first, uidAndGid.second, dataSource)).isSuccessful()) {
+                    Log.e("BSM - Restore", "Failed to get restore owner for index " + i + ".");
+                    return false;
+                }
             }
         }
         if ((flags & BACKUP_RULES) != 0) {
@@ -459,6 +471,15 @@ public class BackupStorageManager implements AutoCloseable {
     private boolean cleanup(@NonNull File backupPath) {
         if (backupPath.exists()) IOUtils.deleteDir(backupPath);
         return false;
+    }
+
+    @Nullable
+    public Pair<String, String> getUidAndGid(String filepath) {
+        Runner.Result result = RootShellRunner.runCommand(String.format("stat -c '%%u %%g' \"%s\"", filepath));
+        if (!result.isSuccessful()) return null;
+        String[] uidGid = result.getOutput().split(" ");
+        if (uidGid.length != 2) return null;
+        return new Pair<>(uidGid[0], uidGid[1]);
     }
 
     @Nullable
