@@ -341,17 +341,9 @@ public class BackupStorageManager implements AutoCloseable {
                 return false;
             }
             // A normal update will do it now
-            if (splitApkNames.length > 0) {
-                // Split apk
-                if (!PackageInstallerShell.getInstance().installMultiple(allApks)) {
-                    Log.e("BSM - Restore", "A (re)install was necessary but couldn't perform it.");
-                    return false;
-                }
-            } else {
-                if (!RunnerUtils.installPackage(baseApk.getAbsolutePath()).isSuccessful()) {
-                    Log.e("BSM - Restore", "A (re)install was necessary but couldn't perform it.");
-                    return false;
-                }
+            if (!PackageInstallerShell.getInstance().installMultiple(allApks)) {
+                Log.e("BSM - Restore", "A (re)install was necessary but couldn't perform it.");
+                return false;
             }
             // Get package info
             try {

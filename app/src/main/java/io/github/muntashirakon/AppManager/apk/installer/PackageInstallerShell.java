@@ -55,7 +55,7 @@ public final class PackageInstallerShell implements IPackageInstaller {
             return false;
         }
         // Create install session
-        StringBuilder cmd = new StringBuilder(installCmd).append(" install-create -r -S ")
+        StringBuilder cmd = new StringBuilder(installCmd).append(" install-create -r -d -t -S ")
                 .append(totalSize).append(" -i ").append(BuildConfig.APPLICATION_ID)
                 .append(" --user 0");
         for (File apkFile : apkFiles)
@@ -94,7 +94,7 @@ public final class PackageInstallerShell implements IPackageInstaller {
         result = Runner.runCommand(installCmd + " install-commit " + sessionId);
         buf = result.getOutput();
         if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
-            Log.e(TAG, "Abandon: Failed to abandon session.");
+            Log.e(TAG, "InstallMultiple: Failed to commit the install.");
             return abandon();
         }
         return true;
