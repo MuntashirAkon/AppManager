@@ -404,8 +404,14 @@ public class BackupStorageManager implements AutoCloseable {
             for (int i = 0; i<metadataV1.dataDirs.length; ++i) {
                 dataSource = metadataV1.dataDirs[i];
                 dataFiles = getDataFiles(backupPath, i);
+                Pair<String, String> uidAndGid = getUidAndGid(dataSource);
                 if (dataFiles == null) {
                     Log.e("BSM - Restore", "Data restore is requested but there are no data files for index " + i + ".");
+                    return false;
+                }
+                // Fix UID and GID
+                if (RunnerUtils.fileExists(dataSource) && uidAndGid == null) {
+                    Log.e("BSM - Restore", "Failed to get owner info for index " + i + ".");
                     return false;
                 }
                 StringBuilder cmdData = new StringBuilder();
@@ -421,13 +427,7 @@ public class BackupStorageManager implements AutoCloseable {
                     // Clear cache if exists: return value is not important for us
                     RootShellRunner.runCommand(String.format("rm -rf %s/cache %s/code_cache", dataSource, dataSource));
                 }
-                // Fix UID and GID
-                Pair<String, String> uidAndGid = getUidAndGid(dataSource);
-                if (uidAndGid == null) {
-                    Log.e("BSM - Restore", "Failed to get owner info for index " + i + ".");
-                    return false;
-                }
-                if (!RootShellRunner.runCommand(String.format("chown -R %s:%s \"%s\"", uidAndGid.first, uidAndGid.second, dataSource)).isSuccessful()) {
+                if (uidAndGid != null && !RootShellRunner.runCommand(String.format("chown -R %s:%s \"%s\"", uidAndGid.first, uidAndGid.second, dataSource)).isSuccessful()) {
                     Log.e("BSM - Restore", "Failed to get restore owner for index " + i + ".");
                     return false;
                 }
