@@ -62,10 +62,6 @@ public class BatchOpsManager {
      * {@link #OP_BLOCK_COMPONENTS}.
      */
     public static final String ARG_SIGNATURES = "signatures";
-    /**
-     * {@link java.io.File[]} value containing app op values
-     */
-    public static final String ARG_FILES = "app_ops";
 
     @IntDef(value = {
             OP_NONE,
