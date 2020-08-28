@@ -36,7 +36,8 @@ public class PackageInstallerService extends Service {
             case PackageInstaller.STATUS_PENDING_USER_ACTION:
                 try {
                     Intent confirmationIntent = intent.getParcelableExtra(Intent.EXTRA_INTENT);
-                    if (confirmationIntent == null) throw new Exception("Empty confirmation intent.");
+                    if (confirmationIntent == null)
+                        throw new Exception("Empty confirmation intent.");
                     confirmationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(confirmationIntent);
                 } catch (Exception e) {
@@ -45,9 +46,18 @@ public class PackageInstallerService extends Service {
                 }
                 break;
             case PackageInstaller.STATUS_SUCCESS:
+                Intent broadcastIntent = new Intent(AMPackageInstaller.ACTION_INSTALL_COMPLETED);
+                broadcastIntent.putExtra(AMPackageInstaller.EXTRA_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME));
+                broadcastIntent.putExtra(AMPackageInstaller.EXTRA_STATUS, AMPackageInstaller.STATUS_SUCCESS);
+                AMPackageInstaller.sendCompletedBroadcast(intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME), AMPackageInstaller.STATUS_SUCCESS);
                 Toast.makeText(getApplicationContext(), getString(R.string.package_name_is_installed_successfully, PackageUtils.getPackageLabel(getPackageManager(), intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME))), Toast.LENGTH_LONG).show();
                 break;
             default:
+                Intent broadcastIntent2 = new Intent(AMPackageInstaller.ACTION_INSTALL_COMPLETED);
+                broadcastIntent2.putExtra(AMPackageInstaller.EXTRA_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME));
+                broadcastIntent2.putExtra(AMPackageInstaller.EXTRA_OTHER_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
+                broadcastIntent2.putExtra(AMPackageInstaller.EXTRA_STATUS, status);
+                getApplication().sendBroadcast(broadcastIntent2);
                 Toast.makeText(getApplicationContext(), getErrorString(status, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME)), Toast.LENGTH_LONG).show();
                 break;
         }

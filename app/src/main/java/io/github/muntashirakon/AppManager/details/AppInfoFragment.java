@@ -561,7 +561,7 @@ public class AppInfoFragment extends Fragment
                 addToHorizontalLayout(R.string.install, R.drawable.ic_baseline_get_app_24)
                         .setOnClickListener(v -> new Thread(() -> {
                     try {
-                        PackageUtils.installApkCompat(mPackageLabel.toString(), mainModel.getApkFiles());
+                        PackageUtils.installApkCompat(mPackageName, mPackageLabel.toString(), mainModel.getApkFiles());
                     } catch (Exception e) {
                         e.printStackTrace();
                         runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show());
@@ -585,7 +585,7 @@ public class AppInfoFragment extends Fragment
                             .setOnClickListener(v -> new Thread(() -> {
                         try {
                             try {
-                                PackageUtils.installApkCompat(mPackageLabel.toString(), mainModel.getApkFiles());
+                                PackageUtils.installApkCompat(mPackageName, mPackageLabel.toString(), mainModel.getApkFiles());
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show());

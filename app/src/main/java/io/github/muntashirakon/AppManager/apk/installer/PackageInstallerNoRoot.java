@@ -17,8 +17,8 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
@@ -31,12 +31,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
-public final class PackageInstallerNoRoot implements IPackageInstaller {
+public final class PackageInstallerNoRoot extends AMPackageInstaller {
     public static final String TAG = "SAI";
 
+    @SuppressLint("StaticFieldLeak")
     private static PackageInstallerNoRoot INSTANCE;
 
     public static PackageInstallerNoRoot getInstance() {
@@ -51,8 +51,8 @@ public final class PackageInstallerNoRoot implements IPackageInstaller {
     }
 
     @Override
-    public boolean installMultiple(File[] apkFiles) {
-        Context context = AppManager.getContext();
+    public boolean installMultiple(File[] apkFiles, String packageName) {
+        sendStartedBroadcast(packageName);
         packageInstaller = context.getPackageManager().getPackageInstaller();
         // Clean old sessions
         cleanOldSessions();
@@ -64,12 +64,14 @@ public final class PackageInstallerNoRoot implements IPackageInstaller {
         try {
             sessionId = packageInstaller.createSession(sessionParams);
         } catch (IOException e) {
+            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE);
             Log.e(TAG, "InstallMultiple: Failed to create install session.", e);
             return false;
         }
         try {
             session = packageInstaller.openSession(sessionId);
         } catch (IOException e) {
+            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE);
             Log.e(TAG, "InstallMultiple: Failed to open install session.", e);
             return false;
         }
@@ -80,9 +82,11 @@ public final class PackageInstallerNoRoot implements IPackageInstaller {
                 IOUtils.copy(apkInputStream, apkOutputStream);
                 session.fsync(apkOutputStream);
             } catch (IOException e) {
-                Log.e(TAG, "InstallMultiple: Cannot access copy files to session.", e);
+                sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE);
+                Log.e(TAG, "InstallMultiple: Cannot copy files to session.", e);
                 return abandon();
             } catch (SecurityException e) {
+                sendCompletedBroadcast(packageName, STATUS_FAILURE_SECURITY);
                 Log.e(TAG, "InstallMultiple: Cannot access apk files.", e);
                 return abandon();
             }

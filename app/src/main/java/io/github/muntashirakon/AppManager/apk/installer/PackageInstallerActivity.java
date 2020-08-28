@@ -17,7 +17,10 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -46,6 +49,14 @@ public class PackageInstallerActivity extends AppCompatActivity {
 
     private int flagSigningInfo;
     private int flagDisabledComponents;
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, @NonNull Intent intent) {
+            if (intent.getAction() != null && intent.getAction().equals(AMPackageInstaller.ACTION_INSTALL_COMPLETED)) {
+                finish();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,10 +97,10 @@ public class PackageInstallerActivity extends AppCompatActivity {
                                 .setTitle(appLabel)
                                 .setIcon(appIcon)
                                 .setMessage(R.string.install_app_message)
-                                .setPositiveButton(R.string.install, (dialog, which) -> install(appLabel))
+                                .setPositiveButton(R.string.install, (dialog, which) -> install(packageInfo.packageName, appLabel))
                                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> finish())
                                 .show());
-                    } else install(appLabel);
+                    } else install(packageInfo.packageName, appLabel);
                 } else {
                     // App is installed
                     long installedVersionCode = PackageUtils.getVersionCode(installedPackageInfo);
@@ -101,7 +112,7 @@ public class PackageInstallerActivity extends AppCompatActivity {
                         args.putParcelable(WhatsNewDialogFragment.ARG_OLD_PKG_INFO, installedPackageInfo);
                         WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
                         dialogFragment.setArguments(args);
-                        dialogFragment.setOnTriggerInstall(() -> install(appLabel));
+                        dialogFragment.setOnTriggerInstall(() -> install(packageInfo.packageName, appLabel));
                         runOnUiThread(() -> dialogFragment.show(getSupportFragmentManager(), WhatsNewDialogFragment.TAG));
                     } else if (installedVersionCode == thisVersionCode) {
                         // Issue reinstall
@@ -111,10 +122,10 @@ public class PackageInstallerActivity extends AppCompatActivity {
                                     .setTitle(appLabel)
                                     .setIcon(appIcon)
                                     .setMessage(R.string.reinstall_app_message)
-                                    .setPositiveButton(R.string.reinstall, (dialog, which) -> install(appLabel))
+                                    .setPositiveButton(R.string.reinstall, (dialog, which) -> install(packageInfo.packageName, appLabel))
                                     .setNegativeButton(android.R.string.cancel, (dialog, which) -> finish())
                                     .show());
-                        } else install(appLabel);
+                        } else install(packageInfo.packageName, appLabel);
                     } else {
                         // TODO: Add option to downgrade
                         runOnUiThread(() -> {
@@ -128,6 +139,7 @@ public class PackageInstallerActivity extends AppCompatActivity {
                 runOnUiThread(this::finish);
             }
         }).start();
+        registerReceiver(broadcastReceiver, new IntentFilter(AMPackageInstaller.ACTION_INSTALL_COMPLETED));
     }
 
     @NonNull
@@ -168,11 +180,10 @@ public class PackageInstallerActivity extends AppCompatActivity {
         return apkFiles;
     }
 
-    private void install(String appLabel) {
+    private void install(String packageName, String appLabel) {
         new Thread(() -> {
             try {
-                PackageUtils.installApkCompat(appLabel, getApkFiles());
-                runOnUiThread(this::finish);
+                PackageUtils.installApkCompat(packageName, appLabel, getApkFiles());
             } catch (Exception e) {
                 e.printStackTrace();
                 runOnUiThread(() -> {
@@ -185,6 +196,7 @@ public class PackageInstallerActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        unregisterReceiver(broadcastReceiver);
         if (apkFile != null) apkFile.close();
         super.onDestroy();
     }

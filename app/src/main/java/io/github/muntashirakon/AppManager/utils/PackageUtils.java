@@ -334,12 +334,12 @@ public final class PackageUtils {
         return s.toString();
     }
 
-    public static void installApkCompat(String appName, File[] apkFiles) throws Exception {
+    public static void installApkCompat(String packageName, String appName, File[] apkFiles) throws Exception {
         // Install apk based on user pref
         if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
             // Use shell method but save to package staging directory
             File[] stagingApkFiles = getStagingApkFiles(apkFiles);
-            boolean isSuccess = PackageInstallerShell.getInstance().installMultiple(stagingApkFiles);
+            boolean isSuccess = PackageInstallerShell.getInstance().installMultiple(stagingApkFiles, packageName);
             for (File file : stagingApkFiles)
                 if (file.exists()) //noinspection ResultOfMethodCallIgnored
                     file.delete();
@@ -353,7 +353,7 @@ public final class PackageUtils {
             }
         } else {
             // Use normal method
-            if (!PackageInstallerNoRoot.getInstance().installMultiple(apkFiles)) {
+            if (!PackageInstallerNoRoot.getInstance().installMultiple(apkFiles, packageName)) {
                 throw new Exception("Failed to proceed to the commit.");
             }
         }
