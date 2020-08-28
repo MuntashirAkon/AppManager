@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
@@ -27,9 +26,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,9 +47,6 @@ import java.util.regex.Pattern;
 import androidx.annotation.NonNull;
 import dalvik.system.DexFile;
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerNoRoot;
-import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerShell;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
@@ -62,6 +55,8 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
 
 public final class PackageUtils {
+    public static final File PACKAGE_STAGING_DIRECTORY = new File("/data/local/tmp");
+
     @SuppressWarnings("RegExpRedundantEscape")
     private static final Pattern SERVICE_REGEX = Pattern.compile("ServiceRecord\\{.*/([^\\}]+)\\}");
 
@@ -332,48 +327,5 @@ public final class PackageUtils {
             s.append(String.format("%02X", b).toLowerCase(Locale.ROOT));
         }
         return s.toString();
-    }
-
-    public static void installApkCompat(String packageName, String appName, File[] apkFiles) throws Exception {
-        // Install apk based on user pref
-        if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
-            // Use shell method but save to package staging directory
-            File[] stagingApkFiles = getStagingApkFiles(apkFiles);
-            boolean isSuccess = PackageInstallerShell.getInstance().installMultiple(stagingApkFiles, packageName);
-            for (File file : stagingApkFiles)
-                if (file.exists()) //noinspection ResultOfMethodCallIgnored
-                    file.delete();
-            if (!isSuccess) {
-                throw new Exception("Failed to install the apk files.");
-            } else {
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    Context context = AppManager.getContext();
-                    Toast.makeText(context, context.getString(R.string.package_name_is_installed_successfully, appName), Toast.LENGTH_SHORT).show();
-                });
-            }
-        } else {
-            // Use normal method
-            if (!PackageInstallerNoRoot.getInstance().installMultiple(apkFiles, packageName)) {
-                throw new Exception("Failed to proceed to the commit.");
-            }
-        }
-    }
-
-    public static final File PACKAGE_STAGING_DIRECTORY = new File("/data/local/tmp");
-
-    @NonNull
-    public static File[] getStagingApkFiles(@NonNull File[] apkFiles) throws IOException {
-        File pkgStagingDir;
-        if (PACKAGE_STAGING_DIRECTORY.exists()) pkgStagingDir = PACKAGE_STAGING_DIRECTORY;
-        else return apkFiles;
-        File[] stagingApkFiles = new File[apkFiles.length];
-        for (int i = 0; i < apkFiles.length; ++i) {
-            stagingApkFiles[i] = new File(pkgStagingDir, apkFiles[i].getName());
-            if(!Runner.runCommand(String.format("cp \"%s\" \"%s\"", apkFiles[i].getAbsolutePath(),
-                    stagingApkFiles[i].getAbsolutePath())).isSuccessful()) {
-                throw new IOException("Failed to copy files to the staging directory.");
-            }
-        }
-        return stagingApkFiles;
     }
 }

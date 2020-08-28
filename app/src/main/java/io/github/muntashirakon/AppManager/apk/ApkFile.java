@@ -20,6 +20,8 @@ package io.github.muntashirakon.AppManager.apk;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.google.classysharkandroid.utils.UriUtils;
@@ -35,7 +37,9 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -48,8 +52,44 @@ import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-public class ApkFile implements AutoCloseable {
+public class ApkFile implements AutoCloseable, Parcelable {
     public static final String TAG = "TAG";
+
+    protected ApkFile(@NonNull Parcel in) {
+        entries = Objects.requireNonNull(in.createTypedArrayList(Entry.CREATOR));
+        baseEntry = in.readParcelable(Entry.class.getClassLoader());
+        hasObb = in.readByte() != 0;
+        isSplit = in.readByte() != 0;
+        apkUri = in.readParcelable(Uri.class.getClassLoader());
+    }
+
+    public static final Creator<ApkFile> CREATOR = new Creator<ApkFile>() {
+        @NonNull
+        @Override
+        public ApkFile createFromParcel(Parcel in) {
+            return new ApkFile(in);
+        }
+
+        @NonNull
+        @Override
+        public ApkFile[] newArray(int size) {
+            return new ApkFile[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeTypedList(entries);
+        dest.writeParcelable(baseEntry, flags);
+        dest.writeByte((byte) (hasObb ? 1 : 0));
+        dest.writeByte((byte) (isSplit ? 1 : 0));
+        dest.writeParcelable(apkUri, flags);
+    }
 
     @IntDef(value = {
             APK_BASE,
@@ -112,6 +152,7 @@ public class ApkFile implements AutoCloseable {
             entries.add(baseEntry);
         } else {
             isSplit = true;
+            boolean foundBaseApk = false;
             File destDir = context.getExternalFilesDir("apks");
             if (destDir == null || !Environment.getExternalStorageState(destDir).equals(Environment.MEDIA_MOUNTED))
                 throw new RuntimeException("External media not present");
@@ -136,10 +177,15 @@ public class ApkFile implements AutoCloseable {
                             // Get manifest attributes
                             HashMap<String, String> manifestAttrs = getManifestAttributes(manifestBytes);
                             if (manifestAttrs.containsKey("split")) {
+                                // TODO: check for duplicates
                                 entries.add(new Entry(fileName, apkFile, APK_SPLIT, manifestAttrs));
                             } else {
+                                if (foundBaseApk) {
+                                    throw new RuntimeException("Duplicate base apk found");
+                                }
                                 baseEntry = new Entry(fileName, apkFile, APK_BASE, manifestAttrs);
                                 entries.add(baseEntry);
+                                foundBaseApk = true;
                             }
                         } catch (Exception e) {
                             //noinspection ResultOfMethodCallIgnored
@@ -164,12 +210,49 @@ public class ApkFile implements AutoCloseable {
         return entries;
     }
 
+    public List<Entry> getSelectedEntries() {
+        List<Entry> selectedEntries = new ArrayList<>();
+        ListIterator<Entry> it = entries.listIterator();
+        Entry tmpEntry;
+        while (it.hasNext()) {
+            tmpEntry = it.next();
+            if (tmpEntry.selected) selectedEntries.add(tmpEntry);
+        }
+        return selectedEntries;
+    }
+
     public boolean isSplit() {
         return isSplit;
     }
 
     public boolean hasObb() {
         return hasObb;
+    }
+
+    public void select(Entry entry) {
+        ListIterator<Entry> it = entries.listIterator();
+        Entry tmpEntry;
+        while (it.hasNext()) {
+            tmpEntry = it.next();
+            if (tmpEntry.equals(entry)) {
+                tmpEntry.selected = true;
+                it.set(tmpEntry);
+                break; // FIXME: Currently there can be duplicate entries
+            }
+        }
+    }
+
+    public void deselect(Entry entry) {
+        ListIterator<Entry> it = entries.listIterator();
+        Entry tmpEntry;
+        while (it.hasNext()) {
+            tmpEntry = it.next();
+            if (tmpEntry.equals(entry) && tmpEntry.type != APK_BASE) {
+                tmpEntry.selected = false;
+                it.set(tmpEntry);
+                break; // FIXME: Currently there can be duplicate entries
+            }
+        }
     }
 
     @Override
@@ -228,7 +311,7 @@ public class ApkFile implements AutoCloseable {
         return manifestAttrs;
     }
 
-    public static class Entry {
+    public static class Entry implements Parcelable {
         /**
          * Name of the file, for split apk, name of the split instead
          */
@@ -242,11 +325,13 @@ public class ApkFile implements AutoCloseable {
         public HashMap<String, String> manifest;
         @Nullable
         public String splitSuffix;
+        public boolean selected = true;  // FIXME: Should be false
 
         Entry(@NonNull String name, @NonNull File source, @ApkType int type) throws Exception {
             this.name = name;
             this.source = source;
             this.type = type;
+            this.selected = true;
             if (type != APK_BASE)
                 throw new Exception("Constructor can only be called for base apk");
         }
@@ -256,7 +341,8 @@ public class ApkFile implements AutoCloseable {
             this.source = source;
             this.type = type;
             this.manifest = manifest;
-            if (type == APK_SPLIT) {
+            if (type == APK_BASE) this.selected = true;
+            else if (type == APK_SPLIT) {
                 // Infer type
                 if (manifest.containsKey(ANDROID_XML_NAMESPACE + ":isFeatureSplit")) {
                     this.type = APK_SPLIT_FEATURE;
@@ -288,6 +374,28 @@ public class ApkFile implements AutoCloseable {
             }
         }
 
+        protected Entry(@NonNull Parcel in) {
+            name = Objects.requireNonNull(in.readString());
+            source = new File(Objects.requireNonNull(in.readString()));
+            type = in.readInt();
+            splitSuffix = in.readString();
+            selected = in.readByte() != 0;
+        }
+
+        public static final Creator<Entry> CREATOR = new Creator<Entry>() {
+            @NonNull
+            @Override
+            public Entry createFromParcel(Parcel in) {
+                return new Entry(in);
+            }
+
+            @NonNull
+            @Override
+            public Entry[] newArray(int size) {
+                return new Entry[size];
+            }
+        };
+
         @NonNull
         public String getAbi() {
             if (type == APK_SPLIT_ABI) //noinspection ConstantConditions
@@ -307,6 +415,33 @@ public class ApkFile implements AutoCloseable {
             if (splitSuffix != null && type == APK_SPLIT_LOCALE)
                 return new Locale.Builder().setLanguageTag(splitSuffix).build();
             throw new RuntimeException("Attempt to fetch Locale for invalid apk");
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(@NonNull Parcel dest, int flags) {
+            dest.writeString(name);
+            dest.writeString(source.getAbsolutePath());
+            dest.writeInt(type);
+            dest.writeString(splitSuffix);
+            dest.writeByte((byte) (selected ? 1 : 0));
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Entry)) return false;
+            Entry entry = (Entry) o;
+            return name.equals(entry.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name);
         }
     }
 }

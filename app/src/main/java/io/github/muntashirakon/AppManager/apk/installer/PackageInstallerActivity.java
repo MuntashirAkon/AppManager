@@ -17,10 +17,7 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -31,12 +28,11 @@ import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.io.File;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
@@ -49,14 +45,7 @@ public class PackageInstallerActivity extends AppCompatActivity {
 
     private int flagSigningInfo;
     private int flagDisabledComponents;
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, @NonNull Intent intent) {
-            if (intent.getAction() != null && intent.getAction().equals(AMPackageInstaller.ACTION_INSTALL_COMPLETED)) {
-                finish();
-            }
-        }
-    };
+    private boolean closeApkFile = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -139,7 +128,6 @@ public class PackageInstallerActivity extends AppCompatActivity {
                 runOnUiThread(this::finish);
             }
         }).start();
-        registerReceiver(broadcastReceiver, new IntentFilter(AMPackageInstaller.ACTION_INSTALL_COMPLETED));
     }
 
     @NonNull
@@ -170,34 +158,20 @@ public class PackageInstallerActivity extends AppCompatActivity {
         return packageInfo;
     }
 
-    @NonNull
-    private File[] getApkFiles() {
-        List<ApkFile.Entry> entries = apkFile.getEntries();
-        File[] apkFiles = new File[entries.size()];
-        for (int i = 0; i < entries.size(); ++i) {
-            apkFiles[i] = entries.get(i).source;
-        }
-        return apkFiles;
-    }
-
     private void install(String packageName, String appLabel) {
-        new Thread(() -> {
-            try {
-                PackageUtils.installApkCompat(packageName, appLabel, getApkFiles());
-            } catch (Exception e) {
-                e.printStackTrace();
-                runOnUiThread(() -> {
-                    Toast.makeText(this, getString(R.string.failed_to_install_package_name, appLabel), Toast.LENGTH_SHORT).show();
-                    finish();
-                });
-            }
-        }).start();
+        Intent intent = new Intent(this, AMPackageInstallerService.class);
+        intent.putExtra(AMPackageInstallerService.EXTRA_APK_FILE, apkFile);
+        intent.putExtra(AMPackageInstallerService.EXTRA_PACKAGE_NAME, packageName);
+        intent.putExtra(AMPackageInstallerService.EXTRA_APP_LABEL, appLabel);
+        intent.putExtra(AMPackageInstallerService.EXTRA_CLOSE_APK_FILE, true);
+        ContextCompat.startForegroundService(AppManager.getContext(), intent);
+        closeApkFile = false;
+        finish();
     }
 
     @Override
     protected void onDestroy() {
-        unregisterReceiver(broadcastReceiver);
-        if (apkFile != null) apkFile.close();
+        if (closeApkFile && apkFile != null) apkFile.close();
         super.onDestroy();
     }
 }

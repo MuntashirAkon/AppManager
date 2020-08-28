@@ -154,6 +154,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return packageName;
     }
 
+    public ApkFile getApkFile() {
+        return apkFile;
+    }
+
     @NonNull
     public File[] getApkFiles() {
         File[] apkFiles;

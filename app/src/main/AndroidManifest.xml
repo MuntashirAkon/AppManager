@@ -195,9 +195,11 @@
             android:taskAffinity=""
             android:theme="@style/AppTheme.TransparentBackground" />
 
+        <service android:name=".apk.installer.AMPackageInstallerService" />
         <service android:name=".apk.installer.PackageInstallerService" />
-
-        <service android:name=".batchops.BatchOpsService" android:exported="false" />
+        <service
+            android:name=".batchops.BatchOpsService"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -79,14 +79,17 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ShareCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
+import io.github.muntashirakon.AppManager.apk.installer.AMPackageInstallerService;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.misc.RequestCodes;
@@ -559,14 +562,14 @@ public class AppInfoFragment extends Fragment
             if (mInstalledPackageInfo == null) {
                 // App not installed
                 addToHorizontalLayout(R.string.install, R.drawable.ic_baseline_get_app_24)
-                        .setOnClickListener(v -> new Thread(() -> {
-                    try {
-                        PackageUtils.installApkCompat(mPackageName, mPackageLabel.toString(), mainModel.getApkFiles());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show());
-                    }
-                }).start());
+                        .setOnClickListener(v -> {
+                            Intent intent = new Intent(requireActivity(), AMPackageInstallerService.class);
+                            intent.putExtra(AMPackageInstallerService.EXTRA_APK_FILE, mainModel.getApkFile());
+                            intent.putExtra(AMPackageInstallerService.EXTRA_PACKAGE_NAME, mPackageName);
+                            intent.putExtra(AMPackageInstallerService.EXTRA_APP_LABEL, mPackageLabel);
+                            intent.putExtra(AMPackageInstallerService.EXTRA_CLOSE_APK_FILE, false);
+                            ContextCompat.startForegroundService(AppManager.getContext(), intent);
+                        });
             } else {
                 // App is installed
                 long installedVersionCode = PackageUtils.getVersionCode(mInstalledPackageInfo);
@@ -582,19 +585,14 @@ public class AppInfoFragment extends Fragment
                                 dialogFragment.show(mActivity.getSupportFragmentManager(), WhatsNewDialogFragment.TAG);
                             });
                     addToHorizontalLayout(R.string.update, R.drawable.ic_baseline_get_app_24)
-                            .setOnClickListener(v -> new Thread(() -> {
-                        try {
-                            try {
-                                PackageUtils.installApkCompat(mPackageName, mPackageLabel.toString(), mainModel.getApkFiles());
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show());
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show());
-                        }
-                    }).start());
+                            .setOnClickListener(v -> {
+                                Intent intent = new Intent(requireActivity(), AMPackageInstallerService.class);
+                                intent.putExtra(AMPackageInstallerService.EXTRA_APK_FILE, mainModel.getApkFile());
+                                intent.putExtra(AMPackageInstallerService.EXTRA_PACKAGE_NAME, mPackageName);
+                                intent.putExtra(AMPackageInstallerService.EXTRA_APP_LABEL, mPackageLabel);
+                                intent.putExtra(AMPackageInstallerService.EXTRA_CLOSE_APK_FILE, false);
+                                ContextCompat.startForegroundService(AppManager.getContext(), intent);
+                            });
                 }
             }
         }

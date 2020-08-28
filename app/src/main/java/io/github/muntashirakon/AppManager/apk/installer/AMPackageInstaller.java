@@ -85,6 +85,10 @@ public abstract class AMPackageInstaller {
      * failure.
      */
     public static final int STATUS_FAILURE_SESSION_ABANDON = -6;
+    /**
+     * The operation failed because the current ROM is incompatible with PackageInstaller
+     */
+    public static final int STATUS_FAILURE_INCOMPATIBLE_ROM = -7;
 
     @SuppressLint("StaticFieldLeak")
     protected static final Context context = AppManager.getContext();

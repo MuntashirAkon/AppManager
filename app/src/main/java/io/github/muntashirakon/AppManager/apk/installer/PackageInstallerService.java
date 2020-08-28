@@ -21,12 +21,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageInstaller;
 import android.os.IBinder;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class PackageInstallerService extends Service {
     @Override
@@ -42,49 +39,22 @@ public class PackageInstallerService extends Service {
                     startActivity(confirmationIntent);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), R.string.installer_error_lidl_rom, Toast.LENGTH_LONG).show();
+                    AMPackageInstaller.sendCompletedBroadcast(intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME), AMPackageInstaller.STATUS_FAILURE_INCOMPATIBLE_ROM);
                 }
                 break;
             case PackageInstaller.STATUS_SUCCESS:
-                Intent broadcastIntent = new Intent(AMPackageInstaller.ACTION_INSTALL_COMPLETED);
-                broadcastIntent.putExtra(AMPackageInstaller.EXTRA_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME));
-                broadcastIntent.putExtra(AMPackageInstaller.EXTRA_STATUS, AMPackageInstaller.STATUS_SUCCESS);
                 AMPackageInstaller.sendCompletedBroadcast(intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME), AMPackageInstaller.STATUS_SUCCESS);
-                Toast.makeText(getApplicationContext(), getString(R.string.package_name_is_installed_successfully, PackageUtils.getPackageLabel(getPackageManager(), intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME))), Toast.LENGTH_LONG).show();
                 break;
             default:
-                Intent broadcastIntent2 = new Intent(AMPackageInstaller.ACTION_INSTALL_COMPLETED);
-                broadcastIntent2.putExtra(AMPackageInstaller.EXTRA_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME));
-                broadcastIntent2.putExtra(AMPackageInstaller.EXTRA_OTHER_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
-                broadcastIntent2.putExtra(AMPackageInstaller.EXTRA_STATUS, status);
-                getApplication().sendBroadcast(broadcastIntent2);
-                Toast.makeText(getApplicationContext(), getErrorString(status, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME)), Toast.LENGTH_LONG).show();
+                Intent broadcastIntent = new Intent(AMPackageInstaller.ACTION_INSTALL_COMPLETED);
+                broadcastIntent.putExtra(AMPackageInstaller.EXTRA_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME));
+                broadcastIntent.putExtra(AMPackageInstaller.EXTRA_OTHER_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
+                broadcastIntent.putExtra(AMPackageInstaller.EXTRA_STATUS, status);
+                getApplication().sendBroadcast(broadcastIntent);
                 break;
         }
         stopSelf();
         return START_NOT_STICKY;
-    }
-
-    public String getErrorString(int status, String blockingPackage) {
-        switch (status) {
-            case PackageInstaller.STATUS_FAILURE_ABORTED:
-                return getString(R.string.installer_error_aborted);
-            case PackageInstaller.STATUS_FAILURE_BLOCKED:
-                String blocker = getString(R.string.installer_error_blocked_device);
-                if (blockingPackage != null) {
-                    blocker = PackageUtils.getPackageLabel(getPackageManager(), blockingPackage);
-                }
-                return getString(R.string.installer_error_blocked, blocker);
-            case PackageInstaller.STATUS_FAILURE_CONFLICT:
-                return getString(R.string.installer_error_conflict);
-            case PackageInstaller.STATUS_FAILURE_INCOMPATIBLE:
-                return getString(R.string.installer_error_incompatible);
-            case PackageInstaller.STATUS_FAILURE_INVALID:
-                return getString(R.string.installer_error_bad_apks);
-            case PackageInstaller.STATUS_FAILURE_STORAGE:
-                return getString(R.string.installer_error_storage);
-        }
-        return getString(R.string.installer_error_generic);
     }
 
     @Nullable
