@@ -94,7 +94,18 @@ public final class PackageInstallerShell implements IPackageInstaller {
         result = Runner.runCommand(installCmd + " install-commit " + sessionId);
         buf = result.getOutput();
         if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
-            Log.e(TAG, "InstallMultiple: Failed to commit the install.");
+            if (buf == null) {
+                Log.e(TAG, "InstallMultiple: Failed to commit the install.");
+            } else {
+                start = buf.indexOf('[');
+                end = buf.indexOf(']');
+                try {
+                    String constantStr = buf.substring(start + 1, end);
+                    Log.e(TAG, "InstallMultiple: " + constantStr);
+                } catch (IndexOutOfBoundsException e) {
+                    Log.e(TAG, "InstallMultiple: Failed to commit the install.");
+                }
+            }
             return abandon();
         }
         return true;
