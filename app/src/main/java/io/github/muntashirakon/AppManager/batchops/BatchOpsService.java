@@ -191,6 +191,7 @@ public class BatchOpsService extends IntentService {
             sendResults(Activity.RESULT_CANCELED, null);
             return;
         }
+        sendStarted();
         BatchOpsManager batchOpsManager = new BatchOpsManager();
         batchOpsManager.setArgs(args);
         BatchOpsManager.Result result = batchOpsManager.performOp(op, packages);
@@ -207,6 +208,13 @@ public class BatchOpsService extends IntentService {
         super.onDestroy();
     }
 
+    private void sendStarted() {
+        Intent broadcastIntent = new Intent(ACTION_BATCH_OPS_STARTED);
+        broadcastIntent.putExtra(EXTRA_OP, op);
+        broadcastIntent.putExtra(EXTRA_OP_PKG, packages != null ? packages.toArray(new String[0]) : new String[0]);
+        sendBroadcast(broadcastIntent);
+    }
+
     private void sendResults(int result, @Nullable ArrayList<String> failedPackages) {
         Intent broadcastIntent = new Intent(ACTION_BATCH_OPS_COMPLETED);
         broadcastIntent.putExtra(EXTRA_OP, op);
@@ -219,7 +227,7 @@ public class BatchOpsService extends IntentService {
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(CHANNEL_ID,
-                    "BatchOpsServiceChannel", NotificationManager.IMPORTANCE_LOW);
+                    "Batch Ops Progress", NotificationManager.IMPORTANCE_LOW);
             notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(serviceChannel);
         }
@@ -314,6 +322,7 @@ public class BatchOpsService extends IntentService {
             case BatchOpsManager.OP_RESTORE_BACKUP:
                 return getResources().getQuantityString(R.plurals.alert_failed_to_restore, failedCount, failedCount);
             case BatchOpsManager.OP_EXPORT_RULES:
+            case BatchOpsManager.OP_NONE:
                 break;
             case BatchOpsManager.OP_BACKUP_APK:
                 return getResources().getQuantityString(R.plurals.failed_to_backup_some_apk_files, failedCount, failedCount);
@@ -335,8 +344,6 @@ public class BatchOpsService extends IntentService {
                 return getResources().getQuantityString(R.plurals.alert_failed_to_block_components, failedCount, failedCount);
             case BatchOpsManager.OP_IGNORE_APP_OPS:
                 return getResources().getQuantityString(R.plurals.alert_failed_to_deny_app_ops, failedCount, failedCount);
-            case BatchOpsManager.OP_NONE:
-                break;
         }
         return getString(R.string.error);
     }
