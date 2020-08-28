@@ -409,7 +409,6 @@ public class BackupStorageManager implements AutoCloseable {
                     Log.e("BSM - Restore", "Data restore is requested but there are no data files for index " + i + ".");
                     return false;
                 }
-                // Fix UID and GID
                 if (RunnerUtils.fileExists(dataSource) && uidAndGid == null) {
                     Log.e("BSM - Restore", "Failed to get owner info for index " + i + ".");
                     return false;
@@ -427,10 +426,13 @@ public class BackupStorageManager implements AutoCloseable {
                     // Clear cache if exists: return value is not important for us
                     RootShellRunner.runCommand(String.format("rm -rf %s/cache %s/code_cache", dataSource, dataSource));
                 }
+                // Fix UID and GID
                 if (uidAndGid != null && !RootShellRunner.runCommand(String.format("chown -R %s:%s \"%s\"", uidAndGid.first, uidAndGid.second, dataSource)).isSuccessful()) {
                     Log.e("BSM - Restore", "Failed to get restore owner for index " + i + ".");
                     return false;
                 }
+                // Restore permissions
+                RootShellRunner.runCommand(String.format("restorecon -R \"%s\"", dataSource));
             }
         }
         if ((flags & BACKUP_RULES) != 0) {
