@@ -565,7 +565,6 @@ public class AppInfoFragment extends Fragment
                         .setOnClickListener(v -> {
                             Intent intent = new Intent(requireActivity(), AMPackageInstallerService.class);
                             intent.putExtra(AMPackageInstallerService.EXTRA_APK_FILE, mainModel.getApkFile());
-                            intent.putExtra(AMPackageInstallerService.EXTRA_PACKAGE_NAME, mPackageName);
                             intent.putExtra(AMPackageInstallerService.EXTRA_APP_LABEL, mPackageLabel);
                             intent.putExtra(AMPackageInstallerService.EXTRA_CLOSE_APK_FILE, false);
                             ContextCompat.startForegroundService(AppManager.getContext(), intent);
@@ -588,7 +587,6 @@ public class AppInfoFragment extends Fragment
                             .setOnClickListener(v -> {
                                 Intent intent = new Intent(requireActivity(), AMPackageInstallerService.class);
                                 intent.putExtra(AMPackageInstallerService.EXTRA_APK_FILE, mainModel.getApkFile());
-                                intent.putExtra(AMPackageInstallerService.EXTRA_PACKAGE_NAME, mPackageName);
                                 intent.putExtra(AMPackageInstallerService.EXTRA_APP_LABEL, mPackageLabel);
                                 intent.putExtra(AMPackageInstallerService.EXTRA_CLOSE_APK_FILE, false);
                                 ContextCompat.startForegroundService(AppManager.getContext(), intent);

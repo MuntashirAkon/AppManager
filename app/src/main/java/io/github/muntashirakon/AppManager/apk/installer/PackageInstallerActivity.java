@@ -86,10 +86,10 @@ public class PackageInstallerActivity extends AppCompatActivity {
                                 .setTitle(appLabel)
                                 .setIcon(appIcon)
                                 .setMessage(R.string.install_app_message)
-                                .setPositiveButton(R.string.install, (dialog, which) -> install(packageInfo.packageName, appLabel))
+                                .setPositiveButton(R.string.install, (dialog, which) -> install(appLabel))
                                 .setNegativeButton(android.R.string.cancel, (dialog, which) -> finish())
                                 .show());
-                    } else install(packageInfo.packageName, appLabel);
+                    } else install(appLabel);
                 } else {
                     // App is installed
                     long installedVersionCode = PackageUtils.getVersionCode(installedPackageInfo);
@@ -101,7 +101,7 @@ public class PackageInstallerActivity extends AppCompatActivity {
                         args.putParcelable(WhatsNewDialogFragment.ARG_OLD_PKG_INFO, installedPackageInfo);
                         WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
                         dialogFragment.setArguments(args);
-                        dialogFragment.setOnTriggerInstall(() -> install(packageInfo.packageName, appLabel));
+                        dialogFragment.setOnTriggerInstall(() -> install(appLabel));
                         runOnUiThread(() -> dialogFragment.show(getSupportFragmentManager(), WhatsNewDialogFragment.TAG));
                     } else if (installedVersionCode == thisVersionCode) {
                         // Issue reinstall
@@ -111,10 +111,10 @@ public class PackageInstallerActivity extends AppCompatActivity {
                                     .setTitle(appLabel)
                                     .setIcon(appIcon)
                                     .setMessage(R.string.reinstall_app_message)
-                                    .setPositiveButton(R.string.reinstall, (dialog, which) -> install(packageInfo.packageName, appLabel))
+                                    .setPositiveButton(R.string.reinstall, (dialog, which) -> install(appLabel))
                                     .setNegativeButton(android.R.string.cancel, (dialog, which) -> finish())
                                     .show());
-                        } else install(packageInfo.packageName, appLabel);
+                        } else install(appLabel);
                     } else {
                         // TODO: Add option to downgrade
                         runOnUiThread(() -> {
@@ -158,10 +158,9 @@ public class PackageInstallerActivity extends AppCompatActivity {
         return packageInfo;
     }
 
-    private void install(String packageName, String appLabel) {
+    private void install(String appLabel) {
         Intent intent = new Intent(this, AMPackageInstallerService.class);
         intent.putExtra(AMPackageInstallerService.EXTRA_APK_FILE, apkFile);
-        intent.putExtra(AMPackageInstallerService.EXTRA_PACKAGE_NAME, packageName);
         intent.putExtra(AMPackageInstallerService.EXTRA_APP_LABEL, appLabel);
         intent.putExtra(AMPackageInstallerService.EXTRA_CLOSE_APK_FILE, true);
         ContextCompat.startForegroundService(AppManager.getContext(), intent);

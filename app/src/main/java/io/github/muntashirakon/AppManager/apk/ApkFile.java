@@ -35,6 +35,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +60,7 @@ public class ApkFile implements AutoCloseable, Parcelable {
     protected ApkFile(@NonNull Parcel in) {
         entries = Objects.requireNonNull(in.createTypedArrayList(Entry.CREATOR));
         baseEntry = in.readParcelable(Entry.class.getClassLoader());
+        packageName = in.readString();
         hasObb = in.readByte() != 0;
         isSplit = in.readByte() != 0;
         apkUri = in.readParcelable(Uri.class.getClassLoader());
@@ -87,6 +89,7 @@ public class ApkFile implements AutoCloseable, Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeTypedList(entries);
         dest.writeParcelable(baseEntry, flags);
+        dest.writeString(packageName);
         dest.writeByte((byte) (hasObb ? 1 : 0));
         dest.writeByte((byte) (isSplit ? 1 : 0));
         dest.writeParcelable(apkUri, flags);
@@ -94,22 +97,22 @@ public class ApkFile implements AutoCloseable, Parcelable {
 
     @IntDef(value = {
             APK_BASE,
-            APK_SPLIT,
             APK_SPLIT_FEATURE,
             APK_SPLIT_ABI,
             APK_SPLIT_DENSITY,
-            APK_SPLIT_LOCALE
+            APK_SPLIT_LOCALE,
+            APK_SPLIT,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface ApkType {
     }
 
     public static final int APK_BASE = 0;
-    public static final int APK_SPLIT = 1;
-    public static final int APK_SPLIT_FEATURE = 2;
-    public static final int APK_SPLIT_ABI = 3;
-    public static final int APK_SPLIT_DENSITY = 4;
-    public static final int APK_SPLIT_LOCALE = 5;
+    public static final int APK_SPLIT_FEATURE = 1;
+    public static final int APK_SPLIT_ABI = 2;
+    public static final int APK_SPLIT_DENSITY = 3;
+    public static final int APK_SPLIT_LOCALE = 4;
+    public static final int APK_SPLIT = 5;
 
     private static final String APK_FILE = "apk_file.apk";
     private static final String MANIFEST_FILE = "AndroidManifest.xml";
@@ -126,9 +129,11 @@ public class ApkFile implements AutoCloseable, Parcelable {
     @NonNull
     private List<Entry> entries = new ArrayList<>();
     private Entry baseEntry;
+    private String packageName;
     private boolean hasObb = false;
     private boolean isSplit = false;
     private Uri apkUri;
+    private File cacheFilePath;
 
     public ApkFile(Uri apkUri) throws Exception {
         Context context = AppManager.getContext();
@@ -151,15 +156,24 @@ public class ApkFile implements AutoCloseable, Parcelable {
             // Cache the apk file
             baseEntry = new Entry(APK_FILE, new File(filePath), APK_BASE);
             entries.add(baseEntry);
+            // Extract manifest file
+            ByteBuffer manifestBytes = getManifestFromApk(new File(filePath));
+            if (manifestBytes == null) throw new Exception("Manifest not found.");
+            // Get manifest attributes
+            HashMap<String, String> manifestAttrs = getManifestAttributes(manifestBytes);
+            if (manifestAttrs.containsKey("package")) {
+                packageName = manifestAttrs.get("package");
+            } else throw new RuntimeException("Package name not found.");
         } else {
             isSplit = true;
             boolean foundBaseApk = false;
+            cacheFilePath = new File(filePath);
             File destDir = context.getExternalFilesDir("apks");
             if (destDir == null || !Environment.getExternalStorageState(destDir).equals(Environment.MEDIA_MOUNTED))
                 throw new RuntimeException("External media not present");
             if (!destDir.exists()) //noinspection ResultOfMethodCallIgnored
                 destDir.mkdirs();
-            try (ZipFile zipFile = new ZipFile(filePath)) {
+            try (ZipFile zipFile = new ZipFile(cacheFilePath)) {
                 Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
                 File apkFile;
                 String fileName;
@@ -184,10 +198,13 @@ public class ApkFile implements AutoCloseable, Parcelable {
                                 entries.add(new Entry(fileName, apkFile, APK_SPLIT, manifestAttrs));
                             } else {
                                 if (foundBaseApk) {
-                                    throw new RuntimeException("Duplicate base apk found");
+                                    throw new RuntimeException("Duplicate base apk found.");
                                 }
                                 baseEntry = new Entry(fileName, apkFile, APK_BASE, manifestAttrs);
                                 entries.add(baseEntry);
+                                if (manifestAttrs.containsKey("package")) {
+                                    packageName = manifestAttrs.get("package");
+                                } else throw new RuntimeException("Package name not found.");
                                 foundBaseApk = true;
                             }
                         } catch (Exception e) {
@@ -201,6 +218,12 @@ public class ApkFile implements AutoCloseable, Parcelable {
                 }
             }
             if (baseEntry == null) throw new Exception("No base apk found.");
+            // Sort the entries based on type
+            Collections.sort(entries, (o1, o2) -> {
+                Integer o1Type = o1.type;
+                Integer o2Type = o2.type;
+                return o1Type.compareTo(o2Type);
+            });
         }
     }
 
@@ -222,6 +245,10 @@ public class ApkFile implements AutoCloseable, Parcelable {
             if (tmpEntry.selected) selectedEntries.add(tmpEntry);
         }
         return selectedEntries;
+    }
+
+    public String getPackageName() {
+        return packageName;
     }
 
     public boolean isSplit() {
@@ -264,6 +291,8 @@ public class ApkFile implements AutoCloseable, Parcelable {
             if (entry.source.exists()) //noinspection ResultOfMethodCallIgnored
                 entry.source.delete();
         }
+        if (cacheFilePath != null && cacheFilePath.exists()) //noinspection ResultOfMethodCallIgnored
+            cacheFilePath.delete();
     }
 
     @Nullable

@@ -49,7 +49,6 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.PACKAGE_STAG
 public class AMPackageInstallerService extends IntentService {
     public static final String EXTRA_APK_FILE = "EXTRA_APK_FILE";
     public static final String EXTRA_APP_LABEL = "EXTRA_APP_LABEL";
-    public static final String EXTRA_PACKAGE_NAME = "EXTRA_PACKAGE_NAME";
     public static final String EXTRA_CLOSE_APK_FILE = "EXTRA_CLOSE_APK_FILE";
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.INSTALL";
     public static final int NOTIFICATION_ID = 3;
@@ -102,13 +101,10 @@ public class AMPackageInstallerService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent == null) return;
         apkFile = intent.getParcelableExtra(EXTRA_APK_FILE);
-        packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
+        if (apkFile == null) return;
+        packageName = apkFile.getPackageName();
         appLabel = intent.getStringExtra(EXTRA_APP_LABEL);
         closeApkFile = intent.getBooleanExtra(EXTRA_CLOSE_APK_FILE, false);
-        if (apkFile == null) {
-            AMPackageInstaller.sendCompletedBroadcast(packageName, AMPackageInstaller.STATUS_FAILURE_INVALID);
-            return;
-        }
         // Set package name in the ongoing notification
         builder.setContentTitle(appLabel);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
