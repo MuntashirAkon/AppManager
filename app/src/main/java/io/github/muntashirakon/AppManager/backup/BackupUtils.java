@@ -36,7 +36,6 @@ public final class BackupUtils {
             metadataManager.readMetadata();
             return metadataManager.getMetadataV1();
         } catch (JSONException e) {
-            e.printStackTrace();
             return null;
         }
     }

@@ -134,7 +134,7 @@ public class AMPackageInstallerService extends IntentService {
         }
         int count = 18000000; // 5 hours
         int interval = 100; // 100 millis
-        while (!completed || count != 0) {
+        while (!completed && count != 0) {
             try {
                 Thread.sleep(interval);
                 count -= interval;

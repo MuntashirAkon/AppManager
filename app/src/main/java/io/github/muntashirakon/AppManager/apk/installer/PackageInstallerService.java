@@ -21,6 +21,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageInstaller;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,6 +52,7 @@ public class PackageInstallerService extends Service {
                 broadcastIntent.putExtra(AMPackageInstaller.EXTRA_OTHER_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
                 broadcastIntent.putExtra(AMPackageInstaller.EXTRA_STATUS, status);
                 getApplication().sendBroadcast(broadcastIntent);
+                Log.e("PIS", "" + intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE));
                 break;
         }
         stopSelf();
