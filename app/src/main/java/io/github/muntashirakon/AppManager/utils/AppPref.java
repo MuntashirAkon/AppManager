@@ -183,8 +183,8 @@ public class AppPref {
 
     private @NonNull Object getDefaultValue(@NonNull PrefKey key) {
         switch (key) {
+            case PREF_ROOT_MODE_ENABLED_BOOL: return Utils.isRootGiven();
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
-            case PREF_ROOT_MODE_ENABLED_BOOL:
             case PREF_USAGE_ACCESS_ENABLED_BOOL:
             case PREF_SHOW_DISCLAIMER_BOOL: return true;
             case PREF_ADB_MODE_ENABLED_BOOL:

@@ -47,9 +47,8 @@ public class UriUtils {
         if (extStorageDir == null || !Environment.getExternalStorageState(extStorageDir).equals(Environment.MEDIA_MOUNTED))
             throw new RuntimeException("External media not present");
         File f = new File(extStorageDir, nCache);
-        try {
-            FileOutputStream fos = new FileOutputStream(f);
-            InputStream is = context.getContentResolver().openInputStream(uri);
+        try (FileOutputStream fos = new FileOutputStream(f);
+             InputStream is = context.getContentResolver().openInputStream(uri)) {
             if (is == null) return null;
             IOUtils.copy(is, fos);
             return f.getPath();

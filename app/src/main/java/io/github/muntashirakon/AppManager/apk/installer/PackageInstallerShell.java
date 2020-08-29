@@ -117,7 +117,7 @@ public final class PackageInstallerShell extends AMPackageInstaller {
                     Log.e(TAG, "InstallMultiple: Failed to commit the install.");
                 }
             }
-            return abandon(packageName);
+            return false;
         }
         sendCompletedBroadcast(packageName, STATUS_SUCCESS);
         return true;

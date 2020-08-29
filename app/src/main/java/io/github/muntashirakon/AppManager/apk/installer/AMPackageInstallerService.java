@@ -59,8 +59,9 @@ public class AMPackageInstallerService extends IntentService {
     }
 
     private boolean completed = false;
-    private String appLabel;
     private boolean closeApkFile = false;
+    private String appLabel;
+    private String packageName;
     private ApkFile apkFile;
     private NotificationCompat.Builder builder;
     private NotificationManager notificationManager;
@@ -68,9 +69,12 @@ public class AMPackageInstallerService extends IntentService {
         @Override
         public void onReceive(Context context, @NonNull Intent intent) {
             if (intent.getAction() != null && intent.getAction().equals(AMPackageInstaller.ACTION_INSTALL_COMPLETED)) {
-                sendNotification(intent.getIntExtra(AMPackageInstaller.EXTRA_STATUS, AMPackageInstaller.STATUS_FAILURE_INVALID), intent.getStringExtra(AMPackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
-                if (closeApkFile && apkFile != null) apkFile.close();
-                completed = true;
+                String packageName = intent.getStringExtra(AMPackageInstaller.EXTRA_PACKAGE_NAME);
+                if (packageName != null && packageName.equals(AMPackageInstallerService.this.packageName)) {
+                    sendNotification(intent.getIntExtra(AMPackageInstaller.EXTRA_STATUS, AMPackageInstaller.STATUS_FAILURE_INVALID), intent.getStringExtra(AMPackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
+                    if (closeApkFile && apkFile != null) apkFile.close();
+                    completed = true;
+                }
             }
         }
     };
@@ -98,10 +102,13 @@ public class AMPackageInstallerService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent == null) return;
         apkFile = intent.getParcelableExtra(EXTRA_APK_FILE);
-        String packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
+        packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
         appLabel = intent.getStringExtra(EXTRA_APP_LABEL);
         closeApkFile = intent.getBooleanExtra(EXTRA_CLOSE_APK_FILE, false);
-        if (apkFile == null) return;
+        if (apkFile == null) {
+            AMPackageInstaller.sendCompletedBroadcast(packageName, AMPackageInstaller.STATUS_FAILURE_INVALID);
+            return;
+        }
         // Set package name in the ongoing notification
         builder.setContentTitle(appLabel);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
@@ -112,6 +119,7 @@ public class AMPackageInstallerService extends IntentService {
             stagingApkFiles = getStagingApkFiles(entries);
         } catch (IOException e) {
             e.printStackTrace();
+            AMPackageInstaller.sendCompletedBroadcast(packageName, AMPackageInstaller.STATUS_FAILURE_INVALID);
             return;
         }
         // Install package
@@ -123,13 +131,15 @@ public class AMPackageInstallerService extends IntentService {
             }
         } else {
             PackageInstallerNoRoot.getInstance().installMultiple(stagingApkFiles, packageName);
-            // Workaround for non-root users
-            while (!completed) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        }
+        int count = 18000000; // 5 hours
+        int interval = 100; // 100 millis
+        while (!completed || count != 0) {
+            try {
+                Thread.sleep(interval);
+                count -= interval;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -205,7 +215,7 @@ public class AMPackageInstallerService extends IntentService {
         if ((AppPref.isRootEnabled() || AppPref.isAdbEnabled()) && PACKAGE_STAGING_DIRECTORY.exists()) {
             File tmpSource;
             for (int i = 0; i < apkFiles.length; ++i) {
-                tmpSource = apkEntries.get(0).source;
+                tmpSource = apkEntries.get(i).source;
                 apkFiles[i] = new File(PACKAGE_STAGING_DIRECTORY, tmpSource.getName());
                 if (!Runner.runCommand(String.format("cp \"%s\" \"%s\"", tmpSource.getAbsolutePath(),
                         apkFiles[i].getAbsolutePath())).isSuccessful()) {

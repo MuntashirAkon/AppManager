@@ -30,6 +30,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
@@ -168,8 +169,10 @@ public class ApkFile implements AutoCloseable, Parcelable {
                     fileName = Utils.getFileNameFromZipEntry(zipEntry);
                     if (fileName.endsWith(".apk")) {
                         // Extract the apk file
-                        apkFile = IOUtils.saveZipFile(zipFile.getInputStream(zipEntry), destDir, fileName);
-                        Log.e(TAG, "Apk File: " + apkFile);
+                        try (InputStream zipInputStream = zipFile.getInputStream(zipEntry)) {
+                            apkFile = IOUtils.saveZipFile(zipInputStream, destDir, fileName);
+                            Log.e(TAG, "Apk File: " + apkFile);
+                        }
                         try {
                             // Extract manifest file
                             ByteBuffer manifestBytes = getManifestFromApk(apkFile);

@@ -563,7 +563,8 @@ public class MainActivity extends AppCompatActivity implements
                     }
                     AppOps.updateConfig(this);
                     runOnUiThread(() -> Toast.makeText(this, "Working on ADB mode", Toast.LENGTH_SHORT).show());
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
                 }
             }).start();
         }

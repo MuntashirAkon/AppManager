@@ -54,9 +54,7 @@ public final class ApkUtils {
             File tmpPublicSource = new File(AppManager.getContext().getExternalCacheDir(), outputName + EXT_APK);
             try (FileInputStream apkInputStream = new FileInputStream(packageInfo.applicationInfo.publicSourceDir);
                  FileOutputStream apkOutputStream = new FileOutputStream(tmpPublicSource)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    FileUtils.copy(apkInputStream, apkOutputStream);
-                } else copy(apkInputStream, apkOutputStream);
+                copy(apkInputStream, apkOutputStream);
             }
             return tmpPublicSource;
         }
@@ -88,9 +86,7 @@ public final class ApkUtils {
                 File tmpPublicSource = new File(backupPath, outputName + EXT_APK);
                 try (FileInputStream apkInputStream = new FileInputStream(info.publicSourceDir);
                      FileOutputStream apkOutputStream = new FileOutputStream(tmpPublicSource)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        FileUtils.copy(apkInputStream, apkOutputStream);
-                    } else IOUtils.copy(apkInputStream, apkOutputStream);
+                    IOUtils.copy(apkInputStream, apkOutputStream);
                 }
                 return true;
             }

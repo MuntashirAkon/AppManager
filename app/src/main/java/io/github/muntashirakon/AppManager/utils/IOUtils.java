@@ -99,7 +99,7 @@ public final class IOUtils {
 
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
-    static long copyLarge(@NonNull InputStream inputStream, OutputStream outputStream) throws IOException {
+    private static long copyLarge(@NonNull InputStream inputStream, OutputStream outputStream) throws IOException {
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         long count = 0;
         int n;
@@ -107,8 +107,6 @@ public final class IOUtils {
             outputStream.write(buffer, 0, n);
             count += n;
         }
-        inputStream.close();
-        if (outputStream != null) outputStream.close();
         return count;
     }
 
@@ -119,8 +117,9 @@ public final class IOUtils {
         File filePath = new File(destinationDirectory, fileName);
         if (filePath.exists()) //noinspection ResultOfMethodCallIgnored
             filePath.delete();
-        OutputStream outputStream = new FileOutputStream(filePath);
-        copy(zipInputStream, outputStream);
+        try (OutputStream outputStream = new FileOutputStream(filePath)) {
+            copy(zipInputStream, outputStream);
+        }
         return filePath;
     }
 
@@ -157,9 +156,7 @@ public final class IOUtils {
         File tmpPublicSource = File.createTempFile(privateFile.getName(), suffix, AppManager.getContext().getExternalCacheDir());
         try (FileInputStream apkInputStream = new FileInputStream(privateFile);
              FileOutputStream apkOutputStream = new FileOutputStream(tmpPublicSource)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                FileUtils.copy(apkInputStream, apkOutputStream);
-            } else copy(apkInputStream, apkOutputStream);
+            copy(apkInputStream, apkOutputStream);
         }
         return tmpPublicSource;
     }
