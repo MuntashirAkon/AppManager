@@ -37,6 +37,7 @@ import androidx.annotation.NonNull;
 import dalvik.system.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -208,7 +209,8 @@ public final class MetadataManager implements Closeable {
         metadataV1.apkName = new File(applicationInfo.sourceDir).getName();
         if (requestedFlags.backupData()) {
             metadataV1.dataDirs = PackageUtils.getDataDirs(applicationInfo, requestedFlags.backupExtData());
-        } else metadataV1.dataDirs = new String[0];
+        }
+        metadataV1.dataDirs = ArrayUtils.defeatNullable(metadataV1.dataDirs);
         metadataV1.isSystem = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         metadataV1.isSplitApk = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -218,8 +220,8 @@ public final class MetadataManager implements Closeable {
                 metadataV1.splitSources = applicationInfo.splitPublicSourceDirs;
             }
         }
-        if (metadataV1.splitNames == null) metadataV1.splitNames = new String[0];
-        if (metadataV1.splitSources == null) metadataV1.splitSources = new String[0];
+        metadataV1.splitNames = ArrayUtils.defeatNullable(metadataV1.splitNames);
+        metadataV1.splitSources = ArrayUtils.defeatNullable(metadataV1.splitSources);
         metadataV1.hasRules = false;
         if (requestedFlags.backupRules()) {
             try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName)) {
@@ -236,8 +238,8 @@ public final class MetadataManager implements Closeable {
 
     @NonNull
     private File getMetadataFile(boolean temporary) {
-        if (temporary)
+        if (temporary) {
             return new File(BackupStorageManager.getTemporaryBackupPath(packageName), META_FILE);
-        else return new File(BackupStorageManager.getBackupPath(packageName), META_FILE);
+        } else return new File(BackupStorageManager.getBackupPath(packageName), META_FILE);
     }
 }

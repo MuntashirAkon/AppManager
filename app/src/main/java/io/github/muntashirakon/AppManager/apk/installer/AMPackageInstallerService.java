@@ -40,6 +40,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.types.FreshFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -122,7 +123,7 @@ public class AMPackageInstallerService extends IntentService {
         if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
             PackageInstallerShell.getInstance().installMultiple(stagingApkFiles, packageName);
             for (File file : stagingApkFiles) {
-                if (file.exists()) //noinspection ResultOfMethodCallIgnored
+                if (file instanceof FreshFile) //noinspection ResultOfMethodCallIgnored
                     file.delete();
             }
         } else {
@@ -208,11 +209,11 @@ public class AMPackageInstallerService extends IntentService {
     @NonNull
     public static File[] getStagingApkFiles(@NonNull List<ApkFile.Entry> apkEntries) throws IOException {
         File[] apkFiles = new File[apkEntries.size()];
-        if ((AppPref.isRootEnabled() || AppPref.isAdbEnabled()) && PACKAGE_STAGING_DIRECTORY.exists()) {
+        if (AppPref.isRootOrAdbEnabled() && PACKAGE_STAGING_DIRECTORY.exists()) {
             File tmpSource;
             for (int i = 0; i < apkFiles.length; ++i) {
                 tmpSource = apkEntries.get(i).source;
-                apkFiles[i] = new File(PACKAGE_STAGING_DIRECTORY, tmpSource.getName());
+                apkFiles[i] = new FreshFile(PACKAGE_STAGING_DIRECTORY, tmpSource.getName());
                 if (!Runner.runCommand(String.format("cp \"%s\" \"%s\"", tmpSource.getAbsolutePath(),
                         apkFiles[i].getAbsolutePath())).isSuccessful()) {
                     throw new IOException("Failed to copy files to the staging directory.");

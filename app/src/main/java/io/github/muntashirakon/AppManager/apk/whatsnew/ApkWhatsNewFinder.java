@@ -26,6 +26,8 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.Signature;
 import android.os.Build;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -50,7 +53,10 @@ public class ApkWhatsNewFinder {
             CHANGE_REMOVED,
             CHANGE_INFO
     })
-    public @interface ChangeType {}
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ChangeType {
+    }
+
     public static final int CHANGE_ADD = 1;
     public static final int CHANGE_REMOVED = 2;
     public static final int CHANGE_INFO = 3;
@@ -69,6 +75,7 @@ public class ApkWhatsNewFinder {
     private final Set<String> tmpInfo = new HashSet<>();
 
     private static ApkWhatsNewFinder instance;
+
     public static ApkWhatsNewFinder getInstance() {
         if (instance == null) instance = new ApkWhatsNewFinder();
         return instance;
@@ -76,6 +83,7 @@ public class ApkWhatsNewFinder {
 
     /**
      * Get changes between two packages: one is the apk file and other is the installed app
+     *
      * @param newPkgInfo Package info fetched with {@link PackageManager#getPackageArchiveInfo(String, int)}
      *                   with the following flags: {@link PackageManager#GET_META_DATA}, {@link PackageManager#GET_SIGNATURES}
      *                   {@link PackageManager#GET_PERMISSIONS}, {@link PackageManager#GET_CONFIGURATIONS},
@@ -109,14 +117,14 @@ public class ApkWhatsNewFinder {
         componentChanges.addAll(findChanges(newPkgComponents.keySet(), oldPkgComponents.keySet()));
         int newTrackerCount = 0;
         int oldTrackerCount = 0;
-        for (Change component: componentChanges) {
+        for (Change component : componentChanges) {
             if (ComponentUtils.isTracker(component.value)) {
                 if (component.changeType == CHANGE_ADD) ++newTrackerCount;
                 else if (component.changeType == CHANGE_REMOVED) ++oldTrackerCount;
             }
         }
         if (newTrackerCount == 0 && oldTrackerCount == 0) {
-            changes[TRACKER_INFO] = new Change[0];
+            changes[TRACKER_INFO] = ArrayUtils.emptyArray(Change.class);
         } else {
             Change newTrackers = new Change(CHANGE_ADD, context.getResources()
                     .getQuantityString(R.plurals.no_of_trackers, newTrackerCount, newTrackerCount));
@@ -126,80 +134,73 @@ public class ApkWhatsNewFinder {
         }
         // Sha256 of signing certificates
         Set<String> newCertSha256 = new HashSet<>();
-        Set<String> oldCertSha256 = new HashSet<>(Arrays.asList(PackageUtils
-                .getSigningCertSha256Checksum(oldPkgInfo)));
+        Set<String> oldCertSha256 = new HashSet<>(Arrays.asList(PackageUtils.getSigningCertSha256Checksum(oldPkgInfo)));
         Signature[] signatureArray = newPkgInfo.signatures;
-        for (Signature signature: signatureArray) {
+        for (Signature signature : signatureArray) {
             try {
-                newCertSha256.add(PackageUtils.byteToHexString(MessageDigest.getInstance("sha256")
-                        .digest(signature.toByteArray())));
-            } catch (NoSuchAlgorithmException ignore) {}
+                newCertSha256.add(PackageUtils.byteToHexString(MessageDigest.getInstance("sha256").digest(signature.toByteArray())));
+            } catch (NoSuchAlgorithmException ignore) {
+            }
         }
         List<Change> certSha256Changes = new ArrayList<>();
         certSha256Changes.add(new Change(CHANGE_INFO, componentInfo[SIGNING_CERT_SHA256]));
         certSha256Changes.addAll(findChanges(newCertSha256, oldCertSha256));
-        changes[SIGNING_CERT_SHA256] = certSha256Changes.size() == 1 ? new Change[0] : certSha256Changes.toArray(new Change[0]);
+        changes[SIGNING_CERT_SHA256] = certSha256Changes.size() == 1 ? ArrayUtils.emptyArray(Change.class) : certSha256Changes.toArray(new Change[0]);
         // Permissions
         Set<String> newPermissions = new HashSet<>();
         Set<String> oldPermissions = new HashSet<>();
         if (newPkgInfo.permissions != null)
-            for (PermissionInfo permissionInfo: newPkgInfo.permissions)
+            for (PermissionInfo permissionInfo : newPkgInfo.permissions)
                 newPermissions.add(permissionInfo.name);
         if (newPkgInfo.requestedPermissions != null)
             newPermissions.addAll(Arrays.asList(newPkgInfo.requestedPermissions));
         if (oldPkgInfo.permissions != null)
-            for (PermissionInfo permissionInfo: oldPkgInfo.permissions)
+            for (PermissionInfo permissionInfo : oldPkgInfo.permissions)
                 oldPermissions.add(permissionInfo.name);
         if (oldPkgInfo.requestedPermissions != null)
             oldPermissions.addAll(Arrays.asList(oldPkgInfo.requestedPermissions));
         List<Change> permissionChanges = new ArrayList<>();
         permissionChanges.add(new Change(CHANGE_INFO, componentInfo[PERMISSION_INFO]));
         permissionChanges.addAll(findChanges(newPermissions, oldPermissions));
-        changes[PERMISSION_INFO] = permissionChanges.size() == 1 ? new Change[0] : permissionChanges.toArray(new Change[0]);
+        changes[PERMISSION_INFO] = permissionChanges.size() == 1 ? ArrayUtils.emptyArray(Change.class) : permissionChanges.toArray(new Change[0]);
         // Component info
-        changes[COMPONENT_INFO] = componentChanges.size() == 1 ? new Change[0] : componentChanges.toArray(new Change[0]);
+        changes[COMPONENT_INFO] = componentChanges.size() == 1 ? ArrayUtils.emptyArray(Change.class) : componentChanges.toArray(new Change[0]);
         // Feature info
         Set<String> newFeatures = new HashSet<>();
         Set<String> oldFeatures = new HashSet<>();
         if (newPkgInfo.reqFeatures != null)
-            for (FeatureInfo featureInfo: newPkgInfo.reqFeatures)
+            for (FeatureInfo featureInfo : newPkgInfo.reqFeatures)
                 if (featureInfo.name != null) newFeatures.add(featureInfo.name);
                 else newFeatures.add("OpenGL ES v" + featureInfo.reqGlEsVersion);
         if (oldPkgInfo.reqFeatures != null)
-            for (FeatureInfo featureInfo: oldPkgInfo.reqFeatures)
+            for (FeatureInfo featureInfo : oldPkgInfo.reqFeatures)
                 if (featureInfo.name != null) oldFeatures.add(featureInfo.name);
                 else oldFeatures.add("OpenGL ES v" + Utils.getOpenGL(featureInfo.reqGlEsVersion));
         List<Change> featureChanges = new ArrayList<>();
         featureChanges.add(new Change(CHANGE_INFO, componentInfo[FEATURE_INFO]));
         featureChanges.addAll(findChanges(newFeatures, oldFeatures));
-        changes[FEATURE_INFO] = featureChanges.size() == 1 ? new Change[0] : featureChanges.toArray(new Change[0]);
+        changes[FEATURE_INFO] = featureChanges.size() == 1 ? ArrayUtils.emptyArray(Change.class) : featureChanges.toArray(new Change[0]);
         // Shared libraries
-        Set<String> newSharedLibs = new HashSet<>();
-        Set<String> oldSharedLibs = new HashSet<>();
-        if (newAppInfo.sharedLibraryFiles != null)
-            newSharedLibs.addAll(Arrays.asList(newAppInfo.sharedLibraryFiles));
-        if (oldAppInfo.sharedLibraryFiles != null)
-            oldSharedLibs.addAll(Arrays.asList(oldAppInfo.sharedLibraryFiles));
+        Set<String> newSharedLibs = new HashSet<>(Arrays.asList(ArrayUtils.defeatNullable(newAppInfo.sharedLibraryFiles)));
+        Set<String> oldSharedLibs = new HashSet<>(Arrays.asList(ArrayUtils.defeatNullable(oldAppInfo.sharedLibraryFiles)));
         List<Change> sharedLibChanges = new ArrayList<>();
         sharedLibChanges.add(new Change(CHANGE_INFO, componentInfo[SHARED_LIBRARIES]));
         sharedLibChanges.addAll(findChanges(newSharedLibs, oldSharedLibs));
-        changes[SHARED_LIBRARIES] = sharedLibChanges.size() == 1 ? new Change[0] : sharedLibChanges.toArray(new Change[0]);
+        changes[SHARED_LIBRARIES] = sharedLibChanges.size() == 1 ? ArrayUtils.emptyArray(Change.class) : sharedLibChanges.toArray(new Change[0]);
         // SDK
-        final StringBuilder newSdk = new StringBuilder();
-        newSdk.append(context.getString(R.string.sdk_max)).append(": ").append(newAppInfo.targetSdkVersion);
-        if (Build.VERSION.SDK_INT > 23)
+        final StringBuilder newSdk = new StringBuilder(context.getString(R.string.sdk_max)).append(": ").append(newAppInfo.targetSdkVersion);
+        final StringBuilder oldSdk = new StringBuilder(context.getString(R.string.sdk_max)).append(": ").append(oldAppInfo.targetSdkVersion);
+        if (Build.VERSION.SDK_INT > 23) {
             newSdk.append(", ").append(context.getString(R.string.sdk_min)).append(": ").append(newAppInfo.minSdkVersion);
-        final StringBuilder oldSdk = new StringBuilder();
-        oldSdk.append(context.getString(R.string.sdk_max)).append(": ").append(oldAppInfo.targetSdkVersion);
-        if (Build.VERSION.SDK_INT > 23)
             oldSdk.append(", ").append(context.getString(R.string.sdk_min)).append(": ").append(oldAppInfo.minSdkVersion);
+        }
         if (!newSdk.toString().equals(oldSdk.toString())) {
             changes[SDK_INFO] = new Change[]{
                     new Change(CHANGE_INFO, componentInfo[SHARED_LIBRARIES]),
                     new Change(CHANGE_ADD, newSdk.toString()),
                     new Change(CHANGE_REMOVED, oldSdk.toString())
             };
-        } else changes[SDK_INFO] = new Change[0];
+        } else changes[SDK_INFO] = ArrayUtils.emptyArray(Change.class);
         return changes;
     }
 
@@ -209,15 +210,18 @@ public class ApkWhatsNewFinder {
         tmpInfo.clear();
         tmpInfo.addAll(newInfo);
         newInfo.removeAll(oldInfo);
-        for (String info: newInfo) changeList.add(new Change(CHANGE_ADD, info));
+        for (String info : newInfo) changeList.add(new Change(CHANGE_ADD, info));
         oldInfo.removeAll(tmpInfo);
-        for (String info: oldInfo) changeList.add(new Change(CHANGE_REMOVED, info));
+        for (String info : oldInfo) changeList.add(new Change(CHANGE_REMOVED, info));
         return changeList;
     }
 
     public static class Change {
-        public @ChangeType int changeType;
-        public @NonNull String value;
+        @ChangeType
+        public int changeType;
+        @NonNull
+        public String value;
+
         public Change(int changeType, @NonNull String value) {
             this.changeType = changeType;
             this.value = value;

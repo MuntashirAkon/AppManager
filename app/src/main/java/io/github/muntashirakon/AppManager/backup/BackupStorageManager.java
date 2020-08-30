@@ -52,6 +52,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.types.FreshFile;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
@@ -333,20 +334,18 @@ public class BackupStorageManager implements AutoCloseable {
                 }
             }
             // Setup package staging directory
-            File packageStagingDirectory = new File("/data/local/tmp");
-            if (!packageStagingDirectory.exists()) packageStagingDirectory = backupPath;
+            File packageStagingDirectory = PackageUtils.PACKAGE_STAGING_DIRECTORY;
+            if (!RunnerUtils.fileExists(packageStagingDirectory)) {
+                packageStagingDirectory = backupPath;
+            }
             // Setup apk files, including split apk
-            File baseApk = new File(packageStagingDirectory, metadataV1.apkName);
+            FreshFile baseApk = new FreshFile(packageStagingDirectory, metadataV1.apkName);
             String[] splitApkNames = new String[metadataV1.splitSources.length];
-            File[] allApks = new File[splitApkNames.length + 1];
+            FreshFile[] allApks = new FreshFile[splitApkNames.length + 1];
             allApks[0] = baseApk;
-            if (baseApk.exists()) //noinspection ResultOfMethodCallIgnored
-                baseApk.delete();
             for (int i = 0; i < splitApkNames.length; ++i) {
                 splitApkNames[i] = new File(metadataV1.splitSources[i]).getName();
-                allApks[i + 1] = new File(packageStagingDirectory, splitApkNames[i]);
-                if (allApks[i + 1].exists()) //noinspection ResultOfMethodCallIgnored
-                    allApks[i + 1].delete();
+                allApks[i + 1] = new FreshFile(packageStagingDirectory, splitApkNames[i]);
             }
             // Extract apk files to the package staging directory
             StringBuilder sb = new StringBuilder("./").append(metadataV1.apkName);
@@ -359,8 +358,10 @@ public class BackupStorageManager implements AutoCloseable {
             // A normal update will do it now
             if (!PackageInstallerShell.getInstance().installMultiple(allApks, packageName)) {
                 Log.e("BSM - Restore", "A (re)install was necessary but couldn't perform it.");
+                deleteFiles(allApks);
                 return false;
             }
+            deleteFiles(allApks);
             // Get package info
             try {
                 packageInfo = AppManager.getContext().getPackageManager().getPackageInfo(packageName, PackageUtils.flagSigningInfo);
@@ -374,9 +375,9 @@ public class BackupStorageManager implements AutoCloseable {
                 Log.e("BSM - Restore", "Apparently the install wasn't complete in the previous section.");
                 return false;
             }
+            String sourceDir = new File(packageInfo.applicationInfo.publicSourceDir).getParent();
             // Restore source directory only if instruction set is matched or app path is not /data/app
             // Or only apk restoring is requested
-            String sourceDir = new File(packageInfo.applicationInfo.publicSourceDir).getParent();
             if (!requestedFlags.backupOnlyApk()  // Only apk restoring is not requested
                     && metadataV1.instructionSet.equals(instructionSet)  // Instruction set matched
                     && !dataAppPath.getAbsolutePath().equals(sourceDir)) {  // Path is not /data/app
@@ -386,6 +387,8 @@ public class BackupStorageManager implements AutoCloseable {
                     Log.e("BSM - Restore", "Failed to restore the source files.");
                     return false;  // Failed to restore source files
                 }
+                // Restore permissions
+                RootShellRunner.runCommand(String.format("restorecon -R \"%s\"", sourceDir));
             } else {
                 Log.e("BSM - Restore", "Skipped restoring files due to mismatched architecture or the path is /data/app or only apk restoring is requested.");
             }
@@ -433,8 +436,9 @@ public class BackupStorageManager implements AutoCloseable {
                 }
                 StringBuilder cmdData = new StringBuilder();
                 // FIXME: Fix API 23 external storage issue
-                for (File file : dataFiles)
+                for (File file : dataFiles) {
                     cmdData.append(" \"").append(file.getAbsolutePath()).append("\"");
+                }
                 // Skip restoring external data if requested
                 if (!requestedFlags.backupExtData() && dataSource.startsWith("/storage") && dataSource.startsWith("/sdcard"))
                     continue;
@@ -535,6 +539,11 @@ public class BackupStorageManager implements AutoCloseable {
             checksums.append(checksum);
         }
         return PackageUtils.getSha256Checksum(checksums.toString().getBytes());
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void deleteFiles(@NonNull FreshFile[] files) {
+        for (FreshFile file : files) file.delete();
     }
 
     static class BackupFlagsManager {

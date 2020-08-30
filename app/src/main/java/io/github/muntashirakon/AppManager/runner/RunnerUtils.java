@@ -164,7 +164,19 @@ public final class RunnerUtils {
         return Runner.runCommand(String.format(CMD_PERMISSION_REVOKE, packageName, permissionName));
     }
 
-    public static boolean fileExists(String fileName) {
+    public static boolean fileExists(@NonNull String fileName) {
         return Runner.runCommand(String.format("test -e \"%s\"", fileName)).isSuccessful();
+    }
+
+    public static boolean fileExists(@NonNull File fileName) {
+        return Runner.runCommand(String.format("test -e \"%s\"", fileName.getAbsolutePath())).isSuccessful();
+    }
+
+    public static void deleteFile(@NonNull String fileName) {
+        Runner.runCommand(String.format("rm -f \"%s\"", fileName));
+    }
+
+    public static void deleteFile(@NonNull File fileName) {
+        Runner.runCommand(String.format("rm -f \"%s\"", fileName.getAbsolutePath()));
     }
 }

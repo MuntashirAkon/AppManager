@@ -55,7 +55,7 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class ApkFile implements AutoCloseable, Parcelable {
-    public static final String TAG = "TAG";
+    public static final String TAG = "ApkFile";
 
     protected ApkFile(@NonNull Parcel in) {
         entries = Objects.requireNonNull(in.createTypedArrayList(Entry.CREATOR));
@@ -357,6 +357,8 @@ public class ApkFile implements AutoCloseable, Parcelable {
         public HashMap<String, String> manifest;
         @Nullable
         public String splitSuffix;
+        @Nullable
+        public String forFeature = null;
         public boolean selected = true;  // FIXME: Should be false
 
         Entry(@NonNull String name, @NonNull File source, @ApkType int type) throws Exception {
@@ -375,13 +377,15 @@ public class ApkFile implements AutoCloseable, Parcelable {
             this.manifest = manifest;
             if (type == APK_BASE) this.selected = true;
             else if (type == APK_SPLIT) {
-                // Infer type
+                // Infer types
                 if (manifest.containsKey(ANDROID_XML_NAMESPACE + ":isFeatureSplit")) {
                     this.type = APK_SPLIT_FEATURE;
                 } else if (manifest.containsKey("configForSplit")) {
                     String splitName = manifest.get("split");
                     if (splitName == null) throw new RuntimeException("Split name is empty.");
                     this.name = splitName;
+                    this.forFeature = manifest.get("configForSplit");
+                    if ("".equals(this.forFeature)) this.forFeature = null;
                     int configPartIndex = this.name.lastIndexOf("config.");
                     if (configPartIndex == -1 || (configPartIndex != 0 && this.name.charAt(configPartIndex - 1) != '.'))
                         return;
@@ -411,6 +415,7 @@ public class ApkFile implements AutoCloseable, Parcelable {
             source = new File(Objects.requireNonNull(in.readString()));
             type = in.readInt();
             splitSuffix = in.readString();
+            forFeature = in.readString();
             selected = in.readByte() != 0;
         }
 
@@ -460,6 +465,7 @@ public class ApkFile implements AutoCloseable, Parcelable {
             dest.writeString(source.getAbsolutePath());
             dest.writeInt(type);
             dest.writeString(splitSuffix);
+            dest.writeString(forFeature);
             dest.writeByte((byte) (selected ? 1 : 0));
         }
 

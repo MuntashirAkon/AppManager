@@ -128,6 +128,10 @@ public class AppPref {
         return getInstance().getBoolean(PrefKey.PREF_ROOT_MODE_ENABLED_BOOL);
     }
 
+    public static boolean isRootOrAdbEnabled() {
+        return isRootEnabled() || isAdbEnabled();
+    }
+
     private @NonNull SharedPreferences preferences;
     private @NonNull SharedPreferences.Editor editor;
 
