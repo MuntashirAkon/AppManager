@@ -23,7 +23,6 @@
 package io.github.muntashirakon.AppManager.details;
 
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -37,6 +36,8 @@ import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Objects;
 
@@ -109,20 +110,19 @@ public class LauncherIconCreator {
         return bmp;
     }
 
-    @TargetApi(14)
     private static void doCreateShortcut(Context context, String appName, Intent intent, String iconResourceName) {
         Intent shortcutIntent = new Intent();
         shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent);
         shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, appName);
         if (iconResourceName != null) {
-            Intent.ShortcutIconResource ir = new Intent.ShortcutIconResource();
+            Intent.ShortcutIconResource iconResource = new Intent.ShortcutIconResource();
             if (intent.getComponent() == null) {
-                ir.packageName = intent.getPackage();
+                iconResource.packageName = intent.getPackage();
             } else {
-                ir.packageName = intent.getComponent().getPackageName();
+                iconResource.packageName = intent.getComponent().getPackageName();
             }
-            ir.resourceName = iconResourceName;
-            shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, ir);
+            iconResource.resourceName = iconResourceName;
+            shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
         }
         shortcutIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
         context.sendBroadcast(shortcutIntent);
@@ -145,13 +145,10 @@ public class LauncherIconCreator {
 
             shortcutManager.requestPinShortcut(shortcutInfo, null);
         } else {
-            new AlertDialog.Builder(context)
+            new MaterialAlertDialogBuilder(context)
                     .setTitle(context.getString(R.string.error_creating_shortcut))
                     .setMessage(context.getString(R.string.error_verbose_pin_shortcut))
-                    .setPositiveButton(context.getString(android.R.string.ok), (dialog, which) -> {
-                        // Just close dialog don't do anything
-                        dialog.cancel();
-                    })
+                    .setPositiveButton(context.getString(android.R.string.ok), (dialog, which) -> dialog.cancel())
                     .show();
         }
     }
