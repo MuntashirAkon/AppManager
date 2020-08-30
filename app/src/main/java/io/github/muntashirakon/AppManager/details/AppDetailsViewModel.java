@@ -733,7 +733,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             if (packageName == null || appOps == null) return;
             if (appOpItems == null) {
                 appOpItems = new ArrayList<>();
-                if (!isExternalApk && (AppPref.isRootEnabled() || AppPref.isAdbEnabled())) {
+                if (!isExternalApk && AppPref.isRootOrAdbEnabled()) {
                     if (mAppOpsService == null) mAppOpsService = new AppOpsService();
                     try {
                         List<PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(-1, packageName, null);

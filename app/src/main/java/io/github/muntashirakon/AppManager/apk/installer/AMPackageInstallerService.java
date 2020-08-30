@@ -120,7 +120,7 @@ public class AMPackageInstallerService extends IntentService {
             return;
         }
         // Install package
-        if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
+        if (AppPref.isRootOrAdbEnabled()) {
             PackageInstallerShell.getInstance().installMultiple(stagingApkFiles, packageName);
             for (File file : stagingApkFiles) {
                 if (file instanceof FreshFile) //noinspection ResultOfMethodCallIgnored

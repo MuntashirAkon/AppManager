@@ -243,7 +243,7 @@ public class OneClickOpsActivity extends AppCompatActivity {
     }
 
     private void blockAppOps() {
-        if (!AppPref.isRootEnabled() && !AppPref.isAdbEnabled()) {
+        if (!AppPref.isRootOrAdbEnabled()) {
             Toast.makeText(this, R.string.only_works_in_root_or_adb_mode, Toast.LENGTH_SHORT).show();
             return;
         }

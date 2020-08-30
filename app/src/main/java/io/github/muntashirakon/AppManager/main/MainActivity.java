@@ -388,7 +388,7 @@ public class MainActivity extends AppCompatActivity implements
                 menu.findItem(R.id.action_filter_apps_with_activities).setChecked(true);
             }
         }
-        if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
+        if (AppPref.isRootOrAdbEnabled()) {
             runningAppsMenu.setVisible(true);
             sortByBlockedComponentMenu.setVisible(true);
         } else {
@@ -581,7 +581,7 @@ public class MainActivity extends AppCompatActivity implements
         }
         // Set sort by
         mSortBy = (int) AppPref.get(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT);
-        if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
+        if (AppPref.isRootOrAdbEnabled()) {
             if (runningAppsMenu != null) runningAppsMenu.setVisible(true);
             if (sortByBlockedComponentMenu != null) sortByBlockedComponentMenu.setVisible(true);
         } else {

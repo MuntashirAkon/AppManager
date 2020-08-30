@@ -74,7 +74,7 @@ public class PackageInstallerActivity extends AppCompatActivity {
                 Drawable appIcon = mPackageManager.getApplicationIcon(packageInfo.applicationInfo);
                 if (installedPackageInfo == null) {
                     // App not installed
-                    if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
+                    if (AppPref.isRootOrAdbEnabled()) {
                         runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
                                 .setCancelable(false)
                                 .setTitle(appLabel)
@@ -99,7 +99,7 @@ public class PackageInstallerActivity extends AppCompatActivity {
                         runOnUiThread(() -> dialogFragment.show(getSupportFragmentManager(), WhatsNewDialogFragment.TAG));
                     } else if (installedVersionCode == thisVersionCode) {
                         // Issue reinstall
-                        if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) {
+                        if (AppPref.isRootOrAdbEnabled()) {
                             runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
                                     .setCancelable(false)
                                     .setTitle(appLabel)

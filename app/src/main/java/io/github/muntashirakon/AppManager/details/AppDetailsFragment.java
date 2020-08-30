@@ -458,7 +458,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             case PROVIDERS: return R.string.no_providers;
             case APP_OPS:
                 if (isExternalApk) return R.string.external_apk_no_app_op;
-                if (AppPref.isRootEnabled() || AppPref.isAdbEnabled()) return R.string.no_app_ops;
+                if (AppPref.isRootOrAdbEnabled()) return R.string.no_app_ops;
                 else return R.string.only_works_in_root_mode;
             case USES_PERMISSIONS:
             case PERMISSIONS: return R.string.require_no_permission;
