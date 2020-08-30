@@ -65,9 +65,11 @@ public final class MetadataManager implements Closeable {
         public int version = 1;  // version
         public String apkName;  // apk_name
         public String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);  // instruction_set
+        public int flags = BackupStorageManager.BACKUP_FLAGS_TOTAL;  // flags, total is set for compatibility
     }
 
     private static MetadataManager metadataManager;
+
     public static MetadataManager getInstance(String packageName) {
         if (metadataManager == null) metadataManager = new MetadataManager(packageName);
         if (!metadataManager.packageName.equals(packageName)) {
@@ -83,11 +85,14 @@ public final class MetadataManager implements Closeable {
     }
 
     @Override
-    public void close() {}
+    public void close() {
+    }
 
-    private @NonNull String packageName;
+    private @NonNull
+    String packageName;
     private MetadataV1 metadataV1;
     private AppManager appManager;
+
     MetadataManager(@NonNull String packageName) {
         this.packageName = packageName;
         this.appManager = AppManager.getInstance();
@@ -135,6 +140,12 @@ public final class MetadataManager implements Closeable {
             // Add "-unknown" suffix to the current platform (to skip restoring)
             metadataV1.instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]) + "-unknown";
         }
+        try {
+            metadataV1.flags = rootObject.getInt("flags");
+        } catch (JSONException e) {
+            // Fallback to total
+            metadataV1.flags = BackupStorageManager.BACKUP_FLAGS_TOTAL;
+        }
     }
 
     synchronized public void writeMetadata() throws IOException, JSONException {
@@ -161,6 +172,7 @@ public final class MetadataManager implements Closeable {
             rootObject.put("version", metadataV1.version);
             rootObject.put("apk_name", metadataV1.apkName);
             rootObject.put("instruction_set", metadataV1.instructionSet);
+            rootObject.put("flags", metadataV1.flags);
             fileOutputStream.write(rootObject.toString().getBytes());
         }
     }
@@ -168,18 +180,19 @@ public final class MetadataManager implements Closeable {
     @NonNull
     private static JSONArray getJSONArrayFromArray(@NonNull final String[] stringArray) {
         JSONArray jsonArray = new JSONArray();
-        for (String string: stringArray) jsonArray.put(string);
+        for (String string : stringArray) jsonArray.put(string);
         return jsonArray;
     }
 
     @NonNull
     private static String[] getArrayFromJSONArray(@NonNull final JSONArray jsonArray) throws JSONException {
         String[] stringArray = new String[jsonArray.length()];
-        for (int i = 0; i<jsonArray.length(); ++i) stringArray[i] = (String) jsonArray.get(i);
+        for (int i = 0; i < jsonArray.length(); ++i) stringArray[i] = (String) jsonArray.get(i);
         return stringArray;
     }
 
-    public MetadataV1 setupMetadata(@BackupStorageManager.BackupFlags int flags) throws PackageManager.NameNotFoundException {
+    public MetadataV1 setupMetadata(@NonNull BackupStorageManager.BackupFlagsManager requestedFlags)
+            throws PackageManager.NameNotFoundException {
         PackageManager pm = appManager.getPackageManager();
         @SuppressLint("WrongConstant")
         PackageInfo packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo);
@@ -189,14 +202,13 @@ public final class MetadataManager implements Closeable {
         metadataV1.packageName = packageName;
         metadataV1.versionName = packageInfo.versionName;
         metadataV1.versionCode = PackageUtils.getVersionCode(packageInfo);
-        if ((flags & BackupStorageManager.BACKUP_APK) != 0)
+        if (requestedFlags.backupSource()) {
             metadataV1.sourceDir = PackageUtils.getSourceDir(applicationInfo);
-        else metadataV1.sourceDir = "";
+        } else metadataV1.sourceDir = "";
         metadataV1.apkName = new File(applicationInfo.sourceDir).getName();
-        if ((flags & BackupStorageManager.BACKUP_DATA) != 0) {
-            metadataV1.dataDirs = PackageUtils.getDataDirs(applicationInfo,
-                    (flags & BackupStorageManager.BACKUP_EXT_DATA) != 0);
-        } else metadataV1.dataDirs = new  String[0];
+        if (requestedFlags.backupData()) {
+            metadataV1.dataDirs = PackageUtils.getDataDirs(applicationInfo, requestedFlags.backupExtData());
+        } else metadataV1.dataDirs = new String[0];
         metadataV1.isSystem = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         metadataV1.isSplitApk = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -209,7 +221,7 @@ public final class MetadataManager implements Closeable {
         if (metadataV1.splitNames == null) metadataV1.splitNames = new String[0];
         if (metadataV1.splitSources == null) metadataV1.splitSources = new String[0];
         metadataV1.hasRules = false;
-        if ((flags & BackupStorageManager.BACKUP_RULES) != 0) {
+        if (requestedFlags.backupRules()) {
             try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName)) {
                 metadataV1.hasRules = cb.entryCount() > 0;
             }
@@ -224,7 +236,8 @@ public final class MetadataManager implements Closeable {
 
     @NonNull
     private File getMetadataFile(boolean temporary) {
-        if (temporary) return new File(BackupStorageManager.getTemporaryBackupPath(packageName), META_FILE);
+        if (temporary)
+            return new File(BackupStorageManager.getTemporaryBackupPath(packageName), META_FILE);
         else return new File(BackupStorageManager.getBackupPath(packageName), META_FILE);
     }
 }

@@ -27,6 +27,8 @@ import android.os.Bundle;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,15 +55,20 @@ public class BackupDialogFragment extends DialogFragment {
             MODE_RESTORE,
             MODE_DELETE
     })
-    public @interface ActionMode {}
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ActionMode {
+    }
+
     public static final int MODE_BACKUP = 864;
     public static final int MODE_RESTORE = 169;
     public static final int MODE_DELETE = 642;
 
-    private @BackupStorageManager.BackupFlags int flags = BackupStorageManager.BACKUP_APK
-            | BackupStorageManager.BACKUP_DATA | BackupStorageManager.BACKUP_EXCLUDE_CACHE
-            | BackupStorageManager.BACKUP_RULES;
-    private @ActionMode int mode = MODE_BACKUP;
+    @BackupStorageManager.BackupFlags
+    private int flags = BackupStorageManager.BACKUP_SOURCE | BackupStorageManager.BACKUP_DATA
+            | BackupStorageManager.BACKUP_EXCLUDE_CACHE | BackupStorageManager.BACKUP_RULES
+            | BackupStorageManager.BACKUP_SOURCE_APK_ONLY;
+    @ActionMode
+    private int mode = MODE_BACKUP;
     private List<String> packageNames;
     private FragmentActivity activity;
     private BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
@@ -83,8 +90,10 @@ public class BackupDialogFragment extends DialogFragment {
         void onActionBegin(@ActionMode int mode);
     }
 
-    private @Nullable ActionCompleteInterface actionCompleteInterface;
-    private @Nullable ActionBeginInterface actionBeginInterface;
+    private @Nullable
+    ActionCompleteInterface actionCompleteInterface;
+    private @Nullable
+    ActionBeginInterface actionBeginInterface;
 
     public void setOnActionCompleteListener(@NonNull ActionCompleteInterface actionCompleteInterface) {
         this.actionCompleteInterface = actionCompleteInterface;
@@ -101,15 +110,17 @@ public class BackupDialogFragment extends DialogFragment {
         Bundle args = requireArguments();
         packageNames = args.getStringArrayList(ARG_PACKAGES);
         if (packageNames == null) return super.onCreateDialog(savedInstanceState);
-        boolean[] checkedItems = new boolean[6];
+        boolean[] checkedItems = new boolean[8];
         Arrays.fill(checkedItems, true);
         // Set external data to false
         checkedItems[2] = false;
+        // Set obb & media files to false
+        checkedItems[7] = false;
         // Set skip signature checks to false
         checkedItems[5] = false;
         // Check if backup exists for all apps
         boolean backupExists = true;
-        for (String packageName: packageNames) {
+        for (String packageName : packageNames) {
             if (!MetadataManager.hasMetadata(packageName)) {
                 backupExists = false;
                 break;
@@ -154,10 +165,15 @@ public class BackupDialogFragment extends DialogFragment {
     public void handleMode() {
         @BatchOpsManager.OpType int op;
         switch (mode) {
-            case MODE_DELETE: op = BatchOpsManager.OP_DELETE_BACKUP; break;
-            case MODE_RESTORE: op = BatchOpsManager.OP_RESTORE_BACKUP; break;
+            case MODE_DELETE:
+                op = BatchOpsManager.OP_DELETE_BACKUP;
+                break;
+            case MODE_RESTORE:
+                op = BatchOpsManager.OP_RESTORE_BACKUP;
+                break;
             case MODE_BACKUP:
-            default: op = BatchOpsManager.OP_BACKUP;
+            default:
+                op = BatchOpsManager.OP_BACKUP;
         }
         if (actionBeginInterface != null) actionBeginInterface.onActionBegin(mode);
         activity.registerReceiver(mBatchOpsBroadCastReceiver, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS_COMPLETED));

@@ -530,4 +530,6 @@
     <string name="installer_error_session_write">Failed to write to the installer session</string>
     <string name="installer_error_session_commit">Failed to commit the apk files</string>
     <string name="installer_error_session_abandon">Failed to abandon the installer session</string>
+    <string name="backup_apk_only">Apk only</string>
+    <string name="backup_obb_media"><![CDATA[Obb & media]]></string>
 </resources>

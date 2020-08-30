@@ -33,6 +33,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -56,24 +58,33 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 public class BackupStorageManager implements AutoCloseable {
     @IntDef(flag = true, value = {
             BACKUP_NOTHING,
-            BACKUP_APK,
+            BACKUP_SOURCE,
+            BACKUP_SOURCE_APK_ONLY,
             BACKUP_DATA,
             BACKUP_EXT_DATA,
+            BACKUP_EXT_OBB_MEDIA,
             BACKUP_EXCLUDE_CACHE,
             BACKUP_RULES,
-            BACKUP_NO_SIGNATURE_CHECK
+            BACKUP_NO_SIGNATURE_CHECK,
     })
-    public @interface BackupFlags {}
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface BackupFlags {
+    }
+
     public static final int BACKUP_NOTHING = 0;
     @SuppressWarnings("PointlessBitwiseExpression")
-    public static final int BACKUP_APK = 1 << 0;
+    public static final int BACKUP_SOURCE = 1 << 0;
     public static final int BACKUP_DATA = 1 << 1;
     public static final int BACKUP_EXT_DATA = 1 << 2;
     public static final int BACKUP_EXCLUDE_CACHE = 1 << 3;
     public static final int BACKUP_RULES = 1 << 4;
     public static final int BACKUP_NO_SIGNATURE_CHECK = 1 << 5;
+    public static final int BACKUP_SOURCE_APK_ONLY = 1 << 6;
+    public static final int BACKUP_EXT_OBB_MEDIA = 1 << 7;  // TODO
+    public static final int BACKUP_FLAGS_TOTAL = (1 << 8) - 1;
 
     private static final String CMD_SOURCE_DIR_BACKUP = "cd \"%s\" && tar -czf - . | split -b 1G - \"%s\"";  // src, dest
+    private static final String CMD_SOURCE_DIR_APK_ONLY_BACKUP = "cd \"%s\" && tar -czf - ./*.apk | split -b 1G - \"%s\"";  // src, dest
     private static final String CMD_DATA_DIR_BACKUP = "tar -czf - \"%s\" %s | split -b 1G - \"%s\"";  // src, exclude, dest
     private static final String SOURCE_PREFIX = "source";
     private static final String DATA_PREFIX = "data";
@@ -84,6 +95,7 @@ public class BackupStorageManager implements AutoCloseable {
     private static final File DEFAULT_BACKUP_PATH = new File(Environment.getExternalStorageDirectory(), "AppManager");
 
     private static BackupStorageManager instance;
+
     public static BackupStorageManager getInstance(String packageName) {
         if (instance == null) instance = new BackupStorageManager(packageName);
         else if (!instance.packageName.equals(packageName)) {
@@ -112,15 +124,19 @@ public class BackupStorageManager implements AutoCloseable {
         return new File(getBackupDirectory(), APK_SAVING_DIRECTORY);
     }
 
-    private @NonNull String packageName;
-    private @NonNull MetadataManager metadataManager;
-    private @NonNull File backupPath;
-    private @BackupFlags int flags;
+    private @NonNull
+    String packageName;
+    private @NonNull
+    MetadataManager metadataManager;
+    private @NonNull
+    File backupPath;
+    private BackupFlagsManager requestedFlags;
+
     protected BackupStorageManager(@NonNull String packageName) {
         this.packageName = packageName;
         metadataManager = MetadataManager.getInstance(packageName);
         backupPath = getBackupPath(packageName);
-        flags = BACKUP_NOTHING;
+        requestedFlags = new BackupFlagsManager(BACKUP_NOTHING);
         if (!backupPath.exists()) {
             //noinspection ResultOfMethodCallIgnored
             backupPath.mkdirs();
@@ -128,18 +144,18 @@ public class BackupStorageManager implements AutoCloseable {
     }
 
     public void setFlags(int flags) {
-        this.flags = flags;
+        requestedFlags.updateFlags(flags);
     }
 
     public boolean backup() {
-        if (flags == BACKUP_NOTHING) {
+        if (requestedFlags.isEmpty()) {
             Log.e("BSM - Backup", "Backup is requested without any flags.");
             return false;
         }
         MetadataManager.MetadataV1 metadataV1;
         try {
             // Override existing metadata
-            metadataV1 = metadataManager.setupMetadata(flags);
+            metadataV1 = metadataManager.setupMetadata(requestedFlags);
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("BSM - Backup", "Failed to setup metadata.");
             e.printStackTrace();
@@ -162,7 +178,7 @@ public class BackupStorageManager implements AutoCloseable {
                 // Backup only the apk file (no split apk support for this type of apk)
                 sourceDir = new File(sourceDir, metadataV1.apkName).getAbsolutePath();
             }
-            String command = String.format(CMD_SOURCE_DIR_BACKUP, sourceDir, backupFile.getAbsolutePath());
+            String command = String.format(requestedFlags.backupOnlyApk() ? CMD_SOURCE_DIR_APK_ONLY_BACKUP : CMD_SOURCE_DIR_BACKUP, sourceDir, backupFile.getAbsolutePath());
             if (!RootShellRunner.runCommand(command).isSuccessful()) {
                 Log.e("BSM - Backup", "Failed to backup source directory. " + RootShellRunner.getLastResult().getOutput());
                 return cleanup(tmpBackupPath);
@@ -175,10 +191,10 @@ public class BackupStorageManager implements AutoCloseable {
             metadataV1.sourceDirSha256Checksum = getSha256Sum(sourceFiles);
         }
         // Backup data
-        for (int i = 0; i<metadataV1.dataDirs.length; ++i) {
+        for (int i = 0; i < metadataV1.dataDirs.length; ++i) {
             backupFile = new File(tmpBackupPath, DATA_PREFIX + i + BACKUP_FILE_SUFFIX + ".");
             StringBuilder excludePaths = new StringBuilder();
-            if ((flags & BACKUP_EXCLUDE_CACHE) != 0) {
+            if (requestedFlags.excludeCache()) {
                 excludePaths.append(" --exclude=\"").append(metadataV1.dataDirs[i].substring(1))
                         .append(File.separatorChar).append("cache").append("\"");
                 excludePaths.append(" --exclude=\"").append(metadataV1.dataDirs[i].substring(1))
@@ -202,7 +218,8 @@ public class BackupStorageManager implements AutoCloseable {
             File rulesFile = new File(tmpBackupPath, RULES_TSV);
             try (OutputStream outputStream = new FileOutputStream(rulesFile);
                  ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName)) {
-                for (RulesStorageManager.Entry entry: cb.getAll()) {
+                for (RulesStorageManager.Entry entry : cb.getAll()) {
+                    // TODO: Do it in ComponentUtils
                     outputStream.write(String.format("%s\t%s\t%s\t%s\n", packageName, entry.name, entry.type.name(), entry.extra).getBytes());
                 }
             } catch (IOException e) {
@@ -230,9 +247,9 @@ public class BackupStorageManager implements AutoCloseable {
         return cleanup(tmpBackupPath);
     }
 
-    @SuppressLint({"SdCardPath", "WrongConstant"})
+    @SuppressLint({"SdCardPath", "WrongConstant", "DefaultLocale"})
     public boolean restore() {
-        if (flags == BACKUP_NOTHING) {
+        if (requestedFlags.isEmpty()) {
             Log.e("BSM - Restore", "Restore is requested without any flags.");
             return false;
         }
@@ -256,8 +273,8 @@ public class BackupStorageManager implements AutoCloseable {
             e.printStackTrace();
         }
         boolean isInstalled = packageInfo != null;
-        boolean noChecksumCheck = 0 != (flags & BACKUP_NO_SIGNATURE_CHECK);
-        if ((flags & BACKUP_APK) != 0) {
+        boolean noChecksumCheck = requestedFlags.noSignatureCheck();
+        if (requestedFlags.backupSource()) {
             // Restoring apk requested
             boolean reinstallNeeded = false;
             File[] backupSourceFiles = getSourceFiles(backupPath);
@@ -267,7 +284,8 @@ public class BackupStorageManager implements AutoCloseable {
                 return false;
             }
             StringBuilder cmdSources = new StringBuilder();
-            for (File file: backupSourceFiles) cmdSources.append(" \"").append(file.getAbsolutePath()).append("\"");
+            for (File file : backupSourceFiles)
+                cmdSources.append(" \"").append(file.getAbsolutePath()).append("\"");
             if (isInstalled) {
                 // Check signature if installed: Should be checked before calling this method if it is enabled
                 List<String> certChecksum = Arrays.asList(PackageUtils.getSigningCertSha256Checksum(packageInfo));
@@ -324,11 +342,11 @@ public class BackupStorageManager implements AutoCloseable {
             allApks[0] = baseApk;
             if (baseApk.exists()) //noinspection ResultOfMethodCallIgnored
                 baseApk.delete();
-            for (int i = 0; i<splitApkNames.length; ++i) {
+            for (int i = 0; i < splitApkNames.length; ++i) {
                 splitApkNames[i] = new File(metadataV1.splitSources[i]).getName();
-                allApks[i+1] = new File(packageStagingDirectory, splitApkNames[i]);
-                if (allApks[i+1].exists()) //noinspection ResultOfMethodCallIgnored
-                    allApks[i+1].delete();
+                allApks[i + 1] = new File(packageStagingDirectory, splitApkNames[i]);
+                if (allApks[i + 1].exists()) //noinspection ResultOfMethodCallIgnored
+                    allApks[i + 1].delete();
             }
             // Extract apk files to the package staging directory
             StringBuilder sb = new StringBuilder("./").append(metadataV1.apkName);
@@ -357,17 +375,22 @@ public class BackupStorageManager implements AutoCloseable {
                 return false;
             }
             // Restore source directory only if instruction set is matched or app path is not /data/app
+            // Or only apk restoring is requested
             String sourceDir = new File(packageInfo.applicationInfo.publicSourceDir).getParent();
-            if (metadataV1.instructionSet.equals(instructionSet) && !dataAppPath.getAbsolutePath().equals(sourceDir)) {
+            if (!requestedFlags.backupOnlyApk()  // Only apk restoring is not requested
+                    && metadataV1.instructionSet.equals(instructionSet)  // Instruction set matched
+                    && !dataAppPath.getAbsolutePath().equals(sourceDir)) {  // Path is not /data/app
                 // Restore source: Get installed source directory and copy backups directly
                 if (!RootShellRunner.runCommand(String.format("cat %s | tar -xzf - -C \"%s\"",
                         cmdSources, sourceDir)).isSuccessful()) {
                     Log.e("BSM - Restore", "Failed to restore the source files.");
                     return false;  // Failed to restore source files
                 }
-            } else Log.e("BSM - Restore", "Skipped restoring files due to mismatched architecture or the path is /data/app");
+            } else {
+                Log.e("BSM - Restore", "Skipped restoring files due to mismatched architecture or the path is /data/app or only apk restoring is requested.");
+            }
         }
-        if ((flags & BACKUP_DATA) != 0) {
+        if (requestedFlags.backupData()) {
             // Data restore is requested: Data restore is only possible if the app is actually
             // installed. So, check if it's installed first.
             if (!isInstalled) {
@@ -397,33 +420,34 @@ public class BackupStorageManager implements AutoCloseable {
             RunnerUtils.forceStopPackage(packageName);
             // Restore backups
             String dataSource;
-            for (int i = 0; i<metadataV1.dataDirs.length; ++i) {
+            for (int i = 0; i < metadataV1.dataDirs.length; ++i) {
                 dataSource = metadataV1.dataDirs[i];
                 dataFiles = getDataFiles(backupPath, i);
-                Pair<String, String> uidAndGid = getUidAndGid(dataSource);
+                Pair<Integer, Integer> uidAndGid = null;
+                if (RunnerUtils.fileExists(dataSource)) {
+                    uidAndGid = getUidAndGid(dataSource, packageInfo.applicationInfo.uid);
+                }
                 if (dataFiles == null) {
                     Log.e("BSM - Restore", "Data restore is requested but there are no data files for index " + i + ".");
                     return false;
                 }
-                if (RunnerUtils.fileExists(dataSource) && uidAndGid == null) {
-                    Log.e("BSM - Restore", "Failed to get owner info for index " + i + ".");
-                    return false;
-                }
                 StringBuilder cmdData = new StringBuilder();
                 // FIXME: Fix API 23 external storage issue
-                for (File file: dataFiles) cmdData.append(" \"").append(file.getAbsolutePath()).append("\"");
+                for (File file : dataFiles)
+                    cmdData.append(" \"").append(file.getAbsolutePath()).append("\"");
                 // Skip restoring external data if requested
-                if ((flags & BACKUP_EXT_DATA) == 0 && dataSource.startsWith("/storage") && dataSource.startsWith("/sdcard")) continue;
+                if (!requestedFlags.backupExtData() && dataSource.startsWith("/storage") && dataSource.startsWith("/sdcard"))
+                    continue;
                 if (!RootShellRunner.runCommand(String.format("cat %s | tar -xzf - -C /", cmdData.toString())).isSuccessful()) {
                     Log.e("BSM - Restore", "Failed to restore data files for index " + i + ".");
                     return false;
                 }
-                if ((flags & BACKUP_EXCLUDE_CACHE) != 0) {
+                if (requestedFlags.excludeCache()) {
                     // Clear cache if exists: return value is not important for us
                     RootShellRunner.runCommand(String.format("rm -rf %s/cache %s/code_cache", dataSource, dataSource));
                 }
                 // Fix UID and GID
-                if (uidAndGid != null && !RootShellRunner.runCommand(String.format("chown -R %s:%s \"%s\"", uidAndGid.first, uidAndGid.second, dataSource)).isSuccessful()) {
+                if (uidAndGid != null && !RootShellRunner.runCommand(String.format("chown -R %d:%d \"%s\"", uidAndGid.first, uidAndGid.second, dataSource)).isSuccessful()) {
                     Log.e("BSM - Restore", "Failed to get restore owner for index " + i + ".");
                     return false;
                 }
@@ -431,7 +455,7 @@ public class BackupStorageManager implements AutoCloseable {
                 RootShellRunner.runCommand(String.format("restorecon -R \"%s\"", dataSource));
             }
         }
-        if ((flags & BACKUP_RULES) != 0) {
+        if (requestedFlags.backupRules()) {
             // Apply rules
             if (!isInstalled) {
                 Log.e("BSM - Restore", "Rules restore is requested but the app isn't installed.");
@@ -471,13 +495,23 @@ public class BackupStorageManager implements AutoCloseable {
         return false;
     }
 
-    @Nullable
-    public Pair<String, String> getUidAndGid(String filepath) {
-        Runner.Result result = RootShellRunner.runCommand(String.format("stat -c '%%u %%g' \"%s\"", filepath));
-        if (!result.isSuccessful()) return null;
+    @NonNull
+    public Pair<Integer, Integer> getUidAndGid(String filepath, int uid) {
+        // Default UID and GID should be the same as the kernel user ID, and will fallback to it
+        // if the stat command fails
+        Pair<Integer, Integer> defaultUidGid = new Pair<>(uid, uid);
+        Runner.Result result = RootShellRunner.runCommand(String.format("stat -c \"%%u %%g\" \"%s\"", filepath));
+        if (!result.isSuccessful()) return defaultUidGid;
         String[] uidGid = result.getOutput().split(" ");
-        if (uidGid.length != 2) return null;
-        return new Pair<>(uidGid[0], uidGid[1]);
+        if (uidGid.length != 2) return defaultUidGid;
+        // Fix for Magisk bug
+        if (uidGid[0].equals("0")) return defaultUidGid;
+        try {
+            // There could be other underlying bugs as well
+            return new Pair<>(Integer.parseInt(uidGid[0]), Integer.parseInt(uidGid[1]));
+        } catch (Exception e) {
+            return defaultUidGid;
+        }
     }
 
     @Nullable
@@ -501,5 +535,58 @@ public class BackupStorageManager implements AutoCloseable {
             checksums.append(checksum);
         }
         return PackageUtils.getSha256Checksum(checksums.toString().getBytes());
+    }
+
+    static class BackupFlagsManager {
+        @BackupFlags
+        int flags;
+
+        BackupFlagsManager(@BackupFlags int flags) {
+            this.flags = flags;
+        }
+
+        void updateFlags(int flags) {
+            this.flags = flags;
+        }
+
+        public int getFlags() {
+            return flags;
+        }
+
+        boolean isEmpty() {
+            return flags == 0;
+        }
+
+        boolean backupSource() {
+            return (flags & BACKUP_SOURCE) != 0;
+        }
+
+        boolean backupOnlyApk() {
+            return (flags & BACKUP_SOURCE_APK_ONLY) != 0;
+        }
+
+        boolean backupData() {
+            return (flags & BACKUP_DATA) != 0;
+        }
+
+        boolean backupExtData() {
+            return (flags & BACKUP_EXT_DATA) != 0;
+        }
+
+        boolean backupMediaObb() {
+            return (flags & BACKUP_EXT_OBB_MEDIA) != 0;
+        }
+
+        boolean backupRules() {
+            return (flags & BACKUP_RULES) != 0;
+        }
+
+        boolean excludeCache() {
+            return (flags & BACKUP_EXCLUDE_CACHE) != 0;
+        }
+
+        boolean noSignatureCheck() {
+            return (flags & BACKUP_NO_SIGNATURE_CHECK) != 0;
+        }
     }
 }
