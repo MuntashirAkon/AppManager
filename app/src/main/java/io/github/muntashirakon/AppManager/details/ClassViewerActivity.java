@@ -17,13 +17,9 @@
 
 package io.github.muntashirakon.AppManager.details;
 
-// NOTE: Patterns here are taken from https://github.com/billthefarmer/editor
-// Some of them might be slightly modified
+// NOTE: Some patterns here are taken from https://github.com/billthefarmer/editor
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -41,7 +37,8 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import androidx.annotation.Nullable;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
@@ -49,14 +46,10 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.R;
 
-import static io.github.muntashirakon.AppManager.misc.RequestCodes.REQUEST_CODE_EXPORT;
-
 public class ClassViewerActivity extends AppCompatActivity {
     public static final String EXTRA_APP_NAME = "app_name";
     public static final String EXTRA_CLASS_NAME = "class_name";
     public static final String EXTRA_CLASS_DUMP = "class_dump";
-
-    private static final String MIME_JAVA = "text/x-java-source";
 
     private static final Pattern KEYWORDS = Pattern.compile
             ("\\b(abstract|and|arguments|as(m|sert|sociativity)?|auto|break|" +
@@ -91,7 +84,17 @@ public class ClassViewerActivity extends AppCompatActivity {
     private boolean isWrapped = true;  // Wrap by default
     private AppCompatEditText container;
     private ProgressIndicator mProgressIndicator;
-    String className;
+    private String className;
+    private ActivityResultLauncher<String> exportManifest = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
+        try (OutputStream outputStream = getContentResolver().openOutputStream(uri)) {
+            Objects.requireNonNull(outputStream).write(classDump.getBytes());
+            outputStream.flush();
+            Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+        }
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,30 +187,8 @@ public class ClassViewerActivity extends AppCompatActivity {
             case R.id.action_wrap: setWrapped(); return true;
             case R.id.action_save:
                 String fileName = className +  ".java";
-                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType(MIME_JAVA);
-                intent.putExtra(Intent.EXTRA_TITLE, fileName);
-                startActivityForResult(intent, REQUEST_CODE_EXPORT);
+                exportManifest.launch(fileName);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK) return;
-        if (requestCode != REQUEST_CODE_EXPORT) return;
-        if (data == null) return;
-        Uri uri = data.getData();
-        if(uri == null) return;
-        try (OutputStream outputStream = getContentResolver().openOutputStream(uri)) {
-            Objects.requireNonNull(outputStream).write(classDump.getBytes());
-            outputStream.flush();
-            Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
-        }
     }
 }

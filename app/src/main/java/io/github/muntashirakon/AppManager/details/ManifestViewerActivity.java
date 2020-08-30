@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.details;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -49,8 +48,9 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.AppCompatEditText;
@@ -60,13 +60,10 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.xmlapkparser.AXMLPrinter;
 
-import static io.github.muntashirakon.AppManager.misc.RequestCodes.REQUEST_CODE_EXPORT;
-
 public class ManifestViewerActivity extends AppCompatActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
 
     private static final String MANIFEST_CACHE_APK = "manifest_cache.apk";
-    private static final String MIME_XML = "text/xml";
 
     private static final Pattern QUOTATIONS = Pattern.compile("\"([^\"]*)\"", Pattern.MULTILINE);
     private static final Pattern MANIFEST_TAGS = Pattern.compile
@@ -85,6 +82,16 @@ public class ManifestViewerActivity extends AppCompatActivity {
     private SpannableString formattedContent;
     private String archiveFilePath;
     private String packageName;
+    private ActivityResultLauncher<String> exportManifest = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
+        try (OutputStream outputStream = getContentResolver().openOutputStream(uri)) {
+            Objects.requireNonNull(outputStream).write(code.getBytes());
+            outputStream.flush();
+            Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+        }
+    });
 
     @SuppressLint("WrongConstant")
     @Override
@@ -157,35 +164,17 @@ public class ManifestViewerActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home: finish(); return true;
-            case R.id.action_wrap: setWrapped(); return true;
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.action_wrap:
+                setWrapped();
+                return true;
             case R.id.action_save:
-                String fileName = packageName +  "_AndroidManifest.xml";
-                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType(MIME_XML);
-                intent.putExtra(Intent.EXTRA_TITLE, fileName);
-                startActivityForResult(intent, REQUEST_CODE_EXPORT);
+                String fileName = packageName + "_AndroidManifest.xml";
+                exportManifest.launch(fileName);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK) return;
-        if (requestCode != REQUEST_CODE_EXPORT) return;
-        if (data == null) return;
-        Uri uri = data.getData();
-        if(uri == null) return;
-        try (OutputStream outputStream = getContentResolver().openOutputStream(uri)) {
-            Objects.requireNonNull(outputStream).write(code.getBytes());
-            outputStream.flush();
-            Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void setWrapped() {
@@ -262,8 +251,8 @@ public class ManifestViewerActivity extends AppCompatActivity {
     @NonNull
     private static CharSequence getAttribs(@NonNull XmlResourceParser xrp, Resources currentResources) {
         StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < xrp.getAttributeCount(); i++){
-            if (xrp.getAttributeName(i).length()!=0)
+        for (int i = 0; i < xrp.getAttributeCount(); i++) {
+            if (xrp.getAttributeName(i).length() != 0)
                 sb.append("\n").append(xrp.getAttributeName(i)).append("=\"").append(resolveValue(xrp.getAttributeValue(i), currentResources)).append("\"");
             else
                 sb.append("\n").append(xrp.getAttributeType(i)).append(Integer.toHexString(xrp.getAttributeNameResource(i)))
@@ -273,26 +262,26 @@ public class ManifestViewerActivity extends AppCompatActivity {
     }
 
     private static String resolveValue(String in, Resources r) {
-        if (in == null )
+        if (in == null)
             return "null";
         if (!in.startsWith("@"))
             return in;
         int num = Integer.parseInt(in.substring(1));
         try {
-            return r.getString(num).replaceAll("&",  "&amp;")
+            return r.getString(num).replaceAll("&", "&amp;")
                     .replaceAll("\"", "&quot;")//
-                    .replaceAll("'",  "&apos;")
-                    .replaceAll("<",  "&lt;")
-                    .replaceAll(">",  "&gt;");
+                    .replaceAll("'", "&apos;")
+                    .replaceAll("<", "&lt;")
+                    .replaceAll(">", "&gt;");
         } catch (NumberFormatException e) {
             e.printStackTrace();
             return in;
         } catch (RuntimeException e) {
             try {
-                if (r.getResourceEntryName(num).length()>0)
-                    return r.getResourceTypeName(num)+"/"+r.getResourceEntryName(num);
-                else return r.getResourceTypeName(num)+"/"+in;
-            } catch (Resources.NotFoundException e2){
+                if (r.getResourceEntryName(num).length() > 0)
+                    return r.getResourceTypeName(num) + "/" + r.getResourceEntryName(num);
+                else return r.getResourceTypeName(num) + "/" + in;
+            } catch (Resources.NotFoundException e2) {
                 e2.printStackTrace();
                 return in;
             }

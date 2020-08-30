@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.main;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -49,9 +48,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -94,8 +94,6 @@ public class MainActivity extends AppCompatActivity implements
     private static final String ACTIVITY_NAME_APK_UPDATER = "com.apkupdater.activity.MainActivity";
     private static final String PACKAGE_NAME_TERMUX = "com.termux";
     private static final String ACTIVITY_NAME_TERMUX = "com.termux.app.TermuxActivity";
-
-    private static final String MIME_TSV = "text/tab-separated-values";
 
     /**
      * A list of packages separated by \r\n.
@@ -172,6 +170,18 @@ public class MainActivity extends AppCompatActivity implements
     private MenuItem sortByBlockedComponentMenu;
     private @SortOrder
     int mSortBy;
+
+    private ActivityResultLauncher<String> batchExportRules = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
+        RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
+        Bundle args = new Bundle();
+        args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
+        args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
+        args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, new ArrayList<>(mModel.getSelectedPackages()));
+        dialogFragment.setArguments(args);
+        dialogFragment.show(getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+        mAdapter.clearSelection();
+        handleSelection();
+    });
 
     private BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
         @Override
@@ -299,13 +309,8 @@ public class MainActivity extends AppCompatActivity implements
                     handleBatchOp(BatchOpsManager.OP_DISABLE_BACKGROUND);
                     return true;
                 case R.id.action_export_blocking_rules:
-                    @SuppressLint("SimpleDateFormat")
-                    String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
-                    Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    intent.setType(MIME_TSV);
-                    intent.putExtra(Intent.EXTRA_TITLE, fileName);
-                    startActivityForResult(intent, RequestCodes.REQUEST_CODE_BATCH_EXPORT);
+                    @SuppressLint("SimpleDateFormat") final String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
+                    batchExportRules.launch(fileName);
                     return true;
                 case R.id.action_force_stop:
                     handleBatchOp(BatchOpsManager.OP_FORCE_STOP);
@@ -319,26 +324,6 @@ public class MainActivity extends AppCompatActivity implements
             return false;
         });
         handleSelection();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == RequestCodes.REQUEST_CODE_BATCH_EXPORT) {
-                if (data != null) {
-                    RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
-                    Bundle args = new Bundle();
-                    args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
-                    args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, data.getData());
-                    args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, new ArrayList<>(mModel.getSelectedPackages()));
-                    dialogFragment.setArguments(args);
-                    dialogFragment.show(getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-                    mAdapter.clearSelection();
-                    handleSelection();
-                }
-            }
-        }
     }
 
     @Override

@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.details;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.usage.StorageStats;
 import android.app.usage.StorageStatsManager;
 import android.content.ComponentName;
@@ -69,6 +68,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IntDef;
@@ -91,7 +92,6 @@ import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.installer.AMPackageInstallerService;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
-import io.github.muntashirakon.AppManager.misc.RequestCodes;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -106,14 +106,11 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-import static io.github.muntashirakon.AppManager.misc.RequestCodes.REQUEST_CODE_EXTRACT_ICON;
-import static io.github.muntashirakon.AppManager.misc.RequestCodes.REQUEST_CODE_TERMUX_PERM_OPEN_IN;
-import static io.github.muntashirakon.AppManager.misc.RequestCodes.REQUEST_CODE_TERMUX_PERM_RUN_AS;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
+import static io.github.muntashirakon.AppManager.utils.Utils.TERMUX_PERM_RUN_COMMAND;
 
-public class AppInfoFragment extends Fragment
-        implements SwipeRefreshLayout.OnRefreshListener {
+public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private static final String UID_STATS_PATH = "/proc/uid_stat/";
     private static final String UID_STATS_TR = "tcp_rcv";
     private static final String UID_STATS_RC = "tcp_snd";
@@ -124,9 +121,6 @@ public class AppInfoFragment extends Fragment
     private static final String ACTIVITY_NAME_FDROID = "org.fdroid.fdroid.views.AppDetailsActivity";
     private static final String ACTIVITY_NAME_AURORA_DROID = "com.aurora.adroid.ui.details.DetailsActivity";
     private static final String ACTIVITY_NAME_AURORA_STORE = "com.aurora.store.ui.details.DetailsActivity";
-
-    private static final String MIME_TSV = "text/tab-separated-values";
-    private static final String MIME_PNG = "image/png";
 
     private PackageManager mPackageManager;
     private String mPackageName;
@@ -155,6 +149,41 @@ public class AppInfoFragment extends Fragment
     private boolean isAdbEnabled;
 
     private final List<ListItem> mListItems = new ArrayList<>();
+
+    private ActivityResultLauncher<String> exportRules = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
+        RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
+        Bundle exportArgs = new Bundle();
+        ArrayList<String> packages = new ArrayList<>();
+        packages.add(mPackageName);
+        exportArgs.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
+        exportArgs.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
+        exportArgs.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, packages);
+        dialogFragment.setArguments(exportArgs);
+        dialogFragment.show(mActivity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+    });
+    private ActivityResultLauncher<String> exportIcon = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
+        try {
+            try (OutputStream outputStream = mActivity.getContentResolver().openOutputStream(uri)) {
+                if (outputStream == null)
+                    throw new IOException("Unable to open output stream.");
+                Bitmap bitmap = IOUtils.getBitmapFromDrawable(mApplicationInfo.loadIcon(mPackageManager));
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                outputStream.flush();
+                Toast.makeText(mActivity, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(mActivity, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+        }
+    });
+    private ActivityResultLauncher<String> permOpenInTermux = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) openInTermux();
+            });
+    private ActivityResultLauncher<String> permRunInTermux = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) runInTermux();
+            });
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -258,81 +287,25 @@ public class AppInfoFragment extends Fragment
                 startActivity(infoIntent);
                 return true;
             case R.id.action_export_blocking_rules:
-                @SuppressLint("SimpleDateFormat")
-                String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
-                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType(MIME_TSV);
-                intent.putExtra(Intent.EXTRA_TITLE, fileName);
-                startActivityForResult(intent, RequestCodes.REQUEST_CODE_BATCH_EXPORT);
+                @SuppressLint("SimpleDateFormat") final String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
+                exportRules.launch(fileName);
                 return true;
             case R.id.action_open_in_termux:
-                if (Utils.requestTermuxPermission(mActivity, REQUEST_CODE_TERMUX_PERM_OPEN_IN)) {
+                if (ContextCompat.checkSelfPermission(mActivity, TERMUX_PERM_RUN_COMMAND) == PackageManager.PERMISSION_GRANTED) {
                     openInTermux();
-                }
+                } else permOpenInTermux.launch(TERMUX_PERM_RUN_COMMAND);
                 return true;
             case R.id.action_run_in_termux:
-                if (Utils.requestTermuxPermission(mActivity, REQUEST_CODE_TERMUX_PERM_RUN_AS)) {
+                if (ContextCompat.checkSelfPermission(mActivity, TERMUX_PERM_RUN_COMMAND) == PackageManager.PERMISSION_GRANTED) {
                     runInTermux();
-                }
+                } else permRunInTermux.launch(TERMUX_PERM_RUN_COMMAND);
                 return true;
             case R.id.action_extract_icon:
-                String iconName = mPackageName + "_icon.png";
-                Intent iconIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-                iconIntent.addCategory(Intent.CATEGORY_OPENABLE);
-                iconIntent.setType(MIME_PNG);
-                iconIntent.putExtra(Intent.EXTRA_TITLE, iconName);
-                startActivityForResult(iconIntent, REQUEST_CODE_EXTRACT_ICON);
+                String iconName = mPackageLabel + "_icon.png";
+                exportIcon.launch(iconName);
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            if (requestCode == REQUEST_CODE_TERMUX_PERM_OPEN_IN) {
-                openInTermux();
-            } else if (requestCode == REQUEST_CODE_TERMUX_PERM_RUN_AS) {
-                runInTermux();
-            }
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == RequestCodes.REQUEST_CODE_BATCH_EXPORT && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
-                Bundle args = new Bundle();
-                ArrayList<String> packages = new ArrayList<>();
-                packages.add(mPackageName);
-                args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
-                args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, data.getData());
-                args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, packages);
-                dialogFragment.setArguments(args);
-                dialogFragment.show(mActivity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-            }
-        } else if (requestCode == REQUEST_CODE_EXTRACT_ICON) {
-            if (data != null) {
-                Uri uri = data.getData();
-                try {
-                    if (uri == null) throw new IOException("Empty Uri.");
-                    try (OutputStream outputStream = mActivity.getContentResolver().openOutputStream(uri)) {
-                        if (outputStream == null)
-                            throw new IOException("Unable to open output stream.");
-                        Bitmap bitmap = IOUtils.getBitmapFromDrawable(mApplicationInfo.loadIcon(mPackageManager));
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-                        outputStream.flush();
-                        Toast.makeText(mActivity, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(mActivity, R.string.saving_failed, Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
     }
 
     @Override
@@ -369,25 +342,19 @@ public class AppInfoFragment extends Fragment
     }
 
     private void openInTermux() {
-        Intent intent = new Intent();
-        intent.setClassName("com.termux", "com.termux.app.RunCommandService");
-        intent.setAction("com.termux.RUN_COMMAND");
-        intent.putExtra("com.termux.RUN_COMMAND_PATH", Utils.TERMUX_LOGIN_PATH);
-        intent.putExtra("com.termux.RUN_COMMAND_ARGUMENTS", new String[]{"su", "-", String.valueOf(mApplicationInfo.uid)});
-        intent.putExtra("com.termux.RUN_COMMAND_BACKGROUND", false);
-        try {
-            ActivityCompat.startForegroundService(mActivity, intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        runWithTermux(new String[]{"su", "-", String.valueOf(mApplicationInfo.uid)});
     }
 
     private void runInTermux() {
+        runWithTermux(new String[]{"run-as", mPackageName});
+    }
+
+    private void runWithTermux(String[] command) {
         Intent intent = new Intent();
         intent.setClassName("com.termux", "com.termux.app.RunCommandService");
         intent.setAction("com.termux.RUN_COMMAND");
         intent.putExtra("com.termux.RUN_COMMAND_PATH", Utils.TERMUX_LOGIN_PATH);
-        intent.putExtra("com.termux.RUN_COMMAND_ARGUMENTS", new String[]{"run-as", mPackageName});
+        intent.putExtra("com.termux.RUN_COMMAND_ARGUMENTS", command);
         intent.putExtra("com.termux.RUN_COMMAND_BACKGROUND", false);
         try {
             ActivityCompat.startForegroundService(mActivity, intent);
@@ -901,7 +868,7 @@ public class AppInfoFragment extends Fragment
         mTagCloud.addView(chip);
     }
 
-    private void addChip(CharSequence text, @ColorRes int color) {
+    private void addChip(CharSequence text, @SuppressWarnings("SameParameterValue") @ColorRes int color) {
         Chip chip = new Chip(mActivity);
         chip.setText(text);
         chip.setChipBackgroundColorResource(color);

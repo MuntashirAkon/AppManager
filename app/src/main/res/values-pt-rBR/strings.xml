@@ -259,7 +259,6 @@
     <string name="pref_import_export_blocking_rules_msg">Importar regras externas do Watt ou do Blocker</string>
     <string name="pref_import_watt">Importar do Watt</string>
     <string name="pref_import_blocker">Importar do Blocker</string>
-    <string name="select_files">Selecionar arquivo(s)</string>
     <string name="the_import_was_successful">A importação foi bem sucedida</string>
     <string name="the_export_was_successful">A exportação foi bem sucedida</string>
     <plurals name="failed_to_import_files">

@@ -18,13 +18,10 @@
 package io.github.muntashirakon.AppManager.settings;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -40,11 +37,12 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.misc.RequestCodes;
 import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
@@ -60,7 +58,48 @@ public class ImportExportDialogFragment extends DialogFragment {
     private static final String MIME_XML = "text/xml";
 
     private SettingsActivity activity;
+    private ActivityResultLauncher<String> exportRules = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
+        RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
+        Bundle args = new Bundle();
+        args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
+        args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
+        args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, null);
+        dialogFragment.setArguments(args);
+        activity.getSupportFragmentManager().popBackStackImmediate();
+        dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+        if (getDialog() != null) getDialog().cancel();
+    });
+    private ActivityResultLauncher<String> importRules = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+        RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
+        Bundle args = new Bundle();
+        args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_IMPORT);
+        args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
+        args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, null);
+        dialogFragment.setArguments(args);
+        activity.getSupportFragmentManager().popBackStackImmediate();
+        dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+        if (getDialog() != null) getDialog().cancel();
+    });
+    private ActivityResultLauncher<String> importFromWatt = registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), uris -> {
+        Tuple<Boolean, Integer> status = ExternalComponentsImporter.applyFromWatt(activity.getApplicationContext(), uris);
+        if (!status.getFirst()) {  // Not failed
+            Toast.makeText(getContext(), R.string.the_import_was_successful, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getContext(), getResources().getQuantityString(R.plurals.failed_to_import_files, status.getSecond(), status.getSecond()), Toast.LENGTH_LONG).show();
+        }
+        if (getDialog() != null) getDialog().cancel();
+    });
+    private ActivityResultLauncher<String> importFromBlocker = registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), uris -> {
+        Tuple<Boolean, Integer> status = ExternalComponentsImporter.applyFromBlocker(activity.getApplicationContext(), uris);
+        if (!status.getFirst()) {  // Not failed
+            Toast.makeText(getContext(), R.string.the_import_was_successful, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getContext(), getResources().getQuantityString(R.plurals.failed_to_import_files, status.getSecond(), status.getSecond()), Toast.LENGTH_LONG).show();
+        }
+        if (getDialog() != null) getDialog().cancel();
+    });
 
+    @SuppressLint("SimpleDateFormat")
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -70,21 +109,10 @@ public class ImportExportDialogFragment extends DialogFragment {
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.dialog_settings_import_export, null);
         view.findViewById(R.id.export_internal).setOnClickListener(v -> {
-            @SuppressLint("SimpleDateFormat")
-            String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
-            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType(MIME_TSV);
-            intent.putExtra(Intent.EXTRA_TITLE, fileName);
-            startActivityForResult(intent, RequestCodes.REQUEST_CODE_EXPORT);
+            final String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
+            exportRules.launch(fileName);
         });
-        view.findViewById(R.id.import_internal).setOnClickListener(v -> {
-            Intent intent = new Intent()
-                    .addCategory(Intent.CATEGORY_OPENABLE)
-                    .setType(MIME_TSV)
-                    .setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RequestCodes.REQUEST_CODE_IMPORT);
-        });
+        view.findViewById(R.id.import_internal).setOnClickListener(v -> importRules.launch(MIME_TSV));
         view.findViewById(R.id.import_existing).setOnClickListener(v ->
                 new MaterialAlertDialogBuilder(activity)
                         .setTitle(R.string.pref_import_existing)
@@ -92,98 +120,13 @@ public class ImportExportDialogFragment extends DialogFragment {
                         .setPositiveButton(R.string.no, (dialog, which) -> importExistingRules(false))
                         .setNegativeButton(R.string.yes, ((dialog, which) -> importExistingRules(true)))
                         .show());
-        view.findViewById(R.id.import_watt).setOnClickListener(v -> {
-            Intent intent = new Intent()
-                    .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                    .addCategory(Intent.CATEGORY_OPENABLE)
-                    .setType(MIME_XML)
-                    .setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RequestCodes.REQUEST_CODE_WATT);
-        });
-        view.findViewById(R.id.import_blocker).setOnClickListener(v -> {
-            Intent intent = new Intent()
-                    .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                    .addCategory(Intent.CATEGORY_OPENABLE)
-                    .setType(MIME_JSON)
-                    .setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, getString(R.string.select_files)), RequestCodes.REQUEST_CODE_BLOCKER);
-        });
+        view.findViewById(R.id.import_watt).setOnClickListener(v -> importFromWatt.launch(MIME_XML));
+        view.findViewById(R.id.import_blocker).setOnClickListener(v -> importFromBlocker.launch(MIME_JSON));
         return new MaterialAlertDialogBuilder(activity)
                 .setView(view)
                 .setTitle(R.string.pref_import_export_blocking_rules)
                 .setNegativeButton(android.R.string.cancel, null)
                 .create();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == RequestCodes.REQUEST_CODE_WATT) {
-                if (data != null) {
-                    List<Uri> uriList = new ArrayList<>();
-                    if (data.getClipData() != null) {
-                        for (int index = 0; index < data.getClipData().getItemCount(); index++) {
-                            uriList.add(data.getClipData().getItemAt(index).getUri());
-                        }
-                    } else uriList.add(data.getData());
-                    Tuple<Boolean, Integer> status = ExternalComponentsImporter.applyFromWatt(
-                            activity.getApplicationContext(), uriList);
-                    if (!status.getFirst()) {  // Not failed
-                        Toast.makeText(getContext(), R.string.the_import_was_successful,
-                                Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(getContext(), getResources().getQuantityString(
-                                R.plurals.failed_to_import_files, status.getSecond(), status
-                                        .getSecond()), Toast.LENGTH_LONG).show();
-                    }
-                    if (getDialog() != null) getDialog().cancel();
-                }
-            } else if (requestCode == RequestCodes.REQUEST_CODE_BLOCKER) {
-                if (data != null) {
-                    List<Uri> uriList = new ArrayList<>();
-                    if (data.getClipData() != null) {
-                        for (int index = 0; index < data.getClipData().getItemCount(); index++) {
-                            uriList.add(data.getClipData().getItemAt(index).getUri());
-                        }
-                    } else uriList.add(data.getData());
-                    Tuple<Boolean, Integer> status = ExternalComponentsImporter.applyFromBlocker(
-                            activity.getApplicationContext(), uriList);
-                    if (!status.getFirst()) {  // Not failed
-                        Toast.makeText(getContext(), R.string.the_import_was_successful,
-                                Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(getContext(), getResources().getQuantityString(
-                                R.plurals.failed_to_import_files, status.getSecond(), status
-                                        .getSecond()), Toast.LENGTH_LONG).show();
-                    }
-                    if (getDialog() != null) getDialog().cancel();
-                }
-            } else if (requestCode == RequestCodes.REQUEST_CODE_EXPORT) {
-                if (data != null) {
-                    RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
-                    Bundle args = new Bundle();
-                    args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
-                    args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, data.getData());
-                    args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, null);
-                    dialogFragment.setArguments(args);
-                    activity.getSupportFragmentManager().popBackStackImmediate();
-                    dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-                    if (getDialog() != null) getDialog().cancel();
-                }
-            } else if (requestCode == RequestCodes.REQUEST_CODE_IMPORT) {
-                if (data != null) {
-                    RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
-                    Bundle args = new Bundle();
-                    args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_IMPORT);
-                    args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, data.getData());
-                    args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, null);
-                    dialogFragment.setArguments(args);
-                    activity.getSupportFragmentManager().popBackStackImmediate();
-                    dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-                    if (getDialog() != null) getDialog().cancel();
-                }
-            }
-        }
     }
 
     private void importExistingRules(final boolean systemApps) {
@@ -197,8 +140,9 @@ public class ImportExportDialogFragment extends DialogFragment {
         new Thread(() -> {
             final List<ItemCount> itemCounts = new ArrayList<>();
             ItemCount trackerCount;
-            for (ApplicationInfo applicationInfo: pm.getInstalledApplications(0)) {
-                if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
+            for (ApplicationInfo applicationInfo : pm.getInstalledApplications(0)) {
+                if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
+                    continue;
                 trackerCount = new ItemCount();
                 trackerCount.packageName = applicationInfo.packageName;
                 trackerCount.packageLabel = applicationInfo.loadLabel(pm).toString();
@@ -208,7 +152,7 @@ public class ImportExportDialogFragment extends DialogFragment {
             if (!itemCounts.isEmpty()) {
                 final List<String> selectedPackages = new ArrayList<>();
                 final String[] packagesWithItemCounts = new String[itemCounts.size()];
-                for (int i = 0; i<itemCounts.size(); ++i) {
+                for (int i = 0; i < itemCounts.size(); ++i) {
                     trackerCount = itemCounts.get(i);
                     selectedPackages.add(trackerCount.packageName);
                     packagesWithItemCounts[i] = "(" + trackerCount.count + ") " + trackerCount.packageLabel;
