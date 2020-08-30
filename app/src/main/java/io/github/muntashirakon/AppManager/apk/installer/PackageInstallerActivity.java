@@ -17,12 +17,12 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -39,12 +39,12 @@ import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
+
 public class PackageInstallerActivity extends AppCompatActivity {
     private ApkFile apkFile;
     private PackageManager mPackageManager;
-
-    private int flagSigningInfo;
-    private int flagDisabledComponents;
     private boolean closeApkFile = true;
 
     @Override
@@ -60,12 +60,6 @@ public class PackageInstallerActivity extends AppCompatActivity {
             finish();
             return;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-            flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
-        else flagSigningInfo = PackageManager.GET_SIGNATURES;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            flagDisabledComponents = PackageManager.MATCH_DISABLED_COMPONENTS;
-        else flagDisabledComponents = PackageManager.GET_DISABLED_COMPONENTS;
         mPackageManager = getPackageManager();
         new Thread(() -> {
             try {
@@ -132,12 +126,12 @@ public class PackageInstallerActivity extends AppCompatActivity {
 
     @NonNull
     private PackageInfo getPackageInfo() throws PackageManager.NameNotFoundException {
-        int flagSigningInfo = PackageManager.GET_SIGNATURES;
         String apkPath = apkFile.getBaseEntry().source.getAbsolutePath();
+        @SuppressLint("WrongConstant")
         PackageInfo packageInfo = mPackageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS
                 | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                 | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
-                | flagDisabledComponents | flagSigningInfo | PackageManager.GET_CONFIGURATIONS
+                | flagDisabledComponents | PackageManager.GET_SIGNATURES | PackageManager.GET_CONFIGURATIONS
                 | PackageManager.GET_SHARED_LIBRARY_FILES);
         if (packageInfo == null)
             throw new PackageManager.NameNotFoundException("Package cannot be parsed.");
@@ -148,6 +142,7 @@ public class PackageInstallerActivity extends AppCompatActivity {
 
     @NonNull
     private PackageInfo getInstalledPackageInfo(String packageName) throws PackageManager.NameNotFoundException {
+        @SuppressLint("WrongConstant")
         PackageInfo packageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
                 | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                 | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS

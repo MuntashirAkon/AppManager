@@ -40,7 +40,6 @@ import android.os.DeadSystemException;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -68,6 +67,9 @@ import io.github.muntashirakon.AppManager.server.common.PackageOps;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
+
 public class AppDetailsViewModel extends AndroidViewModel {
     private PackageManager mPackageManager;
     private PackageInfo packageInfo;
@@ -76,9 +78,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private PackageIntentReceiver receiver;
     private String apkPath;
     private ApkFile apkFile;
-
-    private int flagSigningInfo;
-    private int flagDisabledComponents;
 
     private @AppDetailsFragment.SortOrder int sortOrderComponents = AppDetailsFragment.SORT_BY_NAME;
     private @AppDetailsFragment.SortOrder int sortOrderAppOps = AppDetailsFragment.SORT_BY_NAME;
@@ -93,12 +92,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
         Log.d("ADVM", "New constructor called.");
         mPackageManager = application.getPackageManager();
         receiver = new PackageIntentReceiver(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-            flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
-        else flagSigningInfo = PackageManager.GET_SIGNATURES;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            flagDisabledComponents = PackageManager.MATCH_DISABLED_COMPONENTS;
-        else flagDisabledComponents = PackageManager.GET_DISABLED_COMPONENTS;
         waitForBlocker = true;
     }
 
@@ -124,7 +117,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public void setPackageUri(@NonNull Uri packageUri) throws Exception {
         Log.d("ADVM", "Package Uri is being set");
         isExternalApk = true;
-        flagSigningInfo = PackageManager.GET_SIGNATURES;  // Fix signature bug of Android
         apkFile = new ApkFile(packageUri);
         apkPath = apkFile.getBaseEntry().source.getAbsolutePath();
     }
@@ -156,30 +148,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     public ApkFile getApkFile() {
         return apkFile;
-    }
-
-    @NonNull
-    public File[] getApkFiles() {
-        File[] apkFiles;
-        if (isExternalApk) {
-            List<ApkFile.Entry> entries = apkFile.getEntries();
-            apkFiles = new File[entries.size()];
-            for (int i = 0; i<entries.size(); ++i) {
-                apkFiles[i] = entries.get(i).source;
-            }
-        } else {
-            ApplicationInfo info = packageInfo.applicationInfo;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && info.splitNames != null) {
-                apkFiles = new File[info.splitNames.length + 1];
-                apkFiles[0] = new File(info.publicSourceDir);
-                for (int i = 0; i<info.splitNames.length; ++i) {
-                    apkFiles[i+1] = new File(info.splitPublicSourceDirs[i]);
-                }
-            } else {
-                apkFiles = new File[]{new File(info.publicSourceDir)};
-            }
-        }
-        return apkFiles;
     }
 
     @SuppressLint("SwitchIntDef")
@@ -526,6 +494,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         loadProviders();
     }
 
+    @SuppressLint("WrongConstant")
     public void setPackageInfo(boolean reload) {
         if (!isExternalApk && packageName == null) return;
         // Wait for component blocker to appear
@@ -538,7 +507,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 packageInfo = mPackageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS
                         | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                         | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
-                        | flagDisabledComponents | flagSigningInfo | PackageManager.GET_CONFIGURATIONS
+                        | flagDisabledComponents | PackageManager.GET_SIGNATURES | PackageManager.GET_CONFIGURATIONS
                         | PackageManager.GET_SHARED_LIBRARY_FILES);
                 if (packageInfo == null) throw new PackageManager.NameNotFoundException("Package cannot be parsed");
                 packageInfo.applicationInfo.sourceDir = apkPath;

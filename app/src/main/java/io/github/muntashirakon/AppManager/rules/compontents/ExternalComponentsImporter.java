@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.rules.compontents;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
@@ -24,7 +25,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.net.Uri;
-import android.os.Build;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -45,6 +45,8 @@ import io.github.muntashirakon.AppManager.runner.RootShellRunner;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
+
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 
 /**
  * Import components from external apps like Blocker, MyAndroidTools, Watt
@@ -158,6 +160,7 @@ public class ExternalComponentsImporter {
      * @param context Application context
      * @param uri File URI
      */
+    @SuppressLint("WrongConstant")
     private static void applyFromBlocker(@NonNull Context context, Uri uri)
             throws Exception {
         try {
@@ -171,14 +174,10 @@ public class ExternalComponentsImporter {
                 JSONObject component = (JSONObject) components.get(i);
                 String packageName = component.getString("packageName");
                 if (!packageInfoList.containsKey(packageName)) {
-                    int apiCompatFlags;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                        apiCompatFlags = PackageManager.MATCH_DISABLED_COMPONENTS;
-                    else apiCompatFlags = PackageManager.GET_DISABLED_COMPONENTS;
                     packageInfoList.put(packageName, packageManager.getPackageInfo(packageName,
                             PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
                                     | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES
-                                    | apiCompatFlags));
+                                    | flagDisabledComponents));
                 }
                 String componentName = component.getString("name");
                 if (!packageComponents.containsKey(packageName))

@@ -440,61 +440,61 @@ public class Utils {
             permissionFlags = permissionInfo.protectionLevel;
             basePermissionType = permissionFlags & PermissionInfo.PROTECTION_MASK_BASE;
         }
-        String protLevel = "????";
+        String protectionLevel = "????";
         switch (basePermissionType) {
             case PermissionInfo.PROTECTION_DANGEROUS:
-                protLevel = "dangerous";
+                protectionLevel = "dangerous";
                 break;
             case PermissionInfo.PROTECTION_NORMAL:
-                protLevel = "normal";
+                protectionLevel = "normal";
                 break;
             case PermissionInfo.PROTECTION_SIGNATURE:
-                protLevel = "signature";
+                protectionLevel = "signature";
                 break;
         }
         if (Build.VERSION.SDK_INT >= 23) {
             if (basePermissionType == (PermissionInfo.PROTECTION_SIGNATURE
                     | PermissionInfo.PROTECTION_FLAG_PRIVILEGED)) {
-                protLevel = "signatureOrPrivileged";
+                protectionLevel = "signatureOrPrivileged";
             }
             if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_PRIVILEGED) != 0)
-                protLevel += "|privileged";
+                protectionLevel += "|privileged";
             if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_PRE23) != 0)
-                protLevel += "|pre23";  // pre marshmallow
+                protectionLevel += "|pre23";  // pre marshmallow
             if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_INSTALLER) != 0)
-                protLevel += "|installer";
+                protectionLevel += "|installer";
             if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_VERIFIER) != 0)
-                protLevel += "|verifier";
+                protectionLevel += "|verifier";
             if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_PREINSTALLED) != 0)
-                protLevel += "|preinstalled";
+                protectionLevel += "|preinstalled";
             if (Build.VERSION.SDK_INT >= 24) {
                 if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_SETUP) != 0)
-                    protLevel += "|setup";
+                    protectionLevel += "|setup";
             }
             if (Build.VERSION.SDK_INT >= 26) {
                 if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_RUNTIME_ONLY) != 0)
-                    protLevel += "|runtime";
+                    protectionLevel += "|runtime";
             }
             if (Build.VERSION.SDK_INT >= 27) {
                 if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_INSTANT) != 0)
-                    protLevel += "|instant";
+                    protectionLevel += "|instant";
             }
         } else {
             if (basePermissionType == PermissionInfo.PROTECTION_SIGNATURE_OR_SYSTEM) {
-                protLevel = "signatureOrSystem";
+                protectionLevel = "signatureOrSystem";
             }
             if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_SYSTEM) != 0) {
-                protLevel += "|system";
+                protectionLevel += "|system";
             }
         }
 
         if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0) {
-            protLevel += "|development";
+            protectionLevel += "|development";
         }
         if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_APPOP) != 0) {
-            protLevel += "|appop";
+            protectionLevel += "|appop";
         }
-        return protLevel;
+        return protectionLevel;
     }
 
     // FIXME Add translation support

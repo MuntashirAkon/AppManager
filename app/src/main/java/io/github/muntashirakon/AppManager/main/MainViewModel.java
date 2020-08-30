@@ -26,7 +26,6 @@ import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
@@ -56,6 +55,9 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
+
 public class MainViewModel extends AndroidViewModel {
     private static Collator sCollator = Collator.getInstance();
 
@@ -70,8 +72,6 @@ public class MainViewModel extends AndroidViewModel {
     private List<String> backupApplications;
     private Set<String> selectedPackages = new HashSet<>();
     private List<ApplicationItem> selectedApplicationItems = new LinkedList<>();
-    private int flagSigningInfo;
-    private int flagDisabledComponents;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -81,12 +81,6 @@ public class MainViewModel extends AndroidViewModel {
         mPackageObserver = new PackageIntentReceiver(this);
         mSortBy = (int) AppPref.get(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT);
         mFilterFlags = (int) AppPref.get(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-            flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
-        else flagSigningInfo = PackageManager.GET_SIGNATURES;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            flagDisabledComponents = PackageManager.MATCH_DISABLED_COMPONENTS;
-        else flagDisabledComponents = PackageManager.GET_DISABLED_COMPONENTS;
     }
 
     private MutableLiveData<List<ApplicationItem>> applicationItemsLiveData;
@@ -196,6 +190,7 @@ public class MainViewModel extends AndroidViewModel {
                     String[] packageList = MainActivity.packageList.split("[\\r\\n]+");
                     for (String packageName : packageList) {
                         try {
+                            @SuppressLint("WrongConstant")
                             PackageInfo packageInfo = mPackageManager.getPackageInfo(packageName,
                                     PackageManager.GET_META_DATA | flagSigningInfo |
                                             PackageManager.GET_ACTIVITIES | flagDisabledComponents);
@@ -239,6 +234,7 @@ public class MainViewModel extends AndroidViewModel {
                         item.label = applicationInfo.loadLabel(mPackageManager).toString();
                         item.sdk = applicationInfo.targetSdkVersion;
                         try {
+                            @SuppressLint("WrongConstant")
                             PackageInfo packageInfo = mPackageManager.getPackageInfo(
                                     applicationInfo.packageName, flagSigningInfo |
                                             PackageManager.GET_ACTIVITIES | flagDisabledComponents);
@@ -457,6 +453,7 @@ public class MainViewModel extends AndroidViewModel {
     @Nullable
     private ApplicationItem getNewApplicationItem(String packageName) {
         try {
+            @SuppressLint("WrongConstant")
             PackageInfo packageInfo = mPackageManager.getPackageInfo(packageName,
                     PackageManager.GET_META_DATA | flagSigningInfo |
                             PackageManager.GET_ACTIVITIES | flagDisabledComponents);

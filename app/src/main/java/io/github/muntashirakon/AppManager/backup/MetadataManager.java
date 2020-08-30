@@ -77,6 +77,7 @@ public final class MetadataManager implements Closeable {
         return metadataManager;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean hasMetadata(String packageName) {
         return new File(BackupStorageManager.getBackupPath(packageName), META_FILE).exists();
     }
@@ -180,12 +181,8 @@ public final class MetadataManager implements Closeable {
 
     public MetadataV1 setupMetadata(@BackupStorageManager.BackupFlags int flags) throws PackageManager.NameNotFoundException {
         PackageManager pm = appManager.getPackageManager();
-        int flagSigningInfo;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-            flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
-        else flagSigningInfo = PackageManager.GET_SIGNATURES;
-        @SuppressLint("PackageManagerGetSignatures")
-        PackageInfo packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_META_DATA | flagSigningInfo);
+        @SuppressLint("WrongConstant")
+        PackageInfo packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo);
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         metadataV1 = new MetadataV1();
         metadataV1.label = applicationInfo.loadLabel(pm).toString();

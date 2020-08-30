@@ -57,6 +57,18 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 public final class PackageUtils {
     public static final File PACKAGE_STAGING_DIRECTORY = new File("/data/local/tmp");
 
+    public static final int flagSigningInfo;
+    public static final int flagDisabledComponents;
+
+    static {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+            flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
+        else flagSigningInfo = PackageManager.GET_SIGNATURES;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            flagDisabledComponents = PackageManager.MATCH_DISABLED_COMPONENTS;
+        else flagDisabledComponents = PackageManager.GET_DISABLED_COMPONENTS;
+    }
+
     @SuppressWarnings("RegExpRedundantEscape")
     private static final Pattern SERVICE_REGEX = Pattern.compile("ServiceRecord\\{.*/([^\\}]+)\\}");
 

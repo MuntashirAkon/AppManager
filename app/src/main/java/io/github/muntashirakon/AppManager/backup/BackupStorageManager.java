@@ -230,7 +230,7 @@ public class BackupStorageManager implements AutoCloseable {
         return cleanup(tmpBackupPath);
     }
 
-    @SuppressLint("SdCardPath")
+    @SuppressLint({"SdCardPath", "WrongConstant"})
     public boolean restore() {
         if (flags == BACKUP_NOTHING) {
             Log.e("BSM - Restore", "Restore is requested without any flags.");
@@ -250,12 +250,8 @@ public class BackupStorageManager implements AutoCloseable {
         File dataAppPath = OsEnvironment.getDataAppDirectory();
         // Get package info
         PackageInfo packageInfo = null;
-        int flagSigningInfo;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-            flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
-        else flagSigningInfo = PackageManager.GET_SIGNATURES;
         try {
-            packageInfo = AppManager.getContext().getPackageManager().getPackageInfo(packageName, flagSigningInfo);
+            packageInfo = AppManager.getContext().getPackageManager().getPackageInfo(packageName, PackageUtils.flagSigningInfo);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -349,7 +345,7 @@ public class BackupStorageManager implements AutoCloseable {
             }
             // Get package info
             try {
-                packageInfo = AppManager.getContext().getPackageManager().getPackageInfo(packageName, flagSigningInfo);
+                packageInfo = AppManager.getContext().getPackageManager().getPackageInfo(packageName, PackageUtils.flagSigningInfo);
                 isInstalled = packageInfo != null;
             } catch (PackageManager.NameNotFoundException e) {
                 Log.e("BSM - Restore", "Apparently the install wasn't complete in the previous section.");

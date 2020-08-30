@@ -40,11 +40,12 @@ import android.widget.Toast;
 
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.R;
 
 public class LauncherIconCreator {
-
+    @NonNull
     private static Intent getActivityIntent(String packageName, String activityName) {
         Intent intent = new Intent();
         intent.setClassName(packageName, activityName);
@@ -55,13 +56,14 @@ public class LauncherIconCreator {
 
     /**
      * Create launcher icon.
-     * @param context Activity context
-     * @param activityInfo App package name
-     * @param activityName Name/Label of the app
-     * @param activityIcon App icon
+     *
+     * @param context                  Activity context
+     * @param activityInfo             App package name
+     * @param activityName             Name/Label of the app
+     * @param activityIcon             App icon
      * @param activityIconResourceName App icon resource name
      */
-    public static void createLauncherIcon(Context context, ActivityInfo activityInfo,
+    public static void createLauncherIcon(Context context, @NonNull ActivityInfo activityInfo,
                                           String activityName, Drawable activityIcon,
                                           @Nullable String activityIconResourceName) {
         Intent activityIntent = getActivityIntent(activityInfo.packageName, activityInfo.name);
@@ -81,10 +83,11 @@ public class LauncherIconCreator {
 
     /**
      * Launch activity.
-     * @param context Activity context
+     *
+     * @param context      Activity context
      * @param activityInfo Activity info
      */
-    public static void launchActivity(Context context, ActivityInfo activityInfo) {
+    public static void launchActivity(Context context, @NonNull ActivityInfo activityInfo) {
         Intent intent = getActivityIntent(activityInfo.packageName, activityInfo.name);
         Toast.makeText(context, context.getString(R.string.starting_activity, activityInfo.name), Toast.LENGTH_LONG).show();
         try {
@@ -126,7 +129,7 @@ public class LauncherIconCreator {
     }
 
     @TargetApi(26)
-    private static void doCreateShortcut(Context context, String appName, Drawable draw, Intent intent) {
+    private static void doCreateShortcut(@NonNull Context context, String appName, Drawable draw, Intent intent) {
         ShortcutManager shortcutManager = Objects.requireNonNull(context.getSystemService(ShortcutManager.class));
 
         if (shortcutManager.isRequestPinShortcutSupported()) {

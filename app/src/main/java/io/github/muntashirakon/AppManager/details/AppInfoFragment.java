@@ -109,6 +109,8 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import static io.github.muntashirakon.AppManager.misc.RequestCodes.REQUEST_CODE_EXTRACT_ICON;
 import static io.github.muntashirakon.AppManager.misc.RequestCodes.REQUEST_CODE_TERMUX_PERM_OPEN_IN;
 import static io.github.muntashirakon.AppManager.misc.RequestCodes.REQUEST_CODE_TERMUX_PERM_RUN_AS;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
 
 public class AppInfoFragment extends Fragment
         implements SwipeRefreshLayout.OnRefreshListener {
@@ -931,6 +933,7 @@ public class AppInfoFragment extends Fragment
     /**
      * Load package sizes and update views if success.
      */
+    @SuppressWarnings("deprecation")
     private void setStorageAndCache() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             try {
@@ -992,6 +995,7 @@ public class AppInfoFragment extends Fragment
     /**
      * Get package info.
      */
+    @SuppressLint("WrongConstant")
     private void getPackageInfo() {
         new Thread(() -> {
             if (mPackageInfo == null) {
@@ -1000,13 +1004,6 @@ public class AppInfoFragment extends Fragment
             }
             if (isExternalApk) {
                 try {
-                    int flagSigningInfo, flagDisabledComponents;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-                        flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
-                    else flagSigningInfo = PackageManager.GET_SIGNATURES;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                        flagDisabledComponents = PackageManager.MATCH_DISABLED_COMPONENTS;
-                    else flagDisabledComponents = PackageManager.GET_DISABLED_COMPONENTS;
                     mInstalledPackageInfo = mPackageManager.getPackageInfo(mPackageName,
                             PackageManager.GET_PERMISSIONS | PackageManager.GET_ACTIVITIES
                                     | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
