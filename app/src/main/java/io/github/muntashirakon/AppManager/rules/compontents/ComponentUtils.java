@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.rules.compontents;
 
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Xml;
 
@@ -60,6 +61,17 @@ public final class ComponentUtils {
     public static HashMap<String, RulesStorageManager.Type> getTrackerComponentsForPackage(String packageName) {
         HashMap<String, RulesStorageManager.Type> trackers = new HashMap<>();
         HashMap<String, RulesStorageManager.Type> components = PackageUtils.collectComponentClassNames(packageName);
+        for (String componentName: components.keySet()) {
+            if (isTracker(componentName))
+                trackers.put(componentName, components.get(componentName));
+        }
+        return trackers;
+    }
+
+    @NonNull
+    public static HashMap<String, RulesStorageManager.Type> getTrackerComponentsForPackageInfo(PackageInfo packageInfo) {
+        HashMap<String, RulesStorageManager.Type> trackers = new HashMap<>();
+        HashMap<String, RulesStorageManager.Type> components = PackageUtils.collectComponentClassNames(packageInfo);
         for (String componentName: components.keySet()) {
             if (isTracker(componentName))
                 trackers.put(componentName, components.get(componentName));
