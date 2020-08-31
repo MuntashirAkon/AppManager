@@ -67,10 +67,9 @@ public class ApkWhatsNewFinder {
     public static final int PERMISSION_INFO = 3;
     public static final int COMPONENT_INFO = 4;
     public static final int FEATURE_INFO = 5;
-    public static final int SHARED_LIBRARIES = 6;
-    public static final int SDK_INFO = 7;
+    public static final int SDK_INFO = 6;
 
-    private static final int INFO_COUNT = 8;
+    private static final int INFO_COUNT = 7;
 
     private final Set<String> tmpInfo = new HashSet<>();
 
@@ -171,7 +170,7 @@ public class ApkWhatsNewFinder {
         if (newPkgInfo.reqFeatures != null)
             for (FeatureInfo featureInfo : newPkgInfo.reqFeatures)
                 if (featureInfo.name != null) newFeatures.add(featureInfo.name);
-                else newFeatures.add("OpenGL ES v" + featureInfo.reqGlEsVersion);
+                else newFeatures.add("OpenGL ES v" + Utils.getOpenGL(featureInfo.reqGlEsVersion));
         if (oldPkgInfo.reqFeatures != null)
             for (FeatureInfo featureInfo : oldPkgInfo.reqFeatures)
                 if (featureInfo.name != null) oldFeatures.add(featureInfo.name);
@@ -180,13 +179,6 @@ public class ApkWhatsNewFinder {
         featureChanges.add(new Change(CHANGE_INFO, componentInfo[FEATURE_INFO]));
         featureChanges.addAll(findChanges(newFeatures, oldFeatures));
         changes[FEATURE_INFO] = featureChanges.size() == 1 ? ArrayUtils.emptyArray(Change.class) : featureChanges.toArray(new Change[0]);
-        // Shared libraries
-        Set<String> newSharedLibs = new HashSet<>(Arrays.asList(ArrayUtils.defeatNullable(newAppInfo.sharedLibraryFiles)));
-        Set<String> oldSharedLibs = new HashSet<>(Arrays.asList(ArrayUtils.defeatNullable(oldAppInfo.sharedLibraryFiles)));
-        List<Change> sharedLibChanges = new ArrayList<>();
-        sharedLibChanges.add(new Change(CHANGE_INFO, componentInfo[SHARED_LIBRARIES]));
-        sharedLibChanges.addAll(findChanges(newSharedLibs, oldSharedLibs));
-        changes[SHARED_LIBRARIES] = sharedLibChanges.size() == 1 ? ArrayUtils.emptyArray(Change.class) : sharedLibChanges.toArray(new Change[0]);
         // SDK
         final StringBuilder newSdk = new StringBuilder(context.getString(R.string.sdk_max)).append(": ").append(newAppInfo.targetSdkVersion);
         final StringBuilder oldSdk = new StringBuilder(context.getString(R.string.sdk_max)).append(": ").append(oldAppInfo.targetSdkVersion);
@@ -196,7 +188,7 @@ public class ApkWhatsNewFinder {
         }
         if (!newSdk.toString().equals(oldSdk.toString())) {
             changes[SDK_INFO] = new Change[]{
-                    new Change(CHANGE_INFO, componentInfo[SHARED_LIBRARIES]),
+                    new Change(CHANGE_INFO, componentInfo[SDK_INFO]),
                     new Change(CHANGE_ADD, newSdk.toString()),
                     new Change(CHANGE_REMOVED, oldSdk.toString())
             };
