@@ -58,6 +58,11 @@ public class BatchOpsManager {
      */
     public static final String ARG_FLAGS = "flags";
     /**
+     * {@link String[]} value containing backup names to be used with {@link #OP_BACKUP},
+     * {@link #OP_RESTORE_BACKUP} and {@link #OP_DELETE_BACKUP}.
+     */
+    public static final String ARG_BACKUP_NAMES = "backup_names";
+    /**
      * {@link String[]} value containing signatures, e.g., org.acra. To be used with
      * {@link #OP_BLOCK_COMPONENTS}.
      */
@@ -210,14 +215,14 @@ public class BatchOpsManager {
             // Send progress
             sendProgress(context, PackageUtils.getPackageLabel(pm, packageName), max, ++i);
             // Do operation
-            try (BackupStorageManager backupStorageManager = BackupStorageManager.getInstance(packageName)) {
-                backupStorageManager.setFlags(args.getInt(ARG_FLAGS));
+            try (BackupStorageManager backupStorageManager = BackupStorageManager.getInstance(
+                    packageName, args.getInt(ARG_FLAGS), args.getStringArray(ARG_BACKUP_NAMES))) {
                 switch (mode) {
                     case BackupDialogFragment.MODE_BACKUP:
                         if (!backupStorageManager.backup()) failedPackages.add(packageName);
                         break;
                     case BackupDialogFragment.MODE_DELETE:
-                        if (!backupStorageManager.delete_backup()) failedPackages.add(packageName);
+                        if (!backupStorageManager.deleteBackup()) failedPackages.add(packageName);
                         break;
                     case BackupDialogFragment.MODE_RESTORE:
                         if (!backupStorageManager.restore()) failedPackages.add(packageName);

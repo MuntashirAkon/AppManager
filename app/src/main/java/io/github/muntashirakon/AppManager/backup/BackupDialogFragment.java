@@ -63,10 +63,9 @@ public class BackupDialogFragment extends DialogFragment {
     public static final int MODE_RESTORE = 169;
     public static final int MODE_DELETE = 642;
 
-    @BackupStorageManager.BackupFlags
-    private int flags = BackupStorageManager.BACKUP_SOURCE | BackupStorageManager.BACKUP_DATA
-            | BackupStorageManager.BACKUP_EXCLUDE_CACHE | BackupStorageManager.BACKUP_RULES
-            | BackupStorageManager.BACKUP_SOURCE_APK_ONLY;
+    @BackupFlags.BackupFlag
+    private int flags = BackupFlags.BACKUP_SOURCE | BackupFlags.BACKUP_DATA | BackupFlags.BACKUP_RULES
+            | BackupFlags.BACKUP_EXCLUDE_CACHE | BackupFlags.BACKUP_SOURCE_APK_ONLY;
     @ActionMode
     private int mode = MODE_BACKUP;
     private List<String> packageNames;

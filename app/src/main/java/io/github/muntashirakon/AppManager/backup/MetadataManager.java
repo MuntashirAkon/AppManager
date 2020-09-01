@@ -22,6 +22,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Process;
 import android.text.TextUtils;
 
 import org.json.JSONArray;
@@ -32,11 +33,16 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringDef;
 import dalvik.system.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -44,14 +50,32 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 public final class MetadataManager implements Closeable {
     public static final String META_FILE = "meta.am.v1";
 
+    @StringDef(value = {
+            DATA_USER,
+            DATA_USER_DE,
+            DATA_EXT_DATA,
+            DATA_MEDIA,
+            DATA_OBB
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface DataDirType {
+    }
+
+    public static final String DATA_USER = "user";
+    public static final String DATA_USER_DE = "user_de";
+    public static final String DATA_EXT_DATA = "data";
+    public static final String DATA_OBB = "obb";
+    public static final String DATA_MEDIA = "media";
+
     // For an extended documentation, see https://github.com/MuntashirAkon/AppManager/issues/30
     // All the attributes must be non-null
-    public static class MetadataV1 {
+    public static class Metadata {
         public String label;  // label
         public String packageName;  // package_name
         public String versionName;  // version_name
         public long versionCode;  // version_code
         public String sourceDir;  // source_dir
+        @DataDirType
         public String[] dataDirs;  // data_dirs
         public boolean isSystem;  // is_system
         public boolean isSplitApk;  // is_split_apk
@@ -66,7 +90,8 @@ public final class MetadataManager implements Closeable {
         public int version = 1;  // version
         public String apkName;  // apk_name
         public String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);  // instruction_set
-        public int flags = BackupStorageManager.BACKUP_FLAGS_TOTAL;  // flags, total is set for compatibility
+        public int flags = BackupFlags.BACKUP_FLAGS_COMPAT;  // flags, total is set for compatibility
+        public int userHandle = Process.myUid() / 100000;  // user_handle
     }
 
     private static MetadataManager metadataManager;
@@ -82,7 +107,8 @@ public final class MetadataManager implements Closeable {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean hasMetadata(String packageName) {
-        return new File(BackupStorageManager.getBackupPath(packageName), META_FILE).exists();
+        PrivilegedFile backupPath = new PrivilegedFile(BackupFiles.getPackagePath(packageName), String.valueOf(0));  // FIXME: Get current user handle
+        return new PrivilegedFile(backupPath, META_FILE).exists();
     }
 
     @Override
@@ -91,7 +117,7 @@ public final class MetadataManager implements Closeable {
 
     private @NonNull
     String packageName;
-    private MetadataV1 metadataV1;
+    private Metadata metadata;
     private AppManager appManager;
 
     MetadataManager(@NonNull String packageName) {
@@ -99,81 +125,90 @@ public final class MetadataManager implements Closeable {
         this.appManager = AppManager.getInstance();
     }
 
-    public MetadataV1 getMetadataV1() {
-        return metadataV1;
+    public Metadata getMetadata() {
+        return metadata;
     }
 
-    public void setMetadataV1(MetadataV1 metadataV1) {
-        this.metadataV1 = metadataV1;
+    public void setMetadata(Metadata metadata) {
+        this.metadata = metadata;
     }
 
-    synchronized public void readMetadata() throws JSONException {
-        File metadataFile = getMetadataFile(false);
+    synchronized public void readMetadata(@NonNull BackupFiles.BackupFile backupFile)
+            throws JSONException {
+        File metadataFile = backupFile.getMetadataFile();
         String metadata = Utils.getFileContent(metadataFile);
         if (TextUtils.isEmpty(metadata)) throw new JSONException("Empty JSON string");
         JSONObject rootObject = new JSONObject(metadata);
-        metadataV1 = new MetadataV1();
-        metadataV1.label = rootObject.getString("label");
-        metadataV1.packageName = rootObject.getString("package_name");
-        metadataV1.versionName = rootObject.getString("version_name");
-        metadataV1.versionCode = rootObject.getLong("version_code");
-        metadataV1.sourceDir = rootObject.getString("source_dir");
-        metadataV1.dataDirs = getArrayFromJSONArray(rootObject.getJSONArray("data_dirs"));
-        metadataV1.isSystem = rootObject.getBoolean("is_system");
-        metadataV1.isSplitApk = rootObject.getBoolean("is_split_apk");
-        metadataV1.splitNames = getArrayFromJSONArray(rootObject.getJSONArray("split_names"));
-        metadataV1.splitSources = getArrayFromJSONArray(rootObject.getJSONArray("split_sources"));
-        metadataV1.hasRules = rootObject.getBoolean("has_rules");
-        metadataV1.backupTime = rootObject.getLong("backup_time");
-        metadataV1.certSha256Checksum = getArrayFromJSONArray(rootObject.getJSONArray("cert_sha256_checksum"));
-        metadataV1.sourceDirSha256Checksum = rootObject.getString("source_dir_sha256_checksum");
-        metadataV1.dataDirsSha256Checksum = getArrayFromJSONArray(rootObject.getJSONArray("data_dirs_sha256_checksum"));
-        metadataV1.mode = rootObject.getInt("mode");
-        metadataV1.version = rootObject.getInt("version");
+        this.metadata = new Metadata();
+        this.metadata.label = rootObject.getString("label");
+        this.metadata.packageName = rootObject.getString("package_name");
+        this.metadata.versionName = rootObject.getString("version_name");
+        this.metadata.versionCode = rootObject.getLong("version_code");
+        this.metadata.sourceDir = rootObject.getString("source_dir");
+        this.metadata.dataDirs = getArrayFromJSONArray(rootObject.getJSONArray("data_dirs"));
+        this.metadata.isSystem = rootObject.getBoolean("is_system");
+        this.metadata.isSplitApk = rootObject.getBoolean("is_split_apk");
+        this.metadata.splitNames = getArrayFromJSONArray(rootObject.getJSONArray("split_names"));
+        this.metadata.splitSources = getArrayFromJSONArray(rootObject.getJSONArray("split_sources"));
+        this.metadata.hasRules = rootObject.getBoolean("has_rules");
+        this.metadata.backupTime = rootObject.getLong("backup_time");
+        this.metadata.certSha256Checksum = getArrayFromJSONArray(rootObject.getJSONArray("cert_sha256_checksum"));
+        this.metadata.sourceDirSha256Checksum = rootObject.getString("source_dir_sha256_checksum");
+        this.metadata.dataDirsSha256Checksum = getArrayFromJSONArray(rootObject.getJSONArray("data_dirs_sha256_checksum"));
+        this.metadata.mode = rootObject.getInt("mode");
+        this.metadata.version = rootObject.getInt("version");
         try {
-            metadataV1.apkName = rootObject.getString("apk_name");
+            this.metadata.apkName = rootObject.getString("apk_name");
         } catch (JSONException e) {
-            metadataV1.apkName = "base.apk";
+            this.metadata.apkName = "base.apk";
         }
         try {
-            metadataV1.instructionSet = rootObject.getString("instruction_set");
+            this.metadata.instructionSet = rootObject.getString("instruction_set");
         } catch (JSONException e) {
             // Add "-unknown" suffix to the current platform (to skip restoring)
-            metadataV1.instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]) + "-unknown";
+            this.metadata.instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]) + "-unknown";
         }
         try {
-            metadataV1.flags = rootObject.getInt("flags");
+            this.metadata.flags = rootObject.getInt("flags");
         } catch (JSONException e) {
             // Fallback to total
-            metadataV1.flags = BackupStorageManager.BACKUP_FLAGS_TOTAL;
+            this.metadata.flags = BackupFlags.BACKUP_FLAGS_COMPAT;
+        }
+        try {
+            this.metadata.userHandle = rootObject.getInt("user_handle");
+        } catch (JSONException e) {
+            // Fallback to total
+            this.metadata.userHandle = Process.myUid() / 100000;
         }
     }
 
-    synchronized public void writeMetadata() throws IOException, JSONException {
-        if (metadataV1 == null) throw new RuntimeException("Metadata is not set.");
-        File metadataFile = getMetadataFile(true);
+    synchronized public void writeMetadata(@NonNull BackupFiles.BackupFile backupFile)
+            throws IOException, JSONException {
+        if (metadata == null) throw new RuntimeException("Metadata is not set.");
+        File metadataFile = backupFile.getMetadataFile();
         try (FileOutputStream fileOutputStream = new FileOutputStream(metadataFile)) {
             JSONObject rootObject = new JSONObject();
-            rootObject.put("label", metadataV1.label);
-            rootObject.put("package_name", metadataV1.packageName);
-            rootObject.put("version_name", metadataV1.versionName);
-            rootObject.put("version_code", metadataV1.versionCode);
-            rootObject.put("source_dir", metadataV1.sourceDir);
-            rootObject.put("data_dirs", getJSONArrayFromArray(metadataV1.dataDirs));
-            rootObject.put("is_system", metadataV1.isSystem);
-            rootObject.put("is_split_apk", metadataV1.isSplitApk);
-            rootObject.put("split_names", getJSONArrayFromArray(metadataV1.splitNames));
-            rootObject.put("split_sources", getJSONArrayFromArray(metadataV1.splitSources));
-            rootObject.put("has_rules", metadataV1.hasRules);
-            rootObject.put("backup_time", metadataV1.backupTime);
-            rootObject.put("cert_sha256_checksum", getJSONArrayFromArray(metadataV1.certSha256Checksum));
-            rootObject.put("source_dir_sha256_checksum", metadataV1.sourceDirSha256Checksum);
-            rootObject.put("data_dirs_sha256_checksum", getJSONArrayFromArray(metadataV1.dataDirsSha256Checksum));
-            rootObject.put("mode", metadataV1.mode);
-            rootObject.put("version", metadataV1.version);
-            rootObject.put("apk_name", metadataV1.apkName);
-            rootObject.put("instruction_set", metadataV1.instructionSet);
-            rootObject.put("flags", metadataV1.flags);
+            rootObject.put("label", metadata.label);
+            rootObject.put("package_name", metadata.packageName);
+            rootObject.put("version_name", metadata.versionName);
+            rootObject.put("version_code", metadata.versionCode);
+            rootObject.put("source_dir", metadata.sourceDir);
+            rootObject.put("data_dirs", getJSONArrayFromArray(metadata.dataDirs));
+            rootObject.put("is_system", metadata.isSystem);
+            rootObject.put("is_split_apk", metadata.isSplitApk);
+            rootObject.put("split_names", getJSONArrayFromArray(metadata.splitNames));
+            rootObject.put("split_sources", getJSONArrayFromArray(metadata.splitSources));
+            rootObject.put("has_rules", metadata.hasRules);
+            rootObject.put("backup_time", metadata.backupTime);
+            rootObject.put("cert_sha256_checksum", getJSONArrayFromArray(metadata.certSha256Checksum));
+            rootObject.put("source_dir_sha256_checksum", metadata.sourceDirSha256Checksum);
+            rootObject.put("data_dirs_sha256_checksum", getJSONArrayFromArray(metadata.dataDirsSha256Checksum));
+            rootObject.put("mode", metadata.mode);
+            rootObject.put("version", metadata.version);
+            rootObject.put("apk_name", metadata.apkName);
+            rootObject.put("instruction_set", metadata.instructionSet);
+            rootObject.put("flags", metadata.flags);
+            rootObject.put("user_handle", metadata.userHandle);
             fileOutputStream.write(rootObject.toString().getBytes());
         }
     }
@@ -192,54 +227,75 @@ public final class MetadataManager implements Closeable {
         return stringArray;
     }
 
-    public MetadataV1 setupMetadata(@NonNull BackupStorageManager.BackupFlagsManager requestedFlags)
+    public Metadata setupMetadata(int userHandle, @NonNull BackupFlags requestedFlags)
             throws PackageManager.NameNotFoundException {
         PackageManager pm = appManager.getPackageManager();
         @SuppressLint("WrongConstant")
         PackageInfo packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo);
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-        metadataV1 = new MetadataV1();
-        metadataV1.label = applicationInfo.loadLabel(pm).toString();
-        metadataV1.packageName = packageName;
-        metadataV1.versionName = packageInfo.versionName;
-        metadataV1.versionCode = PackageUtils.getVersionCode(packageInfo);
+        metadata = new Metadata();
+        metadata.userHandle = userHandle;
+        metadata.label = applicationInfo.loadLabel(pm).toString();
+        metadata.packageName = packageName;
+        metadata.versionName = packageInfo.versionName;
+        metadata.versionCode = PackageUtils.getVersionCode(packageInfo);
         if (requestedFlags.backupSource()) {
-            metadataV1.sourceDir = PackageUtils.getSourceDir(applicationInfo);
-        } else metadataV1.sourceDir = "";
-        metadataV1.apkName = new File(applicationInfo.sourceDir).getName();
+            metadata.sourceDir = PackageUtils.getSourceDir(applicationInfo);
+        } else metadata.sourceDir = "";
+        metadata.apkName = new File(applicationInfo.sourceDir).getName();
         if (requestedFlags.backupData()) {
-            metadataV1.dataDirs = PackageUtils.getDataDirs(applicationInfo, requestedFlags.backupExtData());
+            metadata.dataDirs = PackageUtils.getDataDirs(applicationInfo, requestedFlags.backupExtData());
         }
-        metadataV1.dataDirs = ArrayUtils.defeatNullable(metadataV1.dataDirs);
-        metadataV1.isSystem = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-        metadataV1.isSplitApk = false;
+        metadata.dataDirs = ArrayUtils.defeatNullable(metadata.dataDirs);
+        metadata.isSystem = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+        metadata.isSplitApk = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            metadataV1.splitNames = applicationInfo.splitNames;
-            if (metadataV1.splitNames != null) {
-                metadataV1.isSplitApk = true;
-                metadataV1.splitSources = applicationInfo.splitPublicSourceDirs;
+            metadata.splitNames = applicationInfo.splitNames;
+            if (metadata.splitNames != null) {
+                metadata.isSplitApk = true;
+                metadata.splitSources = applicationInfo.splitPublicSourceDirs;
             }
         }
-        metadataV1.splitNames = ArrayUtils.defeatNullable(metadataV1.splitNames);
-        metadataV1.splitSources = ArrayUtils.defeatNullable(metadataV1.splitSources);
-        metadataV1.hasRules = false;
+        metadata.splitNames = ArrayUtils.defeatNullable(metadata.splitNames);
+        metadata.splitSources = ArrayUtils.defeatNullable(metadata.splitSources);
+        metadata.hasRules = false;
         if (requestedFlags.backupRules()) {
             try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName)) {
-                metadataV1.hasRules = cb.entryCount() > 0;
+                metadata.hasRules = cb.entryCount() > 0;
             }
         }
-        metadataV1.backupTime = 0;
-        metadataV1.certSha256Checksum = PackageUtils.getSigningCertSha256Checksum(packageInfo);
+        metadata.backupTime = 0;
+        metadata.certSha256Checksum = PackageUtils.getSigningCertSha256Checksum(packageInfo);
         // Initialize checksums
-        metadataV1.sourceDirSha256Checksum = "";
-        metadataV1.dataDirsSha256Checksum = new String[metadataV1.dataDirs.length];
-        return metadataV1;
+        metadata.sourceDirSha256Checksum = "";
+        metadata.dataDirsSha256Checksum = new String[metadata.dataDirs.length];
+        return metadata;
     }
 
     @NonNull
-    private File getMetadataFile(boolean temporary) {
-        if (temporary) {
-            return new File(BackupStorageManager.getTemporaryBackupPath(packageName), META_FILE);
-        } else return new File(BackupStorageManager.getBackupPath(packageName), META_FILE);
+    public String[] buildDataDirTypes(@Nullable String[] dataDir) {
+        dataDir = ArrayUtils.defeatNullable(dataDir);
+        for (int i = 0; i < dataDir.length; ++i) {
+            dataDir[i] = dataDirToDataDirType(dataDir[i]);
+        }
+        return dataDir;
+    }
+
+    @SuppressLint("SdCardPath")
+    @DataDirType
+    public String dataDirToDataDirType(@NonNull String dir) {
+        if (dir.startsWith("/data/user/") || dir.startsWith("/data/data/")) {
+            return DATA_USER;
+        } else if (dir.startsWith("/data/user_de/")) {
+            return DATA_USER_DE;
+        } else if (dir.contains("/Android/data/")) {
+            return DATA_EXT_DATA;
+        } else if (dir.contains("/Android/media")) {
+            return DATA_MEDIA;
+        } else if (dir.contains("/Android/obb")) {
+            return DATA_OBB;
+        } else {
+            throw new IllegalArgumentException("Cannot infer directory type.");
+        }
     }
 }

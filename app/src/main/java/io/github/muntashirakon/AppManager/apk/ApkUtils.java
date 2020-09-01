@@ -21,7 +21,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,9 +29,9 @@ import java.io.FileOutputStream;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
+import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
-import static io.github.muntashirakon.AppManager.backup.BackupStorageManager.getApkBackupDirectory;
 import static io.github.muntashirakon.AppManager.utils.IOUtils.copy;
 
 public final class ApkUtils {
@@ -63,10 +62,11 @@ public final class ApkUtils {
     /**
      * Backup the given apk (both root and non root). This is similar to apk sharing feature except
      * that these are saved at /sdcard/AppManager/apks
+     *
      * @return true on success, false on failure
      */
     public static boolean backupApk(String packageName) {
-        File backupPath = getApkBackupDirectory();
+        File backupPath = BackupFiles.getApkBackupDirectory();
         if (!backupPath.exists()) {
             if (!backupPath.mkdirs()) return false;
         }

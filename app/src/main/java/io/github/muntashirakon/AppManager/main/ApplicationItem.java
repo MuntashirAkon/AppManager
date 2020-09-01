@@ -42,7 +42,8 @@ public class ApplicationItem extends PackageItemInfo {
     /**
      * Backup info
      */
-    public @Nullable MetadataManager.MetadataV1 metadataV1;
+    public @Nullable
+    MetadataManager.Metadata metadata;
     /**
      * Application flags.
      * See {@link android.content.pm.ApplicationInfo#flags}

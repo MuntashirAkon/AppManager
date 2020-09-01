@@ -199,7 +199,7 @@ public class MainViewModel extends AndroidViewModel {
                             item.versionName = packageInfo.versionName;
                             item.versionCode = PackageUtils.getVersionCode(packageInfo);
                             if (backupApplications.contains(packageName)) {
-                                item.metadataV1 = BackupUtils.getBackupInfo(packageName);
+                                item.metadata = BackupUtils.getBackupInfo(packageName);
                                 backupApplications.remove(packageName);
                             }
                             item.flags = applicationInfo.flags;
@@ -223,7 +223,7 @@ public class MainViewModel extends AndroidViewModel {
                     for (ApplicationInfo applicationInfo : applicationInfoList) {
                         ApplicationItem item = new ApplicationItem(applicationInfo);
                         if (backupApplications.contains(applicationInfo.packageName)) {
-                            item.metadataV1 = BackupUtils.getBackupInfo(applicationInfo.packageName);
+                            item.metadata = BackupUtils.getBackupInfo(applicationInfo.packageName);
                             backupApplications.remove(applicationInfo.packageName);
                         }
                         item.flags = applicationInfo.flags;
@@ -256,15 +256,15 @@ public class MainViewModel extends AndroidViewModel {
                 for (String packageName : backupApplications) {
                     ApplicationItem item = new ApplicationItem();
                     item.packageName = packageName;
-                    item.metadataV1 = BackupUtils.getBackupInfo(packageName);
-                    if (item.metadataV1 == null) continue;
-                    item.versionName = item.metadataV1.versionName;
-                    item.versionCode = item.metadataV1.versionCode;
-                    item.label = item.metadataV1.label;
+                    item.metadata = BackupUtils.getBackupInfo(packageName);
+                    if (item.metadata == null) continue;
+                    item.versionName = item.metadata.versionName;
+                    item.versionCode = item.metadata.versionCode;
+                    item.label = item.metadata.label;
                     Log.e("MVM", item.label);
-                    item.firstInstallTime = item.metadataV1.backupTime;
-                    item.lastUpdateTime = item.metadataV1.backupTime;
-                    item.isUser = !item.metadataV1.isSystem;
+                    item.firstInstallTime = item.metadata.backupTime;
+                    item.lastUpdateTime = item.metadata.backupTime;
+                    item.isUser = !item.metadata.isSystem;
                     item.isDisabled = false;
                     item.isInstalled = false;
                     applicationItems.add(item);
@@ -425,7 +425,7 @@ public class MainViewModel extends AndroidViewModel {
     private void removePackageIfNoBackup(String packageName) {
         ApplicationItem item = getApplicationItemFromApplicationItems(packageName);
         if (item != null) {
-            if (item.metadataV1 == null) applicationItems.remove(item);
+            if (item.metadata == null) applicationItems.remove(item);
             else {
                 ApplicationItem changedItem = getNewApplicationItem(packageName);
                 if (changedItem != null) insertOrAddApplicationItem(changedItem);
@@ -461,7 +461,7 @@ public class MainViewModel extends AndroidViewModel {
             ApplicationItem item = new ApplicationItem(applicationInfo);
             item.versionName = packageInfo.versionName;
             item.versionCode = PackageUtils.getVersionCode(packageInfo);
-            item.metadataV1 = BackupUtils.getBackupInfo(packageName);
+            item.metadata = BackupUtils.getBackupInfo(packageName);
             item.flags = applicationInfo.flags;
             item.uid = applicationInfo.uid;
             item.sharedUserId = packageInfo.sharedUserId;

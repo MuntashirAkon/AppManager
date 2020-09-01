@@ -20,14 +20,12 @@ package io.github.muntashirakon.AppManager.types;
 import java.io.File;
 
 import androidx.annotation.NonNull;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 
 /**
  * Start with a new file, delete old one if existed
  */
 @SuppressWarnings("ResultOfMethodCallIgnored")
-public class FreshFile extends File {
+public class FreshFile extends PrivilegedFile {
     public FreshFile(@NonNull String pathname) {
         super(pathname);
         delete();
@@ -41,19 +39,5 @@ public class FreshFile extends File {
     public FreshFile(@NonNull File parent, @NonNull String child) {
         super(parent, child);
         delete();
-    }
-
-    @Override
-    public boolean delete() {
-        boolean isDeleted = false;
-        try {
-            if (exists()) isDeleted = super.delete();
-        } catch (Exception ignore) {
-        }
-        if (!isDeleted && AppPref.isRootOrAdbEnabled()) {
-            RunnerUtils.deleteFile(getPath());
-            isDeleted = !RunnerUtils.fileExists(getPath());
-        }
-        return isDeleted;
     }
 }

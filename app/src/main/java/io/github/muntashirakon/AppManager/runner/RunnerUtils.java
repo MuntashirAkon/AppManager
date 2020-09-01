@@ -172,11 +172,24 @@ public final class RunnerUtils {
         return Runner.runCommand(String.format("test -e \"%s\"", fileName.getAbsolutePath())).isSuccessful();
     }
 
-    public static void deleteFile(@NonNull String fileName) {
-        Runner.runCommand(String.format("rm -f \"%s\"", fileName));
+    public static boolean mkdir(@NonNull String fileName) {
+        return Runner.runCommand(String.format("mkdir \"%s\"", fileName)).isSuccessful();
     }
 
-    public static void deleteFile(@NonNull File fileName) {
-        Runner.runCommand(String.format("rm -f \"%s\"", fileName.getAbsolutePath()));
+    public static boolean mkdirs(@NonNull String fileName) {
+        return Runner.runCommand(String.format("mkdir -p \"%s\"", fileName)).isSuccessful();
+    }
+
+    public static void deleteFile(@NonNull String fileName, boolean isForce) {
+        String forceSwitch = isForce ? "r" : "";
+        Runner.runCommand(String.format("rm -%sf \"%s\"", isForce, fileName));
+    }
+
+    public static void deleteFile(@NonNull File fileName, boolean isForce) {
+        deleteFile(fileName.getAbsolutePath(), isForce);
+    }
+
+    public static boolean mv(@NonNull File source, @NonNull File dest) {
+        return Runner.runCommand(String.format("mv -f \"%s\" \"%s\"", source.getAbsolutePath(), dest.getAbsolutePath())).isSuccessful();
     }
 }

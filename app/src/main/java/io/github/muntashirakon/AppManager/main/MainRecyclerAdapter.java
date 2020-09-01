@@ -280,25 +280,25 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.size.setTextColor(mColorOrange);
         else holder.size.setTextColor(mColorSecondary);
         // Check for backup
-        if (item.metadataV1 != null) {
+        if (item.metadata != null) {
             holder.backupIndicator.setVisibility(View.VISIBLE);
             holder.backupInfo.setVisibility(View.VISIBLE);
             holder.backupInfoExt.setVisibility(View.VISIBLE);
             holder.backupIndicator.setText(R.string.backup);
-            MetadataManager.MetadataV1 metadataV1 = item.metadataV1;
+            MetadataManager.Metadata metadata = item.metadata;
             long days = TimeUnit.DAYS.convert(System.currentTimeMillis() -
-                    metadataV1.backupTime, TimeUnit.MILLISECONDS);
+                    metadata.backupTime, TimeUnit.MILLISECONDS);
             holder.backupInfo.setText(String.format("%s: %s, %s %s",
                     mActivity.getString(R.string.backup), mActivity.getResources()
                             .getQuantityString(R.plurals.usage_days, (int) days, days),
-                    mActivity.getString(R.string.version), metadataV1.versionName));
+                    mActivity.getString(R.string.version), metadata.versionName));
             StringBuilder extBulder = new StringBuilder();
-            if (!TextUtils.isEmpty(metadataV1.sourceDir)) extBulder.append("apk");
-            if (metadataV1.dataDirs.length > 0) {
+            if (!TextUtils.isEmpty(metadata.sourceDir)) extBulder.append("apk");
+            if (metadata.dataDirs.length > 0) {
                 if (extBulder.length() > 0) extBulder.append("+");
                 extBulder.append("data");
             }
-            if (metadataV1.hasRules) {
+            if (metadata.hasRules) {
                 if (extBulder.length() > 0) extBulder.append("+");
                 extBulder.append("rules");
             }

@@ -24,17 +24,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 
 public final class BackupUtils {
     @Nullable
-    public static MetadataManager.MetadataV1 getBackupInfo(String packageName) {
+    public static MetadataManager.Metadata getBackupInfo(String packageName) {
         try (MetadataManager metadataManager = MetadataManager.getInstance(packageName)) {
-            metadataManager.readMetadata();
-            return metadataManager.getMetadataV1();
+            PrivilegedFile backupPath = new PrivilegedFile(BackupFiles.getPackagePath(packageName), String.valueOf(0));  // FIXME: Get current user handle
+            metadataManager.readMetadata(new BackupFiles.BackupFile(backupPath, false));
+            return metadataManager.getMetadata();
         } catch (JSONException e) {
             return null;
         }
@@ -42,12 +43,12 @@ public final class BackupUtils {
 
     @NonNull
     public static List<String> getBackupApplications() {
-        File backupPath = BackupStorageManager.getBackupDirectory();
+        File backupPath = BackupFiles.getBackupDirectory();
         List<String> packages;
         String[] files = backupPath.list((dir, name) -> new File(dir, name).isDirectory());
         if (files != null) packages = new ArrayList<>(Arrays.asList(files));
         else return new ArrayList<>();
-        packages.remove(BackupStorageManager.APK_SAVING_DIRECTORY);
+        packages.remove(BackupFiles.APK_SAVING_DIRECTORY);
         for (Iterator<String> it = packages.iterator(); it.hasNext(); ) {
             if (!MetadataManager.hasMetadata(it.next())) it.remove();
         }
