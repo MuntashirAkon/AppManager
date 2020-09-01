@@ -25,12 +25,14 @@ import androidx.annotation.IntDef;
 class BackupFlags {
     @IntDef(flag = true, value = {
             BACKUP_NOTHING,
+            BACKUP_ALL_USERS,
             BACKUP_SOURCE,
             BACKUP_SOURCE_APK_ONLY,
             BACKUP_DATA,
             BACKUP_EXT_DATA,
             BACKUP_EXT_OBB_MEDIA,
             BACKUP_EXCLUDE_CACHE,
+            BACKUP_MULTIPLE,
             BACKUP_RULES,
             BACKUP_NO_SIGNATURE_CHECK,
     })
@@ -49,7 +51,7 @@ class BackupFlags {
     public static final int BACKUP_SOURCE_APK_ONLY = 1 << 6;
     public static final int BACKUP_EXT_OBB_MEDIA = 1 << 7;  // TODO
     public static final int BACKUP_ALL_USERS = 1 << 8;  // TODO
-    public static final int BACKUP_MULTIPLE = 1 << 8;  // TODO
+    public static final int BACKUP_MULTIPLE = 1 << 9;  // TODO
     public static final int BACKUP_FLAGS_COMPAT = (1 << 8) - 1;
 
     @BackupFlag

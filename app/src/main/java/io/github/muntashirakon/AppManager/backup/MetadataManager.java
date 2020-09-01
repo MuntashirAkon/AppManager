@@ -41,6 +41,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
 import dalvik.system.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -92,6 +93,9 @@ public final class MetadataManager implements Closeable {
         public String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);  // instruction_set
         public int flags = BackupFlags.BACKUP_FLAGS_COMPAT;  // flags, total is set for compatibility
         public int userHandle = Process.myUid() / 100000;  // user_handle
+        @TarUtils.TarType
+        public String tarType = TarUtils.TAR_GZIP;  // tar_type
+        public boolean keyStore = false;  // key_store
     }
 
     private static MetadataManager metadataManager;
@@ -107,7 +111,8 @@ public final class MetadataManager implements Closeable {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean hasMetadata(String packageName) {
-        PrivilegedFile backupPath = new PrivilegedFile(BackupFiles.getPackagePath(packageName), String.valueOf(0));  // FIXME: Get current user handle
+        PrivilegedFile backupPath = new PrivilegedFile(BackupFiles.getPackagePath(packageName),
+                String.valueOf(Users.getCurrentUser()));
         return new PrivilegedFile(backupPath, META_FILE).exists();
     }
 
@@ -157,28 +162,19 @@ public final class MetadataManager implements Closeable {
         this.metadata.dataDirsSha256Checksum = getArrayFromJSONArray(rootObject.getJSONArray("data_dirs_sha256_checksum"));
         this.metadata.mode = rootObject.getInt("mode");
         this.metadata.version = rootObject.getInt("version");
+        this.metadata.apkName = rootObject.getString("apk_name");
+        this.metadata.instructionSet = rootObject.getString("instruction_set");
+        this.metadata.flags = rootObject.getInt("flags");
+        this.metadata.userHandle = rootObject.getInt("user_handle");
         try {
-            this.metadata.apkName = rootObject.getString("apk_name");
+            this.metadata.tarType = rootObject.getString("tar_type");
         } catch (JSONException e) {
-            this.metadata.apkName = "base.apk";
+            this.metadata.tarType = TarUtils.TAR_GZIP;
         }
         try {
-            this.metadata.instructionSet = rootObject.getString("instruction_set");
+            this.metadata.keyStore = rootObject.getBoolean("key_store");
         } catch (JSONException e) {
-            // Add "-unknown" suffix to the current platform (to skip restoring)
-            this.metadata.instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]) + "-unknown";
-        }
-        try {
-            this.metadata.flags = rootObject.getInt("flags");
-        } catch (JSONException e) {
-            // Fallback to total
-            this.metadata.flags = BackupFlags.BACKUP_FLAGS_COMPAT;
-        }
-        try {
-            this.metadata.userHandle = rootObject.getInt("user_handle");
-        } catch (JSONException e) {
-            // Fallback to total
-            this.metadata.userHandle = Process.myUid() / 100000;
+            this.metadata.keyStore = false;
         }
     }
 
@@ -209,6 +205,8 @@ public final class MetadataManager implements Closeable {
             rootObject.put("instruction_set", metadata.instructionSet);
             rootObject.put("flags", metadata.flags);
             rootObject.put("user_handle", metadata.userHandle);
+            rootObject.put("tar_type", metadata.tarType);
+            rootObject.put("key_store", metadata.keyStore);
             fileOutputStream.write(rootObject.toString().getBytes());
         }
     }
@@ -235,6 +233,8 @@ public final class MetadataManager implements Closeable {
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         metadata = new Metadata();
         metadata.userHandle = userHandle;
+        metadata.tarType = TarUtils.TAR_GZIP;  // FIXME: Load from user prefs
+        metadata.keyStore = false;  // FIXME: Get from /data/misc/keystore/user/{user_handle}/{UID}_{KEY_NAME}_{alias}
         metadata.label = applicationInfo.loadLabel(pm).toString();
         metadata.packageName = packageName;
         metadata.versionName = packageInfo.versionName;
