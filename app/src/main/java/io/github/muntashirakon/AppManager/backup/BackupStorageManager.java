@@ -45,6 +45,7 @@ import dalvik.system.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerShell;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -96,8 +97,9 @@ public class BackupStorageManager implements AutoCloseable {
         metadataManager = MetadataManager.getInstance(packageName);
         requestedFlags = new BackupFlags(flags);
         if (requestedFlags.backupAllUsers()) {
-            userHandles = new int[]{0};  // FIXME
-        } else userHandles = new int[]{0}; // FIXME
+            userHandles = Users.getUsers();
+        } else userHandles = new int[]{Users.getCurrentUser()};
+        Log.e("BSM", "Users: " + Arrays.toString(userHandles));
         if (requestedFlags.backupMultiple()) {
             // Multiple backups requested
             if (backupNames == null) {
@@ -105,12 +107,15 @@ public class BackupStorageManager implements AutoCloseable {
                 backupNames = new String[]{new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss",
                         Locale.ROOT).format(Calendar.getInstance().getTime())};
             }
-            // Append “Backup_” if backup name is a number
             for (int i = 0; i < backupNames.length; ++i) {
                 if (TextUtils.isDigitsOnly(backupNames[i])) {
+                    // Append “Backup_” if backup name is a number
                     backupNames[i] = "Backup_" + backupNames[i];
                 }
+                // Replace spaces with underscore if exists
+                backupNames[i] = backupNames[i].replace(' ', '_');
             }
+            Log.e("BSM", "Backup names: " + Arrays.toString(backupNames));
         } else backupNames = null;  // Overwrite existing backup
         backupFilesList = new BackupFiles[userHandles.length];
         for (int i = 0; i < userHandles.length; ++i) {

@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.misc;
 
-import android.os.UserHandle;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
 import android.text.TextUtils;
@@ -60,23 +59,14 @@ public final class OsEnvironment {
     }
 
     public static void initForCurrentUser() {
-        int userId = 0;
-        try {
-            // FIXME: Get user id using root since this is only intended for root users
-            @SuppressWarnings("JavaReflectionMemberAccess")
-            Method myUserId = UserHandle.class.getMethod("myUserId");
-            userId = (int) myUserId.invoke(null);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        sCurrentUser = new UserEnvironment(userId);
+        sCurrentUser = new UserEnvironment(Users.getCurrentUser());
     }
 
     public static class UserEnvironment {
-        private final int mUserId;
+        private final int mUserHandle;
 
-        public UserEnvironment(int userId) {
-            mUserId = userId;
+        public UserEnvironment(int userHandle) {
+            mUserHandle = userHandle;
         }
 
         public File[] getExternalDirs() {
@@ -87,7 +77,7 @@ public final class OsEnvironment {
                 try {
                     @SuppressWarnings("JavaReflectionMemberAccess")
                     Method getVolumeList = StorageManager.class.getMethod("getVolumeList", int.class, int.class);
-                    final @NonNull StorageVolume[] volumes = (StorageVolume[]) Objects.requireNonNull(getVolumeList.invoke(null, mUserId, 1 << 8 /* FLAG_FOR_WRITE */));
+                    final @NonNull StorageVolume[] volumes = (StorageVolume[]) Objects.requireNonNull(getVolumeList.invoke(null, mUserHandle, 1 << 8 /* FLAG_FOR_WRITE */));
                     Log.e(TAG, Arrays.toString(volumes));
                     final File[] files = new File[volumes.length];
                     for (int i = 0; i < volumes.length; i++) {
@@ -106,7 +96,7 @@ public final class OsEnvironment {
             if (!TextUtils.isEmpty(rawEmulatedTarget)) {
                 // Device has emulated storage; external storage paths should have
                 // userId burned into them.
-                final String rawUserId = Integer.toString(mUserId);
+                final String rawUserId = Integer.toString(mUserHandle);
                 //noinspection ConstantConditions
                 final File emulatedTargetBase = new File(rawEmulatedTarget);
 
