@@ -221,17 +221,17 @@ public final class MetadataManager implements Closeable {
     }
 
     @NonNull
-    private static String[] getArrayFromJSONArray(@NonNull final JSONArray jsonArray) throws JSONException {
+    private static String[] getArrayFromJSONArray(@NonNull final JSONArray jsonArray)
+            throws JSONException {
         String[] stringArray = new String[jsonArray.length()];
         for (int i = 0; i < jsonArray.length(); ++i) stringArray[i] = (String) jsonArray.get(i);
         return stringArray;
     }
 
-    public Metadata setupMetadata(int userHandle, @NonNull BackupFlags requestedFlags)
-            throws PackageManager.NameNotFoundException {
+    public Metadata setupMetadata(@NonNull PackageInfo packageInfo,
+                                  int userHandle,
+                                  @NonNull BackupFlags requestedFlags) {
         PackageManager pm = appManager.getPackageManager();
-        @SuppressLint("WrongConstant")
-        PackageInfo packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo);
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         metadata = new Metadata();
         metadata.userHandle = userHandle;

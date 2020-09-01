@@ -17,6 +17,8 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
+import android.util.Pair;
+
 import org.json.JSONException;
 
 import java.io.File;
@@ -27,7 +29,10 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.runner.RootShellRunner;
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public final class BackupUtils {
     @Nullable
@@ -53,5 +58,36 @@ public final class BackupUtils {
             if (!MetadataManager.hasMetadata(it.next())) it.remove();
         }
         return packages;
+    }
+
+    @NonNull
+    static String getSha256Sum(@NonNull File[] files) {
+        if (files.length == 1) return PackageUtils.getSha256Checksum(files[0]);
+
+        StringBuilder checksums = new StringBuilder();
+        for (File file : files) {
+            String checksum = PackageUtils.getSha256Checksum(file);
+            checksums.append(checksum);
+        }
+        return PackageUtils.getSha256Checksum(checksums.toString().getBytes());
+    }
+
+    @NonNull
+    static Pair<Integer, Integer> getUidAndGid(String filepath, int uid) {
+        // Default UID and GID should be the same as the kernel user ID, and will fallback to it
+        // if the stat command fails
+        Pair<Integer, Integer> defaultUidGid = new Pair<>(uid, uid);
+        Runner.Result result = RootShellRunner.runCommand(String.format("stat -c \"%%u %%g\" \"%s\"", filepath));
+        if (!result.isSuccessful()) return defaultUidGid;
+        String[] uidGid = result.getOutput().split(" ");
+        if (uidGid.length != 2) return defaultUidGid;
+        // Fix for Magisk bug
+        if (uidGid[0].equals("0")) return defaultUidGid;
+        try {
+            // There could be other underlying bugs as well
+            return new Pair<>(Integer.parseInt(uidGid[0]), Integer.parseInt(uidGid[1]));
+        } catch (Exception e) {
+            return defaultUidGid;
+        }
     }
 }

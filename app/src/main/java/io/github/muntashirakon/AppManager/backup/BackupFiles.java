@@ -64,10 +64,10 @@ public class BackupFiles {
         private PrivilegedFile tmpBackupPath;
         private boolean isTemporary;
 
-        public BackupFile(@NonNull PrivilegedFile backupPath, boolean isTemporary) {
+        public BackupFile(@NonNull PrivilegedFile backupPath, boolean hasTemporary) {
             this.backupPath = backupPath;
-            this.isTemporary = isTemporary;
-            if (isTemporary) {
+            this.isTemporary = hasTemporary;
+            if (hasTemporary) {
                 //noinspection ResultOfMethodCallIgnored
                 backupPath.mkdirs();  // Create backup path if not exists
                 tmpBackupPath = getTemporaryBackupPath();
@@ -122,10 +122,10 @@ public class BackupFiles {
         packagePath = getPackagePath(packageName);
     }
 
-    BackupFile[] getBackupPaths() {
+    BackupFile[] getBackupPaths(boolean hasTemporary) {
         BackupFile[] backupFiles = new BackupFile[backupNames.length];
         for (int i = 0; i < backupNames.length; ++i) {
-            backupFiles[i] = new BackupFile(new PrivilegedFile(packagePath, backupNames[i]), false);
+            backupFiles[i] = new BackupFile(new PrivilegedFile(packagePath, backupNames[i]), hasTemporary);
         }
         return backupFiles;
     }

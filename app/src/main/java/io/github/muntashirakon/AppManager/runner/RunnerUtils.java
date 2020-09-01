@@ -182,7 +182,7 @@ public final class RunnerUtils {
 
     public static void deleteFile(@NonNull String fileName, boolean isForce) {
         String forceSwitch = isForce ? "r" : "";
-        Runner.runCommand(String.format("rm -%sf \"%s\"", isForce, fileName));
+        Runner.runCommand(String.format("rm -%sf \"%s\"", forceSwitch, fileName));
     }
 
     public static void deleteFile(@NonNull File fileName, boolean isForce) {
