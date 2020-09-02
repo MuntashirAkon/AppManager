@@ -27,6 +27,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -109,6 +112,28 @@ public class AMPackageInstallerService extends IntentService {
         // Set package name in the ongoing notification
         builder.setContentTitle(appLabel);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
+        // Start writing Obb files
+        new Thread(() -> {
+            if (apkFile.hasObb()) {
+                boolean tmpCloseApkFile = closeApkFile;
+                // Disable closing apk file in case the install is finished already.
+                closeApkFile = false;
+                if (!apkFile.extractObb()) {
+                    new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(this,
+                            R.string.failed_to_extract_obb_files, Toast.LENGTH_LONG).show());
+                } else {
+                    new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(this,
+                            R.string.obb_files_extracted_successfully, Toast.LENGTH_LONG).show());
+                }
+                if (!completed) {
+                    // Reset close apk file if the install isn't completed
+                    closeApkFile = tmpCloseApkFile;
+                } else {
+                    // Install completed, close apk file if requested
+                    if (tmpCloseApkFile) apkFile.close();
+                }
+            }
+        }).start();
         // Get staging apk files
         List<ApkFile.Entry> entries = apkFile.getSelectedEntries();
         File[] stagingApkFiles;

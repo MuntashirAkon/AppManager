@@ -51,19 +51,27 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class ApkFile implements AutoCloseable, Parcelable {
     public static final String TAG = "ApkFile";
 
+    private static final String OBB_DIR = "Android/obb";
+
     protected ApkFile(@NonNull Parcel in) {
         entries = Objects.requireNonNull(in.createTypedArrayList(Entry.CREATOR));
         baseEntry = in.readParcelable(Entry.class.getClassLoader());
         packageName = in.readString();
         hasObb = in.readByte() != 0;
+        obbFiles = Objects.requireNonNull(in.createStringArrayList());
         isSplit = in.readByte() != 0;
         apkUri = in.readParcelable(Uri.class.getClassLoader());
+        cacheFilePath = new File(Objects.requireNonNull(in.readString()));
     }
 
     public static final Creator<ApkFile> CREATOR = new Creator<ApkFile>() {
@@ -91,8 +99,10 @@ public class ApkFile implements AutoCloseable, Parcelable {
         dest.writeParcelable(baseEntry, flags);
         dest.writeString(packageName);
         dest.writeByte((byte) (hasObb ? 1 : 0));
+        dest.writeStringList(obbFiles);
         dest.writeByte((byte) (isSplit ? 1 : 0));
         dest.writeParcelable(apkUri, flags);
+        dest.writeString(cacheFilePath.getAbsolutePath());
     }
 
     @IntDef(value = {
@@ -131,6 +141,7 @@ public class ApkFile implements AutoCloseable, Parcelable {
     private Entry baseEntry;
     private String packageName;
     private boolean hasObb = false;
+    private List<String> obbFiles = new ArrayList<>();
     private boolean isSplit = false;
     private Uri apkUri;
     private File cacheFilePath;
@@ -214,6 +225,7 @@ public class ApkFile implements AutoCloseable, Parcelable {
                         }
                     } else if (fileName.endsWith(".obb")) {
                         hasObb = true;
+                        obbFiles.add(zipEntry.getName());
                     }
                 }
             }
@@ -257,6 +269,67 @@ public class ApkFile implements AutoCloseable, Parcelable {
 
     public boolean hasObb() {
         return hasObb;
+    }
+
+    public boolean extractObb() {
+        if (!hasObb) return true;
+        try {
+            PrivilegedFile[] extDirs = OsEnvironment.buildExternalStoragePublicDirs();
+            PrivilegedFile writableExtDir = null;
+            for (PrivilegedFile extDir : extDirs) {
+                if (!extDir.exists()) {
+                    continue;
+                }
+                writableExtDir = extDir;
+                break;
+            }
+            if (writableExtDir == null) throw new IOException("Couldn't find any writable Obb dir");
+            final PrivilegedFile writableObbDir = new PrivilegedFile(writableExtDir.getAbsolutePath() + "/" + OBB_DIR + "/" + packageName);
+            PrivilegedFile[] oldObbFiles = null;
+            if (writableObbDir.exists()) {
+                oldObbFiles = writableObbDir.listFiles();
+            } else {
+                if (!writableObbDir.mkdirs()) return false;
+            }
+
+            if (AppPref.isRootOrAdbEnabled()) {
+                for (String obbFile : obbFiles) {
+                    if (!Runner.runCommand(String.format("unzip \"%s\" \"%s\" -d \"%s\"",
+                            cacheFilePath.getAbsolutePath(), obbFile, obbFile.startsWith(OBB_DIR) ?
+                                    writableExtDir.getAbsolutePath()
+                                    : writableObbDir.getAbsolutePath())).isSuccessful()) {
+                        return false;
+                    }
+                }
+            } else {
+                try (ZipFile zipFile = new ZipFile(cacheFilePath)) {
+                    Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
+                    String fileName;
+                    while (zipEntries.hasMoreElements()) {
+                        ZipEntry zipEntry = zipEntries.nextElement();
+                        if (zipEntry.isDirectory()) continue;
+                        fileName = Utils.getFileNameFromZipEntry(zipEntry);
+                        if (fileName.endsWith(".obb")) {
+                            // Extract obb file to the destination directory
+                            try (InputStream zipInputStream = zipFile.getInputStream(zipEntry)) {
+                                IOUtils.saveZipFile(zipInputStream, writableObbDir, fileName);
+                            }
+                        }
+                    }
+                }
+            }
+            // Delete old files
+            if (oldObbFiles != null) {
+                for (PrivilegedFile oldFile : oldObbFiles) {
+                    //noinspection ResultOfMethodCallIgnored
+                    oldFile.delete();
+                }
+            }
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void select(Entry entry) {

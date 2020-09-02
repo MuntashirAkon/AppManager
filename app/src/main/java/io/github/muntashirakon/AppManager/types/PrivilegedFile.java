@@ -18,9 +18,14 @@
 package io.github.muntashirakon.AppManager.types;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
@@ -114,5 +119,76 @@ public class PrivilegedFile extends File {
             return RunnerUtils.mv(this, dest);
         }
         return isRenamed;
+    }
+
+    @Nullable
+    @Override
+    public String[] list() {
+        try {
+            return super.list();
+        } catch (SecurityException ignore) {}
+        if (AppPref.isRootOrAdbEnabled()) {
+            Runner.Result result = Runner.runCommand("for f in * .*; do echo $f; done");
+            if (result.isSuccessful()) {
+                List<String> fileList = result.getOutputAsList();
+                if (fileList.size() > 0) return fileList.toArray(new String[0]);
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public String[] list(@Nullable FilenameFilter filter) {
+        String[] names = list();
+        if ((names == null) || (filter == null)) {
+            return names;
+        }
+        List<String> v = new ArrayList<>();
+        for (String name : names) {
+            if (filter.accept(this, name)) {
+                v.add(name);
+            }
+        }
+        return v.toArray(new String[0]);
+    }
+
+    @Nullable
+    @Override
+    public PrivilegedFile[] listFiles() {
+        String[] ss = list();
+        if (ss == null) return null;
+        int n = ss.length;
+        PrivilegedFile[] fs = new PrivilegedFile[n];
+        for (int i = 0; i < n; i++) {
+            fs[i] = new PrivilegedFile(this, ss[i]);
+        }
+        return fs;
+    }
+
+    @Nullable
+    @Override
+    public PrivilegedFile[] listFiles(@Nullable FileFilter filter) {
+        String[] ss = list();
+        if (ss == null) return null;
+        ArrayList<PrivilegedFile> files = new ArrayList<>();
+        for (String s : ss) {
+            PrivilegedFile f = new PrivilegedFile(this, s);
+            if ((filter == null) || filter.accept(f))
+                files.add(f);
+        }
+        return files.toArray(new PrivilegedFile[0]);
+    }
+
+    @Nullable
+    @Override
+    public PrivilegedFile[] listFiles(@Nullable FilenameFilter filter) {
+        String[] ss = list();
+        if (ss == null) return null;
+        ArrayList<PrivilegedFile> files = new ArrayList<>();
+        for (String s : ss)
+            if ((filter == null) || filter.accept(this, s))
+                files.add(new PrivilegedFile(this, s));
+        return files.toArray(new PrivilegedFile[0]);
     }
 }

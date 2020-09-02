@@ -88,6 +88,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.installer.AMPackageInstallerService;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
@@ -183,6 +184,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private ActivityResultLauncher<String> permRunInTermux = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) runInTermux();
+            });
+    private ActivityResultLauncher<String[]> permInstallWithObb = registerForActivityResult(
+            new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+                if (Utils.getExternalStoragePermissions(mActivity) == null) {
+                    launchInstaller();
+                }
             });
 
     @Override
@@ -363,6 +370,27 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
+    private void install() {
+        ApkFile apkFile = mainModel.getApkFile();
+        if (apkFile.hasObb() && !AppPref.isRootOrAdbEnabled()) {
+            // Need to request permissions if not given
+            String[] permissions = Utils.getExternalStoragePermissions(mActivity);
+            if (permissions != null) {
+                permInstallWithObb.launch(permissions);
+                return;
+            }
+        }
+        launchInstaller();
+    }
+
+    private void launchInstaller() {
+        Intent intent = new Intent(requireActivity(), AMPackageInstallerService.class);
+        intent.putExtra(AMPackageInstallerService.EXTRA_APK_FILE, mainModel.getApkFile());
+        intent.putExtra(AMPackageInstallerService.EXTRA_APP_LABEL, mPackageLabel);
+        intent.putExtra(AMPackageInstallerService.EXTRA_CLOSE_APK_FILE, false);
+        ContextCompat.startForegroundService(AppManager.getContext(), intent);
+    }
+
     private void refreshDetails() {
         showProgressIndicator(true);
         mainModel.setIsPackageChanged();
@@ -511,13 +539,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (mInstalledPackageInfo == null) {
                 // App not installed
                 addToHorizontalLayout(R.string.install, R.drawable.ic_baseline_get_app_24)
-                        .setOnClickListener(v -> {
-                            Intent intent = new Intent(requireActivity(), AMPackageInstallerService.class);
-                            intent.putExtra(AMPackageInstallerService.EXTRA_APK_FILE, mainModel.getApkFile());
-                            intent.putExtra(AMPackageInstallerService.EXTRA_APP_LABEL, mPackageLabel);
-                            intent.putExtra(AMPackageInstallerService.EXTRA_CLOSE_APK_FILE, false);
-                            ContextCompat.startForegroundService(AppManager.getContext(), intent);
-                        });
+                        .setOnClickListener(v -> install());
             } else {
                 // App is installed
                 long installedVersionCode = PackageUtils.getVersionCode(mInstalledPackageInfo);
@@ -533,13 +555,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 dialogFragment.show(mActivity.getSupportFragmentManager(), WhatsNewDialogFragment.TAG);
                             });
                     addToHorizontalLayout(R.string.update, R.drawable.ic_baseline_get_app_24)
-                            .setOnClickListener(v -> {
-                                Intent intent = new Intent(requireActivity(), AMPackageInstallerService.class);
-                                intent.putExtra(AMPackageInstallerService.EXTRA_APK_FILE, mainModel.getApkFile());
-                                intent.putExtra(AMPackageInstallerService.EXTRA_APP_LABEL, mPackageLabel);
-                                intent.putExtra(AMPackageInstallerService.EXTRA_CLOSE_APK_FILE, false);
-                                ContextCompat.startForegroundService(AppManager.getContext(), intent);
-                            });
+                            .setOnClickListener(v -> install());
                 }
             }
         }

@@ -768,4 +768,17 @@ public class Utils {
         }
         return true;  // Permissions given
     }
+
+    @Nullable
+    public static String[] getExternalStoragePermissions(FragmentActivity activity) {
+        List<String> permissions = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (permissions.size() == 0) return null;
+        else return permissions.toArray(new String[0]);
+    }
 }

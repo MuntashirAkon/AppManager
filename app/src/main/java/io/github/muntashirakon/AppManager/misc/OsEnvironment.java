@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 
 // Keep this in sync with https://cs.android.com/android/platform/superproject/+/master:frameworks/base/core/java/android/os/Environment.java
 // Last snapshot https://cs.android.com/android/_/android/platform/frameworks/base/+/bc3d8b9071d4f0b2903d6836770d974e70366290
@@ -69,7 +70,7 @@ public final class OsEnvironment {
             mUserHandle = userHandle;
         }
 
-        public File[] getExternalDirs() {
+        public PrivilegedFile[] getExternalDirs() {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 // The reflection calls cannot be hidden since they are called internally by the
                 // system. The alternative is to parse the Context.getExternalCacheDirs(). Some
@@ -79,20 +80,24 @@ public final class OsEnvironment {
                     Method getVolumeList = StorageManager.class.getMethod("getVolumeList", int.class, int.class);
                     final @NonNull StorageVolume[] volumes = (StorageVolume[]) Objects.requireNonNull(getVolumeList.invoke(null, mUserHandle, 1 << 8 /* FLAG_FOR_WRITE */));
                     Log.e(TAG, Arrays.toString(volumes));
-                    final File[] files = new File[volumes.length];
-                    for (int i = 0; i < volumes.length; i++) {
+                    final List<PrivilegedFile> files = new ArrayList<>();
+                    File tmpFile;
+                    for (StorageVolume volume : volumes) {
                         @SuppressWarnings("JavaReflectionMemberAccess")
                         Method getPathFile = StorageVolume.class.getMethod("getPathFile");
-                        files[i] = (File) getPathFile.invoke(volumes[i]);
+                        tmpFile = (File) getPathFile.invoke(volume);
+                        if (tmpFile != null) {
+                            files.add(new PrivilegedFile(tmpFile.getAbsolutePath()));
+                        }
                     }
-                    return files;
+                    return files.toArray(new PrivilegedFile[0]);
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
             }
             String rawExternalStorage = System.getenv(ENV_EXTERNAL_STORAGE);
             String rawEmulatedTarget = System.getenv("EMULATED_STORAGE_TARGET");
-            List<File> externalForApp = new ArrayList<>();
+            List<PrivilegedFile> externalForApp = new ArrayList<>();
             if (!TextUtils.isEmpty(rawEmulatedTarget)) {
                 // Device has emulated storage; external storage paths should have
                 // userId burned into them.
@@ -110,68 +115,68 @@ public final class OsEnvironment {
                 }
                 // /storage/sdcard0
                 //noinspection ConstantConditions
-                externalForApp.add(new File(rawExternalStorage));
+                externalForApp.add(new PrivilegedFile(rawExternalStorage));
             }
-            return externalForApp.toArray(new File[0]);
+            return externalForApp.toArray(new PrivilegedFile[0]);
         }
 
         @Deprecated
-        public File getExternalStorageDirectory() {
+        public PrivilegedFile getExternalStorageDirectory() {
             return getExternalDirs()[0];
         }
 
         @Deprecated
-        public File getExternalStoragePublicDirectory(String type) {
+        public PrivilegedFile getExternalStoragePublicDirectory(String type) {
             return buildExternalStoragePublicDirs(type)[0];
         }
 
-        public File[] buildExternalStoragePublicDirs(String type) {
+        public PrivilegedFile[] buildExternalStoragePublicDirs(String type) {
             return buildPaths(getExternalDirs(), type);
         }
 
-        public File[] buildExternalStorageAndroidDataDirs() {
+        public PrivilegedFile[] buildExternalStorageAndroidDataDirs() {
             return buildPaths(getExternalDirs(), DIR_ANDROID, DIR_DATA);
         }
 
-        public File[] buildExternalStorageAndroidObbDirs() {
+        public PrivilegedFile[] buildExternalStorageAndroidObbDirs() {
             return buildPaths(getExternalDirs(), DIR_ANDROID, DIR_OBB);
         }
 
-        public File[] buildExternalStorageAppDataDirs(String packageName) {
+        public PrivilegedFile[] buildExternalStorageAppDataDirs(String packageName) {
             return buildPaths(getExternalDirs(), DIR_ANDROID, DIR_DATA, packageName);
         }
 
-        public File[] buildExternalStorageAppMediaDirs(String packageName) {
+        public PrivilegedFile[] buildExternalStorageAppMediaDirs(String packageName) {
             return buildPaths(getExternalDirs(), DIR_ANDROID, DIR_MEDIA, packageName);
         }
 
-        public File[] buildExternalStorageAppObbDirs(String packageName) {
+        public PrivilegedFile[] buildExternalStorageAppObbDirs(String packageName) {
             return buildPaths(getExternalDirs(), DIR_ANDROID, DIR_OBB, packageName);
         }
 
-        public File[] buildExternalStorageAppFilesDirs(String packageName) {
+        public PrivilegedFile[] buildExternalStorageAppFilesDirs(String packageName) {
             return buildPaths(getExternalDirs(), DIR_ANDROID, DIR_DATA, packageName, DIR_FILES);
         }
 
-        public File[] buildExternalStorageAppCacheDirs(String packageName) {
+        public PrivilegedFile[] buildExternalStorageAppCacheDirs(String packageName) {
             return buildPaths(getExternalDirs(), DIR_ANDROID, DIR_DATA, packageName, DIR_CACHE);
         }
     }
 
     @NonNull
-    public static File getDataAppDirectory() {
-        return new File(DIR_ANDROID_DATA, "app");
+    public static PrivilegedFile getDataAppDirectory() {
+        return new PrivilegedFile(DIR_ANDROID_DATA, "app");
     }
 
     @NonNull
-    public static File getDataDataDirectory() {
-        return new File(DIR_ANDROID_DATA, "data");
+    public static PrivilegedFile getDataDataDirectory() {
+        return new PrivilegedFile(DIR_ANDROID_DATA, "data");
     }
 
     /**
      * Returns the path for android-specific data on the SD card.
      */
-    public static File[] buildExternalStorageAndroidDataDirs() {
+    public static PrivilegedFile[] buildExternalStorageAndroidDataDirs() {
         throwIfUserRequired();
         return sCurrentUser.buildExternalStorageAndroidDataDirs();
     }
@@ -179,7 +184,7 @@ public final class OsEnvironment {
     /**
      * Generates the raw path to an application's data
      */
-    public static File[] buildExternalStorageAppDataDirs(String packageName) {
+    public static PrivilegedFile[] buildExternalStorageAppDataDirs(String packageName) {
         throwIfUserRequired();
         return sCurrentUser.buildExternalStorageAppDataDirs(packageName);
     }
@@ -187,7 +192,7 @@ public final class OsEnvironment {
     /**
      * Generates the raw path to an application's media
      */
-    public static File[] buildExternalStorageAppMediaDirs(String packageName) {
+    public static PrivilegedFile[] buildExternalStorageAppMediaDirs(String packageName) {
         throwIfUserRequired();
         return sCurrentUser.buildExternalStorageAppMediaDirs(packageName);
     }
@@ -195,7 +200,7 @@ public final class OsEnvironment {
     /**
      * Generates the raw path to an application's OBB files
      */
-    public static File[] buildExternalStorageAppObbDirs(String packageName) {
+    public static PrivilegedFile[] buildExternalStorageAppObbDirs(String packageName) {
         throwIfUserRequired();
         return sCurrentUser.buildExternalStorageAppObbDirs(packageName);
     }
@@ -203,7 +208,7 @@ public final class OsEnvironment {
     /**
      * Generates the path to an application's files.
      */
-    public static File[] buildExternalStorageAppFilesDirs(String packageName) {
+    public static PrivilegedFile[] buildExternalStorageAppFilesDirs(String packageName) {
         throwIfUserRequired();
         return sCurrentUser.buildExternalStorageAppFilesDirs(packageName);
     }
@@ -211,20 +216,25 @@ public final class OsEnvironment {
     /**
      * Generates the path to an application's cache.
      */
-    public static File[] buildExternalStorageAppCacheDirs(String packageName) {
+    public static PrivilegedFile[] buildExternalStorageAppCacheDirs(String packageName) {
         throwIfUserRequired();
         return sCurrentUser.buildExternalStorageAppCacheDirs(packageName);
     }
 
-    public static File[] buildExternalStoragePublicDirs(@NonNull String dirType) {
+    public static PrivilegedFile[] buildExternalStoragePublicDirs(@NonNull String dirType) {
         throwIfUserRequired();
         return sCurrentUser.buildExternalStoragePublicDirs(dirType);
     }
 
+    public static PrivilegedFile[] buildExternalStoragePublicDirs() {
+        throwIfUserRequired();
+        return sCurrentUser.getExternalDirs();
+    }
+
     @NonNull
-    static File getDirectory(String variableName, String defaultPath) {
+    static PrivilegedFile getDirectory(String variableName, String defaultPath) {
         String path = System.getenv(variableName);
-        return path == null ? new File(defaultPath) : new File(path);
+        return path == null ? new PrivilegedFile(defaultPath) : new PrivilegedFile(path);
     }
 
     public static void setUserRequired(boolean userRequired) {
@@ -242,8 +252,8 @@ public final class OsEnvironment {
      * Append path segments to each given base path, returning result.
      */
     @NonNull
-    public static File[] buildPaths(@NonNull File[] base, String... segments) {
-        File[] result = new File[base.length];
+    public static PrivilegedFile[] buildPaths(@NonNull File[] base, String... segments) {
+        PrivilegedFile[] result = new PrivilegedFile[base.length];
         for (int i = 0; i < base.length; i++) {
             result[i] = buildPath(base[i], segments);
         }
@@ -253,13 +263,13 @@ public final class OsEnvironment {
     /**
      * Append path segments to given base path, returning result.
      */
-    public static File buildPath(File base, @NonNull String... segments) {
-        File cur = base;
+    public static PrivilegedFile buildPath(@NonNull File base, @NonNull String... segments) {
+        PrivilegedFile cur = new PrivilegedFile(base.getAbsolutePath());
         for (String segment : segments) {
             if (cur == null) {
-                cur = new File(segment);
+                cur = new PrivilegedFile(segment);
             } else {
-                cur = new File(cur, segment);
+                cur = new PrivilegedFile(cur, segment);
             }
         }
         return cur;
