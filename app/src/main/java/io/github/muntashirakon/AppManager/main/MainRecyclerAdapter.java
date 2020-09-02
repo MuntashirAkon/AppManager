@@ -293,8 +293,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                             .getQuantityString(R.plurals.usage_days, (int) days, days),
                     mActivity.getString(R.string.version), metadata.versionName));
             StringBuilder extBulder = new StringBuilder();
-            if (!TextUtils.isEmpty(metadata.sourceDir)) extBulder.append("apk");
-            if (metadata.dataDirs.length > 0) {
+            if (metadata.flags.backupSource()) extBulder.append("apk");
+            if (metadata.flags.backupData()) {
                 if (extBulder.length() > 0) extBulder.append("+");
                 extBulder.append("data");
             }

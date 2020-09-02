@@ -53,6 +53,7 @@ import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 
 public final class PackageUtils {
     public static final File PACKAGE_STAGING_DIRECTORY = new File("/data/local/tmp");
@@ -81,10 +82,11 @@ public final class PackageUtils {
             else apiCompatFlags = PackageManager.GET_DISABLED_COMPONENTS;
             PackageInfo packageInfo = AppManager.getContext().getPackageManager().getPackageInfo(packageName,
                     PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
-                    | PackageManager.GET_PROVIDERS | apiCompatFlags | PackageManager.GET_SERVICES
-                    | PackageManager.GET_URI_PERMISSION_PATTERNS);
+                            | PackageManager.GET_PROVIDERS | apiCompatFlags | PackageManager.GET_SERVICES
+                            | PackageManager.GET_URI_PERMISSION_PATTERNS);
             return collectComponentClassNames(packageInfo);
-        } catch (PackageManager.NameNotFoundException ignore) {}
+        } catch (PackageManager.NameNotFoundException ignore) {
+        }
         return new HashMap<>();
     }
 
@@ -119,8 +121,8 @@ public final class PackageUtils {
     public static HashMap<String, RulesStorageManager.Type> getFilteredComponents(String packageName, String[] signatures) {
         HashMap<String, RulesStorageManager.Type> filteredComponents = new HashMap<>();
         HashMap<String, RulesStorageManager.Type> components = collectComponentClassNames(packageName);
-        for (String componentName: components.keySet()) {
-            for(String signature: signatures) {
+        for (String componentName : components.keySet()) {
+            for (String signature : signatures) {
                 if (componentName.startsWith(signature) || componentName.contains(signature)) {
                     filteredComponents.put(componentName, components.get(componentName));
                 }
@@ -133,7 +135,7 @@ public final class PackageUtils {
     public static Collection<Integer> getFilteredAppOps(String packageName, @NonNull int[] appOps) {
         List<Integer> filteredAppOps = new ArrayList<>();
         AppOpsService appOpsService = new AppOpsService();
-        for(int appOp: appOps) {
+        for (int appOp : appOps) {
             try {
                 if (appOpsService.checkOperation(appOp, -1, packageName) != AppOpsManager.MODE_IGNORED) {
                     filteredAppOps.add(appOp);
@@ -174,7 +176,7 @@ public final class PackageUtils {
         HashMap<String, RulesStorageManager.Type> componentClasses = collectComponentClassNames(packageName);
         HashMap<String, RulesStorageManager.Type> disabledComponents = new HashMap<>();
         PackageManager pm = AppManager.getContext().getPackageManager();
-        for (String componentName: componentClasses.keySet()) {
+        for (String componentName : componentClasses.keySet()) {
             if (isComponentDisabledByUser(pm, packageName, componentName))
                 disabledComponents.put(componentName, componentClasses.get(componentName));
         }
@@ -185,12 +187,14 @@ public final class PackageUtils {
     public static boolean isComponentDisabledByUser(@NonNull PackageManager pm, @NonNull String packageName, @NonNull String componentClassName) {
         ComponentName componentName = new ComponentName(packageName, componentClassName);
         switch (pm.getComponentEnabledSetting(componentName)) {
-            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER: return true;
+            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER:
+                return true;
             case PackageManager.COMPONENT_ENABLED_STATE_DISABLED:
             case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED:
             case PackageManager.COMPONENT_ENABLED_STATE_ENABLED:
             case PackageManager.COMPONENT_ENABLED_STATE_DEFAULT:
-            default: return false;
+            default:
+                return false;
         }
     }
 
@@ -234,7 +238,8 @@ public final class PackageUtils {
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName,
                     PackageManager.GET_META_DATA);
             return packageManager.getApplicationLabel(applicationInfo).toString();
-        } catch (PackageManager.NameNotFoundException ignore) {}
+        } catch (PackageManager.NameNotFoundException ignore) {
+        }
         return packageName;
     }
 
@@ -242,7 +247,8 @@ public final class PackageUtils {
         ApplicationInfo applicationInfo = null;
         try {
             applicationInfo = packageManager.getApplicationInfo(packageName, 0);
-        } catch (PackageManager.NameNotFoundException ignore) {}
+        } catch (PackageManager.NameNotFoundException ignore) {
+        }
         return applicationInfo != null;
     }
 
@@ -251,7 +257,8 @@ public final class PackageUtils {
         try {
             applicationInfo = packageManager.getApplicationInfo(packageName, 0);
             return applicationInfo.uid;
-        } catch (PackageManager.NameNotFoundException ignore) {}
+        } catch (PackageManager.NameNotFoundException ignore) {
+        }
         return 0;
     }
 
@@ -263,25 +270,36 @@ public final class PackageUtils {
     @NonNull
     public static String getSourceDir(@NonNull ApplicationInfo applicationInfo) {
         String sourceDir = new File(applicationInfo.publicSourceDir).getParent(); // or applicationInfo.sourceDir
-        if (sourceDir == null) throw new RuntimeException("Application source directory cannot be empty");
+        if (sourceDir == null) {
+            throw new RuntimeException("Application source directory cannot be empty");
+        }
         return sourceDir;
     }
 
     @NonNull
-    public static String[] getDataDirs(@NonNull ApplicationInfo applicationInfo, boolean loadExternal) {
+    public static String[] getDataDirs(@NonNull ApplicationInfo applicationInfo, boolean loadExternal, boolean loadMediaObb) {
         ArrayList<String> dataDirs = new ArrayList<>();
-        if (applicationInfo.dataDir == null)
+        if (applicationInfo.dataDir == null) {
             throw new RuntimeException("Data directory cannot be empty.");
+        }
         dataDirs.add(applicationInfo.dataDir);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !applicationInfo.dataDir.equals(applicationInfo.deviceProtectedDataDir)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&
+                !applicationInfo.dataDir.equals(applicationInfo.deviceProtectedDataDir)) {
             dataDirs.add(applicationInfo.deviceProtectedDataDir);
         }
         if (loadExternal) {
-            List<File> externalFiles = new ArrayList<>();
-            externalFiles.addAll(Arrays.asList(OsEnvironment.buildExternalStorageAppDataDirs(applicationInfo.packageName)));
+            List<PrivilegedFile> externalFiles = new ArrayList<>(Arrays.asList(OsEnvironment
+                    .buildExternalStorageAppDataDirs(applicationInfo.packageName)));
+            for (PrivilegedFile externalFile : externalFiles) {
+                if (externalFile != null && externalFile.exists())
+                    dataDirs.add(externalFile.getAbsolutePath());
+            }
+        }
+        if (loadMediaObb) {
+            List<PrivilegedFile> externalFiles = new ArrayList<>();
             externalFiles.addAll(Arrays.asList(OsEnvironment.buildExternalStorageAppMediaDirs(applicationInfo.packageName)));
             externalFiles.addAll(Arrays.asList(OsEnvironment.buildExternalStorageAppObbDirs(applicationInfo.packageName)));
-            for (File externalFile : externalFiles) {
+            for (PrivilegedFile externalFile : externalFiles) {
                 if (externalFile != null && externalFile.exists())
                     dataDirs.add(externalFile.getAbsolutePath());
             }
@@ -298,7 +316,7 @@ public final class PackageUtils {
                     : signingInfo.getSigningCertificateHistory();
         } else signatureArray = packageInfo.signatures;
         ArrayList<String> checksums = new ArrayList<>();
-        for (Signature signature: signatureArray) {
+        for (Signature signature : signatureArray) {
             checksums.add(getSha256Checksum(signature.toByteArray()));
         }
         return checksums.toArray(new String[0]);
@@ -322,7 +340,8 @@ public final class PackageUtils {
                 DigestInputStream digestInputStream = new DigestInputStream(fileInputStream, messageDigest);
                 byte[] buffer = new byte[1024 * 8];
                 //noinspection StatementWithEmptyBody
-                while (digestInputStream.read(buffer) != -1) {}
+                while (digestInputStream.read(buffer) != -1) {
+                }
                 digestInputStream.close();
                 return byteToHexString(messageDigest.digest());
             }
@@ -334,8 +353,8 @@ public final class PackageUtils {
 
     @NonNull
     public static String byteToHexString(@NonNull byte[] digest) {
-        StringBuilder s= new StringBuilder();
-        for (byte b:digest){
+        StringBuilder s = new StringBuilder();
+        for (byte b : digest) {
             s.append(String.format("%02X", b).toLowerCase(Locale.ROOT));
         }
         return s.toString();

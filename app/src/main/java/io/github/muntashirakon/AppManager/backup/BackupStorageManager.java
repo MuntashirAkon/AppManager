@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.backup;
 
 import android.annotation.SuppressLint;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -56,6 +57,9 @@ import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class BackupStorageManager implements AutoCloseable {
+    private static final String EXT_DATA = "/Android/data/";
+    private static final String EXT_MEDIA = "/Android/media/";
+    private static final String EXT_OBB = "/Android/obb/";
     private static final String[] CACHE_DIRS = new String[]{"cache", "code_cache"};
     private static final String SOURCE_PREFIX = "source";
     private static final String DATA_PREFIX = "data";
@@ -136,26 +140,29 @@ public class BackupStorageManager implements AutoCloseable {
         return true;
     }
 
+    @SuppressLint("WrongConstant")
     public boolean backup(BackupFiles.BackupFile backupFile, int userHandle) {
-        MetadataManager.Metadata metadata;
+        final MetadataManager.Metadata metadata;
+        final PackageInfo packageInfo;
+        final ApplicationInfo applicationInfo;
         try {
             PackageManager pm = AppManager.getContext().getPackageManager();
-            @SuppressLint("WrongConstant")
-            PackageInfo packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo);
+            packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo);
+            applicationInfo = packageInfo.applicationInfo;
             // Override existing metadata
             metadata = metadataManager.setupMetadata(packageInfo, userHandle, requestedFlags);
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("BSM - Backup", "Failed to setup metadata.");
-            e.printStackTrace();
             return false;
         }
         // Create a new temporary directory
         PrivilegedFile tmpBackupPath = backupFile.getBackupPath();
         // Backup source
         File dataAppPath = OsEnvironment.getDataAppDirectory();
-        File sourceFile = new File(tmpBackupPath, SOURCE_PREFIX + BACKUP_FILE_SUFFIX + ".");
-        if (!metadata.sourceDir.equals("")) {
-            String sourceDir = metadata.sourceDir;
+        File sourceFile;
+        if (requestedFlags.backupSource()) {
+            sourceFile = new File(tmpBackupPath, SOURCE_PREFIX + BACKUP_FILE_SUFFIX + ".");
+            String sourceDir = PackageUtils.getSourceDir(applicationInfo);
             if (dataAppPath.getAbsolutePath().equals(sourceDir)) {
                 // Backup only the apk file (no split apk support for this type of apk)
                 sourceDir = new File(sourceDir, metadata.apkName).getAbsolutePath();
@@ -166,7 +173,7 @@ public class BackupStorageManager implements AutoCloseable {
                 Log.e("BSM - Backup", "Source backup is requested but no source directory has been backed up.");
                 return backupFile.cleanup();
             }
-            metadata.sourceDirSha256Checksum = BackupUtils.getSha256Sum(sourceFiles);
+            metadata.sourceSha256Checksum = BackupUtils.getSha256Sum(sourceFiles);
         }
         // Backup data
         for (int i = 0; i < metadata.dataDirs.length; ++i) {
@@ -177,7 +184,7 @@ public class BackupStorageManager implements AutoCloseable {
                 Log.e("BSM - Backup", "Failed to backup data directory at " + metadata.dataDirs[i]);
                 return backupFile.cleanup();
             }
-            metadata.dataDirsSha256Checksum[i] = BackupUtils.getSha256Sum(dataFiles);
+            metadata.dataSha256Checksum[i] = BackupUtils.getSha256Sum(dataFiles);
         }
         // Export rules
         if (metadata.hasRules) {
@@ -186,7 +193,8 @@ public class BackupStorageManager implements AutoCloseable {
                  ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName)) {
                 for (RulesStorageManager.Entry entry : cb.getAll()) {
                     // TODO: Do it in ComponentUtils
-                    outputStream.write(String.format("%s\t%s\t%s\t%s\n", packageName, entry.name, entry.type.name(), entry.extra).getBytes());
+                    outputStream.write(String.format("%s\t%s\t%s\t%s\n", packageName, entry.name,
+                            entry.type.name(), entry.extra).getBytes());
                 }
             } catch (IOException e) {
                 Log.e("BSM - Backup", "Rules backup is requested but encountered an error during fetching rules.");
@@ -246,8 +254,7 @@ public class BackupStorageManager implements AutoCloseable {
         PackageInfo packageInfo = null;
         try {
             packageInfo = AppManager.getContext().getPackageManager().getPackageInfo(packageName, PackageUtils.flagSigningInfo);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        } catch (PackageManager.NameNotFoundException ignore) {
         }
         boolean isInstalled = packageInfo != null;
         boolean noChecksumCheck = requestedFlags.noSignatureCheck();
@@ -285,16 +292,11 @@ public class BackupStorageManager implements AutoCloseable {
                 }
             }
             if (!noChecksumCheck) {
-                // Check integrity of source
-                if (TextUtils.isEmpty(metadata.sourceDir)) {
-                    Log.e("BSM - Restore", "Source restore is requested but source_dir metadata is empty.");
-                    return false;
-                }
                 String checksum = BackupUtils.getSha256Sum(backupSourceFiles);
-                if (!checksum.equals(metadata.sourceDirSha256Checksum)) {
+                if (!checksum.equals(metadata.sourceSha256Checksum)) {
                     Log.e("BSM - Restore", "Source file verification failed." +
                             "\nFiles: " + checksum +
-                            "\nMetadata: " + metadata.sourceDirSha256Checksum);
+                            "\nMetadata: " + metadata.sourceSha256Checksum);
                     return false;
                 }
             }
@@ -313,13 +315,13 @@ public class BackupStorageManager implements AutoCloseable {
             }
             // Setup apk files, including split apk
             FreshFile baseApk = new FreshFile(packageStagingDirectory, metadata.apkName);
-            final int splitCount = metadata.splitSources.length;
+            final int splitCount = metadata.splitNames.length;
             String[] allApkNames = new String[splitCount + 1];
             FreshFile[] allApks = new FreshFile[splitCount + 1];
             allApks[0] = baseApk;
             allApkNames[0] = metadata.apkName;
             for (int i = 1; i < allApkNames.length; ++i) {
-                allApkNames[i] = new File(metadata.splitSources[i - 1]).getName();
+                allApkNames[i] = metadata.splitNames[i - 1];
                 allApks[i] = new FreshFile(packageStagingDirectory, allApkNames[i]);
             }
             // Extract apk files to the package staging directory
@@ -347,16 +349,12 @@ public class BackupStorageManager implements AutoCloseable {
                 Log.e("BSM - Restore", "Apparently the install wasn't complete in the previous section.");
                 return false;
             }
-            File sourceDir = new File(packageInfo.applicationInfo.publicSourceDir).getParentFile();
+            File sourceDir = new File(PackageUtils.getSourceDir(packageInfo.applicationInfo));
             // Restore source directory only if instruction set is matched or app path is not /data/app
             // Or only apk restoring is requested
             if (!requestedFlags.backupOnlyApk()  // Only apk restoring is not requested
                     && metadata.instructionSet.equals(instructionSet)  // Instruction set matched
                     && !dataAppPath.equals(sourceDir)) {  // Path is not /data/app
-                if (sourceDir == null) {
-                    Log.e("BSM - Restore", "Apparently the source directory was null which should never be.");
-                    return false;
-                }
                 // Restore source: Get installed source directory and copy backups directly
                 if (!TarUtils.extract(TarUtils.TAR_GZIP, backupSourceFiles, sourceDir, null, null)) {
                     Log.e("BSM - Restore", "Failed to restore the source files.");
@@ -386,10 +384,10 @@ public class BackupStorageManager implements AutoCloseable {
                         return false;
                     }
                     checksum = BackupUtils.getSha256Sum(dataFiles);
-                    if (!checksum.equals(metadata.dataDirsSha256Checksum[i])) {
+                    if (!checksum.equals(metadata.dataSha256Checksum[i])) {
                         Log.e("BSM - Restore", "Data file verification failed for index " + i + "." +
                                 "\nFiles: " + checksum +
-                                "\nMetadata: " + metadata.dataDirsSha256Checksum[i]);
+                                "\nMetadata: " + metadata.dataSha256Checksum[i]);
                         return false;
                     }
                 }
@@ -399,7 +397,7 @@ public class BackupStorageManager implements AutoCloseable {
             // Restore backups
             String dataSource;
             for (int i = 0; i < metadata.dataDirs.length; ++i) {
-                dataSource = metadata.dataDirs[i];
+                dataSource = metadata.dataDirs[i];  // FIXME: get data dir for new user handle (by replacing the user handle)
                 dataFiles = getDataFiles(backupPath, i);
                 Pair<Integer, Integer> uidAndGid = null;
                 if (RunnerUtils.fileExists(dataSource)) {
@@ -409,17 +407,31 @@ public class BackupStorageManager implements AutoCloseable {
                     Log.e("BSM - Restore", "Data restore is requested but there are no data files for index " + i + ".");
                     return false;
                 }
-                // Skip restoring external data if requested
-                if (!requestedFlags.backupExtData() && dataSource.startsWith("/storage") && dataSource.startsWith("/sdcard"))
-                    continue;
+                // External storage checks
+                if (dataSource.startsWith("/storage") || dataSource.startsWith("/sdcard")) {
+                    // Skip if external data restore is not requested
+                    if (!requestedFlags.backupExtData() && dataSource.contains(EXT_DATA))
+                        continue;
+                    // Skip if media/obb restore not requested
+                    if (!requestedFlags.backupMediaObb() && (dataSource.contains(EXT_MEDIA)
+                            || dataSource.contains(EXT_OBB))) continue;
+                }
                 // Fix problem accessing external directory in Android API < 23
-                if(Build.VERSION.SDK_INT < 23) {
-                    if(dataSource.contains("/storage/emulated/")) {
+                if (Build.VERSION.SDK_INT < 23) {
+                    if (dataSource.contains("/storage/emulated/")) {
                         dataSource = dataSource.replace("/storage/emulated/", "/mnt/shell/emulated/");
                     }
                 }
+                // Create data folder if not exists
+                PrivilegedFile dataSourceFile = new PrivilegedFile(dataSource);
+                if (!dataSourceFile.exists()) {
+                    if (!dataSourceFile.mkdirs()) {
+                        Log.e("BSM - Restore", "Failed to create data folder for index " + i + ".");
+                        return false;
+                    }
+                }
                 // Extract data to the data directory
-                if (!TarUtils.extract(TarUtils.TAR_GZIP, dataFiles, new File(dataSource),
+                if (!TarUtils.extract(TarUtils.TAR_GZIP, dataFiles, dataSourceFile,
                         null, requestedFlags.excludeCache() ? CACHE_DIRS : null)) {
                     Log.e("BSM - Restore", "Failed to restore data files for index " + i + ".");
                     return false;

@@ -17,12 +17,10 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
-import android.annotation.SuppressLint;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Process;
 import android.text.TextUtils;
 
 import org.json.JSONArray;
@@ -33,12 +31,8 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringDef;
 import dalvik.system.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.misc.Users;
@@ -51,23 +45,6 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 public final class MetadataManager implements Closeable {
     public static final String META_FILE = "meta.am.v1";
 
-    @StringDef(value = {
-            DATA_USER,
-            DATA_USER_DE,
-            DATA_EXT_DATA,
-            DATA_MEDIA,
-            DATA_OBB
-    })
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface DataDirType {
-    }
-
-    public static final String DATA_USER = "user";
-    public static final String DATA_USER_DE = "user_de";
-    public static final String DATA_EXT_DATA = "data";
-    public static final String DATA_OBB = "obb";
-    public static final String DATA_MEDIA = "media";
-
     // For an extended documentation, see https://github.com/MuntashirAkon/AppManager/issues/30
     // All the attributes must be non-null
     public static class Metadata {
@@ -75,24 +52,22 @@ public final class MetadataManager implements Closeable {
         public String packageName;  // package_name
         public String versionName;  // version_name
         public long versionCode;  // version_code
-        public String sourceDir;  // source_dir
-        @DataDirType
         public String[] dataDirs;  // data_dirs
         public boolean isSystem;  // is_system
         public boolean isSplitApk;  // is_split_apk
+        public String[] splitConfigs;  // split_configs
         public String[] splitNames;  // split_names
-        public String[] splitSources;  // split_sources
         public boolean hasRules;  // has_rules
         public long backupTime;  // backup_time
         public String[] certSha256Checksum;  // cert_sha256_checksum
-        public String sourceDirSha256Checksum;  // source_dir_sha256_checksum
-        public String[] dataDirsSha256Checksum;  // data_dirs_sha256_checksum
+        public String sourceSha256Checksum;  // source_dir_sha256_checksum
+        public String[] dataSha256Checksum;  // data_dirs_sha256_checksum
         public int mode = 0;  // mode
         public int version = 1;  // version
         public String apkName;  // apk_name
         public String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);  // instruction_set
-        public int flags = BackupFlags.BACKUP_FLAGS_COMPAT;  // flags, total is set for compatibility
-        public int userHandle = Process.myUid() / 100000;  // user_handle
+        public BackupFlags flags;  // flags
+        public int userHandle;  // user_handle
         @TarUtils.TarType
         public String tarType = TarUtils.TAR_GZIP;  // tar_type
         public boolean keyStore = false;  // key_store
@@ -149,33 +124,24 @@ public final class MetadataManager implements Closeable {
         this.metadata.packageName = rootObject.getString("package_name");
         this.metadata.versionName = rootObject.getString("version_name");
         this.metadata.versionCode = rootObject.getLong("version_code");
-        this.metadata.sourceDir = rootObject.getString("source_dir");
         this.metadata.dataDirs = getArrayFromJSONArray(rootObject.getJSONArray("data_dirs"));
         this.metadata.isSystem = rootObject.getBoolean("is_system");
         this.metadata.isSplitApk = rootObject.getBoolean("is_split_apk");
+        this.metadata.splitConfigs = getArrayFromJSONArray(rootObject.getJSONArray("split_configs"));
         this.metadata.splitNames = getArrayFromJSONArray(rootObject.getJSONArray("split_names"));
-        this.metadata.splitSources = getArrayFromJSONArray(rootObject.getJSONArray("split_sources"));
         this.metadata.hasRules = rootObject.getBoolean("has_rules");
         this.metadata.backupTime = rootObject.getLong("backup_time");
         this.metadata.certSha256Checksum = getArrayFromJSONArray(rootObject.getJSONArray("cert_sha256_checksum"));
-        this.metadata.sourceDirSha256Checksum = rootObject.getString("source_dir_sha256_checksum");
-        this.metadata.dataDirsSha256Checksum = getArrayFromJSONArray(rootObject.getJSONArray("data_dirs_sha256_checksum"));
+        this.metadata.sourceSha256Checksum = rootObject.getString("source_sha256_checksum");
+        this.metadata.dataSha256Checksum = getArrayFromJSONArray(rootObject.getJSONArray("data_sha256_checksum"));
         this.metadata.mode = rootObject.getInt("mode");
         this.metadata.version = rootObject.getInt("version");
         this.metadata.apkName = rootObject.getString("apk_name");
         this.metadata.instructionSet = rootObject.getString("instruction_set");
-        this.metadata.flags = rootObject.getInt("flags");
+        this.metadata.flags = new BackupFlags(rootObject.getInt("flags"));
         this.metadata.userHandle = rootObject.getInt("user_handle");
-        try {
-            this.metadata.tarType = rootObject.getString("tar_type");
-        } catch (JSONException e) {
-            this.metadata.tarType = TarUtils.TAR_GZIP;
-        }
-        try {
-            this.metadata.keyStore = rootObject.getBoolean("key_store");
-        } catch (JSONException e) {
-            this.metadata.keyStore = false;
-        }
+        this.metadata.tarType = rootObject.getString("tar_type");
+        this.metadata.keyStore = rootObject.getBoolean("key_store");
     }
 
     synchronized public void writeMetadata(@NonNull BackupFiles.BackupFile backupFile)
@@ -188,22 +154,21 @@ public final class MetadataManager implements Closeable {
             rootObject.put("package_name", metadata.packageName);
             rootObject.put("version_name", metadata.versionName);
             rootObject.put("version_code", metadata.versionCode);
-            rootObject.put("source_dir", metadata.sourceDir);
             rootObject.put("data_dirs", getJSONArrayFromArray(metadata.dataDirs));
             rootObject.put("is_system", metadata.isSystem);
             rootObject.put("is_split_apk", metadata.isSplitApk);
+            rootObject.put("split_configs", getJSONArrayFromArray(metadata.splitConfigs));
             rootObject.put("split_names", getJSONArrayFromArray(metadata.splitNames));
-            rootObject.put("split_sources", getJSONArrayFromArray(metadata.splitSources));
             rootObject.put("has_rules", metadata.hasRules);
             rootObject.put("backup_time", metadata.backupTime);
             rootObject.put("cert_sha256_checksum", getJSONArrayFromArray(metadata.certSha256Checksum));
-            rootObject.put("source_dir_sha256_checksum", metadata.sourceDirSha256Checksum);
-            rootObject.put("data_dirs_sha256_checksum", getJSONArrayFromArray(metadata.dataDirsSha256Checksum));
+            rootObject.put("source_sha256_checksum", metadata.sourceSha256Checksum);
+            rootObject.put("data_sha256_checksum", getJSONArrayFromArray(metadata.dataSha256Checksum));
             rootObject.put("mode", metadata.mode);
             rootObject.put("version", metadata.version);
             rootObject.put("apk_name", metadata.apkName);
             rootObject.put("instruction_set", metadata.instructionSet);
-            rootObject.put("flags", metadata.flags);
+            rootObject.put("flags", metadata.flags.getFlags());
             rootObject.put("user_handle", metadata.userHandle);
             rootObject.put("tar_type", metadata.tarType);
             rootObject.put("key_store", metadata.keyStore);
@@ -232,6 +197,7 @@ public final class MetadataManager implements Closeable {
         PackageManager pm = appManager.getPackageManager();
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         metadata = new Metadata();
+        metadata.flags = requestedFlags;
         metadata.userHandle = userHandle;
         metadata.tarType = TarUtils.TAR_GZIP;  // FIXME: Load from user prefs
         metadata.keyStore = false;  // FIXME: Get from /data/misc/keystore/user/{user_handle}/{UID}_{KEY_NAME}_{alias}
@@ -239,25 +205,26 @@ public final class MetadataManager implements Closeable {
         metadata.packageName = packageName;
         metadata.versionName = packageInfo.versionName;
         metadata.versionCode = PackageUtils.getVersionCode(packageInfo);
-        if (requestedFlags.backupSource()) {
-            metadata.sourceDir = PackageUtils.getSourceDir(applicationInfo);
-        } else metadata.sourceDir = "";
         metadata.apkName = new File(applicationInfo.sourceDir).getName();
         if (requestedFlags.backupData()) {
-            metadata.dataDirs = PackageUtils.getDataDirs(applicationInfo, requestedFlags.backupExtData());
+            metadata.dataDirs = PackageUtils.getDataDirs(applicationInfo,
+                    requestedFlags.backupExtData(), requestedFlags.backupMediaObb());
         }
         metadata.dataDirs = ArrayUtils.defeatNullable(metadata.dataDirs);
         metadata.isSystem = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         metadata.isSplitApk = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            metadata.splitNames = applicationInfo.splitNames;
-            if (metadata.splitNames != null) {
+            metadata.splitConfigs = applicationInfo.splitNames;
+            if (metadata.splitConfigs != null) {
                 metadata.isSplitApk = true;
-                metadata.splitSources = applicationInfo.splitPublicSourceDirs;
+                metadata.splitNames = new String[metadata.splitConfigs.length];
+                for (int i = 0; i < applicationInfo.splitPublicSourceDirs.length; ++i) {
+                    metadata.splitNames[i] = new File(applicationInfo.splitPublicSourceDirs[i]).getName();
+                }
             }
         }
+        metadata.splitConfigs = ArrayUtils.defeatNullable(metadata.splitConfigs);
         metadata.splitNames = ArrayUtils.defeatNullable(metadata.splitNames);
-        metadata.splitSources = ArrayUtils.defeatNullable(metadata.splitSources);
         metadata.hasRules = false;
         if (requestedFlags.backupRules()) {
             try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName)) {
@@ -267,35 +234,8 @@ public final class MetadataManager implements Closeable {
         metadata.backupTime = 0;
         metadata.certSha256Checksum = PackageUtils.getSigningCertSha256Checksum(packageInfo);
         // Initialize checksums
-        metadata.sourceDirSha256Checksum = "";
-        metadata.dataDirsSha256Checksum = new String[metadata.dataDirs.length];
+        metadata.sourceSha256Checksum = "";
+        metadata.dataSha256Checksum = new String[metadata.dataDirs.length];
         return metadata;
-    }
-
-    @NonNull
-    public String[] buildDataDirTypes(@Nullable String[] dataDir) {
-        dataDir = ArrayUtils.defeatNullable(dataDir);
-        for (int i = 0; i < dataDir.length; ++i) {
-            dataDir[i] = dataDirToDataDirType(dataDir[i]);
-        }
-        return dataDir;
-    }
-
-    @SuppressLint("SdCardPath")
-    @DataDirType
-    public String dataDirToDataDirType(@NonNull String dir) {
-        if (dir.startsWith("/data/user/") || dir.startsWith("/data/data/")) {
-            return DATA_USER;
-        } else if (dir.startsWith("/data/user_de/")) {
-            return DATA_USER_DE;
-        } else if (dir.contains("/Android/data/")) {
-            return DATA_EXT_DATA;
-        } else if (dir.contains("/Android/media")) {
-            return DATA_MEDIA;
-        } else if (dir.contains("/Android/obb")) {
-            return DATA_OBB;
-        } else {
-            throw new IllegalArgumentException("Cannot infer directory type.");
-        }
     }
 }

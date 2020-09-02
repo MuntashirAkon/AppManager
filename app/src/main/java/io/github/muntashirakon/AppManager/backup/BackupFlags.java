@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 
 import androidx.annotation.IntDef;
 
-class BackupFlags {
+public final class BackupFlags {
     @IntDef(flag = true, value = {
             BACKUP_NOTHING,
             BACKUP_ALL_USERS,
@@ -65,47 +65,47 @@ class BackupFlags {
         return flags;
     }
 
-    boolean isEmpty() {
+    public boolean isEmpty() {
         return flags == 0;
     }
 
-    boolean backupSource() {
+    public boolean backupSource() {
         return (flags & BACKUP_SOURCE) != 0;
     }
 
-    boolean backupOnlyApk() {
+    public boolean backupOnlyApk() {
         return (flags & BACKUP_SOURCE_APK_ONLY) != 0;
     }
 
-    boolean backupData() {
+    public boolean backupData() {
         return (flags & BACKUP_DATA) != 0;
     }
 
-    boolean backupExtData() {
+    public boolean backupExtData() {
         return (flags & BACKUP_EXT_DATA) != 0;
     }
 
-    boolean backupMediaObb() {
+    public boolean backupMediaObb() {
         return (flags & BACKUP_EXT_OBB_MEDIA) != 0;
     }
 
-    boolean backupRules() {
+    public boolean backupRules() {
         return (flags & BACKUP_RULES) != 0;
     }
 
-    boolean excludeCache() {
+    public boolean excludeCache() {
         return (flags & BACKUP_EXCLUDE_CACHE) != 0;
     }
 
-    boolean noSignatureCheck() {
+    public boolean noSignatureCheck() {
         return (flags & BACKUP_NO_SIGNATURE_CHECK) != 0;
     }
 
-    boolean backupMultiple() {
+    public boolean backupMultiple() {
         return (flags & BACKUP_MULTIPLE) != 0;
     }
 
-    boolean backupAllUsers() {
+    public boolean backupAllUsers() {
         return (flags & BACKUP_ALL_USERS) != 0;
     }
 }
