@@ -44,6 +44,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.AppOps;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -111,6 +112,8 @@ public class SettingsActivity extends AppCompatActivity {
         // Root mode switcher
         rootSwitcher.setOnCheckedChangeListener((buttonView, isChecked) -> {
             appPref.setPref(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, isChecked);
+            // Reset runner
+            Runner.getInstance();
             // Change server type based on root status
             AppOps.updateConfig(this);
             // Toggle GCB view based on root status

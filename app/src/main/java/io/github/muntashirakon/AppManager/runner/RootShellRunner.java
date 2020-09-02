@@ -31,6 +31,7 @@ import eu.chainfire.libsuperuser.Shell;
 
 public class RootShellRunner extends Runner {
     private static RootShellRunner rootShellRunner;
+
     public static RootShellRunner getInstance() {
         if (rootShellRunner == null) rootShellRunner = new RootShellRunner();
         return rootShellRunner;

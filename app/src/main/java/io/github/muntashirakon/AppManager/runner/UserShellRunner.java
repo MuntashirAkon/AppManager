@@ -31,6 +31,7 @@ import eu.chainfire.libsuperuser.Shell;
 
 public class UserShellRunner extends Runner {
     private static UserShellRunner rootShellRunner;
+
     public static UserShellRunner getInstance() {
         if (rootShellRunner == null) rootShellRunner = new UserShellRunner();
         return rootShellRunner;
@@ -49,8 +50,8 @@ public class UserShellRunner extends Runner {
         List<String> stderr = Collections.synchronizedList(new ArrayList<>());
         AtomicInteger retVal = new AtomicInteger(FAILED_RET_VAL);
         try {
-            retVal.set(eu.chainfire.libsuperuser.Shell.Pool.SH.run(TextUtils.join("; ", commands), stdout, stderr, true));
-            if (stderr.size() > 0) Log.e("RootShellRunner", TextUtils.join("\n", stderr));
+            retVal.set(Shell.Pool.SH.run(TextUtils.join("; ", commands), stdout, stderr, true));
+            if (stderr.size() > 0) Log.e("UserShellRunner", TextUtils.join("\n", stderr));
         } catch (Shell.ShellDiedException e) {
             e.printStackTrace();
         }
