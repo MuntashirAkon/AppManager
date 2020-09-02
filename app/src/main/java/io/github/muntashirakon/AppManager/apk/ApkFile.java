@@ -285,9 +285,15 @@ public class ApkFile implements AutoCloseable, Parcelable {
             }
             if (writableExtDir == null) throw new IOException("Couldn't find any writable Obb dir");
             final PrivilegedFile writableObbDir = new PrivilegedFile(writableExtDir.getAbsolutePath() + "/" + OBB_DIR + "/" + packageName);
-            PrivilegedFile[] oldObbFiles = null;
             if (writableObbDir.exists()) {
-                oldObbFiles = writableObbDir.listFiles();
+                PrivilegedFile[] oldObbFiles = writableObbDir.listFiles();
+                // Delete old files
+                if (oldObbFiles != null) {
+                    for (PrivilegedFile oldFile : oldObbFiles) {
+                        //noinspection ResultOfMethodCallIgnored
+                        oldFile.delete();
+                    }
+                }
             } else {
                 if (!writableObbDir.mkdirs()) return false;
             }
@@ -316,13 +322,6 @@ public class ApkFile implements AutoCloseable, Parcelable {
                             }
                         }
                     }
-                }
-            }
-            // Delete old files
-            if (oldObbFiles != null) {
-                for (PrivilegedFile oldFile : oldObbFiles) {
-                    //noinspection ResultOfMethodCallIgnored
-                    oldFile.delete();
                 }
             }
             return true;
