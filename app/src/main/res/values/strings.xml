@@ -535,4 +535,6 @@
     <string name="failed_to_extract_obb_files">Failed to extract obb files</string>
     <string name="obb_files_extracted_successfully">Obb files extracted successfully</string>
     <string name="source">Source</string>
+    <string name="backup_multiple">Backup multiple</string>
+    <string name="backup_all_users">All users</string>
 </resources>

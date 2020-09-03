@@ -21,6 +21,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -30,6 +32,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 
 public class AppPref {
@@ -42,6 +45,7 @@ public class AppPref {
         PREF_ADB_MODE_ENABLED_BOOL,
         PREF_APP_OP_SHOW_DEFAULT_BOOL,
         PREF_APP_THEME_INT,
+        PREF_BACKUP_FLAGS_INT,
         PREF_ENABLE_KILL_FOR_SYSTEM_BOOL,
         PREF_GLOBAL_BLOCKING_ENABLED_BOOL,
         PREF_LAST_VERSION_CODE_LONG,
@@ -52,30 +56,41 @@ public class AppPref {
         PREF_USAGE_ACCESS_ENABLED_BOOL;
 
         public static final String[] keys = new String[values().length];
-        public static final @Type int[] types = new int[values().length];
+        public static final @Type
+        int[] types = new int[values().length];
         public static final List<PrefKey> prefKeyList = Arrays.asList(values());
+
         static {
             String keyStr;
             int typeSeparator;
             PrefKey[] keyValues = values();
-            for (int i = 0; i<keyValues.length; ++i) {
+            for (int i = 0; i < keyValues.length; ++i) {
                 keyStr = keyValues[i].name();
                 typeSeparator = keyStr.lastIndexOf('_');
                 keys[i] = keyStr.substring(PREF_SKIP, typeSeparator).toLowerCase(Locale.ROOT);
-                types[i] = inferType(keyStr.substring(typeSeparator+1));
+                types[i] = inferType(keyStr.substring(typeSeparator + 1));
             }
         }
+
         public static int indexOf(PrefKey key) {
             return prefKeyList.indexOf(key);
         }
-        private static @Type int inferType(@NonNull String typeName) {
+
+        private static @Type
+        int inferType(@NonNull String typeName) {
             switch (typeName) {
-                case "BOOL": return TYPE_BOOLEAN;
-                case "FLOAT": return TYPE_FLOAT;
-                case "INT": return TYPE_INTEGER;
-                case "LONG": return TYPE_LONG;
-                case "STR": return TYPE_STRING;
-                default: throw new IllegalArgumentException("Unsupported type.");
+                case "BOOL":
+                    return TYPE_BOOLEAN;
+                case "FLOAT":
+                    return TYPE_FLOAT;
+                case "INT":
+                    return TYPE_INTEGER;
+                case "LONG":
+                    return TYPE_LONG;
+                case "STR":
+                    return TYPE_STRING;
+                default:
+                    throw new IllegalArgumentException("Unsupported type.");
             }
         }
     }
@@ -87,14 +102,18 @@ public class AppPref {
             TYPE_LONG,
             TYPE_STRING
     })
-    public @interface Type {}
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Type {
+    }
+
     public static final int TYPE_BOOLEAN = 0;
-    public static final int TYPE_FLOAT   = 1;
+    public static final int TYPE_FLOAT = 1;
     public static final int TYPE_INTEGER = 2;
-    public static final int TYPE_LONG    = 3;
-    public static final int TYPE_STRING  = 4;
+    public static final int TYPE_LONG = 3;
+    public static final int TYPE_STRING = 4;
 
     private static AppPref appPref;
+
     public static AppPref getInstance() {
         if (appPref == null) {
             Context context = AppManager.getInstance();
@@ -103,15 +122,21 @@ public class AppPref {
         return appPref;
     }
 
-    public static @NonNull Object get(PrefKey key) {
+    @NonNull
+    public static Object get(PrefKey key) {
         int index = PrefKey.indexOf(key);
         AppPref appPref = getInstance();
         switch (PrefKey.types[index]) {
-            case TYPE_BOOLEAN: return appPref.preferences.getBoolean(PrefKey.keys[index], (boolean) appPref.getDefaultValue(PrefKey.prefKeyList.get(index)));
-            case TYPE_FLOAT: return appPref.preferences.getFloat(PrefKey.keys[index], (float) appPref.getDefaultValue(PrefKey.prefKeyList.get(index)));
-            case TYPE_INTEGER: return appPref.preferences.getInt(PrefKey.keys[index], (int) appPref.getDefaultValue(PrefKey.prefKeyList.get(index)));
-            case TYPE_LONG: return appPref.preferences.getLong(PrefKey.keys[index], (long) appPref.getDefaultValue(PrefKey.prefKeyList.get(index)));
-            case TYPE_STRING: return Objects.requireNonNull(appPref.preferences.getString(PrefKey.keys[index], (String) appPref.getDefaultValue(PrefKey.prefKeyList.get(index))));
+            case TYPE_BOOLEAN:
+                return appPref.preferences.getBoolean(PrefKey.keys[index], (boolean) appPref.getDefaultValue(PrefKey.prefKeyList.get(index)));
+            case TYPE_FLOAT:
+                return appPref.preferences.getFloat(PrefKey.keys[index], (float) appPref.getDefaultValue(PrefKey.prefKeyList.get(index)));
+            case TYPE_INTEGER:
+                return appPref.preferences.getInt(PrefKey.keys[index], (int) appPref.getDefaultValue(PrefKey.prefKeyList.get(index)));
+            case TYPE_LONG:
+                return appPref.preferences.getLong(PrefKey.keys[index], (long) appPref.getDefaultValue(PrefKey.prefKeyList.get(index)));
+            case TYPE_STRING:
+                return Objects.requireNonNull(appPref.preferences.getString(PrefKey.keys[index], (String) appPref.getDefaultValue(PrefKey.prefKeyList.get(index))));
         }
         throw new IllegalArgumentException("Unknown key or type.");
     }
@@ -132,8 +157,10 @@ public class AppPref {
         return isRootEnabled() || isAdbEnabled();
     }
 
-    private @NonNull SharedPreferences preferences;
-    private @NonNull SharedPreferences.Editor editor;
+    private @NonNull
+    SharedPreferences preferences;
+    private @NonNull
+    SharedPreferences.Editor editor;
 
     @SuppressLint("CommitPrefEdits")
     private AppPref(@NonNull SharedPreferences preferences) {
@@ -146,6 +173,7 @@ public class AppPref {
         int index = PrefKey.indexOf(key);
         return preferences.getBoolean(PrefKey.keys[index], (boolean) getDefaultValue(PrefKey.prefKeyList.get(index)));
     }
+
     public int getInt(PrefKey key) {
         int index = PrefKey.indexOf(key);
         return preferences.getInt(PrefKey.keys[index], (int) getDefaultValue(PrefKey.prefKeyList.get(index)));
@@ -163,7 +191,7 @@ public class AppPref {
     }
 
     private void init() {
-        for (int i = 0; i<PrefKey.keys.length; ++i) {
+        for (int i = 0; i < PrefKey.keys.length; ++i) {
             if (!preferences.contains(PrefKey.keys[i])) {
                 switch (PrefKey.types[i]) {
                     case TYPE_BOOLEAN:
@@ -178,26 +206,39 @@ public class AppPref {
                     case TYPE_LONG:
                         editor.putLong(PrefKey.keys[i], (long) getDefaultValue(PrefKey.prefKeyList.get(i)));
                         break;
-                    case TYPE_STRING: editor.putString(PrefKey.keys[i], (String) getDefaultValue(PrefKey.prefKeyList.get(i)));
+                    case TYPE_STRING:
+                        editor.putString(PrefKey.keys[i], (String) getDefaultValue(PrefKey.prefKeyList.get(i)));
                 }
             }
         }
         editor.apply();
     }
 
-    private @NonNull Object getDefaultValue(@NonNull PrefKey key) {
+    private @NonNull
+    Object getDefaultValue(@NonNull PrefKey key) {
         switch (key) {
-            case PREF_ROOT_MODE_ENABLED_BOOL: return Utils.isRootGiven();
+            case PREF_BACKUP_FLAGS_INT:
+                return BackupFlags.BACKUP_SOURCE | BackupFlags.BACKUP_DATA
+                        | BackupFlags.BACKUP_RULES | BackupFlags.BACKUP_EXCLUDE_CACHE
+                        | BackupFlags.BACKUP_SOURCE_APK_ONLY;
+            case PREF_ROOT_MODE_ENABLED_BOOL:
+                return Utils.isRootGiven();
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_USAGE_ACCESS_ENABLED_BOOL:
-            case PREF_SHOW_DISCLAIMER_BOOL: return true;
+            case PREF_SHOW_DISCLAIMER_BOOL:
+                return true;
             case PREF_ADB_MODE_ENABLED_BOOL:
             case PREF_ENABLE_KILL_FOR_SYSTEM_BOOL:
-            case PREF_GLOBAL_BLOCKING_ENABLED_BOOL: return false;
-            case PREF_LAST_VERSION_CODE_LONG: return 0L;
-            case PREF_APP_THEME_INT: return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
-            case PREF_MAIN_WINDOW_FILTER_FLAGS_INT: return MainActivity.FILTER_NO_FILTER;
-            case PREF_MAIN_WINDOW_SORT_ORDER_INT: return MainActivity.SORT_BY_APP_LABEL;
+            case PREF_GLOBAL_BLOCKING_ENABLED_BOOL:
+                return false;
+            case PREF_LAST_VERSION_CODE_LONG:
+                return 0L;
+            case PREF_APP_THEME_INT:
+                return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+            case PREF_MAIN_WINDOW_FILTER_FLAGS_INT:
+                return MainActivity.FILTER_NO_FILTER;
+            case PREF_MAIN_WINDOW_SORT_ORDER_INT:
+                return MainActivity.SORT_BY_APP_LABEL;
         }
         throw new IllegalArgumentException("Pref key not found.");
     }

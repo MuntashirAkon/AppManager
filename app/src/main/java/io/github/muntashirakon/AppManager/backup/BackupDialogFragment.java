@@ -30,7 +30,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import androidx.annotation.IntDef;
@@ -63,9 +62,7 @@ public class BackupDialogFragment extends DialogFragment {
     public static final int MODE_RESTORE = 169;
     public static final int MODE_DELETE = 642;
 
-    @BackupFlags.BackupFlag
-    private int flags = BackupFlags.BACKUP_SOURCE | BackupFlags.BACKUP_DATA | BackupFlags.BACKUP_RULES
-            | BackupFlags.BACKUP_EXCLUDE_CACHE | BackupFlags.BACKUP_SOURCE_APK_ONLY;
+    private BackupFlags flags = BackupFlags.fromPref();
     @ActionMode
     private int mode = MODE_BACKUP;
     private List<String> packageNames;
@@ -89,10 +86,10 @@ public class BackupDialogFragment extends DialogFragment {
         void onActionBegin(@ActionMode int mode);
     }
 
-    private @Nullable
-    ActionCompleteInterface actionCompleteInterface;
-    private @Nullable
-    ActionBeginInterface actionBeginInterface;
+    @Nullable
+    private ActionCompleteInterface actionCompleteInterface;
+    @Nullable
+    private ActionBeginInterface actionBeginInterface;
 
     public void setOnActionCompleteListener(@NonNull ActionCompleteInterface actionCompleteInterface) {
         this.actionCompleteInterface = actionCompleteInterface;
@@ -109,14 +106,6 @@ public class BackupDialogFragment extends DialogFragment {
         Bundle args = requireArguments();
         packageNames = args.getStringArrayList(ARG_PACKAGES);
         if (packageNames == null) return super.onCreateDialog(savedInstanceState);
-        boolean[] checkedItems = new boolean[8];
-        Arrays.fill(checkedItems, true);
-        // Set external data to false
-        checkedItems[2] = false;
-        // Set obb & media files to false
-        checkedItems[7] = false;
-        // Set skip signature checks to false
-        checkedItems[5] = false;
         // Check if backup exists for all apps
         boolean backupExists = true;
         for (String packageName : packageNames) {
@@ -128,10 +117,11 @@ public class BackupDialogFragment extends DialogFragment {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
                 .setTitle(packageNames.size() == 1 ? PackageUtils.getPackageLabel(activity
                         .getPackageManager(), packageNames.get(0)) : getString(R.string.backup_options))
-                .setMultiChoiceItems(R.array.backup_flags, checkedItems, (dialog, which, isChecked) -> {
-                    if (isChecked) flags |= (1 << which);
-                    else flags &= ~(1 << which);
-                })
+                .setMultiChoiceItems(R.array.backup_flags, flags.flagsToCheckedItems(),
+                        (dialog, flag, isChecked) -> {
+                            if (isChecked) flags.addFlag(flag);
+                            else flags.removeFlag(flag);
+                        })
                 .setPositiveButton(R.string.backup, (dialog, which) -> {
                     mode = MODE_BACKUP;
                     if (requestExternalStoragePermissions(activity)) {
@@ -181,7 +171,7 @@ public class BackupDialogFragment extends DialogFragment {
         intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(packageNames));
         intent.putExtra(BatchOpsService.EXTRA_OP, op);
         Bundle args = new Bundle();
-        args.putInt(BatchOpsManager.ARG_FLAGS, flags);
+        args.putInt(BatchOpsManager.ARG_FLAGS, flags.getFlags());
         intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
         ContextCompat.startForegroundService(activity, intent);
     }

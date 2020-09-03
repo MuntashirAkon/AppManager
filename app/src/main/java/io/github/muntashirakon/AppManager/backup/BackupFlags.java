@@ -19,8 +19,11 @@ package io.github.muntashirakon.AppManager.backup;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Arrays;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public final class BackupFlags {
     @IntDef(flag = true, value = {
@@ -49,13 +52,19 @@ public final class BackupFlags {
     public static final int BACKUP_RULES = 1 << 4;
     public static final int BACKUP_NO_SIGNATURE_CHECK = 1 << 5;
     public static final int BACKUP_SOURCE_APK_ONLY = 1 << 6;
-    public static final int BACKUP_EXT_OBB_MEDIA = 1 << 7;  // TODO
+    public static final int BACKUP_EXT_OBB_MEDIA = 1 << 7;
     public static final int BACKUP_ALL_USERS = 1 << 8;  // TODO
     public static final int BACKUP_MULTIPLE = 1 << 9;  // TODO
-    public static final int BACKUP_FLAGS_COMPAT = (1 << 8) - 1;
+
+    public static final int BACKUP_TOTAL = 10;  // TODO
 
     @BackupFlag
     private int flags;
+
+    @NonNull
+    public static BackupFlags fromPref() {
+        return new BackupFlags((Integer) AppPref.get(AppPref.PrefKey.PREF_BACKUP_FLAGS_INT));
+    }
 
     BackupFlags(@BackupFlag int flags) {
         this.flags = flags;
@@ -63,6 +72,24 @@ public final class BackupFlags {
 
     public int getFlags() {
         return flags;
+    }
+
+    public void addFlag(@BackupFlag int flag) {
+        this.flags |= (1 << flag);
+    }
+
+    public void removeFlag(@BackupFlag int flag) {
+        this.flags &= ~(1 << flag);
+    }
+
+    @NonNull
+    public boolean[] flagsToCheckedItems() {
+        boolean[] checkedItems = new boolean[BackupFlags.BACKUP_TOTAL];
+        Arrays.fill(checkedItems, false);
+        for (int i = 0; i < BackupFlags.BACKUP_TOTAL; ++i) {
+            if ((flags & (1 << i)) != 0) checkedItems[i] = true;
+        }
+        return checkedItems;
     }
 
     public boolean isEmpty() {
