@@ -194,18 +194,8 @@ public final class DataTransmission {
      * @throws IOException When it fails to read the message received
      */
     public void handleReceive() throws IOException {
-        if (!async) {
-            return;
-        }
-        while (running) {
-//                int len = inputStream.readInt();
-//                byte[] bytes = new byte[len];
-//                if(inputStream.read(bytes, 0, len) == len){
-//                    onReceiveMessage(bytes);
-//                }
-            onReceiveMessage(readMessage());
-        }
-
+        if (!async) return;
+        while (running) onReceiveMessage(readMessage());
     }
 
     /**

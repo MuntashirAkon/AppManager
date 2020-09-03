@@ -76,7 +76,7 @@ class Server {
     void run() throws Exception {
         while (running) {
             try {
-                // Allow only on client
+                // Allow only one client
                 server.accept();
                 // Prepare input and output streams for data interchange
                 dataTransmission = new DataTransmission(server.getOutputStream(),

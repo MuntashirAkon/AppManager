@@ -38,6 +38,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.server.common.BaseCaller;
@@ -275,10 +276,9 @@ class ServerHandler implements DataTransmission.OnReceiveCallback, AutoCloseable
         CallerResult result = new CallerResult();
         try {
             ActivityThread activityThread = ActivityThread.currentActivityThread();
-            Context context = activityThread.getSystemContext();
+            Context context = Objects.requireNonNull(activityThread).getSystemContext();
             Context packageContext = null;
-
-            //create or from cache get context
+            // Get context from cache or create new
             WeakReference<Context> contextWeakReference = sLocalContext.get(caller.getPackageName());
             if (contextWeakReference != null && contextWeakReference.get() != null) {
                 packageContext = contextWeakReference.get();
@@ -287,58 +287,50 @@ class ServerHandler implements DataTransmission.OnReceiveCallback, AutoCloseable
                 packageContext = context.createPackageContext(caller.getPackageName(), Context.CONTEXT_INCLUDE_CODE | Context.CONTEXT_IGNORE_SECURITY);
                 sLocalContext.put(caller.getPackageName(), new WeakReference<>(packageContext));
             }
-
-            //load class
+            // Load the class
             Class<?> clazz = sClassCache.get(caller.getClassName());
-            Constructor<?> aConstructor = sConstructorCache.get(caller.getClassName());
-            if (clazz == null || aConstructor == null) {
+            Constructor<?> clazzConstructor = sConstructorCache.get(caller.getClassName());
+            if (clazz == null || clazzConstructor == null) {
                 clazz = Class.forName(caller.getClassName(), false, packageContext.getClassLoader());
-                Class<?> processer = Class.forName(ClassCallerProcessor.class.getName(), false, packageContext.getClassLoader());
-                if (processer.isAssignableFrom(clazz)) {
+                Class<?> callerProcessorClazz = Class.forName(ClassCallerProcessor.class.getName(), false, packageContext.getClassLoader());
+                if (callerProcessorClazz.isAssignableFrom(clazz)) {
                     sClassCache.put(caller.getClassName(), clazz);
                     sConstructorCache.put(caller.getClassName(), clazz.getConstructor(Context.class, Context.class, byte[].class));
+                    clazzConstructor = sConstructorCache.get(caller.getClassName());
                 } else {
-                    throw new ClassCastException("class " + clazz.getName() + "  need extends ClassCallerProcessor !");
+                    throw new ClassCastException("Class " + clazz.getName() + " did not extend ClassCallerProcessor.");
                 }
             }
-
-            //if found class,invoke proxyInvoke method
-            if (clazz != null) {
-
-                Object o = null;
-                if (aConstructor != null) {
-
-                    o = aConstructor.newInstance(packageContext, context, ParcelableUtil.marshall(LifecycleAgent.serverRunInfo));
-                }
-
-                Object[] params = caller.getParams();
-                if (params != null) {
-                    for (Object param : params) {
-                        if (param instanceof Bundle) {
-                            ((Bundle) param).setClassLoader(packageContext.getClassLoader());
-                        }
+            // Check if class is successfully loaded
+            if (clazzConstructor == null)
+                throw new Exception("Class constructor cannot be null");
+            // Class has been loaded
+            // Get the object
+            final Object callerProcessor = clazzConstructor.newInstance(packageContext, context,
+                    ParcelableUtil.marshall(LifecycleAgent.serverRunInfo));
+            // Change package context of the params
+            Object[] params = caller.getParams();
+            if (params != null) {
+                for (Object param : params) {
+                    if (param instanceof Bundle) {
+                        ((Bundle) param).setClassLoader(packageContext.getClassLoader());
                     }
                 }
-
-                FLog.log("------new object " + o + "  params " + Arrays.toString(params) + "    " + clazz);
-
-                Object ret = MethodUtils.invokeExactMethod(o, "proxyInvoke", params, new Class[]{Bundle.class});
-                if (ret instanceof Bundle) {
-                    writeResult(result, ret);
-                } else {
-                    writeResult(result, Bundle.EMPTY);
-                }
-
-            } else {
-                throw new ClassNotFoundException("not found class " + caller.getClassName() + "  in package: " + caller.getPackageName());
             }
-
+            // Log changes
+            FLog.log("CallClass: Object: " + callerProcessor + ", params: " + Arrays.toString(params) + ", class: " + clazz.getName());
+            //  Invoke proxyInvoke method
+            Object ret = MethodUtils.invokeExactMethod(callerProcessor, "proxyInvoke", params, new Class[]{Bundle.class});
+            if (ret instanceof Bundle) {
+                writeResult(result, ret);
+            } else {
+                writeResult(result, Bundle.EMPTY);
+            }
         } catch (Throwable e) {
             e.printStackTrace();
             FLog.log(e);
             result.setThrowable(e);
         }
-
         return result;
     }
 
