@@ -55,20 +55,21 @@ import io.github.muntashirakon.AppManager.server.common.Shell;
 public class AppOpsHandler extends ClassCallerProcessor {
     private static IpTablesController mIpTablesController = null;
 
-    static {
-        try {
-            if (Process.myUid() == 0) {
-                mIpTablesController = new IpTablesController(Shell.getRootShell());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    static {
+//        try {
+//            if (Process.myUid() == 0) {
+//                mIpTablesController = new IpTablesController(Shell.getRootShell());
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public AppOpsHandler(Context mPackageContext, Context mSystemContext, byte[] bytes) {
         super(mPackageContext, mSystemContext, bytes);
     }
 
+    @NonNull
     @Override
     public Bundle proxyInvoke(Bundle args) throws Throwable {
         OpsResult result;

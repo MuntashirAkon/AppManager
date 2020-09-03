@@ -42,7 +42,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.NonNull;
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.adb.LineReader;
 import io.github.muntashirakon.AppManager.server.common.BaseCaller;
@@ -76,6 +75,7 @@ class LocalServerManager {
 
     /**
      * Update preferences
+     *
      * @param config The new preferences
      */
     void updateConfig(LocalServer.Config config) {
@@ -91,6 +91,7 @@ class LocalServerManager {
     /**
      * Get current session. If no session is running, create a new one. If no server is running,
      * create one first.
+     *
      * @return Currently running session
      * @throws Exception When creating session fails or server couldn't be started
      */
@@ -192,7 +193,7 @@ class LocalServerManager {
         AssetsUtils.writeScript(mConfig);
         Log.e(TAG, "classpath --> " + ServerConfig.getClassPath());
         List<String> commands = new ArrayList<>();
-        commands.add("sh /sdcard/Android/data/" + BuildConfig.APPLICATION_ID + "/files/run_server.sh");
+        commands.add(ServerConfig.getExecPath());
         return commands;
     }
 
@@ -467,6 +468,7 @@ class LocalServerManager {
 
     /**
      * Start root or ADB server based on config
+     *
      * @throws Exception When server cannot be started
      */
     private void startServer() throws Exception {
@@ -528,8 +530,9 @@ class LocalServerManager {
 
     /**
      * Create a client session
+     *
      * @return New session if not running, running session otherwise
-     * @throws IOException If session creation failed
+     * @throws IOException      If session creation failed
      * @throws RuntimeException If supplied token is empty
      */
     private ClientSession createSession() throws IOException {

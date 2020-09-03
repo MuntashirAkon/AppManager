@@ -29,12 +29,12 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.server.common.Shell;
+import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-import io.github.muntashirakon.AppManager.servermanager.AppOpsManager;
 
 public class AdbShell {
     @SuppressLint("StaticFieldLeak")
-    private static AppOpsManager appOpsManager;
+    private static ApiSupporter apiSupporter;
 
     public static class CommandResult {
         public int returnCode;
@@ -56,12 +56,12 @@ public class AdbShell {
 
     @NonNull
     synchronized public static CommandResult run(String command) throws IOException {
-        if (appOpsManager == null) {
-            appOpsManager = AppOpsManager.getInstance(LocalServer.getInstance());
+        if (apiSupporter == null) {
+            apiSupporter = ApiSupporter.getInstance(LocalServer.getInstance());
         }
         Shell.Result result;
         try {
-            result = appOpsManager.runCommand(command);
+            result = apiSupporter.runCommand(command);
         } catch (Exception e) {
             throw new IOException(e);
         }

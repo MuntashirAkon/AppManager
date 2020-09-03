@@ -15,9 +15,10 @@ class ServerConfig {
     private static final String LOCAL_TOKEN = "l_token";
 
     static final String JAR_NAME = "am.jar";
-//    static final String EXECUTABLE_FILE_NAME = "run_server.sh";
+    static final String EXECUTABLE_FILE_NAME = "run_server.sh";
 
     private static File destJarFile;
+    private static File destExecFile;
     private static SharedPreferences sPreferences;
     private static volatile boolean sInitialised = false;
 
@@ -26,6 +27,7 @@ class ServerConfig {
             return;
         }
         destJarFile = new File(context.getExternalFilesDir(null), JAR_NAME);
+        destJarFile = new File(context.getExternalFilesDir(null), EXECUTABLE_FILE_NAME);
         sPreferences = context.getSharedPreferences("server_config", Context.MODE_PRIVATE);
         if (userHandleId != 0) {
             SOCKET_PATH += userHandleId;
@@ -34,7 +36,7 @@ class ServerConfig {
         sInitialised = true;
     }
 
-
+    @NonNull
     static File getDestJarFile() {
         return destJarFile;
     }
@@ -42,6 +44,11 @@ class ServerConfig {
     @NonNull
     static String getClassPath() {
         return destJarFile.getAbsolutePath();
+    }
+
+    @NonNull
+    static String getExecPath() {
+        return destExecFile.getAbsolutePath();
     }
 
     /**

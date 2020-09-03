@@ -89,7 +89,6 @@ public class LocalServer {
     }
 
     public synchronized void checkConnect() throws Exception {
-        //
         mLocalServerManager.start();
     }
 

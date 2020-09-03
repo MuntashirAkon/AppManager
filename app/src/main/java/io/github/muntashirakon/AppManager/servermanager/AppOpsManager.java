@@ -13,9 +13,7 @@ import io.github.muntashirakon.AppManager.server.common.OpEntry;
 import io.github.muntashirakon.AppManager.server.common.OpsCommands;
 import io.github.muntashirakon.AppManager.server.common.OpsResult;
 import io.github.muntashirakon.AppManager.server.common.PackageOps;
-import io.github.muntashirakon.AppManager.server.common.Shell;
 import io.github.muntashirakon.AppManager.servermanager.remote.AppOpsHandler;
-import io.github.muntashirakon.AppManager.servermanager.remote.ShellCommandHandler;
 
 public class AppOpsManager {
     private LocalServer mLocalServer;
@@ -36,15 +34,6 @@ public class AppOpsManager {
         mLocalServer = localServer;
         userId = Users.getCurrentUser();
         packageName = localServer.getContext().getPackageName();
-    }
-
-    public Shell.Result runCommand(String command) throws Exception {
-        Bundle args = new Bundle();
-        args.putString("command", command);
-        ClassCaller classCaller = new ClassCaller(packageName, ShellCommandHandler.class.getName(), args);
-        CallerResult result = mLocalServer.exec(classCaller);
-        Bundle replyBundle = result.getReplyBundle();
-        return replyBundle.getParcelable("return");
     }
 
     public OpsResult getOpsForPackage(int uid, String packageName, int[] ops) throws Exception {
