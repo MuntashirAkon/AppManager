@@ -27,11 +27,10 @@ import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.server.common.OpsResult;
 import io.github.muntashirakon.AppManager.server.common.PackageOps;
-import io.github.muntashirakon.AppManager.servermanager.AppOps;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 
 @SuppressLint("DefaultLocale")
 public
@@ -58,7 +57,7 @@ class AppOpsService implements IAppOpsService {
     private io.github.muntashirakon.AppManager.servermanager.AppOpsManager appOpsManager;
 
     public AppOpsService() {
-        appOpsManager = AppOps.getInstance(AppManager.getContext());
+        appOpsManager = io.github.muntashirakon.AppManager.servermanager.AppOpsManager.getInstance(LocalServer.getInstance());
     }
 
     /**

@@ -31,46 +31,114 @@ import java.io.InputStreamReader;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.server.common.Caller;
+import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
-public class AppOps {
-
+public class LocalServer {
     private static final String LOG_FILE = "am.log";
 
     @SuppressLint("StaticFieldLeak")
-    private static AppOpsManager sManager;
+    private static LocalServer INSTANCE;
 
-    public static AppOpsManager getInstance(Context context) {
-        if (sManager == null) {
-            synchronized (AppOps.class) {
-                if (sManager == null) {
-                    Config config = new Config();
-                    updateConfig(context, config);
-                    sManager = new AppOpsManager(context.getApplicationContext(), config);
+    public static LocalServer getInstance() {
+        if (INSTANCE == null) {
+            synchronized (LocalServer.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new LocalServer();
                 }
             }
         }
-        return sManager;
+        return INSTANCE;
     }
 
-    public static void updateConfig(Context context) {
-        if (sManager != null) {
-            Config config = sManager.getConfig();
+    private LocalServerManager mLocalServerManager;
+    private Context mContext;
+
+    private LocalServer() {
+        mContext = AppManager.getContext();
+        Config config = new Config();
+        config.context = mContext;
+        updateConfig(config);
+        int userHandleId = Users.getCurrentUser();
+        ServerConfig.init(config.context, userHandleId);
+        mLocalServerManager = LocalServerManager.getInstance(config);
+        // Check if am.jar is in the right place
+        checkFile();
+        // Start server if not already
+        try {
+            checkConnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    Config getConfig() {
+        return mLocalServerManager.getConfig();
+    }
+
+    Context getContext() {
+        return mContext;
+    }
+
+    LocalServerManager getLocalServerManager() {
+        return mLocalServerManager;
+    }
+
+    public synchronized void checkConnect() throws Exception {
+        //
+        mLocalServerManager.start();
+    }
+
+    public CallerResult exec(Caller caller) throws Exception {
+        checkConnect();
+        return mLocalServerManager.execNew(caller);
+    }
+
+    public boolean isRunning() {
+        return mLocalServerManager != null && mLocalServerManager.isRunning();
+    }
+
+    public void destroy() {
+        if (mLocalServerManager != null) {
+            mLocalServerManager.stop();
+        }
+    }
+
+    public void closeBgServer() {
+        if (mLocalServerManager != null) {
+            mLocalServerManager.closeBgServer();
+            mLocalServerManager.stop();
+        }
+    }
+
+    private void checkFile() {
+        AssetsUtils.copyFile(mContext, ServerConfig.JAR_NAME, ServerConfig.getDestJarFile(), BuildConfig.DEBUG);
+        AssetsUtils.writeScript(getConfig());
+    }
+
+    public static void updateConfig() {
+        if (INSTANCE != null) {
+            Config config = INSTANCE.getConfig();
             if (config != null) {
-                updateConfig(context, config);
+                updateConfig(config);
             }
         }
     }
 
-    private static void updateConfig(Context context, @NonNull Config config) {
+    private static void updateConfig(@NonNull Config config) {
         // FIXME: Use AppPref instead of SharedPreferences
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(config.context);
         config.allowBgRunning = sp.getBoolean("allow_bg_remote", true);
-        config.logFile = context.getFileStreamPath(LOG_FILE).getAbsolutePath();
+        config.logFile = config.context.getFileStreamPath(LOG_FILE).getAbsolutePath();
         config.useAdb = AppPref.isAdbEnabled() && !AppPref.isRootEnabled();
         config.adbPort = sp.getInt("use_adb_port", 5555);
         config.rootOverAdb = sp.getBoolean("allow_root_over_adb", false);
-        Log.e("test", "buildConfig --> " + context.getFileStreamPath(LOG_FILE).getAbsolutePath());
+        Log.e("test", "buildConfig --> " + config.context.getFileStreamPath(LOG_FILE).getAbsolutePath());
+        if (INSTANCE != null) INSTANCE.mLocalServerManager.updateConfig(config);
     }
 
     @NonNull
@@ -107,11 +175,7 @@ public class AppOps {
                 }
             }
 
-        } else {
-
-            sb.append("No logs");
-        }
-
+        } else sb.append("No logs");
         return sb.toString();
     }
 
@@ -153,7 +217,7 @@ public class AppOps {
         public boolean allowBgRunning = false;
         public String logFile;
         public boolean printLog = false;
-        public boolean useAdb = AppPref.isAdbEnabled() && !AppPref.isRootEnabled();;
+        public boolean useAdb = AppPref.isAdbEnabled() && !AppPref.isRootEnabled();
         public boolean rootOverAdb = false;
         public String adbHost = "127.0.0.1";
         public int adbPort = 5555;

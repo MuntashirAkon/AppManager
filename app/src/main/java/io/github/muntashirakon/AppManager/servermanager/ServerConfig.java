@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import java.io.File;
 
-import io.github.muntashirakon.AppManager.BuildConfig;
+import androidx.annotation.NonNull;
 
 class ServerConfig {
     static String SOCKET_PATH = "am_socket";
@@ -15,29 +15,23 @@ class ServerConfig {
     private static final String LOCAL_TOKEN = "l_token";
 
     static final String JAR_NAME = "am.jar";
-    static final String EXECUTABLE_FILE_NAME = "run_server.sh";
+//    static final String EXECUTABLE_FILE_NAME = "run_server.sh";
 
     private static File destJarFile;
-    private static File destExecutableFile;
-    private static String sClassPath = null;
     private static SharedPreferences sPreferences;
-    private static volatile boolean sInited = false;
-
+    private static volatile boolean sInitialised = false;
 
     static void init(Context context, int userHandleId) {
-        if (sInited) {
+        if (sInitialised) {
             return;
         }
         destJarFile = new File(context.getExternalFilesDir(null), JAR_NAME);
-        destExecutableFile = new File(context.getExternalFilesDir(null), EXECUTABLE_FILE_NAME);
-        //sClassPath = destJarFile.getAbsolutePath();
-        sClassPath = "/sdcard/Android/data/" + BuildConfig.APPLICATION_ID + "/files/" + JAR_NAME;
         sPreferences = context.getSharedPreferences("server_config", Context.MODE_PRIVATE);
         if (userHandleId != 0) {
             SOCKET_PATH += userHandleId;
             DEFAULT_ADB_PORT += userHandleId;
         }
-        sInited = true;
+        sInitialised = true;
     }
 
 
@@ -45,12 +39,9 @@ class ServerConfig {
         return destJarFile;
     }
 
-    static File getDestExecutableFile() {
-        return destExecutableFile;
-    }
-
+    @NonNull
     static String getClassPath() {
-        return sClassPath;
+        return destJarFile.getAbsolutePath();
     }
 
     /**

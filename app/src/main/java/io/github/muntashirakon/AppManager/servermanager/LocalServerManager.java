@@ -56,7 +56,7 @@ class LocalServerManager {
 
     private static LocalServerManager sLocalServerManager;
 
-    static LocalServerManager getInstance(AppOps.Config config) {
+    static LocalServerManager getInstance(LocalServer.Config config) {
         if (sLocalServerManager == null) {
             synchronized (LocalServerManager.class) {
                 if (sLocalServerManager == null) {
@@ -68,9 +68,9 @@ class LocalServerManager {
     }
 
     private ClientSession mSession = null;
-    private AppOps.Config mConfig;
+    private LocalServer.Config mConfig;
 
-    private LocalServerManager(AppOps.Config config) {
+    private LocalServerManager(LocalServer.Config config) {
         mConfig = config;
     }
 
@@ -78,13 +78,13 @@ class LocalServerManager {
      * Update preferences
      * @param config The new preferences
      */
-    void updateConfig(AppOps.Config config) {
+    void updateConfig(LocalServer.Config config) {
         if (config != null) {
             mConfig = config;
         }
     }
 
-    AppOps.Config getConfig() {
+    LocalServer.Config getConfig() {
         return mConfig;
     }
 

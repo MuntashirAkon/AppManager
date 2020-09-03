@@ -1,13 +1,12 @@
 package io.github.muntashirakon.AppManager.servermanager;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Process;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.ClassCaller;
 import io.github.muntashirakon.AppManager.server.common.OpEntry;
@@ -19,63 +18,36 @@ import io.github.muntashirakon.AppManager.servermanager.remote.AppOpsHandler;
 import io.github.muntashirakon.AppManager.servermanager.remote.ShellCommandHandler;
 
 public class AppOpsManager {
-    private static final String TAG = "AppOpsManager";
-
-    private Context mContext;
-    private LocalServerManager mLocalServerManager;
-    private int mUserHandleId;
+    private LocalServer mLocalServer;
     private int userId;
-    private static String pkgName;
-    private ApiSupporter apiSupporter;
+    private static String packageName;
 
-    public AppOpsManager(Context context) {
-        this(context, new AppOps.Config());
+    @SuppressLint("StaticFieldLeak")
+    private static AppOpsManager INSTANCE;
+
+    public static AppOpsManager getInstance(@NonNull LocalServer localServer) {
+        if (INSTANCE == null) {
+            INSTANCE = new AppOpsManager(localServer);
+        }
+        return INSTANCE;
     }
 
-    public AppOpsManager(Context context, @NonNull AppOps.Config config) {
-        mContext = context;
-        config.context = mContext;
-        mUserHandleId = Process.myUid() / 100000; // android.os.UserHandle.myUserId()
-        ServerConfig.init(context, mUserHandleId);
-        userId = mUserHandleId;
-        mLocalServerManager = LocalServerManager.getInstance(config);
-        apiSupporter = new ApiSupporter(mLocalServerManager);
-        pkgName = context.getPackageName();
-        checkFile();
-    }
-
-    public void setUserHandleId(int uid) {
-        this.userId = uid;
-    }
-
-    public void updateConfig(AppOps.Config config) {
-        mLocalServerManager.updateConfig(config);
-    }
-
-    public AppOps.Config getConfig() {
-        return mLocalServerManager.getConfig();
-    }
-
-    private void checkFile() {
-        AssetsUtils.copyFile(mContext, ServerConfig.JAR_NAME, ServerConfig.getDestJarFile(), BuildConfig.DEBUG);
-        AssetsUtils.writeScript(getConfig());
-    }
-
-    private synchronized void checkConnect() throws Exception {
-        mLocalServerManager.start();
+    public AppOpsManager(@NonNull LocalServer localServer) {
+        mLocalServer = localServer;
+        userId = Users.getCurrentUser();
+        packageName = localServer.getContext().getPackageName();
     }
 
     public Shell.Result runCommand(String command) throws Exception {
         Bundle args = new Bundle();
         args.putString("command", command);
-        ClassCaller classCaller = new ClassCaller(pkgName, ShellCommandHandler.class.getName(), args);
-        CallerResult result = mLocalServerManager.execNew(classCaller);
+        ClassCaller classCaller = new ClassCaller(packageName, ShellCommandHandler.class.getName(), args);
+        CallerResult result = mLocalServer.exec(classCaller);
         Bundle replyBundle = result.getReplyBundle();
         return replyBundle.getParcelable("return");
     }
 
     public OpsResult getOpsForPackage(int uid, String packageName, int[] ops) throws Exception {
-        checkConnect();
         OpsCommands.Builder builder = new OpsCommands.Builder();
         builder.setAction(OpsCommands.ACTION_GET);
         builder.setPackageName(packageName);
@@ -87,14 +59,13 @@ public class AppOpsManager {
     private OpsResult wrapOps(OpsCommands.Builder builder) throws Exception {
         Bundle args = new Bundle();
         args.putParcelable("args", builder);
-        ClassCaller classCaller = new ClassCaller(pkgName, AppOpsHandler.class.getName(), args);
-        CallerResult result = mLocalServerManager.execNew(classCaller);
+        ClassCaller classCaller = new ClassCaller(packageName, AppOpsHandler.class.getName(), args);
+        CallerResult result = mLocalServer.exec(classCaller);
         Bundle replyBundle = result.getReplyBundle();
         return replyBundle.getParcelable("return");
     }
 
     public OpsResult getPackagesForOps(int[] ops, boolean reqNet) throws Exception {
-        checkConnect();
         OpsCommands.Builder builder = new OpsCommands.Builder();
         builder.setAction(OpsCommands.ACTION_GET_FOR_OPS);
         builder.setOps(ops);
@@ -104,7 +75,6 @@ public class AppOpsManager {
     }
 
     public OpsResult setOpsMode(String packageName, int op, int mode) throws Exception {
-        checkConnect();
         OpsCommands.Builder builder = new OpsCommands.Builder();
         builder.setAction(OpsCommands.ACTION_SET);
         builder.setPackageName(packageName);
@@ -131,20 +101,6 @@ public class AppOpsManager {
         return wrapOps(builder);
     }
 
-    public ApiSupporter getApiSupporter() {
-        return apiSupporter;
-    }
-
-    public void destory() {
-        if (mLocalServerManager != null) {
-            mLocalServerManager.stop();
-        }
-    }
-
-    public boolean isRunning() {
-        return mLocalServerManager != null && mLocalServerManager.isRunning();
-    }
-
     public OpsResult disableAllPermission(final String packageName) throws Exception {
         OpsResult opsForPackage = getOpsForPackage(-1, packageName, null);
         if (opsForPackage != null) {
@@ -167,15 +123,6 @@ public class AppOpsManager {
             }
         }
         return opsForPackage;
-    }
-
-
-    public void closeBgServer() {
-        if (mLocalServerManager != null) {
-            mLocalServerManager.closeBgServer();
-            mLocalServerManager.stop();
-        }
-
     }
 
     public static boolean isEnableSELinux() {

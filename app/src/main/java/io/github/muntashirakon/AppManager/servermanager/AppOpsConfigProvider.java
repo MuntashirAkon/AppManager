@@ -28,6 +28,7 @@ import android.os.Process;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.misc.Users;
 
 public class AppOpsConfigProvider extends ContentProvider {
 
@@ -57,7 +58,7 @@ public class AppOpsConfigProvider extends ContentProvider {
                         String sortOrder) {
         checkCalling();
 
-        ServerConfig.init(getContext(), Process.myUid() / 100000);
+        ServerConfig.init(getContext(), Users.getCurrentUser());
         MatrixCursor cursor = null;
         switch (uriMatcher.match(uri)) {
             case TYPE_TOKEN:

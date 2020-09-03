@@ -75,7 +75,7 @@ import io.github.muntashirakon.AppManager.misc.RequestCodes;
 import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
-import io.github.muntashirakon.AppManager.servermanager.AppOps;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
@@ -324,6 +324,9 @@ public class MainActivity extends AppCompatActivity implements
             return false;
         });
         handleSelection();
+
+        // Start local server
+        new Thread(LocalServer::getInstance).start();
     }
 
     @Override
@@ -546,7 +549,7 @@ public class MainActivity extends AppCompatActivity implements
                         AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
                         throw new IOException("Adb not available");
                     }
-                    AppOps.updateConfig(this);
+                    LocalServer.updateConfig();
                     runOnUiThread(() -> Toast.makeText(this, "Working on ADB mode", Toast.LENGTH_SHORT).show());
                 } catch (Exception e) {
                     AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);

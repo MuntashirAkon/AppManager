@@ -28,9 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.server.common.Shell;
-import io.github.muntashirakon.AppManager.servermanager.AppOps;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.AppOpsManager;
 
 public class AdbShell {
@@ -58,7 +57,7 @@ public class AdbShell {
     @NonNull
     synchronized public static CommandResult run(String command) throws IOException {
         if (appOpsManager == null) {
-            appOpsManager = AppOps.getInstance(AppManager.getContext());
+            appOpsManager = AppOpsManager.getInstance(LocalServer.getInstance());
         }
         Shell.Result result;
         try {

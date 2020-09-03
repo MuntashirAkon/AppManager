@@ -158,7 +158,7 @@ class AssetsUtils {
     }
 
 
-    static void writeScript(@NonNull AppOps.Config config) {
+    static void writeScript(@NonNull LocalServer.Config config) {
         BufferedWriter bw = null;
         FileInputStream fis = null;
         try {

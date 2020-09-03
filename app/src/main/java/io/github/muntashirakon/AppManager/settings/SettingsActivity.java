@@ -45,7 +45,7 @@ import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.servermanager.AppOps;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -115,7 +115,7 @@ public class SettingsActivity extends AppCompatActivity {
             // Reset runner
             Runner.getInstance();
             // Change server type based on root status
-            AppOps.updateConfig(this);
+            LocalServer.updateConfig();
             // Toggle GCB view based on root status
             globalBlockingView.setVisibility(isChecked ? View.VISIBLE : View.GONE);
             importExportView.setVisibility(isChecked || adbEnabled ? View.VISIBLE : View.GONE);
