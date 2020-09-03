@@ -22,6 +22,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.classysharkandroid.utils.UriUtils;
@@ -71,7 +72,11 @@ public class ApkFile implements AutoCloseable, Parcelable {
         obbFiles = Objects.requireNonNull(in.createStringArrayList());
         isSplit = in.readByte() != 0;
         apkUri = in.readParcelable(Uri.class.getClassLoader());
-        cacheFilePath = new File(Objects.requireNonNull(in.readString()));
+        String cachePath = in.readString();
+        if (!TextUtils.isEmpty(cachePath)) {
+            //noinspection ConstantConditions
+            cacheFilePath = new File(cachePath);
+        }
     }
 
     public static final Creator<ApkFile> CREATOR = new Creator<ApkFile>() {
@@ -102,7 +107,7 @@ public class ApkFile implements AutoCloseable, Parcelable {
         dest.writeStringList(obbFiles);
         dest.writeByte((byte) (isSplit ? 1 : 0));
         dest.writeParcelable(apkUri, flags);
-        dest.writeString(cacheFilePath.getAbsolutePath());
+        dest.writeString(cacheFilePath == null ? "" : cacheFilePath.getAbsolutePath());
     }
 
     @IntDef(value = {
@@ -144,6 +149,7 @@ public class ApkFile implements AutoCloseable, Parcelable {
     private List<String> obbFiles = new ArrayList<>();
     private boolean isSplit = false;
     private Uri apkUri;
+    @Nullable
     private File cacheFilePath;
 
     public ApkFile(Uri apkUri) throws Exception {
