@@ -26,19 +26,16 @@ import io.github.muntashirakon.AppManager.server.common.ClassCallerProcessor;
 import io.github.muntashirakon.AppManager.server.common.FLog;
 
 public class RestartHandler extends ClassCallerProcessor {
+    public RestartHandler(Context mPackageContext,
+                          Context mSystemContext, byte[] bytes) {
+        super(mPackageContext, mSystemContext, bytes);
+    }
 
-  private static final String TAG = "RestartHandler";
-
-  public RestartHandler(Context mPackageContext,
-      Context mSystemContext, byte[] bytes) {
-    super(mPackageContext, mSystemContext, bytes);
-  }
-
-  @Override
-  public Bundle proxyInvoke(Bundle bundle) throws Throwable {
-    Runtime.getRuntime().exec("sh /sdcard/Android/data/" + BuildConfig.APPLICATION_ID +
-            "/files/run_server.sh " + Process.myPid());
-    FLog.log("RestartHandler -----------exec  --- ");
-    return bundle;
-  }
+    @Override
+    public Bundle proxyInvoke(Bundle bundle) throws Throwable {
+        Runtime.getRuntime().exec("sh /sdcard/Android/data/" + BuildConfig.APPLICATION_ID +
+                "/files/run_server.sh " + Process.myPid());
+        FLog.log("RestartHandler -----------exec  --- ");
+        return bundle;
+    }
 }

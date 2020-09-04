@@ -303,7 +303,7 @@ class ServerHandler implements DataTransmission.OnReceiveCallback, AutoCloseable
             }
             // Check if class is successfully loaded
             if (clazzConstructor == null)
-                throw new Exception("Class constructor cannot be null");
+                throw new NoSuchMethodException("Class constructor cannot be null.");
             // Class has been loaded
             // Get the object
             final Object callerProcessor = clazzConstructor.newInstance(packageContext, context,

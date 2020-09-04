@@ -49,8 +49,7 @@ public class PackageHandler extends ClassCallerProcessor {
             int flags = args.getInt(ARG_FLAGS, 0);
             IPackageManager pm = ActivityThread.getPackageManager();
             if (pm == null) throw new Exception("IPackageManager cannot be null");
-            PackageInfo packageInfo;
-            packageInfo = pm.getPackageInfo(packageName, flags, userHandle);
+            PackageInfo packageInfo = pm.getPackageInfo(packageName, flags, userHandle);
             if (packageInfo == null) throw new PackageManager.NameNotFoundException("Package doesn't exist.");
             args.clear();
             args.putParcelable("return", packageInfo);

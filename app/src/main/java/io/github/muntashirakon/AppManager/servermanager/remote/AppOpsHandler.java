@@ -25,13 +25,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.os.Process;
 import android.os.ServiceManager;
 import android.util.Log;
 
 import com.android.internal.app.IAppOpsService;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,13 +38,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.server.common.ClassCallerProcessor;
 import io.github.muntashirakon.AppManager.server.common.FLog;
-import io.github.muntashirakon.AppManager.server.common.OpEntry;
 import io.github.muntashirakon.AppManager.server.common.OpsCommands;
 import io.github.muntashirakon.AppManager.server.common.OpsResult;
-//import io.github.muntashirakon.AppManager.server.common.OtherOp;
 import io.github.muntashirakon.AppManager.server.common.PackageOps;
 import io.github.muntashirakon.AppManager.server.common.ReflectUtils;
-import io.github.muntashirakon.AppManager.server.common.Shell;
+
+//import io.github.muntashirakon.AppManager.server.common.OtherOp;
 
 /**
  * Handler class for App Ops. This class is executed by the server, therefore, any privileged code

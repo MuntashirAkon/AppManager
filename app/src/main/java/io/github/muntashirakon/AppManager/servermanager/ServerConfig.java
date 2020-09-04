@@ -27,7 +27,7 @@ class ServerConfig {
             return;
         }
         destJarFile = new File(context.getExternalFilesDir(null), JAR_NAME);
-        destJarFile = new File(context.getExternalFilesDir(null), EXECUTABLE_FILE_NAME);
+        destExecFile = new File(context.getExternalFilesDir(null), EXECUTABLE_FILE_NAME);
         sPreferences = context.getSharedPreferences("server_config", Context.MODE_PRIVATE);
         if (userHandleId != 0) {
             SOCKET_PATH += userHandleId;

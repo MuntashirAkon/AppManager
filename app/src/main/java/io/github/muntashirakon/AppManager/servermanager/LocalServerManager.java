@@ -192,8 +192,9 @@ class LocalServerManager {
     private List<String> getCommands() {
         AssetsUtils.writeScript(mConfig);
         Log.e(TAG, "classpath --> " + ServerConfig.getClassPath());
+        Log.e(TAG, "exec path --> " + ServerConfig.getExecPath());
         List<String> commands = new ArrayList<>();
-        commands.add(ServerConfig.getExecPath());
+        commands.add("sh " + ServerConfig.getExecPath());
         return commands;
     }
 

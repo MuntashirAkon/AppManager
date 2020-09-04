@@ -6,6 +6,7 @@ import android.os.Bundle;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.ClassCaller;
@@ -16,9 +17,9 @@ import io.github.muntashirakon.AppManager.server.common.PackageOps;
 import io.github.muntashirakon.AppManager.servermanager.remote.AppOpsHandler;
 
 public class AppOpsManager {
-    private LocalServer mLocalServer;
-    private int userId;
-    private static String packageName;
+    private LocalServer localServer;
+    private int userHandle;
+    private String packageName;
 
     @SuppressLint("StaticFieldLeak")
     private static AppOpsManager INSTANCE;
@@ -31,9 +32,9 @@ public class AppOpsManager {
     }
 
     public AppOpsManager(@NonNull LocalServer localServer) {
-        mLocalServer = localServer;
-        userId = Users.getCurrentUser();
-        packageName = localServer.getContext().getPackageName();
+        this.localServer = localServer;
+        userHandle = Users.getCurrentUser();
+        packageName = BuildConfig.APPLICATION_ID;
     }
 
     public OpsResult getOpsForPackage(int uid, String packageName, int[] ops) throws Exception {
@@ -41,7 +42,7 @@ public class AppOpsManager {
         builder.setAction(OpsCommands.ACTION_GET);
         builder.setPackageName(packageName);
         builder.setOps(ops);
-        builder.setUserHandleId(userId);
+        builder.setUserHandleId(userHandle);
         return wrapOps(builder);
     }
 
@@ -49,7 +50,7 @@ public class AppOpsManager {
         Bundle args = new Bundle();
         args.putParcelable("args", builder);
         ClassCaller classCaller = new ClassCaller(packageName, AppOpsHandler.class.getName(), args);
-        CallerResult result = mLocalServer.exec(classCaller);
+        CallerResult result = localServer.exec(classCaller);
         Bundle replyBundle = result.getReplyBundle();
         return replyBundle.getParcelable("return");
     }
@@ -59,7 +60,7 @@ public class AppOpsManager {
         builder.setAction(OpsCommands.ACTION_GET_FOR_OPS);
         builder.setOps(ops);
         builder.setReqNet(reqNet);
-        builder.setUserHandleId(userId);
+        builder.setUserHandleId(userHandle);
         return wrapOps(builder);
     }
 
@@ -69,7 +70,7 @@ public class AppOpsManager {
         builder.setPackageName(packageName);
         builder.setOpInt(op);
         builder.setModeInt(mode);
-        builder.setUserHandleId(userId);
+        builder.setUserHandleId(userHandle);
         return wrapOps(builder);
     }
 
@@ -77,7 +78,7 @@ public class AppOpsManager {
         OpsCommands.Builder builder = new OpsCommands.Builder();
         builder.setAction(OpsCommands.ACTION_RESET);
         builder.setPackageName(packageName);
-        builder.setUserHandleId(userId);
+        builder.setUserHandleId(userHandle);
         return wrapOps(builder);
     }
 
@@ -86,7 +87,7 @@ public class AppOpsManager {
         builder.setAction(OpsCommands.ACTION_CHECK);
         builder.setPackageName(packageName);
         builder.setOpInt(op);
-        builder.setUserHandleId(userId);
+        builder.setUserHandleId(userHandle);
         return wrapOps(builder);
     }
 

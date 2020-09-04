@@ -27,6 +27,7 @@ import android.util.Log;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.server.common.Shell;
 import io.github.muntashirakon.AppManager.servermanager.remote.PackageHandler;
@@ -51,13 +52,13 @@ public class ApiSupporter {
 
     ApiSupporter(@NonNull LocalServer localServer) {
         this.localServer = localServer;
-        this.packageName = localServer.getContext().getPackageName();
+        this.packageName = BuildConfig.APPLICATION_ID;
         this.userHandle = Users.getCurrentUser();
     }
 
-    public List<PackageInfo> getInstalledPackages(int flags, int uid) throws Exception {
+    public List<PackageInfo> getInstalledPackages(int flags, int userHandle) throws Exception {
         SystemServiceCaller caller = new SystemServiceCaller("package",
-                "getInstalledPackages", new Class[]{int.class, int.class}, new Object[]{flags, uid});
+                "getInstalledPackages", new Class[]{int.class, int.class}, new Object[]{flags, userHandle});
         CallerResult callerResult = localServer.exec(caller);
         callerResult.getReplyObj();
         if (callerResult.getThrowable() != null) {
@@ -85,12 +86,17 @@ public class ApiSupporter {
         args.putString(PackageHandler.ARG_PACKAGE_NAME, packageName);
         args.putInt(PackageHandler.ARG_FLAGS, flags);
         args.putInt(PackageHandler.ARG_USER_HANDLE, userHandle);
-        ClassCaller classCaller = new ClassCaller(packageName, RestartHandler.class.getName(), new Bundle());
+        ClassCaller classCaller = new ClassCaller(this.packageName, ShellCommandHandler.class.getName(), args);
         CallerResult result = localServer.exec(classCaller);
-        Bundle reply = result.getReplyBundle();
-        PackageInfo packageInfo = reply.getParcelable("return");
-        if (packageInfo == null) throw new PackageManager.NameNotFoundException("Package doesn't exist.");
-        return packageInfo;
+        result.getReplyObj();
+        if (result.getThrowable() != null) {
+            throw new Exception(result.getThrowable());
+        } else {
+            Bundle reply = result.getReplyBundle();
+            PackageInfo packageInfo = reply.getParcelable("return");
+            if (packageInfo == null) throw new PackageManager.NameNotFoundException("Package doesn't exist.");
+            return packageInfo;
+        }
     }
 
     public List<UserInfo> getUsers(boolean excludeDying) throws Exception {
