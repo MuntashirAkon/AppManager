@@ -36,4 +36,8 @@ adb kill-server
 ADB over TCP will be disabled after a restart. In that case, you have to run the stated command again to enable it.
 :::
 
+::: tip
+LineageOS contains a GUI option for enabling "ADB over network" in the developer options.
+:::
+
 [1]: https://www.xda-developers.com/install-adb-windows-macos-linux/
