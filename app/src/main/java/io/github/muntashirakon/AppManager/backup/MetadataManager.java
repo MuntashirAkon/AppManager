@@ -115,8 +115,7 @@ public final class MetadataManager implements Closeable {
 
     synchronized public void readMetadata(@NonNull BackupFiles.BackupFile backupFile)
             throws JSONException {
-        File metadataFile = backupFile.getMetadataFile();
-        String metadata = Utils.getFileContent(metadataFile);
+        String metadata = Utils.getFileContent(backupFile.getMetadataFile());
         if (TextUtils.isEmpty(metadata)) throw new JSONException("Empty JSON string");
         JSONObject rootObject = new JSONObject(metadata);
         this.metadata = new Metadata();

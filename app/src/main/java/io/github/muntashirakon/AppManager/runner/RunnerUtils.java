@@ -172,6 +172,14 @@ public final class RunnerUtils {
         return Runner.runCommand(String.format("test -e \"%s\"", fileName.getAbsolutePath())).isSuccessful();
     }
 
+    public static boolean isDirectory(@NonNull String fileName) {
+        return Runner.runCommand(String.format("test -d \"%s\"", fileName)).isSuccessful();
+    }
+
+    public static boolean isFile(@NonNull String fileName) {
+        return Runner.runCommand(String.format("test -f \"%s\"", fileName)).isSuccessful();
+    }
+
     public static boolean mkdir(@NonNull String fileName) {
         return Runner.runCommand(String.format("mkdir \"%s\"", fileName)).isSuccessful();
     }
@@ -191,5 +199,10 @@ public final class RunnerUtils {
 
     public static boolean mv(@NonNull File source, @NonNull File dest) {
         return Runner.runCommand(String.format("mv -f \"%s\" \"%s\"", source.getAbsolutePath(), dest.getAbsolutePath())).isSuccessful();
+    }
+
+    public static String cat(@NonNull String fileName, String emptyValue) {
+        Runner.Result result = Runner.runCommand(String.format("cat \"%s\" 2> /dev/null", fileName));
+        return result.isSuccessful() ? result.getOutput() : emptyValue;
     }
 }

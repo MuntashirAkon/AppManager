@@ -48,12 +48,13 @@ public final class BackupUtils {
 
     @NonNull
     public static List<String> getBackupApplications() {
-        File backupPath = BackupFiles.getBackupDirectory();
+        PrivilegedFile backupPath = BackupFiles.getBackupDirectory();
         List<String> packages;
-        String[] files = backupPath.list((dir, name) -> new File(dir, name).isDirectory());
+        String[] files = backupPath.list((dir, name) -> new PrivilegedFile(dir, name).isDirectory());
         if (files != null) packages = new ArrayList<>(Arrays.asList(files));
         else return new ArrayList<>();
         packages.remove(BackupFiles.APK_SAVING_DIRECTORY);
+        packages.remove(BackupFiles.TEMPORARY_DIRECTORY);
         for (Iterator<String> it = packages.iterator(); it.hasNext(); ) {
             if (!MetadataManager.hasMetadata(it.next())) it.remove();
         }

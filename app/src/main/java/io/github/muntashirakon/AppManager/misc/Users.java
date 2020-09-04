@@ -35,7 +35,8 @@ public final class Users {
             for (String user : output) {
                 try {
                     users.add(Integer.parseInt(user));
-                } catch (Exception ignore) {}
+                } catch (Exception ignore) {
+                }
             }
             return ArrayUtils.convertToIntArray(users);
         } else {
@@ -43,27 +44,31 @@ public final class Users {
         }
     }
 
+    private static Integer currentUserHandle = null;
+
     @SuppressWarnings({"JavaReflectionMemberAccess", "rawtypes"})
     public static int getCurrentUser() {
-        try {
-            // using reflection to get id of calling user since method getCallingUserId of UserHandle is hidden
-            // https://github.com/android/platform_frameworks_base/blob/master/core/java/android/os/UserHandle.java#L123
-            Class userHandle = Class.forName("android.os.UserHandle");
-            boolean muEnabled = userHandle.getField("MU_ENABLED").getBoolean(null);
-            int range = userHandle.getField("PER_USER_RANGE").getInt(null);
-            if (muEnabled)
-                return android.os.Binder.getCallingUid() / range;
-        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException ignore) {
+        if (currentUserHandle == null) {
+            currentUserHandle = 0;
+            try {
+                // using reflection to get id of calling user since method getCallingUserId of UserHandle is hidden
+                // https://github.com/android/platform_frameworks_base/blob/master/core/java/android/os/UserHandle.java#L123
+                Class userHandle = Class.forName("android.os.UserHandle");
+                boolean muEnabled = userHandle.getField("MU_ENABLED").getBoolean(null);
+                int range = userHandle.getField("PER_USER_RANGE").getInt(null);
+                if (muEnabled) currentUserHandle = android.os.Binder.getCallingUid() / range;
+            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException ignore) {
+            }
+            // Another way
+//            try {
+//                // FIXME: Get user id using root since this is only intended for root users
+//                @SuppressWarnings("JavaReflectionMemberAccess")
+//                Method myUserId = UserHandle.class.getMethod("myUserId");
+//                currentUserHandle = (int) myUserId.invoke(null);
+//            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+//                e.printStackTrace();
+//            }
         }
-        // Another way
-//        try {
-//            // FIXME: Get user id using root since this is only intended for root users
-//            @SuppressWarnings("JavaReflectionMemberAccess")
-//            Method myUserId = UserHandle.class.getMethod("myUserId");
-//            return (int) myUserId.invoke(null);
-//        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-//            e.printStackTrace();
-//        }
-        return 0;
+        return currentUserHandle;
     }
 }

@@ -83,6 +83,32 @@ public class PrivilegedFile extends File {
     }
 
     @Override
+    public boolean isDirectory() {
+        boolean isDirectory = false;
+        try {
+            isDirectory = super.isDirectory();
+        } catch (SecurityException ignore) {
+        }
+        if (!isDirectory && AppPref.isRootOrAdbEnabled()) {
+            return RunnerUtils.isDirectory(getAbsolutePath());
+        }
+        return isDirectory;
+    }
+
+    @Override
+    public boolean isFile() {
+        boolean isFile = false;
+        try {
+            isFile = super.isFile();
+        } catch (SecurityException ignore) {
+        }
+        if (!isFile && AppPref.isRootOrAdbEnabled()) {
+            return RunnerUtils.isFile(getAbsolutePath());
+        }
+        return isFile;
+    }
+
+    @Override
     public boolean mkdir() {
         boolean isCreated = false;
         try {
@@ -125,10 +151,12 @@ public class PrivilegedFile extends File {
     @Override
     public String[] list() {
         try {
-            return super.list();
-        } catch (SecurityException ignore) {}
+            String[] files = super.list();
+            if (files != null) return files;
+        } catch (SecurityException ignore) {
+        }
         if (AppPref.isRootOrAdbEnabled()) {
-            Runner.Result result = Runner.runCommand("for f in * .*; do echo $f; done");
+            Runner.Result result = Runner.runCommand(String.format("cd %s; for f in * .*; do echo $f; done", getAbsolutePath()));
             if (result.isSuccessful()) {
                 List<String> fileList = result.getOutputAsList();
                 if (fileList.size() > 0) return fileList.toArray(new String[0]);
