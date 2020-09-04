@@ -41,18 +41,20 @@ public abstract class Runner {
 
     private static Runner runner;
     private static boolean isAdb = false;
+    private static boolean isRoot = false;
 
     public static Runner getInstance() {
-        if (runner == null || (isAdb && !AppPref.isAdbEnabled()) || (!isAdb && AppPref.isAdbEnabled())) {
+        if (runner == null || isAdb != AppPref.isAdbEnabled() || isRoot != AppPref.isRootEnabled()) {
+            isAdb = false;
+            isRoot = false;
             if (AppPref.isRootEnabled()) {
                 runner = new RootShellRunner();
-                isAdb = false;
+                isRoot = true;
             } else if (AppPref.isAdbEnabled()) {
                 runner = new AdbShellRunner();
                 isAdb = true;
             } else {
                 runner = new UserShellRunner();
-                isAdb = false;
             }
         }
         return runner;
