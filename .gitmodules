@@ -1,0 +1,3 @@
+[submodule "toybox"]
+	path = toybox
+	url = git@github.com:MuntashirAkon/toybox.git

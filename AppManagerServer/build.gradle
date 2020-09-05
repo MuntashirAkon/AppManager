@@ -124,6 +124,10 @@ def findSdkHome() {
     }
 
     if (sdkHome == null) {
+        sdkHome = System.getenv("ANDROID_SDK_ROOT")
+    }
+
+    if (sdkHome == null) {
         sdkHome = System.getenv("ANDROID_HOME")
     }
 

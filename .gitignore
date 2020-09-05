@@ -8,6 +8,7 @@
 /build
 /app/release
 /app/libs/am-common.jar
+/app/src/main/jniLibs
 /app/src/main/assets/am.jar
 pids
 logs

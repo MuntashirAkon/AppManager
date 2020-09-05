@@ -20,12 +20,13 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 29
     buildToolsVersion '30.0.0'
+    ndkVersion '21.1.6352462'
 
     defaultConfig {
         applicationId 'io.github.muntashirakon.AppManager'
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 355
+        versionCode 356
         versionName "2.5.14"
     }
 
@@ -58,9 +59,21 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
-
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            universalApk true
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ["src/main/jniLibs"]
+        }
+    }
     aaptOptions {
-        noCompress 'jar','sh'
+        noCompress 'jar', 'sh'
     }
 }
 
@@ -78,3 +91,62 @@ dependencies {
 }
 
 preBuild.dependsOn ":AppManagerServer:build"
+
+android.applicationVariants.all {  variant ->
+    variant.getAssembleProvider().configure() {
+        it.doFirst {
+            println("=== toybox: start ===")
+            if (variant.buildType.name == "release") {
+                buildToybox()
+            } else if (variant.buildType.name == "debug") {
+                File file = new File("${rootProject.projectDir.absolutePath}/app/src/main/jniLibs/arm64-v8a/toybox.so")
+                if (!file.exists()) {
+                    buildToybox()
+                } else {
+                    println("Skipping toybox since the files already exists.")
+                }
+            }
+            println("=== toybox: finish ===")
+        }
+    }
+}
+
+def buildToybox() {
+    def ndkPath = getNdk()
+    def buildExec = "${rootProject.projectDir.absolutePath}/toybox-all.sh"
+    def cmdArgs = [ndkPath]
+    exec {
+        workingDir = rootProject.projectDir.absolutePath
+        executable = buildExec
+        args = cmdArgs
+    }
+}
+
+def getNdk() {
+    def ndkHome = null
+    def pFile = project.rootProject.file("local.properties")
+    if (pFile.exists()) {
+        def myProp = new Properties()
+        pFile.withReader {
+            r -> myProp.load(r)
+        }
+        ndkHome = myProp.getProperty("ndk.dir")
+    }
+
+    if (ndkHome == null) {
+        ndkHome = System.getenv("ANDROID_NDK_HOME")
+    }
+
+    if (ndkHome == null) {
+        ndkHome = System.getenv("ANDROID_NDK_ROOT")
+    }
+
+    if (ndkHome == null) {
+        ndkHome = System.getenv("ANDROID_NDK")
+    }
+
+    if (ndkHome?.trim()?.isEmpty()) {
+        throw new RuntimeException("Android NDK directory not found.")
+    }
+    return ndkHome
+}
