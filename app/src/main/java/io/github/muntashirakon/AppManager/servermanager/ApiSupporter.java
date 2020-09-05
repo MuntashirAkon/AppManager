@@ -75,6 +75,22 @@ public class ApiSupporter {
         return null;
     }
 
+    public void setComponentEnabledSetting(String packageName, String componentName, int newState, int flags, int userHandle) throws Exception {
+        Bundle args = new Bundle();
+        args.putInt(PackageHandler.ARG_ACTION, PackageHandler.ACTION_COMPONENT_SETTING);
+        args.putString(PackageHandler.ARG_PACKAGE_NAME, packageName);
+        args.putString(PackageHandler.ARG_COMPONENT_NAME, componentName);
+        args.putInt(PackageHandler.ARG_COMPONENT_STATE, newState);
+        args.putInt(PackageHandler.ARG_FLAGS, flags);
+        args.putInt(PackageHandler.ARG_USER_HANDLE, userHandle);
+        ClassCaller classCaller = new ClassCaller(this.packageName, PackageHandler.class.getName(), args);
+        CallerResult result = localServer.exec(classCaller);
+        result.getReplyObj();
+        if (result.getThrowable() != null) {
+            throw new Exception(result.getThrowable());
+        }
+    }
+
     @NonNull
     public PackageInfo getPackageInfo(String packageName, int flags, int userHandle) throws Exception {
         if (this.userHandle == userHandle) {
@@ -86,7 +102,7 @@ public class ApiSupporter {
         args.putString(PackageHandler.ARG_PACKAGE_NAME, packageName);
         args.putInt(PackageHandler.ARG_FLAGS, flags);
         args.putInt(PackageHandler.ARG_USER_HANDLE, userHandle);
-        ClassCaller classCaller = new ClassCaller(this.packageName, ShellCommandHandler.class.getName(), args);
+        ClassCaller classCaller = new ClassCaller(this.packageName, PackageHandler.class.getName(), args);
         CallerResult result = localServer.exec(classCaller);
         result.getReplyObj();
         if (result.getThrowable() != null) {
@@ -94,7 +110,9 @@ public class ApiSupporter {
         } else {
             Bundle reply = result.getReplyBundle();
             PackageInfo packageInfo = reply.getParcelable("return");
-            if (packageInfo == null) throw new PackageManager.NameNotFoundException("Package doesn't exist.");
+            if (packageInfo == null) {
+                throw new PackageManager.NameNotFoundException("Package doesn't exist.");
+            }
             return packageInfo;
         }
     }

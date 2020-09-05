@@ -322,7 +322,8 @@ public class MainActivity extends BaseActivity implements
             return false;
         });
         handleSelection();
-
+        // Check root
+        if (Utils.isRootGiven()) AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
         // Start local server
         new Thread(LocalServer::getInstance).start();
     }
@@ -536,9 +537,9 @@ public class MainActivity extends BaseActivity implements
         super.onStart();
         // Check root
         AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
-        if (!Utils.isRootGiven()) {
-            AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+        if (!AppPref.isRootEnabled()) {
             AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
+            LocalServer.updateConfig();
             // Check for adb
             new Thread(() -> {
                 try {
@@ -547,11 +548,11 @@ public class MainActivity extends BaseActivity implements
                         AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
                         throw new IOException("Adb not available");
                     }
-                    LocalServer.updateConfig();
                     runOnUiThread(() -> Toast.makeText(this, "Working on ADB mode", Toast.LENGTH_SHORT).show());
                 } catch (Exception e) {
                     AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
                 }
+                LocalServer.updateConfig();
             }).start();
         }
 

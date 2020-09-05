@@ -224,7 +224,7 @@ public class AppPref {
                         | BackupFlags.BACKUP_RULES | BackupFlags.BACKUP_EXCLUDE_CACHE
                         | BackupFlags.BACKUP_SOURCE_APK_ONLY;
             case PREF_ROOT_MODE_ENABLED_BOOL:
-                return Utils.isRootGiven();
+                return false;
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_USAGE_ACCESS_ENABLED_BOOL:
             case PREF_SHOW_DISCLAIMER_BOOL:

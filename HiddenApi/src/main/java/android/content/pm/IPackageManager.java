@@ -17,13 +17,12 @@
 
 package android.content.pm;
 
+import android.annotation.TargetApi;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-
-/**
- * Created by zl on 2017/7/31.
- */
+import android.os.RemoteException;
 
 public interface IPackageManager {
     PackageInfo getPackageInfo(String packageName, int flags, int userId);
@@ -46,10 +45,27 @@ public interface IPackageManager {
 
     ApplicationInfo getApplicationInfo(String packageName, int flags, int userId);
 
-    ParceledListSlice getInstalledPackages(int flags, int userId);
-
     int getPackageUid(String packageName, int flags, int userId);
 
-    // for API 23 or lower
+    @TargetApi(23)
     int getPackageUid(String packageName, int userId);
+
+    IPackageInstaller getPackageInstaller();
+
+    ParceledListSlice<PackageInfo> getInstalledPackages(int flags, int userId);
+
+    void setComponentEnabledSetting(ComponentName componentName, int newState, int flags, int userId);
+
+    int getComponentEnabledSetting(ComponentName componentName, int userId);
+
+    void setApplicationEnabledSetting(String packageName, int newState, int flags, int userId);
+
+    int getApplicationEnabledSetting(String packageName, int userId);
+
+    abstract class Stub extends Binder implements IPackageManager {
+
+        public static IPackageManager asInterface(IBinder obj) {
+            throw new UnsupportedOperationException();
+        }
+    }
 }
