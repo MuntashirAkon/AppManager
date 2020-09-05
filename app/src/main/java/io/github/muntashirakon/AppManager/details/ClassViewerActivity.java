@@ -40,13 +40,13 @@ import java.util.regex.Pattern;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
+import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 
-public class ClassViewerActivity extends AppCompatActivity {
+public class ClassViewerActivity extends BaseActivity {
     public static final String EXTRA_APP_NAME = "app_name";
     public static final String EXTRA_CLASS_NAME = "class_name";
     public static final String EXTRA_CLASS_DUMP = "class_dump";

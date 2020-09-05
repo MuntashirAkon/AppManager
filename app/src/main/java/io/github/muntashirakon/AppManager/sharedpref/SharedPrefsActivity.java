@@ -55,16 +55,16 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-public class SharedPrefsActivity extends AppCompatActivity implements
+public class SharedPrefsActivity extends BaseActivity implements
         SearchView.OnQueryTextListener, EditPrefItemFragment.InterfaceCommunicator {
     public static final String EXTRA_PREF_LOCATION = "EXTRA_PREF_LOCATION";
     public static final String EXTRA_PREF_LABEL    = "EXTRA_PREF_LABEL";  // Optional

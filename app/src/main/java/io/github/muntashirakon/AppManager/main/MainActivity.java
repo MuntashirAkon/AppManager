@@ -53,8 +53,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SearchView;
@@ -65,6 +63,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
@@ -85,7 +84,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import static androidx.appcompat.app.ActionBar.LayoutParams;
 import static io.github.muntashirakon.AppManager.utils.Utils.requestExternalStoragePermissions;
 
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity extends BaseActivity implements
         SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
     public static final String EXTRA_PACKAGE_LIST = "EXTRA_PACKAGE_LIST";
     public static final String EXTRA_LIST_NAME = "EXTRA_LIST_NAME";
@@ -194,7 +193,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppCompatDelegate.setDefaultNightMode((int) AppPref.get(AppPref.PrefKey.PREF_APP_THEME_INT));
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.toolbar));
         mModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(MainViewModel.class);

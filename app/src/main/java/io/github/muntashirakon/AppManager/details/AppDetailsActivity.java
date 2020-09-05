@@ -36,7 +36,6 @@ import com.google.android.material.tabs.TabLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
@@ -44,10 +43,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
+import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-public class AppDetailsActivity extends AppCompatActivity {
+public class AppDetailsActivity extends BaseActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
 
     public AppDetailsViewModel model;

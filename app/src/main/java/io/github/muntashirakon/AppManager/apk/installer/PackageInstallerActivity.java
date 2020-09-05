@@ -32,9 +32,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
@@ -45,7 +45,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
 
-public class PackageInstallerActivity extends AppCompatActivity {
+public class PackageInstallerActivity extends BaseActivity {
     private ApkFile apkFile;
     private String appLabel;
     private PackageManager mPackageManager;

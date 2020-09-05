@@ -51,16 +51,16 @@ import java.util.regex.Pattern;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
+import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.xmlapkparser.AXMLPrinter;
 
-public class ManifestViewerActivity extends AppCompatActivity {
+public class ManifestViewerActivity extends BaseActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
 
     private static final String MANIFEST_CACHE_APK = "manifest_cache.apk";

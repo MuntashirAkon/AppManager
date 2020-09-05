@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.settings;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.view.MenuItem;
@@ -36,25 +35,30 @@ import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.text.HtmlCompat;
+import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-public class SettingsActivity extends AppCompatActivity {
-    private static List<Integer> themeConst = Arrays.asList(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM, AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY, AppCompatDelegate.MODE_NIGHT_NO, AppCompatDelegate.MODE_NIGHT_YES);
+public class SettingsActivity extends BaseActivity {
+    private static final List<Integer> themeConst = Arrays.asList(
+            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
+            AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY,
+            AppCompatDelegate.MODE_NIGHT_NO,
+            AppCompatDelegate.MODE_NIGHT_YES);
 
     private AppPref appPref;
     private int currentTheme;
+    private String currentLang;
     public ProgressIndicator progressIndicator;
 
     @Override
@@ -74,6 +78,7 @@ public class SettingsActivity extends AppCompatActivity {
         final View importExportView = findViewById(R.id.import_view);
         final View removeAllView = findViewById(R.id.remove_all_rules);
         final TextView appThemeMsg = findViewById(R.id.app_theme_msg);
+        final TextView languageMsg = findViewById(R.id.app_language_msg);
 
         // Read pref
         boolean rootEnabled = appPref.getBoolean(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL);
@@ -81,6 +86,7 @@ public class SettingsActivity extends AppCompatActivity {
         boolean blockingEnabled = appPref.getBoolean(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL);
         boolean usageEnabled = appPref.getBoolean(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL);
         currentTheme = appPref.getInt(AppPref.PrefKey.PREF_APP_THEME_INT);
+        currentLang = (String) AppPref.get(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR);
 
         // Set changed values
         rootSwitcher.setChecked(rootEnabled);
@@ -91,6 +97,9 @@ public class SettingsActivity extends AppCompatActivity {
         usageSwitcher.setChecked(usageEnabled);
         final String[] themes = getResources().getStringArray(R.array.themes);
         appThemeMsg.setText(String.format(Locale.getDefault(), getString(R.string.current_theme), themes[themeConst.indexOf(currentTheme)]));
+        final String[] languages = getResources().getStringArray(R.array.languages);
+        final String[] langKeys = getResources().getStringArray(R.array.languages_key);
+        languageMsg.setText(String.format(Locale.getDefault(), getString(R.string.current_language), languages[ArrayUtils.indexOf(langKeys, currentLang)]));
 
         // Set listeners
         // App theme
@@ -102,9 +111,19 @@ public class SettingsActivity extends AppCompatActivity {
                         .setPositiveButton(R.string.apply, (dialog, which) -> {
                             appPref.setPref(AppPref.PrefKey.PREF_APP_THEME_INT, currentTheme);
                             AppCompatDelegate.setDefaultNightMode(currentTheme);
-                            Intent intent = new Intent(this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
+                        })
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .create()
+                        .show());
+        // Language
+        findViewById(R.id.app_language).setOnClickListener(v ->
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string.choose_language)
+                        .setSingleChoiceItems(languages, ArrayUtils.indexOf(langKeys, currentLang),
+                                (dialog, which) -> currentLang = langKeys[which])
+                        .setPositiveButton(R.string.apply, (dialog, which) -> {
+                            appPref.setPref(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR, currentLang);
+                            recreate();
                         })
                         .setNegativeButton(android.R.string.cancel, null)
                         .create()

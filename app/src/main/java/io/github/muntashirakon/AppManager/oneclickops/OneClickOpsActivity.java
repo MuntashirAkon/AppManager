@@ -39,8 +39,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
@@ -49,7 +49,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
-public class OneClickOpsActivity extends AppCompatActivity {
+public class OneClickOpsActivity extends BaseActivity {
     private ListItemCreator mItemCreator;
     private ProgressIndicator mProgressIndicator;
     private BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {

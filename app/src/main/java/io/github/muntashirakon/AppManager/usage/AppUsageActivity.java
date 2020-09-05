@@ -55,9 +55,9 @@ import java.util.Locale;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.usage.UsageUtils.IntervalType;
@@ -69,7 +69,7 @@ import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_TODAY;
 import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_WEEKLY;
 import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_YESTERDAY;
 
-public class AppUsageActivity extends AppCompatActivity implements ListView.OnItemClickListener,
+public class AppUsageActivity extends BaseActivity implements ListView.OnItemClickListener,
         SwipeRefreshLayout.OnRefreshListener {
     @IntDef(value = {
             SORT_BY_APP_LABEL,

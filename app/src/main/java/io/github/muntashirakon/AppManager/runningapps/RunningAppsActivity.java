@@ -51,10 +51,10 @@ import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
+import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
@@ -64,7 +64,7 @@ import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-public class RunningAppsActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class RunningAppsActivity extends BaseActivity implements SearchView.OnQueryTextListener {
     // "^(?<label>[^\\t\\s]+)[\\t\\s]+(?<pid>\\d+)[\\t\\s]+(?<ppid>\\d+)[\\t\\s]+(?<rss>\\d+)[\\t\\s]+(?<vsz>\\d+)[\\t\\s]+(?<user>[^\\t\\s]+)[\\t\\s]+(?<uid>\\d+)[\\t\\s]+(?<state>\\w)(?<stateplus>[\\w\\+<])?[\\t\\s]+(?<name>[^\\t\\s]+)$"
     private static final Pattern PROCESS_MATCHER = Pattern.compile("^([^\\t\\s]+)[\\t\\s]+(\\d+)" +
             "[\\t\\s]+(\\d+)[\\t\\s]+(\\d+)[\\t\\s]+(\\d+)[\\t\\s]+([^\\t\\s]+)[\\t\\s]+(\\d+)" +

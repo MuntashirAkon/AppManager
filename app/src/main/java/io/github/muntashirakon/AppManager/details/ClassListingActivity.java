@@ -57,13 +57,13 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 import dalvik.system.DexClassLoader;
+import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
@@ -73,7 +73,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import static com.google.classysharkandroid.utils.PackageUtils.apkCert;
 import static com.google.classysharkandroid.utils.PackageUtils.convertS;
 
-public class ClassListingActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class ClassListingActivity extends BaseActivity implements SearchView.OnQueryTextListener {
     private static final String APP_DEX = "app_dex";
     private static final String EXODUS_CACHE_APK = "exodus_cache.apk";
 

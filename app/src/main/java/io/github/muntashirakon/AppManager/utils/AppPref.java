@@ -46,6 +46,7 @@ public class AppPref {
         PREF_APP_OP_SHOW_DEFAULT_BOOL,
         PREF_APP_THEME_INT,
         PREF_BACKUP_FLAGS_INT,
+        PREF_CUSTOM_LOCALE_STR,
         PREF_ENABLE_KILL_FOR_SYSTEM_BOOL,
         PREF_GLOBAL_BLOCKING_ENABLED_BOOL,
         PREF_LAST_VERSION_CODE_LONG,
@@ -145,6 +146,7 @@ public class AppPref {
         return getInstance().getBoolean(PrefKey.PREF_ADB_MODE_ENABLED_BOOL);
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isGlobalBlockingEnabled() {
         return getInstance().getBoolean(PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL);
     }
@@ -214,8 +216,8 @@ public class AppPref {
         editor.apply();
     }
 
-    private @NonNull
-    Object getDefaultValue(@NonNull PrefKey key) {
+    @NonNull
+    private Object getDefaultValue(@NonNull PrefKey key) {
         switch (key) {
             case PREF_BACKUP_FLAGS_INT:
                 return BackupFlags.BACKUP_SOURCE | BackupFlags.BACKUP_DATA
@@ -239,6 +241,8 @@ public class AppPref {
                 return MainActivity.FILTER_NO_FILTER;
             case PREF_MAIN_WINDOW_SORT_ORDER_INT:
                 return MainActivity.SORT_BY_APP_LABEL;
+            case PREF_CUSTOM_LOCALE_STR:
+                return LangUtils.LANG_AUTO;
         }
         throw new IllegalArgumentException("Pref key not found.");
     }

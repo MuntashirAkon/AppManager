@@ -537,4 +537,8 @@
     <string name="source">Source</string>
     <string name="backup_multiple">Backup multiple</string>
     <string name="backup_all_users">All users</string>
+    <string name="pref_app_language">Language</string>
+    <string name="auto">Auto</string>
+    <string name="current_language">Current language: %s</string>
+    <string name="choose_language">Choose a language</string>
 </resources>
