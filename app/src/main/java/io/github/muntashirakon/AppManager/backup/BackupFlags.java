@@ -53,10 +53,10 @@ public final class BackupFlags {
     public static final int BACKUP_NO_SIGNATURE_CHECK = 1 << 5;
     public static final int BACKUP_SOURCE_APK_ONLY = 1 << 6;
     public static final int BACKUP_EXT_OBB_MEDIA = 1 << 7;
-    public static final int BACKUP_ALL_USERS = 1 << 8;  // TODO
-    public static final int BACKUP_MULTIPLE = 1 << 9;  // TODO
+    public static final int BACKUP_ALL_USERS = 1 << 8;
+    public static final int BACKUP_MULTIPLE = 1 << 9;
 
-    public static final int BACKUP_TOTAL = 10;  // TODO
+    public static final int BACKUP_TOTAL = 10;
 
     @BackupFlag
     private int flags;

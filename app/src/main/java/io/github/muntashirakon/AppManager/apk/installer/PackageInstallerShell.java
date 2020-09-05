@@ -24,6 +24,7 @@ import java.io.File;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
@@ -40,9 +41,15 @@ public final class PackageInstallerShell extends AMPackageInstaller {
         return INSTANCE;
     }
 
-    int sessionId = -1;
+    private int sessionId = -1;
+    private int userHandle;
 
     private PackageInstallerShell() {
+        userHandle = Users.getCurrentUser();
+    }
+
+    public PackageInstallerShell(int userHandle) {
+        this.userHandle = userHandle;
     }
 
     // https://cs.android.com/android/_/android/platform/system/core/+/5b940dc7f9c0364d84469cad7b47a5ffaa33600b:adb/client/adb_install.cpp;drc=71afeb9a5e849e8752c470aa31c568be2e48d0b6;l=538
@@ -61,7 +68,7 @@ public final class PackageInstallerShell extends AMPackageInstaller {
         // Create install session
         StringBuilder cmd = new StringBuilder(installCmd).append(" install-create -r -d -t -S ")
                 .append(totalSize).append(" -i ").append(BuildConfig.APPLICATION_ID)
-                .append(" --user 0");
+                .append(" --user ").append(RunnerUtils.userHandleToUser(userHandle));
         for (File apkFile : apkFiles)
             cmd.append(" \"").append(apkFile.getAbsolutePath()).append("\"");
         Runner.Result result = Runner.runCommand(cmd.toString());

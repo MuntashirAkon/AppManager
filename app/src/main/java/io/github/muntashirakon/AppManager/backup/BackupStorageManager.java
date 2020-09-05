@@ -43,7 +43,6 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import dalvik.system.VMRuntime;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerShell;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.misc.Users;
@@ -52,9 +51,12 @@ import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.FreshFile;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class BackupStorageManager implements AutoCloseable {
     private static final String EXT_DATA = "/Android/data/";
@@ -140,19 +142,19 @@ public class BackupStorageManager implements AutoCloseable {
         return true;
     }
 
-    @SuppressLint("WrongConstant")
     public boolean backup(BackupFiles.BackupFile backupFile, int userHandle) {
         final MetadataManager.Metadata metadata;
         final PackageInfo packageInfo;
         final ApplicationInfo applicationInfo;
         try {
-            PackageManager pm = AppManager.getContext().getPackageManager();
-            packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo);
+            packageInfo = ApiSupporter.getInstance(LocalServer.getInstance()).getPackageInfo(
+                    packageName, PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo,
+                    userHandle);
             applicationInfo = packageInfo.applicationInfo;
             // Override existing metadata
             metadata = metadataManager.setupMetadata(packageInfo, userHandle, requestedFlags);
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e("BSM - Backup", "Failed to setup metadata.");
+        } catch (Exception e) {
+            Log.e("BSM - Backup", "Failed to setup metadata.", e);
             return false;
         }
         // Create a new temporary directory
@@ -228,8 +230,9 @@ public class BackupStorageManager implements AutoCloseable {
         }
         for (int i = 0; i < userHandles.length; ++i) {
             BackupFiles.BackupFile[] backupFiles = backupFilesList[i].getBackupPaths(false);
-            for (BackupFiles.BackupFile backupFile : backupFiles) {
-                if (!restore(backupFile, userHandles[i])) return false;
+            // Only restore from the first backup file
+            if (backupFiles.length > 0) {
+                if (!restore(backupFiles[0], userHandles[i])) return false;
             }
         }
         return true;
@@ -246,6 +249,11 @@ public class BackupStorageManager implements AutoCloseable {
             e.printStackTrace();
             return false;
         }
+        // Check user handle
+        if (metadata.userHandle != userHandle) {
+            Log.w("BSM - Restore", "Using different user handle.");
+        }
+        ApiSupporter apiSupporter = ApiSupporter.getInstance(LocalServer.getInstance());
         PrivilegedFile backupPath = backupFile.getBackupPath();
         // Get instruction set
         String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);
@@ -253,8 +261,8 @@ public class BackupStorageManager implements AutoCloseable {
         // Get package info
         PackageInfo packageInfo = null;
         try {
-            packageInfo = AppManager.getContext().getPackageManager().getPackageInfo(packageName, PackageUtils.flagSigningInfo);
-        } catch (PackageManager.NameNotFoundException ignore) {
+            packageInfo = apiSupporter.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
+        } catch (Exception ignore) {
         }
         boolean isInstalled = packageInfo != null;
         boolean noChecksumCheck = requestedFlags.noSignatureCheck();
@@ -303,7 +311,7 @@ public class BackupStorageManager implements AutoCloseable {
             if (reinstallNeeded) {
                 // A complete reinstall needed, first uninstall the package with -k and then install
                 // the package again with -r
-                if (!RunnerUtils.uninstallPackageWithoutData(packageName).isSuccessful()) {
+                if (!RunnerUtils.uninstallPackageWithoutData(packageName, userHandle).isSuccessful()) {
                     Log.e("BSM - Restore", "An uninstall was necessary but couldn't perform it.");
                     return false;
                 }
@@ -330,7 +338,8 @@ public class BackupStorageManager implements AutoCloseable {
                 return false;
             }
             // A normal update will do it now
-            if (!PackageInstallerShell.getInstance().installMultiple(allApks, packageName)) {
+            PackageInstallerShell packageInstaller = new PackageInstallerShell(userHandle);
+            if (!packageInstaller.installMultiple(allApks, packageName)) {
                 Log.e("BSM - Restore", "A (re)install was necessary but couldn't perform it.");
                 deleteFiles(allApks);
                 return false;
@@ -338,15 +347,11 @@ public class BackupStorageManager implements AutoCloseable {
             deleteFiles(allApks);
             // Get package info
             try {
-                packageInfo = AppManager.getContext().getPackageManager().getPackageInfo(packageName, PackageUtils.flagSigningInfo);
-                isInstalled = packageInfo != null;
-            } catch (PackageManager.NameNotFoundException e) {
+                packageInfo = apiSupporter.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
+                isInstalled = true;
+            } catch (Exception e) {
                 Log.e("BSM - Restore", "Apparently the install wasn't complete in the previous section.");
                 e.printStackTrace();
-                return false;
-            }
-            if (packageInfo == null) {
-                Log.e("BSM - Restore", "Apparently the install wasn't complete in the previous section.");
                 return false;
             }
             File sourceDir = new File(PackageUtils.getSourceDir(packageInfo.applicationInfo));
@@ -393,11 +398,11 @@ public class BackupStorageManager implements AutoCloseable {
                 }
             }
             // Force stop app before restoring backups
-            RunnerUtils.forceStopPackage(packageName);
+            RunnerUtils.forceStopPackage(packageName, RunnerUtils.USER_ALL);
             // Restore backups
             String dataSource;
             for (int i = 0; i < metadata.dataDirs.length; ++i) {
-                dataSource = metadata.dataDirs[i];  // FIXME: get data dir for new user handle (by replacing the user handle)
+                dataSource = Utils.replaceOnce(metadata.dataDirs[i], "/" + metadata.userHandle + "/", "/" + userHandle + "/");
                 dataFiles = getDataFiles(backupPath, i);
                 Pair<Integer, Integer> uidAndGid = null;
                 if (RunnerUtils.fileExists(dataSource)) {
@@ -453,6 +458,7 @@ public class BackupStorageManager implements AutoCloseable {
             }
             File rulesFile = new File(backupPath, RULES_TSV);
             if (rulesFile.exists()) {
+                // FIXME: Import rules for user handle
                 try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()))) {
                     importer.addRulesFromUri(Uri.fromFile(rulesFile));
                     importer.setPackagesToImport(Collections.singletonList(packageName));
@@ -472,7 +478,7 @@ public class BackupStorageManager implements AutoCloseable {
 
     public boolean deleteBackup() {
         for (int i = 0; i < userHandles.length; ++i) {
-            BackupFiles.BackupFile[] backupFiles = backupFilesList[i].getFreshBackupPaths();
+            BackupFiles.BackupFile[] backupFiles = backupFilesList[i].getBackupPaths(false);
             for (BackupFiles.BackupFile backupFile : backupFiles) {
                 if (!backupFile.delete()) return false;
             }

@@ -37,6 +37,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
@@ -184,6 +185,7 @@ public class RulesStorageManager implements Closeable {
 
     public void applyAppOpsAndPerms(boolean apply) {
         Runner runner = Runner.getInstance();
+        String user = RunnerUtils.userHandleToUser(Users.getCurrentUser());
         if (apply) {
             // Apply all app ops
             List<Entry> appOps = getAll(Type.APP_OP);
@@ -199,9 +201,9 @@ public class RulesStorageManager implements Closeable {
             for (Entry permission: permissions) {
                 if ((Boolean) permission.extra) {
                     // grant permission
-                    runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_GRANT, packageName, permission.name));
+                    runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_GRANT, user, packageName, permission.name));
                 } else {
-                    runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_REVOKE, packageName, permission.name));
+                    runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_REVOKE, user, packageName, permission.name));
                 }
             }
         } else {
@@ -214,7 +216,7 @@ public class RulesStorageManager implements Closeable {
             // Revoke all permissions
             List<Entry> permissions = getAll(Type.PERMISSION);
             for (Entry permission: permissions) {
-                runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_REVOKE, packageName, permission.name));
+                runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_REVOKE, user, packageName, permission.name));
             }
         }
         // Run all commands

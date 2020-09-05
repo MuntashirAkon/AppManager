@@ -86,6 +86,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.misc.RequestCodes;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
 public class Utils {
     public static final String TERMUX_LOGIN_PATH = OsEnvironment.getDataDataDirectory() + "/com.termux/files/usr/bin/login";
@@ -153,22 +154,22 @@ public class Utils {
         int tokenStart = 0;
         int currentType = Character.getType(c[tokenStart]);
         for (int pos = tokenStart + 1; pos < c.length; pos++) {
-                int type = Character.getType(c[pos]);
-                if (type == currentType) {
-                        continue;
-                    }
-                if (camelCase && type == Character.LOWERCASE_LETTER && currentType == Character.UPPERCASE_LETTER) {
-                        int newTokenStart = pos - 1;
-                        if (newTokenStart != tokenStart) {
-                                list.add(new String(c, tokenStart, newTokenStart - tokenStart));
-                                tokenStart = newTokenStart;
-                            }
-                    } else {
-                        list.add(new String(c, tokenStart, pos - tokenStart));
-                        tokenStart = pos;
-                    }
-                currentType = type;
+            int type = Character.getType(c[pos]);
+            if (type == currentType) {
+                continue;
             }
+            if (camelCase && type == Character.LOWERCASE_LETTER && currentType == Character.UPPERCASE_LETTER) {
+                int newTokenStart = pos - 1;
+                if (newTokenStart != tokenStart) {
+                    list.add(new String(c, tokenStart, newTokenStart - tokenStart));
+                    tokenStart = newTokenStart;
+                }
+            } else {
+                list.add(new String(c, tokenStart, pos - tokenStart));
+                tokenStart = pos;
+            }
+            currentType = type;
+        }
         list.add(new String(c, tokenStart, c.length - tokenStart));
         return list.toArray(new String[0]);
     }
@@ -206,7 +207,7 @@ public class Utils {
     @NonNull
     public static String getLastComponent(@NonNull String str) {
         try {
-            return str.substring(str.lastIndexOf('.')+1);
+            return str.substring(str.lastIndexOf('.') + 1);
         } catch (Exception e) {
             return str;
         }
@@ -219,7 +220,8 @@ public class Utils {
 
     /**
      * Read the full content of a file.
-     * @param file The file to be read
+     *
+     * @param file       The file to be read
      * @param emptyValue Empty value if no content has been found
      * @return File content as string
      */
@@ -230,8 +232,11 @@ public class Utils {
             return getInputStreamContent(new FileInputStream(file));
         } catch (IOException e) {
             e.printStackTrace();
-            return emptyValue;
         }
+        if (AppPref.isRootOrAdbEnabled()) {
+            return RunnerUtils.cat(file.getAbsolutePath(), emptyValue);
+        }
+        return emptyValue;
     }
 
     @NonNull
@@ -261,19 +266,31 @@ public class Utils {
     @NonNull
     public static String getProcessStateName(@NonNull String shortName) {
         switch (shortName) {
-            case "R": return "Running";
-            case "S": return "Sleeping";
-            case "D": return "Device I/O";
-            case "T": return "Stopped";
-            case "t": return "Trace stop";
+            case "R":
+                return "Running";
+            case "S":
+                return "Sleeping";
+            case "D":
+                return "Device I/O";
+            case "T":
+                return "Stopped";
+            case "t":
+                return "Trace stop";
             case "x":
-            case "X": return "Dead";
-            case "Z": return "Zombie";
-            case "P": return "Parked";
-            case "I": return "Idle";
-            case "K": return "Wake kill";
-            case "W": return "Waking";
-            default: return "";
+            case "X":
+                return "Dead";
+            case "Z":
+                return "Zombie";
+            case "P":
+                return "Parked";
+            case "I":
+                return "Idle";
+            case "K":
+                return "Wake kill";
+            case "W":
+                return "Waking";
+            default:
+                return "";
         }
     }
 
@@ -281,13 +298,20 @@ public class Utils {
     public static String getProcessStateExtraName(String shortName) {
         if (shortName == null) return "";
         switch (shortName) {
-            case "<": return "High priority";
-            case "N": return "Low priority";
-            case "L": return "Locked memory";
-            case "s": return "Session leader";
-            case "+": return "foreground";
-            case "l": return "Multithreaded";
-            default: return "";
+            case "<":
+                return "High priority";
+            case "N":
+                return "Low priority";
+            case "L":
+                return "Locked memory";
+            case "s":
+                return "Session leader";
+            case "+":
+                return "foreground";
+            case "l":
+                return "Multithreaded";
+            default:
+                return "";
         }
     }
 
@@ -295,11 +319,16 @@ public class Utils {
     @NonNull
     public static String getLaunchMode(int mode) {
         switch (mode) {
-            case ActivityInfo.LAUNCH_MULTIPLE: return "Multiple";
-            case ActivityInfo.LAUNCH_SINGLE_INSTANCE: return "Single instance";
-            case ActivityInfo.LAUNCH_SINGLE_TASK: return "Single task";
-            case ActivityInfo.LAUNCH_SINGLE_TOP: return "Single top";
-            default: return "null";
+            case ActivityInfo.LAUNCH_MULTIPLE:
+                return "Multiple";
+            case ActivityInfo.LAUNCH_SINGLE_INSTANCE:
+                return "Single instance";
+            case ActivityInfo.LAUNCH_SINGLE_TASK:
+                return "Single task";
+            case ActivityInfo.LAUNCH_SINGLE_TOP:
+                return "Single top";
+            default:
+                return "null";
         }
     }
 
@@ -307,23 +336,40 @@ public class Utils {
     @NonNull
     public static String getOrientationString(int orientation) {
         switch (orientation) {
-            case ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED: return "Unspecified";
-            case ActivityInfo.SCREEN_ORIENTATION_BEHIND: return "Behind";
-            case ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR: return "Full sensor";
-            case ActivityInfo.SCREEN_ORIENTATION_FULL_USER: return "Full user";
-            case ActivityInfo.SCREEN_ORIENTATION_LOCKED: return "Locked";
-            case ActivityInfo.SCREEN_ORIENTATION_NOSENSOR: return "No sensor";
-            case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE: return "Landscape";
-            case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT: return "Portrait";
-            case ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT: return "Reverse portrait";
-            case ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE: return "Reverse landscape";
-            case ActivityInfo.SCREEN_ORIENTATION_USER: return "User";
-            case ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE: return "Sensor landscape";
-            case ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT: return "Sensor portrait";
-            case ActivityInfo.SCREEN_ORIENTATION_SENSOR: return "Sensor";
-            case ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE: return "User landscape";
-            case ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT: return "User portrait";
-            default: return "null";
+            case ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED:
+                return "Unspecified";
+            case ActivityInfo.SCREEN_ORIENTATION_BEHIND:
+                return "Behind";
+            case ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR:
+                return "Full sensor";
+            case ActivityInfo.SCREEN_ORIENTATION_FULL_USER:
+                return "Full user";
+            case ActivityInfo.SCREEN_ORIENTATION_LOCKED:
+                return "Locked";
+            case ActivityInfo.SCREEN_ORIENTATION_NOSENSOR:
+                return "No sensor";
+            case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
+                return "Landscape";
+            case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:
+                return "Portrait";
+            case ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT:
+                return "Reverse portrait";
+            case ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE:
+                return "Reverse landscape";
+            case ActivityInfo.SCREEN_ORIENTATION_USER:
+                return "User";
+            case ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE:
+                return "Sensor landscape";
+            case ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT:
+                return "Sensor portrait";
+            case ActivityInfo.SCREEN_ORIENTATION_SENSOR:
+                return "Sensor";
+            case ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE:
+                return "User landscape";
+            case ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT:
+                return "User portrait";
+            default:
+                return "null";
         }
     }
 
@@ -376,18 +422,18 @@ public class Utils {
         if ((flag & ServiceInfo.FLAG_SINGLE_USER) != 0)
             builder.append("Single user, ");
 
-        if (Build.VERSION.SDK_INT >= 24){
-            if ((flag & ServiceInfo.FLAG_EXTERNAL_SERVICE)!= 0)
-            builder.append("External service, ");
+        if (Build.VERSION.SDK_INT >= 24) {
+            if ((flag & ServiceInfo.FLAG_EXTERNAL_SERVICE) != 0)
+                builder.append("External service, ");
 
-            if (Build.VERSION.SDK_INT >= 29){
+            if (Build.VERSION.SDK_INT >= 29) {
                 if ((flag & ServiceInfo.FLAG_USE_APP_ZYGOTE) != 0)
                     builder.append("Use app zygote, ");
             }
         }
         checkStringBuilderEnd(builder);
         String result = builder.toString();
-        return result.equals("") ? "\u2690" : "\u2691 "+result;
+        return result.equals("") ? "\u2690" : "\u2691 " + result;
     }
 
     // FIXME Add translation support
@@ -428,7 +474,7 @@ public class Utils {
             builder.append("NotNeeded, ");
         checkStringBuilderEnd(builder);
         String result = builder.toString();
-        return result.equals("") ? "\u2690" : "\u2691 "+result;
+        return result.equals("") ? "\u2690" : "\u2691 " + result;
     }
 
     // FIXME Add translation support
@@ -503,7 +549,7 @@ public class Utils {
     // FIXME Add translation support
     @NonNull
     public static String getFeatureFlagsString(int flags) {
-        return (flags == FeatureInfo.FLAG_REQUIRED) ? "Required": "null";
+        return (flags == FeatureInfo.FLAG_REQUIRED) ? "Required" : "null";
     }
 
     // FIXME Add translation support
@@ -521,10 +567,14 @@ public class Utils {
     @NonNull
     public static String getKeyboardTypeString(int KbType) {
         switch (KbType) {
-            case Configuration.KEYBOARD_UNDEFINED: return "Undefined";
-            case Configuration.KEYBOARD_NOKEYS: return "No keys";
-            case Configuration.KEYBOARD_QWERTY: return "Qwerty";
-            case Configuration.KEYBOARD_12KEY: return "12 key";
+            case Configuration.KEYBOARD_UNDEFINED:
+                return "Undefined";
+            case Configuration.KEYBOARD_NOKEYS:
+                return "No keys";
+            case Configuration.KEYBOARD_QWERTY:
+                return "Qwerty";
+            case Configuration.KEYBOARD_12KEY:
+                return "12 key";
         }
         return String.valueOf(KbType);
     }
@@ -533,11 +583,16 @@ public class Utils {
     @NonNull
     public static String getNavigationString(int navId) {
         switch (navId) {
-            case Configuration.NAVIGATION_UNDEFINED: return "Undefined";
-            case Configuration.NAVIGATION_NONAV: return "No nav";
-            case Configuration.NAVIGATION_DPAD: return "Dial pad";
-            case Configuration.NAVIGATION_TRACKBALL: return "Trackball";
-            case Configuration.NAVIGATION_WHEEL: return "Wheel";
+            case Configuration.NAVIGATION_UNDEFINED:
+                return "Undefined";
+            case Configuration.NAVIGATION_NONAV:
+                return "No nav";
+            case Configuration.NAVIGATION_DPAD:
+                return "Dial pad";
+            case Configuration.NAVIGATION_TRACKBALL:
+                return "Trackball";
+            case Configuration.NAVIGATION_WHEEL:
+                return "Wheel";
         }
         return String.valueOf(navId);
     }
@@ -546,10 +601,14 @@ public class Utils {
     @NonNull
     public static String getTouchScreenString(int touchId) {
         switch (touchId) {
-            case Configuration.TOUCHSCREEN_UNDEFINED: return "Undefined";
-            case Configuration.TOUCHSCREEN_NOTOUCH: return "No touch";
-            case 2: return "Stylus";  // Configuration.TOUCHSCREEN_STYLUS
-            case Configuration.TOUCHSCREEN_FINGER: return "Finger";
+            case Configuration.TOUCHSCREEN_UNDEFINED:
+                return "Undefined";
+            case Configuration.TOUCHSCREEN_NOTOUCH:
+                return "No touch";
+            case 2:
+                return "Stylus";  // Configuration.TOUCHSCREEN_STYLUS
+            case Configuration.TOUCHSCREEN_FINGER:
+                return "Finger";
         }
         return String.valueOf(touchId);
     }
@@ -560,10 +619,10 @@ public class Utils {
     }
 
     @NonNull
-    public static String getOpenGL(int reqGL){
-            if (reqGL != 0) {
-                return (short) (reqGL >> 16) + "." + (short) reqGL; // Integer.toString((reqGL & 0xffff0000) >> 16);
-            } else return "1"; // Lack of property means OpenGL ES version 1
+    public static String getOpenGL(int reqGL) {
+        if (reqGL != 0) {
+            return (short) (reqGL >> 16) + "." + (short) reqGL; // Integer.toString((reqGL & 0xffff0000) >> 16);
+        } else return "1"; // Lack of property means OpenGL ES version 1
     }
 
     @NonNull
@@ -582,7 +641,7 @@ public class Utils {
 
     // FIXME Add translation support
     @NonNull
-    public static String signCert(@NonNull Signature sign){
+    public static String signCert(@NonNull Signature sign) {
         String s = "";
         try {
             X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X.509")
@@ -598,14 +657,14 @@ public class Utils {
                     + "---" + cert.getSigAlgName() + "---" + cert.getSigAlgOID()
                     + "\n" + cert.getPublicKey()
                     + "\n";
-        }catch (NoSuchAlgorithmException | CertificateException e) {
+        } catch (NoSuchAlgorithmException | CertificateException e) {
             return e.toString() + s;
         }
         return s;
     }
 
     @NonNull
-    public static Tuple<String, String> getIssuerAndAlg(@NonNull PackageInfo p){
+    public static Tuple<String, String> getIssuerAndAlg(@NonNull PackageInfo p) {
         Signature[] signatures;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             SigningInfo signingInfo = p.signingInfo;
@@ -615,15 +674,16 @@ public class Utils {
             signatures = p.signatures;
         }
         X509Certificate c;
-        Tuple<String, String> t= new Tuple<>("", "");
+        Tuple<String, String> t = new Tuple<>("", "");
         try {
-            for (Signature sg: signatures) {
+            for (Signature sg : signatures) {
                 c = (X509Certificate) CertificateFactory.getInstance("X.509")
                         .generateCertificate(new ByteArrayInputStream(sg.toByteArray()));
                 t.setFirst(c.getIssuerX500Principal().getName());
                 t.setSecond(c.getSigAlgName());
             }
-        } catch (CertificateException ignored) {}
+        } catch (CertificateException ignored) {
+        }
         return t;
     }
 
@@ -677,12 +737,14 @@ public class Utils {
         }
         time /= 60000; // minutes
         long month, day, hour, min;
-        month = time / 43200; time %= 43200;
-        day = time / 1440; time %= 1440;
+        month = time / 43200;
+        time %= 43200;
+        day = time / 1440;
+        time %= 1440;
         hour = time / 60;
         min = time % 60;
         int count = 0;
-        if (month != 0){
+        if (month != 0) {
             fTime += context.getResources().getQuantityString(R.plurals.usage_months, (int) month, month);
             ++count;
         }
@@ -737,7 +799,8 @@ public class Utils {
                     if (new File(pathDir, "su").exists()) {
                         return true;
                     }
-                } catch (NullPointerException ignore) {}
+                } catch (NullPointerException ignore) {
+                }
             }
         }
         return false;
@@ -780,5 +843,33 @@ public class Utils {
         }
         if (permissions.size() == 0) return null;
         else return permissions.toArray(new String[0]);
+    }
+
+    /**
+     * Replace the first occurrence of matched string
+     *
+     * @param text         The text where the operation will be carried out
+     * @param searchString The string to replace
+     * @param replacement  The string that takes in place of the search string
+     * @return The modified string
+     */
+    // Similar impl. of https://commons.apache.org/proper/commons-lang/apidocs/src-html/org/apache/commons/lang3/StringUtils.html#line.6418
+    @NonNull
+    public static String replaceOnce(@NonNull final String text, @NonNull String searchString, @NonNull final String replacement) {
+        if (TextUtils.isEmpty(text) || TextUtils.isEmpty(searchString)) {
+            return text;
+        }
+        int start = 0;
+        final int end = TextUtils.indexOf(text, searchString, start);
+        if (end == -1) {
+            return text;
+        }
+        final int replLength = searchString.length();
+        final int increase = Math.max(replacement.length() - replLength, 0);
+        final StringBuilder buf = new StringBuilder(text.length() + increase);
+        buf.append(text, start, end).append(replacement);
+        start = end + replLength;
+        buf.append(text, start, text.length());
+        return buf.toString();
     }
 }

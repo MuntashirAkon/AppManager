@@ -30,25 +30,26 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 
 @SuppressWarnings("unused,UnusedReturnValue")
 public final class RunnerUtils {
+    public static final int USER_ALL = -1;
+
     public static final String CMD_PM = Build.VERSION.SDK_INT >= 28 ? "cmd package" : "pm";
     public static final String CMD_AM = Build.VERSION.SDK_INT >= 28 ? "cmd activity" : "am";
     public static final String CMD_APP_OPS = Build.VERSION.SDK_INT >= 28 ? "cmd appops" : "appops";
 
     public static final String CMD_CLEAR_CACHE_PREFIX = "rm -rf";
     public static final String CMD_CLEAR_CACHE_DIR_SUFFIX = " %s/cache %s/code_cache";
-    public static final String CMD_CLEAR_PACKAGE_DATA = CMD_PM + " clear %s";
-    public static final String CMD_ENABLE_PACKAGE = CMD_PM + " enable %s";
-    public static final String CMD_DISABLE_PACKAGE = CMD_PM + " disable-user %s";
-    public static final String CMD_FORCE_STOP_PACKAGE = CMD_AM + " force-stop %s";
-    public static final String CMD_UNINSTALL_PACKAGE = CMD_PM + " uninstall -k --user 0 %s";
-    public static final String CMD_UNINSTALL_PACKAGE_WITH_DATA = CMD_PM + " uninstall --user 0 %s";
-    public static final String CMD_INSTALL_PACKAGE = CMD_PM + " install --user 0 -r -i " + BuildConfig.APPLICATION_ID + " %s";
+    public static final String CMD_CLEAR_PACKAGE_DATA = CMD_PM + " clear --user %s %s";
+    public static final String CMD_ENABLE_PACKAGE = CMD_PM + " enable --user %s %s";
+    public static final String CMD_DISABLE_PACKAGE = CMD_PM + " disable-user --user %s %s";
+    public static final String CMD_FORCE_STOP_PACKAGE = CMD_AM + " force-stop --user %s %s";
+    public static final String CMD_UNINSTALL_PACKAGE = CMD_PM + " uninstall -k --user %s %s";
+    public static final String CMD_UNINSTALL_PACKAGE_WITH_DATA = CMD_PM + " uninstall --user %s %s";
 
-    public static final String CMD_COMPONENT_ENABLE = CMD_PM + " default-state %s/%s";  // default-state is more safe than enable
-    public static final String CMD_COMPONENT_DISABLE = CMD_PM + " disable %s/%s";
+    public static final String CMD_COMPONENT_ENABLE = CMD_PM + " default-state --user %s %s/%s";  // default-state is more safe than enable
+    public static final String CMD_COMPONENT_DISABLE = CMD_PM + " disable --user %s %s/%s";
 
-    public static final String CMD_PERMISSION_GRANT = CMD_PM + " grant %s %s";
-    public static final String CMD_PERMISSION_REVOKE = CMD_PM + " revoke %s %s";
+    public static final String CMD_PERMISSION_GRANT = CMD_PM + " grant --user %s %s %s";
+    public static final String CMD_PERMISSION_REVOKE = CMD_PM + " revoke --user %s %s %s";
 
     public static final String CMD_APP_OPS_GET = CMD_APP_OPS + " get %s %d";
     public static final String CMD_APP_OPS_GET_ALL = CMD_APP_OPS + " get %s";
@@ -110,58 +111,53 @@ public final class RunnerUtils {
     }
 
     @NonNull
-    public static Runner.Result clearPackageData(String packageName) {
-        return Runner.runCommand(String.format(CMD_CLEAR_PACKAGE_DATA, packageName));
+    public static Runner.Result clearPackageData(String packageName, int userHandle) {
+        return Runner.runCommand(String.format(CMD_CLEAR_PACKAGE_DATA, userHandleToUser(userHandle), packageName));
     }
 
     @NonNull
-    public static Runner.Result enablePackage(String packageName) {
-        return Runner.runCommand(String.format(CMD_ENABLE_PACKAGE, packageName));
+    public static Runner.Result enablePackage(String packageName, int userHandle) {
+        return Runner.runCommand(String.format(CMD_ENABLE_PACKAGE, userHandleToUser(userHandle), packageName));
     }
 
     @NonNull
-    public static Runner.Result disablePackage(String packageName) {
-        return Runner.runCommand(String.format(CMD_DISABLE_PACKAGE, packageName));
+    public static Runner.Result disablePackage(String packageName, int userHandle) {
+        return Runner.runCommand(String.format(CMD_DISABLE_PACKAGE, userHandleToUser(userHandle), packageName));
     }
 
     @NonNull
-    public static Runner.Result forceStopPackage(String packageName) {
-        return Runner.runCommand(String.format(CMD_FORCE_STOP_PACKAGE, packageName));
+    public static Runner.Result forceStopPackage(String packageName, int userHandle) {
+        return Runner.runCommand(String.format(CMD_FORCE_STOP_PACKAGE, userHandleToUser(userHandle), packageName));
     }
 
     @NonNull
-    public static Runner.Result uninstallPackageWithoutData(String packageName) {
-        return Runner.runCommand(String.format(CMD_UNINSTALL_PACKAGE, packageName));
+    public static Runner.Result uninstallPackageWithoutData(String packageName, int userHandle) {
+        return Runner.runCommand(String.format(CMD_UNINSTALL_PACKAGE, userHandleToUser(userHandle), packageName));
     }
 
     @NonNull
-    public static Runner.Result uninstallPackageWithData(String packageName) {
-        return Runner.runCommand(String.format(CMD_UNINSTALL_PACKAGE_WITH_DATA, packageName));
+    public static Runner.Result uninstallPackageWithData(String packageName, int userHandle) {
+        return Runner.runCommand(String.format(CMD_UNINSTALL_PACKAGE_WITH_DATA, userHandleToUser(userHandle), packageName));
     }
 
     @NonNull
-    public static Runner.Result installPackage(String packageLocation) {
-        return Runner.runCommand(String.format(CMD_INSTALL_PACKAGE, packageLocation));
+    public static Runner.Result disableComponent(String packageName, String componentName, int userHandle) {
+        return Runner.runCommand(String.format(CMD_COMPONENT_DISABLE, userHandleToUser(userHandle), packageName, componentName));
     }
 
     @NonNull
-    public static Runner.Result disableComponent(String packageName, String componentName) {
-        return Runner.runCommand(String.format(CMD_COMPONENT_DISABLE, packageName, componentName));
+    public static Runner.Result enableComponent(String packageName, String componentName, int userHandle) {
+        return Runner.runCommand(String.format(CMD_COMPONENT_ENABLE, userHandleToUser(userHandle), packageName, componentName));
     }
 
     @NonNull
-    public static Runner.Result enableComponent(String packageName, String componentName) {
-        return Runner.runCommand(String.format(CMD_COMPONENT_ENABLE, packageName, componentName));
+    public static Runner.Result grantPermission(String packageName, String permissionName, int userHandle) {
+        return Runner.runCommand(String.format(CMD_PERMISSION_GRANT, userHandleToUser(userHandle), packageName, permissionName));
     }
 
     @NonNull
-    public static Runner.Result grantPermission(String packageName, String permissionName) {
-        return Runner.runCommand(String.format(CMD_PERMISSION_GRANT, packageName, permissionName));
-    }
-
-    @NonNull
-    public static Runner.Result revokePermission(String packageName, String permissionName) {
-        return Runner.runCommand(String.format(CMD_PERMISSION_REVOKE, packageName, permissionName));
+    public static Runner.Result revokePermission(String packageName, String permissionName, int userHandle) {
+        return Runner.runCommand(String.format(CMD_PERMISSION_REVOKE, userHandleToUser(userHandle), packageName, permissionName));
     }
 
     public static boolean fileExists(@NonNull String fileName) {
@@ -204,5 +200,11 @@ public final class RunnerUtils {
     public static String cat(@NonNull String fileName, String emptyValue) {
         Runner.Result result = Runner.runCommand(String.format("cat \"%s\" 2> /dev/null", fileName));
         return result.isSuccessful() ? result.getOutput() : emptyValue;
+    }
+
+    @NonNull
+    public static String userHandleToUser(int userHandle) {
+        if (userHandle == USER_ALL) return "all";
+        else return String.valueOf(userHandle);
     }
 }

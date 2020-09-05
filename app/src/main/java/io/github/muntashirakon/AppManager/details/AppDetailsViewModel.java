@@ -58,6 +58,7 @@ import androidx.lifecycle.MutableLiveData;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -231,10 +232,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public boolean setPermission(String permissionName, boolean isGranted) {
         if (isExternalApk) return false;
         if (isGranted) {
-            if (!RunnerUtils.grantPermission(packageName, permissionName).isSuccessful())
+            if (!RunnerUtils.grantPermission(packageName, permissionName, Users.getCurrentUser()).isSuccessful())
                 return false;
         } else {
-            if (!RunnerUtils.revokePermission(packageName, permissionName).isSuccessful())
+            if (!RunnerUtils.revokePermission(packageName, permissionName, Users.getCurrentUser()).isSuccessful())
                 return false;
         }
         new Thread(() -> {
@@ -258,7 +259,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         for (int i = 0; i<usesPermissionItems.size(); ++i) {
             permissionItem = usesPermissionItems.get(i);
             if (permissionItem.isDangerous && permissionItem.isGranted) {
-                if (RunnerUtils.revokePermission(packageName, permissionItem.name).isSuccessful()) {
+                if (RunnerUtils.revokePermission(packageName, permissionItem.name, Users.getCurrentUser()).isSuccessful()) {
                     permissionItem.isGranted = false;
                     usesPermissionItems.set(i, permissionItem);
                     revokedPermissions.add(permissionItem.name);

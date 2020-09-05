@@ -40,6 +40,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
@@ -197,7 +198,7 @@ public final class ComponentUtils {
             }
             // Grant configured permissions
             for (RulesStorageManager.Entry entry: cb.getAll(RulesStorageManager.Type.PERMISSION)) {
-                if (RunnerUtils.grantPermission(packageName, entry.name).isSuccessful()) {
+                if (RunnerUtils.grantPermission(packageName, entry.name, Users.getCurrentUser()).isSuccessful()) {
                     cb.removeEntry(entry);
                 }
             }

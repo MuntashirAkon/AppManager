@@ -33,6 +33,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
@@ -291,10 +292,10 @@ public class ComponentsBlocker extends RulesStorageManager {
                 Log.d("ComponentBlocker", "Providers: " + disabledProviders.toString());
                 for (RulesStorageManager.Entry provider: disabledProviders) {
                     if (provider.extra == COMPONENT_TO_BE_UNBLOCKED) {  // Enable components that are removed
-                        RunnerUtils.enableComponent(packageName, provider.name);
+                        RunnerUtils.enableComponent(packageName, provider.name, Users.getCurrentUser());
                         removeEntry(provider);
                     } else {
-                        RunnerUtils.disableComponent(packageName, provider.name);
+                        RunnerUtils.disableComponent(packageName, provider.name, Users.getCurrentUser());
                         setComponent(provider.name, provider.type, COMPONENT_BLOCKED);
                     }
                 }
@@ -303,7 +304,7 @@ public class ComponentsBlocker extends RulesStorageManager {
                 List<RulesStorageManager.Entry> allEntries = getAllComponents();
                 Log.d("ComponentBlocker", "All: " + allEntries.toString());
                 for (RulesStorageManager.Entry entry: allEntries) {
-                    RunnerUtils.enableComponent(packageName, entry.name);  // Enable components if they're disabled by other methods
+                    RunnerUtils.enableComponent(packageName, entry.name, Users.getCurrentUser());  // Enable components if they're disabled by other methods
                     if (entry.extra == COMPONENT_TO_BE_UNBLOCKED) removeEntry(entry);
                     else setComponent(entry.name, entry.type, COMPONENT_TO_BE_BLOCKED);
                 }
