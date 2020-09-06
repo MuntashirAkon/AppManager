@@ -366,7 +366,7 @@ public class BackupStorageManager implements AutoCloseable {
                     return false;  // Failed to restore source files
                 }
                 // Restore permissions
-                Runner.runCommand(String.format("restorecon -R \"%s\"", sourceDir));
+                Runner.runCommand(new String[]{ "restorecon", "-R", sourceDir.getAbsolutePath()});
             } else {
                 Log.e("BSM - Restore", "Skipped restoring files due to mismatched architecture or the path is /data/app or only apk restoring is requested.");
             }
@@ -442,12 +442,12 @@ public class BackupStorageManager implements AutoCloseable {
                     return false;
                 }
                 // Fix UID and GID
-                if (uidAndGid != null && !Runner.runCommand(String.format("chown -R %d:%d \"%s\"", uidAndGid.first, uidAndGid.second, dataSource)).isSuccessful()) {
+                if (uidAndGid != null && !Runner.runCommand(String.format(Runner.TOYBOX + " chown -R %d:%d \"%s\"", uidAndGid.first, uidAndGid.second, dataSource)).isSuccessful()) {
                     Log.e("BSM - Restore", "Failed to get restore owner for index " + i + ".");
                     return false;
                 }
                 // Restore permissions
-                Runner.runCommand(String.format("restorecon -R \"%s\"", dataSource));
+                Runner.runCommand(new String[]{"restorecon", "-R", dataSource});
             }
         }
         if (requestedFlags.backupRules()) {

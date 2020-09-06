@@ -28,7 +28,8 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 public final class Users {
     @NonNull
     public static int[] getUsers() {
-        Runner.Result result = Runner.runCommand(RunnerUtils.CMD_PM + " list users | sed -nr 's/.*\\{([0-9]+):.*/\\1/p'");
+        // FIXME: Use Pattern.compile() instead
+        Runner.Result result = Runner.runCommand(RunnerUtils.CMD_PM + " list users | " + Runner.TOYBOX + " sed -nr 's/.*\\{([0-9]+):.*/\\1/p'");
         if (result.isSuccessful()) {
             List<String> output = result.getOutputAsList();
             List<Integer> users = new ArrayList<>();

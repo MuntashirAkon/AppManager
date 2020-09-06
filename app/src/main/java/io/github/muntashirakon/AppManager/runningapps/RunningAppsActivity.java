@@ -312,6 +312,7 @@ public class RunningAppsActivity extends BaseActivity implements SearchView.OnQu
             if (applicationInfo != null) {
                 holder.forceStopBtn.setVisibility(View.VISIBLE);
                 holder.forceStopBtn.setOnClickListener(v -> new Thread(() -> {
+                    // FIXME: Use user handle
                     if (Runner.runCommand(String.format("am force-stop %s", applicationInfo.packageName)).isSuccessful()) {
                         mActivity.runOnUiThread(() -> mActivity.refresh());
                     } else {
@@ -348,7 +349,7 @@ public class RunningAppsActivity extends BaseActivity implements SearchView.OnQu
             if ((processItem.pid >= 10000 || enableKillForSystem) && !isAdbMode) {
                 holder.killBtn.setVisibility(View.VISIBLE);
                 holder.killBtn.setOnClickListener(v -> new Thread(() -> {
-                    if (Runner.runCommand(String.format(Locale.ROOT, "kill -9 %d", processItem.pid)).isSuccessful()) {
+                    if (Runner.runCommand(new String[]{Runner.TOYBOX, "kill", "-9", String.valueOf(processItem.pid)}).isSuccessful()) {
                         mActivity.runOnUiThread(() -> mActivity.refresh());
                     } else {
                         mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_stop, processName), Toast.LENGTH_LONG).show());
@@ -404,11 +405,12 @@ public class RunningAppsActivity extends BaseActivity implements SearchView.OnQu
         @Override
         public void run() {
             List<ApplicationInfo> applicationInfoList = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-            Runner.runCommand("ps -dwZ -o PID,PPID,RSS,VSZ,USER,UID,STAT,NAME | grep -v :kernel:");
-            if (Runner.getLastResult().isSuccessful()) {
-                List<String> processInfoLines = Runner.getLastResult().getOutputAsList(1);
+            Runner.Result result = Runner.runCommand(new String[]{Runner.TOYBOX, "ps", "-dwZ", "-o", "PID,PPID,RSS,VSZ,USER,UID,STAT,NAME"});
+            if (result.isSuccessful()) {
+                List<String> processInfoLines = result.getOutputAsList(1);
                 HashMap<String, ProcessItem> processList = new HashMap<>();
                 for (String processInfoLine: processInfoLines) {
+                    if (processInfoLine.contains(":kernel:")) continue;
                     try {
                         ProcessItem processItem = parseProcess(processInfoLine);
                         processList.put(processItem.name, processItem);

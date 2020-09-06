@@ -37,6 +37,7 @@ import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 /**
@@ -127,17 +128,13 @@ public class ComponentsBlocker extends RulesStorageManager {
         // Add all rules from the local IFW folder
         addAllLocalRules(context);
         // Apply all rules from conf folder
-        File confPath = new File(context.getFilesDir(), "conf");
-        Runner.runCommand(String.format("ls %s/*.tsv", confPath.getAbsolutePath()));
-        if (Runner.getLastResult().isSuccessful()) {
-            // Get packages
-            List<String> packageNames = Runner.getLastResult().getOutputAsList();
-            for (int i = 0; i<packageNames.size(); ++i) {
-                String s = new File(packageNames.get(i)).getName();
-                packageNames.set(i, s.substring(0, s.lastIndexOf(".tsv")));
-            }
-            // Apply rules for each package
-            for (String packageName: packageNames) {
+        PrivilegedFile confPath = new PrivilegedFile(context.getFilesDir(), "conf");
+        String[] packageNamesWithTSV = confPath.list((dir, name) -> name.endsWith(".tsv"));
+        if (packageNamesWithTSV != null) {
+            // Apply rules
+            String packageName;
+            for (String s : packageNamesWithTSV) {
+                packageName = s.substring(0, s.lastIndexOf(".tsv"));
                 try (ComponentsBlocker cb = getMutableInstance(packageName)) {
                     cb.applyRules(true);
                 }
@@ -154,16 +151,13 @@ public class ComponentsBlocker extends RulesStorageManager {
     @Deprecated
     public static void addAllLocalRules(@NonNull Context context) {
         try {
-            String ifwPath = getLocalIfwRulesPath();
-            if (Runner.runCommand(String.format("ls %s/*.xml", ifwPath)).isSuccessful()) {
-                // Get packages
-                List<String> packageNames = Runner.getLastResult().getOutputAsList();
-                for (int i = 0; i<packageNames.size(); ++i) {
-                    String s = new File(packageNames.get(i)).getName();
-                    packageNames.set(i, s.substring(0, s.lastIndexOf(".xml")));
-                }
-                // Apply rules for each package
-                for (String packageName: packageNames) {
+            PrivilegedFile ifwPath = new PrivilegedFile(getLocalIfwRulesPath());
+            String[] packageNamesWithXML = ifwPath.list((dir, name) -> name.endsWith(".xml"));
+            if (packageNamesWithXML != null) {
+                // Apply rules
+                String packageName;
+                for (String s: packageNamesWithXML) {
+                    packageName = s.substring(0, s.lastIndexOf(".xml"));
                     try (ComponentsBlocker cb = getInstance(packageName)) {
                         // Make the instance mutable
                         cb.readOnly = false;
@@ -275,12 +269,12 @@ public class ComponentsBlocker extends RulesStorageManager {
             // Apply/Remove rules
             if (apply && localRulesFile.exists()) {
                 // Apply rules
-                Runner.runCommand(String.format("cp '%s' %s && chmod 0666 %s%s.xml && am force-stop %s",
+                Runner.runCommand(String.format(Runner.TOYBOX + " cp \"%s\" %s && " + Runner.TOYBOX + " chmod 0666 %s%s.xml && am force-stop %s",
                         localRulesFile.getAbsolutePath(), SYSTEM_RULES_PATH, SYSTEM_RULES_PATH,
                         packageName, packageName));
             } else {
                 // Remove rules if remove is called or applied with no rules
-                Runner.runCommand(String.format("test -e '%s%s.xml' && rm -rf %s%s.xml && am force-stop %s",
+                Runner.runCommand(String.format(Runner.TOYBOX + " test -e '%s%s.xml' && " + Runner.TOYBOX + " rm -rf %s%s.xml && am force-stop %s",
                         SYSTEM_RULES_PATH, packageName, SYSTEM_RULES_PATH, packageName, packageName));
             }
             if (localRulesFile.exists()) //noinspection ResultOfMethodCallIgnored
@@ -320,13 +314,12 @@ public class ComponentsBlocker extends RulesStorageManager {
      */
     private void retrieveDisabledComponents() {
         Log.d("ComponentBlocker", "Retrieving disabled components for package " + packageName);
-        if (AppPref.isRootEnabled() && Runner.runCommand(String.format("test -e '%s%s.xml'",
-                SYSTEM_RULES_PATH, packageName)).isSuccessful()) {
+        if (AppPref.isRootEnabled() && new PrivilegedFile(SYSTEM_RULES_PATH, packageName).exists()) {
             // Copy system rules to access them locally
             Log.d("ComponentBlocker - IFW", "Copying disabled components for package " + packageName);
             // FIXME: Read all files instead of just one for greater compatibility
             // FIXME: In v2.6, file contents will be copied instead of copying the file itself
-            Runner.runCommand(String.format("cp %s%s.xml '%s' && chmod 0666 '%s/%s.xml'",
+            Runner.runCommand(String.format(Runner.TOYBOX + " cp %s%s.xml \"%s\" && " + Runner.TOYBOX + " chmod 0666 '%s/%s.xml'",
                     SYSTEM_RULES_PATH, packageName, LOCAL_RULES_PATH, LOCAL_RULES_PATH, packageName));
         }
         retrieveDisabledProviders();

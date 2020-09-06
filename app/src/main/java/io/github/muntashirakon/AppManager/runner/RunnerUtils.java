@@ -227,32 +227,32 @@ public final class RunnerUtils {
     }
 
     public static boolean fileExists(@NonNull String fileName) {
-        return Runner.runCommand(String.format("test -e \"%s\"", fileName)).isSuccessful();
+        return Runner.runCommand(new String[]{Runner.TOYBOX, "test", "-e", fileName}).isSuccessful();
     }
 
     public static boolean fileExists(@NonNull File fileName) {
-        return Runner.runCommand(String.format("test -e \"%s\"", fileName.getAbsolutePath())).isSuccessful();
+        return Runner.runCommand(new String[]{Runner.TOYBOX, "test", "-e", fileName.getAbsolutePath()}).isSuccessful();
     }
 
     public static boolean isDirectory(@NonNull String fileName) {
-        return Runner.runCommand(String.format("test -d \"%s\"", fileName)).isSuccessful();
+        return Runner.runCommand(new String[]{Runner.TOYBOX, "test", "-d", fileName}).isSuccessful();
     }
 
     public static boolean isFile(@NonNull String fileName) {
-        return Runner.runCommand(String.format("test -f \"%s\"", fileName)).isSuccessful();
+        return Runner.runCommand(new String[]{Runner.TOYBOX, "test", "-f", fileName}).isSuccessful();
     }
 
     public static boolean mkdir(@NonNull String fileName) {
-        return Runner.runCommand(String.format("mkdir \"%s\"", fileName)).isSuccessful();
+        return Runner.runCommand(new String[]{Runner.TOYBOX, "mkdir", fileName}).isSuccessful();
     }
 
     public static boolean mkdirs(@NonNull String fileName) {
-        return Runner.runCommand(String.format("mkdir -p \"%s\"", fileName)).isSuccessful();
+        return Runner.runCommand(new String[]{Runner.TOYBOX, "mkdir", "-p", fileName}).isSuccessful();
     }
 
     public static void deleteFile(@NonNull String fileName, boolean isForce) {
-        String forceSwitch = isForce ? "r" : "";
-        Runner.runCommand(String.format("rm -%sf \"%s\"", forceSwitch, fileName));
+        String forceSwitch = isForce ? "-rf" : "-f";
+        Runner.runCommand(new String[]{Runner.TOYBOX, "rm", forceSwitch, fileName});
     }
 
     public static void deleteFile(@NonNull File fileName, boolean isForce) {
@@ -260,15 +260,15 @@ public final class RunnerUtils {
     }
 
     public static boolean mv(@NonNull File source, @NonNull File dest) {
-        return Runner.runCommand(String.format("mv -f \"%s\" \"%s\"", source.getAbsolutePath(), dest.getAbsolutePath())).isSuccessful();
+        return Runner.runCommand(new String[]{Runner.TOYBOX, "mv", "-f", source.getAbsolutePath(), dest.getAbsolutePath()}).isSuccessful();
     }
 
     public static boolean cp(@NonNull File source, @NonNull File dest) {
-        return Runner.runCommand(String.format("cp -a \"%s\" \"%s\"", source.getAbsolutePath(), dest.getAbsolutePath())).isSuccessful();
+        return Runner.runCommand(new String[]{Runner.TOYBOX, "cp", "-a", source.getAbsolutePath(), dest.getAbsolutePath()}).isSuccessful();
     }
 
     public static String cat(@NonNull String fileName, String emptyValue) {
-        Runner.Result result = Runner.runCommand(String.format("cat \"%s\" 2> /dev/null", fileName));
+        Runner.Result result = Runner.runCommand(String.format(Runner.TOYBOX + " cat \"%s\" 2> /dev/null", fileName));
         return result.isSuccessful() ? result.getOutput() : emptyValue;
     }
 

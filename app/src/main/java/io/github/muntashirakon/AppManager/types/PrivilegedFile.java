@@ -46,7 +46,7 @@ public class PrivilegedFile extends File {
     public long length() {
         long size = super.length();
         if (size == 0L && !isDirectory() && AppPref.isRootOrAdbEnabled()) {
-            Runner.Result result = Runner.runCommand(new String[]{"stat", "-c", "%b", getAbsolutePath()});
+            Runner.Result result = Runner.runCommand(new String[]{Runner.TOYBOX, "stat", "-c", "%b", getAbsolutePath()});
             if (result.isSuccessful()) {
                 try {
                     size = Long.parseLong(result.getOutput());

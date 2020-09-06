@@ -277,6 +277,7 @@ public class ApkFile implements AutoCloseable, Parcelable {
         return hasObb;
     }
 
+    @SuppressWarnings("ConstantConditions")
     public boolean extractObb() {
         if (!hasObb) return true;
         try {
@@ -306,10 +307,10 @@ public class ApkFile implements AutoCloseable, Parcelable {
 
             if (AppPref.isRootOrAdbEnabled()) {
                 for (String obbFile : obbFiles) {
-                    if (!Runner.runCommand(String.format("unzip \"%s\" \"%s\" -d \"%s\"",
-                            cacheFilePath.getAbsolutePath(), obbFile, obbFile.startsWith(OBB_DIR) ?
-                                    writableExtDir.getAbsolutePath()
-                                    : writableObbDir.getAbsolutePath())).isSuccessful()) {
+                    if (!Runner.runCommand(new String[]{"unzip", cacheFilePath.getAbsolutePath(),
+                            obbFile, "-d", obbFile.startsWith(OBB_DIR) ?
+                            writableExtDir.getAbsolutePath() : writableObbDir.getAbsolutePath()}
+                    ).isSuccessful()) {
                         return false;
                     }
                 }

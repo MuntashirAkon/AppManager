@@ -239,8 +239,8 @@ public class AMPackageInstallerService extends IntentService {
             for (int i = 0; i < apkFiles.length; ++i) {
                 tmpSource = apkEntries.get(i).source;
                 apkFiles[i] = new FreshFile(PACKAGE_STAGING_DIRECTORY, tmpSource.getName());
-                if (!Runner.runCommand(String.format("cp \"%s\" \"%s\"", tmpSource.getAbsolutePath(),
-                        apkFiles[i].getAbsolutePath())).isSuccessful()) {
+                if (!Runner.runCommand(new String[]{Runner.TOYBOX, "cp", tmpSource.getAbsolutePath(),
+                        apkFiles[i].getAbsolutePath()}).isSuccessful()) {
                     throw new IOException("Failed to copy files to the staging directory.");
                 }
             }

@@ -41,9 +41,9 @@ final class TarUtils {
     public static final String TAR_BZIP2 = "j";
 
     // source, type, filters, exclude, size, destination
-    private static final String TAR_CREATE = "cd \"%s\" && tar -c%sf - %s %s | split -b %s - \"%s\"";
+    private static final String TAR_CREATE = "cd \"%s\" && " + Runner.TOYBOX + " tar -c%sf - %s %s | " + Runner.TOYBOX + " split -b %s - \"%s\"";
     // sources, type, filters, exclude, destination
-    private static final String TAR_EXTRACT = "cat %s | tar -x%sf - %s %s -C \"%s\"";
+    private static final String TAR_EXTRACT = Runner.TOYBOX + " cat %s | " + Runner.TOYBOX + "  tar -x%sf - %s %s -C \"%s\"";
 
     /**
      * Create a tar file using the given compression method and split it into multiple files based
@@ -79,6 +79,7 @@ final class TarUtils {
      * @param exclude Files to be excluded, a list of string without {@code ./} prefix
      * @return {@code true} on success, {@code false} otherwise
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     static boolean extract(@NonNull @TarType String type, @NonNull File[] sources, @NonNull File dest, @Nullable String[] filters, @Nullable String[] exclude) {
         return Runner.runCommand(String.format(TAR_EXTRACT, getSourceStr(sources), type,
                 getFilterStr(filters), getExcludeStr(exclude), dest.getAbsolutePath())).isSuccessful();
