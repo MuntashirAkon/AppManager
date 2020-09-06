@@ -43,6 +43,20 @@ public class PrivilegedFile extends File {
     }
 
     @Override
+    public long length() {
+        long size = super.length();
+        if (size == 0L && !isDirectory() && AppPref.isRootOrAdbEnabled()) {
+            Runner.Result result = Runner.runCommand(new String[]{"stat", "-c", "%b", getAbsolutePath()});
+            if (result.isSuccessful()) {
+                try {
+                    size = Long.parseLong(result.getOutput());
+                } catch (Exception ignore) {}
+            }
+        }
+        return size;
+    }
+
+    @Override
     public boolean delete() {
         boolean isDeleted = false;
         try {
@@ -156,9 +170,11 @@ public class PrivilegedFile extends File {
         } catch (SecurityException ignore) {
         }
         if (isDirectory() && AppPref.isRootOrAdbEnabled()) {
-            Runner.Result result = Runner.runCommand(String.format("cd %s; for f in * .*; do echo $f; done", getAbsolutePath()));
+            Runner.Result result = Runner.runCommand(String.format("cd %s && for f in * .*; do echo $f; done", getAbsolutePath()));
             if (result.isSuccessful()) {
                 List<String> fileList = result.getOutputAsList();
+                fileList.remove("*");  // Remove * in case no non-hidden file exists
+                fileList.remove(".*");  // Remove .* in case no hidden file exists
                 if (fileList.size() > 0) return fileList.toArray(new String[0]);
             }
         }
