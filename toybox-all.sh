@@ -52,8 +52,6 @@ export LDFLAGS="-s"
 jni_dir=../app/src/main/jniLibs
 target_name=toybox.so  # .so is appended to fool the gradle plugin
 target_dir=
-# Run defconfig first
-make defconfig
 for (( i = 0; i < 4; ++i )); do
     export AR="${TOOLCHAIN}/bin/${BIN_UTILS[i]}-ar"
     export AS="${TOOLCHAIN}/bin/${BIN_UTILS[i]}-as"
@@ -62,8 +60,10 @@ for (( i = 0; i < 4; ++i )); do
     export LD="${TOOLCHAIN}/bin/${BIN_UTILS[i]}-ld"
     export RANLIB="${TOOLCHAIN}/bin/${BIN_UTILS[i]}-ranlib"
     export STRIP="${TOOLCHAIN}/bin/${BIN_UTILS[i]}-strip"
+    # Run defconfig first
+    make clean && make defconfig
     # create executable
-    make clean && make
+    make
     chmod 755 toybox
     # move to jni dir
     target_dir=${jni_dir}/${JNI_DIRS[i]}
