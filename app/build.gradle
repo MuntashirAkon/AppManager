@@ -90,31 +90,23 @@ dependencies {
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 }
 
-preBuild.dependsOn ":AppManagerServer:build"
-
-android.applicationVariants.all {  variant ->
-    variant.getAssembleProvider().configure() {
-        it.doFirst {
-            println("=== toybox: start ===")
-            if (variant.buildType.name == "release") {
-                buildToybox()
-            } else if (variant.buildType.name == "debug") {
-                File file = new File("${rootProject.projectDir.absolutePath}/app/src/main/jniLibs/arm64-v8a/toybox.so")
-                if (!file.exists()) {
-                    buildToybox()
-                } else {
-                    println("Skipping toybox since the files already exists.")
-                }
-            }
-            println("=== toybox: finish ===")
-        }
+task toybox {
+    println("=== toybox: start ===")
+    File file = new File("${rootProject.projectDir.absolutePath}/app/src/main/jniLibs/arm64-v8a/toybox.so")
+    if (!file.exists()) {
+        buildToybox()
+    } else {
+        println("Skipping toybox since the files already exists.")
     }
+    println("=== toybox: finish ===")
 }
 
 def buildToybox() {
-    def ndkPath = getNdk()
+    def ndkPath = android.ndkDirectory
     def buildExec = "${rootProject.projectDir.absolutePath}/toybox-all.sh"
     def cmdArgs = [ndkPath]
+    println("NDK Path: ${ndkPath}")
+    println("Exec Path: ${buildExec}")
     exec {
         workingDir = rootProject.projectDir.absolutePath
         executable = buildExec
@@ -122,31 +114,4 @@ def buildToybox() {
     }
 }
 
-def getNdk() {
-    def ndkHome = null
-    def pFile = project.rootProject.file("local.properties")
-    if (pFile.exists()) {
-        def myProp = new Properties()
-        pFile.withReader {
-            r -> myProp.load(r)
-        }
-        ndkHome = myProp.getProperty("ndk.dir")
-    }
-
-    if (ndkHome == null) {
-        ndkHome = System.getenv("ANDROID_NDK_HOME")
-    }
-
-    if (ndkHome == null) {
-        ndkHome = System.getenv("ANDROID_NDK_ROOT")
-    }
-
-    if (ndkHome == null) {
-        ndkHome = System.getenv("ANDROID_NDK")
-    }
-
-    if (ndkHome?.trim()?.isEmpty()) {
-        throw new RuntimeException("Android NDK directory not found.")
-    }
-    return ndkHome
-}
+preBuild.dependsOn ":AppManagerServer:build", toybox
