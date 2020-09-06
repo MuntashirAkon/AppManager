@@ -61,6 +61,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -97,9 +98,9 @@ import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
-import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
+import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -165,6 +166,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     });
     private ActivityResultLauncher<String> exportIcon = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
         try {
+            if (uri == null) return;
             try (OutputStream outputStream = mActivity.getContentResolver().openOutputStream(uri)) {
                 if (outputStream == null)
                     throw new IOException("Unable to open output stream.");
@@ -579,22 +581,24 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Root only features
         if (!mainModel.getIsExternalApk() && isRootEnabled) {
             // Shared prefs (root only)
-            List<String> sharedPrefs;
-            sharedPrefs = getSharedPrefs(mApplicationInfo.dataDir);
+            final List<PrivilegedFile> sharedPrefs = new ArrayList<>();
+            PrivilegedFile[] tmpPaths = getSharedPrefs(mApplicationInfo.dataDir);
+            if (tmpPaths != null) sharedPrefs.addAll(Arrays.asList(tmpPaths));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                sharedPrefs.addAll(getSharedPrefs(mApplicationInfo.deviceProtectedDataDir));
+                tmpPaths = getSharedPrefs(mApplicationInfo.deviceProtectedDataDir);
+                if (tmpPaths != null) sharedPrefs.addAll(Arrays.asList(tmpPaths));
             }
             if (!sharedPrefs.isEmpty()) {
-                CharSequence[] sharedPrefs2 = new CharSequence[sharedPrefs.size()];
+                CharSequence[] sharedPrefNames = new CharSequence[sharedPrefs.size()];
                 for (int i = 0; i < sharedPrefs.size(); ++i) {
-                    sharedPrefs2[i] = new File(sharedPrefs.get(i)).getName();
+                    sharedPrefNames[i] = sharedPrefs.get(i).getName();
                 }
                 addToHorizontalLayout(R.string.shared_prefs, R.drawable.ic_view_list_black_24dp)
                         .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                                 .setTitle(R.string.shared_prefs)
-                                .setItems(sharedPrefs2, (dialog, which) -> {
+                                .setItems(sharedPrefNames, (dialog, which) -> {
                                     Intent intent = new Intent(mActivity, SharedPrefsActivity.class);
-                                    intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LOCATION, sharedPrefs.get(which));
+                                    intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LOCATION, sharedPrefs.get(which).getAbsolutePath());
                                     intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LABEL, mPackageLabel);
                                     startActivity(intent);
                                 })
@@ -602,20 +606,33 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .show());
             }
             // Databases (root only)
-            List<String> databases;
-            databases = getDatabases(mApplicationInfo.dataDir);
+            final List<PrivilegedFile> databases = new ArrayList<>();
+            tmpPaths = getDatabases(mApplicationInfo.dataDir);
+            if (tmpPaths != null) databases.addAll(Arrays.asList(tmpPaths));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                databases.addAll(getDatabases(mApplicationInfo.deviceProtectedDataDir));
+                tmpPaths = getDatabases(mApplicationInfo.deviceProtectedDataDir);
+                if (tmpPaths != null) databases.addAll(Arrays.asList(tmpPaths));
             }
             if (!databases.isEmpty()) {
                 CharSequence[] databases2 = new CharSequence[databases.size()];
                 for (int i = 0; i < databases.size(); ++i) {
-                    databases2[i] = databases.get(i);
+                    databases2[i] = databases.get(i).getName();
                 }
                 addToHorizontalLayout(R.string.databases, R.drawable.ic_assignment_black_24dp)
                         .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                                 .setTitle(R.string.databases)
-                                .setItems(databases2, null)  // TODO
+                                .setItems(databases2, (dialog, which) -> {
+                                    // TODO
+//                                    File realFile = databases.get(which);
+//                                    File sharableFile = new File(AppManager.getContext().getExternalCacheDir(), realFile.getName());
+//                                    RunnerUtils.cp(realFile, sharableFile);
+//                                    Intent openFile = new Intent(Intent.ACTION_VIEW)
+//                                            .setDataAndType(FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID + ".provider", sharableFile), "application/x-sqlite3")
+//                                            .putExtra("real_path", realFile.getAbsolutePath())
+//                                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                    if (openFile.resolveActivityInfo(mPackageManager, 0) != null)
+//                                        startActivity(openFile);
+                                })
                                 .setNegativeButton(android.R.string.ok, null)
                                 .show());
             }
@@ -856,15 +873,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
-    private List<String> getSharedPrefs(@NonNull String sourceDir) {
-        File sharedPath = new File(sourceDir + "/shared_prefs");
-        return Runner.runCommand(String.format("ls %s/*.xml", sharedPath.getAbsolutePath())).getOutputAsList();
+    @Nullable
+    private PrivilegedFile[] getSharedPrefs(@NonNull String sourceDir) {
+        PrivilegedFile sharedPath = new PrivilegedFile(sourceDir, "shared_prefs");
+        return sharedPath.listFiles();
     }
 
-    private List<String> getDatabases(@NonNull String sourceDir) {
-        File sharedPath = new File(sourceDir + "/databases");
-        // FIXME: SQLite db doesn't necessarily have .db extension
-        return Runner.runCommand(String.format("ls %s/*.db", sharedPath.getAbsolutePath())).getOutputAsList();
+    private PrivilegedFile[] getDatabases(@NonNull String sourceDir) {
+        PrivilegedFile sharedPath = new PrivilegedFile(sourceDir, "databases");
+        return sharedPath.listFiles((dir, name) -> !name.endsWith("-journal"));
     }
 
     @NonNull

@@ -152,11 +152,11 @@ public final class IOUtils {
     }
 
     @NonNull
-    public static File getSharableFile(@NonNull File privateFile, String suffix) throws IOException {
-        File tmpPublicSource = File.createTempFile(privateFile.getName(), suffix, AppManager.getContext().getExternalCacheDir());
-        try (FileInputStream apkInputStream = new FileInputStream(privateFile);
-             FileOutputStream apkOutputStream = new FileOutputStream(tmpPublicSource)) {
-            copy(apkInputStream, apkOutputStream);
+    public static File getSharableFile(@NonNull File privateFile) throws IOException {
+        File tmpPublicSource = new File(AppManager.getContext().getExternalCacheDir(), privateFile.getName());
+        try (FileInputStream inputStream = new FileInputStream(privateFile);
+             FileOutputStream outputStream = new FileOutputStream(tmpPublicSource)) {
+            copy(inputStream, outputStream);
         }
         return tmpPublicSource;
     }
