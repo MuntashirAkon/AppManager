@@ -1,8 +1,8 @@
 # Страница «Операции в один клик»
 
-Эта страница появляется после нажатия на опцию **Операции в один клик** на [главной странице](./main-page.md#options-menu). В настоящее время поддерживаемые операции включают в себя: _блокировку/разблокировку трекеров_, _блокировку компонентов_ и _отклонение операций приложений_. Больше опций будет добавлено позже.
+Эта страница появляется после нажатия на опцию **Операции в один клик** на [главной странице](./main-page.md#меню-опций). В настоящее время поддерживаемые операции включают в себя: _блокировку/разблокировку трекеров_, _блокировку компонентов_ и _отклонение операций приложений_. Больше опций будет добавлено позже.
 
-::: details Оглавление
+::: details Таблица содержания
 [[toc]]
 :::
 
@@ -13,7 +13,7 @@
 Certain apps may not function as expected after applying the blocking. If that is the case, remove blocking rules all at once or one by one using the corresponding [App Details][1] page.
 :::
 
-_Смотрите также: [Как разблокировать компоненты трекера, заблокированные с помощью операций в один клик или пакетных операций?](../faq/app-components.md#how-to-unblock-the-tracker-components-blocked-using-1-click-ops-or-batch-ops)_
+_Смотрите также: [Как разблокировать компоненты трекера, заблокированные с помощью операций в один клик или пакетных операций?](../faq/app-components.md#как-разбnокировать-компоненты-трекера-забnокированные-с-помощью-операций-в-один-кnик-иnи-пакетных-операций)_
 
 ## Блокировка компонентов…
 This option can be used to block certain app components denoted by the signatures. App signature is the full name or partial name of the components. For safety, it is recommended that you should add a `.` (dot) at the end of each partial signature name as the algorithm used here chooses all matched components in a greedy manner. You can insert more than one signature in which case all signatures have to be separated by spaces. Similar to the option above, there is an option to apply blocking to system apps as well.

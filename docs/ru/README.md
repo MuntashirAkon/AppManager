@@ -3,7 +3,7 @@ home: true
 heroImage: /icon.png
 heroText: App Manager
 tagline:
-actionText: Вступление
+actionText: Начать
 actionLink: ./guide/
 features:
   - title: Просмотреть детали

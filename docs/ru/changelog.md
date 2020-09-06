@@ -8,14 +8,14 @@ sidebar: auto
 
 В настоящее время поддерживаемые версии: [2.5.12](#v2-5-12-341), [2.5.11](#v2-5-11-333) и [2.5.10](#v2-5-10-324). Обновите App Manager, если вы используете более раннюю версию.
 
-::: details Оглавление
+::: details Таблица содержания
 [[toc]]
 :::
 
 ## v2.5.12 (341)
-- <span><tagfeature/></span>  Добавлена ​​поддержка разделения резервных копий данных на файлы размером 1 ГБ для обхода ограничения файловой системы FAT32.
-- <span><tagfeature/></span>  Добавлена ​​возможность разблокировать трекеры
-- <span><tagfeature/></span>  Добавлена ​​возможность пропустить проверку подписи при восстановлении резервных копий.
+- <span><tagfeature/></span>  Добавлена поддержка разделения резервных копий данных на файлы размером 1 ГБ для обхода ограничения файловой системы FAT32.
+- <span><tagfeature/></span>  Добавлена возможность разблокировать трекеры
+- <span><tagfeature/></span>  Добавлена возможность пропустить проверку подписи при восстановлении резервных копий.
 - <span><tagfeature/></span>  Поддержка [Termux][termux]: <code>run-as</code> отладка приложения или запуск нового сеанса в виде приложения во вкладке [О приложении][app_info].
 - <span><tagfeature/></span>  Отображание информации о резервной копии приложения на [Главной странице][main_page]
 - <span><tagfeature/></span>  Восстановление исходных файлов (за исключением файлов APK) отключено на неподдерживаемой архитектуре.
@@ -23,7 +23,7 @@ sidebar: auto
 - <span><tagfeature/></span>  Возможность импорта компонентов отключена с помощью IFW на MAT.
 - <span><tagfeature/></span>  Включение внешнего носителя и каталога OBB для резервного копирования.
 - <span><tagfeature/></span>  Разрешение импорта существующих правил другими приложениями или инструментами.
-- <span><tagfeature/></span>  Добавлена ​​возможность извлекать значок приложения во вкладке [О приложении][app_info].
+- <span><tagfeature/></span>  Добавлена возможность извлекать значок приложения во вкладке [О приложении][app_info].
 - <span><tagfix/></span> Отображание функции восстановления и удаления резервных копий только для приложений с существующими резервными копиями.
 - <span><tagfix/></span> Отображание индикатора прогресса при создании резервных копий.
 - <span><tagfix/></span> Отображение индикатора прогресса при загрузке операций приложения.
@@ -44,12 +44,12 @@ sidebar: auto
 Функция резервного копирования данных по-прежнему считается экспериментальной, и поэтому, пожалуйста, пока не полагайтесь на нее при управлении своими резервными копиями.
 
 ## v2.5.11 (333)
-- <span><tagfeature/></span>  Добавлена ​​экспериментальная поддержка резервного копирования данных приложений. Пожалуйста, тестируйте только те приложения, которые вам не нужны. (только root)
+- <span><tagfeature/></span>  Добавлена экспериментальная поддержка резервного копирования данных приложений. Пожалуйста, тестируйте только те приложения, которые вам не нужны. (только root)
 - <span><tagfeature/></span>  Добавлена возможность отправки разделенных файлов APK в виде apks (можно установить через [SAI][8]).
 - <span><tagfeature/></span>  Реализовано сохранение файлов APK в режиме пакетного выбора.
 - <span><tagfeature/></span>  Добавлено список изменений для файла APK, который нуждается в обновлении (при открытии внешних файлов APK).
-- <span><tagfeature/></span>  Добавлена ​​возможность применять операции в один клик для системных приложений (по умолчанию отключено).
-- <span><tagfeature/></span>  Добавлена ​​информация об установленной версии приложения на вкладке «О приложении». Нажатие на значок _i_ открывает вкладку [О приложении][app_info].
+- <span><tagfeature/></span>  Добавлена возможность применять операции в один клик для системных приложений (по умолчанию отключено).
+- <span><tagfeature/></span>  Добавлена информация об установленной версии приложения на вкладке «О приложении». Нажатие на значок _i_ открывает вкладку [О приложении][app_info].
 - <span><tagfeature/></span>  Новые разрешения по запросу <tt>READ_EXTERNAL_STORAGE</tt> & <tt>WRITE_EXTERNAL_STORAGE</tt> для поддержки резервного копирования приложений.
 - <span><tagfeature/></span>  Отображение удаленных приложений, у которых есть резервные копии, на главной странице.
 - <span><tagfeature/></span>  Добавлено отображение предупреждения при первом открытии приложения.
@@ -62,62 +62,62 @@ sidebar: auto
 
 ## v2.5.10 (324)
 - <span><tagfeature/></span>  Добавлены операции в один клик (опция [Операции в один клик](./guide/one-click-ops-page.md) на [Главной странице][main_page]): блокировка рекламы трекеров, блокировка компонентов по подписям, блокировка операций приложений.
-- <span><tagfeature/></span>  Добавлена ​​поддержка внешних APK: теперь вы можете открывать файлы APK из файлового менеджера. Вы можете просматривать сведения о приложении, манифест или сканировать трекеры прямо оттуда.
-- <span><tagfeature/></span>  Добавлена ​​опция постоянной фильтрации приложений на [Главной странице][main_page].
+- <span><tagfeature/></span>  Добавлена поддержка внешних APK: теперь вы можете открывать файлы APK из файлового менеджера. Вы можете просматривать сведения о приложении, манифест или сканировать трекеры прямо оттуда.
+- <span><tagfeature/></span>  Добавлена опция постоянной фильтрации приложений на [Главной странице][main_page].
 - <span><tagfeature/></span>  Альтернативный просмотрщик манифестов для установленных файлов APKS.
 - <span><tagfeature/></span>  Отображение количества трекеров в виде тега во вкладке [О приложении][app_info].
 - <span><tagfeature/></span>  Добавлен параметр «Выбрать все» на нижней панели на [Главной странице][main_page] в режиме выделения.
 - <span><tagfeature/></span>  Добавлены ссылки на исходный код и сообщество.
-- <span><tagfeature/></span>  Добавлена ​​поддержка установки/обновления файлов APK во вкладке [О приложении][app_info] (в стадии разработки).
+- <span><tagfeature/></span>  Добавлена поддержка установки/обновления файлов APK во вкладке [О приложении][app_info] (в стадии разработки).
 - <span><tagfeature/></span>  Added an option to import existing disabled components in the Import/Export settings (incomplete)
 - <span><tagfeature/></span>  Added split apk information in [App Info][app_info] tab
-- <span><tagfeature/></span>  Added an option to open [Termux](./guide/main-page.md#termux) in the [Main page][main_page] (incomplete)
-- <span><tagfeature/></span>  Initial support for app banner
-- <span><tagfix/></span> Fixed inconsistency of enable and disable in the App Info tab
-- <span><tagfix/></span> Fixed issue with persistent app cache
-- <span><tagfix/></span> Fixed scrolling issue on settings page
-- <span><tagfix/></span> Fixed crashes when switching to the components tabs for non-root users
-- <span><tagfix/></span> Fixed crash when trying to view summary while scanning is still in progress in the exodus page
-- <span><tagfix/></span> Fixed crashes on devices that does not support data usage
-- <span><tagfix/></span> Fixed crash when trying to view manifest of an split apk
-- <span><tagfix/></span> Fixed wrong package installer name in the [App Info][app_info] tab
-- <span><tagfix/></span> Fixed changelog formatting for old devices
+- <span><tagfeature/></span>  Добавлена возможность открытт [Termux](./guide/main-page.md#termux) на [на главной странице][main_page] (в стадии разработки)
+- <span><tagfeature/></span>  Первоначальная поддержка баннера приложения
+- <span><tagfix/></span> Исправлено несоответствие включения и выключения во вкладке «О приложении»
+- <span><tagfix/></span> Исправлена проблема с постоянным кэшем приложения
+- <span><tagfix/></span> Исправлена проблема с прокруткой на странице настроек
+- <span><tagfix/></span> Исправлены сбои при переходе на вкладки компонентов для пользователей без root-прав
+- <span><tagfix/></span> Исправлен сбой при попытке просмотреть сводку во время сканирования на странице exodus
+- <span><tagfix/></span> Исправлены сбои на устройствах, не поддерживающих отображение использования данных
+- <span><tagfix/></span> Исправлен сбой при попытке просмотреть манифест разделенного APK
+- <span><tagfix/></span> Исправлено неправильное имя установщика пакета во вкладке [О приложении][app_info]
+- <span><tagfix/></span> Исправлено форматирование списка изменений для старых устройств
 
 ## v2.5.9 (315)
-- <span><tagfeature/></span>  Merged [App Info][app_info] as a single tab in [App Details][1]
-- <span><tagfeature/></span>  Added option to reset all app ops
-- <span><tagfeature/></span>  Added option to revoke all dangerous app ops/permissions
-- <span><tagfeature/></span>  Highlight trackers in the component tabs
-- <span><tagfeature/></span>  Added option to save manifest and class dump
-- <span><tagfeature/></span>  Added the ability to grant/revoke development permissions
+- <span><tagfeature/></span>  Вкладка [О приложении][app_info] теперь единая вкладка на странице [информации о приложении][1]
+- <span><tagfeature/></span>  Добавлена возможность сбросить все операции приложения
+- <span><tagfeature/></span>  Добавлена возможность отозовать все опасные операции/разрешения приложения
+- <span><tagfeature/></span>  Выделение трекеров на вкладке компонентов
+- <span><tagfeature/></span>  Добавлена возможность сохранения манифеста и дампа класса
+- <span><tagfeature/></span>  Добавлена возможность предоставлять/отзывать разрешения на разработку
 - <span><tagfeature/></span>  Добавлены параметры сортировки для вкладок компонентов, операций приложения и используемых разрешений.
-- <span><tagfeature/></span>  Добавлена ​​сортировка по использованию Wi-Fi на странице [Использование приложений][6].
-- <span><tagfeature/></span>  Добавлена ​​кнопка запуска приложения во вкладке [О приложении][app_info].
-- <span><tagfeature/></span>  Добавлена ​​опция «Не спрашивать снова» в подсказке статуса использования.
+- <span><tagfeature/></span>  Добавлена сортировка по использованию Wi-Fi на странице [Использование приложений][app_usage].
+- <span><tagfeature/></span>  Добавлена кнопка запуска приложения во вкладке [О приложении][app_info].
+- <span><tagfeature/></span>  Добавлена опция «Не спрашивать снова» в подсказке статуса использования.
 - <span><tagfeature/></span>  Добавлено долгое нажатие для выбора приложений на [Главной странице][main_page].
 - <span><tagfeature/></span>  Добавлен журнал изменений в приложении.
 - <span><tagfix/></span> Нажатие для выбора приложений в режиме выделения.
 - <span><tagfix/></span> Улучшен блокировщик компонентов.
 - <span><tagfix/></span> Улучшена загрузка манифеста для больших приложений
 - <span><tagfix/></span> Улучшена производительность загрузки вкладок.
-- <span><tagfix/></span> Исправлена ​​проверка операций и пользовательских операций приложений для некоторых устройств.
+- <span><tagfix/></span> Исправлена проверка операций и пользовательских операций приложений для некоторых устройств.
 - <span><tagfix/></span> Отключено открытие активити для отключенных активити.
 - <span><tagfix/></span> Получение настоящего имени активити для активити, которые используют псевдонимы.
 - <span><tagfix/></span> Исправлены фоновые цвета.
 - <span><tagfix/></span> Исправлен сбой при загрузке вкладки служб для пользователей без root-прав.
-- <span><tagfix/></span> Исправлена ​​неработающая кнопка возврата во время просмотра классов.
+- <span><tagfix/></span> Исправлена неработающая кнопка возврата во время просмотра классов.
 - <span><tagfix/></span> Изменены цвета значков блоков на цвет акцента.
-- <span><tagfix/></span> Removed translation until the app is complete
+- <span><tagfix/></span> Удаление переводов до релиза стабильной версии приложения
 - <span><tagfix/></span> При нажатии на ссылку в разделе «О приложении» открывается определенная страница.
 - <span><tagfix/></span> Исправлены различные утечки памяти.
 
 ## v2.5.8 (289)
-- <span><tagfeature/></span>  Добавлен [возможность импорта/экспорта правил блокировки](./guide/settings-page.md#import-export-blocking-rules).
-- <span><tagfeature/></span>  Добавлена ​​возможность [выбирать темы](./guide/settings-page.html#app-theme) (светлая/ночная).
+- <span><tagfeature/></span>  Добавлен [возможность импорта/экспорта правил блокировки](./guide/settings-page.md#импортирование-существующих-правиn).
+- <span><tagfeature/></span>  Добавлена возможность [выбирать темы](./guide/settings-page.html#тема-приnожения) (светлая/ночная).
 - <span><tagfeature/></span>  Добавлен режим, длительность, время принятия, время отклонения для операций приложения.
 - <span><tagfeature/></span>  Выделение работающих служб.
 - <span><tagfeature/></span>  Выделение отключенных компонентов, не отключенных в App Manager.
-- <span><tagfeature/></span>  Добавлен жест обновления страницы [Использование приложений][6].
+- <span><tagfeature/></span>  Добавлен жест обновления страницы [Использование приложений][app_usage].
 - <span><tagfeature/></span>  Добавлено отображение процентного соотношения использования экрана с индикатором.
 - <span><tagfeature/></span>  Разделение страниц «Инструкции» и «О приложении» с полноэкранным диалогом для обеих страниц.
 - <span><tagfeature/></span>  Закругленное меню переполнения (в стадии разработки).
@@ -137,37 +137,30 @@ sidebar: auto
 **Для root-пользователей:** Если вы пропустили версию [v2.5.6](#v2-5-6-233), вам может потребоваться применить все правила глобально, применив [глобальную блокировку компонентов][5] в настройках, чтобы они работали корректно.
 
 ## v2.5.6 (233)
-- <span><tagfeature/></span>  [Пакетные операции](./guide/main-page.md#batch-operations) на главной странице: очистка данных приложения, отключение запуска в фоновом режиме, отключить/закрытие/удаление приложения (нажмите на значок приложения, чтобы выбрать).
+- <span><tagfeature/></span>  [Пакетные операции](./guide/main-page.md#пакетные-операции) на главной странице: очистка данных приложения, отключение запуска в фоновом режиме, отключить/закрытие/удаление приложения (нажмите на значок приложения, чтобы выбрать).
 - <span><tagfeature/></span>  Полная поддержка экспортированных и поврежденных файлов с помощью [Blocker][3].
 - <span><tagfeature/></span>  Повторная реализация блокирующих активити, приемников, служб и поставщиков.
 - <span><tagfix/></span> Удалена зависимость от ConstraintLayout, из-за чего стало возможно уменьшение размера приложения.
 - <span><tagfix/></span> Исправлено предупреждение о дублировании использования приложения на странице [О приложении][app_info].
 - <span><tagfix/></span> Исправлен сбой при ненахождении значка приложения на странице [О приложении][1].
 
-**Note for root users:** In order to ensure that the previous blocking rules are preserved with the new blocking implementation, this update reads from the previous rules consequently increasing the loading time in the [Main page][main_page]. This feature will be removed in the next release but can still be simulated by applying [global component blocking][5] in Settings.
+**Note for root users:** In order to ensure that the previous blocking rules are preserved with the new blocking implementation, this update reads from the previous rules consequently increasing the loading time in the [Main page][main_page]. Эта функция будет удалена в следующем релизе, но ее все еще можно симулировать, применив [глобальную блокировку компонентов][5] в настройках приложения.
 
 ## v2.5.5 (215)
-- <span><tagfeature/></span>  Added [Running Apps/Process Viewer](./guide/main-page.md#running-apps) (requires root)
-- <span><tagfeature/></span>  Added [Usage Details Viewer][6]
-- <span><tagfeature/></span>  Added [Apk Updater](./guide/main-page.md#apk-updater) and [Aurora Store](./guide/app-details-page.md#actions-in-app-info-tab) support
-- <span><tagfeature/></span>  Save modified values of app ops and permissions to the disk (on progress)
-- <span><tagfix/></span> Uninstall support for non-root users
-- <span><tagfix/></span> Restructure app usage
+- <span><tagfeature/></span>  Добавлен [просмотр работающих приложений/процессов](./guide/main-page.md#работающие-приnожения) (требует root-прав)
+- <span><tagfeature/></span>  Добавлен [просмотр деталей использования приложений][app_usage]
+- <span><tagfeature/></span>  Добавлена поддержка [APK Updater](./guide/main-page.md#apk-updater) и [Aurora Store](./guide/app-details-page.md#горизонтаnьная-панеnь-действий)
+- <span><tagfeature/></span>  Сохранение измененных значений операций и разрешений приложений в хранилище устройства (в процессе разработки)
+- <span><tagfix/></span> Удаление поддержки для пользователей без root-прав
+- <span><tagfix/></span> Реструктуризация вкладки использования приложений
 - <span><tagfix/></span> Added more clarity as well as improve performance in the [App Details][1] page
-
-[1]: ./guide/app-details-page.md
 
 [1]: ./guide/app-details-page.md
 [2]: https://github.com/tuyafeng/Watt
 [3]: https://github.com/lihenggui/blocker
-[app_info]: ./guide/app-details-page.md#app-info-tab
-[app_info]: ./guide/app-details-page.md#app-info-tab
-[5]: ./guide/settings-page.md#global-component-blocking
-[5]: ./guide/settings-page.md#global-component-blocking
-[5]: ./guide/settings-page.md#global-component-blocking
-[6]: ./guide/main-page.md#app-usage
-[6]: ./guide/main-page.md#app-usage
-[main_page]: ./guide/main-page.md
+[app_info]: ./guide/app-details-page.md#вкnадка-«о-приnожении»
+[5]: ./guide/settings-page.md#гnобаnьная-бnокировка-компонентов
+[app_usage]: ./guide/main-page.md#испоnьзование-приnожений
 [main_page]: ./guide/main-page.md
 [8]: https://github.com/Aefyr/SAI
 [termux]: https://github.com/termux/termux-app

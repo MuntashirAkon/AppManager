@@ -5,7 +5,7 @@ sidebarDepth: 2
 # Страница «О приложении»
 Страница **О приложении** состоит из 11 (одиннадцати) вкладок. В основном она описывает почти каждый бит информации, которую может иметь приложение, включая все атрибуты из манифеста приложения, разрешения, [операции приложения][1], информация о подписи и т. д.
 
-::: details Оглавление
+::: details Таблица содержания
 [[toc]]
 :::
 
@@ -21,38 +21,38 @@ sidebarDepth: 2
 
 ### Общая информация
 Список ниже находится в том же порядке, что и на вкладке «О приложении».
-- **App Icon.** The application icon, if an app doesn't have a icon, the system default icon is displayed.
-- **App Label.** The application label or application name.
-- **Version.** Application version is divided into two parts. The first part is called _version name_, the format of this part varies but it often consists of multiple integers separated by dots. The second part is called _version code_ and it is closed under first brackets. Version code is an integer which is usually used to differentiate between app versions (as version name can often be unreadable by a machine). In general, new version of an app has higher version code than the old ones. For instance, if `123` and `125` are two version codes of an app, we can say that the latter is more updated than the former because the version code of the latter is higher. For applications that depend on platforms (mobile, tabs, desktops, etc.), these version numbers can be misleading as they use prefixes for each platform.
-- **Tags.** (Also known as tag clouds) Tags include the basic, concised and most useful information of an app. Tags contain _tracker info_ (i.e., number of trackers), _app type_ (user app or system app and whether the app is an updated version of the system app), _split apk info_ (i.e., number of splits), _debuggable_ (the app is a debug version), _test only_ (the app is a test only app), _large heap_ (the app has requested a large heap size), _stopped_ (the app is force stopped), _disabled_ (the app is disabled) and _no code_ (the app doesn't have any code associated with it). The importance of including _test only_ and _debuggable_ is that app with these properties can do additional tasks or these apps can be `run-as` without root which can cause potential security problems if these apps store any private information. _large heap_ denotes that the app will be allocated a higher amount of memory (RAM) if needed. While this may not be harmful for most cases, any suspicious apps requesting large heap should be taken seriously.
-- **Horizontal Action Panel.** This is a action panel containing various actions regarding the app. See [below](#horizontal-action-panel) for a complete list of actions available there.
-- **Paths & Directories.** Contains various information regarding application paths including _app directory_ (where the apk files are stored), _data directories_ (internal, device protected and externals), _split apk directories_ (along with the split names), and _native JNI library_ (if present). JNI libraries are used to invoke native codes usually written in C/C++. Use of native library can make the app run faster or help an app use third-pary libraries written using languages other than Java like in most games. You can also open these directories using your favourite file managers (provided they support it and have necessary permissions) by clicking on the launch icon on the right-hand side of each item.
-- **Data Usage Since Last Boot.** A rather self explanatory option. But beware that due to some issues, the results might often be misleading and simply wrong. This part remains hidden if _Usage Access_ permission is not granted in newer devices.
-- **Storage & Cache.** Displays information regarding the size of the app (apk files), data and cache. In older devices, size of external data, cache, media and obb folders are also displayed. This part remains hidden if _Usage Access_ permission is not granted in newer devices.
-- **More Info.** Displays other information such as
-  * **SDK.** Displays information related to the Android SDK. There are two (one in old devices) values: _Max_ denotes the target SDK and _Min_ denotes the minimum SDK (the latter is not available in old devices). It is best practice to use apps with maximum SDK that the platform currently supports. SDK is also known as **API Level**. _See also: [Android Version History][wiki_android_versions]_
-  * **Flags.** The application flags used at the time of building the app. For a complete list of flags and what they do, visit the [official documentation][app_flags].
-  * **Date Installed.** The date when the app was first installed.
-  * **Date Updated.** The date when the app was last updated. This is the same as _Date Installed_ if the app hasn't been updated.
-  * **Installer App.** The app that installed the app. Not all app supply the information used by the package manager to register the installer app. Therefore, this value should not be take for granted.
-  * **User ID.** The unique user ID set by the Android system to the app. For shared applications, same user ID is assigned to multiple applications that have the same _Shared User ID_.
-  * **Shared User ID.** Applicable for applications that are shared together. Although it says ID, this is actually a string value. The shared application must have the same [signatures](#signatures-tab).
-  * **Main Activity.** The main entry point to the app. This is only visible if the app has [activities](#activities) and any of those are openable from the Launcher. There's also launch button on the right-hand side which can be used to launch this activity.
+- **Значок приложения.** Значок приложения, если приложение не имеет значка, отображается значок системы по умолчанию.
+- **Метка приложения.** Метка приложения или название приложения.
+- **Версия.** Версия приложения разделена на две части. The first part is called _version name_, the format of this part varies but it often consists of multiple integers separated by dots. The second part is called _version code_ and it is closed under first brackets. Version code is an integer which is usually used to differentiate between app versions (as version name can often be unreadable by a machine). Как правило, новая версия приложения имеет более высокий код версии, чем старая. For instance, if `123` and `125` are two version codes of an app, we can say that the latter is more updated than the former because the version code of the latter is higher. For applications that depend on platforms (mobile, tabs, desktops, etc.), these version numbers can be misleading as they use prefixes for each platform.
+- **Теги (также известные как облака тегов).** Теги включают в себя основную, краткую и наиболее полезную информацию о приложении. Tags contain _tracker info_ (i.e., number of trackers), _app type_ (user app or system app and whether the app is an updated version of the system app), _split apk info_ (i.e., number of splits), _debuggable_ (the app is a debug version), _test only_ (the app is a test only app), _large heap_ (the app has requested a large heap size), _stopped_ (the app is force stopped), _disabled_ (the app is disabled) and _no code_ (the app doesn't have any code associated with it). The importance of including _test only_ and _debuggable_ is that app with these properties can do additional tasks or these apps can be `run-as` without root which can cause potential security problems if these apps store any private information. _large heap_ denotes that the app will be allocated a higher amount of memory (RAM) if needed. While this may not be harmful for most cases, any suspicious apps requesting large heap should be taken seriously.
+- **Horizontal Action Panel.** This is a action panel containing various actions regarding the app. See [below](#горизонтаnьная-панеnь-действий) for a complete list of actions available there.
+- **Paths & Directories.** Contains various information regarding application paths including _app directory_ (where the apk files are stored), _data directories_ (internal, device protected and externals), _split apk directories_ (along with the split names), and _native JNI library_ (if present). Библиотеки JNI используются для вызова собственных кодов, обычно написанных на языке C/C ++. Использование собственной библиотеки может ускорить работу приложения или помочь приложению использовать сторонние библиотеки, написанные на языках, отличных от Java, как в большинстве игр. Вы также можете открывать эти каталоги с помощью ваших файловых менеджеров (при условии, что они их поддерживают и имеют необходимые разрешения), нажав на значок запуска с правой стороны каждого элемента.
+- **Использование данных с момента последнего включения устройства.** Опция, которая не требует пояснений. Но имейте в виду, что из-за некоторых проблем результаты часто могут вводить в заблуждение и быть просто неверными. Эта часть остается скрытой, если не предоставить разрешение _Доступ к использованию_ на новых устройствах.
+- **Хранилище и кэш.** Отображает информацию о размере приложения (файлы APK), данных и кэша. В старых устройствах также отображается размер папок с внешними данными, кэшем, медиа и obb. Эта часть остается скрытой, если не представить разрешение _Доступ к использованию_ на новых устройствах.
+- **Подробнее.** Отображает прочую информацию, такую ​​как
+  * **SDK.** Отображает информацию, относящуюся к Android SDK. There are two (one in old devices) values: _Max_ denotes the target SDK and _Min_ denotes the minimum SDK (the latter is not available in old devices). Лучше всего использовать приложения с максимальным набором SDK, которых в настоящее время поддерживает платформа. SDK также известен как **уровень API**. _Смотрите также: [история версий Android][wiki_android_versions]_
+  * **Флаги.** Флаги приложения используются во время создания приложения. Чтобы увидеть полный список флагов и их назначение, ознакомьтесь с [официальной документацией][app_flags].
+  * **Дата установки.** Дата, когда приложение было впервые установлено.
+  * **Дата обновления.** Дата, когда приложение было последний раз обновлено. Это то же самое, что и _дата установки_, если приложение не обновлялось.
+  * **Установщик приложения.** Приложение, установившее приложение. Не все приложения предоставляют информацию, используемую диспетчером пакетов для регистрации приложения-установщика. Следовательно, это значение не следует воспринимать как должное.
+  * **Идентификатор пользователя.** Уникальный идентификатор пользователя, установленный системой Android для приложения. For shared applications, same user ID is assigned to multiple applications that have the same _Shared User ID_.
+  * **Shared User ID.** Applicable for applications that are shared together. Although it says ID, this is actually a string value. The shared application must have the same [signatures](#вкnадка-«подписи»).
+  * **Main Activity.** The main entry point to the app. This is only visible if the app has [activities](#активити) and any of those are openable from the Launcher. There's also launch button on the right-hand side which can be used to launch this activity.
 
-### Horizontal Action Panel
-Horizontal Action Panel, as described in the previous section, consists of various app-related actions, such as —
-- **Launch.** Application that has a launchable [activity](#activities) can be launched using this button.
-- **Disable.** Disable an app. This button is not displayed for already disabled apps or to users who do not have root or [ADB][2]. If you disable an app, the app will not be displayed in your Launcher app. Shortcuts for the app will also be removed. If you disable an user app, you can only enable them via App Manager or any other tool that supports it. There isn't any option in Android Settings to enable a disabled user app.
+### Горизонтальная панель действий
+Горизонтальная панель действий, как описано в предыдущем разделе, состоит из различных действий, связанных с приложением, таких как —
+- **Запуск.** Приложение с [активити](#активити), поддерживающего запуск, можно запустить с помощью этой кнопки.
+- **Отключить.** Отключение приложения. Эта кнопка не отображается для уже отключенных приложений или для пользователей, у которых нет root-прав или [ADB][2]. If you disable an app, the app will not be displayed in your Launcher app. Shortcuts for the app will also be removed. If you disable an user app, you can only enable them via App Manager or any other tool that supports it. There isn't any option in Android Settings to enable a disabled user app.
 - **Uninstall.** Uninstall an app.
-- **Enable.** Enable an app. This button is not displayed for already enabled apps or to users who do not have root or [ADB][2].
-- **Force Stop.** Force-stop an app. When you force stop an app, the app will not be able to run in background unless you explicitly open it first. However, this is not always true.
-- **Clear Data.** Clear data from an app. This includes any information stored in the internal and often the external directories, including accounts (if set by the app), cache, etc. Clearing data from App Manager, for example, removes all the rules (the blocking is not removed though) saved within the app. Which is why you should always take backups of your rules. This button is not displayed to users who do not have root or [ADB][2].
-- **Clear Cache.** Clear app cache only. There is not any Android-way to clear app cache. Therefore, it needs root permission to clear cache from the app's internal storage.
-- **Install.** Install an apk opened using any third-party app. This button is only displayed for an external apk that hasn't been installed.
-- **What's New.** This button is displayed for an apk that has higher version code than the installed one. Clicking on this button displays a dialog consisting of differences in a version control manner. The information it displays include _version_, _trackers_, _permissions_, _components_, _signatures_ (checksum changes), _features_, _shared libraries_ and _sdk_.
-- **Update.** Displayed for an apk that has the higher version code than the installed one.
-- **Manifest.** Clicking on this button displays the app's manifest file in a separate page. The manifest file can be wrapped or unwrapped using the corresponding toggle button (on the top-right side) or can be saved to you shared storage using the save button.
-- **εxodus.** Clicking on this button displays the app's tracker information. At first, it scans the app to extract a list of classes. Then the class list is matched with a number of tracking signatures. After that, a scan summary is displayed in an alert dialog. If you accidentally close this dialog box, you can see it again using the corresponding option in the menu. If the app has tracker classes, they will be displayed as a list within this page. _See also: [εxodus page][exodus_page]_
+- **Включить.** Включение приложение. Эта кнопка не отображается для уже включенных приложений или для пользователей, у которых нет root-прав или [ADB][2].
+- **Принудительное закрытие.** Принудительное закрытие приложения. Если вы принудительно остановите приложение, оно не будет работать в фоновом режиме, до того, как вы не откроете его повторно. Однако это не всегда так.
+- **Очистка данных.** Очистка данных приложения. В число данных приложения входит любая информация, хранящаяся во внутреннем и внешнем каталоге, включая учетные записи (если они настроены в приложении), кэш и т. д. Например, при очистке данных из App Manager удаляются все правила (однако блокировка не отключается), сохраненные в приложении. Вот почему вы всегда должны делать резервные копии своих правил. Эта кнопка не отображается для пользователей, у которых нет root-прав или [ADB][2].
+- **Очистка кэша.** Исключительно очистка кэша приложения. There is not any Android-way to clear app cache. Следовательно, для очистки кэша из внутренней памяти приложения требуется разрешение root-доступа.
+- **Установка.** Установка APK, открытого с помощью любого стороннего приложения. Эта кнопка отображается только для внешних файлов APK, которые еще не были установлены.
+- **Что нового.** Эта кнопка отображается для файла APK с более высоким кодом версии, чем установленный. При нажатии на эту кнопку отображается диалоговое окно с описанием различий в способах управления версиями. Информация, которую он отображает, включает в себя: _версия_, _трекеры_, _разрешения_, _компоненты_, _подписи_ (изменения контрольной суммы), _функциии_, _общие библиотеки_ и _SDK_.
+- **Обновление.** Отображается для файлов APK с более высоким кодом версии, чем установленная.
+- **Манифест.** При нажатии на эту показывается манифест файла приложения на отдельной странице. The manifest file can be wrapped or unwrapped using the corresponding toggle button (on the top-right side) or can be saved to you shared storage using the save button.
+- **εxodus.** При нажатии на эту кнопку показывается информация о трекерах приложения. Сначала он сканирует приложение, чтобы извлечь список классов. Затем список классов сопоставляется с числом подписей трекинга. После этого сводка сканирования отображается в диалоговом окне предупреждения. If you accidentally close this dialog box, you can see it again using the corresponding option in the menu. If the app has tracker classes, they will be displayed as a list within this page. _See also: [εxodus page][exodus_page]_
 - **Shared Prefs.** Clicking on this button displays a list of shared preferences used by the app. Clicking on a preference item in the list opens the [Shared Preferences Editor page][3]. This option is only visible to the root users.
 - **Databases.** Clicking on this button displays a list of databases used by the app. This needs more improvements and a database editor which might be added in future. This option is only visible to the root users.
 - **Aurora.** Opens the app in _Aurora Droid_. The option is only visible if _Aurora Droid_ is installed.
@@ -67,7 +67,7 @@ Horizontal Action Panel, as described in the previous section, consists of vario
 - **Посмотреть в настройках.** Открывает приложение в настройках Android.
 - **Резервное копирование/восстановление.** Открывает диалоговое окно резервного копирования/восстановления.
 - **Экспорт правил блокировки.** Экспортирует правила, настроенные для этого приложения с помощью App Manager.
-- **Открыть в Termux.** Открывает приложение в Termux. This actually runs `su - user_id` where `user_id` denotes the app's kernel user ID (described in the [General Information section](#general-information)). Эта опция видна только root-пользователям. See [Termux](#termux) section below to learn how to configure Termux to run commands from third-party applications.
+- **Открыть в Termux.** Открывает приложение в Termux. This actually runs `su - user_id` where `user_id` denotes the app's kernel user ID (described in the [General Information section](#общая-информация)). Эта опция видна только root-пользователям. See [Termux](#termux) section below to learn how to configure Termux to run commands from third-party applications.
 - **Запустить в Termux.** Открывает приложение, используя команду `run-as package_name` в Termux. Это применимо только для отлаживаемых приложений и также работает для пользователей без root-прав. See [Termux](#termux) section below to learn how to configure Termux to run commands from third-party applications.
 - **Извлечь значок.** Извлечение и сохранение значка приложения в желаемом месте.
 
@@ -79,9 +79,9 @@ Horizontal Action Panel, as described in the previous section, consists of vario
 :::
 
 ## Вкладка «Компоненты»
-**Активити**, **Службы**, **Приемники** (изначально _радиовещательные приемники_) и **Поставщики** (изначально _поставщики контента_) вместе называются компонентами приложения. Это потому, что у них есть много общих черт. Например, у всех есть _имя_ и _метка_. Компоненты приложения являются строительными блоками любого приложения, и большинство из них должны быть объявлены в манифесте приложения. Манифест приложения – это файл, в котором хранятся метаданные приложения. Операционная система Android узнает, что делать с приложением, читая метаданные. [Цвета](#color-codes) используемые в этих вкладках объяснены выше.
+**Активити**, **Службы**, **Приемники** (изначально _радиовещательные приемники_) и **Поставщики** (изначально _поставщики контента_) вместе называются компонентами приложения. Это потому, что у них есть много общих черт. Например, у всех есть _имя_ и _метка_. Компоненты приложения являются строительными блоками любого приложения, и большинство из них должны быть объявлены в манифесте приложения. Манифест приложения – это файл, в котором хранятся метаданные приложения. Операционная система Android узнает, что делать с приложением, читая метаданные. [Цвета](#цветовые-коды) используемые в этих вкладках объяснены выше.
 
-::: details Оглавление
+::: details Таблица содержания
 - [Активити](#активити)
 - [Службы](#службы)
 - [Приемники](#приемники)
@@ -104,37 +104,37 @@ You can also create shortcut for these _exportable_ activites (using the dedicat
 If you uninstall App Manager, the shortcuts created by App Manager will be lost.
 :::
 
-### Services
-Unlike [activities](#activities) which users can see, **Services** handle background tasks. If you're, for example, downloading a video from the internet using your phone's Internet browser, the Internet browser is using a background service to download the content.
+### Службы
+В отличии от [активити](#активити), которых видят пользователи, **службы** обрабатывают фоновые задачи. If you're, for example, downloading a video from the internet using your phone's Internet browser, the Internet browser is using a background service to download the content.
 
-When you close an activity, it usually gets destroyed immediately (depending on many factors such as how much free memory your phone has). But services can be run for indefinite periods if desired. If more services are running in background, you phone will get slower due to shortage of memory and/or processing power, and your phone's battery can be drained more quickly. Newer Android versions have a battery optimization feature enabled by default for all apps. With this feature enabled, the system can randomly terminate any service.
+When you close an activity, it usually gets destroyed immediately (depending on many factors such as how much free memory your phone has). But services can be run for indefinite periods if desired. If more services are running in background, you phone will get slower due to shortage of memory and/or processing power, and your phone's battery can be drained more quickly. В более новых версиях Android по умолчанию включена функция оптимизации заряда батареи для всех приложений. Если эта функция включена, система может случайным образом прекратить работу любой службы.
 
-By the way, both activities and services are run in the same looper called the main [looper][looper], which means the services are not really run in the background. It's the application authors job to ensure that. How do application communicate with services? They use [broadcast receivers](#receivers).
+Кстати, и активити, и службы выполняются в одном и том же лупере, который называется основным [лупером][looper], что означает, что службы на самом деле не работают в фоновом режиме. It's the application authors job to ensure that. Как приложение взаимодействует со службами? Они используют [радиовещательные приемники](#приемники).
 
-### Receivers
-**Receivers** (also called _broadcast receivers_) can be used to trigger execution of certain tasks for certain events. These components are called broadcast receivers because they are executed as soon as a broadcast message is received. These broadcast messages are sent using a method called intent. Intent is a special feature for Android which can be used to open applications, activities, services and send broadcast messages. Therefore, like [activities](#activities), broadcast receivers use intent filters to receive only the desired broadcast message(s). Broadcast messages can be sent by either system or the app itself. When a broadcast message is sent, the corresponding receivers are awaken by the system so that they can execute tasks. For example, if you have low memory, your phone may freeze or experience lags for a moment after you enable mobile data or connect to the Wifi. Ever wondered why? This is because broadcast receivers that can receive `android.net.conn.CONNECTIVITY_CHANGE` are awaken by the system as soon as you enable data connection. Since many apps use this intent filter, all of these apps are awaken almost immediately by the system which causes the freeze or lags. That being said, receivers can be used for inter-process communication (IPC), i.e., it helps you communicate between different apps (provided you have the necessary permissions) or even different components of a single app.
+### Приемники
+**Приемники** (также известные как _радиовещательные приемники_) может использоваться для переключения выполнения определенных задач при определенных событиях. Эти компоненты называются широковещательными приемниками, потому что они выполняются сразу после получения широковещательного сообщения. Эти широковещательные сообщения отправляются с использованием метода, называемого намерением. Намерение – это специальная функция Android, которую можно использовать для открытия приложений, активити, служб и отправки широковещательных сообщений. Поэтому, так же, как и [активити](#активити), широковещательные приемники используют фильтры намерений, чтобы получать только желаемые широковещательное сообщения. Широковещательные сообщения могут быть отправлены системой или самим приложением. Когда отправляется широковещательное сообщение, соответствующие приемники активируются системой, чтобы они могли выполнять задачи. Например, если у вас мало памяти, ваш телефон может тормозить или зависать на мгновение после того, как вы включите мобильные данные или подключитесь к Wi-Fi. Вы когда-нибудь задумывались, почему? Это потому, что широковещательные приемники, которые могут принимать `android.net.conn.CONNECTIVITY_CHANGE` просыпаются системой, как только вы включаете передачу данных. Поскольку многие приложения используют этот фильтр намерений, все эти приложения почти сразу же пробуждаются системой, что приводит к зависанию или задержкам. That being said, receivers can be used for inter-process communication (IPC), i.e., it helps you communicate between different apps (provided you have the necessary permissions) or even different components of a single app.
 
-### Providers
-**Providers** (also called _content providers_) are used for data management. For example, when you save an apk file or export rules in App Manager, it uses a content provider called `androidx.core.content.FileProvider` to save the apk or export the rules. There are other content providers or even custom ones to manage various content-related tasks such as database management, tracking, searching, etc. Each content provider has a field called _Authority_ which is unique to that particular app in the entire Android eco-system just like the package name.
+### Поставщики
+**Поставщики** (также известные как _поставщики контента_) используются для управления данными. Например, когда вы сохраняете файл APK или правила экспорта в App Manager, оно использует поставщика контента с именем `androidx.core.content.FileProvider` для сохранения файла APK или экспорта правил. There are other content providers or even custom ones to manage various content-related tasks such as database management, tracking, searching, etc. Each content provider has a field called _Authority_ which is unique to that particular app in the entire Android eco-system just like the package name.
 
 ### Additional Features for Rooted Phones
 Unlike non-root users who are just spectators in these tabs, root users can perform various operations. On the right-most side of each component item, there is a “block” icon (which becomes a “unblock/restore” icon when the component is being blocked). This icon can be used to toggle blocking status of that particular component. If you do not have [Global Component Blocking][settings_gcb] enabled or haven't applied blocking for the app before, you have to apply the changes using the **Apply rules** option in the top-right menu. You can also remove already applied rules using the same option (which would be read as **Remove rules** this time). You also have the ability to sort the component list to display blocked or tracker components on top of the list using the **Sort** option in the same menu. You can also disable all ad and tracker components using the **Block tracker** option in the menu.
 
-_See also:_
-- _[εxodus Page](./exodus-page.md)_
-- _[FAQ: App Components][faq_ac]_
+_Смотрите также:_
+- _[Страница εxodus](./exodus-page.md)_
+- _[FAQ: Компоненты приложения][faq_ac]_
 
-## Permission Tabs
-**App Ops**, **Uses Permissions** and **Permissions** tabs are related to permissions. In Android communication between apps or processes which do not have the same identity (known as _shared id_) often require permission(s). These permissions are managed by the permission controller. Some permissions are considered _normal_ permissions which are granted automatically if they appear in the application manifest, but _dangerous_ and _development_ permissions require confirmation from the user. [Colors](#color-codes) used in these tabs are explained above.
+## Вкладки разрешений
+Вкладки **Операции приложения**, **Используемые разрешения** и **Разрешения** связаны с разрешениями. In Android communication between apps or processes which do not have the same identity (known as _shared id_) often require permission(s). These permissions are managed by the permission controller. Some permissions are considered _normal_ permissions which are granted automatically if they appear in the application manifest, but _dangerous_ and _development_ permissions require confirmation from the user. [Colors](#цветовые-коды) used in these tabs are explained above.
 
-::: details Оглавление
-- [App Ops](#операции-приложений)
-- [Uses Permissions](#используемые-разрешения)
-- [Permissions](#permissions)
+::: details Таблица содержания
+- [Операции приложения](#операции-приложений)
+- [Используемые разрешения](#используемые-разрешения)
+- [Разрешения](#разрешения)
 :::
 
-### App Ops
-**App Ops** stands for **Application Operations**. Since Android 4.3, _App Ops_ are used by Android system to control most of the application permissions. Each app op has a unique number associated with them which are closed inside first brackets in the App Ops tab. They also have private and optionally a public name. Some app ops are associated with _permissions_ as well. The dangerousness of an app op is decided based on the associated permission, and other informations such as _flags_, _permission name_, _permission description_, _package name_, _group_ are taken from the associated [permission](#permissions). Other information may include the following:
+### Операции приложения
+**App Ops** stands for **Application Operations**. Начиная с Android 4.3, _операции приложений_ используются системой Android для управления большинством разрешений приложений. Each app op has a unique number associated with them which are closed inside first brackets in the App Ops tab. They also have private and optionally a public name. Some app ops are associated with _permissions_ as well. The dangerousness of an app op is decided based on the associated permission, and other informations such as _flags_, _permission name_, _permission description_, _package name_, _group_ are taken from the associated [permission](#разрешения). Other information may include the following:
 - **Mode.** It describes the current authorization status which can be _allow_, _deny_ (a rather misonomer, it simply means error), _ignore_ (it actually means deny), _default_ (inferred from a list of defaults set internally by the vendor), _foreground_ (in newer Androids, it means the app op can only be used when the app is running in foreground), and some custom modes set by the vendors (MIUI uses _ask_ and other modes with just numbers without any associated names).
 - **Duration.** The amount of time this app op has been used (there can be negative durations whose use cases are currently not known to me).
 - **Accept Time.** The last time the app op was accepted.
@@ -152,8 +152,8 @@ Denying an app op may cause the app to misbehave. Use the _reset to default_ opt
 
 _See also: [Technical Info: App Ops][1]_
 
-### Uses Permissions
-**Uses Permissions** are the permissions used by the application. This is named so because they are declared in the manifest using `uses-permission` tags. Informations such as _flags_, _permission name_, _permission description_, _package name_, _group_ are taken from the associated [permission](#permissions).
+### Используемые разрешения
+**Используемые разрешения** – разрешения, используемые приложением. Этот раздел назван так, потому что они объявлены в манифесте с использованием тегов `uses-permission`. Informations such as _flags_, _permission name_, _permission description_, _package name_, _group_ are taken from the associated [permission](#разрешения).
 
 **Root and [ADB][2] users** can grant or revoke the _dangerous_ and _development_ permissions using the toggle button on the right side of each permission item. They can also revoke dangerous permissions all at once using the corresponding option in the menu. Only these two types of permissions can be revoked because Android doesn't allow modifiying _normal_ permissions (which most of them are). The only alternative is to edit the app manifest and remove these permissions from there.
 
@@ -163,29 +163,29 @@ Since dangerous permissions are revoked by default by the system, revoking all d
 
 Users can sort the permissions by permission name (in ascending order) or choose to display denied or dangerous permissions at first using the corresponding options in the menu.
 
-### Permissions
+### Разрешения
 **Permissions** are usually custom permissions defined by the app itself. It could contain regular permissions as well, mostly in old applications. Here's a complete description of each item that is displayed there:
 - **Name.** Each permission has a unique name like `android.permission.INTERNET` but multiple app can request the permission.
 - **Icon.** Each permission can have a custom icon. The other permission tabs do not have any icon because they do not contain any icon in the app manifest.
-- **Description.** This optional field describes the permission. If there isn't any description associated with the permission, the field is not displayed.
-- **Flags.** (Uses ⚑ symbol or **Protection Level** name) This describes various permission flags such as _normal_, _development_, _dangerous_, _instant_, _granted_, _revoked_, _signature_, _privileged_, etc.
-- **Package Name.** Denotes the package name associated with the permission, i.e., the package that defined the permission.
-- **Group.** The group name associated with the permission (if any). Newer Androids do not seem to use group names which is why you'll usually see `android.permission-group.UNDEFINED` or no group name at all.
+- **Description.** This optional field describes the permission. Если с разрешением не связано какое-либо описание, поле не отображается.
+- **Флаги.** (Используют символ ⚑ или имя **уровня защиты**) Описывают различные флаги разрешений, такие как _обычное_, _разработка_, _опасное_, _мгновенное_, _предоставленное_, _отозванное_, _подпись_, _привилегированное_, и т. д.
+- **Имя пакета.** Обозначает имя пакета, связанного с разрешением, т. е пакет, который определил разрешение.
+- **Группа.** Имя группы, связанное с разрешением (если есть). Новые Android-устройства, похоже, не используют имена групп, поэтому вы обычно видите имя группы `android.permission-group.UNDEFINED` или вообще не видите.
 
-## Signatures Tab
-**Signatures** are actually called signing info. An application is signed by one or more singing certificates by the application developers before publishing it. The integrity of an application (whether the app is from the actual developer and isn't modified by other people) can be checked using the signing info; because when an app is modified by a third-party unauthorized person, the app cannot be signed using the original certificate(s) again because the signing info are kept private by the actual developer. _How do you verify these signatures?_ Using checksums. Checksums are generated from the certificates themselves. If the developer supplies the checksums, you can match the checksums using the different checksums generated in the **Signatures** tab. For example, if you have downloaded App Manager from Github, Telegram Channel or IzzyOnDroid's repo, you can verify whether the app is actually released by me by simply matching the following _sha256_ checksum with the one displayed in this tab:
+## Вкладка «Подписи»
+**Подписи** на самом деле называется информацией о подписи. Приложение подписывается одним или несколькими сертификатами разработчиками приложения перед его публикацией. The integrity of an application (whether the app is from the actual developer and isn't modified by other people) can be checked using the signing info; because when an app is modified by a third-party unauthorized person, the app cannot be signed using the original certificate(s) again because the signing info are kept private by the actual developer. _Как вы проверяете эти подписи?_ Используя контрольные суммы. Контрольные суммы генерируются из самих сертификатов. Если разработчик предоставляет контрольные суммы, вы можете сопоставить контрольные суммы, используя разные контрольные суммы, сгенерированные во вкладке **Подписи**. For example, if you have downloaded App Manager from Github, Telegram Channel or IzzyOnDroid's repo, you can verify whether the app is actually released by me by simply matching the following _sha256_ checksum with the one displayed in this tab:
 ```
 320c0c0fe8cef873f2b554cb88c837f1512589dcced50c5b25c43c04596760ab
 ```
 
-There are three types of checksums displayed there: _md5_, _sha1_ and _sha256_.
+Здесь отображаются контрольные суммы трех типов: _md5_, _sha1_ и _sha256_.
 
-::: danger Caution
-It is recommended that you verify signing info using only _sha256_ checksums or all three of them. DO NOT rely on _md5_ or _sha1_ checksums only as they are known to generate the same results for multiple certificates.
+::: danger Предупреждение
+Рекомендуется проверять информацию о подписи, используя только контрольные суммы _sha256_ или все три из них. НЕ полагайтесь на контрольные суммы _md5_ или _sha1_ только потому, что они, как известно, генерируют одинаковые результаты для нескольких сертификатов.
 :::
 
-## Other Tabs
-Other tabs list android manifest components such as features, configurations, shared libraries, and signatures. A complete description about these tabs will be available soon.
+## Другие вкладки
+На других вкладках перечислены компоненты манифеста Android, такие как функции, конфигурации, общие библиотеки и подписи. Полное описание этих вкладок будет скоро доступно.
 
 [1]: ../tech/AppOps.md
 [2]: ./adb-over-tcp.md

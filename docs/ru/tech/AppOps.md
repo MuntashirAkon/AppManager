@@ -7,29 +7,29 @@ sidebarDepth: 2
 
 *Перейдите к [похожей проблеме](https://github.com/MuntashirAkon/AppManager/issues/17) для обсуждения.*
 
-::: details Оглавление
+::: details Таблица содержания
 [[toc]]
 :::
 
 ## Фоновый режим
-**Операции приложения** используются системой Android (начиная с Android 4.3) для управления разрешениями приложений. The user *can* control some permissions, but only the permissions that are considered dangerous (and Google thinks knowing your phone number isn't a dangerous thing). So, app ops seems to be the one we need if we want to install apps like Facebook and it's Messenger (which literary records everything) and still want *some* privacy and/or security. Although certain features of app ops were available in Settings and later in hidden settings in older version of Android, it's completely hidden in newer versions of Android and is continued to be kept hidden. Now, any app with **android.Manifest.permission.GET_APP_OPS_STATS** permission can get the app ops information for other applications but this permission is hidden from users and can only be enabled using ADB or root. Still, the app with this permission cannot grant or revoke permissions (actually mode of operation) for apps other than itself (with limited capacity, of course). To modify the ops of other app, the app needs **android.Manifest.permission.UPDATE_APP_OPS_STATS** permissions which isn't accessible via _pm_ command. So, you cannot grant it via root or ADB, the permission is only granted to the system apps. There are very few apps who support disabling permissions via app ops. The best one to my knowledge is [AppOpsX][1]. The main (visible) difference between my app (AppManager) and this app is that the later also provides you the ability to revoke internet permissions (by writing ip tables). Another difference is that the author used the hidden API to access/grant/revoke ops whereas I used [_appops_](#appops-command-line-interface) command-line tool to do that. I did this because of the limit of [Reflection][2] that Android recently imposed which rendered many hidden APIs unusable (there are some hacks but they may not work after the final release of R, I believe). One crucial problem that I faced during developing an API for App Ops is the lack of documentation in English language.
+**Операции приложения** используются системой Android (начиная с Android 4.3) для управления разрешениями приложений. The user *can* control some permissions, but only the permissions that are considered dangerous (and Google thinks knowing your phone number isn't a dangerous thing). So, app ops seems to be the one we need if we want to install apps like Facebook and it's Messenger (which literary records everything) and still want *some* privacy and/or security. Although certain features of app ops were available in Settings and later in hidden settings in older version of Android, it's completely hidden in newer versions of Android and is continued to be kept hidden. Теперь любое приложение с разрешением **android.Manifest.permission.GET_APP_OPS_STATS** может получать информацию об операциях приложения для других приложений, но это разрешение скрыто от пользователей и может быть включено только с помощью ADB или root. Тем не менее, приложение с этим разрешением не может предоставлять или отзывать разрешения (фактически режим операции) для приложений, отличных от себя (конечно, с ограниченными возможностями). Для изменения операции другого приложения, приложению необходимо разрешение **android.Manifest.permission.UPDATE_APP_OPS_STATS**, которое недоступно через команду _pm_. Таким образом, вы не можете предоставить его через root или ADB, разрешение предоставляется только системным приложениям. Очень мало приложений, которые поддерживают отключение разрешений через операции приложения. Насколько мне известно, лучшее среди них это [AppOpsX][1]. The main (visible) difference between my app (AppManager) and this app is that the later also provides you the ability to revoke internet permissions (by writing ip tables). Другое отличие состоит в том, что автор использовал скрытый API для доступа/предоставления/отзыва операций, тогда как я использовал инструмент командой строки [_appops_](#appops-command-line-interface) для этого. I did this because of the limit of [Reflection][2] that Android recently imposed which rendered many hidden APIs unusable (there are some hacks but they may not work after the final release of R, I believe). Одна из важнейших проблем, с которыми я столкнулся при разработке API раздела операций приложений, – это отсутствие документации на английском языке.
 
-## Introduction to App Ops
+## Знакомство с операциями приложений
 
-<img :src="$withBase('/assets/how_app_ops_work.png')" alt="How AppOps Works" />
+<img :src="$withBase('/assets/how_app_ops_work.png')" alt="Как работают операции приложений" />
 
-The figure (taken from [this article][3]) above describes the process of changing and processing permission. [**AppOpsManager**](#appopsmanager) can be used to manage permissions in Settings app. **AppOpsManager** is also useful in determining if a certain permission (or operation) is granted to the application. Most of the methods of **AppOpsManager** are accessible to the user app but unlike a system app, it can only be used to check permissions for any app or for the app itself and start or terminating certain operations. Moreover, not all operations are actually accessible from this Java class. **AppOpsManager** holds all the necessary constants such as [_OP\_*_](#op-constants), `OPSTR_*`, [_MODE\_*_](#mode-constants) which describes operation code, operation string and mode of operations respectively. It also holds necessary data stuctures such as [**PackageOps**](#packageops) and **OpEntry**. **PackageOps** holds **OpEntry** for a package, and **OpEntry**, as the name suggests, describes each operation. Under the hood, **AppOpsManager** calls **AppOpsService** to perform any real work.
+Фигура (взята из [этой статьи][3]) выше описывает процесс изменения и обработки разрешения. [**Диспетчер операций приложений**](#appopsmanager) можно использовать для управления разрешениями в приложении "Настройки". **Диспетчер операций приложений** также полезен при определении того, предоставлено ли приложению определенное разрешение (или операция). Большинство методов **диспетчера операций приложений** доступны для пользовательских приложений, но в отличие от системных приложений, их можно использовать только для проверки разрешений для любого приложения или для самого приложения, а также для запуска или завершения определенных операций. Более того, не все операции фактически доступны из этого класса Java. **Диспетчер операций приложений** содержит все необходимые константы, такие как [_OP\_*_](#op-constants), `OPSTR_*`, [_MODE\_*_](#mode-constants), которые описывают код операции, строку операции и режим работы соответственно. Он также содержит необходимые структуры данных, такие как [**PackageOps**](#packageops) и **OpEntry**. **PackageOps** держит **OpEntry** длч пакета, и **OpEntry**, как следует из названия, описывает каждую операцию. Под влиянием, **AppOpsManager** вызывает службу **AppOpsService** выполнять любую реальную работу.
 
-[**AppOpService**][5] is completely hidden from a user application but acessible to the system applications. As seen in the picture, this is the class that does the actual management stuff. It contains data structures such as **Ops** to store basic package info and **Op** which is similar to **OpEntry** of **AppOpsManager**. It also has **Shell** which is actually the source code of the _appops_ command line tool. It writes configurations to or read configurations from [/data/system/appops.xml](#appops-xml). System services calls **AppOpsService** to find out what an application is allowed and what is not allowed to perform, and **AppOpsService** determines these permissions by parsing `/data/system/appops.xml`. If no custom values are set in _appops.xml_, it returns the default mode available in **AppOpsManager**.
+Служба [**AppOpService**][5] полностью скрыта для пользовательских приложений, но доступна для системных. Как видно на рисунке, это класс, который выполняет фактическое управление. Он содержит такие структуры данных, как **операции** для хранения базовой информации о пакете и **операцию** что похоже на **OpEntry** из **AppOpsManager**. Он также имеет **оболочку** которая на самом деле является исходным кодом инструмента командной строки_appops_. Он записывает или считывает конфигурации из [/data/system/appops.xml](#appops-xml). Системные службы вызывают **AppOpsService**, чтобы узнать, какие приложения разрешены, а какие не разрешены, а **AppOpsService** определяет эти разрешения путем анализа `/data/system/appops.xml`. Если пользовательские значения не заданы в _appops.xml_, он возвращает режим по умолчанию, доступный в **AppOpsManager**.
 
 
-## AppOpsManager
-[AppOpsManager][4] stands for application operations manager. It consists of various constants and classes to modify app operations. Official documentation can be found [here][11].
+## Диспетчер операций приложений
+[Диспетчер операций][4], он же диспетчер операций приложения. Он содержит в себе различные константы и классы для редактирования операций приложений. Официальную документацию можно найти [здесь][11].
 
-### OP_* Constants
-`OP_*` are the integer constants starting from `0`. `OP_NONE` implies that no operations are specified whereas `_NUM_OP` denotes the number of operations defined in `OP_*` prefix.  These denotes each operations. But these operations are not necessarily unique. In fact, there are many operations that are actually a single operation denoted by multiple `OP_*` constant (possibly for future use). Vendors may define their own op based on their requirements. MIUI is one of the vendors who are known to do that.
+### Константы OP_*
+`OP_*` – целые константы, начинающиеся с цифры `0`. `OP_NONE` означает, что операции не определены, тогда как `_NUM_OP` обозначает количество операций, определенных в префиксе `OP_*`.  Обозначает каждую операцию. Но эти операции не обязательно должны быть уникальными. Фактически, есть много операций, которые на самом деле являются одной операцией, обозначенной несколькими константами `OP_*` (возможно для будущего использования). Надстройки могут определять свои собственные операции в зависимости от своих требований. MIUI – одна из известных надстроек, которая умеет это делать.
 
-_Sneak-peek of `OP_*`:_
+_Краткий обзор `OP_*`:_
 ``` java{1,10}
 public static final int OP_NONE = -1;
 public static final int OP_COARSE_LOCATION = 0;
@@ -43,21 +43,21 @@ public static final int OP_ACTIVATE_PLATFORM_VPN = 91;
 public static final int _NUM_OP = 92;
 ```
 
-Whether an operation is unique is defined by [`sOpToSwitch`][7]. It maps each operation to another operation or to itself (if it's a unique operation). For instance, `OP_FINE_LOCATION` and `OP_GPS` are mapped to `OP_COARSE_LOCATION`.
+Уникальность операции определяется значением [`sOpToSwitch`][7]. Оно соотносит каждую операцию с другой операцией или с собой (если это уникальная операция). Например, `OP_FINE_LOCATION` и `OP_GPS` соотносится с `OP_COARSE_LOCATION`.
 
-Each operation has a private name which are described by [`sOpNames`][10]. These names are usually the same names as the constants without the `OP_` prefix. Some operations have public names as well which are described by `sOpToString`. For instance, `OP_COARSE_LOCATION` has the public name **android:coarse_location**.
+Каждая операция имеет личное имя, которое описывается значением [`sOpNames`][10]. Эти имена обычно совпадают с именами констант без префикса `OP_`. Некоторые операции также имеют публичные имена, которые описываются `sOpToString`. Например, `OP_COARSE_LOCATION` имеет публичное имя **android:coarse_location**.
 
-As a gradual process of moving permissions to app ops, there are already many permissions that are defined under some operations. These permissions are mapped in [`sOpPerms`][8]. For example, the permission **android.Manifest.permission.ACCESS_COARSE_LOCATION** is mapped to `OP_COARSE_LOCATION`. Some operations may not have any associated permissions which have `null` values.
+По мере постепенного процесса перемещения разрешений в операции приложений уже существует множество разрешений, определенных для некоторых операций. Эти разрешения сопоставляются с [`sOpPerms`][8]. Например, разрешение **android.Manifest.permission.ACCESS_COARSE_LOCATION** сопоставлено с `OP_COARSE_LOCATION`. Некоторые операции могут не иметь связанных разрешений, которые имеют значения `null`.
 
-As described in the previous section, operations that are configured for an app are stored at [/data/system/appops.xml](#appops-xml). If an operation is not configured, then whether system will allow that operation is determined from [`sOpDefaultMode`][9]. It lists the _default mode_ for each operation.
+Как описано в предыдущем разделе, операции, настроенные для приложения, хранятся в [/data/system/appops.xml](#appops-xml). If an operation is not configured, then whether system will allow that operation is determined from [`sOpDefaultMode`][9]. В нем отображается _режим по умолчанию_ для каждой операции.
 
-### MODE_* Constants
-`MODE_*` constants also integer constants starting from `0`. These constants are assigned to each operations describing whether an app is authorised to perform that operation. These modes usually have associated names such as **allow** for `MODE_ALLOWED`, **ignore** for `MODE_IGNORED`, **deny** for `MODE_ERRORED` (a rather misonomer), **default** for `MODE_DEFAULT` and **foreground** for `MODE_FOREGROUND`.
+### Константы MODE_*
+Константы `MODE_*`, а также целочисленные константы, начинаются с цифры `0`. Эти константы назначаются каждой операции, описывающей, авторизовано ли приложение для выполнения этой операции. Эти режимы обычно имеют связанные имена, такие как **allow** для `MODE_ALLOWED`, **ignore** для `MODE_IGNORED`, **deny** для `MODE_ERRORED` (довольно мизономер), **default** для `MODE_DEFAULT` и **foreground** для `MODE_FOREGROUND`.
 
-_Default modes:_
+_Режимы по умолчанию:_
 ``` java
 /**
- * the given caller is allowed to perform the given operation.
+ * данному вызывающему абоненту разрешено выполнять данную операцию.
  */
 public static final int MODE_ALLOWED = 0;
 /**
@@ -83,8 +83,8 @@ public static final int MODE_FOREGROUND = 1 << 2;
 Besides these default modes, vendors can set custom modes such as `MODE_ASK` (with the name **ask**) which is actively used by MIUI. MIUI also uses some other modes without any name associated with them.
 
 
-### PackageOps
-**AppOpsManager.PackageOps** is a data structure to store all the **OpEntry** for a package. In simple terms, it stores all the customised operations for a package.
+### Операции пакетов
+**AppOpsManager.PackageOps** – это структура данных для хранения всех **OpEntry** пакета. Проще говоря, она хранит все настроенные операции для пакета.
 
 ``` java
 public static class PackageOps implements Parcelable {
@@ -94,11 +94,11 @@ public static class PackageOps implements Parcelable {
   ...
 }
 ```
-As can be seen above, it stores all **OpEntry** for a package as well as the corresponding package name and it's kernel user ID.
+Как видно выше, в нем хранятся все **OpEntry** пакета, а также соответствующее имя пакета и его идентификатор пользователя ядра.
 
 
 ### OpEntry
-**AppOpsManager.OpEntry** is a data structure that stores a single operation for any package.
+**AppOpsManager.OpEntry** – это структура данных, в которой хранится одна операция для любого пакета.
 
 ``` java
 public static final class OpEntry implements Parcelable {
@@ -113,21 +113,21 @@ public static final class OpEntry implements Parcelable {
     ...
 }
 ```
-Here:
-- `mOp`: Denotes one of the [`OP_*` constants](#op-constants).
-- `mRunning`: Whether the operations is in progress (ie. the operation has started but not finished yet). Not all operations can be started or finished this way.
-- `mMOde`: One of the [`MODE_*` constants](#mode-constants).
-- `mAccessTimes`: Stores all the available access times
-- `mRejectTimes`: Stores all the available reject times
-- `mDurations`: All available access durations, checking this with `mRunning` will tell you for how long the app is performing a certain app operation.
-- `mProxyUids`: No documentation found
-- `mProxyPackageNames:` No documentation found
+Здесь:
+- `mOp`: обозначает одну из констант [`OP_*`](#op-constants).
+- `mRunning`: выполняются ли операции (т. е, операция началась, но еще не завершена). Не все операции можно запустить или завершить таким образом.
+- `mMOde`: одна из констант [`MODE_*`](#mode-constants).
+- `mAccessTimes`: хранит все доступные времена принятия
+- `mRejectTimes`: хранит все доступные времена отклонения
+- `mDurations`: все доступные длительности доступа, выполняемые с помощью `mRunning` сообщат вам, как долго приложение выполняет определенную операцию.
+- `mProxyUids`: документация не найдена
+- `mProxyPackageNames:` документация не найдена
 
-### Usage
-TODO
+### Использование
+Список задач
 
-## AppOpsService
-TODO
+## Служба AppOpsService
+Список задач
 
 ## appops.xml
 
@@ -167,44 +167,44 @@ pu CDATA #IMPLIED>
 ]>
 ```
 
-The instructions below follows the exact order given above:
-* `app-ops`: The root element. It can contain any number of `pkg` or package `uid`
-  - `v`: (optional, integer) The version number (default: `NO_VERSION` or `-1`)
-* `pkg`: Stores package info. It can contain any number of `uid`
-  - `n`: (required, string) Name of the package
-* Package `uid`: Stores package or packages info
-  - `n`: (required, integer) The user ID
-* `uid`: The package user ID. It can contain any number of `op`
-  - `n`: (required, integer) The user ID
-  - `p`: (optional, boolean) Is the app is a private/system app
-* `op`: The operation, can contain `st` or nothing at all
-  - `n`: (required, integer) The op name in integer, ie. AppOpsManager.OP_*
-  - `m`: (required, integer) The op mode, ie. AppOpsManager.MODE_*
+Приведенные ниже инструкции следуют точному порядку, указанному выше:
+* `app-ops`: корневой элемент. Оно может содержать любое количество `pkg` или пакетов `uid`
+  - `v`: (опционально, целое число) номер версии (по умолчанию: `NO_VERSION` или `-1`)
+* `pkg`: информация о пакете магазинов. Оно может содержать любое количество `uid`
+  - `n`: (обязательно, строка) название пакета
+* Пакет `uid`: хранит пакет или информацию о пакетах
+  - `n`: (обязательно, целое число) идентификатор пользователя
+* `uid`: идентификатор пользователя пакета Оно может содержать любое количество `операций`
+  - `n`: (обязательно, целое число) идентификатор пользователя
+  - `p`: (необязательно, логический) указывает, является ли приложение приватным или системным
+* `op`: операция, которая может содержать `st` или вообще ничего
+  - `n`: (обязательно, целое число) имя операции в целом числе AppOpsManager.OP_*
+  - `m`: (обязательно, целое число) режим операции AppOpsManager.MODE_*
 * `st`: State of operation: whether the operation is accessed, rejected or running (not available on old versions)
-  - `n`: (required, long) Key containing flags and uid
-  - `t`: (optional, long) Access time (default: `0`)
-  - `r`: (optional, long) Reject time (default: `0`)
-  - `d`: (optional, long) Access duration (default: `0`)
-  - `pp`: (optional, string) Proxy package name
-  - `pu`: (optional, integer) Proxy package uid
+  - `n`: (обязательно, длинное число) ключ, содержащий флаги и uid
+  - `t`: (опционально, длинное число) время доступа (по умолчанию: `0`)
+  - `r`: (опционально, длинное число) время отклонения (по умолчанию: `0`)
+  - `d`: (опционально, длинное число) длительность доступа (по умолчанию: `0`)
+  - `pp`: (опционально, строка) имя пакета прокси
+  - `pu`: (опционально, целое число) uid пакета прокси
 
-This definition can be found at [**AppOpsService**][5].
+Это определение можно найти на странице [**AppOpsService**][5].
 
-## appops command line interface
-`appops` or `cmd appops` (on latest versions) can be accessible via ADB or root. This is an easier method to get or update any operation for a package (provided the package name is known). The help page of this command is self explanatory:
+## Интерфейс командной строки appops
+`appops` или `cmd appops` (в последних версиях) могут быть доступны через ADB или root. Это более простой способ получить или обновить любую операцию для пакета (при условии, что имя пакета известно). Страница справки по этой команде не требует пояснений:
 
 ```
-AppOps service (appops) commands:
+Команды службы AppOps (appops):
 help
-  Print this help text.
+  Напишите этот текст для получения справки.
 start [--user <USER_ID>] <PACKAGE | UID> <OP> 
-  Starts a given operation for a particular application.
+  Запускает заданную операцию для определенного приложения.
 stop [--user <USER_ID>] <PACKAGE | UID> <OP> 
-  Stops a given operation for a particular application.
+  Останавливает заданную операцию для определенного приложения.
 set [--user <USER_ID>] <[--uid] PACKAGE | UID> <OP> <MODE>
-  Set the mode for a particular application and operation.
+  Устанавливает режим для конкретного приложения и операции.
 get [--user <USER_ID>] <PACKAGE | UID> [<OP>]
-  Return the mode for a particular application and optional operation.
+  Возвращает режим для конкретного приложения и дополнительной операции.
 query-op [--user <USER_ID>] <OP> [<MODE>]
   Print all packages that currently have the given op in the given mode.
 reset [--user <USER_ID>] [<PACKAGE>]
@@ -224,7 +224,6 @@ options:
 [1]: https://github.com/8enet/AppOpsX
 [2]: https://stackoverflow.com/questions/37628
 [3]: https://translate.googleusercontent.com/translate_c?depth=2&pto=aue&rurl=translate.google.com&sl=auto&sp=nmt4&tl=en&u=https://www.cnblogs.com/0616--ataozhijia/p/5009718.html&usg=ALkJrhgSo4IcKp2cXJlqttXuiRJZGa_jnw
-[5]: https://android.googlesource.com/platform/frameworks/base/+/master/services/core/java/com/android/server/appop/AppOpsService.java
 [5]: https://android.googlesource.com/platform/frameworks/base/+/master/services/core/java/com/android/server/appop/AppOpsService.java
 [4]: https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/app/AppOpsManager.java
 [11]: https://developer.android.com/reference/android/app/AppOpsManager

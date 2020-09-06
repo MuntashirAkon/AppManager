@@ -5,7 +5,7 @@ sidebarDepth: 2
 
 # Разное
 
-::: details Оглавление
+::: details Таблица содержания
 [[toc]]
 :::
 

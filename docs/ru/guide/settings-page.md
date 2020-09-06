@@ -3,71 +3,71 @@ next: false
 sidebarDepth: 2
 ---
 
-# Settings Page
-Settings can be used to customize the behavior of the app.
+# Страница настроек
+Настройки можно использовать для настройки поведения приложения.
 
-::: details Оглавление
+::: details Таблица содержания
 [[toc]]
 :::
 
-## App Theme
-Application theme selection
+## Тема приложения
+Выбор темы приложения
 
-## Root Mode
-Enable or disable root mode.
+## Режим root
+Включение или отключение режима root.
 
 ::: tip
 To use [ADB][1], root mode has to be disabled at first and then preferably after a relaunch, ADB mode will be detected automatically.
 :::
 
-_See also: [ADB over TCP][1]_
+_Смотрите также: [ADB через TCP][1]_
 
-### Global Component Blocking
-Enable component blocking globally. By default, blocking rules are not applied unless they are applied in the [App Details][2] page for any package. Upon enabling this option, all (old and new) rules are applied immediately for all apps without explicitly enabling blocking for any app.
+### Глобальная блокировка компонентов
+Включение глобальной блокировки компонентов. По умолчанию правила блокировки не применяются, если они не применены на странице [О приложении][2] для любого пакета. После включения этой опции все (старые и новые) правила применяются немедленно для всех приложений без явного включения блокировки для любого приложения.
 
 ::: warning Notice
-Enabling this setting may have some unintended side-effects, such as rules that are not completely removed will get applied. So, proceed with caution. This option should be kept disabled if not required for some reasons.
+Enabling this setting may have some unintended side-effects, such as rules that are not completely removed will get applied. Поэтому, соблюдайте осторожность. Эту опцию следует оставить отключенной, если она по каким-либо причинам не требуется.
 :::
 
-_See also: [What is global component blocking?][7]_
+_Смотрите также: [Что такое глобальная блокировка компонентов?][7]_
 
-## Usage Access
-Turning off this option disables the **App Usage** page as well as _data usage_ and _app storage info_ in the [App Info tab][3]. With this option turned off, App Manager will never ask for _Usage Access_ permission
+## Доступ к использованию
+Деактивация этой опции отключает страницу **Использование приложений**, а также _использование данных_ и _информация о хранилище приложения_ во вкладке [О приложении][3]. Если отключить эту опцию, App Manager никогда не будет запрашивать разрешение _Доступ к использованию_
 
-## Import/Export Blocking Rules
-It is possible to import or export blocking rules within App Manager for all apps. There is a choice to export or import only certain rules (components, app ops or permissions) instead of all of them. It is also possible to import blocking rules from [Blocker][4] and [Watt][5]. If it is necessary to export blocking rules for a single app, use the corresponding [App Details][2] page to export rules, or for multiple apps, use [batch operations][6].
+## Импорт/экспорт правил блокировки
+В App Manager можно импортировать или экспортировать правила блокировки для всех приложений. Вы можете экспортировать или импортировать только определенные правила (компоненты, операции приложений или разрешения) вместо их всех. Также можно импортировать правила блокировки из [Blocker][4] и [Watt][5]. Если необходимо экспортировать правила блокировки для одного приложения, используйте соответствующую страницу [О приложении][2] для экспорта правил, или для нескольких приложений используйте [пакетные операции][6].
 
-_See also: [App Manager: Rules Specification][rules_spec]_
+_Смотрите также: [App Manager: спецификация правил][rules_spec]_
 
-### Export
-Export blocking rules for all apps configured within App Manager. This may include [app components][what_are_components], app ops and permissions based on what options is/are selected in the multichoice options.
+### Экспорт
+Экспортируйте правила блокировки для всех приложений, настроенных в App Manager. Это может включать в себя [компоненты приложения][what_are_components], операции и разрешения приложения на основе того, какие параметры выбраны в параметрах множественного выбора.
 
-### Import
-Import previously exported blocking rules from App Manager. Similar to export, this may include [app components][what_are_components], app ops and permissions based on what options is/are selected in the multichoice options.
+### Импорт
+Импортируйте ранее экспортированные правила блокировки из App Manager. Similar to export, this may include [app components][what_are_components], app ops and permissions based on what options is/are selected in the multichoice options.
 
-### Import Existing Rules
-Add components disabled by other apps to App Manager. App Manager only keeps track of component disabled within App Manager. If you use other tools to block app components, you can use this tools to import these disabled components. Clicking on this option triggers a search for disabled components and will lists apps with components disabled by user. For safety, all the apps are unselected by default. You can manually select the apps in the list and re-apply the blocking through App Manager.
+### Импортирование существующих правил
+Добавить компоненты, отключенные другими приложениями, в App Manager. App Manager отслеживает только компоненты, отключенные с помощью App Manager. Если вы используете другие инструменты для блокировки компонентов приложения, вы можете использовать эти инструменты для импорта этих отключенных компонентов. Clicking on this option triggers a search for disabled components and will lists apps with components disabled by user. For safety, all the apps are unselected by default. Вы можете вручную выбрать приложения в списке и повторно применить блокировку через App Manager.
 
-::: danger Caution
-Be careful when using this tool as there can be many false positives. Choose only the apps that you are certain about.
+::: danger Предупреждение
+Будьте осторожны при использовании этого инструмента, так как могут возникнуть негативные последствия. Выбирайте только те приложения, в которых вы уверены.
 :::
 
-### Import from Watt
+### Импорт из Watt
 Import configuration files from [Watt][5], each file containing rules for a single package and file name being the name of the package with `.xml` extension.
 
 ::: tip
 Location of configuration files in Watt: <tt>/sdcard/Android/data/com.tuyafeng.watt/files/ifw</tt>
 :::
 
-### Import from Blocker
+### Импорт из Blocker
 Import blocking rules from [Blocker][4], each file containing rules for a single package. These files have a `.json` extension.
 
 [1]: ./adb-over-tcp.md
 [2]: ./app-details-page.md
-[3]: ./app-details-page.md#app-info-tab
+[3]: ./app-details-page.md#вкnадка-«о-приnожении»
 [4]: https://github.com/lihenggui/blocker
 [5]: https://github.com/tuyafeng/Watt
-[6]: ./main-page.md#batch-operations
-[7]: ../faq/app-components.md#what-is-global-component-blocking
-[what_are_components]: ../faq/app-components.md#what-are-the-app-components
+[6]: ./main-page.md#пакетные-операции
+[7]: ../faq/app-components.md#что-такое-гnобаnьная-бnокировка-компонентов
+[what_are_components]: ../faq/app-components.md#что-такое-компоненты-приnожения
 [rules_spec]: ../tech/rules-specification.md
