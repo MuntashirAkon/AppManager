@@ -22,10 +22,16 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public abstract class Runner {
     public static final int FAILED_RET_VAL = -500;  // An impossible value
+    public static final String TOYBOX;
+
+    static {
+        TOYBOX = AppManager.getContext().getApplicationInfo().nativeLibraryDir + "/toybox.so";
+    }
 
     public interface Result {
         boolean isSuccessful();
@@ -63,6 +69,15 @@ public abstract class Runner {
     @NonNull
     synchronized public static Result runCommand(@NonNull String command) {
         return getInstance().run(command);
+    }
+
+    @NonNull
+    synchronized public static Result runCommand(@NonNull String[] command) {
+        StringBuilder cmd = new StringBuilder();
+        for (String part: command) {
+            cmd.append(RunnerUtils.escape(part)).append(" ");
+        }
+        return getInstance().run(cmd.toString());
     }
 
     protected List<String> commands;
