@@ -155,7 +155,7 @@ public class PrivilegedFile extends File {
             if (files != null) return files;
         } catch (SecurityException ignore) {
         }
-        if (AppPref.isRootOrAdbEnabled()) {
+        if (isDirectory() && AppPref.isRootOrAdbEnabled()) {
             Runner.Result result = Runner.runCommand(String.format("cd %s; for f in * .*; do echo $f; done", getAbsolutePath()));
             if (result.isSuccessful()) {
                 List<String> fileList = result.getOutputAsList();
