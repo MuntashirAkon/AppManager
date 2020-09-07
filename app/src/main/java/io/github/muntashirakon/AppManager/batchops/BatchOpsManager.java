@@ -356,7 +356,7 @@ public class BatchOpsManager {
     @NonNull
     private Result opUninstall() {
         for (String packageName : packageNames) {
-            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_UNINSTALL_PACKAGE,
+            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_UNINSTALL_PACKAGE_WITH_DATA,
                     RunnerUtils.userHandleToUser(Users.getCurrentUser()), packageName));
         }
         return runOpAndFetchResults();
