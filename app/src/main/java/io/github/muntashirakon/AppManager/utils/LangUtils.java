@@ -45,6 +45,7 @@ public final class LangUtils {
         sLocaleMap.put("de", Locale.GERMAN);
         sLocaleMap.put("pt-BR", new Locale("pt", "BR"));
         sLocaleMap.put("ru-RU", new Locale("ru", "RU"));
+        sLocaleMap.put("zh-CN", new Locale("zh", "CN"));
     }
 
     public static Locale updateLanguage(@NonNull Context context) {

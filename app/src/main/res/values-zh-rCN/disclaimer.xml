@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="disclaimer_header">免责声明</string>
+    <string name="disclaimer_body">由
+        使用这个应用程序。如果你不完全了解root的工作原理，那么你应该避免使用这个应用程序。
+        使用root选项，直到你完全意识到风险。
+
+        \n\n我提供的任何链接到其他应用程序和网站是为了用户的利益。我不是
+        对您通过外部链接找到的任何内容负责。
+
+        \n\n在使用App Manager时，您对自己的使用行为承担全部责任，并且不承担任何责任。
+        因使用不当而造成的损失、索赔或货币价值将被赋予。
+
+        \n\n使用此应用程序，你接受使用它的所有责任，并同意我是你的朋友。
+        对于您所做的任何对您的设备产生不利影响的行为，本公司概不负责。
+    </string>
+    <string name="disclaimer_footer">© 2020 Muntashir Al-Islam</string>
+    <string name="disclaimer_agree_forever">不再显示</string>
+    <string name="disclaimer_agree">我接受</string>
+    <string name="disclaimer_exit">退出</string>
+</resources>
