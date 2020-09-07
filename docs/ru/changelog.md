@@ -69,8 +69,8 @@ sidebar: auto
 - <span><tagfeature/></span>  Добавлен параметр «Выбрать все» на нижней панели на [Главной странице][main_page] в режиме выделения.
 - <span><tagfeature/></span>  Добавлены ссылки на исходный код и сообщество.
 - <span><tagfeature/></span>  Добавлена поддержка установки/обновления файлов APK во вкладке [О приложении][app_info] (в стадии разработки).
-- <span><tagfeature/></span>  Added an option to import existing disabled components in the Import/Export settings (incomplete)
-- <span><tagfeature/></span>  Added split apk information in [App Info][app_info] tab
+- <span><tagfeature/></span>  Добавлена ​​возможность импортировать существующие отключенные компоненты в настройках импорта/экспорта (в стадии разработки)
+- <span><tagfeature/></span>  Добавлено отображение информации о разделенных файлах APK во вкладке [«О приложении»][app_info]
 - <span><tagfeature/></span>  Добавлена возможность открытт [Termux](./guide/main-page.md#termux) на [на главной странице][main_page] (в стадии разработки)
 - <span><tagfeature/></span>  Первоначальная поддержка баннера приложения
 - <span><tagfix/></span> Исправлено несоответствие включения и выключения во вкладке «О приложении»
@@ -144,7 +144,7 @@ sidebar: auto
 - <span><tagfix/></span> Исправлено предупреждение о дублировании использования приложения на странице [О приложении][app_info].
 - <span><tagfix/></span> Исправлен сбой при ненахождении значка приложения на странице [О приложении][1].
 
-**Note for root users:** In order to ensure that the previous blocking rules are preserved with the new blocking implementation, this update reads from the previous rules consequently increasing the loading time in the [Main page][main_page]. Эта функция будет удалена в следующем релизе, но ее все еще можно симулировать, применив [глобальную блокировку компонентов][5] в настройках приложения.
+**Примечание для пользователей root:** чтобы гарантировать, что предыдущие правила блокировки сохраняются с новой реализацией блокировки, это обновление основано на предыдущих правилах, следовательно, увеличивая время загрузки на [главной странице][main_page]. Эта функция будет удалена в следующем релизе, но ее все еще можно симулировать, применив [глобальную блокировку компонентов][5] в настройках приложения.
 
 ## v2.5.5 (215)
 - <span><tagfeature/></span>  Добавлен [просмотр работающих приложений/процессов](./guide/main-page.md#работающие-приnожения) (требует root-прав)

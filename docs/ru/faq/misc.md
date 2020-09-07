@@ -12,13 +12,13 @@ sidebarDepth: 2
 ## Есть планы по Shizuku?
 Было бы неплохо, если бы я добавил поддержку Shuzuku. Но проблема не во мне или моем приложении, а в самом Shizuku.
 
-Хотя [Shizuku][shizuku] является приложением с открытым исходным кодом, оно не использует никаких лицензий. Следовательно, это несвободное программное обеспечение. Initially thinking it as an oversight, a number of people had [suggested the authors][shizuku_56] to add a license for their app as F-Droid scanners would not build a library without a free license. In response, the authors have separated the API library responsible for accessing Shizuku with a free (libre) license and closed the issue. It implicitly implies that <mark>the authors have no intention to make the app free,</mark> and therefore, being a strong supporter of freedom, I cannot add support for Shizuku.
+Хотя [Shizuku][shizuku] является приложением с открытым исходным кодом, оно не использует никаких лицензий. Следовательно, это несвободное программное обеспечение. Первоначально считая это недосмотром, некоторые люди [предлогали авторам][shizuku_56] добавить лицензию для своего приложения, поскольку сканеры F-Droid не собирали библиотеку без бесплатной лицензии. В ответ авторы выделили библиотеку API, отвечающую за доступ к Shizuku с помощью бесплатной лицензии, и закрыли тему проблемы. Это неявно подразумевает, что <mark>авторы не собираются делать приложение бесплатным,</mark> и поэтому, будучи решительным сторонником свободы, я не могу добавить поддержку Shizuku.
 
-As stated in [choosealicense.com][cal]:
-> If you find software that doesn’t have a license, that generally means you have no permission from the creators of the software to use, modify, or share the software. Although a code host such as GitHub may allow you to view and fork the code, this does not imply that you are permitted to use, modify, or share the software for any purpose.
+Как указано на сайте [choosealicense.com][cal]:
+> Если вы найдете программное обеспечение, у которого нет лицензии, это обычно означает, что у вас нет разрешения от создателей программного обеспечения на использование, изменение или совместное использование программного обеспечения. Хотя такие сервисы, как GitHub, могут позволить вам просматривать и разветвлять код, это не означает, что вам разрешено использовать, изменять или совместно использовать программное обеспечение в любых целях.
 > 
-> Your options:
-> - **Ask the maintainers nicely to add a license.** Unless the software includes strong indications to the contrary, lack of a license is probably an oversight. If the software is hosted on a site like GitHub, open an issue requesting a license and include a link to this site. If you’re bold and it’s fairly obvious what license is most appropriate, open a pull request to add a license – see “suggest this license” in the sidebar of the page for each license on this site (e.g., MIT).
+> Ваши варианты:
+> - **Вежливо попросите сопровождающих добавить лицензию.** Если программное обеспечение не содержит явных указаний на обратное, отсутствие лицензии, вероятно, является недосмотром. Если программное обеспечение размещено на таком сайте, как GitHub, откройте тему проблемы с запросом лицензии и укажите ссылку на этот сайт. If you’re bold and it’s fairly obvious what license is most appropriate, open a pull request to add a license – see “suggest this license” in the sidebar of the page for each license on this site (e.g., MIT).
 > - **Не используйте программное обеспечение.** Найдите или создайте альтернативу по лицензии с открытым исходным кодом.
 > - **Договоритесь о частной лицензии.** Приведите своего адвоката.
 
