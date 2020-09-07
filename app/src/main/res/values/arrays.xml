@@ -85,11 +85,13 @@
         <item>English</item>
         <item>Deutsch</item>
         <item>Português Brasileiro</item>
+        <item>Русский</item>
     </string-array>
     <string-array name="languages_key">
         <item>auto</item>
         <item>en</item>
         <item>de</item>
         <item>pt-BR</item>
+        <item>ru-RU</item>
     </string-array>
 </resources>

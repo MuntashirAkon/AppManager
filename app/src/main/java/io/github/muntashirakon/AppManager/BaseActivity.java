@@ -20,6 +20,8 @@ package io.github.muntashirakon.AppManager;
 import android.content.Context;
 import android.os.Bundle;
 
+import java.util.Locale;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -27,9 +29,11 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public class BaseActivity extends AppCompatActivity {
+    private Locale currentLocale;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        LangUtils.updateLanguage(this);
+        currentLocale = LangUtils.updateLanguage(this);
         super.onCreate(savedInstanceState);
         AppCompatDelegate.setDefaultNightMode((int) AppPref.get(AppPref.PrefKey.PREF_APP_THEME_INT));
     }
@@ -37,5 +41,11 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(LangUtils.attachBaseContext(newBase));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (currentLocale != LangUtils.getLocaleByLanguage()) recreate();
     }
 }

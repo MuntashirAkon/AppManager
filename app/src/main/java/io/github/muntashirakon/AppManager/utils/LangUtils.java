@@ -44,14 +44,21 @@ public final class LangUtils {
         sLocaleMap.put("en", Locale.ENGLISH);
         sLocaleMap.put("de", Locale.GERMAN);
         sLocaleMap.put("pt-BR", new Locale("pt", "BR"));
+        sLocaleMap.put("ru-RU", new Locale("ru", "RU"));
     }
 
-    public static void updateLanguage(@NonNull Context context) {
+    public static Locale updateLanguage(@NonNull Context context) {
         Resources resources = context.getResources();
         Configuration config = resources.getConfiguration();
-        config.setLocale(getLocaleByLanguage());
+        Locale currentLocale = getLocaleByLanguage();
+        config.setLocale(currentLocale);
         DisplayMetrics dm = resources.getDisplayMetrics();
-        resources.updateConfiguration(config, dm);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N){
+            context.getApplicationContext().createConfigurationContext(config);
+        } else {
+            resources.updateConfiguration(config, dm);
+        }
+        return currentLocale;
     }
 
     public static Locale getLocaleByLanguage() {
