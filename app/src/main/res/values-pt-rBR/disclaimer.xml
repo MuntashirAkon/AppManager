@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="disclaimer_header">AVISO</string>
-    <string name="disclaimer_body">O App Manager oferece funções Root que podem eventualmente
-        prejudicar o seu dispositivo, se utilizado incorretamente. O App Manager não é responsável
-        por quaisquer danos causados pela utilização desta aplicação. Se não estiver totalmente
-        consciente de como o modo Root funciona, então você deve evitar utilizar essas opções até
-        estar plenamente consciente dos riscos.
+    <string name="disclaimer_body">O App Manager oferece funções Root que podem eventualmente prejudicar
+        o seu dispositivo, se utilizado incorretamente. O App Manager não é responsável por quaisquer danos causados pela
+        utilização desta aplicação. Se não estiver totalmente consciente de como o modo Root funciona, então você deve evitar
+        utilizar essas opções até estar plenamente consciente dos riscos.
 
-        \n\nQualquer link que eu forneça para outros aplicativos e websites é para o benefício dos
-        usuários. Eu não sou responsável por qualquer conteúdo que você possa encontrar através de
-        links externos.
+        \n\nQualquer link que eu forneça para outros aplicativos e websites é para o benefício dos usuários. Eu não sou
+        responsável por qualquer conteúdo que você possa encontrar através de links externos.
 
-        \n\nAo utilizar o App Manager, você aceita total responsabilidade por seu próprio uso e não
-        aceita danos, reclamações ou valor monetário será dado devido ao uso indevido.
+        \n\nAo utilizar o App Manager, você aceita total responsabilidade por seu próprio uso e não aceita
+        danos, reclamações ou valor monetário será dado devido ao uso indevido.
 
-        \n\nAo utilizar este aplicativo, você aceita toda a responsabilidade de usá-lo e concorda
-        que eu não sou responsável por qualquer ação que você faça e que tenha um efeito adverso
-        sobre seu dispositivo.
+        \n\nAo utilizar este aplicativo, você aceita toda a responsabilidade de usá-lo e concorda que eu
+        não sou responsável por qualquer ação que você faça e que tenha um efeito adverso sobre seu dispositivo.
     </string>
     <string name="disclaimer_footer">© 2020 Muntashir Al-Islam</string>
     <string name="disclaimer_agree_forever">Nunca mostrar novamente</string>
