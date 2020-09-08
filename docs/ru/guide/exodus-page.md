@@ -8,10 +8,10 @@ tags:
 ---
 
 # Страница εxodus
-εxodus page appears after clicking on the _εxodus_ button in the [App Info tab][1] in the [App Details][2] page. It scans for trackers and displays a list of trackers and their classes as a summary. A list of tracker classes for the given app is also displayed. All the classes of the app can also be viewed by clicking on the _Toggle Class Listing_ menu. A sneak-peek of each class can be viewed by simply clicking on any class item. The tracker names have some prefixes, and although they are not properly documented in the [original repository][3], a list is given below:
-- `°` - Missing in εxodus' list
-- `²` - [ETIP][4] stand-by
-- `µ` - Micro non-intrusive
+страница εxodus появляется после нажатия на кнопку _«εxodus»_ во вкладке [«О приложении≥][1] на странице [«Сведения о приложении»][2]. Он сканирует трекеры и отображает список трекеров и их классы в виде сводки. Также отображается список классов трекера для выбранного приложения. Все классы приложения также можно просмотреть, нажав на _«Переключить список классов»_ в меню опций. Краткий обзор каждого класса можно просмотреть, просто нажав на любой элемент класса. Имена трекеров имеют некоторые префиксы, и хотя они должным образом не задокументированы в [оригинальном репозитории][3], список приведен ниже:
+- `°` - отсутствует в списке εxodus
+- `²` - [ETIP][4] в режиме ожидания
+- `µ` - микро ненавязчивый
 - `?` - неподтвержденное
 
 [1]: ./app-details-page.md#вкnадка-«о-приnожении»

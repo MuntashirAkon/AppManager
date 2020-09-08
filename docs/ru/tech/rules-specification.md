@@ -13,29 +13,29 @@ sidebarDepth: 2
 :::
 
 ## Фон
-Все файлы конфигурации хранятся в <tt>/data/data/io.github.muntashirakon.AppManager/Files/conf</tt>, а <tt>/sdcard/Android/data/io.github.muntashirakon.AppManager/Files/ifw</tt> используется как временное хранилище. The latter directory is kept to provide compatibility for App Manager v2.5.5 or older as well. This latter directory will be removed in v2.6 as it is not secured to store sensitive data in the shared storage as any app having access to these directories can create or modify these files.
+Все файлы конфигурации хранятся в <tt>/data/data/io.github.muntashirakon.AppManager/Files/conf</tt>, а <tt>/sdcard/Android/data/io.github.muntashirakon.AppManager/Files/ifw</tt> используется как временное хранилище. Последний каталог хранится для обеспечения совместимости с App Manager 2.5.5 или более ранней версией. Этот последний каталог будет удален в версии 2.6, поскольку он не защищен для хранения конфиденциальных данных в общем хранилище, поскольку любое приложение, имеющее доступ к этим каталогам, может создавать или изменять эти файлы.
 
 ::: tip
-From v2.5.6, this latter directory is mostly kept for temporary storage. If you're upgrading from v2.5.5 or older versions, make sure to apply [Global Component Blocking][gcb] which will import all the rules from this directory automatically (you can later disable this option).
+Начиная с версии 2.5.6, этот последний каталог в основном используется для временного хранения. Если вы обновляетесь с версии 2.5.5 или более старых версий, обязательно примените [глобальную блокировку компонентов][gcb], которая автоматически импортирует все правила из этого каталога (позже вы можете отключить эту опцию).
 :::
 
-Maintaining a database should be the best choice when it comes to storing data. But for now, I'll be using several `tsv` files with each file having the name of the package and a `.tsv` extension. The file/database will be queried/processed by the `RulesStorageManager` class. Due to this abstraction, it should be easier to switch to database or encrypted database systems in future without changing the design of the entire project.
+Когда дело доходит до хранения данных, обслуживание базы данных должно быть лучшим выбором. Но пока я буду использовать несколько файлов `tsv` с каждым файлом, имеющим имя пакета и расширением `.tsv`. Файл/база данных будет запрошены/обработаны классом `RulesStorageManager`. Благодаря этой абстракции в будущем будет проще переключиться на базы данных или системы зашифрованных баз данных без изменения конструкции всего проекта.
 
 ## Формат файла правил
 
-### Внутренняя
-The format below is used internally within App Manager and _is not compatible with the external format._
+### Внутренний
+Приведенный ниже формат используется внутри App Manager и _не совместим с внешним форматом._
 ```
 <name> <type> <mode>|<component_status>|<is_granted>
 ```
 Где:
-- `<name>` - имя операции компонента/разрешения/приложения (в случае операции приложения это может быть строка или целое число)
-- `<type>` - один из `АКТИВИТИ`, `ПРИЕМНИКОВ`, `ПОСТАВЩИКОВ`, `СЛУЖБ`, `ОПЕРАЦИЙ ПРИЛОЖЕНИЯ`,  `РАЗРЕШЕНИЙ`
-- `<mode>` - (For app ops) The associated [mode constant][mode_constants]
+- `<name>` - имя операции компонента/разрешения/операции приложения (в случае операции приложения это может быть строка или целое число)
+- `<type>` - одно из `ACTIVITY`, `RECEIVER`, `PROVIDER`, `SERVICE`, `APP_OP`,  `PERMISSION`
+- `<mode>` - (для операций приложений) связанно с [режимом константы][mode_constants]
 - `<component_status>` - (для компонентов) статус компонента
-    * `true` - компонент был применен (значение `true` сохранено для совместимости)
-    * `false` - компонент не применен, но будет применяться в будущем (значение `false` сохранено для совместимости)
-    * `разблокировано` - компонент планируется разблокировать
+    * `true` - компонент был применен (значение `true` хранится для совместимости)
+    * `false` - компонент не был применен, но будет применен в будущем (значение `false` хранится для совместимости)
+    * `unblocked` - компонент запланирован на разблокировку
 - `<is_granted>` - показывает, предоставлено ли разрешение или же отозвано
 
 ### Внешний
@@ -45,8 +45,8 @@ The format below is used internally within App Manager and _is not compatible wi
 ```
 Этот формат по сути такой же, как и выше, за исключением первого элемента, который является именем пакета.
 
-::: danger Caution
-The exprted rules have a different format than the internal one and should not be copied directly to the **conf** folder.
+::: danger Предупреждение
+Экспортированные правила имеют формат, отличный от внутреннего, и не должны копироваться непосредственно в папку **conf**.
 :::
 
 [mode_constants]: ./AppOps.md#mode-constants
