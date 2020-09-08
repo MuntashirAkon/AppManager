@@ -16,15 +16,16 @@
 
 package io.github.muntashirakon.AppManager.apk;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * XML pull style parser of Android binary XML resources, such as {@code AndroidManifest.xml}.
@@ -36,45 +37,54 @@ import androidx.annotation.NonNull;
  */
 @SuppressWarnings("unused")
 public class AndroidBinXmlParser {
-
-    /** Event: start of document. */
+    /**
+     * Event: start of document.
+     */
     public static final int EVENT_START_DOCUMENT = 1;
 
-    /** Event: end of document. */
+    /**
+     * Event: end of document.
+     */
     public static final int EVENT_END_DOCUMENT = 2;
-
-    /** Event: start of an element. */
+    /**
+     * Event: start of an element.
+     */
     public static final int EVENT_START_ELEMENT = 3;
-
-    /** Event: end of an document. */
+    /**
+     * Event: end of an document.
+     */
     public static final int EVENT_END_ELEMENT = 4;
-
-    /** Attribute value type is not supported by this parser. */
+    /**
+     * Attribute value type is not supported by this parser.
+     */
     public static final int VALUE_TYPE_UNSUPPORTED = 0;
-
-    /** Attribute value is a string. Use {@link #getAttributeStringValue(int)} to obtain it. */
+    /**
+     * Attribute value is a string. Use {@link #getAttributeStringValue(int)} to obtain it.
+     */
     public static final int VALUE_TYPE_STRING = 1;
-
-    /** Attribute value is an integer. Use {@link #getAttributeIntValue(int)} to obtain it. */
+    /**
+     * Attribute value is an integer. Use {@link #getAttributeIntValue(int)} to obtain it.
+     */
     public static final int VALUE_TYPE_INT = 2;
-
     /**
      * Attribute value is a resource reference. Use {@link #getAttributeIntValue(int)} to obtain it.
      */
     public static final int VALUE_TYPE_REFERENCE = 3;
-
-    /** Attribute value is a boolean. Use {@link #getAttributeBooleanValue(int)} to obtain it. */
+    /**
+     * Attribute value is a boolean. Use {@link #getAttributeBooleanValue(int)} to obtain it.
+     */
     public static final int VALUE_TYPE_BOOLEAN = 4;
+    /**
+     * Attribute value is a float. Use {@link #getAttributeFloatValue(int)} (int)} to obtain it.
+     */
+    public static final int VALUE_TYPE_FLOAT = 5;
 
     private static final long NO_NAMESPACE = 0xffffffffL;
-
     private final ByteBuffer mXml;
-
     private StringPool mStringPool;
     private ResourceMap mResourceMap;
     private int mDepth;
     private int mCurrentEvent = EVENT_START_DOCUMENT;
-
     private String mCurrentElementName;
     private String mCurrentElementNamespace;
     private int mCurrentElementAttributeCount;
@@ -87,7 +97,6 @@ public class AndroidBinXmlParser {
      */
     public AndroidBinXmlParser(@NonNull ByteBuffer xml) throws XmlParserException {
         xml.order(ByteOrder.LITTLE_ENDIAN);
-
         Chunk resXmlChunk = null;
         while (xml.hasRemaining()) {
             Chunk chunk = Chunk.get(xml);
@@ -99,7 +108,6 @@ public class AndroidBinXmlParser {
                 break;
             }
         }
-
         if (resXmlChunk == null) {
             throw new XmlParserException("No XML chunk in file");
         }
@@ -153,7 +161,6 @@ public class AndroidBinXmlParser {
         if (mCurrentEvent != EVENT_START_ELEMENT) {
             return -1;
         }
-
         return mCurrentElementAttributeCount;
     }
 
@@ -162,8 +169,8 @@ public class AndroidBinXmlParser {
      * element or {@code 0} if the name is not associated with a resource ID.
      *
      * @throws IndexOutOfBoundsException if the index is out of range or the current event is not a
-     *         {@code start element} event
-     * @throws XmlParserException if a parsing error is occurred
+     *                                   {@code start element} event
+     * @throws XmlParserException        if a parsing error is occurred
      */
     public int getAttributeNameResourceId(int index) throws XmlParserException {
         return getAttribute(index).getNameResourceId();
@@ -173,8 +180,8 @@ public class AndroidBinXmlParser {
      * Returns the name of the specified attribute of the current element.
      *
      * @throws IndexOutOfBoundsException if the index is out of range or the current event is not a
-     *         {@code start element} event
-     * @throws XmlParserException if a parsing error is occurred
+     *                                   {@code start element} event
+     * @throws XmlParserException        if a parsing error is occurred
      */
     public String getAttributeName(int index) throws XmlParserException {
         return getAttribute(index).getName();
@@ -185,8 +192,8 @@ public class AndroidBinXmlParser {
      * the attribute is not associated with a namespace.
      *
      * @throws IndexOutOfBoundsException if the index is out of range or the current event is not a
-     *         {@code start element} event
-     * @throws XmlParserException if a parsing error is occurred
+     *                                   {@code start element} event
+     * @throws XmlParserException        if a parsing error is occurred
      */
     public String getAttributeNamespace(int index) throws XmlParserException {
         return getAttribute(index).getNamespace();
@@ -197,8 +204,8 @@ public class AndroidBinXmlParser {
      * {@code VALUE_TYPE_...} constants.
      *
      * @throws IndexOutOfBoundsException if the index is out of range or the current event is not a
-     *         {@code start element} event
-     * @throws XmlParserException if a parsing error is occurred
+     *                                   {@code start element} event
+     * @throws XmlParserException        if a parsing error is occurred
      */
     public int getAttributeValueType(int index) throws XmlParserException {
         int type = getAttribute(index).getValueType();
@@ -212,6 +219,8 @@ public class AndroidBinXmlParser {
                 return VALUE_TYPE_REFERENCE;
             case Attribute.TYPE_INT_BOOLEAN:
                 return VALUE_TYPE_BOOLEAN;
+            case Attribute.TYPE_FLOAT:
+                return VALUE_TYPE_FLOAT;
             default:
                 return VALUE_TYPE_UNSUPPORTED;
         }
@@ -222,8 +231,8 @@ public class AndroidBinXmlParser {
      * {@code VALUE_TYPE_...} constants.
      *
      * @throws IndexOutOfBoundsException if the index is out of range or the current event is not a
-     *         {@code start element} event.
-     * @throws XmlParserException if a parsing error is occurred
+     *                                   {@code start element} event.
+     * @throws XmlParserException        if a parsing error is occurred
      */
     public int getAttributeIntValue(int index) throws XmlParserException {
         return getAttribute(index).getIntValue();
@@ -234,11 +243,23 @@ public class AndroidBinXmlParser {
      * {@code VALUE_TYPE_...} constants.
      *
      * @throws IndexOutOfBoundsException if the index is out of range or the current event is not a
-     *         {@code start element} event.
-     * @throws XmlParserException if a parsing error is occurred
+     *                                   {@code start element} event.
+     * @throws XmlParserException        if a parsing error is occurred
      */
     public boolean getAttributeBooleanValue(int index) throws XmlParserException {
         return getAttribute(index).getBooleanValue();
+    }
+
+    /**
+     * Returns the float value of the specified attribute of the current element. See
+     * {@code VALUE_TYPE_...} constants.
+     *
+     * @throws IndexOutOfBoundsException if the index is out of range or the current event is not a
+     *                                   {@code start element} event.
+     * @throws XmlParserException        if a parsing error is occurred
+     */
+    public float getAttributeFloatValue(int index) throws XmlParserException {
+        return getAttribute(index).getFloatValue();
     }
 
     /**
@@ -246,8 +267,8 @@ public class AndroidBinXmlParser {
      * {@code VALUE_TYPE_...} constants.
      *
      * @throws IndexOutOfBoundsException if the index is out of range or the current event is not a
-     *         {@code start element} event.
-     * @throws XmlParserException if a parsing error is occurred
+     *                                   {@code start element} event.
+     * @throws XmlParserException        if a parsing error is occurred
      */
     public String getAttributeStringValue(int index) throws XmlParserException {
         return getAttribute(index).getStringValue();
@@ -276,7 +297,6 @@ public class AndroidBinXmlParser {
         if (mCurrentEvent == EVENT_END_ELEMENT) {
             mDepth--;
         }
-
         // Read events from document, ignoring events that we don't report to caller. Stop at the
         // earliest event which we report to caller.
         while (mXml.hasRemaining()) {
@@ -291,9 +311,7 @@ public class AndroidBinXmlParser {
                     }
                     mStringPool = new StringPool(chunk);
                     break;
-
-                case Chunk.RES_XML_TYPE_START_ELEMENT:
-                {
+                case Chunk.RES_XML_TYPE_START_ELEMENT: {
                     if (mStringPool == null) {
                         throw new XmlParserException(
                                 "Named element encountered before string pool");
@@ -314,14 +332,13 @@ public class AndroidBinXmlParser {
                     if (attrStartOffset > contents.remaining()) {
                         throw new XmlParserException(
                                 "Attributes start offset out of bounds: " + attrStartOffset
-                                    + ", max: " + contents.remaining());
+                                        + ", max: " + contents.remaining());
                     }
                     if (attrEndOffset > contents.remaining()) {
                         throw new XmlParserException(
                                 "Attributes end offset out of bounds: " + attrEndOffset
-                                    + ", max: " + contents.remaining());
+                                        + ", max: " + contents.remaining());
                     }
-
                     mCurrentElementName = mStringPool.getString(nameId);
                     mCurrentElementNamespace =
                             (nsId == NO_NAMESPACE) ? "" : mStringPool.getString(nsId);
@@ -330,14 +347,11 @@ public class AndroidBinXmlParser {
                     mCurrentElementAttrSizeBytes = attrSizeBytes;
                     mCurrentElementAttributesContents =
                             sliceFromTo(contents, attrStartOffset, attrEndOffset);
-
                     mDepth++;
                     mCurrentEvent = EVENT_START_ELEMENT;
                     return mCurrentEvent;
                 }
-
-                case Chunk.RES_XML_TYPE_END_ELEMENT:
-                {
+                case Chunk.RES_XML_TYPE_END_ELEMENT: {
                     if (mStringPool == null) {
                         throw new XmlParserException(
                                 "Named element encountered before string pool");
@@ -369,7 +383,6 @@ public class AndroidBinXmlParser {
                     break;
             }
         }
-
         mCurrentEvent = EVENT_END_DOCUMENT;
         return mCurrentEvent;
     }
@@ -405,10 +418,10 @@ public class AndroidBinXmlParser {
     private static class Attribute {
         private static final int TYPE_REFERENCE = 1;
         private static final int TYPE_STRING = 3;
+        private static final int TYPE_FLOAT = 0x4;
         private static final int TYPE_INT_DEC = 0x10;
         private static final int TYPE_INT_HEX = 0x11;
         private static final int TYPE_INT_BOOLEAN = 0x12;
-
         private final long mNsId;
         private final long mNameId;
         private final int mValueType;
@@ -459,6 +472,13 @@ public class AndroidBinXmlParser {
             }
         }
 
+        public float getFloatValue() throws XmlParserException {
+            if (mValueType == TYPE_FLOAT) {
+                return Float.intBitsToFloat(mValueData);
+            }
+            throw new XmlParserException("Cannot coerce to float: value type " + mValueType);
+        }
+
         public boolean getBooleanValue() throws XmlParserException {
             if (mValueType == TYPE_INT_BOOLEAN) {
                 return mValueData != 0;
@@ -478,6 +498,8 @@ public class AndroidBinXmlParser {
                     return Boolean.toString(mValueData != 0);
                 case TYPE_REFERENCE:
                     return "@" + Integer.toHexString(mValueData);
+                case TYPE_FLOAT:
+                    return Float.toString(Float.intBitsToFloat(mValueData));
                 default:
                     throw new XmlParserException(
                             "Cannot coerce to string: value type " + mValueType);
@@ -495,9 +517,7 @@ public class AndroidBinXmlParser {
         public static final int RES_XML_TYPE_START_ELEMENT = 0x0102;
         public static final int RES_XML_TYPE_END_ELEMENT = 0x0103;
         public static final int RES_XML_TYPE_RESOURCE_MAP = 0x0180;
-
         static final int HEADER_MIN_SIZE_BYTES = 8;
-
         private final int mType;
         private final ByteBuffer mHeader;
         private final ByteBuffer mContents;
@@ -530,13 +550,13 @@ public class AndroidBinXmlParser {
          *
          * @throws XmlParserException if the chunk is malformed
          */
-        public static Chunk get(ByteBuffer input) throws XmlParserException {
+        @Nullable
+        public static Chunk get(@NonNull ByteBuffer input) throws XmlParserException {
             if (input.remaining() < HEADER_MIN_SIZE_BYTES) {
                 // Android ignores the last chunk if its header is too big to fit into the file
                 input.position(input.limit());
                 return null;
             }
-
             int originalPosition = input.position();
             int type = getUnsignedInt16(input);
             int headerSize = getUnsignedInt16(input);
@@ -572,7 +592,6 @@ public class AndroidBinXmlParser {
      */
     private static class StringPool {
         private static final int FLAG_UTF8 = 1 << 8;
-
         private final ByteBuffer mChunkContents;
         private final ByteBuffer mStringsSection;
         private final int mStringCount;
@@ -584,7 +603,7 @@ public class AndroidBinXmlParser {
          *
          * @throws XmlParserException if a parsing error occurred
          */
-        public StringPool(Chunk chunk) throws XmlParserException {
+        public StringPool(@NonNull Chunk chunk) throws XmlParserException {
             ByteBuffer header = chunk.getHeader();
             int headerSizeBytes = header.remaining();
             header.position(Chunk.HEADER_MIN_SIZE_BYTES);
@@ -605,7 +624,6 @@ public class AndroidBinXmlParser {
             long flags = getUnsignedInt32(header);
             long stringsStartOffset = getUnsignedInt32(header);
             long stylesStartOffset = getUnsignedInt32(header);
-
             ByteBuffer contents = chunk.getContents();
             if (mStringCount > 0) {
                 int stringsSectionStartOffsetInContents =
@@ -630,7 +648,6 @@ public class AndroidBinXmlParser {
             } else {
                 mStringsSection = ByteBuffer.allocate(0);
             }
-
             mUtf8Encoded = (flags & FLAG_UTF8) != 0;
             mChunkContents = contents;
         }
@@ -647,13 +664,11 @@ public class AndroidBinXmlParser {
                 throw new XmlParserException(
                         "Unsuported string index: " + index + ", max: " + (mStringCount - 1));
             }
-
             int idx = (int) index;
             String result = mCachedStrings.get(idx);
             if (result != null) {
                 return result;
             }
-
             long offsetInStringsSection = getUnsignedInt32(mChunkContents, idx * 4);
             if (offsetInStringsSection >= mStringsSection.capacity()) {
                 throw new XmlParserException(
@@ -669,6 +684,7 @@ public class AndroidBinXmlParser {
             return result;
         }
 
+        @NonNull
         private static String getLengthPrefixedUtf16EncodedString(ByteBuffer encoded)
                 throws XmlParserException {
             // If the length (in uint16s) is 0x7fff or lower, it is stored as a single uint16.
@@ -682,7 +698,6 @@ public class AndroidBinXmlParser {
                 throw new XmlParserException("String too long: " + lengthChars + " uint16s");
             }
             int lengthBytes = lengthChars * 2;
-
             byte[] arr;
             int arrOffset;
             if (encoded.hasArray()) {
@@ -700,31 +715,25 @@ public class AndroidBinXmlParser {
                     || (arr[arrOffset + lengthBytes + 1] != 0)) {
                 throw new XmlParserException("UTF-16 encoded form of string not NULL terminated");
             }
-            try {
-                return new String(arr, arrOffset, lengthBytes, "UTF-16LE");
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException("UTF-16LE character encoding not supported", e);
-            }
+            return new String(arr, arrOffset, lengthBytes, StandardCharsets.UTF_16LE);
         }
 
+        @NonNull
         private static String getLengthPrefixedUtf8EncodedString(ByteBuffer encoded)
                 throws XmlParserException {
             // If the length (in bytes) is 0x7f or lower, it is stored as a single uint8. Otherwise,
             // it is stored as a big-endian uint16 with highest bit set. Thus, the range of
             // supported values is 0 to 0x7fff inclusive.
-
             // Skip UTF-16 encoded length (in uint16s)
             int lengthBytes = getUnsignedInt8(encoded);
             if ((lengthBytes & 0x80) != 0) {
                 lengthBytes = ((lengthBytes & 0x7f) << 8) | getUnsignedInt8(encoded);
             }
-
             // Read UTF-8 encoded length (in bytes)
             lengthBytes = getUnsignedInt8(encoded);
             if ((lengthBytes & 0x80) != 0) {
                 lengthBytes = ((lengthBytes & 0x7f) << 8) | getUnsignedInt8(encoded);
             }
-
             byte[] arr;
             int arrOffset;
             if (encoded.hasArray()) {
@@ -741,11 +750,7 @@ public class AndroidBinXmlParser {
             if (arr[arrOffset + lengthBytes] != 0) {
                 throw new XmlParserException("UTF-8 encoded form of string not NULL terminated");
             }
-            try {
-                return new String(arr, arrOffset, lengthBytes, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException("UTF-8 character encoding not supported", e);
-            }
+            return new String(arr, arrOffset, lengthBytes, StandardCharsets.UTF_8);
         }
     }
 
@@ -766,7 +771,7 @@ public class AndroidBinXmlParser {
             mChunkContents = chunk.getContents().slice();
             mChunkContents.order(chunk.getContents().order());
             // Each entry of the map is four bytes long, containing the int32 resource ID.
-            mEntryCount = mChunkContents.remaining() /  4;
+            mEntryCount = mChunkContents.remaining() / 4;
         }
 
         /**
