@@ -173,6 +173,7 @@ public class AMPackageInstallerService extends IntentService {
     }
 
     private void sendNotification(int status, String blockingPackage) {
+        Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
         NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this);
         builder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
@@ -182,6 +183,9 @@ public class AMPackageInstallerService extends IntentService {
                 .setContentTitle(appLabel)
                 .setSubText(getText(R.string.package_installer))
                 .setContentText(getStringFromStatus(status, blockingPackage));
+        if (intent != null) {
+            builder.setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT));
+        }
         NotificationUtils.displayHighPriorityNotification(builder.build());
     }
 
