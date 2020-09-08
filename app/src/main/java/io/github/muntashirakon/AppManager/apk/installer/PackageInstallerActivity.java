@@ -33,6 +33,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
@@ -71,6 +72,7 @@ public class PackageInstallerActivity extends BaseActivity {
             return;
         }
         mPackageManager = getPackageManager();
+        FragmentManager fm = getSupportFragmentManager();
         new Thread(() -> {
             try {
                 apkFile = new ApkFile(apkUri);
@@ -106,7 +108,7 @@ public class PackageInstallerActivity extends BaseActivity {
                         WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
                         dialogFragment.setArguments(args);
                         dialogFragment.setOnTriggerInstall(this::install);
-                        runOnUiThread(() -> dialogFragment.show(getSupportFragmentManager(), WhatsNewDialogFragment.TAG));
+                        runOnUiThread(() -> dialogFragment.show(fm, WhatsNewDialogFragment.TAG));
                     } else if (installedVersionCode == thisVersionCode) {
                         // Issue reinstall
                         if (AppPref.isRootOrAdbEnabled()) {

@@ -20,21 +20,32 @@ package io.github.muntashirakon.AppManager.runner;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.security.InvalidParameterException;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 @SuppressWarnings("unused,UnusedReturnValue")
 public final class RunnerUtils {
@@ -270,6 +281,42 @@ public final class RunnerUtils {
     public static String cat(@NonNull String fileName, String emptyValue) {
         Runner.Result result = Runner.runCommand(String.format(Runner.TOYBOX + " cat \"%s\" 2> /dev/null", fileName));
         return result.isSuccessful() ? result.getOutput() : emptyValue;
+    }
+
+    static void copyToybox(File amApkPath, File toyboxPath) {
+        try (ZipFile zipFile = new ZipFile(amApkPath)) {
+            Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
+            String fileName;
+            String fullPath;
+            String abi;
+            int minAbi = Integer.MAX_VALUE;
+            int lastAbi;
+            while (zipEntries.hasMoreElements()) {
+                ZipEntry zipEntry = zipEntries.nextElement();
+                if (zipEntry.isDirectory()) continue;
+                fullPath = zipEntry.getName();
+                fileName = Utils.getLastPathComponent(fullPath);
+                if (Runner.TOYBOX_SO_NAME.equals(fileName)) {
+                    Log.d("Runner", "Matched toybox: " + fullPath);
+                    abi = Utils.getLastPathComponent(fullPath.substring(0, fullPath.length() - fileName.length()));
+                    Log.d("Runner", "Abi: " + abi + ", Supported: " + Arrays.toString(Build.SUPPORTED_ABIS));
+                    lastAbi = ArrayUtils.indexOf(Build.SUPPORTED_ABIS, abi);
+                    if (lastAbi != -1 && lastAbi < minAbi) {
+                        Log.d("Runner", "Copying toybox");
+                        try (InputStream zipInputStream = zipFile.getInputStream(zipEntry)) {
+                            IOUtils.saveZipFile(zipInputStream, toyboxPath);
+                            if (toyboxPath.setExecutable(true, false)) {
+                                throw new RuntimeException("Cannot set exec permissions.");
+                            }
+                        }
+                        minAbi = lastAbi;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     @NonNull

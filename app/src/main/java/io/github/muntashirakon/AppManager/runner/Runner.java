@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.runner;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +30,17 @@ public abstract class Runner {
     public static final int FAILED_RET_VAL = -500;  // An impossible value
     public static final String TOYBOX;
 
+    static final String TOYBOX_SO_NAME = "toybox.so";
+    static final String TOYBOX_BIN_NAME = "toybox";
+    static final boolean toyboxInJNIDir;
+
     static {
-        TOYBOX = AppManager.getContext().getApplicationInfo().nativeLibraryDir + "/toybox.so";
+        File jniToybox = new File(AppManager.getContext().getApplicationInfo().nativeLibraryDir, TOYBOX_SO_NAME);
+        if (!jniToybox.exists()) {
+            jniToybox = new File(AppManager.getContext().getFilesDir(), TOYBOX_BIN_NAME);
+            toyboxInJNIDir = false;
+        } else toyboxInJNIDir = true;
+        TOYBOX = jniToybox.getAbsolutePath();
     }
 
     public interface Result {
@@ -101,6 +111,14 @@ public abstract class Runner {
     }
 
     protected Runner() {
+        if (!toyboxInJNIDir) {
+            // Check if toybox is copied already
+            File toybox = new File(TOYBOX);
+            if (!toybox.exists()) {
+                // Need to copy toybox
+                RunnerUtils.copyToybox(new File(AppManager.getContext().getApplicationInfo().publicSourceDir), toybox);
+            }
+        }
         this.commands = new ArrayList<>();
     }
 

@@ -196,6 +196,22 @@ public class Utils {
     }
 
     @NonNull
+    public static String getLastPathComponent(@NonNull String path) {
+        int lastIndexOfSeparator = path.lastIndexOf("/");
+        int lastIndexOfPath = path.length() - 1;
+        if (lastIndexOfSeparator == -1) {
+            // There are no `/` in the string, so return as is.
+            return path;
+        } else if (lastIndexOfSeparator == lastIndexOfPath) {
+            // `/` is the last character.
+            // Therefore, trim it and find the last path again.
+            return getLastPathComponent(path.substring(0, lastIndexOfPath));
+        }
+        // There are path components, so return the last one.
+        return path.substring(lastIndexOfSeparator + 1);
+    }
+
+    @NonNull
     public static String trimExtension(@NonNull String filename) {
         try {
             return filename.substring(0, filename.lastIndexOf('.'));

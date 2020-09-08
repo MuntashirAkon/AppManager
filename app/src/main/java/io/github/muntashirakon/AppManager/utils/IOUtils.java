@@ -112,9 +112,15 @@ public final class IOUtils {
 
     @NonNull
     public static File saveZipFile(@NonNull InputStream zipInputStream,
-                                   @NonNull File destinationDirectory, @NonNull String fileName)
+                                   @NonNull File destinationDirectory,
+                                   @NonNull String fileName)
             throws IOException {
-        File filePath = new File(destinationDirectory, fileName);
+        return  saveZipFile(zipInputStream, new File(destinationDirectory, fileName));
+    }
+
+    @NonNull
+    public static File saveZipFile(@NonNull InputStream zipInputStream, @NonNull File filePath)
+            throws IOException {
         if (filePath.exists()) //noinspection ResultOfMethodCallIgnored
             filePath.delete();
         try (OutputStream outputStream = new FileOutputStream(filePath)) {
