@@ -1031,9 +1031,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (uidStatsDir.exists() && uidStatsDir.isDirectory()) {
             for (File child : Objects.requireNonNull(uidStatsDir.listFiles())) {
                 if (child.getName().equals(UID_STATS_TR))
-                    tuple.setFirst(getReadableSize(Long.parseLong(Utils.getFileContent(child, "-1"))));
+                    tuple.setFirst(getReadableSize(Long.parseLong(Utils.getFileContent(child, "-1").trim())));
                 else if (child.getName().equals(UID_STATS_RC))
-                    tuple.setSecond(getReadableSize(Long.parseLong(Utils.getFileContent(child, "-1"))));
+                    tuple.setSecond(getReadableSize(Long.parseLong(Utils.getFileContent(child, "-1").trim())));
             }
         }
         return tuple;
