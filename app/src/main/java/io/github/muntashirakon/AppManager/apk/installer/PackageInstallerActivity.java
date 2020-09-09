@@ -38,6 +38,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -50,6 +51,7 @@ public class PackageInstallerActivity extends BaseActivity {
     private ApkFile apkFile;
     private String appLabel;
     private PackageManager mPackageManager;
+    FragmentManager fm;
     private boolean closeApkFile = true;
     private ActivityResultLauncher<String[]> permInstallWithObb = registerForActivityResult(
             new ActivityResultContracts.RequestMultiplePermissions(), result -> {
@@ -67,12 +69,13 @@ public class PackageInstallerActivity extends BaseActivity {
             return;
         }
         final Uri apkUri = intent.getData();
+        // TODO: Add support for EXTRA_APK_FILE as well
         if (apkUri == null) {
             finish();
             return;
         }
         mPackageManager = getPackageManager();
-        FragmentManager fm = getSupportFragmentManager();
+        fm = getSupportFragmentManager();
         new Thread(() -> {
             try {
                 apkFile = new ApkFile(apkUri);
@@ -178,6 +181,29 @@ public class PackageInstallerActivity extends BaseActivity {
     }
 
     private void launchInstaller() {
+        if (apkFile.isSplit()) {
+            SplitApkChooser splitApkChooser = new SplitApkChooser();
+            Bundle args = new Bundle();
+            args.putParcelable(SplitApkChooser.EXTRA_APK_FILE, apkFile);
+            splitApkChooser.setArguments(args);
+            splitApkChooser.setOnTriggerInstall(new SplitApkChooser.InstallInterface() {
+                @Override
+                public void triggerInstall() {
+                    launchInstallService();
+                }
+
+                @Override
+                public void triggerCancel() {
+                    finish();
+                }
+            });
+            splitApkChooser.show(fm, SplitApkChooser.TAG);
+        } else {
+            launchInstallService();
+        }
+    }
+
+    private void launchInstallService() {
         Intent intent = new Intent(this, AMPackageInstallerService.class);
         intent.putExtra(AMPackageInstallerService.EXTRA_APK_FILE, apkFile);
         intent.putExtra(AMPackageInstallerService.EXTRA_APP_LABEL, appLabel);

@@ -70,7 +70,6 @@ public class ApkFile implements AutoCloseable, Parcelable {
         packageName = in.readString();
         hasObb = in.readByte() != 0;
         obbFiles = Objects.requireNonNull(in.createStringArrayList());
-        isSplit = in.readByte() != 0;
         apkUri = in.readParcelable(Uri.class.getClassLoader());
         String cachePath = in.readString();
         if (!TextUtils.isEmpty(cachePath)) {
@@ -105,7 +104,6 @@ public class ApkFile implements AutoCloseable, Parcelable {
         dest.writeString(packageName);
         dest.writeByte((byte) (hasObb ? 1 : 0));
         dest.writeStringList(obbFiles);
-        dest.writeByte((byte) (isSplit ? 1 : 0));
         dest.writeParcelable(apkUri, flags);
         dest.writeString(cacheFilePath == null ? "" : cacheFilePath.getAbsolutePath());
     }
@@ -147,7 +145,6 @@ public class ApkFile implements AutoCloseable, Parcelable {
     private String packageName;
     private boolean hasObb = false;
     private List<String> obbFiles = new ArrayList<>();
-    private boolean isSplit = false;
     private Uri apkUri;
     @Nullable
     private File cacheFilePath;
@@ -182,7 +179,6 @@ public class ApkFile implements AutoCloseable, Parcelable {
                 packageName = manifestAttrs.get("package");
             } else throw new RuntimeException("Package name not found.");
         } else {
-            isSplit = true;
             boolean foundBaseApk = false;
             cacheFilePath = new File(filePath);
             File destDir = context.getExternalFilesDir("apks");
@@ -270,7 +266,7 @@ public class ApkFile implements AutoCloseable, Parcelable {
     }
 
     public boolean isSplit() {
-        return isSplit;
+        return entries.size() > 1;
     }
 
     public boolean hasObb() {
@@ -338,30 +334,16 @@ public class ApkFile implements AutoCloseable, Parcelable {
         }
     }
 
-    public void select(Entry entry) {
-        ListIterator<Entry> it = entries.listIterator();
-        Entry tmpEntry;
-        while (it.hasNext()) {
-            tmpEntry = it.next();
-            if (tmpEntry.equals(entry)) {
-                tmpEntry.selected = true;
-                it.set(tmpEntry);
-                break; // FIXME: Currently there can be duplicate entries
-            }
-        }
+    public void select(int entry) {
+        Entry tmpEntry = entries.get(entry);
+        tmpEntry.selected = true;
+        entries.set(entry, tmpEntry);
     }
 
-    public void deselect(Entry entry) {
-        ListIterator<Entry> it = entries.listIterator();
-        Entry tmpEntry;
-        while (it.hasNext()) {
-            tmpEntry = it.next();
-            if (tmpEntry.equals(entry) && tmpEntry.type != APK_BASE) {
-                tmpEntry.selected = false;
-                it.set(tmpEntry);
-                break; // FIXME: Currently there can be duplicate entries
-            }
-        }
+    public void deselect(int entry) {
+        Entry tmpEntry = entries.get(entry);
+        tmpEntry.selected = false;
+        entries.set(entry, tmpEntry);
     }
 
     @Override
@@ -438,7 +420,7 @@ public class ApkFile implements AutoCloseable, Parcelable {
         public String splitSuffix;
         @Nullable
         public String forFeature = null;
-        public boolean selected = true;  // FIXME: Should be false
+        public boolean selected = false;
 
         Entry(@NonNull String name, @NonNull File source, @ApkType int type) throws Exception {
             this.name = name;

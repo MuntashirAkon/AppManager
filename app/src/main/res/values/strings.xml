@@ -541,4 +541,15 @@
     <string name="auto">Auto</string>
     <string name="current_language">Current language: %s</string>
     <string name="choose_language">Choose a language</string>
+    <string name="split_apk_chooser">Split APK Chooser</string>
+    <string name="base_apk">Base APK</string>
+    <string name="split_feature_name">Feature: %s</string>
+    <string name="unknown_split_for_feature">%s for feature %s</string>
+    <string name="unknown_split_for_base_apk">%s for base APK</string>
+    <string name="density_split_for_feature">%s (%d DPI) resources for feature %s</string>
+    <string name="density_split_for_base_apk">%s (%d DPI) resources for base APK</string>
+    <string name="abi_split_for_feature">%s code for %s</string>
+    <string name="abi_split_for_base_apk">%s code for base APK</string>
+    <string name="locale_split_for_feature">%s locale for %s</string>
+    <string name="locale_split_for_base_apk">%s locale for base APK</string>
 </resources>
