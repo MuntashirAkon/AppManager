@@ -86,12 +86,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
-import io.github.muntashirakon.AppManager.apk.installer.AMPackageInstallerService;
+import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.misc.Users;
@@ -187,12 +185,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private ActivityResultLauncher<String> permRunInTermux = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) runInTermux();
-            });
-    private ActivityResultLauncher<String[]> permInstallWithObb = registerForActivityResult(
-            new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-                if (Utils.getExternalStoragePermissions(mActivity) == null) {
-                    launchInstaller();
-                }
             });
 
     @Override
@@ -374,24 +366,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void install() {
-        ApkFile apkFile = mainModel.getApkFile();
-        if (apkFile.hasObb() && !AppPref.isRootOrAdbEnabled()) {
-            // Need to request permissions if not given
-            String[] permissions = Utils.getExternalStoragePermissions(mActivity);
-            if (permissions != null) {
-                permInstallWithObb.launch(permissions);
-                return;
-            }
+        Intent intent = new Intent(this.getContext(), PackageInstallerActivity.class);
+        intent.putExtra(PackageInstallerActivity.EXTRA_APK_FILE, mainModel.getApkFile());
+        try {
+            startActivity(intent);
+        } catch (Exception ignore) {
         }
-        launchInstaller();
-    }
-
-    private void launchInstaller() {
-        Intent intent = new Intent(requireActivity(), AMPackageInstallerService.class);
-        intent.putExtra(AMPackageInstallerService.EXTRA_APK_FILE, mainModel.getApkFile());
-        intent.putExtra(AMPackageInstallerService.EXTRA_APP_LABEL, mPackageLabel);
-        intent.putExtra(AMPackageInstallerService.EXTRA_CLOSE_APK_FILE, false);
-        ContextCompat.startForegroundService(AppManager.getContext(), intent);
     }
 
     private void refreshDetails() {

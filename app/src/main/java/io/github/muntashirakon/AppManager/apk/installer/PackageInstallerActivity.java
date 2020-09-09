@@ -48,6 +48,8 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabled
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
 
 public class PackageInstallerActivity extends BaseActivity {
+    public static final String EXTRA_APK_FILE = "EXTRA_APK_FILE";
+
     private ApkFile apkFile;
     private String appLabel;
     private PackageInfo packageInfo;
@@ -71,8 +73,8 @@ public class PackageInstallerActivity extends BaseActivity {
             return;
         }
         final Uri apkUri = intent.getData();
-        // TODO: Add support for EXTRA_APK_FILE as well
-        if (apkUri == null) {
+        apkFile = intent.getParcelableExtra(EXTRA_APK_FILE);
+        if (apkUri == null && apkFile == null) {
             finish();
             return;
         }
@@ -80,7 +82,7 @@ public class PackageInstallerActivity extends BaseActivity {
         fm = getSupportFragmentManager();
         new Thread(() -> {
             try {
-                apkFile = new ApkFile(apkUri);
+                if (apkUri != null) apkFile = new ApkFile(apkUri);
                 packageInfo = getPackageInfo();
                 PackageInfo installedPackageInfo = null;
                 try {
