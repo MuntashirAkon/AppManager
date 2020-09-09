@@ -64,6 +64,7 @@ for (( i = 0; i < 4; ++i )); do
     make clean && make defconfig
     # create executable
     make
+    if [[ $? -ne 0 ]]; then exit 1; fi
     chmod 755 toybox
     # move to jni dir
     target_dir=${jni_dir}/${JNI_DIRS[i]}
