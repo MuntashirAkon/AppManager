@@ -116,9 +116,3 @@ def buildToybox() {
 }
 
 preBuild.dependsOn ":AppManagerServer:build", toybox
-
-task testClasses {
-    doLast {
-        println 'This is a dummy testClasses task'
-    }
-}
