@@ -52,7 +52,6 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
@@ -219,8 +218,11 @@ public class MainViewModel extends AndroidViewModel {
                         }
                     }
                 } else {
-                    List<ApplicationInfo> applicationInfoList = mPackageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-                    for (ApplicationInfo applicationInfo : applicationInfoList) {
+                    @SuppressLint("WrongConstant")
+                    List<PackageInfo> packageInfoList = mPackageManager.getInstalledPackages(flagSigningInfo | PackageManager.GET_ACTIVITIES | flagDisabledComponents);
+                    ApplicationInfo applicationInfo;
+                    for (PackageInfo packageInfo : packageInfoList) {
+                        applicationInfo = packageInfo.applicationInfo;
                         ApplicationItem item = new ApplicationItem(applicationInfo);
                         if (backupApplications.contains(applicationInfo.packageName)) {
                             item.metadata = BackupUtils.getBackupInfo(applicationInfo.packageName);
@@ -233,22 +235,13 @@ public class MainViewModel extends AndroidViewModel {
                         item.isDisabled = !applicationInfo.enabled;
                         item.label = applicationInfo.loadLabel(mPackageManager).toString();
                         item.sdk = applicationInfo.targetSdkVersion;
-                        try {
-                            @SuppressLint("WrongConstant")
-                            PackageInfo packageInfo = mPackageManager.getPackageInfo(
-                                    applicationInfo.packageName, flagSigningInfo |
-                                            PackageManager.GET_ACTIVITIES | flagDisabledComponents);
-                            item.versionName = packageInfo.versionName;
-                            item.versionCode = PackageUtils.getVersionCode(packageInfo);
-                            item.sharedUserId = packageInfo.sharedUserId;
-                            item.sha = Utils.getIssuerAndAlg(packageInfo);
-                            item.firstInstallTime = packageInfo.firstInstallTime;
-                            item.lastUpdateTime = packageInfo.lastUpdateTime;
-                            item.hasActivities = packageInfo.activities != null;
-                        } catch (PackageManager.NameNotFoundException e) {
-                            item.lastUpdateTime = 0L;
-                            item.sha = new Tuple<>("?", "?");
-                        }
+                        item.versionName = packageInfo.versionName;
+                        item.versionCode = PackageUtils.getVersionCode(packageInfo);
+                        item.sharedUserId = packageInfo.sharedUserId;
+                        item.sha = Utils.getIssuerAndAlg(packageInfo);
+                        item.firstInstallTime = packageInfo.firstInstallTime;
+                        item.lastUpdateTime = packageInfo.lastUpdateTime;
+                        item.hasActivities = packageInfo.activities != null;
                         item.blockedCount = 0;
                         applicationItems.add(item);
                     }
