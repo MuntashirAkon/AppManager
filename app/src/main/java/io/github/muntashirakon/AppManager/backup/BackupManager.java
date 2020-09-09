@@ -58,7 +58,7 @@ import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-public class BackupStorageManager implements AutoCloseable {
+public class BackupManager implements AutoCloseable {
     private static final String EXT_DATA = "/Android/data/";
     private static final String EXT_MEDIA = "/Android/media/";
     private static final String EXT_OBB = "/Android/obb/";
@@ -68,18 +68,18 @@ public class BackupStorageManager implements AutoCloseable {
     private static final String BACKUP_FILE_SUFFIX = ".tar.gz";
     private static final String RULES_TSV = "rules.am.tsv";
 
-    private static BackupStorageManager instance;
+    private static BackupManager instance;
 
     /**
      * @param packageName Package name of the app
      * @param flags       One or more of the {@link BackupFlags.BackupFlag}
      * @param backupNames A singleton array containing a backup name or {@code null} to use default
      */
-    public static BackupStorageManager getInstance(String packageName, int flags, @Nullable String[] backupNames) {
-        if (instance == null) instance = new BackupStorageManager(packageName, flags, backupNames);
+    public static BackupManager getInstance(String packageName, int flags, @Nullable String[] backupNames) {
+        if (instance == null) instance = new BackupManager(packageName, flags, backupNames);
         else if (!instance.packageName.equals(packageName)) {
             instance.close();
-            instance = new BackupStorageManager(packageName, flags, backupNames);
+            instance = new BackupManager(packageName, flags, backupNames);
         }
         return instance;
     }
@@ -95,7 +95,7 @@ public class BackupStorageManager implements AutoCloseable {
     @NonNull
     private int[] userHandles;
 
-    protected BackupStorageManager(@NonNull String packageName, int flags, @Nullable String[] backupNames) {
+    protected BackupManager(@NonNull String packageName, int flags, @Nullable String[] backupNames) {
         this.packageName = packageName;
         metadataManager = MetadataManager.getInstance(packageName);
         requestedFlags = new BackupFlags(flags);

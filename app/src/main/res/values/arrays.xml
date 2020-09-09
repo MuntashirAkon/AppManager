@@ -68,7 +68,7 @@
         <item>@string/sdk</item>
     </string-array>
     <string-array name="backup_flags">
-        <!-- Must be aligned with BackupStorageManager#BackupFlags, starting from 1 -->
+        <!-- Must be aligned with BackupManager#BackupFlags, starting from 1 -->
         <item>@string/source</item>
         <item>@string/data</item>
         <item>@string/external_data</item>

@@ -38,7 +38,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
-import io.github.muntashirakon.AppManager.backup.BackupStorageManager;
+import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -216,17 +216,17 @@ public class BatchOpsManager {
             // Send progress
             sendProgress(context, PackageUtils.getPackageLabel(pm, packageName), max, ++i);
             // Do operation
-            try (BackupStorageManager backupStorageManager = BackupStorageManager.getInstance(
+            try (BackupManager backupManager = BackupManager.getInstance(
                     packageName, args.getInt(ARG_FLAGS), args.getStringArray(ARG_BACKUP_NAMES))) {
                 switch (mode) {
                     case BackupDialogFragment.MODE_BACKUP:
-                        if (!backupStorageManager.backup()) failedPackages.add(packageName);
+                        if (!backupManager.backup()) failedPackages.add(packageName);
                         break;
                     case BackupDialogFragment.MODE_DELETE:
-                        if (!backupStorageManager.deleteBackup()) failedPackages.add(packageName);
+                        if (!backupManager.deleteBackup()) failedPackages.add(packageName);
                         break;
                     case BackupDialogFragment.MODE_RESTORE:
-                        if (!backupStorageManager.restore()) failedPackages.add(packageName);
+                        if (!backupManager.restore()) failedPackages.add(packageName);
                         break;
                 }
             }
