@@ -56,6 +56,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
@@ -85,7 +86,8 @@ import static androidx.appcompat.app.ActionBar.LayoutParams;
 import static io.github.muntashirakon.AppManager.utils.Utils.requestExternalStoragePermissions;
 
 public class MainActivity extends BaseActivity implements
-        SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
+        SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener,
+        Toolbar.OnMenuItemClickListener {
     public static final String EXTRA_PACKAGE_LIST = "EXTRA_PACKAGE_LIST";
     public static final String EXTRA_LIST_NAME = "EXTRA_LIST_NAME";
 
@@ -167,8 +169,8 @@ public class MainActivity extends BaseActivity implements
     private MenuItem appUsageMenu;
     private MenuItem runningAppsMenu;
     private MenuItem sortByBlockedComponentMenu;
-    private @SortOrder
-    int mSortBy;
+    @SortOrder
+    private int mSortBy;
 
     private ActivityResultLauncher<String> batchExportRules = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
         RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
@@ -273,57 +275,12 @@ public class MainActivity extends BaseActivity implements
             if (mAdapter != null) mAdapter.clearSelection();
             handleSelection();
         });
-        mBottomAppBar.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.action_select_all:
-                    mAdapter.selectAll();
-                    return true;
-                case R.id.action_backup:
-                    BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
-                    Bundle args = new Bundle();
-                    args.putStringArrayList(BackupDialogFragment.ARG_PACKAGES, new ArrayList<>(mModel.getSelectedPackages()));
-                    backupDialogFragment.setArguments(args);
-                    backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
-                    backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
-                    backupDialogFragment.show(getSupportFragmentManager(), BackupDialogFragment.TAG);
-                    mAdapter.clearSelection();
-                    handleSelection();
-                    return true;
-                case R.id.action_backup_apk:
-                    if (requestExternalStoragePermissions(this)) {
-                        handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
-                    }
-                    return true;
-                case R.id.action_block_trackers:
-                    handleBatchOp(BatchOpsManager.OP_BLOCK_TRACKERS);
-                    return true;
-                case R.id.action_clear_data:
-                    handleBatchOp(BatchOpsManager.OP_CLEAR_DATA);
-                    return true;
-                case R.id.action_disable:
-                    handleBatchOp(BatchOpsManager.OP_DISABLE);
-                    return true;
-                case R.id.action_disable_background:
-                    handleBatchOp(BatchOpsManager.OP_DISABLE_BACKGROUND);
-                    return true;
-                case R.id.action_export_blocking_rules:
-                    @SuppressLint("SimpleDateFormat") final String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
-                    batchExportRules.launch(fileName);
-                    return true;
-                case R.id.action_force_stop:
-                    handleBatchOp(BatchOpsManager.OP_FORCE_STOP);
-                    return true;
-                case R.id.action_uninstall:
-                    handleBatchOp(BatchOpsManager.OP_UNINSTALL);
-                    return true;
-            }
-            mAdapter.clearSelection();
-            handleSelection();
-            return false;
-        });
+        mBottomAppBar.setOnMenuItemClickListener(this);
         handleSelection();
         // Check root
-        if (Utils.isRootGiven()) AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
+        if (Utils.isRootGiven()) {
+            AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
+        }
         // Start local server
         new Thread(LocalServer::getInstance).start();
     }
@@ -523,6 +480,60 @@ public class MainActivity extends BaseActivity implements
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onMenuItemClick(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_select_all:
+                mAdapter.selectAll();
+                return true;
+            case R.id.action_backup:
+                BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
+                Bundle args = new Bundle();
+                args.putStringArrayList(BackupDialogFragment.ARG_PACKAGES, new ArrayList<>(mModel.getSelectedPackages()));
+                backupDialogFragment.setArguments(args);
+                backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
+                backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
+                backupDialogFragment.show(getSupportFragmentManager(), BackupDialogFragment.TAG);
+                mAdapter.clearSelection();
+                handleSelection();
+                return true;
+            case R.id.action_backup_apk:
+                if (requestExternalStoragePermissions(this)) {
+                    handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
+                }
+                return true;
+            case R.id.action_block_trackers:
+                handleBatchOp(BatchOpsManager.OP_BLOCK_TRACKERS);
+                return true;
+            case R.id.action_clear_data:
+                handleBatchOp(BatchOpsManager.OP_CLEAR_DATA);
+                return true;
+            case R.id.action_enable:
+                handleBatchOp(BatchOpsManager.OP_ENABLE);
+                return true;
+            case R.id.action_disable:
+                handleBatchOp(BatchOpsManager.OP_DISABLE);
+                return true;
+            case R.id.action_disable_background:
+                handleBatchOp(BatchOpsManager.OP_DISABLE_BACKGROUND);
+                return true;
+            case R.id.action_export_blocking_rules:
+                @SuppressLint("SimpleDateFormat")
+                final String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
+                batchExportRules.launch(fileName);
+                return true;
+            case R.id.action_force_stop:
+                handleBatchOp(BatchOpsManager.OP_FORCE_STOP);
+                return true;
+            case R.id.action_uninstall:
+                handleBatchOp(BatchOpsManager.OP_UNINSTALL);
+                return true;
+        }
+        mAdapter.clearSelection();
+        handleSelection();
+        return false;
     }
 
     @Override

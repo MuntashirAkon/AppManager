@@ -545,8 +545,8 @@ public class MainViewModel extends AndroidViewModel {
                     // Trigger for all ops except disable, force-stop and uninstall
                     @BatchOpsManager.OpType int op;
                     op = intent.getIntExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_NONE);
-                    if (op != BatchOpsManager.OP_NONE && op != BatchOpsManager.OP_DISABLE
-                            && op != BatchOpsManager.OP_UNINSTALL) {
+                    if (op != BatchOpsManager.OP_NONE && op != BatchOpsManager.OP_DISABLE &&
+                            op != BatchOpsManager.OP_ENABLE && op != BatchOpsManager.OP_UNINSTALL) {
                         String[] packages = intent.getStringArrayExtra(BatchOpsService.EXTRA_OP_PKG);
                         String[] failedPackages = intent.getStringArrayExtra(BatchOpsService.EXTRA_FAILED_PKG);
                         if (packages != null && failedPackages != null) {

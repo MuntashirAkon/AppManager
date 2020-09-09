@@ -33,6 +33,11 @@
         android:title="@string/uninstall"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_enable"
+        android:icon="@drawable/ic_baseline_get_app_24"
+        android:title="@string/enable"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_disable"
         android:icon="@drawable/ic_block_black_24dp"
         android:title="@string/disable"

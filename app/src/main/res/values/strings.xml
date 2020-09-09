@@ -480,6 +480,10 @@
         <item quantity="one">Failed to deny app ops for %d app</item>
         <item quantity="other">Failed to deny app ops for %d apps</item>
     </plurals>
+    <plurals name="alert_failed_to_enable">
+        <item quantity="one">Failed to enable %s app</item>
+        <item quantity="other">Failed to enable %s apps</item>
+    </plurals>
     <string name="failed_to_delete_backup">Failed to delete backup</string>
     <string name="failed_to_restore_backup">Failed to restore backup</string>
     <string name="apply_to_system_apps">Apply to system apps</string>

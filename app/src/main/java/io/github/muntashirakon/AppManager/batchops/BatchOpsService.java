@@ -295,6 +295,8 @@ public class BatchOpsService extends IntentService {
                 return getString(R.string.disable);
             case BatchOpsManager.OP_DISABLE_BACKGROUND:
                 return getString(R.string.disable_background);
+            case BatchOpsManager.OP_ENABLE:
+                return getString(R.string.enable);
             case BatchOpsManager.OP_EXPORT_RULES:
                 return getString(R.string.export_blocking_rules);
             case BatchOpsManager.OP_FORCE_STOP:
@@ -332,6 +334,8 @@ public class BatchOpsService extends IntentService {
                 return getResources().getQuantityString(R.plurals.alert_failed_to_clear_data, failedCount, failedCount);
             case BatchOpsManager.OP_DISABLE:
                 return getResources().getQuantityString(R.plurals.alert_failed_to_disable, failedCount, failedCount);
+            case BatchOpsManager.OP_ENABLE:
+                return getResources().getQuantityString(R.plurals.alert_failed_to_enable, failedCount, failedCount);
             case BatchOpsManager.OP_DISABLE_BACKGROUND:
                 return getResources().getQuantityString(R.plurals.alert_failed_to_disable_background, failedCount, failedCount);
             case BatchOpsManager.OP_FORCE_STOP:

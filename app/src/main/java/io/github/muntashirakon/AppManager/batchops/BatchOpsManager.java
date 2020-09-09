@@ -79,6 +79,7 @@ public class BatchOpsManager {
             OP_DELETE_BACKUP,
             OP_DISABLE,
             OP_DISABLE_BACKGROUND,
+            OP_ENABLE,
             OP_EXPORT_RULES,
             OP_FORCE_STOP,
             OP_IGNORE_APP_OPS,
@@ -104,6 +105,7 @@ public class BatchOpsManager {
     public static final int OP_UNINSTALL = 11;
     public static final int OP_BLOCK_COMPONENTS = 12;
     public static final int OP_IGNORE_APP_OPS = 13;
+    public static final int OP_ENABLE = 14;
 
     private Runner runner;
     private Handler handler;
@@ -140,6 +142,8 @@ public class BatchOpsManager {
                 return opDisable();
             case OP_DISABLE_BACKGROUND:
                 return opDisableBackground();
+            case OP_ENABLE:
+                return opEnable();
             case OP_EXPORT_RULES:
                 break;  // Done in the main activity
             case OP_FORCE_STOP:
@@ -310,6 +314,15 @@ public class BatchOpsManager {
             }
         }
         return result;
+    }
+
+    @NonNull
+    private Result opEnable() {
+        for (String packageName : packageNames) {
+            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_ENABLE_PACKAGE,
+                    RunnerUtils.userHandleToUser(Users.getCurrentUser()), packageName));
+        }
+        return runOpAndFetchResults();
     }
 
     @NonNull
