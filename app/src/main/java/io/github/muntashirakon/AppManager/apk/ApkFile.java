@@ -114,6 +114,7 @@ public class ApkFile implements AutoCloseable, Parcelable {
             APK_SPLIT_ABI,
             APK_SPLIT_DENSITY,
             APK_SPLIT_LOCALE,
+            APK_SPLIT_UNKNOWN,
             APK_SPLIT,
     })
     @Retention(RetentionPolicy.SOURCE)
@@ -125,7 +126,8 @@ public class ApkFile implements AutoCloseable, Parcelable {
     public static final int APK_SPLIT_ABI = 2;
     public static final int APK_SPLIT_DENSITY = 3;
     public static final int APK_SPLIT_LOCALE = 4;
-    public static final int APK_SPLIT = 5;
+    public static final int APK_SPLIT_UNKNOWN = 5;
+    public static final int APK_SPLIT = 6;
 
     private static final String APK_FILE = "apk_file.apk";
     private static final String MANIFEST_FILE = "AndroidManifest.xml";
@@ -438,13 +440,13 @@ public class ApkFile implements AutoCloseable, Parcelable {
             this.manifest = manifest;
             if (type == APK_BASE) this.selected = true;
             else if (type == APK_SPLIT) {
+                String splitName = manifest.get("split");
+                if (splitName == null) throw new RuntimeException("Split name is empty.");
+                this.name = splitName;
                 // Infer types
                 if (manifest.containsKey(ANDROID_XML_NAMESPACE + ":isFeatureSplit")) {
                     this.type = APK_SPLIT_FEATURE;
                 } else if (manifest.containsKey("configForSplit")) {
-                    String splitName = manifest.get("split");
-                    if (splitName == null) throw new RuntimeException("Split name is empty.");
-                    this.name = splitName;
                     this.forFeature = manifest.get("configForSplit");
                     if ("".equals(this.forFeature)) this.forFeature = null;
                     int configPartIndex = this.name.lastIndexOf("config.");
@@ -467,7 +469,7 @@ public class ApkFile implements AutoCloseable, Parcelable {
                             }
                         }
                     }
-                }
+                } else this.type = APK_SPLIT_UNKNOWN;
             }
         }
 

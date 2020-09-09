@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.apk.splitapk;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -58,7 +59,9 @@ public class SplitApkChooser extends DialogFragment {
         String actionName = requireArguments().getString(EXTRA_ACTION_NAME);
         ApplicationInfo appInfo = requireArguments().getParcelable(EXTRA_APP_INFO);
         PackageManager pm = requireActivity().getPackageManager();
-        if (apkFile == null || appInfo == null) throw new IllegalArgumentException("ApkFile cannot be empty.");
+        if (apkFile == null || appInfo == null) {
+            throw new IllegalArgumentException("ApkFile cannot be empty.");
+        }
         if (!apkFile.isSplit()) throw new RuntimeException("Apk file does not contain any split.");
         List<ApkFile.Entry> apkEntries = apkFile.getEntries();
         String[] entryNames = new String[apkEntries.size()];
@@ -73,31 +76,39 @@ public class SplitApkChooser extends DialogFragment {
                 case ApkFile.APK_BASE:
                     name = getString(R.string.base_apk);
                     break;
-                case ApkFile.APK_SPLIT:
-                    if (apkEntry.forFeature != null) {
-                        name = getString(R.string.unknown_split_for_feature, apkEntry.splitSuffix, apkEntry.forFeature);
-                    } else
-                        name = getString(R.string.unknown_split_for_base_apk, apkEntry.splitSuffix);
-                    break;
                 case ApkFile.APK_SPLIT_DENSITY:
                     if (apkEntry.forFeature != null) {
                         name = getString(R.string.density_split_for_feature, apkEntry.splitSuffix, apkEntry.getDensity(), apkEntry.forFeature);
-                    } else
+                    } else {
                         name = getString(R.string.density_split_for_base_apk, apkEntry.splitSuffix, apkEntry.getDensity());
+                    }
                     break;
                 case ApkFile.APK_SPLIT_ABI:
                     if (apkEntry.forFeature != null) {
                         name = getString(R.string.abi_split_for_feature, apkEntry.getAbi(), apkEntry.forFeature);
-                    } else name = getString(R.string.abi_split_for_base_apk, apkEntry.getAbi());
+                    } else {
+                        name = getString(R.string.abi_split_for_base_apk, apkEntry.getAbi());
+                    }
                     break;
                 case ApkFile.APK_SPLIT_LOCALE:
                     if (apkEntry.forFeature != null) {
                         name = getString(R.string.locale_split_for_feature, apkEntry.getLocale().getDisplayLanguage(), apkEntry.forFeature);
-                    } else
+                    } else {
                         name = getString(R.string.locale_split_for_base_apk, apkEntry.getLocale().getDisplayLanguage());
+                    }
                     break;
                 case ApkFile.APK_SPLIT_FEATURE:
                     name = getString(R.string.split_feature_name, apkEntry.splitSuffix);
+                    break;
+                case ApkFile.APK_SPLIT_UNKNOWN:
+                    name = apkEntry.name;
+                    break;
+                case ApkFile.APK_SPLIT:
+                    if (apkEntry.forFeature != null) {
+                        name = getString(R.string.unknown_split_for_feature, apkEntry.name, apkEntry.forFeature);
+                    } else {
+                        name = getString(R.string.unknown_split_for_base_apk, apkEntry.name);
+                    }
                     break;
                 default:
                     throw new RuntimeException("Invalid split type.");
@@ -115,7 +126,12 @@ public class SplitApkChooser extends DialogFragment {
                 })
                 .setPositiveButton(actionName == null ? getString(R.string.install) : actionName,
                         (dialog, which) -> installInterface.triggerInstall())
-                .setNegativeButton(android.R.string.cancel, (dialog, which) -> installInterface.triggerCancel())
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel())
                 .create();
+    }
+
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        installInterface.triggerCancel();
     }
 }

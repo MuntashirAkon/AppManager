@@ -204,6 +204,7 @@ public class PackageInstallerActivity extends BaseActivity {
             args.putString(SplitApkChooser.EXTRA_ACTION_NAME, actionName);
             args.putParcelable(SplitApkChooser.EXTRA_APP_INFO, packageInfo.applicationInfo);
             splitApkChooser.setArguments(args);
+            splitApkChooser.setCancelable(false);
             splitApkChooser.setOnTriggerInstall(new SplitApkChooser.InstallInterface() {
                 @Override
                 public void triggerInstall() {
@@ -212,7 +213,7 @@ public class PackageInstallerActivity extends BaseActivity {
 
                 @Override
                 public void triggerCancel() {
-                    finish();
+                    PackageInstallerActivity.this.finish();
                 }
             });
             splitApkChooser.show(fm, SplitApkChooser.TAG);
