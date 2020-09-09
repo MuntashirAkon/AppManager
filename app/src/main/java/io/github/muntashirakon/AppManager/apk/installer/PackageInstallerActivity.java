@@ -50,6 +50,8 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningI
 public class PackageInstallerActivity extends BaseActivity {
     private ApkFile apkFile;
     private String appLabel;
+    private PackageInfo packageInfo;
+    private String actionName;
     private PackageManager mPackageManager;
     FragmentManager fm;
     private boolean closeApkFile = true;
@@ -79,7 +81,7 @@ public class PackageInstallerActivity extends BaseActivity {
         new Thread(() -> {
             try {
                 apkFile = new ApkFile(apkUri);
-                PackageInfo packageInfo = getPackageInfo();
+                packageInfo = getPackageInfo();
                 PackageInfo installedPackageInfo = null;
                 try {
                     installedPackageInfo = getInstalledPackageInfo(packageInfo.packageName);
@@ -89,15 +91,20 @@ public class PackageInstallerActivity extends BaseActivity {
                 Drawable appIcon = mPackageManager.getApplicationIcon(packageInfo.applicationInfo);
                 if (installedPackageInfo == null) {
                     // App not installed
+                    actionName = getString(R.string.install);
                     if (AppPref.isRootOrAdbEnabled()) {
-                        runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
-                                .setCancelable(false)
-                                .setTitle(appLabel)
-                                .setIcon(appIcon)
-                                .setMessage(R.string.install_app_message)
-                                .setPositiveButton(R.string.install, (dialog, which) -> install())
-                                .setNegativeButton(android.R.string.cancel, (dialog, which) -> finish())
-                                .show());
+                        if (apkFile.isSplit()) {
+                            install();
+                        } else {
+                            runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
+                                    .setCancelable(false)
+                                    .setTitle(appLabel)
+                                    .setIcon(appIcon)
+                                    .setMessage(R.string.install_app_message)
+                                    .setPositiveButton(R.string.install, (dialog, which) -> install())
+                                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> finish())
+                                    .show());
+                        }
                     } else install();
                 } else {
                     // App is installed
@@ -105,6 +112,7 @@ public class PackageInstallerActivity extends BaseActivity {
                     long thisVersionCode = PackageUtils.getVersionCode(packageInfo);
                     if (installedVersionCode < thisVersionCode) {  // FIXME: Check for signature
                         // Needs update
+                        actionName = getString(R.string.update);
                         Bundle args = new Bundle();
                         args.putParcelable(WhatsNewDialogFragment.ARG_NEW_PKG_INFO, packageInfo);
                         args.putParcelable(WhatsNewDialogFragment.ARG_OLD_PKG_INFO, installedPackageInfo);
@@ -114,18 +122,24 @@ public class PackageInstallerActivity extends BaseActivity {
                         runOnUiThread(() -> dialogFragment.show(fm, WhatsNewDialogFragment.TAG));
                     } else if (installedVersionCode == thisVersionCode) {
                         // Issue reinstall
+                        actionName = getString(R.string.reinstall);
                         if (AppPref.isRootOrAdbEnabled()) {
-                            runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
-                                    .setCancelable(false)
-                                    .setTitle(appLabel)
-                                    .setIcon(appIcon)
-                                    .setMessage(R.string.reinstall_app_message)
-                                    .setPositiveButton(R.string.reinstall, (dialog, which) -> install())
-                                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> finish())
-                                    .show());
+                            if (apkFile.isSplit()) {
+                                install();
+                            } else {
+                                runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
+                                        .setCancelable(false)
+                                        .setTitle(appLabel)
+                                        .setIcon(appIcon)
+                                        .setMessage(R.string.reinstall_app_message)
+                                        .setPositiveButton(R.string.reinstall, (dialog, which) -> install())
+                                        .setNegativeButton(android.R.string.cancel, (dialog, which) -> finish())
+                                        .show());
+                            }
                         } else install();
                     } else {
                         // TODO: Add option to downgrade
+//                        actionName = getString(R.string.downgrade);
                         runOnUiThread(() -> {
                             Toast.makeText(this, "Downgrade is not currently possible in App Manager.", Toast.LENGTH_SHORT).show();
                             finish();
@@ -185,6 +199,8 @@ public class PackageInstallerActivity extends BaseActivity {
             SplitApkChooser splitApkChooser = new SplitApkChooser();
             Bundle args = new Bundle();
             args.putParcelable(SplitApkChooser.EXTRA_APK_FILE, apkFile);
+            args.putString(SplitApkChooser.EXTRA_ACTION_NAME, actionName);
+            args.putParcelable(SplitApkChooser.EXTRA_APP_INFO, packageInfo.applicationInfo);
             splitApkChooser.setArguments(args);
             splitApkChooser.setOnTriggerInstall(new SplitApkChooser.InstallInterface() {
                 @Override

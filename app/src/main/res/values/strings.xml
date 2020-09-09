@@ -541,7 +541,6 @@
     <string name="auto">Auto</string>
     <string name="current_language">Current language: %s</string>
     <string name="choose_language">Choose a language</string>
-    <string name="split_apk_chooser">Split APK Chooser</string>
     <string name="base_apk">Base APK</string>
     <string name="split_feature_name">Feature: %s</string>
     <string name="unknown_split_for_feature">%s for feature %s</string>
