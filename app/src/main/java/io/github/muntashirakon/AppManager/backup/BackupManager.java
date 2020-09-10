@@ -143,90 +143,14 @@ public class BackupManager implements AutoCloseable {
     }
 
     public boolean backup(BackupFiles.BackupFile backupFile, int userHandle) {
-        final MetadataManager.Metadata metadata;
-        final PackageInfo packageInfo;
-        final ApplicationInfo applicationInfo;
+        final BackupOp backupOp;
         try {
-            packageInfo = ApiSupporter.getInstance(LocalServer.getInstance()).getPackageInfo(
-                    packageName, PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo,
-                    userHandle);
-            applicationInfo = packageInfo.applicationInfo;
-            // Override existing metadata
-            metadata = metadataManager.setupMetadata(packageInfo, userHandle, requestedFlags);
+            backupOp = new BackupOp(backupFile, userHandle);
+            return backupOp.runBackup();
         } catch (Exception e) {
-            Log.e("BSM - Backup", "Failed to setup metadata.", e);
+            Log.e("BSM - Backup", "Failed to complete backup.", e);
             return false;
         }
-        // Fail backup if the app has items in Android KeyStore
-        // TODO(#82): Implement a clever mechanism to retrieve keys from Android keystore
-        if (metadata.keyStore) {
-            Log.e("BSM - Backup", "Cannot backup app as it has keystore items.");
-            return false;
-        }
-        // Create a new temporary directory
-        PrivilegedFile tmpBackupPath = backupFile.getBackupPath();
-        // Backup source
-        File dataAppPath = OsEnvironment.getDataAppDirectory();
-        File sourceFile;
-        if (requestedFlags.backupSource()) {
-            sourceFile = new File(tmpBackupPath, SOURCE_PREFIX + BACKUP_FILE_SUFFIX + ".");
-            String sourceDir = PackageUtils.getSourceDir(applicationInfo);
-            if (dataAppPath.getAbsolutePath().equals(sourceDir)) {
-                // Backup only the apk file (no split apk support for this type of apk)
-                sourceDir = new File(sourceDir, metadata.apkName).getAbsolutePath();
-            }
-            File[] sourceFiles = TarUtils.create(TarUtils.TAR_GZIP, new File(sourceDir), sourceFile,
-                    requestedFlags.backupOnlyApk() ? new String[]{"*.apk"} : null, null, null);
-            if (sourceFiles.length == 0) {
-                Log.e("BSM - Backup", "Source backup is requested but no source directory has been backed up.");
-                return backupFile.cleanup();
-            }
-            metadata.sourceSha256Checksum = BackupUtils.getSha256Sum(sourceFiles);
-        }
-        // Backup data
-        for (int i = 0; i < metadata.dataDirs.length; ++i) {
-            sourceFile = new File(tmpBackupPath, DATA_PREFIX + i + BACKUP_FILE_SUFFIX + ".");
-            File[] dataFiles = TarUtils.create(TarUtils.TAR_GZIP, new File(metadata.dataDirs[i]), sourceFile,
-                    null, null, requestedFlags.excludeCache() ? CACHE_DIRS : null);
-            if (dataFiles.length == 0) {
-                Log.e("BSM - Backup", "Failed to backup data directory at " + metadata.dataDirs[i]);
-                return backupFile.cleanup();
-            }
-            metadata.dataSha256Checksum[i] = BackupUtils.getSha256Sum(dataFiles);
-        }
-        // Export rules
-        if (metadata.hasRules) {
-            File rulesFile = new File(tmpBackupPath, RULES_TSV);
-            try (OutputStream outputStream = new FileOutputStream(rulesFile);
-                 ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName)) {
-                for (RulesStorageManager.Entry entry : cb.getAll()) {
-                    // TODO: Do it in ComponentUtils
-                    outputStream.write(String.format("%s\t%s\t%s\t%s\n", packageName, entry.name,
-                            entry.type.name(), entry.extra).getBytes());
-                }
-            } catch (IOException e) {
-                Log.e("BSM - Backup", "Rules backup is requested but encountered an error during fetching rules.");
-                e.printStackTrace();
-                return backupFile.cleanup();
-            }
-        }
-        metadata.backupTime = System.currentTimeMillis();
-        // Write modified metadata
-        metadataManager.setMetadata(metadata);
-        try {
-            metadataManager.writeMetadata(backupFile);
-        } catch (IOException | JSONException e) {
-            Log.e("BSM - Backup", "Failed to write metadata due to " + e.toString());
-            e.printStackTrace();
-            return backupFile.cleanup();
-        }
-        // Replace current backup:
-        // There's hardly any chance of getting a false here but checks are done anyway.
-        if (backupFile.commit()) {
-            return true;
-        }
-        Log.e("BSM - Backup", "Unknown error occurred. This message should never be printed.");
-        return backupFile.cleanup();
     }
 
     public boolean restore() {
@@ -339,7 +263,7 @@ public class BackupManager implements AutoCloseable {
                 allApks[i] = new FreshFile(packageStagingDirectory, allApkNames[i]);
             }
             // Extract apk files to the package staging directory
-            if (!TarUtils.extract(TarUtils.TAR_GZIP, backupSourceFiles, packageStagingDirectory, allApkNames, null)) {
+            if (!TarUtils.extract(metadata.tarType, backupSourceFiles, packageStagingDirectory, allApkNames, null)) {
                 Log.e("BSM - Restore", "Failed to extract the apk file(s).");
                 return false;
             }
@@ -367,12 +291,12 @@ public class BackupManager implements AutoCloseable {
                     && metadata.instructionSet.equals(instructionSet)  // Instruction set matched
                     && !dataAppPath.equals(sourceDir)) {  // Path is not /data/app
                 // Restore source: Get installed source directory and copy backups directly
-                if (!TarUtils.extract(TarUtils.TAR_GZIP, backupSourceFiles, sourceDir, null, null)) {
+                if (!TarUtils.extract(metadata.tarType, backupSourceFiles, sourceDir, null, null)) {
                     Log.e("BSM - Restore", "Failed to restore the source files.");
                     return false;  // Failed to restore source files
                 }
                 // Restore permissions
-                Runner.runCommand(new String[]{ "restorecon", "-R", sourceDir.getAbsolutePath()});
+                Runner.runCommand(new String[]{"restorecon", "-R", sourceDir.getAbsolutePath()});
             } else {
                 Log.e("BSM - Restore", "Skipped restoring files due to mismatched architecture or the path is /data/app or only apk restoring is requested.");
             }
@@ -442,7 +366,7 @@ public class BackupManager implements AutoCloseable {
                     }
                 }
                 // Extract data to the data directory
-                if (!TarUtils.extract(TarUtils.TAR_GZIP, dataFiles, dataSourceFile,
+                if (!TarUtils.extract(metadata.tarType, dataFiles, dataSourceFile,
                         null, requestedFlags.excludeCache() ? CACHE_DIRS : null)) {
                     Log.e("BSM - Restore", "Failed to restore data files for index " + i + ".");
                     return false;
@@ -512,4 +436,121 @@ public class BackupManager implements AutoCloseable {
     private void deleteFiles(@NonNull FreshFile[] files) {
         for (FreshFile file : files) file.delete();
     }
+
+    class BackupOp {
+        @NonNull
+        private final BackupFiles.BackupFile backupFile;
+        @NonNull
+        private final MetadataManager metadataManager;
+        @NonNull
+        private final BackupFlags backupFlags;
+        @NonNull
+        private final MetadataManager.Metadata metadata;
+        @NonNull
+        private final ApplicationInfo applicationInfo;
+        @NonNull
+        private final PrivilegedFile tmpBackupPath;
+
+        BackupOp(@NonNull BackupFiles.BackupFile backupFile, int userHandle) throws Exception {
+            this.backupFile = backupFile;
+            this.metadataManager = BackupManager.this.metadataManager;
+            this.backupFlags = BackupManager.this.requestedFlags;
+            this.tmpBackupPath = backupFile.getBackupPath();
+            try {
+                PackageInfo packageInfo = ApiSupporter.getInstance(LocalServer.getInstance()).getPackageInfo(
+                        packageName, PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo,
+                        userHandle);
+                this.applicationInfo = packageInfo.applicationInfo;
+                // Override existing metadata
+                this.metadata = metadataManager.setupMetadata(packageInfo, userHandle, backupFlags);
+            } catch (Exception e) {
+                Log.e("BSM - Backup", "Failed to setup metadata.", e);
+                backupFile.cleanup();
+                throw new Exception(e);
+            }
+        }
+
+        boolean runBackup() {
+            // Fail backup if the app has items in Android KeyStore
+            // TODO(#82): Implement a clever mechanism to retrieve keys from Android keystore
+            if (metadata.keyStore) {
+                Log.e("BSM - Backup", "Cannot backup app as it has keystore items.");
+                return backupFile.cleanup();
+            }
+            try {
+                // Backup source
+                if (backupFlags.backupSource()) backupSource();
+                // Backup data
+                if (backupFlags.backupData()) backupData();
+                // Export rules
+                if (metadata.hasRules) backupRules();
+            } catch (Exception e) {
+                Log.e("BSM - Backup", "" + e.getMessage());
+                return backupFile.cleanup();
+            }
+            // Set backup time
+            metadata.backupTime = System.currentTimeMillis();
+            // Write modified metadata
+            metadataManager.setMetadata(metadata);
+            try {
+                metadataManager.writeMetadata(backupFile);
+            } catch (IOException | JSONException e) {
+                Log.e("BSM - Backup", "Failed to write metadata due to " + e.toString());
+                e.printStackTrace();
+                return backupFile.cleanup();
+            }
+            // Replace current backup:
+            // There's hardly any chance of getting a false here but checks are done anyway.
+            if (backupFile.commit()) {
+                return true;
+            }
+            Log.e("BSM - Backup", "Unknown error occurred. This message should never be printed.");
+            return backupFile.cleanup();
+        }
+
+        void backupSource() throws Exception {
+            final File dataAppPath = OsEnvironment.getDataAppDirectory();
+            final File sourceFile = new File(tmpBackupPath, SOURCE_PREFIX + BACKUP_FILE_SUFFIX + ".");
+            String sourceDir = PackageUtils.getSourceDir(applicationInfo);
+            if (dataAppPath.getAbsolutePath().equals(sourceDir)) {
+                // Backup only the apk file (no split apk support for this type of apk)
+                sourceDir = new File(sourceDir, metadata.apkName).getAbsolutePath();
+            }
+            File[] sourceFiles = TarUtils.create(metadata.tarType, new File(sourceDir), sourceFile,
+                    backupFlags.backupOnlyApk() ? new String[]{"*.apk"} : null, null, null);
+            if (sourceFiles.length == 0) {
+                throw new Exception("Source backup is requested but no source directory has been backed up.");
+            }
+            metadata.sourceSha256Checksum = BackupUtils.getSha256Sum(sourceFiles);
+        }
+
+        void backupData() throws Exception {
+            File sourceFile;
+            for (int i = 0; i < metadata.dataDirs.length; ++i) {
+                sourceFile = new File(tmpBackupPath, DATA_PREFIX + i + BACKUP_FILE_SUFFIX + ".");
+                File[] dataFiles = TarUtils.create(metadata.tarType, new File(metadata.dataDirs[i]), sourceFile,
+                        null, null, backupFlags.excludeCache() ? CACHE_DIRS : null);
+                if (dataFiles.length == 0) {
+                    throw new Exception("Failed to backup data directory at " + metadata.dataDirs[i]);
+                }
+                metadata.dataSha256Checksum[i] = BackupUtils.getSha256Sum(dataFiles);
+            }
+        }
+
+        void backupRules() throws Exception {
+            File rulesFile = new File(tmpBackupPath, RULES_TSV);
+            try (OutputStream outputStream = new FileOutputStream(rulesFile);
+                 ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName)) {
+                for (RulesStorageManager.Entry entry : cb.getAll()) {
+                    // TODO: Do it in ComponentUtils
+                    outputStream.write(String.format("%s\t%s\t%s\t%s\n", packageName, entry.name,
+                            entry.type.name(), entry.extra).getBytes());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new Exception("Rules backup is requested but encountered an error during fetching rules.");
+            }
+        }
+    }
+
 }

@@ -69,8 +69,8 @@ public final class MetadataManager implements Closeable {
         public BackupFlags flags;  // flags
         public int userHandle;  // user_handle
         @TarUtils.TarType
-        public String tarType = TarUtils.TAR_GZIP;  // tar_type
-        public boolean keyStore = false;  // key_store
+        public String tarType;  // tar_type
+        public boolean keyStore;  // key_store
     }
 
     private static MetadataManager metadataManager;
