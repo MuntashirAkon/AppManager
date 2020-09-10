@@ -342,7 +342,7 @@ public class RunningAppsActivity extends BaseActivity implements
                 if (applicationInfo != null) {
                     forceStopItem.setVisible(true).setOnMenuItemClickListener(item -> {
                         new Thread(() -> {
-                            if (RunnerUtils.forceStopPackage(applicationInfo.packageName, Users.getUser(applicationInfo.uid)).isSuccessful()) {
+                            if (RunnerUtils.forceStopPackage(applicationInfo.packageName, Users.getUserHandle(applicationInfo.uid)).isSuccessful()) {
                                 mActivity.runOnUiThread(() -> mActivity.refresh());
                             } else {
                                 mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_stop, processName), Toast.LENGTH_LONG).show());

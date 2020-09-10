@@ -45,7 +45,7 @@ public final class PackageInstallerShell extends AMPackageInstaller {
     private int userHandle;
 
     private PackageInstallerShell() {
-        userHandle = Users.getCurrentUser();
+        userHandle = Users.getCurrentUserHandle();
     }
 
     public PackageInstallerShell(int userHandle) {

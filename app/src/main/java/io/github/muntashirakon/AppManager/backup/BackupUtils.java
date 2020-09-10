@@ -39,7 +39,7 @@ public final class BackupUtils {
     @Nullable
     public static MetadataManager.Metadata getBackupInfo(String packageName) {
         try (MetadataManager metadataManager = MetadataManager.getInstance(packageName)) {
-            PrivilegedFile backupPath = new PrivilegedFile(BackupFiles.getPackagePath(packageName), String.valueOf(Users.getCurrentUser()));
+            PrivilegedFile backupPath = new PrivilegedFile(BackupFiles.getPackagePath(packageName), String.valueOf(Users.getCurrentUserHandle()));
             metadataManager.readMetadata(new BackupFiles.BackupFile(backupPath, false));
             return metadataManager.getMetadata();
         } catch (JSONException e) {
@@ -97,7 +97,7 @@ public final class BackupUtils {
         // FIXME(10/7/20): Check for /data/misc/keystore/.masterkey as well?
         // For any app, the key path is as follows:
         // /data/misc/keystore/user_{user_handle}/{uid}_{KEY_NAME}_{alias}
-        PrivilegedFile keyStorePath = new PrivilegedFile("/data/misc/keystore", "user_" + Users.getUser(uid));
+        PrivilegedFile keyStorePath = new PrivilegedFile("/data/misc/keystore", "user_" + Users.getUserHandle(uid));
         String[] fileNames = keyStorePath.list();
         if (fileNames != null) {
             String uidStr = String.valueOf(uid);

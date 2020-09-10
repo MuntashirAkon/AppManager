@@ -439,7 +439,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (isRootEnabled || isAdbEnabled) {
                 if (mApplicationInfo.enabled) {
                     addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> new Thread(() -> {
-                        if (!RunnerUtils.disablePackage(mPackageName, Users.getCurrentUser()).isSuccessful()) {
+                        if (!RunnerUtils.disablePackage(mPackageName, Users.getCurrentUserHandle()).isSuccessful()) {
                             runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_disable, mPackageLabel), Toast.LENGTH_LONG).show());
                         }
                     }).start());
@@ -455,7 +455,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     R.string.uninstall_system_app_message : R.string.uninstall_app_message)
                             .setPositiveButton(R.string.uninstall, (dialog, which) -> new Thread(() -> {
                                 // Try without root first then with root
-                                if (RunnerUtils.uninstallPackageWithData(mPackageName, Users.getCurrentUser()).isSuccessful()) {
+                                if (RunnerUtils.uninstallPackageWithData(mPackageName, Users.getCurrentUserHandle()).isSuccessful()) {
                                     runOnUiThread(() -> {
                                         Toast.makeText(mActivity, getString(R.string.uninstalled_successfully, mPackageLabel), Toast.LENGTH_LONG).show();
                                         mActivity.finish();
@@ -479,7 +479,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 if (!mApplicationInfo.enabled) {
                     // Enable app
                     addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> new Thread(() -> {
-                        if (!RunnerUtils.enablePackage(mPackageName, Users.getCurrentUser()).isSuccessful()) {
+                        if (!RunnerUtils.enablePackage(mPackageName, Users.getCurrentUserHandle()).isSuccessful()) {
                             runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_enable, mPackageLabel), Toast.LENGTH_LONG).show());
                         }
                     }).start());
@@ -487,7 +487,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 // Force stop
                 if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
                     addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> new Thread(() -> {
-                        if (RunnerUtils.forceStopPackage(mPackageName, Users.getCurrentUser()).isSuccessful()) {
+                        if (RunnerUtils.forceStopPackage(mPackageName, Users.getCurrentUserHandle()).isSuccessful()) {
                             // Refresh
                             runOnUiThread(this::refreshDetails);
                         } else {
@@ -502,7 +502,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .setMessage(R.string.clear_data_message)
                                 .setPositiveButton(R.string.clear, (dialog, which) ->
                                         new Thread(() -> {
-                                            if (RunnerUtils.clearPackageData(mPackageName, Users.getCurrentUser()).isSuccessful()) {
+                                            if (RunnerUtils.clearPackageData(mPackageName, Users.getCurrentUserHandle()).isSuccessful()) {
                                                 runOnUiThread(this::refreshDetails);
                                             }
                                         }).start())

@@ -232,10 +232,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public boolean setPermission(String permissionName, boolean isGranted) {
         if (isExternalApk) return false;
         if (isGranted) {
-            if (!RunnerUtils.grantPermission(packageName, permissionName, Users.getCurrentUser()).isSuccessful())
+            if (!RunnerUtils.grantPermission(packageName, permissionName, Users.getCurrentUserHandle()).isSuccessful())
                 return false;
         } else {
-            if (!RunnerUtils.revokePermission(packageName, permissionName, Users.getCurrentUser()).isSuccessful())
+            if (!RunnerUtils.revokePermission(packageName, permissionName, Users.getCurrentUserHandle()).isSuccessful())
                 return false;
         }
         new Thread(() -> {
@@ -259,7 +259,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         for (int i = 0; i<usesPermissionItems.size(); ++i) {
             permissionItem = usesPermissionItems.get(i);
             if (permissionItem.isDangerous && permissionItem.isGranted) {
-                if (RunnerUtils.revokePermission(packageName, permissionItem.name, Users.getCurrentUser()).isSuccessful()) {
+                if (RunnerUtils.revokePermission(packageName, permissionItem.name, Users.getCurrentUserHandle()).isSuccessful()) {
                     permissionItem.isGranted = false;
                     usesPermissionItems.set(i, permissionItem);
                     revokedPermissions.add(permissionItem.name);

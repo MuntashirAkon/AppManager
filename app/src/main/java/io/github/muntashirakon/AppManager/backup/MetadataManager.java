@@ -87,7 +87,7 @@ public final class MetadataManager implements Closeable {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean hasMetadata(String packageName) {
         PrivilegedFile backupPath = new PrivilegedFile(BackupFiles.getPackagePath(packageName),
-                String.valueOf(Users.getCurrentUser()));
+                String.valueOf(Users.getCurrentUserHandle()));
         return new PrivilegedFile(backupPath, META_FILE).exists();
     }
 

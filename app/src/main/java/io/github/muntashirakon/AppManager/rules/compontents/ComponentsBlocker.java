@@ -286,10 +286,10 @@ public class ComponentsBlocker extends RulesStorageManager {
                 Log.d("ComponentBlocker", "Providers: " + disabledProviders.toString());
                 for (RulesStorageManager.Entry provider: disabledProviders) {
                     if (provider.extra == COMPONENT_TO_BE_UNBLOCKED) {  // Enable components that are removed
-                        RunnerUtils.enableComponent(packageName, provider.name, Users.getCurrentUser());
+                        RunnerUtils.enableComponent(packageName, provider.name, Users.getCurrentUserHandle());
                         removeEntry(provider);
                     } else {
-                        RunnerUtils.disableComponent(packageName, provider.name, Users.getCurrentUser());
+                        RunnerUtils.disableComponent(packageName, provider.name, Users.getCurrentUserHandle());
                         setComponent(provider.name, provider.type, COMPONENT_BLOCKED);
                     }
                 }
@@ -298,7 +298,7 @@ public class ComponentsBlocker extends RulesStorageManager {
                 List<RulesStorageManager.Entry> allEntries = getAllComponents();
                 Log.d("ComponentBlocker", "All: " + allEntries.toString());
                 for (RulesStorageManager.Entry entry: allEntries) {
-                    RunnerUtils.enableComponent(packageName, entry.name, Users.getCurrentUser());  // Enable components if they're disabled by other methods
+                    RunnerUtils.enableComponent(packageName, entry.name, Users.getCurrentUserHandle());  // Enable components if they're disabled by other methods
                     if (entry.extra == COMPONENT_TO_BE_UNBLOCKED) removeEntry(entry);
                     else setComponent(entry.name, entry.type, COMPONENT_TO_BE_BLOCKED);
                 }

@@ -58,7 +58,7 @@ public class AppOpsConfigProvider extends ContentProvider {
                         String sortOrder) {
         checkCalling();
 
-        ServerConfig.init(getContext(), Users.getCurrentUser());
+        ServerConfig.init(getContext(), Users.getCurrentUserHandle());
         MatrixCursor cursor = null;
         switch (uriMatcher.match(uri)) {
             case TYPE_TOKEN:

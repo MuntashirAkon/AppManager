@@ -63,7 +63,7 @@ public class LocalServer {
         Config config = new Config();
         config.context = mContext;
         updateConfig(config);
-        int userHandleId = Users.getCurrentUser();
+        int userHandleId = Users.getCurrentUserHandle();
         ServerConfig.init(config.context, userHandleId);
         mLocalServerManager = LocalServerManager.getInstance(config);
         // Check if am.jar is in the right place

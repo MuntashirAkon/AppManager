@@ -33,7 +33,7 @@ public class AppOpsManager {
 
     public AppOpsManager(@NonNull LocalServer localServer) {
         this.localServer = localServer;
-        userHandle = Users.getCurrentUser();
+        userHandle = Users.getCurrentUserHandle();
         packageName = BuildConfig.APPLICATION_ID;
     }
 

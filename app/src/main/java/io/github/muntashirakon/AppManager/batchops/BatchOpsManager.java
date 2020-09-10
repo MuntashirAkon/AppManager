@@ -285,7 +285,7 @@ public class BatchOpsManager {
     private Result opClearData() {
         for (String packageName : packageNames) {
             addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_CLEAR_PACKAGE_DATA,
-                    RunnerUtils.userHandleToUser(Users.getCurrentUser()), packageName));
+                    RunnerUtils.userHandleToUser(Users.getCurrentUserHandle()), packageName));
         }
         return runOpAndFetchResults();
     }
@@ -294,7 +294,7 @@ public class BatchOpsManager {
     private Result opDisable() {
         for (String packageName : packageNames) {
             addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_DISABLE_PACKAGE,
-                    RunnerUtils.userHandleToUser(Users.getCurrentUser()), packageName));
+                    RunnerUtils.userHandleToUser(Users.getCurrentUserHandle()), packageName));
         }
         return runOpAndFetchResults();
     }
@@ -320,7 +320,7 @@ public class BatchOpsManager {
     private Result opEnable() {
         for (String packageName : packageNames) {
             addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_ENABLE_PACKAGE,
-                    RunnerUtils.userHandleToUser(Users.getCurrentUser()), packageName));
+                    RunnerUtils.userHandleToUser(Users.getCurrentUserHandle()), packageName));
         }
         return runOpAndFetchResults();
     }
@@ -329,7 +329,7 @@ public class BatchOpsManager {
     private Result opForceStop() {
         for (String packageName : packageNames) {
             addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_FORCE_STOP_PACKAGE,
-                    RunnerUtils.userHandleToUser(Users.getCurrentUser()), packageName), false);
+                    RunnerUtils.userHandleToUser(Users.getCurrentUserHandle()), packageName), false);
         }
         return runOpAndFetchResults();
     }
@@ -370,7 +370,7 @@ public class BatchOpsManager {
     private Result opUninstall() {
         for (String packageName : packageNames) {
             addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_UNINSTALL_PACKAGE_WITH_DATA,
-                    RunnerUtils.userHandleToUser(Users.getCurrentUser()), packageName));
+                    RunnerUtils.userHandleToUser(Users.getCurrentUserHandle()), packageName));
         }
         return runOpAndFetchResults();
     }

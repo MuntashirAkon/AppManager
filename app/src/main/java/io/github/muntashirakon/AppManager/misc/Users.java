@@ -17,17 +17,21 @@
 
 package io.github.muntashirakon.AppManager.misc;
 
+import android.content.pm.UserInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 public final class Users {
     public static final boolean MU_ENABLED;
     public static final int PER_USER_RANGE;
+
+    public static List<UserInfo> userInfoList;
 
     static {
         boolean muEnabled = true;
@@ -48,28 +52,37 @@ public final class Users {
         PER_USER_RANGE = perUserRange;
     }
 
+    public static List<UserInfo> getUsers() {
+        if (userInfoList == null) {
+            try {
+                userInfoList = ApiSupporter.getInstance(LocalServer.getInstance()).getUsers();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return userInfoList;
+    }
+
     @NonNull
-    public static int[] getUsers() {
-        // FIXME: Use Pattern.compile() instead
-        Runner.Result result = Runner.runCommand(RunnerUtils.CMD_PM + " list users | " + Runner.TOYBOX + " sed -nr 's/.*\\{([0-9]+):.*/\\1/p'");
-        if (result.isSuccessful()) {
-            List<String> output = result.getOutputAsList();
+    public static int[] getUsersHandles() {
+        getUsers();
+        if (userInfoList != null) {
             List<Integer> users = new ArrayList<>();
-            for (String user : output) {
+            for (UserInfo userInfo : userInfoList) {
                 try {
-                    users.add(Integer.parseInt(user));
+                    users.add(userInfo.id);
                 } catch (Exception ignore) {
                 }
             }
             return ArrayUtils.convertToIntArray(users);
         } else {
-            return new int[]{getCurrentUser()};
+            return new int[]{getCurrentUserHandle()};
         }
     }
 
     private static Integer currentUserHandle = null;
 
-    public static int getCurrentUser() {
+    public static int getCurrentUserHandle() {
         if (currentUserHandle == null) {
             if (MU_ENABLED) currentUserHandle = android.os.Binder.getCallingUid() / PER_USER_RANGE;
             else currentUserHandle = 0;
@@ -85,7 +98,7 @@ public final class Users {
         return currentUserHandle;
     }
 
-    public static int getUser(int uid) {
+    public static int getUserHandle(int uid) {
         if (MU_ENABLED && uid >= (PER_USER_RANGE / 10)) return uid / PER_USER_RANGE;
         return uid;
     }

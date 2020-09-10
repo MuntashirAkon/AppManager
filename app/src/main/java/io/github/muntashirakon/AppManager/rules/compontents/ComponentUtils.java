@@ -198,7 +198,7 @@ public final class ComponentUtils {
             }
             // Grant configured permissions
             for (RulesStorageManager.Entry entry: cb.getAll(RulesStorageManager.Type.PERMISSION)) {
-                if (RunnerUtils.grantPermission(packageName, entry.name, Users.getCurrentUser()).isSuccessful()) {
+                if (RunnerUtils.grantPermission(packageName, entry.name, Users.getCurrentUserHandle()).isSuccessful()) {
                     cb.removeEntry(entry);
                 }
             }

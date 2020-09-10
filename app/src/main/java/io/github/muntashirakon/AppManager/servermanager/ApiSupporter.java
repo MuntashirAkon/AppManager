@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.servermanager;
 
-import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
@@ -36,6 +35,7 @@ import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.ClassCaller;
 import io.github.muntashirakon.AppManager.server.common.SystemServiceCaller;
 import io.github.muntashirakon.AppManager.servermanager.remote.ShellCommandHandler;
+import io.github.muntashirakon.AppManager.servermanager.remote.UserHandler;
 
 public class ApiSupporter {
     private static ApiSupporter INSTANCE;
@@ -53,7 +53,7 @@ public class ApiSupporter {
     ApiSupporter(@NonNull LocalServer localServer) {
         this.localServer = localServer;
         this.packageName = BuildConfig.APPLICATION_ID;
-        this.userHandle = Users.getCurrentUser();
+        this.userHandle = Users.getCurrentUserHandle();
     }
 
     public List<PackageInfo> getInstalledPackages(int flags, int userHandle) throws Exception {
@@ -117,20 +117,28 @@ public class ApiSupporter {
         }
     }
 
-    public List<UserInfo> getUsers(boolean excludeDying) throws Exception {
-        SystemServiceCaller caller = new SystemServiceCaller(Context.USER_SERVICE,
-                "getUsers", new Class[]{boolean.class}, new Object[]{excludeDying});
-        CallerResult callerResult = localServer.exec(caller);
+    public List<UserInfo> getUsers() throws Exception {
+        Bundle args = new Bundle();
+        args.putInt(UserHandler.ARG_ACTION, UserHandler.ACTION_GET_ALL_USER_INFO);
+        ClassCaller classCaller = new ClassCaller(this.packageName, UserHandler.class.getName(), args);
+        CallerResult callerResult = localServer.exec(classCaller);
         callerResult.getReplyObj();
         if (callerResult.getThrowable() != null) {
-            throw new Exception(callerResult.getThrowable());
-        } else {
-            Object replyObj = callerResult.getReplyObj();
-            if (replyObj instanceof List) {
-                return ((List<UserInfo>) replyObj);
+            // Try new API
+            args.putInt(UserHandler.ARG_ACTION, UserHandler.ACTION_GET_ALL_USER_INFO_NEW_API);
+            classCaller = new ClassCaller(this.packageName, UserHandler.class.getName(), args);
+            callerResult = localServer.exec(classCaller);
+            callerResult.getReplyObj();
+            if (callerResult.getThrowable() != null) {
+                throw new Exception(callerResult.getThrowable());
+            } else {
+                Bundle bundle = callerResult.getReplyBundle();
+                return bundle.getParcelableArrayList("return");
             }
+        } else {
+            Bundle bundle = callerResult.getReplyBundle();
+            return bundle.getParcelableArrayList("return");
         }
-        return null;
     }
 
     public Shell.Result runCommand(String command) throws Exception {

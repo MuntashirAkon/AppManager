@@ -60,7 +60,7 @@ public final class OsEnvironment {
     }
 
     public static void initForCurrentUser() {
-        sCurrentUser = new UserEnvironment(Users.getCurrentUser());
+        sCurrentUser = new UserEnvironment(Users.getCurrentUserHandle());
     }
 
     public static class UserEnvironment {

@@ -102,8 +102,8 @@ public class BackupManager implements AutoCloseable {
         metadataManager = MetadataManager.getInstance(packageName);
         requestedFlags = new BackupFlags(flags);
         if (requestedFlags.backupAllUsers()) {
-            userHandles = Users.getUsers();
-        } else userHandles = new int[]{Users.getCurrentUser()};
+            userHandles = Users.getUsersHandles();
+        } else userHandles = new int[]{Users.getCurrentUserHandle()};
         Log.e(TAG, "Users: " + Arrays.toString(userHandles));
         if (requestedFlags.backupMultiple()) {
             // Multiple backups requested

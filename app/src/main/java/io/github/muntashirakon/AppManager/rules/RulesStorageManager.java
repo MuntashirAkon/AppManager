@@ -185,7 +185,7 @@ public class RulesStorageManager implements Closeable {
 
     public void applyAppOpsAndPerms(boolean apply) {
         Runner runner = Runner.getInstance();
-        String user = RunnerUtils.userHandleToUser(Users.getCurrentUser());
+        String user = RunnerUtils.userHandleToUser(Users.getCurrentUserHandle());
         if (apply) {
             // Apply all app ops
             List<Entry> appOps = getAll(Type.APP_OP);
