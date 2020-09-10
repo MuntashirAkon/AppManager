@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.rules.compontents;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
@@ -62,8 +63,8 @@ public final class ComponentsBlocker extends RulesStorageManager {
     private static String LOCAL_RULES_PATH;
     static final String SYSTEM_RULES_PATH = "/data/system/ifw/";
 
-    @NonNull
-    private static final HashMap<String, ComponentsBlocker> componentsBlockers = new HashMap<>();
+    @SuppressLint("StaticFieldLeak")
+    private static ComponentsBlocker INSTANCE;
 
     @NonNull
     public static ComponentsBlocker getInstance(@NonNull String packageName) {
@@ -79,21 +80,23 @@ public final class ComponentsBlocker extends RulesStorageManager {
 
     @NonNull
     public static ComponentsBlocker getInstance(@NonNull String packageName, boolean noLoadFromDisk) {
-        if (!componentsBlockers.containsKey(packageName)) {
+        if (INSTANCE == null) {
             try {
                 getLocalIfwRulesPath();
-                componentsBlockers.put(packageName, new ComponentsBlocker(AppManager.getContext(), packageName));
+                INSTANCE = new ComponentsBlocker(AppManager.getContext(), packageName);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 throw new AssertionError();
             }
+        } else if (!INSTANCE.packageName.equals(packageName)) {
+            INSTANCE.close();
+            INSTANCE = null;
+            INSTANCE = new ComponentsBlocker(AppManager.getContext(), packageName);
         }
-        ComponentsBlocker componentsBlocker = componentsBlockers.get(packageName);
-        if (!noLoadFromDisk && AppPref.isRootEnabled()) //noinspection ConstantConditions
-            componentsBlocker.retrieveDisabledComponents();
-        //noinspection ConstantConditions
-        componentsBlocker.readOnly = true;
-        return componentsBlocker;
+        if (!noLoadFromDisk && AppPref.isRootEnabled())
+            INSTANCE.retrieveDisabledComponents();
+        INSTANCE.readOnly = true;
+        return INSTANCE;
     }
 
     public static void getLocalIfwRulesPath() throws FileNotFoundException {

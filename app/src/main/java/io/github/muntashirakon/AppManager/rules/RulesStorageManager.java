@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.rules;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -119,7 +118,6 @@ public class RulesStorageManager implements Closeable {
     @Override
     public void close() {
         if (!readOnly) commit();
-        else Log.e("RSM", "Read only for " + packageName);
     }
 
     @GuardedBy("entries")
@@ -313,15 +311,8 @@ public class RulesStorageManager implements Closeable {
                 stringBuilder.append(entry.name).append("\t").append(entry.type.name()).append("\t").
                         append(entry.extra).append("\n");
             }
-
-            Log.d("RSM", "Writing rules to " + tsvRulesFile.getAbsolutePath());
-
             try (FileOutputStream TSVFile = new FileOutputStream(tsvRulesFile)) {
                 TSVFile.write(stringBuilder.toString().getBytes());
-            }
-
-            if (tsvRulesFile.exists()) {
-                Log.d("RSM",  tsvRulesFile.getAbsolutePath() + " saved successfully.");
             }
         }
     }
