@@ -157,6 +157,12 @@ public class BackupManager implements AutoCloseable {
             Log.e("BSM - Backup", "Failed to setup metadata.", e);
             return false;
         }
+        // Fail backup if the app has items in Android KeyStore
+        // TODO(#82): Implement a clever mechanism to retrieve keys from Android keystore
+        if (metadata.keyStore) {
+            Log.e("BSM - Backup", "Cannot backup app as it has keystore items.");
+            return false;
+        }
         // Create a new temporary directory
         PrivilegedFile tmpBackupPath = backupFile.getBackupPath();
         // Backup source

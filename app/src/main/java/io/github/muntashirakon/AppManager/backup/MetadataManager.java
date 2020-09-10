@@ -199,7 +199,7 @@ public final class MetadataManager implements Closeable {
         metadata.flags = requestedFlags;
         metadata.userHandle = userHandle;
         metadata.tarType = TarUtils.TAR_GZIP;  // FIXME: Load from user prefs
-        metadata.keyStore = false;  // FIXME: Get from /data/misc/keystore/user/{user_handle}/{UID}_{KEY_NAME}_{alias}
+        metadata.keyStore = BackupUtils.hasKeyStore(applicationInfo.uid);
         metadata.label = applicationInfo.loadLabel(pm).toString();
         metadata.packageName = packageName;
         metadata.versionName = packageInfo.versionName;

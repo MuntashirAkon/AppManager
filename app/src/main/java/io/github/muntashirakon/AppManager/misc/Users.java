@@ -86,7 +86,7 @@ public final class Users {
     }
 
     public static int getUser(int uid) {
-        if (MU_ENABLED && uid >= PER_USER_RANGE) return uid / PER_USER_RANGE;
+        if (MU_ENABLED && uid >= (PER_USER_RANGE / 10)) return uid / PER_USER_RANGE;
         return uid;
     }
 }

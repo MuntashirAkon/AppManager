@@ -92,4 +92,19 @@ public final class BackupUtils {
             return defaultUidGid;
         }
     }
+
+    static boolean hasKeyStore(int uid) {
+        // FIXME(10/7/20): Check for /data/misc/keystore/.masterkey as well?
+        // For any app, the key path is as follows:
+        // /data/misc/keystore/user_{user_handle}/{uid}_{KEY_NAME}_{alias}
+        PrivilegedFile keyStorePath = new PrivilegedFile("/data/misc/keystore", "user_" + Users.getUser(uid));
+        String[] fileNames = keyStorePath.list();
+        if (fileNames != null) {
+            String uidStr = String.valueOf(uid);
+            for (String fileName: fileNames) {
+                if (fileName.startsWith(uidStr)) return true;
+            }
+        }
+        return false;
+    }
 }
