@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.servermanager;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -125,16 +126,18 @@ public class ApiSupporter {
         callerResult.getReplyObj();
         if (callerResult.getThrowable() != null) {
             // Try new API
-            args.putInt(UserHandler.ARG_ACTION, UserHandler.ACTION_GET_ALL_USER_INFO_NEW_API);
-            classCaller = new ClassCaller(this.packageName, UserHandler.class.getName(), args);
-            callerResult = localServer.exec(classCaller);
-            callerResult.getReplyObj();
-            if (callerResult.getThrowable() != null) {
-                throw new Exception(callerResult.getThrowable());
-            } else {
-                Bundle bundle = callerResult.getReplyBundle();
-                return bundle.getParcelableArrayList("return");
-            }
+            if (Build.VERSION.SDK_INT >= 29) {
+                args.putInt(UserHandler.ARG_ACTION, UserHandler.ACTION_GET_ALL_USER_INFO_NEW_API);
+                classCaller = new ClassCaller(this.packageName, UserHandler.class.getName(), args);
+                callerResult = localServer.exec(classCaller);
+                callerResult.getReplyObj();
+                if (callerResult.getThrowable() != null) {
+                    throw new Exception(callerResult.getThrowable());
+                } else {
+                    Bundle bundle = callerResult.getReplyBundle();
+                    return bundle.getParcelableArrayList("return");
+                }
+            } else throw new Exception(callerResult.getThrowable());
         } else {
             Bundle bundle = callerResult.getReplyBundle();
             return bundle.getParcelableArrayList("return");

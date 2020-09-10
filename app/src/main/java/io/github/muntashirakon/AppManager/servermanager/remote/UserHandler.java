@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.servermanager.remote;
 
 import android.content.Context;
 import android.content.pm.UserInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IUserManager;
 import android.os.ServiceManager;
@@ -52,6 +53,7 @@ public final class UserHandler extends ClassCallerProcessor {
             if (userInfoList == null) throw new Exception("Empty user info");
             bundle.putParcelableArrayList("return", new ArrayList<>(userInfoList));
         } else if (action == ACTION_GET_ALL_USER_INFO_NEW_API) {
+            // Changed in 10.0.0_r30
             List<UserInfo> userInfoList = userManager.getUsers(true, true, true);
             if (userInfoList == null) throw new Exception("Empty user info");
             bundle.putParcelableArrayList("return", new ArrayList<>(userInfoList));
