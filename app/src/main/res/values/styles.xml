@@ -29,6 +29,7 @@
         <item name="navigationIcon">@drawable/ic_keyboard_backspace_black_24dp</item>
         <item name="actionOverflowButtonStyle">@style/AppTheme.ActionButton.Overflow</item>
         <item name="actionOverflowMenuStyle">@style/AppTheme.PopupMenu.Overflow</item>
+        <item name="popupMenuStyle">@style/AppTheme.PopupMenu.Overflow</item>
         <item name="appBarLayoutStyle">@style/AppTheme.AppBarLayout</item>
         <item name="materialAlertDialogTheme">@style/AppTheme.AlertDialog</item>
         <item name="android:windowContentTransitions">true</item>

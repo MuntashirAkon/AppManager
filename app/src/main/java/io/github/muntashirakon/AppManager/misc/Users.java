@@ -26,6 +26,28 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 public final class Users {
+    public static final boolean MU_ENABLED;
+    public static final int PER_USER_RANGE;
+
+    static {
+        boolean muEnabled = true;
+        int perUserRange = 100000;
+        try {
+            // using reflection to get id of calling user since method getCallingUserId of UserHandle is hidden
+            // https://github.com/android/platform_frameworks_base/blob/master/core/java/android/os/UserHandle.java#L123
+            @SuppressWarnings("rawtypes")
+            Class userHandle = Class.forName("android.os.UserHandle");
+            //noinspection JavaReflectionMemberAccess
+            muEnabled = userHandle.getField("MU_ENABLED").getBoolean(null);
+            //noinspection JavaReflectionMemberAccess
+            perUserRange = userHandle.getField("PER_USER_RANGE").getInt(null);
+        } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        MU_ENABLED = muEnabled;
+        PER_USER_RANGE = perUserRange;
+    }
+
     @NonNull
     public static int[] getUsers() {
         // FIXME: Use Pattern.compile() instead
@@ -47,22 +69,12 @@ public final class Users {
 
     private static Integer currentUserHandle = null;
 
-    @SuppressWarnings({"JavaReflectionMemberAccess", "rawtypes"})
     public static int getCurrentUser() {
         if (currentUserHandle == null) {
-            currentUserHandle = 0;
-            try {
-                // using reflection to get id of calling user since method getCallingUserId of UserHandle is hidden
-                // https://github.com/android/platform_frameworks_base/blob/master/core/java/android/os/UserHandle.java#L123
-                Class userHandle = Class.forName("android.os.UserHandle");
-                boolean muEnabled = userHandle.getField("MU_ENABLED").getBoolean(null);
-                int range = userHandle.getField("PER_USER_RANGE").getInt(null);
-                if (muEnabled) currentUserHandle = android.os.Binder.getCallingUid() / range;
-            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException ignore) {
-            }
+            if (MU_ENABLED) currentUserHandle = android.os.Binder.getCallingUid() / PER_USER_RANGE;
+            else currentUserHandle = 0;
             // Another way
 //            try {
-//                // FIXME: Get user id using root since this is only intended for root users
 //                @SuppressWarnings("JavaReflectionMemberAccess")
 //                Method myUserId = UserHandle.class.getMethod("myUserId");
 //                currentUserHandle = (int) myUserId.invoke(null);
@@ -71,5 +83,10 @@ public final class Users {
 //            }
         }
         return currentUserHandle;
+    }
+
+    public static int getUser(int uid) {
+        if (MU_ENABLED && uid >= PER_USER_RANGE) return uid / PER_USER_RANGE;
+        return uid;
     }
 }

@@ -37,7 +37,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.ProgressIndicator;
 
 import java.util.ArrayList;
@@ -52,6 +51,7 @@ import java.util.regex.Pattern;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -59,8 +59,10 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -240,7 +242,7 @@ public class RunningAppsActivity extends BaseActivity implements
             mDefaultList = list;
             mAdapterList = list;
             isAdbMode = AppPref.isAdbEnabled();
-            if(RunningAppsActivity.mConstraint != null
+            if (RunningAppsActivity.mConstraint != null
                     && !RunningAppsActivity.mConstraint.equals("")) {
                 getFilter().filter(RunningAppsActivity.mConstraint);
             }
@@ -264,14 +266,12 @@ public class RunningAppsActivity extends BaseActivity implements
 
         static class ViewHolder {
             ImageView icon;
+            ImageView more;
             TextView processName;
             TextView packageName;
             TextView processIds;
             TextView memoryUsage;
             TextView userInfo;
-            MaterialButton killBtn;
-            MaterialButton forceStopBtn;
-            MaterialButton disableBackgroundRunBtn;
             IconLoaderThread iconLoader;
         }
 
@@ -282,14 +282,12 @@ public class RunningAppsActivity extends BaseActivity implements
                 convertView = mLayoutInflater.inflate(R.layout.item_running_app, parent, false);
                 holder = new ViewHolder();
                 holder.icon = convertView.findViewById(R.id.icon);
+                holder.more = convertView.findViewById(R.id.more);
                 holder.processName = convertView.findViewById(R.id.process_name);
                 holder.packageName = convertView.findViewById(R.id.package_name);
                 holder.processIds = convertView.findViewById(R.id.process_ids);
                 holder.memoryUsage = convertView.findViewById(R.id.memory_usage);
                 holder.userInfo = convertView.findViewById(R.id.user_info);
-                holder.killBtn = convertView.findViewById(R.id.kill_btn);
-                holder.forceStopBtn = convertView.findViewById(R.id.force_stop_btn);
-                holder.disableBackgroundRunBtn = convertView.findViewById(R.id.disable_background_run_btn);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -319,54 +317,74 @@ public class RunningAppsActivity extends BaseActivity implements
             holder.memoryUsage.setText(mActivity.getString(R.string.memory_virtual_memory, Formatter.formatFileSize(mActivity, processItem.rss), Formatter.formatFileSize(mActivity, processItem.vsz)));
             // Set user info
             holder.userInfo.setText(mActivity.getString(R.string.user_and_uid, processItem.user, processItem.uid));
-            // Buttons
-            if (applicationInfo != null) {
-                holder.forceStopBtn.setVisibility(View.VISIBLE);
-                holder.forceStopBtn.setOnClickListener(v -> new Thread(() -> {
-                    // FIXME: Use user handle
-                    if (Runner.runCommand(String.format("am force-stop %s", applicationInfo.packageName)).isSuccessful()) {
-                        mActivity.runOnUiThread(() -> mActivity.refresh());
-                    } else {
-                        mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_stop, processName), Toast.LENGTH_LONG).show());
-                    }
-                }).start());
-                new Thread(() -> {
-                    final AtomicInteger mode = new AtomicInteger(AppOpsManager.MODE_DEFAULT);
-                    try {
-                        mode.set(new AppOpsService().checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName));
-                    } catch (Exception ignore) {}
-                    mActivity.runOnUiThread(() -> {
-                        if (mode.get() != AppOpsManager.MODE_IGNORED) {
-                            holder.disableBackgroundRunBtn.setVisibility(View.VISIBLE);
-                            holder.disableBackgroundRunBtn.setOnClickListener(v -> new Thread(() -> {
-                                try {
-                                    new AppOpsService().setMode(AppOpsManager.OP_RUN_IN_BACKGROUND,
-                                            applicationInfo.uid, applicationInfo.packageName, AppOpsManager.MODE_IGNORED);
-                                    try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(applicationInfo.packageName)) {
-                                        cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
-                                    }
-                                    mActivity.runOnUiThread(() -> mActivity.refresh());
-                                } catch (Exception e) {
-                                    mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_disable_op), Toast.LENGTH_LONG).show());
-                                }
-                            }).start());
-                        } else holder.disableBackgroundRunBtn.setVisibility(View.GONE);
+            // Set more
+            holder.more.setOnClickListener(v -> {
+                PopupMenu popupMenu = new PopupMenu(mActivity, holder.more);
+                popupMenu.inflate(R.menu.activity_running_apps_popup_actions);
+                Menu menu = popupMenu.getMenu();
+                // Set kill
+                MenuItem killItem = menu.findItem(R.id.action_kill);
+                if ((processItem.pid >= 10000 || enableKillForSystem) && !isAdbMode) {
+                    killItem.setVisible(true).setOnMenuItemClickListener(item -> {
+                        new Thread(() -> {
+                            if (Runner.runCommand(new String[]{Runner.TOYBOX, "kill", "-9", String.valueOf(processItem.pid)}).isSuccessful()) {
+                                mActivity.runOnUiThread(() -> mActivity.refresh());
+                            } else {
+                                mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_stop, processName), Toast.LENGTH_LONG).show());
+                            }
+                        }).start();
+                        return true;
                     });
-                }).start();
-            } else {
-                holder.forceStopBtn.setVisibility(View.GONE);
-                holder.disableBackgroundRunBtn.setVisibility(View.GONE);
-            }
-            if ((processItem.pid >= 10000 || enableKillForSystem) && !isAdbMode) {
-                holder.killBtn.setVisibility(View.VISIBLE);
-                holder.killBtn.setOnClickListener(v -> new Thread(() -> {
-                    if (Runner.runCommand(new String[]{Runner.TOYBOX, "kill", "-9", String.valueOf(processItem.pid)}).isSuccessful()) {
-                        mActivity.runOnUiThread(() -> mActivity.refresh());
-                    } else {
-                        mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_stop, processName), Toast.LENGTH_LONG).show());
-                    }
-                }).start());
-            } else holder.killBtn.setVisibility(View.GONE);
+                } else killItem.setVisible(false);
+                // Set others
+                MenuItem forceStopItem = menu.findItem(R.id.action_force_stop);
+                MenuItem bgItem = menu.findItem(R.id.action_disable_background);
+                if (applicationInfo != null) {
+                    forceStopItem.setVisible(true).setOnMenuItemClickListener(item -> {
+                        new Thread(() -> {
+                            if (RunnerUtils.forceStopPackage(applicationInfo.packageName, Users.getUser(applicationInfo.uid)).isSuccessful()) {
+                                mActivity.runOnUiThread(() -> mActivity.refresh());
+                            } else {
+                                mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_stop, processName), Toast.LENGTH_LONG).show());
+                            }
+                        }).start();
+                        return true;
+                    });
+                    new Thread(() -> {
+                        final AtomicInteger mode = new AtomicInteger(AppOpsManager.MODE_DEFAULT);
+                        try {
+                            mode.set(new AppOpsService().checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName));
+                        } catch (Exception ignore) {
+                        }
+                        mActivity.runOnUiThread(() -> {
+                            if (mode.get() != AppOpsManager.MODE_IGNORED) {
+                                bgItem.setVisible(true).setOnMenuItemClickListener(item -> {
+                                    new Thread(() -> {
+                                        try {
+                                            new AppOpsService().setMode(AppOpsManager.OP_RUN_IN_BACKGROUND,
+                                                    applicationInfo.uid, applicationInfo.packageName, AppOpsManager.MODE_IGNORED);
+                                            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(applicationInfo.packageName)) {
+                                                cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
+                                            }
+                                            mActivity.runOnUiThread(() -> mActivity.refresh());
+                                        } catch (Exception e) {
+                                            mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_disable_op), Toast.LENGTH_LONG).show());
+                                        }
+                                    }).start();
+                                    return true;
+                                });
+                            } else bgItem.setVisible(false);
+                            // Display popup menu
+                            popupMenu.show();
+                        });
+                    }).start();
+                } else {
+                    forceStopItem.setVisible(false);
+                    bgItem.setVisible(false);
+                    // Show popup menu without hesitation
+                    popupMenu.show();
+                }
+            });
             convertView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
             return convertView;
         }
@@ -422,14 +440,17 @@ public class RunningAppsActivity extends BaseActivity implements
                 // FIXME: Process name cannot be a primary key since there can be duplicate
                 //  processes. Use process id instead
                 HashMap<String, ProcessItem> processList = new HashMap<>();
-                for (String processInfoLine: processInfoLines) {
+                for (String processInfoLine : processInfoLines) {
                     if (processInfoLine.contains(":kernel:")) continue;
                     try {
                         ProcessItem processItem = parseProcess(processInfoLine);
                         processList.put(processItem.name, processItem);
-                    } catch (Exception ignore) {}
+                    } catch (Exception ignore) {
+                    }
                 }
-                processList.remove("ps");  // Remove the `ps` command from the list
+                // Remove toybox commands from the list as they are killed already
+                processList.remove("toybox");
+                processList.remove("toybox.so");
                 Set<String> processNames = processList.keySet();
                 for (ApplicationInfo applicationInfo : applicationInfoList) {
                     if (processNames.contains(applicationInfo.packageName)) {
