@@ -54,19 +54,10 @@ public class ApksMetadata {
         }
     }
 
-    public ApksMetadata(String metadataString) {
-        // TODO:
-        readMetadata();
-    }
-
     PackageInfo packageInfo;
     public ApksMetadata(PackageInfo packageInfo) {
         this.packageInfo = packageInfo;
         setupMetadata();
-    }
-
-    public void readMetadata() {
-        // TODO
     }
 
     public void setupMetadata() {

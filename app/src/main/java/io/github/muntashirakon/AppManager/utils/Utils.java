@@ -78,6 +78,7 @@ import javax.xml.xpath.XPathFactory;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -279,6 +280,7 @@ public class Utils {
         return getInputStreamContent(inputStream);
     }
 
+    // FIXME(10/9/20): Add translation support
     @NonNull
     public static String getProcessStateName(@NonNull String shortName) {
         switch (shortName) {
@@ -310,6 +312,7 @@ public class Utils {
         }
     }
 
+    // FIXME(10/9/20): Add translation support
     @NonNull
     public static String getProcessStateExtraName(String shortName) {
         if (shortName == null) return "";
@@ -331,61 +334,59 @@ public class Utils {
         }
     }
 
-    // FIXME: Add translation support
-    @NonNull
-    public static String getLaunchMode(int mode) {
+    @StringRes
+    public static int getLaunchMode(int mode) {
         switch (mode) {
             case ActivityInfo.LAUNCH_MULTIPLE:
-                return "Multiple";
+                return R.string.launch_mode_multiple;
             case ActivityInfo.LAUNCH_SINGLE_INSTANCE:
-                return "Single instance";
+                return R.string.launch_mode_single_instance;
             case ActivityInfo.LAUNCH_SINGLE_TASK:
-                return "Single task";
+                return R.string.launch_mode_single_task;
             case ActivityInfo.LAUNCH_SINGLE_TOP:
-                return "Single top";
+                return R.string.launch_mode_single_top;
             default:
-                return "null";
+                return R.string._null;
         }
     }
 
-    // FIXME: Add translation support
-    @NonNull
-    public static String getOrientationString(int orientation) {
+    @StringRes
+    public static int getOrientationString(int orientation) {
         switch (orientation) {
             case ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED:
-                return "Unspecified";
+                return R.string.orientation_unspecified;
             case ActivityInfo.SCREEN_ORIENTATION_BEHIND:
-                return "Behind";
+                return R.string.orientation_behind;
             case ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR:
-                return "Full sensor";
+                return R.string.orientation_full_sensor;
             case ActivityInfo.SCREEN_ORIENTATION_FULL_USER:
-                return "Full user";
+                return R.string.orientation_full_user;
             case ActivityInfo.SCREEN_ORIENTATION_LOCKED:
-                return "Locked";
+                return R.string.orientation_locked;
             case ActivityInfo.SCREEN_ORIENTATION_NOSENSOR:
-                return "No sensor";
+                return R.string.orientation_no_sensor;
             case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
-                return "Landscape";
+                return R.string.orientation_landscape;
             case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:
-                return "Portrait";
+                return R.string.orientation_portrait;
             case ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT:
-                return "Reverse portrait";
+                return R.string.orientation_reverse_portrait;
             case ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE:
-                return "Reverse landscape";
+                return R.string.orientation_reverse_landscape;
             case ActivityInfo.SCREEN_ORIENTATION_USER:
-                return "User";
+                return R.string.orientation_user;
             case ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE:
-                return "Sensor landscape";
+                return R.string.orientation_sensor_landscape;
             case ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT:
-                return "Sensor portrait";
+                return R.string.orientation_sensor_portrait;
             case ActivityInfo.SCREEN_ORIENTATION_SENSOR:
-                return "Sensor";
+                return R.string.orientation_sensor;
             case ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE:
-                return "User landscape";
+                return R.string.orientation_user_landscape;
             case ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT:
-                return "User portrait";
+                return R.string.orientation_user_portrait;
             default:
-                return "null";
+                return R.string._null;
         }
     }
 
@@ -562,10 +563,9 @@ public class Utils {
         return protectionLevel;
     }
 
-    // FIXME Add translation support
-    @NonNull
-    public static String getFeatureFlagsString(int flags) {
-        return (flags == FeatureInfo.FLAG_REQUIRED) ? "Required" : "null";
+    @StringRes
+    public static int getFeatureFlags(int flags) {
+        return (flags == FeatureInfo.FLAG_REQUIRED) ? R.string.required : R.string._null;
     }
 
     // FIXME Add translation support
@@ -579,54 +579,51 @@ public class Utils {
         return string.length() == 0 ? "null" : string;
     }
 
-    // FIXME Add translation support
-    @NonNull
-    public static String getKeyboardTypeString(int KbType) {
+    @StringRes
+    public static int getKeyboardType(int KbType) {
         switch (KbType) {
-            case Configuration.KEYBOARD_UNDEFINED:
-                return "Undefined";
             case Configuration.KEYBOARD_NOKEYS:
-                return "No keys";
+                return R.string.keyboard_no_keys;
             case Configuration.KEYBOARD_QWERTY:
-                return "Qwerty";
+                return R.string.keyboard_qwerty;
             case Configuration.KEYBOARD_12KEY:
-                return "12 key";
+                return R.string.keyboard_12_keys;
+            case Configuration.KEYBOARD_UNDEFINED:
+            default:
+                return R.string._undefined;
         }
-        return String.valueOf(KbType);
     }
 
-    // FIXME Add translation support
-    @NonNull
-    public static String getNavigationString(int navId) {
+    @StringRes
+    public static int getNavigation(int navId) {
         switch (navId) {
-            case Configuration.NAVIGATION_UNDEFINED:
-                return "Undefined";
             case Configuration.NAVIGATION_NONAV:
-                return "No nav";
+                return R.string.navigation_no_nav;
             case Configuration.NAVIGATION_DPAD:
-                return "Dial pad";
+                return R.string.navigation_dial_pad;
             case Configuration.NAVIGATION_TRACKBALL:
-                return "Trackball";
+                return R.string.navigation_trackball;
             case Configuration.NAVIGATION_WHEEL:
-                return "Wheel";
+                return R.string.navigation_wheel;
+            case Configuration.NAVIGATION_UNDEFINED:
+            default:
+                return R.string._undefined;
         }
-        return String.valueOf(navId);
     }
 
-    // FIXME Add translation support
-    @NonNull
-    public static String getTouchScreenString(int touchId) {
+    @StringRes
+    public static int getTouchScreen(int touchId) {
         switch (touchId) {
-            case Configuration.TOUCHSCREEN_UNDEFINED:
-                return "Undefined";
             case Configuration.TOUCHSCREEN_NOTOUCH:
-                return "No touch";
-            case 2:
-                return "Stylus";  // Configuration.TOUCHSCREEN_STYLUS
+                return R.string.touchscreen_no_touch;
+            case 2:  // Configuration.TOUCHSCREEN_STYLUS
+                return R.string.touchscreen_stylus;
             case Configuration.TOUCHSCREEN_FINGER:
-                return "Finger";
+                return R.string.touchscreen_finger;
+            case Configuration.TOUCHSCREEN_UNDEFINED:
+            default:
+                return R.string._undefined;
         }
-        return String.valueOf(touchId);
     }
 
     public static void checkStringBuilderEnd(@NonNull StringBuilder builder) {

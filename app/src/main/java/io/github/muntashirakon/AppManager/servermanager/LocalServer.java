@@ -130,11 +130,12 @@ public class LocalServer {
 
     private static void updateConfig(@NonNull Config config) {
         // FIXME: Use AppPref instead of SharedPreferences
+        // FIXME(10/9/20): These prefs are not saved anywhere
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(config.context);
-        config.allowBgRunning = sp.getBoolean("allow_bg_remote", true);
+        config.allowBgRunning = sp.getBoolean("allow_bg_running", true);
         config.logFile = config.context.getFileStreamPath(LOG_FILE).getAbsolutePath();
         config.useAdb = AppPref.isAdbEnabled() && !AppPref.isRootEnabled();
-        config.adbPort = sp.getInt("use_adb_port", 5555);
+        config.adbPort = sp.getInt("adb_port", 5555);
         config.rootOverAdb = sp.getBoolean("allow_root_over_adb", false);
         Log.e("test", "buildConfig --> " + config.context.getFileStreamPath(LOG_FILE).getAbsolutePath());
         if (INSTANCE != null) INSTANCE.mLocalServerManager.updateConfig(config);

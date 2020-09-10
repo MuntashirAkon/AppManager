@@ -206,6 +206,7 @@ public final class MetadataManager implements Closeable {
         metadata.versionCode = PackageUtils.getVersionCode(packageInfo);
         metadata.apkName = new File(applicationInfo.sourceDir).getName();
         if (requestedFlags.backupData()) {
+            // FIXME(10/7/20): External data directory is not respecting userHandle
             metadata.dataDirs = PackageUtils.getDataDirs(applicationInfo,
                     requestedFlags.backupExtData(), requestedFlags.backupMediaObb());
         }

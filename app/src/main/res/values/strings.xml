@@ -555,4 +555,38 @@
     <string name="abi_split_for_base_apk">%s code for base APK</string>
     <string name="locale_split_for_feature">%s locale for %s</string>
     <string name="locale_split_for_base_apk">%s locale for base APK</string>
+    <string name="empty" translatable="false" />
+    <string name="_null" translatable="false">null</string>
+    <string name="launch_mode_multiple">Multiple</string>
+    <string name="launch_mode_single_instance">Single instance</string>
+    <string name="launch_mode_single_task">Single task</string>
+    <string name="launch_mode_single_top">Single top</string>
+    <string name="orientation_unspecified">Unspecified</string>
+    <string name="orientation_behind">Behind</string>
+    <string name="orientation_full_sensor">Full sensor</string>
+    <string name="orientation_full_user">Full user</string>
+    <string name="orientation_locked">Locked</string>
+    <string name="orientation_no_sensor">No sensor</string>
+    <string name="orientation_landscape">Landscape</string>
+    <string name="orientation_portrait">Portrait</string>
+    <string name="orientation_reverse_portrait">Reverse portrait</string>
+    <string name="orientation_reverse_landscape">Reverse landscape</string>
+    <string name="orientation_user">User</string>
+    <string name="orientation_sensor_landscape">Sensor landscape</string>
+    <string name="orientation_sensor_portrait">Sensor portrait</string>
+    <string name="orientation_sensor">Sensor</string>
+    <string name="orientation_user_landscape">User landscape</string>
+    <string name="orientation_user_portrait">User portrait</string>
+    <string name="required">Required</string>
+    <string name="_undefined">Undefined</string>
+    <string name="keyboard_no_keys">No keys</string>
+    <string name="keyboard_qwerty">Qwerty</string>
+    <string name="keyboard_12_keys">12 key</string>
+    <string name="navigation_no_nav">No nav</string>
+    <string name="navigation_dial_pad">Dial pad</string>
+    <string name="navigation_trackball">Trackball</string>
+    <string name="navigation_wheel">Wheel</string>
+    <string name="touchscreen_no_touch">No touch</string>
+    <string name="touchscreen_stylus">Stylus</string>
+    <string name="touchscreen_finger">Finger</string>
 </resources>

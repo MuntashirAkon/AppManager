@@ -778,8 +778,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     getString(R.string.task_affinity), activityInfo.taskAffinity));
             // LaunchMode
             holder.textView4.setText(String.format(Locale.ROOT, "%s: %s | %s: %s",
-                    getString(R.string.launch_mode), Utils.getLaunchMode(activityInfo.launchMode),
-                    getString(R.string.orientation), Utils.getOrientationString(activityInfo.screenOrientation)));
+                    getString(R.string.launch_mode), getString(Utils.getLaunchMode(activityInfo.launchMode)),
+                    getString(R.string.orientation), getString(Utils.getOrientationString(activityInfo.screenOrientation))));
             // Orientation
             holder.textView5.setText(Utils.getActivitiesFlagsString(activityInfo.flags));
             // SoftInput
@@ -929,8 +929,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     getString(R.string.task_affinity), activityInfo.taskAffinity));
             // LaunchMode
             holder.textView4.setText(String.format(Locale.ROOT, "%s: %s | %s: %s",
-                    getString(R.string.launch_mode), Utils.getLaunchMode(activityInfo.launchMode),
-                    getString(R.string.orientation), Utils.getOrientationString(activityInfo.screenOrientation)));
+                    getString(R.string.launch_mode), getString(Utils.getLaunchMode(activityInfo.launchMode)),
+                    getString(R.string.orientation), getString(Utils.getOrientationString(activityInfo.screenOrientation))));
             // Orientation
             holder.textView5.setText(activityInfo.permission == null ? getString(R.string.require_no_permission) : activityInfo.permission);
             // SoftInput
@@ -1275,7 +1275,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             holder.textView1.setText(featureInfo.name);
             // Flags
             holder.textView2.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.flags), Utils.getFeatureFlagsString(featureInfo.flags)
+                    getString(R.string.flags), getString(Utils.getFeatureFlags(featureInfo.flags))
                     + (Build.VERSION.SDK_INT >= 24 && featureInfo.version != 0 ? " | minV%:" + featureInfo.version : "")));
             // GLES ver
             holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
@@ -1297,11 +1297,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             holder.textView2.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.input_features),
                     Utils.getInputFeaturesString(configurationInfo.reqInputFeatures)));
             holder.textView3.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.keyboard_type),
-                    Utils.getKeyboardTypeString(configurationInfo.reqKeyboardType)));
+                    getString(Utils.getKeyboardType(configurationInfo.reqKeyboardType))));
             holder.textView4.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.navigation),
-                    Utils.getNavigationString(configurationInfo.reqNavigation)));
+                    getString(Utils.getNavigation(configurationInfo.reqNavigation))));
             holder.textView5.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.touchscreen),
-                    Utils.getTouchScreenString(configurationInfo.reqTouchScreen)));
+                    getString(Utils.getTouchScreen(configurationInfo.reqTouchScreen))));
         }
 
         /**

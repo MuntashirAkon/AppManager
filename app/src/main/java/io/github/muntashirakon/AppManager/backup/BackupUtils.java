@@ -29,6 +29,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
@@ -38,7 +39,7 @@ public final class BackupUtils {
     @Nullable
     public static MetadataManager.Metadata getBackupInfo(String packageName) {
         try (MetadataManager metadataManager = MetadataManager.getInstance(packageName)) {
-            PrivilegedFile backupPath = new PrivilegedFile(BackupFiles.getPackagePath(packageName), String.valueOf(0));  // FIXME: Get current user handle
+            PrivilegedFile backupPath = new PrivilegedFile(BackupFiles.getPackagePath(packageName), String.valueOf(Users.getCurrentUser()));
             metadataManager.readMetadata(new BackupFiles.BackupFile(backupPath, false));
             return metadataManager.getMetadata();
         } catch (JSONException e) {

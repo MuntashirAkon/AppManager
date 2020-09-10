@@ -437,7 +437,7 @@ public class RunningAppsActivity extends BaseActivity implements
             Runner.Result result = Runner.runCommand(new String[]{Runner.TOYBOX, "ps", "-dwZ", "-o", "PID,PPID,RSS,VSZ,USER,UID,STAT,NAME"});
             if (result.isSuccessful()) {
                 List<String> processInfoLines = result.getOutputAsList(1);
-                // FIXME: Process name cannot be a primary key since there can be duplicate
+                // FIXME(10/9/20): Process name cannot be a primary key since there can be duplicate
                 //  processes. Use process id instead
                 HashMap<String, ProcessItem> processList = new HashMap<>();
                 for (String processInfoLine : processInfoLines) {
