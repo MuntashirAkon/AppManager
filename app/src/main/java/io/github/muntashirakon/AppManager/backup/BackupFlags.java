@@ -124,7 +124,7 @@ public final class BackupFlags {
         return (flags & BACKUP_EXCLUDE_CACHE) != 0;
     }
 
-    public boolean noSignatureCheck() {
+    public boolean skipSignatureCheck() {
         return (flags & BACKUP_NO_SIGNATURE_CHECK) != 0;
     }
 

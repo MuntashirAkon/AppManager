@@ -59,6 +59,8 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class BackupManager implements AutoCloseable {
+    public static final String TAG = "BackupManager";
+
     private static final String EXT_DATA = "/Android/data/";
     private static final String EXT_MEDIA = "/Android/media/";
     private static final String EXT_OBB = "/Android/obb/";
@@ -102,7 +104,7 @@ public class BackupManager implements AutoCloseable {
         if (requestedFlags.backupAllUsers()) {
             userHandles = Users.getUsers();
         } else userHandles = new int[]{Users.getCurrentUser()};
-        Log.e("BSM", "Users: " + Arrays.toString(userHandles));
+        Log.e(TAG, "Users: " + Arrays.toString(userHandles));
         if (requestedFlags.backupMultiple()) {
             // Multiple backups requested
             if (backupNames == null) {
@@ -118,7 +120,7 @@ public class BackupManager implements AutoCloseable {
                 // Replace spaces with underscore if exists
                 backupNames[i] = backupNames[i].replace(' ', '_');
             }
-            Log.e("BSM", "Backup names: " + Arrays.toString(backupNames));
+            Log.e(TAG, "Backup names: " + Arrays.toString(backupNames));
         } else backupNames = null;  // Overwrite existing backup
         backupFilesList = new BackupFiles[userHandles.length];
         for (int i = 0; i < userHandles.length; ++i) {
@@ -128,7 +130,7 @@ public class BackupManager implements AutoCloseable {
 
     public boolean backup() {
         if (requestedFlags.isEmpty()) {
-            Log.e("BSM - Backup", "Backup is requested without any flags.");
+            Log.e(BackupOp.TAG, "Backup is requested without any flags.");
             return false;
         }
         for (int i = 0; i < userHandles.length; ++i) {
@@ -147,15 +149,15 @@ public class BackupManager implements AutoCloseable {
         try {
             backupOp = new BackupOp(backupFile, userHandle);
             return backupOp.runBackup();
-        } catch (Exception e) {
-            Log.e("BSM - Backup", "Failed to complete backup.", e);
+        } catch (BackupException e) {
+            Log.e(BackupOp.TAG, e.getMessage(), e);
             return false;
         }
     }
 
     public boolean restore() {
         if (requestedFlags.isEmpty()) {
-            Log.e("BSM - Backup", "Backup is requested without any flags.");
+            Log.e(RestoreOp.TAG, "Restore is requested without any flags.");
             return false;
         }
         for (int i = 0; i < userHandles.length; ++i) {
@@ -168,242 +170,15 @@ public class BackupManager implements AutoCloseable {
         return true;
     }
 
-    @SuppressLint({"SdCardPath", "WrongConstant", "DefaultLocale"})
     public boolean restore(BackupFiles.BackupFile backupFile, int userHandle) {
-        MetadataManager.Metadata metadata;
         try {
-            metadataManager.readMetadata(backupFile);
-            metadata = metadataManager.getMetadata();
-        } catch (JSONException e) {
-            Log.e("BSM - Restore", "Failed to read metadata. Possibly due to malformed json file.");
+            RestoreOp restoreOp = new RestoreOp(backupFile, userHandle);
+            return restoreOp.runRestore();
+        } catch (BackupException e) {
             e.printStackTrace();
-            return false;
+            Log.e(RestoreOp.TAG, e.getMessage(), e);
         }
-        // Check user handle
-        if (metadata.userHandle != userHandle) {
-            Log.w("BSM - Restore", "Using different user handle.");
-        }
-        ApiSupporter apiSupporter = ApiSupporter.getInstance(LocalServer.getInstance());
-        PrivilegedFile backupPath = backupFile.getBackupPath();
-        // Get instruction set
-        String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);
-        File dataAppPath = OsEnvironment.getDataAppDirectory();
-        // Get package info
-        PackageInfo packageInfo = null;
-        try {
-            packageInfo = apiSupporter.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
-        } catch (Exception ignore) {
-        }
-        boolean isInstalled = packageInfo != null;
-        boolean noChecksumCheck = requestedFlags.noSignatureCheck();
-        if (requestedFlags.backupSource()) {
-            // Restoring apk requested
-            boolean reinstallNeeded = false;
-            File[] backupSourceFiles = getSourceFiles(backupPath);
-            if (backupSourceFiles == null) {
-                // No source backup found
-                Log.e("BSM - Restore", "Source restore is requested but there are no source files.");
-                return false;
-            }
-            if (isInstalled) {
-                // Check signature if installed: Should be checked before calling this method if it is enabled
-                List<String> certChecksum = Arrays.asList(PackageUtils.getSigningCertSha256Checksum(packageInfo));
-                boolean isVerified = true;
-                for (String checksum : metadata.certSha256Checksum) {
-                    if (certChecksum.contains(checksum)) continue;
-                    isVerified = false;
-                    if (!noChecksumCheck) {
-                        Log.e("BSM - Restore", "Signing info verification failed." +
-                                "\nInstalled: " + certChecksum.toString() +
-                                "\nBackup: " + Arrays.toString(metadata.certSha256Checksum));
-                        return false;
-                    }
-                }
-                if (!isVerified) {
-                    // Signature verification failed but still here because signature check is disabled.
-                    // The only way to restore is to reinstall the app
-                    reinstallNeeded = true;
-                } else if (PackageUtils.getVersionCode(packageInfo) > metadata.versionCode) {
-                    // Installed package has higher version code. The only way to downgrade is to
-                    // reinstall the package.
-                    reinstallNeeded = true;
-                }
-            }
-            if (!noChecksumCheck) {
-                String checksum = BackupUtils.getSha256Sum(backupSourceFiles);
-                if (!checksum.equals(metadata.sourceSha256Checksum)) {
-                    Log.e("BSM - Restore", "Source file verification failed." +
-                            "\nFiles: " + checksum +
-                            "\nMetadata: " + metadata.sourceSha256Checksum);
-                    return false;
-                }
-            }
-            if (reinstallNeeded) {
-                // A complete reinstall needed, first uninstall the package with -k and then install
-                // the package again with -r
-                if (!RunnerUtils.uninstallPackageWithoutData(packageName, userHandle).isSuccessful()) {
-                    Log.e("BSM - Restore", "An uninstall was necessary but couldn't perform it.");
-                    return false;
-                }
-            }
-            // Setup package staging directory
-            File packageStagingDirectory = PackageUtils.PACKAGE_STAGING_DIRECTORY;
-            if (!RunnerUtils.fileExists(packageStagingDirectory)) {
-                packageStagingDirectory = backupPath;
-            }
-            // Setup apk files, including split apk
-            FreshFile baseApk = new FreshFile(packageStagingDirectory, metadata.apkName);
-            final int splitCount = metadata.splitNames.length;
-            String[] allApkNames = new String[splitCount + 1];
-            FreshFile[] allApks = new FreshFile[splitCount + 1];
-            allApks[0] = baseApk;
-            allApkNames[0] = metadata.apkName;
-            for (int i = 1; i < allApkNames.length; ++i) {
-                allApkNames[i] = metadata.splitNames[i - 1];
-                allApks[i] = new FreshFile(packageStagingDirectory, allApkNames[i]);
-            }
-            // Extract apk files to the package staging directory
-            if (!TarUtils.extract(metadata.tarType, backupSourceFiles, packageStagingDirectory, allApkNames, null)) {
-                Log.e("BSM - Restore", "Failed to extract the apk file(s).");
-                return false;
-            }
-            // A normal update will do it now
-            PackageInstallerShell packageInstaller = new PackageInstallerShell(userHandle);
-            if (!packageInstaller.installMultiple(allApks, packageName)) {
-                Log.e("BSM - Restore", "A (re)install was necessary but couldn't perform it.");
-                deleteFiles(allApks);
-                return false;
-            }
-            deleteFiles(allApks);
-            // Get package info
-            try {
-                packageInfo = apiSupporter.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
-                isInstalled = true;
-            } catch (Exception e) {
-                Log.e("BSM - Restore", "Apparently the install wasn't complete in the previous section.");
-                e.printStackTrace();
-                return false;
-            }
-            File sourceDir = new File(PackageUtils.getSourceDir(packageInfo.applicationInfo));
-            // Restore source directory only if instruction set is matched or app path is not /data/app
-            // Or only apk restoring is requested
-            if (!requestedFlags.backupOnlyApk()  // Only apk restoring is not requested
-                    && metadata.instructionSet.equals(instructionSet)  // Instruction set matched
-                    && !dataAppPath.equals(sourceDir)) {  // Path is not /data/app
-                // Restore source: Get installed source directory and copy backups directly
-                if (!TarUtils.extract(metadata.tarType, backupSourceFiles, sourceDir, null, null)) {
-                    Log.e("BSM - Restore", "Failed to restore the source files.");
-                    return false;  // Failed to restore source files
-                }
-                // Restore permissions
-                Runner.runCommand(new String[]{"restorecon", "-R", sourceDir.getAbsolutePath()});
-            } else {
-                Log.e("BSM - Restore", "Skipped restoring files due to mismatched architecture or the path is /data/app or only apk restoring is requested.");
-            }
-        }
-        if (requestedFlags.backupData()) {
-            // Data restore is requested: Data restore is only possible if the app is actually
-            // installed. So, check if it's installed first.
-            if (!isInstalled) {
-                Log.e("BSM - Restore", "Data restore is requested but the app isn't installed.");
-                return false;
-            }
-            File[] dataFiles;
-            if (!noChecksumCheck) {
-                // Verify integrity of the data backups
-                String checksum;
-                for (int i = 0; i < metadata.dataDirs.length; ++i) {
-                    dataFiles = getDataFiles(backupPath, i);
-                    if (dataFiles == null) {
-                        Log.e("BSM - Restore", "Data restore is requested but there are no data files for index " + i + ".");
-                        return false;
-                    }
-                    checksum = BackupUtils.getSha256Sum(dataFiles);
-                    if (!checksum.equals(metadata.dataSha256Checksum[i])) {
-                        Log.e("BSM - Restore", "Data file verification failed for index " + i + "." +
-                                "\nFiles: " + checksum +
-                                "\nMetadata: " + metadata.dataSha256Checksum[i]);
-                        return false;
-                    }
-                }
-            }
-            // Force stop app before restoring backups
-            RunnerUtils.forceStopPackage(packageName, RunnerUtils.USER_ALL);
-            // Restore backups
-            String dataSource;
-            for (int i = 0; i < metadata.dataDirs.length; ++i) {
-                dataSource = Utils.replaceOnce(metadata.dataDirs[i], "/" + metadata.userHandle + "/", "/" + userHandle + "/");
-                dataFiles = getDataFiles(backupPath, i);
-                Pair<Integer, Integer> uidAndGid = null;
-                if (RunnerUtils.fileExists(dataSource)) {
-                    uidAndGid = BackupUtils.getUidAndGid(dataSource, packageInfo.applicationInfo.uid);
-                }
-                if (dataFiles == null) {
-                    Log.e("BSM - Restore", "Data restore is requested but there are no data files for index " + i + ".");
-                    return false;
-                }
-                // External storage checks
-                if (dataSource.startsWith("/storage") || dataSource.startsWith("/sdcard")) {
-                    // Skip if external data restore is not requested
-                    if (!requestedFlags.backupExtData() && dataSource.contains(EXT_DATA))
-                        continue;
-                    // Skip if media/obb restore not requested
-                    if (!requestedFlags.backupMediaObb() && (dataSource.contains(EXT_MEDIA)
-                            || dataSource.contains(EXT_OBB))) continue;
-                }
-                // Fix problem accessing external directory in Android API < 23
-                if (Build.VERSION.SDK_INT < 23) {
-                    if (dataSource.contains("/storage/emulated/")) {
-                        dataSource = dataSource.replace("/storage/emulated/", "/mnt/shell/emulated/");
-                    }
-                }
-                // Create data folder if not exists
-                PrivilegedFile dataSourceFile = new PrivilegedFile(dataSource);
-                if (!dataSourceFile.exists()) {
-                    if (!dataSourceFile.mkdirs()) {
-                        Log.e("BSM - Restore", "Failed to create data folder for index " + i + ".");
-                        return false;
-                    }
-                }
-                // Extract data to the data directory
-                if (!TarUtils.extract(metadata.tarType, dataFiles, dataSourceFile,
-                        null, requestedFlags.excludeCache() ? CACHE_DIRS : null)) {
-                    Log.e("BSM - Restore", "Failed to restore data files for index " + i + ".");
-                    return false;
-                }
-                // Fix UID and GID
-                if (uidAndGid != null && !Runner.runCommand(String.format(Runner.TOYBOX + " chown -R %d:%d \"%s\"", uidAndGid.first, uidAndGid.second, dataSource)).isSuccessful()) {
-                    Log.e("BSM - Restore", "Failed to get restore owner for index " + i + ".");
-                    return false;
-                }
-                // Restore permissions
-                Runner.runCommand(new String[]{"restorecon", "-R", dataSource});
-            }
-        }
-        if (requestedFlags.backupRules()) {
-            // Apply rules
-            if (!isInstalled) {
-                Log.e("BSM - Restore", "Rules restore is requested but the app isn't installed.");
-                return false;
-            }
-            File rulesFile = new File(backupPath, RULES_TSV);
-            if (rulesFile.exists()) {
-                // FIXME: Import rules for user handle
-                try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()))) {
-                    importer.addRulesFromUri(Uri.fromFile(rulesFile));
-                    importer.setPackagesToImport(Collections.singletonList(packageName));
-                    importer.applyRules();
-                } catch (IOException e) {
-                    Log.e("BSM - Restore", "Failed to restore rules file.");
-                    e.printStackTrace();
-                    return false;
-                }
-            } else if (metadata.hasRules) {
-                Log.e("BSM - Restore", "Rules file is missing.");
-                return false;
-            } // else there are no rules, just skip instead of returning false
-        }
-        return true;
+        return false;
     }
 
     public boolean deleteBackup() {
@@ -438,6 +213,8 @@ public class BackupManager implements AutoCloseable {
     }
 
     class BackupOp {
+        static final String TAG = "BackupOp";
+
         @NonNull
         private final BackupFiles.BackupFile backupFile;
         @NonNull
@@ -451,7 +228,7 @@ public class BackupManager implements AutoCloseable {
         @NonNull
         private final PrivilegedFile tmpBackupPath;
 
-        BackupOp(@NonNull BackupFiles.BackupFile backupFile, int userHandle) throws Exception {
+        BackupOp(@NonNull BackupFiles.BackupFile backupFile, int userHandle) throws BackupException {
             this.backupFile = backupFile;
             this.metadataManager = BackupManager.this.metadataManager;
             this.backupFlags = BackupManager.this.requestedFlags;
@@ -464,9 +241,8 @@ public class BackupManager implements AutoCloseable {
                 // Override existing metadata
                 this.metadata = metadataManager.setupMetadata(packageInfo, userHandle, backupFlags);
             } catch (Exception e) {
-                Log.e("BSM - Backup", "Failed to setup metadata.", e);
                 backupFile.cleanup();
-                throw new Exception(e);
+                throw new BackupException("Failed to setup metadata.", e);
             }
         }
 
@@ -474,7 +250,7 @@ public class BackupManager implements AutoCloseable {
             // Fail backup if the app has items in Android KeyStore
             // TODO(#82): Implement a clever mechanism to retrieve keys from Android keystore
             if (metadata.keyStore) {
-                Log.e("BSM - Backup", "Cannot backup app as it has keystore items.");
+                Log.e(TAG, "Cannot backup app as it has keystore items.");
                 return backupFile.cleanup();
             }
             try {
@@ -484,8 +260,8 @@ public class BackupManager implements AutoCloseable {
                 if (backupFlags.backupData()) backupData();
                 // Export rules
                 if (metadata.hasRules) backupRules();
-            } catch (Exception e) {
-                Log.e("BSM - Backup", "" + e.getMessage());
+            } catch (BackupException e) {
+                Log.e(TAG, e.getMessage(), e);
                 return backupFile.cleanup();
             }
             // Set backup time
@@ -495,8 +271,7 @@ public class BackupManager implements AutoCloseable {
             try {
                 metadataManager.writeMetadata(backupFile);
             } catch (IOException | JSONException e) {
-                Log.e("BSM - Backup", "Failed to write metadata due to " + e.toString());
-                e.printStackTrace();
+                Log.e(TAG, "Failed to write metadata.", e);
                 return backupFile.cleanup();
             }
             // Replace current backup:
@@ -504,11 +279,11 @@ public class BackupManager implements AutoCloseable {
             if (backupFile.commit()) {
                 return true;
             }
-            Log.e("BSM - Backup", "Unknown error occurred. This message should never be printed.");
+            Log.e(TAG, "Unknown error occurred. This message should never be printed.");
             return backupFile.cleanup();
         }
 
-        void backupSource() throws Exception {
+        private void backupSource() throws BackupException {
             final File dataAppPath = OsEnvironment.getDataAppDirectory();
             final File sourceFile = new File(tmpBackupPath, SOURCE_PREFIX + BACKUP_FILE_SUFFIX + ".");
             String sourceDir = PackageUtils.getSourceDir(applicationInfo);
@@ -519,25 +294,25 @@ public class BackupManager implements AutoCloseable {
             File[] sourceFiles = TarUtils.create(metadata.tarType, new File(sourceDir), sourceFile,
                     backupFlags.backupOnlyApk() ? new String[]{"*.apk"} : null, null, null);
             if (sourceFiles.length == 0) {
-                throw new Exception("Source backup is requested but no source directory has been backed up.");
+                throw new BackupException("Source backup is requested but no source directory has been backed up.");
             }
             metadata.sourceSha256Checksum = BackupUtils.getSha256Sum(sourceFiles);
         }
 
-        void backupData() throws Exception {
+        private void backupData() throws BackupException {
             File sourceFile;
             for (int i = 0; i < metadata.dataDirs.length; ++i) {
                 sourceFile = new File(tmpBackupPath, DATA_PREFIX + i + BACKUP_FILE_SUFFIX + ".");
                 File[] dataFiles = TarUtils.create(metadata.tarType, new File(metadata.dataDirs[i]), sourceFile,
                         null, null, backupFlags.excludeCache() ? CACHE_DIRS : null);
                 if (dataFiles.length == 0) {
-                    throw new Exception("Failed to backup data directory at " + metadata.dataDirs[i]);
+                    throw new BackupException("Failed to backup data directory at " + metadata.dataDirs[i]);
                 }
                 metadata.dataSha256Checksum[i] = BackupUtils.getSha256Sum(dataFiles);
             }
         }
 
-        void backupRules() throws Exception {
+        private void backupRules() throws BackupException {
             File rulesFile = new File(tmpBackupPath, RULES_TSV);
             try (OutputStream outputStream = new FileOutputStream(rulesFile);
                  ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName)) {
@@ -547,10 +322,287 @@ public class BackupManager implements AutoCloseable {
                             entry.type.name(), entry.extra).getBytes());
                 }
             } catch (IOException e) {
-                e.printStackTrace();
-                throw new Exception("Rules backup is requested but encountered an error during fetching rules.");
+                throw new BackupException("Rules backup is requested but encountered an error during fetching rules.", e);
             }
         }
     }
 
+    class RestoreOp {
+        static final String TAG = "RestoreOp";
+
+        @NonNull
+        private final BackupFlags backupFlags;
+        @NonNull
+        private final BackupFlags requestedFlags;
+        @NonNull
+        private final MetadataManager.Metadata metadata;
+        @NonNull
+        private final PrivilegedFile backupPath;
+        @NonNull
+        private final ApiSupporter apiSupporter;
+        @Nullable
+        private PackageInfo packageInfo;
+        private final int userHandle;
+        private boolean isInstalled;
+
+        RestoreOp(@NonNull BackupFiles.BackupFile backupFile, int userHandle) throws BackupException {
+            this.requestedFlags = BackupManager.this.requestedFlags;
+            this.backupPath = backupFile.getBackupPath();
+            this.userHandle = userHandle;
+            this.apiSupporter = ApiSupporter.getInstance(LocalServer.getInstance());
+            try {
+                metadataManager.readMetadata(backupFile);
+                metadata = metadataManager.getMetadata();
+                backupFlags = metadata.flags;
+            } catch (JSONException e) {
+                throw new BackupException("Failed to read metadata. Possibly due to malformed json file.", e);
+            }
+            // Check user handle
+            if (metadata.userHandle != userHandle) {
+                Log.w(TAG, "Using different user handle.");
+            }
+            // Get package info
+            packageInfo = null;
+            try {
+                packageInfo = apiSupporter.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
+            } catch (Exception ignore) {
+            }
+            isInstalled = packageInfo != null;
+        }
+
+        boolean runRestore() {
+            try {
+                if (requestedFlags.backupSource()) restoreSource();
+                if (requestedFlags.backupData()) restoreData();
+                if (requestedFlags.backupRules()) restoreRules();
+            } catch (BackupException e) {
+                Log.e(TAG, e.getMessage(), e);
+                return false;
+            }
+            return true;
+        }
+
+        private void restoreSource() throws BackupException {
+            if (!backupFlags.backupSource()) {
+                throw new BackupException("Source restore is requested but backup doesn't contain any source files.");
+            }
+            File[] backupSourceFiles = getSourceFiles(backupPath);
+            if (backupSourceFiles == null) {
+                // No source backup found
+                throw new BackupException("Source restore is requested but there are no source files.");
+            }
+            boolean reinstallNeeded = false;
+            if (isInstalled) {
+                // Check signature of the installed app
+                List<String> certChecksum = Arrays.asList(PackageUtils.getSigningCertSha256Checksum(packageInfo));
+                boolean isVerified = true;
+                for (String checksum : metadata.certSha256Checksum) {
+                    if (certChecksum.contains(checksum)) continue;
+                    isVerified = false;
+                    if (!requestedFlags.skipSignatureCheck()) {
+                        throw new BackupException("Signing info verification failed." +
+                                "\nInstalled: " + certChecksum.toString() +
+                                "\nBackup: " + Arrays.toString(metadata.certSha256Checksum));
+                    }
+                }
+                if (!isVerified) {
+                    // Signature verification failed but still here because signature check is disabled.
+                    // The only way to restore is to reinstall the app
+                    reinstallNeeded = true;
+                } else if (PackageUtils.getVersionCode(packageInfo) > metadata.versionCode) {
+                    // Installed package has higher version code. The only way to downgrade is to
+                    // reinstall the package.
+                    reinstallNeeded = true;
+                }
+            }
+            if (!requestedFlags.skipSignatureCheck()) {
+                String checksum = BackupUtils.getSha256Sum(backupSourceFiles);
+                if (!checksum.equals(metadata.sourceSha256Checksum)) {
+                    throw new BackupException("Source file verification failed." +
+                            "\nFiles: " + checksum +
+                            "\nMetadata: " + metadata.sourceSha256Checksum);
+                }
+            }
+            if (reinstallNeeded) {
+                // A complete reinstall needed, first uninstall the package with -k and then install
+                // the package again with -r
+                if (!RunnerUtils.uninstallPackageWithoutData(packageName, userHandle).isSuccessful()) {
+                    throw new BackupException("An uninstall was necessary but couldn't perform it.");
+                }
+            }
+            // Setup package staging directory
+            File packageStagingDirectory = PackageUtils.PACKAGE_STAGING_DIRECTORY;
+            if (!RunnerUtils.fileExists(packageStagingDirectory)) {
+                packageStagingDirectory = backupPath;
+            }
+            // Setup apk files, including split apk
+            FreshFile baseApk = new FreshFile(packageStagingDirectory, metadata.apkName);
+            final int splitCount = metadata.splitNames.length;
+            String[] allApkNames = new String[splitCount + 1];
+            FreshFile[] allApks = new FreshFile[splitCount + 1];
+            allApks[0] = baseApk;
+            allApkNames[0] = metadata.apkName;
+            for (int i = 1; i < allApkNames.length; ++i) {
+                allApkNames[i] = metadata.splitNames[i - 1];
+                allApks[i] = new FreshFile(packageStagingDirectory, allApkNames[i]);
+            }
+            // Extract apk files to the package staging directory
+            if (!TarUtils.extract(metadata.tarType, backupSourceFiles, packageStagingDirectory, allApkNames, null)) {
+                throw new BackupException("Failed to extract the apk file(s).");
+            }
+            // A normal update will do it now
+            PackageInstallerShell packageInstaller = new PackageInstallerShell(userHandle);
+            if (!packageInstaller.installMultiple(allApks, packageName)) {
+                deleteFiles(allApks);
+                throw new BackupException("A (re)install was necessary but couldn't perform it.");
+            }
+            deleteFiles(allApks);  // Clean up apk files
+            // Get package info, again
+            try {
+                packageInfo = apiSupporter.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
+                isInstalled = true;
+            } catch (Exception e) {
+                throw new BackupException("Apparently the install wasn't complete in the previous section.", e);
+            }
+            // Get instruction set
+            // TODO(10/9/20): Investigate support for unmatched instruction set as well
+            final String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);
+            final File dataAppPath = OsEnvironment.getDataAppDirectory();
+            final File sourceDir = new File(PackageUtils.getSourceDir(packageInfo.applicationInfo));
+            // Restore source directory only if instruction set is matched or app path is not /data/app
+            // Or only apk restoring is requested
+            if (!requestedFlags.backupOnlyApk()  // Only apk restoring is not requested
+                    && metadata.instructionSet.equals(instructionSet)  // Instruction set matched
+                    && !dataAppPath.equals(sourceDir)) {  // Path is not /data/app
+                // Restore source: Get installed source directory and copy backups directly
+                if (!TarUtils.extract(metadata.tarType, backupSourceFiles, sourceDir, null, null)) {
+                    throw new BackupException("Failed to restore the source files.");
+                }
+                // Restore permissions
+                Runner.runCommand(new String[]{"restorecon", "-R", sourceDir.getAbsolutePath()});
+            } else {
+                Log.w(TAG, "Skipped restoring files due to mismatched architecture or the path is /data/app or only apk restoring is requested.");
+            }
+        }
+
+        @SuppressLint("SdCardPath")
+        private void restoreData() throws BackupException {
+            // Data restore is requested: Data restore is only possible if the app is actually
+            // installed. So, check if it's installed first.
+            if (packageInfo == null) {
+                throw new BackupException("Data restore is requested but the app isn't installed.");
+            }
+            File[] dataFiles;
+            if (!requestedFlags.skipSignatureCheck()) {
+                // Verify integrity of the data backups
+                String checksum;
+                for (int i = 0; i < metadata.dataDirs.length; ++i) {
+                    dataFiles = getDataFiles(backupPath, i);
+                    if (dataFiles == null) {
+                        throw new BackupException("Data restore is requested but there are no data files for index " + i + ".");
+                    }
+                    checksum = BackupUtils.getSha256Sum(dataFiles);
+                    if (!checksum.equals(metadata.dataSha256Checksum[i])) {
+                        throw new BackupException("Data file verification failed for index " + i + "." +
+                                "\nFiles: " + checksum +
+                                "\nMetadata: " + metadata.dataSha256Checksum[i]);
+                    }
+                }
+            }
+            // Force stop app before restoring backups
+            RunnerUtils.forceStopPackage(packageName, RunnerUtils.USER_ALL);
+            // Restore backups
+            String dataSource;
+            boolean isExternal;
+            for (int i = 0; i < metadata.dataDirs.length; ++i) {
+                dataSource = Utils.replaceOnce(metadata.dataDirs[i], "/" + metadata.userHandle + "/", "/" + userHandle + "/");
+                dataFiles = getDataFiles(backupPath, i);
+                Pair<Integer, Integer> uidAndGid = null;
+                if (RunnerUtils.fileExists(dataSource)) {
+                    uidAndGid = BackupUtils.getUidAndGid(dataSource, packageInfo.applicationInfo.uid);
+                }
+                if (dataFiles == null) {
+                    throw new BackupException("Data restore is requested but there are no data files for index " + i + ".");
+                }
+                // External storage checks
+                if (dataSource.startsWith("/storage") || dataSource.startsWith("/sdcard")) {
+                    isExternal = true;
+                    // Skip if external data restore is not requested
+                    if (!requestedFlags.backupExtData() && dataSource.contains(EXT_DATA))
+                        continue;
+                    // Skip if media/obb restore not requested
+                    if (!requestedFlags.backupMediaObb() && (dataSource.contains(EXT_MEDIA)
+                            || dataSource.contains(EXT_OBB))) continue;
+                } else isExternal = false;
+                // Fix problem accessing external directory in Android API < 23
+                if (Build.VERSION.SDK_INT < 23) {
+                    if (dataSource.contains("/storage/emulated/")) {
+                        dataSource = dataSource.replace("/storage/emulated/", "/mnt/shell/emulated/");
+                    }
+                }
+                // Create data folder if not exists
+                PrivilegedFile dataSourceFile = new PrivilegedFile(dataSource);
+                if (!dataSourceFile.exists()) {
+                    // FIXME(10/9/20): Check if the media is mounted and readable before running
+                    //  mkdir, otherwise it may create a folder to a path that will be gone
+                    //  after a restart
+                    if (!dataSourceFile.mkdirs()) {
+                        throw new BackupException("Failed to create data folder for index " + i + ".");
+                    }
+                }
+                // Extract data to the data directory
+                if (!TarUtils.extract(metadata.tarType, dataFiles, dataSourceFile,
+                        null, requestedFlags.excludeCache() ? CACHE_DIRS : null)) {
+                    throw new BackupException("Failed to restore data files for index " + i + ".");
+                }
+                // Fix UID and GID
+                if (uidAndGid != null && !Runner.runCommand(String.format(Runner.TOYBOX + " chown -R %d:%d \"%s\"", uidAndGid.first, uidAndGid.second, dataSource)).isSuccessful()) {
+                    throw new BackupException("Failed to restore ownership info for index " + i + ".");
+                }
+                // Restore permissions
+                if (!isExternal) Runner.runCommand(new String[]{"restorecon", "-R", dataSource});
+            }
+        }
+
+        private void restoreRules() throws BackupException {
+            // Apply rules
+            if (!isInstalled) {
+                throw new BackupException("Rules restore is requested but the app isn't installed.");
+            }
+            File rulesFile = new File(backupPath, RULES_TSV);
+            if (rulesFile.exists()) {
+                // FIXME: Import rules for user handle
+                try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()))) {
+                    importer.addRulesFromUri(Uri.fromFile(rulesFile));
+                    importer.setPackagesToImport(Collections.singletonList(packageName));
+                    importer.applyRules();
+                } catch (IOException e) {
+                    throw new BackupException("Failed to restore rules file.", e);
+                }
+            } else if (metadata.hasRules) {
+                throw new BackupException("Rules file is missing.");
+            } // else there are no rules, just skip
+        }
+    }
+
+    public static class BackupException extends Throwable {
+        @NonNull
+        private final String detailMessage;
+
+        public BackupException(@NonNull String message) {
+            super(message);
+            this.detailMessage = message;
+        }
+
+        public BackupException(@NonNull String message, @NonNull Throwable cause) {
+            super(message, cause);
+            detailMessage = message;
+        }
+
+        @NonNull
+        @Override
+        public String getMessage() {
+            return detailMessage;
+        }
+    }
 }
