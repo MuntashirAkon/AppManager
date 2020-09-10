@@ -54,6 +54,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
@@ -64,7 +65,8 @@ import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-public class RunningAppsActivity extends BaseActivity implements SearchView.OnQueryTextListener {
+public class RunningAppsActivity extends BaseActivity implements
+        SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
     // "^(?<label>[^\\t\\s]+)[\\t\\s]+(?<pid>\\d+)[\\t\\s]+(?<ppid>\\d+)[\\t\\s]+(?<rss>\\d+)[\\t\\s]+(?<vsz>\\d+)[\\t\\s]+(?<user>[^\\t\\s]+)[\\t\\s]+(?<uid>\\d+)[\\t\\s]+(?<state>\\w)(?<stateplus>[\\w\\+<])?[\\t\\s]+(?<name>[^\\t\\s]+)$"
     private static final Pattern PROCESS_MATCHER = Pattern.compile("^([^\\t\\s]+)[\\t\\s]+(\\d+)" +
             "[\\t\\s]+(\\d+)[\\t\\s]+(\\d+)[\\t\\s]+(\\d+)[\\t\\s]+([^\\t\\s]+)[\\t\\s]+(\\d+)" +
@@ -75,6 +77,7 @@ public class RunningAppsActivity extends BaseActivity implements SearchView.OnQu
     private RunningAppsAdapter mAdapter;
     private static PackageManager mPackageManager;
     private ProgressIndicator mProgressIndicator;
+    private SwipeRefreshLayout mSwipeRefresh;
     private static boolean enableKillForSystem = false;
 
     static class ProcessItem {
@@ -114,6 +117,8 @@ public class RunningAppsActivity extends BaseActivity implements SearchView.OnQu
         }
         mPackageManager = getPackageManager();
         mProgressIndicator = findViewById(R.id.progress_linear);
+        mSwipeRefresh = findViewById(R.id.swipe_refresh);
+        mSwipeRefresh.setOnRefreshListener(this);
         ListView mListView = findViewById(android.R.id.list);
         mListView.setTextFilterEnabled(true);
         mListView.setDividerHeight(0);
@@ -153,6 +158,12 @@ public class RunningAppsActivity extends BaseActivity implements SearchView.OnQu
     @Override
     protected void onResume() {
         super.onResume();
+        refresh();
+    }
+
+    @Override
+    public void onRefresh() {
+        mSwipeRefresh.setRefreshing(false);
         refresh();
     }
 
@@ -408,6 +419,8 @@ public class RunningAppsActivity extends BaseActivity implements SearchView.OnQu
             Runner.Result result = Runner.runCommand(new String[]{Runner.TOYBOX, "ps", "-dwZ", "-o", "PID,PPID,RSS,VSZ,USER,UID,STAT,NAME"});
             if (result.isSuccessful()) {
                 List<String> processInfoLines = result.getOutputAsList(1);
+                // FIXME: Process name cannot be a primary key since there can be duplicate
+                //  processes. Use process id instead
                 HashMap<String, ProcessItem> processList = new HashMap<>();
                 for (String processInfoLine: processInfoLines) {
                     if (processInfoLine.contains(":kernel:")) continue;

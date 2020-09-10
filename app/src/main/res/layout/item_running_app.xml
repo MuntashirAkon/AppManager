@@ -17,6 +17,7 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -37,7 +38,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/padding_small"
             android:layout_weight="0"
-            android:contentDescription="@string/app_name" />
+            tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -73,7 +74,8 @@
                 android:gravity="center_vertical"
                 android:textIsSelectable="true"
                 android:textSize="10sp"
-                tools:text="@tools:sample/lorem" />
+                tools:text="@tools:sample/lorem"
+                tools:ignore="SmallSp" />
 
             <TextView
                 android:id="@+id/memory_usage"
@@ -81,7 +83,8 @@
                 android:layout_height="wrap_content"
                 android:textIsSelectable="true"
                 android:textSize="10sp"
-                tools:text="@tools:sample/lorem" />
+                tools:text="@tools:sample/lorem"
+                tools:ignore="SmallSp" />
 
             <TextView
                 android:id="@+id/user_info"
@@ -89,7 +92,8 @@
                 android:layout_height="wrap_content"
                 android:textIsSelectable="true"
                 android:textSize="10sp"
-                tools:text="@tools:sample/lorem" />
+                tools:text="@tools:sample/lorem"
+                tools:ignore="SmallSp" />
 
         </LinearLayout>
 
