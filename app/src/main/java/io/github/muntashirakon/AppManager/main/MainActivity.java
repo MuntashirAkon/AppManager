@@ -691,7 +691,7 @@ public class MainActivity extends BaseActivity implements
 
     @Override
     public boolean onQueryTextChange(String searchQuery) {
-        mModel.setSearchQuery(searchQuery.toLowerCase());
+        mModel.setSearchQuery(searchQuery.toLowerCase(Locale.ROOT));
         return true;
     }
 

@@ -221,7 +221,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     public boolean onQueryTextChange(String newText) {
         mConstraint = newText;
         if (mClassListingAdapter != null)
-            mClassListingAdapter.getFilter().filter(newText.toLowerCase());
+            mClassListingAdapter.getFilter().filter(newText.toLowerCase(Locale.ROOT));
         return true;
     }
 

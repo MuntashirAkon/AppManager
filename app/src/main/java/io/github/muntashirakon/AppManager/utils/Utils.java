@@ -799,7 +799,7 @@ public class Utils {
     public static boolean isRootGiven() {
         if (isRootAvailable()) {
             String output = RootShellRunner.runCommand("id").getOutput();
-            return output != null && output.toLowerCase().contains("uid=0");
+            return output != null && output.toLowerCase(Locale.ROOT).contains("uid=0");
         }
         return false;
     }

@@ -234,7 +234,7 @@ public class SharedPrefsActivity extends BaseActivity implements
     @Override
     public boolean onQueryTextChange(String newText) {
         mConstraint = newText;
-        if (mAdapter != null) mAdapter.getFilter().filter(newText.toLowerCase());
+        if (mAdapter != null) mAdapter.getFilter().filter(newText.toLowerCase(Locale.ROOT));
         return true;
     }
 

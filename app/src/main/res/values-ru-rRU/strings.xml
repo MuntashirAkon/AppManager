@@ -63,7 +63,6 @@
     <string name="manifest">Манифест</string>
     <string name="error">Ошибка</string>
     <string name="loading">Загрузка…</string>
-    <!-- &#8230; = ... -->
     <string name="sort_by_app_label">Имя приложения</string>
     <string name="sort_by_package_name">Название пакета</string>
     <string name="sort_by_domain">Сначала пользовательские</string>
@@ -544,7 +543,7 @@
     <string name="reinstall">Переустановить</string>
     <string name="unblock_trackers">Разблокировать трекеры</string>
     <string name="package_installer">Установщик пакетов</string>
-    <string name="install_in_progress">Идет установка...</string>
+    <string name="install_in_progress">Идет установка…</string>
     <string name="installer_error_security">Нет доступа к файлам APK</string>
     <string name="installer_error_session_create">Не удалось создать сеанс установщика</string>
     <string name="installer_error_session_write">Не удалось записать в сеанс установщика</string>

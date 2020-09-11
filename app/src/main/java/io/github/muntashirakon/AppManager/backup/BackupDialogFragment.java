@@ -155,13 +155,16 @@ public class BackupDialogFragment extends DialogFragment {
         @BatchOpsManager.OpType int op;
         switch (mode) {
             case MODE_DELETE:
+                // TODO(11/9/20): Display a list of backups if only a single package is requested
                 op = BatchOpsManager.OP_DELETE_BACKUP;
                 break;
             case MODE_RESTORE:
+                // TODO(11/9/20): Display a list of backups if only a single package is requested
                 op = BatchOpsManager.OP_RESTORE_BACKUP;
                 break;
             case MODE_BACKUP:
             default:
+                // TODO(11/9/20): Display a prompt asking for the backup name if multiple backup requested
                 op = BatchOpsManager.OP_BACKUP;
         }
         if (actionBeginInterface != null) actionBeginInterface.onActionBegin(mode);

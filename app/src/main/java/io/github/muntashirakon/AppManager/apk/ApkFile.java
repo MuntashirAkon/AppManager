@@ -160,7 +160,7 @@ public final class ApkFile implements AutoCloseable, Parcelable {
         if (name == null) throw new Exception("Could not extract package name from the URI.");
         String extension;
         try {
-            extension = name.substring(name.lastIndexOf('.') + 1).toLowerCase();
+            extension = name.substring(name.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
             if (!SUPPORTED_EXTENSIONS.contains(extension))
                 throw new Exception("Invalid package extension.");
         } catch (IndexOutOfBoundsException e) {
