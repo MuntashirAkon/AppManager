@@ -98,7 +98,7 @@ public class SplitApkChooser extends DialogFragment {
                     }
                     break;
                 case ApkFile.APK_SPLIT_FEATURE:
-                    name = getString(R.string.split_feature_name, apkEntry.splitSuffix);
+                    name = getString(R.string.split_feature_name, apkEntry.name);
                     break;
                 case ApkFile.APK_SPLIT_UNKNOWN:
                     name = apkEntry.name;

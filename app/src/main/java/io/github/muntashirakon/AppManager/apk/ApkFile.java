@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.IllformedLocaleException;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -59,7 +60,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-public class ApkFile implements AutoCloseable, Parcelable {
+public final class ApkFile implements AutoCloseable, Parcelable {
     public static final String TAG = "ApkFile";
 
     private static final String OBB_DIR = "Android/obb";
@@ -446,9 +447,11 @@ public class ApkFile implements AutoCloseable, Parcelable {
                 // Infer types
                 if (manifest.containsKey(ANDROID_XML_NAMESPACE + ":isFeatureSplit")) {
                     this.type = APK_SPLIT_FEATURE;
-                } else if (manifest.containsKey("configForSplit")) {
-                    this.forFeature = manifest.get("configForSplit");
-                    if ("".equals(this.forFeature)) this.forFeature = null;
+                } else {
+                    if (manifest.containsKey("configForSplit")) {
+                        this.forFeature = manifest.get("configForSplit");
+                        if ("".equals(this.forFeature)) this.forFeature = null;
+                    }
                     int configPartIndex = this.name.lastIndexOf("config.");
                     if (configPartIndex == -1 || (configPartIndex != 0 && this.name.charAt(configPartIndex - 1) != '.'))
                         return;
@@ -461,15 +464,20 @@ public class ApkFile implements AutoCloseable, Parcelable {
                         this.type = APK_SPLIT_DENSITY;
                     } else {
                         // Check locale
-                        Locale locale = new Locale.Builder().setLanguageTag(splitSuffix).build();
-                        for (Locale validLocale : Locale.getAvailableLocales()) {
-                            if (validLocale.equals(locale)) {
-                                this.type = APK_SPLIT_LOCALE;
-                                break;
+                        try {
+                            Locale locale = new Locale.Builder().setLanguageTag(splitSuffix).build();
+                            for (Locale validLocale : Locale.getAvailableLocales()) {
+                                if (validLocale.equals(locale)) {
+                                    this.type = APK_SPLIT_LOCALE;
+                                    break;
+                                }
                             }
+                        } catch (IllformedLocaleException e) {
+                            // Unknown locale
+                            this.type = APK_SPLIT_UNKNOWN;
                         }
                     }
-                } else this.type = APK_SPLIT_UNKNOWN;
+                }
             }
         }
 
