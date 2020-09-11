@@ -79,7 +79,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
@@ -259,13 +258,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     try {
                         File tmpApkSource = ApkUtils.getSharableApkFile(mPackageInfo);
                         runOnUiThread(() -> {
-                            Intent intent = ShareCompat.IntentBuilder.from(mActivity)
-                                    .setStream(FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID + ".provider", tmpApkSource))
+                            Intent intent = new Intent(Intent.ACTION_SEND)
                                     .setType("application/vnd.android.package-archive")
-                                    .getIntent()
-                                    .setAction(Intent.ACTION_SEND)
+                                    .putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID + ".provider", tmpApkSource))
                                     .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            startActivity(intent);
+                            startActivity(Intent.createChooser(intent, getString(R.string.share_apk)));
                         });
                     } catch (Exception e) {
                         e.printStackTrace();
