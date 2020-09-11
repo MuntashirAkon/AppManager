@@ -259,7 +259,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         File tmpApkSource = ApkUtils.getSharableApkFile(mPackageInfo);
                         runOnUiThread(() -> {
                             Intent intent = new Intent(Intent.ACTION_SEND)
-                                    .setType("application/vnd.android.package-archive")
+                                    .setType("application/*")
                                     .putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID + ".provider", tmpApkSource))
                                     .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                             startActivity(Intent.createChooser(intent, getString(R.string.share_apk)));
