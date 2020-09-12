@@ -29,7 +29,7 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="40dp"
+        android:layout_width="@dimen/icon_size"
         android:layout_height="match_parent"
         android:layout_marginEnd="@dimen/padding_small"
         android:layout_weight="0"
@@ -94,10 +94,13 @@
 
     <ImageView
         android:id="@+id/more"
-        android:layout_width="30dp"
-        android:layout_height="match_parent"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
         android:layout_marginStart="@dimen/padding_small"
+        android:padding="@dimen/padding_small"
         android:layout_weight="0"
+        android:layout_gravity="center_vertical"
+        android:background="?android:selectableItemBackgroundBorderless"
         app:srcCompat="@drawable/ic_more_vert_black_24dp"
         tools:ignore="ContentDescription" />
 

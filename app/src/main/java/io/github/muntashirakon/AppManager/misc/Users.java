@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.misc;
 
 import android.content.pm.UserInfo;
+import android.os.UserHandle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,13 +40,11 @@ public final class Users {
         try {
             // using reflection to get id of calling user since method getCallingUserId of UserHandle is hidden
             // https://github.com/android/platform_frameworks_base/blob/master/core/java/android/os/UserHandle.java#L123
-            @SuppressWarnings("rawtypes")
-            Class userHandle = Class.forName("android.os.UserHandle");
             //noinspection JavaReflectionMemberAccess
-            muEnabled = userHandle.getField("MU_ENABLED").getBoolean(null);
+            muEnabled = UserHandle.class.getField("MU_ENABLED").getBoolean(null);
             //noinspection JavaReflectionMemberAccess
-            perUserRange = userHandle.getField("PER_USER_RANGE").getInt(null);
-        } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException e) {
+            perUserRange = UserHandle.class.getField("PER_USER_RANGE").getInt(null);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
         }
         MU_ENABLED = muEnabled;
