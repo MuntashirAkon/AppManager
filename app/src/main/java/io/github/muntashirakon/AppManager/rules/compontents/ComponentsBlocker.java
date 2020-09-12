@@ -60,6 +60,8 @@ import io.github.muntashirakon.AppManager.utils.Utils;
  * @see <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/services/core/java/com/android/server/firewall/IntentFirewall.java">IntentFirewall.java</a>
  */
 public final class ComponentsBlocker extends RulesStorageManager {
+    public static final String TAG = "ComponentBlocker";
+
     private static String LOCAL_RULES_PATH;
     static final String SYSTEM_RULES_PATH = "/data/system/ifw/";
 
@@ -215,7 +217,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                 "</rules>";
         // Save rules
         try (FileOutputStream rulesStream = new FileOutputStream(localRulesFile)) {
-            Log.d("Rules", rules);
+            Log.d(TAG, "Rules: " + rules);
             rulesStream.write(rules.getBytes());
         }
     }
@@ -266,7 +268,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
             if (apply) {
                 // Disable providers
                 List<RulesStorageManager.Entry> disabledProviders = getAll(RulesStorageManager.Type.PROVIDER);
-                Log.d("ComponentBlocker", "Providers: " + disabledProviders.toString());
+                Log.d(TAG, "Providers: " + disabledProviders.toString());
                 for (RulesStorageManager.Entry provider : disabledProviders) {
                     if (provider.extra == COMPONENT_TO_BE_UNBLOCKED) {  // Enable components that are removed
                         RunnerUtils.enableComponent(packageName, provider.name, Users.getCurrentUserHandle());
@@ -279,7 +281,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
             } else {
                 // Enable all, remove to be removed components and set others to be blocked
                 List<RulesStorageManager.Entry> allEntries = getAllComponents();
-                Log.d("ComponentBlocker", "All: " + allEntries.toString());
+                Log.d(TAG, "All: " + allEntries.toString());
                 for (RulesStorageManager.Entry entry : allEntries) {
                     RunnerUtils.enableComponent(packageName, entry.name, Users.getCurrentUserHandle());  // Enable components if they're disabled by other methods
                     if (entry.extra == COMPONENT_TO_BE_UNBLOCKED) removeEntry(entry);
@@ -297,13 +299,13 @@ public final class ComponentsBlocker extends RulesStorageManager {
      */
     private void retrieveDisabledComponents() {
         if (!AppPref.isRootEnabled()) return;
-        Log.d("ComponentBlocker", "Retrieving disabled components for package " + packageName);
+        Log.d(TAG, "Retrieving disabled components for package " + packageName);
         PrivilegedFile rulesFile = new PrivilegedFile(SYSTEM_RULES_PATH, packageName + ".xml");
         String ruleXmlString = null;
         if (rulesFile.exists()) {
             // Copy system rules to access them locally
             ruleXmlString = Utils.getFileContent(rulesFile);
-            Log.d("ComponentBlocker - IFW", "Retrieved components for package " + packageName + "\n" + ruleXmlString);
+            Log.d(TAG, "IFW: Retrieved components for package " + packageName + "\n" + ruleXmlString);
         }
         if (TextUtils.isEmpty(ruleXmlString)) {
             // Load from App Manager's saved rules

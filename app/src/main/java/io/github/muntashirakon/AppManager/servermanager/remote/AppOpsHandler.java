@@ -190,8 +190,9 @@ public class AppOpsHandler extends ClassCallerProcessor {
                 ServiceManager.getService(Context.APP_OPS_SERVICE));
         if (appOpsService == null) throw new Exception("AppOpsService is null");
         appOpsService.setMode(builder.getOpInt(), uid, builder.getPackageName(), builder.getModeInt());
-        if (appOpsService.checkOperation(builder.getOpInt(), uid, builder.getPackageName()) != builder.getModeInt())
-            throw new Exception("Failed to set mode " + builder.getModeInt() + " for op " + builder.getOpInt() + " in package " + builder.getPackageName());
+        // The following logic seem to yield a false positive result for some op
+//        if (appOpsService.checkOperation(builder.getOpInt(), uid, builder.getPackageName()) != builder.getModeInt())
+//            throw new Exception("Failed to set mode " + builder.getModeInt() + " for op " + builder.getOpInt() + " in package " + builder.getPackageName());
 //        }
     }
 

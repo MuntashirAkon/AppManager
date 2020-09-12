@@ -327,7 +327,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 // Turn filter on/off
                 boolean curr = (boolean) AppPref.get(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL);
                 AppPref.getInstance().setPref(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL, !curr);
-                mainModel.resetAppOpItems();
                 refreshDetails();
                 return true;
             case R.id.action_deny_dangerous_permissions:  // permissions

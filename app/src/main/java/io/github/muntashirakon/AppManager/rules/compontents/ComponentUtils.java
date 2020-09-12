@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.rules.compontents;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -138,25 +139,6 @@ public final class ComponentUtils {
     }
 
     @NonNull
-    public static List<ItemCount> getTrackerCountsForPackages(@NonNull List<String> packages) {
-        List<ItemCount> trackerCounts = new ArrayList<>();
-        PackageManager pm = AppManager.getContext().getPackageManager();
-        for (String packageName: packages) {
-            ItemCount trackerCount = new ItemCount();
-            trackerCount.packageName = packageName;
-            try {
-                ApplicationInfo info = pm.getApplicationInfo(packageName, 0);
-                trackerCount.packageLabel = info.loadLabel(pm).toString();
-            } catch (PackageManager.NameNotFoundException e) {
-                trackerCount.packageLabel = packageName;
-                e.printStackTrace();
-            }
-            trackerCount.count = getTrackerComponentsForPackage(packageName).size();
-        }
-        return trackerCounts;
-    }
-
-    @NonNull
     public static ItemCount getTrackerCountForApp(@NonNull ApplicationInfo applicationInfo) {
         PackageManager pm = AppManager.getContext().getPackageManager();
         ItemCount trackerCount = new ItemCount();
@@ -188,18 +170,26 @@ public final class ComponentUtils {
             cb.applyRules(true);
             // Reset configured app ops
             AppOpsService appOpsService = new AppOpsService();
-            for (RulesStorageManager.Entry entry: cb.getAll(RulesStorageManager.Type.APP_OP)) {
-                try {
-                    appOpsService.setMode((Integer) entry.extra, -1, packageName, AppOpsManager.MODE_DEFAULT);
-                    cb.removeEntry(entry);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            try {
+                appOpsService.resetAllModes(-1, packageName);
+                for (RulesStorageManager.Entry entry: cb.getAll(RulesStorageManager.Type.APP_OP)) {
+                    try {
+                        int op = (int) entry.extra;
+                        appOpsService.setMode(op, -1, packageName, AppOpsManager.MODE_DEFAULT);
+                        cb.removeEntry(entry);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             // Grant configured permissions
             for (RulesStorageManager.Entry entry: cb.getAll(RulesStorageManager.Type.PERMISSION)) {
                 if (RunnerUtils.grantPermission(packageName, entry.name, Users.getCurrentUserHandle()).isSuccessful()) {
                     cb.removeEntry(entry);
+                } else {
+                    Log.e("ComponentUtils", "Cannot revoke permission " + entry.name + " for package " + packageName);
                 }
             }
         }
