@@ -26,12 +26,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
-import java.util.concurrent.CopyOnWriteArrayList;
 
+import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
@@ -47,7 +49,10 @@ public class RulesStorageManager implements Closeable {
             COMPONENT_TO_BE_BLOCKED,
             COMPONENT_TO_BE_UNBLOCKED
     })
-    public @interface ComponentStatus {}
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ComponentStatus {
+    }
+
     public static final String COMPONENT_BLOCKED = "true";  // To preserve compatibility
     public static final String COMPONENT_TO_BE_BLOCKED = "false";  // To preserve compatibility
     public static final String COMPONENT_TO_BE_UNBLOCKED = "unblocked";
@@ -62,9 +67,10 @@ public class RulesStorageManager implements Closeable {
         UNKNOWN;
 
         public static final String[] names = new String[values().length];
+
         static {
             Type[] values = values();
-            for (int i = 0; i<values.length; ++i) names[i] = values[i].name();
+            for (int i = 0; i < values.length; ++i) names[i] = values[i].name();
         }
     }
 
@@ -84,14 +90,20 @@ public class RulesStorageManager implements Closeable {
         }
     }
 
-    protected Context context;
+    @NonNull
+    protected final Context context;
+    @NonNull
+    private final ArrayList<Entry> entries;
+    @GuardedBy("entries")
+    @NonNull
     protected String packageName;
+    @GuardedBy("entries")
     protected boolean readOnly = true;
-    private CopyOnWriteArrayList<Entry> entries;
 
-    protected RulesStorageManager(Context context, String packageName) {
+    protected RulesStorageManager(@NonNull Context context, @NonNull String packageName) {
         this.context = context;
         this.packageName = packageName;
+        this.entries = new ArrayList<>();
         loadEntries();
     }
 
@@ -108,50 +120,74 @@ public class RulesStorageManager implements Closeable {
         if (!readOnly) commit();
     }
 
+    @GuardedBy("entries")
     public Entry get(String name) {
-        for (Entry entry: entries) if (entry.name.equals(name)) return entry;
-        return null;
-    }
-
-    public List<Entry> getAll(Type type) {
-        List<Entry> newEntries = new ArrayList<>();
-        for (Entry entry: entries) if (entry.type.equals(type)) newEntries.add(entry);
-        return newEntries;
-    }
-
-    public List<Entry> getAllComponents() {
-        List<Entry> newEntries = new ArrayList<>();
-        for (Entry entry: entries) {
-            if (entry.type.equals(Type.ACTIVITY)
-                    || entry.type.equals(Type.PROVIDER)
-                    || entry.type.equals(Type.RECEIVER)
-                    || entry.type.equals(Type.SERVICE))
-                newEntries.add(entry);
+        synchronized (entries) {
+            for (Entry entry : entries) if (entry.name.equals(name)) return entry;
+            return null;
         }
-        return newEntries;
     }
 
+    @GuardedBy("entries")
+    public List<Entry> getAll(Type type) {
+        synchronized (entries) {
+            List<Entry> newEntries = new ArrayList<>();
+            for (Entry entry : entries) if (entry.type.equals(type)) newEntries.add(entry);
+            return newEntries;
+        }
+    }
+
+    @GuardedBy("entries")
+    public List<Entry> getAllComponents() {
+        synchronized (entries) {
+            List<Entry> newEntries = new ArrayList<>();
+            for (Entry entry : entries) {
+                if (entry.type.equals(Type.ACTIVITY)
+                        || entry.type.equals(Type.PROVIDER)
+                        || entry.type.equals(Type.RECEIVER)
+                        || entry.type.equals(Type.SERVICE))
+                    newEntries.add(entry);
+            }
+            return newEntries;
+        }
+    }
+
+    @GuardedBy("entries")
     public List<Entry> getAll() {
-        return entries;
+        synchronized (entries) {
+            return entries;
+        }
     }
 
+    @GuardedBy("entries")
     public boolean hasName(String name) {
-        for (Entry entry: entries) if (entry.name.equals(name)) return true;
-        return false;
+        synchronized (entries) {
+            for (Entry entry : entries) if (entry.name.equals(name)) return true;
+            return false;
+        }
     }
 
+    @GuardedBy("entries")
     public int entryCount() {
-        return entries.size();
+        synchronized (entries) {
+            return entries.size();
+        }
     }
 
+    @GuardedBy("entries")
     public void removeEntry(Entry entry) {
-        entries.remove(entry);
+        synchronized (entries) {
+            entries.remove(entry);
+        }
     }
 
+    @GuardedBy("entries")
     public void removeEntry(String name) {
-        Entry removableEntry = null;
-        for (Entry entry: entries) if (entry.name.equals(name)) removableEntry = entry;
-        entries.remove(removableEntry);
+        synchronized (entries) {
+            Entry removableEntry = null;
+            for (Entry entry : entries) if (entry.name.equals(name)) removableEntry = entry;
+            entries.remove(removableEntry);
+        }
     }
 
     protected void setComponent(String name, Type componentType, @ComponentStatus String componentStatus) {
@@ -178,9 +214,12 @@ public class RulesStorageManager implements Closeable {
         addEntry(entry);
     }
 
+    @GuardedBy("entries")
     public void addEntry(@NonNull Entry entry) {
-        removeEntry(entry.name);
-        entries.add(entry);
+        synchronized (entries) {
+            removeEntry(entry.name);
+            entries.add(entry);
+        }
     }
 
     public void applyAppOpsAndPerms(boolean apply) {
@@ -189,7 +228,7 @@ public class RulesStorageManager implements Closeable {
         if (apply) {
             // Apply all app ops
             List<Entry> appOps = getAll(Type.APP_OP);
-            for (Entry appOp: appOps) {
+            for (Entry appOp : appOps) {
                 try {
                     runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_APP_OPS_SET, packageName, Integer.parseInt(appOp.name), appOp.extra));
                 } catch (Exception e) {
@@ -198,7 +237,7 @@ public class RulesStorageManager implements Closeable {
             }
             // Apply all permissions
             List<Entry> permissions = getAll(Type.PERMISSION);
-            for (Entry permission: permissions) {
+            for (Entry permission : permissions) {
                 if ((Boolean) permission.extra) {
                     // grant permission
                     runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_GRANT, user, packageName, permission.name));
@@ -215,7 +254,7 @@ public class RulesStorageManager implements Closeable {
             }
             // Revoke all permissions
             List<Entry> permissions = getAll(Type.PERMISSION);
-            for (Entry permission: permissions) {
+            for (Entry permission : permissions) {
                 runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_REVOKE, user, packageName, permission.name));
             }
         }
@@ -223,13 +262,13 @@ public class RulesStorageManager implements Closeable {
         runner.runCommand();
     }
 
+    @GuardedBy("entries")
     private void loadEntries() {
-        entries = new CopyOnWriteArrayList<>();
         StringTokenizer tokenizer;
         String dataRow;
         try (BufferedReader TSVFile = new BufferedReader(new FileReader(getDesiredFile()))) {
-            while ((dataRow = TSVFile.readLine()) != null){
-                tokenizer = new StringTokenizer(dataRow,"\t");
+            while ((dataRow = TSVFile.readLine()) != null) {
+                tokenizer = new StringTokenizer(dataRow, "\t");
                 Entry entry = new Entry();
                 if (tokenizer.hasMoreElements()) entry.name = tokenizer.nextElement().toString();
                 if (tokenizer.hasMoreElements()) {
@@ -239,35 +278,42 @@ public class RulesStorageManager implements Closeable {
                         entry.type = Type.UNKNOWN;
                     }
                 }
-                if (tokenizer.hasMoreElements()) entry.extra = getExtra(entry.type, tokenizer.nextElement().toString());
-                entries.add(entry);
+                if (tokenizer.hasMoreElements())
+                    entry.extra = getExtra(entry.type, tokenizer.nextElement().toString());
+                synchronized (entries) {
+                    entries.add(entry);
+                }
             }
-        } catch (IOException ignore) {}
+        } catch (IOException ignore) {
+        }
     }
 
+    @GuardedBy("entries")
     public void commit() {
-        new Thread(() -> {
-            try {
-                saveEntries(new ArrayList<>(entries));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }).start();
+        try {
+            saveEntries();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
-    synchronized private void saveEntries(@NonNull List<Entry> finalEntries) throws IOException {
-        if (finalEntries.size() == 0) {
-            //noinspection ResultOfMethodCallIgnored
-            getDesiredFile().delete();
-            return;
-        }
-        StringBuilder stringBuilder = new StringBuilder();
-        for(Entry entry: finalEntries) {
-            stringBuilder.append(entry.name).append("\t").append(entry.type.name()).append("\t").
-                    append(entry.extra).append("\n");
-        }
-        try (FileOutputStream TSVFile = new FileOutputStream(getDesiredFile())) {
-            TSVFile.write(stringBuilder.toString().getBytes());
+    @GuardedBy("entries")
+    private void saveEntries() throws IOException {
+        synchronized (entries) {
+            File tsvRulesFile = getDesiredFile();
+            if (entries.size() == 0) {
+                //noinspection ResultOfMethodCallIgnored
+                tsvRulesFile.delete();
+                return;
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            for (Entry entry : entries) {
+                stringBuilder.append(entry.name).append("\t").append(entry.type.name()).append("\t").
+                        append(entry.extra).append("\n");
+            }
+            try (FileOutputStream TSVFile = new FileOutputStream(tsvRulesFile)) {
+                TSVFile.write(stringBuilder.toString().getBytes());
+            }
         }
     }
 
@@ -295,8 +341,10 @@ public class RulesStorageManager implements Closeable {
                 return strExtra;
             case PERMISSION:
                 return Boolean.valueOf(strExtra);
-            case APP_OP: return Integer.valueOf(strExtra);
-            default: return null;
+            case APP_OP:
+                return Integer.valueOf(strExtra);
+            default:
+                return null;
         }
     }
 }

@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 
@@ -272,6 +273,11 @@ public class ArrayUtils {
             array[i] = list.get(i);
         }
         return array;
+    }
+
+    @NonNull
+    public static int[] convertToIntArray(@NonNull Set<Integer> set) {
+        return convertToIntArray(new ArrayList<>(set));
     }
 
     public static @Nullable long[] convertToLongArray(@Nullable int[] intArray) {

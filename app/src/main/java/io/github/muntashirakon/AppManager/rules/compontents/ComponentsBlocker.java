@@ -17,17 +17,17 @@
 
 package io.github.muntashirakon.AppManager.rules.compontents;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,6 +39,7 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 /**
  * Block application components: activities, broadcasts, services and providers.
@@ -58,12 +59,14 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
  *
  * @see <a href="https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/services/core/java/com/android/server/firewall/IntentFirewall.java">IntentFirewall.java</a>
  */
-public class ComponentsBlocker extends RulesStorageManager {
+public final class ComponentsBlocker extends RulesStorageManager {
+    public static final String TAG = "ComponentBlocker";
 
     private static String LOCAL_RULES_PATH;
     static final String SYSTEM_RULES_PATH = "/data/system/ifw/";
 
-    private static @NonNull HashMap<String, ComponentsBlocker> componentsBlockers = new HashMap<>();
+    @SuppressLint("StaticFieldLeak")
+    private static ComponentsBlocker INSTANCE;
 
     @NonNull
     public static ComponentsBlocker getInstance(@NonNull String packageName) {
@@ -79,25 +82,26 @@ public class ComponentsBlocker extends RulesStorageManager {
 
     @NonNull
     public static ComponentsBlocker getInstance(@NonNull String packageName, boolean noLoadFromDisk) {
-        if (!componentsBlockers.containsKey(packageName)) {
+        if (INSTANCE == null) {
             try {
                 getLocalIfwRulesPath();
-                componentsBlockers.put(packageName, new ComponentsBlocker(AppManager.getContext(), packageName));
+                INSTANCE = new ComponentsBlocker(AppManager.getContext(), packageName);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 throw new AssertionError();
             }
+        } else if (!INSTANCE.packageName.equals(packageName)) {
+            INSTANCE.close();
+            INSTANCE = null;
+            INSTANCE = new ComponentsBlocker(AppManager.getContext(), packageName);
         }
-        ComponentsBlocker componentsBlocker = componentsBlockers.get(packageName);
-        if (!noLoadFromDisk && AppPref.isRootEnabled()) //noinspection ConstantConditions
-            componentsBlocker.retrieveDisabledComponents();
-        //noinspection ConstantConditions
-        componentsBlocker.readOnly = true;
-        return componentsBlocker;
+        if (!noLoadFromDisk && AppPref.isRootEnabled())
+            INSTANCE.retrieveDisabledComponents();
+        INSTANCE.readOnly = true;
+        return INSTANCE;
     }
 
-    @NonNull
-    public static String getLocalIfwRulesPath() throws FileNotFoundException {
+    public static void getLocalIfwRulesPath() throws FileNotFoundException {
         Context context = AppManager.getContext();
         // FIXME: Move from getExternalFilesDir to getCacheDir
         if (LOCAL_RULES_PATH == null) {
@@ -110,23 +114,22 @@ public class ComponentsBlocker extends RulesStorageManager {
             }
             LOCAL_RULES_PATH = file.getAbsolutePath();
         }
-        return LOCAL_RULES_PATH;
     }
+
+    private File localRulesFile;
 
     protected ComponentsBlocker(Context context, String packageName) {
         super(context, packageName);
         this.localRulesFile = new File(LOCAL_RULES_PATH, packageName + ".xml");
-        this.localProvidersFile = new File(LOCAL_RULES_PATH, packageName + ".txt");
     }
 
     /**
      * Apply all rules configured within App Manager. This includes the external IFW path as well as
      * the internal conf path. In v2.6, the former path will be removed.
+     *
      * @param context Application Context
      */
     public static void applyAllRules(@NonNull Context context) {
-        // Add all rules from the local IFW folder
-        addAllLocalRules(context);
         // Apply all rules from conf folder
         PrivilegedFile confPath = new PrivilegedFile(context.getFilesDir(), "conf");
         String[] packageNamesWithTSV = confPath.list((dir, name) -> name.endsWith(".tsv"));
@@ -142,41 +145,13 @@ public class ComponentsBlocker extends RulesStorageManager {
         }
     }
 
-    /**
-     * Add all rules from the external IFW path
-     * @param context Application context
-     * @deprecated Due to the fact that any application can edit or delete these files, this method
-     *      is not secured and will be removed in v2.6
-     */
-    @Deprecated
-    public static void addAllLocalRules(@NonNull Context context) {
-        try {
-            PrivilegedFile ifwPath = new PrivilegedFile(getLocalIfwRulesPath());
-            String[] packageNamesWithXML = ifwPath.list((dir, name) -> name.endsWith(".xml"));
-            if (packageNamesWithXML != null) {
-                // Apply rules
-                String packageName;
-                for (String s: packageNamesWithXML) {
-                    packageName = s.substring(0, s.lastIndexOf(".xml"));
-                    try (ComponentsBlocker cb = getInstance(packageName)) {
-                        // Make the instance mutable
-                        cb.readOnly = false;
-                    }
-                }
-            }
-        } catch (FileNotFoundException ignore) {}
-    }
-
-    private File localRulesFile;
-    private File localProvidersFile;
-
-    public Boolean hasComponent(String componentName) {
+    public boolean hasComponent(String componentName) {
         return hasName(componentName);
     }
 
     public int componentCount() {
         int count = 0;
-        for (Entry entry: getAll()) {
+        for (Entry entry : getAll()) {
             if ((entry.type.equals(Type.ACTIVITY)
                     || entry.type.equals(Type.PROVIDER)
                     || entry.type.equals(Type.RECEIVER)
@@ -202,6 +177,7 @@ public class ComponentsBlocker extends RulesStorageManager {
 
     /**
      * Save the disabled components locally (not applied to the system)
+     *
      * @throws IOException If it fails to write to the destination file
      */
     private void saveDisabledComponents() throws IOException {
@@ -219,10 +195,17 @@ public class ComponentsBlocker extends RulesStorageManager {
             String componentFilter = "  <component-filter name=\"" + packageName + "/" + component.name + "\"/>\n";
             RulesStorageManager.Type componentType = component.type;
             switch (component.type) {
-                case ACTIVITY: activities.append(componentFilter); break;
-                case RECEIVER: receivers.append(componentFilter); break;
-                case SERVICE: services.append(componentFilter); break;
-                case PROVIDER: continue;
+                case ACTIVITY:
+                    activities.append(componentFilter);
+                    break;
+                case RECEIVER:
+                    receivers.append(componentFilter);
+                    break;
+                case SERVICE:
+                    services.append(componentFilter);
+                    break;
+                case PROVIDER:
+                    continue;
             }
             setComponent(component.name, componentType, COMPONENT_BLOCKED);
         }
@@ -234,7 +217,7 @@ public class ComponentsBlocker extends RulesStorageManager {
                 "</rules>";
         // Save rules
         try (FileOutputStream rulesStream = new FileOutputStream(localRulesFile)) {
-            Log.d("Rules", rules);
+            Log.d(TAG, "Rules: " + rules);
             rulesStream.write(rules.getBytes());
         }
     }
@@ -245,11 +228,12 @@ public class ComponentsBlocker extends RulesStorageManager {
      * itself, it's no longer deemed necessary to check the existence of the file. Besides, previous
      * implementation (which was similar to Watt's) did not take providers into account, which are
      * blocked via <code>pm</code>.
+     *
      * @return True if applied, false otherwise
      */
     public boolean isRulesApplied() {
         List<RulesStorageManager.Entry> entries = getAllComponents();
-        for (RulesStorageManager.Entry entry: entries)
+        for (RulesStorageManager.Entry entry : entries)
             if (entry.extra == COMPONENT_TO_BE_BLOCKED) return false;
         return true;
     }
@@ -260,6 +244,7 @@ public class ComponentsBlocker extends RulesStorageManager {
      * be removed or unblocked will be removed (or for providers, enabled and removed). If apply is
      * set to false, all rules will be removed but before that all components will be set to their
      * default state (ie., the state described in the app manifest).
+     *
      * @param apply Whether to apply the rules or remove them altogether
      */
     public void applyRules(boolean apply) {
@@ -283,8 +268,8 @@ public class ComponentsBlocker extends RulesStorageManager {
             if (apply) {
                 // Disable providers
                 List<RulesStorageManager.Entry> disabledProviders = getAll(RulesStorageManager.Type.PROVIDER);
-                Log.d("ComponentBlocker", "Providers: " + disabledProviders.toString());
-                for (RulesStorageManager.Entry provider: disabledProviders) {
+                Log.d(TAG, "Providers: " + disabledProviders.toString());
+                for (RulesStorageManager.Entry provider : disabledProviders) {
                     if (provider.extra == COMPONENT_TO_BE_UNBLOCKED) {  // Enable components that are removed
                         RunnerUtils.enableComponent(packageName, provider.name, Users.getCurrentUserHandle());
                         removeEntry(provider);
@@ -296,8 +281,8 @@ public class ComponentsBlocker extends RulesStorageManager {
             } else {
                 // Enable all, remove to be removed components and set others to be blocked
                 List<RulesStorageManager.Entry> allEntries = getAllComponents();
-                Log.d("ComponentBlocker", "All: " + allEntries.toString());
-                for (RulesStorageManager.Entry entry: allEntries) {
+                Log.d(TAG, "All: " + allEntries.toString());
+                for (RulesStorageManager.Entry entry : allEntries) {
                     RunnerUtils.enableComponent(packageName, entry.name, Users.getCurrentUserHandle());  // Enable components if they're disabled by other methods
                     if (entry.extra == COMPONENT_TO_BE_UNBLOCKED) removeEntry(entry);
                     else setComponent(entry.name, entry.type, COMPONENT_TO_BE_BLOCKED);
@@ -313,54 +298,31 @@ public class ComponentsBlocker extends RulesStorageManager {
      * save a copy to the local source and then retrieve the components
      */
     private void retrieveDisabledComponents() {
-        Log.d("ComponentBlocker", "Retrieving disabled components for package " + packageName);
-        if (AppPref.isRootEnabled() && new PrivilegedFile(SYSTEM_RULES_PATH, packageName).exists()) {
+        if (!AppPref.isRootEnabled()) return;
+        Log.d(TAG, "Retrieving disabled components for package " + packageName);
+        PrivilegedFile rulesFile = new PrivilegedFile(SYSTEM_RULES_PATH, packageName + ".xml");
+        String ruleXmlString = null;
+        if (rulesFile.exists()) {
             // Copy system rules to access them locally
-            Log.d("ComponentBlocker - IFW", "Copying disabled components for package " + packageName);
-            // FIXME: Read all files instead of just one for greater compatibility
-            // FIXME: In v2.6, file contents will be copied instead of copying the file itself
-            Runner.runCommand(String.format(Runner.TOYBOX + " cp %s%s.xml \"%s\" && " + Runner.TOYBOX + " chmod 0666 '%s/%s.xml'",
-                    SYSTEM_RULES_PATH, packageName, LOCAL_RULES_PATH, LOCAL_RULES_PATH, packageName));
+            ruleXmlString = Utils.getFileContent(rulesFile);
+            Log.d(TAG, "IFW: Retrieved components for package " + packageName + "\n" + ruleXmlString);
         }
-        retrieveDisabledProviders();
-        if (!localRulesFile.exists()) {
-            for (RulesStorageManager.Entry entry: getAllComponents()) {
+        if (TextUtils.isEmpty(ruleXmlString)) {
+            // Load from App Manager's saved rules
+            for (RulesStorageManager.Entry entry : getAllComponents()) {
                 setComponent(entry.name, entry.type, COMPONENT_TO_BE_BLOCKED);
             }
             return;
         }
         try {
-            try (FileInputStream rulesStream = new FileInputStream(localRulesFile)) {
+            //noinspection ConstantConditions ruleXmlString is never null
+            try (InputStream rulesStream = new ByteArrayInputStream(ruleXmlString.getBytes())) {
                 HashMap<String, Type> components = ComponentUtils.readIFWRules(rulesStream, packageName);
-                for (String componentName: components.keySet()) {
+                for (String componentName : components.keySet()) {
                     setComponent(componentName, components.get(componentName), COMPONENT_BLOCKED);
                 }
             }
-            //noinspection ResultOfMethodCallIgnored
-            localRulesFile.delete();
-        } catch (IOException ignored) {}
-    }
-
-    /**
-     * Retrieve disabled providers from the local IFW path.
-     * @deprecated Due to the fact that any application can edit or delete these files, this method
-     *      is not secured and will be removed in v2.6
-     */
-    @Deprecated
-    private void retrieveDisabledProviders() {
-        // Read from external provider file if exists and delete it
-        if (localProvidersFile.exists()) {
-            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(localProvidersFile))) {
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    if (!TextUtils.isEmpty(line))
-                        setComponent(line.trim(), RulesStorageManager.Type.PROVIDER, COMPONENT_BLOCKED);
-                }
-            } catch (IOException ignored) {
-            } finally {
-                //noinspection ResultOfMethodCallIgnored
-                localProvidersFile.delete();
-            }
+        } catch (IOException ignored) {
         }
     }
 }

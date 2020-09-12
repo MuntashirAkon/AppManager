@@ -52,6 +52,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -313,8 +314,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (mAppOpsService != null) {
             try {
                 mAppOpsService.resetAllModes(-1, packageName);
-                appOpItems.clear();
-                appOpItems = null;
                 loadAppOps();
                 // Save values to the blocking rules
                 new Thread(() -> {
@@ -712,11 +711,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return appOps;
     }
 
-    public void resetAppOpItems() {
-        appOpItems.clear();
-        appOpItems = null;
-    }
-
     public void setAppOp(AppDetailsItem appDetailsItem) {
         new Thread(() -> {
             for (int i = 0; i < appOpItems.size(); ++i) {
@@ -729,42 +723,40 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("SwitchIntDef")
+    @WorkerThread
     private void loadAppOps() {
         new Thread(() -> {
             if (packageName == null || appOps == null) return;
-            if (appOpItems == null) {
-                appOpItems = new ArrayList<>();
-                if (!isExternalApk && AppPref.isRootOrAdbEnabled()) {
-                    if (mAppOpsService == null) mAppOpsService = new AppOpsService();
-                    try {
-                        List<PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(-1, packageName, null);
-                        List<OpEntry> opEntries = new ArrayList<>();
-                        if (packageOpsList.size() == 1)
-                            opEntries.addAll(packageOpsList.get(0).getOps());
-                        // Include defaults
-                        if ((boolean) AppPref.get(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL)) {
-                            final int[] ops = {2, 11, 12, 15, 22, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41, 42, 44, 45,
-                                    46, 47, 48, 49, 50, 58, 61, 63, 65, 69};
-                            for (int op : ops) {
-                                opEntries.add(new OpEntry(op, android.app.AppOpsManager.MODE_ALLOWED,
-                                        0, 0, 0, 0, null));
-                            }
+            if (!isExternalApk && AppPref.isRootOrAdbEnabled()) {
+                if (mAppOpsService == null) mAppOpsService = new AppOpsService();
+                try {
+                    List<PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(-1, packageName, null);
+                    List<OpEntry> opEntries = new ArrayList<>();
+                    if (packageOpsList.size() == 1)
+                        opEntries.addAll(packageOpsList.get(0).getOps());
+                    // Include defaults
+                    if ((boolean) AppPref.get(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL)) {
+                        for (int op : AppOpsManager.sOpsWithNoPerm) {
+                            opEntries.add(new OpEntry(op, AppOpsManager.opToDefaultMode(op), 0,
+                                    0, 0, 0, null));
                         }
-                        if (opEntries.size() > 0) {
-                            Set<String> uniqueSet = new HashSet<>();
-                            for (OpEntry opEntry : opEntries) {
-                                String opName = AppOpsManager.opToName(opEntry.getOp());
-                                if (uniqueSet.contains(opName)) continue;
-                                AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry);
-                                appDetailsItem.name = opName;
-                                uniqueSet.add(opName);
-                                appOpItems.add(appDetailsItem);
-                            }
-                        }
-                    } catch (Exception ignored) {}
+                    }
+                    Set<String> uniqueSet = new HashSet<>();
+                    appOpItems = new ArrayList<>(opEntries.size());
+                    for (OpEntry opEntry : opEntries) {
+                        String opName = AppOpsManager.opToName(opEntry.getOp());
+                        if (uniqueSet.contains(opName)) continue;
+                        AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry);
+                        appDetailsItem.name = opName;
+                        uniqueSet.add(opName);
+                        appOpItems.add(appDetailsItem);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
             final List<AppDetailsItem> appDetailsItems = new ArrayList<>();
+            if (appOpItems == null) appOpItems = new ArrayList<>(0);
             if (!TextUtils.isEmpty(searchQuery)) {
                 for (AppDetailsItem appDetailsItem: appOpItems)
                     if (appDetailsItem.name.toLowerCase(Locale.ROOT).contains(searchQuery))

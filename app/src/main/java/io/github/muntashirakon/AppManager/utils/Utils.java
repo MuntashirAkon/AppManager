@@ -36,6 +36,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.OpenableColumns;
+import android.system.ErrnoException;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
@@ -248,7 +249,10 @@ public class Utils {
         try {
             return getInputStreamContent(new FileInputStream(file));
         } catch (IOException e) {
-            e.printStackTrace();
+            if (!(e.getCause() instanceof ErrnoException)) {
+                // This isn't just another EACCESS exception
+                e.printStackTrace();
+            }
         }
         if (AppPref.isRootOrAdbEnabled()) {
             return RunnerUtils.cat(file.getAbsolutePath(), emptyValue);
