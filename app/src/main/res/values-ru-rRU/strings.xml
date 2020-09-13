@@ -14,11 +14,8 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-<resources>
-    <string name="instructions_header">Эти инструкции устарели и больше не будут обновляться.
-        Посетите сайт с официальной документацией (https://muntashirakon.github.io/AppManager)
-        для получения актуальной информации.</string>
+  --><resources>
+    <string name="instructions_header">[Эти инструкции устарели и больше не будут обновляться. Посетите официальный сайт документации (https://muntashirakon.github.io/AppManager), чтобы получить самую свежую информацию]</string>
     <string name="uninstall">Удалить</string>
     <string name="permissions">Используемые разрешения</string>
     <string name="require_no_permission">Не требует разрешений</string>
@@ -154,7 +151,7 @@
     <string name="usage_30_days">Последние 30 дней</string>
     <string name="usage_365_days">Последние 365 дней</string>
     <plurals name="usage_months">
-        <item quantity="one">%d мес.</item>
+        <item quantity="one">%d месяц</item>
         <item quantity="few">%d мес.</item>
         <item quantity="many">%d мес.</item>
         <item quantity="other">%d мес.</item>
@@ -245,7 +242,7 @@
     <string name="pref_root_mode_enabled">Режим root</string>
     <string name="pref_root_mode_enabled_msg">Включение режима root активирует все функции этого приложения, режим ADB определяется автоматически, когда он отключен</string>
     <string name="pref_global_blocking_enabled">Глобальная блокировка компонентов</string>
-    <string name="pref_global_blocking_enabled_msg">Включение глобальной блокировки компонентов позволяет вам блокировать любой компонент любого приложения без явного включения блокировки для приложения.</string>
+    <string name="pref_global_blocking_enabled_msg">Включение глобальной блокировки компонентов позволяет вам блокировать любой компонент любого приложения без явного включения блокировки для приложения</string>
     <string name="pref_usage_access_enabled">Доступ к использованию</string>
     <string name="pref_usage_access_enabled_msg">Включение доступа к использованию позволяет просматривать статистику использования и информацию о приложении</string>
     <string name="app_settings">Настройки</string>
@@ -267,16 +264,16 @@
     <string name="sort_by_times_opened">Количество запусков</string>
     <string name="sort_by_mobile_data">Мобильные данные</string>
     <string name="pref_import_export_blocking_rules">Импорт/экспорт правил блокировки</string>
-    <string name="pref_import_export_blocking_rules_msg">Импорт/экспорт правил, импорт внешних правил из Watt или Blocker.</string>
+    <string name="pref_import_export_blocking_rules_msg">Импорт/экспорт правил, импорт внешних правил из Watt или Blocker</string>
     <string name="pref_import_watt">Импорт из Watt</string>
     <string name="pref_import_blocker">Импорт из Blocker</string>
     <string name="the_import_was_successful">Импортирование завершено успешно</string>
     <string name="the_export_was_successful">Экспорт завершен</string>
     <plurals name="failed_to_import_files">
-        <item quantity="one">Ошибка импортирования %d файла</item>
-        <item quantity="few">Ошибка импортирования %d файлов</item>
-        <item quantity="many">Ошибка импортирования %d файлов</item>
-        <item quantity="other">Ошибка импортирования %d файлов</item>
+        <item quantity="one">Ошибка импортирования %d файла.</item>
+        <item quantity="few">Ошибка импортирования %d файлов.</item>
+        <item quantity="many">Ошибка импортирования %d файлов.</item>
+        <item quantity="other">Ошибка импортирования %d файлов.</item>
     </plurals>
     <string name="apk_updater">APK Updater</string>
     <string name="store">Магазин</string>
@@ -343,10 +340,10 @@
     <string name="keyboard_type">Тип клавиатуры</string>
     <string name="navigation">Навигация</string>
     <string name="touchscreen">Сенсорный экран</string>
-    <string name="pref_export_msg">Экспортировать правила блокировки, настроенные в App Manager на внешнее хранилище.</string>
-    <string name="pref_import_msg">Импортировать ранее экспортированные правила блокировки из App Manager.</string>
-    <string name="pref_import_watt_msg">Импортировать правила блокировки из Watt, каждый файл содержит правила для одного пакета, а имя файла является именем пакета с расширением XML.</string>
-    <string name="pref_import_blocker_msg">Импортировать правила блокировки из Blocker, каждый файл содержит правила для одного пакета.</string>
+    <string name="pref_export_msg">Экспортировать правила блокировки, настроенные в App Manager на внешнее хранилище</string>
+    <string name="pref_import_msg">Импортировать ранее экспортированные правила блокировки из App Manager</string>
+    <string name="pref_import_watt_msg">Импортировать правила блокировки из Watt, каждый файл содержит правила для одного пакета, а имя файла является именем пакета с расширением XML</string>
+    <string name="pref_import_blocker_msg">Импортировать правила блокировки из Blocker, каждый файл содержит правила для одного пакета</string>
     <string name="pref_app_theme">Тема приложения</string>
     <string name="follow_system">Согласно системным настройкам</string>
     <string name="battery_mode">Режим батареи</string>
@@ -404,8 +401,7 @@
     <string name="community_links">Канал с обновлениями: https://t.me/AppManagerChannel
         \nГруппа поддержки: https://t.me/AppManagerAndroid</string>
     <string name="pref_import_existing">Импорт существующих правил</string>
-    <string name="pref_import_existing_msg">Добавить компоненты, отключенные другими приложениями, в App Manager.
-        Будьте осторожны при использовании этого инструмента, так как может быть много ложных срабатываний. Выбирайте только те приложения, в которых вы уверены.</string>
+    <string name="pref_import_existing_msg">Добавить компоненты, отключенные другими приложениями, в App Manager. Будьте осторожны при использовании этого инструмента, так как может быть много ложных срабатываний. Выбирайте только те приложения, в которых вы уверены</string>
     <string name="failed_to_get_data_usage_information">Не удалось получить информацию об использовании данных</string>
     <string name="clear_cache">Очистить кэш</string>
     <string name="block_unblock_trackers_description">Блокировать или разблокировать рекламу и компоненты отслеживания из всех установленных приложений</string>
@@ -503,7 +499,7 @@
     <string name="failed_to_delete_backup">Не удалось удалить резервную копию</string>
     <string name="failed_to_restore_backup">Не удалось восстановить резервную копию</string>
     <string name="apply_to_system_apps">Применить к системным приложениям</string>
-    <string name="apply_to_system_apps_question">Применить и к системным приложениям?</string>
+    <string name="apply_to_system_apps_question">Применить и к системным приложениям\? Если не уверены, выберите \"Нет\".</string>
     <string name="no">Нет</string>
     <string name="yes">Да</string>
     <string name="skip_signature_checks">Пропустить проверку подписи</string>
@@ -520,14 +516,14 @@
     <string name="website">Веб-сайт</string>
     <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">Очистить все правила</string>
-    <string name="pref_remove_all_rules_msg">Все настроенные заблокированные компоненты будут включены, операциям приложений будут присвоены значения по умолчанию и будут предоставлены разрешения.</string>
+    <string name="pref_remove_all_rules_msg">Все настроенные заблокированные компоненты будут включены, операциям приложений будут присвоены значения по умолчанию и будут предоставлены разрешения</string>
     <string name="are_you_sure">Вы уверены?</string>
     <string name="filter_apps_with_activities">Приложения с активити</string>
     <string name="toggle_default_app_ops">Переключение операций приложения по умолчанию</string>
-    <string name="installer_error_aborted">Установка не удалась из-за отмены или неожиданного закрытия сеанса.</string>
+    <string name="installer_error_aborted">Установка не удалась из-за отмены или неожиданного закрытия сеанса</string>
     <string name="installer_error_blocked_device">устройством</string>
     <string name="installer_error_blocked">Установка заблокирована %s</string>
-    <string name="installer_error_conflict">Невозможно установить приложение, поскольку оно конфликтует с уже установленным приложением с таким же именем пакета.</string>
+    <string name="installer_error_conflict">Невозможно установить приложение, поскольку оно конфликтует с уже установленным приложением с таким же именем пакета</string>
     <string name="installer_error_incompatible">Приложение несовместимо с этим устройством</string>
     <string name="installer_error_bad_apks">Выбраны недопустимые файлы APK</string>
     <string name="installer_error_storage">Недостаточно места для установки приложения</string>
@@ -544,7 +540,7 @@
     <string name="reinstall">Переустановить</string>
     <string name="unblock_trackers">Разблокировать трекеры</string>
     <string name="package_installer">Установщик пакетов</string>
-    <string name="install_in_progress">Идет установка...</string>
+    <string name="install_in_progress">Выполняется установка</string>
     <string name="installer_error_security">Нет доступа к файлам APK</string>
     <string name="installer_error_session_create">Не удалось создать сеанс установщика</string>
     <string name="installer_error_session_write">Не удалось записать в сеанс установщика</string>
@@ -561,4 +557,52 @@
     <string name="auto">Авто</string>
     <string name="current_language">Текущий язык: %s</string>
     <string name="choose_language">Выберите язык</string>
+    <string name="launch_mode_single_top">Единственный сверху</string>
+    <string name="touchscreen_finger">Палец</string>
+    <string name="touchscreen_stylus">Стилус</string>
+    <string name="touchscreen_no_touch">Без касаний</string>
+    <string name="navigation_wheel">Колесо</string>
+    <string name="navigation_trackball">Трекбол</string>
+    <string name="navigation_dial_pad">Циферблат</string>
+    <string name="navigation_no_nav">Нет навигации</string>
+    <string name="keyboard_12_keys">12 клавиш</string>
+    <string name="keyboard_qwerty">Qwerty</string>
+    <string name="keyboard_no_keys">Без клавиш</string>
+    <string name="_undefined">Неопределённый</string>
+    <string name="required">Требуется</string>
+    <string name="orientation_user_portrait">Пользовательская портретная</string>
+    <string name="orientation_user_landscape">Пользовательская альбомная</string>
+    <string name="orientation_sensor">По датчику</string>
+    <string name="orientation_sensor_portrait">Портретная по датчику</string>
+    <string name="orientation_sensor_landscape">Альбомная по датчику</string>
+    <string name="orientation_user">Пользовательская</string>
+    <string name="orientation_reverse_landscape">Перевёрнутая альбомная</string>
+    <string name="orientation_reverse_portrait">Перевёрнутый портрет</string>
+    <string name="orientation_portrait">Портретная</string>
+    <string name="orientation_full_sensor">Полностью по датчику</string>
+    <string name="orientation_no_sensor">Без датчика</string>
+    <string name="orientation_landscape">Альбомная</string>
+    <string name="orientation_full_user">Полностью пользовательская</string>
+    <string name="orientation_locked">Заблокированая</string>
+    <string name="orientation_behind">Позади</string>
+    <string name="orientation_unspecified">Неопределенная</string>
+    <string name="launch_mode_single_task">Одна задача</string>
+    <string name="launch_mode_single_instance">Единичный экземпляр</string>
+    <string name="launch_mode_multiple">Несколько</string>
+    <string name="locale_split_for_base_apk">%s локаль для базового APK</string>
+    <string name="locale_split_for_feature">%s локаль для %s</string>
+    <string name="abi_split_for_base_apk">%s код для базового APK</string>
+    <string name="abi_split_for_feature">%s код для %s</string>
+    <string name="density_split_for_base_apk">%s (%d DPI) ресурсы для базового APK</string>
+    <string name="density_split_for_feature">%s (%d DPI) ресурсы для функции %s</string>
+    <string name="unknown_split_for_base_apk">%s для базового APK</string>
+    <string name="unknown_split_for_feature">%s для функции %s</string>
+    <string name="split_feature_name">Функции: %s</string>
+    <string name="base_apk">Базовый APK</string>
+    <plurals name="alert_failed_to_enable">
+        <item quantity="one">Не удалось включить %s приложение</item>
+        <item quantity="few">Не удалось включить %s приложения</item>
+        <item quantity="many">Не удалось включить %s приложений</item>
+        <item quantity="other">Не удалось включить %s приложений</item>
+    </plurals>
 </resources>
