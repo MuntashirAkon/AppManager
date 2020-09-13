@@ -30,7 +30,6 @@
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="?actionBarSize"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -52,6 +51,7 @@
         android:layout_height="?actionBarSize"
         android:layout_gravity="bottom"
         android:theme="@style/AppTheme.BottomAppBar"
+        android:visibility="gone"
         app:menu="@menu/activity_running_apps_selection_actions"
         app:navigationIcon="@drawable/ic_baseline_clear_24">
 
@@ -63,7 +63,8 @@
             android:textSize="20sp"
             android:textColor="?android:attr/textColorPrimary"
             android:ellipsize="marquee"
-            tools:text="@tools:sample/lorem[4]" />
+            tools:text="@tools:sample/lorem[4]"
+            android:singleLine="true" />
 
     </com.google.android.material.bottomappbar.BottomAppBar>
 

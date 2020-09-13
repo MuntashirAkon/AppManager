@@ -1,0 +1,8 @@
+F-Droid doesn't support extended changelog. View in-app changelog for a more helpful changelog.
+- Custom language chooser
+- Multiple backup and for all users
+- Added tu and zh translations
+- Install xapk with Obb
+- Toybox supplied with AM
+- Various fixes and performance improvements.
+App data backup is still a experimental feature, please don't rely on it.

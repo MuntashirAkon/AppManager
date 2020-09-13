@@ -18,6 +18,49 @@
 <p>App Manager is now on F-Droid! Link: https://f-droid.org/packages/io.github.muntashirakon.AppManager</p><br />
 <p>Visit App Manager docs here: https://muntashirakon.github.io/AppManager</p><br />
 
+<h5>v2.5.14 (359) pre-release:</h5>
+&#x2022; <font color="#09868B">[Feature]</font> Added a custom language chooser<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added a flag to backup only apk file instead of the whole source directory<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added a flag to backup app data for all users<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added a flag to take multiple backups<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added enable option in batch ops<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added fast scroll for Main page and App Details page<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added flags to take obb/media backups<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added notification progressbar for backups<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added Russian (ru) and Chinese (zh) translations (the latter is unverified)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added swipe to refresh in the running apps page<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added the ability to select split apk files before installation<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added toybox within App Manager (doesn't work for ADB users)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Display notification after apk/apks/xapk install is complete<br />
+&#x2022; <font color="#09868B">[Feature]</font> Install apk using a foreground service instead of in the main thread<br />
+&#x2022; <font color="#09868B">[Feature]</font> Install xapk with obb files (old obb files will be deleted)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Open newly installed app from the confirmation notification<br />
+&#x2022; <font color="red">[Fix]</font> Added install support for non-root users (which was broken in 348)<br />
+&#x2022; <font color="red">[Fix]</font> Apply correct UID/GUID and permissions after restoring a backup<br />
+&#x2022; <font color="red">[Fix]</font> Automatically fail backup for apps that use Android KeyStore<br />
+&#x2022; <font color="red">[Fix]</font> Clear all extracted apk files after installation is finished<br />
+&#x2022; <font color="red">[Fix]</font> Disabled permission toggle for apps that has a target SDK version less than 23 (because they don't work)<br />
+&#x2022; <font color="red">[Fix]</font> Fixed apk files not correctly copied to the package installer<br />
+&#x2022; <font color="red">[Fix]</font> Fixed apk sharing via Bluetooth<br />
+&#x2022; <font color="red">[Fix]</font> Fixed detecting splits if their manifests don't have configForSplit<br />
+&#x2022; <font color="red">[Fix]</font> Fixed parsing data usage for old devices which resulted in crash<br />
+&#x2022; <font color="red">[Fix]</font> Fixed resetting app ops by resetting their parents instead of themselves<br />
+&#x2022; <font color="red">[Fix]</font> Fixed rules being applied or removed incorrectly<br />
+&#x2022; <font color="red">[Fix]</font> Fixed some apk files not parsed properly and resulted in crash<br />
+&#x2022; <font color="red">[Fix]</font> Improved adb/root detection<br />
+&#x2022; <font color="red">[Fix]</font> Install/disable/force-stop for current users only<br />
+&#x2022; <font color="red">[Fix]</font> Load backup metadata using root instead of using storage access permission<br />
+&#x2022; <font color="red">[Fix]</font> Perform 1-click ops in the same way batch operations are performed<br />
+&#x2022; <font color="red">[Fix]</font> Performance optimization for main page<br />
+&#x2022; <font color="red">[Fix]</font> Removed Shared Libs from What's New as it wasn't working properly<br />
+&#x2022; <font color="red">[Fix]</font> Removed sort by app size in favour of sdk in old devices<br />
+&#x2022; <font color="red">[Fix]</font> Replace action buttons with popup menu in running apps page<br />
+&#x2022; <font color="red">[Fix]</font> Update app info properly after a batch operation<br />
+&#x2022; <font color="red">[Fix]</font> Workaround for various deprecated libraries<br />
+
+<p>Due to some major changes, backup functionality has become incompatible with the previous versions. Data backup feature is still considered experimental and please do not rely on it to manage your backups yet. If you encounter any problem, please report to me without hesitation.</p><br />
+<p>Compatibility for blocking rules is removed for v2.5.6. If you're still using this version, update to v2.5.13, enable global component blocking (and disable it again) and then update to v2.5.14.</p><br />
+
 <h5>v2.5.13 (348):</h5>
 &#x2022; <font color="#09868B">[Feature]</font> Split apk install support (apks and xapk)<br />
 &#x2022; <font color="#09868B">[Feature]</font> Added an option to install apk (with apks and xapk) directly from FM or Browser<br />
@@ -33,7 +76,7 @@
 &#x2022; <font color="red">[Fix]</font> Fixed broken ADB support<br />
 &#x2022; <font color="red">[Fix]</font> Install app only for the current user at the time of restoring backups<br />
 
-<p>Data backup feature is now considered unstable. If you encounter any problem, please report to me without hesitation.</p><br />
+<p>Data backup feature is still considered experimental and please do not rely on it to manage your backups yet. If you encounter any problem, please report to me without hesitation.</p><br />
 <p>Visit https://muntashirakon.github.io/AppManager/changelog.html for a more helpful changelog.</p><br />
 
 <h5>v2.5.12 (341):</h5>
@@ -134,21 +177,4 @@
 &#x2022; <font color="red">[Fix]</font> Removed translation until the app is complete<br />
 &#x2022; <font color="red">[Fix]</font> Made links in the credit section clickable<br />
 &#x2022; <font color="red">[Fix]</font> Fixed various memory leaks<br />
-<br/>
-
-<h5>v2.5.8 (289):</h5>
-&#x2022; <font color="#09868B">[Feature]</font> Added import/export capabilities for blocking rules<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added ability to select themes (night/day)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added mode, duration, accept time, reject time for app ops<br />
-&#x2022; <font color="#09868B">[Feature]</font> Highlight running services<br />
-&#x2022; <font color="#09868B">[Feature]</font> Highlight disabled components not disabled within App Manager<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added swipe to refresh in the App Usage window<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added screen time percentage with indicator<br />
-&#x2022; <font color="#09868B">[Feature]</font> Separate instructions and about pages with fullscreen dialog for both<br />
-&#x2022; <font color="#09868B">[Feature]</font> Rounded overflow menu (still incomplete)<br />
-&#x2022; <font color="red">[Fix]</font> Fixed various device/SDK specific app ops issues<br />
-&#x2022; <font color="red">[Fix]</font> Stability improvements of the entire apps<br />
-&#x2022; <font color="red">[Fix]</font> Added <tt>ACCESS_NETWORK_STATE</tt> permission to support older operating systems<br />
-&#x2022; <font color="red">[Fix]</font> Fixed deleting all IFW rules when selecting apply global rules<br />
-&#x2022; <font color="red">[Fix]</font> Fixed various search issues<br />
 <br/>
