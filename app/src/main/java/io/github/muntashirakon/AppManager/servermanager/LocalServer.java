@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.SocketTimeoutException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -84,17 +85,21 @@ public class LocalServer {
         return mContext;
     }
 
-    LocalServerManager getLocalServerManager() {
-        return mLocalServerManager;
-    }
-
     public synchronized void checkConnect() throws Exception {
         mLocalServerManager.start();
     }
 
     public CallerResult exec(Caller caller) throws Exception {
-        checkConnect();
-        return mLocalServerManager.execNew(caller);
+        try {
+            checkConnect();
+            return mLocalServerManager.execNew(caller);
+        } catch (SocketTimeoutException e) {
+            e.printStackTrace();
+            closeBgServer();
+            // Retry
+            checkConnect();
+            return mLocalServerManager.execNew(caller);
+        }
     }
 
     public boolean isRunning() {
