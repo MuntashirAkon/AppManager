@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (C) 2020 Muntashir Al-Islam
   ~
@@ -13,9 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-
-<resources>
+  --><resources>
     <string name="app_name" translatable="false">App Manager</string>
     <string name="instructions_header">[These instructions are outdated and will no longer be
         updated. Visit the official docs site (https://muntashirakon.github.io/AppManager) to get
@@ -63,7 +62,8 @@
     <string name="input_features">Input features</string>
     <string name="manifest">Manifest</string>
     <string name="error">Error</string>
-    <string name="loading">Loading …</string> <!-- &#8230; = ... -->
+    <string name="loading">Loading…</string>
+    <!-- &#8230; = ... -->
     <string name="sort_by_app_label">App label</string>
     <string name="sort_by_package_name">Package name</string>
     <string name="sort_by_domain">User app first</string>
@@ -555,7 +555,7 @@
     <string name="abi_split_for_base_apk">%s code for base APK</string>
     <string name="locale_split_for_feature">%s locale for %s</string>
     <string name="locale_split_for_base_apk">%s locale for base APK</string>
-    <string name="empty" translatable="false" />
+    <string name="empty" translatable="false"/>
     <string name="_null" translatable="false">null</string>
     <string name="launch_mode_multiple">Multiple</string>
     <string name="launch_mode_single_instance">Single instance</string>
