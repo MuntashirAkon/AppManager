@@ -47,15 +47,21 @@ Telegram Support Group: https://t.me/AppManagerAndroid
 
 Telegram Update Channel: https://t.me/AppManagerChannel
 
-Help us translate App Manager at Crowdin: https://crwd.in/android-app-manager
+### Translation
+
+Help us translate App Manager at Weblate: https://hosted.weblate.org/engage/app-manager/
 
 Help up translate App Manager Docs at Crowdin: https://crwd.in/app-manager-docs
+
+[![Translation status](https://hosted.weblate.org/widgets/app-manager/-/multi-auto.svg)](https://hosted.weblate.org/engage/app-manager/)
 
 ### Mirrors
 
 Gitlab: https://gitlab.com/muntashir/AppManager
 
 Riseup: https://0xacab.org/muntashir/AppManager
+
+Codeberg: https://codeberg.org/muntashir/AppManager
 
 ### Screenshots
 

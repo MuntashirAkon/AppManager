@@ -1,7 +1,0 @@
-- Added AppOps manager (as App Ops tab) in the app details window (requires root)
-- Added a warning message when blocking is not enabled in the menu
-- Bug fixes including many API compatibility issues, disappearance of search results when back
-  button is pressed
-- Performance improvements such as loading app info/details in background displaying a progress bar
-  in the window
-- Ability to move the app to SD card for old versions of Android (credit: Atrate)

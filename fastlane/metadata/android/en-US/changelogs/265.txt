@@ -1,7 +1,0 @@
-- [Feature] Initial support for ADB over TCP (port 5555) for non-root users (See about section within the app for instruction)
-- [Fix] Fix importing rules from Watt and Blocker
-- [Fix] Display Aurora Droid in App Info window as a first priority over F-Droid
-- [Fix] Improved performance for component blocking
-- [Fix] Fix app op mode detection bug
-
-For root users, if you've skipped v2.5.6, you may need to apply all rules globally in Settings in order for them to work.

@@ -1,5 +1,0 @@
-- Uninstall/enable/disable/force-stop apps (some actions require root access)
-- View storage info of any app (requires “Usage Access” permission)
-- Clear data/cache of any app (requires root access)
-- Add the option to grant/revoke dangerous permissions (requires root access)
-- Various bug fixes and performance improvements

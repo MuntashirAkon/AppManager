@@ -1,4 +1,0 @@
-- Added the ability to search app components (activities, services, etc.)
-- Updated 3xodus database from ClassyShark3xodus
-- Input fields are now follow material design guidelines
-- Various bug fixes and performance improvements

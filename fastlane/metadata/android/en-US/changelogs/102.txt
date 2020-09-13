@@ -1,2 +1,0 @@
-- Add the ability to view/edit/delete shared preferences (requires root)
-- Bug fixes and performance improvements

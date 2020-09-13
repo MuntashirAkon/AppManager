@@ -1,7 +1,0 @@
-- Initial release
-- Added Material design and vector graphics
-- Changed min API to 21, max to 29
-- Change almost every layouts and menus
-- Get rid of most png icons in favour of vector icons
-
-

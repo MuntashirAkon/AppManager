@@ -1,5 +1,0 @@
-- Add support for apk sharing
-- Enable component (activities, broadcast receivers, servieces) blocking
-- Opening packages in Aurora Droid alongside F-Droid
-- Allow launching app, and its directories via default file manager
-- Add custom day/night theme

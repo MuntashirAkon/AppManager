@@ -1,4 +1,0 @@
-- Merged Activity Launcher features: Activity can be launched or shortcuts can be created from the Activities tab
-- Merged ClassyShark3xodus features: Scan apps for trackers directly within the app
-- Added Custom manifest and class viewer: This is done to reduce the app size
-

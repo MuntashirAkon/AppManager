@@ -1,7 +1,0 @@
-- [Feature] Added running apps/process viewer (requires root)
-- [Feature] Added usage details viewer
-- [Feature] Added apk updater and aurora store support
-- [Feature] Save modified values of app ops and permissions to the disk (on progress)
-- [Fix] Uninstall support for non-root users
-- [Fix] Restructure app usage
-- [Fix] Added more clarity as well as improve performance in the app details window

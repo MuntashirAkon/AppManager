@@ -6,6 +6,7 @@
 /.idea/libraries
 .DS_Store
 /build
+/app/preRelease
 /app/release
 /app/libs/am-common.jar
 /app/src/main/jniLibs
