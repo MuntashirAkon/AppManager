@@ -19,7 +19,6 @@ package io.github.muntashirakon.AppManager.runningapps;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,9 +52,9 @@ final class ProcessParser {
     }
 
     @NonNull
-    List<ProcessItem> parse() {
+    HashMap<Integer, ProcessItem> parse() {
         Runner.Result result = Runner.runCommand(new String[]{Runner.TOYBOX, "ps", "-dwZ", "-o", "PID,PPID,RSS,VSZ,USER,UID,STAT,NAME"});
-        List<ProcessItem> processItems = new ArrayList<>();
+        HashMap<Integer, ProcessItem> processItems = new HashMap<>();
         if (result.isSuccessful()) {
             List<String> processInfoLines = result.getOutputAsList(1);
             for (String processInfoLine : processInfoLines) {
@@ -63,7 +62,7 @@ final class ProcessParser {
                     continue;
                 try {
                     ProcessItem processItem = parseProcess(processInfoLine);
-                    processItems.add(processItem);
+                    processItems.put(processItem.pid, processItem);
                 } catch (Exception ignore) {
                 }
             }
@@ -74,8 +73,7 @@ final class ProcessParser {
     @NonNull
     private ProcessItem parseProcess(String line) throws Exception {
         Matcher matcher = PROCESS_MATCHER.matcher(line);
-        if (matcher.find() && matcher.groupCount() >= 10) {
-            Log.e("Group Count", "" + matcher.groupCount());
+        if (matcher.find() && matcher.groupCount() == 10) {
             String processName = matcher.group(10);
             ProcessItem processItem;
             if (installedPackages.containsKey(processName)) {
@@ -85,7 +83,7 @@ final class ProcessParser {
                 processItem.name = pm.getApplicationLabel(packageInfo.applicationInfo).toString();
             } else {
                 processItem = new ProcessItem();
-                processItem.name = matcher.group(10);
+                processItem.name = processName;
             }
             //noinspection ConstantConditions
             processItem.pid = Integer.parseInt(matcher.group(2));
@@ -108,7 +106,7 @@ final class ProcessParser {
 
     private void getInstalledPackages() {
         List<PackageInfo> packageInfoList = new ArrayList<>();
-        for (int userHandle: Users.getUsersHandles()) {
+        for (int userHandle : Users.getUsersHandles()) {
             try {
                 packageInfoList.addAll(ApiSupporter.getInstance(LocalServer.getInstance())
                         .getInstalledPackages(0, userHandle));
@@ -117,7 +115,7 @@ final class ProcessParser {
             }
         }
         installedPackages = new HashMap<>(packageInfoList.size());
-        for (PackageInfo info: packageInfoList) {
+        for (PackageInfo info : packageInfoList) {
             installedPackages.put(info.packageName, info);
         }
     }

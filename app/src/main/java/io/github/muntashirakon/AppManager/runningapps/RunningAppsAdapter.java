@@ -25,21 +25,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
@@ -51,84 +47,41 @@ import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-public class RunningAppsAdapter extends BaseAdapter implements Filterable {
-    private LayoutInflater mLayoutInflater;
-    private Filter mFilter;
-    private String mConstraint;
-    private List<ProcessItem> mDefaultList;
-    private List<ProcessItem> mAdapterList;
+public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.ViewHolder> {
     private RunningAppsActivity mActivity;
+    private RunningAppsViewModel mModel;
     private boolean isAdbMode = false;
 
     private int mColorTransparent;
     private int mColorSemiTransparent;
     private int mColorRed;
+    private int mColorSelection;
 
     RunningAppsAdapter(@NonNull RunningAppsActivity activity) {
         mActivity = activity;
-        mLayoutInflater = activity.getLayoutInflater();
+        mModel = activity.mModel;
 
         mColorTransparent = Color.TRANSPARENT;
         mColorSemiTransparent = ContextCompat.getColor(activity, R.color.semi_transparent);
         mColorRed = ContextCompat.getColor(activity, R.color.red);
+        mColorSelection = ContextCompat.getColor(activity, R.color.highlight);
     }
 
-    void setDefaultList(List<ProcessItem> list) {
-        mDefaultList = list;
-        mAdapterList = list;
+    void setDefaultList() {
         isAdbMode = AppPref.isAdbEnabled();
-        if (RunningAppsActivity.mConstraint != null
-                && !RunningAppsActivity.mConstraint.equals("")) {
-            getFilter().filter(RunningAppsActivity.mConstraint);
-        }
         notifyDataSetChanged();
     }
 
+    @NonNull
     @Override
-    public int getCount() {
-        return mAdapterList == null ? 0 : mAdapterList.size();
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_running_app, parent, false);
+        return new RunningAppsAdapter.ViewHolder(view);
     }
 
     @Override
-    public ProcessItem getItem(int position) {
-        return mAdapterList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return mDefaultList.indexOf(mAdapterList.get(position));
-    }
-
-    static class ViewHolder {
-        ImageView icon;
-        ImageView more;
-        TextView processName;
-        TextView packageName;
-        TextView processIds;
-        TextView memoryUsage;
-        TextView userInfo;
-        IconLoaderThread iconLoader;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.item_running_app, parent, false);
-            holder = new ViewHolder();
-            holder.icon = convertView.findViewById(R.id.icon);
-            holder.more = convertView.findViewById(R.id.more);
-            holder.processName = convertView.findViewById(R.id.process_name);
-            holder.packageName = convertView.findViewById(R.id.package_name);
-            holder.processIds = convertView.findViewById(R.id.process_ids);
-            holder.memoryUsage = convertView.findViewById(R.id.memory_usage);
-            holder.userInfo = convertView.findViewById(R.id.user_info);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-            if (holder.iconLoader != null) holder.iconLoader.interrupt();
-        }
-        ProcessItem processItem = mAdapterList.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        @NonNull ProcessItem processItem = mModel.getProcessItem(position);
         ApplicationInfo applicationInfo;
         if (processItem instanceof AppProcessItem) {
             applicationInfo = ((AppProcessItem) processItem).packageInfo.applicationInfo;
@@ -138,9 +91,9 @@ public class RunningAppsAdapter extends BaseAdapter implements Filterable {
         holder.iconLoader = new IconLoaderThread(holder.icon, applicationInfo);
         holder.iconLoader.start();
         // Set process name
-        if (mConstraint != null && processName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
+        if (mModel.getQuery() != null && processName.toLowerCase(Locale.ROOT).contains(mModel.getQuery())) {
             // Highlight searched query
-            holder.processName.setText(Utils.getHighlightedText(processName, mConstraint, mColorRed));
+            holder.processName.setText(Utils.getHighlightedText(processName, mModel.getQuery(), mColorRed));
         } else {
             holder.processName.setText(processName);
         }
@@ -223,47 +176,45 @@ public class RunningAppsAdapter extends BaseAdapter implements Filterable {
                 popupMenu.show();
             }
         });
-        convertView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
-        return convertView;
+        // Set background colors
+        holder.itemView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
+        if (processItem.selected) holder.itemView.setBackgroundColor(mColorSelection);
+        // Set selections
+        holder.icon.setOnClickListener(v -> {
+            if (processItem.selected) mModel.deselect(processItem.pid);
+            else mModel.select(processItem.pid);
+        });
     }
 
     @Override
-    public Filter getFilter() {
-        if (mFilter == null)
-            mFilter = new Filter() {
-                @Override
-                protected FilterResults performFiltering(CharSequence charSequence) {
-                    String constraint = charSequence.toString().toLowerCase(Locale.ROOT);
-                    mConstraint = constraint;
-                    FilterResults filterResults = new FilterResults();
-                    if (constraint.length() == 0) {
-                        filterResults.count = 0;
-                        filterResults.values = null;
-                        return filterResults;
-                    }
+    public long getItemId(int position) {
+        return position;
+    }
 
-                    List<ProcessItem> list = new ArrayList<>(mDefaultList.size());
-                    for (ProcessItem item : mDefaultList) {
-                        if (item.name.toLowerCase(Locale.ROOT).contains(constraint))
-                            list.add(item);
-                    }
+    @Override
+    public int getItemCount() {
+        return mModel.getCount();
+    }
 
-                    filterResults.count = list.size();
-                    filterResults.values = list;
-                    return filterResults;
-                }
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView icon;
+        ImageView more;
+        TextView processName;
+        TextView packageName;
+        TextView processIds;
+        TextView memoryUsage;
+        TextView userInfo;
+        IconLoaderThread iconLoader;
 
-                @Override
-                protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                    if (filterResults.values == null) {
-                        mAdapterList = mDefaultList;
-                    } else {
-                        //noinspection unchecked
-                        mAdapterList = (List<ProcessItem>) filterResults.values;
-                    }
-                    notifyDataSetChanged();
-                }
-            };
-        return mFilter;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            icon = itemView.findViewById(R.id.icon);
+            more = itemView.findViewById(R.id.more);
+            processName = itemView.findViewById(R.id.process_name);
+            packageName = itemView.findViewById(R.id.package_name);
+            processIds = itemView.findViewById(R.id.process_ids);
+            memoryUsage = itemView.findViewById(R.id.memory_usage);
+            userInfo = itemView.findViewById(R.id.user_info);
+        }
     }
 }

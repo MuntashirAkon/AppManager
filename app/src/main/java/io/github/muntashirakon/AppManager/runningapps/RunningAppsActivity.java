@@ -24,17 +24,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.progressindicator.ProgressIndicator;
-
-import java.util.List;
-import java.util.Locale;
+import com.google.android.material.textview.MaterialTextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
@@ -49,6 +50,8 @@ public class RunningAppsActivity extends BaseActivity implements
     private RunningAppsAdapter mAdapter;
     private ProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
+    private MaterialTextView mCounterView;
+    RunningAppsViewModel mModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,18 +75,21 @@ public class RunningAppsActivity extends BaseActivity implements
             layoutParams.gravity = Gravity.END;
             actionBar.setCustomView(searchView, layoutParams);
         }
+        mModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(RunningAppsViewModel.class);
         mProgressIndicator = findViewById(R.id.progress_linear);
+        mCounterView = findViewById(R.id.bottom_appbar_counter);
+        BottomAppBar bottomAppBar = findViewById(R.id.bottom_appbar);
+        bottomAppBar.setNavigationOnClickListener(v -> mModel.clearSelections());
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setOnRefreshListener(this);
-        ListView mListView = findViewById(android.R.id.list);
-        mListView.setTextFilterEnabled(true);
-        mListView.setDividerHeight(0);
-        mListView.setEmptyView(findViewById(android.R.id.empty));
+        RecyclerView recyclerView = findViewById(R.id.list_item);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView.setEmptyView(findViewById(android.R.id.empty));
         mAdapter = new RunningAppsAdapter(this);
-        mListView.setAdapter(mAdapter);
+        recyclerView.setAdapter(mAdapter);
         mConstraint = null;
         enableKillForSystem = (boolean) AppPref.get(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL);
-        refresh();
     }
 
     @SuppressLint("RestrictedApi")
@@ -112,6 +118,17 @@ public class RunningAppsActivity extends BaseActivity implements
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mModel.getProcessLiveData().observe(this, processList -> {
+            mAdapter.setDefaultList();
+            mProgressIndicator.hide();
+        });
+        mModel.getSelection().observe(this, count ->
+                mCounterView.setText(getString(R.string.some_items_selected, count)));
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         refresh();
@@ -135,19 +152,12 @@ public class RunningAppsActivity extends BaseActivity implements
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mConstraint = newText;
-        if (mAdapter != null) mAdapter.getFilter().filter(newText.toLowerCase(Locale.ROOT));
+        new Thread(() -> mModel.setQuery(newText)).start();
         return true;
     }
 
     void refresh() {
-        new Thread(() -> {
-            List<ProcessItem> processItemList = new ProcessParser().parse();
-            runOnUiThread(() -> {
-                mAdapter.setDefaultList(processItemList);
-                mProgressIndicator.hide();
-            });
-
-        }).start();
+        mProgressIndicator.show();
+        new Thread(() -> mModel.loadProcesses()).start();
     }
 }
