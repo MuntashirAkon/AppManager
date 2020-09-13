@@ -306,7 +306,7 @@ public class OneClickOpsActivity extends BaseActivity {
                                             mProgressIndicator.show();
                                             Intent intent = new Intent(this, BatchOpsService.class);
                                             intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedPackages);
-                                            intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_BLOCK_COMPONENTS);
+                                            intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_IGNORE_APP_OPS);
                                             intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
                                             Bundle args = new Bundle();
                                             args.putIntArray(BatchOpsManager.ARG_APP_OPS, appOps);
