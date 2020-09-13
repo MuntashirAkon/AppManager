@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="disclaimer_header">SYARAT PEMAKAIAN / DISCLAIMER</string>
+    <string name="disclaimer_body">App Manajer menawarkan fungsi root yang mungkin dapat membahayakan perangkat Anda jika digunakan secara tidak benar. App Manajer tidak bertanggung jawab atas segala kerusakan yang dibuat oleh pengguna aplikasi ini. Jika Anda tidak sepenuhnya mengetahui cara kerja root maka Anda harus menghindarinya menggunakan opsi root hingga Anda sepenuhnya menyadari risikonya.
+
+\n\nTautan apa pun yang saya berikan ke aplikasi dan situs web lain adalah untuk keuntungan pengguna. Saya tidak bertanggung jawab atas konten apa pun yang mungkin Anda temukan dengan membuka tautan eksternal.
+
+\n\nDengan menggunakan App Manajer ini, Anda menerima tanggung jawab penuh atas penggunaan Anda sendiri dan tidak menerima kerusakan, klaim atau nilai uang akan diberikan karena penyalahgunaan.
+
+\n\nDengan menggunakan aplikasi ini, Anda menerima semua tanggung jawab untuk menggunakannya dan setuju bahwa saya tidak bertanggung jawab atas tindakan apa pun yang Anda lakukan yang berdampak buruk pada perangkat Anda.</string>
+    <string name="disclaimer_footer">© 2020 Muntashir Al-Islam</string>
+    <string name="disclaimer_agree_forever">Jangan pernah tampilkan ini lagi</string>
+    <string name="disclaimer_agree">Saya Setuju</string>
+    <string name="disclaimer_exit">Keluar</string>
+</resources>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2020 Muntashir Al-Islam
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="instructions_header">[Estas instrucciones están obsoletas y ya no serán
+        actualizadas. Visite el sitio oficial de documentación (https://muntashirakon.github.io/AppManager) para obtener
+        información actualizada]</string>
+    <string name="uninstall">Desinstalar</string>
+    <string name="permissions">Usar los permisos</string>
+    <string name="require_no_permission">No se requiere ningún permiso</string>
+    <string name="activities">Actividades</string>
+    <string name="launch">Lanzar</string>
+    <string name="unsupported">Sin soporte</string>
+    <string name="refresh">Actualizar</string>
+    <string name="no_activities">Sin actividades</string>
+    <string name="receivers">Receptores</string>
+    <string name="no_receivers">Sin receptores</string>
+    <string name="providers">Proveedores</string>
+    <string name="no_providers">Sin proveedores</string>
+    <string name="launch_mode">Modo de lanzamiento</string>
+    <string name="task_affinity">Afinidad de tareas</string>
+    <string name="sort_by_last_update">Última actualización</string>
+    <string name="authority">Autoridad</string>
+    <string name="service">Servicios</string>
+    <string name="no_service">Sin servicios</string>
+    <string name="orientation">Orientación</string>
+    <string name="soft_input">Modo de entrada suave</string>
+    <string name="flags">Banderas</string>
+    <string name="grant_uri_permission">Conceder permisos de URI</string>
+    <string name="path_permissions">Permisos de ruta</string>
+    <string name="read">Leer</string>
+    <string name="write">Escribir</string>
+    <string name="patterns_allowed">Patrones permitidos</string>
+    <string name="declared_permission">Permisos</string>
+    <string name="shared_libs">Bibliotecas compartidas</string>
+    <string name="group">Grupo</string>
+    <string name="protection_level">Nivel de protección</string>
+    <string name="no_feature">Sin caracteristicas</string>
+    <string name="sort_by_shared_user_id">ID de usuario compartido</string>
+    <string name="shared_user_id">ID de usuario compartido</string>
+    <string name="sort_by_sha">Firma</string>
+    <string name="signatures">Firmas</string>
+    <string name="no_signatures">Sin firmas</string>
+    <string name="configurations">Configuraciones</string>
+    <string name="no_configurations">Sin configuraciones</string>
+    <string name="input_features">Funciones de entrada</string>
+    <string name="error">Error</string>
+    <string name="loading">Cargando…</string>
+    <!-- &#8230; = ... -->
+    <string name="credits_message">A los autores de
+        \n- The Android Open Source Project
+        \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+        \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+        \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+        \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+        \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+        \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+        \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+        \nLogo credit: <a href="https://github.com/Atrate">Atrate</a>.
+    </string>
+    <string name="word_wrap">Cambiar el formato de las palabras</string>
+</resources>

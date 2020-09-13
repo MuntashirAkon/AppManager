@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2020 Muntashir Al-Islam
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="instructions_header">[এই নির্দেশাবলী পুরানো এবং আর আপডেট করা হবে না
+         অফিসিয়াল ডক সাইট  ভিজিট করুন (https://muntashirakon.github.io/AppManager)
+         আপডেট তথ্য পেতে]</string>
+    <string name="uninstall">আনইনস্টল</string>
+    <string name="require_no_permission">কোন অনুমতির প্রয়োজন নেই</string>
+    <string name="activities">ক্রিয়াকলাপ</string>
+    <string name="launch">চালু করুন</string>
+    <string name="unsupported">সমর্থিত নয়</string>
+    <string name="refresh">রিফ্রেশ</string>
+    <string name="no_activities">কোন কার্যক্রম নেই</string>
+    <string name="sort_by_last_update">সর্বশেষ আপডেট</string>
+    <string name="flags">ফ্ল্যাগসমূহ</string>
+    <string name="grant_uri_permission">ইউআরআই অনুমতি প্রদান করুন</string>
+    <string name="patterns_allowed">অনুমোদিত প্যাটার্ন</string>
+    <string name="declared_permission">অনুমতিসমূহ</string>
+    <string name="group">গ্রুপ</string>
+    <string name="protection_level">সুরক্ষা স্তর</string>
+    <string name="no_feature">কোন বৈশিষ্ট্য নেই</string>
+    <string name="error">ত্রুটি</string>
+    <string name="loading">লোড হচ্ছে …</string>
+    <!-- &#8230; = ... -->
+    <string name="sort_by_app_label">অ্যাপের নাম অনুসারে</string>
+    <string name="sort_by_package_name">প্যাকেজের নাম</string>
+    <string name="sort_by_domain">ব্যবহারকারীর অ্যাপ প্রথমে</string>
+    <string name="data_received">প্রাপ্ত ডেটা</string>
+    <string name="data_transmitted">প্রেরিত ডেটা</string>
+    <string name="data_usage_msg">সর্বশেষ বুট থেকে ডেটা ইউসেজ</string>
+    <string name="data_size">তথ্য</string>
+    <string name="cache_size">ক্যাশ</string>
+    <string name="obb_size">ওবিবি</string>
+    <string name="media_size">মিডিয়া</string>
+    <string name="app_not_installed">অ্যাপটি ইনস্টলড হয়নি</string>
+    <string name="system">সিস্টেম</string>
+    <string name="user">ব্যবহারকারী</string>
+    <string name="sort">শ্রেণীবিভক্ত</string>
+    <string name="version_name_with_code">সংস্করণ %s (%d)</string>
+    <string name="app_info">অ্যাপের তথ্য</string>
+    <string name="system_app">সিস্টেম অ্যাপ</string>
+    <string name="user_app">ব্যবহারকারীর অ্যাপ</string>
+    <string name="source_dir">মূল ডিরেক্টরি</string>
+    <string name="data_dir">ডেটা ডিরেক্টরি</string>
+    <string name="sdk_min">সর্বনিম্ন</string>
+    <string name="sdk_max">সর্বোচ্চ</string>
+    <string name="sdk_flags">ফ্ল্যাগসমূহ</string>
+    <string name="more_info">আরো তথ্য</string>
+    <string name="date_installed">ইনস্টলের তারিখ</string>
+    <string name="date_updated">আপডেটের তারিখ</string>
+    <string name="user_id">ব্যবহারকারীর আইডি</string>
+    <string name="main_activity">মূল একটিভিটি</string>
+    <string name="show_details">বিস্তারিত দেখান</string>
+    <string name="empty_package_name">প্যাকেজের নাম খালি</string>
+    <string name="instructions">নির্দেশনা</string>
+    <string name="error_verbose_pin_shortcut">বর্তমান লঞ্চার পিনশোর্টকট সমর্থন করে না। শর্টকাট তৈরি করতে ব্যর্থ।</string>
+    <string name="shortcut_name">শর্টকাটের নাম</string>
+    <string name="package_name">প্যাকেজের নাম</string>
+    <string name="license">লাইসেন্স</string>
+    <string name="third_party">তৃতীয় পক্ষের লাইব্রেরি এবং আইকন গুলো</string>
+    <string name="credits">ক্রেডিট</string>
+    <string name="view_trackers">ট্র্যাকার গুলো দেখুন</string>
+    <string name="view_summary">সারাংশ দেখুন</string>
+    <string name="toggle_class_listing">ক্লাস লিস্টিং টগল করুন</string>
+    <string name="found_trackers">পাওয়া ট্র্যাকার গুলো:</string>
+    <string name="tracker_details">ট্র্যাকারের বিস্তারিত</string>
+    <plurals name="main_list_date_days">
+        <item quantity="one">%s %d দিন</item>
+        <item quantity="other">%s %d দিন</item>
+    </plurals>
+    <string name="app_usage">অ্যাপ ব্যবহারের ডেটা</string>
+    <string name="usage_weekly">সাপ্তাহিক</string>
+    <string name="usage_monthly">মাসিক</string>
+    <string name="usage_yearly">বার্ষিক</string>
+    <string name="usage_today">আজ</string>
+    <string name="usage_7_days">গত ৭ দিন</string>
+    <string name="usage_30_days">গত ৩০ দিন</string>
+    <string name="usage_365_days">গত ৩৬৫ দিন</string>
+    <plurals name="usage_months">
+        <item quantity="one">%d মাস</item>
+        <item quantity="other">%d মাস</item>
+    </plurals>
+    <plurals name="usage_days">
+        <item quantity="one">%d দিন</item>
+        <item quantity="other">%d দিন</item>
+    </plurals>
+    <plurals name="usage_hours">
+        <item quantity="one">%d ঘণ্টা</item>
+        <item quantity="other">%d ঘণ্টা</item>
+    </plurals>
+    <string name="usage_min">%d মিনিট</string>
+    <string name="usage_less_than_a_minute">এক মিনিটেরও কম</string>
+    <string name="usage_last_used">সর্বশেষ ব্যবহৃত:</string>
+    <string name="go_back">পিছনে যান</string>
+    <string name="go">এগিয়ে যান</string>
+    <string name="grant_usage_access">ইউসেজ একসেস প্রদান করুন</string>
+    <string name="grant_usage_acess_message">অ্যাপ্লিকেশন ব্যবহারের ডেটা প্রদর্শনের জন্য ইউসেজ অ্যাক্সেস বাধ্যতামূলক।</string>
+    <string name="share_apk">এপিকে শেয়ার করুন</string>
+    <string name="failed_to_extract_apk_file">এপিকে এক্সট্র্যাক্ট করতে ব্যর্থ</string>
+    <string name="menu_remove_rules">বিধি সরান</string>
+    <string name="menu_apply_rules">বিধি প্রয়োগ করুন</string>
+    <string name="search">অনুসন্ধান</string>
+    <string name="aurora">অরোরা</string>
+    <string name="dev_protected_data_dir">ডিভাইস-সুরক্ষিত ডেটা ডিরেক্টরি</string>
+    <string name="process_name">প্রক্রিয়ার নাম</string>
+    <string name="no_code">কোনো কোড নেই</string>
+    <string name="updated_app">আপডেটেড</string>
+    <string name="test_only">পরীক্ষামূলক</string>
+    <string name="databases">ডেটাবেজ</string>
+    <string name="save">সংরক্ষণ করুন</string>
+    <string name="discard">বাতিল করুন</string>
+    <string name="delete">মুছুন</string>
+    <string name="deleted_successfully">সফলভাবে মুছে ফেলা হয়েছে</string>
+    <string name="deletion_failed">মুছতে ব্যর্থ</string>
+    <string name="saved_successfully">সফলভাবে সংরক্ষিত</string>
+    <string name="saving_failed">সংরক্ষণ করতে ব্যর্থ, আবার চেষ্টা করুন।</string>
+    <string name="string_value">স্ট্রিংয়ের মান</string>
+    <string name="long_integer_value">দীর্ঘ পূর্ণসংখ্যার মান</string>
+    <string name="integer_value">পূর্ণসংখ্যার মান</string>
+    <string name="decimal_value">দশমিকের মান</string>
+    <string name="boolean_value">বুলিয়ান এর মান</string>
+    <string name="select_type">প্রকার নির্বাচন করুন</string>
+    <string name="system_odex_not_supported">ওডেক্স এবং কিছু সিস্টেম অ্যাপস সমর্থিত নয়!</string>
+    <string name="add_item">যোগ করুন</string>
+    <string name="done">সম্পন্ন</string>
+    <string name="type_float">দশমিক সংখ্যা</string>
+    <string name="type_int">পূর্ণ সংখ্যা</string>
+    <string name="type_long">দীর্ঘ পূর্ণসংখ্যা</string>
+    <string name="error_evaluating_input">ইনপুট মূল্যায়নে ব্যর্থ</string>
+    <string name="key_name_cannot_be_null">মূল নামটি খালি থাকতে পারবে না</string>
+    <string name="disabled_app">ডিজ্যাবলড</string>
+    <string name="view_in_settings">সেটিংসে দেখুন</string>
+    <string name="uninstall_app_message">আপনি কি এই অ্যাপটি আনইনস্টল করতে চান?</string>
+    <string name="failed_to_uninstall">%s টি আনইনস্টল করতে ব্যর্থ.</string>
+    <string name="uninstalled_successfully">%s টি সফলভাবে আনইনস্টলড হয়েছে।</string>
+    <string name="uninstall_system_app_message">এটি একটি সিস্টেম অ্যাপ। আপনি কি এটি আনইনস্টল করার ব্যাপারে নিশ্চিত?</string>
+    <string name="stopped">স্থগিত</string>
+    <string name="disable">নিস্ক্রিয় করুন</string>
+    <string name="enable">সক্রিয় করুন</string>
+    <string name="failed_to_disable">%s টি ডিজ্যাবল করতে ব্যর্থ.</string>
+    <string name="failed_to_enable">%s টি এনাবল করতে ব্যর্থ.</string>
+    <string name="force_stop">স্থগিত রাখুন</string>
+    <string name="failed_to_stop">%s টি কাটতে ব্যার্থ.</string>
+    <string name="storage_and_cache">স্টোরেজ এবং ক্যাশে</string>
+    <string name="total_size">মোট</string>
+    <string name="app_size">অ্যাপ</string>
+    <string name="app_ops">অ্যাপ অপ্স</string>
+    <string name="no_app_ops">কোনো অ্যাপ অপারেশন নেই</string>
+    <string name="pref_root_mode_enabled">রুট মোড</string>
+    <string name="pref_root_mode_enabled_msg">রুট মোড চালু করলে এই অ্যাপটির সব রুটের বৈশিষ্ট্যগুলি সক্রিয় হয়ে যায়, যখন এটি বন্ধ থাকে এডিবি মোডটি স্বয়ংক্রিয়ভাবে সনাক্ত হয়</string>
+    <string name="pref_usage_access_enabled">ইউসেজ অ্যাক্সেস</string>
+    <string name="pref_usage_access_enabled_msg">ইউসেজ অ্যাক্সেস সক্ষম করার মাধ্যমে আপনি আপনার অ্যাপ ব্যবহারের পরিসংখ্যান এবং অ্যাপ ডেটার তথ্য দেখতে পারবেন</string>
+    <string name="app_settings">সেটিংস</string>
+    <string name="only_works_in_root_mode">শুধুমাত্র রুট মোডে ব্যবহারযোগ্য</string>
+    <string name="usage_yesterday">গতকাল</string>
+    <string name="exodus_link">\u03b5xodus এর লিংক</string>
+    <string name="sort_by_disabled_app">ডিজ্যাবলড গুলো প্রথমে</string>
+    <string name="sort_by_blocked_components">ব্লকড গুলো শুরুতে</string>
+    <string name="external_data_dir">বাহ্যিক ডেটা ডিরেক্টরি</string>
+    <string name="external_multiple_data_dir">বাহ্যিক ডেটা ডিরেক্টরি %d</string>
+    <plurals name="no_of_times_opened">
+        <item quantity="one">%d বার</item>
+        <item quantity="other">%d বার</item>
+    </plurals>
+    <string name="sort_by_last_used">সর্বশেষ ব্যবহৃত</string>
+    <string name="sort_by_mobile_data">মোবাইল ডাটা</string>
+    <string name="pref_import_export_blocking_rules">ব্লকিং নীতিগুলো ইম্পোর্ট/এক্সপোর্ট করুন</string>
+    <string name="pref_import_watt">ওয়াট(Watt) থেকে ইম্পোর্ট করুন</string>
+    <string name="pref_import_blocker">ব্লকার থেকে ইম্পোর্ট করুন</string>
+    <string name="the_import_was_successful">ইম্পর্টটি সফল হয়েছে</string>
+    <string name="the_export_was_successful">এক্সপোর্টটি সফল হয়েছে</string>
+    <string name="apk_updater">এপিকে আপডেটর</string>
+    <string name="store">স্টোর</string>
+    <string name="running_apps">চলমান অ্যাপসমূহ</string>
+    <string name="no_running_apps">কোনও অ্যাপ চলমান নেই</string>
+    <string name="kill_process">কেটে দিন</string>
+    <string name="pid_and_ppid">প্রক্রিয়ার আইডি: %d, প্যারেন্ট প্রক্রিয়ার আইডি: %d</string>
+    <string name="memory_virtual_memory">মেমোরি: %s, ভার্চুয়াল মেমোরি: %s</string>
+    <string name="user_and_uid">ব্যবহারকারী: %s (%d)</string>
+    <string name="clear_data">তথ্য মুছুন</string>
+    <string name="backup_apk">এপিকের ব্যাকআপ নিন</string>
+    <string name="backup_restore">ব্যাকআপ/পুনরুদ্ধার</string>
+    <string name="export_blocking_rules">ব্লকিং বিধিগুলো এক্সপোর্ট করুন</string>
+    <string name="some_items_selected">%d টি নির্বাচিত</string>
+    <plurals name="alert_failed_to_clear_data">
+        <item quantity="one">%d অ্যাপটি থেকে ডাটা মুছতে ব্যর্থ</item>
+        <item quantity="other">%d অ্যাপগুলো থেকে ডাটা মুছতে ব্যর্থ</item>
+    </plurals>
+    <plurals name="alert_failed_to_disable">
+        <item quantity="one">%d অ্যাপটি ডিজ্যাবল করতে ব্যর্থ</item>
+        <item quantity="other">%d অ্যাপস গুলো ডিজ্যাবল করতে ব্যর্থ</item>
+    </plurals>
+    <plurals name="alert_failed_to_uninstall">
+        <item quantity="one">%d অ্যাপটি আনইনস্টল করতে ব্যর্থ</item>
+        <item quantity="other">%d অ্যাপ গুলো আনইনস্টল করতে ব্যর্থ</item>
+    </plurals>
+    <string name="the_operation_was_successful">ক্রিয়াটি সফল হয়েছে</string>
+    <string name="toggle_kill_for_system_apps">সিস্টেম অ্যাপগুলোর জন্য কিল অপশনটি টগল করুন</string>
+    <string name="permission_name">অনুমতির নাম</string>
+    <string name="mode">ধরন</string>
+    <string name="running">চলমান</string>
+    <string name="duration">সময়সীমা</string>
+    <string name="ago">পূর্বে</string>
+    <string name="pref_app_theme">অ্যাপের থিম</string>
+    <string name="follow_system">সিস্টেমকে অনুসরণ করুন</string>
+    <string name="battery_mode">ব্যাটারী মোড</string>
+    <string name="day">দিন</string>
+    <string name="night">রাত</string>
+    <string name="select_theme">থিম নির্বাচন করুন</string>
+    <string name="apply">প্রয়োগ করুন</string>
+    <string name="current_theme">বর্তমান থীম: %s</string>
+    <string name="version">সংস্করণ</string>
+    <string name="sort_by_wifi_data">ওয়াইফাই ডেটা</string>
+    <string name="block_trackers">ট্র্যাকারসমূহ ব্লক করুন</string>
+    <string name="reset_to_default">পূর্ব-নির্ধারিত অবস্থায় ফেরত</string>
+    <string name="sort_by_app_ops_names">অ্যাপ অপ্সের নাম</string>
+    <string name="sort_by_app_ops_values">অ্যাপ অপ্সের মান</string>
+    <string name="sort_by_permission_names">অনুমতির নাম</string>
+    <string name="sort_by_dangerous_permissions">ক্ষতিকর গুলো প্রথমে</string>
+    <string name="deny_dangerous_permissions">বিপজ্জনক অনুমতি অগ্রাহ্য করুন</string>
+    <string name="sort_by_tracker_components">ট্র্যাকার প্রথমে</string>
+    <string name="unknown_op">অজানা অপারেশন</string>
+    <string name="failed_to_disable_trackers">ট্র্যাকার ডিজ্যাবল করতে ব্যর্থ</string>
+    <string name="trackers_disabled_successfully">ট্র্যাকারগুলো সফলভাবে ডিজ্যাবল করা হয়েছে</string>
+    <plurals name="alert_failed_to_disable_trackers">
+        <item quantity="one">%d অ্যাপ থেকে ট্র্যাকারদের ডিজ্যাবল করতে ব্যর্থ</item>
+        <item quantity="other">%d অ্যাপস গুলো থেকে ট্র্যাকারদের অক্ষম করতে ব্যর্থ</item>
+    </plurals>
+    <string name="failed_to_grant_permission">অনুমতি দিতে ব্যর্থ</string>
+    <string name="failed_to_revoke_permission">অনুমতি প্রত্যাহার করতে ব্যর্থ</string>
+    <string name="failed_to_reset_app_ops">অ্যাপস অপ রিসেট করতে ব্যর্থ</string>
+    <string name="failed_to_deny_dangerous_perms">সব বিপজ্জনক অনুমতি গুলো অগ্রাহ্য করতে ব্যর্থ</string>
+    <string name="failed_to_deny_dangerous_app_ops">সব বিপজ্জনক অ্যাপ অপস এর গুলো অগ্রাহ্য করতে ব্যর্থ</string>
+    <string name="launch_app">চালু করুন</string>
+    <string name="never_ask">আর বলবেন না</string>
+    <string name="one_click_ops">১-ক্লিক অপস</string>
+    <string name="changelog">পরিবর্তনসূচী</string>
+    <string name="scanning_is_still_in_progress">স্ক্যান করা এখনও চলছে</string>
+    <plurals name="no_of_trackers">
+        <item quantity="one">%d টি ট্র্যাকার</item>
+        <item quantity="other">%d টি ট্র্যাকার</item>
+    </plurals>
+    <string name="install">ইনস্টল</string>
+    <string name="update">আপডেট</string>
+    <string name="source_code">সোর্স কোড</string>
+    <string name="community">টেলিগ্রাম কমিউনিটি</string>
+    <string name="community_links">আপডেটের চ্যানেল: https://t.me/AppManagerChannel
+        \nSupport Group: https://t.me/AppManagerAndroid</string>
+    <string name="clear_cache">ক্যাশে মুছুন</string>
+    <string name="block_unblock_trackers_description">সব ইনস্টল থাকা অ্যাপস গুলো থেকে বিজ্ঞাপন এবং ট্র্যাকিং উপাদানগুলিকে ব্লক/আনব্লক করুন</string>
+    <string name="clear_data_from_uninstalled_apps">আনইনস্টলড অ্যাপগুলো থেকে তথ্য মুছুন</string>
+    <string name="clear_app_cache">অ্যাপের ক্যাশ পরিষ্কার করুন</string>
+    <string name="clear_app_cache_description">সকল অ্যাপ হতে ক্যাশ মুছে ফেলুন</string>
+    <string name="no_tracker_found">কোনো ট্র্যাকার পাওয়া যায়নি</string>
+    <string name="filtered_packages">ফিল্টার করা প্যাকেজ গুলো</string>
+    <string name="input_app_ops">অ্যাপ অপস এর মান ইনপুট করুন</string>
+    <string name="only_works_in_root_or_adb_mode">শুধুমাত্র রুট অথবা এডিবি মোডে ব্যবহারযোগ্য</string>
+    <string name="termux">টার্মাক্স</string>
+    <string name="package_name_is_installed_successfully">%s টি সফলভাবে ইনস্টল হয়েছে</string>
+    <string name="failed_to_install_package_name">%s টি ইনস্টল করতে ব্যর্থ</string>
+    <string name="filter_user_apps">ব্যবহারকারীর অ্যাপসমূহ</string>
+    <string name="filter_system_apps">সিস্টেম অ্যাপসমূহ</string>
+    <string name="select_all">সবগুলো নির্বাচন করুন</string>
+    <string name="filter_disabled_apps">ডিজ্যাবলড অ্যাপস</string>
+    <string name="installed_version">ইনস্টলকৃত সংস্করণ</string>
+    <string name="trackers">ট্র্যাকারসমূহ</string>
+    <string name="features">বৈশিষ্ট্যসমূহ</string>
+    <string name="whats_new">নতুন কি</string>
+    <string name="blocking_rules">ব্লকিং এর বিধিগুলো</string>
+    <string name="exclude_cache">ক্যাশে বাদ দিন</string>
+    <string name="external_data">বাহ্যিক ডেটা</string>
+    <string name="data">তথ্য</string>
+    <string name="apk">এপিকে</string>
+    <string name="backup">ব্যাকআপ</string>
+    <string name="restore">পুনরুদ্ধার</string>
+    <string name="delete_backup">ব্যাকআপ মুছুন</string>
+    <plurals name="alert_failed_to_backup">
+        <item quantity="one">%d অ্যাপটি ব্যাকআপ করতে ব্যর্থ</item>
+        <item quantity="other">%d অ্যাপস গুলো পুনরুদ্ধার করতে ব্যর্থ</item>
+    </plurals>
+    <plurals name="alert_failed_to_restore">
+        <item quantity="one">%d অ্যাপটি পুনরুদ্ধার করতে ব্যর্থ</item>
+        <item quantity="other">%d অ্যাপস গুলো পুনরুদ্ধার করতে ব্যর্থ</item>
+    </plurals>
+    <plurals name="alert_failed_to_delete_backup">
+        <item quantity="one">%d অ্যাপটির ব্যাকআপ মুছতে করতে ব্যর্থ</item>
+        <item quantity="other">%d অ্যাপস গুলোর ব্যাকআপ মুছতে করতে ব্যর্থ</item>
+    </plurals>
+    <string name="failed_to_delete_backup">ব্যাকআপ মুছতে ব্যর্থ</string>
+    <string name="failed_to_restore_backup">ব্যাকআপ পুনরুদ্ধার করতে ব্যর্থ</string>
+    <string name="apply_to_system_apps">সিস্টেম অ্যাপসে প্রয়োগ করুন</string>
+    <string name="apply_to_system_apps_question">সিস্টেম অ্যাপ গুলোতেও প্রয়োগ করবেন? অনিশ্চিত হলে \'না\' বাছুন</string>
+    <string name="no">না</string>
+    <string name="yes">হ্যাঁ</string>
+    <string name="clear_data_message">আপনি কি এই অ্যাপ থেকে ডাটা মুছার বেপারে নিশ্চিত?</string>
+    <string name="clear">মুছুন</string>
+    <string name="failed_to_backup">ব্যাকআপ তৈরী করতে ব্যর্থ</string>
+    <string name="block">ব্লক</string>
+    <string name="unblock">আনব্লক</string>
+    <string name="block_unblock_trackers">ট্র্যাকার গুলো ব্লক/আনব্লক করুন</string>
+    <string name="export_icon">আইকন এক্সট্র্যাক্ট করুন</string>
+    <string name="open_in_termux">টার্মাক্সে খুলুন</string>
+    <string name="run_in_termux">টার্মাক্সে চালান</string>
+    <string name="website">ওয়েবসাইট</string>
+    <string name="pref_remove_all_rules">সমস্ত বিধি অপসারণ করুন</string>
+    <string name="are_you_sure">আপনি নিশ্চিত?</string>
+    <string name="toggle_default_app_ops">ডিফল্ট অ্যাপ অপস টগল করুন</string>
+    <string name="installer_error_blocked_device">ডিভাইস</string>
+    <string name="installer_error_incompatible">অ্যাপ্লিকেশনটি এই ডিভাইসের জন্য অসমর্থিত</string>
+    <string name="installer_error_storage">অ্যাপ ইনস্টল করার পর্যাপ্ত স্টোরেজ নেই</string>
+    <string name="installer_error_generic">ইনস্টলেশন ব্যর্থ হয়েছে</string>
+    <string name="operation_running">অপারেশন চলছে…</string>
+    <string name="full_stop_tap_to_see_details">. বিবরণ দেখার জন্য ট্যাপ করুন।</string>
+    <string name="try_again">আবার চেষ্টা করুন</string>
+    <string name="info">তথ্য</string>
+    <string name="install_app_message">আপনি কি এই অ্যাপটি ইনস্টল করতে চান?</string>
+    <string name="reinstall_app_message">আপনি কি এই অ্যাপটি পুনরায় ইনস্টল করতে চান?</string>
+    <string name="reinstall">পুনঃইনস্টল</string>
+    <string name="unblock_trackers">ট্র্যাকারসমূহ আনব্লক করুন</string>
+    <string name="install_in_progress">ইনস্টল হচ্ছে।</string>
+</resources>

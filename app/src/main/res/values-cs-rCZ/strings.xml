@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2020 Muntashir Al-Islam
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="uninstall">Odinstalovat</string>
+    <string name="require_no_permission">Nejsou vyžadována žádná oprávnění</string>
+    <string name="activities">Aktivity</string>
+    <string name="launch">Spustit</string>
+    <string name="error">Chyba</string>
+    <string name="loading">Načítání …</string>
+    <!-- &#8230; = ... -->
+    <string name="license">Licence</string>
+    <string name="usage_weekly">Za týden</string>
+    <string name="usage_monthly">Za měsíc</string>
+    <string name="usage_yearly">Za rok</string>
+    <string name="usage_today">Dnes</string>
+    <string name="usage_7_days">Posledních 7 dní</string>
+    <string name="usage_30_days">Posledních 30 dní</string>
+    <string name="usage_365_days">Posledních 365 dní</string>
+</resources>

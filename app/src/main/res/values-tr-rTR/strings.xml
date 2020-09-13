@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2020 Muntashir Al-Islam
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="uninstall">Uygulamayı Kaldır</string>
+    <string name="permissions">Kullanılan izinler</string>
+    <string name="require_no_permission">İzin gerektirmez</string>
+    <string name="activities">Etkinlikler</string>
+    <string name="launch">Başlat</string>
+    <string name="unsupported">Desteklenmiyor</string>
+    <string name="refresh">Yenile</string>
+    <string name="no_activities">Etkinlik yok</string>
+    <string name="receivers">Alıcılar</string>
+    <string name="no_receivers">Alıcılar yok</string>
+    <string name="providers">Sağlayıcılar</string>
+    <string name="no_providers">Sağlayıcı yok</string>
+    <string name="launch_mode">Başlatma Modu</string>
+    <string name="task_affinity">Görev İlgisi</string>
+    <string name="sort_by_last_update">Son güncelleme</string>
+    <string name="authority">Yetki</string>
+    <string name="service">Hizmetler</string>
+    <string name="no_service">Servis yok</string>
+    <string name="orientation">Yönlendirme</string>
+    <string name="soft_input">Yumuşak Giriş Modu</string>
+    <string name="flags">Etiketler</string>
+    <string name="grant_uri_permission">URI izinlerine izin ver</string>
+    <string name="path_permissions">Yol İzinleri</string>
+    <string name="read">Oku</string>
+    <string name="write">Yaz</string>
+    <string name="patterns_allowed">İzin verilen desenler</string>
+    <string name="declared_permission">İzinler</string>
+    <string name="shared_libs">Paylaşılan Kütüphaneler</string>
+    <string name="group">Grup</string>
+    <string name="protection_level">Güvenlik Seviyesi</string>
+    <string name="uses_feature">Özellikleri Kullanır</string>
+    <string name="gles_ver">GL ES sürümü gerekiyor</string>
+    <string name="no_feature">Özellik yok</string>
+    <string name="sort_by_shared_user_id">Paylaşılan kullanıcı kimliği</string>
+    <string name="shared_user_id">Paylaşılan kullanıcı kimliği</string>
+    <string name="sort_by_sha">İmza</string>
+    <string name="signatures">İmzalar</string>
+    <string name="no_signatures">İmza yok</string>
+    <string name="configurations">Yapılandırmalar</string>
+    <string name="no_configurations">Yapılandırma yok</string>
+    <string name="input_features">Giriş özellikleri</string>
+    <string name="manifest">Bildirim</string>
+    <string name="error">Hata</string>
+    <string name="loading">Yükleniyor…</string>
+    <!-- &#8230; = ... -->
+    <string name="sort_by_app_label">Uygulama etiketleri</string>
+    <string name="sort_by_package_name">Paket adı</string>
+    <string name="sort_by_domain">Kullanıcı uygulaması bölümleri</string>
+    <string name="data_received">Alınan veriler</string>
+    <string name="data_transmitted">İletilen veriler</string>
+    <string name="data_usage_msg">Son Önyüklemeden Bu Yana Veri Kullanımı</string>
+    <string name="about">Hakkında</string>
+    <string name="data_size">Kullanıcı Verisi</string>
+    <string name="cache_size">Önbellek</string>
+    <string name="obb_size">Obb</string>
+    <string name="media_size">Ortam</string>
+    <string name="app_not_installed">Uygulama yüklenmedi</string>
+    <string name="system">Sistem</string>
+    <string name="user">Kullanıcı</string>
+    <string name="sort">Sıralama</string>
+    <string name="version_name_with_code">Versiyon: %s (%d)</string>
+    <string name="app_info">Uygulama Bilgisi</string>
+    <string name="system_app">Sistem uygulamaları</string>
+    <string name="user_app">Kullanıcı uygulaması</string>
+    <string name="source_dir">Kaynak dizin</string>
+    <string name="data_dir">Veri Dizini</string>
+    <string name="sdk_min">En az</string>
+    <string name="sdk_max">En çok</string>
+    <string name="sdk_flags">Etiketler</string>
+    <string name="more_info">Daha Fazla Bilgi</string>
+    <string name="date_installed">Yükleme Tarihi</string>
+    <string name="date_updated">Güncellenme tarihi</string>
+    <string name="installer_app">İndirilen Uygulamalar</string>
+    <string name="user_id">Kullanıcı ID</string>
+    <string name="main_activity">Asıl Faaliyet</string>
+    <string name="show_details">Detayları Göster</string>
+    <string name="empty_package_name">Boş paket adı</string>
+    <string name="instructions">Açıklamalar</string>
+    <string name="error_creating_shortcut">Kısayol oluşturulurken hata oluştu</string>
+    <string name="error_verbose_pin_shortcut">Geçerli başlatıcısı \"PinShortcut\" özelliğini desteklemiyor. Kısayol oluşturulamıyor.</string>
+    <string name="grant_usage_acess_message">Uygulama kullanım bilgilerini görüntülemek için kullanıma erişim zorunludur.</string>
+    <string name="share_apk">APK\'yi Paylaş</string>
+    <string name="failed_to_extract_apk_file">Apk dosyası ayıklanamadı</string>
+    <string name="menu_remove_rules">Kuralları Kaldır</string>
+    <string name="menu_apply_rules">Kuralları Uygula</string>
+    <string name="search">Arama</string>
+    <string name="aurora">Şafak</string>
+    <string name="dev_protected_data_dir">Cihaz korumalı veri dizini</string>
+    <string name="native_library_dir">Yerel Jnı Kütüphane dizini</string>
+    <string name="process_name">İşlem adı</string>
+    <string name="no_code">Kod yok</string>
+    <string name="requested_large_heap">Büyük metin</string>
+    <string name="updated_app">Güncelleme</string>
+    <string name="select_all">Tümünü Seç</string>
+    <string name="filter_disabled_apps">Pasif uygulamalar</string>
+    <string name="installed_version">Yüklü Sürüm</string>
+    <string name="trackers">İzleyiciler</string>
+    <string name="components">Bileşenler</string>
+    <string name="features">Özellikler</string>
+    <string name="whats_new">Yenilikler</string>
+    <string name="blocking_rules">Reklam engelleme kuralları</string>
+    <string name="exclude_cache">Hariç tutulan yollar</string>
+    <string name="external_data">Harici Veri</string>
+    <string name="data">Veri</string>
+    <string name="apk">APK</string>
+    <string name="backup">Yedekleme</string>
+    <string name="restore">Geri Yükle</string>
+    <string name="delete_backup">Yedeklemeyi sil</string>
+    <string name="backup_options">Yedekleme Seçenekleri</string>
+    <string name="failed_to_delete_backup">Yedek oluşturma başarısız oldu</string>
+    <string name="failed_to_restore_backup">Yedek oluşturma başarısız oldu</string>
+    <string name="apply_to_system_apps">Sistem uygulamalarına Uygula</string>
+    <string name="apply_to_system_apps_question">Sistem uygulamaları için de geçerli mi? Emin değilseniz Hayır\'ı seçin.</string>
+    <string name="no">Hayır</string>
+    <string name="yes">Evet</string>
+    <string name="skip_signature_checks">İmza denetimlerini atla</string>
+    <string name="clear_data_message">Bu uygulamadan verileri temizlemek istediğinizden emin misiniz?</string>
+    <string name="clear">Temizle</string>
+    <string name="failed_to_backup">Yedek oluşturma başarısız oldu</string>
+</resources>

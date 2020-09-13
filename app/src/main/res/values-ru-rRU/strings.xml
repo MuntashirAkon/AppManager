@@ -29,7 +29,7 @@
     <string name="no_activities">Нет активити</string>
     <string name="receivers">Приемники</string>
     <string name="no_receivers">Нет приемников</string>
-    <string name="providers">Провайдеры</string>
+    <string name="providers">Поставщики</string>
     <string name="no_providers">Нет поставщиков</string>
     <string name="launch_mode">Режим запуска</string>
     <string name="task_affinity">Сочетание задачи</string>
@@ -40,7 +40,7 @@
     <string name="orientation">Ориентация</string>
     <string name="soft_input">Режим мягкого ввода</string>
     <string name="flags">Флаги</string>
-    <string name="grant_uri_permission">Предоставить разрешения URI</string>
+    <string name="grant_uri_permission">Предоставьте разрешения URI</string>
     <string name="path_permissions">Разрешения пути</string>
     <string name="read">Чтение</string>
     <string name="write">Запись</string>
@@ -63,10 +63,11 @@
     <string name="manifest">Манифест</string>
     <string name="error">Ошибка</string>
     <string name="loading">Загрузка…</string>
+    <!-- &#8230; = ... -->
     <string name="sort_by_app_label">Имя приложения</string>
     <string name="sort_by_package_name">Название пакета</string>
     <string name="sort_by_domain">Сначала пользовательские</string>
-    <string name="sort_by_target_sdk">Целевой SDK</string>
+    <string name="sort_by_target_sdk">Целевая версия SDK</string>
     <string name="data_received">Данных получено</string>
     <string name="data_transmitted">Данных отправлено</string>
     <string name="data_usage_msg">Использование данных с последнего запуска устройства</string>
@@ -174,8 +175,8 @@
     <string name="usage_less_than_a_minute">Меньше минуты</string>
     <string name="usage_last_used">Последний запуск:</string>
     <string name="go_back">Вернуться</string>
-    <string name="go">Вперед</string>
-    <string name="grant_usage_access">Предоставить доступ к использованию</string>
+    <string name="go">Разрешить</string>
+    <string name="grant_usage_access">Предоставьте доступ к использованию</string>
     <string name="grant_usage_acess_message">Разрешение доступа к использованию является обязательным для отображения информации об использовании приложений.</string>
     <string name="share_apk">Поделиться APK</string>
     <string name="failed_to_extract_apk_file">Не удалось извлечь файл APK</string>
@@ -199,7 +200,7 @@
     <string name="deleted_successfully">Удалено</string>
     <string name="deletion_failed">Не удалось удалить</string>
     <string name="saved_successfully">Сохранено</string>
-    <string name="saving_failed">Не удалось сохранить, попробуйте еще раз.</string>
+    <string name="saving_failed">Ошибка сохранения, повторите попытку.</string>
     <string name="string_value">Строковое значение</string>
     <string name="long_integer_value">Длинное целое значение</string>
     <string name="integer_value">Целое значение</string>
@@ -242,11 +243,11 @@
     <string name="rules_not_applied">Правила не применены</string>
     <string name="str_logo">Логотип</string>
     <string name="pref_root_mode_enabled">Режим root</string>
-    <string name="pref_root_mode_enabled_msg">Включение режима root активирует все функции этого приложения, режим ADB определяется автоматически, когда он отключен.</string>
+    <string name="pref_root_mode_enabled_msg">Включение режима root активирует все функции этого приложения, режим ADB определяется автоматически, когда он отключен</string>
     <string name="pref_global_blocking_enabled">Глобальная блокировка компонентов</string>
     <string name="pref_global_blocking_enabled_msg">Включение глобальной блокировки компонентов позволяет вам блокировать любой компонент любого приложения без явного включения блокировки для приложения.</string>
     <string name="pref_usage_access_enabled">Доступ к использованию</string>
-    <string name="pref_usage_access_enabled_msg">Включение доступа к использованию позволяет просматривать статистику использования и информацию о приложении.</string>
+    <string name="pref_usage_access_enabled_msg">Включение доступа к использованию позволяет просматривать статистику использования и информацию о приложении</string>
     <string name="app_settings">Настройки</string>
     <string name="only_works_in_root_mode">Доступно только в режиме root</string>
     <string name="usage_yesterday">Вчера</string>
@@ -278,11 +279,11 @@
         <item quantity="other">Ошибка импортирования %d файлов</item>
     </plurals>
     <string name="apk_updater">APK Updater</string>
-    <string name="store">Сохранить</string>
+    <string name="store">Магазин</string>
     <string name="running_apps">Работающие приложения</string>
     <string name="no_running_apps">Нет работающих приложений</string>
     <string name="kill_process">Закрыть</string>
-    <string name="disable_background_run">Отключить фоновый запуск приложения</string>
+    <string name="disable_background_run">Запретить работу в фоне</string>
     <string name="pid_and_ppid">Идентификатор процесса: %d, идентификатор родительского процесса: %d</string>
     <string name="memory_virtual_memory">Память: %s, виртуальная память: %s</string>
     <string name="user_and_uid">Пользователь: %s (%d)</string>
@@ -311,7 +312,7 @@
         <item quantity="other">Не удалось удалить %d приложений</item>
     </plurals>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">Не удалось отключить запуск в фоновом режиме для %d приложения</item>
+        <item quantity="one">Не удалось отключить работу в фоне для %d приложения</item>
         <item quantity="few">Не удалось отключить запуск в фоновом режиме для %d приложений</item>
         <item quantity="many">Не удалось отключить запуск в фоновом режиме для %d приложений</item>
         <item quantity="other">Не удалось отключить запуск в фоновом режиме для %d приложений</item>
@@ -347,10 +348,10 @@
     <string name="pref_import_watt_msg">Импортировать правила блокировки из Watt, каждый файл содержит правила для одного пакета, а имя файла является именем пакета с расширением XML.</string>
     <string name="pref_import_blocker_msg">Импортировать правила блокировки из Blocker, каждый файл содержит правила для одного пакета.</string>
     <string name="pref_app_theme">Тема приложения</string>
-    <string name="follow_system">Как в системных настройках</string>
+    <string name="follow_system">Согласно системным настройкам</string>
     <string name="battery_mode">Режим батареи</string>
-    <string name="day">Светлая</string>
-    <string name="night">Темная</string>
+    <string name="day">Светлая тема</string>
+    <string name="night">Темная тема</string>
     <string name="select_theme">Выберите тему</string>
     <string name="apply">Применить</string>
     <string name="current_theme">Текущая тема: %s</string>
@@ -407,7 +408,7 @@
         Будьте осторожны при использовании этого инструмента, так как может быть много ложных срабатываний. Выбирайте только те приложения, в которых вы уверены.</string>
     <string name="failed_to_get_data_usage_information">Не удалось получить информацию об использовании данных</string>
     <string name="clear_cache">Очистить кэш</string>
-    <string name="block_unblock_trackers_description">Блокировать или разблокировать рекламу и компоненты отслеживания из всех установленных приложений.</string>
+    <string name="block_unblock_trackers_description">Блокировать или разблокировать рекламу и компоненты отслеживания из всех установленных приложений</string>
     <string name="block_components_dots">Блокировка компонентов…</string>
     <string name="block_components_description">Заблокировать все компоненты, идентифицированные данными подписями</string>
     <string name="deny_app_ops_dots">Отклонить операции приложения…</string>
@@ -502,7 +503,7 @@
     <string name="failed_to_delete_backup">Не удалось удалить резервную копию</string>
     <string name="failed_to_restore_backup">Не удалось восстановить резервную копию</string>
     <string name="apply_to_system_apps">Применить к системным приложениям</string>
-    <string name="apply_to_system_apps_question">Применить и к системным приложениям? Выберите «нет», если не уверены.</string>
+    <string name="apply_to_system_apps_question">Применить и к системным приложениям?</string>
     <string name="no">Нет</string>
     <string name="yes">Да</string>
     <string name="skip_signature_checks">Пропустить проверку подписи</string>
@@ -543,7 +544,7 @@
     <string name="reinstall">Переустановить</string>
     <string name="unblock_trackers">Разблокировать трекеры</string>
     <string name="package_installer">Установщик пакетов</string>
-    <string name="install_in_progress">Идет установка…</string>
+    <string name="install_in_progress">Идет установка...</string>
     <string name="installer_error_security">Нет доступа к файлам APK</string>
     <string name="installer_error_session_create">Не удалось создать сеанс установщика</string>
     <string name="installer_error_session_write">Не удалось записать в сеанс установщика</string>

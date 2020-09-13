@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2020 Muntashir Al-Islam
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="uninstall">Видалити</string>
+    <string name="activities">Активність</string>
+    <string name="launch">Запустити</string>
+    <string name="unsupported">Не підтримується</string>
+    <string name="refresh">Оновити</string>
+    <string name="providers">Провайдери</string>
+    <string name="no_providers">Немає провайдерів</string>
+    <string name="launch_mode">Режим запуску</string>
+    <string name="sort_by_last_update">Останнє оновлення</string>
+    <string name="service">Служби</string>
+    <string name="no_service">Немає сервісів</string>
+    <string name="read">Читання</string>
+    <string name="write">Запис</string>
+    <string name="patterns_allowed">Дозволені шаблони</string>
+    <string name="declared_permission">Дозволи</string>
+    <string name="group">Група</string>
+    <string name="protection_level">Рівень захисту</string>
+    <string name="sort_by_sha">Підпис</string>
+    <string name="signatures">Підписи</string>
+    <string name="no_signatures">Немає підписів</string>
+    <string name="configurations">Конфігурації</string>
+    <string name="manifest">Маніфест</string>
+    <string name="error">Помилка</string>
+    <string name="loading">Завантаження …</string>
+    <!-- &#8230; = ... -->
+    <string name="about">Про додаток</string>
+    <string name="cache_size">Кеш</string>
+    <string name="obb_size">Obb</string>
+    <string name="instructions">Інструкції</string>
+    <string name="error_creating_shortcut">Помилка створення ярлика</string>
+    <string name="create_shortcut">Створити ярлик</string>
+    <string name="edit_shortcut">Редагувати ярлик</string>
+    <string name="class_name">Назва класу</string>
+    <string name="license">Ліцензія</string>
+    <string name="third_party">Сторонні бібліотеки та іконки</string>
+    <string name="credits">Автори</string>
+</resources>

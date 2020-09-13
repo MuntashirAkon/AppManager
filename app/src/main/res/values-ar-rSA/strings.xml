@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2020 Muntashir Al-Islam
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="uninstall">إلغاء التثبيت</string>
+    <string name="permissions">إستخدام الأذونات</string>
+    <string name="require_no_permission">لا توجد أذونات مطلوبة</string>
+    <string name="activities">الأنشطة</string>
+    <string name="launch">البدء</string>
+    <string name="unsupported">غير مدعوم</string>
+    <string name="refresh">تحديث</string>
+    <string name="no_activities">لا توجد أي أنشطة</string>
+    <string name="receivers">الاستقبال</string>
+    <string name="no_receivers">لا يوجد إستقبال</string>
+    <string name="providers">مقدمي الخدمات</string>
+    <string name="no_providers">لا يوجد مقدمي</string>
+    <string name="launch_mode">وضع التشغيل</string>
+    <!-- &#8230; = ... -->
+    <string name="import_options">خيارات الاستيراد</string>
+    <string name="export_options">خيارات التصدير</string>
+    <string name="import_failed">فشل في الاستيراد!</string>
+    <string name="export_failed">فشل في التصدير!</string>
+</resources>

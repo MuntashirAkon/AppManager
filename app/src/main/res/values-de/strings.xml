@@ -448,14 +448,6 @@ Sei vorsichtig wenn Du dies tust: Es kann hierbei zu sehr vielen falsch-positive
         <item quantity="one">Deaktivieren der Tracker aus %d App(s) fehlgeschlagen</item>
         <item quantity="other">Deaktivieren der Tracker aus %d Apps fehlgeschlagen</item>
     </plurals>
-    <plurals name="alert_failed_to_block_components">
-        <item quantity="one">Fehler beim Blockieren von Komponenten der %d App</item>
-        <item quantity="other">Failed to block components for %d apps</item>
-    </plurals>
-    <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="one">Fehler beim Verweigern von App-Operationen für %d App</item>
-        <item quantity="other">Failed to deny app ops for %d apps</item>
-    </plurals>
     <string name="failed_to_delete_backup">Löschen der Sicherung fehlgeschlagen</string>
     <string name="failed_to_restore_backup">Wiederherstellen der Sicherung fehlgeschlagen</string>
     <string name="apply_to_system_apps">Auf Systemanwendungen anwenden</string>
@@ -480,7 +472,7 @@ Sei vorsichtig wenn Du dies tust: Es kann hierbei zu sehr vielen falsch-positive
     <string name="are_you_sure">Bist du Dir sicher?</string>
     <string name="filter_apps_with_activities">Anwendungen mit Activities</string>
     <string name="toggle_default_app_ops">Voreingestellte App Ops ein-/ausschalten</string>
-    <string name="installer_error_aborted">Installation failed because either it\'s cancelled or the session closed unexpectedly</string>
+    <string name="installer_error_aborted">Die Installation ist fehlgeschlagen, weil sie entweder abgebrochen wurde oder die Sitzung unerwartet geschlossen wurde</string>
     <string name="installer_error_blocked_device">Gerät</string>
     <string name="installer_error_blocked">Installation wurde von %s blockiert</string>
     <string name="installer_error_conflict">Anwendung kann installiert werden, da bereits eine mit dem selben Paketnamen installiert ist</string>
@@ -506,15 +498,15 @@ Sei vorsichtig wenn Du dies tust: Es kann hierbei zu sehr vielen falsch-positive
     <string name="installer_error_session_write">Schreib-Zugriff für die Installation wurde verweigert</string>
     <string name="installer_error_session_commit">Fehler beim Übertragen der apk-Dateien</string>
     <string name="installer_error_session_abandon">Fehler beim Beenden der Installation</string>
-    <string name="backup_apk_only">Apk only</string>
-    <string name="backup_obb_media">Obb &amp; media</string>
-    <string name="failed_to_extract_obb_files">Failed to extract obb files</string>
-    <string name="obb_files_extracted_successfully">Obb files extracted successfully</string>
-    <string name="source">Source</string>
-    <string name="backup_multiple">Backup multiple</string>
-    <string name="backup_all_users">All users</string>
-    <string name="pref_app_language">Language</string>
-    <string name="auto">Auto</string>
-    <string name="current_language">Current language: %s</string>
-    <string name="choose_language">Choose a language</string>
+    <string name="backup_apk_only">Nur Apk</string>
+    <string name="backup_obb_media">Obb &amp; Dateien</string>
+    <string name="failed_to_extract_obb_files">Fehler beim Extrahieren der Obb Dateien</string>
+    <string name="obb_files_extracted_successfully">Obb Dateien erfolgreich entpackt</string>
+    <string name="source">Quelle</string>
+    <string name="backup_multiple">Mehrere Backups</string>
+    <string name="backup_all_users">Alle Benutzer</string>
+    <string name="pref_app_language">Sprache</string>
+    <string name="auto">Automatisch</string>
+    <string name="current_language">Aktuelle Sprache: %s</string>
+    <string name="choose_language">Wähle eine Sprache</string>
 </resources>

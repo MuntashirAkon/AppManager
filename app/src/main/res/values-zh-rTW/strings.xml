@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2020 Muntashir Al-Islam
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="instructions_header">[這些說明已經過時，將不再被更新
+        。瀏覽官方文件 (https://muntashirakon.github.io/AppManager) 以取得
+        最新資訊]</string>
+    <string name="uninstall">解除安裝</string>
+    <string name="permissions">使用權限</string>
+    <string name="unsupported">不支援</string>
+    <string name="sort_by_last_update">上次更新</string>
+    <string name="error">錯誤</string>
+    <string name="loading">正在載入…</string>
+    <!-- &#8230; = ... -->
+    <string name="system">系統</string>
+    <string name="sort">排序</string>
+    <string name="version_name_with_code">版本 %s (%d)</string>
+    <string name="app_info">應用程式資訊</string>
+    <string name="system_app">系統應用程式</string>
+    <string name="user_app">使用者應用程式</string>
+    <string name="date_installed">安裝時間</string>
+    <string name="date_updated">更新時間</string>
+    <string name="installer_app">安裝來源</string>
+    <string name="share_apk">分享APK</string>
+    <string name="saved_successfully">儲存成功</string>
+    <string name="saving_failed">儲存失敗。請再試一次。</string>
+</resources>

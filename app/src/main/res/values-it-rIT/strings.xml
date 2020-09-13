@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2020 Muntashir Al-Islam
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="instructions_header">[Queste istruzioni sono obsolete e non saranno più
+        aggiornate. Visita il sito web con la documentazione ufficiale (https://muntashirakon.github.io/AppManager) per
+        ottenere informazioni aggiornate]</string>
+    <string name="uninstall">Disinstalla</string>
+    <string name="require_no_permission">Nessun permesso richiesto</string>
+    <string name="activities">Attività</string>
+    <string name="launch">Avvia</string>
+    <string name="unsupported">Non supportato</string>
+    <string name="refresh">Aggiorna</string>
+    <string name="no_activities">Nessuna attività</string>
+    <string name="receivers">Receiver</string>
+    <string name="no_receivers">Nessun receiver</string>
+    <string name="providers">Provider</string>
+    <string name="no_providers">Nessun provider</string>
+    <string name="service">Servizi</string>
+    <string name="no_service">Nessun servizio</string>
+    <string name="orientation">Orientamento</string>
+    <string name="group">Gruppo</string>
+    <string name="sort_by_sha">Firma</string>
+    <string name="signatures">Firme</string>
+    <string name="no_signatures">Nessuna firma</string>
+    <string name="configurations">Configurazioni</string>
+    <string name="no_configurations">Nessuna configurazione</string>
+    <!-- &#8230; = ... -->
+    <string name="sort_by_package_name">Nome pacchetto</string>
+    <string name="cache_size">Cache</string>
+    <string name="obb_size">Obb</string>
+    <string name="system_app">Applicazione di sistema</string>
+    <string name="user_app">Applicazione dell\'utente</string>
+    <string name="sdk_min">Minimo</string>
+    <string name="sdk_max">Massimo</string>
+    <string name="more_info">Altre informazioni</string>
+    <string name="date_installed">Data di installazione</string>
+    <string name="date_updated">Data di aggiornamento</string>
+    <string name="user_id">ID utente</string>
+    <string name="instructions">Istruzioni</string>
+    <string name="insert_icon">Inserisci icona</string>
+    <string name="license">Licenza</string>
+    <string name="view_trackers">Visualizza tracker</string>
+    <string name="usage_today">Oggi</string>
+    <string name="usage_7_days">Ultimi 7 giorni</string>
+    <string name="usage_30_days">Ultimi 30 giorni</string>
+    <string name="usage_365_days">Ultimi 365 giorni</string>
+    <string name="search">Cerca</string>
+    <string name="aurora">Aurora</string>
+    <string name="process_name">Nome processo</string>
+    <string name="requested_large_heap">Heap grande</string>
+    <string name="databases">Database</string>
+    <string name="save">Salva</string>
+    <string name="disabled_app">Disabilitato</string>
+    <string name="disable">Disabilita</string>
+    <string name="enable">Abilita</string>
+    <string name="force_stop">Forza interruzione</string>
+    <string name="str_logo">Logo</string>
+    <string name="pref_root_mode_enabled">Modalità root</string>
+    <string name="pref_import">Importa</string>
+    <string name="pref_export">Esporta</string>
+    <string name="import_failed">Importazione fallita!</string>
+    <string name="export_failed">Esportazione fallita!</string>
+    <string name="keyboard_type">Tipo tastiera</string>
+    <string name="navigation">Navigazione</string>
+    <string name="touchscreen">Touchscreen</string>
+    <string name="pref_app_theme">Tema dell\'applicazione</string>
+    <string name="battery_mode">Modalità batteria</string>
+    <string name="day">Giorno</string>
+    <string name="night">Notte</string>
+    <string name="select_theme">Seleziona un tema</string>
+    <string name="apply">Applica</string>
+    <string name="current_theme">Tema attuale: %s</string>
+    <string name="version">Versione</string>
+    <string name="block_trackers">Blocca tracker</string>
+    <string name="failed_to_disable_trackers">Impossibile disattivare i tracker</string>
+    <string name="trackers_disabled_successfully">Tracker disattivati con successo</string>
+    <string name="never_ask">Non chiedere mai</string>
+    <string name="install">Installa</string>
+</resources>
