@@ -96,7 +96,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             SIGNATURES,
             SHARED_LIBRARIES
     })
-    public @interface Property {}
+    public @interface Property {
+    }
+
     public static final int NONE = -1;
     public static final int APP_INFO = 0;
     public static final int ACTIVITIES = 1;
@@ -120,14 +122,16 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             SORT_BY_DANGEROUS_PERMS,
             SORT_BY_DENIED_PERMS
     })
-    public @interface SortOrder {}
-    public static final int SORT_BY_NAME    = 0;
-    public static final int SORT_BY_BLOCKED  = 1;
+    public @interface SortOrder {
+    }
+
+    public static final int SORT_BY_NAME = 0;
+    public static final int SORT_BY_BLOCKED = 1;
     public static final int SORT_BY_TRACKERS = 2;
-    public static final int SORT_BY_APP_OP_VALUES   = 3;
-    public static final int SORT_BY_DENIED_APP_OPS  = 4;
+    public static final int SORT_BY_APP_OP_VALUES = 3;
+    public static final int SORT_BY_DENIED_APP_OPS = 4;
     public static final int SORT_BY_DANGEROUS_PERMS = 5;
-    public static final int SORT_BY_DENIED_PERMS    = 6;
+    public static final int SORT_BY_DENIED_PERMS = 6;
 
     private static final int[] sSortMenuItemIdsMap = {
             R.id.action_sort_by_name, R.id.action_sort_by_blocked_components,
@@ -143,9 +147,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private MenuItem blockingToggler;
     private ProgressIndicator mProgressIndicator;
     private TextView mRulesNotAppliedMsg;
-    private boolean bFi;
     private boolean isExternalApk;
-    private @Property int neededProperty;
+    private @Property
+    int neededProperty;
     AppDetailsFragmentViewModel model;
     AppDetailsViewModel mainModel;
 
@@ -158,6 +162,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     // Load from saved instance if empty constructor is called.
     private boolean isEmptyFragmentConstructCalled = false;
+
     public AppDetailsFragment() {
         isEmptyFragmentConstructCalled = true;
     }
@@ -376,8 +381,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         super.onStart();
         if (mainModel == null) return;
         if (mPackageName == null) mPackageName = mainModel.getPackageName();
+//        mainModel.getIsPackageChanged().observe(this, isPackageChanged -> {
+//            if (mAdapter != null) mAdapter.setDefaultList();
+//        });
         mainModel.get(neededProperty).observe(this, appDetailsItems -> {
-            if (neededProperty == FEATURES) bFi = mainModel.isbFi();
             if (mAdapter != null) mAdapter.setDefaultList(appDetailsItems);
         });
         mainModel.getRuleApplicationStatus().observe(this, status -> {
@@ -452,19 +459,27 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
      */
     private int getNotFoundString(@Property int index) {
         switch (index) {
-            case SERVICES: return R.string.no_service;
-            case RECEIVERS: return R.string.no_receivers;
-            case PROVIDERS: return R.string.no_providers;
+            case SERVICES:
+                return R.string.no_service;
+            case RECEIVERS:
+                return R.string.no_receivers;
+            case PROVIDERS:
+                return R.string.no_providers;
             case APP_OPS:
                 if (isExternalApk) return R.string.external_apk_no_app_op;
                 if (AppPref.isRootOrAdbEnabled()) return R.string.no_app_ops;
                 else return R.string.only_works_in_root_mode;
             case USES_PERMISSIONS:
-            case PERMISSIONS: return R.string.require_no_permission;
-            case FEATURES: return R.string.no_feature;
-            case CONFIGURATIONS: return R.string.no_configurations;
-            case SIGNATURES: return R.string.no_signatures;
-            case SHARED_LIBRARIES: return R.string.no_shared_libs;
+            case PERMISSIONS:
+                return R.string.require_no_permission;
+            case FEATURES:
+                return R.string.no_feature;
+            case CONFIGURATIONS:
+                return R.string.no_configurations;
+            case SIGNATURES:
+                return R.string.no_signatures;
+            case SHARED_LIBRARIES:
+                return R.string.no_shared_libs;
             case ACTIVITIES:
             case APP_INFO:
             case NONE:
@@ -513,8 +528,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsRecyclerAdapter.ViewHolder> {
-        private @NonNull List<AppDetailsItem> mAdapterList;
-        private @Property int requestedProperty;
+        @NonNull
+        private List<AppDetailsItem> mAdapterList;
+        @Property
+        private int requestedProperty;
         private String mConstraint;
         private Boolean isRootEnabled = true;
         private Boolean isADBEnabled = true;
@@ -525,19 +542,17 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         }
 
         void setDefaultList(@NonNull List<AppDetailsItem> list) {
+            isRootEnabled = AppPref.isRootEnabled();
+            isADBEnabled = AppPref.isAdbEnabled();
+            requestedProperty = neededProperty;
+            mConstraint = mainModel.getSearchQuery();
+            mAdapterList = list;
+            showProgressIndicator(false);
+            notifyDataSetChanged();
             new Thread(() -> {
-                isRootEnabled = AppPref.isRootEnabled();
-                isADBEnabled = AppPref.isAdbEnabled();
-                requestedProperty = neededProperty;
-                mConstraint = mainModel.getSearchQuery();
-                mAdapterList = list;
-                if (requestedProperty == SERVICES && (isRootEnabled || isADBEnabled) && !isExternalApk ) {
+                if (requestedProperty == SERVICES && (isRootEnabled || isADBEnabled) && !isExternalApk) {
                     runningServices = PackageUtils.getRunningServicesForPackage(mPackageName);
                 }
-                runOnUiThread(() -> {
-                    showProgressIndicator(false);
-                    notifyDataSetChanged();
-                });
             }).start();
         }
 
@@ -582,9 +597,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         textView5 = itemView.findViewById(R.id.orientation);
                         textView6 = itemView.findViewById(R.id.softInput);
                         launchBtn = itemView.findViewById(R.id.launch);
-                        blockBtn  = itemView.findViewById(R.id.block_component);
+                        blockBtn = itemView.findViewById(R.id.block_component);
                         createBtn = itemView.findViewById(R.id.create_shortcut_btn);
-                        editBtn   = itemView.findViewById(R.id.edit_shortcut_btn);
+                        editBtn = itemView.findViewById(R.id.edit_shortcut_btn);
                         itemView.findViewById(R.id.label).setVisibility(View.GONE);
                         break;
                     case SERVICES:
@@ -592,7 +607,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         textView1 = itemView.findViewById(R.id.label);
                         textView2 = itemView.findViewById(R.id.name);
                         textView3 = itemView.findViewById(R.id.orientation);
-                        blockBtn  = itemView.findViewById(R.id.block_component);
+                        blockBtn = itemView.findViewById(R.id.block_component);
                         itemView.findViewById(R.id.taskAffinity).setVisibility(View.GONE);
                         itemView.findViewById(R.id.launchMode).setVisibility(View.GONE);
                         itemView.findViewById(R.id.softInput).setVisibility(View.GONE);
@@ -608,7 +623,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         textView4 = itemView.findViewById(R.id.launchMode);
                         textView5 = itemView.findViewById(R.id.orientation);
                         textView6 = itemView.findViewById(R.id.softInput);
-                        blockBtn  = itemView.findViewById(R.id.block_component);
+                        blockBtn = itemView.findViewById(R.id.block_component);
                         itemView.findViewById(R.id.launch).setVisibility(View.GONE);
                         itemView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
                         itemView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
@@ -621,7 +636,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         textView4 = itemView.findViewById(R.id.orientation);
                         textView5 = itemView.findViewById(R.id.softInput);
                         textView6 = itemView.findViewById(R.id.taskAffinity);
-                        blockBtn  = itemView.findViewById(R.id.block_component);
+                        blockBtn = itemView.findViewById(R.id.block_component);
                         itemView.findViewById(R.id.launch).setVisibility(View.GONE);
                         itemView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
                         itemView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
@@ -683,8 +698,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            @SuppressLint("InflateParams")
-            final View view;
+            @SuppressLint("InflateParams") final View view;
             switch (requestedProperty) {
                 case ACTIVITIES:
                 case SERVICES:
@@ -719,20 +733,42 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             switch (requestedProperty) {
-                case SERVICES: getServicesView(holder, position); break;
-                case RECEIVERS: getReceiverView(holder, position); break;
-                case PROVIDERS: getProviderView(holder, position); break;
-                case APP_OPS: getAppOpsView(holder, position); break;
-                case USES_PERMISSIONS: getUsesPermissionsView(holder, position); break;
-                case PERMISSIONS: getPermissionsView(holder, position); break;
-                case FEATURES: getFeaturesView(holder, position); break;
-                case CONFIGURATIONS: getConfigurationView(holder, position); break;
-                case SIGNATURES: getSignatureView(holder, position); break;
-                case SHARED_LIBRARIES: getSharedLibsView(holder, position); break;
+                case SERVICES:
+                    getServicesView(holder, position);
+                    break;
+                case RECEIVERS:
+                    getReceiverView(holder, position);
+                    break;
+                case PROVIDERS:
+                    getProviderView(holder, position);
+                    break;
+                case APP_OPS:
+                    getAppOpsView(holder, position);
+                    break;
+                case USES_PERMISSIONS:
+                    getUsesPermissionsView(holder, position);
+                    break;
+                case PERMISSIONS:
+                    getPermissionsView(holder, position);
+                    break;
+                case FEATURES:
+                    getFeaturesView(holder, position);
+                    break;
+                case CONFIGURATIONS:
+                    getConfigurationView(holder, position);
+                    break;
+                case SIGNATURES:
+                    getSignatureView(holder, position);
+                    break;
+                case SHARED_LIBRARIES:
+                    getSharedLibsView(holder, position);
+                    break;
                 case ACTIVITIES:
                 case NONE:
                 case APP_INFO:
-                default: getActivityView(holder, position); break;
+                default:
+                    getActivityView(holder, position);
+                    break;
             }
         }
 
@@ -815,7 +851,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                                 .getResourceName(activityInfo.getIconResource());
                     } catch (PackageManager.NameNotFoundException e) {
                         Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
-                    } catch (Resources.NotFoundException ignore) {}
+                    } catch (Resources.NotFoundException ignore) {
+                    }
                     LauncherIconCreator.createLauncherIcon(getActivity(), activityInfo,
                             (String) activityInfo.loadLabel(mPackageManager),
                             activityInfo.loadIcon(mPackageManager), iconResourceName);
@@ -858,9 +895,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final ServiceInfo serviceInfo = (ServiceInfo) appDetailsItem.vanillaItem;
             // Background color: regular < running < tracker < disabled < blocked
             if (!isExternalApk && appDetailsItem.isBlocked) view.setBackgroundColor(mColorRed);
-            else if (!isExternalApk && isComponentDisabled(mPackageManager, serviceInfo)) view.setBackgroundColor(mColorDisabled);
+            else if (!isExternalApk && isComponentDisabled(mPackageManager, serviceInfo))
+                view.setBackgroundColor(mColorDisabled);
             else if (appDetailsItem.isTracker) view.setBackgroundColor(mColorTracker);
-            else if (runningServices != null && runningServices.contains(serviceInfo.name)) view.setBackgroundColor(mColorRunning);
+            else if (runningServices != null && runningServices.contains(serviceInfo.name))
+                view.setBackgroundColor(mColorRunning);
             else view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // Label
             holder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(serviceInfo.name)));
@@ -905,7 +944,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final ActivityInfo activityInfo = (ActivityInfo) appDetailsItem.vanillaItem;
             // Background color: regular < tracker < disabled < blocked
             if (!isExternalApk && appDetailsItem.isBlocked) view.setBackgroundColor(mColorRed);
-            else if (!isExternalApk && isComponentDisabled(mPackageManager, activityInfo)) view.setBackgroundColor(mColorDisabled);
+            else if (!isExternalApk && isComponentDisabled(mPackageManager, activityInfo))
+                view.setBackgroundColor(mColorDisabled);
             else if (appDetailsItem.isTracker) view.setBackgroundColor(mColorTracker);
             else view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // Label
@@ -961,7 +1001,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             final String providerName = providerInfo.name;
             // Background color: regular < tracker < disabled < blocked
             if (!isExternalApk && appDetailsItem.isBlocked) view.setBackgroundColor(mColorRed);
-            else if (!isExternalApk && isComponentDisabled(mPackageManager, providerInfo)) view.setBackgroundColor(mColorDisabled);
+            else if (!isExternalApk && isComponentDisabled(mPackageManager, providerInfo))
+                view.setBackgroundColor(mColorDisabled);
             else if (appDetailsItem.isTracker) view.setBackgroundColor(mColorTracker);
             else view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // Label
@@ -1044,7 +1085,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 String permName = AppOpsManager.opToPermission(opEntry.getOp());
                 if (permName != null)
                     permissionInfo = mPackageManager.getPermissionInfo(permName, PackageManager.GET_META_DATA);
-            } catch (PackageManager.NameNotFoundException | IllegalArgumentException | IndexOutOfBoundsException ignore) {}
+            } catch (PackageManager.NameNotFoundException | IllegalArgumentException | IndexOutOfBoundsException ignore) {
+            }
             // Set op name
             SpannableStringBuilder opName = new SpannableStringBuilder("(" + opEntry.getOp() + ") ");
             if (item.name.equals(String.valueOf(opEntry.getOp()))) {
@@ -1114,7 +1156,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 holder.textView6.setVisibility(View.GONE);
             }
             // Set background
-            if (isDangerousOp) view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
+            if (isDangerousOp)
+                view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
             else view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // Op Switch
             holder.toggleSwitch.setVisibility(View.VISIBLE);
@@ -1204,7 +1247,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                                         appDetailsItem.isGranted = isGranted;
                                         set(index, appDetailsItem);
                                         mainModel.setUsesPermission(appDetailsItem.name, isGranted);
-                                    } catch (PackageManager.NameNotFoundException ignore) {}
+                                    } catch (PackageManager.NameNotFoundException ignore) {
+                                    }
                                 });
                             } else {
                                 runOnUiThread(() -> {
@@ -1275,10 +1319,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Flags
             holder.textView2.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.flags), getString(Utils.getFeatureFlags(featureInfo.flags))
-                    + (Build.VERSION.SDK_INT >= 24 && featureInfo.version != 0 ? " | minV%:" + featureInfo.version : "")));
+                            + (Build.VERSION.SDK_INT >= 24 && featureInfo.version != 0 ? " | minV%:" + featureInfo.version : "")));
             // GLES ver
             holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.gles_ver), (bFi && !featureInfo.name.equals("OpenGL ES") ? "_"
+                    getString(R.string.gles_ver), (mainModel.isbFi() && !featureInfo.name.equals("OpenGL ES") ? "_"
                             : Utils.getOpenGL(featureInfo.reqGlEsVersion))));
         }
 
