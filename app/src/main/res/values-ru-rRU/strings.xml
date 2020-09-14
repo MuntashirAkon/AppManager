@@ -151,7 +151,7 @@
     <string name="usage_30_days">Последние 30 дней</string>
     <string name="usage_365_days">Последние 365 дней</string>
     <plurals name="usage_months">
-        <item quantity="one">%d месяц</item>
+        <item quantity="one">%d мес.</item>
         <item quantity="few">%d мес.</item>
         <item quantity="many">%d мес.</item>
         <item quantity="other">%d мес.</item>
