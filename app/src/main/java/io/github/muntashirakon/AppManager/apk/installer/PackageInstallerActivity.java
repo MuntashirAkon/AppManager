@@ -83,6 +83,7 @@ public class PackageInstallerActivity extends BaseActivity {
         new Thread(() -> {
             try {
                 if (apkUri != null) apkFile = new ApkFile(apkUri);
+                else closeApkFile = false;  // Internal request, don't close the ApkFile
                 packageInfo = getPackageInfo();
                 PackageInfo installedPackageInfo = null;
                 try {
@@ -226,7 +227,7 @@ public class PackageInstallerActivity extends BaseActivity {
         Intent intent = new Intent(this, AMPackageInstallerService.class);
         intent.putExtra(AMPackageInstallerService.EXTRA_APK_FILE, apkFile);
         intent.putExtra(AMPackageInstallerService.EXTRA_APP_LABEL, appLabel);
-        intent.putExtra(AMPackageInstallerService.EXTRA_CLOSE_APK_FILE, true);
+        intent.putExtra(AMPackageInstallerService.EXTRA_CLOSE_APK_FILE, closeApkFile);
         ContextCompat.startForegroundService(AppManager.getContext(), intent);
         closeApkFile = false;
         finish();
