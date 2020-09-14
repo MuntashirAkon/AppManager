@@ -60,6 +60,7 @@ import java.util.Locale;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
@@ -314,7 +315,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 refreshDetails();
                 return true;
             case R.id.action_toggle_blocking:  // Components
-                if (mainModel != null) mainModel.applyRules();
+                if (mainModel != null) new Thread(() -> mainModel.applyRules()).start();
                 return true;
             case R.id.action_block_trackers:  // Components
                 new Thread(() -> {
@@ -446,7 +447,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     synchronized private void applyRules(String componentName, RulesStorageManager.Type type) {
-        if (mainModel != null) mainModel.updateRulesForComponent(componentName, type);
+        if (mainModel != null) {
+            new Thread(() -> mainModel.updateRulesForComponent(componentName, type)).start();
+        }
     }
 
     private void refreshDetails() {
@@ -527,6 +530,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         return opStr != null ? "\nAppOp: " + opStr : "";
     }
 
+    @UiThread
     private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsRecyclerAdapter.ViewHolder> {
         @NonNull
         private List<AppDetailsItem> mAdapterList;
@@ -561,7 +565,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             notifyItemChanged(currentIndex);
             // Update the value in the app ops list in view model
             if (neededProperty == APP_OPS) {
-                mainModel.setAppOp(appDetailsItem);
+                new Thread(() -> mainModel.setAppOp(appDetailsItem)).start();
             }
         }
 
@@ -782,9 +786,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             return mAdapterList.size();
         }
 
-        /**
-         * Bored view inflation / creation.
-         */
         private void getActivityView(@NonNull ViewHolder holder, int index) {
             final View view = holder.itemView;
             final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
@@ -886,9 +887,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } else holder.blockBtn.setVisibility(View.GONE);
         }
 
-        /**
-         * Boring view inflation / creation
-         */
         private void getServicesView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
             final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
@@ -935,9 +933,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } else holder.blockBtn.setVisibility(View.GONE);
         }
 
-        /**
-         * Boring view inflation / creation
-         */
         private void getReceiverView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
             final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
@@ -991,9 +986,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } else holder.blockBtn.setVisibility(View.GONE);
         }
 
-        /**
-         * Boring view inflation / creation
-         */
         private void getProviderView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
             final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
@@ -1071,9 +1063,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } else holder.blockBtn.setVisibility(View.GONE);
         }
 
-        /**
-         * We do not need complex views, Use recycled view if possible
-         */
         private void getAppOpsView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
             AppDetailsItem item = mAdapterList.get(index);
@@ -1237,19 +1226,17 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     if (buttonView.isPressed()) {
                         new Thread(() -> {
                             if (mainModel.setPermission(permName, isGranted)) {
-                                runOnUiThread(() -> {
-                                    try {
-                                        PermissionInfo newPermissionInfo = mPackageManager.getPermissionInfo(permissionItem.name, PackageManager.GET_META_DATA);
-                                        AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(newPermissionInfo);
-                                        appDetailsItem.name = permissionItem.name;
-                                        appDetailsItem.flags = permissionItem.flags;
-                                        appDetailsItem.isDangerous = permissionItem.isDangerous;
-                                        appDetailsItem.isGranted = isGranted;
-                                        set(index, appDetailsItem);
-                                        mainModel.setUsesPermission(appDetailsItem.name, isGranted);
-                                    } catch (PackageManager.NameNotFoundException ignore) {
-                                    }
-                                });
+                                try {
+                                    PermissionInfo newPermissionInfo = mPackageManager.getPermissionInfo(permissionItem.name, PackageManager.GET_META_DATA);
+                                    AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(newPermissionInfo);
+                                    appDetailsItem.name = permissionItem.name;
+                                    appDetailsItem.flags = permissionItem.flags;
+                                    appDetailsItem.isDangerous = permissionItem.isDangerous;
+                                    appDetailsItem.isGranted = isGranted;
+                                    runOnUiThread(() -> set(index, appDetailsItem));
+                                    mainModel.setUsesPermission(appDetailsItem.name, isGranted);
+                                } catch (PackageManager.NameNotFoundException ignore) {
+                                }
                             } else {
                                 runOnUiThread(() -> {
                                     Toast.makeText(mActivity, isGranted ? R.string.failed_to_grant_permission : R.string.failed_to_revoke_permission, Toast.LENGTH_SHORT).show();
@@ -1273,9 +1260,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             textView.setPadding(medium_size, small_size, medium_size, small_size);
         }
 
-        /**
-         * Boring view inflation / creation
-         */
         private void getPermissionsView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
             final PermissionInfo permissionInfo = (PermissionInfo) mAdapterList.get(index).vanillaItem;
@@ -1307,9 +1291,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
         }
 
-        /**
-         * Boring view inflation / creation
-         */
         private void getFeaturesView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
             final FeatureInfo featureInfo = (FeatureInfo) mAdapterList.get(index).vanillaItem;
@@ -1326,9 +1307,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                             : Utils.getOpenGL(featureInfo.reqGlEsVersion))));
         }
 
-        /**
-         * Boring view inflation / creation
-         */
         private void getConfigurationView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
             final ConfigurationInfo configurationInfo = (ConfigurationInfo) mAdapterList.get(index).vanillaItem;
@@ -1347,9 +1325,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     getString(Utils.getTouchScreen(configurationInfo.reqTouchScreen))));
         }
 
-        /**
-         * We do not need complex views, Use recycled view if possible
-         */
         private void getSignatureView(@NonNull ViewHolder holder, int index) {
             TextView textView = (TextView) holder.itemView;
             final Signature signature = (Signature) mAdapterList.get(index).vanillaItem;
