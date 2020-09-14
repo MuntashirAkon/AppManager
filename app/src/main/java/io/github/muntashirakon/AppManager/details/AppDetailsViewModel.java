@@ -506,10 +506,15 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
     }
 
-    private MutableLiveData<Boolean> isPackageExist = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isPackageExistLiveData = new MutableLiveData<>();
+    private boolean isPackageExist = true;
 
-    public LiveData<Boolean> getIsPackageExist() {
-        if (isPackageExist.getValue() == null) isPackageExist.setValue(true);
+    public LiveData<Boolean> getIsPackageExistLiveData() {
+        if (isPackageExistLiveData.getValue() == null) isPackageExistLiveData.setValue(isPackageExist);
+        return isPackageExistLiveData;
+    }
+
+    public boolean isPackageExist() {
         return isPackageExist;
     }
 
@@ -586,9 +591,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         | flagDisabledComponents | flagSigningInfo | PackageManager.GET_CONFIGURATIONS
                         | PackageManager.GET_SHARED_LIBRARY_FILES);
             }
-            isPackageExist.postValue(true);
+            isPackageExistLiveData.postValue(isPackageExist = true);
         } catch (PackageManager.NameNotFoundException e) {
-            isPackageExist.postValue(false);
+            isPackageExistLiveData.postValue(isPackageExist = false);
         } catch (Exception e) {
             e.printStackTrace();
             //noinspection ConstantConditions

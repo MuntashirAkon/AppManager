@@ -124,7 +124,7 @@ public class AppDetailsActivity extends BaseActivity {
                 setTitle(applicationInfo.loadLabel(getPackageManager()));
                 // Check for the existence of package
                 viewPager.setAdapter(new AppDetailsFragmentPagerAdapter(fragmentManager));
-                model.getIsPackageExist().observe(this, isPackageExist -> {
+                model.getIsPackageExistLiveData().observe(this, isPackageExist -> {
                     if (!isPackageExist) {
                         Toast.makeText(this, R.string.app_not_installed, Toast.LENGTH_LONG).show();
                         finish();
@@ -138,8 +138,7 @@ public class AppDetailsActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         model.getIsPackageChanged().observe(this, isPackageChanged -> {
-            //noinspection ConstantConditions
-            if (isPackageChanged && model.getIsPackageExist().getValue()) {
+            if (isPackageChanged && model.isPackageExist()) {
                 @AppDetailsFragment.Property int id = viewPager.getCurrentItem();
                 Log.e("ADA - " + mTabTitleIds.getText(id), "isPackageChanged called");
                 if (model.getIsExternalApk()) model.load(AppDetailsFragment.APP_INFO);

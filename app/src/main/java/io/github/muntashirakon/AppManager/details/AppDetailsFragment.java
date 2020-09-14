@@ -231,7 +231,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 //            if (mAdapter != null) mAdapter.setDefaultList();
 //        });
         mainModel.get(neededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
-            if (mAdapter != null) mAdapter.setDefaultList(appDetailsItems);
+            if (mAdapter != null && mainModel.isPackageExist()) mAdapter.setDefaultList(appDetailsItems);
         });
         mainModel.getRuleApplicationStatus().observe(getViewLifecycleOwner(), status -> {
             if (neededProperty > APP_INFO && neededProperty <= PROVIDERS) {
