@@ -82,6 +82,58 @@ public abstract class AbstractApkFile implements Closeable {
     }
 
     /**
+     * Get the apk's certificate meta. If have multi signer, return the certificate the first signer used.
+     *
+     * @deprecated use {{@link #getApkSingers()}} instead
+     */
+    @Deprecated
+    public List<CertificateMeta> getCertificateMetaList() throws IOException, CertificateException {
+        if (apkSigners == null) {
+            parseCertificates();
+        }
+        if (apkSigners.isEmpty()) {
+            throw new ParserException("ApkFile certificate not found");
+        }
+        return apkSigners.get(0).getCertificateMetas();
+    }
+
+    /**
+     * Get the apk's all certificates.
+     * For each entry, the key is certificate file path in apk file, the value is the certificates info of the certificate file.
+     *
+     * @deprecated use {{@link #getApkSingers()}} instead
+     */
+    @Deprecated
+    public Map<String, List<CertificateMeta>> getAllCertificateMetas() throws IOException, CertificateException {
+        List<ApkSigner> apkSigners = getApkSingers();
+        Map<String, List<CertificateMeta>> map = new LinkedHashMap<>();
+        for (ApkSigner apkSigner : apkSigners) {
+            map.put(apkSigner.getPath(), apkSigner.getCertificateMetas());
+        }
+        return map;
+    }
+
+    /**
+     * Get the apk's all cert file info, of apk v1 signing.
+     * If cert faile not exist, return empty list.
+     */
+    public List<ApkSigner> getApkSingers() throws IOException, CertificateException {
+        if (apkSigners == null) {
+            parseCertificates();
+        }
+        return this.apkSigners;
+    }
+
+    private void parseCertificates() throws IOException, CertificateException {
+        this.apkSigners = new ArrayList<>();
+        for (CertificateFile file : getAllCertificateData()) {
+            CertificateParser parser = CertificateParser.getInstance(file.getData());
+            List<CertificateMeta> certificateMetas = parser.parse();
+            apkSigners.add(new ApkSigner(file.getPath(), certificateMetas));
+        }
+    }
+
+    /**
      * Get the apk's all signer in apk sign block, using apk singing v2 scheme.
      * If apk v2 signing block not exists, return empty list.
      */
@@ -108,6 +160,8 @@ public abstract class AbstractApkFile implements Closeable {
         this.apkV2Signers = list;
     }
 
+
+    protected abstract List<CertificateFile> getAllCertificateData() throws IOException;
 
     protected static class CertificateFile {
         private String path;

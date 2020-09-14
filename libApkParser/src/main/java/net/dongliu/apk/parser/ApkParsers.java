@@ -12,21 +12,6 @@ import java.util.Locale;
  * @author Liu Dong
  */
 public class ApkParsers {
-
-    private static boolean useBouncyCastle;
-
-    public static boolean useBouncyCastle() {
-        return useBouncyCastle;
-    }
-
-    /**
-     * Use BouncyCastle instead of JSSE to parse X509 certificate.
-     * If want to use BouncyCastle, you will also need to add bcprov and bcpkix lib to your project.
-     */
-    public static void useBouncyCastle(boolean useBouncyCastle) {
-        ApkParsers.useBouncyCastle = useBouncyCastle;
-    }
-
     /**
      * Get apk meta info for apk file
      *

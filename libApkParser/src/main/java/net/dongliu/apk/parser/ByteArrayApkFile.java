@@ -27,6 +27,7 @@ public class ByteArrayApkFile extends AbstractApkFile implements Closeable {
         this.apkData = apkData;
     }
 
+    @Override
     protected List<CertificateFile> getAllCertificateData() throws IOException {
         List<CertificateFile> list = new ArrayList<>();
         try (InputStream in = new ByteArrayInputStream(apkData);

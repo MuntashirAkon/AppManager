@@ -40,6 +40,7 @@ public class ApkFile extends AbstractApkFile implements Closeable {
         this(new File(filePath));
     }
 
+    @Override
     protected List<CertificateFile> getAllCertificateData() throws IOException {
         Enumeration<? extends ZipEntry> enu = zf.entries();
         List<CertificateFile> list = new ArrayList<>();
@@ -121,6 +122,7 @@ public class ApkFile extends AbstractApkFile implements Closeable {
         };
              Closeable zipFileClosable = zf;
              Closeable fileChannelClosable = fileChannel) {
+
         }
     }
 
