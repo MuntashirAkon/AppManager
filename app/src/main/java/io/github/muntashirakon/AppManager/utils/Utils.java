@@ -682,16 +682,10 @@ public class Utils {
 
     @NonNull
     public static Tuple<String, String> getIssuerAndAlg(@NonNull PackageInfo p) {
-        Signature[] signatures;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            SigningInfo signingInfo = p.signingInfo;
-            signatures = signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
-                    : signingInfo.getSigningCertificateHistory();
-        } else {
-            signatures = p.signatures;
-        }
+        Signature[] signatures = PackageUtils.getSigningInfo(p, false);
         X509Certificate c;
         Tuple<String, String> t = new Tuple<>("", "");
+        if (signatures == null) return t;
         try {
             for (Signature sg : signatures) {
                 c = (X509Certificate) CertificateFactory.getInstance("X.509")

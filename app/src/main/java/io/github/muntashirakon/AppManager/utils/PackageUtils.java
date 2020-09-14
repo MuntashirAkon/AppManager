@@ -45,6 +45,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import dalvik.system.DexFile;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
@@ -307,17 +308,28 @@ public final class PackageUtils {
         return dataDirs.toArray(new String[0]);
     }
 
-    @NonNull
-    public static String[] getSigningCertSha256Checksum(PackageInfo packageInfo) {
-        Signature[] signatureArray;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+    @Nullable
+    public static Signature[] getSigningInfo(@NonNull PackageInfo packageInfo, boolean isExternal) {
+        if (!isExternal && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             SigningInfo signingInfo = packageInfo.signingInfo;
-            signatureArray = signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
+            return signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
                     : signingInfo.getSigningCertificateHistory();
-        } else signatureArray = packageInfo.signatures;
+        } else return packageInfo.signatures;
+    }
+
+    @NonNull
+    public static String[] getSigningCertSha256Checksum(@NonNull PackageInfo packageInfo) {
+        return getSigningCertSha256Checksum(packageInfo, false);
+    }
+
+    @NonNull
+    public static String[] getSigningCertSha256Checksum(PackageInfo packageInfo, boolean isExternal) {
+        Signature[] signatureArray = getSigningInfo(packageInfo, isExternal);
         ArrayList<String> checksums = new ArrayList<>();
-        for (Signature signature : signatureArray) {
-            checksums.add(getSha256Checksum(signature.toByteArray()));
+        if (signatureArray != null) {
+            for (Signature signature : signatureArray) {
+                checksums.add(getSha256Checksum(signature.toByteArray()));
+            }
         }
         return checksums.toArray(new String[0]);
     }

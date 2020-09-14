@@ -392,7 +392,7 @@ public class BackupManager implements AutoCloseable {
                 throw new BackupException("Source restore is requested but there are no source files.");
             }
             boolean reinstallNeeded = false;
-            if (isInstalled) {
+            if (packageInfo != null) {
                 // Check signature of the installed app
                 List<String> certChecksum = Arrays.asList(PackageUtils.getSigningCertSha256Checksum(packageInfo));
                 boolean isVerified = true;
