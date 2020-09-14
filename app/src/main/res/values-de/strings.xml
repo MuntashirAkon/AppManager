@@ -14,8 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-<resources>
+  --><resources>
     <string name="instructions_header">Diese Anleitungen sind veraltet und werden nicht mehr aktualisiert. Besuche die offizielle Dokumentationen-Seite (https://muntashirakon.github.io/AppManager) für die aktuellsten Informationen</string>
     <string name="uninstall">Deinstallieren</string>
     <string name="permissions">Benutzt Berechtigungen</string>
@@ -74,9 +73,9 @@
     <string name="cache_size">Cache</string>
     <string name="obb_size">Obb</string>
     <string name="media_size">Medien</string>
-    <string name="app_not_installed">Anwendung nicht installiert</string>
+    <string name="app_not_installed">Anwendung ist nicht installiert</string>
     <string name="system">System</string>
-    <string name="user">Benutzer</string>
+    <string name="user">Nutzer</string>
     <string name="sort">Sortieren</string>
     <string name="version_name_with_code">Version %s (%d)</string>
     <string name="app_info">App-Informationen</string>
@@ -509,4 +508,56 @@ Sei vorsichtig wenn Du dies tust: Es kann hierbei zu sehr vielen falsch-positive
     <string name="auto">Automatisch</string>
     <string name="current_language">Aktuelle Sprache: %s</string>
     <string name="choose_language">Wähle eine Sprache</string>
+    <string name="touchscreen_finger">Finger</string>
+    <string name="touchscreen_stylus">Schreibstift</string>
+    <string name="touchscreen_no_touch">Keine Berührung</string>
+    <string name="navigation_wheel">Rad</string>
+    <string name="navigation_trackball">Trackball</string>
+    <string name="navigation_dial_pad">Ziffernblock wählen</string>
+    <string name="navigation_no_nav">Kein Navigator</string>
+    <string name="keyboard_12_keys">12 Schlüssel</string>
+    <string name="keyboard_qwerty">Qwerty</string>
+    <string name="keyboard_no_keys">Keine Schlüssel</string>
+    <string name="_undefined">nicht definiert</string>
+    <string name="required">Erfordert</string>
+    <string name="orientation_sensor">Sensor</string>
+    <string name="orientation_sensor_portrait">Hochformat erfassen</string>
+    <string name="orientation_sensor_landscape">Querformat erfassen</string>
+    <string name="orientation_user">Nutzer</string>
+    <string name="orientation_reverse_landscape">Querformat drehen</string>
+    <string name="orientation_reverse_portrait">Hochformat drehen</string>
+    <string name="orientation_portrait">Hochformat</string>
+    <string name="orientation_landscape">Querformat</string>
+    <string name="orientation_no_sensor">Kein Sensor</string>
+    <string name="orientation_locked">Gesperrt</string>
+    <string name="orientation_full_user">Vollbenutzer</string>
+    <string name="orientation_full_sensor">Voll-Sensor</string>
+    <string name="orientation_behind">Hinter</string>
+    <string name="orientation_unspecified">Nicht näher bezeichnet</string>
+    <string name="launch_mode_single_top">Einzelne Spitze</string>
+    <string name="launch_mode_single_task">Einzelne Aufgabe</string>
+    <string name="launch_mode_single_instance">Einzelne Instanz</string>
+    <string name="launch_mode_multiple">mehrfach</string>
+    <string name="locale_split_for_base_apk">%s Lokalisierung für die Basis-APK</string>
+    <string name="locale_split_for_feature">%s Lokalisierung für %s</string>
+    <string name="abi_split_for_base_apk">%s Code für die Basis-APK</string>
+    <string name="abi_split_for_feature">%s Code für %s</string>
+    <string name="density_split_for_base_apk">%s (%d DPI) Ressourcen für die Basis-APK</string>
+    <string name="density_split_for_feature">%s (%d DPI) Ressourcen für das Merkmal %s</string>
+    <string name="base_apk">Basis-APK</string>
+    <string name="unknown_split_for_base_apk">%s für die Basis-APK</string>
+    <string name="unknown_split_for_feature">%s für Merkmal %s</string>
+    <string name="split_feature_name">Merkmal: %s</string>
+    <plurals name="alert_failed_to_enable">
+        <item quantity="one">%s App konnte nicht aktiviert werden</item>
+        <item quantity="other">%s Apps konnten nicht aktiviert werden</item>
+    </plurals>
+    <plurals name="alert_failed_to_deny_app_ops">
+        <item quantity="one">Fehler beim Verweigern von App-Operationen für %d Apps</item>
+        <item quantity="other">Fehler beim Verweigern von App-Operationen für %d App</item>
+    </plurals>
+    <plurals name="alert_failed_to_block_components">
+        <item quantity="one">Komponenten für %d App konnte nicht blockiert werden</item>
+        <item quantity="other">Komponenten für %d Apps konnten nicht blockiert werden</item>
+    </plurals>
 </resources>
