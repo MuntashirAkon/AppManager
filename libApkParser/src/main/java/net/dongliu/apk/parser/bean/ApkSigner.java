@@ -1,6 +1,6 @@
 package net.dongliu.apk.parser.bean;
 
-import java.util.List;
+import androidx.annotation.NonNull;
 
 import static java.util.Objects.requireNonNull;
 
@@ -15,26 +15,27 @@ public class ApkSigner {
     /**
      * The meta info of certificate contained in this cert file.
      */
-    private List<CertificateMeta> certificateMetas;
+    private CertificateMeta certificateMeta;
 
-    public ApkSigner(String path, List<CertificateMeta> certificateMetas) {
+    public ApkSigner(String path, @NonNull CertificateMeta certificateMeta) {
         this.path = path;
-        this.certificateMetas = requireNonNull(certificateMetas);
+        this.certificateMeta = certificateMeta;
     }
 
     public String getPath() {
         return path;
     }
 
-    public List<CertificateMeta> getCertificateMetas() {
-        return certificateMetas;
+    public CertificateMeta getCertificateMeta() {
+        return certificateMeta;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "ApkSigner{" +
                 "path='" + path + '\'' +
-                ", certificateMetas=" + certificateMetas +
+                ", certificateMetas=" + certificateMeta +
                 '}';
     }
 }

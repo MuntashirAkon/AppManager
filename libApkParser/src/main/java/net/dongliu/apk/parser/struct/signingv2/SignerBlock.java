@@ -1,7 +1,8 @@
 package net.dongliu.apk.parser.struct.signingv2;
 
-import java.security.cert.X509Certificate;
 import java.util.List;
+
+import javax.security.cert.X509Certificate;
 
 public class SignerBlock {
     private List<Digest> digests;

@@ -31,6 +31,8 @@ package net.dongliu.apk.parser.bean;
 
 import java.util.Date;
 
+import androidx.annotation.NonNull;
+
 public class CertificateMeta {
 
     public static Builder newCertificateMeta() {
@@ -90,9 +92,12 @@ public class CertificateMeta {
         this.certMd5 = builder.certMd5;
     }
 
-    @Override public String toString() {
-        return "signAlgorithm:\t" + signAlgorithm + '\n' + "certBase64Md5:\t" + certBase64Md5 + '\n' +
-                "certMd5:\t" + certMd5;
+    @NonNull
+    @Override
+    public String toString() {
+        return "signAlgorithm:\t" + signAlgorithm +
+                "\ncertBase64Md5:\t" + certBase64Md5 +
+                "\ncertMd5:\t" + certMd5;
     }
 
     public static final class Builder {
@@ -105,7 +110,7 @@ public class CertificateMeta {
         private String certBase64Md5;
         private String certMd5;
 
-        private Builder() {
+        public Builder() {
         }
 
         public CertificateMeta build() {

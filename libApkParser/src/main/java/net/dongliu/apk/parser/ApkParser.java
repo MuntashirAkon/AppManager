@@ -9,7 +9,7 @@ import java.io.IOException;
  * This class is not thread-safe.
  *
  * @author dongliu
- * @deprecated use {@link net.dongliu.apk.parser.ApkFile} instead
+ * @deprecated use {@link ApkFile} instead
  */
 @Deprecated
 public class ApkParser extends ApkFile {

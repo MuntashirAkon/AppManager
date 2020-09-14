@@ -7,15 +7,16 @@ import net.dongliu.apk.parser.struct.signingv2.SignerBlock;
 import net.dongliu.apk.parser.utils.Buffers;
 import net.dongliu.apk.parser.utils.Unsigned;
 
-import java.io.ByteArrayInputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.security.cert.CertificateException;
+import javax.security.cert.X509Certificate;
+
+import androidx.annotation.NonNull;
+
 
 // see https://source.android.com/security/apksigning/v2
 
@@ -50,6 +51,7 @@ public class ApkSignBlockParser {
         return new ApkSigningBlock(signerBlocks);
     }
 
+    @NonNull
     private SignerBlock readSigningV2(ByteBuffer buffer) throws CertificateException {
         buffer = readLenPrefixData(buffer);
 
@@ -68,7 +70,8 @@ public class ApkSignBlockParser {
         return new SignerBlock(digests, certificates, signatures);
     }
 
-    private List<Digest> readDigests(ByteBuffer buffer) {
+    @NonNull
+    private List<Digest> readDigests(@NonNull ByteBuffer buffer) {
         List<Digest> list = new ArrayList<>();
         while (buffer.hasRemaining()) {
             ByteBuffer digestData = readLenPrefixData(buffer);
@@ -79,19 +82,18 @@ public class ApkSignBlockParser {
         return list;
     }
 
-    private List<X509Certificate> readCertificates(ByteBuffer buffer) throws CertificateException {
-        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+    @NonNull
+    private List<X509Certificate> readCertificates(@NonNull ByteBuffer buffer) throws CertificateException {
         List<X509Certificate> certificates = new ArrayList<>();
         while (buffer.hasRemaining()) {
             ByteBuffer certificateData = readLenPrefixData(buffer);
-            Certificate certificate = certificateFactory.generateCertificate(
-                    new ByteArrayInputStream(Buffers.readBytes(certificateData)));
+            X509Certificate certificate = X509Certificate.getInstance(Buffers.readBytes(certificateData));
             certificates.add((X509Certificate) certificate);
         }
         return certificates;
     }
 
-    private void readAttributes(ByteBuffer buffer) {
+    private void readAttributes(@NonNull ByteBuffer buffer) {
         while (buffer.hasRemaining()) {
             ByteBuffer attributeData = readLenPrefixData(buffer);
             int id = attributeData.getInt();
@@ -99,7 +101,8 @@ public class ApkSignBlockParser {
         }
     }
 
-    private List<Signature> readSignatures(ByteBuffer buffer) {
+    @NonNull
+    private List<Signature> readSignatures(@NonNull ByteBuffer buffer) {
         List<Signature> signatures = new ArrayList<>();
         while (buffer.hasRemaining()) {
             ByteBuffer signatureData = readLenPrefixData(buffer);
@@ -112,7 +115,7 @@ public class ApkSignBlockParser {
     }
 
 
-    private ByteBuffer readLenPrefixData(ByteBuffer buffer) {
+    private ByteBuffer readLenPrefixData(@NonNull ByteBuffer buffer) {
         int len = Unsigned.ensureUInt(buffer.getInt());
         return Buffers.sliceAndSkip(buffer, len);
     }

@@ -31,8 +31,6 @@ package net.dongliu.apk.parser.parser;
 
 import net.dongliu.apk.parser.bean.CertificateMeta;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -44,15 +42,14 @@ import javax.security.cert.X509Certificate;
 import androidx.annotation.NonNull;
 
 public class CertificateParser {
+    private final byte[] data;
 
-    private final InputStream in;
-
-    public CertificateParser(InputStream in) {
-        this.in = new BufferedInputStream(in);
+    public CertificateParser(byte[] data) {
+        this.data = data;
     }
 
     public CertificateMeta parse() throws CertificateException {
-        X509Certificate certificate = X509Certificate.getInstance(in);
+        X509Certificate certificate = X509Certificate.getInstance(data);
         CertificateMeta.Builder builder = CertificateMeta.newCertificateMeta();
         byte[] bytes = certificate.getEncoded();
         String certMd5 = md5Digest(bytes);

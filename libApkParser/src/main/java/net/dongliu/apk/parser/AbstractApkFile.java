@@ -1,8 +1,27 @@
 package net.dongliu.apk.parser;
 
-import net.dongliu.apk.parser.bean.*;
+import net.dongliu.apk.parser.bean.AdaptiveIcon;
+import net.dongliu.apk.parser.bean.ApkMeta;
+import net.dongliu.apk.parser.bean.ApkSignStatus;
+import net.dongliu.apk.parser.bean.ApkSigner;
+import net.dongliu.apk.parser.bean.ApkV2Signer;
+import net.dongliu.apk.parser.bean.CertificateMeta;
+import net.dongliu.apk.parser.bean.DexClass;
+import net.dongliu.apk.parser.bean.Icon;
+import net.dongliu.apk.parser.bean.IconFace;
+import net.dongliu.apk.parser.bean.IconPath;
 import net.dongliu.apk.parser.exception.ParserException;
-import net.dongliu.apk.parser.parser.*;
+import net.dongliu.apk.parser.parser.AdaptiveIconParser;
+import net.dongliu.apk.parser.parser.ApkMetaTranslator;
+import net.dongliu.apk.parser.parser.ApkSignBlockParser;
+import net.dongliu.apk.parser.parser.BinaryXmlParser;
+import net.dongliu.apk.parser.parser.CertificateMetas;
+import net.dongliu.apk.parser.parser.CertificateParser;
+import net.dongliu.apk.parser.parser.CompositeXmlStreamer;
+import net.dongliu.apk.parser.parser.DexParser;
+import net.dongliu.apk.parser.parser.ResourceTableParser;
+import net.dongliu.apk.parser.parser.XmlStreamer;
+import net.dongliu.apk.parser.parser.XmlTranslator;
 import net.dongliu.apk.parser.struct.AndroidConstants;
 import net.dongliu.apk.parser.struct.resource.Densities;
 import net.dongliu.apk.parser.struct.resource.ResourceTable;
@@ -16,9 +35,19 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+
+import javax.security.cert.CertificateException;
+import javax.security.cert.X509Certificate;
+
+import androidx.annotation.NonNull;
 
 import static java.lang.System.arraycopy;
 
@@ -87,14 +116,14 @@ public abstract class AbstractApkFile implements Closeable {
      * @deprecated use {{@link #getApkSingers()}} instead
      */
     @Deprecated
-    public List<CertificateMeta> getCertificateMetaList() throws IOException, CertificateException {
+    public CertificateMeta getCertificateMeta() throws IOException, CertificateException {
         if (apkSigners == null) {
             parseCertificates();
         }
         if (apkSigners.isEmpty()) {
             throw new ParserException("ApkFile certificate not found");
         }
-        return apkSigners.get(0).getCertificateMetas();
+        return apkSigners.get(0).getCertificateMeta();
     }
 
     /**
@@ -104,11 +133,11 @@ public abstract class AbstractApkFile implements Closeable {
      * @deprecated use {{@link #getApkSingers()}} instead
      */
     @Deprecated
-    public Map<String, List<CertificateMeta>> getAllCertificateMetas() throws IOException, CertificateException {
+    public Map<String, CertificateMeta> getAllCertificateMetas() throws IOException, CertificateException {
         List<ApkSigner> apkSigners = getApkSingers();
-        Map<String, List<CertificateMeta>> map = new LinkedHashMap<>();
+        Map<String, CertificateMeta> map = new LinkedHashMap<>();
         for (ApkSigner apkSigner : apkSigners) {
-            map.put(apkSigner.getPath(), apkSigner.getCertificateMetas());
+            map.put(apkSigner.getPath(), apkSigner.getCertificateMeta());
         }
         return map;
     }
@@ -127,9 +156,9 @@ public abstract class AbstractApkFile implements Closeable {
     private void parseCertificates() throws IOException, CertificateException {
         this.apkSigners = new ArrayList<>();
         for (CertificateFile file : getAllCertificateData()) {
-            CertificateParser parser = CertificateParser.getInstance(file.getData());
-            List<CertificateMeta> certificateMetas = parser.parse();
-            apkSigners.add(new ApkSigner(file.getPath(), certificateMetas));
+            CertificateParser parser = new CertificateParser(file.getData());
+            CertificateMeta certificateMeta = parser.parse();
+            apkSigners.add(new ApkSigner(file.getPath(), certificateMeta));
         }
     }
 
@@ -211,7 +240,6 @@ public abstract class AbstractApkFile implements Closeable {
      */
     protected abstract ByteBuffer fileData() throws IOException;
 
-
     /**
      * trans binary xml file to text xml file.
      *
@@ -283,6 +311,7 @@ public abstract class AbstractApkFile implements Closeable {
         return iconFaces;
     }
 
+    @NonNull
     private Icon newFileIcon(String filePath, int density) throws IOException {
         return new Icon(filePath, density, getFileData(filePath));
     }
@@ -360,7 +389,7 @@ public abstract class AbstractApkFile implements Closeable {
     private void parseDexFiles() throws IOException {
         this.dexClasses = parseDexFile(AndroidConstants.DEX_FILE);
         for (int i = 2; i < 1000; i++) {
-            String path = String.format(AndroidConstants.DEX_ADDITIONAL, i);
+            String path = String.format(Locale.ROOT, AndroidConstants.DEX_ADDITIONAL, i);
             try {
                 DexClass[] classes = parseDexFile(path);
                 this.dexClasses = mergeDexClasses(this.dexClasses, classes);
