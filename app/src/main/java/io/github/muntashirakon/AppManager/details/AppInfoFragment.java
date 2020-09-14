@@ -73,10 +73,12 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
+import androidx.annotation.GuardedBy;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.annotation.WorkerThread;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -148,6 +150,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private boolean isRootEnabled;
     private boolean isAdbEnabled;
 
+    @GuardedBy("mListItems")
     private final List<ListItem> mListItems = new ArrayList<>();
 
     private ActivityResultLauncher<String> exportRules = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
@@ -207,7 +210,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.pager_app_info, container, false);
+        return inflater.inflate(R.layout.pager_app_info, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setColorSchemeColors(mAccentColor);
@@ -229,7 +237,16 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         packageNameView = view.findViewById(R.id.packageName);
         iconView = view.findViewById(R.id.icon);
         versionView = view.findViewById(R.id.version);
-        return view;
+        // Set observer
+        mainModel.get(AppDetailsFragment.APP_INFO).observe(getViewLifecycleOwner(), appDetailsItems -> {
+            if (!appDetailsItems.isEmpty()) {
+                AppDetailsItem appDetailsItem = appDetailsItems.get(0);
+                mPackageInfo = (PackageInfo) appDetailsItem.vanillaItem;
+                mPackageName = appDetailsItem.name;
+                showProgressIndicator(true);
+                getPackageInfo();
+            }
+        });
     }
 
     @Override
@@ -311,15 +328,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onStart() {
         super.onStart();
         if (mActivity.searchView != null) mActivity.searchView.setVisibility(View.GONE);
-        mainModel.get(AppDetailsFragment.APP_INFO).observe(this, appDetailsItems -> {
-            if (!appDetailsItems.isEmpty()) {
-                AppDetailsItem appDetailsItem = appDetailsItems.get(0);
-                mPackageInfo = (PackageInfo) appDetailsItem.vanillaItem;
-                mPackageName = appDetailsItem.name;
-                showProgressIndicator(true);
-                getPackageInfo();
-            }
-        });
     }
 
     @Override
@@ -379,6 +387,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     /**
      * Set views up to details_container.
      */
+    @WorkerThread
     private void setHeaders() {
         // Set Application Name, aka Label
         runOnUiThread(() -> labelView.setText(mPackageLabel));
@@ -666,137 +675,143 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
+    @GuardedBy("mListItems")
     private void setPathsAndDirectories() {
-        // Paths and directories
-        mListItems.add(ListItem.getGroupHeader(getString(R.string.paths_and_directories)));
-        // Source directory (apk path)
-        mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.source_dir), mApplicationInfo.publicSourceDir,
-                openAsFolderInFM(new File(mApplicationInfo.publicSourceDir).getParent())));
-        // Split source directories
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && mApplicationInfo.splitNames != null) {
-            int countSplits = mApplicationInfo.splitNames.length;
-            for (int i = 0; i < countSplits; ++i) {
-                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.split_no, (i + 1),
-                        mApplicationInfo.splitNames[i]), mApplicationInfo.splitSourceDirs[i],
-                        openAsFolderInFM(new File(mApplicationInfo.splitSourceDirs[i]).getParent())));
-            }
-        }
-        // Data dir
-        mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.data_dir), mApplicationInfo.dataDir, openAsFolderInFM(mApplicationInfo.dataDir)));
-        // Device-protected data dir
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.dev_protected_data_dir),
-                    mApplicationInfo.deviceProtectedDataDir, openAsFolderInFM(mApplicationInfo.deviceProtectedDataDir)));
-        }
-        // External data dirs
-        File[] dataDirs = mActivity.getExternalCacheDirs();
-        if (dataDirs != null) {
-            List<String> extDataDirs = new ArrayList<>();
-            String tmpDataDir;
-            for (File dataDir : dataDirs) {
-                if (dataDir == null) continue;
-                tmpDataDir = dataDir.getParent();
-                if (tmpDataDir != null) tmpDataDir = new File(tmpDataDir).getParent();
-                if (tmpDataDir != null)
-                    extDataDirs.add(tmpDataDir + File.separatorChar + mPackageName);
-            }
-            if (extDataDirs.size() == 1) {
-                if (new File(extDataDirs.get(0)).exists()) {
-                    mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.external_data_dir),
-                            extDataDirs.get(0), openAsFolderInFM(extDataDirs.get(0))));
+        synchronized (mListItems) {
+            // Paths and directories
+            mListItems.add(ListItem.getGroupHeader(getString(R.string.paths_and_directories)));
+            // Source directory (apk path)
+            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.source_dir), mApplicationInfo.publicSourceDir,
+                    openAsFolderInFM(new File(mApplicationInfo.publicSourceDir).getParent())));
+            // Split source directories
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && mApplicationInfo.splitNames != null) {
+                int countSplits = mApplicationInfo.splitNames.length;
+                for (int i = 0; i < countSplits; ++i) {
+                    mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.split_no, (i + 1),
+                            mApplicationInfo.splitNames[i]), mApplicationInfo.splitSourceDirs[i],
+                            openAsFolderInFM(new File(mApplicationInfo.splitSourceDirs[i]).getParent())));
                 }
-            } else {
-                for (int i = 0; i < extDataDirs.size(); ++i) {
-                    if (new File(extDataDirs.get(i)).exists()) {
-                        mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.external_multiple_data_dir, i),
-                                extDataDirs.get(i), openAsFolderInFM(extDataDirs.get(i))));
+            }
+            // Data dir
+            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.data_dir), mApplicationInfo.dataDir, openAsFolderInFM(mApplicationInfo.dataDir)));
+            // Device-protected data dir
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.dev_protected_data_dir),
+                        mApplicationInfo.deviceProtectedDataDir, openAsFolderInFM(mApplicationInfo.deviceProtectedDataDir)));
+            }
+            // External data dirs
+            File[] dataDirs = mActivity.getExternalCacheDirs();
+            if (dataDirs != null) {
+                List<String> extDataDirs = new ArrayList<>();
+                String tmpDataDir;
+                for (File dataDir : dataDirs) {
+                    if (dataDir == null) continue;
+                    tmpDataDir = dataDir.getParent();
+                    if (tmpDataDir != null) tmpDataDir = new File(tmpDataDir).getParent();
+                    if (tmpDataDir != null)
+                        extDataDirs.add(tmpDataDir + File.separatorChar + mPackageName);
+                }
+                if (extDataDirs.size() == 1) {
+                    if (new File(extDataDirs.get(0)).exists()) {
+                        mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.external_data_dir),
+                                extDataDirs.get(0), openAsFolderInFM(extDataDirs.get(0))));
+                    }
+                } else {
+                    for (int i = 0; i < extDataDirs.size(); ++i) {
+                        if (new File(extDataDirs.get(i)).exists()) {
+                            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.external_multiple_data_dir, i),
+                                    extDataDirs.get(i), openAsFolderInFM(extDataDirs.get(i))));
+                        }
                     }
                 }
             }
+            // Native JNI library dir
+            File nativeLib = new File(mApplicationInfo.nativeLibraryDir);
+            if (nativeLib.exists()) {
+                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.native_library_dir),
+                        mApplicationInfo.nativeLibraryDir, openAsFolderInFM(mApplicationInfo.nativeLibraryDir)));
+            }
+            mListItems.add(ListItem.getGroupDivider());
         }
-        // Native JNI library dir
-        File nativeLib = new File(mApplicationInfo.nativeLibraryDir);
-        if (nativeLib.exists()) {
-            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.native_library_dir),
-                    mApplicationInfo.nativeLibraryDir, openAsFolderInFM(mApplicationInfo.nativeLibraryDir)));
-        }
-        mListItems.add(ListItem.getGroupDivider());
     }
 
+    @GuardedBy("mListItems")
     private void setMoreInfo() {
-        // Set more info
-        mListItems.add(ListItem.getGroupHeader(getString(R.string.more_info)));
+        synchronized (mListItems) {
+            // Set more info
+            mListItems.add(ListItem.getGroupHeader(getString(R.string.more_info)));
 
-        // Set installer version info
-        if (isExternalApk && mInstalledPackageInfo != null) {
-            ListItem listItem = ListItem.getSelectableRegularItem(getString(R.string.installed_version),
-                    getString(R.string.version_name_with_code, mInstalledPackageInfo.versionName,
-                            PackageUtils.getVersionCode(mInstalledPackageInfo)), v -> {
-                        Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
-                        appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, mPackageName);
-                        mActivity.startActivity(appDetailsIntent);
-                    });
-            listItem.actionIcon = R.drawable.ic_info_outline_black_24dp;
-            mListItems.add(listItem);
-        }
+            // Set installer version info
+            if (isExternalApk && mInstalledPackageInfo != null) {
+                ListItem listItem = ListItem.getSelectableRegularItem(getString(R.string.installed_version),
+                        getString(R.string.version_name_with_code, mInstalledPackageInfo.versionName,
+                                PackageUtils.getVersionCode(mInstalledPackageInfo)), v -> {
+                            Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
+                            appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, mPackageName);
+                            mActivity.startActivity(appDetailsIntent);
+                        });
+                listItem.actionIcon = R.drawable.ic_info_outline_black_24dp;
+                mListItems.add(listItem);
+            }
 
-        // SDK
-        final StringBuilder sdk = new StringBuilder();
-        sdk.append(getString(R.string.sdk_max)).append(": ").append(mApplicationInfo.targetSdkVersion);
-        if (Build.VERSION.SDK_INT > 23)
-            sdk.append(", ").append(getString(R.string.sdk_min)).append(": ").append(mApplicationInfo.minSdkVersion);
-        mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.sdk), sdk.toString()));
+            // SDK
+            final StringBuilder sdk = new StringBuilder();
+            sdk.append(getString(R.string.sdk_max)).append(": ").append(mApplicationInfo.targetSdkVersion);
+            if (Build.VERSION.SDK_INT > 23)
+                sdk.append(", ").append(getString(R.string.sdk_min)).append(": ").append(mApplicationInfo.minSdkVersion);
+            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.sdk), sdk.toString()));
 
-        // Set Flags
-        final StringBuilder flags = new StringBuilder();
-        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
-            flags.append("FLAG_DEBUGGABLE");
-        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
-            flags.append(flags.length() == 0 ? "" : "|").append("FLAG_TEST_ONLY");
-        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_MULTIARCH) != 0)
-            flags.append(flags.length() == 0 ? "" : "|").append("FLAG_MULTIARCH");
-        if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_HARDWARE_ACCELERATED) != 0)
-            flags.append(flags.length() == 0 ? "" : "|").append("FLAG_HARDWARE_ACCELERATED");
+            // Set Flags
+            final StringBuilder flags = new StringBuilder();
+            if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
+                flags.append("FLAG_DEBUGGABLE");
+            if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
+                flags.append(flags.length() == 0 ? "" : "|").append("FLAG_TEST_ONLY");
+            if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_MULTIARCH) != 0)
+                flags.append(flags.length() == 0 ? "" : "|").append("FLAG_MULTIARCH");
+            if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_HARDWARE_ACCELERATED) != 0)
+                flags.append(flags.length() == 0 ? "" : "|").append("FLAG_HARDWARE_ACCELERATED");
 
-        if (flags.length() != 0) {
-            ListItem flagsItem = ListItem.getSelectableRegularItem(getString(R.string.sdk_flags), flags.toString());
-            flagsItem.flags |= LIST_ITEM_FLAG_MONOSPACE;
-            mListItems.add(flagsItem);
-        }
-        if (isExternalApk) return;
+            if (flags.length() != 0) {
+                ListItem flagsItem = ListItem.getSelectableRegularItem(getString(R.string.sdk_flags), flags.toString());
+                flagsItem.flags |= LIST_ITEM_FLAG_MONOSPACE;
+                mListItems.add(flagsItem);
+            }
+            if (isExternalApk) return;
 
-        mListItems.add(ListItem.getRegularItem(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime)));
-        mListItems.add(ListItem.getRegularItem(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime)));
-        if (!mPackageName.equals(mApplicationInfo.processName))
-            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.process_name), mApplicationInfo.processName));
-        try {
-            String installerPackageName = mPackageManager.getInstallerPackageName(mPackageName);
-            if (installerPackageName != null) {
-                String applicationLabel;
-                try {
-                    applicationLabel = mPackageManager.getApplicationInfo(installerPackageName, 0).loadLabel(mPackageManager).toString();
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                    applicationLabel = installerPackageName;
+            mListItems.add(ListItem.getRegularItem(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime)));
+            mListItems.add(ListItem.getRegularItem(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime)));
+            if (!mPackageName.equals(mApplicationInfo.processName))
+                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.process_name), mApplicationInfo.processName));
+            try {
+                String installerPackageName = mPackageManager.getInstallerPackageName(mPackageName);
+                if (installerPackageName != null) {
+                    String applicationLabel;
+                    try {
+                        applicationLabel = mPackageManager.getApplicationInfo(installerPackageName, 0).loadLabel(mPackageManager).toString();
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                        applicationLabel = installerPackageName;
+                    }
+                    mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.installer_app), applicationLabel));
                 }
-                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.installer_app), applicationLabel));
+            } catch (IllegalArgumentException ignore) {
             }
-        } catch (IllegalArgumentException ignore) {
-        }
-        mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.user_id), Integer.toString(mApplicationInfo.uid)));
-        if (mPackageInfo.sharedUserId != null)
-            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.shared_user_id), mPackageInfo.sharedUserId));
-        // Main activity
-        final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
-        if (launchIntentForPackage != null) {
-            final ComponentName launchComponentName = launchIntentForPackage.getComponent();
-            if (launchComponentName != null) {
-                final String mainActivity = launchIntentForPackage.getComponent().getClassName();
-                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.main_activity),
-                        mainActivity, view -> startActivity(launchIntentForPackage)));
+            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.user_id), Integer.toString(mApplicationInfo.uid)));
+            if (mPackageInfo.sharedUserId != null)
+                mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.shared_user_id), mPackageInfo.sharedUserId));
+            // Main activity
+            final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
+            if (launchIntentForPackage != null) {
+                final ComponentName launchComponentName = launchIntentForPackage.getComponent();
+                if (launchComponentName != null) {
+                    final String mainActivity = launchIntentForPackage.getComponent().getClassName();
+                    mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.main_activity),
+                            mainActivity, view -> startActivity(launchIntentForPackage)));
+                }
             }
+            mListItems.add(ListItem.getGroupDivider());
         }
-        mListItems.add(ListItem.getGroupDivider());
     }
 
     private void setDataUsage() {
@@ -828,13 +843,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
-    private void setDataUsageHelper(String txData, String rxData) {
-        mListItems.add(ListItem.getGroupHeader(getString(R.string.data_usage_msg)));
-        mListItems.add(ListItem.getInlineItem(getString(R.string.data_transmitted), txData));
-        mListItems.add(ListItem.getInlineItem(getString(R.string.data_received), rxData));
-        mListItems.add(ListItem.getGroupDivider());
-    }
-
+    @WorkerThread
+    @GuardedBy("mListItems")
     private void setVerticalView() {
         synchronized (mListItems) {
             mListItems.clear();
@@ -847,6 +857,16 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
             setMoreInfo();
             runOnUiThread(() -> adapter.setAdapterList(mListItems));
+        }
+    }
+
+    @GuardedBy("mListItems")
+    private void setDataUsageHelper(String txData, String rxData) {
+        synchronized (mListItems) {
+            mListItems.add(ListItem.getGroupHeader(getString(R.string.data_usage_msg)));
+            mListItems.add(ListItem.getInlineItem(getString(R.string.data_transmitted), txData));
+            mListItems.add(ListItem.getInlineItem(getString(R.string.data_received), rxData));
+            mListItems.add(ListItem.getGroupDivider());
         }
     }
 
@@ -956,18 +976,21 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
+    @GuardedBy("mListItems")
     private void setStorageInfo(long codeSize, long dataSize, long cacheSize, long obbSize, long mediaSize) {
-        mListItems.add(ListItem.getGroupHeader(getString(R.string.storage_and_cache)));
-        mListItems.add(ListItem.getInlineItem(getString(R.string.app_size), getReadableSize(codeSize)));
-        mListItems.add(ListItem.getInlineItem(getString(R.string.data_size), getReadableSize(dataSize)));
-        mListItems.add(ListItem.getInlineItem(getString(R.string.cache_size), getReadableSize(cacheSize)));
-        if (obbSize != 0)
-            mListItems.add(ListItem.getInlineItem(getString(R.string.obb_size), getReadableSize(obbSize)));
-        if (mediaSize != 0)
-            mListItems.add(ListItem.getInlineItem(getString(R.string.media_size), getReadableSize(mediaSize)));
-        mListItems.add(ListItem.getInlineItem(getString(R.string.total_size), getReadableSize(codeSize
-                + dataSize + cacheSize + obbSize + mediaSize)));
-        mListItems.add(ListItem.getGroupDivider());
+        synchronized (mListItems) {
+            mListItems.add(ListItem.getGroupHeader(getString(R.string.storage_and_cache)));
+            mListItems.add(ListItem.getInlineItem(getString(R.string.app_size), getReadableSize(codeSize)));
+            mListItems.add(ListItem.getInlineItem(getString(R.string.data_size), getReadableSize(dataSize)));
+            mListItems.add(ListItem.getInlineItem(getString(R.string.cache_size), getReadableSize(cacheSize)));
+            if (obbSize != 0)
+                mListItems.add(ListItem.getInlineItem(getString(R.string.obb_size), getReadableSize(obbSize)));
+            if (mediaSize != 0)
+                mListItems.add(ListItem.getInlineItem(getString(R.string.media_size), getReadableSize(mediaSize)));
+            mListItems.add(ListItem.getInlineItem(getString(R.string.total_size), getReadableSize(codeSize
+                    + dataSize + cacheSize + obbSize + mediaSize)));
+            mListItems.add(ListItem.getGroupDivider());
+        }
     }
 
     /**

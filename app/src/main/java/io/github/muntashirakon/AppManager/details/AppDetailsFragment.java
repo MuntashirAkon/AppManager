@@ -201,7 +201,12 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.pager_app_details, container, false);
+        return inflater.inflate(R.layout.pager_app_details, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setColorSchemeColors(Utils.getThemeColor(mActivity, android.R.attr.colorAccent));
         mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(mActivity, android.R.attr.colorPrimary));
@@ -220,7 +225,20 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         mAdapter = new AppDetailsRecyclerAdapter();
         recyclerView.setAdapter(mAdapter);
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
-        return view;
+        if (mainModel == null) return;
+        if (mPackageName == null) mPackageName = mainModel.getPackageName();
+//        mainModel.getIsPackageChanged().observe(getViewLifecycleOwner(), isPackageChanged -> {
+//            if (mAdapter != null) mAdapter.setDefaultList();
+//        });
+        mainModel.get(neededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
+            if (mAdapter != null) mAdapter.setDefaultList(appDetailsItems);
+        });
+        mainModel.getRuleApplicationStatus().observe(getViewLifecycleOwner(), status -> {
+            if (neededProperty > APP_INFO && neededProperty <= PROVIDERS) {
+                mRulesNotAppliedMsg.setVisibility(status != AppDetailsViewModel.RULE_NOT_APPLIED ?
+                        View.GONE : View.VISIBLE);
+            }
+        });
     }
 
     @Override
@@ -374,25 +392,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (mainModel == null) return;
-        if (mPackageName == null) mPackageName = mainModel.getPackageName();
-//        mainModel.getIsPackageChanged().observe(this, isPackageChanged -> {
-//            if (mAdapter != null) mAdapter.setDefaultList();
-//        });
-        mainModel.get(neededProperty).observe(this, appDetailsItems -> {
-            if (mAdapter != null) mAdapter.setDefaultList(appDetailsItems);
-        });
-        mainModel.getRuleApplicationStatus().observe(this, status -> {
-            if (neededProperty > APP_INFO && neededProperty <= PROVIDERS) {
-                mRulesNotAppliedMsg.setVisibility(status != AppDetailsViewModel.RULE_NOT_APPLIED ?
-                        View.GONE : View.VISIBLE);
-            }
-        });
     }
 
     @Override
