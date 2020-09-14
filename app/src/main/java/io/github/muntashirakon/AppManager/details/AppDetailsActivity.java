@@ -59,7 +59,7 @@ public class AppDetailsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        model = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(AppDetailsViewModel.class);
+        model = new ViewModelProvider(this).get(AppDetailsViewModel.class);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_details);
         setSupportActionBar(findViewById(R.id.toolbar));
@@ -130,27 +130,17 @@ public class AppDetailsActivity extends BaseActivity {
                         finish();
                     }
                 });
+                // Check for package changes
+                model.getIsPackageChanged().observe(this, isPackageChanged -> {
+                    if (isPackageChanged && model.isPackageExist()) {
+                        @AppDetailsFragment.Property int id = viewPager.getCurrentItem();
+                        Log.e("ADA - " + mTabTitleIds.getText(id), "isPackageChanged called");
+                        if (model.getIsExternalApk()) model.load(AppDetailsFragment.APP_INFO);
+                        else for (int i = 0; i<mTabTitleIds.length(); ++i) model.load(i);
+                    }
+                });
             });
         }).start();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        model.getIsPackageChanged().observe(this, isPackageChanged -> {
-            if (isPackageChanged && model.isPackageExist()) {
-                @AppDetailsFragment.Property int id = viewPager.getCurrentItem();
-                Log.e("ADA - " + mTabTitleIds.getText(id), "isPackageChanged called");
-                if (model.getIsExternalApk()) model.load(AppDetailsFragment.APP_INFO);
-                else for (int i = 0; i<mTabTitleIds.length(); ++i) model.load(i);
-            }
-        });
-    }
-
-    @Override
-    public void finish() {
-        model.onCleared();
-        super.finish();
     }
 
     @SuppressLint("RestrictedApi")

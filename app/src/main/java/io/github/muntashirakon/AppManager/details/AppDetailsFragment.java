@@ -176,17 +176,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         model = new ViewModelProvider(this).get(AppDetailsFragmentViewModel.class);
+        mActivity = (AppDetailsActivity) requireActivity();
         if (isEmptyFragmentConstructCalled) {
             neededProperty = model.getNeededProperty();
         } else model.setNeededProperty(neededProperty);
-        mActivity = (AppDetailsActivity) requireActivity();
         mainModel = mActivity.model;
-        mPackageName = mainModel.getPackageName();
-        if (mPackageName == null) {
-            mainModel.setPackageInfo(false);
-            mPackageName = mainModel.getPackageName();
-        }
-        isExternalApk = mainModel.getIsExternalApk();
         mPackageManager = mActivity.getPackageManager();
         if (mActivity != null) {
             mColorGrey1 = Color.TRANSPARENT;
@@ -207,6 +201,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setColorSchemeColors(Utils.getThemeColor(mActivity, android.R.attr.colorAccent));
         mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(mActivity, android.R.attr.colorPrimary));
@@ -222,14 +217,20 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         mRulesNotAppliedMsg = view.findViewById(R.id.alert_text);
         mRulesNotAppliedMsg.setVisibility(View.GONE);
         mRulesNotAppliedMsg.setText(R.string.rules_not_applied);
-        mAdapter = new AppDetailsRecyclerAdapter();
-        recyclerView.setAdapter(mAdapter);
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
         if (mainModel == null) return;
         if (mPackageName == null) mPackageName = mainModel.getPackageName();
-//        mainModel.getIsPackageChanged().observe(getViewLifecycleOwner(), isPackageChanged -> {
-//            if (mAdapter != null) mAdapter.setDefaultList();
-//        });
+        // Set adapter only after package info is loaded
+        new Thread(() -> {
+            mPackageName = mainModel.getPackageName();
+            if (mPackageName == null) {
+                mainModel.setPackageInfo(false);
+                mPackageName = mainModel.getPackageName();
+            }
+            isExternalApk = mainModel.getIsExternalApk();
+            mAdapter = new AppDetailsRecyclerAdapter();
+            recyclerView.setAdapter(mAdapter);
+        }).start();
         mainModel.get(neededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (mAdapter != null && mainModel.isPackageExist()) mAdapter.setDefaultList(appDetailsItems);
         });

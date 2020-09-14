@@ -195,12 +195,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         setHasOptionsMenu(true);
         mActivity = (AppDetailsActivity) requireActivity();
         mainModel = mActivity.model;
-        mPackageName = mainModel.getPackageName();
-        if (mPackageName == null) {
-            mainModel.setPackageInfo(false);
-            mPackageName = mainModel.getPackageName();
-        }
-        isExternalApk = mainModel.getIsExternalApk();
         isRootEnabled = AppPref.isRootEnabled();
         isAdbEnabled = AppPref.isAdbEnabled();
         mPackageManager = mActivity.getPackageManager();
@@ -225,8 +219,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         RecyclerView recyclerView = view.findViewById(android.R.id.list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        adapter = new AppInfoRecyclerAdapter();
-        recyclerView.setAdapter(adapter);
         // Horizontal view
         mHorizontalLayout = view.findViewById(R.id.horizontal_layout);
         // Progress indicator
@@ -237,6 +229,17 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         packageNameView = view.findViewById(R.id.packageName);
         iconView = view.findViewById(R.id.icon);
         versionView = view.findViewById(R.id.version);
+        // Set adapter only after package info is loaded
+        new Thread(() -> {
+            mPackageName = mainModel.getPackageName();
+            if (mPackageName == null) {
+                mainModel.setPackageInfo(false);
+                mPackageName = mainModel.getPackageName();
+            }
+            isExternalApk = mainModel.getIsExternalApk();
+            adapter = new AppInfoRecyclerAdapter();
+            recyclerView.setAdapter(adapter);
+        }).start();
         // Set observer
         mainModel.get(AppDetailsFragment.APP_INFO).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (!appDetailsItems.isEmpty() && mainModel.isPackageExist()) {
@@ -244,7 +247,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 mPackageInfo = (PackageInfo) appDetailsItem.vanillaItem;
                 mPackageName = appDetailsItem.name;
                 showProgressIndicator(true);
-                getPackageInfo();
+                new Thread(this::getPackageInfo).start();
             }
         });
     }
@@ -997,32 +1000,31 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
      * Get package info.
      */
     @SuppressLint("WrongConstant")
+    @WorkerThread
     private void getPackageInfo() {
-        new Thread(() -> {
-            if (mPackageInfo == null) {
-                runOnUiThread(() -> showProgressIndicator(false));
-                return;
-            }
-            if (isExternalApk) {
-                try {
-                    mInstalledPackageInfo = mPackageManager.getPackageInfo(mPackageName,
-                            PackageManager.GET_PERMISSIONS | PackageManager.GET_ACTIVITIES
-                                    | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                                    | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
-                                    | flagDisabledComponents | flagSigningInfo | PackageManager.GET_CONFIGURATIONS
-                                    | PackageManager.GET_SHARED_LIBRARY_FILES);
-                } catch (PackageManager.NameNotFoundException e) {
-                    mInstalledPackageInfo = null;
-                }
-            }
-            mApplicationInfo = mPackageInfo.applicationInfo;
-            mPackageLabel = mApplicationInfo.loadLabel(mPackageManager);
-            // (Re)load views
-            setHeaders();
-            runOnUiThread(this::setHorizontalActions);
-            setVerticalView();
+        if (mPackageInfo == null) {
             runOnUiThread(() -> showProgressIndicator(false));
-        }).start();
+            return;
+        }
+        if (isExternalApk) {
+            try {
+                mInstalledPackageInfo = mPackageManager.getPackageInfo(mPackageName,
+                        PackageManager.GET_PERMISSIONS | PackageManager.GET_ACTIVITIES
+                                | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
+                                | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
+                                | flagDisabledComponents | flagSigningInfo | PackageManager.GET_CONFIGURATIONS
+                                | PackageManager.GET_SHARED_LIBRARY_FILES);
+            } catch (PackageManager.NameNotFoundException e) {
+                mInstalledPackageInfo = null;
+            }
+        }
+        mApplicationInfo = mPackageInfo.applicationInfo;
+        mPackageLabel = mApplicationInfo.loadLabel(mPackageManager);
+        // (Re)load views
+        setHeaders();
+        runOnUiThread(this::setHorizontalActions);
+        setVerticalView();
+        runOnUiThread(() -> showProgressIndicator(false));
     }
 
     /**

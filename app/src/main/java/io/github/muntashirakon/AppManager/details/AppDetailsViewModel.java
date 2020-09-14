@@ -123,6 +123,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         super.onCleared();
     }
 
+    @WorkerThread
     public void setPackageUri(@NonNull Uri packageUri) throws Exception {
         Log.d("ADVM", "Package Uri is being set");
         isExternalApk = true;
@@ -518,8 +519,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return isPackageExist;
     }
 
-    private @NonNull
-    MutableLiveData<Boolean> isPackageChanged = new MutableLiveData<>();
+    @NonNull
+    private MutableLiveData<Boolean> isPackageChanged = new MutableLiveData<>();
 
     public LiveData<Boolean> getIsPackageChanged() {
         if (isPackageChanged.getValue() == null) {
@@ -528,6 +529,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return isPackageChanged;
     }
 
+    @WorkerThread
     public void setIsPackageChanged() {
         setPackageInfo(true);
     }
@@ -565,6 +567,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("WrongConstant")
+    @WorkerThread
     public void setPackageInfo(boolean reload) {
         if (!isExternalApk && packageName == null) return;
         // Wait for component blocker to appear
@@ -606,6 +609,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         isPackageChanged.postValue(true);
     }
 
+    @WorkerThread
     public PackageInfo getPackageInfo() {
         if (packageInfo == null) setPackageInfo(false);
         return packageInfo;
@@ -623,8 +627,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void loadAppInfo() {
-        setPackageInfo(false);
-        if (packageInfo == null || appInfo == null) return;
+        if (getPackageInfo() == null || appInfo == null) return;
         AppDetailsItem appDetailsItem = new AppDetailsItem(packageInfo);
         appDetailsItem.name = packageName;
         List<AppDetailsItem> appDetailsItems = Collections.singletonList(appDetailsItem);
@@ -644,8 +647,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     private void loadActivities() {
-        setPackageInfo(false);
-        if (packageInfo == null || activities == null || packageInfo.activities == null) return;
+        if (getPackageInfo() == null || activities == null || packageInfo.activities == null) return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
         for (ActivityInfo activityInfo : packageInfo.activities) {
             AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
@@ -676,8 +678,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     private void loadServices() {
-        setPackageInfo(false);
-        if (packageInfo == null || services == null || packageInfo.services == null) return;
+        if (getPackageInfo() == null || services == null || packageInfo.services == null) return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
         for (ServiceInfo serviceInfo : packageInfo.services) {
             AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(serviceInfo);
@@ -709,8 +710,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     private void loadReceivers() {
-        setPackageInfo(false);
-        if (packageInfo == null || receivers == null || packageInfo.receivers == null) return;
+        if (getPackageInfo() == null || receivers == null || packageInfo.receivers == null) return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
         for (ActivityInfo activityInfo : packageInfo.receivers) {
             AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(activityInfo);
@@ -740,8 +740,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     private void loadProviders() {
-        setPackageInfo(false);
-        if (packageInfo == null || providers == null || packageInfo.providers == null) return;
+        if (getPackageInfo() == null || providers == null || packageInfo.providers == null) return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
         for (ProviderInfo providerInfo : packageInfo.providers) {
             AppDetailsComponentItem appDetailsItem = new AppDetailsComponentItem(providerInfo);
@@ -885,8 +884,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @SuppressLint("SwitchIntDef")
     @WorkerThread
     private void loadUsesPermissions() {
-        setPackageInfo(false);
-        if (packageInfo == null || usesPermissions == null || packageInfo.requestedPermissions == null)
+        if (getPackageInfo() == null || usesPermissions == null || packageInfo.requestedPermissions == null)
             return;
         if (usesPermissionItems == null) {
             usesPermissionItems = new CopyOnWriteArrayList<>();
@@ -943,8 +941,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void loadPermissions() {
-        setPackageInfo(false);
-        if (packageInfo == null || permissions == null || packageInfo.permissions == null) return;
+        if (getPackageInfo() == null || permissions == null || packageInfo.permissions == null) return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
         for (PermissionInfo permissionInfo : packageInfo.permissions) {
             AppDetailsItem appDetailsItem = new AppDetailsItem(permissionInfo);
@@ -975,8 +972,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void loadFeatures() {
-        setPackageInfo(false);
-        if (packageInfo == null || features == null || packageInfo.reqFeatures == null) return;
+        if (getPackageInfo() == null || features == null || packageInfo.reqFeatures == null) return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
         try {
             Arrays.sort(packageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
@@ -1007,8 +1003,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void loadConfigurations() {
-        setPackageInfo(false);
-        if (packageInfo == null || configurations == null || packageInfo.configPreferences == null)
+        if (getPackageInfo() == null || configurations == null || packageInfo.configPreferences == null)
             return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
         for (ConfigurationInfo configurationInfo : packageInfo.configPreferences) {
@@ -1030,8 +1025,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void loadSignatures() {
-        setPackageInfo(false);
-        if (packageInfo == null || signatures == null) return;
+        if (getPackageInfo() == null || signatures == null) return;
         Signature[] signatureArray = PackageUtils.getSigningInfo(packageInfo, isExternalApk);
         if (signatureArray != null) {
             List<AppDetailsItem> appDetailsItems = new ArrayList<>();
@@ -1055,8 +1049,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void loadSharedLibraries() {
-        setPackageInfo(false);
-        if (packageInfo == null || sharedLibraries == null || packageInfo.applicationInfo.sharedLibraryFiles == null)
+        if (getPackageInfo() == null || sharedLibraries == null || packageInfo.applicationInfo.sharedLibraryFiles == null)
             return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
         for (String sharedLibrary : packageInfo.applicationInfo.sharedLibraryFiles) {
