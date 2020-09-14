@@ -38,12 +38,15 @@ import android.widget.Toast;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.classysharkandroid.utils.UriUtils;
 
+import net.dongliu.apk.parser.ApkFile;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,7 +61,6 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
-import io.github.muntashirakon.xmlapkparser.AXMLPrinter;
 
 public class ManifestViewerActivity extends BaseActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
@@ -194,7 +196,11 @@ public class ManifestViewerActivity extends BaseActivity {
         final int attrValueColor = ContextCompat.getColor(this, R.color.ocean_blue);
         new Thread(() -> {
             if (formattedContent == null) {
-                getManifest();
+                try {
+                    getManifest();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 if (code == null) {
                     runOnUiThread(() -> {
                         Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
@@ -221,9 +227,11 @@ public class ManifestViewerActivity extends BaseActivity {
         }).start();
     }
 
-    private void getManifest() {
+    private void getManifest() throws IOException {
         if (archiveFilePath != null) {
-            code = Utils.getProperXml(AXMLPrinter.getManifestXMLFromAPK(archiveFilePath, "AndroidManifest.xml"));
+            ApkFile apkFile = new ApkFile(archiveFilePath);
+            apkFile.setPreferredLocale(Locale.getDefault());
+            code = Utils.getProperXml(apkFile.getManifestXml());
         } else {
             AssetManager mCurAm;
             XmlResourceParser xml;

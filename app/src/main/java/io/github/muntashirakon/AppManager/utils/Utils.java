@@ -30,7 +30,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
-import android.content.pm.SigningInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
@@ -229,6 +228,11 @@ public class Utils {
         } catch (Exception e) {
             return str;
         }
+    }
+
+    @NonNull
+    public static String getExtension(@NonNull String path) {
+        return getLastComponent(getLastPathComponent(path));
     }
 
     @NonNull
@@ -701,7 +705,7 @@ public class Utils {
     /**
      * Format xml file to correct indentation ...
      */
-    @Nullable
+    @NonNull
     public static String getProperXml(@NonNull String dirtyXml) {
         try {
             Document document = DocumentBuilderFactory.newInstance()
@@ -732,7 +736,7 @@ public class Utils {
             return stringWriter.toString();
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return dirtyXml;
         }
     }
 
