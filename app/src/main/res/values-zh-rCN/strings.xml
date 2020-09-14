@@ -59,7 +59,7 @@
     <string name="input_features">输入特性</string>
     <string name="manifest">Manifest清单</string>
     <string name="error">错误</string>
-    <string name="loading">加载中...</string>
+    <string name="loading">加载中</string>
     <!-- &#8230; = ... -->
     <string name="sort_by_app_label">应用程序标签</string>
     <string name="sort_by_package_name">包名</string>
@@ -228,8 +228,8 @@
     <string name="str_logo">Logo</string>
     <string name="pref_root_mode_enabled">Root 模式</string>
     <string name="pref_root_mode_enabled_msg">启用root模式激活此应用的所有根功能，禁用时自动检测到ADB 模式</string>
-    <string name="pref_global_blocking_enabled">全局组件阻止</string>
-    <string name="pref_global_blocking_enabled_msg">启用全局组件屏蔽功能，您可以屏蔽任何应用的任何组件，而不会明确启用屏蔽应用</string>
+    <string name="pref_global_blocking_enabled">实时拦截组件</string>
+    <string name="pref_global_blocking_enabled_msg">启用该选项后，拦截组件的操作会实时生效，无需再点击右上角的应用规则</string>
     <string name="pref_usage_access_enabled">使用情况访问权限</string>
     <string name="pref_usage_access_enabled_msg">启用使用情况访问权限使您能够看到您的应用使用情况统计和应用数据信息</string>
     <string name="app_settings">设置</string>
@@ -494,4 +494,21 @@
     <string name="auto">自动</string>
     <string name="current_language">当前语言：%s</string>
     <string name="choose_language">选择语言</string>
+    <string name="navigation_dial_pad">拨号键盘</string>
+    <string name="keyboard_12_keys">12 键</string>
+    <string name="keyboard_qwerty">Qwerty 布局</string>
+    <string name="_undefined">未定义</string>
+    <string name="orientation_user">用户</string>
+    <string name="orientation_reverse_landscape">镜像反转横屏</string>
+    <string name="orientation_reverse_portrait">镜像反转竖屏</string>
+    <string name="orientation_portrait">竖屏</string>
+    <string name="orientation_landscape">横屏</string>
+    <string name="orientation_unspecified">未指定</string>
+    <string name="launch_mode_single_task">单任务</string>
+    <string name="launch_mode_single_instance">单实例</string>
+    <string name="base_apk">Base APK</string>
+    <string name="split_feature_name">特点：%s</string>
+    <plurals name="alert_failed_to_enable">
+        <item quantity="other">启用 %s 失败</item>
+    </plurals>
 </resources>
