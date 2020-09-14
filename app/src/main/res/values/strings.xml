@@ -170,7 +170,7 @@
     <string name="usage_30_days">Last 30 days</string>
     <string name="usage_365_days">Last 365 days</string>
     <plurals name="usage_months">
-        <item quantity="one">%d month</item>
+        <item quantity="one">%d mo</item>
         <item quantity="other">%d mos</item>
     </plurals>
     <plurals name="usage_days">
