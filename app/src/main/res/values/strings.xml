@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2020 Muntashir Al-Islam
+  ~ Copyright © 2020 Muntashir Al-Islam
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
     <string name="app_name" translatable="false">App Manager</string>
     <string name="instructions_header">[These instructions are outdated and will no longer be
         updated. Visit the official docs site (https://muntashirakon.github.io/AppManager) to get
-        up-to-date information]</string>
+        up-to-date info]</string>
     <string name="uninstall">Uninstall</string>
-    <string name="permissions">Uses permissions</string>
+    <string name="permissions">Used permissions</string>
     <string name="require_no_permission">No permission required</string>
     <string name="activities">Activities</string>
     <string name="launch">Launch</string>
@@ -71,13 +71,13 @@
     <string name="sdk" translatable="false">SDK</string>
     <string name="data_received">Data received</string>
     <string name="data_transmitted">Data transmitted</string>
-    <string name="data_usage_msg">Data Usage Since Last Boot</string>
+    <string name="data_usage_msg">Data usage since last boot</string>
     <string name="about">About</string>
     <string name="data_size">Data</string>
     <string name="cache_size">Cache</string>
     <string name="obb_size">Obb</string>
     <string name="media_size">Media</string>
-    <string name="app_not_installed">Application not installed</string>
+    <string name="app_not_installed">App not installed</string>
     <string name="system">System</string>
     <string name="user">User</string>
     <string name="sort">Sort</string>
@@ -114,7 +114,7 @@
     <string name="error_invalid_icon_resource">Invalid icon resource</string>
     <string name="error_invalid_icon_format">Invalid icon format</string>
     <string name="icon_picker">Icon Picker</string>
-    <string name="error_loading_icons">Error loading icons</string>
+    <string name="error_loading_icons">Could not load icons</string>
     <string name="license">License</string>
     <string name="license_message" translatable="false"><a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General
         Public License v3.0</a></string>
@@ -187,9 +187,9 @@
     <string name="go_back">Go back</string>
     <string name="go">Go</string>
     <string name="grant_usage_access">Grant Usage Access</string>
-    <string name="grant_usage_acess_message">Usage access is mandatory in order to display app usage information.</string>
+    <string name="grant_usage_acess_message">Usage access is mandatory in order to display app usage info.</string>
     <string name="share_apk">Share APK</string>
-    <string name="failed_to_extract_apk_file">Failed to extract apk file</string>
+    <string name="failed_to_extract_apk_file">Could not extract APK file</string>
     <string name="menu_remove_rules">Remove rules</string>
     <string name="menu_apply_rules">Apply rules</string>
     <string name="search">Search</string>
@@ -207,9 +207,9 @@
     <string name="save">Save</string>
     <string name="discard">Discard</string>
     <string name="delete">Delete</string>
-    <string name="deleted_successfully">Deleted successfully</string>
+    <string name="deleted_successfully">Deleted</string>
     <string name="deletion_failed">Deletion failed</string>
-    <string name="saved_successfully">Saved successfully</string>
+    <string name="saved_successfully">Saved</string>
     <string name="saving_failed">Saving failed, try again.</string>
     <string name="string_value">String value</string>
     <string name="long_integer_value">Long integer value</string>
@@ -218,7 +218,7 @@
     <string name="boolean_value">Boolean value</string>
     <string name="key_name">Key Name</string>
     <string name="select_type">Select a type</string>
-    <string name="system_odex_not_supported">Odex and some system apps not supported!</string>
+    <string name="system_odex_not_supported">.odex and some system apps lack support!</string>
     <string name="add_item">Add item</string>
     <string name="done">Done</string>
     <string name="type_boolean">True/false</string>
@@ -226,38 +226,38 @@
     <string name="type_int">Integer</string>
     <string name="type_long">Long integer</string>
     <string name="type_string">Characters</string>
-    <string name="error_evaluating_input">Error evaluating input</string>
+    <string name="error_evaluating_input">Could not evaluate input</string>
     <string name="key_name_cannot_be_null">Key name cannot be empty</string>
     <string name="disabled_app">Disabled</string>
     <string name="no_usage_in_this_time_range">No usage in this time range</string>
     <string name="no_content">No content</string>
     <string name="view_in_settings">View in Settings</string>
     <string name="uninstall_app_message">Do you want to uninstall this app?</string>
-    <string name="failed_to_uninstall">Failed to uninstall %s.</string>
-    <string name="uninstalled_successfully">%s is successfully uninstalled.</string>
+    <string name="failed_to_uninstall">Could not uninstall %s.</string>
+    <string name="uninstalled_successfully">%s has been uninstalled.</string>
     <string name="uninstall_system_app_message">This is a system app. Are you sure want to uninstall this app?</string>
     <string name="stopped">Stopped</string>
     <string name="disable">Disable</string>
     <string name="enable">Enable</string>
-    <string name="failed_to_disable">Failed to disable %s.</string>
-    <string name="failed_to_enable">Failed to enable %s.</string>
-    <string name="force_stop">Force Stop</string>
-    <string name="failed_to_stop">Failed to stop %s.</string>
-    <string name="storage_and_cache">Storage &amp; Cache</string>
+    <string name="failed_to_disable">Could not disable %s.</string>
+    <string name="failed_to_enable">Could not enable %s.</string>
+    <string name="force_stop">Force-Stop</string>
+    <string name="failed_to_stop">Could not stop %s.</string>
+    <string name="storage_and_cache">Storage and Cache</string>
     <string name="total_size">Total</string>
     <string name="app_size">App</string>
     <string name="app_ops">App Ops</string>
     <string name="no_app_ops">No app operations</string>
-    <string name="failed_to_enable_op">Failed to enable the requested app op</string>
-    <string name="failed_to_disable_op">Failed to disable the requested app op</string>
+    <string name="failed_to_enable_op">Could not enable the requested app op</string>
+    <string name="failed_to_disable_op">Could not disable the requested app op</string>
     <string name="rules_not_applied">Rules are not applied</string>
     <string name="str_logo">Logo</string>
     <string name="pref_root_mode_enabled">Root mode</string>
-    <string name="pref_root_mode_enabled_msg">Enabling root mode activates all root features of this app, ADB mode is detected automatically when this is disabled</string>
+    <string name="pref_root_mode_enabled_msg">Activates all the root features of this app, ADB mode is detected automatically when this is disabled</string>
     <string name="pref_global_blocking_enabled">Global component blocking</string>
-    <string name="pref_global_blocking_enabled_msg">Enabling global component blocking lets you block any component of any app without explicitly enabling blocking for the app</string>
+    <string name="pref_global_blocking_enabled_msg">Lets you block any component of any app without explicitly enabling blocking for the app</string>
     <string name="pref_usage_access_enabled">Usage access</string>
-    <string name="pref_usage_access_enabled_msg">Enabling usage acess lets you see your app usage statistics and app data info</string>
+    <string name="pref_usage_access_enabled_msg">Lets you see your app usage statistics and app data info</string>
     <string name="app_settings">Settings</string>
     <string name="only_works_in_root_mode">Only works in root mode</string>
     <string name="usage_yesterday">Yesterday</string>
@@ -278,18 +278,18 @@
     <string name="pref_import_export_blocking_rules_msg">Import/export rules, import external rules from Watt or Blocker</string>
     <string name="pref_import_watt">Import from Watt</string>
     <string name="pref_import_blocker">Import from Blocker</string>
-    <string name="the_import_was_successful">The import was successful</string>
-    <string name="the_export_was_successful">The export was successful</string>
+    <string name="the_import_was_successful">Imported</string>
+    <string name="the_export_was_successful">Exported</string>
     <plurals name="failed_to_import_files">
-        <item quantity="one">Failed to import %d file.</item>
-        <item quantity="other">Failed to import %d files.</item>
+        <item quantity="one">Could not import %d file.</item>
+        <item quantity="other">Could not import %d files.</item>
     </plurals>
     <string name="apk_updater">APK Updater</string>
     <string name="store">Store</string>
     <string name="running_apps">Running Apps</string>
     <string name="no_running_apps">No running apps</string>
     <string name="kill_process">Kill</string>
-    <string name="disable_background_run">Disable Background Run</string>
+    <string name="disable_background_run">Prevent Running in the Background</string>
     <string name="pid_and_ppid">Process ID: %d, Parent Process ID: %d</string>
     <string name="memory_virtual_memory">Memory: %s, Virtual Memory: %s</string>
     <string name="user_and_uid">User: %s (%d)</string>
@@ -300,27 +300,27 @@
     <string name="export_blocking_rules">Export Blocking Rules</string>
     <string name="some_items_selected">%d selected</string>
     <plurals name="alert_failed_to_clear_data">
-        <item quantity="one">Failed to clear data from %d app</item>
-        <item quantity="other">Failed to clear data from %d apps</item>
+        <item quantity="one">Could not clear data from %d app</item>
+        <item quantity="other">Could not clear data from %d apps</item>
     </plurals>
     <plurals name="alert_failed_to_disable">
-        <item quantity="one">Failed to disable %d app</item>
-        <item quantity="other">Failed to disable %d apps</item>
+        <item quantity="one">Could not disable %d app</item>
+        <item quantity="other">Could not disable %d apps</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
-        <item quantity="one">Failed to uninstall %d app</item>
-        <item quantity="other">Failed to uninstall %d apps</item>
+        <item quantity="one">Could not uninstall %d app</item>
+        <item quantity="other">Could not uninstall %d apps</item>
     </plurals>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">Failed to disable run in background for %d app</item>
-        <item quantity="other">Failed to disable run in background for %d apps</item>
+        <item quantity="one">Could not prevent %d app from running in the background</item>
+        <item quantity="other">Could not prevent %d apps from running in the background</item>
     </plurals>
-    <string name="the_operation_was_successful">The operation was successful</string>
+    <string name="the_operation_was_successful">Done</string>
     <plurals name="alert_failed_to_force_stop">
-        <item quantity="one">Failed to force stop %d app</item>
-        <item quantity="other">Failed to force stop %d apps</item>
+        <item quantity="one">Could not force-stop %d app</item>
+        <item quantity="other">Could not force-stop %d apps</item>
     </plurals>
-    <string name="toggle_kill_for_system_apps">Toggle kill for system apps</string>
+    <string name="toggle_kill_for_system_apps">Toggle kill system apps</string>
     <string name="app_op_cannot_be_enabled">This app op cannot be enabled, possibly a read-only app op depended on another app op.</string>
     <string name="app_op_cannot_be_disabled">This app op cannot be disabled, possibly a read-only app op depended on another app op.</string>
     <string name="permission_name">Permission Name</string>
@@ -341,19 +341,19 @@
     <string name="touchscreen">Touchscreen</string>
     <string name="pref_export_msg">Export blocking rules configured within App Manager to external storage</string>
     <string name="pref_import_msg">Import previously exported blocking rules from App Manager</string>
-    <string name="pref_import_watt_msg">Import blocking rules from Watt, each file containing rules for a single package and file name being the package name with xml extension</string>
+    <string name="pref_import_watt_msg">Import blocking rules from Watt, each file containing rules for a single package as the packagename.xml</string>
     <string name="pref_import_blocker_msg">Import blocking rules from Blocker, each file containing rules for a single package</string>
     <string name="pref_app_theme">App theme</string>
     <string name="follow_system">Follow system</string>
     <string name="battery_mode">Battery mode</string>
     <string name="day">Day</string>
     <string name="night">Night</string>
-    <string name="select_theme">Select a theme</string>
+    <string name="select_theme">Theme</string>
     <string name="apply">Apply</string>
     <string name="current_theme">Current theme: %s</string>
     <string name="pref_about_msg">App Manager version, license, credits, etc.</string>
     <string name="version">Version</string>
-    <string name="sort_by_wifi_data">Wifi data</string>
+    <string name="sort_by_wifi_data">Wi-Fi data</string>
     <string name="block_trackers">Block trackers</string>
     <string name="sort_by_component_name">Component name</string>
     <string name="reset_to_default">Reset to default</string>
@@ -367,24 +367,24 @@
     <string name="deny_dangerous_permissions">Deny dangerous permissions</string>
     <string name="sort_by_tracker_components">Tracker first</string>
     <string name="unknown_op">Unknown Operation</string>
-    <string name="failed_to_disable_trackers">Failed to disable trackers</string>
-    <string name="trackers_disabled_successfully">Trackers are successfully disabled</string>
+    <string name="failed_to_disable_trackers">Could not disable trackers</string>
+    <string name="trackers_disabled_successfully">Trackers now disabled</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">Failed to disable trackers from %d app</item>
-        <item quantity="other">Failed to disable trackers from %d apps</item>
+        <item quantity="one">Could not disable trackers from %d app</item>
+        <item quantity="other">Could not disable trackers from %d apps</item>
     </plurals>
-    <string name="failed_to_grant_permission">Failed to grant permission</string>
-    <string name="failed_to_revoke_permission">Failed to revoke permission</string>
-    <string name="failed_to_reset_app_ops">Failed to reset app ops</string>
-    <string name="failed_to_deny_dangerous_perms">Failed to deny all dangerous permissions</string>
-    <string name="failed_to_deny_dangerous_app_ops">Failed to deny all dangerous app ops</string>
+    <string name="failed_to_grant_permission">Could not grant permission</string>
+    <string name="failed_to_revoke_permission">Could not revoke permission</string>
+    <string name="failed_to_reset_app_ops">Could not reset app ops</string>
+    <string name="failed_to_deny_dangerous_perms">Could not revoke all dangerous permissions</string>
+    <string name="failed_to_deny_dangerous_app_ops">Could not revoke all dangerous app ops</string>
     <string name="launch_app">Launch</string>
     <string name="never_ask">Never ask</string>
     <string name="one_click_ops">1-Click Ops</string>
     <string name="changelog">Changelog</string>
-    <string name="external_apk_no_app_op">External apk does not have any app operation</string>
+    <string name="external_apk_no_app_op">External APK does not have any app operation</string>
     <string name="manifest_viewer">Manifest Viewer</string>
-    <string name="scanning_is_still_in_progress">Scanning is still in progress</string>
+    <string name="scanning_is_still_in_progress">Scanning still in progress</string>
     <plurals name="no_of_trackers">
         <item quantity="one">%d tracker</item>
         <item quantity="other">%d trackers</item>
@@ -392,46 +392,46 @@
     <string name="install">Install</string>
     <string name="update">Update</string>
     <string name="source_code">Source Code</string>
-    <string name="source_code_links" translatable="false">Github: https://github.com/MuntashirAkon/AppManager
-        \nGitlab: https://gitlab.com/muntashir/AppManager
-        \nRiseup: https://0xacab.org/muntashir/AppManager
+    <string name="source_code_links" translatable="false">GitHub: https://github.com/MuntashirAkon/AppManager
+        \nGitLab: https://gitlab.com/muntashir/AppManager
+        \nRiseUp: https://0xacab.org/muntashir/AppManager
         \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
     <string name="community">Telegram Community</string>
     <string name="community_links">Update Channel: https://t.me/AppManagerChannel
         \nSupport Group: https://t.me/AppManagerAndroid</string>
     <string name="pref_import_existing">Import existing rules</string>
     <string name="pref_import_existing_msg">Add components disabled by others apps to App Manager.
-        Be careful when using this tool as there can be many false positives. Choose only the apps that you\'re certain about</string>
-    <string name="failed_to_get_data_usage_information">Failed to get data usage information</string>
+        Be careful when using this tool as there can be many false positives. Choose only the apps you\'re certain about</string>
+    <string name="failed_to_get_data_usage_information">Could not fetch data usage info</string>
     <string name="clear_cache">Clear Cache</string>
     <string name="block_unblock_trackers_description">Block or unblock ad and tracking components from all the installed apps</string>
     <string name="block_components_dots">Block components…</string>
     <string name="block_components_description">Block all components identified by the given signature(s)</string>
     <string name="deny_app_ops_dots">Deny app ops…</string>
-    <string name="deny_app_ops_description">Deny given app operations identified by the constant values, ie. 63 means RUN_IN_BACKGROUND</string>
+    <string name="deny_app_ops_description">Deny given app operations identified by the constant values, i.e. 63 means RUN_IN_BACKGROUND</string>
     <string name="clear_data_from_uninstalled_apps">Clear data from uninstalled apps</string>
     <string name="clear_data_from_uninstalled_apps_description">Clear data from apps that are uninstalled with DONT_DELETE_DATA flag</string>
     <string name="clear_app_cache">Clear app cache</string>
-    <string name="clear_app_cache_description">Clear cache from all the applications</string>
+    <string name="clear_app_cache_description">Clear app cache from all apps</string>
     <string name="no_tracker_found">No tracker found</string>
     <string name="failed_packages">Failed packages</string>
     <string name="input_signatures">Input signatures</string>
-    <string name="input_signatures_description">Input signatures (eg., com.facebook.) each separated by a space.</string>
+    <string name="input_signatures_description">Input signatures (com.facebook org.app2 com.app3) etc.</string>
     <string name="filtered_packages">Filtered packages</string>
     <string name="input_app_ops">Input app ops</string>
-    <string name="input_app_ops_description">Input app op constants (eg., 63) each separated by a
-        space. You can find app op constants in the app ops tab under the brackets.</string>
+    <string name="input_app_ops_description">Input app op constants e.g. (63 72 12) etc.
+        You can find app op constants in the app ops tab under the brackets.</string>
     <string name="only_works_in_root_or_adb_mode">Only works in root or ADB mode</string>
-    <string name="failed_to_parse_some_numbers">Failed to parse some numbers</string>
+    <string name="failed_to_parse_some_numbers">Could not parse some numbers</string>
     <plurals name="no_of_splits">
         <item quantity="one">%d split</item>
         <item quantity="other">%d splits</item>
     </plurals>
     <string name="split_no">Split#%d: %s</string>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Failed to fetch package info, possibly a split apk</string>
+    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Could not fetch package info, possibly a split APK</string>
     <string name="termux">Termux</string>
-    <string name="package_name_is_installed_successfully">%s is installed successfully</string>
-    <string name="failed_to_install_package_name">Failed to install %s</string>
+    <string name="package_name_is_installed_successfully">%s installed</string>
+    <string name="failed_to_install_package_name">Could not install %s</string>
     <string name="filter">Filter</string>
     <string name="filter_user_apps">User apps</string>
     <string name="filter_system_apps">System apps</string>
@@ -453,47 +453,47 @@
     <string name="delete_backup">Delete backup</string>
     <string name="backup_options">Backup Options</string>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="one">Failed to backup %d app</item>
-        <item quantity="other">Failed to backup %d apps</item>
+        <item quantity="one">Could not back up %d app</item>
+        <item quantity="other">Could not back up %d apps</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
-        <item quantity="one">Failed to backup %d app</item>
-        <item quantity="other">Failed to backup %d apps</item>
+        <item quantity="one">Could not back up %d app</item>
+        <item quantity="other">Could not back up %d apps</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
-        <item quantity="one">Failed to restore %d app</item>
-        <item quantity="other">Failed to restore %d apps</item>
+        <item quantity="one">Could not restore %d app</item>
+        <item quantity="other">Could not restore %d apps</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="one">Failed to delete %d backup</item>
-        <item quantity="other">Failed to delete %d backups</item>
+        <item quantity="one">Could not delete %d backup</item>
+        <item quantity="other">Could not delete %d backups</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="one">Failed to unblock trackers from %d app</item>
-        <item quantity="other">Failed to unblock trackers from %d apps</item>
+        <item quantity="one">Could not unblock trackers from %d app</item>
+        <item quantity="other">Could not unblock trackers from %d apps</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
-        <item quantity="one">Failed to block components for %d app</item>
-        <item quantity="other">Failed to block components for %d apps</item>
+        <item quantity="one">Could not block components for %d app</item>
+        <item quantity="other">Could not block components for %d apps</item>
     </plurals>
     <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="one">Failed to deny app ops for %d app</item>
-        <item quantity="other">Failed to deny app ops for %d apps</item>
+        <item quantity="one">Could not deny app ops for %d app</item>
+        <item quantity="other">Could not deny app ops for %d apps</item>
     </plurals>
     <plurals name="alert_failed_to_enable">
-        <item quantity="one">Failed to enable %s app</item>
-        <item quantity="other">Failed to enable %s apps</item>
+        <item quantity="one">Could not enable %s app</item>
+        <item quantity="other">Could not enable %s apps</item>
     </plurals>
-    <string name="failed_to_delete_backup">Failed to delete backup</string>
-    <string name="failed_to_restore_backup">Failed to restore backup</string>
+    <string name="failed_to_delete_backup">Could not delete backup</string>
+    <string name="failed_to_restore_backup">Could not restore backup</string>
     <string name="apply_to_system_apps">Apply to system apps</string>
-    <string name="apply_to_system_apps_question">Apply to system apps as well? Select no if unsure.</string>
+    <string name="apply_to_system_apps_question">Apply to system apps too? Select \"No\" if unsure.</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="skip_signature_checks">Skip signature checks</string>
     <string name="clear_data_message">Are you sure want to clear data from this app?</string>
     <string name="clear">Clear</string>
-    <string name="failed_to_backup">Failed to create backup</string>
+    <string name="failed_to_backup">Could not create backup</string>
     <string name="block">Block</string>
     <string name="unblock">Unblock</string>
     <string name="block_unblock_trackers">Block/unblock trackers</string>
@@ -504,20 +504,20 @@
     <string name="website">Website</string>
     <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">Remove all rules</string>
-    <string name="pref_remove_all_rules_msg">All configured blocked components will be enabled, app ops will be set default values and permissions will be granted</string>
+    <string name="pref_remove_all_rules_msg">All configured blocked components will be enabled, app ops will be set to default values and permissions will be granted</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="filter_apps_with_activities">Apps with activities</string>
     <string name="toggle_default_app_ops">Toggle default app ops</string>
-    <string name="installer_error_aborted">Installation failed because either it\'s cancelled or the session closed unexpectedly</string>
+    <string name="installer_error_aborted">Installation failed because either because it was cancelled, or the session closed unexpectedly</string>
     <string name="installer_error_blocked_device">device</string>
-    <string name="installer_error_blocked">Installation was blocked by %s</string>
-    <string name="installer_error_conflict">Unable to install the app because it conflicts with an already installed app with same package name</string>
-    <string name="installer_error_incompatible">Application is incompatible with this device</string>
+    <string name="installer_error_blocked">Installation blocked by %s</string>
+    <string name="installer_error_conflict">Cannot install the app because an installed app has this package name already</string>
+    <string name="installer_error_incompatible">The app is incompatible with this device</string>
     <string name="installer_error_bad_apks">Invalid APK files selected</string>
     <string name="installer_error_storage">Not enough storage space to install the app</string>
     <string name="installer_error_generic">Installation failed</string>
     <string name="installer_error_lidl_rom">Your ROM is incompatible with rootless installer.</string>
-    <string name="failed_to_fetch_package_info">Failed to fetch package info</string>
+    <string name="failed_to_fetch_package_info">Could not fetch package info</string>
     <string name="batch_ops">Batch Operations</string>
     <string name="operation_running">Operation running…</string>
     <string name="full_stop_tap_to_see_details">. Tap to see details.</string>
@@ -529,22 +529,22 @@
     <string name="unblock_trackers">Unblock trackers</string>
     <string name="package_installer">Package Installer</string>
     <string name="install_in_progress">Install in progress</string>
-    <string name="installer_error_security">Cannot access apk files</string>
-    <string name="installer_error_session_create">Failed to create an installer session</string>
+    <string name="installer_error_security">Cannot access APK files</string>
+    <string name="installer_error_session_create">Could not create an installer session</string>
     <string name="installer_error_session_write">Failed to write to the installer session</string>
-    <string name="installer_error_session_commit">Failed to commit the apk files</string>
-    <string name="installer_error_session_abandon">Failed to abandon the installer session</string>
-    <string name="backup_apk_only">Apk only</string>
-    <string name="backup_obb_media">Obb &amp; media</string>
-    <string name="failed_to_extract_obb_files">Failed to extract obb files</string>
-    <string name="obb_files_extracted_successfully">Obb files extracted successfully</string>
+    <string name="installer_error_session_commit">Could not commit the APK files</string>
+    <string name="installer_error_session_abandon">Could not abandon the installer session</string>
+    <string name="backup_apk_only">APK only</string>
+    <string name="backup_obb_media">Obb and Media</string>
+    <string name="failed_to_extract_obb_files">Could not extract OBB files</string>
+    <string name="obb_files_extracted_successfully">OBB files extracted</string>
     <string name="source">Source</string>
-    <string name="backup_multiple">Backup multiple</string>
+    <string name="backup_multiple">Back up multiple</string>
     <string name="backup_all_users">All users</string>
     <string name="pref_app_language">Language</string>
     <string name="auto">Auto</string>
-    <string name="current_language">Current language: %s</string>
-    <string name="choose_language">Choose a language</string>
+    <string name="current_language">Language: %s</string>
+    <string name="choose_language">Change language</string>
     <string name="base_apk">Base APK</string>
     <string name="split_feature_name">Feature: %s</string>
     <string name="unknown_split_for_feature">%s for feature %s</string>
