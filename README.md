@@ -1,7 +1,7 @@
 # App Manager
 ![Debug Build](https://github.com/MuntashirAkon/AppManager/workflows/Debug%20Build/badge.svg)
-[![Crowdin](https://badges.crowdin.net/android-app-manager/localized.svg)](https://crowdin.com/project/android-app-manager)
-[![GitHub Release](https://img.shields.io/github/v/release/MuntashirAkon/AppManager)](https://github.com/MuntashirAkon/AppManager/releases/latest)
+[![Translation status](https://hosted.weblate.org/widgets/app-manager/-/svg-badge.svg)](https://hosted.weblate.org/engage/app-manager/)
+[![GitHub release (including pre-releases)](https://img.shields.io/github/v/release/MuntashirAkon/AppManager?include_prereleases)](https://github.com/MuntashirAkon/AppManager/releases/latest)
 [![F-Droid](https://img.shields.io/f-droid/v/io.github.muntashirakon.AppManager)](https://f-droid.org/packages/io.github.muntashirakon.AppManager)
 ![GitHub Repo Size](https://img.shields.io/github/repo-size/MuntashirAkon/AppManager)
 ![GitHub Commit per Week](https://img.shields.io/github/commit-activity/w/MuntashirAkon/AppManager)
@@ -47,21 +47,21 @@ Telegram Support Group: https://t.me/AppManagerAndroid
 
 Telegram Update Channel: https://t.me/AppManagerChannel
 
-### Translation
+### Translations
 
-Help us translate App Manager at Weblate: https://hosted.weblate.org/engage/app-manager/
+Translate **App Manager** at _Weblate_: https://hosted.weblate.org/engage/app-manager/
 
-Help up translate App Manager Docs at Crowdin: https://crwd.in/app-manager-docs
+Translate **App Manager Docs** at _Crowdin_: https://crwd.in/app-manager-docs
 
 [![Translation status](https://hosted.weblate.org/widgets/app-manager/-/multi-auto.svg)](https://hosted.weblate.org/engage/app-manager/)
 
 ### Mirrors
 
-Gitlab: https://gitlab.com/muntashir/AppManager
+**Gitlab**: https://gitlab.com/muntashir/AppManager
 
-Riseup: https://0xacab.org/muntashir/AppManager
+**Riseup**: https://0xacab.org/muntashir/AppManager
 
-Codeberg: https://codeberg.org/muntashir/AppManager
+**Codeberg**: https://codeberg.org/muntashir/AppManager
 
 ### Screenshots
 
