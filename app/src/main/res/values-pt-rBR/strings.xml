@@ -14,31 +14,28 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-<resources>
-    <string name="instructions_header">[Essas instruções estão desatualizadas e não serão
-        atualizadas. Visite o site da documentação oficial (https://muntashirakon.github.io/AppManager) para obter
-        mais informações]</string>
+  --><resources>
+    <string name="instructions_header">[Estas instruções estão desatualizadas e não serão mais atualizadas. Visite o site de documentação oficial (https://muntashirakon.github.io/AppManager) para obter mais informações]</string>
     <string name="uninstall">Desinstalar</string>
-    <string name="permissions">Permissões utilizadas</string>
+    <string name="permissions">Usa permissões</string>
     <string name="require_no_permission">Nenhuma permissão requerida</string>
     <string name="activities">Atividades</string>
     <string name="launch">Iniciar</string>
     <string name="unsupported">Não suportado</string>
     <string name="refresh">Atualizar</string>
     <string name="no_activities">Nenhuma atividade</string>
-    <string name="no_receivers">Nenhum receivers</string>
-    <string name="no_providers">Nenhum providers</string>
+    <string name="no_receivers">Nenhum receptor</string>
+    <string name="no_providers">Nenhum provedor</string>
     <string name="launch_mode">Modo de inicialização</string>
     <string name="sort_by_last_update">Última atualização</string>
     <string name="authority">Autoridade</string>
     <string name="service">Serviços</string>
     <string name="no_service">Nenhum serviço</string>
     <string name="orientation">Orientação</string>
-    <string name="grant_uri_permission">Conceder permissão URI</string>
+    <string name="grant_uri_permission">Conceder permissões de URI</string>
     <string name="path_permissions">Permissões do caminho</string>
-    <string name="read">Leitura</string>
-    <string name="write">Escrita</string>
+    <string name="read">Ler</string>
+    <string name="write">Escrever</string>
     <string name="patterns_allowed">Padrões permitidos</string>
     <string name="declared_permission">Permissões</string>
     <string name="group">Grupo</string>
@@ -53,9 +50,9 @@
     <string name="error">Erro</string>
     <string name="loading">Carregando…</string>
     <!-- &#8230; = ... -->
-    <string name="sort_by_app_label">Nome do aplicativo</string>
+    <string name="sort_by_app_label">Rótulo do aplicativo</string>
     <string name="sort_by_package_name">Nome do pacote</string>
-    <string name="sort_by_domain">Apps do usuário</string>
+    <string name="sort_by_domain">Aplicativos do usuário primeiro</string>
     <string name="data_received">Dados recebidos</string>
     <string name="data_transmitted">Dados transmitidos</string>
     <string name="data_usage_msg">Uso de dados desde a última inicialização</string>
@@ -66,26 +63,26 @@
     <string name="app_not_installed">Aplicativo não instalado</string>
     <string name="system">Sistema</string>
     <string name="user">Usuário</string>
-    <string name="sort">Ordenar por</string>
+    <string name="sort">Ordenar</string>
     <string name="version_name_with_code">Versão %s (%d)</string>
-    <string name="app_info">Informações do app</string>
-    <string name="system_app">App do sistema</string>
-    <string name="user_app">App do usuário</string>
+    <string name="app_info">Informações do aplicativo</string>
+    <string name="system_app">Aplicativo do sistema</string>
+    <string name="user_app">Aplicativo do usuário</string>
     <string name="paths_and_directories">Caminhos &amp; Diretórios</string>
     <string name="source_dir">Diretório de origem</string>
     <string name="data_dir">Diretório de dados</string>
-    <string name="sdk_min">Min</string>
-    <string name="sdk_max">Max</string>
+    <string name="sdk_min">Mín</string>
+    <string name="sdk_max">Máx</string>
     <string name="more_info">Mais informações</string>
-    <string name="date_installed">Data da instalação</string>
-    <string name="date_updated">Data da atualização</string>
-    <string name="installer_app">Origem</string>
+    <string name="date_installed">Data de instalação</string>
+    <string name="date_updated">Data de atualização</string>
+    <string name="installer_app">Aplicativo instalador</string>
     <string name="user_id">ID do usuário</string>
     <string name="main_activity">Atividade principal</string>
     <string name="show_details">Mostrar detalhes</string>
     <string name="empty_package_name">Nome do pacote vazio</string>
     <string name="instructions">Instruções</string>
-    <string name="error_creating_shortcut">Erro ao criar o atalho</string>
+    <string name="error_creating_shortcut">Erro ao criar atalho</string>
     <string name="error_verbose_pin_shortcut">O launcher atual não suporta PinShortcut. Não foi possível criar o atalho.</string>
     <string name="starting_activity">Iniciando atividade: \"%s\"</string>
     <string name="create_shortcut">Criar atalho</string>
@@ -94,10 +91,10 @@
     <string name="package_name">Nome do pacote</string>
     <string name="class_name">Nome da classe</string>
     <string name="insert_icon">Inserir ícone</string>
-    <string name="error_invalid_icon_resource">O ícone inserido é inválido</string>
-    <string name="error_invalid_icon_format">O formato do ícone inserido é inválido</string>
+    <string name="error_invalid_icon_resource">Recurso de ícone inválido</string>
+    <string name="error_invalid_icon_format">Formato de ícone inválido</string>
     <string name="icon_picker">Seletor de ícone</string>
-    <string name="error_loading_icons">Erro ao carregar o ícone</string>
+    <string name="error_loading_icons">Erro ao carregar ícone</string>
     <string name="license">Licença</string>
     <string name="third_party">Bibliotecas e Ícones de terceiros</string>
     <string name="credits">Créditos</string>
@@ -114,22 +111,22 @@
     </string>
     <string name="word_wrap">Alternar quebra de palavra</string>
     <string name="class_viewer">Visualizador de classe</string>
-    <string name="view_trackers">Visualizar rastreadores</string>
-    <string name="view_summary">Visualizar resumo</string>
-    <string name="toggle_class_listing">Alternar listas de classes</string>
+    <string name="view_trackers">Ver rastreadores</string>
+    <string name="view_summary">Ver resumo</string>
+    <string name="toggle_class_listing">Alternar lista de classes</string>
     <string name="trackers_and_classes">%d rastreadores com %d classes</string>
     <string name="tested_signatures_on_classes_and_time_taken">%d assinaturas testadas em %d classes.\nTempo total: %d ms (%d iterações).\n\n%s</string>
     <string name="found_trackers">Rastreadores encontrados:</string>
-    <string name="tracker_details">Detalhes dos reastreadores</string>
-    <string name="tracker_classes">Classes dos rastreadores</string>
+    <string name="tracker_details">Detalhes do reastreador</string>
+    <string name="tracker_classes">Classes do rastreador</string>
     <string name="all_classes">Todas as classes</string>
     <plurals name="main_list_date_days">
         <item quantity="one">%s %d dia</item>
         <item quantity="other">%s %d dias</item>
     </plurals>
     <string name="no_shared_libs">Nenhuma biblioteca compartilhada</string>
-    <string name="no_tracker_class">Nenhuma classe de rastreadores</string>
-    <string name="app_usage">Uso dos apps</string>
+    <string name="no_tracker_class">Nenhuma classe de rastreador</string>
+    <string name="app_usage">Uso de aplicativos</string>
     <string name="usage_weekly">Semanal</string>
     <string name="usage_monthly">Mensal</string>
     <string name="usage_yearly">Anual</string>
@@ -146,33 +143,33 @@
         <item quantity="other">%d dias</item>
     </plurals>
     <plurals name="usage_hours">
-        <item quantity="one">%d hr</item>
-        <item quantity="other">%d hrs</item>
+        <item quantity="one">%d hora</item>
+        <item quantity="other">%d horas</item>
     </plurals>
-    <string name="usage_min">%d min</string>
+    <string name="usage_min">%d minutos</string>
     <string name="usage_less_than_a_minute">Menos de um minuto</string>
-    <string name="usage_last_used">Usado pela última vez:</string>
+    <string name="usage_last_used">Último usado:</string>
     <string name="go_back">Voltar</string>
     <string name="go">Ir</string>
-    <string name="grant_usage_access">Conceder permissão de Acesso ao uso</string>
-    <string name="grant_usage_acess_message">A permissão de Acesso ao uso é obrigatória para exibir informações de uso dos aplicativos.</string>
+    <string name="grant_usage_access">Conceder Acesso de Uso</string>
+    <string name="grant_usage_acess_message">Acesso do uso é obrigatório para exibir informações de uso dos aplicativos.</string>
     <string name="share_apk">Compartilhar APK</string>
-    <string name="failed_to_extract_apk_file">Falha ao extrair o arquivo apk</string>
+    <string name="failed_to_extract_apk_file">Falha ao extrair arquivo apk</string>
     <string name="menu_remove_rules">Remover regras</string>
     <string name="menu_apply_rules">Aplicar regras</string>
     <string name="search">Pesquisar</string>
     <string name="aurora">Aurora</string>
-    <string name="dev_protected_data_dir">Diretório de dados protegidos</string>
-    <string name="process_name">Nome do processo</string>
+    <string name="dev_protected_data_dir">Diretório de dados protegidos pelo dispositivo</string>
+    <string name="process_name">Nome do Processo</string>
     <string name="no_code">Nenhum código</string>
     <string name="updated_app">Atualizado</string>
     <string name="test_only">Apenas teste</string>
     <string name="databases">Banco de dados</string>
     <string name="save">Salvar</string>
     <string name="discard">Descartar</string>
-    <string name="delete">Deletar</string>
+    <string name="delete">Excluir</string>
     <string name="deleted_successfully">Excluído com sucesso</string>
-    <string name="deletion_failed">Falha ao deletar</string>
+    <string name="deletion_failed">Falha ao excluir</string>
     <string name="saved_successfully">Salvo com sucesso</string>
     <string name="saving_failed">Falha ao salvar, tente novamente.</string>
     <string name="string_value">Valor da string</string>
@@ -479,4 +476,22 @@
     <string name="pref_app_language">Idioma</string>
     <string name="current_language">Idioma atual: %s</string>
     <string name="choose_language">Escolha um idioma</string>
+    <string name="shared_prefs">Preferências Compartilhadas</string>
+    <string name="debuggable">Depurável</string>
+    <string name="requested_large_heap">Grande pilha</string>
+    <string name="native_library_dir">Diretório Nativo da Biblioteca JNI</string>
+    <string name="sdk_flags">Bandeiras</string>
+    <string name="obb_size">Obb</string>
+    <string name="sort_by_target_sdk">SDK de destino</string>
+    <string name="manifest">Manifesto</string>
+    <string name="input_features">Recursos de entrada</string>
+    <string name="shared_user_id">ID de usuário compartilhado</string>
+    <string name="sort_by_shared_user_id">ID de usuário compartilhado</string>
+    <string name="gles_ver">Versão requerida do GL ES</string>
+    <string name="shared_libs">Bibliotecas compartilhadas</string>
+    <string name="flags">Bandeiras</string>
+    <string name="soft_input">Modo de entrada suave</string>
+    <string name="task_affinity">Afinidade de tarefas</string>
+    <string name="providers">Provedores</string>
+    <string name="receivers">Receptores</string>
 </resources>
