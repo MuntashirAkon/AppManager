@@ -23,7 +23,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.text.TextUtils;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,6 +38,7 @@ import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -123,16 +123,16 @@ public final class MetadataManager implements Closeable {
         this.metadata.packageName = rootObject.getString("package_name");
         this.metadata.versionName = rootObject.getString("version_name");
         this.metadata.versionCode = rootObject.getLong("version_code");
-        this.metadata.dataDirs = getArrayFromJSONArray(rootObject.getJSONArray("data_dirs"));
+        this.metadata.dataDirs = JSONUtils.getArray(String.class, rootObject.getJSONArray("data_dirs"));
         this.metadata.isSystem = rootObject.getBoolean("is_system");
         this.metadata.isSplitApk = rootObject.getBoolean("is_split_apk");
-        this.metadata.splitConfigs = getArrayFromJSONArray(rootObject.getJSONArray("split_configs"));
-        this.metadata.splitNames = getArrayFromJSONArray(rootObject.getJSONArray("split_names"));
+        this.metadata.splitConfigs = JSONUtils.getArray(String.class, rootObject.getJSONArray("split_configs"));
+        this.metadata.splitNames = JSONUtils.getArray(String.class, rootObject.getJSONArray("split_names"));
         this.metadata.hasRules = rootObject.getBoolean("has_rules");
         this.metadata.backupTime = rootObject.getLong("backup_time");
-        this.metadata.certSha256Checksum = getArrayFromJSONArray(rootObject.getJSONArray("cert_sha256_checksum"));
+        this.metadata.certSha256Checksum = JSONUtils.getArray(String.class, rootObject.getJSONArray("cert_sha256_checksum"));
         this.metadata.sourceSha256Checksum = rootObject.getString("source_sha256_checksum");
-        this.metadata.dataSha256Checksum = getArrayFromJSONArray(rootObject.getJSONArray("data_sha256_checksum"));
+        this.metadata.dataSha256Checksum = JSONUtils.getArray(String.class, rootObject.getJSONArray("data_sha256_checksum"));
         this.metadata.mode = rootObject.getInt("mode");
         this.metadata.version = rootObject.getInt("version");
         this.metadata.apkName = rootObject.getString("apk_name");
@@ -153,16 +153,16 @@ public final class MetadataManager implements Closeable {
             rootObject.put("package_name", metadata.packageName);
             rootObject.put("version_name", metadata.versionName);
             rootObject.put("version_code", metadata.versionCode);
-            rootObject.put("data_dirs", getJSONArrayFromArray(metadata.dataDirs));
+            rootObject.put("data_dirs", JSONUtils.getJSONArray(metadata.dataDirs));
             rootObject.put("is_system", metadata.isSystem);
             rootObject.put("is_split_apk", metadata.isSplitApk);
-            rootObject.put("split_configs", getJSONArrayFromArray(metadata.splitConfigs));
-            rootObject.put("split_names", getJSONArrayFromArray(metadata.splitNames));
+            rootObject.put("split_configs", JSONUtils.getJSONArray(metadata.splitConfigs));
+            rootObject.put("split_names", JSONUtils.getJSONArray(metadata.splitNames));
             rootObject.put("has_rules", metadata.hasRules);
             rootObject.put("backup_time", metadata.backupTime);
-            rootObject.put("cert_sha256_checksum", getJSONArrayFromArray(metadata.certSha256Checksum));
+            rootObject.put("cert_sha256_checksum", JSONUtils.getJSONArray(metadata.certSha256Checksum));
             rootObject.put("source_sha256_checksum", metadata.sourceSha256Checksum);
-            rootObject.put("data_sha256_checksum", getJSONArrayFromArray(metadata.dataSha256Checksum));
+            rootObject.put("data_sha256_checksum", JSONUtils.getJSONArray(metadata.dataSha256Checksum));
             rootObject.put("mode", metadata.mode);
             rootObject.put("version", metadata.version);
             rootObject.put("apk_name", metadata.apkName);
@@ -173,21 +173,6 @@ public final class MetadataManager implements Closeable {
             rootObject.put("key_store", metadata.keyStore);
             fileOutputStream.write(rootObject.toString().getBytes());
         }
-    }
-
-    @NonNull
-    private static JSONArray getJSONArrayFromArray(@NonNull final String[] stringArray) {
-        JSONArray jsonArray = new JSONArray();
-        for (String string : stringArray) jsonArray.put(string);
-        return jsonArray;
-    }
-
-    @NonNull
-    private static String[] getArrayFromJSONArray(@NonNull final JSONArray jsonArray)
-            throws JSONException {
-        String[] stringArray = new String[jsonArray.length()];
-        for (int i = 0; i < jsonArray.length(); ++i) stringArray[i] = (String) jsonArray.get(i);
-        return stringArray;
     }
 
     public Metadata setupMetadata(@NonNull PackageInfo packageInfo,
