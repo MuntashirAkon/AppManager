@@ -46,8 +46,8 @@ import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
 
 public final class ComponentUtils {
     public static boolean isTracker(String componentName) {
@@ -155,7 +155,7 @@ public final class ComponentUtils {
         String[] names = confDir.list((dir, name) -> name.endsWith(".tsv"));
         if (names != null) {
             for (String name: names) {
-                packages.add(Utils.trimExtension(name));
+                packages.add(IOUtils.trimExtension(name));
             }
         }
         return packages;

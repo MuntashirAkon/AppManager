@@ -43,7 +43,6 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
 
 @SuppressWarnings("unused,UnusedReturnValue")
 public final class RunnerUtils {
@@ -293,10 +292,10 @@ public final class RunnerUtils {
                 ZipEntry zipEntry = zipEntries.nextElement();
                 if (zipEntry.isDirectory()) continue;
                 fullPath = zipEntry.getName();
-                fileName = Utils.getLastPathComponent(fullPath);
+                fileName = IOUtils.getLastPathComponent(fullPath);
                 if (Runner.TOYBOX_SO_NAME.equals(fileName)) {
                     Log.d("Runner", "Matched toybox: " + fullPath);
-                    abi = Utils.getLastPathComponent(fullPath.substring(0, fullPath.length() - fileName.length()));
+                    abi = IOUtils.getLastPathComponent(fullPath.substring(0, fullPath.length() - fileName.length()));
                     Log.d("Runner", "Abi: " + abi + ", Supported: " + Arrays.toString(Build.SUPPORTED_ABIS));
                     lastAbi = ArrayUtils.indexOf(Build.SUPPORTED_ABIS, abi);
                     if (lastAbi != -1 && lastAbi < minAbi) {

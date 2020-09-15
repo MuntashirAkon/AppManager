@@ -80,6 +80,7 @@ import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static androidx.appcompat.app.ActionBar.LayoutParams;
@@ -630,7 +631,7 @@ public class MainActivity extends BaseActivity implements
     private void checkAppUpdate() {
         if (Utils.isAppUpdated()) {
             new Thread(() -> {
-                final Spanned spannedChangelog = HtmlCompat.fromHtml(Utils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
+                final Spanned spannedChangelog = HtmlCompat.fromHtml(IOUtils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
                 runOnUiThread(() -> {
                     View view = getLayoutInflater().inflate(R.layout.dialog_changelog, null);
                     ((MaterialTextView) view.findViewById(R.id.content)).setText(spannedChangelog);

@@ -57,7 +57,6 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
 
 public final class ApkFile implements AutoCloseable, Parcelable {
     public static final String TAG = "ApkFile";
@@ -164,7 +163,7 @@ public final class ApkFile implements AutoCloseable, Parcelable {
         ContentResolver cr = context.getContentResolver();
         this.apkUri = apkUri;
         // Check extension
-        String name = Utils.getName(cr, apkUri);
+        String name = IOUtils.getFileName(cr, apkUri);
         if (name == null) throw new Exception("Could not extract package name from the URI.");
         String extension;
         try {
@@ -178,7 +177,7 @@ public final class ApkFile implements AutoCloseable, Parcelable {
         ParcelFileDescriptor fd = cr.openFileDescriptor(apkUri, "r");
         if (fd == null) throw new Exception("Could not get file descriptor from the Uri");
         this.fd = fd;
-        this.cacheFilePath = Utils.getFileFromFd(fd);
+        this.cacheFilePath = IOUtils.getFileFromFd(fd);
         String packageName = null;
         // Check for splits
         if (extension.equals("apk")) {
@@ -207,7 +206,7 @@ public final class ApkFile implements AutoCloseable, Parcelable {
                 while (zipEntries.hasMoreElements()) {
                     ZipEntry zipEntry = zipEntries.nextElement();
                     if (zipEntry.isDirectory()) continue;
-                    fileName = Utils.getFileNameFromZipEntry(zipEntry);
+                    fileName = IOUtils.getFileNameFromZipEntry(zipEntry);
                     if (fileName.endsWith(".apk")) {
                         // Extract the apk file
                         try (InputStream zipInputStream = zipFile.getInputStream(zipEntry)) {
@@ -334,7 +333,7 @@ public final class ApkFile implements AutoCloseable, Parcelable {
                     while (zipEntries.hasMoreElements()) {
                         ZipEntry zipEntry = zipEntries.nextElement();
                         if (zipEntry.isDirectory()) continue;
-                        fileName = Utils.getFileNameFromZipEntry(zipEntry);
+                        fileName = IOUtils.getFileNameFromZipEntry(zipEntry);
                         if (fileName.endsWith(".obb")) {
                             // Extract obb file to the destination directory
                             try (InputStream zipInputStream = zipFile.getInputStream(zipEntry)) {
@@ -371,7 +370,7 @@ public final class ApkFile implements AutoCloseable, Parcelable {
                     entry.source.delete();
             }
         }
-        Utils.closeSilently(fd);
+        IOUtils.closeSilently(fd);
     }
 
     @Nullable

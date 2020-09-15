@@ -47,7 +47,7 @@ import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 public class SettingsActivity extends BaseActivity {
     private static final List<Integer> themeConst = Arrays.asList(
@@ -183,7 +183,7 @@ public class SettingsActivity extends BaseActivity {
             });
         // Changelog
         findViewById(R.id.changelog_view).setOnClickListener(v -> new Thread(() -> {
-            final Spanned spannedChangelog = HtmlCompat.fromHtml(Utils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
+            final Spanned spannedChangelog = HtmlCompat.fromHtml(IOUtils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
             runOnUiThread(() -> {
                 View view = getLayoutInflater().inflate(R.layout.dialog_changelog, null);
                 ((MaterialTextView) view.findViewById(R.id.content)).setText(spannedChangelog);

@@ -38,9 +38,9 @@ import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
 
 public final class MetadataManager implements Closeable {
     public static final String META_FILE = "meta.am.v1";
@@ -115,7 +115,7 @@ public final class MetadataManager implements Closeable {
 
     synchronized public void readMetadata(@NonNull BackupFiles.BackupFile backupFile)
             throws JSONException {
-        String metadata = Utils.getFileContent(backupFile.getMetadataFile());
+        String metadata = IOUtils.getFileContent(backupFile.getMetadataFile());
         if (TextUtils.isEmpty(metadata)) throw new JSONException("Empty JSON string");
         JSONObject rootObject = new JSONObject(metadata);
         this.metadata = new Metadata();

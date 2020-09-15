@@ -20,7 +20,6 @@ package io.github.muntashirakon.AppManager.utils;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AppOpsManager;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
@@ -31,16 +30,10 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
-import android.os.ParcelFileDescriptor;
-import android.provider.OpenableColumns;
-import android.system.ErrnoException;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.WindowManager;
@@ -51,13 +44,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import java.io.ByteArrayInputStream;
-import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -67,7 +55,6 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.zip.ZipEntry;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -90,7 +77,6 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.misc.RequestCodes;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
 public class Utils {
     public static final String TERMUX_LOGIN_PATH = OsEnvironment.getDataDataDirectory() + "/com.termux/files/usr/bin/login";
@@ -127,10 +113,6 @@ public class Utils {
                     == PackageManager.PERMISSION_GRANTED;
         }
         return mode == AppOpsManager.MODE_ALLOWED;
-    }
-
-    public static int getArrayLengthSafely(Object[] array) {
-        return array == null ? 0 : array.length;
     }
 
     public static int dpToPx(@NonNull Context context, int dp) {
@@ -178,52 +160,6 @@ public class Utils {
         return list.toArray(new String[0]);
     }
 
-    @Nullable
-    public static String getName(@NonNull ContentResolver resolver, Uri uri) {
-        Cursor returnCursor =
-                resolver.query(uri, null, null, null, null);
-        if (returnCursor == null) return null;
-        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-        returnCursor.moveToFirst();
-        String name = returnCursor.getString(nameIndex);
-        returnCursor.close();
-        return name;
-    }
-
-    @NonNull
-    public static String getFileNameFromZipEntry(@NonNull ZipEntry zipEntry) {
-        String path = zipEntry.getName();
-        int lastIndexOfSeparator = path.lastIndexOf("/");
-        if (lastIndexOfSeparator == -1)
-            return path;
-        return path.substring(lastIndexOfSeparator + 1);
-    }
-
-    @NonNull
-    public static String getLastPathComponent(@NonNull String path) {
-        int lastIndexOfSeparator = path.lastIndexOf("/");
-        int lastIndexOfPath = path.length() - 1;
-        if (lastIndexOfSeparator == -1) {
-            // There are no `/` in the string, so return as is.
-            return path;
-        } else if (lastIndexOfSeparator == lastIndexOfPath) {
-            // `/` is the last character.
-            // Therefore, trim it and find the last path again.
-            return getLastPathComponent(path.substring(0, lastIndexOfPath));
-        }
-        // There are path components, so return the last one.
-        return path.substring(lastIndexOfSeparator + 1);
-    }
-
-    @NonNull
-    public static String trimExtension(@NonNull String filename) {
-        try {
-            return filename.substring(0, filename.lastIndexOf('.'));
-        } catch (Exception e) {
-            return filename;
-        }
-    }
-
     @NonNull
     public static String getLastComponent(@NonNull String str) {
         try {
@@ -231,78 +167,6 @@ public class Utils {
         } catch (Exception e) {
             return str;
         }
-    }
-
-    @NonNull
-    public static File getFileFromFd(@NonNull ParcelFileDescriptor fd) {
-        return new File("/proc/self/fd/" + fd.getFd());
-    }
-
-    public static void closeSilently(@Nullable Closeable closeable) {
-        if (closeable == null) return;
-        try {
-            closeable.close();
-        } catch (Exception e) {
-            Log.w("IOUtils", String.format("Unable to close %s", closeable.getClass().getCanonicalName()), e);
-        }
-    }
-
-    @NonNull
-    public static String getExtension(@NonNull String path) {
-        return getLastComponent(getLastPathComponent(path));
-    }
-
-    @NonNull
-    public static String getFileContent(@NonNull File file) {
-        return getFileContent(file, "");
-    }
-
-    /**
-     * Read the full content of a file.
-     *
-     * @param file       The file to be read
-     * @param emptyValue Empty value if no content has been found
-     * @return File content as string
-     */
-    @NonNull
-    public static String getFileContent(@NonNull File file, @NonNull String emptyValue) {
-        if (!file.exists() || file.isDirectory()) return emptyValue;
-        try {
-            return getInputStreamContent(new FileInputStream(file));
-        } catch (IOException e) {
-            if (!(e.getCause() instanceof ErrnoException)) {
-                // This isn't just another EACCESS exception
-                e.printStackTrace();
-            }
-        }
-        if (AppPref.isRootOrAdbEnabled()) {
-            return RunnerUtils.cat(file.getAbsolutePath(), emptyValue);
-        }
-        return emptyValue;
-    }
-
-    @NonNull
-    public static String getInputStreamContent(@NonNull InputStream inputStream) throws IOException {
-        return new String(IOUtils.readFully(inputStream, -1, true), Charset.defaultCharset());
-    }
-
-    @NonNull
-    public static String getContentFromAssets(@NonNull Context context, String fileName) {
-        try {
-            InputStream inputStream = context.getResources().getAssets().open(fileName);
-            return getInputStreamContent(inputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
-    @NonNull
-    public static String getFileContent(@NonNull ContentResolver contentResolver, @NonNull Uri file)
-            throws IOException {
-        InputStream inputStream = contentResolver.openInputStream(file);
-        if (inputStream == null) throw new IOException("Failed to open " + file.toString());
-        return getInputStreamContent(inputStream);
     }
 
     // FIXME(10/9/20): Add translation support

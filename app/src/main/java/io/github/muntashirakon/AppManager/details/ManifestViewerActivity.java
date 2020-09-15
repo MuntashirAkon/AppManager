@@ -61,6 +61,7 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class ManifestViewerActivity extends BaseActivity {
@@ -119,7 +120,7 @@ public class ManifestViewerActivity extends BaseActivity {
                     if (fd == null) {
                         throw new FileNotFoundException("FileDescription cannot be null");
                     }
-                    archiveFilePath = Utils.getFileFromFd(fd).getAbsolutePath();
+                    archiveFilePath = IOUtils.getFileFromFd(fd).getAbsolutePath();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     showErrorAndFinish();
@@ -155,7 +156,7 @@ public class ManifestViewerActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        Utils.closeSilently(fd);
+        IOUtils.closeSilently(fd);
         super.onDestroy();
     }
 

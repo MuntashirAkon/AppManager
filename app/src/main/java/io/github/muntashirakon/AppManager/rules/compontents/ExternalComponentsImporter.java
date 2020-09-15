@@ -42,9 +42,9 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
-import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 
@@ -135,12 +135,12 @@ public class ExternalComponentsImporter {
      * @param fileUri File URI
      */
     private static void applyFromWatt(@NonNull Context context, Uri fileUri) throws FileNotFoundException {
-        String filename = Utils.getName(context.getContentResolver(), fileUri);
+        String filename = IOUtils.getFileName(context.getContentResolver(), fileUri);
         if (filename == null) throw new FileNotFoundException("The requested content is not found.");
         try {
             try (InputStream rulesStream = context.getContentResolver().openInputStream(fileUri)) {
                 if (rulesStream == null) throw new IOException("Failed to open input stream.");
-                String packageName = Utils.trimExtension(filename);
+                String packageName = IOUtils.trimExtension(filename);
                 try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
                     HashMap<String, RulesStorageManager.Type> components = ComponentUtils.readIFWRules(rulesStream, packageName);
                     for (String componentName: components.keySet()) {
@@ -164,7 +164,7 @@ public class ExternalComponentsImporter {
     private static void applyFromBlocker(@NonNull Context context, Uri uri)
             throws Exception {
         try {
-            String jsonString = Utils.getFileContent(context.getContentResolver(), uri);
+            String jsonString = IOUtils.getFileContent(context.getContentResolver(), uri);
             HashMap<String, HashMap<String, RulesStorageManager.Type>> packageComponents = new HashMap<>();
             HashMap<String, PackageInfo> packageInfoList = new HashMap<>();
             PackageManager packageManager = context.getPackageManager();

@@ -39,7 +39,7 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 /**
  * Block application components: activities, broadcasts, services and providers.
@@ -304,7 +304,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
         String ruleXmlString = null;
         if (rulesFile.exists()) {
             // Copy system rules to access them locally
-            ruleXmlString = Utils.getFileContent(rulesFile);
+            ruleXmlString = IOUtils.getFileContent(rulesFile);
             Log.d(TAG, "IFW: Retrieved components for package " + packageName + "\n" + ruleXmlString);
         }
         if (TextUtils.isEmpty(ruleXmlString)) {

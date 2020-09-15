@@ -36,7 +36,7 @@ import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
-import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 @SuppressLint("SetWorldReadable")
@@ -249,7 +249,7 @@ class AssetsUtils {
     static boolean isEnableSELinux() {
         PrivilegedFile f = new PrivilegedFile("/sys/fs/selinux/enforce");
         if (f.exists()) {
-            return "1".equals(Utils.getFileContent(f).trim());
+            return "1".equals(IOUtils.getFileContent(f).trim());
         } else {
             return "Enforcing".contains(Runner.runCommand("getenforce").getOutput().trim());
         }

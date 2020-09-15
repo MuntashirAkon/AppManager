@@ -104,7 +104,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     protected void onDestroy() {
         IOUtils.deleteDir(new File(getCacheDir().getParent(), APP_DEX));
         IOUtils.deleteDir(getCodeCacheDir());
-        Utils.closeSilently(fd);
+        IOUtils.closeSilently(fd);
         super.onDestroy();
     }
 
@@ -163,7 +163,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                 if (fd == null) {
                     throw new FileNotFoundException("FileDescription cannot be null");
                 }
-                archiveFilePath = Utils.getFileFromFd(fd).getAbsolutePath();
+                archiveFilePath = IOUtils.getFileFromFd(fd).getAbsolutePath();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
