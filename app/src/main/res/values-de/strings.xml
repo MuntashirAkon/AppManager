@@ -15,7 +15,7 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   --><resources>
-    <string name="instructions_header">Diese Anleitungen sind veraltet und werden nicht mehr aktualisiert. Besuche die offizielle Dokumentationen-Seite (https://muntashirakon.github.io/AppManager) für die aktuellsten Informationen</string>
+    <string name="instructions_header">Diese Anleitungen sind veraltet und werden nicht mehr aktualisiert. Besuchen Sie die offizielle Dokumentation auf (https://muntashirakon.github.io/AppManager), um die aktuellsten Informationen zu erhalten</string>
     <string name="uninstall">Deinstallieren</string>
     <string name="permissions">Benutzt Berechtigungen</string>
     <string name="require_no_permission">Keine Berechtigungen benötigt</string>
@@ -67,13 +67,13 @@
     <string name="sort_by_target_sdk">Ziel-SDK</string>
     <string name="data_received">Daten empfangen</string>
     <string name="data_transmitted">Daten gesendet</string>
-    <string name="data_usage_msg">Daten-Verbrauch seit letztem Hochfahren</string>
+    <string name="data_usage_msg">Datenverbrauch seit dem letzten Hochfahren</string>
     <string name="about">Über App Manager</string>
     <string name="data_size">Daten</string>
     <string name="cache_size">Cache</string>
     <string name="obb_size">Obb</string>
     <string name="media_size">Medien</string>
-    <string name="app_not_installed">Anwendung ist nicht installiert</string>
+    <string name="app_not_installed">App ist nicht installiert</string>
     <string name="system">System</string>
     <string name="user">Nutzer</string>
     <string name="sort">Sortieren</string>
@@ -108,7 +108,7 @@
     <string name="error_invalid_icon_resource">Ungültige Icon-Ressource</string>
     <string name="error_invalid_icon_format">Ungültiges Icon-Format</string>
     <string name="icon_picker">Icon-Auswahl</string>
-    <string name="error_loading_icons">Fehler beim Laden der Icons</string>
+    <string name="error_loading_icons">Icon konnten nicht geladen werden</string>
     <string name="license">Lizenz</string>
     <string name="third_party">Drittanbieter-Lizenzen und -Icons</string>
     <string name="credits">Danksagungen</string>
@@ -166,7 +166,7 @@
     <string name="go_back">Zurück</string>
     <string name="go">Weiter</string>
     <string name="grant_usage_access">Zugriff auf Nutzungsdaten erlauben</string>
-    <string name="grant_usage_acess_message">Zugriff auf Nutzungsdaten wird benötigt, um Nutzungsinformationen von Anwendungen anzuzeigen.</string>
+    <string name="grant_usage_acess_message">Zugriff auf Nutzungsdaten wird benötigt, um Informationen zur App-Nutzung anzuzeigen.</string>
     <string name="share_apk">APK teilen</string>
     <string name="failed_to_extract_apk_file">APK-Extraktion fehlgeschlagen</string>
     <string name="menu_remove_rules">Regeln entfernen</string>
@@ -186,9 +186,9 @@
     <string name="save">Speichern</string>
     <string name="discard">Verwerfen</string>
     <string name="delete">Löschen</string>
-    <string name="deleted_successfully">Löschen erfolgreich</string>
+    <string name="deleted_successfully">Gelöscht</string>
     <string name="deletion_failed">Löschen fehlgeschlagen</string>
-    <string name="saved_successfully">Speichern erfolgreich</string>
+    <string name="saved_successfully">Gespeichert</string>
     <string name="saving_failed">Speichern fehlgeschlagen, versuche es bitte erneut.</string>
     <string name="string_value">String-Wert</string>
     <string name="long_integer_value">Wert der Ganzzahl (long)</string>
@@ -197,7 +197,7 @@
     <string name="boolean_value">Wahrheitswert</string>
     <string name="key_name">Schlüssel-Name</string>
     <string name="select_type">Wähle einen Typ</string>
-    <string name="system_odex_not_supported">Odex- und bestimmte System-Anwendungen werden nicht unterstützt!</string>
+    <string name="system_odex_not_supported">.odex- und einige System-Anwendungen werden nicht unterstützt!</string>
     <string name="add_item">Hinzufügen</string>
     <string name="done">Fertig</string>
     <string name="type_boolean">Wahr/falsch</string>
@@ -205,37 +205,36 @@
     <string name="type_int">Ganzzahl (int)</string>
     <string name="type_long">Ganzzahl (long)</string>
     <string name="type_string">Zeichen</string>
-    <string name="error_evaluating_input">Auswerten der Eingabe fehlgeschlagen</string>
+    <string name="error_evaluating_input">Konnte Eingabe nicht auswerten</string>
     <string name="key_name_cannot_be_null">Schlüssel-Name darf nicht leer sein</string>
     <string name="disabled_app">Deaktiviert</string>
     <string name="no_usage_in_this_time_range">Keine Nutzung in diesem Zeitraum</string>
     <string name="no_content">Keine Inhalte</string>
     <string name="view_in_settings">In Einstellungen öffnen</string>
     <string name="uninstall_app_message">Möchtest Du diese Anwendung deinstallieren?</string>
-    <string name="failed_to_uninstall">Deinstallation von %s fehlgeschlagen.</string>
+    <string name="failed_to_uninstall">Konnte %s nicht deinstallieren.</string>
     <string name="uninstalled_successfully">%s wurde deinstalliert.</string>
     <string name="uninstall_system_app_message">Dies ist eine Systemanwendung. Möchtest Du sie wirklich deinstallieren?</string>
     <string name="stopped">Beendet</string>
     <string name="disable">Deaktivieren</string>
     <string name="enable">Aktivieren</string>
-    <string name="failed_to_disable">Konnte %s nicht deaktivieren.</string>
-    <string name="failed_to_enable">Konnte %s nicht aktivieren.</string>
-    <string name="force_stop">Beenden erzwingen</string>
+    <string name="failed_to_disable">%s konnte nicht deaktiviert werden.</string>
+    <string name="failed_to_enable">%s konnte nicht aktiviert werden.</string>
+    <string name="force_stop">Erzwungener Stopp</string>
     <string name="failed_to_stop">Konnte %s nicht beenden.</string>
-    <string name="storage_and_cache">Speicher &amp; Cache</string>
+    <string name="storage_and_cache">Speicher und Cache</string>
     <string name="total_size">Insgesamt</string>
     <string name="app_size">Anwendung</string>
     <string name="app_ops">App Ops</string>
     <string name="no_app_ops">Keine App Ops</string>
-    <string name="failed_to_enable_op">Konnte gewünschten App Op nicht erteilen</string>
-    <string name="failed_to_disable_op">Konnte gewünschten App Op nicht entziehen</string>
+    <string name="failed_to_enable_op">Konnte die geforderte App Op nicht aktivieren</string>
+    <string name="failed_to_disable_op">Konnte gewünschte App Op nicht entziehen</string>
     <string name="rules_not_applied">Regeln wurden nicht angewendet</string>
     <string name="str_logo">Logo</string>
     <string name="pref_root_mode_enabled">Root-Modus</string>
-    <string name="pref_root_mode_enabled_msg">Der Root-Modus schaltet alle Administrator-Funktionen dieser Anwendung frei.
-Ist der Root-Modus deaktiviert, wird der ADB-Modus automatisch erkannt</string>
+    <string name="pref_root_mode_enabled_msg">Aktiviert alle Root-Funktionen dieser Anwendung, der ADB-Modus wird automatisch erkannt, wenn er deaktiviert wird</string>
     <string name="pref_global_blocking_enabled">Globales Komponenten-Blockieren</string>
-    <string name="pref_global_blocking_enabled_msg">Globales Komponenten-Blockieren erlaubt das Blockieren jede Komponente einer Anwendung, ohne dass Blockieren für diese bestimmte Anwendung eingeschaltet werden muss</string>
+    <string name="pref_global_blocking_enabled_msg">Erlaubt es Ihnen, jede Komponente einer Anwendung zu blockieren, ohne die Blockierung für die Anwendung explizit zu aktivieren</string>
     <string name="pref_usage_access_enabled">Zugriff auf Nutzungsdaten</string>
     <string name="pref_usage_access_enabled_msg">Zugriff auf Nutzungsdaten erlaubt es, Nutzungsstatistiken und Informationen über gespeicherte Daten einer Anwendung einzusehen</string>
     <string name="app_settings">Einstellungen</string>
