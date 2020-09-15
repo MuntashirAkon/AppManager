@@ -48,7 +48,7 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabled
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
 
 public class PackageInstallerActivity extends BaseActivity {
-    public static final String EXTRA_APK_FILE = "EXTRA_APK_FILE";
+    public static final String EXTRA_APK_FILE_KEY = "EXTRA_APK_FILE_KEY";
 
     private ApkFile apkFile;
     private String appLabel;
@@ -57,6 +57,7 @@ public class PackageInstallerActivity extends BaseActivity {
     private PackageManager mPackageManager;
     FragmentManager fm;
     private boolean closeApkFile = true;
+    private int apkFileKey;
     private ActivityResultLauncher<String[]> permInstallWithObb = registerForActivityResult(
             new ActivityResultContracts.RequestMultiplePermissions(), result -> {
                 if (Utils.getExternalStoragePermissions(this) == null) {
@@ -73,8 +74,8 @@ public class PackageInstallerActivity extends BaseActivity {
             return;
         }
         final Uri apkUri = intent.getData();
-        apkFile = intent.getParcelableExtra(EXTRA_APK_FILE);
-        if (apkUri == null && apkFile == null) {
+        apkFileKey = intent.getIntExtra(EXTRA_APK_FILE_KEY, -1);
+        if (apkUri == null && apkFileKey == -1) {
             finish();
             return;
         }
@@ -82,8 +83,12 @@ public class PackageInstallerActivity extends BaseActivity {
         fm = getSupportFragmentManager();
         new Thread(() -> {
             try {
-                if (apkUri != null) apkFile = new ApkFile(apkUri);
-                else closeApkFile = false;  // Internal request, don't close the ApkFile
+                if (apkUri != null) {
+                    apkFileKey = ApkFile.createInstance(apkUri);
+                } else {
+                    closeApkFile = false;  // Internal request, don't close the ApkFile
+                }
+                apkFile = ApkFile.getInstance(apkFileKey);
                 packageInfo = getPackageInfo();
                 PackageInfo installedPackageInfo = null;
                 try {
@@ -201,7 +206,7 @@ public class PackageInstallerActivity extends BaseActivity {
         if (apkFile.isSplit()) {
             SplitApkChooser splitApkChooser = new SplitApkChooser();
             Bundle args = new Bundle();
-            args.putParcelable(SplitApkChooser.EXTRA_APK_FILE, apkFile);
+            args.putInt(SplitApkChooser.EXTRA_APK_FILE_KEY, apkFileKey);
             args.putString(SplitApkChooser.EXTRA_ACTION_NAME, actionName);
             args.putParcelable(SplitApkChooser.EXTRA_APP_INFO, packageInfo.applicationInfo);
             splitApkChooser.setArguments(args);
@@ -225,7 +230,7 @@ public class PackageInstallerActivity extends BaseActivity {
 
     private void launchInstallService() {
         Intent intent = new Intent(this, AMPackageInstallerService.class);
-        intent.putExtra(AMPackageInstallerService.EXTRA_APK_FILE, apkFile);
+        intent.putExtra(AMPackageInstallerService.EXTRA_APK_FILE_KEY, apkFileKey);
         intent.putExtra(AMPackageInstallerService.EXTRA_APP_LABEL, appLabel);
         intent.putExtra(AMPackageInstallerService.EXTRA_CLOSE_APK_FILE, closeApkFile);
         ContextCompat.startForegroundService(AppManager.getContext(), intent);

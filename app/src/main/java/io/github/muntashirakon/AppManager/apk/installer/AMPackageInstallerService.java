@@ -51,7 +51,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.PACKAGE_STAGING_DIRECTORY;
 
 public class AMPackageInstallerService extends IntentService {
-    public static final String EXTRA_APK_FILE = "EXTRA_APK_FILE";
+    public static final String EXTRA_APK_FILE_KEY = "EXTRA_APK_FILE_KEY";
     public static final String EXTRA_APP_LABEL = "EXTRA_APP_LABEL";
     public static final String EXTRA_CLOSE_APK_FILE = "EXTRA_CLOSE_APK_FILE";
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.INSTALL";
@@ -106,8 +106,9 @@ public class AMPackageInstallerService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent == null) return;
-        apkFile = intent.getParcelableExtra(EXTRA_APK_FILE);
-        if (apkFile == null) return;
+        int apkFileKey = intent.getIntExtra(EXTRA_APK_FILE_KEY, -1);
+        if (apkFileKey == -1) return;
+        apkFile = ApkFile.getInstance(apkFileKey);
         packageName = apkFile.getPackageName();
         appLabel = intent.getStringExtra(EXTRA_APP_LABEL);
         closeApkFile = intent.getBooleanExtra(EXTRA_CLOSE_APK_FILE, false);

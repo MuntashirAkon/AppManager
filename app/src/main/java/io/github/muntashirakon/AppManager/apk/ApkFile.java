@@ -21,10 +21,9 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
-import android.os.Parcel;
 import android.os.ParcelFileDescriptor;
-import android.os.Parcelable;
 import android.util.Log;
+import android.util.SparseArray;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -43,6 +42,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -58,56 +58,28 @@ import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
-public final class ApkFile implements AutoCloseable, Parcelable {
+public final class ApkFile implements AutoCloseable {
     public static final String TAG = "ApkFile";
 
     private static final String OBB_DIR = "Android/obb";
 
-    protected ApkFile(@NonNull Parcel in) {
-        entries = Objects.requireNonNull(in.createTypedArrayList(Entry.CREATOR));
-        baseEntry = in.readParcelable(Entry.class.getClassLoader());
-        packageName = Objects.requireNonNull(in.readString());
-        hasObb = in.readByte() != 0;
-        obbFiles = Objects.requireNonNull(in.createStringArrayList());
-        apkUri = Objects.requireNonNull(in.readParcelable(Uri.class.getClassLoader()));
-        cacheFilePath = new File(Objects.requireNonNull(in.readString()));
-        try {
-            ParcelFileDescriptor fd = AppManager.getContext().getContentResolver().openFileDescriptor(apkUri, "r");
-            if (fd == null) throw new Exception("Could not get file descriptor from the Uri");
-            this.fd = fd;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    // There's hardly any chance of using multiple instances of ApkFile but still kept for convenience
+    private static SparseArray<ApkFile> apkFiles = new SparseArray<>(2);
+
+    @NonNull
+    public static ApkFile getInstance(int sparseArrayKey) {
+        ApkFile apkFile = apkFiles.get(sparseArrayKey);
+        if (apkFile == null) {
+            throw new IllegalArgumentException("ApkFile not found for key " + sparseArrayKey);
         }
+        return apkFile;
     }
 
-    public static final Creator<ApkFile> CREATOR = new Creator<ApkFile>() {
-        @NonNull
-        @Override
-        public ApkFile createFromParcel(Parcel in) {
-            return new ApkFile(in);
-        }
-
-        @NonNull
-        @Override
-        public ApkFile[] newArray(int size) {
-            return new ApkFile[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeTypedList(entries);
-        dest.writeParcelable(baseEntry, flags);
-        dest.writeString(packageName);
-        dest.writeByte((byte) (hasObb ? 1 : 0));
-        dest.writeStringList(obbFiles);
-        dest.writeParcelable(apkUri, flags);
-        dest.writeString(cacheFilePath.getAbsolutePath());
+    public static int createInstance(Uri apkUri) throws Exception {
+        int key = ThreadLocalRandom.current().nextInt();
+        ApkFile apkFile = new ApkFile(apkUri, key);
+        apkFiles.put(key, apkFile);
+        return key;
     }
 
     @IntDef(value = {
@@ -143,6 +115,7 @@ public final class ApkFile implements AutoCloseable, Parcelable {
         SUPPORTED_EXTENSIONS.add("xapk");
     }
 
+    private int sparseArrayKey;
     @NonNull
     private List<Entry> entries = new ArrayList<>();
     private Entry baseEntry;
@@ -152,16 +125,14 @@ public final class ApkFile implements AutoCloseable, Parcelable {
     @NonNull
     private List<String> obbFiles = new ArrayList<>();
     @NonNull
-    private Uri apkUri;
-    @NonNull
     private File cacheFilePath;
     @NonNull
     private ParcelFileDescriptor fd;
 
-    public ApkFile(@NonNull Uri apkUri) throws Exception {
+    public ApkFile(@NonNull Uri apkUri, int sparseArrayKey) throws Exception {
+        this.sparseArrayKey = sparseArrayKey;
         Context context = AppManager.getContext();
         ContentResolver cr = context.getContentResolver();
-        this.apkUri = apkUri;
         // Check extension
         String name = IOUtils.getFileName(cr, apkUri);
         if (name == null) throw new Exception("Could not extract package name from the URI.");
@@ -364,6 +335,7 @@ public final class ApkFile implements AutoCloseable, Parcelable {
 
     @Override
     public void close() {
+        apkFiles.delete(sparseArrayKey);
         if (isSplit()) {
             for (Entry entry : entries) {
                 if (entry.source.exists()) //noinspection ResultOfMethodCallIgnored
@@ -427,7 +399,7 @@ public final class ApkFile implements AutoCloseable, Parcelable {
         return manifestAttrs;
     }
 
-    public static class Entry implements Parcelable {
+    public static class Entry {
         /**
          * Name of the file, for split apk, name of the split instead
          */
@@ -501,29 +473,6 @@ public final class ApkFile implements AutoCloseable, Parcelable {
             }
         }
 
-        protected Entry(@NonNull Parcel in) {
-            name = Objects.requireNonNull(in.readString());
-            source = new File(Objects.requireNonNull(in.readString()));
-            type = in.readInt();
-            splitSuffix = in.readString();
-            forFeature = in.readString();
-            selected = in.readByte() != 0;
-        }
-
-        public static final Creator<Entry> CREATOR = new Creator<Entry>() {
-            @NonNull
-            @Override
-            public Entry createFromParcel(Parcel in) {
-                return new Entry(in);
-            }
-
-            @NonNull
-            @Override
-            public Entry[] newArray(int size) {
-                return new Entry[size];
-            }
-        };
-
         @NonNull
         public String getAbi() {
             if (type == APK_SPLIT_ABI) //noinspection ConstantConditions
@@ -543,21 +492,6 @@ public final class ApkFile implements AutoCloseable, Parcelable {
             if (splitSuffix != null && type == APK_SPLIT_LOCALE)
                 return new Locale.Builder().setLanguageTag(splitSuffix).build();
             throw new RuntimeException("Attempt to fetch Locale for invalid apk");
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(@NonNull Parcel dest, int flags) {
-            dest.writeString(name);
-            dest.writeString(source.getAbsolutePath());
-            dest.writeInt(type);
-            dest.writeString(splitSuffix);
-            dest.writeString(forFeature);
-            dest.writeByte((byte) (selected ? 1 : 0));
         }
 
         @Override

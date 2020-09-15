@@ -36,7 +36,7 @@ import io.github.muntashirakon.AppManager.apk.ApkFile;
 
 public class SplitApkChooser extends DialogFragment {
     public static final String TAG = "SplitApkChooser";
-    public static final String EXTRA_APK_FILE = "EXTRA_APK_FILE";
+    public static final String EXTRA_APK_FILE_KEY = "EXTRA_APK_FILE_KEY";
     public static final String EXTRA_ACTION_NAME = "EXTRA_ACTION_NAME";
     public static final String EXTRA_APP_INFO = "EXTRA_APP_INFO";
 
@@ -55,13 +55,14 @@ public class SplitApkChooser extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        ApkFile apkFile = requireArguments().getParcelable(EXTRA_APK_FILE);
+        int apkFileKey = requireArguments().getInt(EXTRA_APK_FILE_KEY, -1);
         String actionName = requireArguments().getString(EXTRA_ACTION_NAME);
         ApplicationInfo appInfo = requireArguments().getParcelable(EXTRA_APP_INFO);
         PackageManager pm = requireActivity().getPackageManager();
-        if (apkFile == null || appInfo == null) {
+        if (apkFileKey == -1 || appInfo == null) {
             throw new IllegalArgumentException("ApkFile cannot be empty.");
         }
+        ApkFile apkFile = ApkFile.getInstance(apkFileKey);
         if (!apkFile.isSplit()) throw new RuntimeException("Apk file does not contain any split.");
         List<ApkFile.Entry> apkEntries = apkFile.getEntries();
         String[] entryNames = new String[apkEntries.size()];

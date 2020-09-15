@@ -83,6 +83,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private PackageIntentReceiver receiver;
     private String apkPath;
     private ApkFile apkFile;
+    private int apkFileKey;
 
     @AppDetailsFragment.SortOrder
     private int sortOrderComponents = AppDetailsFragment.SORT_BY_NAME;
@@ -127,7 +128,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public void setPackageUri(@NonNull Uri packageUri) throws Exception {
         Log.d("ADVM", "Package Uri is being set");
         isExternalApk = true;
-        apkFile = new ApkFile(packageUri);
+        apkFileKey = ApkFile.createInstance(packageUri);
+        apkFile = ApkFile.getInstance(apkFileKey);
         apkPath = apkFile.getBaseEntry().source.getAbsolutePath();
     }
 
@@ -158,8 +160,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return packageName;
     }
 
-    public ApkFile getApkFile() {
-        return apkFile;
+    public int getApkFileKey() {
+        return apkFileKey;
     }
 
     @SuppressLint("SwitchIntDef")

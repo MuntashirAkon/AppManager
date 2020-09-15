@@ -375,7 +375,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void install() {
         Intent intent = new Intent(this.getContext(), PackageInstallerActivity.class);
-        intent.putExtra(PackageInstallerActivity.EXTRA_APK_FILE, mainModel.getApkFile());
+        intent.putExtra(PackageInstallerActivity.EXTRA_APK_FILE_KEY, mainModel.getApkFileKey());
         try {
             startActivity(intent);
         } catch (Exception ignore) {
