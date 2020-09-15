@@ -45,6 +45,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class AppDetailsActivity extends BaseActivity {
@@ -103,7 +104,7 @@ public class AppDetailsActivity extends BaseActivity {
             else {
                 try {
                     model.setPackageUri(apkUri);
-                } catch (Exception e) {
+                } catch (ApkFile.ApkFileException e) {
                     e.printStackTrace();
                     runOnUiThread(() -> {
                         Toast.makeText(this, getString(R.string.failed_to_fetch_package_info), Toast.LENGTH_LONG).show();

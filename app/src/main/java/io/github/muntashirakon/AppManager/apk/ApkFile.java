@@ -28,6 +28,7 @@ import android.util.SparseArray;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Retention;
@@ -75,7 +76,7 @@ public final class ApkFile implements AutoCloseable {
         return apkFile;
     }
 
-    public static int createInstance(Uri apkUri) throws Exception {
+    public static int createInstance(Uri apkUri) throws ApkFileException {
         int key = ThreadLocalRandom.current().nextInt();
         ApkFile apkFile = new ApkFile(apkUri, key);
         apkFiles.put(key, apkFile);
@@ -123,46 +124,70 @@ public final class ApkFile implements AutoCloseable {
     private String packageName;
     private boolean hasObb = false;
     @NonNull
-    private List<String> obbFiles = new ArrayList<>();
+    private List<ZipEntry> obbFiles = new ArrayList<>();
     @NonNull
     private File cacheFilePath;
     @NonNull
     private ParcelFileDescriptor fd;
+    @Nullable
+    private ZipFile zipFile;
 
-    public ApkFile(@NonNull Uri apkUri, int sparseArrayKey) throws Exception {
+    public ApkFile(@NonNull Uri apkUri, int sparseArrayKey) throws ApkFileException {
         this.sparseArrayKey = sparseArrayKey;
         Context context = AppManager.getContext();
         ContentResolver cr = context.getContentResolver();
         // Check extension
         String name = IOUtils.getFileName(cr, apkUri);
-        if (name == null) throw new Exception("Could not extract package name from the URI.");
+        if (name == null)
+            throw new ApkFileException("Could not extract package name from the URI.");
         String extension;
         try {
             extension = name.substring(name.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
-            if (!SUPPORTED_EXTENSIONS.contains(extension))
-                throw new Exception("Invalid package extension.");
+            if (!SUPPORTED_EXTENSIONS.contains(extension)) {
+                throw new ApkFileException("Invalid package extension.");
+            }
         } catch (IndexOutOfBoundsException e) {
-            throw new Exception("Invalid package extension.");
+            throw new ApkFileException("Invalid package extension.");
         }
         // Open file descriptor
-        ParcelFileDescriptor fd = cr.openFileDescriptor(apkUri, "r");
-        if (fd == null) throw new Exception("Could not get file descriptor from the Uri");
-        this.fd = fd;
+        try {
+            ParcelFileDescriptor fd = cr.openFileDescriptor(apkUri, "r");
+            if (fd == null) {
+                throw new FileNotFoundException("Could not get file descriptor from the Uri");
+            }
+            this.fd = fd;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            throw new ApkFileException(e);
+        }
         this.cacheFilePath = IOUtils.getFileFromFd(fd);
         String packageName = null;
         // Check for splits
         if (extension.equals("apk")) {
             // Cache the apk file
-            baseEntry = new Entry(APK_FILE, cacheFilePath, APK_BASE);
+            try {
+                baseEntry = new Entry(APK_FILE, cacheFilePath, APK_BASE);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ApkFileException("Base APK not found.");
+            }
             entries.add(baseEntry);
             // Extract manifest file
             ByteBuffer manifestBytes = getManifestFromApk(cacheFilePath);
-            if (manifestBytes == null) throw new Exception("Manifest not found.");
+            if (manifestBytes == null)
+                throw new ApkFileException("Manifest not found for base APK.");
             // Get manifest attributes
-            HashMap<String, String> manifestAttrs = getManifestAttributes(manifestBytes);
-            if (manifestAttrs.containsKey("package")) {
+            HashMap<String, String> manifestAttrs;
+            try {
+                manifestAttrs = getManifestAttributes(manifestBytes);
+                if (!manifestAttrs.containsKey("package")) {
+                    throw new IllegalArgumentException("Manifest doesn't contain any package name.");
+                }
                 packageName = manifestAttrs.get("package");
-            } else throw new RuntimeException("Package name not found.");
+            } catch (AndroidBinXmlParser.XmlParserException e) {
+                e.printStackTrace();
+                throw new ApkFileException(e);
+            }
         } else {
             boolean foundBaseApk = false;
             File destDir = context.getExternalFilesDir("apks");
@@ -170,52 +195,59 @@ public final class ApkFile implements AutoCloseable {
                 throw new RuntimeException("External media not present");
             if (!destDir.exists()) //noinspection ResultOfMethodCallIgnored
                 destDir.mkdirs();
-            try (ZipFile zipFile = new ZipFile(cacheFilePath)) {
-                Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
-                File apkFile;
-                String fileName;
-                while (zipEntries.hasMoreElements()) {
-                    ZipEntry zipEntry = zipEntries.nextElement();
-                    if (zipEntry.isDirectory()) continue;
-                    fileName = IOUtils.getFileNameFromZipEntry(zipEntry);
-                    if (fileName.endsWith(".apk")) {
-                        // Extract the apk file
-                        try (InputStream zipInputStream = zipFile.getInputStream(zipEntry)) {
-                            apkFile = IOUtils.saveZipFile(zipInputStream, destDir, fileName);
-                            Log.e(TAG, "Apk File: " + apkFile);
-                        }
-                        try {
-                            // Extract manifest file
-                            ByteBuffer manifestBytes = getManifestFromApk(apkFile);
-                            if (manifestBytes == null) throw new Exception("Manifest not found.");
-                            // Get manifest attributes
-                            HashMap<String, String> manifestAttrs = getManifestAttributes(manifestBytes);
-                            if (manifestAttrs.containsKey("split")) {
-                                // TODO: check for duplicates
-                                entries.add(new Entry(fileName, apkFile, APK_SPLIT, manifestAttrs));
-                            } else {
-                                if (foundBaseApk) {
-                                    throw new RuntimeException("Duplicate base apk found.");
-                                }
-                                baseEntry = new Entry(fileName, apkFile, APK_BASE, manifestAttrs);
-                                entries.add(baseEntry);
-                                if (manifestAttrs.containsKey("package")) {
-                                    packageName = manifestAttrs.get("package");
-                                } else throw new RuntimeException("Package name not found.");
-                                foundBaseApk = true;
-                            }
-                        } catch (Exception e) {
-                            //noinspection ResultOfMethodCallIgnored
-                            apkFile.delete();
-                            throw new Exception(e);
-                        }
-                    } else if (fileName.endsWith(".obb")) {
-                        hasObb = true;
-                        obbFiles.add(zipEntry.getName());
+            try {
+                zipFile = new ZipFile(cacheFilePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new ApkFileException(e);
+            }
+            Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
+            File apkFile;
+            String fileName;
+            while (zipEntries.hasMoreElements()) {
+                ZipEntry zipEntry = zipEntries.nextElement();
+                if (zipEntry.isDirectory()) continue;
+                fileName = IOUtils.getFileNameFromZipEntry(zipEntry);
+                if (fileName.endsWith(".apk")) {
+                    // Extract the apk file
+                    try (InputStream zipInputStream = zipFile.getInputStream(zipEntry)) {
+                        apkFile = IOUtils.saveZipFile(zipInputStream, destDir, fileName);
+                        Log.e(TAG, "Apk File: " + apkFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        throw new ApkFileException(e);
                     }
+                    try {
+                        // Extract manifest file
+                        ByteBuffer manifestBytes = getManifestFromApk(apkFile);
+                        if (manifestBytes == null) throw new Exception("Manifest not found.");
+                        // Get manifest attributes
+                        HashMap<String, String> manifestAttrs = getManifestAttributes(manifestBytes);
+                        if (manifestAttrs.containsKey("split")) {
+                            // TODO: check for duplicates
+                            entries.add(new Entry(fileName, apkFile, APK_SPLIT, manifestAttrs));
+                        } else {
+                            if (foundBaseApk) {
+                                throw new RuntimeException("Duplicate base apk found.");
+                            }
+                            baseEntry = new Entry(fileName, apkFile, APK_BASE, manifestAttrs);
+                            entries.add(baseEntry);
+                            if (manifestAttrs.containsKey("package")) {
+                                packageName = manifestAttrs.get("package");
+                            } else throw new RuntimeException("Package name not found.");
+                            foundBaseApk = true;
+                        }
+                    } catch (Exception e) {
+                        //noinspection ResultOfMethodCallIgnored
+                        apkFile.delete();
+                        throw new ApkFileException(e);
+                    }
+                } else if (fileName.endsWith(".obb")) {
+                    hasObb = true;
+                    obbFiles.add(zipEntry);
                 }
             }
-            if (baseEntry == null) throw new Exception("No base apk found.");
+            if (baseEntry == null) throw new ApkFileException("No base apk found.");
             // Sort the entries based on type
             Collections.sort(entries, (o1, o2) -> {
                 Integer o1Type = o1.type;
@@ -223,7 +255,7 @@ public final class ApkFile implements AutoCloseable {
                 return o1Type.compareTo(o2Type);
             });
         }
-        if (packageName == null) throw new Exception("Package name not found.");
+        if (packageName == null) throw new ApkFileException("Package name not found.");
         this.packageName = packageName;
     }
 
@@ -262,7 +294,7 @@ public final class ApkFile implements AutoCloseable {
     }
 
     public boolean extractObb() {
-        if (!hasObb) return true;
+        if (!hasObb || zipFile == null) return true;
         try {
             PrivilegedFile[] extDirs = OsEnvironment.buildExternalStoragePublicDirs();
             PrivilegedFile writableExtDir = null;
@@ -289,27 +321,21 @@ public final class ApkFile implements AutoCloseable {
             }
 
             if (AppPref.isRootOrAdbEnabled()) {
-                for (String obbFile : obbFiles) {
+                for (ZipEntry obbEntry : obbFiles) {
                     if (!Runner.runCommand(new String[]{"unzip", cacheFilePath.getAbsolutePath(),
-                            obbFile, "-d", obbFile.startsWith(OBB_DIR) ?
+                            obbEntry.getName(), "-d", obbEntry.getName().startsWith(OBB_DIR) ?
                             writableExtDir.getAbsolutePath() : writableObbDir.getAbsolutePath()}
                     ).isSuccessful()) {
                         return false;
                     }
                 }
             } else {
-                try (ZipFile zipFile = new ZipFile(cacheFilePath)) {
-                    Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
-                    String fileName;
-                    while (zipEntries.hasMoreElements()) {
-                        ZipEntry zipEntry = zipEntries.nextElement();
-                        if (zipEntry.isDirectory()) continue;
-                        fileName = IOUtils.getFileNameFromZipEntry(zipEntry);
-                        if (fileName.endsWith(".obb")) {
-                            // Extract obb file to the destination directory
-                            try (InputStream zipInputStream = zipFile.getInputStream(zipEntry)) {
-                                IOUtils.saveZipFile(zipInputStream, writableObbDir, fileName);
-                            }
+                for (ZipEntry obbEntry : obbFiles) {
+                    String fileName = IOUtils.getFileNameFromZipEntry(obbEntry);
+                    if (fileName.endsWith(".obb")) {
+                        // Extract obb file to the destination directory
+                        try (InputStream zipInputStream = zipFile.getInputStream(obbEntry)) {
+                            IOUtils.saveZipFile(zipInputStream, writableObbDir, fileName);
                         }
                     }
                 }
@@ -342,18 +368,26 @@ public final class ApkFile implements AutoCloseable {
                     entry.source.delete();
             }
         }
+        IOUtils.closeSilently(zipFile);
         IOUtils.closeSilently(fd);
+        // Ensure that entries are not accessible if accidentally accessed
+        entries.clear();
+        baseEntry = null;
+        obbFiles.clear();
     }
 
     @Nullable
-    private ByteBuffer getManifestFromApk(File apkFile) throws IOException {
+    private ByteBuffer getManifestFromApk(File apkFile) {
         try (FileInputStream apkInputStream = new FileInputStream(apkFile)) {
             return getManifestFromApk(apkInputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
     @Nullable
-    private ByteBuffer getManifestFromApk(InputStream apkInputStream) throws IOException {
+    private ByteBuffer getManifestFromApk(InputStream apkInputStream) {
         try (ZipInputStream zipInputStream = new ZipInputStream(apkInputStream)) {
             ZipEntry zipEntry;
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
@@ -370,12 +404,15 @@ public final class ApkFile implements AutoCloseable {
                 zipInputStream.closeEntry();
                 return ByteBuffer.wrap(buffer.toByteArray());
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }
 
     @NonNull
-    private HashMap<String, String> getManifestAttributes(@NonNull ByteBuffer manifestBytes) throws Exception {
+    private HashMap<String, String> getManifestAttributes(@NonNull ByteBuffer manifestBytes)
+            throws ApkFileException, AndroidBinXmlParser.XmlParserException {
         HashMap<String, String> manifestAttrs = new HashMap<>();
         AndroidBinXmlParser parser = new AndroidBinXmlParser(manifestBytes);
         int eventType = parser.getEventType();
@@ -383,7 +420,9 @@ public final class ApkFile implements AutoCloseable {
         while (eventType != AndroidBinXmlParser.EVENT_END_DOCUMENT) {
             if (eventType == AndroidBinXmlParser.EVENT_START_ELEMENT) {
                 if (parser.getName().equals("manifest") && parser.getDepth() == 1 && parser.getNamespace().isEmpty()) {
-                    if (seenManifestElement) throw new Exception("Duplicate manifest found.");
+                    if (seenManifestElement) {
+                        throw new ApkFileException("Duplicate manifest found.");
+                    }
                     seenManifestElement = true;
                     for (int i = 0; i < parser.getAttributeCount(); i++) {
                         if (parser.getAttributeName(i).isEmpty())
@@ -395,7 +434,7 @@ public final class ApkFile implements AutoCloseable {
             }
             eventType = parser.next();
         }
-        if (!seenManifestElement) throw new Exception("No manifest found.");
+        if (!seenManifestElement) throw new ApkFileException("No manifest found.");
         return manifestAttrs;
     }
 
@@ -505,6 +544,16 @@ public final class ApkFile implements AutoCloseable {
         @Override
         public int hashCode() {
             return Objects.hash(name);
+        }
+    }
+
+    public static class ApkFileException extends Throwable {
+        public ApkFileException(String message) {
+            super(message);
+        }
+
+        public ApkFileException(Throwable throwable) {
+            super(throwable);
         }
     }
 }

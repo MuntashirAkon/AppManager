@@ -154,7 +154,7 @@ public class PackageInstallerActivity extends BaseActivity {
                         });
                     }
                 }
-            } catch (Exception e) {
+            } catch (ApkFile.ApkFileException | PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
                 runOnUiThread(this::finish);
             }

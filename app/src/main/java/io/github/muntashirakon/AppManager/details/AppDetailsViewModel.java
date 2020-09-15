@@ -125,7 +125,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @WorkerThread
-    public void setPackageUri(@NonNull Uri packageUri) throws Exception {
+    public void setPackageUri(@NonNull Uri packageUri) throws ApkFile.ApkFileException {
         Log.d("ADVM", "Package Uri is being set");
         isExternalApk = true;
         apkFileKey = ApkFile.createInstance(packageUri);
