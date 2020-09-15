@@ -23,13 +23,10 @@ import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
-import android.content.pm.Signature;
 import android.os.Build;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -132,15 +129,8 @@ public class ApkWhatsNewFinder {
             changes[TRACKER_INFO] = new Change[]{new Change(CHANGE_INFO, componentInfo[TRACKER_INFO]), newTrackers, oldTrackers};
         }
         // Sha256 of signing certificates
-        Set<String> newCertSha256 = new HashSet<>();
+        Set<String> newCertSha256 = new HashSet<>(Arrays.asList(PackageUtils.getSigningCertSha256Checksum(newPkgInfo, true)));
         Set<String> oldCertSha256 = new HashSet<>(Arrays.asList(PackageUtils.getSigningCertSha256Checksum(oldPkgInfo)));
-        Signature[] signatureArray = newPkgInfo.signatures;
-        for (Signature signature : signatureArray) {
-            try {
-                newCertSha256.add(PackageUtils.byteToHexString(MessageDigest.getInstance("sha256").digest(signature.toByteArray())));
-            } catch (NoSuchAlgorithmException ignore) {
-            }
-        }
         List<Change> certSha256Changes = new ArrayList<>();
         certSha256Changes.add(new Change(CHANGE_INFO, componentInfo[SIGNING_CERT_SHA256]));
         certSha256Changes.addAll(findChanges(newCertSha256, oldCertSha256));
