@@ -17,15 +17,14 @@
 
 package io.github.muntashirakon.AppManager.apk;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Parcel;
+import android.os.ParcelFileDescriptor;
 import android.os.Parcelable;
-import android.text.TextUtils;
 import android.util.Log;
-
-import com.google.classysharkandroid.utils.UriUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -68,14 +67,17 @@ public final class ApkFile implements AutoCloseable, Parcelable {
     protected ApkFile(@NonNull Parcel in) {
         entries = Objects.requireNonNull(in.createTypedArrayList(Entry.CREATOR));
         baseEntry = in.readParcelable(Entry.class.getClassLoader());
-        packageName = in.readString();
+        packageName = Objects.requireNonNull(in.readString());
         hasObb = in.readByte() != 0;
         obbFiles = Objects.requireNonNull(in.createStringArrayList());
-        apkUri = in.readParcelable(Uri.class.getClassLoader());
-        String cachePath = in.readString();
-        if (!TextUtils.isEmpty(cachePath)) {
-            //noinspection ConstantConditions
-            cacheFilePath = new File(cachePath);
+        apkUri = Objects.requireNonNull(in.readParcelable(Uri.class.getClassLoader()));
+        cacheFilePath = new File(Objects.requireNonNull(in.readString()));
+        try {
+            ParcelFileDescriptor fd = AppManager.getContext().getContentResolver().openFileDescriptor(apkUri, "r");
+            if (fd == null) throw new Exception("Could not get file descriptor from the Uri");
+            this.fd = fd;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -106,7 +108,7 @@ public final class ApkFile implements AutoCloseable, Parcelable {
         dest.writeByte((byte) (hasObb ? 1 : 0));
         dest.writeStringList(obbFiles);
         dest.writeParcelable(apkUri, flags);
-        dest.writeString(cacheFilePath == null ? "" : cacheFilePath.getAbsolutePath());
+        dest.writeString(cacheFilePath.getAbsolutePath());
     }
 
     @IntDef(value = {
@@ -145,18 +147,24 @@ public final class ApkFile implements AutoCloseable, Parcelable {
     @NonNull
     private List<Entry> entries = new ArrayList<>();
     private Entry baseEntry;
+    @NonNull
     private String packageName;
     private boolean hasObb = false;
+    @NonNull
     private List<String> obbFiles = new ArrayList<>();
+    @NonNull
     private Uri apkUri;
-    @Nullable
+    @NonNull
     private File cacheFilePath;
+    @NonNull
+    private ParcelFileDescriptor fd;
 
-    public ApkFile(Uri apkUri) throws Exception {
+    public ApkFile(@NonNull Uri apkUri) throws Exception {
         Context context = AppManager.getContext();
+        ContentResolver cr = context.getContentResolver();
         this.apkUri = apkUri;
         // Check extension
-        String name = Utils.getName(context.getContentResolver(), apkUri);
+        String name = Utils.getName(cr, apkUri);
         if (name == null) throw new Exception("Could not extract package name from the URI.");
         String extension;
         try {
@@ -166,15 +174,19 @@ public final class ApkFile implements AutoCloseable, Parcelable {
         } catch (IndexOutOfBoundsException e) {
             throw new Exception("Invalid package extension.");
         }
-        String filePath = UriUtils.pathUriCache(context, apkUri, APK_FILE);
-        if (filePath == null) throw new Exception("Failed to cache the provided apk file.");
+        // Open file descriptor
+        ParcelFileDescriptor fd = cr.openFileDescriptor(apkUri, "r");
+        if (fd == null) throw new Exception("Could not get file descriptor from the Uri");
+        this.fd = fd;
+        this.cacheFilePath = Utils.getFileFromFd(fd);
+        String packageName = null;
         // Check for splits
         if (extension.equals("apk")) {
             // Cache the apk file
-            baseEntry = new Entry(APK_FILE, new File(filePath), APK_BASE);
+            baseEntry = new Entry(APK_FILE, cacheFilePath, APK_BASE);
             entries.add(baseEntry);
             // Extract manifest file
-            ByteBuffer manifestBytes = getManifestFromApk(new File(filePath));
+            ByteBuffer manifestBytes = getManifestFromApk(cacheFilePath);
             if (manifestBytes == null) throw new Exception("Manifest not found.");
             // Get manifest attributes
             HashMap<String, String> manifestAttrs = getManifestAttributes(manifestBytes);
@@ -183,7 +195,6 @@ public final class ApkFile implements AutoCloseable, Parcelable {
             } else throw new RuntimeException("Package name not found.");
         } else {
             boolean foundBaseApk = false;
-            cacheFilePath = new File(filePath);
             File destDir = context.getExternalFilesDir("apks");
             if (destDir == null || !Environment.getExternalStorageState(destDir).equals(Environment.MEDIA_MOUNTED))
                 throw new RuntimeException("External media not present");
@@ -242,6 +253,8 @@ public final class ApkFile implements AutoCloseable, Parcelable {
                 return o1Type.compareTo(o2Type);
             });
         }
+        if (packageName == null) throw new Exception("Package name not found.");
+        this.packageName = packageName;
     }
 
     public Entry getBaseEntry() {
@@ -253,6 +266,7 @@ public final class ApkFile implements AutoCloseable, Parcelable {
         return entries;
     }
 
+    @NonNull
     public List<Entry> getSelectedEntries() {
         List<Entry> selectedEntries = new ArrayList<>();
         ListIterator<Entry> it = entries.listIterator();
@@ -264,6 +278,7 @@ public final class ApkFile implements AutoCloseable, Parcelable {
         return selectedEntries;
     }
 
+    @NonNull
     public String getPackageName() {
         return packageName;
     }
@@ -276,7 +291,6 @@ public final class ApkFile implements AutoCloseable, Parcelable {
         return hasObb;
     }
 
-    @SuppressWarnings("ConstantConditions")
     public boolean extractObb() {
         if (!hasObb) return true;
         try {
@@ -351,18 +365,25 @@ public final class ApkFile implements AutoCloseable, Parcelable {
 
     @Override
     public void close() {
-        for (Entry entry : entries) {
-            if (entry.source.exists()) //noinspection ResultOfMethodCallIgnored
-                entry.source.delete();
+        if (isSplit()) {
+            for (Entry entry : entries) {
+                if (entry.source.exists()) //noinspection ResultOfMethodCallIgnored
+                    entry.source.delete();
+            }
         }
-        if (cacheFilePath != null && cacheFilePath.exists()) //noinspection ResultOfMethodCallIgnored
-            cacheFilePath.delete();
+        Utils.closeSilently(fd);
     }
 
     @Nullable
     private ByteBuffer getManifestFromApk(File apkFile) throws IOException {
-        try (FileInputStream apkInputStream = new FileInputStream(apkFile);
-             ZipInputStream zipInputStream = new ZipInputStream(apkInputStream)) {
+        try (FileInputStream apkInputStream = new FileInputStream(apkFile)) {
+            return getManifestFromApk(apkInputStream);
+        }
+    }
+
+    @Nullable
+    private ByteBuffer getManifestFromApk(InputStream apkInputStream) throws IOException {
+        try (ZipInputStream zipInputStream = new ZipInputStream(apkInputStream)) {
             ZipEntry zipEntry;
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
                 if (!zipEntry.getName().equals(MANIFEST_FILE)) {

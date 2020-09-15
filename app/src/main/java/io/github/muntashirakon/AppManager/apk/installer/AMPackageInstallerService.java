@@ -75,9 +75,11 @@ public class AMPackageInstallerService extends IntentService {
                 String packageName = intent.getStringExtra(AMPackageInstaller.EXTRA_PACKAGE_NAME);
                 if (packageName != null && packageName.equals(AMPackageInstallerService.this.packageName)) {
                     sendNotification(intent.getIntExtra(AMPackageInstaller.EXTRA_STATUS, AMPackageInstaller.STATUS_FAILURE_INVALID), intent.getStringExtra(AMPackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
-                    if (closeApkFile && apkFile != null) apkFile.close();
-                    completed = true;
+                    if (closeApkFile && apkFile != null) {
+                        apkFile.close();
+                    }
                 }
+                completed = true;
             }
         }
     };

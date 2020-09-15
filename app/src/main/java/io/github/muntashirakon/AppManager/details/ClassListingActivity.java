@@ -26,6 +26,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -45,9 +46,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.classysharkandroid.dex.DexLoaderBuilder;
 import com.google.classysharkandroid.reflector.Reflector;
-import com.google.classysharkandroid.utils.UriUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -59,7 +60,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 import dalvik.system.DexClassLoader;
@@ -75,9 +75,7 @@ import static com.google.classysharkandroid.utils.PackageUtils.convertS;
 
 public class ClassListingActivity extends BaseActivity implements SearchView.OnQueryTextListener {
     private static final String APP_DEX = "app_dex";
-    private static final String EXODUS_CACHE_APK = "exodus_cache.apk";
 
-    private Intent intent;
     private List<String> classList;
     private List<String> classListAll;
     private ListView mListView;
@@ -99,12 +97,14 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     private ProgressIndicator mProgressIndicator;
     private static String mConstraint;
     private String mPackageName;
+    private ParcelFileDescriptor fd;
+    private String archiveFilePath;
 
     @Override
     protected void onDestroy() {
         IOUtils.deleteDir(new File(getCacheDir().getParent(), APP_DEX));
         IOUtils.deleteDir(getCodeCacheDir());
-        IOUtils.deleteDir(new File(getFilesDir(), EXODUS_CACHE_APK));
+        Utils.closeSilently(fd);
         super.onDestroy();
     }
 
@@ -120,7 +120,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         setContentView(R.layout.activity_class_listing);
         setSupportActionBar(findViewById(R.id.toolbar));
         mActionBar = getSupportActionBar();
-        intent = getIntent();
+        Intent intent = getIntent();
         if (mActionBar != null) {
             mActionBar.setDisplayShowCustomEnabled(true);
 
@@ -150,35 +150,49 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         mProgressIndicator = findViewById(R.id.progress_linear);
         showProgress(true);
 
+        final Uri uriFromIntent = intent.getData();
+        if (uriFromIntent == null) {
+            Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
+            try {
+                fd = getContentResolver().openFileDescriptor(uriFromIntent, "r");
+                if (fd == null) {
+                    throw new FileNotFoundException("FileDescription cannot be null");
+                }
+                archiveFilePath = Utils.getFileFromFd(fd).getAbsolutePath();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else archiveFilePath = uriFromIntent.getPath();
+        if (archiveFilePath == null) {
+            Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
         new Thread(() -> {
-            final Uri uriFromIntent = intent.getData();
             classList = new ArrayList<>();
-            if (uriFromIntent != null) packageInfo = "<b>" + getString(R.string.source_dir) + ": </b>" + uriFromIntent.toString() + "\n";
-            else packageInfo = "";
+            packageInfo = "<b>" + getString(R.string.source_dir) + ": </b>" + uriFromIntent.toString() + "\n";
             tracker_names = StaticDataset.getTrackerNames();
             signatures = StaticDataset.getTrackerCodeSignatures();
             try {
-                InputStream uriStream = UriUtils.getStreamFromUri(ClassListingActivity.this, uriFromIntent);
-                final byte[] bytes = IOUtils.readFully(uriStream, -1, true);
-                uriStream.close();
+                final byte[] bytes;
+                try (InputStream uriStream = getContentResolver().openInputStream(uriFromIntent)) {
+                    bytes = IOUtils.readFully(uriStream, -1, true);
+                }
                 new Thread(() -> {
                     try {
                         packageInfo += "\n<b>MD5sum:</b> " + convertS(MessageDigest.getInstance("md5").digest(bytes))
                                 + "\n<b>SHA1sum:</b> " + convertS(MessageDigest.getInstance("sha1").digest(bytes))
                                 + "\n<b>SHA256sum:</b> " + convertS(MessageDigest.getInstance("sha256").digest(bytes));
-                    } catch (NoSuchAlgorithmException ignored) {}
-
-                    final PackageManager pm = getApplicationContext().getPackageManager();
-                    PackageInfo packageInfo = null;
-                    String archiveFilePath = null;
-                    if (uriFromIntent != null) {
-                        if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
-                            archiveFilePath = UriUtils.pathUriCache(getApplicationContext(),
-                                    uriFromIntent, EXODUS_CACHE_APK);
-                        } else archiveFilePath = uriFromIntent.getPath();
-                        if (archiveFilePath != null)
-                            packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
+                    } catch (NoSuchAlgorithmException ignored) {
                     }
+                    final PackageManager pm = getApplicationContext().getPackageManager();
+                    PackageInfo packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
                     if (packageInfo != null) {
                         this.packageInfo += apkCert(packageInfo);
                         mPackageName = packageInfo.packageName;
@@ -194,12 +208,11 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                         });
                     } else this.packageInfo += "\n<i><b>FAILED to retrieve PackageInfo!</b></i>";
                 }).start();
-
                 new FillClassesNamesThread(bytes).start();
                 new StartDexLoaderThread(bytes).start();
             } catch (Exception e) {
                 e.printStackTrace();
-                ActivityCompat.finishAffinity(this);
+                finishAffinity();
             }
         }).start();
     }
@@ -251,7 +264,8 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                 j = 1;
                 for (i = 1; i < tracker_names.length; i++) {
                     if (tracker_names[i - 1].equals(tracker_names[i])) continue;
-                    statsMsg.append(tracker_names[i]).append("\n"); j++;
+                    statsMsg.append(tracker_names[i]).append("\n");
+                    j++;
                 }
                 new MaterialAlertDialogBuilder(this)
                         .setTitle(getString(R.string.trackers_and_classes, j, tracker_names.length))
@@ -357,7 +371,8 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                 }
                 t_end = System.currentTimeMillis();
                 totalTimeTaken = t_end - t_start;
-                if (totalTrackersFound > 0) foundTrackerList = getString(R.string.found_trackers) + "\n" + found;
+                if (totalTrackersFound > 0)
+                    foundTrackerList = getString(R.string.found_trackers) + "\n" + found;
             } catch (Exception e) {
                 // ODEX, need to see how to handle
                 e.printStackTrace();
@@ -454,7 +469,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         void setDefaultList(List<String> list) {
             mDefaultList = list;
             mAdapterList = list;
-            if(ClassListingActivity.mConstraint != null
+            if (ClassListingActivity.mConstraint != null
                     && !ClassListingActivity.mConstraint.equals("")) {
                 getFilter().filter(ClassListingActivity.mConstraint);
             }

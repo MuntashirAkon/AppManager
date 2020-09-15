@@ -34,11 +34,13 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
 import android.system.ErrnoException;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.WindowManager;
@@ -49,6 +51,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import java.io.ByteArrayInputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -227,6 +230,20 @@ public class Utils {
             return str.substring(str.lastIndexOf('.') + 1);
         } catch (Exception e) {
             return str;
+        }
+    }
+
+    @NonNull
+    public static File getFileFromFd(@NonNull ParcelFileDescriptor fd) {
+        return new File("/proc/self/fd/" + fd.getFd());
+    }
+
+    public static void closeSilently(@Nullable Closeable closeable) {
+        if (closeable == null) return;
+        try {
+            closeable.close();
+        } catch (Exception e) {
+            Log.w("IOUtils", String.format("Unable to close %s", closeable.getClass().getCanonicalName()), e);
         }
     }
 

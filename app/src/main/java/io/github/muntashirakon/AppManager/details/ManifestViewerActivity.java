@@ -27,6 +27,7 @@ import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -36,14 +37,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.progressindicator.ProgressIndicator;
-import com.google.classysharkandroid.utils.UriUtils;
 
 import net.dongliu.apk.parser.ApkFile;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Locale;
@@ -54,18 +54,17 @@ import java.util.regex.Pattern;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class ManifestViewerActivity extends BaseActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
-
-    private static final String MANIFEST_CACHE_APK = "manifest_cache.apk";
 
     private static final Pattern QUOTATIONS = Pattern.compile("\"([^\"]*)\"", Pattern.MULTILINE);
     private static final Pattern MANIFEST_TAGS = Pattern.compile
@@ -84,6 +83,8 @@ public class ManifestViewerActivity extends BaseActivity {
     private SpannableString formattedContent;
     private String archiveFilePath;
     private String packageName;
+    @Nullable
+    private ParcelFileDescriptor fd;
     private ActivityResultLauncher<String> exportManifest = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
         try (OutputStream outputStream = getContentResolver().openOutputStream(uri)) {
             Objects.requireNonNull(outputStream).write(code.getBytes());
@@ -106,50 +107,55 @@ public class ManifestViewerActivity extends BaseActivity {
         final Uri packageUri = intent.getData();
         packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
         if (packageUri == null && packageName == null) {
-            Toast.makeText(this, getString(R.string.empty_package_name), Toast.LENGTH_LONG).show();
-            finish();
+            showErrorAndFinish();
             return;
         }
-        archiveFilePath = null;
-        new Thread(() -> {
-            final PackageManager pm = getApplicationContext().getPackageManager();
-            if (packageUri != null) {
-                PackageInfo packageInfo = null;
-                if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
-                    archiveFilePath = UriUtils.pathUriCache(getApplicationContext(),
-                            packageUri, MANIFEST_CACHE_APK);
-                } else archiveFilePath = packageUri.getPath();
-                if (archiveFilePath != null)
-                    packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 0);
-                if (packageInfo != null) {
-                    packageName = packageInfo.packageName;
-                    final ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-                    applicationInfo.publicSourceDir = archiveFilePath;
-                    applicationInfo.sourceDir = archiveFilePath;
-                    runOnUiThread(() -> {
-                        setTitle(applicationInfo.loadLabel(pm));
-                        setWrapped();
-                    });
-                } else {  // Possibly a split apk
-                    runOnUiThread(this::setWrapped);
-                }
-            } else {
-                runOnUiThread(() -> {
-                    try {
-                        setTitle(pm.getApplicationInfo(packageName, 0).loadLabel(pm));
-                        setWrapped();
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
+        final PackageManager pm = getApplicationContext().getPackageManager();
+        if (packageUri != null) {
+            PackageInfo packageInfo = null;
+            if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
+                try {
+                    fd = getContentResolver().openFileDescriptor(packageUri, "r");
+                    if (fd == null) {
+                        throw new FileNotFoundException("FileDescription cannot be null");
                     }
-                });
+                    archiveFilePath = Utils.getFileFromFd(fd).getAbsolutePath();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    showErrorAndFinish();
+                    return;
+                }
+            } else archiveFilePath = packageUri.getPath();
+            if (archiveFilePath != null)
+                packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 0);
+            if (packageInfo != null) {
+                packageName = packageInfo.packageName;
+                final ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+                applicationInfo.publicSourceDir = archiveFilePath;
+                applicationInfo.sourceDir = archiveFilePath;
+                setTitle(applicationInfo.loadLabel(pm));
+            } // else Could be a split apk
+            setWrapped();
+        } else {
+            try {
+                setTitle(pm.getApplicationInfo(packageName, 0).loadLabel(pm));
+                setWrapped();
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+                showErrorAndFinish();
             }
-        }).start();
+        }
+    }
+
+    @UiThread
+    private void showErrorAndFinish() {
+        Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
+        finish();
     }
 
     @Override
     protected void onDestroy() {
-        IOUtils.deleteDir(getCodeCacheDir());
-        IOUtils.deleteDir(new File(getFilesDir(), MANIFEST_CACHE_APK));
+        Utils.closeSilently(fd);
         super.onDestroy();
     }
 
@@ -164,7 +170,7 @@ public class ManifestViewerActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
