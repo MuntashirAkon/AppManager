@@ -16,7 +16,7 @@ Yet another Android package manager and viewer but...
 - Does not connect to the Internet (the permission is required for ADB mode)
 - Displays as much info as possible in the main window
 - Lists activities, broadcast receivers, services, providers, permissions, signatures, shared libraries, etc. of any app
-- Can launch (exportable) activities, create (customizable) shortcuts
+- Launch (exportable) activities, create (customizable) shortcuts
 - Can block any activities, broadcast receivers, services or providers you like with native import/export as well as Watt and Blocker import support (requires root)
 - Revoke permissions considered dangerous (requires root/ADB)
 - Disable app ops considered dangerous (requires root/ADB)
