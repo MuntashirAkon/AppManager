@@ -8,31 +8,29 @@
 [![TG Group](https://img.shields.io/badge/TG-Group-blue?logo=telegram)](https://t.me/AppManagerAndroid)
 [![TG Channel](https://img.shields.io/badge/TG-Channel-blue?logo=telegram)](https://t.me/AppManagerChannel)
 
-Yet another android package manager and viewer but...
+Yet another Android package manager and viewer but...
 
-- It is free and open source
-- It has material design (and a nice UI)
-- It doesn't have any useless permissions
-- It doesn't connect to the internet (internet permission is required for ADB mode)
-- It tries to display as much information as possible in the main window
-- It lists activities, broadcast receivers, services, providers, permissions, signatures, shared libraries, etc. of any app
-- It can launch (exportable) activities, create (customizable) shortcuts
-- It can block any activities, broadcast receivers, services or providers you like with native import/export as well as Watt and Blocker import support (requires root)
-- It can revoke permissions that are considered dangerous (requires root/ADB)
-- It can disable app ops that are considered dangerous (requires root/ADB)
-- It can scan for trackers in apps and list (all or only) tracking classes (and their code dump)
-- It can generate dynamic manifest for any app
-- It can be used to view/edit/delete shared preferences of any app (requires root)
-- It displays running processes/apps (requires root/ADB)
-- It displays your app usage, data usage and app storage info (requires “Usage Access” permission)
-- Apk files can be shared (hence the use of a provider)
-- It can be used to clear app data or app cache (requires root/ADB)
+- Copylefted libre software (GPLv3+)
+- Material design (and a nice UI)
+- No useless permissions
+- Does not connect to the Internet (the permission is required for ADB mode)
+- Displays as much info as possible in the main window
+- Lists activities, broadcast receivers, services, providers, permissions, signatures, shared libraries, etc. of any app
+- Launch (exportable) activities, create (customizable) shortcuts
+- Block any activities, broadcast receivers, services or providers you like with native import/export as well as Watt and Blocker import support (requires root)
+- Revoke permissions considered dangerous (requires root/ADB)
+- Disable app ops considered dangerous (requires root/ADB)
+- Scan for trackers in apps and list (all or only) tracking classes (and their code dump)
+- Generate dynamic manifest for any app
+- View/edit/delete shared preferences of any app (requires root)
+- Display running processes/apps (requires root/ADB)
+- Display your app usage, data usage and app storage info (requires “Usage Access” permission)
+- APK files can be shared (hence the use of a provider)
+- Clear app data or app cache (requires root/ADB)
 - Batch operations: clear app data, disable run in background, disable/kill/uninstall apps
 - One-click operations: block ads/tracker components, block components by signature, block multiple app ops
 
-...and other minor features such as installing/uninstalling/updating/enabling/disabling apps, displaying app installation info, opening on F-Droid, Aurora Droid or Aurora Store.
-
-It basically combines the features of 5 or 6 apps that any tech-savvy person needs to use in order to have a life.
+…and other minor features such as installing/uninstalling/updating/enabling/disabling apps, displaying app installation info, opening on F-Droid, Aurora Droid or Aurora Store combining the features of 5 or 6 apps any tech-savvy person needs.
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
 alt="Get it on F-Droid"
@@ -57,7 +55,7 @@ Translate **App Manager Docs** at _Crowdin_: https://crwd.in/app-manager-docs
 
 ### Mirrors
 
-**Gitlab**: https://gitlab.com/muntashir/AppManager
+**GitLab**: https://gitlab.com/muntashir/AppManager
 
 **Riseup**: https://0xacab.org/muntashir/AppManager
 
@@ -72,10 +70,6 @@ Translate **App Manager Docs** at _Crowdin_: https://crwd.in/app-manager-docs
 #### Dark
 
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/14.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/10.png" height="500dp" />
-
-### License
-
-GNU General Public License v3.0
 
 ### Credits and Libraries
 
