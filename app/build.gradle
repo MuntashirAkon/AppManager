@@ -91,7 +91,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.0-alpha02'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
 
-    implementation 'eu.chainfire:libsuperuser:1.1.0.+'
+    implementation 'eu.chainfire:libsuperuser:1.1.0.202004101746'
     implementation 'com.tananaev:adblib:1.2'
 
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
