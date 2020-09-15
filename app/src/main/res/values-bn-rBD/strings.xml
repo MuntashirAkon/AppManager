@@ -44,7 +44,7 @@
     <string name="cache_size">ক্যাশ</string>
     <string name="obb_size">ওবিবি</string>
     <string name="media_size">মিডিয়া</string>
-    <string name="app_not_installed">অ্যাপটি ইনস্টলড হয়নি</string>
+    <string name="app_not_installed">অ্যাপটি ইনস্টল হয়নি</string>
     <string name="system">সিস্টেম</string>
     <string name="user">ব্যবহারকারী</string>
     <string name="sort">বাছাই</string>
@@ -143,8 +143,8 @@
     <string name="disabled_app">নিস্ক্রিয় করা</string>
     <string name="view_in_settings">সেটিংসে দেখুন</string>
     <string name="uninstall_app_message">আপনি কি এই অ্যাপটি আনইনস্টল করতে চান?</string>
-    <string name="failed_to_uninstall">%s অ্যাপটি আনইনস্টল করতে ব্যর্থ.</string>
-    <string name="uninstalled_successfully">%sঅ্যাপটি সফলভাবে আনইনস্টলড হয়েছে।</string>
+    <string name="failed_to_uninstall">%s আনইনস্টল করতে ব্যর্থ</string>
+    <string name="uninstalled_successfully">%s আনইনস্টল হয়েছে।</string>
     <string name="uninstall_system_app_message">এটি একটি সিস্টেম অ্যাপ। আপনি কি এটি আনইনস্টল করার ব্যাপারে নিশ্চিত?</string>
     <string name="stopped">স্থগিত</string>
     <string name="disable">নিষ্ক্রিয় করুন</string>
