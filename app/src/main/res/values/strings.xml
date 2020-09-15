@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2020 Muntashir Al-Islam
+  ~ Copyright (C) 2020 Muntashir Al-Islam
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
         updated. Visit the official docs site (https://muntashirakon.github.io/AppManager) to get
         up-to-date info]</string>
     <string name="uninstall">Uninstall</string>
-    <string name="permissions">Used permissions</string>
+    <string name="permissions">Uses permissions</string>
     <string name="require_no_permission">No permission required</string>
     <string name="activities">Activities</string>
     <string name="launch">Launch</string>
@@ -289,7 +289,7 @@
     <string name="running_apps">Running Apps</string>
     <string name="no_running_apps">No running apps</string>
     <string name="kill_process">Kill</string>
-    <string name="disable_background_run">Keep App in Foreground</string>
+    <string name="disable_background_run">Disable Background Run</string>
     <string name="pid_and_ppid">Process ID: %d, Parent Process ID: %d</string>
     <string name="memory_virtual_memory">Memory: %s, Virtual Memory: %s</string>
     <string name="user_and_uid">User: %s (%d)</string>
@@ -341,7 +341,7 @@
     <string name="touchscreen">Touchscreen</string>
     <string name="pref_export_msg">Export blocking rules configured within App Manager to external storage</string>
     <string name="pref_import_msg">Import previously exported blocking rules from App Manager</string>
-    <string name="pref_import_watt_msg">Import blocking rules from Watt, each file containing rules for a single package as the respective packagename.xml</string>
+    <string name="pref_import_watt_msg">Import blocking rules from Watt, each file containing rules for a single named package as packagename.xml etc.</string>
     <string name="pref_import_blocker_msg">Import blocking rules from Blocker, each file containing rules for a single package</string>
     <string name="pref_app_theme">App theme</string>
     <string name="follow_system">Follow system</string>
