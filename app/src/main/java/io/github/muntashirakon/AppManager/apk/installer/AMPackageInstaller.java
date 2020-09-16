@@ -24,8 +24,10 @@ import android.content.pm.PackageInstaller;
 
 import java.io.File;
 
+import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.apk.ApkFile;
 
 public abstract class AMPackageInstaller {
     public static final String EXTRA_STATUS = "EXTRA_STATUS";
@@ -93,7 +95,9 @@ public abstract class AMPackageInstaller {
     @SuppressLint("StaticFieldLeak")
     protected static final Context context = AppManager.getContext();
 
-    public abstract boolean installMultiple(File[] apkFiles, String packageName);
+    public abstract boolean install(@NonNull ApkFile apkFile);
+
+    public abstract boolean install(@NonNull File[] apkFiles, String packageName);
 
     static void sendStartedBroadcast(String packageName) {
         Intent broadcastIntent = new Intent(ACTION_INSTALL_STARTED);

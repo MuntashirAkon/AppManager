@@ -452,7 +452,7 @@ public class BackupManager implements AutoCloseable {
             }
             // A normal update will do it now
             PackageInstallerShell packageInstaller = new PackageInstallerShell(userHandle);
-            if (!packageInstaller.installMultiple(allApks, packageName)) {
+            if (!packageInstaller.install(allApks, packageName)) {
                 deleteFiles(allApks);
                 throw new BackupException("A (re)install was necessary but couldn't perform it.");
             }

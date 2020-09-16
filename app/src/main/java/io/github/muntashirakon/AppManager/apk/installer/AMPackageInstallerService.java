@@ -31,10 +31,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -42,13 +38,9 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.main.MainActivity;
-import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.types.FreshFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.PACKAGE_STAGING_DIRECTORY;
 
 public class AMPackageInstallerService extends IntentService {
     public static final String EXTRA_APK_FILE_KEY = "EXTRA_APK_FILE_KEY";
@@ -78,8 +70,8 @@ public class AMPackageInstallerService extends IntentService {
                     if (closeApkFile && apkFile != null) {
                         apkFile.close();
                     }
+                    completed = true;
                 }
-                completed = true;
             }
         }
     };
@@ -137,25 +129,11 @@ public class AMPackageInstallerService extends IntentService {
                 }
             }
         }).start();
-        // Get staging apk files
-        List<ApkFile.Entry> entries = apkFile.getSelectedEntries();
-        File[] stagingApkFiles;
-        try {
-            stagingApkFiles = getStagingApkFiles(entries);
-        } catch (IOException e) {
-            e.printStackTrace();
-            AMPackageInstaller.sendCompletedBroadcast(packageName, AMPackageInstaller.STATUS_FAILURE_INVALID);
-            return;
-        }
         // Install package
         if (AppPref.isRootOrAdbEnabled()) {
-            PackageInstallerShell.getInstance().installMultiple(stagingApkFiles, packageName);
-            for (File file : stagingApkFiles) {
-                if (file instanceof FreshFile) //noinspection ResultOfMethodCallIgnored
-                    file.delete();
-            }
+            PackageInstallerShell.getInstance().install(apkFile);
         } else {
-            PackageInstallerNoRoot.getInstance().installMultiple(stagingApkFiles, packageName);
+            PackageInstallerNoRoot.getInstance().install(apkFile);
         }
         int count = 18000000; // 5 hours
         int interval = 100; // 100 millis
@@ -236,24 +214,5 @@ public class AMPackageInstallerService extends IntentService {
             notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(serviceChannel);
         }
-    }
-
-    @NonNull
-    public static File[] getStagingApkFiles(@NonNull List<ApkFile.Entry> apkEntries) throws IOException {
-        File[] apkFiles = new File[apkEntries.size()];
-        if (AppPref.isRootOrAdbEnabled() && PACKAGE_STAGING_DIRECTORY.exists()) {
-            File tmpSource;
-            for (int i = 0; i < apkFiles.length; ++i) {
-                tmpSource = apkEntries.get(i).getCachedFile();
-                apkFiles[i] = new FreshFile(PACKAGE_STAGING_DIRECTORY, tmpSource.getName());
-                if (!Runner.runCommand(new String[]{Runner.TOYBOX, "cp", tmpSource.getAbsolutePath(),
-                        apkFiles[i].getAbsolutePath()}).isSuccessful()) {
-                    throw new IOException("Failed to copy files to the staging directory.");
-                }
-            }
-        } else {
-            for (int i = 0; i < apkFiles.length; ++i) apkFiles[i] = apkEntries.get(i).getCachedFile();
-        }
-        return apkFiles;
     }
 }

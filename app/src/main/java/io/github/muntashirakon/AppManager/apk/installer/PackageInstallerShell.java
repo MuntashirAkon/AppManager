@@ -21,15 +21,18 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
 public final class PackageInstallerShell extends AMPackageInstaller {
-    public static final String TAG = "SASI";
+    public static final String TAG = "PIS";
 
     private static final String installCmd = RunnerUtils.CMD_PM;
 
@@ -52,25 +55,26 @@ public final class PackageInstallerShell extends AMPackageInstaller {
         this.userHandle = userHandle;
     }
 
-    // https://cs.android.com/android/_/android/platform/system/core/+/5b940dc7f9c0364d84469cad7b47a5ffaa33600b:adb/client/adb_install.cpp;drc=71afeb9a5e849e8752c470aa31c568be2e48d0b6;l=538
     @Override
-    public boolean installMultiple(@NonNull File[] apkFiles, String packageName) {
-        sendStartedBroadcast(packageName);
-        long totalSize = 0;
-        // Get file size
+    public boolean install(@NonNull ApkFile apkFile) {
+        File[] apkFiles;
         try {
-            for (File apkFile : apkFiles) totalSize += apkFile.length();
-        } catch (SecurityException e) {
-            sendCompletedBroadcast(packageName, STATUS_FAILURE_SECURITY);
-            Log.e(TAG, "InstallMultiple: Cannot access apk files.", e);
+            apkFiles = getStagingApkFiles(apkFile.getSelectedEntries());
+        } catch (IOException e) {
+            Log.e(TAG, "Install: Could not cache apk files.", e);
             return false;
         }
+        return install(apkFiles, apkFile.getPackageName());
+    }
+
+    // https://cs.android.com/android/_/android/platform/system/core/+/5b940dc7f9c0364d84469cad7b47a5ffaa33600b:adb/client/adb_install.cpp;drc=71afeb9a5e849e8752c470aa31c568be2e48d0b6;l=538
+    @Override
+    public boolean install(@NonNull File[] apkFiles, String packageName) {
+        sendStartedBroadcast(packageName);
         // Create install session
-        StringBuilder cmd = new StringBuilder(installCmd).append(" install-create -r -d -t -S ")
-                .append(totalSize).append(" -i ").append(BuildConfig.APPLICATION_ID)
-                .append(" --user ").append(RunnerUtils.userHandleToUser(userHandle));
-        for (File apkFile : apkFiles)
-            cmd.append(" \"").append(apkFile.getAbsolutePath()).append("\"");
+        StringBuilder cmd = new StringBuilder(installCmd).append(" install-create -r -d -t")
+                .append(" --user ").append(RunnerUtils.userHandleToUser(userHandle))
+                .append(" -i ").append(BuildConfig.APPLICATION_ID);
         Runner.Result result = Runner.runCommand(cmd.toString());
         String buf = result.getOutput();
         if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
@@ -94,9 +98,12 @@ public final class PackageInstallerShell extends AMPackageInstaller {
         }
         // Write apk files
         for (File apkFile : apkFiles) {
-            cmd = new StringBuilder(installCmd).append(" install-write -S ")
+            // TODO(16/9/20): Find a way to pipe the stream directly
+            cmd = new StringBuilder(Runner.TOYBOX).append(" cat ").append("\"")
+                    .append(apkFile.getAbsolutePath()).append("\" | ")
+                    .append(installCmd).append(" install-write -S ")
                     .append(apkFile.length()).append(" ").append(sessionId).append(" ")
-                    .append(apkFile.getName()).append(" \"").append(apkFile.getAbsolutePath()).append("\"");
+                    .append(apkFile.getName()).append(" -");
             result = Runner.runCommand(cmd.toString());
             buf = result.getOutput();
             if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
@@ -138,6 +145,13 @@ public final class PackageInstallerShell extends AMPackageInstaller {
             Log.e(TAG, "Abandon: Failed to abandon session.");
         }
         return false;
+    }
+
+    @NonNull
+    public static File[] getStagingApkFiles(@NonNull List<ApkFile.Entry> apkEntries) throws IOException {
+        File[] apkFiles = new File[apkEntries.size()];
+        for (int i = 0; i < apkFiles.length; ++i) apkFiles[i] = apkEntries.get(i).getCachedFile();
+        return apkFiles;
     }
 
     private int statusStrToStatus(@NonNull String statusStr) {
