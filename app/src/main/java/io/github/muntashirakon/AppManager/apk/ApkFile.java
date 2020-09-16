@@ -509,7 +509,7 @@ public final class ApkFile implements AutoCloseable {
         public String getFileName() {
             if (cachedFile != null && cachedFile.exists()) return cachedFile.getName();
             if (zipEntry != null) return IOUtils.getFileNameFromZipEntry(zipEntry);
-            if (source != null && source.exists()) return source.getName();
+            if (source != null && source.exists()) return name;
             else throw new RuntimeException("Neither zipEntry nor source is defined.");
         }
 
@@ -539,7 +539,6 @@ public final class ApkFile implements AutoCloseable {
         }
 
         public File getCachedFile() throws IOException {
-            if (source != null) return source;
             File destDir = AppManager.getContext().getExternalFilesDir("apks");
             if (destDir == null || !Environment.getExternalStorageState(destDir).equals(Environment.MEDIA_MOUNTED))
                 throw new RuntimeException("External media not present");
