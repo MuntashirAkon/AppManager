@@ -244,7 +244,7 @@ public class AMPackageInstallerService extends IntentService {
         if (AppPref.isRootOrAdbEnabled() && PACKAGE_STAGING_DIRECTORY.exists()) {
             File tmpSource;
             for (int i = 0; i < apkFiles.length; ++i) {
-                tmpSource = apkEntries.get(i).source;
+                tmpSource = apkEntries.get(i).getCachedFile();
                 apkFiles[i] = new FreshFile(PACKAGE_STAGING_DIRECTORY, tmpSource.getName());
                 if (!Runner.runCommand(new String[]{Runner.TOYBOX, "cp", tmpSource.getAbsolutePath(),
                         apkFiles[i].getAbsolutePath()}).isSuccessful()) {
@@ -252,7 +252,7 @@ public class AMPackageInstallerService extends IntentService {
                 }
             }
         } else {
-            for (int i = 0; i < apkFiles.length; ++i) apkFiles[i] = apkEntries.get(i).source;
+            for (int i = 0; i < apkFiles.length; ++i) apkFiles[i] = apkEntries.get(i).getCachedFile();
         }
         return apkFiles;
     }

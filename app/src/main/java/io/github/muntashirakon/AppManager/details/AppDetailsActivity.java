@@ -33,6 +33,8 @@ import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.IOException;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -104,7 +106,7 @@ public class AppDetailsActivity extends BaseActivity {
             else {
                 try {
                     model.setPackageUri(apkUri);
-                } catch (ApkFile.ApkFileException e) {
+                } catch (ApkFile.ApkFileException | IOException e) {
                     e.printStackTrace();
                     runOnUiThread(() -> {
                         Toast.makeText(this, getString(R.string.failed_to_fetch_package_info), Toast.LENGTH_LONG).show();

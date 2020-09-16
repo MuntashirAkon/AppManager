@@ -28,6 +28,8 @@ import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.io.IOException;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -154,7 +156,7 @@ public class PackageInstallerActivity extends BaseActivity {
                         });
                     }
                 }
-            } catch (ApkFile.ApkFileException | PackageManager.NameNotFoundException e) {
+            } catch (ApkFile.ApkFileException | PackageManager.NameNotFoundException | IOException e) {
                 e.printStackTrace();
                 runOnUiThread(this::finish);
             }
@@ -162,8 +164,8 @@ public class PackageInstallerActivity extends BaseActivity {
     }
 
     @NonNull
-    private PackageInfo getPackageInfo() throws PackageManager.NameNotFoundException {
-        String apkPath = apkFile.getBaseEntry().source.getAbsolutePath();
+    private PackageInfo getPackageInfo() throws PackageManager.NameNotFoundException, IOException {
+        String apkPath = apkFile.getBaseEntry().getCachedFile().getAbsolutePath();
         @SuppressLint("WrongConstant")
         PackageInfo packageInfo = mPackageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS
                 | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS

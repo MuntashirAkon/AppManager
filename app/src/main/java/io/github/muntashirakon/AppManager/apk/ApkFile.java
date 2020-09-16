@@ -202,35 +202,27 @@ public final class ApkFile implements AutoCloseable {
                 throw new ApkFileException(e);
             }
             Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
-            File apkFile;
             String fileName;
             while (zipEntries.hasMoreElements()) {
                 ZipEntry zipEntry = zipEntries.nextElement();
                 if (zipEntry.isDirectory()) continue;
                 fileName = IOUtils.getFileNameFromZipEntry(zipEntry);
                 if (fileName.endsWith(".apk")) {
-                    // Extract the apk file
                     try (InputStream zipInputStream = zipFile.getInputStream(zipEntry)) {
-                        apkFile = IOUtils.saveZipFile(zipInputStream, destDir, fileName);
-                        Log.e(TAG, "Apk File: " + apkFile);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new ApkFileException(e);
-                    }
-                    try {
                         // Extract manifest file
-                        ByteBuffer manifestBytes = getManifestFromApk(apkFile);
+                        ByteBuffer manifestBytes = getManifestFromApk(zipInputStream);
                         if (manifestBytes == null) throw new Exception("Manifest not found.");
                         // Get manifest attributes
                         HashMap<String, String> manifestAttrs = getManifestAttributes(manifestBytes);
                         if (manifestAttrs.containsKey("split")) {
                             // TODO: check for duplicates
-                            entries.add(new Entry(fileName, apkFile, APK_SPLIT, manifestAttrs));
+                            Entry entry = new Entry(fileName, zipEntry, APK_SPLIT, manifestAttrs);
+                            entries.add(entry);
                         } else {
                             if (foundBaseApk) {
                                 throw new RuntimeException("Duplicate base apk found.");
                             }
-                            baseEntry = new Entry(fileName, apkFile, APK_BASE, manifestAttrs);
+                            baseEntry = new Entry(fileName, zipEntry, APK_BASE, manifestAttrs);
                             entries.add(baseEntry);
                             if (manifestAttrs.containsKey("package")) {
                                 packageName = manifestAttrs.get("package");
@@ -238,8 +230,6 @@ public final class ApkFile implements AutoCloseable {
                             foundBaseApk = true;
                         }
                     } catch (Exception e) {
-                        //noinspection ResultOfMethodCallIgnored
-                        apkFile.delete();
                         throw new ApkFileException(e);
                     }
                 } else if (fileName.endsWith(".obb")) {
@@ -362,11 +352,8 @@ public final class ApkFile implements AutoCloseable {
     @Override
     public void close() {
         apkFiles.delete(sparseArrayKey);
-        if (isSplit()) {
-            for (Entry entry : entries) {
-                if (entry.source.exists()) //noinspection ResultOfMethodCallIgnored
-                    entry.source.delete();
-            }
+        for (Entry entry : entries) {
+            entry.close();
         }
         IOUtils.closeSilently(zipFile);
         IOUtils.closeSilently(fd);
@@ -438,36 +425,42 @@ public final class ApkFile implements AutoCloseable {
         return manifestAttrs;
     }
 
-    public static class Entry {
+    public class Entry implements AutoCloseable {
         /**
          * Name of the file, for split apk, name of the split instead
          */
         @NonNull
         public String name;
-        @NonNull
-        public File source;
         @ApkType
         public int type;
         @Nullable
-        public HashMap<String, String> manifest;
+        public final HashMap<String, String> manifest;
         @Nullable
         public String splitSuffix;
         @Nullable
         public String forFeature = null;
-        public boolean selected = false;
 
-        Entry(@NonNull String name, @NonNull File source, @ApkType int type) throws Exception {
+        @Nullable
+        private File cachedFile;
+        @Nullable
+        private ZipEntry zipEntry;
+        @Nullable
+        private File source;
+        private boolean selected = false;
+
+        Entry(@NonNull String name, @NonNull File source, @ApkType int type) throws ApkFileException {
             this.name = name;
             this.source = source;
             this.type = type;
             this.selected = true;
+            this.manifest = null;
             if (type != APK_BASE)
-                throw new Exception("Constructor can only be called for base apk");
+                throw new ApkFileException("Constructor can only be called for base apk");
         }
 
-        Entry(@NonNull String name, @NonNull File source, @ApkType int type, @NonNull HashMap<String, String> manifest) {
+        Entry(@NonNull String name, @NonNull ZipEntry zipEntry, @ApkType int type, @NonNull HashMap<String, String> manifest) {
             this.name = name;
-            this.source = source;
+            this.zipEntry = zipEntry;
             this.type = type;
             this.manifest = manifest;
             if (type == APK_BASE) this.selected = true;
@@ -510,6 +503,37 @@ public final class ApkFile implements AutoCloseable {
                     }
                 }
             }
+        }
+
+        public InputStream getInputStream() throws IOException {
+            if (cachedFile != null && cachedFile.exists()) return new FileInputStream(cachedFile);
+            if (zipEntry != null) return Objects.requireNonNull(zipFile).getInputStream(zipEntry);
+            if (source != null && source.exists()) return new FileInputStream(source);
+            else throw new IOException("Neither zipEntry nor source is defined.");
+        }
+
+        @Override
+        public void close() {
+            if (cachedFile != null && cachedFile.exists() && !cachedFile.delete()) {
+                Log.e(TAG, "Failed to delete: " + cachedFile.getAbsolutePath());
+            }
+            if (source != null && source.exists() && !source.delete()) {
+                Log.w(TAG, "Could not remove entry: " + source.getAbsolutePath());
+            }
+        }
+
+        public File getCachedFile() throws IOException {
+            if (source != null) return source;
+            File destDir = AppManager.getContext().getExternalFilesDir("apks");
+            if (destDir == null || !Environment.getExternalStorageState(destDir).equals(Environment.MEDIA_MOUNTED))
+                throw new RuntimeException("External media not present");
+            if (!destDir.exists()) //noinspection ResultOfMethodCallIgnored
+                destDir.mkdirs();
+            return cachedFile = IOUtils.saveZipFile(getInputStream(), destDir, name);
+        }
+
+        public boolean isSelected() {
+            return selected;
         }
 
         @NonNull

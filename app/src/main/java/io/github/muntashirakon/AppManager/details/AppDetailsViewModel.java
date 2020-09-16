@@ -39,6 +39,7 @@ import android.os.DeadSystemException;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -125,12 +126,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @WorkerThread
-    public void setPackageUri(@NonNull Uri packageUri) throws ApkFile.ApkFileException {
+    public void setPackageUri(@NonNull Uri packageUri) throws ApkFile.ApkFileException, IOException {
         Log.d("ADVM", "Package Uri is being set");
         isExternalApk = true;
         apkFileKey = ApkFile.createInstance(packageUri);
         apkFile = ApkFile.getInstance(apkFileKey);
-        apkPath = apkFile.getBaseEntry().source.getAbsolutePath();
+        apkPath = apkFile.getBaseEntry().getCachedFile().getAbsolutePath();
     }
 
     @WorkerThread
