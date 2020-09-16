@@ -41,11 +41,13 @@ public final class LangUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             sDefaultLocale = LocaleList.getDefault().get(0);
         } else sDefaultLocale = Locale.getDefault();
+        sLocaleMap.put("bn-BD", new Locale("bn", "BD"));
         sLocaleMap.put("en", Locale.ENGLISH);
         sLocaleMap.put("de", Locale.GERMAN);
+        sLocaleMap.put("nb-NO", new Locale("nb", "NO"));
         sLocaleMap.put("pt-BR", new Locale("pt", "BR"));
         sLocaleMap.put("ru-RU", new Locale("ru", "RU"));
-        sLocaleMap.put("zh-CN", new Locale("zh", "CN"));
+        sLocaleMap.put("zh-CN", Locale.SIMPLIFIED_CHINESE);
     }
 
     public static Locale updateLanguage(@NonNull Context context) {
