@@ -14,7 +14,8 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources>
+  -->
+<resources>
     <string name="instructions_header">[এই নির্দেশাবলী পুরানো এবং আর আপডেট করা হবে না আপডেটেড তথ্য পেতে অফিসিয়াল ডক সাইট ভিজিট করুন (https://muntashirakon.github.io/AppManager) ]</string>
     <string name="uninstall">আনইনস্টল</string>
     <string name="require_no_permission">কোন অনুমতির প্রয়োজন নেই</string>
@@ -33,7 +34,6 @@
     <string name="no_feature">কোনো ফিচার্স নেই</string>
     <string name="error">Error</string>
     <string name="loading">লোড হচ্ছে…</string>
-    <!-- &#8230; = ... -->
     <string name="sort_by_app_label">App label</string>
     <string name="sort_by_package_name">প্যাকেজের নাম</string>
     <string name="sort_by_domain">প্রথমে ব্যবহারকারীর এপ</string>
@@ -229,7 +229,6 @@
     <string name="sort_by_app_ops_values">অ্যাপ অপ্সের মান</string>
     <string name="sort_by_permission_names">অনুমতির নাম</string>
     <string name="sort_by_dangerous_permissions">বিপজ্জনক গুলো প্রথমে</string>
-    <string name="deny_dangerous_permissions"/>
     <string name="sort_by_tracker_components">প্রথমে ট্র্যাকার</string>
     <string name="unknown_op">অজানা অপারেশন</string>
     <string name="failed_to_disable_trackers">ট্র্যাকারগুলো নিষ্ক্রিয় করতে ব্যর্থ</string>
@@ -324,7 +323,6 @@
     <string name="operation_running">অপারেশন চলছে…</string>
     <string name="full_stop_tap_to_see_details">. বিবরণ দেখার জন্য ট্যাপ করুন।</string>
     <string name="try_again">পুনরায় চেষ্টা করুন</string>
-    <string name="info">Info</string>
     <string name="install_app_message">আপনি কি এই অ্যাপটি ইনস্টল করতে চান?</string>
     <string name="reinstall_app_message">আপনি কি এই অ্যাপটি পুনরায় ইনস্টল করতে চান?</string>
     <string name="reinstall">পুনরায় ইনস্টল করুন</string>
@@ -387,46 +385,15 @@
     <string name="task_affinity">টাস্ক অ্যাফিনিটি</string>
     <string name="launch_mode">লঞ্চ মোড</string>
     <string name="uses_feature">ব্যবহৃত ফিচার্স</string>
-    <string name="sort_by_denied_permissions"/>
     <string name="paths_and_directories">পাথ এবং ডিরেক্টরি</string>
-    <string name="installer_error_session_commit"/>
-    <string name="installer_error_session_write"/>
-    <string name="failed_to_fetch_package_info"/>
-    <string name="installer_error_blocked"/>
-    <string name="pref_remove_all_rules_msg"/>
-    <string name="split_no"/>
-    <plurals name="no_of_splits">
-        <item quantity="one"/>
-        <item quantity="other"/>
-    </plurals>
-    <string name="input_app_ops_description"/>
-    <string name="input_signatures_description"/>
-    <string name="pref_import_existing_msg"/>
     <string name="block_components_dots">উপাদানগুলি ব্লক করুন…</string>
-    <string name="deny_app_ops_description"/>
     <string name="deny_app_ops_dots">অ্যাপস অপস প্রত্যাখ্যান করুন…</string>
-    <string name="pref_import_existing"/>
-    <string name="sort_by_denied_app_ops"/>
-    <string name="pref_import_blocker_msg"/>
-    <string name="pref_import_watt_msg"/>
-    <string name="pref_import_msg"/>
-    <string name="pref_export_msg"/>
-    <string name="disable_background"/>
-    <string name="disable_background_run"/>
-    <string name="pref_import_export_blocking_rules_msg"/>
-    <string name="sort_by_times_opened"/>
-    <string name="pref_global_blocking_enabled_msg"/>
     <string name="rules_not_applied">বিধিগুলো প্রয়োগ করা হয়নি</string>
     <string name="failed_to_disable_op">অনুরোধকৃত অ্যাপ অপটি নিষ্ক্রিয় করতে ব্যর্থ</string>
-    <string name="type_string"/>
     <string name="no_shared_libs">কোন শেয়ার্ড লাইব্রেরি নেই</string>
     <string name="all_classes">সকল ক্লাস</string>
-    <string name="tested_signatures_on_classes_and_time_taken"/>
     <string name="trackers_and_classes">%dটি ক্লাস সহ %d ট্র্যাকারসমূহ</string>
-    <string name="class_viewer"/>
-    <string name="credits_message"/>
     <string name="class_name">শ্রেণির নাম</string>
-    <string name="starting_activity"/>
     <string name="installer_app">যে অ্যাপ দ্বারা ইনস্টলড হয়েছে</string>
     <string name="about">সম্পর্কে</string>
     <plurals name="alert_failed_to_unblock_trackers">
@@ -443,7 +410,6 @@
     <string name="auto">অটো</string>
     <string name="pref_app_language">ভাষা</string>
     <string name="backup_all_users">সকল ব্যবহারকারী</string>
-    <string name="backup_multiple">Backup multiple</string>
     <string name="source">সোর্স</string>
     <string name="obb_files_extracted_successfully">Obb ফাইলগুলি সফলভাবে এক্সট্র্যাক্ট হয়েছে</string>
     <string name="failed_to_extract_obb_files">Obb ফাইলগুলি এক্সট্র্যাক্ট করতে ব্যর্থ</string>
@@ -454,7 +420,6 @@
     <string name="skip_signature_checks">স্বাক্ষর চেকগুলি এড়িয়ে যান</string>
     <string name="backup_options">Backup Options</string>
     <string name="components">উপাদানগুলো</string>
-    <string name="filter">Filter</string>
     <string name="clear_data_from_uninstalled_apps_description">DONT_DELETE_DATA ফ্ল্যাগ দ্বারা আনইনস্টলড অ্যাপগুলো থেকে ডাটা মুছুন</string>
     <string name="manifest_viewer">ম্যানিফেস্ট ভিউয়ার</string>
     <string name="sort_by_target_sdk">টার্গেট SDK</string>
@@ -481,17 +446,9 @@
     <string name="deny_dangerous_app_ops">বিপজ্জনক অ্যাপস অপস গুলো প্রত্যাখ্যান করুন</string>
     <string name="sort_by_component_name">উপাদানের নাম</string>
     <string name="pref_about_msg">অ্যাপ ম্যানেজারের সংস্করণ, লাইসেন্স, স্বীকৃতি, etc.</string>
-    <string name="navigation">Navigation</string>
-    <string name="export_options">Export Options</string>
-    <string name="import_options">Import Options</string>
-    <string name="pref_export">Export</string>
-    <string name="pref_import">Import</string>
     <string name="pref_global_blocking_enabled">গ্লোবাল উপাদান ব্লকিং</string>
-    <string name="str_logo">Logo</string>
-    <string name="failed_to_enable_op">Failed to সক্রিয় the requested app op</string>
     <string name="type_boolean">সত্য/মিথ্যা</string>
     <string name="native_library_dir">Native JNI Library ডিরেক্টরি</string>
-    <string name="insert_icon">Insert Icon</string>
     <string name="edit_shortcut">শর্টকাট সম্পাদনা করুন</string>
     <string name="create_shortcut">শর্টকাট তৈরি করুন</string>
     <string name="manifest">ম্যানিফেস্ট</string>
