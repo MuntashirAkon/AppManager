@@ -24,7 +24,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 
 import java.io.ByteArrayOutputStream;
@@ -150,7 +149,7 @@ public final class ApkFile implements AutoCloseable {
             throw new ApkFileException("Could not extract package name from the URI.");
         String extension;
         try {
-            extension = name.substring(name.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
+            extension = IOUtils.getExtension(name).toLowerCase(Locale.ROOT);
             if (!SUPPORTED_EXTENSIONS.contains(extension)) {
                 throw new ApkFileException("Invalid package extension.");
             }
@@ -169,6 +168,14 @@ public final class ApkFile implements AutoCloseable {
             throw new ApkFileException(e);
         }
         this.cacheFilePath = IOUtils.getFileFromFd(fd);
+        if (!this.cacheFilePath.exists() || !this.cacheFilePath.canRead()) {
+            // Cache manually
+            try {
+                this.cacheFilePath = IOUtils.getCachedFile(cr.openInputStream(apkUri));
+            } catch (IOException e) {
+                throw new ApkFileException("Could not cache the input file.");
+            }
+        }
         String packageName = null;
         // Check for splits
         if (extension.equals("apk")) {
@@ -369,6 +376,7 @@ public final class ApkFile implements AutoCloseable {
         }
         IOUtils.closeSilently(zipFile);
         IOUtils.closeSilently(fd);
+        IOUtils.deleteSilently(cacheFilePath);
         // Ensure that entries are not accessible if accidentally accessed
         entries.clear();
         baseEntry = null;
@@ -561,12 +569,8 @@ public final class ApkFile implements AutoCloseable {
 
         @Override
         public void close() {
-            if (cachedFile != null && cachedFile.exists() && !cachedFile.delete()) {
-                Log.e(TAG, "Failed to delete: " + cachedFile.getAbsolutePath());
-            }
-            if (source != null && source.exists() && !source.delete()) {
-                Log.w(TAG, "Could not remove entry: " + source.getAbsolutePath());
-            }
+            IOUtils.deleteSilently(cachedFile);
+            IOUtils.deleteSilently(source);
         }
 
         public File getCachedFile() throws IOException {

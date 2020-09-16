@@ -37,6 +37,7 @@ import java.io.Closeable;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,8 +64,9 @@ public final class IOUtils {
     /**
      * Get byte array from an InputStream most efficiently.
      * Taken from sun.misc.IOUtils
-     * @param is InputStream
-     * @param length Length of the buffer, -1 to read the whole stream
+     *
+     * @param is      InputStream
+     * @param length  Length of the buffer, -1 to read the whole stream
      * @param readAll Whether to read the whole stream
      * @return Desired byte array
      * @throws IOException If maximum capacity exceeded.
@@ -128,7 +130,7 @@ public final class IOUtils {
                                    @NonNull File destinationDirectory,
                                    @NonNull String fileName)
             throws IOException {
-        return  saveZipFile(zipInputStream, new File(destinationDirectory, fileName));
+        return saveZipFile(zipInputStream, new File(destinationDirectory, fileName));
     }
 
     @NonNull
@@ -202,6 +204,16 @@ public final class IOUtils {
         }
     }
 
+    public static void deleteSilently(@Nullable File file) {
+        if (file == null || !file.exists()) return;
+        try {
+            if (!file.delete())
+                throw new Exception("Could not delete file " + file.getAbsolutePath());
+        } catch (Exception e) {
+            Log.w("IOUtils", String.format("Unable to close %s", file.getClass().getCanonicalName()), e);
+        }
+    }
+
     @NonNull
     public static String getExtension(@NonNull String path) {
         String str = getLastPathComponent(path);
@@ -267,6 +279,7 @@ public final class IOUtils {
 
     /**
      * Delete a directory by recursively deleting its children
+     *
      * @param dir The directory to delete
      * @return True on success, false on failure
      */
@@ -274,12 +287,12 @@ public final class IOUtils {
         if (dir != null && dir.isDirectory()) {
             String[] children = dir.list();
             if (children == null) return false;
-            for (String child: children) {
+            for (String child : children) {
                 boolean success = deleteDir(new File(dir, child));
                 if (!success) return false;
             }
             return dir.delete();
-        } else if(dir != null && dir.isFile()) {
+        } else if (dir != null && dir.isFile()) {
             return dir.delete();
         } else return false;
     }
@@ -291,6 +304,20 @@ public final class IOUtils {
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
         return bmp;
+    }
+
+    @NonNull
+    public static File getCachedFile(InputStream inputStream) throws IOException {
+        File extDir = AppManager.getContext().getExternalFilesDir("cache");
+        if (extDir == null) throw new FileNotFoundException("External storage not available.");
+        if (!extDir.exists() && !extDir.mkdirs()) {
+            throw new IOException("Cannot create cache directory in the external storage.");
+        }
+        File tempFile = File.createTempFile("file_" + System.currentTimeMillis(), ".cached", AppManager.getContext().getExternalFilesDir("cache"));
+        try (OutputStream outputStream = new FileOutputStream(tempFile)) {
+            copy(inputStream, outputStream);
+        }
+        return tempFile;
     }
 
     @NonNull
