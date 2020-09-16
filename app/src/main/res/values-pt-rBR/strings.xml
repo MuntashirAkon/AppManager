@@ -168,9 +168,9 @@
     <string name="save">Salvar</string>
     <string name="discard">Descartar</string>
     <string name="delete">Excluir</string>
-    <string name="deleted_successfully">Excluído com sucesso</string>
+    <string name="deleted_successfully">Excluído</string>
     <string name="deletion_failed">Falha ao excluir</string>
-    <string name="saved_successfully">Salvo com sucesso</string>
+    <string name="saved_successfully">Salvo</string>
     <string name="saving_failed">Falha ao salvar, tente novamente.</string>
     <string name="string_value">Valor da string</string>
     <string name="integer_value">Valor inteiro</string>
@@ -187,10 +187,10 @@
     <string name="no_usage_in_this_time_range">Nenhum uso nesse intervalo de tempo</string>
     <string name="no_content">Nenhum conteúdo</string>
     <string name="view_in_settings">Ver nas configurações</string>
-    <string name="uninstall_app_message">Você deseja desinstalar esse app?</string>
+    <string name="uninstall_app_message">Você deseja desinstalar este aplicativo\?</string>
     <string name="failed_to_uninstall">%s não pôde ser desinstalado.</string>
-    <string name="uninstalled_successfully">O %s foi desinstalado com sucesso.</string>
-    <string name="uninstall_system_app_message">Esse é um app do sistema. Tem certeza que desejar desinstalá-lo?</string>
+    <string name="uninstalled_successfully">%s foi desinstalado.</string>
+    <string name="uninstall_system_app_message">Este é um aplicativo do sistema. Tem certeza que deseja desinstalá-lo\?</string>
     <string name="stopped">Parado</string>
     <string name="disable">Desativar</string>
     <string name="enable">Ativar</string>
@@ -198,15 +198,15 @@
     <string name="failed_to_enable">%s não pôde ser ativado.</string>
     <string name="force_stop">Forçar parada</string>
     <string name="failed_to_stop">%s não pôde ser parado.</string>
-    <string name="storage_and_cache">Armazenamento &amp; Cache</string>
+    <string name="storage_and_cache">Armazenamento e Cache</string>
     <string name="total_size">Total</string>
-    <string name="app_size">App</string>
-    <string name="app_ops">App Ops</string>
-    <string name="no_app_ops">Nenhuma app op</string>
+    <string name="app_size">Aplicativo</string>
+    <string name="app_ops">Operações de Aplicativo</string>
+    <string name="no_app_ops">Nenhuma operação de aplicativo</string>
     <string name="failed_to_enable_op">A operação do aplicativo solicitada não pôde ser ativada</string>
     <string name="failed_to_disable_op">A operação do aplicativo solicitada não pôde ser desativada</string>
-    <string name="pref_root_mode_enabled">Modo Root</string>
-    <string name="pref_root_mode_enabled_msg">Ativar o modo root ativa todos os recursos deste app, o modo ADB é detectado automaticamente quando este está desativado</string>
+    <string name="pref_root_mode_enabled">Modo root</string>
+    <string name="pref_root_mode_enabled_msg">Ativa todos os recursos root deste aplicativo, o modo ADB é detectado automaticamente quando isto está desativado</string>
     <string name="pref_global_blocking_enabled">Bloquear componentes globalmente</string>
     <string name="pref_global_blocking_enabled_msg">Ativar o bloqueio de componentes globalmente permite a restrição em outros apps mesmo sem ativar explicitamente o bloqueio</string>
     <string name="pref_usage_access_enabled">Acesso ao uso</string>
@@ -323,11 +323,11 @@
         <item quantity="one">Não foi possível desativar rastreadores de %d aplicativo</item>
         <item quantity="other">Não foi possível desativar rastreadores de %d aplicativos</item>
     </plurals>
-    <string name="failed_to_grant_permission">Falha ao conceder permissão</string>
-    <string name="failed_to_revoke_permission">Falha ao revogar permissão</string>
-    <string name="failed_to_reset_app_ops">Falha ao resetar app ops</string>
-    <string name="failed_to_deny_dangerous_perms">Falha ao negar todas as permissões perigosas</string>
-    <string name="failed_to_deny_dangerous_app_ops">Falha ao negar todas as app ops perigosas</string>
+    <string name="failed_to_grant_permission">A permissão não pôde ser concedida</string>
+    <string name="failed_to_revoke_permission">A permissão não pôde ser revogada</string>
+    <string name="failed_to_reset_app_ops">Não foi possível redefinir as operações de aplicativo</string>
+    <string name="failed_to_deny_dangerous_perms">Não foi possível negar todas as permissões perigosas</string>
+    <string name="failed_to_deny_dangerous_app_ops">Não foi possível negar todas as operações de aplicativos perigosas</string>
     <string name="launch_app">Iniciar</string>
     <string name="never_ask">Nunca perguntar</string>
     <string name="external_apk_no_app_op">APKs externos não possuem nenhuma app op</string>
@@ -346,7 +346,7 @@
     <string name="pref_import_existing">Importar regras existentes</string>
     <string name="pref_import_existing_msg">Adicionar componentes desativados por outros apps ao App Manager.
         Tenha cuidado ao usar essa ferramenta, pois podem haver muitos falsos positivos. Escolha apenas os apps sobre os quais você tem certeza</string>
-    <string name="failed_to_get_data_usage_information">Falha ao obter informações de uso de dados</string>
+    <string name="failed_to_get_data_usage_information">Não foi possível obter informações de uso de dados</string>
     <string name="clear_cache">Limpar cache</string>
     <string name="block_unblock_trackers_description">Bloquear ou desbloquear componentes de propagandas e rastreamento em todos os apps instalados</string>
     <string name="block_components_dots">Bloquear componentes…</string>
@@ -358,18 +358,18 @@
     <string name="clear_app_cache_description">Limpar cache de todos os aplicativos</string>
     <string name="no_tracker_found">Nenhum rastreador encontrado</string>
     <string name="failed_packages">Pacotes que falharam</string>
-    <string name="input_signatures_description">Input signatures (ex.: com.facebook.) cada uma separada por um espaço.</string>
+    <string name="input_signatures_description">assinaturas de input com espaços, ex. (com.facebook org.app2 com.app3) etc.</string>
     <string name="filtered_packages">Pacotes filtrados</string>
     <string name="only_works_in_root_or_adb_mode">Somente funciona no modo Root ou ADB</string>
-    <string name="failed_to_parse_some_numbers">Falha ao analisar alguns números</string>
+    <string name="failed_to_parse_some_numbers">Não foi possível analisar alguns números</string>
     <plurals name="no_of_splits">
         <item quantity="one">%d APK</item>
         <item quantity="other">%d APKs</item>
     </plurals>
     <string name="split_no">APK#%d: %s</string>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Falha ao obter informações do pacote, possivelmente é um apk dividido</string>
+    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Não foi possível obter informações do pacote, possivelmente um APK dividido</string>
     <string name="package_name_is_installed_successfully">%s foi instalado com sucesso</string>
-    <string name="failed_to_install_package_name">Falha ao instalar o %s</string>
+    <string name="failed_to_install_package_name">O %s não pôde ser instalado</string>
     <string name="filter">Filtro</string>
     <string name="filter_user_apps">Apps do usuário</string>
     <string name="filter_system_apps">Apps do sistema</string>
@@ -391,35 +391,35 @@
     <string name="delete_backup">Deletar backup</string>
     <string name="backup_options">Opções do backup</string>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="one">Falha ao criar um backup de %d app</item>
-        <item quantity="other">Falha ao criar um backup de %d apps</item>
+        <item quantity="one">O backup de %d aplicativo não pôde ser feito</item>
+        <item quantity="other">Não foi possível fazer backup de %d aplicativos</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
-        <item quantity="one">Falha ao fazer backup de %d app</item>
-        <item quantity="other">Falha ao fazer backup de %d apps</item>
+        <item quantity="one">O backup de %d aplicativo não pôde ser feito</item>
+        <item quantity="other">Não foi possível fazer backup de %d aplicativos</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
-        <item quantity="one">Falha ao restaurar %d app</item>
-        <item quantity="other">Falha ao restaurar %d apps</item>
+        <item quantity="one">%d aplicativo não pôde ser restaurado</item>
+        <item quantity="other">Não foi possível restaurar %d aplicativos</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="one">Falha ao deletar o backup de %d app</item>
-        <item quantity="other">Falha ao deletar o backup de %d apps</item>
+        <item quantity="one">%d backup não pôde ser excluído</item>
+        <item quantity="other">Não foi possível excluir %d backups</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="one">Falha ao desbloquear rastreadores de %d app</item>
-        <item quantity="other">Falha ao desbloquear rastreadores de %d apps</item>
+        <item quantity="one">Não foi possível desbloquear rastreadores de %d aplicativo</item>
+        <item quantity="other">Não foi possível desbloquear rastreadores de %d aplicativos</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
-        <item quantity="one">Falha ao bloquear rastreadores de %d app</item>
-        <item quantity="other">Falha ao bloquear rastreadores de %d apps</item>
+        <item quantity="one">Não foi possível bloquear componentes de %d aplicativo</item>
+        <item quantity="other">Não foi possível bloquear componentes de %d aplicativos</item>
     </plurals>
     <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="one">Falha ao negar app ops para o app %d</item>
-        <item quantity="other">Falha ao negar app ops para os apps %d</item>
+        <item quantity="one">Não foi possível negar operações de aplicativo para %d aplicativo</item>
+        <item quantity="other">Não foi possível negar operações de aplicativo para %d aplicativos</item>
     </plurals>
-    <string name="failed_to_delete_backup">Falha ao deletar o backup</string>
-    <string name="failed_to_restore_backup">Falha ao restaurar o backup</string>
+    <string name="failed_to_delete_backup">O backup não pôde ser excluído</string>
+    <string name="failed_to_restore_backup">O backup não pôde ser restaurado</string>
     <string name="apply_to_system_apps">Aplicar aos apps de sistema</string>
     <string name="apply_to_system_apps_question">Aplicar aos apps do sistema também? Faça isso somente se tiver certeza.</string>
     <string name="no">Não</string>
@@ -427,7 +427,7 @@
     <string name="skip_signature_checks">Pular verificação de assinatura</string>
     <string name="clear_data_message">Tem certeza que deseja deletar os dados desse app?</string>
     <string name="clear">Limpar</string>
-    <string name="failed_to_backup">Falha ao criar o backup</string>
+    <string name="failed_to_backup">O backup não pôde ser restaurado</string>
     <string name="block">Bloquear</string>
     <string name="unblock">Desbloquear</string>
     <string name="block_unblock_trackers">Bloquear/desbloquear rastreadores</string>
@@ -450,7 +450,7 @@
     <string name="installer_error_storage">Não há espaço suficiente no armazenamento para instalar esse app</string>
     <string name="installer_error_generic">Falha na instalação</string>
     <string name="installer_error_lidl_rom">Sua ROM é incompatível com o instalador rootless.</string>
-    <string name="failed_to_fetch_package_info">Falha ao obter informações do pacote</string>
+    <string name="failed_to_fetch_package_info">Não foi possível obter informações do pacote</string>
     <string name="batch_ops">Operações em lote</string>
     <string name="operation_running">Operação em execução…</string>
     <string name="full_stop_tap_to_see_details">. Toque para ver detalhes.</string>
@@ -463,12 +463,12 @@
     <string name="package_installer">Instalador de pacotes</string>
     <string name="install_in_progress">Instalação em andamento</string>
     <string name="installer_error_security">Não foi possível acessar os arquivos APK</string>
-    <string name="installer_error_session_create">Falha ao criar uma sessão de instalação</string>
-    <string name="installer_error_session_write">Falha ao escrever os dados na sessão de instalação</string>
-    <string name="installer_error_session_commit">Falha ao fazer commit dos arquivos do apk</string>
-    <string name="installer_error_session_abandon">Falha ao fechar a sessão de instalação</string>
+    <string name="installer_error_session_create">Uma sessão de instalação não pôde ser criada</string>
+    <string name="installer_error_session_write">Não foi possível gravar na sessão de instalação</string>
+    <string name="installer_error_session_commit">O commit dos arquivos APK não pôde ser feito</string>
+    <string name="installer_error_session_abandon">A sessão de instalação não pôde ser abandonada</string>
     <string name="backup_apk_only">Somente APK</string>
-    <string name="failed_to_extract_obb_files">Falha ao extrair os arquivos obb</string>
+    <string name="failed_to_extract_obb_files">Não foi possível extrair arquivos OBB</string>
     <string name="obb_files_extracted_successfully">Arquivos obb extraídos com sucesso</string>
     <string name="source">Fonte</string>
     <string name="backup_multiple">Backup múltiplo</string>
@@ -484,14 +484,27 @@
     <string name="obb_size">Obb</string>
     <string name="sort_by_target_sdk">SDK de destino</string>
     <string name="manifest">Manifesto</string>
-    <string name="input_features">Recursos de entrada</string>
+    <string name="input_features">Recursos de input</string>
     <string name="shared_user_id">ID de usuário compartilhado</string>
     <string name="sort_by_shared_user_id">ID de usuário compartilhado</string>
     <string name="gles_ver">Versão requerida do GL ES</string>
     <string name="shared_libs">Bibliotecas compartilhadas</string>
     <string name="flags">Bandeiras</string>
-    <string name="soft_input">Modo de entrada suave</string>
+    <string name="soft_input">Modo de input suave</string>
     <string name="task_affinity">Afinidade de tarefas</string>
     <string name="providers">Provedores</string>
     <string name="receivers">Receptores</string>
+    <string name="str_logo">Logo</string>
+    <string name="rules_not_applied">Regras não são aplicadas</string>
+    <string name="key_name_cannot_be_null">O nome da chave não pode estar vazio</string>
+    <string name="error_evaluating_input">Não foi possível avaliar o input</string>
+    <string name="input_signatures">Assinaturas de input</string>
+    <string name="type_long">Inteiro longo</string>
+    <string name="system_odex_not_supported">.odex e alguns aplicativos do sistema não têm suporte!</string>
+    <string name="key_name">Nome da Chave</string>
+    <string name="long_integer_value">Valor inteiro longo</string>
+    <plurals name="alert_failed_to_enable">
+        <item quantity="one">%s aplicativo não pôde ser ativado</item>
+        <item quantity="other">Não foi possível ativar %s aplicativos</item>
+    </plurals>
 </resources>
