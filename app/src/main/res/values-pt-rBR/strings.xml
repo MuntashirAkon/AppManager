@@ -94,7 +94,7 @@
     <string name="error_invalid_icon_resource">Recurso de ícone inválido</string>
     <string name="error_invalid_icon_format">Formato de ícone inválido</string>
     <string name="icon_picker">Seletor de ícone</string>
-    <string name="error_loading_icons">Erro ao carregar ícone</string>
+    <string name="error_loading_icons">Não foi possível carregar os ícones</string>
     <string name="license">Licença</string>
     <string name="third_party">Bibliotecas e Ícones de terceiros</string>
     <string name="credits">Créditos</string>
@@ -154,7 +154,7 @@
     <string name="grant_usage_access">Conceder Acesso de Uso</string>
     <string name="grant_usage_acess_message">Acesso do uso é obrigatório para exibir informações de uso dos aplicativos.</string>
     <string name="share_apk">Compartilhar APK</string>
-    <string name="failed_to_extract_apk_file">Falha ao extrair arquivo apk</string>
+    <string name="failed_to_extract_apk_file">O arquivo APK não pôde ser extraído</string>
     <string name="menu_remove_rules">Remover regras</string>
     <string name="menu_apply_rules">Aplicar regras</string>
     <string name="search">Pesquisar</string>
@@ -188,23 +188,23 @@
     <string name="no_content">Nenhum conteúdo</string>
     <string name="view_in_settings">Ver nas configurações</string>
     <string name="uninstall_app_message">Você deseja desinstalar esse app?</string>
-    <string name="failed_to_uninstall">Falha ao desinstalar o %s.</string>
+    <string name="failed_to_uninstall">%s não pôde ser desinstalado.</string>
     <string name="uninstalled_successfully">O %s foi desinstalado com sucesso.</string>
     <string name="uninstall_system_app_message">Esse é um app do sistema. Tem certeza que desejar desinstalá-lo?</string>
     <string name="stopped">Parado</string>
     <string name="disable">Desativar</string>
     <string name="enable">Ativar</string>
-    <string name="failed_to_disable">Falha ao desativar o %s.</string>
-    <string name="failed_to_enable">Falha ao ativar o %s.</string>
+    <string name="failed_to_disable">%s não pôde ser desativado.</string>
+    <string name="failed_to_enable">%s não pôde ser ativado.</string>
     <string name="force_stop">Forçar parada</string>
-    <string name="failed_to_stop">Falha ao parar o %s.</string>
+    <string name="failed_to_stop">%s não pôde ser parado.</string>
     <string name="storage_and_cache">Armazenamento &amp; Cache</string>
     <string name="total_size">Total</string>
     <string name="app_size">App</string>
     <string name="app_ops">App Ops</string>
     <string name="no_app_ops">Nenhuma app op</string>
-    <string name="failed_to_enable_op">Falha ao ativar a app op solicitada</string>
-    <string name="failed_to_disable_op">Falha ao desativar a app op solicitada</string>
+    <string name="failed_to_enable_op">A operação do aplicativo solicitada não pôde ser ativada</string>
+    <string name="failed_to_disable_op">A operação do aplicativo solicitada não pôde ser desativada</string>
     <string name="pref_root_mode_enabled">Modo Root</string>
     <string name="pref_root_mode_enabled_msg">Ativar o modo root ativa todos os recursos deste app, o modo ADB é detectado automaticamente quando este está desativado</string>
     <string name="pref_global_blocking_enabled">Bloquear componentes globalmente</string>
@@ -234,8 +234,8 @@
     <string name="the_import_was_successful">A importação foi bem sucedida</string>
     <string name="the_export_was_successful">A exportação foi bem sucedida</string>
     <plurals name="failed_to_import_files">
-        <item quantity="one">Falha ao importar %d arquivo.</item>
-        <item quantity="other">Falha ao importar %d arquivos.</item>
+        <item quantity="one">%d arquivo não pôde ser importado.</item>
+        <item quantity="other">Não foi possível importar %d arquivos.</item>
     </plurals>
     <string name="apk_updater">APK Updater</string>
     <string name="store">Loja</string>
@@ -253,25 +253,25 @@
     <string name="export_blocking_rules">Exportar regras de bloqueio</string>
     <string name="some_items_selected">%d selecionados</string>
     <plurals name="alert_failed_to_clear_data">
-        <item quantity="one">Falha ao limpar os dados de %d app</item>
-        <item quantity="other">Falha ao limpar os dados de %d apps</item>
+        <item quantity="one">Não foi possível limpar os dados de %d aplicativo</item>
+        <item quantity="other">Não foi possível limpar os dados de %d aplicativos</item>
     </plurals>
     <plurals name="alert_failed_to_disable">
-        <item quantity="one">Falha ao desabilitar %d app</item>
-        <item quantity="other">Falha ao desabilitar %d apps</item>
+        <item quantity="one">%d aplicativo não pôde ser desativado</item>
+        <item quantity="other">Não foi possível desativar %d aplicativos</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
-        <item quantity="one">Falha ao desinstalar %d app</item>
-        <item quantity="other">Falha ao desinstalar %d apps</item>
+        <item quantity="one">%d aplicativo não pôde ser desinstalado</item>
+        <item quantity="other">Não foi possível desinstalar %d aplicativos</item>
     </plurals>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">Falha ao desativar a execução em background de %d app</item>
-        <item quantity="other">Falha ao desativar a execução em background de %d apps</item>
+        <item quantity="one">%d aplicativo não pôde ser impedido de rodar em segundo plano</item>
+        <item quantity="other">%d aplicativos não puderam ser impedidos de rodar em segundo plano</item>
     </plurals>
     <string name="the_operation_was_successful">A operação foi bem sucedida</string>
     <plurals name="alert_failed_to_force_stop">
-        <item quantity="one">Falha ao encerrar %d app</item>
-        <item quantity="other">Falha ao encerrar %d apps</item>
+        <item quantity="one">Não foi possível forçar parada de %d aplicativo</item>
+        <item quantity="other">Não foi possível forçar parada de %d aplicativos</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">Alternar encerramento para aplicativos de sistema</string>
     <string name="app_op_cannot_be_enabled">Este app op não pode ser ativado. É provável que seja somente leitura ou depende de outro app op.</string>
@@ -317,11 +317,11 @@
     <string name="deny_dangerous_permissions">Negar permissões perigosas</string>
     <string name="sort_by_tracker_components">Rastreadores</string>
     <string name="unknown_op">Operação desconhecida</string>
-    <string name="failed_to_disable_trackers">Falha ao desabilitar os rastreadores</string>
+    <string name="failed_to_disable_trackers">Não foi possível desativar rastreadores</string>
     <string name="trackers_disabled_successfully">Os rastreadores foram desativados com sucesso</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">Falha ao desabilitar rastreadores de %d app</item>
-        <item quantity="other">Falha ao desabilitar rastreadores de %d apps</item>
+        <item quantity="one">Não foi possível desativar rastreadores de %d aplicativo</item>
+        <item quantity="other">Não foi possível desativar rastreadores de %d aplicativos</item>
     </plurals>
     <string name="failed_to_grant_permission">Falha ao conceder permissão</string>
     <string name="failed_to_revoke_permission">Falha ao revogar permissão</string>
