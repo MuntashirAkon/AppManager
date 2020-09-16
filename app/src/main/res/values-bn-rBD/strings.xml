@@ -14,9 +14,8 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-<resources>
-    <string name="instructions_header">[এই নির্দেশাবলী পুরানো এবং আর আপডেট করা হবে না আপডেটেড তথ্য পেতে অফিসিয়াল ডক সাইট ভিজিট করুন (https://muntashirakon.github.io/AppManager) ]</string>
+  --><resources>
+    <string name="instructions_header">[এই নির্দেশাবলী পুরানো এবং আর আপডেট করা হবে না আপডেটেড তথ্য পেতে অফিসিয়াল ডক সাইট (https://muntashirakon.github.io/AppManager) ভিজিট করুন]</string>
     <string name="uninstall">আনইনস্টল</string>
     <string name="require_no_permission">কোন অনুমতির প্রয়োজন নেই</string>
     <string name="activities">কার্যকলাপ</string>
@@ -122,9 +121,9 @@
     <string name="save">সংরক্ষণ</string>
     <string name="discard">বাতিল করুন</string>
     <string name="delete">মুছুন</string>
-    <string name="deleted_successfully">সফলভাবে মুছে ফেলা হয়েছে</string>
+    <string name="deleted_successfully">মুছে ফেলা হয়েছে</string>
     <string name="deletion_failed">মুছতে ব্যর্থ</string>
-    <string name="saved_successfully">সফলভাবে সংরক্ষিত</string>
+    <string name="saved_successfully">সংরক্ষিত</string>
     <string name="saving_failed">সংরক্ষণ করতে ব্যর্থ, আবার চেষ্টা করুন।</string>
     <string name="string_value">স্ট্রিংয়ের মান</string>
     <string name="long_integer_value">দীর্ঘ পূর্ণসংখ্যার মান</string>
@@ -132,7 +131,7 @@
     <string name="decimal_value">দশমিকের মান</string>
     <string name="boolean_value">বুলিয়ান এর মান</string>
     <string name="select_type">প্রকার নির্বাচন করুন</string>
-    <string name="system_odex_not_supported">ওডেক্স এবং কিছু সিস্টেম অ্যাপস সমর্থিত নয়!</string>
+    <string name="system_odex_not_supported">ওডেক্স এবং কিছু সিস্টেম অ্যাপস পুরোপুরি সমর্থিত নয়!</string>
     <string name="add_item">যোগ করুন</string>
     <string name="done">সম্পন্ন</string>
     <string name="type_float">দশমিকের মান</string>
@@ -150,7 +149,7 @@
     <string name="disable">নিষ্ক্রিয় করুন</string>
     <string name="enable">সক্রিয় করুন</string>
     <string name="failed_to_disable">%sটি নিষ্ক্রিয় করতে ব্যর্থ।</string>
-    <string name="failed_to_enable">Failed to সক্রিয় %s.</string>
+    <string name="failed_to_enable">%sটি সক্রিয় করতে ব্যর্থ।</string>
     <string name="force_stop">কাটুন</string>
     <string name="failed_to_stop">%sটি কাটতে ব্যার্থ.</string>
     <string name="storage_and_cache">স্টোরেজ এবং ক্যাশে</string>
@@ -179,8 +178,8 @@
     <string name="pref_import_export_blocking_rules">ব্লকিং বিধিগুলো ইম্পোর্ট/এক্সপোর্ট করুন</string>
     <string name="pref_import_watt">ওয়াট(Watt) থেকে ইম্পোর্ট করুন</string>
     <string name="pref_import_blocker">ব্লকার থেকে ইম্পোর্ট করুন</string>
-    <string name="the_import_was_successful">ইম্পর্টটি সফল হয়েছে</string>
-    <string name="the_export_was_successful">এক্সপোর্টটি সফল হয়েছে</string>
+    <string name="the_import_was_successful">ইমপোর্টেড</string>
+    <string name="the_export_was_successful">এক্সপোর্টেড</string>
     <string name="apk_updater">এপিকে আপডেটর</string>
     <string name="store">স্টোর</string>
     <string name="running_apps">চলমান এপ্স</string>
@@ -465,4 +464,13 @@
     <string name="orientation_sensor_landscape">সেন্সর ল্যান্ডস্কেপ</string>
     <string name="navigation_dial_pad">ডায়াল প্যাড</string>
     <string name="touchscreen_no_touch">কোন টাচ নেই</string>
+    <string name="navigation">নেভিগেশন</string>
+    <string name="export_options">অপসন গুলো এক্সপোর্ট করুন</string>
+    <string name="import_options">অপসন গুলো ইম্পোর্ট করুন</string>
+    <string name="pref_export">এক্সপোর্ট</string>
+    <string name="pref_import">ইম্পোর্ট</string>
+    <string name="pref_import_export_blocking_rules_msg">ইম্পোর্ট/এক্সপোর্ট বিধি, ওয়াট বা ব্লকার থেকে বহিঃস্থ বিধি ইম্পোর্ট করুন</string>
+    <string name="str_logo">লোগো</string>
+    <string name="class_viewer">ক্লাস ভিউয়ার</string>
+    <string name="insert_icon">আইকন যোগ করুন</string>
 </resources>
