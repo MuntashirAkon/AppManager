@@ -72,7 +72,7 @@ public class SplitApkChooser extends DialogFragment {
         String name;
         for (int i = 0; i < apkEntries.size(); ++i) {
             apkEntry = apkEntries.get(i);
-            choices[i] = apkEntry.isSelected();
+            choices[i] = apkEntry.isSelected() || apkEntry.isRequired();
             switch (apkEntry.type) {
                 case ApkFile.APK_BASE:
                     name = getString(R.string.base_apk);

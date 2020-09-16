@@ -22,6 +22,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -38,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.IllformedLocaleException;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -58,10 +58,20 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public final class ApkFile implements AutoCloseable {
     public static final String TAG = "ApkFile";
 
+    private static final String MANIFEST_FILE = "AndroidManifest.xml";
+    private static final String ANDROID_XML_NAMESPACE = "http://schemas.android.com/apk/res/android";
+    private static final String ATTR_IS_FEATURE_SPLIT = ANDROID_XML_NAMESPACE + ":isFeatureSplit";
+    private static final String ATTR_IS_SPLIT_REQUIRED = ANDROID_XML_NAMESPACE + ":isSplitRequired";
+    private static final String ATTR_ISOLATED_SPLIT = ANDROID_XML_NAMESPACE + ":isolatedSplits";
+    private static final String ATTR_CONFIG_FOR_SPLIT = "configForSplit";
+    private static final String ATTR_SPLIT = "split";
+    private static final String ATTR_PACKAGE = "package";
+    private static final String CONFIG_PREFIX = "config.";
     private static final String OBB_DIR = "Android/obb";
 
     // There's hardly any chance of using multiple instances of ApkFile but still kept for convenience
@@ -103,10 +113,6 @@ public final class ApkFile implements AutoCloseable {
     public static final int APK_SPLIT_LOCALE = 4;
     public static final int APK_SPLIT_UNKNOWN = 5;
     public static final int APK_SPLIT = 6;
-
-    private static final String APK_FILE = "apk_file.apk";
-    private static final String MANIFEST_FILE = "AndroidManifest.xml";
-    private static final String ANDROID_XML_NAMESPACE = "http://schemas.android.com/apk/res/android";
 
     public static List<String> SUPPORTED_EXTENSIONS = new ArrayList<>();
 
@@ -166,7 +172,7 @@ public final class ApkFile implements AutoCloseable {
         if (extension.equals("apk")) {
             // Cache the apk file
             try {
-                baseEntry = new Entry(APK_FILE, cacheFilePath, APK_BASE);
+                baseEntry = new Entry(cacheFilePath);
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new ApkFileException("Base APK not found.");
@@ -180,10 +186,10 @@ public final class ApkFile implements AutoCloseable {
             HashMap<String, String> manifestAttrs;
             try {
                 manifestAttrs = getManifestAttributes(manifestBytes);
-                if (!manifestAttrs.containsKey("package")) {
+                if (!manifestAttrs.containsKey(ATTR_PACKAGE)) {
                     throw new IllegalArgumentException("Manifest doesn't contain any package name.");
                 }
-                packageName = manifestAttrs.get("package");
+                packageName = manifestAttrs.get(ATTR_PACKAGE);
             } catch (AndroidBinXmlParser.XmlParserException e) {
                 e.printStackTrace();
                 throw new ApkFileException(e);
@@ -224,8 +230,8 @@ public final class ApkFile implements AutoCloseable {
                             }
                             baseEntry = new Entry(fileName, zipEntry, APK_BASE, manifestAttrs);
                             entries.add(baseEntry);
-                            if (manifestAttrs.containsKey("package")) {
-                                packageName = manifestAttrs.get("package");
+                            if (manifestAttrs.containsKey(ATTR_PACKAGE)) {
+                                packageName = manifestAttrs.get(ATTR_PACKAGE);
                             } else throw new RuntimeException("Package name not found.");
                             foundBaseApk = true;
                         }
@@ -432,7 +438,7 @@ public final class ApkFile implements AutoCloseable {
         @NonNull
         public String name;
         @ApkType
-        public int type;
+        public final int type;
         @Nullable
         public final HashMap<String, String> manifest;
         @Nullable
@@ -447,61 +453,66 @@ public final class ApkFile implements AutoCloseable {
         @Nullable
         private File source;
         private boolean selected = false;
+        private final boolean required;
+        private final boolean isolated;
 
-        Entry(@NonNull String name, @NonNull File source, @ApkType int type) throws ApkFileException {
-            this.name = name;
+        Entry(@NonNull File source) {
+            this.name = "Base.apk";
             this.source = source;
-            this.type = type;
-            this.selected = true;
+            this.type = APK_BASE;
+            this.selected = this.required = true;
+            this.isolated = false;
             this.manifest = null;
-            if (type != APK_BASE)
-                throw new ApkFileException("Constructor can only be called for base apk");
         }
 
         Entry(@NonNull String name, @NonNull ZipEntry zipEntry, @ApkType int type, @NonNull HashMap<String, String> manifest) {
             this.name = name;
             this.zipEntry = zipEntry;
-            this.type = type;
             this.manifest = manifest;
-            if (type == APK_BASE) this.selected = true;
-            else if (type == APK_SPLIT) {
-                String splitName = manifest.get("split");
+            if (type == APK_BASE) {
+                this.selected = this.required = true;
+                this.isolated = false;
+                this.type = APK_BASE;
+            } else if (type == APK_SPLIT) {
+                String splitName = manifest.get(ATTR_SPLIT);
                 if (splitName == null) throw new RuntimeException("Split name is empty.");
                 this.name = splitName;
+                if (manifest.containsKey(ATTR_IS_SPLIT_REQUIRED)) {
+                    String value = manifest.get(ATTR_IS_SPLIT_REQUIRED);
+                    this.selected = this.required = value != null && Boolean.parseBoolean(value);
+                } else this.required = false;
+                if (manifest.containsKey(ATTR_ISOLATED_SPLIT)) {
+                    String value = manifest.get(ATTR_ISOLATED_SPLIT);
+                    this.isolated = value != null && Boolean.parseBoolean(value);
+                } else this.isolated = false;
                 // Infer types
-                if (manifest.containsKey(ANDROID_XML_NAMESPACE + ":isFeatureSplit")) {
+                if (manifest.containsKey(ATTR_IS_FEATURE_SPLIT)) {
                     this.type = APK_SPLIT_FEATURE;
                 } else {
-                    if (manifest.containsKey("configForSplit")) {
-                        this.forFeature = manifest.get("configForSplit");
-                        if ("".equals(this.forFeature)) this.forFeature = null;
+                    if (manifest.containsKey(ATTR_CONFIG_FOR_SPLIT)) {
+                        this.forFeature = manifest.get(ATTR_CONFIG_FOR_SPLIT);
+                        if (TextUtils.isEmpty(this.forFeature)) this.forFeature = null;
                     }
-                    int configPartIndex = this.name.lastIndexOf("config.");
-                    if (configPartIndex == -1 || (configPartIndex != 0 && this.name.charAt(configPartIndex - 1) != '.'))
+                    int configPartIndex = this.name.lastIndexOf(CONFIG_PREFIX);
+                    if (configPartIndex == -1 || (configPartIndex != 0 && this.name.charAt(configPartIndex - 1) != '.')) {
+                        this.type = APK_SPLIT_UNKNOWN;
                         return;
-                    splitSuffix = this.name.substring(configPartIndex + ("config.".length()));
+                    }
+                    splitSuffix = this.name.substring(configPartIndex + (CONFIG_PREFIX.length()));
                     if (StaticDataset.ALL_ABIS.contains(splitSuffix)) {
                         // Check for ABI
                         this.type = APK_SPLIT_ABI;
                     } else if (StaticDataset.DENSITY_NAME_TO_DENSITY.containsKey(splitSuffix)) {
                         // Check for screen density
                         this.type = APK_SPLIT_DENSITY;
-                    } else {
+                    } else if (LangUtils.isValidLocale(splitSuffix)) {
                         // Check locale
-                        try {
-                            Locale locale = new Locale.Builder().setLanguageTag(splitSuffix).build();
-                            for (Locale validLocale : Locale.getAvailableLocales()) {
-                                if (validLocale.equals(locale)) {
-                                    this.type = APK_SPLIT_LOCALE;
-                                    break;
-                                }
-                            }
-                        } catch (IllformedLocaleException e) {
-                            // Unknown locale
-                            this.type = APK_SPLIT_UNKNOWN;
-                        }
-                    }
+                        this.type = APK_SPLIT_LOCALE;
+                    } else this.type = APK_SPLIT_UNKNOWN;
                 }
+            } else {
+                this.type = APK_SPLIT_UNKNOWN;
+                this.required = this.isolated = false;
             }
         }
 
@@ -549,6 +560,14 @@ public final class ApkFile implements AutoCloseable {
 
         public boolean isSelected() {
             return selected;
+        }
+
+        public boolean isRequired() {
+            return required;
+        }
+
+        public boolean isIsolated() {
+            return isolated;
         }
 
         @NonNull

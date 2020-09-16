@@ -26,6 +26,7 @@ import android.os.LocaleList;
 import android.util.DisplayMetrics;
 
 import java.util.HashMap;
+import java.util.IllformedLocaleException;
 import java.util.Locale;
 import java.util.Map;
 
@@ -89,5 +90,17 @@ public final class LangUtils {
         configuration.setLocale(locale);
         configuration.setLocales(new LocaleList(locale));
         return context.createConfigurationContext(configuration);
+    }
+
+    public static boolean isValidLocale(String languageTag) {
+        try {
+            Locale locale = new Locale.Builder().setLanguageTag(languageTag).build();
+            for (Locale validLocale : Locale.getAvailableLocales()) {
+                if (validLocale.equals(locale)) {
+                    return true;
+                }
+            }
+        } catch (IllformedLocaleException ignore) {}
+        return false;
     }
 }
