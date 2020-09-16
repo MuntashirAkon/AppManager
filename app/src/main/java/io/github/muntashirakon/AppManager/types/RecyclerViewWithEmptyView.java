@@ -23,6 +23,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerViewWithEmptyView extends RecyclerView {
@@ -64,6 +65,7 @@ public class RecyclerViewWithEmptyView extends RecyclerView {
         }
     }
 
+    @UiThread
     @Override
     public void setAdapter(Adapter adapter) {
         @SuppressWarnings("rawtypes")

@@ -230,7 +230,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             }
             isExternalApk = mainModel.getIsExternalApk();
             mAdapter = new AppDetailsRecyclerAdapter();
-            recyclerView.setAdapter(mAdapter);
+            runOnUiThread(() -> recyclerView.setAdapter(mAdapter));
         }).start();
         mainModel.get(neededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (mAdapter != null && mainModel.isPackageExist()) mAdapter.setDefaultList(appDetailsItems);
