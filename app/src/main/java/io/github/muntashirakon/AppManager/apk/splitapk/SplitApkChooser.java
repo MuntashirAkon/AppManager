@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -70,6 +71,7 @@ public class SplitApkChooser extends DialogFragment {
         Arrays.fill(choices, false);
         ApkFile.Entry apkEntry;
         String name;
+        SparseBooleanArray seenSplit = new SparseBooleanArray(3);
         for (int i = 0; i < apkEntries.size(); ++i) {
             apkEntry = apkEntries.get(i);
             choices[i] = apkEntry.isSelected() || apkEntry.isRequired();
@@ -78,6 +80,9 @@ public class SplitApkChooser extends DialogFragment {
                     name = getString(R.string.base_apk);
                     break;
                 case ApkFile.APK_SPLIT_DENSITY:
+                    if (!seenSplit.get(ApkFile.APK_SPLIT_DENSITY)) {
+                        seenSplit.put(ApkFile.APK_SPLIT_DENSITY, choices[i] = true);
+                    }
                     if (apkEntry.forFeature != null) {
                         name = getString(R.string.density_split_for_feature, apkEntry.splitSuffix, apkEntry.getDensity(), apkEntry.forFeature);
                     } else {
@@ -85,6 +90,9 @@ public class SplitApkChooser extends DialogFragment {
                     }
                     break;
                 case ApkFile.APK_SPLIT_ABI:
+                    if (!seenSplit.get(ApkFile.APK_SPLIT_ABI)) {
+                        seenSplit.put(ApkFile.APK_SPLIT_ABI, choices[i] = true);
+                    }
                     if (apkEntry.forFeature != null) {
                         name = getString(R.string.abi_split_for_feature, apkEntry.getAbi(), apkEntry.forFeature);
                     } else {
@@ -92,6 +100,9 @@ public class SplitApkChooser extends DialogFragment {
                     }
                     break;
                 case ApkFile.APK_SPLIT_LOCALE:
+                    if (!seenSplit.get(ApkFile.APK_SPLIT_LOCALE)) {
+                        seenSplit.put(ApkFile.APK_SPLIT_LOCALE, choices[i] = true);
+                    }
                     if (apkEntry.forFeature != null) {
                         name = getString(R.string.locale_split_for_feature, apkEntry.getLocale().getDisplayLanguage(), apkEntry.forFeature);
                     } else {

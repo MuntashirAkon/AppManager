@@ -17,12 +17,15 @@
 
 package io.github.muntashirakon.AppManager;
 
+import android.content.Context;
+import android.os.Build;
+import android.os.LocaleList;
 import android.util.DisplayMetrics;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+
+import dalvik.system.VMRuntime;
 
 public class StaticDataset {
     private static String[] trackerCodeSignatures;
@@ -33,13 +36,13 @@ public class StaticDataset {
     public static final String X86 = "x86";
     public static final String X86_64 = "x86_64";
 
-    public static Set<String> ALL_ABIS = new HashSet<>();
+    public static Map<String, String> ALL_ABIS = new HashMap<>();
 
     static {
-        ALL_ABIS.add(ARMEABI_V7A);
-        ALL_ABIS.add(ARM64_V8A);
-        ALL_ABIS.add(X86);
-        ALL_ABIS.add(X86_64);
+        ALL_ABIS.put(ARMEABI_V7A, VMRuntime.ABI_ARMEABI_V7A);
+        ALL_ABIS.put(ARM64_V8A, VMRuntime.ABI_ARM64_V8A);
+        ALL_ABIS.put(X86, VMRuntime.ABI_X86);
+        ALL_ABIS.put(X86_64, VMRuntime.ABI_X86_64);
     }
 
     private static final String LDPI = "ldpi";
@@ -51,6 +54,7 @@ public class StaticDataset {
     private static final String XXXHDPI = "xxxhdpi";
 
     public static final Map<String, Integer> DENSITY_NAME_TO_DENSITY = new HashMap<>();
+    public static final int DEVICE_DENSITY;
 
     static {
         DENSITY_NAME_TO_DENSITY.put(LDPI, DisplayMetrics.DENSITY_LOW);
@@ -60,6 +64,22 @@ public class StaticDataset {
         DENSITY_NAME_TO_DENSITY.put(XHDPI, DisplayMetrics.DENSITY_XHIGH);
         DENSITY_NAME_TO_DENSITY.put(XXHDPI, DisplayMetrics.DENSITY_XXHIGH);
         DENSITY_NAME_TO_DENSITY.put(XXXHDPI, DisplayMetrics.DENSITY_XXXHIGH);
+
+        DEVICE_DENSITY = AppManager.getContext().getResources().getDisplayMetrics().densityDpi;
+    }
+
+    public static final Map<String, Integer> LOCALE_RANKING = new HashMap<>();
+
+    static {
+        Context context = AppManager.getContext();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            LOCALE_RANKING.put(context.getResources().getConfiguration().locale.getLanguage(), 0);
+        } else {
+            LocaleList localeList = context.getResources().getConfiguration().getLocales();
+            for (int i = 0; i < localeList.size(); i++) {
+                LOCALE_RANKING.put(localeList.get(i).getLanguage(), i);
+            }
+        }
     }
 
     public static String[] getTrackerCodeSignatures() {

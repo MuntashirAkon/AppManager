@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.apk;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
@@ -57,6 +58,7 @@ import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 
@@ -246,9 +248,13 @@ public final class ApkFile implements AutoCloseable {
             if (baseEntry == null) throw new ApkFileException("No base apk found.");
             // Sort the entries based on type
             Collections.sort(entries, (o1, o2) -> {
-                Integer o1Type = o1.type;
-                Integer o2Type = o2.type;
-                return o1Type.compareTo(o2Type);
+                Integer int1 = o1.type;
+                int int2 = o2.type;
+                int typeCmp;
+                if ((typeCmp = int1.compareTo(int2)) != 0) return typeCmp;
+                int1 = o1.rank;
+                int2 = o2.rank;
+                return int1.compareTo(int2);
             });
         }
         if (packageName == null) throw new ApkFileException("Package name not found.");
@@ -456,6 +462,12 @@ public final class ApkFile implements AutoCloseable {
         private final boolean required;
         private final boolean isolated;
 
+        /**
+         * Rank for a certain {@link #type} to create a priority list. This is applicable for
+         * {@link #APK_SPLIT_ABI}, {@link #APK_SPLIT_DENSITY} and {@link #APK_SPLIT_LOCALE}.
+         */
+        public int rank = Integer.MAX_VALUE;
+
         Entry(@NonNull File source) {
             this.name = "Base.apk";
             this.source = source;
@@ -477,10 +489,12 @@ public final class ApkFile implements AutoCloseable {
                 String splitName = manifest.get(ATTR_SPLIT);
                 if (splitName == null) throw new RuntimeException("Split name is empty.");
                 this.name = splitName;
+                // Check if required
                 if (manifest.containsKey(ATTR_IS_SPLIT_REQUIRED)) {
                     String value = manifest.get(ATTR_IS_SPLIT_REQUIRED);
                     this.selected = this.required = value != null && Boolean.parseBoolean(value);
                 } else this.required = false;
+                // Check if isolated
                 if (manifest.containsKey(ATTR_ISOLATED_SPLIT)) {
                     String value = manifest.get(ATTR_ISOLATED_SPLIT);
                     this.isolated = value != null && Boolean.parseBoolean(value);
@@ -499,15 +513,21 @@ public final class ApkFile implements AutoCloseable {
                         return;
                     }
                     splitSuffix = this.name.substring(configPartIndex + (CONFIG_PREFIX.length()));
-                    if (StaticDataset.ALL_ABIS.contains(splitSuffix)) {
-                        // Check for ABI
+                    if (StaticDataset.ALL_ABIS.containsKey(splitSuffix)) {
+                        // This split is an ABI
                         this.type = APK_SPLIT_ABI;
+                        int index = ArrayUtils.indexOf(Build.SUPPORTED_ABIS, StaticDataset.ALL_ABIS.get(splitSuffix));
+                        if (index != -1) this.rank = index;
                     } else if (StaticDataset.DENSITY_NAME_TO_DENSITY.containsKey(splitSuffix)) {
-                        // Check for screen density
+                        // This split is for Screen Density
                         this.type = APK_SPLIT_DENSITY;
+                        //noinspection ConstantConditions
+                        this.rank = Math.abs(StaticDataset.DEVICE_DENSITY - StaticDataset.DENSITY_NAME_TO_DENSITY.get(splitSuffix));
                     } else if (LangUtils.isValidLocale(splitSuffix)) {
-                        // Check locale
+                        // This split is for Locale
                         this.type = APK_SPLIT_LOCALE;
+                        Integer rank = StaticDataset.LOCALE_RANKING.get(splitSuffix);
+                        if (rank != null) this.rank = rank;
                     } else this.type = APK_SPLIT_UNKNOWN;
                 }
             } else {
