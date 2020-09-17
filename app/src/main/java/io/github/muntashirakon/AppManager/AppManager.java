@@ -20,8 +20,17 @@ package io.github.muntashirakon.AppManager;
 import android.app.Application;
 import android.content.Context;
 
+import com.topjohnwu.superuser.Shell;
+
 public class AppManager extends Application {
     private static AppManager instance;
+
+    static {
+        Shell.enableVerboseLogging = BuildConfig.DEBUG;
+        Shell.setDefaultBuilder(Shell.Builder.create()
+                .setFlags(Shell.FLAG_MOUNT_MASTER)
+                .setTimeout(10));
+    }
 
     public static AppManager getInstance() {
         return instance;

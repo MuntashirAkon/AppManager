@@ -44,7 +44,7 @@ public class UserShellRunner extends Runner {
     @WorkerThread
     @Override
     synchronized public Result runCommand() {
-        Shell.Result result = Shell.su(commands.toArray(new String[0])).exec();
+        Shell.Result result = Shell.sh(commands.toArray(new String[0])).exec();
         List<String> stdout = result.getOut();
         List<String> stderr = result.getErr();
         if (stderr.size() > 0) Log.e("UserShellRunner", TextUtils.join("\n", stderr));
