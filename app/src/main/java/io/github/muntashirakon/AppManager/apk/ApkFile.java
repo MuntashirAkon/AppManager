@@ -338,8 +338,14 @@ public final class ApkFile implements AutoCloseable {
                     String fileName = IOUtils.getFileNameFromZipEntry(obbEntry);
                     if (cacheFilePath.getAbsolutePath().startsWith("/proc")) {
                         // Normal way won't work for FD
-                        File obbCacheDir = IOUtils.getCachedFile(zipFile.getInputStream(obbEntry));
-                        return RunnerUtils.mv(obbCacheDir, new File(writableObbDir, fileName));
+                        File obbCacheFile = IOUtils.getCachedFile(zipFile.getInputStream(obbEntry));
+                        if (AppPref.isAdbEnabled()) {
+                            boolean result = RunnerUtils.cp(obbCacheFile, new File(writableObbDir, fileName));
+                            IOUtils.deleteSilently(obbCacheFile);
+                            return result;
+                        } else {
+                            return RunnerUtils.mv(obbCacheFile, new File(writableObbDir, fileName));
+                        }
                     } else {
                         if (!Runner.runCommand(new String[]{"unzip", cacheFilePath.getAbsolutePath(),
                                 obbEntry.getName(), "-d", obbEntry.getName().startsWith(OBB_DIR) ?
