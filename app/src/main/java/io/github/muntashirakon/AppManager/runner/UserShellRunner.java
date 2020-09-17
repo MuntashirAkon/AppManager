@@ -20,14 +20,12 @@ package io.github.muntashirakon.AppManager.runner;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import com.topjohnwu.superuser.Shell;
+
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
-import eu.chainfire.libsuperuser.Shell;
 
 public class UserShellRunner extends Runner {
     private static UserShellRunner rootShellRunner;
@@ -46,20 +44,15 @@ public class UserShellRunner extends Runner {
     @WorkerThread
     @Override
     synchronized public Result runCommand() {
-        List<String> stdout = Collections.synchronizedList(new ArrayList<>());
-        List<String> stderr = Collections.synchronizedList(new ArrayList<>());
-        AtomicInteger retVal = new AtomicInteger(FAILED_RET_VAL);
-        try {
-            retVal.set(Shell.Pool.SH.run(TextUtils.join("; ", commands), stdout, stderr, true));
-            if (stderr.size() > 0) Log.e("UserShellRunner", TextUtils.join("\n", stderr));
-        } catch (Shell.ShellDiedException e) {
-            e.printStackTrace();
-        }
+        Shell.Result result = Shell.su(commands.toArray(new String[0])).exec();
+        List<String> stdout = result.getOut();
+        List<String> stderr = result.getErr();
+        if (stderr.size() > 0) Log.e("UserShellRunner", TextUtils.join("\n", stderr));
         clear();
         return lastResult = new Result() {
             @Override
             public boolean isSuccessful() {
-                return retVal.get() == 0;
+                return result.isSuccess();
             }
 
             @Override
