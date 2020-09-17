@@ -152,7 +152,7 @@ public class RunningAppsActivity extends BaseActivity implements
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        new Thread(() -> mModel.setQuery(newText)).start();
+        mModel.setQuery(newText);
         return true;
     }
 

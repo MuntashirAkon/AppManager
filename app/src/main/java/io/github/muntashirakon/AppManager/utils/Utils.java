@@ -169,57 +169,55 @@ public class Utils {
         }
     }
 
-    // FIXME(10/9/20): Add translation support
-    @NonNull
-    public static String getProcessStateName(@NonNull String shortName) {
+    @StringRes
+    public static int getProcessStateName(@NonNull String shortName) {
         switch (shortName) {
             case "R":
-                return "Running";
+                return R.string.running;
             case "S":
-                return "Sleeping";
+                return R.string.state_sleeping;
             case "D":
-                return "Device I/O";
+                return R.string.state_device_io;
             case "T":
-                return "Stopped";
+                return R.string.stopped;
             case "t":
-                return "Trace stop";
+                return R.string.state_trace_stop;
             case "x":
             case "X":
-                return "Dead";
+                return R.string.state_dead;
             case "Z":
-                return "Zombie";
+                return R.string.state_zombie;
             case "P":
-                return "Parked";
+                return R.string.state_parked;
             case "I":
-                return "Idle";
+                return R.string.state_idle;
             case "K":
-                return "Wake kill";
+                return R.string.state_wake_kill;
             case "W":
-                return "Waking";
+                return R.string.state_waking;
             default:
-                return "";
+                return R.string.state_unknown;
         }
     }
 
-    // FIXME(10/9/20): Add translation support
-    @NonNull
-    public static String getProcessStateExtraName(String shortName) {
-        if (shortName == null) return "";
+    @StringRes
+    public static int getProcessStateExtraName(String shortName) {
+        if (shortName == null) return R.string.empty;
         switch (shortName) {
             case "<":
-                return "High priority";
+                return R.string.state_high_priority;
             case "N":
-                return "Low priority";
+                return R.string.state_low_priority;
             case "L":
-                return "Locked memory";
+                return R.string.state_locked_memory;
             case "s":
-                return "Session leader";
+                return R.string.state_session_leader;
             case "+":
-                return "foreground";
+                return R.string.state_foreground;
             case "l":
-                return "Multithreaded";
+                return R.string.state_multithreaded;
             default:
-                return "";
+                return R.string.state_unknown;
         }
     }
 

@@ -589,4 +589,22 @@
     <string name="touchscreen_no_touch">No touch</string>
     <string name="touchscreen_stylus">Stylus</string>
     <string name="touchscreen_finger">Finger</string>
+    <string name="state_sleeping">Sleeping</string>
+    <string name="state_device_io">Device I/O</string>
+    <string name="state_trace_stop">Trace stop</string>
+    <string name="state_dead">Dead</string>
+    <string name="state_zombie">Zombie</string>
+    <string name="state_parked">Parked</string>
+    <string name="state_idle">Idle</string>
+    <string name="state_wake_kill">Wake kill</string>
+    <string name="state_waking">Waking</string>
+    <string name="state_unknown">Unknown</string>
+    <string name="state_high_priority">High priority</string>
+    <string name="state_low_priority">Low priority</string>
+    <string name="state_locked_memory">Locked memory</string>
+    <string name="state_session_leader">Session leader</string>
+    <string name="state_foreground">Foreground</string>
+    <string name="state_multithreaded">Multithreaded</string>
+    <string name="process_state">State: %s</string>
+    <string name="process_state_with_extra">State: %s (%s)</string>
 </resources>

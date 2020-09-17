@@ -63,8 +63,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
         }
         originalProcessList.clear();
         originalProcessList.addAll(new ArrayList<>(processList.keySet()));
-        // TODO(13/9/20): Apply sorting, search, and filters
-        filter();
+        filterAndSort();
     }
 
     public int getCount() {
@@ -90,7 +89,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
 
     public void setQuery(String query) {
         this.query = query;
-        filter();
+        new Thread(this::filterAndSort).start();
     }
 
     public String getQuery() {
@@ -98,7 +97,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
     }
 
     @WorkerThread
-    public void filter() {
+    public void filterAndSort() {
         filteredProcessList.clear();
         if (!TextUtils.isEmpty(query)) {
             for (int item : processList.keySet()) {

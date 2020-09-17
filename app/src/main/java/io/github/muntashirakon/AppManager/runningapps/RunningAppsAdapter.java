@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.runningapps;
 
 import android.content.pm.ApplicationInfo;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -107,7 +108,14 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
         // Set memory usage
         holder.memoryUsage.setText(mActivity.getString(R.string.memory_virtual_memory, Formatter.formatFileSize(mActivity, processItem.rss), Formatter.formatFileSize(mActivity, processItem.vsz)));
         // Set user info
-        holder.userInfo.setText(mActivity.getString(R.string.user_and_uid, processItem.user, processItem.uid));
+        String userInfo = mActivity.getString(R.string.user_and_uid, processItem.user, processItem.uid);
+        String stateInfo;
+        if (TextUtils.isEmpty(processItem.state_extra)) {
+            stateInfo = mActivity.getString(R.string.process_state, processItem.state);
+        } else {
+            stateInfo = mActivity.getString(R.string.process_state_with_extra, processItem.state, processItem.state_extra);
+        }
+        holder.userAndStateInfo.setText(String.format("%s, %s", userInfo, stateInfo));
         // Set more
         holder.more.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(mActivity, holder.more);
@@ -203,7 +211,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
         TextView packageName;
         TextView processIds;
         TextView memoryUsage;
-        TextView userInfo;
+        TextView userAndStateInfo;
         IconLoaderThread iconLoader;
 
         public ViewHolder(@NonNull View itemView) {
@@ -214,7 +222,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
             packageName = itemView.findViewById(R.id.package_name);
             processIds = itemView.findViewById(R.id.process_ids);
             memoryUsage = itemView.findViewById(R.id.memory_usage);
-            userInfo = itemView.findViewById(R.id.user_info);
+            userAndStateInfo = itemView.findViewById(R.id.user_state_info);
         }
     }
 }

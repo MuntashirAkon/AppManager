@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.runningapps;
 
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
@@ -43,10 +44,12 @@ final class ProcessParser {
             "[\\t\\s]+(\\d+)[\\t\\s]+(\\d+)[\\t\\s]+(\\d+)[\\t\\s]+([^\\t\\s]+)[\\t\\s]+(\\d+)" +
             "[\\t\\s]+(\\w)([\\w+<])?[\\t\\s]+([^\\t\\s]+)$");
 
+    private Context context;
     private PackageManager pm;
     private HashMap<String, PackageInfo> installedPackages;
 
     ProcessParser() {
+        context = AppManager.getContext();
         pm = AppManager.getContext().getPackageManager();
         getInstalledPackages();
     }
@@ -97,8 +100,8 @@ final class ProcessParser {
             //noinspection ConstantConditions
             processItem.uid = Integer.parseInt(matcher.group(7));
             //noinspection ConstantConditions
-            processItem.state = Utils.getProcessStateName(matcher.group(8));
-            processItem.state_extra = Utils.getProcessStateExtraName(matcher.group(9));
+            processItem.state = context.getString(Utils.getProcessStateName(matcher.group(8)));
+            processItem.state_extra = context.getString(Utils.getProcessStateExtraName(matcher.group(9)));
             return processItem;
         }
         throw new Exception("Failed to parse line");
