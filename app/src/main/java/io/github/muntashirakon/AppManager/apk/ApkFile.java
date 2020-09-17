@@ -56,6 +56,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -334,11 +335,18 @@ public final class ApkFile implements AutoCloseable {
 
             if (AppPref.isRootOrAdbEnabled()) {
                 for (ZipEntry obbEntry : obbFiles) {
-                    if (!Runner.runCommand(new String[]{"unzip", cacheFilePath.getAbsolutePath(),
-                            obbEntry.getName(), "-d", obbEntry.getName().startsWith(OBB_DIR) ?
-                            writableExtDir.getAbsolutePath() : writableObbDir.getAbsolutePath()}
-                    ).isSuccessful()) {
-                        return false;
+                    String fileName = IOUtils.getFileNameFromZipEntry(obbEntry);
+                    if (cacheFilePath.getAbsolutePath().startsWith("/proc")) {
+                        // Normal way won't work for FD
+                        File obbCacheDir = IOUtils.getCachedFile(zipFile.getInputStream(obbEntry));
+                        return RunnerUtils.mv(obbCacheDir, new File(writableObbDir, fileName));
+                    } else {
+                        if (!Runner.runCommand(new String[]{"unzip", cacheFilePath.getAbsolutePath(),
+                                obbEntry.getName(), "-d", obbEntry.getName().startsWith(OBB_DIR) ?
+                                writableExtDir.getAbsolutePath() : writableObbDir.getAbsolutePath()}
+                        ).isSuccessful()) {
+                            return false;
+                        }
                     }
                 }
             } else {
