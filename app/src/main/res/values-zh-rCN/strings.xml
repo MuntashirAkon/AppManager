@@ -15,7 +15,7 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   --><resources>
-    <string name="instructions_header">这些说明已过时且不再更新 ，访问官方文档（https://muntashirakon.github.io/AppManager）以获取最新信息。</string>
+    <string name="instructions_header">[这些说明已过时且不再更新 ，访问官方文档站点（https://muntashirakon.github.io/AppManager）以获取最新信息]</string>
     <string name="uninstall">卸载</string>
     <string name="permissions">使用权限</string>
     <string name="require_no_permission">无需任何权限</string>
@@ -67,13 +67,13 @@
     <string name="sort_by_target_sdk">目标 SDK</string>
     <string name="data_received">已收到的数据</string>
     <string name="data_transmitted">已传送数据</string>
-    <string name="data_usage_msg">自上次启动以来的数据使用情况</string>
+    <string name="data_usage_msg">自上次启动以来的数据使用</string>
     <string name="about">关于</string>
     <string name="data_size">数据</string>
     <string name="cache_size">缓存</string>
     <string name="obb_size">安卓应用通用数据包</string>
     <string name="media_size">媒体</string>
-    <string name="app_not_installed">程序未安装</string>
+    <string name="app_not_installed">应用未安装</string>
     <string name="system">系统</string>
     <string name="user">用户</string>
     <string name="sort">排序</string>
@@ -108,7 +108,7 @@
     <string name="error_invalid_icon_resource">无效的图标</string>
     <string name="error_invalid_icon_format">无效图标格式</string>
     <string name="icon_picker">选择图标</string>
-    <string name="error_loading_icons">加载图标时出错</string>
+    <string name="error_loading_icons">无法加载图标</string>
     <string name="license">许可协议</string>
     <string name="third_party">第三方库和图标</string>
     <string name="credits">鸣谢</string>
@@ -147,7 +147,7 @@
     <string name="usage_30_days">过去 30 天</string>
     <string name="usage_365_days">过去 365 天</string>
     <plurals name="usage_months">
-        <item quantity="other">%d 月</item>
+        <item quantity="other">%d 个月</item>
     </plurals>
     <plurals name="usage_days">
         <item quantity="other">%d 天</item>
@@ -161,9 +161,9 @@
     <string name="go_back">返回</string>
     <string name="go">前进</string>
     <string name="grant_usage_access">授予查看使用情况权限</string>
-    <string name="grant_usage_acess_message">要显示应用程序的使用信息，必须要有使用权限。</string>
+    <string name="grant_usage_acess_message">要显示应用程序的使用信息，必须要有使用情况访问权限。</string>
     <string name="share_apk">apk分享</string>
-    <string name="failed_to_extract_apk_file">apk文件解压失败</string>
+    <string name="failed_to_extract_apk_file">无法提取APK文件</string>
     <string name="menu_remove_rules">删除规则</string>
     <string name="menu_apply_rules">应用规则</string>
     <string name="search">搜索</string>
@@ -181,9 +181,9 @@
     <string name="save">保存</string>
     <string name="discard">忽略</string>
     <string name="delete">刪除</string>
-    <string name="deleted_successfully">删除成功</string>
+    <string name="deleted_successfully">已删除</string>
     <string name="deletion_failed">刪除失败</string>
-    <string name="saved_successfully">已成功保存</string>
+    <string name="saved_successfully">已保存</string>
     <string name="saving_failed">保存失败，请再试一次。</string>
     <string name="string_value">字符串</string>
     <string name="long_integer_value">长整数值</string>
@@ -192,7 +192,7 @@
     <string name="boolean_value">布尔值</string>
     <string name="key_name">键名</string>
     <string name="select_type">选择一个类型</string>
-    <string name="system_odex_not_supported">Odex 和一些系统应用程序不受支持！</string>
+    <string name="system_odex_not_supported">不支持.odex和一些系统应用！</string>
     <string name="add_item">新增项目</string>
     <string name="done">已完成</string>
     <string name="type_boolean">正确/错误</string>
@@ -200,38 +200,38 @@
     <string name="type_int">整数</string>
     <string name="type_long">长整数</string>
     <string name="type_string">字符</string>
-    <string name="error_evaluating_input">评估输入时出错</string>
+    <string name="error_evaluating_input">无法评估输入</string>
     <string name="key_name_cannot_be_null">名称不能为空</string>
     <string name="disabled_app">已禁用</string>
     <string name="no_usage_in_this_time_range">在此时间范围内没有使用</string>
     <string name="no_content">没有内容</string>
     <string name="view_in_settings">在设置中查看</string>
     <string name="uninstall_app_message">要卸载此应用吗？</string>
-    <string name="failed_to_uninstall">卸载 %s 应用程序失败.</string>
-    <string name="uninstalled_successfully">%s 已成功卸载。</string>
+    <string name="failed_to_uninstall">无法卸载 %s</string>
+    <string name="uninstalled_successfully">%s 已被卸载</string>
     <string name="uninstall_system_app_message">这是一个系统应用。您确定要卸载此应用吗？</string>
     <string name="stopped">已停止</string>
     <string name="disable">禁用</string>
     <string name="enable">启用</string>
-    <string name="failed_to_disable">禁用 %s 失败。</string>
-    <string name="failed_to_enable">启用 %s 失败。</string>
+    <string name="failed_to_disable">无法禁用 %s</string>
+    <string name="failed_to_enable">无法启用 %s</string>
     <string name="force_stop">强行停止</string>
-    <string name="failed_to_stop">停止 %s 失败</string>
-    <string name="storage_and_cache">存储 &amp; 缓存</string>
+    <string name="failed_to_stop">无法停用 %s</string>
+    <string name="storage_and_cache">存储和缓存</string>
     <string name="total_size">总计</string>
     <string name="app_size">应用程序</string>
     <string name="app_ops">应用程序操作</string>
     <string name="no_app_ops">无应用程序操作</string>
-    <string name="failed_to_enable_op">无法启用请求的应用程序</string>
-    <string name="failed_to_disable_op">无法禁用请求的应用</string>
+    <string name="failed_to_enable_op">无法启用请求的应用操作</string>
+    <string name="failed_to_disable_op">无法禁用请求的应用操作</string>
     <string name="rules_not_applied">规则未被应用</string>
     <string name="str_logo">Logo</string>
     <string name="pref_root_mode_enabled">Root 模式</string>
-    <string name="pref_root_mode_enabled_msg">启用root模式激活此应用的所有根功能，禁用时自动检测到ADB 模式</string>
+    <string name="pref_root_mode_enabled_msg">激活此应用程序的所有根功能，禁用此功能会自动检测ADB模式</string>
     <string name="pref_global_blocking_enabled">实时拦截组件</string>
-    <string name="pref_global_blocking_enabled_msg">启用该选项后，拦截组件的操作会实时生效，无需再点击右上角的应用规则</string>
+    <string name="pref_global_blocking_enabled_msg">使您可以阻止任何应用程序的任何组件，而无需显式启用阻止该应用程序</string>
     <string name="pref_usage_access_enabled">使用情况访问权限</string>
-    <string name="pref_usage_access_enabled_msg">启用使用情况访问权限使您能够看到您的应用使用情况统计和应用数据信息</string>
+    <string name="pref_usage_access_enabled_msg">让您查看应用程序使用统计数据和应用程序数据信息</string>
     <string name="app_settings">设置</string>
     <string name="only_works_in_root_mode">仅在 root 或 ADB 模式下工作</string>
     <string name="usage_yesterday">昨天</string>
@@ -251,10 +251,10 @@
     <string name="pref_import_export_blocking_rules_msg">导入/导出规则，从 Watt 或 Blocker 导入外部规则</string>
     <string name="pref_import_watt">从 Watt导入</string>
     <string name="pref_import_blocker">从Blocker 导入</string>
-    <string name="the_import_was_successful">导入成功</string>
-    <string name="the_export_was_successful">导出成功</string>
+    <string name="the_import_was_successful">已导入</string>
+    <string name="the_export_was_successful">已导出</string>
     <plurals name="failed_to_import_files">
-        <item quantity="other">导入 %d 文件失败。</item>
+        <item quantity="other">无法导入％d个文件。</item>
     </plurals>
     <string name="apk_updater">APK更新器</string>
     <string name="store">商店</string>
@@ -272,22 +272,22 @@
     <string name="export_blocking_rules">导出屏蔽规则</string>
     <string name="some_items_selected">%d 已选择</string>
     <plurals name="alert_failed_to_clear_data">
-        <item quantity="other">清除来自 %d 应用的数据失败</item>
+        <item quantity="other">无法清除％d个应用中的数据</item>
     </plurals>
     <plurals name="alert_failed_to_disable">
-        <item quantity="other">禁用 %d 应用程序失败</item>
+        <item quantity="other">无法禁用％d个应用</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
-        <item quantity="other">卸载 %d 应用程序失败</item>
+        <item quantity="other">无法卸载％d个应用</item>
     </plurals>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="other">为 %d 应用程序禁用后台运行失败</item>
+        <item quantity="other">无法阻止％d个应用在后台运行</item>
     </plurals>
     <string name="the_operation_was_successful">操作成功</string>
     <plurals name="alert_failed_to_force_stop">
-        <item quantity="other">强制停止 %d 应用程序失败</item>
+        <item quantity="other">无法强制停止％d个应用</item>
     </plurals>
-    <string name="toggle_kill_for_system_apps">切换终止的系统应用</string>
+    <string name="toggle_kill_for_system_apps">切换杀死系统应用程序</string>
     <string name="app_op_cannot_be_enabled">这个应用无法启用，它可能是依赖于另一个应用操作的一个只读应用。</string>
     <string name="app_op_cannot_be_disabled">此应用无法禁用，可能是一个只读的应用依赖于另一个应用操作。</string>
     <string name="permission_name">权限名称</string>
@@ -308,19 +308,19 @@
     <string name="touchscreen">触摸屏</string>
     <string name="pref_export_msg">导出应用管理器中配置的阻止规则到外部存储</string>
     <string name="pref_import_msg">从应用管理器导入先前导出的屏蔽规则</string>
-    <string name="pref_import_watt_msg">导入Watt封锁规则(每个文件正好包含一个数据包的规则，文件名为数据包名，扩展名为\".xml\")</string>
+    <string name="pref_import_watt_msg">从Watt导入阻止规则，每个文件都包含单个命名包的规则，诸如packagename.xml。</string>
     <string name="pref_import_blocker_msg">从Blocker导入阻止规则，每个文件包含单个软件包的规则</string>
     <string name="pref_app_theme">应用主题</string>
     <string name="follow_system">跟随系统</string>
     <string name="battery_mode">电量模式</string>
     <string name="day">日期</string>
     <string name="night">夜间模式</string>
-    <string name="select_theme">请选择一个主题</string>
+    <string name="select_theme">主题</string>
     <string name="apply">应用</string>
     <string name="current_theme">当前主题: %s</string>
     <string name="pref_about_msg">应用程序管理器版本，许可，积分等</string>
     <string name="version">版本</string>
-    <string name="sort_by_wifi_data">Wifi 数据</string>
+    <string name="sort_by_wifi_data">Wi-Fi 数据</string>
     <string name="block_trackers">屏蔽所有追踪器</string>
     <string name="sort_by_component_name">组件名称</string>
     <string name="reset_to_default">重置为默认值</string>
@@ -334,21 +334,21 @@
     <string name="deny_dangerous_permissions">拒绝有危险的权限</string>
     <string name="sort_by_tracker_components">优先的跟踪器</string>
     <string name="unknown_op">未知的操作</string>
-    <string name="failed_to_disable_trackers">禁用追踪器失败</string>
-    <string name="trackers_disabled_successfully">已成功禁用追踪器</string>
+    <string name="failed_to_disable_trackers">无法禁用跟踪器</string>
+    <string name="trackers_disabled_successfully">已禁用追踪器</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="other">从 %d 应用禁用追踪器失败</item>
+        <item quantity="other">无法从％d个应用禁用跟踪器</item>
     </plurals>
-    <string name="failed_to_grant_permission">授予权限失败</string>
-    <string name="failed_to_revoke_permission">撤销权限失败</string>
-    <string name="failed_to_reset_app_ops">重置应用程序失败</string>
-    <string name="failed_to_deny_dangerous_perms">拒绝所有危险权限失败</string>
-    <string name="failed_to_deny_dangerous_app_ops">拒绝所有危险应用程序失败</string>
+    <string name="failed_to_grant_permission">无法授予权限</string>
+    <string name="failed_to_revoke_permission">无法撤销权限</string>
+    <string name="failed_to_reset_app_ops">无法重置应用操作</string>
+    <string name="failed_to_deny_dangerous_perms">无法撤销所有的危险权限</string>
+    <string name="failed_to_deny_dangerous_app_ops">无法撤消所有危险的应用程序操作</string>
     <string name="launch_app">启动</string>
     <string name="never_ask">从不询问</string>
     <string name="one_click_ops">1-Click Ops</string>
     <string name="changelog">更新日志</string>
-    <string name="external_apk_no_app_op">外部apk没有任何应用程序操作</string>
+    <string name="external_apk_no_app_op">外部APK没有任何应用程序操作</string>
     <string name="manifest_viewer">清单查看器</string>
     <string name="scanning_is_still_in_progress">扫描仍在进行中</string>
     <plurals name="no_of_trackers">
@@ -361,15 +361,14 @@
     <string name="community_links">更新频道: https://t.me/AppManagerChannel
         \n支持小组: https://t.me/AppManagerAndroid</string>
     <string name="pref_import_existing">导入现有规则</string>
-    <string name="pref_import_existing_msg">将其他应用禁用的组件添加到应用管理器。
-        在使用此工具时小心，因为可能有许多虚假正数。 只选择您确定的应用</string>
-    <string name="failed_to_get_data_usage_information">获取数据使用情况失败</string>
+    <string name="pref_import_existing_msg">将被其他应用禁用的组件添加到应用管理器。 在使用此工具时要小心，因为可能有许多误报。 只选择您确定的应用</string>
+    <string name="failed_to_get_data_usage_information">无法获取数据使用情况</string>
     <string name="clear_cache">清除缓存</string>
     <string name="block_unblock_trackers_description">阻止或取消屏蔽所有已安装应用的广告和跟踪组件</string>
     <string name="block_components_dots">屏蔽组件…</string>
     <string name="block_components_description">阻止给定签名识别的所有组件</string>
     <string name="deny_app_ops_dots">拒绝应用程序…</string>
-    <string name="deny_app_ops_description">拒绝以常数值识别给定的应用操作，i。63表示RUN_IN_BACKGROUND</string>
+    <string name="deny_app_ops_description">拒绝常数值识别给定的应用操作，如63表示RUN_IN_BACKGROUND</string>
     <string name="clear_data_from_uninstalled_apps">清除已卸载应用的数据</string>
     <string name="clear_data_from_uninstalled_apps_description">清除使用DONT_DELETE_DATA标志卸载的应用中的数据</string>
     <string name="clear_app_cache">清除缓存</string>
@@ -377,21 +376,20 @@
     <string name="no_tracker_found">没有发现跟踪器。</string>
     <string name="failed_packages">错误的软件包</string>
     <string name="input_signatures">输入签名</string>
-    <string name="input_signatures_description">输入签名(e.g., com.facebook), 每个签名都用空格隔开。</string>
+    <string name="input_signatures_description">用空格隔开输入的签名，如(com.facebook org.app2 com.app3) 等。</string>
     <string name="filtered_packages">已过滤的软件包</string>
     <string name="input_app_ops">输入应用操作</string>
-    <string name="input_app_ops_description">输入应用程序操作常量(e.g., 63)，每个常量用
-        空间隔开。 您可以在方括号下的应用程序选项卡中找到应用程序打开常数。</string>
+    <string name="input_app_ops_description">用空格隔开输入的应用操作常数，如. (63 72 12) 等。您可以在括号内下的“应用程序操作”标签中找到应用程序操作常量。</string>
     <string name="only_works_in_root_or_adb_mode">仅在 root 或 ADB 模式下工作</string>
-    <string name="failed_to_parse_some_numbers">解析某些数字失败</string>
+    <string name="failed_to_parse_some_numbers">无法解析某些数字</string>
     <plurals name="no_of_splits">
         <item quantity="other">%d 拆分</item>
     </plurals>
     <string name="split_no">拆分#%d: %s</string>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">获取软件包信息失败，可能是一个拆分apk</string>
+    <string name="failed_to_fetch_package_info_possibly_a_split_apk">无法获取安装包信息，可能是一个拆分APK</string>
     <string name="termux">Termux</string>
-    <string name="package_name_is_installed_successfully">%s 已成功卸载。</string>
-    <string name="failed_to_install_package_name">%s 安装失败</string>
+    <string name="package_name_is_installed_successfully">已安装 %s</string>
+    <string name="failed_to_install_package_name">无法安装 %s</string>
     <string name="filter">筛选器</string>
     <string name="filter_user_apps">用户应用</string>
     <string name="filter_system_apps">系统应用</string>
@@ -413,27 +411,27 @@
     <string name="delete_backup">删除备份</string>
     <string name="backup_options">备份选项</string>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="other">备份 %d 应用程序失败</item>
+        <item quantity="other">无法备份 %d 个应用</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
-        <item quantity="other">备份 %d 应用程序失败</item>
+        <item quantity="other">无法备份％d个应用</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
-        <item quantity="other">禁用 %d 应用程序失败</item>
+        <item quantity="other">无法还原％d个应用</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="other">删除 %d 备份失败</item>
+        <item quantity="other">无法删除％d个备份</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="other">取消禁用 %d 中的追踪器的操作失败</item>
+        <item quantity="other">无法解除封锁％d个应用程式中的追踪器</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
-        <item quantity="other">禁用 %d 中的追踪器的操作失败</item>
+        <item quantity="other">无法阻止％d个应用的组件</item>
     </plurals>
     <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="other">禁用 %d 的 app ops 操作失败</item>
+        <item quantity="other">无法拒绝％d个应用的应用操作</item>
     </plurals>
-    <string name="failed_to_delete_backup">删除备份失败</string>
+    <string name="failed_to_delete_backup">无法删除备份</string>
     <string name="failed_to_restore_backup">恢复备份失败</string>
     <string name="apply_to_system_apps">应用到系统应用</string>
     <string name="apply_to_system_apps_question">同时应用于系统应用？如果不确定，请不要选择。</string>
@@ -509,6 +507,6 @@
     <string name="base_apk">Base APK</string>
     <string name="split_feature_name">特点：%s</string>
     <plurals name="alert_failed_to_enable">
-        <item quantity="other">启用 %s 失败</item>
+        <item quantity="other">无法启用％s个应用</item>
     </plurals>
 </resources>
