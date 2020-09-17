@@ -50,6 +50,8 @@ public class WhatsNewDialogFragment extends DialogFragment {
 
     public interface InstallInterface {
         void triggerInstall();
+
+        void triggerCancel();
     }
 
     public void setOnTriggerInstall(InstallInterface installInterface) {
@@ -88,7 +90,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
                 .setTitle(R.string.whats_new)
                 .setView(view);
         if (installInterface != null) {
-            builder.setNegativeButton(android.R.string.cancel, null)
+            builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> installInterface.triggerCancel())
                     .setPositiveButton(R.string.update, (dialog, which) -> installInterface.triggerInstall());
         } else builder.setNegativeButton(android.R.string.ok, null);
         return builder.create();

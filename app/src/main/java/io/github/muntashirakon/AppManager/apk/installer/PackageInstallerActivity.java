@@ -127,8 +127,20 @@ public class PackageInstallerActivity extends BaseActivity {
                         args.putParcelable(WhatsNewDialogFragment.ARG_NEW_PKG_INFO, packageInfo);
                         args.putParcelable(WhatsNewDialogFragment.ARG_OLD_PKG_INFO, installedPackageInfo);
                         WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
+                        dialogFragment.setCancelable(false);
                         dialogFragment.setArguments(args);
-                        dialogFragment.setOnTriggerInstall(this::install);
+                        dialogFragment.setOnTriggerInstall(
+                                new WhatsNewDialogFragment.InstallInterface() {
+                                    @Override
+                                    public void triggerInstall() {
+                                        install();
+                                    }
+
+                                    @Override
+                                    public void triggerCancel() {
+                                        finish();
+                                    }
+                                });
                         runOnUiThread(() -> dialogFragment.show(fm, WhatsNewDialogFragment.TAG));
                     } else if (installedVersionCode == thisVersionCode) {
                         // Issue reinstall
