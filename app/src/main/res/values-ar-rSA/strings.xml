@@ -14,8 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-<resources>
+  --><resources>
     <string name="uninstall">إلغاء التثبيت</string>
     <string name="permissions">إستخدام الأذونات</string>
     <string name="require_no_permission">لا توجد أذونات مطلوبة</string>
@@ -34,4 +33,5 @@
     <string name="export_options">خيارات التصدير</string>
     <string name="import_failed">فشل في الاستيراد!</string>
     <string name="export_failed">فشل في التصدير!</string>
+    <string name="soft_input">Soft input mode</string>
 </resources>
