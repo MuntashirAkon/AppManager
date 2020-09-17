@@ -126,6 +126,7 @@ public class PackageInstallerActivity extends BaseActivity {
                         Bundle args = new Bundle();
                         args.putParcelable(WhatsNewDialogFragment.ARG_NEW_PKG_INFO, packageInfo);
                         args.putParcelable(WhatsNewDialogFragment.ARG_OLD_PKG_INFO, installedPackageInfo);
+                        args.putString(WhatsNewDialogFragment.ARG_INSTALL_NAME, actionName);
                         WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
                         dialogFragment.setCancelable(false);
                         dialogFragment.setArguments(args);
@@ -160,12 +161,34 @@ public class PackageInstallerActivity extends BaseActivity {
                             }
                         } else install();
                     } else {
-                        // TODO: Add option to downgrade
-//                        actionName = getString(R.string.downgrade);
-                        runOnUiThread(() -> {
-                            Toast.makeText(this, "Downgrade is not currently possible in App Manager.", Toast.LENGTH_SHORT).show();
-                            finish();
-                        });
+                        actionName = getString(R.string.downgrade);
+                        if (AppPref.isRootOrAdbEnabled()) {
+                            Bundle args = new Bundle();
+                            args.putParcelable(WhatsNewDialogFragment.ARG_NEW_PKG_INFO, packageInfo);
+                            args.putParcelable(WhatsNewDialogFragment.ARG_OLD_PKG_INFO, installedPackageInfo);
+                            args.putString(WhatsNewDialogFragment.ARG_INSTALL_NAME, actionName);
+                            WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
+                            dialogFragment.setCancelable(false);
+                            dialogFragment.setArguments(args);
+                            dialogFragment.setOnTriggerInstall(
+                                    new WhatsNewDialogFragment.InstallInterface() {
+                                        @Override
+                                        public void triggerInstall() {
+                                            install();
+                                        }
+
+                                        @Override
+                                        public void triggerCancel() {
+                                            finish();
+                                        }
+                                    });
+                            runOnUiThread(() -> dialogFragment.show(fm, WhatsNewDialogFragment.TAG));
+                        } else {
+                            runOnUiThread(() -> {
+                                Toast.makeText(this, "Downgrade is not currently possible for non-root users.", Toast.LENGTH_SHORT).show();
+                                finish();
+                            });
+                        }
                     }
                 }
             } catch (ApkFile.ApkFileException | PackageManager.NameNotFoundException | IOException e) {

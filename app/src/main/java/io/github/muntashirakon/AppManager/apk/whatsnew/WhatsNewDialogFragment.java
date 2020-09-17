@@ -47,6 +47,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
     public static final String TAG = "WhatsNewDialogFragment";
     public static final String ARG_NEW_PKG_INFO = "ARG_NEW_PKG_INFO";
     public static final String ARG_OLD_PKG_INFO = "ARG_OLD_PKG_INFO";
+    public static final String ARG_INSTALL_NAME = "ARG_INSTALL_NAME";
 
     public interface InstallInterface {
         void triggerInstall();
@@ -69,6 +70,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
         activity = requireActivity();
         newPkgInfo = (PackageInfo) requireArguments().get(ARG_NEW_PKG_INFO);
         oldPkgInfo = (PackageInfo) requireArguments().get(ARG_OLD_PKG_INFO);
+        final String installName = requireArguments().getString(ARG_INSTALL_NAME);
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
         @SuppressLint("InflateParams")
@@ -91,7 +93,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
                 .setView(view);
         if (installInterface != null) {
             builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> installInterface.triggerCancel())
-                    .setPositiveButton(R.string.update, (dialog, which) -> installInterface.triggerInstall());
+                    .setPositiveButton(installName, (dialog, which) -> installInterface.triggerInstall());
         } else builder.setNegativeButton(android.R.string.ok, null);
         return builder.create();
     }

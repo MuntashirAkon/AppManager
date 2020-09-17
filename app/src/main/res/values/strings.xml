@@ -607,4 +607,5 @@
     <string name="state_multithreaded">Multithreaded</string>
     <string name="process_state">State: %s</string>
     <string name="process_state_with_extra">State: %s (%s)</string>
+    <string name="downgrade">Downgrade</string>
 </resources>
