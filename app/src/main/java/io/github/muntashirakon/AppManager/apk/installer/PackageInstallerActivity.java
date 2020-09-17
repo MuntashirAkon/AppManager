@@ -185,7 +185,7 @@ public class PackageInstallerActivity extends BaseActivity {
                             runOnUiThread(() -> dialogFragment.show(fm, WhatsNewDialogFragment.TAG));
                         } else {
                             runOnUiThread(() -> {
-                                Toast.makeText(this, "Downgrade is not currently possible for non-root users.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, R.string.downgrade_not_possible, Toast.LENGTH_SHORT).show();
                                 finish();
                             });
                         }

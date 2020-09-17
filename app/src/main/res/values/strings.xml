@@ -608,4 +608,5 @@
     <string name="process_state">State: %s</string>
     <string name="process_state_with_extra">State: %s (%s)</string>
     <string name="downgrade">Downgrade</string>
+    <string name="downgrade_not_possible">Downgrade is not possible without root or ADB</string>
 </resources>

@@ -537,6 +537,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 long installedVersionCode = PackageUtils.getVersionCode(mInstalledPackageInfo);
                 long thisVersionCode = PackageUtils.getVersionCode(mPackageInfo);
                 if (installedVersionCode < thisVersionCode) {  // FIXME: Check for signature
+                    // Needs update
                     addToHorizontalLayout(R.string.whats_new, R.drawable.ic_info_outline_black_24dp)
                             .setOnClickListener(v -> {
                                 Bundle args = new Bundle();
@@ -548,6 +549,16 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             });
                     addToHorizontalLayout(R.string.update, R.drawable.ic_baseline_get_app_24)
                             .setOnClickListener(v -> install());
+                } else if (installedVersionCode == thisVersionCode) {
+                    // Needs reinstall
+                    addToHorizontalLayout(R.string.reinstall, R.drawable.ic_baseline_get_app_24)
+                            .setOnClickListener(v -> install());
+                } else {
+                    // Needs downgrade
+                    if (AppPref.isRootOrAdbEnabled()) {
+                        addToHorizontalLayout(R.string.downgrade, R.drawable.ic_baseline_get_app_24)
+                                .setOnClickListener(v -> install());
+                    }
                 }
             }
         }
