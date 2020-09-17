@@ -18,8 +18,8 @@ public class ApkParsers {
      * @throws IOException
      */
     public static ApkMeta getMetaInfo(String apkFilePath) throws IOException {
-        try (ApkFile apkFile = new ApkFile(apkFilePath)) {
-            return apkFile.getApkMeta();
+        try (ApkParser apkParser = new ApkParser(apkFilePath)) {
+            return apkParser.getApkMeta();
         }
     }
 
@@ -29,8 +29,8 @@ public class ApkParsers {
      * @throws IOException
      */
     public static ApkMeta getMetaInfo(File file) throws IOException {
-        try (ApkFile apkFile = new ApkFile(file)) {
-            return apkFile.getApkMeta();
+        try (ApkParser apkParser = new ApkParser(file)) {
+            return apkParser.getApkMeta();
         }
     }
 
@@ -51,9 +51,9 @@ public class ApkParsers {
      * @throws IOException
      */
     public static ApkMeta getMetaInfo(String apkFilePath, Locale locale) throws IOException {
-        try (ApkFile apkFile = new ApkFile(apkFilePath)) {
-            apkFile.setPreferredLocale(locale);
-            return apkFile.getApkMeta();
+        try (ApkParser apkParser = new ApkParser(apkFilePath)) {
+            apkParser.setPreferredLocale(locale);
+            return apkParser.getApkMeta();
         }
     }
 
@@ -63,9 +63,9 @@ public class ApkParsers {
      * @throws IOException
      */
     public static ApkMeta getMetaInfo(File file, Locale locale) throws IOException {
-        try (ApkFile apkFile = new ApkFile(file)) {
-            apkFile.setPreferredLocale(locale);
-            return apkFile.getApkMeta();
+        try (ApkParser apkParser = new ApkParser(file)) {
+            apkParser.setPreferredLocale(locale);
+            return apkParser.getApkMeta();
         }
     }
 
@@ -87,8 +87,8 @@ public class ApkParsers {
      * @throws IOException
      */
     public static String getManifestXml(String apkFilePath) throws IOException {
-        try (ApkFile apkFile = new ApkFile(apkFilePath)) {
-            return apkFile.getManifestXml();
+        try (ApkParser apkParser = new ApkParser(apkFilePath)) {
+            return apkParser.getManifestXml();
         }
     }
 
@@ -98,8 +98,8 @@ public class ApkParsers {
      * @throws IOException
      */
     public static String getManifestXml(File file) throws IOException {
-        try (ApkFile apkFile = new ApkFile(file)) {
-            return apkFile.getManifestXml();
+        try (ApkParser apkParser = new ApkParser(file)) {
+            return apkParser.getManifestXml();
         }
     }
 
@@ -120,9 +120,9 @@ public class ApkParsers {
      * @throws IOException
      */
     public static String getManifestXml(String apkFilePath, Locale locale) throws IOException {
-        try (ApkFile apkFile = new ApkFile(apkFilePath)) {
-            apkFile.setPreferredLocale(locale);
-            return apkFile.getManifestXml();
+        try (ApkParser apkParser = new ApkParser(apkFilePath)) {
+            apkParser.setPreferredLocale(locale);
+            return apkParser.getManifestXml();
         }
     }
 
@@ -132,9 +132,9 @@ public class ApkParsers {
      * @throws IOException
      */
     public static String getManifestXml(File file, Locale locale) throws IOException {
-        try (ApkFile apkFile = new ApkFile(file)) {
-            apkFile.setPreferredLocale(locale);
-            return apkFile.getManifestXml();
+        try (ApkParser apkParser = new ApkParser(file)) {
+            apkParser.setPreferredLocale(locale);
+            return apkParser.getManifestXml();
         }
     }
 

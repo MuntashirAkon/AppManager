@@ -49,6 +49,7 @@ import com.google.classysharkandroid.reflector.Reflector;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -98,13 +99,14 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     private static String mConstraint;
     private String mPackageName;
     private ParcelFileDescriptor fd;
-    private String archiveFilePath;
+    private File archiveFile;
 
     @Override
     protected void onDestroy() {
         IOUtils.deleteDir(new File(getCacheDir().getParent(), APP_DEX));
         IOUtils.deleteDir(getCodeCacheDir());
         IOUtils.closeSilently(fd);
+        IOUtils.deleteSilently(archiveFile);
         super.onDestroy();
     }
 
@@ -113,7 +115,6 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         super.onSaveInstanceState(outState);
     }
 
-    @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -163,12 +164,15 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                 if (fd == null) {
                     throw new FileNotFoundException("FileDescription cannot be null");
                 }
-                archiveFilePath = IOUtils.getFileFromFd(fd).getAbsolutePath();
+                archiveFile = IOUtils.getFileFromFd(fd);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-        } else archiveFilePath = uriFromIntent.getPath();
-        if (archiveFilePath == null) {
+        } else {
+            String path = uriFromIntent.getPath();
+            if (path != null) archiveFile = new File(path);
+        }
+        if (archiveFile == null) {
             Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
             finish();
             return;
@@ -184,30 +188,6 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                 try (InputStream uriStream = getContentResolver().openInputStream(uriFromIntent)) {
                     bytes = IOUtils.readFully(uriStream, -1, true);
                 }
-                new Thread(() -> {
-                    try {
-                        packageInfo += "\n<b>MD5sum:</b> " + convertS(MessageDigest.getInstance("md5").digest(bytes))
-                                + "\n<b>SHA1sum:</b> " + convertS(MessageDigest.getInstance("sha1").digest(bytes))
-                                + "\n<b>SHA256sum:</b> " + convertS(MessageDigest.getInstance("sha256").digest(bytes));
-                    } catch (NoSuchAlgorithmException ignored) {
-                    }
-                    final PackageManager pm = getApplicationContext().getPackageManager();
-                    PackageInfo packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
-                    if (packageInfo != null) {
-                        this.packageInfo += apkCert(packageInfo);
-                        mPackageName = packageInfo.packageName;
-                        final ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-                        applicationInfo.publicSourceDir = archiveFilePath;
-                        applicationInfo.sourceDir = archiveFilePath;
-                        mAppName = applicationInfo.loadLabel(pm);
-                        runOnUiThread(() -> {
-                            if (mActionBar != null) {
-                                mActionBar.setTitle(mAppName);
-                                mActionBar.setSubtitle(getString(R.string.tracker_classes));
-                            }
-                        });
-                    } else this.packageInfo += "\n<i><b>FAILED to retrieve PackageInfo!</b></i>";
-                }).start();
                 new FillClassesNamesThread(bytes).start();
                 new StartDexLoaderThread(bytes).start();
             } catch (Exception e) {
@@ -346,7 +326,41 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         public void run() {
             try {
                 Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-                classListAll = PackageUtils.getClassNames(bytes);
+                try {
+                    packageInfo += "\n<b>MD5sum:</b> " + convertS(MessageDigest.getInstance("md5").digest(bytes))
+                            + "\n<b>SHA1sum:</b> " + convertS(MessageDigest.getInstance("sha1").digest(bytes))
+                            + "\n<b>SHA256sum:</b> " + convertS(MessageDigest.getInstance("sha256").digest(bytes));
+                } catch (NoSuchAlgorithmException ignored) {
+                }
+                // Test if this path is readable
+                if (!archiveFile.exists() || !archiveFile.canRead()) {
+                    try {
+                        archiveFile = IOUtils.getCachedFile(bytes);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                final PackageManager pm = getApplicationContext().getPackageManager();
+                final String archiveFilePath = archiveFile.getAbsolutePath();
+                @SuppressLint("WrongConstant")
+                PackageInfo packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
+                if (packageInfo != null) {
+                    ClassListingActivity.this.packageInfo += apkCert(packageInfo);
+                    mPackageName = packageInfo.packageName;
+                    final ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+                    applicationInfo.publicSourceDir = archiveFilePath;
+                    applicationInfo.sourceDir = archiveFilePath;
+                    mAppName = applicationInfo.loadLabel(pm);
+                    runOnUiThread(() -> {
+                        if (mActionBar != null) {
+                            mActionBar.setTitle(mAppName);
+                            mActionBar.setSubtitle(getString(R.string.tracker_classes));
+                        }
+                    });
+                } else {
+                    ClassListingActivity.this.packageInfo += "\n<i><b>FAILED to retrieve PackageInfo!</b></i>";
+                }
+                classListAll = PackageUtils.getClassNames(archiveFile);
                 totalClassesScanned = classListAll.size();
                 StringBuilder found = new StringBuilder();
                 signatureCount = new int[signatures.length];

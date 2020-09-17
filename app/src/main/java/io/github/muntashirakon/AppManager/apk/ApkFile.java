@@ -51,6 +51,7 @@ import java.util.zip.ZipInputStream;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
@@ -87,6 +88,7 @@ public final class ApkFile implements AutoCloseable {
         return apkFile;
     }
 
+    @WorkerThread
     public static int createInstance(Uri apkUri) throws ApkFileException {
         int key = ThreadLocalRandom.current().nextInt();
         ApkFile apkFile = new ApkFile(apkUri, key);
@@ -139,7 +141,7 @@ public final class ApkFile implements AutoCloseable {
     @Nullable
     private ZipFile zipFile;
 
-    public ApkFile(@NonNull Uri apkUri, int sparseArrayKey) throws ApkFileException {
+    private ApkFile(@NonNull Uri apkUri, int sparseArrayKey) throws ApkFileException {
         this.sparseArrayKey = sparseArrayKey;
         Context context = AppManager.getContext();
         ContentResolver cr = context.getContentResolver();
@@ -302,6 +304,7 @@ public final class ApkFile implements AutoCloseable {
         return hasObb;
     }
 
+    @WorkerThread
     public boolean extractObb() {
         if (!hasObb || zipFile == null) return true;
         try {
@@ -573,6 +576,7 @@ public final class ApkFile implements AutoCloseable {
             IOUtils.deleteSilently(source);
         }
 
+        @WorkerThread
         public File getCachedFile() throws IOException {
             File destDir = AppManager.getContext().getExternalFilesDir("apks");
             if (destDir == null || !Environment.getExternalStorageState(destDir).equals(Environment.MEDIA_MOUNTED))

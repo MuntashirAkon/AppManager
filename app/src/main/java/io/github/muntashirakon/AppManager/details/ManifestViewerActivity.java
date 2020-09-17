@@ -27,7 +27,6 @@ import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -38,12 +37,11 @@ import android.widget.Toast;
 
 import com.google.android.material.progressindicator.ProgressIndicator;
 
-import net.dongliu.apk.parser.ApkFile;
+import net.dongliu.apk.parser.ApkParser;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Locale;
@@ -54,14 +52,13 @@ import java.util.regex.Pattern;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class ManifestViewerActivity extends BaseActivity {
@@ -84,8 +81,7 @@ public class ManifestViewerActivity extends BaseActivity {
     private SpannableString formattedContent;
     private String archiveFilePath;
     private String packageName;
-    @Nullable
-    private ParcelFileDescriptor fd;
+    private ApkFile apkFile;
     private ActivityResultLauncher<String> exportManifest = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
         try (OutputStream outputStream = getContentResolver().openOutputStream(uri)) {
             Objects.requireNonNull(outputStream).write(code.getBytes());
@@ -113,30 +109,30 @@ public class ManifestViewerActivity extends BaseActivity {
         }
         final PackageManager pm = getApplicationContext().getPackageManager();
         if (packageUri != null) {
-            PackageInfo packageInfo = null;
-            if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
-                try {
-                    fd = getContentResolver().openFileDescriptor(packageUri, "r");
-                    if (fd == null) {
-                        throw new FileNotFoundException("FileDescription cannot be null");
+            new Thread(() -> {
+                PackageInfo packageInfo = null;
+                if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
+                    try {
+                        int key = ApkFile.createInstance(packageUri);
+                        apkFile = ApkFile.getInstance(key);
+                        archiveFilePath = apkFile.getBaseEntry().getCachedFile().getAbsolutePath();
+                    } catch (IOException | ApkFile.ApkFileException e) {
+                        e.printStackTrace();
+                        showErrorAndFinish();
+                        return;
                     }
-                    archiveFilePath = IOUtils.getFileFromFd(fd).getAbsolutePath();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    showErrorAndFinish();
-                    return;
-                }
-            } else archiveFilePath = packageUri.getPath();
-            if (archiveFilePath != null)
-                packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 0);
-            if (packageInfo != null) {
-                packageName = packageInfo.packageName;
-                final ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-                applicationInfo.publicSourceDir = archiveFilePath;
-                applicationInfo.sourceDir = archiveFilePath;
-                setTitle(applicationInfo.loadLabel(pm));
-            } // else Could be a split apk
-            setWrapped();
+                } else archiveFilePath = packageUri.getPath();
+                if (archiveFilePath != null)
+                    packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 0);
+                if (packageInfo != null) {
+                    packageName = packageInfo.packageName;
+                    final ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+                    applicationInfo.publicSourceDir = archiveFilePath;
+                    applicationInfo.sourceDir = archiveFilePath;
+                    runOnUiThread(() -> setTitle(applicationInfo.loadLabel(pm)));
+                } // else Could be a split apk
+                runOnUiThread(this::setWrapped);
+            }).start();
         } else {
             try {
                 setTitle(pm.getApplicationInfo(packageName, 0).loadLabel(pm));
@@ -156,7 +152,7 @@ public class ManifestViewerActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        IOUtils.closeSilently(fd);
+        apkFile.close();
         super.onDestroy();
     }
 
@@ -236,9 +232,9 @@ public class ManifestViewerActivity extends BaseActivity {
 
     private void getManifest() throws IOException {
         if (archiveFilePath != null) {
-            ApkFile apkFile = new ApkFile(archiveFilePath);
-            apkFile.setPreferredLocale(Locale.getDefault());
-            code = Utils.getProperXml(apkFile.getManifestXml());
+            ApkParser apkParser = new ApkParser(archiveFilePath);
+            apkParser.setPreferredLocale(Locale.getDefault());
+            code = Utils.getProperXml(apkParser.getManifestXml());
         } else {
             AssetManager mCurAm;
             XmlResourceParser xml;

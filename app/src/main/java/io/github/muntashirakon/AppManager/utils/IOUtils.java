@@ -308,16 +308,28 @@ public final class IOUtils {
 
     @NonNull
     public static File getCachedFile(InputStream inputStream) throws IOException {
+        File tempFile = getTempFile();
+        try (OutputStream outputStream = new FileOutputStream(tempFile)) {
+            copy(inputStream, outputStream);
+        }
+        return tempFile;
+    }
+
+    @NonNull
+    public static File getCachedFile(byte[] bytes) throws IOException {
+        File tempFile = getTempFile();
+        bytesToFile(bytes, tempFile);
+        return tempFile;
+    }
+
+    @NonNull
+    public static File getTempFile() throws IOException {
         File extDir = AppManager.getContext().getExternalFilesDir("cache");
         if (extDir == null) throw new FileNotFoundException("External storage not available.");
         if (!extDir.exists() && !extDir.mkdirs()) {
             throw new IOException("Cannot create cache directory in the external storage.");
         }
-        File tempFile = File.createTempFile("file_" + System.currentTimeMillis(), ".cached", AppManager.getContext().getExternalFilesDir("cache"));
-        try (OutputStream outputStream = new FileOutputStream(tempFile)) {
-            copy(inputStream, outputStream);
-        }
-        return tempFile;
+        return File.createTempFile("file_" + System.currentTimeMillis(), ".cached", AppManager.getContext().getExternalFilesDir("cache"));
     }
 
     @NonNull

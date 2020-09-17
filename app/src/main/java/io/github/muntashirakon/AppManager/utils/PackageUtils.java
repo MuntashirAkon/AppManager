@@ -149,14 +149,11 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static List<String> getClassNames(byte[] bytes) {
+    public static List<String> getClassNames(File incomeFile) {
         ArrayList<String> classNames = new ArrayList<>();
-        File incomeFile = null;
         File optimizedFile = null;
         try {
             File cacheDir = AppManager.getContext().getCacheDir();
-            incomeFile = File.createTempFile("classes_" + System.currentTimeMillis(), ".dex", cacheDir);
-            IOUtils.bytesToFile(bytes, incomeFile);
             optimizedFile = File.createTempFile("opt_" + System.currentTimeMillis(), ".dex", cacheDir);
             DexFile dexFile = DexFile.loadDex(incomeFile.getPath(), optimizedFile.getPath(), 0);
             classNames = Collections.list(dexFile.entries());
@@ -164,10 +161,7 @@ public final class PackageUtils {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (incomeFile != null) //noinspection ResultOfMethodCallIgnored
-                incomeFile.delete();
-            if (optimizedFile != null) //noinspection ResultOfMethodCallIgnored
-                optimizedFile.delete();
+            IOUtils.deleteSilently(optimizedFile);
         }
         return classNames;
     }
