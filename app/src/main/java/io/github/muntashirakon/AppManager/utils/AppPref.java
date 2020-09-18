@@ -33,6 +33,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
+import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 
 public class AppPref {
@@ -44,14 +45,17 @@ public class AppPref {
         // Keep this in sync with getDefaultValue(PrefKey)
         PREF_ADB_MODE_ENABLED_BOOL,
         PREF_APP_OP_SHOW_DEFAULT_BOOL,
+        PREF_APP_OP_SORT_ORDER_INT,
         PREF_APP_THEME_INT,
         PREF_BACKUP_FLAGS_INT,
+        PREF_COMPONENTS_SORT_ORDER_INT,
         PREF_CUSTOM_LOCALE_STR,
         PREF_ENABLE_KILL_FOR_SYSTEM_BOOL,
         PREF_GLOBAL_BLOCKING_ENABLED_BOOL,
         PREF_LAST_VERSION_CODE_LONG,
         PREF_MAIN_WINDOW_FILTER_FLAGS_INT,
         PREF_MAIN_WINDOW_SORT_ORDER_INT,
+        PREF_PERMISSIONS_SORT_ORDER_INT,
         PREF_ROOT_MODE_ENABLED_BOOL,
         PREF_SHOW_DISCLAIMER_BOOL,
         PREF_USAGE_ACCESS_ENABLED_BOOL;
@@ -224,15 +228,14 @@ public class AppPref {
                         | BackupFlags.BACKUP_RULES | BackupFlags.BACKUP_EXCLUDE_CACHE
                         | BackupFlags.BACKUP_SOURCE_APK_ONLY;
             case PREF_ROOT_MODE_ENABLED_BOOL:
+            case PREF_ADB_MODE_ENABLED_BOOL:
+            case PREF_ENABLE_KILL_FOR_SYSTEM_BOOL:
+            case PREF_GLOBAL_BLOCKING_ENABLED_BOOL:
                 return false;
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_USAGE_ACCESS_ENABLED_BOOL:
             case PREF_SHOW_DISCLAIMER_BOOL:
                 return true;
-            case PREF_ADB_MODE_ENABLED_BOOL:
-            case PREF_ENABLE_KILL_FOR_SYSTEM_BOOL:
-            case PREF_GLOBAL_BLOCKING_ENABLED_BOOL:
-                return false;
             case PREF_LAST_VERSION_CODE_LONG:
                 return 0L;
             case PREF_APP_THEME_INT:
@@ -243,6 +246,10 @@ public class AppPref {
                 return MainActivity.SORT_BY_APP_LABEL;
             case PREF_CUSTOM_LOCALE_STR:
                 return LangUtils.LANG_AUTO;
+            case PREF_APP_OP_SORT_ORDER_INT:
+            case PREF_COMPONENTS_SORT_ORDER_INT:
+            case PREF_PERMISSIONS_SORT_ORDER_INT:
+                return AppDetailsFragment.SORT_BY_NAME;
         }
         throw new IllegalArgumentException("Pref key not found.");
     }
