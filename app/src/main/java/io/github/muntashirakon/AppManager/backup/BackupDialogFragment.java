@@ -26,6 +26,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -70,7 +71,7 @@ public class BackupDialogFragment extends DialogFragment {
     @ActionMode
     private int mode = MODE_BACKUP;
     private List<String> packageNames;
-    private int backupCount = 0;
+    private int baseBackupCount = 0;
     private FragmentActivity activity;
     private BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
         @Override
@@ -114,7 +115,7 @@ public class BackupDialogFragment extends DialogFragment {
         // Check if backup exists for all apps
         for (String packageName : packageNames) {
             if (MetadataManager.hasMetadata(packageName)) {
-                ++backupCount;
+                ++baseBackupCount;
             }
         }
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
@@ -124,14 +125,17 @@ public class BackupDialogFragment extends DialogFragment {
                         (dialog, flag, isChecked) -> {
                             if (isChecked) flags.addFlag(flag);
                             else flags.removeFlag(flag);
-                        })
-                .setPositiveButton(R.string.backup, (dialog, which) -> {
-                    mode = MODE_BACKUP;
-                    if (requestExternalStoragePermissions(activity)) {
-                        handleMode();
-                    }
-                });
-        if (backupCount == packageNames.size()) {
+                        });
+        builder.setPositiveButton(R.string.backup, (dialog, which) -> {
+            mode = MODE_BACKUP;
+            if (requestExternalStoragePermissions(activity)) {
+                handleMode();
+            }
+        });
+        if (baseBackupCount == packageNames.size()) {
+            // Display restore and delete only if backups of all the selected package exist
+            // FIXME(19/9/20): Enable these option if only a single package is selected and
+            //  there are existing backups, just just the base backup.
             builder.setNegativeButton(R.string.restore, (dialog, which) -> {
                 mode = MODE_RESTORE;
                 if (requestExternalStoragePermissions(activity)) {
@@ -156,25 +160,56 @@ public class BackupDialogFragment extends DialogFragment {
 
     public void handleMode() {
         @BatchOpsManager.OpType int op;
+        // FIXME(19/9/20): Add multiple user checks
         switch (mode) {
             case MODE_DELETE:
-                // TODO(11/9/20): Display a list of backups if only a single package is requested
-                // TODO(18/9/20): Display a confirmation prompt
                 op = BatchOpsManager.OP_DELETE_BACKUP;
-                startOperation(op, null);
+                if (packageNames.size() == 1) {
+                    // Only a single package is requested, display a list of existing backups to
+                    // choose which of them are to be deleted
+                    // TODO(11/9/20): Display a list of backups
+                    startOperation(op, null);
+                } else if (baseBackupCount == packageNames.size()) {
+                    // We shouldn't even check this since the restore option will only be visible
+                    // if backup of all the packages exist
+                    new MaterialAlertDialogBuilder(activity)
+                            .setTitle(R.string.delete_backup)
+                            .setMessage(R.string.are_you_sure)
+                            .setPositiveButton(R.string.yes, (dialog, which) -> startOperation(op, null))
+                            .setNegativeButton(R.string.no, null)
+                            .show();
+                } else {
+                    Log.e(TAG, "Delete: Why are we even here? Backup count " + baseBackupCount);
+                }
                 break;
             case MODE_RESTORE:
-                // TODO(11/9/20): Display a list of backups if only a single package is requested
-                // TODO(18/9/20): Display a confirmation prompt
                 op = BatchOpsManager.OP_RESTORE_BACKUP;
-                startOperation(op, null);
+                if (packageNames.size() == 1) {
+                    // Only a single package is requested, display a list of existing backups to
+                    // choose which one to restore
+                    // TODO(11/9/20): Display a list of backups
+                    startOperation(op, null);
+                } else if (baseBackupCount == packageNames.size()) {
+                    // We shouldn't even check this since the restore option will only be visible
+                    // if backup of all the packages exist
+                    new MaterialAlertDialogBuilder(activity)
+                            .setTitle(R.string.restore)
+                            .setMessage(R.string.are_you_sure)
+                            .setPositiveButton(R.string.yes, (dialog, which) -> startOperation(op, null))
+                            .setNegativeButton(R.string.no, null)
+                            .show();
+                } else {
+                    Log.e(TAG, "Restore: Why are we even here? Backup count " + baseBackupCount);
+                }
                 break;
             case MODE_BACKUP:
             default:
                 op = BatchOpsManager.OP_BACKUP;
                 if (flags.backupMultiple()) {
-                    View view = activity.getLayoutInflater().inflate(R.layout.dialog_input_backup_name, null);
+                    // Multiple backup is requested, no need to warn users about backups since the
+                    // user has a choice between overwriting the existing backup or create a new one
                     // TODO(18/9/20): Add overwrite option
+                    View view = activity.getLayoutInflater().inflate(R.layout.dialog_input_backup_name, null);
                     new MaterialAlertDialogBuilder(activity)
                             .setTitle(R.string.backup)
                             .setView(view)
@@ -187,14 +222,17 @@ public class BackupDialogFragment extends DialogFragment {
                             })
                             .show();
                 } else {
-                    if (backupCount > 0) {
+                    // Base backup requested
+                    if (baseBackupCount > 0) {
+                        // One or more app has backups, warn users
                         new MaterialAlertDialogBuilder(activity)
                                 .setTitle(R.string.backup)
-                                .setMessage(getResources().getQuantityString(R.plurals.backup_exists_are_you_sure, backupCount))
+                                .setMessage(getResources().getQuantityString(R.plurals.backup_exists_are_you_sure, baseBackupCount))
                                 .setPositiveButton(R.string.yes, (dialog, which) -> startOperation(op, null))
                                 .setNegativeButton(R.string.no, null)
                                 .show();
                     } else {
+                        // No need to warn users, proceed to backup
                         startOperation(op, null);
                     }
                 }

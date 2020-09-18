@@ -221,17 +221,19 @@ public class BatchOpsManager {
             // Send progress
             sendProgress(context, PackageUtils.getPackageLabel(pm, packageName), max, ++i);
             // Do operation
-            BackupManager backupManager = BackupManager.getNewInstance(packageName,
-                    args.getInt(ARG_FLAGS), args.getStringArray(ARG_BACKUP_NAMES));
+            String[] backupNames = args.getStringArray(ARG_BACKUP_NAMES);
+            BackupManager backupManager = BackupManager.getNewInstance(packageName, args.getInt(ARG_FLAGS));
             switch (mode) {
                 case BackupDialogFragment.MODE_BACKUP:
-                    if (!backupManager.backup()) failedPackages.add(packageName);
+                    if (!backupManager.backup(backupNames)) {
+                        failedPackages.add(packageName);
+                    }
                     break;
                 case BackupDialogFragment.MODE_DELETE:
-                    if (!backupManager.deleteBackup()) failedPackages.add(packageName);
+                    if (!backupManager.deleteBackup(backupNames)) failedPackages.add(packageName);
                     break;
                 case BackupDialogFragment.MODE_RESTORE:
-                    if (!backupManager.restore()) failedPackages.add(packageName);
+                    if (!backupManager.restore(backupNames)) failedPackages.add(packageName);
                     break;
             }
         }

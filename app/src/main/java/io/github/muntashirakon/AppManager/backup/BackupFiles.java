@@ -114,11 +114,26 @@ public class BackupFiles {
     @NonNull
     private PrivilegedFile packagePath;
 
+    /**
+     * Create and handle {@link BackupFile}.
+     *
+     * @param packageName Name of the package whose backups has to be managed
+     * @param userHandle  The user handle (aka user ID) to whom the package belong to
+     * @param backupNames Name of the backups. If {@code null}, user handle will be used. If not
+     *                    null, the backup names will have the format {@code userHandle_backupName}.
+     */
     BackupFiles(@NonNull String packageName, int userHandle, @Nullable String[] backupNames) {
         this.packageName = packageName;
         this.userHandle = userHandle;
-        if (backupNames == null) backupNames = new String[]{String.valueOf(userHandle)};
-        this.backupNames = backupNames;
+        if (backupNames == null) {
+            this.backupNames = new String[]{String.valueOf(userHandle)};
+        } else {
+            // Add user handle before the backup name
+            this.backupNames = new String[backupNames.length];
+            for (int i = 0; i < backupNames.length; ++i) {
+                this.backupNames[i] = userHandle + "_" + backupNames[i].trim();
+            }
+        }
         packagePath = getPackagePath(packageName);
     }
 

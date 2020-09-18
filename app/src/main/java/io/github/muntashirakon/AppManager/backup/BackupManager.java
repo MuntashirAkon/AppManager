@@ -23,7 +23,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
@@ -73,11 +72,10 @@ public class BackupManager {
     /**
      * @param packageName Package name of the app
      * @param flags       One or more of the {@link BackupFlags.BackupFlag}
-     * @param backupNames A singleton array containing a backup name or {@code null} to use default
      */
     @NonNull
-    public static BackupManager getNewInstance(String packageName, int flags, @Nullable String[] backupNames) {
-        return new BackupManager(packageName, flags, backupNames);
+    public static BackupManager getNewInstance(String packageName, int flags) {
+        return new BackupManager(packageName, flags);
     }
 
     @NonNull
@@ -87,11 +85,9 @@ public class BackupManager {
     @NonNull
     private BackupFlags requestedFlags;
     @NonNull
-    private BackupFiles[] backupFilesList;
-    @NonNull
     private int[] userHandles;
 
-    protected BackupManager(@NonNull String packageName, int flags, @Nullable String[] backupNames) {
+    protected BackupManager(@NonNull String packageName, int flags) {
         this.packageName = packageName;
         metadataManager = MetadataManager.getNewInstance(packageName);
         requestedFlags = new BackupFlags(flags);
@@ -99,6 +95,38 @@ public class BackupManager {
             userHandles = Users.getUsersHandles();
         } else userHandles = new int[]{Users.getCurrentUserHandle()};
         Log.e(TAG, "Users: " + Arrays.toString(userHandles));
+    }
+
+    public boolean backup(@Nullable String[] backupNames) {
+        if (requestedFlags.isEmpty()) {
+            Log.e(BackupOp.TAG, "Backup is requested without any flags.");
+            return false;
+        }
+        backupNames = getProcessedBackupNames(backupNames);
+        BackupFiles[] backupFilesList = new BackupFiles[userHandles.length];
+        for (int i = 0; i < userHandles.length; ++i) {
+            backupFilesList[i] = new BackupFiles(packageName, userHandles[i], backupNames);
+        }
+        BackupOp backupOp;
+        for (int i = 0; i < userHandles.length; ++i) {
+            BackupFiles.BackupFile[] backupFiles = requestedFlags.backupMultiple() ?
+                    backupFilesList[i].getFreshBackupPaths() :
+                    backupFilesList[i].getBackupPaths(true);
+            for (BackupFiles.BackupFile backupFile : backupFiles) {
+                try {
+                    backupOp = new BackupOp(backupFile, userHandles[i]);
+                    if (!backupOp.runBackup()) return false;
+                } catch (BackupException e) {
+                    Log.e(BackupOp.TAG, e.getMessage(), e);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Nullable
+    private String[] getProcessedBackupNames(@Nullable String[] backupNames) {
         if (requestedFlags.backupMultiple()) {
             // Multiple backups requested
             if (backupNames == null) {
@@ -107,78 +135,46 @@ public class BackupManager {
                         Locale.ROOT).format(Calendar.getInstance().getTime())};
             }
             for (int i = 0; i < backupNames.length; ++i) {
-                if (TextUtils.isDigitsOnly(backupNames[i])) {
-                    // Append “Backup_” if backup name is a number
-                    backupNames[i] = "Backup_" + backupNames[i];
-                }
-                // Replace spaces with underscore if exists
-                backupNames[i] = backupNames[i].replace(' ', '_');
+                // Replace illegal characters
+                backupNames[i] = backupNames[i].trim().replaceAll("[\\\\/?\"<>|\\s]+", "_");  // [\\/:?"<>|\s]
             }
             Log.e(TAG, "Backup names: " + Arrays.toString(backupNames));
-        } else backupNames = null;  // Overwrite existing backup
-        backupFilesList = new BackupFiles[userHandles.length];
-        for (int i = 0; i < userHandles.length; ++i) {
-            backupFilesList[i] = new BackupFiles(packageName, userHandles[i], backupNames);
-        }
+            return backupNames;
+        } else return null; // Overwrite existing backup
     }
 
-    public boolean backup() {
-        if (requestedFlags.isEmpty()) {
-            Log.e(BackupOp.TAG, "Backup is requested without any flags.");
-            return false;
-        }
-        for (int i = 0; i < userHandles.length; ++i) {
-            BackupFiles.BackupFile[] backupFiles = requestedFlags.backupMultiple() ?
-                    backupFilesList[i].getFreshBackupPaths() :
-                    backupFilesList[i].getBackupPaths(true);
-            for (BackupFiles.BackupFile backupFile : backupFiles) {
-                if (!backup(backupFile, userHandles[i])) return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean backup(BackupFiles.BackupFile backupFile, int userHandle) {
-        final BackupOp backupOp;
-        try {
-            backupOp = new BackupOp(backupFile, userHandle);
-            return backupOp.runBackup();
-        } catch (BackupException e) {
-            Log.e(BackupOp.TAG, e.getMessage(), e);
-            return false;
-        }
-    }
-
-    public boolean restore() {
+    public boolean restore(@Nullable String[] backupNames) {
         if (requestedFlags.isEmpty()) {
             Log.e(RestoreOp.TAG, "Restore is requested without any flags.");
             return false;
         }
-        for (int i = 0; i < userHandles.length; ++i) {
-            BackupFiles.BackupFile[] backupFiles = backupFilesList[i].getBackupPaths(false);
-            // Only restore from the first backup file
-            if (backupFiles.length > 0) {
-                if (!restore(backupFiles[0], userHandles[i])) return false;
+        if (backupNames != null && backupNames.length > 1) {
+            Log.e(RestoreOp.TAG, "Restore is requested from more than one backups!");
+            return false;
+        }
+        for (int userHandle : userHandles) {
+            BackupFiles backupFiles = new BackupFiles(packageName, userHandle, backupNames);
+            BackupFiles.BackupFile[] backupFileList = backupFiles.getBackupPaths(false);
+            // Only restore from the first backup though we shouldn't have more than one backup.
+            if (backupFileList.length > 0) {
+                try {
+                    RestoreOp restoreOp = new RestoreOp(backupFileList[0], userHandle);
+                    if (!restoreOp.runRestore()) return false;
+                } catch (BackupException e) {
+                    e.printStackTrace();
+                    Log.e(RestoreOp.TAG, e.getMessage(), e);
+                    return false;
+                }
             }
         }
         return true;
     }
 
-    public boolean restore(BackupFiles.BackupFile backupFile, int userHandle) {
-        try {
-            RestoreOp restoreOp = new RestoreOp(backupFile, userHandle);
-            return restoreOp.runRestore();
-        } catch (BackupException e) {
-            e.printStackTrace();
-            Log.e(RestoreOp.TAG, e.getMessage(), e);
-        }
-        return false;
-    }
-
-    public boolean deleteBackup() {
-        for (int i = 0; i < userHandles.length; ++i) {
-            BackupFiles.BackupFile[] backupFiles = backupFilesList[i].getBackupPaths(false);
-            for (BackupFiles.BackupFile backupFile : backupFiles) {
+    public boolean deleteBackup(String[]  backupNames) {
+        for (int userHandle : userHandles) {
+            BackupFiles backupFiles = new BackupFiles(packageName, userHandle, backupNames);
+            BackupFiles.BackupFile[] backupFileList = backupFiles.getBackupPaths(false);
+            for (BackupFiles.BackupFile backupFile : backupFileList) {
                 if (!backupFile.delete()) return false;
             }
         }
