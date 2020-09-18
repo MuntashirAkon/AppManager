@@ -973,7 +973,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 Settings.ACTION_USAGE_ACCESS_SETTINGS), 0))
                         .setNegativeButton(android.R.string.cancel, null)
                         .setNeutralButton(R.string.never_ask, (dialog, which) ->
-                                AppPref.getInstance().setPref(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, false))
+                                AppPref.set(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, false))
                         .setCancelable(false)
                         .show());
                 return;

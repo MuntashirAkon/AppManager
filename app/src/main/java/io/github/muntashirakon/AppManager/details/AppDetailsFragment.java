@@ -52,6 +52,8 @@ import android.widget.Toast;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -97,6 +99,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             SIGNATURES,
             SHARED_LIBRARIES
     })
+    @Retention(RetentionPolicy.SOURCE)
     public @interface Property {
     }
 
@@ -123,6 +126,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             SORT_BY_DANGEROUS_PERMS,
             SORT_BY_DENIED_PERMS
     })
+    @Retention(RetentionPolicy.SOURCE)
     public @interface SortOrder {
     }
 
@@ -149,8 +153,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private ProgressIndicator mProgressIndicator;
     private TextView mRulesNotAppliedMsg;
     private boolean isExternalApk;
-    private @Property
-    int neededProperty;
+    @Property
+    private int neededProperty;
     AppDetailsFragmentViewModel model;
     AppDetailsViewModel mainModel;
 
@@ -351,7 +355,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 showProgressIndicator(true);
                 // Turn filter on/off
                 boolean curr = (boolean) AppPref.get(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL);
-                AppPref.getInstance().setPref(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL, !curr);
+                AppPref.set(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL, !curr);
                 refreshDetails();
                 return true;
             case R.id.action_deny_dangerous_permissions:  // permissions

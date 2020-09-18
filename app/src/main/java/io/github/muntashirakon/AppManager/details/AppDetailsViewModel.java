@@ -173,15 +173,15 @@ public class AppDetailsViewModel extends AndroidViewModel {
             case AppDetailsFragment.RECEIVERS:
             case AppDetailsFragment.PROVIDERS:
                 sortOrderComponents = sortOrder;
-                AppPref.getInstance().setPref(AppPref.PrefKey.PREF_COMPONENTS_SORT_ORDER_INT, sortOrder);
+                AppPref.set(AppPref.PrefKey.PREF_COMPONENTS_SORT_ORDER_INT, sortOrder);
                 break;
             case AppDetailsFragment.APP_OPS:
                 sortOrderAppOps = sortOrder;
-                AppPref.getInstance().setPref(AppPref.PrefKey.PREF_APP_OP_SORT_ORDER_INT, sortOrder);
+                AppPref.set(AppPref.PrefKey.PREF_APP_OP_SORT_ORDER_INT, sortOrder);
                 break;
             case AppDetailsFragment.USES_PERMISSIONS:
                 sortOrderPermissions = sortOrder;
-                AppPref.getInstance().setPref(AppPref.PrefKey.PREF_PERMISSIONS_SORT_ORDER_INT, sortOrder);
+                AppPref.set(AppPref.PrefKey.PREF_PERMISSIONS_SORT_ORDER_INT, sortOrder);
                 break;
         }
     }

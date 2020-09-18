@@ -256,7 +256,7 @@ public class MainActivity extends BaseActivity implements
                     .setCancelable(false)
                     .setPositiveButton(R.string.disclaimer_agree, (dialog, which) -> {
                         if (((MaterialCheckBox) view.findViewById(R.id.agree_forever)).isChecked()) {
-                            AppPref.getInstance().setPref(AppPref.PrefKey.PREF_SHOW_DISCLAIMER_BOOL, false);
+                            AppPref.set(AppPref.PrefKey.PREF_SHOW_DISCLAIMER_BOOL, false);
                         }
                         checkFirstRun();
                         checkAppUpdate();
@@ -280,7 +280,7 @@ public class MainActivity extends BaseActivity implements
         handleSelection();
         // Check root
         if (Utils.isRootGiven()) {
-            AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
+            AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
         }
         // Start local server
         new Thread(LocalServer::getInstance).start();
@@ -548,21 +548,21 @@ public class MainActivity extends BaseActivity implements
     protected void onStart() {
         super.onStart();
         // Check root
-        AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
+        AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
         if (!AppPref.isRootEnabled()) {
-            AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
+            AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
             LocalServer.updateConfig();
             // Check for adb
             new Thread(() -> {
                 try {
                     AdbShell.CommandResult result = AdbShell.run("id");
                     if (!result.isSuccessful()) {
-                        AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
+                        AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
                         throw new IOException("Adb not available");
                     }
                     runOnUiThread(() -> Toast.makeText(this, "Working on ADB mode", Toast.LENGTH_SHORT).show());
                 } catch (Exception e) {
-                    AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
+                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
                 }
                 LocalServer.updateConfig();
             }).start();
@@ -624,7 +624,7 @@ public class MainActivity extends BaseActivity implements
                     .setView(R.layout.dialog_instructions)
                     .setNegativeButton(android.R.string.ok, null)
                     .show();
-            AppPref.getInstance().setPref(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
+            AppPref.set(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
         }
     }
 
@@ -647,7 +647,7 @@ public class MainActivity extends BaseActivity implements
                             .show();
                 });
             }).start();
-            AppPref.getInstance().setPref(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
+            AppPref.set(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
         }
     }
 

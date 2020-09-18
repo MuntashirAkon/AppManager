@@ -41,8 +41,13 @@ public class AppPref {
 
     private static final int PREF_SKIP = 5;
 
+    /**
+     * Preference keys. It's necessary to do things manually as the shared prefs in Android is
+     * literary unusable.
+     * <br/>
+     * Keep these in sync with {@link #getDefaultValue(PrefKey)}.
+     */
     public enum PrefKey {
-        // Keep this in sync with getDefaultValue(PrefKey)
         PREF_ADB_MODE_ENABLED_BOOL,
         PREF_APP_OP_SHOW_DEFAULT_BOOL,
         PREF_APP_OP_SORT_ORDER_INT,
@@ -61,8 +66,8 @@ public class AppPref {
         PREF_USAGE_ACCESS_ENABLED_BOOL;
 
         public static final String[] keys = new String[values().length];
-        public static final @Type
-        int[] types = new int[values().length];
+        @Type
+        public static final int[] types = new int[values().length];
         public static final List<PrefKey> prefKeyList = Arrays.asList(values());
 
         static {
@@ -81,8 +86,8 @@ public class AppPref {
             return prefKeyList.indexOf(key);
         }
 
-        private static @Type
-        int inferType(@NonNull String typeName) {
+        @Type
+        private static int inferType(@NonNull String typeName) {
             switch (typeName) {
                 case "BOOL":
                     return TYPE_BOOLEAN;
@@ -163,10 +168,14 @@ public class AppPref {
         return isRootEnabled() || isAdbEnabled();
     }
 
-    private @NonNull
-    SharedPreferences preferences;
-    private @NonNull
-    SharedPreferences.Editor editor;
+    public static void set(PrefKey key, Object value) {
+        getInstance().setPref(key, value);
+    }
+
+    @NonNull
+    private SharedPreferences preferences;
+    @NonNull
+    private SharedPreferences.Editor editor;
 
     @SuppressLint("CommitPrefEdits")
     private AppPref(@NonNull SharedPreferences preferences) {

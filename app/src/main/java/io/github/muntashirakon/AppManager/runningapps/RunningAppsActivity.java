@@ -110,7 +110,7 @@ public class RunningAppsActivity extends BaseActivity implements
                 return true;
             case R.id.action_toggle_kill:
                 enableKillForSystem = !enableKillForSystem;
-                AppPref.getInstance().setPref(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL, enableKillForSystem);
+                AppPref.set(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL, enableKillForSystem);
                 refresh();
                 return true;
         }

@@ -151,7 +151,7 @@ public class MainViewModel extends AndroidViewModel {
             }).start();
         }
         mSortBy = sortBy;
-        AppPref.getInstance().setPref(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT, mSortBy);
+        AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT, mSortBy);
     }
 
     public int getFilterFlags() {
@@ -160,7 +160,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public void addFilterFlag(@MainActivity.Filter int filterFlag) {
         mFilterFlags |= filterFlag;
-        AppPref.getInstance().setPref(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT, mFilterFlags);
+        AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT, mFilterFlags);
         new Thread(() -> {
             synchronized (applicationItems) {
                 filterItemsByFlags();
@@ -170,7 +170,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public void removeFilterFlag(@MainActivity.Filter int filterFlag) {
         mFilterFlags &= ~filterFlag;
-        AppPref.getInstance().setPref(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT, mFilterFlags);
+        AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT, mFilterFlags);
         new Thread(() -> {
             synchronized (applicationItems) {
                 filterItemsByFlags();
