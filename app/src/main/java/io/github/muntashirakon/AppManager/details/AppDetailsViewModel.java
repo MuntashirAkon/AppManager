@@ -87,11 +87,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private int apkFileKey;
 
     @AppDetailsFragment.SortOrder
-    private int sortOrderComponents = AppDetailsFragment.SORT_BY_NAME;
+    private int sortOrderComponents = (int) AppPref.get(AppPref.PrefKey.PREF_COMPONENTS_SORT_ORDER_INT);
     @AppDetailsFragment.SortOrder
-    private int sortOrderAppOps = AppDetailsFragment.SORT_BY_NAME;
+    private int sortOrderAppOps = (int) AppPref.get(AppPref.PrefKey.PREF_APP_OP_SORT_ORDER_INT);
     @AppDetailsFragment.SortOrder
-    private int sortOrderPermissions = AppDetailsFragment.SORT_BY_NAME;
+    private int sortOrderPermissions = (int) AppPref.get(AppPref.PrefKey.PREF_PERMISSIONS_SORT_ORDER_INT);
 
     private String searchQuery;
     private boolean waitForBlocker;
@@ -173,14 +173,34 @@ public class AppDetailsViewModel extends AndroidViewModel {
             case AppDetailsFragment.RECEIVERS:
             case AppDetailsFragment.PROVIDERS:
                 sortOrderComponents = sortOrder;
+                AppPref.getInstance().setPref(AppPref.PrefKey.PREF_COMPONENTS_SORT_ORDER_INT, sortOrder);
                 break;
             case AppDetailsFragment.APP_OPS:
                 sortOrderAppOps = sortOrder;
+                AppPref.getInstance().setPref(AppPref.PrefKey.PREF_APP_OP_SORT_ORDER_INT, sortOrder);
                 break;
             case AppDetailsFragment.USES_PERMISSIONS:
                 sortOrderPermissions = sortOrder;
+                AppPref.getInstance().setPref(AppPref.PrefKey.PREF_PERMISSIONS_SORT_ORDER_INT, sortOrder);
                 break;
         }
+    }
+
+    @SuppressLint("SwitchIntDef")
+    @AppDetailsFragment.SortOrder
+    public int getSortOrder(@AppDetailsFragment.Property int property) {
+        switch (property) {
+            case AppDetailsFragment.ACTIVITIES:
+            case AppDetailsFragment.SERVICES:
+            case AppDetailsFragment.RECEIVERS:
+            case AppDetailsFragment.PROVIDERS:
+                return sortOrderComponents;
+            case AppDetailsFragment.APP_OPS:
+                return sortOrderAppOps;
+            case AppDetailsFragment.USES_PERMISSIONS:
+                return sortOrderPermissions;
+        }
+        return AppDetailsFragment.SORT_BY_NAME;
     }
 
     public void setSearchQuery(String searchQuery) {

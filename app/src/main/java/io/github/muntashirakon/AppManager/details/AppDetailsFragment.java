@@ -303,9 +303,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         if (neededProperty == APP_INFO) super.onPrepareOptionsMenu(menu);
         else if (neededProperty <= PROVIDERS) {
             if (AppPref.isRootEnabled())
-                menu.findItem(sSortMenuItemIdsMap[model.getSortBy()]).setChecked(true);
+                menu.findItem(sSortMenuItemIdsMap[mainModel.getSortOrder(neededProperty)]).setChecked(true);
         } else if (neededProperty <= USES_PERMISSIONS)
-            menu.findItem(sSortMenuItemIdsMap[model.getSortBy()]).setChecked(true);
+            menu.findItem(sSortMenuItemIdsMap[mainModel.getSortOrder(neededProperty)]).setChecked(true);
     }
 
     @Override
@@ -443,7 +443,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         showProgressIndicator(true);
         mainModel.setSortOrder(sortBy, neededProperty);
         mainModel.load(neededProperty);
-        model.setSortBy(sortBy);
     }
 
     synchronized private void applyRules(String componentName, RulesStorageManager.Type type) {
