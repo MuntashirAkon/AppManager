@@ -99,6 +99,13 @@ public abstract class AMPackageInstaller {
 
     public abstract boolean install(@NonNull File[] apkFiles, String packageName);
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    abstract boolean openSession();
+
+    abstract boolean abandon();
+
+    abstract boolean commit();
+
     static void sendStartedBroadcast(String packageName) {
         Intent broadcastIntent = new Intent(ACTION_INSTALL_STARTED);
         broadcastIntent.putExtra(EXTRA_PACKAGE_NAME, packageName);

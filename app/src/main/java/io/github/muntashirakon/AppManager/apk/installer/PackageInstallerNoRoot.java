@@ -76,7 +76,7 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
             }
         }
         // Commit
-        commitSession();
+        commit();
         return true;
     }
 
@@ -101,18 +101,20 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
             }
         }
         // Commit
-        commitSession();
+        commit();
         return true;
     }
 
-    private void commitSession() {
+    @Override
+    boolean commit() {
         Intent callbackIntent = new Intent(context, PackageInstallerService.class);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, callbackIntent, 0);
         session.commit(pendingIntent.getIntentSender());
+        return true;
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private boolean openSession() {
+    @Override
+    boolean openSession() {
         sendStartedBroadcast(packageName);
         packageInstaller = context.getPackageManager().getPackageInstaller();
         // Clean old sessions
@@ -149,7 +151,8 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
         }
     }
 
-    private boolean abandon() {
+    @Override
+    boolean abandon() {
         if (session != null) session.close();
         return false;
     }

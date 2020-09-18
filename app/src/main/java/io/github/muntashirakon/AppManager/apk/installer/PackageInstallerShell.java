@@ -46,6 +46,7 @@ public final class PackageInstallerShell extends AMPackageInstaller {
 
     private int sessionId = -1;
     private int userHandle;
+    private String packageName;
 
     private PackageInstallerShell() {
         userHandle = Users.getCurrentUserHandle();
@@ -70,12 +71,36 @@ public final class PackageInstallerShell extends AMPackageInstaller {
     // https://cs.android.com/android/_/android/platform/system/core/+/5b940dc7f9c0364d84469cad7b47a5ffaa33600b:adb/client/adb_install.cpp;drc=71afeb9a5e849e8752c470aa31c568be2e48d0b6;l=538
     @Override
     public boolean install(@NonNull File[] apkFiles, String packageName) {
-        sendStartedBroadcast(packageName);
-        // Create install session
-        StringBuilder cmd = new StringBuilder(installCmd).append(" install-create -r -d -t")
-                .append(" --user ").append(RunnerUtils.userHandleToUser(userHandle))
-                .append(" -i ").append(BuildConfig.APPLICATION_ID);
-        Runner.Result result = Runner.runCommand(cmd.toString());
+        this.packageName = packageName;
+        if (!openSession()) return false;
+        StringBuilder cmd;
+        Runner.Result result;
+        String buf;
+        // Write apk files
+        for (File apkFile : apkFiles) {
+            // TODO(16/9/20): Find a way to pipe the stream directly
+            cmd = new StringBuilder(Runner.TOYBOX).append(" cat ").append("\"")
+                    .append(apkFile.getAbsolutePath()).append("\" | ")
+                    .append(installCmd).append(" install-write -S ")
+                    .append(apkFile.length()).append(" ").append(sessionId).append(" ")
+                    .append(apkFile.getName()).append(" -");
+            result = Runner.runCommand(cmd.toString());
+            buf = result.getOutput();
+            if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
+                sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE);
+                Log.e(TAG, String.format("InstallMultiple: Failed to write %s.", apkFile.getName()));
+                return abandon();
+            }
+        }
+        // Commit
+        return commit();
+    }
+
+    @Override
+    boolean openSession() {
+        String cmd = installCmd + " install-create -r -d -t --user " +
+                RunnerUtils.userHandleToUser(userHandle) + " -i " + BuildConfig.APPLICATION_ID;
+        Runner.Result result = Runner.runCommand(cmd);
         String buf = result.getOutput();
         if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
             sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE);
@@ -96,32 +121,32 @@ public final class PackageInstallerShell extends AMPackageInstaller {
             Log.e(TAG, "InstallMultiple: Session id cannot be less than 0.");
             return false;
         }
-        // Write apk files
-        for (File apkFile : apkFiles) {
-            // TODO(16/9/20): Find a way to pipe the stream directly
-            cmd = new StringBuilder(Runner.TOYBOX).append(" cat ").append("\"")
-                    .append(apkFile.getAbsolutePath()).append("\" | ")
-                    .append(installCmd).append(" install-write -S ")
-                    .append(apkFile.length()).append(" ").append(sessionId).append(" ")
-                    .append(apkFile.getName()).append(" -");
-            result = Runner.runCommand(cmd.toString());
-            buf = result.getOutput();
-            if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
-                sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE);
-                Log.e(TAG, String.format("InstallMultiple: Failed to write %s.", apkFile.getName()));
-                return abandon(packageName);
-            }
+        return true;
+    }
+
+    @Override
+    boolean abandon() {
+        Runner.Result result = Runner.runCommand(installCmd + " install-abandon " + sessionId);
+        String buf = result.getOutput();
+        if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
+            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_ABANDON);
+            Log.e(TAG, "Abandon: Failed to abandon session.");
         }
+        return false;
+    }
+
+    @Override
+    boolean commit() {
         // Finalize session
-        result = Runner.runCommand(installCmd + " install-commit " + sessionId);
-        buf = result.getOutput();
+        Runner.Result result = Runner.runCommand(installCmd + " install-commit " + sessionId);
+        String buf = result.getOutput();
         if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
             if (buf == null) {
                 sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_COMMIT);
                 Log.e(TAG, "InstallMultiple: Failed to commit the install.");
             } else {
-                start = buf.indexOf('[');
-                end = buf.indexOf(']');
+                int start = buf.indexOf('[');
+                int end = buf.indexOf(']');
                 try {
                     String statusStr = buf.substring(start + 1, end);
                     sendCompletedBroadcast(packageName, statusStrToStatus(statusStr));
@@ -135,16 +160,6 @@ public final class PackageInstallerShell extends AMPackageInstaller {
         }
         sendCompletedBroadcast(packageName, STATUS_SUCCESS);
         return true;
-    }
-
-    private boolean abandon(String packageName) {
-        Runner.Result result = Runner.runCommand(installCmd + " install-abandon " + sessionId);
-        String buf = result.getOutput();
-        if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
-            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_ABANDON);
-            Log.e(TAG, "Abandon: Failed to abandon session.");
-        }
-        return false;
     }
 
     @NonNull
