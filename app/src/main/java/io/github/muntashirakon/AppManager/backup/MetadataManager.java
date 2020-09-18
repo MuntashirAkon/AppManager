@@ -26,7 +26,6 @@ import android.text.TextUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -42,7 +41,7 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
-public final class MetadataManager implements Closeable {
+public final class MetadataManager {
     public static final String META_FILE = "meta.am.v1";
 
     // For an extended documentation, see https://github.com/MuntashirAkon/AppManager/issues/30
@@ -73,34 +72,23 @@ public final class MetadataManager implements Closeable {
         public boolean keyStore;  // key_store
     }
 
-    private static MetadataManager metadataManager;
-
-    public static MetadataManager getInstance(String packageName) {
-        if (metadataManager == null) metadataManager = new MetadataManager(packageName);
-        if (!metadataManager.packageName.equals(packageName)) {
-            metadataManager.close();
-            metadataManager = new MetadataManager(packageName);
-        }
-        return metadataManager;
+    @NonNull
+    public static MetadataManager getNewInstance(String packageName) {
+        return new MetadataManager(packageName);
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean hasMetadata(String packageName) {
         PrivilegedFile backupPath = new PrivilegedFile(BackupFiles.getPackagePath(packageName),
                 String.valueOf(Users.getCurrentUserHandle()));
         return new PrivilegedFile(backupPath, META_FILE).exists();
     }
 
-    @Override
-    public void close() {
-    }
-
-    private @NonNull
-    String packageName;
+    @NonNull
+    private String packageName;
     private Metadata metadata;
     private AppManager appManager;
 
-    MetadataManager(@NonNull String packageName) {
+    private MetadataManager(@NonNull String packageName) {
         this.packageName = packageName;
         this.appManager = AppManager.getInstance();
     }

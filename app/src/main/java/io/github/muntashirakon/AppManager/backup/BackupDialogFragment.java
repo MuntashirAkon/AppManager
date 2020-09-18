@@ -24,8 +24,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.view.View;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -66,6 +70,7 @@ public class BackupDialogFragment extends DialogFragment {
     @ActionMode
     private int mode = MODE_BACKUP;
     private List<String> packageNames;
+    private int backupCount = 0;
     private FragmentActivity activity;
     private BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
         @Override
@@ -107,11 +112,9 @@ public class BackupDialogFragment extends DialogFragment {
         packageNames = args.getStringArrayList(ARG_PACKAGES);
         if (packageNames == null) return super.onCreateDialog(savedInstanceState);
         // Check if backup exists for all apps
-        boolean backupExists = true;
         for (String packageName : packageNames) {
-            if (!MetadataManager.hasMetadata(packageName)) {
-                backupExists = false;
-                break;
+            if (MetadataManager.hasMetadata(packageName)) {
+                ++backupCount;
             }
         }
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
@@ -128,7 +131,7 @@ public class BackupDialogFragment extends DialogFragment {
                         handleMode();
                     }
                 });
-        if (backupExists) {
+        if (backupCount == packageNames.size()) {
             builder.setNegativeButton(R.string.restore, (dialog, which) -> {
                 mode = MODE_RESTORE;
                 if (requestExternalStoragePermissions(activity)) {
@@ -156,17 +159,49 @@ public class BackupDialogFragment extends DialogFragment {
         switch (mode) {
             case MODE_DELETE:
                 // TODO(11/9/20): Display a list of backups if only a single package is requested
+                // TODO(18/9/20): Display a confirmation prompt
                 op = BatchOpsManager.OP_DELETE_BACKUP;
+                startOperation(op, null);
                 break;
             case MODE_RESTORE:
                 // TODO(11/9/20): Display a list of backups if only a single package is requested
+                // TODO(18/9/20): Display a confirmation prompt
                 op = BatchOpsManager.OP_RESTORE_BACKUP;
+                startOperation(op, null);
                 break;
             case MODE_BACKUP:
             default:
-                // TODO(11/9/20): Display a prompt asking for the backup name if multiple backup requested
                 op = BatchOpsManager.OP_BACKUP;
+                if (flags.backupMultiple()) {
+                    View view = activity.getLayoutInflater().inflate(R.layout.dialog_input_backup_name, null);
+                    // TODO(18/9/20): Add overwrite option
+                    new MaterialAlertDialogBuilder(activity)
+                            .setTitle(R.string.backup)
+                            .setView(view)
+                            .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                                Editable backupName = ((TextInputEditText) view.findViewById(R.id.input_backup_name)).getText();
+                                if (!TextUtils.isEmpty(backupName)) {
+                                    //noinspection ConstantConditions backupName is never null here
+                                    startOperation(op, new String[]{backupName.toString()});
+                                } else startOperation(op, null);
+                            })
+                            .show();
+                } else {
+                    if (backupCount > 0) {
+                        new MaterialAlertDialogBuilder(activity)
+                                .setTitle(R.string.backup)
+                                .setMessage(getResources().getQuantityString(R.plurals.backup_exists_are_you_sure, backupCount))
+                                .setPositiveButton(R.string.yes, (dialog, which) -> startOperation(op, null))
+                                .setNegativeButton(R.string.no, null)
+                                .show();
+                    } else {
+                        startOperation(op, null);
+                    }
+                }
         }
+    }
+
+    private void startOperation(int op, @Nullable String[] backupNames) {
         if (actionBeginInterface != null) actionBeginInterface.onActionBegin(mode);
         activity.registerReceiver(mBatchOpsBroadCastReceiver, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS_COMPLETED));
         // Start batch ops service
@@ -175,6 +210,7 @@ public class BackupDialogFragment extends DialogFragment {
         intent.putExtra(BatchOpsService.EXTRA_OP, op);
         Bundle args = new Bundle();
         args.putInt(BatchOpsManager.ARG_FLAGS, flags.getFlags());
+        args.putStringArray(BatchOpsManager.ARG_BACKUP_NAMES, backupNames);
         intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
         ContextCompat.startForegroundService(activity, intent);
     }

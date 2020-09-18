@@ -38,7 +38,8 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 public final class BackupUtils {
     @Nullable
     public static MetadataManager.Metadata getBackupInfo(String packageName) {
-        try (MetadataManager metadataManager = MetadataManager.getInstance(packageName)) {
+        try {
+            MetadataManager metadataManager = MetadataManager.getNewInstance(packageName);
             PrivilegedFile backupPath = new PrivilegedFile(BackupFiles.getPackagePath(packageName), String.valueOf(Users.getCurrentUserHandle()));
             metadataManager.readMetadata(new BackupFiles.BackupFile(backupPath, false));
             return metadataManager.getMetadata();

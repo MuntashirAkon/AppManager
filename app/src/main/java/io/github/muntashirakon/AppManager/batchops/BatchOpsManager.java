@@ -90,6 +90,7 @@ public class BatchOpsManager {
     @Retention(RetentionPolicy.SOURCE)
     public @interface OpType {
     }
+
     public static final int OP_NONE = -1;
     public static final int OP_BACKUP_APK = 0;
     public static final int OP_BACKUP = 1;
@@ -220,19 +221,18 @@ public class BatchOpsManager {
             // Send progress
             sendProgress(context, PackageUtils.getPackageLabel(pm, packageName), max, ++i);
             // Do operation
-            try (BackupManager backupManager = BackupManager.getInstance(
-                    packageName, args.getInt(ARG_FLAGS), args.getStringArray(ARG_BACKUP_NAMES))) {
-                switch (mode) {
-                    case BackupDialogFragment.MODE_BACKUP:
-                        if (!backupManager.backup()) failedPackages.add(packageName);
-                        break;
-                    case BackupDialogFragment.MODE_DELETE:
-                        if (!backupManager.deleteBackup()) failedPackages.add(packageName);
-                        break;
-                    case BackupDialogFragment.MODE_RESTORE:
-                        if (!backupManager.restore()) failedPackages.add(packageName);
-                        break;
-                }
+            BackupManager backupManager = BackupManager.getNewInstance(packageName,
+                    args.getInt(ARG_FLAGS), args.getStringArray(ARG_BACKUP_NAMES));
+            switch (mode) {
+                case BackupDialogFragment.MODE_BACKUP:
+                    if (!backupManager.backup()) failedPackages.add(packageName);
+                    break;
+                case BackupDialogFragment.MODE_DELETE:
+                    if (!backupManager.deleteBackup()) failedPackages.add(packageName);
+                    break;
+                case BackupDialogFragment.MODE_RESTORE:
+                    if (!backupManager.restore()) failedPackages.add(packageName);
+                    break;
             }
         }
         return lastResult = new Result() {

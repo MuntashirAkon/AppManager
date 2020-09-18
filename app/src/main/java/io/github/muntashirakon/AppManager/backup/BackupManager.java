@@ -58,7 +58,7 @@ import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-public class BackupManager implements AutoCloseable {
+public class BackupManager {
     public static final String TAG = "BackupManager";
 
     private static final String EXT_DATA = "/Android/data/";
@@ -70,20 +70,14 @@ public class BackupManager implements AutoCloseable {
     private static final String BACKUP_FILE_SUFFIX = ".tar.gz";
     private static final String RULES_TSV = "rules.am.tsv";
 
-    private static BackupManager instance;
-
     /**
      * @param packageName Package name of the app
      * @param flags       One or more of the {@link BackupFlags.BackupFlag}
      * @param backupNames A singleton array containing a backup name or {@code null} to use default
      */
-    public static BackupManager getInstance(String packageName, int flags, @Nullable String[] backupNames) {
-        if (instance == null) instance = new BackupManager(packageName, flags, backupNames);
-        else if (!instance.packageName.equals(packageName)) {
-            instance.close();
-            instance = new BackupManager(packageName, flags, backupNames);
-        }
-        return instance;
+    @NonNull
+    public static BackupManager getNewInstance(String packageName, int flags, @Nullable String[] backupNames) {
+        return new BackupManager(packageName, flags, backupNames);
     }
 
     @NonNull
@@ -99,7 +93,7 @@ public class BackupManager implements AutoCloseable {
 
     protected BackupManager(@NonNull String packageName, int flags, @Nullable String[] backupNames) {
         this.packageName = packageName;
-        metadataManager = MetadataManager.getInstance(packageName);
+        metadataManager = MetadataManager.getNewInstance(packageName);
         requestedFlags = new BackupFlags(flags);
         if (requestedFlags.backupAllUsers()) {
             userHandles = Users.getUsersHandles();
@@ -189,11 +183,6 @@ public class BackupManager implements AutoCloseable {
             }
         }
         return true;
-    }
-
-    @Override
-    public void close() {
-        metadataManager.close();
     }
 
     @Nullable

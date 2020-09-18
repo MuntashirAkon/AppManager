@@ -484,6 +484,10 @@
         <item quantity="one">Could not enable %s app</item>
         <item quantity="other">Could not enable %s apps</item>
     </plurals>
+    <plurals name="backup_exists_are_you_sure">
+        <item quantity="one">Backup exists. Are you sure?</item>
+        <item quantity="other">Backup exists for more than one app. Are you sure?</item>
+    </plurals>
     <string name="failed_to_delete_backup">Could not delete backup</string>
     <string name="failed_to_restore_backup">Could not restore backup</string>
     <string name="apply_to_system_apps">Apply to system apps</string>
@@ -609,4 +613,6 @@
     <string name="process_state_with_extra">State: %s (%s)</string>
     <string name="downgrade">Downgrade</string>
     <string name="downgrade_not_possible">Downgrade is not possible without root or ADB</string>
+    <string name="input_backup_name">Backup name</string>
+    <string name="input_backup_name_description">Backup name should not start with a digit nor should it contain any space. Leave it empty if you want to use current date-time.</string>
 </resources>
