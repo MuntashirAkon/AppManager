@@ -18,10 +18,14 @@
 package io.github.muntashirakon.AppManager.apk.installer;
 
 import android.annotation.SuppressLint;
+import android.text.TextUtils;
 import android.util.Log;
+
+import com.topjohnwu.superuser.Shell;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -30,6 +34,7 @@ import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public final class PackageInstallerShell extends AMPackageInstaller {
     public static final String TAG = "PIS";
@@ -58,14 +63,47 @@ public final class PackageInstallerShell extends AMPackageInstaller {
 
     @Override
     public boolean install(@NonNull ApkFile apkFile) {
-        File[] apkFiles;
-        try {
-            apkFiles = getStagingApkFiles(apkFile.getSelectedEntries());
-        } catch (IOException e) {
-            Log.e(TAG, "Install: Could not cache apk files.", e);
-            return false;
+        if (AppPref.isAdbEnabled()) {
+            // TODO(18/9/20): Find a way to pipe the stream directly like root users
+            File[] apkFiles;
+            try {
+                apkFiles = getStagingApkFiles(apkFile.getSelectedEntries());
+            } catch (IOException e) {
+                Log.e(TAG, "Install: Could not cache apk files.", e);
+                return false;
+            }
+            return install(apkFiles, apkFile.getPackageName());
+        } else {
+            this.packageName = apkFile.getPackageName();
+            if (!openSession()) return false;
+            String cmd;
+            Shell.Result result;
+            String buf;
+            // Write apk files
+            for (ApkFile.Entry entry : apkFile.getSelectedEntries()) {
+                try (InputStream apkInputStream = entry.getInputStream()) {
+                    cmd = installCmd + " install-write -S " + entry.getFileSize() + " " + sessionId +
+                            " " + entry.getFileName() + " -";
+                    result = Shell.su(cmd).add(apkInputStream).exec();
+                    buf = TextUtils.join("\n", result.getOut());
+                    if (!result.isSuccess() || buf == null || !buf.contains("Success")) {
+                        sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE);
+                        Log.e(TAG, String.format("Install: Failed to write %s.", entry.getFileName()));
+                        return abandon();
+                    }
+                } catch (IOException e) {
+                    sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE);
+                    Log.e(TAG, "Install: Cannot copy files to session.", e);
+                    return abandon();
+                } catch (SecurityException e) {
+                    sendCompletedBroadcast(packageName, STATUS_FAILURE_SECURITY);
+                    Log.e(TAG, "Install: Cannot access apk files.", e);
+                    return abandon();
+                }
+            }
+            // Commit
+            return commit();
         }
-        return install(apkFiles, apkFile.getPackageName());
     }
 
     // https://cs.android.com/android/_/android/platform/system/core/+/5b940dc7f9c0364d84469cad7b47a5ffaa33600b:adb/client/adb_install.cpp;drc=71afeb9a5e849e8752c470aa31c568be2e48d0b6;l=538
@@ -73,22 +111,19 @@ public final class PackageInstallerShell extends AMPackageInstaller {
     public boolean install(@NonNull File[] apkFiles, String packageName) {
         this.packageName = packageName;
         if (!openSession()) return false;
-        StringBuilder cmd;
+        String cmd;
         Runner.Result result;
         String buf;
         // Write apk files
         for (File apkFile : apkFiles) {
-            // TODO(16/9/20): Find a way to pipe the stream directly
-            cmd = new StringBuilder(Runner.TOYBOX).append(" cat ").append("\"")
-                    .append(apkFile.getAbsolutePath()).append("\" | ")
-                    .append(installCmd).append(" install-write -S ")
-                    .append(apkFile.length()).append(" ").append(sessionId).append(" ")
-                    .append(apkFile.getName()).append(" -");
-            result = Runner.runCommand(cmd.toString());
+            cmd = Runner.TOYBOX + " cat \"" + apkFile.getAbsolutePath() + "\" | " +
+                    installCmd + " install-write -S " + apkFile.length() + " " + sessionId + " " +
+                    apkFile.getName() + " -";
+            result = Runner.runCommand(cmd);
             buf = result.getOutput();
             if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
                 sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE);
-                Log.e(TAG, String.format("InstallMultiple: Failed to write %s.", apkFile.getName()));
+                Log.e(TAG, String.format("Install: Failed to write %s.", apkFile.getName()));
                 return abandon();
             }
         }
@@ -104,7 +139,7 @@ public final class PackageInstallerShell extends AMPackageInstaller {
         String buf = result.getOutput();
         if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
             sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE);
-            Log.e(TAG, "InstallMultiple: Failed to create install session.");
+            Log.e(TAG, "Install: Failed to create install session.");
             return false;
         }
         int start = buf.indexOf('[');
@@ -113,12 +148,12 @@ public final class PackageInstallerShell extends AMPackageInstaller {
             sessionId = Integer.parseInt(buf.substring(start + 1, end));
         } catch (IndexOutOfBoundsException | NumberFormatException e) {
             sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE);
-            Log.e(TAG, "InstallMultiple: Failed to parse session id.", e);
+            Log.e(TAG, "Install: Failed to parse session id.", e);
             return false;
         }
         if (sessionId < 0) {
             sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE);
-            Log.e(TAG, "InstallMultiple: Session id cannot be less than 0.");
+            Log.e(TAG, "Install: Session id cannot be less than 0.");
             return false;
         }
         return true;
@@ -143,17 +178,17 @@ public final class PackageInstallerShell extends AMPackageInstaller {
         if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
             if (buf == null) {
                 sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_COMMIT);
-                Log.e(TAG, "InstallMultiple: Failed to commit the install.");
+                Log.e(TAG, "Install: Failed to commit the install.");
             } else {
                 int start = buf.indexOf('[');
                 int end = buf.indexOf(']');
                 try {
                     String statusStr = buf.substring(start + 1, end);
                     sendCompletedBroadcast(packageName, statusStrToStatus(statusStr));
-                    Log.e(TAG, "InstallMultiple: " + statusStr);
+                    Log.e(TAG, "Install: " + statusStr);
                 } catch (IndexOutOfBoundsException e) {
                     sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_COMMIT);
-                    Log.e(TAG, "InstallMultiple: Failed to commit the install.");
+                    Log.e(TAG, "Install: Failed to commit the install.");
                 }
             }
             return false;
