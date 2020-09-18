@@ -473,7 +473,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_uninstall, mPackageLabel), Toast.LENGTH_LONG).show());
                                 }
                             }).start())
-                            .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                            .setNegativeButton(R.string.cancel, (dialog, which) -> {
                                 if (dialog != null) dialog.cancel();
                             })
                             .show();
@@ -515,7 +515,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                                 runOnUiThread(this::refreshDetails);
                                             }
                                         }).start())
-                                .setNegativeButton(android.R.string.cancel, null)
+                                .setNegativeButton(R.string.cancel, null)
                                 .show());
                 // Clear cache
                 if (isRootEnabled) {
@@ -602,7 +602,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LABEL, mPackageLabel);
                                     startActivity(intent);
                                 })
-                                .setNegativeButton(android.R.string.ok, null)
+                                .setNegativeButton(R.string.ok, null)
                                 .show());
             }
             // Databases (root only)
@@ -633,7 +633,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 //                                    if (openFile.resolveActivityInfo(mPackageManager, 0) != null)
 //                                        startActivity(openFile);
                                 })
-                                .setNegativeButton(android.R.string.ok, null)
+                                .setNegativeButton(R.string.ok, null)
                                 .show());
             }
         }  // End root only features
@@ -971,7 +971,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setMessage(R.string.grant_usage_acess_message)
                         .setPositiveButton(R.string.go, (dialog, which) -> startActivityForResult(new Intent(
                                 Settings.ACTION_USAGE_ACCESS_SETTINGS), 0))
-                        .setNegativeButton(android.R.string.cancel, null)
+                        .setNegativeButton(R.string.cancel, null)
                         .setNeutralButton(R.string.never_ask, (dialog, which) ->
                                 AppPref.set(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, false))
                         .setCancelable(false)

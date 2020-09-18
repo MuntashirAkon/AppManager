@@ -249,7 +249,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                 }
                 new MaterialAlertDialogBuilder(this)
                         .setTitle(getString(R.string.trackers_and_classes, j, tracker_names.length))
-                        .setNegativeButton(android.R.string.ok, null)
+                        .setNegativeButton(R.string.ok, null)
                         .setMessage(statsMsg.toString()).show();
                 return true;
             case R.id.action_toggle_class_listing:
@@ -294,7 +294,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                 .setTitle(getString(R.string.trackers_and_classes, totalTrackersFound, classList.size()))
                 .setView(showText)
                 .setIcon(R.drawable.ic_frost_classysharkexodus_black_24dp)
-                .setNegativeButton(android.R.string.ok, null)
+                .setNegativeButton(R.string.ok, null)
                 .setNeutralButton(R.string.exodus_link, (dialog, which) -> {
                     Uri exodus_link = Uri.parse(String.format("https://reports.exodus-privacy.eu.org/en/reports/%s/latest/", mPackageName));
                     Intent intent = new Intent(Intent.ACTION_VIEW, exodus_link);

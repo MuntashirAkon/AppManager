@@ -178,7 +178,7 @@ public class BackupDialogFragment extends DialogFragment {
                     new MaterialAlertDialogBuilder(activity)
                             .setTitle(R.string.backup)
                             .setView(view)
-                            .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                            .setPositiveButton(R.string.ok, (dialog, which) -> {
                                 Editable backupName = ((TextInputEditText) view.findViewById(R.id.input_backup_name)).getText();
                                 if (!TextUtils.isEmpty(backupName)) {
                                     //noinspection ConstantConditions backupName is never null here

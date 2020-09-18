@@ -615,4 +615,6 @@
     <string name="downgrade_not_possible">Downgrade is not possible without root or ADB</string>
     <string name="input_backup_name">Backup name</string>
     <string name="input_backup_name_description">Backup name should not start with a digit nor should it contain any space. Leave it empty if you want to use current date-time.</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

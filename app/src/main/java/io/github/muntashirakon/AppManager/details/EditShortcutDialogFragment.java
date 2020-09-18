@@ -141,7 +141,7 @@ public class EditShortcutDialogFragment extends DialogFragment {
 
                     LauncherIconCreator.createLauncherIcon(getActivity(), mActivityInfo, newActivityName, icon, activityIconResourceName[0]);
                 })
-                .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {
                     if (getDialog() != null) getDialog().cancel();
                 }).create();
     }

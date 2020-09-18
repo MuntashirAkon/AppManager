@@ -622,7 +622,7 @@ public class MainActivity extends BaseActivity implements
             new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.instructions)
                     .setView(R.layout.dialog_instructions)
-                    .setNegativeButton(android.R.string.ok, null)
+                    .setNegativeButton(R.string.ok, null)
                     .show();
             AppPref.set(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
         }
@@ -638,7 +638,7 @@ public class MainActivity extends BaseActivity implements
                     new MaterialAlertDialogBuilder(this)
                             .setTitle(R.string.changelog)
                             .setView(view)
-                            .setNegativeButton(android.R.string.ok, null)
+                            .setNegativeButton(R.string.ok, null)
                             .setNeutralButton(R.string.instructions, (dialog, which) ->
                                     new FullscreenDialog(this)
                                             .setTitle(R.string.instructions)

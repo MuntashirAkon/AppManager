@@ -228,7 +228,7 @@ public class EditPrefItemFragment extends DialogFragment {
                     }
                     interfaceCommunicator.sendInfo(mode, newPrefItem);
                 })
-                .setNegativeButton(android.R.string.cancel,  (dialog, which) -> {
+                .setNegativeButton(R.string.cancel,  (dialog, which) -> {
                     if (getDialog() != null) getDialog().cancel();
                 });
         if (mode == MODE_EDIT) builder.setNeutralButton(R.string.delete,

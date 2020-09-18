@@ -51,7 +51,7 @@ public class AlertDialogActivity extends BaseActivity {
                     .setTitle(failureMessage)
                     .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
                             failedPackages), null)
-                    .setNegativeButton(android.R.string.ok, null)
+                    .setNegativeButton(R.string.ok, null)
                     .setPositiveButton(R.string.try_again, (dialog, which) -> {
                         Intent intent = new Intent(this, BatchOpsService.class);
                         intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, failedPackages);

@@ -125,7 +125,7 @@ public class ImportExportDialogFragment extends DialogFragment {
         return new MaterialAlertDialogBuilder(activity)
                 .setView(view)
                 .setTitle(R.string.pref_import_export_blocking_rules)
-                .setNegativeButton(android.R.string.cancel, null)
+                .setNegativeButton(R.string.cancel, null)
                 .create();
     }
 
@@ -177,7 +177,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                                             new MaterialAlertDialogBuilder(activity)
                                                     .setTitle(R.string.failed_packages)
                                                     .setItems((CharSequence[]) failedPackages.toArray(), null)
-                                                    .setNegativeButton(android.R.string.ok, null)
+                                                    .setNegativeButton(R.string.ok, null)
                                                     .show();
                                             activity.progressIndicator.hide();
                                         });
@@ -187,7 +187,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                                     });
                                 }).start();
                             })
-                            .setNegativeButton(android.R.string.cancel, (dialog, which) -> activity.progressIndicator.hide())
+                            .setNegativeButton(R.string.cancel, (dialog, which) -> activity.progressIndicator.hide())
                             .show();
                 });
             } else {

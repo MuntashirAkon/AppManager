@@ -156,7 +156,7 @@ public class OneClickOpsActivity extends BaseActivity {
                                 intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
                                 ContextCompat.startForegroundService(this, intent);
                             })
-                            .setNegativeButton(android.R.string.cancel, (dialog, which) -> mProgressIndicator.hide())
+                            .setNegativeButton(R.string.cancel, (dialog, which) -> mProgressIndicator.hide())
                             .show();
                 });
             } else {
@@ -227,7 +227,7 @@ public class OneClickOpsActivity extends BaseActivity {
                                             intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
                                             ContextCompat.startForegroundService(this, intent);
                                         })
-                                        .setNegativeButton(android.R.string.cancel, (dialog1, which1) -> mProgressIndicator.hide())
+                                        .setNegativeButton(R.string.cancel, (dialog1, which1) -> mProgressIndicator.hide())
                                         .show();
                             });
                         } else {
@@ -238,7 +238,7 @@ public class OneClickOpsActivity extends BaseActivity {
                         }
                     }).start();
                 })
-                .setNegativeButton(android.R.string.cancel, null)
+                .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 
@@ -313,7 +313,7 @@ public class OneClickOpsActivity extends BaseActivity {
                                             intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
                                             ContextCompat.startForegroundService(this, intent);
                                         })
-                                        .setNegativeButton(android.R.string.cancel, (dialog1, which1) -> mProgressIndicator.hide())
+                                        .setNegativeButton(R.string.cancel, (dialog1, which1) -> mProgressIndicator.hide())
                                         .show();
                             });
                         } else {
@@ -324,7 +324,7 @@ public class OneClickOpsActivity extends BaseActivity {
                         }
                     }).start();
                 })
-                .setNegativeButton(android.R.string.cancel, null)
+                .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 

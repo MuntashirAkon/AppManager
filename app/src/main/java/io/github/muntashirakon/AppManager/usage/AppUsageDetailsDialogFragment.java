@@ -70,7 +70,7 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
                 .setTitle(packageUS.packageName)
                 .setView(view)
-                .setNegativeButton(android.R.string.ok, (dialog, which) -> {
+                .setNegativeButton(R.string.ok, (dialog, which) -> {
                     if (getDialog() == null) dismiss();
                 });
         try {

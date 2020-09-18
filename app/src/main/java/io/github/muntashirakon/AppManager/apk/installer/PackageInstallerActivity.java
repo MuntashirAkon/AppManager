@@ -112,7 +112,7 @@ public class PackageInstallerActivity extends BaseActivity {
                                     .setIcon(appIcon)
                                     .setMessage(R.string.install_app_message)
                                     .setPositiveButton(R.string.install, (dialog, which) -> install())
-                                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> finish())
+                                    .setNegativeButton(R.string.cancel, (dialog, which) -> finish())
                                     .show());
                         }
                     } else install();
@@ -156,7 +156,7 @@ public class PackageInstallerActivity extends BaseActivity {
                                         .setIcon(appIcon)
                                         .setMessage(R.string.reinstall_app_message)
                                         .setPositiveButton(R.string.reinstall, (dialog, which) -> install())
-                                        .setNegativeButton(android.R.string.cancel, (dialog, which) -> finish())
+                                        .setNegativeButton(R.string.cancel, (dialog, which) -> finish())
                                         .show());
                             }
                         } else install();

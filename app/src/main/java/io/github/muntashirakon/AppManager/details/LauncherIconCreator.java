@@ -148,7 +148,7 @@ public class LauncherIconCreator {
             new MaterialAlertDialogBuilder(context)
                     .setTitle(context.getString(R.string.error_creating_shortcut))
                     .setMessage(context.getString(R.string.error_verbose_pin_shortcut))
-                    .setPositiveButton(context.getString(android.R.string.ok), (dialog, which) -> dialog.cancel())
+                    .setPositiveButton(context.getString(R.string.ok), (dialog, which) -> dialog.cancel())
                     .show();
         }
     }

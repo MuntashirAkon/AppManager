@@ -92,9 +92,9 @@ public class WhatsNewDialogFragment extends DialogFragment {
                 .setTitle(R.string.whats_new)
                 .setView(view);
         if (installInterface != null) {
-            builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> installInterface.triggerCancel())
+            builder.setNegativeButton(R.string.cancel, (dialog, which) -> installInterface.triggerCancel())
                     .setPositiveButton(installName, (dialog, which) -> installInterface.triggerInstall());
-        } else builder.setNegativeButton(android.R.string.ok, null);
+        } else builder.setNegativeButton(R.string.ok, null);
         return builder.create();
     }
 

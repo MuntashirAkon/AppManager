@@ -112,7 +112,7 @@ public class SettingsActivity extends BaseActivity {
                             appPref.setPref(AppPref.PrefKey.PREF_APP_THEME_INT, currentTheme);
                             AppCompatDelegate.setDefaultNightMode(currentTheme);
                         })
-                        .setNegativeButton(android.R.string.cancel, null)
+                        .setNegativeButton(R.string.cancel, null)
                         .create()
                         .show());
         // Language
@@ -125,7 +125,7 @@ public class SettingsActivity extends BaseActivity {
                             appPref.setPref(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR, currentLang);
                             recreate();
                         })
-                        .setNegativeButton(android.R.string.cancel, null)
+                        .setNegativeButton(R.string.cancel, null)
                         .create()
                         .show());
         // Root mode switcher
@@ -190,7 +190,7 @@ public class SettingsActivity extends BaseActivity {
                 new MaterialAlertDialogBuilder(this)
                         .setTitle(R.string.changelog)
                         .setView(view)
-                        .setNegativeButton(android.R.string.ok, null)
+                        .setNegativeButton(R.string.ok, null)
                         .show();
             });
         }).start());

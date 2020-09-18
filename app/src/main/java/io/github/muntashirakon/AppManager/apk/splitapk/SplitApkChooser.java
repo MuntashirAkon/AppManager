@@ -138,7 +138,7 @@ public class SplitApkChooser extends DialogFragment {
                 })
                 .setPositiveButton(actionName == null ? getString(R.string.install) : actionName,
                         (dialog, which) -> installInterface.triggerInstall())
-                .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel())
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel())
                 .create();
     }
 

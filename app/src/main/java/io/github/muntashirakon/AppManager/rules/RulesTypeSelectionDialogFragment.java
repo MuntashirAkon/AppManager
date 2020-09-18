@@ -92,7 +92,7 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
                     if (mode == MODE_IMPORT) handleImport();
                     else handleExport();
                 })
-                .setNegativeButton(getResources().getString(android.R.string.cancel), null)
+                .setNegativeButton(getResources().getString(R.string.cancel), null)
                 .create();
     }
 
