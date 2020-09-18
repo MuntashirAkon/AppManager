@@ -157,7 +157,7 @@
         <item quantity="other">%d Tage</item>
     </plurals>
     <plurals name="usage_hours">
-        <item quantity="one">%d St.</item>
+        <item quantity="one">%d Std.</item>
         <item quantity="other">%d Stdn.</item>
     </plurals>
     <string name="usage_min">%d min</string>
@@ -180,7 +180,7 @@
     <string name="requested_large_heap">Große Halde</string>
     <string name="updated_app">Aktualisiert</string>
     <string name="debuggable">Debuggbar</string>
-    <string name="test_only">Test only</string>
+    <string name="test_only">Nur zum Testen</string>
     <string name="shared_prefs">Geteilte Einstellungen</string>
     <string name="databases">Datenbanken</string>
     <string name="save">Speichern</string>
@@ -225,8 +225,8 @@
     <string name="storage_and_cache">Speicher und Cache</string>
     <string name="total_size">Insgesamt</string>
     <string name="app_size">Anwendung</string>
-    <string name="app_ops">App Ops</string>
-    <string name="no_app_ops">Keine App Ops</string>
+    <string name="app_ops">App-Ops</string>
+    <string name="no_app_ops">Keine App-Operationen</string>
     <string name="failed_to_enable_op">Konnte die geforderte App Op nicht aktivieren</string>
     <string name="failed_to_disable_op">Konnte gewünschte App Op nicht entziehen</string>
     <string name="rules_not_applied">Regeln wurden nicht angewendet</string>
@@ -236,7 +236,7 @@
     <string name="pref_global_blocking_enabled">Globales Komponenten-Blockieren</string>
     <string name="pref_global_blocking_enabled_msg">Erlaubt es Ihnen, jede Komponente einer Anwendung zu blockieren, ohne die Blockierung für die Anwendung explizit zu aktivieren</string>
     <string name="pref_usage_access_enabled">Zugriff auf Nutzungsdaten</string>
-    <string name="pref_usage_access_enabled_msg">Zugriff auf Nutzungsdaten erlaubt es, Nutzungsstatistiken und Informationen über gespeicherte Daten einer Anwendung einzusehen</string>
+    <string name="pref_usage_access_enabled_msg">Dies erlaubt Nutzungsstatistiken und Informationen über gespeicherte Daten einer Anwendung einzusehen</string>
     <string name="app_settings">Einstellungen</string>
     <string name="only_works_in_root_mode">Diese Funktion ist nur im Root-Modus verfügbar</string>
     <string name="usage_yesterday">Gestern</string>
@@ -246,8 +246,8 @@
     <string name="external_data_dir">Externes Daten-Verzeichnis</string>
     <string name="external_multiple_data_dir">Externes Daten-Verzeichnis %d</string>
     <plurals name="no_of_times_opened">
-        <item quantity="one">Anzahl geöffnet: %d</item>
-        <item quantity="other">Anzahl geöffnet: %d</item>
+        <item quantity="one">%d mal</item>
+        <item quantity="other">%d mal</item>
     </plurals>
     <string name="sort_by_last_used">Zuletzt verwendet</string>
     <string name="sort_by_screen_time">Zeit im Vordergrund</string>
@@ -257,13 +257,13 @@
     <string name="pref_import_export_blocking_rules_msg">Regeln importieren/exportieren, externe Regeln aus Watt oder Blocker importieren</string>
     <string name="pref_import_watt">Aus Watt importieren</string>
     <string name="pref_import_blocker">Aus Blocker importieren</string>
-    <string name="the_import_was_successful">Importieren erfolgreich</string>
-    <string name="the_export_was_successful">Exportieren erfolgreich</string>
+    <string name="the_import_was_successful">Importiert</string>
+    <string name="the_export_was_successful">Exportiert</string>
     <plurals name="failed_to_import_files">
-        <item quantity="one">Importieren von %d Datei fehlgeschlagen</item>
-        <item quantity="other">Importieren von %d Dateien fehlgeschlagen</item>
+        <item quantity="one">%d Datei konnte nicht importiert werden.</item>
+        <item quantity="other">%d Dateien konnten nicht importiert werden.</item>
     </plurals>
-    <string name="apk_updater">APK Updater</string>
+    <string name="apk_updater">APK-Aktualisierung</string>
     <string name="store">Store</string>
     <string name="running_apps">Laufende Anwendungen</string>
     <string name="no_running_apps">Keine laufenden Anwendungen</string>
@@ -279,27 +279,27 @@
     <string name="export_blocking_rules">Blockierregeln exportieren</string>
     <string name="some_items_selected">%d ausgewählt</string>
     <plurals name="alert_failed_to_clear_data">
-        <item quantity="one">Löschen der Daten von %d Anwendung fehlgeschlagen</item>
-        <item quantity="other">Löschen der Daten von %d Anwendungen fehlgeschlagen</item>
+        <item quantity="one">Löschen der Daten von %d Anwendung nicht möglich</item>
+        <item quantity="other">Löschen der Daten von %d Anwendungen nicht mglich</item>
     </plurals>
     <plurals name="alert_failed_to_disable">
-        <item quantity="one">Deaktivieren von %d Anwendung fehlgeschlagen</item>
-        <item quantity="other">Deaktivieren von %d Anwendungen fehlgeschlagen</item>
+        <item quantity="one">Deaktivieren von %d Anwendung nicht möglich</item>
+        <item quantity="other">Deaktivieren von %d Anwendungen nicht möglich</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
-        <item quantity="one">Deinstallieren von %d Anwendung fehlgeschlagen</item>
-        <item quantity="other">Deinstallieren von %d Anwendungen fehlgeschlagen</item>
+        <item quantity="one">Deinstallieren von %d Anwendung nicht möglich</item>
+        <item quantity="other">Deinstallieren von %d Anwendungen nicht möglich</item>
     </plurals>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">Konnte Hintergrundausführung für %d Anwendung nicht deaktivieren</item>
-        <item quantity="other">Deaktivieren der Hintergrundausführung von %d Anwendungen fehlgeschlagen</item>
+        <item quantity="one">Konnte die Hintergrundausführung von %d Anwendung nicht verhindern</item>
+        <item quantity="other">Konnte die Hintergrundausführung von %d Anwendungen nicht verhindern</item>
     </plurals>
-    <string name="the_operation_was_successful">Aufgabe erfolgreich beendet</string>
+    <string name="the_operation_was_successful">Erledigt</string>
     <plurals name="alert_failed_to_force_stop">
-        <item quantity="one">Beenden erzwingen von %d Anwendung fehlgeschlagen</item>
-        <item quantity="other">Beenden erzwingen von %d Anwendungen fehlgeschlagen</item>
+        <item quantity="one">Beenden erzwingen von %d Anwendung nicht möglich</item>
+        <item quantity="other">Beenden erzwingen von %d Anwendungen nicht möglich</item>
     </plurals>
-    <string name="toggle_kill_for_system_apps">\"Beenden erzwingen\" für System-Anwendungen ein-/ausschalten</string>
+    <string name="toggle_kill_for_system_apps">„Beenden erzwingen“ für System-Anwendungen ein- oder ausschalten</string>
     <string name="app_op_cannot_be_enabled">Dieser App Op kann nicht aktiviert werden, unter Umständen weil ein nicht-beschreibbarer App Op von einem anderen App Op abhängt.</string>
     <string name="app_op_cannot_be_disabled">Dieser App Op kann nicht deaktiviert werden, unter Umständen weil ein nicht-beschreibbarer App Op von einem anderen App Op abhängt.</string>
     <string name="permission_name">Name der Berechtigung</string>
@@ -320,19 +320,19 @@
     <string name="touchscreen">Berührungsempfindlicher Bildschirm</string>
     <string name="pref_export_msg">Exportieren von Blockier-Regeln von App Manager in den externen Speicher</string>
     <string name="pref_import_msg">Importieren von exportierten Blockier-Regeln von App Manager</string>
-    <string name="pref_import_watt_msg">Importieren von Watt-Blockier-Regeln (Jede Datei enthält Regeln für genau ein Paket, und der Dateiname ist der Paketname mit \".xml\"-Erweiterung.)</string>
+    <string name="pref_import_watt_msg">Importieren der Blockier-Regeln von Watt; jede Datei enthält Regeln für ein genanntes Paket „paketname.xml“ usw.</string>
     <string name="pref_import_blocker_msg">Importieren von Blocker-Regeln (Jede Datei enthält eine Regel pro Paket.)</string>
     <string name="pref_app_theme">Farbschema der Anwendung</string>
     <string name="follow_system">Systemkonform</string>
     <string name="battery_mode">Energiesparmodus</string>
     <string name="day">Tag</string>
     <string name="night">Nacht</string>
-    <string name="select_theme">Farbschema auswählen</string>
+    <string name="select_theme">Farbschema</string>
     <string name="apply">Anwenden</string>
     <string name="current_theme">Aktuelles Farbschema: %s</string>
     <string name="pref_about_msg">App Manager-Version und -Lizenz, Danksagungen, etc.</string>
     <string name="version">Version</string>
-    <string name="sort_by_wifi_data">Wi-Fi-Nutzung</string>
+    <string name="sort_by_wifi_data">Wlan-Daten</string>
     <string name="block_trackers">Verfolger blockieren</string>
     <string name="sort_by_component_name">Komponentennamen</string>
     <string name="reset_to_default">Standardeinstellungen wiederherstellen</string>
@@ -347,23 +347,23 @@
     <string name="sort_by_tracker_components">Verfolger zuerst</string>
     <string name="unknown_op">Unbekannte Operation</string>
     <string name="failed_to_disable_trackers">Konnte Verfolger nicht deaktivieren</string>
-    <string name="trackers_disabled_successfully">Verfolger wurden erfolgreich deaktiviert</string>
+    <string name="trackers_disabled_successfully">Verfolger sind nun deaktiviert</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">Konnte Verfolger von %d Anwendung nicht deaktivieren</item>
-        <item quantity="other">Deaktivieren der Verfolger von %d Anwendungen fehlgeschlagen</item>
+        <item quantity="other">Konnte Verfolger von %d Anwendungen nicht deaktivieren</item>
     </plurals>
-    <string name="failed_to_grant_permission">Erteilen der Berechtigung fehlgeschlagen</string>
-    <string name="failed_to_revoke_permission">Entziehen der Berechtigung fehlgeschlagen</string>
-    <string name="failed_to_reset_app_ops">Zurücksetzen der App Ops fehlgeschlagen</string>
-    <string name="failed_to_deny_dangerous_perms">Entziehen aller gefährlichen Berechtigungen fehlgeschlagen</string>
-    <string name="failed_to_deny_dangerous_app_ops">Entziehen aller gefährlichen App Ops fehlgeschlagen</string>
+    <string name="failed_to_grant_permission">Erteilen der Berechtigung nicht möglich</string>
+    <string name="failed_to_revoke_permission">Entziehen der Berechtigung nicht möglich</string>
+    <string name="failed_to_reset_app_ops">Zurücksetzen der App-Ops nicht möglich</string>
+    <string name="failed_to_deny_dangerous_perms">Entziehen aller gefährlichen Berechtigungen nicht möglich</string>
+    <string name="failed_to_deny_dangerous_app_ops">Entziehen aller gefährlichen App-Ops nicht möglich</string>
     <string name="launch_app">Starten</string>
     <string name="never_ask">Niemals fragen</string>
     <string name="one_click_ops">Ein-Klick-Ops</string>
     <string name="changelog">Änderungen</string>
-    <string name="external_apk_no_app_op">Externe APK benötigt keine App Ops</string>
+    <string name="external_apk_no_app_op">Eine externe APK hat keine App-Operationen</string>
     <string name="manifest_viewer">Manifest einsehen</string>
-    <string name="scanning_is_still_in_progress">Suche erfolgt bereits</string>
+    <string name="scanning_is_still_in_progress">Suche läuft</string>
     <plurals name="no_of_trackers">
         <item quantity="one">%d Verfolger</item>
         <item quantity="other">%d Verfolger</item>
@@ -375,37 +375,36 @@
     <string name="community_links">Telegram-Update-Channel: https://t.me/AppManagerChannel
         \nHilfe-Gruppe (auf Englisch): https://t.me/AppManagerAndroid</string>
     <string name="pref_import_existing">Existierende Regeln importieren</string>
-    <string name="pref_import_existing_msg">Füge Komponenten zu App Manager hinzu, die von anderen Anwendungen deaktiviert wurden.
-Sei vorsichtig wenn Du dies tust: Es kann hierbei zu sehr vielen falsch-positiven Meldungen kommen. Wähle ausschließlich die Anwendungen aus, bei denen Du Dir sicher bist</string>
-    <string name="failed_to_get_data_usage_information">Abfrage der Nutzung von mobilen Daten fehlgeschlagen</string>
+    <string name="pref_import_existing_msg">Fügt Komponenten zum App-Manager hinzu, die von anderen Anwendungen deaktiviert wurden. Sei vorsichtig, wenn Du dies tust: Es kann hierbei zu sehr vielen falschen positiven Meldungen kommen. Wähle nur die Anwendungen aus, bei denen Du Dir sicher bist.</string>
+    <string name="failed_to_get_data_usage_information">Abfrage der Datennutzung nicht möglich</string>
     <string name="clear_cache">Cache leeren</string>
     <string name="block_unblock_trackers_description">Blockiere oder gebe Verfolger-Komponenten aller installierter Anwendungen frei</string>
     <string name="block_components_dots">Komponenten blockieren…</string>
     <string name="block_components_description">Blockieren aller Komponenten, die Signatur(en) entsprechen</string>
     <string name="deny_app_ops_dots">App Ops entziehen…</string>
-    <string name="deny_app_ops_description">Apps Ops anhand ihrer konstanten Werte entziehen (d.h. 63 bedeutet RUN_IN_BACKGROUND)</string>
+    <string name="deny_app_ops_description">Bestimmte App-Operationen anhand ihrer konstanten Werte verweigern (z. B. 63 bedeutet RUN_IN_BACKGROUND)</string>
     <string name="clear_data_from_uninstalled_apps">Daten deinstallierter Anwendungen löschen</string>
     <string name="clear_data_from_uninstalled_apps_description">Daten von Anwendungen, die mit der DONT_DELETE_DATA-Flagge deinstalliert wurden, löschen</string>
     <string name="clear_app_cache">Cache der Anwendung leeren</string>
-    <string name="clear_app_cache_description">Cache aller Anwendungen leeren</string>
+    <string name="clear_app_cache_description">Den Cache aller Anwendungen leeren</string>
     <string name="no_tracker_found">Keine Verfolger gefunden</string>
     <string name="failed_packages">Pakete mit Fehlern</string>
     <string name="input_signatures">Signatur(en)</string>
-    <string name="input_signatures_description">Gib bitte die gewünschten Signaturen ein (z.B. com.facebook.) und trenne sie mit einer Leerstelle.</string>
+    <string name="input_signatures_description">Gib bitte die gewünschten Signaturen mit einer Leerstelle getrennt ein, z. B. com.facebook org.app2 com.app3 usw.</string>
     <string name="filtered_packages">Gefilterte Pakete</string>
     <string name="input_app_ops">App Ops</string>
-    <string name="input_app_ops_description">Gib bitte die gewünschten App Ops-Konstanten ein (z.B. 63) und trenne sie mit einer Leerstelle. App Ops-Konstanten lassen sich in eckigen Klammern im entsprechenden Reiter finden.</string>
+    <string name="input_app_ops_description">Gib bitte die gewünschten App-Ops-Konstanten ein, mit einer Leerstelle getrennt (z.B. 63 72 12 usw.). Die App-Ops-Konstanten finden sich in eckigen Klammern im entsprechenden Reiter.</string>
     <string name="only_works_in_root_or_adb_mode">Nur im Root- oder ADB-Modus verfügbar</string>
-    <string name="failed_to_parse_some_numbers">Einlesen mancher Zahlen fehlgeschlagen</string>
+    <string name="failed_to_parse_some_numbers">Einlesen mancher Zahlen nicht möglich</string>
     <plurals name="no_of_splits">
         <item quantity="one">%d Teil</item>
         <item quantity="other">%d Teile</item>
     </plurals>
     <string name="split_no">Teil#%d: %s</string>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Laden von Paket-Informationen fehlgeschlagen, könnte eine geteilte APK sein</string>
+    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Laden von Paket-Informationen nicht möglich, es könnte eine geteilte APK sein</string>
     <string name="termux">Termux</string>
-    <string name="package_name_is_installed_successfully">%s wurde erfolgreich installiert</string>
-    <string name="failed_to_install_package_name">Installation von %s fehlgeschlagen</string>
+    <string name="package_name_is_installed_successfully">%s ist installiert</string>
+    <string name="failed_to_install_package_name">Installation von %s nicht möglich</string>
     <string name="filter">Filter</string>
     <string name="filter_user_apps">Benutzer-Anwendungen</string>
     <string name="filter_system_apps">System-Anwendungen</string>
@@ -427,29 +426,29 @@ Sei vorsichtig wenn Du dies tust: Es kann hierbei zu sehr vielen falsch-positive
     <string name="delete_backup">Sicherung löschen</string>
     <string name="backup_options">Sicherungsoptionen</string>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="one">Erstellen der Sicherung von %d Anwendung fehlgeschlagen</item>
-        <item quantity="other">Erstellen der Sicherung von %d Anwendungen fehlgeschlagen</item>
+        <item quantity="one">Erstellen der Sicherung von %d Anwendung nicht möglich</item>
+        <item quantity="other">Erstellen der Sicherungen von %d Anwendungen nicht möglich</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
-        <item quantity="one">Sichern von %d APK-Datei fehlgeschlagen</item>
-        <item quantity="other">Sichern von %d APK-Dateien fehlgeschlagen</item>
+        <item quantity="one">Sichern von %d APK-Datei nicht möglich</item>
+        <item quantity="other">Sichern von %d APK-Dateien nicht möglich</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
-        <item quantity="one">Wiederherstellen von %d APK-Datei fehlgeschlagen</item>
-        <item quantity="other">Wiederherstellen von %d APK-Dateien fehlgeschlagen</item>
+        <item quantity="one">Wiederherstellen von %d Anwendung nicht möglich</item>
+        <item quantity="other">Wiederherstellen von %d Anwendungen nicht möglich</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
         <item quantity="one">Konnte %d Sicherung nicht löschen</item>
-        <item quantity="other">Löschen von %d Sicherungen fehlgeschlagen</item>
+        <item quantity="other">Konnte %d Sicherungen nicht löschen</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="one">Deaktivieren der Tracker aus %d App(s) fehlgeschlagen</item>
-        <item quantity="other">Deaktivieren der Tracker aus %d Apps fehlgeschlagen</item>
+        <item quantity="one">Deaktivieren der Verfolger aus %d Anwendung nicht möglich</item>
+        <item quantity="other">Deaktivieren der Verfolger aus %d Anwendungen nicht möglich</item>
     </plurals>
-    <string name="failed_to_delete_backup">Löschen der Sicherung fehlgeschlagen</string>
-    <string name="failed_to_restore_backup">Wiederherstellen der Sicherung fehlgeschlagen</string>
+    <string name="failed_to_delete_backup">Löschen der Sicherung nicht möglich</string>
+    <string name="failed_to_restore_backup">Wiederherstellen der Sicherung nicht möglich</string>
     <string name="apply_to_system_apps">Auf Systemanwendungen anwenden</string>
-    <string name="apply_to_system_apps_question">Soll dies auch auf Systemanwendungen angewendet werden? (Im Zweifelsfall \"Nein\" auswählen.)</string>
+    <string name="apply_to_system_apps_question">Soll dies auch auf Systemanwendungen angewendet werden\? Im Zweifelsfall „Nein“ auswählen.</string>
     <string name="no">Nein</string>
     <string name="yes">Ja</string>
     <string name="skip_signature_checks">Signaturprüfungen überspringen</string>
@@ -466,20 +465,20 @@ Sei vorsichtig wenn Du dies tust: Es kann hierbei zu sehr vielen falsch-positive
     <string name="website">Webseite</string>
     <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">Alle Regeln entfernen</string>
-    <string name="pref_remove_all_rules_msg">Alle eingetragenen blockierten Komponenten werden wieder aktiviert, App Ops auf ihren ursprünglichen Wert gesetzt und Berechtigungen erteilt werden</string>
+    <string name="pref_remove_all_rules_msg">Alle eingetragenen blockierten Komponenten werden aktiviert, App-Ops auf ihren ursprünglichen Wert gesetzt und Berechtigungen erteilt</string>
     <string name="are_you_sure">Bist du Dir sicher?</string>
     <string name="filter_apps_with_activities">Anwendungen mit Activities</string>
     <string name="toggle_default_app_ops">Voreingestellte App Ops ein-/ausschalten</string>
-    <string name="installer_error_aborted">Die Installation ist fehlgeschlagen, weil sie entweder abgebrochen wurde oder die Sitzung unerwartet geschlossen wurde</string>
+    <string name="installer_error_aborted">Die Installation ist fehlgeschlagen, weil sie entweder abgebrochen oder die Sitzung unerwartet geschlossen wurde</string>
     <string name="installer_error_blocked_device">Gerät</string>
-    <string name="installer_error_blocked">Installation wurde von %s blockiert</string>
-    <string name="installer_error_conflict">Anwendung kann installiert werden, da bereits eine mit dem selben Paketnamen installiert ist</string>
-    <string name="installer_error_incompatible">Anwendung ist nicht kompatibel mit diesem Gerät</string>
+    <string name="installer_error_blocked">Installation ist von %s blockiert</string>
+    <string name="installer_error_conflict">Die Anwendung kann nicht installiert werden, da bereits eine Anwendung mit demselben Paketnamen installiert ist</string>
+    <string name="installer_error_incompatible">Anwendung ist nicht mit diesem Gerät kompatibel</string>
     <string name="installer_error_bad_apks">Ungültige APK-Dateien ausgewählt</string>
     <string name="installer_error_storage">Nicht genügend Speicherplatz zur Installation verfügbar</string>
     <string name="installer_error_generic">Installation fehlgeschlagen</string>
     <string name="installer_error_lidl_rom">Dein ROM ist leider nicht kompatibel mit dem Installationsprogramm ohne Root.</string>
-    <string name="failed_to_fetch_package_info">Laden der Paket-Informationen fehlgeschlagen</string>
+    <string name="failed_to_fetch_package_info">Laden der Paket-Informationen nicht möglich</string>
     <string name="batch_ops">Stapelverarbeitung</string>
     <string name="operation_running">Vorgang erfolgt…</string>
     <string name="full_stop_tap_to_see_details">. Berühren für mehr Details.</string>
@@ -491,21 +490,21 @@ Sei vorsichtig wenn Du dies tust: Es kann hierbei zu sehr vielen falsch-positive
     <string name="unblock_trackers">Tracker blockieren</string>
     <string name="package_installer">Paket-Installer</string>
     <string name="install_in_progress">Installation wird durchgeführt</string>
-    <string name="installer_error_security">Zugriff auf apk-Dateien nicht möglich</string>
+    <string name="installer_error_security">Zugriff auf APK-Dateien nicht möglich</string>
     <string name="installer_error_session_create">Die Installation konnte nicht gestartet werden</string>
-    <string name="installer_error_session_write">Schreib-Zugriff für die Installation wurde verweigert</string>
-    <string name="installer_error_session_commit">Fehler beim Übertragen der apk-Dateien</string>
-    <string name="installer_error_session_abandon">Fehler beim Beenden der Installation</string>
-    <string name="backup_apk_only">Nur Apk</string>
-    <string name="backup_obb_media">Obb &amp; Dateien</string>
-    <string name="failed_to_extract_obb_files">Fehler beim Extrahieren der Obb Dateien</string>
-    <string name="obb_files_extracted_successfully">Obb Dateien erfolgreich entpackt</string>
+    <string name="installer_error_session_write">Der Schreib-Zugriff für die Installation wurde verweigert</string>
+    <string name="installer_error_session_commit">Fehler beim Übertragen der APK-Dateien</string>
+    <string name="installer_error_session_abandon">Beenden der Installation nicht möglich</string>
+    <string name="backup_apk_only">Nur APK</string>
+    <string name="backup_obb_media">OBB und Medien</string>
+    <string name="failed_to_extract_obb_files">Extrahieren der OBB-Dateien nicht möglich</string>
+    <string name="obb_files_extracted_successfully">OBB-Dateien entpackt</string>
     <string name="source">Quelle</string>
-    <string name="backup_multiple">Mehrere Backups</string>
+    <string name="backup_multiple">Mehrfache Sicherung</string>
     <string name="backup_all_users">Alle Benutzer</string>
     <string name="pref_app_language">Sprache</string>
     <string name="auto">Automatisch</string>
-    <string name="current_language">Aktuelle Sprache: %s</string>
+    <string name="current_language">Sprache: %s</string>
     <string name="choose_language">Wähle eine Sprache</string>
     <string name="touchscreen_finger">Finger</string>
     <string name="touchscreen_stylus">Schreibstift</string>
@@ -515,7 +514,7 @@ Sei vorsichtig wenn Du dies tust: Es kann hierbei zu sehr vielen falsch-positive
     <string name="navigation_dial_pad">Ziffernblock wählen</string>
     <string name="navigation_no_nav">Kein Navigator</string>
     <string name="keyboard_12_keys">12 Schlüssel</string>
-    <string name="keyboard_qwerty">Qwerty</string>
+    <string name="keyboard_qwerty">QWERTY</string>
     <string name="keyboard_no_keys">Keine Schlüssel</string>
     <string name="_undefined">nicht definiert</string>
     <string name="required">Erfordert</string>
@@ -548,15 +547,17 @@ Sei vorsichtig wenn Du dies tust: Es kann hierbei zu sehr vielen falsch-positive
     <string name="unknown_split_for_feature">%s für Merkmal %s</string>
     <string name="split_feature_name">Merkmal: %s</string>
     <plurals name="alert_failed_to_enable">
-        <item quantity="one">%s App konnte nicht aktiviert werden</item>
-        <item quantity="other">%s Apps konnten nicht aktiviert werden</item>
+        <item quantity="one">%s Anwendung konnte nicht aktiviert werden</item>
+        <item quantity="other">%s Anwendungen konnten nicht aktiviert werden</item>
     </plurals>
     <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="one">Fehler beim Verweigern von App-Operationen für %d Apps</item>
-        <item quantity="other">Fehler beim Verweigern von App-Operationen für %d App</item>
+        <item quantity="one">Verweigern der App-Operationen für %d Anwendung nicht möglich</item>
+        <item quantity="other">Verweigern der App-Operationen für %d Anwendungen nicht möglich</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
-        <item quantity="one">Komponenten für %d App konnte nicht blockiert werden</item>
-        <item quantity="other">Komponenten für %d Apps konnten nicht blockiert werden</item>
+        <item quantity="one">Komponenten für %d Anwendung konnte nicht blockiert werden</item>
+        <item quantity="other">Komponenten für %d Anwendungen konnten nicht blockiert werden</item>
     </plurals>
+    <string name="orientation_user_landscape">Horizontale Ansicht</string>
+    <string name="orientation_user_portrait">Vertikale Ansicht</string>
 </resources>
