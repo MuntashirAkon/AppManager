@@ -56,7 +56,7 @@ public class AppDetailsActivity extends BaseActivity {
     public AppDetailsViewModel model;
     public SearchView searchView;
 
-    private ViewPager viewPager;
+    ViewPager viewPager;
     private TypedArray mTabTitleIds;
     private Fragment[] fragments;
 

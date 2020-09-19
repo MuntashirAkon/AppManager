@@ -73,6 +73,7 @@ public final class PackageUtils {
 
     @SuppressWarnings("RegExpRedundantEscape")
     private static final Pattern SERVICE_REGEX = Pattern.compile("ServiceRecord\\{.*/([^\\}]+)\\}");
+    private static final String SERVICE_NOTHING = "(nothing)";
 
     @NonNull
     public static HashMap<String, RulesStorageManager.Type> collectComponentClassNames(String packageName) {
@@ -198,7 +199,7 @@ public final class PackageUtils {
         List<String> runningServices = new ArrayList<>();
         Runner.runCommand(new String[]{"dumpsys", "activity", "services", "-p", packageName});
         if (Runner.getLastResult().isSuccessful()) {
-            List<String> serviceDump = Runner.getLastResult().getOutputAsList();
+            List<String> serviceDump = Runner.getLastResult().getOutputAsList(1);
             Matcher matcher;
             String service, line;
             ListIterator<String> it = serviceDump.listIterator();
@@ -225,6 +226,38 @@ public final class PackageUtils {
             }
         }
         return runningServices;
+    }
+
+    public static boolean hasRunningServices(String packageName) {
+        Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "activity", "services", "-p", packageName});
+        if (result.isSuccessful()) {
+            List<String> serviceDump = result.getOutputAsList(1);
+            if (serviceDump.size() == 1 && SERVICE_NOTHING.equals(serviceDump.get(0).trim())) {
+                return false;
+            }
+            Matcher matcher;
+            String service, line;
+            ListIterator<String> it = serviceDump.listIterator();
+            if (it.hasNext()) {
+                matcher = SERVICE_REGEX.matcher(it.next());
+                while (it.hasNext()) {
+                    if (matcher.find(0)) {
+                        service = matcher.group(1);
+                        line = it.next();
+                        matcher = SERVICE_REGEX.matcher(line);
+                        while (it.hasNext()) {
+                            if (matcher.find(0)) break;
+                            if (line.contains("app=ProcessRecord{")) {
+                                if (service != null) return true;
+                            }
+                            line = it.next();
+                            matcher = SERVICE_REGEX.matcher(line);
+                        }
+                    } else matcher = SERVICE_REGEX.matcher(it.next());
+                }
+            }
+        }
+        return false;
     }
 
     @NonNull

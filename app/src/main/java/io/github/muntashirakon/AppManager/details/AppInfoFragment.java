@@ -408,6 +408,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Tag cloud //
         HashMap<String, RulesStorageManager.Type> trackerComponents;
         trackerComponents = ComponentUtils.getTrackerComponentsForPackageInfo(mPackageInfo);
+        boolean isRunning = PackageUtils.hasRunningServices(mPackageName);
         runOnUiThread(() -> {
             mTagCloud.removeAllViews();
             // Add tracker chip
@@ -429,6 +430,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 addChip(R.string.no_code);
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)
                 addChip(R.string.requested_large_heap, R.color.red);
+            if (isRunning) {
+                addChip(R.string.running, R.color.running).setOnClickListener(v ->
+                        mActivity.viewPager.setCurrentItem(AppDetailsFragment.SERVICES));
+            }
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0)
                 addChip(R.string.stopped, R.color.stopped);
             if (!mApplicationInfo.enabled) addChip(R.string.disabled_app, R.color.disabled_user);
@@ -906,11 +911,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         };
     }
 
-    private void addChip(@StringRes int resId, @ColorRes int color) {
+    @NonNull
+    private Chip addChip(@StringRes int resId, @ColorRes int color) {
         Chip chip = new Chip(mActivity);
         chip.setText(resId);
         chip.setChipBackgroundColorResource(color);
         mTagCloud.addView(chip);
+        return chip;
     }
 
     private void addChip(CharSequence text, @SuppressWarnings("SameParameterValue") @ColorRes int color) {
