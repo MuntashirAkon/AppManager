@@ -34,6 +34,10 @@ public class PrivilegedFile extends File {
         super(pathname);
     }
 
+    public PrivilegedFile(@NonNull File file) {
+        super(file.getAbsolutePath());
+    }
+
     public PrivilegedFile(@Nullable String parent, @NonNull String child) {
         super(parent, child);
     }

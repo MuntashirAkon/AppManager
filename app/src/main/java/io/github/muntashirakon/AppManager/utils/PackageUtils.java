@@ -54,6 +54,7 @@ import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 
 public final class PackageUtils {
@@ -333,6 +334,21 @@ public final class PackageUtils {
             }
         }
         return dataDirs.toArray(new String[0]);
+    }
+
+    public static String getHiddenCodePathOrDefault(String packageName, String defaultPath) {
+        Runner.Result result = Runner.runCommand(RunnerUtils.CMD_PM + " dump " + packageName + " | "
+                + Runner.TOYBOX + " grep codePath");
+        if (result.isSuccessful()) {
+            List<String> paths = result.getOutputAsList();
+            if (paths != null && paths.size() > 0) {
+                // Get only the last path
+                String codePath = paths.get(paths.size() - 1);
+                int start = codePath.indexOf('=');
+                if (start != -1) return codePath.substring(start + 1);
+            }
+        }
+        return new File(defaultPath).getParent();
     }
 
     @Nullable

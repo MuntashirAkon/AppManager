@@ -104,6 +104,7 @@ import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -409,13 +410,17 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         HashMap<String, RulesStorageManager.Type> trackerComponents;
         trackerComponents = ComponentUtils.getTrackerComponentsForPackageInfo(mPackageInfo);
         boolean isRunning = PackageUtils.hasRunningServices(mPackageName);
+        boolean isSystemlessPath = MagiskUtils.isSystemlessPath(PackageUtils
+                .getHiddenCodePathOrDefault(mPackageName, mApplicationInfo.publicSourceDir));
         runOnUiThread(() -> {
             mTagCloud.removeAllViews();
             // Add tracker chip
             if (!trackerComponents.isEmpty())
                 addChip(getResources().getQuantityString(R.plurals.no_of_trackers, trackerComponents.size(), trackerComponents.size()), R.color.red);
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-                addChip(R.string.system_app);
+                if (isSystemlessPath) {
+                    addChip(R.string.systemless_app);
+                } else addChip(R.string.system_app);
                 if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0)
                     addChip(R.string.updated_app);
             } else if (!mainModel.getIsExternalApk()) addChip(R.string.user_app);
