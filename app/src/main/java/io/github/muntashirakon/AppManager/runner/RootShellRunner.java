@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.runner;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.topjohnwu.superuser.Shell;
 
@@ -26,6 +25,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
+import io.github.muntashirakon.AppManager.logs.Log;
 
 public class RootShellRunner extends Runner {
     private static RootShellRunner rootShellRunner;

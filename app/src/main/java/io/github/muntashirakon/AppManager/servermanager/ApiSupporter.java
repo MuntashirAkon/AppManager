@@ -22,12 +22,12 @@ import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.server.common.Shell;
 import io.github.muntashirakon.AppManager.servermanager.remote.PackageHandler;

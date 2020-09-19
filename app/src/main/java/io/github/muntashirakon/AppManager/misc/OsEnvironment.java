@@ -20,7 +20,6 @@ package io.github.muntashirakon.AppManager.misc;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -31,6 +30,7 @@ import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 
 // Keep this in sync with https://cs.android.com/android/platform/superproject/+/master:frameworks/base/core/java/android/os/Environment.java
@@ -243,8 +243,7 @@ public final class OsEnvironment {
 
     private static void throwIfUserRequired() {
         if (sUserRequired) {
-            Log.wtf(TAG, "Path requests must specify a user by using UserEnvironment",
-                    new Throwable());
+            Log.e(TAG, "Path requests must specify a user by using UserEnvironment", new Throwable());
         }
     }
 

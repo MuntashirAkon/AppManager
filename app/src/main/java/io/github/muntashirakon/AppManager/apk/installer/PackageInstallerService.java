@@ -21,10 +21,10 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageInstaller;
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.logs.Log;
 
 public class PackageInstallerService extends Service {
     @Override

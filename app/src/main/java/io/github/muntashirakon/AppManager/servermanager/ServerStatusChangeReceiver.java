@@ -3,9 +3,9 @@ package io.github.muntashirakon.AppManager.servermanager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.server.common.Actions;
 
 public class ServerStatusChangeReceiver extends BroadcastReceiver {

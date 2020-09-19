@@ -29,7 +29,6 @@ import android.os.FileUtils;
 import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
 import android.system.ErrnoException;
-import android.util.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -50,6 +49,7 @@ import java.util.zip.ZipEntry;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
 public final class IOUtils {

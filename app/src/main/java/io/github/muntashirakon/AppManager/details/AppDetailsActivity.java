@@ -23,7 +23,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,6 +47,7 @@ import androidx.viewpager.widget.ViewPager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class AppDetailsActivity extends BaseActivity {

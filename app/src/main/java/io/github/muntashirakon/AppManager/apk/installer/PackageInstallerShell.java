@@ -19,7 +19,6 @@ package io.github.muntashirakon.AppManager.apk.installer;
 
 import android.annotation.SuppressLint;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.topjohnwu.superuser.Shell;
 
@@ -31,6 +30,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;

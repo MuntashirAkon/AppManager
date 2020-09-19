@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,6 +33,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 public final class PackageInstallerNoRoot extends AMPackageInstaller {

@@ -23,7 +23,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 import android.util.Pair;
 
 import org.json.JSONException;
@@ -43,6 +42,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import dalvik.system.VMRuntime;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerShell;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;

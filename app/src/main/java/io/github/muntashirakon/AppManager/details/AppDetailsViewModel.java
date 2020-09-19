@@ -37,7 +37,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.DeadSystemException;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,6 +59,7 @@ import androidx.lifecycle.MutableLiveData;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;

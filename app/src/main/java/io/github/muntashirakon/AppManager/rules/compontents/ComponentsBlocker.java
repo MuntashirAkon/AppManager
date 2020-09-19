@@ -20,7 +20,6 @@ package io.github.muntashirakon.AppManager.rules.compontents;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -33,6 +32,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;

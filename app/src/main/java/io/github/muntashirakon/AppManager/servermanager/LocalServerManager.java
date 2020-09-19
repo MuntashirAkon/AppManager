@@ -19,7 +19,6 @@ package io.github.muntashirakon.AppManager.servermanager;
 
 import android.os.SystemClock;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.tananaev.adblib.AdbConnection;
 import com.tananaev.adblib.AdbStream;
@@ -44,6 +43,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.adb.LineReader;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.server.common.BaseCaller;
 import io.github.muntashirakon.AppManager.server.common.Caller;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;

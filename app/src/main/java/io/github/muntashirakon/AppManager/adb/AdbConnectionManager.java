@@ -19,7 +19,6 @@ package io.github.muntashirakon.AppManager.adb;
 
 import android.content.Context;
 import android.util.Base64;
-import android.util.Log;
 
 import com.tananaev.adblib.AdbBase64;
 import com.tananaev.adblib.AdbConnection;
