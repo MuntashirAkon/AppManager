@@ -59,7 +59,7 @@
     <string name="input_features">输入特性</string>
     <string name="manifest">Manifest清单</string>
     <string name="error">错误</string>
-    <string name="loading">加载中</string>
+    <string name="loading">加载中…</string>
     <!-- &#8230; = ... -->
     <string name="sort_by_app_label">应用程序标签</string>
     <string name="sort_by_package_name">包名</string>
@@ -207,13 +207,13 @@
     <string name="no_content">没有内容</string>
     <string name="view_in_settings">在设置中查看</string>
     <string name="uninstall_app_message">要卸载此应用吗？</string>
-    <string name="failed_to_uninstall">无法卸载 %s</string>
-    <string name="uninstalled_successfully">%s 已被卸载</string>
+    <string name="failed_to_uninstall">无法卸载 %s.</string>
+    <string name="uninstalled_successfully">%s 已被卸载.</string>
     <string name="uninstall_system_app_message">这是一个系统应用。您确定要卸载此应用吗？</string>
     <string name="stopped">已停止</string>
     <string name="disable">禁用</string>
     <string name="enable">启用</string>
-    <string name="failed_to_disable">无法禁用 %s</string>
+    <string name="failed_to_disable">无法禁用 %s.</string>
     <string name="failed_to_enable">无法启用 %s</string>
     <string name="force_stop">强行停止</string>
     <string name="failed_to_stop">无法停用 %s</string>
@@ -523,4 +523,5 @@
     <string name="locale_split_for_feature">%s 的 %s 语言环境</string>
     <string name="abi_split_for_base_apk">基础 APK 的 %s 代码</string>
     <string name="abi_split_for_feature">%s 的 %s 代码</string>
+    <string name="touchscreen_stylus">触控笔</string>
 </resources>
