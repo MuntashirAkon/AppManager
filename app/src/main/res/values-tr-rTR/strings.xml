@@ -14,8 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-<resources>
+  --><resources>
     <string name="uninstall">Uygulamayı Kaldır</string>
     <string name="permissions">Kullanılan izinler</string>
     <string name="require_no_permission">İzin gerektirmez</string>
@@ -135,4 +134,14 @@
     <string name="clear_data_message">Bu uygulamadan verileri temizlemek istediğinizden emin misiniz?</string>
     <string name="clear">Temizle</string>
     <string name="failed_to_backup">Yedek oluşturma başarısız oldu</string>
+    <string name="third_party">Üçüncü Parti Kütüphaneler ve Simgeler</string>
+    <string name="license">Lisans</string>
+    <string name="error_loading_icons">Simgeler yüklenemiyor</string>
+    <string name="icon_picker">Simge Seçici</string>
+    <string name="error_invalid_icon_format">Geçersiz Simge Biçimi</string>
+    <string name="error_invalid_icon_resource">Geçersiz Simge Kaynağı</string>
+    <string name="insert_icon">Simge Ekle</string>
+    <string name="class_name">Sınıf Adı</string>
+    <string name="package_name">Paket Adı</string>
+    <string name="shortcut_name">Kısayol Adı</string>
 </resources>
