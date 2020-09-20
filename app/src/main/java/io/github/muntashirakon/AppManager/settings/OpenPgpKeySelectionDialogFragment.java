@@ -54,9 +54,6 @@ public class OpenPgpKeySelectionDialogFragment extends DialogFragment {
     private String mOpenPgpProvider;
     private OpenPgpServiceConnection mServiceConnection;
     private FragmentActivity activity;
-
-    private static final int NO_KEY = 0;
-
     private ActivityResultLauncher<IntentSenderRequest> keyIdResultLauncher;
 
     @NonNull
@@ -94,7 +91,7 @@ public class OpenPgpKeySelectionDialogFragment extends DialogFragment {
     }
 
     private void chooseKey() {
-        // bind to service
+        // Bind to service
         mServiceConnection = new OpenPgpServiceConnection(AppManager.getContext(), mOpenPgpProvider,
                 new OpenPgpServiceConnection.OnBound() {
                     @Override
@@ -112,23 +109,22 @@ public class OpenPgpKeySelectionDialogFragment extends DialogFragment {
     }
 
     private void getUserId(@NonNull Intent data) {
-        data.setAction(OpenPgpApi.ACTION_GET_SIGN_KEY_ID);
-        data.putExtra(OpenPgpApi.EXTRA_USER_ID, "");
+        data.setAction(OpenPgpApi.ACTION_GET_KEY_IDS);
+        data.putExtra(OpenPgpApi.EXTRA_USER_IDS, new String[]{});
         OpenPgpApi api = new OpenPgpApi(activity, mServiceConnection.getService());
-        api.executeApiAsync(data, null, null, new OpenPgpCallback());
-    }
-
-    private class OpenPgpCallback implements OpenPgpApi.IOpenPgpCallback {
-
-        private OpenPgpCallback() {
-        }
-
-        @Override
-        public void onReturn(@NonNull Intent result) {
+        api.executeApiAsync(data, null, null, result -> {
             switch (result.getIntExtra(OpenPgpApi.RESULT_CODE, OpenPgpApi.RESULT_CODE_ERROR)) {
                 case OpenPgpApi.RESULT_CODE_SUCCESS: {
-                    long keyId = result.getLongExtra(OpenPgpApi.EXTRA_SIGN_KEY_ID, NO_KEY);
-                    AppPref.set(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_LONG, keyId);
+                    long[] keyIds = result.getLongArrayExtra(OpenPgpApi.EXTRA_KEY_IDS);
+                    if (keyIds == null || keyIds.length == 0) {
+                        // Remove encryption
+                        AppPref.set(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR, "");
+                        AppPref.set(AppPref.PrefKey.PREF_OPEN_PGP_PACKAGE_STR, "");
+                    } else {
+                        StringBuilder keyIdSb = new StringBuilder();
+                        for (long keyId : keyIds) keyIdSb.append(',').append(keyId);
+                        AppPref.set(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR, keyIdSb.toString());
+                    }
                     break;
                 }
                 case OpenPgpApi.RESULT_CODE_USER_INTERACTION_REQUIRED: {
@@ -143,6 +139,6 @@ public class OpenPgpKeySelectionDialogFragment extends DialogFragment {
                     break;
                 }
             }
-        }
+        });
     }
 }
