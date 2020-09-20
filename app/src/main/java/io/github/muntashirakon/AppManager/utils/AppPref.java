@@ -60,6 +60,8 @@ public class AppPref {
         PREF_LAST_VERSION_CODE_LONG,
         PREF_MAIN_WINDOW_FILTER_FLAGS_INT,
         PREF_MAIN_WINDOW_SORT_ORDER_INT,
+        PREF_OPEN_PGP_PACKAGE_STR,
+        PREF_OPEN_PGP_USER_ID_LONG,
         PREF_PERMISSIONS_SORT_ORDER_INT,
         PREF_ROOT_MODE_ENABLED_BOOL,
         PREF_SHOW_DISCLAIMER_BOOL,
@@ -246,6 +248,7 @@ public class AppPref {
             case PREF_SHOW_DISCLAIMER_BOOL:
                 return true;
             case PREF_LAST_VERSION_CODE_LONG:
+            case PREF_OPEN_PGP_USER_ID_LONG:
                 return 0L;
             case PREF_APP_THEME_INT:
                 return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
@@ -259,6 +262,8 @@ public class AppPref {
             case PREF_COMPONENTS_SORT_ORDER_INT:
             case PREF_PERMISSIONS_SORT_ORDER_INT:
                 return AppDetailsFragment.SORT_BY_NAME;
+            case PREF_OPEN_PGP_PACKAGE_STR:
+                return "";
         }
         throw new IllegalArgumentException("Pref key not found.");
     }

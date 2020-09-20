@@ -618,4 +618,6 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="systemless_app">Systemless App</string>
+    <string name="open_pgp_provider">OpenPGP Provider</string>
+    <string name="pref_open_pgp_provider_msg">Adding an OpenPGP provider enables you to encrypt sensitive info such as app data backups</string>
 </resources>

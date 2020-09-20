@@ -173,6 +173,10 @@ public class SettingsActivity extends BaseActivity {
                 })
                 .setNegativeButton(R.string.no, null)
                 .show());
+        // OpenPGP Provider
+        findViewById(R.id.open_pgp_provider).setOnClickListener(v ->
+                new OpenPgpKeySelectionDialogFragment().show(getSupportFragmentManager(),
+                        OpenPgpKeySelectionDialogFragment.TAG));
         // About
         findViewById(R.id.about_view).setOnClickListener(v -> {
             @SuppressLint("InflateParams")

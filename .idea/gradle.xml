@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/HiddenApi" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/libApkParser" />
+            <option value="$PROJECT_DIR$/libOpenPGP" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
