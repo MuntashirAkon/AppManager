@@ -59,6 +59,7 @@ import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class ManifestViewerActivity extends BaseActivity {
@@ -152,7 +153,7 @@ public class ManifestViewerActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        apkFile.close();
+        IOUtils.closeSilently(apkFile);
         super.onDestroy();
     }
 

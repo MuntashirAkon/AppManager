@@ -195,7 +195,7 @@ public final class IOUtils {
         return new File("/proc/self/fd/" + fd.getFd());
     }
 
-    public static void closeSilently(@Nullable Closeable closeable) {
+    public static void closeSilently(@Nullable AutoCloseable closeable) {
         if (closeable == null) return;
         try {
             closeable.close();
