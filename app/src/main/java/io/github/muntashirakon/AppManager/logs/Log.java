@@ -160,7 +160,7 @@ public class Log {
                 break;
         }
         sb.append(tag == null ? "App Manager" : tag);
-        if (msg != null) sb.append(msg);
+        if (msg != null) sb.append(": ").append(msg);
         new Thread(() -> {
             synchronized (INSTANCE) {
                 INSTANCE.writer.println(sb.toString());
