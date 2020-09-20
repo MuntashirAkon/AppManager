@@ -6,7 +6,7 @@ sidebarDepth: 2
 Many root-only features can still be used by enabling ADB over TCP. To do that, a PC or Mac is required with Android platform-tools installed, and an Android phone with developer options & USB debugging enabled.
 
 ::: tip Root users
-To use ADB over TCP, you must revoke root permission for App Manager and restart your device. You may see _working on ADB mode_ message without restarting but it isn't entirely true. The server (used as an interface between system and App Manager) is still running in root mode. This is a known issue and will be fixed in a future version of App Manager.
+If superuser permission has been granted to App Manager, it can already execute privileged code without any problem. **Threfore, root users don't need to enable ADB over TCP.** If you still want to use ADB over TCP, you must revoke superuser permission for App Manager and restart your device. You may see _working on ADB mode_ message without restarting but this isn't entirely true. The server (used as an interface between system and App Manager) is still running in root mode. This is a known issue and will be fixed in a future version of App Manager.
 :::
 
 _See also: [FAQ: ADB over TCP][faq_aot]_
