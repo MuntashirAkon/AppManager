@@ -38,14 +38,17 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 public final class BackupUtils {
     @Nullable
     public static MetadataManager.Metadata getBackupInfo(String packageName) {
-        try {
-            MetadataManager metadataManager = MetadataManager.getNewInstance();
-            PrivilegedFile backupPath = new PrivilegedFile(BackupFiles.getPackagePath(packageName), String.valueOf(Users.getCurrentUserHandle()));
-            metadataManager.readMetadata(new BackupFiles.BackupFile(backupPath, false));
-            return metadataManager.getMetadata();
-        } catch (JSONException e) {
-            return null;
+        MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(packageName);
+        if (metadata.length == 0) return null;
+        int maxIndex = 0;
+        long maxTime = 0;
+        for (int i = 0; i < metadata.length; ++i) {
+            if (metadata[i].backupTime > maxTime) {
+                maxIndex = i;
+                maxTime = metadata[i].backupTime;
+            }
         }
+        return metadata[maxIndex];
     }
 
     @NonNull
