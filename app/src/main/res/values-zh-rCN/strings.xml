@@ -524,4 +524,32 @@
     <string name="abi_split_for_base_apk">基础 APK 的 %s 代码</string>
     <string name="abi_split_for_feature">%s 的 %s 代码</string>
     <string name="touchscreen_stylus">触控笔</string>
+    <string name="pref_open_pgp_provider_msg">添加一个OpenPGP提供商使您能够加密敏感信息，如应用程序数据备份</string>
+    <string name="open_pgp_provider">OpenPGP 提供商</string>
+    <string name="systemless_app">Systemless 应用</string>
+    <string name="cancel">取消</string>
+    <string name="ok">好</string>
+    <string name="input_backup_name_description">备份文件名称不应以数字开头，也不应包含任何空格。如果您想使用当前日期时间格式的命名，请将其保留为空。</string>
+    <string name="input_backup_name">备份文件名</string>
+    <string name="downgrade_not_possible">没有root权限或通过ADB，应用降级不可能</string>
+    <string name="downgrade">降级</string>
+    <string name="process_state_with_extra">状态: %s (%s)</string>
+    <string name="process_state">状态: %s</string>
+    <string name="state_multithreaded">多线程</string>
+    <string name="state_foreground">前台</string>
+    <string name="state_session_leader">会话首领</string>
+    <string name="state_locked_memory">上锁的内存</string>
+    <string name="state_low_priority">低优先级</string>
+    <string name="state_high_priority">高优先级</string>
+    <string name="state_unknown">未知</string>
+    <string name="state_waking">苏醒</string>
+    <string name="state_idle">空闲</string>
+    <string name="state_zombie">僵尸</string>
+    <string name="state_dead">死亡</string>
+    <string name="state_device_io">设备输入/输出</string>
+    <string name="state_sleeping">沉睡中</string>
+    <string name="navigation_wheel">滚轮</string>
+    <plurals name="backup_exists_are_you_sure">
+        <item quantity="other">超过一个应用存在备份。你确定吗？</item>
+    </plurals>
 </resources>
