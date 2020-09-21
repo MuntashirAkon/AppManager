@@ -18,6 +18,38 @@
 <p>App Manager is now on F-Droid! Link: https://f-droid.org/packages/io.github.muntashirakon.AppManager</p><br />
 <p>Visit App Manager docs here: https://muntashirakon.github.io/AppManager</p><br />
 
+<h5>v2.5.15 (362) pre-release:</h5>
+&#x2022; <font color="#09868B">[Feature]</font> Added a tag for running apps in the App Info tab<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added a tag for system apps installed/injected through Magisk in the App Info tab<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added Bengali and Norwegian Bokmål (incomplete)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added reinstall and downgrade option in the App Info page<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added option to downgrade for root and ADB users<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added process state in the Running Apps page<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added support for OpenPGP clients (such as OpenKeychain). Configure in Settings page (incomplete)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Display a prompt to input backup name when multiple backups flag is enabled<br />
+&#x2022; <font color="#09868B">[Feature]</font> Manifest files of external apps are now parsed using apk-parser library<br />
+&#x2022; <font color="#09868B">[Feature]</font> Offer users to keep app data when uninstalling AM (android 10 or later only)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Preserve sort order for components, app ops and permissions tabs<br />
+&#x2022; <font color="#09868B">[Feature]</font> Recommend ABI, locale and density in the split apk chooser dialog<br />
+&#x2022; <font color="#09868B">[Feature]</font> Save logs file internally at <tt>/sdcard/Android/data/io.github.muntashirakon.AppManager/files/cache/am.log</tt>><br />
+&#x2022; <font color="#09868B">[Feature]</font> Switch to libSu (SuperSu turned out to be backdated despite its revival of late)<br />
+&#x2022; <font color="#09868B">[Feature]</font> For a single package, display a multiple choice list for deleting backups and a single choice list for restoring backups<br />
+&#x2022; <font color="#09868B">[Feature]</font> Warn users when taking/deleting/restoring multiple backups<br />
+&#x2022; <font color="red">[Fix]</font> Add localization for "ok" and "cancel"<br />
+&#x2022; <font color="red">[Fix]</font> Canceling an update in the what's new finishes the activity<br />
+&#x2022; <font color="red">[Fix]</font> Changed various strings to increase readability<br />
+&#x2022; <font color="red">[Fix]</font> Display only the latest backup info in the main page<br />
+&#x2022; <font color="red">[Fix]</font> Fixed backup app listing<br />
+&#x2022; <font color="red">[Fix]</font> Fixed broken app ops action in 1-Click Ops page<br />
+&#x2022; <font color="red">[Fix]</font> Fixed crash in the App Info page if it's visited after uninstalling the app<br />
+&#x2022; <font color="red">[Fix]</font> Optimized install time for root users<br />
+&#x2022; <font color="red">[Fix]</font> Prevent the installer from failing if installation is triggered from the App Info page<br />
+&#x2022; <font color="red">[Fix]</font> Running services now has the highest priority (over blocking/disabling, etc.)<br />
+&#x2022; <font color="red">[Fix]</font> Rename toybox.so to libtoybox.so<br />
+&#x2022; <font color="red">[Fix]</font> Use FileDescriptor when available to decrease install time<br />
+
+<p>Data backup feature is still considered experimental and please do not rely on it to manage your backups yet. If you encounter any problem, please report to me without hesitation.</p><br />
+
 <h5>v2.5.14 (359) pre-release:</h5>
 &#x2022; <font color="#09868B">[Feature]</font> Added a custom language chooser<br />
 &#x2022; <font color="#09868B">[Feature]</font> Added a flag to backup only apk file instead of the whole source directory<br />
@@ -58,7 +90,7 @@
 &#x2022; <font color="red">[Fix]</font> Update app info properly after a batch operation<br />
 &#x2022; <font color="red">[Fix]</font> Workaround for various deprecated libraries<br />
 
-<p>Due to some major changes, backup functionality has become incompatible with the previous versions. Data backup feature is still considered experimental and please do not rely on it to manage your backups yet. If you encounter any problem, please report to me without hesitation.</p><br />
+<p>Due to some major changes, backup functionality has become incompatible with the previous versions. Data backup feature is still considered experimental and please do not rely on it to manage your backups yet.</p><br />
 <p>Compatibility for blocking rules is removed for v2.5.6. If you're still using this version, update to v2.5.13, enable global component blocking (and disable it again) and then update to v2.5.14.</p><br />
 
 <h5>v2.5.13 (348):</h5>
@@ -76,7 +108,7 @@
 &#x2022; <font color="red">[Fix]</font> Fixed broken ADB support<br />
 &#x2022; <font color="red">[Fix]</font> Install app only for the current user at the time of restoring backups<br />
 
-<p>Data backup feature is still considered experimental and please do not rely on it to manage your backups yet. If you encounter any problem, please report to me without hesitation.</p><br />
+<p>Data backup feature is still considered experimental and please do not rely on it to manage your backups yet.</p><br />
 <p>Visit https://muntashirakon.github.io/AppManager/changelog.html for a more helpful changelog.</p><br />
 
 <h5>v2.5.12 (341):</h5>
@@ -125,56 +157,3 @@
 <p>
     <b>Note:</b> Backup data are stored at <tt>/sdcard/AppManager</tt> and apk backups are stored at <tt>/sdcard/AppManager/apks</tt>. Data backups are currently not working on Android Lollipop.
 </p><br />
-
-<h5>v2.5.10 (324):</h5>
-&#x2022; <font color="#09868B">[Feature]</font> Added 1-click operations (as 1-Click Ops in the menu section in the main window): block (ads and) trackers, component blocking by signatures, app op blocking<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added support for external apk: You can now open apk files from your file manager. You can view app details, manifest or scan for trackers directly from there<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added persistent apps filtering option in the main window<br />
-&#x2022; <font color="#09868B">[Feature]</font> Alternative manifest viewer for installed apks<br />
-&#x2022; <font color="#09868B">[Feature]</font> Display number of trackers as a tag in the App Info tab<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added a select all option in the bottom bar in the main window in selection mode<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added links to source code and community<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added support for installing/updating apk files in the App Info tab (incomplete)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added an option to import existing disabled components in the Import/Export settings (incomplete)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added split apk information in App Info tab<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added an option to open Termux in the main window (incomplete)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Initial support for app banner<br />
-&#x2022; <font color="red">[Fix]</font> Fixed inconsistency of enable and disable in the App Info tab<br />
-&#x2022; <font color="red">[Fix]</font> Fixed issue with persistent app cache<br />
-&#x2022; <font color="red">[Fix]</font> Fixed scrolling issue on settings page<br />
-&#x2022; <font color="red">[Fix]</font> Fixed crashes when switching to the components tabs for non-root users<br />
-&#x2022; <font color="red">[Fix]</font> Fixed crash when trying to view summary while scanning is still in progress in the exodus page<br />
-&#x2022; <font color="red">[Fix]</font> Fixed crashes on devices that does not support data usage<br />
-&#x2022; <font color="red">[Fix]</font> Fixed crash when trying to view manifest of an split apk<br />
-&#x2022; <font color="red">[Fix]</font> Fixed wrong package installer name in the App Info<br />
-&#x2022; <font color="red">[Fix]</font> Fixed changelog formatting for old devices<br />
-<br />
-
-<h5>v2.5.9 (315):</h5>
-&#x2022; <font color="#09868B">[Feature]</font> Merged App Info as a single tab in App Details<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added option to reset all app ops<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added option to revoke all dangerous app ops/permissions<br />
-&#x2022; <font color="#09868B">[Feature]</font> Highlight trackers in the component tabs<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added option to save manifest and class dump<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added the ability to grant/revoke development permissions<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added sorting options for components, app ops and uses permissions tabs<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added sort by wifi usage in the App Usage window<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added launch button in the App Info tab<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added never ask option to usage status prompt<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added long click to select apps in the main window<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added changelog within the app<br />
-&#x2022; <font color="red">[Fix]</font> Click to select apps during selection mode<br />
-&#x2022; <font color="red">[Fix]</font> Improved component blocker<br />
-&#x2022; <font color="red">[Fix]</font> Improved manifest loading for large apps<br />
-&#x2022; <font color="red">[Fix]</font> Improved tab loading performance<br />
-&#x2022; <font color="red">[Fix]</font> Fixed app ops checking and custom app ops for some devices<br />
-&#x2022; <font color="red">[Fix]</font> Disabled activity opening for disabled activities<br />
-&#x2022; <font color="red">[Fix]</font> Get real activity name for activities that use activity-alias<br />
-&#x2022; <font color="red">[Fix]</font> Fixed background colors<br />
-&#x2022; <font color="red">[Fix]</font> Fixed crashing when loading the services tab for non-root users<br />
-&#x2022; <font color="red">[Fix]</font> Fixed back button for class viewer which was not working<br />
-&#x2022; <font color="red">[Fix]</font> Changed block icon's colour to accent colour<br />
-&#x2022; <font color="red">[Fix]</font> Removed translation until the app is complete<br />
-&#x2022; <font color="red">[Fix]</font> Made links in the credit section clickable<br />
-&#x2022; <font color="red">[Fix]</font> Fixed various memory leaks<br />
-<br/>

@@ -1,0 +1,7 @@
+F-Droid doesn't support extended changelog. View in-app changelog for a more helpful changelog.
+- New languages: bn and nb
+- UI improvement of backup/restore
+- Recommend splits in the apk chooser dialog
+- Option to downgrade
+- Various fixes and performance improvements.
+App data backup is still an experimental feature, please don't rely on it.
