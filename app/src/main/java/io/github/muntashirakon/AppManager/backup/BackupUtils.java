@@ -24,7 +24,6 @@ import org.json.JSONException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -57,9 +56,8 @@ public final class BackupUtils {
         else return new ArrayList<>();
         packages.remove(BackupFiles.APK_SAVING_DIRECTORY);
         packages.remove(BackupFiles.TEMPORARY_DIRECTORY);
-        for (Iterator<String> it = packages.iterator(); it.hasNext(); ) {
-            if (!MetadataManager.hasMetadata(it.next())) it.remove();
-        }
+        // We don't need to check the contents of the packages at this stage.
+        // It's the caller's job to check contents if needed.
         return packages;
     }
 
@@ -102,7 +100,7 @@ public final class BackupUtils {
         String[] fileNames = keyStorePath.list();
         if (fileNames != null) {
             String uidStr = String.valueOf(uid);
-            for (String fileName: fileNames) {
+            for (String fileName : fileNames) {
                 if (fileName.startsWith(uidStr)) return true;
             }
         }
