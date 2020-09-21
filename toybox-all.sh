@@ -50,8 +50,11 @@ export LDFLAGS="-s"
 # Copy to JNI dir: This is a clever workaround as Android doesn't have
 # any option to separate assets based on ABI
 jni_dir=../app/src/main/jniLibs
-target_name=toybox.so  # .so is appended to fool the gradle plugin
+target_name=libtoybox.so  # lib and .so is appended to fool Android into thinking that it's a JNI library
 target_dir=
+# Replace toybox with libtoybox in toys.h file
+sed -i 's|#define TOYBOX_NAME .*|#define TOYBOX_NAME "libtoybox"|' toys.h
+# Build and copy toybox to their respective directories
 for (( i = 0; i < 4; ++i )); do
     export AR="${TOOLCHAIN}/bin/${BIN_UTILS[i]}-ar"
     export AS="${TOOLCHAIN}/bin/${BIN_UTILS[i]}-as"

@@ -25,22 +25,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public abstract class Runner {
-    public static final int FAILED_RET_VAL = -500;  // An impossible value
     public static final String TOYBOX;
 
-    static final String TOYBOX_SO_NAME = "toybox.so";
-    static final String TOYBOX_BIN_NAME = "toybox";
-    static final boolean toyboxInJNIDir;
+    static final String TOYBOX_SO_NAME = "libtoybox.so";
+    static final File TOYBOX_SO_PATH;
+    static final File DEFAULT_TOYBOX_BIN_PATH;
 
     static {
-        File jniToybox = new File(AppManager.getContext().getApplicationInfo().nativeLibraryDir, TOYBOX_SO_NAME);
-        if (!jniToybox.exists()) {
-            jniToybox = new File(AppManager.getContext().getFilesDir(), TOYBOX_BIN_NAME);
-            toyboxInJNIDir = false;
-        } else toyboxInJNIDir = true;
-        TOYBOX = jniToybox.getAbsolutePath();
+        TOYBOX_SO_PATH = new File(AppManager.getContext().getApplicationInfo().nativeLibraryDir, TOYBOX_SO_NAME);
+        TOYBOX = TOYBOX_SO_PATH.getAbsolutePath();
+        // FIXME(21/9/20): We no longer need this unless Google removes executable permission from JNI directory as well
+        DEFAULT_TOYBOX_BIN_PATH = new File(PackageUtils.PACKAGE_STAGING_DIRECTORY, TOYBOX_SO_NAME);
     }
 
     public interface Result {
@@ -64,11 +62,11 @@ public abstract class Runner {
             isAdb = false;
             isRoot = false;
             if (AppPref.isRootEnabled()) {
-                runner = new RootShellRunner();
                 isRoot = true;
+                runner = new RootShellRunner();
             } else if (AppPref.isAdbEnabled()) {
-                runner = new AdbShellRunner();
                 isAdb = true;
+                runner = new AdbShellRunner();
             } else {
                 runner = new UserShellRunner();
             }
@@ -111,14 +109,6 @@ public abstract class Runner {
     }
 
     protected Runner() {
-        if (!toyboxInJNIDir) {
-            // Check if toybox is copied already
-            File toybox = new File(TOYBOX);
-            if (!toybox.exists()) {
-                // Need to copy toybox
-                RunnerUtils.copyToybox(new File(AppManager.getContext().getApplicationInfo().publicSourceDir), toybox);
-            }
-        }
         this.commands = new ArrayList<>();
     }
 
