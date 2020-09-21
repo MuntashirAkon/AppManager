@@ -34,6 +34,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import androidx.annotation.IntDef;
@@ -112,10 +113,17 @@ public class BackupDialogFragment extends DialogFragment {
         Bundle args = requireArguments();
         packageNames = args.getStringArrayList(ARG_PACKAGES);
         if (packageNames == null) return super.onCreateDialog(savedInstanceState);
-        // Check if backup exists for all apps
-        for (String packageName : packageNames) {
-            if (MetadataManager.hasMetadata(packageName)) {
+        if (packageNames.size() == 1) {
+            // Check for all meta, not just the base since we are going to display every backups
+            if (MetadataManager.hasAnyMetadata(packageNames.get(0))) {
                 ++baseBackupCount;
+            }
+        } else {
+            // Check if only for base meta
+            for (String packageName : packageNames) {
+                if (MetadataManager.hasBaseMetadata(packageName)) {
+                    ++baseBackupCount;
+                }
             }
         }
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
@@ -134,8 +142,6 @@ public class BackupDialogFragment extends DialogFragment {
         });
         if (baseBackupCount == packageNames.size()) {
             // Display restore and delete only if backups of all the selected package exist
-            // FIXME(19/9/20): Enable these option if only a single package is selected and
-            //  there are existing backups, just just the base backup.
             builder.setNegativeButton(R.string.restore, (dialog, which) -> {
                 mode = MODE_RESTORE;
                 if (requestExternalStoragePermissions(activity)) {
@@ -147,6 +153,10 @@ public class BackupDialogFragment extends DialogFragment {
                     handleMode();
                 }
             });
+        } else {
+            if (baseBackupCount == 1) {
+                packageNames.size();
+            }
         }
         return builder.create();
     }
@@ -167,8 +177,31 @@ public class BackupDialogFragment extends DialogFragment {
                 if (packageNames.size() == 1) {
                     // Only a single package is requested, display a list of existing backups to
                     // choose which of them are to be deleted
-                    // TODO(11/9/20): Display a list of backups
-                    startOperation(op, null);
+                    MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(packageNames.get(0));
+                    String[] backupNames = new String[metadata.length];
+                    String[] readableBackupNames = new String[metadata.length];
+                    boolean[] choices = new boolean[metadata.length];
+                    Arrays.fill(choices, false);
+                    for (int i = 0; i < backupNames.length; ++i) {
+                        backupNames[i] = metadata[i].backupName;
+                        readableBackupNames[i] = BackupUtils.getBackupName(backupNames[i]);
+                    }
+                    new MaterialAlertDialogBuilder(activity)
+                            .setTitle(PackageUtils.getPackageLabel(activity.getPackageManager(), packageNames.get(0)))
+                            .setMultiChoiceItems(readableBackupNames, choices,
+                                    (dialog, which, isChecked) -> choices[which] = isChecked)
+                            .setNegativeButton(R.string.cancel, null)
+                            .setPositiveButton(R.string.delete_backup, (dialog, which) -> {
+                                List<String> newBackupNames = new ArrayList<>(backupNames.length);
+                                for (int i = 0; i < backupNames.length; ++i) {
+                                    if (choices[i] && backupNames[i] != null) {
+                                        newBackupNames.add(backupNames[i]);
+                                    }
+                                }
+                                // backupNames arguments must not be null!!
+                                startOperation(op, newBackupNames.toArray(new String[0]));
+                            })
+                            .show();
                 } else if (baseBackupCount == packageNames.size()) {
                     // We shouldn't even check this since the restore option will only be visible
                     // if backup of all the packages exist

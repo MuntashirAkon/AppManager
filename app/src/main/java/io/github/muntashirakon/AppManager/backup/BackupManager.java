@@ -89,7 +89,7 @@ public class BackupManager {
 
     protected BackupManager(@NonNull String packageName, int flags) {
         this.packageName = packageName;
-        metadataManager = MetadataManager.getNewInstance(packageName);
+        metadataManager = MetadataManager.getNewInstance();
         requestedFlags = new BackupFlags(flags);
         if (requestedFlags.backupAllUsers()) {
             userHandles = Users.getUsersHandles();
@@ -170,12 +170,24 @@ public class BackupManager {
         return true;
     }
 
-    public boolean deleteBackup(String[]  backupNames) {
-        for (int userHandle : userHandles) {
-            BackupFiles backupFiles = new BackupFiles(packageName, userHandle, backupNames);
-            BackupFiles.BackupFile[] backupFileList = backupFiles.getBackupPaths(false);
-            for (BackupFiles.BackupFile backupFile : backupFileList) {
-                if (!backupFile.delete()) return false;
+    public boolean deleteBackup(@Nullable String[] backupNames) {
+        if (backupNames == null) {
+            // No backup names supplied, use user handle
+            for (int userHandle : userHandles) {
+                BackupFiles backupFiles = new BackupFiles(packageName, userHandle, null);
+                BackupFiles.BackupFile[] backupFileList = backupFiles.getBackupPaths(false);
+                for (BackupFiles.BackupFile backupFile : backupFileList) {
+                    if (!backupFile.delete()) return false;
+                }
+            }
+        } else {
+            // backupNames is not null but that doesn't mean that it's not empty,
+            // requested for only single backups
+            for (String backupName : backupNames) {
+                new BackupFiles.BackupFile(
+                        new PrivilegedFile(BackupFiles.getPackagePath(packageName), backupName),
+                        false
+                ).delete();
             }
         }
         return true;

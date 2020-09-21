@@ -29,6 +29,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import dalvik.system.VMRuntime;
@@ -47,6 +49,7 @@ public final class MetadataManager {
     // For an extended documentation, see https://github.com/MuntashirAkon/AppManager/issues/30
     // All the attributes must be non-null
     public static class Metadata {
+        public String backupName;  // This isn't part of the json file and for internal use only
         public String label;  // label
         public String packageName;  // package_name
         public String versionName;  // version_name
@@ -73,23 +76,53 @@ public final class MetadataManager {
     }
 
     @NonNull
-    public static MetadataManager getNewInstance(String packageName) {
-        return new MetadataManager(packageName);
+    public static MetadataManager getNewInstance() {
+        return new MetadataManager();
     }
 
-    public static boolean hasMetadata(String packageName) {
+    public static boolean hasAnyMetadata(String packageName) {
+        for (File file : getBackupFiles(packageName)) {
+            if (new PrivilegedFile(file, META_FILE).exists()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean hasBaseMetadata(String packageName) {
         PrivilegedFile backupPath = new PrivilegedFile(BackupFiles.getPackagePath(packageName),
                 String.valueOf(Users.getCurrentUserHandle()));
         return new PrivilegedFile(backupPath, META_FILE).exists();
     }
 
     @NonNull
-    private String packageName;
+    public static Metadata[] getMetadata(String packageName) {
+        File[] backupFiles = getBackupFiles(packageName);
+        List<Metadata> metadataList = new ArrayList<>(backupFiles.length);
+        for (File backupFile : backupFiles) {
+            try {
+                MetadataManager metadataManager = MetadataManager.getNewInstance();
+                metadataManager.readMetadata(new BackupFiles.BackupFile((PrivilegedFile) backupFile, false));
+                Metadata metadata = metadataManager.getMetadata();
+                metadata.backupName = backupFile.getName();
+                metadataList.add(metadata);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return metadataList.toArray(new Metadata[0]);
+    }
+
+    @NonNull
+    private static File[] getBackupFiles(String packageName) {
+        PrivilegedFile[] backupFiles = BackupFiles.getPackagePath(packageName).listFiles(pathname -> new PrivilegedFile(pathname).isDirectory());
+        return ArrayUtils.defeatNullable(backupFiles);
+    }
+
     private Metadata metadata;
     private AppManager appManager;
 
-    private MetadataManager(@NonNull String packageName) {
-        this.packageName = packageName;
+    private MetadataManager() {
         this.appManager = AppManager.getInstance();
     }
 
@@ -174,7 +207,7 @@ public final class MetadataManager {
         metadata.tarType = TarUtils.TAR_GZIP;  // FIXME: Load from user prefs
         metadata.keyStore = BackupUtils.hasKeyStore(applicationInfo.uid);
         metadata.label = applicationInfo.loadLabel(pm).toString();
-        metadata.packageName = packageName;
+        metadata.packageName = packageInfo.packageName;
         metadata.versionName = packageInfo.versionName;
         metadata.versionCode = PackageUtils.getVersionCode(packageInfo);
         metadata.apkName = new File(applicationInfo.sourceDir).getName();
@@ -200,7 +233,7 @@ public final class MetadataManager {
         metadata.splitNames = ArrayUtils.defeatNullable(metadata.splitNames);
         metadata.hasRules = false;
         if (requestedFlags.backupRules()) {
-            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName)) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageInfo.packageName)) {
                 metadata.hasRules = cb.entryCount() > 0;
             }
         }

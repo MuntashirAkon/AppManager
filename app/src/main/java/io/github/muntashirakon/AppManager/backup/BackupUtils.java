@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
+import android.text.TextUtils;
 import android.util.Pair;
 
 import org.json.JSONException;
@@ -38,7 +39,7 @@ public final class BackupUtils {
     @Nullable
     public static MetadataManager.Metadata getBackupInfo(String packageName) {
         try {
-            MetadataManager metadataManager = MetadataManager.getNewInstance(packageName);
+            MetadataManager metadataManager = MetadataManager.getNewInstance();
             PrivilegedFile backupPath = new PrivilegedFile(BackupFiles.getPackagePath(packageName), String.valueOf(Users.getCurrentUserHandle()));
             metadataManager.readMetadata(new BackupFiles.BackupFile(backupPath, false));
             return metadataManager.getMetadata();
@@ -105,5 +106,27 @@ public final class BackupUtils {
             }
         }
         return false;
+    }
+
+    static String getBackupName(@NonNull String backupFileName) {
+        //noinspection IfStatementWithIdenticalBranches We will remove the old style backup names in future
+        if (TextUtils.isDigitsOnly(backupFileName)) {
+            // It's already a user handle
+            return backupFileName;
+        } else {
+            int firstUnderscore = backupFileName.indexOf('_');
+            if (firstUnderscore != -1) {
+                // Found an underscore
+                String userHandle = backupFileName.substring(0, firstUnderscore);
+                if (TextUtils.isDigitsOnly(userHandle)) {
+                    // The new backup system
+                    return backupFileName.substring(firstUnderscore + 1);
+                }
+            }
+            // Could be the old naming style
+            // FIXME(21/9/20): Throw a runtime exception instead of returning a backup name
+            //  since we don't support old style names
+            return backupFileName;
+        }
     }
 }
