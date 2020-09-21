@@ -36,6 +36,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -177,14 +178,19 @@ public class BackupDialogFragment extends DialogFragment {
                 if (packageNames.size() == 1) {
                     // Only a single package is requested, display a list of existing backups to
                     // choose which of them are to be deleted
+                    // TODO(21/9/20): Replace with a custom alert dialog to display more info.
                     MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(packageNames.get(0));
                     String[] backupNames = new String[metadata.length];
                     String[] readableBackupNames = new String[metadata.length];
                     boolean[] choices = new boolean[metadata.length];
                     Arrays.fill(choices, false);
+                    String backupName;
+                    String userHandle;
                     for (int i = 0; i < backupNames.length; ++i) {
                         backupNames[i] = metadata[i].backupName;
-                        readableBackupNames[i] = BackupUtils.getBackupName(backupNames[i]);
+                        backupName = BackupUtils.getShortBackupName(backupNames[i]);
+                        userHandle = String.valueOf(metadata[i].userHandle);
+                        readableBackupNames[i] = backupName == null ? "Base backup for user " + userHandle : backupName + " for user " + userHandle;
                     }
                     new MaterialAlertDialogBuilder(activity)
                             .setTitle(PackageUtils.getPackageLabel(activity.getPackageManager(), packageNames.get(0)))
@@ -220,8 +226,30 @@ public class BackupDialogFragment extends DialogFragment {
                 if (packageNames.size() == 1) {
                     // Only a single package is requested, display a list of existing backups to
                     // choose which one to restore
-                    // TODO(11/9/20): Display a list of backups
-                    startOperation(op, null);
+                    // TODO(21/9/20): Replace with a custom alert dialog to display more info.
+                    MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(packageNames.get(0));
+                    String[] backupNames = new String[metadata.length];
+                    AtomicInteger selectedItem = new AtomicInteger(-1);
+                    String[] readableBackupNames = new String[metadata.length];
+                    String backupName;
+                    String userHandle;
+                    for (int i = 0; i < backupNames.length; ++i) {
+                        backupNames[i] = metadata[i].backupName;
+                        backupName = BackupUtils.getShortBackupName(backupNames[i]);
+                        userHandle = String.valueOf(metadata[i].userHandle);
+                        readableBackupNames[i] = backupName == null ? "Base backup for user " + userHandle : backupName + " for user " + userHandle;
+                    }
+                    new MaterialAlertDialogBuilder(activity)
+                            .setTitle(PackageUtils.getPackageLabel(activity.getPackageManager(), packageNames.get(0)))
+                            .setSingleChoiceItems(readableBackupNames, -1, (dialog, which) -> selectedItem.set(which))
+                            .setNegativeButton(R.string.cancel, null)
+                            .setPositiveButton(R.string.restore, (dialog, which) -> {
+                                if (selectedItem.get() != -1) {
+                                    // Do operation only if something is selected
+                                    startOperation(op, new String[]{backupNames[selectedItem.get()]});
+                                }
+                            })
+                            .show();
                 } else if (baseBackupCount == packageNames.size()) {
                     // We shouldn't even check this since the restore option will only be visible
                     // if backup of all the packages exist

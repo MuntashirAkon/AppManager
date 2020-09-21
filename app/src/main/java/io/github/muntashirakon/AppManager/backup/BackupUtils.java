@@ -108,11 +108,11 @@ public final class BackupUtils {
         return false;
     }
 
-    static String getBackupName(@NonNull String backupFileName) {
-        //noinspection IfStatementWithIdenticalBranches We will remove the old style backup names in future
+    @Nullable
+    static String getShortBackupName(@NonNull String backupFileName) {
         if (TextUtils.isDigitsOnly(backupFileName)) {
             // It's already a user handle
-            return backupFileName;
+            return null;
         } else {
             int firstUnderscore = backupFileName.indexOf('_');
             if (firstUnderscore != -1) {
@@ -127,6 +127,22 @@ public final class BackupUtils {
             // FIXME(21/9/20): Throw a runtime exception instead of returning a backup name
             //  since we don't support old style names
             return backupFileName;
+        }
+    }
+
+    static int getUserHandleFromBackupName(@NonNull String backupFileName) {
+        if (TextUtils.isDigitsOnly(backupFileName)) return Integer.parseInt(backupFileName);
+        else {
+            int firstUnderscore = backupFileName.indexOf('_');
+            if (firstUnderscore != -1) {
+                // Found an underscore
+                String userHandle = backupFileName.substring(0, firstUnderscore);
+                if (TextUtils.isDigitsOnly(userHandle)) {
+                    // The new backup system
+                    return Integer.parseInt(userHandle);
+                }
+            }
+            throw new IllegalArgumentException("Invalid backup name");
         }
     }
 }

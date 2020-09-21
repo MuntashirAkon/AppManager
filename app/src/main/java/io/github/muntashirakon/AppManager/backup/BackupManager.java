@@ -148,12 +148,22 @@ public class BackupManager {
             Log.e(RestoreOp.TAG, "Restore is requested without any flags.");
             return false;
         }
-        if (backupNames != null && backupNames.length > 1) {
+        if (backupNames != null && backupNames.length != 1) {
             Log.e(RestoreOp.TAG, "Restore is requested from more than one backups!");
             return false;
         }
+        int backupUserHandle = -1;
+        if (backupNames != null) {
+            // Strip userHandle from backup name
+            String backupName = BackupUtils.getShortBackupName(backupNames[0]);
+            backupUserHandle = BackupUtils.getUserHandleFromBackupName(backupNames[0]);
+            backupNames = new String[]{backupName};
+        }
         for (int userHandle : userHandles) {
-            BackupFiles backupFiles = new BackupFiles(packageName, userHandle, backupNames);
+            // Set backup userHandle to the userHandle we're working with.
+            // This value is only set if backupNames is null
+            if (backupUserHandle == -1) backupUserHandle = userHandle;
+            BackupFiles backupFiles = new BackupFiles(packageName, backupUserHandle, backupNames);
             BackupFiles.BackupFile[] backupFileList = backupFiles.getBackupPaths(false);
             // Only restore from the first backup though we shouldn't have more than one backup.
             if (backupFileList.length > 0) {
