@@ -46,6 +46,7 @@ public final class LangUtils {
         sLocaleMap.put("en", Locale.ENGLISH);
         sLocaleMap.put("de", Locale.GERMAN);
         sLocaleMap.put("nb-NO", new Locale("nb", "NO"));
+        sLocaleMap.put("pt", new Locale("pt"));
         sLocaleMap.put("pt-BR", new Locale("pt", "BR"));
         sLocaleMap.put("ru-RU", new Locale("ru", "RU"));
         sLocaleMap.put("zh-CN", Locale.SIMPLIFIED_CHINESE);
