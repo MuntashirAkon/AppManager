@@ -58,14 +58,14 @@
             android:label="@string/running_apps" />
         <activity
             android:name=".settings.SettingsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/app_settings" />
         <activity
             android:name=".sharedpref.SharedPrefsActivity"
             android:exported="false" />
         <activity
             android:name=".usage.AppUsageActivity"
-            android:exported="false"
-            android:permission="android.permission.PACKAGE_USAGE_STATS" />
+            android:exported="false" />
         <activity
             android:name=".details.ClassViewerActivity"
             android:exported="false" />
@@ -193,6 +193,10 @@
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.xapk" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".profiles.ProfilesActivity"
+            android:label="@string/profiles"
+            android:exported="false" />
         <activity
             android:name=".misc.AlertDialogActivity"
             android:excludeFromRecents="true"
