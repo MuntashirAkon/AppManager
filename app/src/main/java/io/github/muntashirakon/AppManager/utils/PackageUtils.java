@@ -51,6 +51,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -349,6 +350,24 @@ public final class PackageUtils {
             }
         }
         return new File(defaultPath).getParent();
+    }
+
+    public static boolean hasKeyStore(int uid) {
+        // For any app, the key path is as follows:
+        // /data/misc/keystore/user_{user_handle}/{uid}_{KEY_NAME}_{alias}
+        PrivilegedFile keyStorePath = new PrivilegedFile("/data/misc/keystore", "user_" + Users.getUserHandle(uid));
+        String[] fileNames = keyStorePath.list();
+        if (fileNames != null) {
+            String uidStr = String.valueOf(uid);
+            for (String fileName : fileNames) {
+                if (fileName.startsWith(uidStr)) return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean hasMasterKey(int uid) {
+        return new PrivilegedFile(new File("/data/misc/keystore/", "user_" + Users.getUserHandle(uid)), ".masterkey").exists();
     }
 
     @Nullable
