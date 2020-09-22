@@ -73,6 +73,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.misc.RequestCodes;
 import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
+import io.github.muntashirakon.AppManager.profiles.ProfilesActivity;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
@@ -478,6 +479,9 @@ public class MainActivity extends BaseActivity implements
                 Intent runningAppsIntent = new Intent(this, RunningAppsActivity.class);
                 startActivity(runningAppsIntent);
                 return true;
+            case R.id.action_profiles:
+                Intent profilesIntent = new Intent(this, ProfilesActivity.class);
+                startActivity(profilesIntent);
             default:
                 return super.onOptionsItemSelected(item);
         }

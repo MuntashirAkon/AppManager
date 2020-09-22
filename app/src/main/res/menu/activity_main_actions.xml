@@ -128,6 +128,11 @@
         android:title="@string/running_apps" />
 
     <item
+        android:id="@+id/action_profiles"
+        android:icon="@drawable/ic_view_list_black_24dp"
+        android:title="@string/profiles" />
+
+    <item
         android:id="@+id/action_apk_updater"
         android:icon="@drawable/ic_baseline_sync_24"
         android:title="@string/apk_updater" />
