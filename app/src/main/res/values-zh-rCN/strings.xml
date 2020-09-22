@@ -552,4 +552,6 @@
     <plurals name="backup_exists_are_you_sure">
         <item quantity="other">超过一个应用存在备份。你确定吗？</item>
     </plurals>
+    <string name="navigation_no_nav">无导航</string>
+    <string name="state_wake_kill">唤醒杀死</string>
 </resources>
