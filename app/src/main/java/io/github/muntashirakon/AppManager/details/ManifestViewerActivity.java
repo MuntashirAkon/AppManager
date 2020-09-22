@@ -22,9 +22,6 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
-import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -38,9 +35,6 @@ import android.widget.Toast;
 import com.google.android.material.progressindicator.ProgressIndicator;
 
 import net.dongliu.apk.parser.ApkParser;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -136,7 +130,9 @@ public class ManifestViewerActivity extends BaseActivity {
             }).start();
         } else {
             try {
-                setTitle(pm.getApplicationInfo(packageName, 0).loadLabel(pm));
+                ApplicationInfo applicationInfo = pm.getApplicationInfo(packageName, 0);
+                archiveFilePath = applicationInfo.publicSourceDir;
+                setTitle(applicationInfo.loadLabel(pm));
                 setWrapped();
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
@@ -206,10 +202,7 @@ public class ManifestViewerActivity extends BaseActivity {
                     e.printStackTrace();
                 }
                 if (code == null) {
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
-                        finish();
-                    });
+                    runOnUiThread(this::showErrorAndFinish);
                     return;
                 }
                 formattedContent = new SpannableString(code);
@@ -236,113 +229,7 @@ public class ManifestViewerActivity extends BaseActivity {
             ApkParser apkParser = new ApkParser(archiveFilePath);
             apkParser.setPreferredLocale(Locale.getDefault());
             code = Utils.getProperXml(apkParser.getManifestXml());
-        } else {
-            AssetManager mCurAm;
-            XmlResourceParser xml;
-            Resources mCurResources;
-            try {
-                // https://stackoverflow.com/questions/35474016/store-and-extract-map-from-android-resource-file
-                mCurAm = createPackageContext(packageName, CONTEXT_IGNORE_SECURITY
-                        | CONTEXT_INCLUDE_CODE).getAssets();
-                mCurResources = new Resources(mCurAm, getResources().getDisplayMetrics(), null);
-                xml = mCurAm.openXmlResourceParser("AndroidManifest.xml");
-                code = Utils.getProperXml(getXMLText(xml, mCurResources).toString());
-            } catch (IOException | PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
         }
-    }
-
-    protected static void insertSpaces(StringBuffer sb, int num) {
-        if (sb == null)
-            return;
-        for (int i = 0; i < num; i++)
-            sb.append(" ");
-    }
-
-    @NonNull
-    private static CharSequence getAttribs(@NonNull XmlResourceParser xrp, Resources currentResources) {
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < xrp.getAttributeCount(); i++) {
-            if (xrp.getAttributeName(i).length() != 0)
-                sb.append("\n").append(xrp.getAttributeName(i)).append("=\"").append(resolveValue(xrp.getAttributeValue(i), currentResources)).append("\"");
-            else
-                sb.append("\n").append(xrp.getAttributeType(i)).append(Integer.toHexString(xrp.getAttributeNameResource(i)))
-                        .append("=\"").append(resolveValue(xrp.getAttributeValue(i), currentResources)).append("\"");
-        }
-        return sb;
-    }
-
-    private static String resolveValue(String in, Resources r) {
-        if (in == null)
-            return "null";
-        if (!in.startsWith("@"))
-            return in;
-        int num = Integer.parseInt(in.substring(1));
-        try {
-            return r.getString(num).replaceAll("&", "&amp;")
-                    .replaceAll("\"", "&quot;")//
-                    .replaceAll("'", "&apos;")
-                    .replaceAll("<", "&lt;")
-                    .replaceAll(">", "&gt;");
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return in;
-        } catch (RuntimeException e) {
-            try {
-                if (r.getResourceEntryName(num).length() > 0)
-                    return r.getResourceTypeName(num) + "/" + r.getResourceEntryName(num);
-                else return r.getResourceTypeName(num) + "/" + in;
-            } catch (Resources.NotFoundException e2) {
-                e2.printStackTrace();
-                return in;
-            }
-        }
-    }
-
-    @NonNull
-    static CharSequence getXMLText(@NonNull XmlResourceParser xrp, Resources currentResources) {
-        StringBuffer sb = new StringBuffer();
-        int indent = 0;
-        try {
-            int eventType = xrp.getEventType();
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                switch (eventType) {
-                    case XmlPullParser.START_TAG:
-                        indent += 1;
-                        sb.append("\n");
-                        insertSpaces(sb, indent);
-                        sb.append("<").append(xrp.getName()).append(getAttribs(xrp, currentResources)).append(">");
-                        break;
-                    case XmlPullParser.END_TAG:
-                        indent -= 1;
-                        sb.append("\n");
-                        insertSpaces(sb, indent);
-                        sb.append("</").append(xrp.getName()).append(">");
-                        break;
-
-                    case XmlPullParser.TEXT:
-                        sb.append(xrp.getText());
-                        break;
-
-                    case XmlPullParser.CDSECT:
-                        sb.append("<!CDATA[").append(xrp.getText()).append("]]>");
-                        break;
-
-                    case XmlPullParser.PROCESSING_INSTRUCTION:
-                        sb.append("<?").append(xrp.getText()).append("?>");
-                        break;
-
-                    case XmlPullParser.COMMENT:
-                        sb.append("<!--").append(xrp.getText()).append("-->");
-                        break;
-                }
-                eventType = xrp.nextToken();
-            }
-        } catch (IOException | XmlPullParserException e) {
-            e.printStackTrace();
-        }
-        return sb;
     }
 
 }
