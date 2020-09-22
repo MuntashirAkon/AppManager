@@ -45,6 +45,7 @@ public class ProfileMetaManager {
     public static class Profile {
         public int type = 0;  // type
         public int version = 1;  // version
+        public boolean allowRoutine = true;  // allow_routine
         @Nullable
         private String state;  // state
         @NonNull
@@ -128,6 +129,9 @@ public class ProfileMetaManager {
         profile = new Profile(profileName, packageNames);
         profile.type = profileObj.getInt("type");
         profile.version = profileObj.getInt("version");
+        try {
+            profile.allowRoutine = profileObj.getBoolean("allow_routine");
+        } catch (JSONException ignore) {}
         profile.state = JSONUtils.getStringOrNull(profileObj, "state");
         try {
             profile.components = JSONUtils.getArray(String.class, profileObj.getJSONArray("components"));
@@ -173,6 +177,10 @@ public class ProfileMetaManager {
             JSONObject profileObj = new JSONObject();
             profileObj.put("type", profile.type);
             profileObj.put("version", profile.version);
+            if (!profile.allowRoutine) {
+                // Only save allow_routine if it's set to false
+                profileObj.put("allow_routine", false);
+            }
             profileObj.put("name", profile.name);
             profileObj.put("state", profile.state);
             profileObj.put("packages", JSONUtils.getJSONArray(profile.packages));
