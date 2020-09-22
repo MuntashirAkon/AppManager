@@ -256,7 +256,7 @@ public class BackupManager {
         boolean runBackup() {
             // Fail backup if the app has items in Android KeyStore
             // TODO(#82): Implement a clever mechanism to retrieve keys from Android keystore
-            if (metadata.keyStore) {
+            if (backupFlags.backupData() && metadata.keyStore) {
                 Log.e(TAG, "Cannot backup app as it has keystore items.");
                 return backupFile.cleanup();
             }
