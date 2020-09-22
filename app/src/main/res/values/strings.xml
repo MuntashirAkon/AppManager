@@ -624,4 +624,6 @@
     <string name="presets">Presets</string>
     <string name="no_profiles">No profiles</string>
     <string name="keystore">KeyStore</string>
+    <string name="apply_now">Apply now...</string>
+    <string name="routine_ops">Routine ops</string>
 </resources>

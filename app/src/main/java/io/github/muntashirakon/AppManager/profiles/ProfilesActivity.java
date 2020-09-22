@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -41,7 +40,9 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
@@ -92,6 +93,7 @@ public class ProfilesActivity extends BaseActivity {
         private String[] mDefaultList;
         private String[] mAdapterList;
         private HashMap<String, String> mAdapterMap;
+        private FragmentActivity activity;
 
         private int mColorTransparent;
         private int mColorSemiTransparent;
@@ -102,7 +104,8 @@ public class ProfilesActivity extends BaseActivity {
             TextView item_value;
         }
 
-        ProfilesAdapter(@NonNull Activity activity) {
+        ProfilesAdapter(@NonNull FragmentActivity activity) {
+            this.activity = activity;
             mLayoutInflater = activity.getLayoutInflater();
 
             mColorTransparent = Color.TRANSPARENT;
@@ -155,6 +158,17 @@ public class ProfilesActivity extends BaseActivity {
             String strValue = (value != null) ? value.toString() : "";
             viewHolder.item_value.setText(strValue);
             convertView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
+            convertView.setOnClickListener(v -> {
+                // TODO(23/9/20): Direct to ProfileActivity
+            });
+            View finalConvertView = convertView;
+            convertView.setOnLongClickListener(v -> {
+                PopupMenu popupMenu = new PopupMenu(activity, finalConvertView);
+                popupMenu.inflate(R.menu.activity_profiles_popup_actions);
+                // TODO(23/9/20): Process popup menu
+                popupMenu.show();
+                return true;
+            });
             return convertView;
         }
 
