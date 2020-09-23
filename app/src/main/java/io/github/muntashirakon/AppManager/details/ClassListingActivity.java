@@ -98,14 +98,17 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     private static String mConstraint;
     private String mPackageName;
     private ParcelFileDescriptor fd;
-    private File archiveFile;
+    private File apkFile;
 
     @Override
     protected void onDestroy() {
         IOUtils.deleteDir(new File(getCacheDir().getParent(), APP_DEX));
         IOUtils.deleteDir(getCodeCacheDir());
         IOUtils.closeSilently(fd);
-        IOUtils.deleteSilently(archiveFile);
+        if (!apkFile.getAbsolutePath().startsWith("/data/app/")) {
+            // Only attempt to delete the apk file if it's cached
+            IOUtils.deleteSilently(apkFile);
+        }
         super.onDestroy();
     }
 
@@ -150,8 +153,8 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         mProgressIndicator = findViewById(R.id.progress_linear);
         showProgress(true);
 
-        final Uri uriFromIntent = intent.getData();
-        if (uriFromIntent == null) {
+        final Uri apkUri = intent.getData();
+        if (apkUri == null) {
             Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
             finish();
             return;
@@ -159,19 +162,19 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
 
         if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
             try {
-                fd = getContentResolver().openFileDescriptor(uriFromIntent, "r");
+                fd = getContentResolver().openFileDescriptor(apkUri, "r");
                 if (fd == null) {
                     throw new FileNotFoundException("FileDescription cannot be null");
                 }
-                archiveFile = IOUtils.getFileFromFd(fd);
+                apkFile = IOUtils.getFileFromFd(fd);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         } else {
-            String path = uriFromIntent.getPath();
-            if (path != null) archiveFile = new File(path);
+            String path = apkUri.getPath();
+            if (path != null) apkFile = new File(path);
         }
-        if (archiveFile == null) {
+        if (apkFile == null) {
             Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
             finish();
             return;
@@ -179,12 +182,12 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
 
         new Thread(() -> {
             classList = new ArrayList<>();
-            packageInfo = "<b>" + getString(R.string.source_dir) + ": </b>" + uriFromIntent.toString() + "\n";
+            packageInfo = "<b>" + getString(R.string.source_dir) + ": </b>" + apkUri.toString() + "\n";
             tracker_names = StaticDataset.getTrackerNames();
             signatures = StaticDataset.getTrackerCodeSignatures();
             try {
                 final byte[] bytes;
-                try (InputStream uriStream = getContentResolver().openInputStream(uriFromIntent)) {
+                try (InputStream uriStream = getContentResolver().openInputStream(apkUri)) {
                     bytes = IOUtils.readFully(uriStream, -1, true);
                 }
                 new FillClassesNamesThread(bytes).start();
@@ -328,15 +331,15 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                 } catch (NoSuchAlgorithmException ignored) {
                 }
                 // Test if this path is readable
-                if (!archiveFile.exists() || !archiveFile.canRead()) {
+                if (!apkFile.exists() || !apkFile.canRead()) {
                     try {
-                        archiveFile = IOUtils.getCachedFile(bytes);
+                        apkFile = IOUtils.getCachedFile(bytes);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
                 final PackageManager pm = getApplicationContext().getPackageManager();
-                final String archiveFilePath = archiveFile.getAbsolutePath();
+                final String archiveFilePath = apkFile.getAbsolutePath();
                 @SuppressLint("WrongConstant")
                 PackageInfo packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
                 if (packageInfo != null) {
@@ -355,7 +358,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                 } else {
                     ClassListingActivity.this.packageInfo += "\n<i><b>FAILED to retrieve PackageInfo!</b></i>";
                 }
-                classListAll = PackageUtils.getClassNames(archiveFile);
+                classListAll = PackageUtils.getClassNames(apkFile);
                 totalClassesScanned = classListAll.size();
                 StringBuilder found = new StringBuilder();
                 signatureCount = new int[signatures.length];
