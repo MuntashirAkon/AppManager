@@ -287,7 +287,7 @@ public final class ApkFile implements AutoCloseable {
         Entry tmpEntry;
         while (it.hasNext()) {
             tmpEntry = it.next();
-            if (tmpEntry.selected) selectedEntries.add(tmpEntry);
+            if (tmpEntry.isSelected() || tmpEntry.isRequired()) selectedEntries.add(tmpEntry);
         }
         return selectedEntries;
     }
