@@ -358,7 +358,7 @@ public final class PackageUtils {
         PrivilegedFile keyStorePath = new PrivilegedFile("/data/misc/keystore", "user_" + Users.getUserHandle(uid));
         String[] fileNames = keyStorePath.list();
         if (fileNames != null) {
-            String uidStr = String.valueOf(uid);
+            String uidStr = uid + "_";
             for (String fileName : fileNames) {
                 if (fileName.startsWith(uidStr)) return true;
             }
