@@ -560,4 +560,41 @@
     </plurals>
     <string name="orientation_user_landscape">Horizontale Ansicht</string>
     <string name="orientation_user_portrait">Vertikale Ansicht</string>
+    <string name="routine_ops">Routineoperationen</string>
+    <string name="apply_now">Jetzt anmelden...</string>
+    <string name="keystore">Schlüsselspeicher</string>
+    <string name="no_profiles">Keine Profile</string>
+    <string name="presets">Voreinstellungen</string>
+    <string name="profiles">Profile</string>
+    <string name="pref_open_pgp_provider_msg">Durch Hinzufügen eines OpenPGP-Anbieters können Sie vertrauliche Informationen wie App-Datensicherungen verschlüsseln</string>
+    <string name="open_pgp_provider">OpenPGP-Anbieter</string>
+    <string name="systemless_app">Systemlose App</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="ok">okay</string>
+    <string name="input_backup_name_description">Die Bezeichnung der Sicherung sollte weder mit einer Ziffer beginnen, noch Leerzeichen enthalten. Lassen Sie es leer, wenn Sie das aktuelle Datum und die aktuelle Uhrzeit verwenden möchten.</string>
+    <string name="input_backup_name">Bezeichnung der Sicherung</string>
+    <string name="downgrade_not_possible">Ein Downgrade ist ohne Root oder ADB nicht möglich</string>
+    <string name="downgrade">Zurückstufen</string>
+    <string name="process_state_with_extra">Zustand: %s (%s)</string>
+    <string name="process_state">Zustand: %s</string>
+    <string name="state_multithreaded">mehrfach</string>
+    <string name="state_foreground">Vordergrund</string>
+    <string name="state_session_leader">Sitzungsleiter</string>
+    <string name="state_locked_memory">Gesperrter Speicher</string>
+    <string name="state_low_priority">Geringe Priorität</string>
+    <string name="state_high_priority">Hohe Priorität</string>
+    <string name="state_unknown">unbekannt</string>
+    <string name="state_waking">Aufwachen</string>
+    <string name="state_wake_kill">Aufwachen abbrechen</string>
+    <string name="state_idle">untätig</string>
+    <string name="state_parked">geparkt</string>
+    <string name="state_zombie">Zombie</string>
+    <string name="state_dead">tot</string>
+    <string name="state_trace_stop">Spurensuche stoppen</string>
+    <string name="state_device_io">Gerät I/O</string>
+    <string name="state_sleeping">ruhend</string>
+    <plurals name="backup_exists_are_you_sure">
+        <item quantity="one">Sind Sie sicher, dass ein Backup vorhanden ist\?</item>
+        <item quantity="other">Sind Sie sicher, dass ein Backup für mehr als eine Anwendung vorhanden ist\?</item>
+    </plurals>
 </resources>
