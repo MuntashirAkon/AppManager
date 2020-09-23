@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.sharedpref;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -55,7 +54,6 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
@@ -153,13 +151,9 @@ public class SharedPrefsActivity extends BaseActivity implements
         new SharedPrefsReaderThread().start();
     }
 
-    @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_shared_prefs_actions, menu);
-        if (menu instanceof MenuBuilder) {
-            ((MenuBuilder) menu).setOptionalIconsVisible(true);
-        }
         return super.onCreateOptionsMenu(menu);
     }
 

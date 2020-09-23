@@ -47,7 +47,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.UiThread;
-import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.BaseActivity;
@@ -153,13 +152,9 @@ public class ManifestViewerActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_any_viewer_actions, menu);
-        if (menu instanceof MenuBuilder) {
-            ((MenuBuilder) menu).setOptionalIconsVisible(true);
-        }
         return super.onCreateOptionsMenu(menu);
     }
 

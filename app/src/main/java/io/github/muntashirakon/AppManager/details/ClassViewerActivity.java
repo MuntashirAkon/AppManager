@@ -19,7 +19,6 @@ package io.github.muntashirakon.AppManager.details;
 
 // NOTE: Some patterns here are taken from https://github.com/billthefarmer/editor
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -40,7 +39,6 @@ import java.util.regex.Pattern;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.BaseActivity;
@@ -170,13 +168,9 @@ public class ClassViewerActivity extends BaseActivity {
         }).start();
     }
 
-    @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_any_viewer_actions, menu);
-        if (menu instanceof MenuBuilder) {
-            ((MenuBuilder) menu).setOptionalIconsVisible(true);
-        }
         return super.onCreateOptionsMenu(menu);
     }
 

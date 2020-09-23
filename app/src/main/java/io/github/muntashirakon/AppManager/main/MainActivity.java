@@ -298,7 +298,6 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
-    @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main_actions, menu);
@@ -320,9 +319,6 @@ public class MainActivity extends BaseActivity implements
             termuxMenu.setVisible(true);
         } catch (PackageManager.NameNotFoundException e) {
             termuxMenu.setVisible(false);
-        }
-        if (menu instanceof MenuBuilder) {
-            ((MenuBuilder) menu).setOptionalIconsVisible(true);
         }
         return super.onCreateOptionsMenu(menu);
     }

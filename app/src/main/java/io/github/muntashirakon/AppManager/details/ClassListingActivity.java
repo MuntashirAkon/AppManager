@@ -59,7 +59,6 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
@@ -218,13 +217,9 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         return true;
     }
 
-    @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_class_listing_actions, menu);
-        if (menu instanceof MenuBuilder) {
-            ((MenuBuilder) menu).setOptionalIconsVisible(true);
-        }
         return super.onCreateOptionsMenu(menu);
     }
 

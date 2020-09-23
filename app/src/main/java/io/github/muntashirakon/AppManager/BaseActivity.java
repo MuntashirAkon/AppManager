@@ -17,14 +17,17 @@
 
 package io.github.muntashirakon.AppManager;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Menu;
 
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.view.menu.MenuBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 
@@ -47,5 +50,14 @@ public class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (currentLocale != LangUtils.getLocaleByLanguage()) recreate();
+    }
+
+    @SuppressLint("RestrictedApi")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (menu instanceof MenuBuilder) {
+            ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        }
+        return super.onCreateOptionsMenu(menu);
     }
 }

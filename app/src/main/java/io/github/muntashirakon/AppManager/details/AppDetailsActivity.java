@@ -17,14 +17,12 @@
 
 package io.github.muntashirakon.AppManager.details;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -37,7 +35,6 @@ import java.io.IOException;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -144,15 +141,6 @@ public class AppDetailsActivity extends BaseActivity {
                 });
             });
         }).start();
-    }
-
-    @SuppressLint("RestrictedApi")
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (menu instanceof MenuBuilder) {
-            ((MenuBuilder) menu).setOptionalIconsVisible(true);
-        }
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
