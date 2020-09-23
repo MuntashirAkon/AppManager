@@ -1,2 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="disclaimer_footer">© 2020 Muntashir Al-Islam</string>
+    <string name="disclaimer_header">ANSVARSFRASKRIVELSE</string>
+    <string name="disclaimer_exit">Avslutt</string>
+    <string name="disclaimer_agree">Jeg samtykker</string>
+    <string name="disclaimer_agree_forever">Aldri vis dette igjen</string>
+</resources>
