@@ -82,6 +82,7 @@ public class SplitApkChooser extends DialogFragment {
                 case ApkFile.APK_SPLIT_DENSITY:
                     if (!seenSplit.get(ApkFile.APK_SPLIT_DENSITY)) {
                         seenSplit.put(ApkFile.APK_SPLIT_DENSITY, choices[i] = true);
+                        apkFile.select(i);
                     }
                     if (apkEntry.forFeature != null) {
                         name = getString(R.string.density_split_for_feature, apkEntry.splitSuffix, apkEntry.getDensity(), apkEntry.forFeature);
@@ -92,6 +93,7 @@ public class SplitApkChooser extends DialogFragment {
                 case ApkFile.APK_SPLIT_ABI:
                     if (!seenSplit.get(ApkFile.APK_SPLIT_ABI)) {
                         seenSplit.put(ApkFile.APK_SPLIT_ABI, choices[i] = true);
+                        apkFile.select(i);
                     }
                     if (apkEntry.forFeature != null) {
                         name = getString(R.string.abi_split_for_feature, apkEntry.getAbi(), apkEntry.forFeature);
@@ -102,6 +104,7 @@ public class SplitApkChooser extends DialogFragment {
                 case ApkFile.APK_SPLIT_LOCALE:
                     if (!seenSplit.get(ApkFile.APK_SPLIT_LOCALE)) {
                         seenSplit.put(ApkFile.APK_SPLIT_LOCALE, choices[i] = true);
+                        apkFile.select(i);
                     }
                     if (apkEntry.forFeature != null) {
                         name = getString(R.string.locale_split_for_feature, apkEntry.getLocale().getDisplayLanguage(), apkEntry.forFeature);
