@@ -554,4 +554,8 @@
     </plurals>
     <string name="navigation_no_nav">无导航</string>
     <string name="state_wake_kill">唤醒杀死</string>
+    <string name="profiles">配置</string>
+    <string name="presets">预设</string>
+    <string name="no_profiles">无配置</string>
+    <string name="keystore">密钥库</string>
 </resources>
