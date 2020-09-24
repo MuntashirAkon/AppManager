@@ -232,11 +232,11 @@ public class BackupDialogFragment extends DialogFragment {
                     AtomicInteger selectedItem = new AtomicInteger(-1);
                     String[] readableBackupNames = new String[metadata.length];
                     String backupName;
-                    String userHandle;
+                    int userHandle;
                     for (int i = 0; i < backupNames.length; ++i) {
                         backupNames[i] = metadata[i].backupName;
                         backupName = BackupUtils.getShortBackupName(backupNames[i]);
-                        userHandle = String.valueOf(metadata[i].userHandle);
+                        userHandle = metadata[i].userHandle;
                         readableBackupNames[i] = backupName == null ? "Base backup for user " + userHandle : backupName + " for user " + userHandle;
                     }
                     new MaterialAlertDialogBuilder(activity)
@@ -246,6 +246,10 @@ public class BackupDialogFragment extends DialogFragment {
                             .setPositiveButton(R.string.restore, (dialog, which) -> {
                                 if (selectedItem.get() != -1) {
                                     // Do operation only if something is selected
+                                    // Send a singleton array consisting of the chosen backup name.
+                                    // Here, the backup name is the full name of the folder itself,
+                                    // not just the “short” ie. the user handle is not stripped and
+                                    // the argument must not be null.
                                     startOperation(op, new String[]{backupNames[selectedItem.get()]});
                                 }
                             })

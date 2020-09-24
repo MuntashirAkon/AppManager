@@ -143,6 +143,14 @@ public class BackupManager {
         } else return null; // Overwrite existing backup
     }
 
+    /**
+     * Restore a single backup but could be for all users
+     * @param backupNames Backup names is a singleton array consisting of the full name of a backup.
+     *                    Full name means backup name along with the user handle, ie., for user 0,
+     *                    the full name of base backup is {@code 0} and the full name of another
+     *                    backup {@code foo} is {@code 0_foo}.
+     * @return {@code true} on success and {@code false} on failure
+     */
     public boolean restore(@Nullable String[] backupNames) {
         if (requestedFlags.isEmpty()) {
             Log.e(RestoreOp.TAG, "Restore is requested without any flags.");
@@ -157,16 +165,26 @@ public class BackupManager {
             // Strip userHandle from backup name
             String backupName = BackupUtils.getShortBackupName(backupNames[0]);
             backupUserHandle = BackupUtils.getUserHandleFromBackupName(backupNames[0]);
-            backupNames = new String[]{backupName};
+            if (backupName != null) {
+                // There's a backup name, not just user handle
+                backupNames = new String[]{backupName};
+            } else {
+                // There's only user handle. Set backupNames to null to restore base backup goes
+                // by the name
+                backupNames = null;
+            }
         }
         for (int userHandle : userHandles) {
             // Set backup userHandle to the userHandle we're working with.
-            // This value is only set if backupNames is null
+            // This value is only set if backupNames is null or it consisted of only user handle
             if (backupUserHandle == -1) backupUserHandle = userHandle;
             BackupFiles backupFiles = new BackupFiles(packageName, backupUserHandle, backupNames);
             BackupFiles.BackupFile[] backupFileList = backupFiles.getBackupPaths(false);
             // Only restore from the first backup though we shouldn't have more than one backup.
             if (backupFileList.length > 0) {
+                if (backupFileList.length > 1) {
+                    Log.w(RestoreOp.TAG, "More than one backups found!");
+                }
                 try {
                     RestoreOp restoreOp = new RestoreOp(backupFileList[0], userHandle);
                     if (!restoreOp.runRestore()) return false;
@@ -175,6 +193,8 @@ public class BackupManager {
                     Log.e(RestoreOp.TAG, e.getMessage(), e);
                     return false;
                 }
+            } else {
+                Log.e(RestoreOp.TAG, "No backups found.");
             }
         }
         return true;
