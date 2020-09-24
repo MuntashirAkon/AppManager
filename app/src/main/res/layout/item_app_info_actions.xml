@@ -26,7 +26,7 @@
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardBackgroundColor="@android:color/transparent"
-    app:cardCornerRadius="0dp"
+    app:cardCornerRadius="@dimen/padding_medium"
     app:cardElevation="0dp">
 
     <TextView
