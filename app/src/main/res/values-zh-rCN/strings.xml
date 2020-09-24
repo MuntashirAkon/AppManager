@@ -558,4 +558,6 @@
     <string name="presets">预设</string>
     <string name="no_profiles">无配置</string>
     <string name="keystore">密钥库</string>
+    <string name="routine_ops">日常操作</string>
+    <string name="apply_now">现在应用...</string>
 </resources>
