@@ -18,9 +18,11 @@
 package io.github.muntashirakon.AppManager.runningapps;
 
 import android.app.Application;
+import android.content.pm.ApplicationInfo;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,12 +31,18 @@ import java.util.Objects;
 import java.util.Set;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public class RunningAppsViewModel extends AndroidViewModel {
+    @RunningAppsActivity.SortOrder
+    private int sortOrder = RunningAppsActivity.SORT_BY_PID;
+    @RunningAppsActivity.Filter
+    private int filter = RunningAppsActivity.FILTER_NONE;
+
     public RunningAppsViewModel(@NonNull Application application) {
         super(application);
     }
@@ -87,8 +95,8 @@ public class RunningAppsViewModel extends AndroidViewModel {
 
     private String query;
 
-    public void setQuery(String query) {
-        this.query = query;
+    public void setQuery(@Nullable String query) {
+        this.query = query == null ? null : query.toLowerCase(Locale.ROOT);
         new Thread(this::filterAndSort).start();
     }
 
@@ -96,18 +104,81 @@ public class RunningAppsViewModel extends AndroidViewModel {
         return query;
     }
 
+    public void setSortOrder(int sortOrder) {
+        this.sortOrder = sortOrder;
+        new Thread(this::filterAndSort).start();
+    }
+
+    public int getSortOrder() {
+        return sortOrder;
+    }
+
+    public void addFilter(int filter) {
+        this.filter |= filter;
+        new Thread(this::filterAndSort).start();
+    }
+
+    public void removeFilter(int filter) {
+        this.filter &= ~filter;
+        new Thread(this::filterAndSort).start();
+    }
+
+    public int getFilter() {
+        return filter;
+    }
+
     @WorkerThread
     public void filterAndSort() {
         filteredProcessList.clear();
-        if (!TextUtils.isEmpty(query)) {
-            for (int item : processList.keySet()) {
-                if (Objects.requireNonNull(processList.get(item)).name
-                        .toLowerCase(Locale.ROOT).contains(query)) {
-                    filteredProcessList.add(item);
-                }
+        // Apply filters
+        // There are 3 filters with “and” relations: query > apps > user apps
+        boolean hasQuery = !TextUtils.isEmpty(query);
+        boolean filterUserApps = (filter & RunningAppsActivity.FILTER_USER_APPS) != 0;
+        // If user apps filter is enabled, disable it since it'll be just an overhead
+        boolean filterApps = !filterUserApps && (filter & RunningAppsActivity.FILTER_APPS) != 0;
+        ProcessItem processItem;
+        ApplicationInfo info;
+        for (int item : originalProcessList) {
+            // Process items are always nonNull
+            processItem = Objects.requireNonNull(processList.get(item));
+            // Filter by query
+            if (hasQuery && !processItem.name.toLowerCase(Locale.ROOT).contains(query)) {
+                continue;
             }
-        } else filteredProcessList.addAll(originalProcessList);
-        // TODO: Apply filters and sorting
+            // Filter by apps
+            if (filterApps && !(processItem instanceof AppProcessItem)) {
+                continue;
+            }
+            // Filter by user apps
+            if (filterUserApps) {
+                if (processItem instanceof AppProcessItem) {
+                    info = ((AppProcessItem) processItem).packageInfo.applicationInfo;
+                    if ((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) continue;
+                    // else it's an user app
+                } else continue;
+            }
+            filteredProcessList.add(item);
+        }
+        // Apply sorts
+        // Sort by pid first
+        Collections.sort(filteredProcessList);
+        if (sortOrder != RunningAppsActivity.SORT_BY_PID) {
+            Collections.sort(filteredProcessList, (o1, o2) -> {
+                ProcessItem p1 = Objects.requireNonNull(processList.get(o1));
+                ProcessItem p2 = Objects.requireNonNull(processList.get(o2));
+                switch (sortOrder) {
+                    case RunningAppsActivity.SORT_BY_APPS_FIRST:
+                        return -Boolean.compare(p1 instanceof AppProcessItem, p2 instanceof AppProcessItem);
+                    case RunningAppsActivity.SORT_BY_MEMORY_USAGE:
+                        return -Long.compare(p1.rss, p2.rss);
+                    case RunningAppsActivity.SORT_BY_PROCESS_NAME:
+                        return p1.name.compareToIgnoreCase(p2.name);
+                    case RunningAppsActivity.SORT_BY_PID:
+                    default:
+                        return Integer.compare(p1.pid, p2.pid);
+                }
+            });
+        }
         processLiveData.postValue(filteredProcessList);
     }
 

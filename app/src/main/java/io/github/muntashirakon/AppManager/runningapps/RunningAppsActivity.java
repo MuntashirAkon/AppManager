@@ -28,6 +28,10 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
@@ -42,8 +46,43 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class RunningAppsActivity extends BaseActivity implements
         SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
+
+    @IntDef(value = {
+            SORT_BY_PID,
+            SORT_BY_PROCESS_NAME,
+            SORT_BY_APPS_FIRST,
+            SORT_BY_MEMORY_USAGE,
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface SortOrder {
+    }
+
+    public static final int SORT_BY_PID = 0;
+    public static final int SORT_BY_PROCESS_NAME = 1;
+    public static final int SORT_BY_APPS_FIRST = 2;
+    public static final int SORT_BY_MEMORY_USAGE = 3;
+
+    @IntDef(value = {
+            FILTER_NONE,
+            FILTER_APPS,
+            FILTER_USER_APPS
+    }, flag = true)
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Filter {
+    }
+
+    public static final int FILTER_NONE = 0;
+    public static final int FILTER_APPS = 1;
+    public static final int FILTER_USER_APPS = 1 << 1;
+
     static String mConstraint;
     static boolean enableKillForSystem = false;
+    private static final int[] sortOrderIds = new int[]{
+            R.id.action_sort_by_pid,
+            R.id.action_sort_by_process_name,
+            R.id.action_sort_by_apps_first,
+            R.id.action_sort_by_memory_usage,
+    };
 
     private RunningAppsAdapter mAdapter;
     private ProgressIndicator mProgressIndicator;
@@ -97,6 +136,15 @@ public class RunningAppsActivity extends BaseActivity implements
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
+        menu.findItem(sortOrderIds[mModel.getSortOrder()]).setChecked(true);
+        int filter = mModel.getFilter();
+        menu.findItem(R.id.action_filter_apps).setChecked((filter & FILTER_APPS) != 0);
+        menu.findItem(R.id.action_filter_user_apps).setChecked((filter & FILTER_USER_APPS) != 0);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -105,7 +153,36 @@ public class RunningAppsActivity extends BaseActivity implements
             case R.id.action_toggle_kill:
                 enableKillForSystem = !enableKillForSystem;
                 AppPref.set(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL, enableKillForSystem);
+            case R.id.action_refresh:
                 refresh();
+                return true;
+            // Sort
+            case R.id.action_sort_by_pid:
+                mModel.setSortOrder(SORT_BY_PID);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_by_process_name:
+                mModel.setSortOrder(SORT_BY_PROCESS_NAME);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_by_apps_first:
+                mModel.setSortOrder(SORT_BY_APPS_FIRST);
+                item.setChecked(true);
+                return true;
+            case R.id.action_sort_by_memory_usage:
+                mModel.setSortOrder(SORT_BY_MEMORY_USAGE);
+                item.setChecked(true);
+                return true;
+            // Filter
+            case R.id.action_filter_apps:
+                if ((mModel.getFilter() & FILTER_APPS) == 0) mModel.addFilter(FILTER_APPS);
+                else mModel.removeFilter(FILTER_APPS);
+                item.setChecked((mModel.getFilter() & FILTER_APPS) != 0);
+                return true;
+            case R.id.action_filter_user_apps:
+                if ((mModel.getFilter() & FILTER_USER_APPS) == 0) mModel.addFilter(FILTER_USER_APPS);
+                else mModel.removeFilter(FILTER_USER_APPS);
+                item.setChecked((mModel.getFilter() & FILTER_APPS) != 0);
                 return true;
         }
         return super.onOptionsItemSelected(item);

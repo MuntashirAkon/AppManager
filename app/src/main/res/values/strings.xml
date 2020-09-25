@@ -624,6 +624,15 @@
     <string name="presets">Presets</string>
     <string name="no_profiles">No profiles</string>
     <string name="keystore">KeyStore</string>
-    <string name="apply_now">Apply now...</string>
+    <string name="apply_now">Apply now…</string>
     <string name="routine_ops">Routine ops</string>
+    <string name="apps">Apps</string>
+    <string name="no_apps">No apps</string>
+    <string name="filter_apps">Apps</string>
+    <string name="sort_by_process_id">Process ID</string>
+    <string name="sort_by_process_name">Process name</string>
+    <string name="sort_by_apps_first">Apps first</string>
+    <string name="sort_by_user_apps_first">User apps first</string>
+    <string name="sort_by_memory_usage">Memory usage</string>
+    <string name="sort_by_priority">Priority</string>
 </resources>
