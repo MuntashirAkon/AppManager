@@ -116,6 +116,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
             stateInfo = mActivity.getString(R.string.process_state_with_extra, processItem.state, processItem.state_extra);
         }
         holder.userAndStateInfo.setText(String.format("%s, %s", userInfo, stateInfo));
+        holder.selinuxContext.setText(String.format("SELinux: %s", processItem.context));
         // Set more
         holder.more.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(mActivity, holder.more);
@@ -212,6 +213,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
         TextView processIds;
         TextView memoryUsage;
         TextView userAndStateInfo;
+        TextView selinuxContext;
         IconLoaderThread iconLoader;
 
         public ViewHolder(@NonNull View itemView) {
@@ -223,6 +225,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
             processIds = itemView.findViewById(R.id.process_ids);
             memoryUsage = itemView.findViewById(R.id.memory_usage);
             userAndStateInfo = itemView.findViewById(R.id.user_state_info);
+            selinuxContext = itemView.findViewById(R.id.selinux_context);
         }
     }
 }

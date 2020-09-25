@@ -88,6 +88,7 @@ final class ProcessParser {
                 processItem = new ProcessItem();
                 processItem.name = processName;
             }
+            processItem.context = matcher.group(1);
             //noinspection ConstantConditions
             processItem.pid = Integer.parseInt(matcher.group(2));
             //noinspection ConstantConditions

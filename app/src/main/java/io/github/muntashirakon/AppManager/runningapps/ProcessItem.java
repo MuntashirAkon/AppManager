@@ -27,6 +27,11 @@ public class ProcessItem {
     public String state;
     public String state_extra;
     public String name;
+    /**
+     * SELinux context
+     * TODO(25/9/20): Improve this by parsing the string
+     */
+    public String context;
 
     public boolean selected = false;
 }
