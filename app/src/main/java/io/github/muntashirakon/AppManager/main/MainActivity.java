@@ -77,6 +77,7 @@ import io.github.muntashirakon.AppManager.profiles.ProfilesActivity;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
@@ -630,6 +631,8 @@ public class MainActivity extends BaseActivity implements
 
     private void checkAppUpdate() {
         if (Utils.isAppUpdated()) {
+            // Clean old am.jar
+            IOUtils.deleteSilently(ServerConfig.getDestJarFile());
             new Thread(() -> {
                 final Spanned spannedChangelog = HtmlCompat.fromHtml(IOUtils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
                 runOnUiThread(() -> {

@@ -8,7 +8,7 @@ import java.io.File;
 
 import androidx.annotation.NonNull;
 
-class ServerConfig {
+public class ServerConfig {
     static String SOCKET_PATH = "am_socket";
     private static final String DEFAULT_ADB_HOST = "127.0.0.1";
     private static int DEFAULT_ADB_PORT = 60001;
@@ -37,7 +37,7 @@ class ServerConfig {
     }
 
     @NonNull
-    static File getDestJarFile() {
+    public static File getDestJarFile() {
         return destJarFile;
     }
 
@@ -47,7 +47,7 @@ class ServerConfig {
     }
 
     @NonNull
-    static String getExecPath() {
+    public static String getExecPath() {
         return destExecFile.getAbsolutePath();
     }
 
