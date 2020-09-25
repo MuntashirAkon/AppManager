@@ -106,7 +106,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
         // Set process IDs
         holder.processIds.setText(mActivity.getString(R.string.pid_and_ppid, processItem.pid, processItem.ppid));
         // Set memory usage
-        holder.memoryUsage.setText(mActivity.getString(R.string.memory_virtual_memory, Formatter.formatFileSize(mActivity, processItem.rss), Formatter.formatFileSize(mActivity, processItem.vsz)));
+        holder.memoryUsage.setText(mActivity.getString(R.string.memory_virtual_memory, Formatter.formatFileSize(mActivity, processItem.rss * 1024), Formatter.formatFileSize(mActivity, processItem.vsz * 1024)));
         // Set user info
         String userInfo = mActivity.getString(R.string.user_and_uid, processItem.user, processItem.uid);
         String stateInfo;
