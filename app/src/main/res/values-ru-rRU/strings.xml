@@ -604,4 +604,20 @@
         <item quantity="many">Не удалось включить %s приложений</item>
         <item quantity="other">Не удалось включить %s приложений</item>
     </plurals>
+    <string name="routine_ops">Обычные операции</string>
+    <string name="no_profiles">Нет профилей</string>
+    <string name="presets">Предустановки</string>
+    <string name="pref_open_pgp_provider_msg">Добавление поставщика OpenPGP позволяет шифровать конфиденциальную информацию, такую как резервные копии данных приложений</string>
+    <string name="open_pgp_provider">Поставщик OpenPGP</string>
+    <string name="input_backup_name_description">Имя резервной копии не должно начинаться с цифры и содержать пробелы. Оставьте это поле пустым, если хотите использовать текущую дату и время.</string>
+    <string name="downgrade_not_possible">Понижение версии невозможно без root или ADB</string>
+    <string name="downgrade">Понизить</string>
+    <string name="process_state_with_extra">Состояние: %s (%s)</string>
+    <string name="process_state">Состояние: %s</string>
+    <string name="state_multithreaded">Многопоточный</string>
+    <string name="state_unknown">Неизвестный</string>
+    <string name="state_idle">Простой</string>
+    <string name="state_zombie">Зомби</string>
+    <string name="state_dead">Мёртвый</string>
+    <string name="state_sleeping">Спящий</string>
 </resources>
