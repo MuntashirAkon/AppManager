@@ -21,6 +21,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:focusable="true"
     android:paddingStart="@dimen/padding_medium"
     android:paddingTop="@dimen/padding_very_small"
     android:paddingEnd="@dimen/padding_medium"
@@ -114,7 +115,7 @@
         <ImageButton
             android:id="@+id/block_component"
             style="@android:style/Widget.Material.ImageButton"
-            android:backgroundTint="@android:color/transparent"
+            android:background="?android:selectableItemBackgroundBorderless"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

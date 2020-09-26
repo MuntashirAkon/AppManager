@@ -21,6 +21,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:focusable="true"
     android:paddingStart="@dimen/padding_medium"
     android:paddingTop="@dimen/padding_very_small"
     android:paddingEnd="@dimen/padding_medium"

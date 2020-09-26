@@ -45,6 +45,7 @@
                 android:id="@+id/app_language"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:padding="@dimen/padding_medium"
                 android:background="?selectableItemBackground"
                 android:orientation="vertical">
@@ -74,6 +75,7 @@
                 android:id="@+id/app_theme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:padding="@dimen/padding_medium"
                 android:background="?selectableItemBackground"
                 android:orientation="vertical">
@@ -103,6 +105,7 @@
                 android:id="@+id/root_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:padding="@dimen/padding_medium"
                 android:paddingBottom="@dimen/padding_very_small">
 
@@ -145,6 +148,7 @@
                 android:id="@+id/blocking_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:padding="@dimen/padding_medium"
                 android:paddingBottom="@dimen/padding_very_small">
 
@@ -187,6 +191,7 @@
                 android:id="@+id/usage_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:padding="@dimen/padding_medium"
                 android:paddingBottom="@dimen/padding_very_small">
 
@@ -229,6 +234,7 @@
                 android:id="@+id/import_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:padding="@dimen/padding_medium"
                 android:background="?selectableItemBackground"
                 android:orientation="vertical">
@@ -257,6 +263,7 @@
                 android:id="@+id/remove_all_rules"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:padding="@dimen/padding_medium"
                 android:background="?selectableItemBackground"
                 android:orientation="vertical">
@@ -285,6 +292,7 @@
                 android:id="@+id/open_pgp_provider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:padding="@dimen/padding_medium"
                 android:background="?selectableItemBackground"
                 android:orientation="vertical">
@@ -313,6 +321,7 @@
                 android:id="@+id/about_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:padding="@dimen/padding_medium"
                 android:background="?selectableItemBackground"
                 android:orientation="vertical">
@@ -341,6 +350,7 @@
                 android:id="@+id/changelog_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:padding="@dimen/padding_medium"
                 android:background="?selectableItemBackground"
                 android:orientation="vertical">
