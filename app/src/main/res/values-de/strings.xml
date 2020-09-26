@@ -561,7 +561,7 @@
     <string name="orientation_user_landscape">Horizontale Ansicht</string>
     <string name="orientation_user_portrait">Vertikale Ansicht</string>
     <string name="routine_ops">Routineoperationen</string>
-    <string name="apply_now">Jetzt anmelden...</string>
+    <string name="apply_now">Jetzt anwenden…</string>
     <string name="keystore">Schlüsselspeicher</string>
     <string name="no_profiles">Keine Profile</string>
     <string name="presets">Voreinstellungen</string>
@@ -597,4 +597,13 @@
         <item quantity="one">Sind Sie sicher, dass ein Backup vorhanden ist\?</item>
         <item quantity="other">Sind Sie sicher, dass ein Backup für mehr als eine Anwendung vorhanden ist\?</item>
     </plurals>
+    <string name="sort_by_priority">Priorität</string>
+    <string name="sort_by_memory_usage">Speicherauslastung</string>
+    <string name="sort_by_user_apps_first">Benutzerapps zuerst</string>
+    <string name="sort_by_apps_first">Apps zuerst</string>
+    <string name="sort_by_process_id">Prozess-ID</string>
+    <string name="sort_by_process_name">Prozess-Name</string>
+    <string name="filter_apps">Apps</string>
+    <string name="no_apps">Keine Apps</string>
+    <string name="apps">Apps</string>
 </resources>
