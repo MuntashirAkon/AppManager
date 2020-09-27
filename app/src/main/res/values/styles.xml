@@ -25,7 +25,6 @@
         <item name="android:colorControlActivated">@color/colorAccent</item>
         <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:textColor">@color/textColorSecondary</item>
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
         <item name="navigationIcon">@drawable/ic_keyboard_backspace_black_24dp</item>
         <item name="actionOverflowButtonStyle">@style/AppTheme.ActionButton.Overflow</item>
