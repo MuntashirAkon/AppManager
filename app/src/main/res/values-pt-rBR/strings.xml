@@ -506,4 +506,8 @@
         <item quantity="one">%s aplicativo não pôde ser ativado</item>
         <item quantity="other">Não foi possível ativar %s aplicativos</item>
     </plurals>
+    <plurals name="backup_exists_are_you_sure">
+        <item quantity="one">O backup existe. Tem certeza\?</item>
+        <item quantity="other">O backup existe para mais de um app. Tem certeza\?</item>
+    </plurals>
 </resources>
