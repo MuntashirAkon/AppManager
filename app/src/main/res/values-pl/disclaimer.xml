@@ -1,2 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="disclaimer_exit">Wyjdź</string>
+    <string name="disclaimer_agree">Zgadzam się</string>
+    <string name="disclaimer_agree_forever">Nie pokazuj więcej tego okna</string>
+    <string name="disclaimer_footer">© 2020 Muntashir Al-Islam</string>
+    <string name="disclaimer_header">OSTRZEŻENIE</string>
+</resources>
