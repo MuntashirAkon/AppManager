@@ -559,5 +559,14 @@
     <string name="no_profiles">无配置</string>
     <string name="keystore">密钥库</string>
     <string name="routine_ops">日常操作</string>
-    <string name="apply_now">现在应用...</string>
+    <string name="apply_now">现在应用…</string>
+    <string name="sort_by_priority">优先级</string>
+    <string name="sort_by_memory_usage">内存使用</string>
+    <string name="sort_by_user_apps_first">用户应用优先</string>
+    <string name="sort_by_apps_first">应用程序优先</string>
+    <string name="sort_by_process_name">进程名</string>
+    <string name="sort_by_process_id">进程ID</string>
+    <string name="filter_apps">应用程序</string>
+    <string name="no_apps">没有应用</string>
+    <string name="apps">应用程序</string>
 </resources>
