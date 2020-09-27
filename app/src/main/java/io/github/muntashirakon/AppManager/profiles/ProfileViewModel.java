@@ -19,8 +19,10 @@ package io.github.muntashirakon.AppManager.profiles;
 
 import android.app.Application;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
 
+import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
@@ -28,24 +30,53 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public class ProfileViewModel extends AndroidViewModel {
+    private final Object profileLock = new Object();
+    @GuardedBy("profileLock")
+    private String profileName;
 
     public ProfileViewModel(@NonNull Application application) {
         super(application);
     }
 
-    private HashMap<String, String> profiles;
-    private MutableLiveData<HashMap<String, String>> profileLiveData;
-    public LiveData<HashMap<String, String>> getProfiles() {
-        if (profileLiveData == null) {
-            profileLiveData = new MutableLiveData<>();
-            new Thread(this::loadProfiles).start();
+    @GuardedBy("profileLock")
+    public void setProfileName(String profileName) {
+        synchronized (profileLock) {
+            this.profileName = profileName;
         }
-        return profileLiveData;
+    }
+
+    @GuardedBy("profileLock")
+    private ProfileMetaManager.Profile profile;
+    @GuardedBy("profileLock")
+    private ProfileMetaManager profileMetaManager;
+
+    @WorkerThread
+    @GuardedBy("profileLock")
+    public void loadProfile() {
+        synchronized (profileLock) {
+            profileMetaManager = new ProfileMetaManager(profileName);
+            profile = profileMetaManager.profile;
+            if (profile == null) profile = profileMetaManager.newProfile(new String[]{});
+        }
+    }
+
+    private MutableLiveData<ArrayList<String>> packagesLiveData;
+
+    @NonNull
+    public LiveData<ArrayList<String>> getPackages() {
+        if (packagesLiveData == null) {
+            packagesLiveData = new MutableLiveData<>();
+            new Thread(this::loadPackages).start();
+        }
+        return packagesLiveData;
     }
 
     @WorkerThread
-    public void loadProfiles() {
-        profiles = ProfileManager.getProfiles();
-        profileLiveData.postValue(profiles);
+    @GuardedBy("profileLock")
+    public void loadPackages() {
+        synchronized (profileLock) {
+            if (profileMetaManager == null) loadProfile();
+            packagesLiveData.postValue(new ArrayList<>(Arrays.asList(profile.packages)));
+        }
     }
 }

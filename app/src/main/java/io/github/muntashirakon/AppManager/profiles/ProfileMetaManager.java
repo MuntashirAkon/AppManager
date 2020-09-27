@@ -120,6 +120,10 @@ public class ProfileMetaManager {
         }
     }
 
+    public Profile newProfile(String[] packages) {
+        return profile = new Profile(profileName, packages);
+    }
+
     public void readProfile() throws JSONException {
         String profileStr = IOUtils.getFileContent(getProfilePath());
         if (TextUtils.isEmpty(profileStr)) throw new JSONException("Empty JSON string");

@@ -635,4 +635,5 @@
     <string name="sort_by_user_apps_first">User apps first</string>
     <string name="sort_by_memory_usage">Memory usage</string>
     <string name="sort_by_priority">Priority</string>
+    <string name="changes_not_saved">Changes not saved</string>
 </resources>

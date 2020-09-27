@@ -198,6 +198,9 @@
             android:label="@string/profiles"
             android:exported="false" />
         <activity
+            android:name=".profiles.AppsProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".misc.AlertDialogActivity"
             android:excludeFromRecents="true"
             android:exported="false"

@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.profiles;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -49,7 +50,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 public class ProfilesActivity extends BaseActivity {
     private ListView listView;
     private ProfilesAdapter adapter;
-    private ProfileViewModel model;
+    private ProfilesViewModel model;
     private ProgressIndicator progressIndicator;
 
     @Override
@@ -57,7 +58,7 @@ public class ProfilesActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profiles);
         setSupportActionBar(findViewById(R.id.toolbar));
-        model = new ViewModelProvider(this).get(ProfileViewModel.class);
+        model = new ViewModelProvider(this).get(ProfilesViewModel.class);
         progressIndicator = findViewById(R.id.progress_linear);
         listView = findViewById(android.R.id.list);
         listView.setEmptyView(findViewById(android.R.id.empty));
@@ -141,19 +142,21 @@ public class ProfilesActivity extends BaseActivity {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            String prefName = mAdapterList[position];
-            if (mConstraint != null && prefName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
+            String profName = mAdapterList[position];
+            if (mConstraint != null && profName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                viewHolder.item_name.setText(Utils.getHighlightedText(prefName, mConstraint, mColorRed));
+                viewHolder.item_name.setText(Utils.getHighlightedText(profName, mConstraint, mColorRed));
             } else {
-                viewHolder.item_name.setText(prefName);
+                viewHolder.item_name.setText(profName);
             }
-            Object value = mAdapterMap.get(prefName);
+            Object value = mAdapterMap.get(profName);
             String strValue = (value != null) ? value.toString() : "";
             viewHolder.item_value.setText(strValue);
             convertView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
             convertView.setOnClickListener(v -> {
-                // TODO(23/9/20): Direct to ProfileActivity
+                Intent intent = new Intent(activity, AppsProfileActivity.class);
+                intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profName);
+                activity.startActivity(intent);
             });
             View finalConvertView = convertView;
             convertView.setOnLongClickListener(v -> {

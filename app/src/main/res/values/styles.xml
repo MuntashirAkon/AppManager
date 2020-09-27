@@ -18,6 +18,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorOnPrimary">?android:attr/colorAccent</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorOnSurface">?android:attr/textColorPrimary</item>
         <item name="android:colorBackground">@color/colorPrimaryDark</item>
@@ -32,6 +33,7 @@
         <item name="popupMenuStyle">@style/AppTheme.PopupMenu.Overflow</item>
         <item name="appBarLayoutStyle">@style/AppTheme.AppBarLayout</item>
         <item name="materialAlertDialogTheme">@style/AppTheme.AlertDialog</item>
+        <item name="bottomNavigationStyle">@style/AppTheme.BottomNavigationView</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
@@ -59,6 +61,15 @@
     </style>
     <style name="AppTheme.BottomAppBarOverlay">
         <item name="colorOnSurface">?android:colorBackground</item>
+    </style>
+    <style name="AppTheme.BottomNavigationView" parent="">
+        <!-- Not Widget.MaterialComponents.BottomNavigationView.Colored because they enforce alpha for background -->
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="itemIconTint">@color/item_icon_tint</item>
+        <item name="itemRippleColor">@color/item_ripple_color</item>
+        <item name="itemTextAppearanceInactive">?attr/textAppearanceCaption</item>
+        <item name="itemTextAppearanceActive">?attr/textAppearanceCaption</item>
+        <item name="itemTextColor">@color/item_text_color</item>
     </style>
     <style name="AppTheme.ActionButton.Overflow" parent="@style/Widget.AppCompat.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_more_vert_black_24dp</item>
