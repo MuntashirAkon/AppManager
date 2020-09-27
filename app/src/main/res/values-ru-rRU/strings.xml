@@ -620,7 +620,7 @@
     <string name="state_zombie">Зомби</string>
     <string name="state_dead">Мёртвый</string>
     <string name="state_sleeping">Спящий</string>
-    <string name="apply_now">Применить сейчас...</string>
+    <string name="apply_now">Применить сейчас…</string>
     <string name="profiles">Профили</string>
     <string name="cancel">Отмена</string>
     <string name="ok">ОК</string>
@@ -628,4 +628,19 @@
     <string name="state_foreground">Передний план</string>
     <string name="state_low_priority">Низкий приоритет</string>
     <string name="state_high_priority">Высокий приоритет</string>
+    <string name="sort_by_priority">Приоритет</string>
+    <string name="sort_by_memory_usage">Использование памяти</string>
+    <string name="sort_by_user_apps_first">Пользовательские приложения в первую очередь</string>
+    <string name="sort_by_apps_first">Приложения в первую очередь</string>
+    <string name="sort_by_process_name">Имя процесса</string>
+    <string name="sort_by_process_id">ID процесса</string>
+    <string name="filter_apps">Приложения</string>
+    <string name="no_apps">Нет приложений</string>
+    <string name="apps">Приложения</string>
+    <plurals name="backup_exists_are_you_sure">
+        <item quantity="one">Резервная копия существует. Вы уверены\?</item>
+        <item quantity="few">Резервная копия существует для более чем одного приложения. Вы уверены\?</item>
+        <item quantity="many">Резервная копия существует для более чем одного приложения. Вы уверены\?</item>
+        <item quantity="other">Резервная копия существует для более чем одного приложения. Вы уверены\?</item>
+    </plurals>
 </resources>
