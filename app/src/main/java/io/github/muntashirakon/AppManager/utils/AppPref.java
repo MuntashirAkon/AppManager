@@ -30,6 +30,7 @@ import java.util.Objects;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
@@ -86,6 +87,10 @@ public class AppPref {
 
         public static int indexOf(PrefKey key) {
             return prefKeyList.indexOf(key);
+        }
+
+        public static int indexOf(String key) {
+            return ArrayUtils.indexOf(keys, key);
         }
 
         @Type
@@ -205,6 +210,41 @@ public class AppPref {
         else if (value instanceof String) editor.putString(PrefKey.keys[index], (String) value);
         editor.apply();
         editor.commit();
+    }
+
+    public void setPref(String key, @Nullable Object value) {
+        int index = PrefKey.indexOf(key);
+        if (index == -1) throw new IllegalArgumentException("Invalid key: " + key);
+        // Set default value if the requested value is null
+        if (value == null) value = getDefaultValue(PrefKey.prefKeyList.get(index));
+        if (value instanceof Boolean) editor.putBoolean(key, (Boolean) value);
+        else if (value instanceof Float) editor.putFloat(key, (Float) value);
+        else if (value instanceof Integer) editor.putInt(key, (Integer) value);
+        else if (value instanceof Long) editor.putLong(key, (Long) value);
+        else if (value instanceof String) editor.putString(key, (String) value);
+        editor.apply();
+        editor.commit();
+    }
+
+    @NonNull
+    public Object get(String key) {
+        int index = PrefKey.indexOf(key);
+        if (index == -1) throw new IllegalArgumentException("Invalid key: " + key);
+        AppPref appPref = getInstance();
+        Object defaultValue = appPref.getDefaultValue(PrefKey.prefKeyList.get(index));
+        switch (PrefKey.types[index]) {
+            case TYPE_BOOLEAN:
+                return appPref.preferences.getBoolean(key, (boolean) defaultValue);
+            case TYPE_FLOAT:
+                return appPref.preferences.getFloat(key, (float) defaultValue);
+            case TYPE_INTEGER:
+                return appPref.preferences.getInt(key, (int) defaultValue);
+            case TYPE_LONG:
+                return appPref.preferences.getLong(key, (long) defaultValue);
+            case TYPE_STRING:
+                return Objects.requireNonNull(appPref.preferences.getString(key, (String) defaultValue));
+        }
+        throw new IllegalArgumentException("Unknown key or type.");
     }
 
     private void init() {

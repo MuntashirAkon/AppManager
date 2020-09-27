@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2020 Muntashir Al-Islam
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <Preference
+        app:key="custom_locale"
+        app:title="@string/pref_app_language"
+        tools:summary="Language: Auto" />
+
+    <Preference
+        app:key="app_theme"
+        app:title="@string/pref_app_theme"
+        tools:summary="Current theme: Follow system" />
+
+    <SwitchPreferenceCompat
+        app:key="usage_access_enabled"
+        app:title="@string/pref_usage_access_enabled"
+        app:summary="@string/pref_usage_access_enabled_msg" />
+
+    <SwitchPreferenceCompat
+        app:key="root_mode_enabled"
+        app:title="@string/pref_root_mode_enabled"
+        app:summary="@string/pref_root_mode_enabled_msg" />
+
+    <PreferenceCategory
+        app:key="rules"
+        app:title="@string/rules">
+
+        <SwitchPreferenceCompat
+            app:key="global_blocking_enabled"
+            app:title="@string/pref_global_blocking_enabled"
+            app:summary="@string/pref_global_blocking_enabled_msg" />
+
+        <Preference
+            app:key="import_export_rules"
+            app:title="@string/pref_import_export_blocking_rules"
+            app:summary="@string/pref_import_export_blocking_rules_msg" />
+
+        <Preference
+            app:key="remove_all_rules"
+            app:title="@string/pref_remove_all_rules"
+            app:summary="@string/pref_remove_all_rules_msg" />
+
+    </PreferenceCategory>
+
+    <Preference
+        app:key="open_pgp_provider"
+        app:title="@string/open_pgp_provider"
+        app:summary="@string/pref_open_pgp_provider_msg">
+    </Preference>
+
+    <PreferenceCategory
+        app:key="other_category"
+        app:title="@string/other">
+
+        <Preference
+            app:key="about"
+            app:title="@string/about"
+            app:summary="@string/pref_about_msg" />
+
+        <Preference
+            app:key="changelog"
+            app:title="@string/changelog" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -636,4 +636,6 @@
     <string name="sort_by_memory_usage">Memory usage</string>
     <string name="sort_by_priority">Priority</string>
     <string name="changes_not_saved">Changes not saved</string>
+    <string name="other">Other</string>
+    <string name="rules">Rules</string>
 </resources>
