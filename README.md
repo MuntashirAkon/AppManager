@@ -4,9 +4,9 @@
 [![GitHub release (including pre-releases)](https://img.shields.io/github/v/release/MuntashirAkon/AppManager?include_prereleases)](https://github.com/MuntashirAkon/AppManager/releases/latest)
 [![F-Droid](https://img.shields.io/f-droid/v/io.github.muntashirakon.AppManager)](https://f-droid.org/packages/io.github.muntashirakon.AppManager)
 ![GitHub Repo Size](https://img.shields.io/github/repo-size/MuntashirAkon/AppManager)
-![GitHub Commit per Week](https://img.shields.io/github/commit-activity/w/MuntashirAkon/AppManager)
 [![TG Group](https://img.shields.io/badge/TG-Group-blue?logo=telegram)](https://t.me/AppManagerAndroid)
 [![TG Channel](https://img.shields.io/badge/TG-Channel-blue?logo=telegram)](https://t.me/AppManagerChannel)
+![Twitter @AMUpdateChannel](https://img.shields.io/twitter/follow/AMUpdateChannel?label=%40AMUpdateChannel)
 
 Yet another Android package manager and viewer but...
 
@@ -44,6 +44,8 @@ App Manager Docs: https://muntashirakon.github.io/AppManager
 Telegram Support Group: https://t.me/AppManagerAndroid
 
 Telegram Update Channel: https://t.me/AppManagerChannel
+
+Follow **@AMUpdateChannel** on Twitter: https://twitter.com/AMUpdateChannel
 
 ### Translations
 
