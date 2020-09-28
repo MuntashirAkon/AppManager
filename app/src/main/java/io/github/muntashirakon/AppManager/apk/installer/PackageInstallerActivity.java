@@ -270,10 +270,10 @@ public class PackageInstallerActivity extends BaseActivity {
     }
 
     private void launchInstallService() {
-        Intent intent = new Intent(this, AMPackageInstallerService.class);
-        intent.putExtra(AMPackageInstallerService.EXTRA_APK_FILE_KEY, apkFileKey);
-        intent.putExtra(AMPackageInstallerService.EXTRA_APP_LABEL, appLabel);
-        intent.putExtra(AMPackageInstallerService.EXTRA_CLOSE_APK_FILE, closeApkFile);
+        Intent intent = new Intent(this, PackageInstallerService.class);
+        intent.putExtra(PackageInstallerService.EXTRA_APK_FILE_KEY, apkFileKey);
+        intent.putExtra(PackageInstallerService.EXTRA_APP_LABEL, appLabel);
+        intent.putExtra(PackageInstallerService.EXTRA_CLOSE_APK_FILE, closeApkFile);
         ContextCompat.startForegroundService(AppManager.getContext(), intent);
         closeApkFile = false;
         if (AppPref.isRootOrAdbEnabled()) finish();

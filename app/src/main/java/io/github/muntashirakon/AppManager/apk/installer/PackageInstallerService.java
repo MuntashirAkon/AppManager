@@ -42,15 +42,15 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
-public class AMPackageInstallerService extends IntentService {
+public class PackageInstallerService extends IntentService {
     public static final String EXTRA_APK_FILE_KEY = "EXTRA_APK_FILE_KEY";
     public static final String EXTRA_APP_LABEL = "EXTRA_APP_LABEL";
     public static final String EXTRA_CLOSE_APK_FILE = "EXTRA_CLOSE_APK_FILE";
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.INSTALL";
     public static final int NOTIFICATION_ID = 3;
 
-    public AMPackageInstallerService() {
-        super("AMPackageInstallerService");
+    public PackageInstallerService() {
+        super("PackageInstallerService");
     }
 
     private boolean completed = false;
@@ -65,7 +65,7 @@ public class AMPackageInstallerService extends IntentService {
         public void onReceive(Context context, @NonNull Intent intent) {
             if (intent.getAction() != null && intent.getAction().equals(AMPackageInstaller.ACTION_INSTALL_COMPLETED)) {
                 String packageName = intent.getStringExtra(AMPackageInstaller.EXTRA_PACKAGE_NAME);
-                if (packageName != null && packageName.equals(AMPackageInstallerService.this.packageName)) {
+                if (packageName != null && packageName.equals(PackageInstallerService.this.packageName)) {
                     sendNotification(intent.getIntExtra(AMPackageInstaller.EXTRA_STATUS, AMPackageInstaller.STATUS_FAILURE_INVALID), intent.getStringExtra(AMPackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
                     if (closeApkFile && apkFile != null) {
                         apkFile.close();
