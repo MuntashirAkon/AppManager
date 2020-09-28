@@ -34,6 +34,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
+import io.github.muntashirakon.AppManager.backup.TarUtils;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 
@@ -53,6 +54,7 @@ public class AppPref {
         PREF_APP_OP_SHOW_DEFAULT_BOOL,
         PREF_APP_OP_SORT_ORDER_INT,
         PREF_APP_THEME_INT,
+        PREF_BACKUP_COMPRESSION_METHOD_STR,
         PREF_BACKUP_FLAGS_INT,
         PREF_COMPONENTS_SORT_ORDER_INT,
         PREF_CUSTOM_LOCALE_STR,
@@ -162,7 +164,6 @@ public class AppPref {
         return getInstance().getBoolean(PrefKey.PREF_ADB_MODE_ENABLED_BOOL);
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isGlobalBlockingEnabled() {
         return getInstance().getBoolean(PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL);
     }
@@ -278,6 +279,8 @@ public class AppPref {
                 return BackupFlags.BACKUP_SOURCE | BackupFlags.BACKUP_DATA
                         | BackupFlags.BACKUP_RULES | BackupFlags.BACKUP_EXCLUDE_CACHE
                         | BackupFlags.BACKUP_SOURCE_APK_ONLY;
+            case PREF_BACKUP_COMPRESSION_METHOD_STR:
+                return TarUtils.TAR_GZIP;
             case PREF_ROOT_MODE_ENABLED_BOOL:
             case PREF_ADB_MODE_ENABLED_BOOL:
             case PREF_ENABLE_KILL_FOR_SYSTEM_BOOL:

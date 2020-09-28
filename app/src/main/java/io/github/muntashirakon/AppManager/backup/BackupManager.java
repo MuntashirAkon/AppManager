@@ -66,8 +66,12 @@ public class BackupManager {
     private static final String[] CACHE_DIRS = new String[]{"cache", "code_cache"};
     private static final String SOURCE_PREFIX = "source";
     private static final String DATA_PREFIX = "data";
-    private static final String BACKUP_FILE_SUFFIX = ".tar.gz";
     private static final String RULES_TSV = "rules.am.tsv";
+    @NonNull
+    private static String getExt(@TarUtils.TarType String tarType) {
+        if (TarUtils.TAR_BZIP2.equals(tarType)) return ".tar.bz2";
+        else return ".tar.gz";
+    }
 
     /**
      * @param packageName Package name of the app
@@ -312,7 +316,7 @@ public class BackupManager {
 
         private void backupSource() throws BackupException {
             final File dataAppPath = OsEnvironment.getDataAppDirectory();
-            final File sourceFile = new File(tmpBackupPath, SOURCE_PREFIX + BACKUP_FILE_SUFFIX + ".");
+            final File sourceFile = new File(tmpBackupPath, SOURCE_PREFIX + getExt(metadata.tarType) + ".");
             String sourceDir = PackageUtils.getSourceDir(applicationInfo);
             if (dataAppPath.getAbsolutePath().equals(sourceDir)) {
                 // Backup only the apk file (no split apk support for this type of apk)
@@ -329,7 +333,7 @@ public class BackupManager {
         private void backupData() throws BackupException {
             File sourceFile;
             for (int i = 0; i < metadata.dataDirs.length; ++i) {
-                sourceFile = new File(tmpBackupPath, DATA_PREFIX + i + BACKUP_FILE_SUFFIX + ".");
+                sourceFile = new File(tmpBackupPath, DATA_PREFIX + i + getExt(metadata.tarType) + ".");
                 File[] dataFiles = TarUtils.create(metadata.tarType, new File(metadata.dataDirs[i]), sourceFile,
                         null, null, backupFlags.excludeCache() ? CACHE_DIRS : null);
                 if (dataFiles.length == 0) {

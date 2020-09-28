@@ -59,11 +59,27 @@
 
     </PreferenceCategory>
 
-    <Preference
-        app:key="open_pgp_provider"
-        app:title="@string/open_pgp_provider"
-        app:summary="@string/pref_open_pgp_provider_msg">
-    </Preference>
+    <PreferenceCategory
+        app:key="backup_restore"
+        app:title="@string/backup_restore">
+
+        <Preference
+            app:key="backup_compression_method"
+            app:title="@string/pref_compression_method"
+            tools:summary="Current method: GZip" />
+
+        <Preference
+            app:key="backup_flags"
+            app:title="@string/backup_options"
+            app:summary="@string/pref_backup_flags_msg" />
+
+        <Preference
+            app:key="open_pgp_provider"
+            app:title="@string/open_pgp_provider"
+            app:summary="@string/pref_open_pgp_provider_msg">
+        </Preference>
+
+    </PreferenceCategory>
 
     <PreferenceCategory
         app:key="other_category"

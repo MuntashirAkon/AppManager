@@ -38,6 +38,8 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.backup.BackupFlags;
+import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -57,6 +59,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
     SettingsActivity activity;
     private int currentTheme;
     private String currentLang;
+    private int currentCompression;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -69,7 +72,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         final String[] languages = getResources().getStringArray(R.array.languages);
         final String[] langKeys = getResources().getStringArray(R.array.languages_key);
         Preference locale = findPreference("custom_locale");
-        locale.setSummary(String.format(getString(R.string.current_language), languages[ArrayUtils.indexOf(langKeys, currentLang)]));
+        locale.setSummary(getString(R.string.current_language, languages[ArrayUtils.indexOf(langKeys, currentLang)]));
         locale.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.choose_language)
@@ -80,7 +83,6 @@ public class MainPreferences extends PreferenceFragmentCompat {
                         activity.recreate();
                     })
                     .setNegativeButton(R.string.cancel, null)
-                    .create()
                     .show();
             return true;
         });
@@ -88,7 +90,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         final String[] themes = getResources().getStringArray(R.array.themes);
         currentTheme = (int) AppPref.get(AppPref.PrefKey.PREF_APP_THEME_INT);
         Preference appTheme = findPreference("app_theme");
-        appTheme.setSummary(String.format(getString(R.string.current_theme), themes[themeConst.indexOf(currentTheme)]));
+        appTheme.setSummary(getString(R.string.current_theme, themes[themeConst.indexOf(currentTheme)]));
         appTheme.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.select_theme)
@@ -99,7 +101,6 @@ public class MainPreferences extends PreferenceFragmentCompat {
                         AppCompatDelegate.setDefaultNightMode(currentTheme);
                     })
                     .setNegativeButton(R.string.cancel, null)
-                    .create()
                     .show();
             return true;
         });
@@ -150,6 +151,39 @@ public class MainPreferences extends PreferenceFragmentCompat {
                         }).start();
                     })
                     .setNegativeButton(R.string.no, null)
+                    .show();
+            return true;
+        });
+        // Backup compression method
+        String[] tarTypes = MetadataManager.TAR_TYPES;
+        String[] readableTarTypes = new String[]{"GZip", "BZip2"};
+        currentCompression = ArrayUtils.indexOf(tarTypes, AppPref.get(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR));
+        Preference compressionMethod = findPreference("backup_compression_method");
+        compressionMethod.setSummary(getString(R.string.compression_method, readableTarTypes[currentCompression == -1 ? 0 : currentCompression]));
+        compressionMethod.setOnPreferenceClickListener(preference -> {
+            new MaterialAlertDialogBuilder(activity)
+                    .setTitle(R.string.pref_compression_method)
+                    .setSingleChoiceItems(readableTarTypes, currentCompression,
+                            (dialog, which) -> currentCompression = which)
+                    .setPositiveButton(R.string.save, (dialog, which) ->
+                            AppPref.set(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR, tarTypes[currentCompression]))
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+            return true;
+        });
+        // Backup flags
+        BackupFlags flags = BackupFlags.fromPref();
+        findPreference("backup_flags").setOnPreferenceClickListener(preference -> {
+            new MaterialAlertDialogBuilder(activity)
+                    .setTitle(R.string.backup_options)
+                    .setMultiChoiceItems(R.array.backup_flags, flags.flagsToCheckedItems(),
+                            (dialog, flag, isChecked) -> {
+                                if (isChecked) flags.addFlag(flag);
+                                else flags.removeFlag(flag);
+                            })
+                    .setPositiveButton(R.string.save, (dialog, which) ->
+                            AppPref.set(AppPref.PrefKey.PREF_BACKUP_FLAGS_INT, flags.getFlags()))
+                    .setNegativeButton(R.string.cancel, null)
                     .show();
             return true;
         });

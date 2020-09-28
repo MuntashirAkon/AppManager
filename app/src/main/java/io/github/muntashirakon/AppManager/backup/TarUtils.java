@@ -28,7 +28,7 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 @SuppressWarnings("SameParameterValue")
-final class TarUtils {
+public final class TarUtils {
     @StringDef(value = {
             TAR_GZIP,
             TAR_BZIP2

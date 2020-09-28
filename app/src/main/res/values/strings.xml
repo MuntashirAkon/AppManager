@@ -638,4 +638,7 @@
     <string name="changes_not_saved">Changes not saved</string>
     <string name="other">Other</string>
     <string name="rules">Rules</string>
+    <string name="pref_compression_method">Compression method</string>
+    <string name="pref_backup_flags_msg">Adding preset for backup options removes the burden of selecting flags every time you backup/restore</string>
+    <string name="compression_method">Compression method: %s</string>
 </resources>

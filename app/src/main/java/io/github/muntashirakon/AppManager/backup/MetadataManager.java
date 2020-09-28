@@ -38,6 +38,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
@@ -45,6 +46,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public final class MetadataManager {
     public static final String META_FILE = "meta.am.v1";
+    public static final String[] TAR_TYPES = new String[]{TarUtils.TAR_GZIP, TarUtils.TAR_BZIP2};
 
     // For an extended documentation, see https://github.com/MuntashirAkon/AppManager/issues/30
     // All the attributes must be non-null
@@ -204,7 +206,12 @@ public final class MetadataManager {
         metadata = new Metadata();
         metadata.flags = requestedFlags;
         metadata.userHandle = userHandle;
-        metadata.tarType = TarUtils.TAR_GZIP;  // FIXME: Load from user prefs
+        metadata.tarType = (String) AppPref.get(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR);
+        // Verify tar type
+        if (ArrayUtils.indexOf(TAR_TYPES, metadata.tarType) == -1) {
+            // Unknown tar type, set default
+            metadata.tarType = TarUtils.TAR_GZIP;
+        }
         metadata.keyStore = BackupUtils.hasKeyStore(applicationInfo.uid);
         metadata.label = applicationInfo.loadLabel(pm).toString();
         metadata.packageName = packageInfo.packageName;
