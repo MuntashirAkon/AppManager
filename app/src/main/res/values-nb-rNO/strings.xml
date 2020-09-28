@@ -361,7 +361,7 @@
     <string name="export_failed">Ekportering mislyktes!</string>
     <string name="import_failed">Importering mislyktes!</string>
     <string name="export_options">Eksporteringsinnstillinger</string>
-    <string name="import_options">Importeringinnstillinger</string>
+    <string name="import_options">Importeringsinnstillinger</string>
     <string name="pref_export">Eksport</string>
     <string name="pref_import">Import</string>
     <string name="ago">siden</string>
