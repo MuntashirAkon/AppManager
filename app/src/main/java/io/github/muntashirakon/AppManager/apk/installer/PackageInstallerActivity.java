@@ -37,7 +37,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -61,7 +60,8 @@ public class PackageInstallerActivity extends BaseActivity {
     private PackageInfo packageInfo;
     private String actionName;
     private PackageManager mPackageManager;
-    FragmentManager fm;
+    private FragmentManager fm;
+    private String packageName;
     private boolean closeApkFile = true;
     private int apkFileKey;
     private ActivityResultLauncher<String[]> permInstallWithObb = registerForActivityResult(
@@ -69,6 +69,13 @@ public class PackageInstallerActivity extends BaseActivity {
                 if (Utils.getExternalStoragePermissions(this) == null) {
                     launchInstaller();
                 }
+            });
+    private ActivityResultLauncher<Intent> confirmIntentLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                // When cancelled implicitly, confirmIntent doesn't return result to the
+                // corresponding broadcast receiver.
+                AMPackageInstaller.sendCompletedBroadcast(packageName, AMPackageInstaller.STATUS_FAILURE_ABORTED);
+                finish();
             });
 
     @Override
@@ -274,7 +281,7 @@ public class PackageInstallerActivity extends BaseActivity {
         intent.putExtra(PackageInstallerService.EXTRA_APK_FILE_KEY, apkFileKey);
         intent.putExtra(PackageInstallerService.EXTRA_APP_LABEL, appLabel);
         intent.putExtra(PackageInstallerService.EXTRA_CLOSE_APK_FILE, closeApkFile);
-        ContextCompat.startForegroundService(AppManager.getContext(), intent);
+        ContextCompat.startForegroundService(this, intent);
         closeApkFile = false;
         if (AppPref.isRootOrAdbEnabled()) finish();
     }
@@ -282,36 +289,19 @@ public class PackageInstallerActivity extends BaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        // Check for action first
         if (ACTION_PACKAGE_INSTALLED.equals(intent.getAction())) {
-            int status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, 0);
-            switch (status) {
-                case PackageInstaller.STATUS_PENDING_USER_ACTION:
-                    try {
-                        Intent confirmationIntent = intent.getParcelableExtra(Intent.EXTRA_INTENT);
-                        if (confirmationIntent == null)
-                            throw new Exception("Empty confirmation intent.");
-                        Log.d("PIS", "Requesting user confirmation...");
-                        startActivity(confirmationIntent);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        AMPackageInstaller.sendCompletedBroadcast(intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME), AMPackageInstaller.STATUS_FAILURE_INCOMPATIBLE_ROM);
-                        finish();
-                    }
-                    break;
-                case PackageInstaller.STATUS_SUCCESS:
-                    Log.d("PIS", "Install success!");
-                    AMPackageInstaller.sendCompletedBroadcast(intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME), AMPackageInstaller.STATUS_SUCCESS);
-                    finish();
-                    break;
-                default:
-                    Intent broadcastIntent = new Intent(AMPackageInstaller.ACTION_INSTALL_COMPLETED);
-                    broadcastIntent.putExtra(AMPackageInstaller.EXTRA_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME));
-                    broadcastIntent.putExtra(AMPackageInstaller.EXTRA_OTHER_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
-                    broadcastIntent.putExtra(AMPackageInstaller.EXTRA_STATUS, status);
-                    getApplication().sendBroadcast(broadcastIntent);
-                    Log.e("PIS", "Install failed! " + intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE));
-                    finish();
-                    break;
+            try {
+                Intent confirmIntent = intent.getParcelableExtra(Intent.EXTRA_INTENT);
+                packageName = intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME);
+                if (confirmIntent == null)
+                    throw new Exception("Empty confirmation intent.");
+                Log.d("PIA", "Requesting user confirmation for package " + packageName);
+                confirmIntentLauncher.launch(confirmIntent);
+            } catch (Exception e) {
+                e.printStackTrace();
+                AMPackageInstaller.sendCompletedBroadcast(packageName, AMPackageInstaller.STATUS_FAILURE_INCOMPATIBLE_ROM);
+                finish();
             }
         }
     }

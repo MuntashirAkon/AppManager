@@ -20,7 +20,6 @@ package io.github.muntashirakon.AppManager.apk.installer;
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -51,6 +50,7 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
     private PackageInstaller packageInstaller;
     private PackageInstaller.Session session;
     private String packageName;
+    private int sessionId = -1;
 
     private PackageInstallerNoRoot() {
     }
@@ -112,11 +112,9 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
     @Override
     boolean commit() {
         Log.d(TAG, "Commit: calling activity to request permission...");
-        Intent intent = new Intent(context, PackageInstallerActivity.class);
-        intent.setAction(PackageInstallerActivity.ACTION_PACKAGE_INSTALLED);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        IntentSender statusReceiver = pendingIntent.getIntentSender();
-        session.commit(statusReceiver);
+        Intent callbackIntent = new Intent(AMPackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, callbackIntent, 0);
+        session.commit(pendingIntent.getIntentSender());
         return true;
     }
 
@@ -130,7 +128,6 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
         PackageInstaller.SessionParams sessionParams = new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             sessionParams.setInstallReason(PackageManager.INSTALL_REASON_USER);
-        int sessionId;
         try {
             sessionId = packageInstaller.createSession(sessionParams);
             Log.d(TAG, "OpenSession: session id " + sessionId);

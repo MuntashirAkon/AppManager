@@ -75,6 +75,7 @@ public class PackageInstallerService extends IntentService {
             }
         }
     };
+    private AMPackageInstallerBroadcastReceiver piReceiver;
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
@@ -92,6 +93,8 @@ public class PackageInstallerService extends IntentService {
                 .setContentIntent(pendingIntent);
         startForeground(NOTIFICATION_ID, builder.build());
         registerReceiver(broadcastReceiver, new IntentFilter(AMPackageInstaller.ACTION_INSTALL_COMPLETED));
+        piReceiver = new AMPackageInstallerBroadcastReceiver();
+        registerReceiver(piReceiver, new IntentFilter(AMPackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER));
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -102,6 +105,7 @@ public class PackageInstallerService extends IntentService {
         if (apkFileKey == -1) return;
         apkFile = ApkFile.getInstance(apkFileKey);
         packageName = apkFile.getPackageName();
+        piReceiver.setPackageName(packageName);
         appLabel = intent.getStringExtra(EXTRA_APP_LABEL);
         closeApkFile = intent.getBooleanExtra(EXTRA_CLOSE_APK_FILE, false);
         // Set package name in the ongoing notification
@@ -150,6 +154,7 @@ public class PackageInstallerService extends IntentService {
     @Override
     public void onDestroy() {
         unregisterReceiver(broadcastReceiver);
+        unregisterReceiver(piReceiver);
         super.onDestroy();
     }
 
