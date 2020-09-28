@@ -55,8 +55,9 @@ public final class BackupFlags {
     public static final int BACKUP_EXT_OBB_MEDIA = 1 << 7;
     public static final int BACKUP_ALL_USERS = 1 << 8;
     public static final int BACKUP_MULTIPLE = 1 << 9;
+    public static final int BACKUP_PERMISSIONS = 1 << 10;
 
-    public static final int BACKUP_TOTAL = 10;
+    public static final int BACKUP_TOTAL = 11;
 
     @BackupFlag
     private int flags;
@@ -118,6 +119,10 @@ public final class BackupFlags {
 
     public boolean backupRules() {
         return (flags & BACKUP_RULES) != 0;
+    }
+
+    public boolean backupPermissions() {
+        return (flags & BACKUP_PERMISSIONS) != 0;
     }
 
     public boolean excludeCache() {

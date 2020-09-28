@@ -21,6 +21,7 @@ import android.annotation.SuppressLint;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PermissionInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Pair;
@@ -41,6 +42,7 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import dalvik.system.VMRuntime;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerShell;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
@@ -67,6 +69,8 @@ public class BackupManager {
     private static final String SOURCE_PREFIX = "source";
     private static final String DATA_PREFIX = "data";
     private static final String RULES_TSV = "rules.am.tsv";
+    private static final String PERMS_TSV = "perms.am.tsv";
+
     @NonNull
     private static String getExt(@TarUtils.TarType String tarType) {
         if (TarUtils.TAR_BZIP2.equals(tarType)) return ".tar.bz2";
@@ -149,6 +153,7 @@ public class BackupManager {
 
     /**
      * Restore a single backup but could be for all users
+     *
      * @param backupNames Backup names is a singleton array consisting of the full name of a backup.
      *                    Full name means backup name along with the user handle, ie., for user 0,
      *                    the full name of base backup is {@code 0} and the full name of another
@@ -255,6 +260,8 @@ public class BackupManager {
         @NonNull
         private final MetadataManager.Metadata metadata;
         @NonNull
+        private final PackageInfo packageInfo;
+        @NonNull
         private final ApplicationInfo applicationInfo;
         @NonNull
         private final PrivilegedFile tmpBackupPath;
@@ -265,9 +272,9 @@ public class BackupManager {
             this.backupFlags = BackupManager.this.requestedFlags;
             this.tmpBackupPath = backupFile.getBackupPath();
             try {
-                PackageInfo packageInfo = ApiSupporter.getInstance(LocalServer.getInstance()).getPackageInfo(
-                        packageName, PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo,
-                        userHandle);
+                packageInfo = ApiSupporter.getInstance(LocalServer.getInstance()).getPackageInfo(
+                        packageName, PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo
+                                | PackageManager.GET_PERMISSIONS, userHandle);
                 this.applicationInfo = packageInfo.applicationInfo;
                 // Override existing metadata
                 this.metadata = metadataManager.setupMetadata(packageInfo, userHandle, backupFlags);
@@ -289,6 +296,8 @@ public class BackupManager {
                 if (backupFlags.backupSource()) backupSource();
                 // Backup data
                 if (backupFlags.backupData()) backupData();
+                // Backup permissions
+                if (backupFlags.backupPermissions()) backupPermissions();
                 // Export rules
                 if (metadata.hasRules) backupRules();
             } catch (BackupException e) {
@@ -340,6 +349,37 @@ public class BackupManager {
                     throw new BackupException("Failed to backup data directory at " + metadata.dataDirs[i]);
                 }
                 metadata.dataSha256Checksum[i] = BackupUtils.getSha256Sum(dataFiles);
+            }
+        }
+
+        private void backupPermissions() throws BackupException {
+            File permsFile = new File(tmpBackupPath, PERMS_TSV);
+            String[] permissions = packageInfo.requestedPermissions;
+            int[] permissionFlags = packageInfo.requestedPermissionsFlags;
+            if (permissions == null) return;
+            PackageManager pm = AppManager.getContext().getPackageManager();
+            PermissionInfo info;
+            int basePermissionType;
+            int protectionLevels;
+            try (OutputStream outputStream = new FileOutputStream(permsFile)) {
+                for (int i = 0; i < permissions.length; ++i) {
+                    try {
+                        info = pm.getPermissionInfo(permissions[i], 0);
+                        basePermissionType = PackageUtils.getBasePermissionType(info);
+                        protectionLevels = PackageUtils.getProtectionLevel(info);
+                        if (basePermissionType != PermissionInfo.PROTECTION_DANGEROUS
+                                && (protectionLevels & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) == 0) {
+                            // Don't include permissions that are neither dangerous nor development
+                            continue;
+                        }
+                        outputStream.write(String.format("%s\t%s\t%s\t%s\n", packageName, permissions[i],
+                                RulesStorageManager.Type.PERMISSION, (permissionFlags[i]
+                                        & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0).getBytes());
+                    } catch (PackageManager.NameNotFoundException ignore) {
+                    }
+                }
+            } catch (IOException e) {
+                throw new BackupException("Error during creating permission file.", e);
             }
         }
 
@@ -405,6 +445,7 @@ public class BackupManager {
             try {
                 if (requestedFlags.backupSource()) restoreSource();
                 if (requestedFlags.backupData()) restoreData();
+                if (requestedFlags.backupPermissions()) restorePermissions();
                 if (requestedFlags.backupRules()) restoreRules();
             } catch (BackupException e) {
                 Log.e(TAG, e.getMessage(), e);
@@ -595,6 +636,24 @@ public class BackupManager {
                 // Restore permissions
                 if (!isExternal) Runner.runCommand(new String[]{"restorecon", "-R", dataSource});
             }
+        }
+
+        private void restorePermissions() throws BackupException {
+            // Apply rules
+            if (!isInstalled) {
+                throw new BackupException("Permission restore is requested but the app isn't installed.");
+            }
+            File permsFile = new File(backupPath, PERMS_TSV);
+            if (permsFile.exists()) {
+                // FIXME: Import rules for user handle
+                try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()))) {
+                    importer.addRulesFromUri(Uri.fromFile(permsFile));
+                    importer.setPackagesToImport(Collections.singletonList(packageName));
+                    importer.applyRules();
+                } catch (IOException e) {
+                    throw new BackupException("Failed to restore permissions.", e);
+                }
+            } // else there are no permissions, just skip
         }
 
         private void restoreRules() throws BackupException {

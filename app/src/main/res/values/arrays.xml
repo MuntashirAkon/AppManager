@@ -79,6 +79,7 @@
         <item>@string/backup_obb_media</item>
         <item>@string/backup_all_users</item>
         <item>@string/backup_multiple</item>
+        <item>@string/declared_permission</item>
     </string-array>
     <string-array name="languages">
         <item>@string/auto</item>
