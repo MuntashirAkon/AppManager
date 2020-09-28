@@ -540,8 +540,10 @@ public class BackupManager {
                     }
                 }
             }
-            // Force stop app before restoring backups
+            // Force stop app
             RunnerUtils.forceStopPackage(packageName, RunnerUtils.USER_ALL);
+            // Clear app data
+            RunnerUtils.clearPackageData(packageName, userHandle);
             // Restore backups
             String dataSource;
             boolean isExternal;
