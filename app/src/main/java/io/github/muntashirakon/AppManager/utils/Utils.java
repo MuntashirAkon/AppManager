@@ -384,15 +384,8 @@ public class Utils {
     // FIXME Add translation support
     @NonNull
     public static String getProtectionLevelString(PermissionInfo permissionInfo) {
-        int basePermissionType;
-        int permissionFlags;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            permissionFlags = permissionInfo.getProtectionFlags();
-            basePermissionType = permissionInfo.getProtection();
-        } else {
-            permissionFlags = permissionInfo.protectionLevel;
-            basePermissionType = permissionFlags & PermissionInfo.PROTECTION_MASK_BASE;
-        }
+        int basePermissionType = PackageUtils.getBasePermissionType(permissionInfo);
+        int permissionFlags = PackageUtils.getProtectionLevel(permissionInfo);
         String protectionLevel = "????";
         switch (basePermissionType) {
             case PermissionInfo.PROTECTION_DANGEROUS:

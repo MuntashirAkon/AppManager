@@ -401,12 +401,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 permName = AppOpsManager.opToPermission(opEntry.getOp());
                 if (permName != null) {
                     PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(permName, PackageManager.GET_META_DATA);
-                    int basePermissionType;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        basePermissionType = permissionInfo.getProtection();
-                    } else {
-                        basePermissionType = permissionInfo.protectionLevel & PermissionInfo.PROTECTION_MASK_BASE;
-                    }
+                    int basePermissionType = PackageUtils.getBasePermissionType(permissionInfo);
                     if (basePermissionType == PermissionInfo.PROTECTION_DANGEROUS) {
                         // Set mode
                         try {
@@ -949,12 +944,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionInfo);
                     appDetailsItem.name = packageInfo.requestedPermissions[i];
                     appDetailsItem.flags = packageInfo.requestedPermissionsFlags[i];
-                    int basePermissionType;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        basePermissionType = permissionInfo.getProtection();
-                    } else {
-                        basePermissionType = permissionInfo.protectionLevel & PermissionInfo.PROTECTION_MASK_BASE;
-                    }
+                    int basePermissionType = PackageUtils.getBasePermissionType(permissionInfo);
                     appDetailsItem.isDangerous = basePermissionType == PermissionInfo.PROTECTION_DANGEROUS;
                     appDetailsItem.isGranted = (appDetailsItem.flags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
                     usesPermissionItems.add(appDetailsItem);
