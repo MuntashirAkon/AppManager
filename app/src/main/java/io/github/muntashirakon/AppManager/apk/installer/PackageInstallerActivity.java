@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.apk.installer;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -38,10 +39,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BaseActivity;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -51,6 +54,7 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningI
 
 public class PackageInstallerActivity extends BaseActivity {
     public static final String EXTRA_APK_FILE_KEY = "EXTRA_APK_FILE_KEY";
+    public static final String ACTION_PACKAGE_INSTALLED = BuildConfig.APPLICATION_ID + ".action.PACKAGE_INSTALLED";
 
     private ApkFile apkFile;
     private String appLabel;
@@ -272,7 +276,44 @@ public class PackageInstallerActivity extends BaseActivity {
         intent.putExtra(AMPackageInstallerService.EXTRA_CLOSE_APK_FILE, closeApkFile);
         ContextCompat.startForegroundService(AppManager.getContext(), intent);
         closeApkFile = false;
-        finish();
+        if (AppPref.isRootOrAdbEnabled()) finish();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (ACTION_PACKAGE_INSTALLED.equals(intent.getAction())) {
+            int status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, 0);
+            switch (status) {
+                case PackageInstaller.STATUS_PENDING_USER_ACTION:
+                    try {
+                        Intent confirmationIntent = intent.getParcelableExtra(Intent.EXTRA_INTENT);
+                        if (confirmationIntent == null)
+                            throw new Exception("Empty confirmation intent.");
+                        Log.d("PIS", "Requesting user confirmation...");
+                        startActivity(confirmationIntent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        AMPackageInstaller.sendCompletedBroadcast(intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME), AMPackageInstaller.STATUS_FAILURE_INCOMPATIBLE_ROM);
+                        finish();
+                    }
+                    break;
+                case PackageInstaller.STATUS_SUCCESS:
+                    Log.d("PIS", "Install success!");
+                    AMPackageInstaller.sendCompletedBroadcast(intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME), AMPackageInstaller.STATUS_SUCCESS);
+                    finish();
+                    break;
+                default:
+                    Intent broadcastIntent = new Intent(AMPackageInstaller.ACTION_INSTALL_COMPLETED);
+                    broadcastIntent.putExtra(AMPackageInstaller.EXTRA_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME));
+                    broadcastIntent.putExtra(AMPackageInstaller.EXTRA_OTHER_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
+                    broadcastIntent.putExtra(AMPackageInstaller.EXTRA_STATUS, status);
+                    getApplication().sendBroadcast(broadcastIntent);
+                    Log.e("PIS", "Install failed! " + intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE));
+                    finish();
+                    break;
+            }
+        }
     }
 
     @Override

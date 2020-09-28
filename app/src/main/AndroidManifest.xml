@@ -155,7 +155,7 @@
             android:excludeFromRecents="true"
             android:exported="true"
             android:label="@string/install"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTop"
             android:taskAffinity=""
             android:theme="@style/AppTheme.TransparentBackground">
             <intent-filter>
@@ -209,7 +209,6 @@
             android:theme="@style/AppTheme.TransparentBackground" />
 
         <service android:name=".apk.installer.AMPackageInstallerService" />
-        <service android:name=".apk.installer.PackageInstallerService" />
         <service
             android:name=".batchops.BatchOpsService"
             android:exported="false" />

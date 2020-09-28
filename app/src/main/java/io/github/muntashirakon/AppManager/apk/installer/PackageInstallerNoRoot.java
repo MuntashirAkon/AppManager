@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.apk.installer;
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -57,14 +58,17 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
     @Override
     public boolean install(@NonNull ApkFile apkFile) {
         packageName = apkFile.getPackageName();
+        Log.d(TAG, "Install: opening session...");
         if (!openSession()) return false;
         List<ApkFile.Entry> selectedEntries = apkFile.getSelectedEntries();
+        Log.d(TAG, "Install: selected entries: " + selectedEntries.size());
         // Write apk files
         for (ApkFile.Entry entry : selectedEntries) {
             try (InputStream apkInputStream = entry.getInputStream();
                  OutputStream apkOutputStream = session.openWrite(entry.getFileName(), 0, entry.getFileSize())) {
                 IOUtils.copy(apkInputStream, apkOutputStream);
                 session.fsync(apkOutputStream);
+                Log.d(TAG, "Install: copied entry " + entry.name);
             } catch (IOException e) {
                 sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE);
                 Log.e(TAG, "Install: Cannot copy files to session.", e);
@@ -75,7 +79,7 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
                 return abandon();
             }
         }
-        // Commit
+        Log.d(TAG, "Install: Running installation...");
         commit();
         return true;
     }
@@ -107,9 +111,12 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
 
     @Override
     boolean commit() {
-        Intent callbackIntent = new Intent(context, PackageInstallerService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(context, 0, callbackIntent, 0);
-        session.commit(pendingIntent.getIntentSender());
+        Log.d(TAG, "Commit: calling activity to request permission...");
+        Intent intent = new Intent(context, PackageInstallerActivity.class);
+        intent.setAction(PackageInstallerActivity.ACTION_PACKAGE_INSTALLED);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        IntentSender statusReceiver = pendingIntent.getIntentSender();
+        session.commit(statusReceiver);
         return true;
     }
 
@@ -126,6 +133,7 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
         int sessionId;
         try {
             sessionId = packageInstaller.createSession(sessionParams);
+            Log.d(TAG, "OpenSession: session id " + sessionId);
         } catch (IOException e) {
             sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE);
             Log.e(TAG, "OpenSession: Failed to create install session.", e);
@@ -133,6 +141,7 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
         }
         try {
             session = packageInstaller.openSession(sessionId);
+            Log.d(TAG, "OpenSession: session opened.");
         } catch (IOException e) {
             sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE);
             Log.e(TAG, "OpenSession: Failed to open install session.", e);
