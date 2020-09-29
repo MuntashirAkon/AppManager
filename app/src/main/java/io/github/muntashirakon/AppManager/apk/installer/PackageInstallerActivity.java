@@ -62,6 +62,7 @@ public class PackageInstallerActivity extends BaseActivity {
     private PackageManager mPackageManager;
     private FragmentManager fm;
     private String packageName;
+    private int sessionId = -1;
     private boolean closeApkFile = true;
     private int apkFileKey;
     private ActivityResultLauncher<String[]> permInstallWithObb = registerForActivityResult(
@@ -71,7 +72,14 @@ public class PackageInstallerActivity extends BaseActivity {
                 }
             });
     private ActivityResultLauncher<Intent> confirmIntentLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> finish());
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                // User did some interaction and the installer screen is closed now
+                Intent broadcastIntent = new Intent(AMPackageInstaller.ACTION_INSTALL_INTERACTION_END);
+                broadcastIntent.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
+                broadcastIntent.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
+                getApplicationContext().sendBroadcast(broadcastIntent);
+                finish();
+            });
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -286,7 +294,7 @@ public class PackageInstallerActivity extends BaseActivity {
         super.onNewIntent(intent);
         // Check for action first
         if (ACTION_PACKAGE_INSTALLED.equals(intent.getAction())) {
-            int sessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
+            sessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
             try {
                 Intent confirmIntent = intent.getParcelableExtra(Intent.EXTRA_INTENT);
                 packageName = intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME);

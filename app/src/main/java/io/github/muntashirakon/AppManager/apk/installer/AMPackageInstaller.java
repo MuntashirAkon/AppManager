@@ -32,6 +32,9 @@ import io.github.muntashirakon.AppManager.apk.ApkFile;
 public abstract class AMPackageInstaller {
     public static final String ACTION_INSTALL_STARTED = BuildConfig.APPLICATION_ID + ".action.INSTALL_STARTED";
     public static final String ACTION_INSTALL_COMPLETED = BuildConfig.APPLICATION_ID + ".action.INSTALL_COMPLETED";
+    // For rootless installer to prevent PackageInstallerService from hanging
+    public static final String ACTION_INSTALL_INTERACTION_BEGIN = BuildConfig.APPLICATION_ID + ".action.INSTALL_INTERACTION_BEGIN";
+    public static final String ACTION_INSTALL_INTERACTION_END = BuildConfig.APPLICATION_ID + ".action.INSTALL_INTERACTION_END";
 
     /**
      * See {@link PackageInstaller#STATUS_SUCCESS}

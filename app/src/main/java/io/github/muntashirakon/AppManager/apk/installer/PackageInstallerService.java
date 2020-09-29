@@ -55,40 +55,60 @@ public class PackageInstallerService extends IntentService {
         super("PackageInstallerService");
     }
 
-    private boolean completed = false;
+    private boolean installComplete = false;
+    private boolean runIndefinitely = false;
+    private int timeCount = 18000000;  // 5 hrs
+
     private boolean closeApkFile = false;
     private String appLabel;
     private String packageName;
+    private int sessionId = -1;
     private ApkFile apkFile;
     private NotificationCompat.Builder builder;
     private NotificationManager notificationManager;
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        private int sessionId = -1;
-
         @Override
         public void onReceive(Context context, @NonNull Intent intent) {
             if (intent.getAction() == null) return;
-            String packageName = intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME);
+            int sessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
+            Log.d("PIS", "Action: " + intent.getAction());
+            Log.d("PIS", "Session ID: " + sessionId);
             switch (intent.getAction()) {
                 case AMPackageInstaller.ACTION_INSTALL_STARTED:
+                    // Session successfully created
+                    String packageName = intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME);
                     if (PackageInstallerService.this.packageName.equals(packageName)) {
-                        this.sessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
-                        Log.d("PIS", "Session ID: " + this.sessionId);
+                        PackageInstallerService.this.sessionId = sessionId;
+                    }
+                    break;
+                case AMPackageInstaller.ACTION_INSTALL_INTERACTION_BEGIN:
+                    // A install prompt is being shown to the user
+                    if (PackageInstallerService.this.sessionId == sessionId) {
+                        // Run indefinitely until user finally decided to do something about it
+                        runIndefinitely = true;
+                    }
+                    break;
+                case AMPackageInstaller.ACTION_INSTALL_INTERACTION_END:
+                    // The install prompt is hidden by the user, either by clicking cancel or install,
+                    // or just clicking on some place else (latter is our main focus)
+                    if (PackageInstallerService.this.sessionId == sessionId) {
+                        // The user interaction is done, it doesn't take more than 1 minute now
+                        timeCount = 60000;
+                        runIndefinitely = false;
                     }
                     break;
                 case AMPackageInstaller.ACTION_INSTALL_COMPLETED:
+                    // Either it failed to create a session or the installation was completed,
+                    // regardless of the status: success or failure
                     int status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, AMPackageInstaller.STATUS_FAILURE_INVALID);
-                    int sessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
-                    Log.d("PIS", "Session ID: " + sessionId);
-                    if (PackageInstallerService.this.packageName.equals(packageName)) {
-                        if (status == AMPackageInstaller.STATUS_FAILURE_SESSION_CREATE
-                                || (sessionId != -1 && this.sessionId == sessionId)) {
-                            sendNotification(status, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
-                            if (closeApkFile && apkFile != null) {
-                                apkFile.close();
-                            }
-                            completed = true;
+                    // No need to check package name since it's been checked before
+                    if (status == AMPackageInstaller.STATUS_FAILURE_SESSION_CREATE
+                            || (sessionId != -1 && PackageInstallerService.this.sessionId == sessionId)) {
+                        sendNotification(status, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
+                        if (closeApkFile && apkFile != null) {
+                            apkFile.close();
                         }
+                        installComplete = true;
                     }
                     break;
             }
@@ -115,6 +135,8 @@ public class PackageInstallerService extends IntentService {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(AMPackageInstaller.ACTION_INSTALL_COMPLETED);
         intentFilter.addAction(AMPackageInstaller.ACTION_INSTALL_STARTED);
+        intentFilter.addAction(AMPackageInstaller.ACTION_INSTALL_INTERACTION_BEGIN);
+        intentFilter.addAction(AMPackageInstaller.ACTION_INSTALL_INTERACTION_END);
         registerReceiver(broadcastReceiver, intentFilter);
         piReceiver = new AMPackageInstallerBroadcastReceiver();
         registerReceiver(piReceiver, new IntentFilter(AMPackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER));
@@ -147,7 +169,7 @@ public class PackageInstallerService extends IntentService {
                     new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(this,
                             R.string.obb_files_extracted_successfully, Toast.LENGTH_LONG).show());
                 }
-                if (!completed) {
+                if (!installComplete) {
                     // Reset close apk file if the install isn't completed
                     closeApkFile = tmpCloseApkFile;
                 } else {
@@ -162,15 +184,22 @@ public class PackageInstallerService extends IntentService {
         } else {
             PackageInstallerNoRoot.getInstance().install(apkFile);
         }
-        int count = 18000000; // 5 hours
+        // Wait for user interaction (if needed)
         int interval = 100; // 100 millis
-        while (!completed && count != 0) {
+        while (!installComplete && (runIndefinitely || timeCount != 0)) {
             try {
                 Thread.sleep(interval);
-                count -= interval;
+                timeCount -= interval;
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Log.e("PIS", "Installation interrupted.", e);
+                // Thread interrupted, just exit
+                break;
             }
+        }
+        // Remove session if exist
+        try {
+            getPackageManager().getPackageInstaller().abandonSession(sessionId);
+        } catch (SecurityException ignore) {
         }
     }
 

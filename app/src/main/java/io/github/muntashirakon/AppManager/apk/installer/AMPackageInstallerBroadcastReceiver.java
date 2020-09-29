@@ -50,6 +50,13 @@ class AMPackageInstallerBroadcastReceiver extends BroadcastReceiver {
         switch (status) {
             case PackageInstaller.STATUS_PENDING_USER_ACTION:
                 Log.d(TAG, "Requesting user confirmation...");
+                // Send broadcast first
+                Intent broadcastIntent2 = new Intent(AMPackageInstaller.ACTION_INSTALL_INTERACTION_BEGIN);
+                broadcastIntent2.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
+                broadcastIntent2.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
+                mContext.sendBroadcast(broadcastIntent2);
+                // Open confirmIntent using the PackageInstallerActivity.
+                // If the confirmIntent isn't open via an activity, it will fail for large apk files
                 Intent confirmIntent = intent.getParcelableExtra(Intent.EXTRA_INTENT);
                 Intent intent2 = new Intent(mContext, PackageInstallerActivity.class);
                 intent2.setAction(PackageInstallerActivity.ACTION_PACKAGE_INSTALLED);
