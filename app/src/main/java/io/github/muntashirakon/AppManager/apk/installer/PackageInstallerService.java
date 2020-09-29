@@ -26,6 +26,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInstaller;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -37,6 +38,7 @@ import androidx.core.app.NotificationCompat;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
@@ -61,17 +63,34 @@ public class PackageInstallerService extends IntentService {
     private NotificationCompat.Builder builder;
     private NotificationManager notificationManager;
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        private int sessionId = -1;
+
         @Override
         public void onReceive(Context context, @NonNull Intent intent) {
-            if (intent.getAction() != null && intent.getAction().equals(AMPackageInstaller.ACTION_INSTALL_COMPLETED)) {
-                String packageName = intent.getStringExtra(AMPackageInstaller.EXTRA_PACKAGE_NAME);
-                if (packageName != null && packageName.equals(PackageInstallerService.this.packageName)) {
-                    sendNotification(intent.getIntExtra(AMPackageInstaller.EXTRA_STATUS, AMPackageInstaller.STATUS_FAILURE_INVALID), intent.getStringExtra(AMPackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
-                    if (closeApkFile && apkFile != null) {
-                        apkFile.close();
+            if (intent.getAction() == null) return;
+            String packageName = intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME);
+            switch (intent.getAction()) {
+                case AMPackageInstaller.ACTION_INSTALL_STARTED:
+                    if (PackageInstallerService.this.packageName.equals(packageName)) {
+                        this.sessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
+                        Log.d("PIS", "Session ID: " + this.sessionId);
                     }
-                    completed = true;
-                }
+                    break;
+                case AMPackageInstaller.ACTION_INSTALL_COMPLETED:
+                    int status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, AMPackageInstaller.STATUS_FAILURE_INVALID);
+                    int sessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
+                    Log.d("PIS", "Session ID: " + sessionId);
+                    if (PackageInstallerService.this.packageName.equals(packageName)) {
+                        if (status == AMPackageInstaller.STATUS_FAILURE_SESSION_CREATE
+                                || (sessionId != -1 && this.sessionId == sessionId)) {
+                            sendNotification(status, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
+                            if (closeApkFile && apkFile != null) {
+                                apkFile.close();
+                            }
+                            completed = true;
+                        }
+                    }
+                    break;
             }
         }
     };
@@ -92,7 +111,11 @@ public class PackageInstallerService extends IntentService {
                 .setProgress(0, 0, true)
                 .setContentIntent(pendingIntent);
         startForeground(NOTIFICATION_ID, builder.build());
-        registerReceiver(broadcastReceiver, new IntentFilter(AMPackageInstaller.ACTION_INSTALL_COMPLETED));
+        // Add receivers
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(AMPackageInstaller.ACTION_INSTALL_COMPLETED);
+        intentFilter.addAction(AMPackageInstaller.ACTION_INSTALL_STARTED);
+        registerReceiver(broadcastReceiver, intentFilter);
         piReceiver = new AMPackageInstallerBroadcastReceiver();
         registerReceiver(piReceiver, new IntentFilter(AMPackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER));
         return super.onStartCommand(intent, flags, startId);

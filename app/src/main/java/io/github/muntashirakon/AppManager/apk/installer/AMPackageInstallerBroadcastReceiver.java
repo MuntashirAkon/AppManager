@@ -61,13 +61,14 @@ class AMPackageInstallerBroadcastReceiver extends BroadcastReceiver {
                 break;
             case PackageInstaller.STATUS_SUCCESS:
                 Log.d(TAG, "Install success!");
-                AMPackageInstaller.sendCompletedBroadcast(packageName, AMPackageInstaller.STATUS_SUCCESS);
+                AMPackageInstaller.sendCompletedBroadcast(packageName, AMPackageInstaller.STATUS_SUCCESS, sessionId);
                 break;
             default:
                 Intent broadcastIntent = new Intent(AMPackageInstaller.ACTION_INSTALL_COMPLETED);
-                broadcastIntent.putExtra(AMPackageInstaller.EXTRA_PACKAGE_NAME, packageName);
-                broadcastIntent.putExtra(AMPackageInstaller.EXTRA_OTHER_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
-                broadcastIntent.putExtra(AMPackageInstaller.EXTRA_STATUS, status);
+                broadcastIntent.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
+                broadcastIntent.putExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
+                broadcastIntent.putExtra(PackageInstaller.EXTRA_STATUS, status);
+                broadcastIntent.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
                 mContext.sendBroadcast(broadcastIntent);
                 Log.e(TAG, "Install failed! " + intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE));
                 break;

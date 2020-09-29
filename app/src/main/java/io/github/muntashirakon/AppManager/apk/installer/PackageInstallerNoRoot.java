@@ -70,11 +70,11 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
                 session.fsync(apkOutputStream);
                 Log.d(TAG, "Install: copied entry " + entry.name);
             } catch (IOException e) {
-                sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE);
+                sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE, sessionId);
                 Log.e(TAG, "Install: Cannot copy files to session.", e);
                 return abandon();
             } catch (SecurityException e) {
-                sendCompletedBroadcast(packageName, STATUS_FAILURE_SECURITY);
+                sendCompletedBroadcast(packageName, STATUS_FAILURE_SECURITY, sessionId);
                 Log.e(TAG, "Install: Cannot access apk files.", e);
                 return abandon();
             }
@@ -95,11 +95,11 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
                 IOUtils.copy(apkInputStream, apkOutputStream);
                 session.fsync(apkOutputStream);
             } catch (IOException e) {
-                sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE);
+                sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE, sessionId);
                 Log.e(TAG, "Install: Cannot copy files to session.", e);
                 return abandon();
             } catch (SecurityException e) {
-                sendCompletedBroadcast(packageName, STATUS_FAILURE_SECURITY);
+                sendCompletedBroadcast(packageName, STATUS_FAILURE_SECURITY, sessionId);
                 Log.e(TAG, "Install: Cannot access apk files.", e);
                 return abandon();
             }
@@ -120,7 +120,6 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
 
     @Override
     boolean openSession() {
-        sendStartedBroadcast(packageName);
         packageInstaller = context.getPackageManager().getPackageInstaller();
         // Clean old sessions
         cleanOldSessions();
@@ -132,7 +131,7 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
             sessionId = packageInstaller.createSession(sessionParams);
             Log.d(TAG, "OpenSession: session id " + sessionId);
         } catch (IOException e) {
-            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE);
+            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE, sessionId);
             Log.e(TAG, "OpenSession: Failed to create install session.", e);
             return false;
         }
@@ -140,10 +139,11 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
             session = packageInstaller.openSession(sessionId);
             Log.d(TAG, "OpenSession: session opened.");
         } catch (IOException e) {
-            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE);
+            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE, sessionId);
             Log.e(TAG, "OpenSession: Failed to open install session.", e);
             return false;
         }
+        sendStartedBroadcast(packageName, sessionId);
         return true;
     }
 

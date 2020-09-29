@@ -30,10 +30,6 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 
 public abstract class AMPackageInstaller {
-    public static final String EXTRA_STATUS = "EXTRA_STATUS";
-    public static final String EXTRA_PACKAGE_NAME = "EXTRA_PACKAGE_NAME";
-    public static final String EXTRA_OTHER_PACKAGE_NAME = "EXTRA_OTHER_PACKAGE_NAME";
-
     public static final String ACTION_INSTALL_STARTED = BuildConfig.APPLICATION_ID + ".action.INSTALL_STARTED";
     public static final String ACTION_INSTALL_COMPLETED = BuildConfig.APPLICATION_ID + ".action.INSTALL_COMPLETED";
 
@@ -106,16 +102,18 @@ public abstract class AMPackageInstaller {
 
     abstract boolean commit();
 
-    static void sendStartedBroadcast(String packageName) {
+    static void sendStartedBroadcast(String packageName, int sessionId) {
         Intent broadcastIntent = new Intent(ACTION_INSTALL_STARTED);
-        broadcastIntent.putExtra(EXTRA_PACKAGE_NAME, packageName);
+        broadcastIntent.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
+        broadcastIntent.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
         context.sendBroadcast(broadcastIntent);
     }
 
-    static void sendCompletedBroadcast(String packageName, int status) {
+    static void sendCompletedBroadcast(String packageName, int status, int sessionId) {
         Intent broadcastIntent = new Intent(ACTION_INSTALL_COMPLETED);
-        broadcastIntent.putExtra(EXTRA_PACKAGE_NAME, packageName);
-        broadcastIntent.putExtra(EXTRA_STATUS, status);
+        broadcastIntent.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
+        broadcastIntent.putExtra(PackageInstaller.EXTRA_STATUS, status);
+        broadcastIntent.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
         context.sendBroadcast(broadcastIntent);
     }
 }

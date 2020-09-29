@@ -71,12 +71,7 @@ public class PackageInstallerActivity extends BaseActivity {
                 }
             });
     private ActivityResultLauncher<Intent> confirmIntentLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(), result -> {
-                // When cancelled implicitly, confirmIntent doesn't return result to the
-                // corresponding broadcast receiver.
-                AMPackageInstaller.sendCompletedBroadcast(packageName, AMPackageInstaller.STATUS_FAILURE_ABORTED);
-                finish();
-            });
+            new ActivityResultContracts.StartActivityForResult(), result -> finish());
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -291,6 +286,7 @@ public class PackageInstallerActivity extends BaseActivity {
         super.onNewIntent(intent);
         // Check for action first
         if (ACTION_PACKAGE_INSTALLED.equals(intent.getAction())) {
+            int sessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
             try {
                 Intent confirmIntent = intent.getParcelableExtra(Intent.EXTRA_INTENT);
                 packageName = intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME);
@@ -300,7 +296,7 @@ public class PackageInstallerActivity extends BaseActivity {
                 confirmIntentLauncher.launch(confirmIntent);
             } catch (Exception e) {
                 e.printStackTrace();
-                AMPackageInstaller.sendCompletedBroadcast(packageName, AMPackageInstaller.STATUS_FAILURE_INCOMPATIBLE_ROM);
+                AMPackageInstaller.sendCompletedBroadcast(packageName, AMPackageInstaller.STATUS_FAILURE_INCOMPATIBLE_ROM, sessionId);
                 finish();
             }
         }

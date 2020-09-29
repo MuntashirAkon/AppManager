@@ -87,16 +87,16 @@ public final class PackageInstallerShell extends AMPackageInstaller {
                     result = Shell.su(cmd).add(apkInputStream).exec();
                     buf = TextUtils.join("\n", result.getOut());
                     if (!result.isSuccess() || buf == null || !buf.contains("Success")) {
-                        sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE);
+                        sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE, sessionId);
                         Log.e(TAG, String.format("Install: Failed to write %s.", entry.getFileName()));
                         return abandon();
                     }
                 } catch (IOException e) {
-                    sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE);
+                    sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE, sessionId);
                     Log.e(TAG, "Install: Cannot copy files to session.", e);
                     return abandon();
                 } catch (SecurityException e) {
-                    sendCompletedBroadcast(packageName, STATUS_FAILURE_SECURITY);
+                    sendCompletedBroadcast(packageName, STATUS_FAILURE_SECURITY, sessionId);
                     Log.e(TAG, "Install: Cannot access apk files.", e);
                     return abandon();
                 }
@@ -122,7 +122,7 @@ public final class PackageInstallerShell extends AMPackageInstaller {
             result = Runner.runCommand(cmd);
             buf = result.getOutput();
             if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
-                sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE);
+                sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE, sessionId);
                 Log.e(TAG, String.format("Install: Failed to write %s.", apkFile.getName()));
                 return abandon();
             }
@@ -138,8 +138,8 @@ public final class PackageInstallerShell extends AMPackageInstaller {
         Runner.Result result = Runner.runCommand(cmd);
         String buf = result.getOutput();
         if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
-            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE);
-            Log.e(TAG, "Install: Failed to create install session.");
+            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE, sessionId);
+            Log.e(TAG, "Install: Failed to create install session. " + buf);
             return false;
         }
         int start = buf.indexOf('[');
@@ -147,15 +147,16 @@ public final class PackageInstallerShell extends AMPackageInstaller {
         try {
             sessionId = Integer.parseInt(buf.substring(start + 1, end));
         } catch (IndexOutOfBoundsException | NumberFormatException e) {
-            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE);
+            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE, sessionId);
             Log.e(TAG, "Install: Failed to parse session id.", e);
             return false;
         }
         if (sessionId < 0) {
-            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE);
+            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE, sessionId);
             Log.e(TAG, "Install: Session id cannot be less than 0.");
             return false;
         }
+        sendStartedBroadcast(packageName, sessionId);
         return true;
     }
 
@@ -164,7 +165,7 @@ public final class PackageInstallerShell extends AMPackageInstaller {
         Runner.Result result = Runner.runCommand(installCmd + " install-abandon " + sessionId);
         String buf = result.getOutput();
         if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
-            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_ABANDON);
+            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_ABANDON, sessionId);
             Log.e(TAG, "Abandon: Failed to abandon session.");
         }
         return false;
@@ -177,23 +178,23 @@ public final class PackageInstallerShell extends AMPackageInstaller {
         String buf = result.getOutput();
         if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
             if (buf == null) {
-                sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_COMMIT);
+                sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_COMMIT, sessionId);
                 Log.e(TAG, "Install: Failed to commit the install.");
             } else {
                 int start = buf.indexOf('[');
                 int end = buf.indexOf(']');
                 try {
                     String statusStr = buf.substring(start + 1, end);
-                    sendCompletedBroadcast(packageName, statusStrToStatus(statusStr));
+                    sendCompletedBroadcast(packageName, statusStrToStatus(statusStr), sessionId);
                     Log.e(TAG, "Install: " + statusStr);
                 } catch (IndexOutOfBoundsException e) {
-                    sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_COMMIT);
+                    sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_COMMIT, sessionId);
                     Log.e(TAG, "Install: Failed to commit the install.");
                 }
             }
             return false;
         }
-        sendCompletedBroadcast(packageName, STATUS_SUCCESS);
+        sendCompletedBroadcast(packageName, STATUS_SUCCESS, sessionId);
         return true;
     }
 
