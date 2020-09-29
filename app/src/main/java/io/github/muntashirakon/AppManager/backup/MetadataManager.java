@@ -240,7 +240,7 @@ public final class MetadataManager {
         metadata.splitNames = ArrayUtils.defeatNullable(metadata.splitNames);
         metadata.hasRules = false;
         if (requestedFlags.backupRules()) {
-            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageInfo.packageName)) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageInfo.packageName, userHandle)) {
                 metadata.hasRules = cb.entryCount() > 0;
             }
         }

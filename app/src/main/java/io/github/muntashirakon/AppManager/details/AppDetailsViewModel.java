@@ -150,7 +150,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     blocker.setReadOnly();
                     blocker.close();
                 }
-                blocker = ComponentsBlocker.getInstance(packageName);
+                blocker = ComponentsBlocker.getInstance(packageName, Users.getCurrentUserHandle());
                 waitForBlocker = false;
                 blockerLocker.notifyAll();
             }

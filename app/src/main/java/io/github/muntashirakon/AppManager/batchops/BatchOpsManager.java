@@ -252,7 +252,7 @@ public class BatchOpsManager {
     }
 
     private Result opBlockComponents() {
-        final List<String> failedPkgList = ComponentUtils.blockFilteredComponents(packageNames, args.getStringArray(ARG_SIGNATURES));
+        final List<String> failedPkgList = ComponentUtils.blockFilteredComponents(packageNames, args.getStringArray(ARG_SIGNATURES), Users.getCurrentUserHandle());
         return lastResult = new Result() {
             @Override
             public boolean isSuccessful() {
@@ -268,7 +268,7 @@ public class BatchOpsManager {
     }
 
     private Result opBlockTrackers() {
-        final List<String> failedPkgList = ComponentUtils.blockTrackingComponents(packageNames);
+        final List<String> failedPkgList = ComponentUtils.blockTrackingComponents(packageNames, Users.getCurrentUserHandle());
         return lastResult = new Result() {
             @Override
             public boolean isSuccessful() {
@@ -303,14 +303,15 @@ public class BatchOpsManager {
 
     @NonNull
     private Result opDisableBackground() {
+        int userHandle = Users.getCurrentUserHandle();
         for (String packageName : packageNames) {
-            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_APP_OPS_SET_MODE_INT, packageName, 63, AppOpsManager.MODE_IGNORED));
+            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_APP_OPS_SET_MODE_INT, userHandle, packageName, AppOpsManager.OP_RUN_IN_BACKGROUND, AppOpsManager.MODE_IGNORED));
         }
         Result result = runOpAndFetchResults();
         List<String> failedPackages = result.failedPackages();
         for (String packageName : packageNames) {
             if (!failedPackages.contains(packageName)) {
-                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
                     cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
                 }
             }
@@ -337,7 +338,7 @@ public class BatchOpsManager {
     }
 
     private Result opIgnoreAppOps() {
-        final List<String> failedPkgList = ExternalComponentsImporter.denyFilteredAppOps(packageNames, args.getIntArray(ARG_APP_OPS));
+        final List<String> failedPkgList = ExternalComponentsImporter.denyFilteredAppOps(packageNames, args.getIntArray(ARG_APP_OPS), Users.getCurrentUserHandle());
         return lastResult = new Result() {
             @Override
             public boolean isSuccessful() {
@@ -353,7 +354,7 @@ public class BatchOpsManager {
     }
 
     private Result opUnblockTrackers() {
-        final List<String> failedPkgList = ComponentUtils.unblockTrackingComponents(packageNames);
+        final List<String> failedPkgList = ComponentUtils.unblockTrackingComponents(packageNames, Users.getCurrentUserHandle());
         return lastResult = new Result() {
             @Override
             public boolean isSuccessful() {

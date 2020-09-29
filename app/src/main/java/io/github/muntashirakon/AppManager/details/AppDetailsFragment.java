@@ -73,6 +73,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.server.common.OpEntry;
@@ -323,7 +324,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 return true;
             case R.id.action_block_trackers:  // Components
                 new Thread(() -> {
-                    List<String> failedPkgList = ComponentUtils.blockTrackingComponents(Collections.singletonList(mPackageName));
+                    List<String> failedPkgList = ComponentUtils.blockTrackingComponents(Collections.singletonList(mPackageName), Users.getCurrentUserHandle());
                     if (failedPkgList.contains(mPackageName)) {
                         runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_disable_trackers, Toast.LENGTH_SHORT).show());
                     } else {

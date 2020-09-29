@@ -31,6 +31,7 @@ import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 
 /**
@@ -51,10 +52,11 @@ public class RulesExporter {
 
     public void saveRules(Uri uri) throws IOException {
         if (mPackagesToExport == null) mPackagesToExport = getAllPackages();
+        int userHandle = Users.getCurrentUserHandle();
         try (OutputStream outputStream = mContext.getContentResolver().openOutputStream(uri)) {
             for (String packageName: mPackagesToExport) {
                 // Get a read-only instance
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName)) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, userHandle)) {
                     for (RulesStorageManager.Entry entry: cb.getAll()) {
                         if (mTypesToExport.contains(entry.type)) {
                             Objects.requireNonNull(outputStream).write(String.format("%s\t%s\t%s\t%s\n", packageName, entry.name, entry.type.name(), entry.extra).getBytes());

@@ -99,10 +99,12 @@ public class RulesStorageManager implements Closeable {
     protected String packageName;
     @GuardedBy("entries")
     protected boolean readOnly = true;
+    protected int userHandle;
 
-    protected RulesStorageManager(@NonNull Context context, @NonNull String packageName) {
+    protected RulesStorageManager(@NonNull Context context, @NonNull String packageName, int userHandle) {
         this.context = context;
         this.packageName = packageName;
+        this.userHandle = userHandle;
         this.entries = new ArrayList<>();
         loadEntries();
     }
@@ -224,13 +226,12 @@ public class RulesStorageManager implements Closeable {
 
     public void applyAppOpsAndPerms(boolean apply) {
         Runner runner = Runner.getInstance();
-        String user = RunnerUtils.userHandleToUser(Users.getCurrentUserHandle());
         if (apply) {
             // Apply all app ops
             List<Entry> appOps = getAll(Type.APP_OP);
             for (Entry appOp : appOps) {
                 try {
-                    runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_APP_OPS_SET, packageName, Integer.parseInt(appOp.name), appOp.extra));
+                    runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_APP_OPS_SET, userHandle, packageName, Integer.parseInt(appOp.name), appOp.extra));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -240,22 +241,22 @@ public class RulesStorageManager implements Closeable {
             for (Entry permission : permissions) {
                 if ((Boolean) permission.extra) {
                     // grant permission
-                    runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_GRANT, user, packageName, permission.name));
+                    runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_GRANT, userHandle, packageName, permission.name));
                 } else {
-                    runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_REVOKE, user, packageName, permission.name));
+                    runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_REVOKE, userHandle, packageName, permission.name));
                 }
             }
         } else {
             // Reset all app ops
             try {
-                runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_APP_OPS_RESET, packageName));
+                runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_APP_OPS_RESET_USER, userHandle, packageName));
             } catch (Exception e) {
                 e.printStackTrace();
             }
             // Revoke all permissions
             List<Entry> permissions = getAll(Type.PERMISSION);
             for (Entry permission : permissions) {
-                runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_REVOKE, user, packageName, permission.name));
+                runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_REVOKE, userHandle, packageName, permission.name));
             }
         }
         // Run all commands

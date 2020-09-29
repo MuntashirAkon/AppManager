@@ -49,6 +49,7 @@ import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -320,9 +321,11 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     private void loadBlockingRules() {
+        // Only load blocking rules for the current user
+        int userHandle = Users.getCurrentUserHandle();
         for (int i = 0; i < applicationItems.size(); ++i) {
             ApplicationItem applicationItem = applicationItems.get(i);
-            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(applicationItem.packageName, true)) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(applicationItem.packageName, userHandle, true)) {
                 applicationItem.blockedCount = cb.componentCount();
             }
             applicationItems.set(i, applicationItem);
@@ -468,7 +471,7 @@ public class MainViewModel extends AndroidViewModel {
             item.sha = Utils.getIssuerAndAlg(packageInfo);
             item.sdk = applicationInfo.targetSdkVersion;
             if (mSortBy == MainActivity.SORT_BY_BLOCKED_COMPONENTS && AppPref.isRootEnabled()) {
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, true)) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, Users.getCurrentUserHandle(), true)) {
                     item.blockedCount = cb.componentCount();
                 }
             }

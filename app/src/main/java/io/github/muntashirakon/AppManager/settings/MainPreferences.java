@@ -40,6 +40,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -123,7 +124,8 @@ public class MainPreferences extends PreferenceFragmentCompat {
         gcb.setOnPreferenceChangeListener((preference, isEnabled) -> {
             if (AppPref.isRootEnabled() && (boolean) isEnabled) {
                 // Apply all rules immediately if GCB is true
-                ComponentsBlocker.applyAllRules(activity);
+                int userHandle = Users.getCurrentUserHandle();
+                ComponentsBlocker.applyAllRules(activity, userHandle);
             }
             return true;
         });
@@ -140,9 +142,11 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .setPositiveButton(R.string.yes, (dialog, which) -> {
                         activity.progressIndicator.show();
                         new Thread(() -> {
+                            // TODO: Remove for all users
+                            int userHandle = Users.getCurrentUserHandle();
                             List<String> packages = ComponentUtils.getAllPackagesWithRules();
                             for (String packageName : packages) {
-                                ComponentUtils.removeAllRules(packageName);
+                                ComponentUtils.removeAllRules(packageName, userHandle);
                             }
                             activity.runOnUiThread(() -> {
                                 activity.progressIndicator.hide();

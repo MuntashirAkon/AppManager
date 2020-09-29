@@ -69,23 +69,23 @@ public final class ComponentsBlocker extends RulesStorageManager {
     private static ComponentsBlocker INSTANCE;
 
     @NonNull
-    public static ComponentsBlocker getInstance(@NonNull String packageName) {
-        return getInstance(packageName, false);
+    public static ComponentsBlocker getInstance(@NonNull String packageName, int userHandle) {
+        return getInstance(packageName, userHandle, false);
     }
 
     @NonNull
-    public static ComponentsBlocker getMutableInstance(@NonNull String packageName) {
-        ComponentsBlocker componentsBlocker = getInstance(packageName, true);
+    public static ComponentsBlocker getMutableInstance(@NonNull String packageName, int userHandle) {
+        ComponentsBlocker componentsBlocker = getInstance(packageName, userHandle, true);
         componentsBlocker.readOnly = false;
         return componentsBlocker;
     }
 
     @NonNull
-    public static ComponentsBlocker getInstance(@NonNull String packageName, boolean noLoadFromDisk) {
+    public static ComponentsBlocker getInstance(@NonNull String packageName, int userHandle, boolean noLoadFromDisk) {
         if (INSTANCE == null) {
             try {
                 getLocalIfwRulesPath();
-                INSTANCE = new ComponentsBlocker(AppManager.getContext(), packageName);
+                INSTANCE = new ComponentsBlocker(AppManager.getContext(), packageName, userHandle);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 throw new AssertionError();
@@ -93,7 +93,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
         } else if (!INSTANCE.packageName.equals(packageName)) {
             INSTANCE.close();
             INSTANCE = null;
-            INSTANCE = new ComponentsBlocker(AppManager.getContext(), packageName);
+            INSTANCE = new ComponentsBlocker(AppManager.getContext(), packageName, userHandle);
         }
         if (!noLoadFromDisk && AppPref.isRootEnabled())
             INSTANCE.retrieveDisabledComponents();
@@ -118,8 +118,8 @@ public final class ComponentsBlocker extends RulesStorageManager {
 
     private File localRulesFile;
 
-    protected ComponentsBlocker(Context context, String packageName) {
-        super(context, packageName);
+    protected ComponentsBlocker(Context context, String packageName, int userHandle) {
+        super(context, packageName, userHandle);
         this.localRulesFile = new File(LOCAL_RULES_PATH, packageName + ".xml");
     }
 
@@ -128,8 +128,9 @@ public final class ComponentsBlocker extends RulesStorageManager {
      * the internal conf path. In v2.6, the former path will be removed.
      *
      * @param context Application Context
+     * @param userHandle The user to apply rules
      */
-    public static void applyAllRules(@NonNull Context context) {
+    public static void applyAllRules(@NonNull Context context, int userHandle) {
         // Apply all rules from conf folder
         PrivilegedFile confPath = new PrivilegedFile(context.getFilesDir(), "conf");
         String[] packageNamesWithTSV = confPath.list((dir, name) -> name.endsWith(".tsv"));
@@ -138,7 +139,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
             String packageName;
             for (String s : packageNamesWithTSV) {
                 packageName = s.substring(0, s.lastIndexOf(".tsv"));
-                try (ComponentsBlocker cb = getMutableInstance(packageName)) {
+                try (ComponentsBlocker cb = getMutableInstance(packageName, userHandle)) {
                     cb.applyRules(true);
                 }
             }

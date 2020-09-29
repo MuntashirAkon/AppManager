@@ -43,6 +43,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
@@ -57,6 +58,7 @@ public class ImportExportDialogFragment extends DialogFragment {
     private static final String MIME_TSV = "text/tab-separated-values";
     private static final String MIME_XML = "text/xml";
 
+    private int userHandle = Users.getCurrentUserHandle();
     private SettingsActivity activity;
     private ActivityResultLauncher<String> exportRules = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
         RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
@@ -171,7 +173,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                             .setPositiveButton(R.string.apply, (dialog, which) -> {
                                 activity.progressIndicator.show();
                                 new Thread(() -> {
-                                    List<String> failedPackages = ExternalComponentsImporter.applyFromExistingBlockList(selectedPackages);
+                                    List<String> failedPackages = ExternalComponentsImporter.applyFromExistingBlockList(selectedPackages, userHandle);
                                     if (!failedPackages.isEmpty()) {
                                         handler.post(() -> {
                                             new MaterialAlertDialogBuilder(activity)

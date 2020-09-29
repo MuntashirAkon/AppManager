@@ -37,6 +37,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 
 public class RulesTypeSelectionDialogFragment extends DialogFragment {
@@ -114,7 +115,7 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
     private void handleImport() {
         new Thread(() -> {
             try (RulesImporter importer = new RulesImporter(new ArrayList<>(mSelectedTypes))) {
-                importer.addRulesFromUri(mUri);
+                importer.addRulesFromUri(mUri, Users.getCurrentUserHandle());
                 if (mPackages != null) importer.setPackagesToImport(mPackages);
                 importer.applyRules();
                 activity.runOnUiThread(() -> Toast.makeText(activity, R.string.the_import_was_successful, Toast.LENGTH_LONG).show());

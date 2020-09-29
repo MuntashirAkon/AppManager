@@ -71,8 +71,8 @@ public final class RunnerUtils {
     public static final String CMD_APP_OPS_GET_ALL = CMD_APP_OPS + " get %s";
     public static final String CMD_APP_OPS_RESET = CMD_APP_OPS + " reset %s";
     public static final String CMD_APP_OPS_RESET_USER = CMD_APP_OPS + " reset --user %d %s";
-    public static final String CMD_APP_OPS_SET = CMD_APP_OPS + " set %s %d %s";
-    public static final String CMD_APP_OPS_SET_MODE_INT = CMD_APP_OPS + " set %s %d %d";
+    public static final String CMD_APP_OPS_SET = CMD_APP_OPS + " set --user %d %s %d %s";
+    public static final String CMD_APP_OPS_SET_MODE_INT = CMD_APP_OPS + " set --user %d %s %d %d";
     public static final String CMD_APP_OPS_SET_UID = CMD_APP_OPS + " set --uid %d %d %s";
 
     public static final String CMD_PID_PACKAGE = "pidof %s";

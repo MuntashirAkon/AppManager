@@ -82,12 +82,12 @@ public final class ComponentUtils {
     }
 
     @NonNull
-    public static List<String> blockTrackingComponents(@NonNull Collection<String> packageNames) {
+    public static List<String> blockTrackingComponents(@NonNull Collection<String> packageNames, int userHandle) {
         List<String> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
         for (String packageName: packageNames) {
             components = ComponentUtils.getTrackerComponentsForPackage(packageName);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
                 for (String componentName: components.keySet()) {
                     cb.addComponent(componentName, components.get(componentName));
                 }
@@ -101,12 +101,12 @@ public final class ComponentUtils {
     }
 
     @NonNull
-    public static List<String> unblockTrackingComponents(@NonNull Collection<String> packageNames) {
+    public static List<String> unblockTrackingComponents(@NonNull Collection<String> packageNames, int userHandle) {
         List<String> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
         for (String packageName: packageNames) {
             components = getTrackerComponentsForPackage(packageName);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
                 for (String componentName: components.keySet()) {
                     cb.removeComponent(componentName);
                 }
@@ -120,12 +120,12 @@ public final class ComponentUtils {
     }
 
     @NonNull
-    public static List<String> blockFilteredComponents(@NonNull Collection<String> packageNames, String[] signatures) {
+    public static List<String> blockFilteredComponents(@NonNull Collection<String> packageNames, String[] signatures, int userHandle) {
         List<String> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
         for (String packageName: packageNames) {
             components = PackageUtils.getFilteredComponents(packageName, signatures);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
                 for (String componentName: components.keySet()) {
                     cb.addComponent(componentName, components.get(componentName));
                 }
@@ -161,8 +161,8 @@ public final class ComponentUtils {
         return packages;
     }
 
-    public static void removeAllRules(@NonNull String packageName) {
-        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
+    public static void removeAllRules(@NonNull String packageName, int userHandle) {
+        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
             // Remove all blocking rules
             for (RulesStorageManager.Entry entry: cb.getAllComponents()) {
                 cb.removeComponent(entry.name);

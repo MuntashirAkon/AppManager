@@ -265,9 +265,11 @@ public class BackupManager {
         private final ApplicationInfo applicationInfo;
         @NonNull
         private final PrivilegedFile tmpBackupPath;
+        private final int userHandle;
 
         BackupOp(@NonNull BackupFiles.BackupFile backupFile, int userHandle) throws BackupException {
             this.backupFile = backupFile;
+            this.userHandle = userHandle;
             this.metadataManager = BackupManager.this.metadataManager;
             this.backupFlags = BackupManager.this.requestedFlags;
             this.tmpBackupPath = backupFile.getBackupPath();
@@ -386,7 +388,7 @@ public class BackupManager {
         private void backupRules() throws BackupException {
             File rulesFile = new File(tmpBackupPath, RULES_TSV);
             try (OutputStream outputStream = new FileOutputStream(rulesFile);
-                 ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName)) {
+                 ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, userHandle)) {
                 for (RulesStorageManager.Entry entry : cb.getAll()) {
                     // TODO: Do it in ComponentUtils
                     outputStream.write(String.format("%s\t%s\t%s\t%s\n", packageName, entry.name,
@@ -645,9 +647,8 @@ public class BackupManager {
             }
             File permsFile = new File(backupPath, PERMS_TSV);
             if (permsFile.exists()) {
-                // FIXME: Import rules for user handle
                 try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()))) {
-                    importer.addRulesFromUri(Uri.fromFile(permsFile));
+                    importer.addRulesFromUri(Uri.fromFile(permsFile), userHandle);
                     importer.setPackagesToImport(Collections.singletonList(packageName));
                     importer.applyRules();
                 } catch (IOException e) {
@@ -663,9 +664,8 @@ public class BackupManager {
             }
             File rulesFile = new File(backupPath, RULES_TSV);
             if (rulesFile.exists()) {
-                // FIXME: Import rules for user handle
                 try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()))) {
-                    importer.addRulesFromUri(Uri.fromFile(rulesFile));
+                    importer.addRulesFromUri(Uri.fromFile(rulesFile), userHandle);
                     importer.setPackagesToImport(Collections.singletonList(packageName));
                     importer.applyRules();
                 } catch (IOException e) {

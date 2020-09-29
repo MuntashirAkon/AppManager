@@ -40,6 +40,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
@@ -53,13 +54,13 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabled
  */
 public class ExternalComponentsImporter {
     @NonNull
-    public static List<String> denyFilteredAppOps(@NonNull Collection<String> packageNames, int[] appOps) {
+    public static List<String> denyFilteredAppOps(@NonNull Collection<String> packageNames, int[] appOps, int userHandle) {
         List<String> failedPkgList = new ArrayList<>();
         Collection<Integer> appOpList;
         AppOpsService appOpsService = new AppOpsService();
         for (String packageName: packageNames) {
             appOpList = PackageUtils.getFilteredAppOps(packageName, appOps);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
                 for (int appOp: appOpList) {
                     try {
                         appOpsService.setMode(appOp, -1, packageName, AppOpsManager.MODE_IGNORED);
@@ -76,12 +77,12 @@ public class ExternalComponentsImporter {
     }
 
     @NonNull
-    public static List<String> applyFromExistingBlockList(@NonNull List<String> packageNames) {
+    public static List<String> applyFromExistingBlockList(@NonNull List<String> packageNames, int userHandle) {
         List<String> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
         for (String packageName: packageNames) {
             components = PackageUtils.getUserDisabledComponentsForPackage(packageName);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
                 for (String componentName: components.keySet()) {
                     cb.addComponent(componentName, components.get(componentName));
                 }
@@ -141,7 +142,7 @@ public class ExternalComponentsImporter {
             try (InputStream rulesStream = context.getContentResolver().openInputStream(fileUri)) {
                 if (rulesStream == null) throw new IOException("Failed to open input stream.");
                 String packageName = IOUtils.trimExtension(filename);
-                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, Users.getCurrentUserHandle())) {
                     HashMap<String, RulesStorageManager.Type> components = ComponentUtils.readIFWRules(rulesStream, packageName);
                     for (String componentName: components.keySet()) {
                         // Overwrite rules if exists
@@ -186,11 +187,13 @@ public class ExternalComponentsImporter {
                 packageComponents.get(packageName).put(componentName, getType(componentName, packageInfoList.get(packageName)));
             }
             if (packageComponents.size() > 0) {
+                // Apply only for the current user
+                int userHandle = Users.getCurrentUserHandle();
                 for (String packageName: packageComponents.keySet()) {
                     HashMap<String, RulesStorageManager.Type> disabledComponents = packageComponents.get(packageName);
                     //noinspection ConstantConditions
                     if (disabledComponents.size() > 0) {
-                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName)){
+                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)){
                             for (String component: disabledComponents.keySet()) {
                                 cb.addComponent(component, disabledComponents.get(component));
                             }

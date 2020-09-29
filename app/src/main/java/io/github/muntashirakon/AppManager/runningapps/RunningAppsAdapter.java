@@ -163,7 +163,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
                                     try {
                                         new AppOpsService().setMode(AppOpsManager.OP_RUN_IN_BACKGROUND,
                                                 applicationInfo.uid, applicationInfo.packageName, AppOpsManager.MODE_IGNORED);
-                                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(applicationInfo.packageName)) {
+                                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(applicationInfo.packageName, Users.getUserHandle(applicationInfo.uid))) {
                                             cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
                                         }
                                         mActivity.runOnUiThread(() -> mActivity.refresh());

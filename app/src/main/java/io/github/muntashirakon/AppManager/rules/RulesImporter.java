@@ -34,6 +34,7 @@ import java.util.StringTokenizer;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 
 /**
@@ -55,7 +56,7 @@ public class RulesImporter implements Closeable {
         mTypesToImport = typesToImport;
     }
 
-    public void addRulesFromUri(Uri uri) throws IOException {
+    public void addRulesFromUri(Uri uri, int userHandle) throws IOException {
         try (InputStream inputStream = mContext.getContentResolver().openInputStream(uri)) {
             try (BufferedReader TSVFile = new BufferedReader(new InputStreamReader(inputStream))) {
                 StringTokenizer tokenizer;
@@ -79,7 +80,7 @@ public class RulesImporter implements Closeable {
                     else throw new IOException("Malformed file.");
                     if (mComponentsBlockers.get(packageName) == null) {
                         // Get a read-only instance, commit will be called manually
-                        mComponentsBlockers.put(packageName, ComponentsBlocker.getInstance(packageName));
+                        mComponentsBlockers.put(packageName, ComponentsBlocker.getInstance(packageName, userHandle));
                     }
                     if (mTypesToImport.contains(entry.type))
                         Objects.requireNonNull(mComponentsBlockers.get(packageName)).addEntry(entry);
