@@ -643,4 +643,9 @@
         <item quantity="many">Резервная копия существует для более чем одного приложения. Вы уверены\?</item>
         <item quantity="other">Резервная копия существует для более чем одного приложения. Вы уверены\?</item>
     </plurals>
+    <string name="changes_not_saved">Изменения не сохранены</string>
+    <string name="rules">Правила</string>
+    <string name="pref_compression_method">Метод сжатия</string>
+    <string name="pref_backup_flags_msg">Добавление предустановки для параметров резервного копирования снимает бремя выбора флагов при каждом резервном копировании/восстановлении</string>
+    <string name="compression_method">Метод сжатия: %s</string>
 </resources>
