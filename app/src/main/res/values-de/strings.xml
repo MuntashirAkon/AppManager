@@ -606,4 +606,10 @@
     <string name="filter_apps">Apps</string>
     <string name="no_apps">Keine Apps</string>
     <string name="apps">Apps</string>
+    <string name="compression_method">Kompressionsverfahren: % s</string>
+    <string name="pref_backup_flags_msg">Durch Hinzufügen von Voreinstellungen für Sicherungsoptionen entfällt die Auswahl von Flags bei jeder Sicherung / Wiederherstellung</string>
+    <string name="pref_compression_method">Kompressionsverfahren</string>
+    <string name="rules">Regeln</string>
+    <string name="other">Andere</string>
+    <string name="changes_not_saved">Änderungen nicht gespeichert</string>
 </resources>
