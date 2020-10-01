@@ -24,6 +24,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.crypto.Crypto;
+import io.github.muntashirakon.AppManager.crypto.OpenPGPCrypto;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class BackupMode {
@@ -46,5 +49,16 @@ public class BackupMode {
             return MODE_OPEN_PGP;
         }
         return MODE_NO_ENCRYPTION;
+    }
+
+    @Nullable
+    public static Crypto getCrypto(@Mode int mode) {
+        switch (mode) {
+            case MODE_OPEN_PGP:
+                return new OpenPGPCrypto();
+            case MODE_NO_ENCRYPTION:
+            default:
+                return null;
+        }
     }
 }

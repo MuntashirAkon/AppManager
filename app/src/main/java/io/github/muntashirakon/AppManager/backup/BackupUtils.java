@@ -66,18 +66,6 @@ public final class BackupUtils {
     }
 
     @NonNull
-    static String getSha256Sum(@NonNull File[] files) {
-        if (files.length == 1) return PackageUtils.getSha256Checksum(files[0]);
-
-        StringBuilder checksums = new StringBuilder();
-        for (File file : files) {
-            String checksum = PackageUtils.getSha256Checksum(file);
-            checksums.append(checksum);
-        }
-        return PackageUtils.getSha256Checksum(checksums.toString().getBytes());
-    }
-
-    @NonNull
     static Pair<Integer, Integer> getUidAndGid(String filepath, int uid) {
         // Default UID and GID should be the same as the kernel user ID, and will fallback to it
         // if the stat command fails

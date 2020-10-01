@@ -63,9 +63,8 @@ public final class MetadataManager {
         public String[] splitNames;  // split_names
         public boolean hasRules;  // has_rules
         public long backupTime;  // backup_time
-        public String[] certSha256Checksum;  // cert_sha256_checksum
-        public String sourceSha256Checksum;  // source_dir_sha256_checksum
-        public String[] dataSha256Checksum;  // data_dirs_sha256_checksum
+        public String[] certChecksums;  // cert_checksums
+        public String checksumAlgo = "sha256";  // checksum_algo
         @BackupMode.Mode
         public int mode = BackupMode.MODE_NO_ENCRYPTION;  // mode
         public int version = 1;  // version
@@ -154,9 +153,8 @@ public final class MetadataManager {
         this.metadata.splitNames = JSONUtils.getArray(String.class, rootObject.getJSONArray("split_names"));
         this.metadata.hasRules = rootObject.getBoolean("has_rules");
         this.metadata.backupTime = rootObject.getLong("backup_time");
-        this.metadata.certSha256Checksum = JSONUtils.getArray(String.class, rootObject.getJSONArray("cert_sha256_checksum"));
-        this.metadata.sourceSha256Checksum = rootObject.getString("source_sha256_checksum");
-        this.metadata.dataSha256Checksum = JSONUtils.getArray(String.class, rootObject.getJSONArray("data_sha256_checksum"));
+        this.metadata.certChecksums = JSONUtils.getArray(String.class, rootObject.getJSONArray("cert_checksums"));
+        this.metadata.checksumAlgo = rootObject.getString("checksum_algo");
         this.metadata.mode = rootObject.getInt("mode");
         this.metadata.version = rootObject.getInt("version");
         this.metadata.apkName = rootObject.getString("apk_name");
@@ -184,9 +182,8 @@ public final class MetadataManager {
             rootObject.put("split_names", JSONUtils.getJSONArray(metadata.splitNames));
             rootObject.put("has_rules", metadata.hasRules);
             rootObject.put("backup_time", metadata.backupTime);
-            rootObject.put("cert_sha256_checksum", JSONUtils.getJSONArray(metadata.certSha256Checksum));
-            rootObject.put("source_sha256_checksum", metadata.sourceSha256Checksum);
-            rootObject.put("data_sha256_checksum", JSONUtils.getJSONArray(metadata.dataSha256Checksum));
+            rootObject.put("cert_checksums", JSONUtils.getJSONArray(metadata.certChecksums));
+            rootObject.put("checksum_algo", metadata.checksumAlgo);
             rootObject.put("mode", metadata.mode);
             rootObject.put("version", metadata.version);
             rootObject.put("apk_name", metadata.apkName);
@@ -247,10 +244,7 @@ public final class MetadataManager {
             }
         }
         metadata.backupTime = 0;
-        metadata.certSha256Checksum = PackageUtils.getSigningCertSha256Checksum(packageInfo);
-        // Initialize checksums
-        metadata.sourceSha256Checksum = "";
-        metadata.dataSha256Checksum = new String[metadata.dataDirs.length];
+        metadata.certChecksums = PackageUtils.getSigningCertSha256Checksum(packageInfo);
         return metadata;
     }
 }

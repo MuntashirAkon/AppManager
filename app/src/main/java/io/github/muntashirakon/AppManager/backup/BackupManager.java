@@ -44,6 +44,7 @@ import androidx.annotation.Nullable;
 import dalvik.system.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerShell;
+import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.misc.Users;
@@ -68,8 +69,10 @@ public class BackupManager {
     private static final String[] CACHE_DIRS = new String[]{"cache", "code_cache"};
     private static final String SOURCE_PREFIX = "source";
     private static final String DATA_PREFIX = "data";
-    private static final String RULES_TSV = "rules.am.tsv";
-    private static final String PERMS_TSV = "perms.am.tsv";
+
+    static final String RULES_TSV = "rules.am.tsv";
+    static final String PERMS_TSV = "perms.am.tsv";
+    static final String CHECKSUMS_TXT = "checksums.txt";
 
     @NonNull
     private static String getExt(@TarUtils.TarType String tarType) {
@@ -266,6 +269,10 @@ public class BackupManager {
         @NonNull
         private final PrivilegedFile tmpBackupPath;
         private final int userHandle;
+        @Nullable
+        private final Crypto crypto;
+        @NonNull
+        private final BackupFiles.Checksum checksum;
 
         BackupOp(@NonNull BackupFiles.BackupFile backupFile, int userHandle) throws BackupException {
             this.backupFile = backupFile;
@@ -274,12 +281,19 @@ public class BackupManager {
             this.backupFlags = BackupManager.this.requestedFlags;
             this.tmpBackupPath = backupFile.getBackupPath();
             try {
+                this.checksum = backupFile.getChecksum("w");
+            } catch (IOException e) {
+                backupFile.cleanup();
+                throw new BackupException("Failed to create checksum file.", e);
+            }
+            try {
                 packageInfo = ApiSupporter.getInstance(LocalServer.getInstance()).getPackageInfo(
                         packageName, PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo
                                 | PackageManager.GET_PERMISSIONS, userHandle);
                 this.applicationInfo = packageInfo.applicationInfo;
                 // Override existing metadata
                 this.metadata = metadataManager.setupMetadata(packageInfo, userHandle, backupFlags);
+                this.crypto = BackupMode.getCrypto(metadata.mode);
             } catch (Exception e) {
                 backupFile.cleanup();
                 throw new BackupException("Failed to setup metadata.", e);
@@ -316,6 +330,10 @@ public class BackupManager {
                 Log.e(TAG, "Failed to write metadata.", e);
                 return backupFile.cleanup();
             }
+            // Store checksum for metadata
+            checksum.add(MetadataManager.META_FILE, PackageUtils.getSha256Checksum(backupFile.getMetadataFile()));
+            checksum.close();
+            // TODO(1/10/20): Encrypt checksum files
             // Replace current backup:
             // There's hardly any chance of getting a false here but checks are done anyway.
             if (backupFile.commit()) {
@@ -338,7 +356,10 @@ public class BackupManager {
             if (sourceFiles.length == 0) {
                 throw new BackupException("Source backup is requested but no source directory has been backed up.");
             }
-            metadata.sourceSha256Checksum = BackupUtils.getSha256Sum(sourceFiles);
+            // TODO(1/10/20): Encrypt source files
+            for (File file : sourceFiles) {
+                checksum.add(file.getName(), PackageUtils.getSha256Checksum(file));
+            }
         }
 
         private void backupData() throws BackupException {
@@ -350,12 +371,15 @@ public class BackupManager {
                 if (dataFiles.length == 0) {
                     throw new BackupException("Failed to backup data directory at " + metadata.dataDirs[i]);
                 }
-                metadata.dataSha256Checksum[i] = BackupUtils.getSha256Sum(dataFiles);
+                // TODO(1/10/20): Encrypt data files
+                for (File file : dataFiles) {
+                    checksum.add(file.getName(), PackageUtils.getSha256Checksum(file));
+                }
             }
         }
 
         private void backupPermissions() throws BackupException {
-            File permsFile = new File(tmpBackupPath, PERMS_TSV);
+            File permsFile = backupFile.getPermsFile();
             String[] permissions = packageInfo.requestedPermissions;
             int[] permissionFlags = packageInfo.requestedPermissionsFlags;
             if (permissions == null) return;
@@ -383,10 +407,13 @@ public class BackupManager {
             } catch (IOException e) {
                 throw new BackupException("Error during creating permission file.", e);
             }
+            // TODO(1/10/20): Encrypt permission file
+            // Store checksum
+            checksum.add(PERMS_TSV, PackageUtils.getSha256Checksum(permsFile));
         }
 
         private void backupRules() throws BackupException {
-            File rulesFile = new File(tmpBackupPath, RULES_TSV);
+            File rulesFile = backupFile.getRulesFile();
             try (OutputStream outputStream = new FileOutputStream(rulesFile);
                  ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, userHandle)) {
                 for (RulesStorageManager.Entry entry : cb.getAll()) {
@@ -397,6 +424,9 @@ public class BackupManager {
             } catch (IOException e) {
                 throw new BackupException("Rules backup is requested but encountered an error during fetching rules.", e);
             }
+            // TODO(1/10/20): Encrypt rules file
+            // Store checksum
+            checksum.add(RULES_TSV, PackageUtils.getSha256Checksum(rulesFile));
         }
     }
 
@@ -415,6 +445,10 @@ public class BackupManager {
         private final ApiSupporter apiSupporter;
         @Nullable
         private PackageInfo packageInfo;
+        @Nullable
+        private final Crypto crypto;
+        @NonNull
+        private final BackupFiles.Checksum checksum;
         private final int userHandle;
         private boolean isInstalled;
 
@@ -427,8 +461,27 @@ public class BackupManager {
                 metadataManager.readMetadata(backupFile);
                 metadata = metadataManager.getMetadata();
                 backupFlags = metadata.flags;
+                crypto = BackupMode.getCrypto(metadata.mode);
             } catch (JSONException e) {
                 throw new BackupException("Failed to read metadata. Possibly due to malformed json file.", e);
+            }
+            // Get checksums
+            try {
+                this.checksum = backupFile.getChecksum("r");
+            } catch (IOException e) {
+                backupFile.cleanup();
+                throw new BackupException("Failed to get checksums.", e);
+            }
+            // Verify metadata
+            if (!requestedFlags.skipSignatureCheck()) {
+                File metadataFile = backupFile.getMetadataFile();
+                String checksum = PackageUtils.getSha256Checksum(metadataFile);
+                if (!checksum.equals(this.checksum.get(metadataFile.getName()))) {
+                    throw new BackupException("Couldn't verify permission file." +
+                            "\nFile: " + metadataFile +
+                            "\nFound: " + checksum +
+                            "\nRequired: " + this.checksum.get(metadataFile.getName()));
+                }
             }
             // Check user handle
             if (metadata.userHandle != userHandle) {
@@ -470,13 +523,13 @@ public class BackupManager {
                 // Check signature of the installed app
                 List<String> certChecksum = Arrays.asList(PackageUtils.getSigningCertSha256Checksum(packageInfo));
                 boolean isVerified = true;
-                for (String checksum : metadata.certSha256Checksum) {
+                for (String checksum : metadata.certChecksums) {
                     if (certChecksum.contains(checksum)) continue;
                     isVerified = false;
                     if (!requestedFlags.skipSignatureCheck()) {
                         throw new BackupException("Signing info verification failed." +
                                 "\nInstalled: " + certChecksum.toString() +
-                                "\nBackup: " + Arrays.toString(metadata.certSha256Checksum));
+                                "\nBackup: " + Arrays.toString(metadata.certChecksums));
                     }
                 }
                 if (!isVerified) {
@@ -490,11 +543,15 @@ public class BackupManager {
                 }
             }
             if (!requestedFlags.skipSignatureCheck()) {
-                String checksum = BackupUtils.getSha256Sum(backupSourceFiles);
-                if (!checksum.equals(metadata.sourceSha256Checksum)) {
-                    throw new BackupException("Source file verification failed." +
-                            "\nFiles: " + checksum +
-                            "\nMetadata: " + metadata.sourceSha256Checksum);
+                String checksum;
+                for (File file : backupSourceFiles) {
+                    checksum = PackageUtils.getSha256Checksum(file);
+                    if (!checksum.equals(this.checksum.get(file.getName()))) {
+                        throw new BackupException("Source file verification failed." +
+                                "\nFile: " + file +
+                                "\nFound: " + checksum +
+                                "\nRequired: " + this.checksum.get(file.getName()));
+                    }
                 }
             }
             if (reinstallNeeded) {
@@ -575,11 +632,14 @@ public class BackupManager {
                     if (dataFiles == null) {
                         throw new BackupException("Data restore is requested but there are no data files for index " + i + ".");
                     }
-                    checksum = BackupUtils.getSha256Sum(dataFiles);
-                    if (!checksum.equals(metadata.dataSha256Checksum[i])) {
-                        throw new BackupException("Data file verification failed for index " + i + "." +
-                                "\nFiles: " + checksum +
-                                "\nMetadata: " + metadata.dataSha256Checksum[i]);
+                    for (File file : dataFiles) {
+                        checksum = PackageUtils.getSha256Checksum(file);
+                        if (!checksum.equals(this.checksum.get(file.getName()))) {
+                            throw new BackupException("Data file verification failed for index " + i + "." +
+                                    "\nFile: " + file +
+                                    "\nFound: " + checksum +
+                                    "\nRequired: " + this.checksum.get(file.getName()));
+                        }
                     }
                 }
             }
@@ -647,6 +707,15 @@ public class BackupManager {
             }
             File permsFile = new File(backupPath, PERMS_TSV);
             if (permsFile.exists()) {
+                if (!requestedFlags.skipSignatureCheck()) {
+                    String checksum = PackageUtils.getSha256Checksum(permsFile);
+                    if (!checksum.equals(this.checksum.get(PERMS_TSV))) {
+                        throw new BackupException("Couldn't verify permission file." +
+                                "\nFile: " + permsFile +
+                                "\nFound: " + checksum +
+                                "\nRequired: " + this.checksum.get(permsFile.getName()));
+                    }
+                }
                 try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()))) {
                     importer.addRulesFromUri(Uri.fromFile(permsFile), userHandle);
                     importer.setPackagesToImport(Collections.singletonList(packageName));
@@ -664,6 +733,15 @@ public class BackupManager {
             }
             File rulesFile = new File(backupPath, RULES_TSV);
             if (rulesFile.exists()) {
+                if (!requestedFlags.skipSignatureCheck()) {
+                    String checksum = PackageUtils.getSha256Checksum(rulesFile);
+                    if (!checksum.equals(this.checksum.get(RULES_TSV))) {
+                        throw new BackupException("Couldn't verify permission file." +
+                                "\nFile: " + rulesFile +
+                                "\nFound: " + checksum +
+                                "\nRequired: " + this.checksum.get(rulesFile.getName()));
+                    }
+                }
                 try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()))) {
                     importer.addRulesFromUri(Uri.fromFile(rulesFile), userHandle);
                     importer.setPackagesToImport(Collections.singletonList(packageName));

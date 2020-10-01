@@ -17,12 +17,16 @@
 
 package io.github.muntashirakon.AppManager.crypto;
 
+import java.io.Closeable;
 import java.io.File;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 
-public interface Crypto {
+public interface Crypto extends Closeable {
+    @WorkerThread
     boolean encrypt(@NonNull File[] files);
 
+    @WorkerThread
     boolean decrypt(@NonNull File[] files);
 }

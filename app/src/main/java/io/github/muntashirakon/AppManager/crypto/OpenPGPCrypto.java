@@ -29,7 +29,6 @@ import org.openintents.openpgp.util.OpenPgpServiceConnection;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -37,13 +36,17 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
-public class OpenPGPCrypto implements Crypto, Closeable {
+public class OpenPGPCrypto implements Crypto {
     public static final String TAG = "OpenPGPCrypto";
+
+    public static final String GPG_EXT = ".gpg";
+
     public static final int OPEN_PGP_REQUEST_ENCRYPT = 3;
     public static final int OPEN_PGP_REQUEST_DECRYPT = 4;
 
@@ -71,12 +74,14 @@ public class OpenPGPCrypto implements Crypto, Closeable {
         if (service != null) service.unbindFromService();
     }
 
+    @WorkerThread
     @Override
     public boolean decrypt(@NonNull File[] files) {
         Intent intent = new Intent(OpenPgpApi.ACTION_DECRYPT_VERIFY);
         return handleFiles(context, intent, OPEN_PGP_REQUEST_DECRYPT, files);
     }
 
+    @WorkerThread
     @Override
     public boolean encrypt(@NonNull File[] filesList) {
         Intent intent = new Intent(OpenPgpApi.ACTION_ENCRYPT);
@@ -100,8 +105,8 @@ public class OpenPGPCrypto implements Crypto, Closeable {
             for (File file : files) {
                 String outputFilename;
                 if (requestCode == OPEN_PGP_REQUEST_DECRYPT) {
-                    outputFilename = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(".gpg"));
-                } else outputFilename = file.getAbsolutePath() + ".gpg";
+                    outputFilename = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(GPG_EXT));
+                } else outputFilename = file.getAbsolutePath() + GPG_EXT;
                 Log.i(TAG, "Input: " + file.getAbsolutePath() +
                         "\nOutput: " + outputFilename);
                 try (FileInputStream is = new FileInputStream(file);
@@ -121,11 +126,10 @@ public class OpenPGPCrypto implements Crypto, Closeable {
                 }
             }
             // Total success
-            return true;
         } else {
             Log.d(TAG, "No files to de/encrypt");
-            return true;
         }
+        return true;
     }
 
     private void bind() {

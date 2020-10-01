@@ -19,9 +19,20 @@ package io.github.muntashirakon.AppManager.backup;
 
 import android.os.Environment;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 public class BackupFiles {
     static final String APK_SAVING_DIRECTORY = "apks";
@@ -63,6 +74,7 @@ public class BackupFiles {
         @NonNull
         private PrivilegedFile tmpBackupPath;
         private boolean isTemporary;
+        private Checksum checksum;
 
         public BackupFile(@NonNull PrivilegedFile backupPath, boolean hasTemporary) {
             this.backupPath = backupPath;
@@ -79,8 +91,32 @@ public class BackupFiles {
             return isTemporary ? tmpBackupPath : backupPath;
         }
 
+        @NonNull
         public PrivilegedFile getMetadataFile() {
             return new PrivilegedFile(getBackupPath(), MetadataManager.META_FILE);
+        }
+
+        @NonNull
+        public Checksum getChecksum(String mode) throws IOException {
+            if (checksum == null) {
+                checksum = new Checksum(new PrivilegedFile(getBackupPath(), BackupManager.CHECKSUMS_TXT), mode);
+            }
+            return checksum;
+        }
+
+        @NonNull
+        public PrivilegedFile getChecksumFile() {
+            return new PrivilegedFile(getBackupPath(), BackupManager.CHECKSUMS_TXT);
+        }
+
+        @NonNull
+        public PrivilegedFile getPermsFile() {
+            return new PrivilegedFile(getBackupPath(), BackupManager.PERMS_TSV);
+        }
+
+        @NonNull
+        public PrivilegedFile getRulesFile() {
+            return new PrivilegedFile(getBackupPath(), BackupManager.RULES_TSV);
         }
 
         public boolean commit() {
@@ -91,9 +127,10 @@ public class BackupFiles {
         }
 
         public boolean cleanup() {
+            IOUtils.closeSilently(checksum);
             if (isTemporary) {
                 //noinspection ResultOfMethodCallIgnored
-                tmpBackupPath.delete();
+                tmpBackupPath.forceDelete();
             }
             return false;
         }
@@ -160,5 +197,48 @@ public class BackupFiles {
             file = new PrivilegedFile(packagePath, backupName + "_" + (++i));
         }
         return file;
+    }
+
+    static class Checksum implements Closeable {
+        private PrintWriter writer;
+        private HashMap<String, String> checksums = new HashMap<>();
+        private String mode;
+
+        private Checksum(@NonNull File checksumFile, String mode) throws IOException {
+            this.mode = mode;
+            if ("w".equals(mode)) {
+                writer = new PrintWriter(new BufferedWriter(new FileWriter(checksumFile)));
+            } else if ("r".equals(mode)) {
+                BufferedReader reader = new BufferedReader(new FileReader(checksumFile));
+                // Get checksums
+                String line;
+                String[] lineSplits;
+                while ((line = reader.readLine()) != null) {
+                    lineSplits = line.split("\t", 2);
+                    if (lineSplits.length != 2) {
+                        throw new RuntimeException("Illegal lines found in the checksum file.");
+                    }
+                    this.checksums.put(lineSplits[1], lineSplits[0]);
+                }
+                reader.close();
+            } else throw new IOException("Unknown mode: " + mode);
+        }
+
+        void add(@NonNull String fileName, @NonNull String checksum) {
+            if (!"w".equals(mode)) throw new IllegalStateException("add is inaccessible in mode " + mode);
+            writer.println(String.format("%s\t%s", checksum, fileName));
+            this.checksums.put(fileName, checksum);
+            writer.flush();
+        }
+
+        @Nullable
+        String get(String fileName) {
+            return checksums.get(fileName);
+        }
+
+        @Override
+        public void close() {
+            if (writer != null) writer.close();
+        }
     }
 }
