@@ -63,7 +63,6 @@ public final class MetadataManager {
         public String[] splitNames;  // split_names
         public boolean hasRules;  // has_rules
         public long backupTime;  // backup_time
-        public String[] certChecksums;  // cert_checksums
         public String checksumAlgo = "sha256";  // checksum_algo
         @BackupMode.Mode
         public int mode = BackupMode.MODE_NO_ENCRYPTION;  // mode
@@ -153,7 +152,6 @@ public final class MetadataManager {
         this.metadata.splitNames = JSONUtils.getArray(String.class, rootObject.getJSONArray("split_names"));
         this.metadata.hasRules = rootObject.getBoolean("has_rules");
         this.metadata.backupTime = rootObject.getLong("backup_time");
-        this.metadata.certChecksums = JSONUtils.getArray(String.class, rootObject.getJSONArray("cert_checksums"));
         this.metadata.checksumAlgo = rootObject.getString("checksum_algo");
         this.metadata.mode = rootObject.getInt("mode");
         this.metadata.version = rootObject.getInt("version");
@@ -182,7 +180,6 @@ public final class MetadataManager {
             rootObject.put("split_names", JSONUtils.getJSONArray(metadata.splitNames));
             rootObject.put("has_rules", metadata.hasRules);
             rootObject.put("backup_time", metadata.backupTime);
-            rootObject.put("cert_checksums", JSONUtils.getJSONArray(metadata.certChecksums));
             rootObject.put("checksum_algo", metadata.checksumAlgo);
             rootObject.put("mode", metadata.mode);
             rootObject.put("version", metadata.version);
@@ -244,7 +241,6 @@ public final class MetadataManager {
             }
         }
         metadata.backupTime = 0;
-        metadata.certChecksums = PackageUtils.getSigningCertSha256Checksum(packageInfo);
         return metadata;
     }
 }

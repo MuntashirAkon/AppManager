@@ -73,6 +73,7 @@ public class BackupManager {
     static final String RULES_TSV = "rules.am.tsv";
     static final String PERMS_TSV = "perms.am.tsv";
     static final String CHECKSUMS_TXT = "checksums.txt";
+    static final String CERT_PREFIX = "cert_";
 
     @NonNull
     private static String getExt(@TarUtils.TarType String tarType) {
@@ -293,6 +294,10 @@ public class BackupManager {
                 this.applicationInfo = packageInfo.applicationInfo;
                 // Override existing metadata
                 this.metadata = metadataManager.setupMetadata(packageInfo, userHandle, backupFlags);
+                String[] certChecksums = PackageUtils.getSigningCertSha256Checksum(packageInfo);
+                for (int i = 0; i<certChecksums.length; ++i) {
+                    checksum.add(CERT_PREFIX + i, certChecksums[i]);
+                }
                 this.crypto = BackupMode.getCrypto(metadata.mode);
             } catch (Exception e) {
                 backupFile.cleanup();
@@ -521,15 +526,16 @@ public class BackupManager {
             boolean reinstallNeeded = false;
             if (packageInfo != null) {
                 // Check signature of the installed app
-                List<String> certChecksum = Arrays.asList(PackageUtils.getSigningCertSha256Checksum(packageInfo));
+                List<String> certChecksumList = Arrays.asList(PackageUtils.getSigningCertSha256Checksum(packageInfo));
+                String[] certChecksums = BackupFiles.Checksum.getCertChecksums(checksum);
                 boolean isVerified = true;
-                for (String checksum : metadata.certChecksums) {
-                    if (certChecksum.contains(checksum)) continue;
+                for (String checksum : certChecksums) {
+                    if (certChecksumList.contains(checksum)) continue;
                     isVerified = false;
                     if (!requestedFlags.skipSignatureCheck()) {
                         throw new BackupException("Signing info verification failed." +
-                                "\nInstalled: " + certChecksum.toString() +
-                                "\nBackup: " + Arrays.toString(metadata.certChecksums));
+                                "\nInstalled: " + certChecksumList.toString() +
+                                "\nBackup: " + Arrays.toString(certChecksums));
                     }
                 }
                 if (!isVerified) {

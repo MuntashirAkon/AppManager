@@ -27,7 +27,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -203,6 +205,17 @@ public class BackupFiles {
         private PrintWriter writer;
         private HashMap<String, String> checksums = new HashMap<>();
         private String mode;
+
+        @NonNull
+        public static String[] getCertChecksums(@NonNull Checksum checksum) {
+            List<String> certChecksums = new ArrayList<>();
+            for (String name : checksum.checksums.keySet()) {
+                if (name.startsWith(BackupManager.CERT_PREFIX)) {
+                    certChecksums.add(checksum.checksums.get(name));
+                }
+            }
+            return certChecksums.toArray(new String[0]);
+        }
 
         private Checksum(@NonNull File checksumFile, String mode) throws IOException {
             this.mode = mode;
