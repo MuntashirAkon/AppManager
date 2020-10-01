@@ -57,7 +57,7 @@
     <string name="apply_to_system_apps_question">Também aplicar às apps do sistema\? Selecione \"Não\" se não tiver certeza.</string>
     <string name="apply_to_system_apps">Aplicar aos apps de sistema</string>
     <string name="failed_to_restore_backup">O backup não pôde ser restaurado</string>
-    <string name="failed_to_delete_backup">O backup não pôde ser excluído</string>
+    <string name="failed_to_delete_backup">O backup não pôde ser apagado</string>
     <plurals name="alert_failed_to_enable">
         <item quantity="one">Não foi possível ativar %s app</item>
         <item quantity="other">Não foi possível ativar %s apps</item>
@@ -75,8 +75,8 @@
         <item quantity="other">Não foi possível desbloquear rastreadores de %d apps</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="one">Não foi possível restaurar %d app</item>
-        <item quantity="other">Não foi possível excluir %d backups</item>
+        <item quantity="one">Não foi possível apagar %d backup</item>
+        <item quantity="other">Não foi possível apagar %d backups</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
         <item quantity="one">Não foi possível restaurar %d app</item>
@@ -242,7 +242,7 @@
     <string name="decimal_value">Valor decimal</string>
     <string name="integer_value">Valor inteiro</string>
     <string name="long_integer_value">Valor inteiro longo</string>
-    <string name="string_value">Valor da string</string>
+    <string name="string_value">Valor da cadeia</string>
     <string name="saving_failed">Falha ao gravar, tente novamente.</string>
     <string name="saved_successfully">Salvo</string>
     <string name="deletion_failed">Falha ao excluir</string>
@@ -331,7 +331,7 @@
         \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
         \nLogo credit: <a href="https://github.com/Atrate">Atrate</a>.
     </string>
-    <string name="credits">Créditos</string>
+    <string name="credits">Méritos</string>
     <string name="third_party">Bibliotecas e Ícones de terceiros</string>
     <string name="license">Licença</string>
     <string name="error_loading_icons">Não foi possível carregar os ícones</string>
