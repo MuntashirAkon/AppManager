@@ -20,16 +20,12 @@ package io.github.muntashirakon.AppManager.backup;
 import android.text.TextUtils;
 import android.util.Pair;
 
-import org.json.JSONException;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
@@ -105,9 +101,7 @@ public final class BackupUtils {
                 }
             }
             // Could be the old naming style
-            // FIXME(21/9/20): Throw a runtime exception instead of returning a backup name
-            //  since we don't support old style names
-            return backupFileName;
+            throw new IllegalArgumentException("Invalid backup name " + backupFileName);
         }
     }
 
