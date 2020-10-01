@@ -42,6 +42,7 @@ public class BackupMode {
     public static int getMode() {
         String keyIds = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR);
         if (!TextUtils.isEmpty(keyIds)) {
+            // FIXME(1/10/20): Check for the availability of the provider
             return MODE_OPEN_PGP;
         }
         return MODE_NO_ENCRYPTION;
