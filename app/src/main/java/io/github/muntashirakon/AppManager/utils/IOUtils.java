@@ -32,7 +32,6 @@ import android.system.ErrnoException;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
-import java.io.Closeable;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -239,8 +238,8 @@ public final class IOUtils {
     @NonNull
     public static String getFileContent(@NonNull File file, @NonNull String emptyValue) {
         if (!file.exists() || file.isDirectory()) return emptyValue;
-        try {
-            return getInputStreamContent(new FileInputStream(file));
+        try (InputStream inputStream = new FileInputStream(file)) {
+            return getInputStreamContent(inputStream);
         } catch (IOException e) {
             if (!(e.getCause() instanceof ErrnoException)) {
                 // This isn't just another EACCESS exception
@@ -254,14 +253,13 @@ public final class IOUtils {
     }
 
     @NonNull
-    public static String getInputStreamContent(@NonNull InputStream inputStream) throws IOException {
-        return new String(IOUtils.readFully(inputStream, -1, true), Charset.defaultCharset());
+    private static String getInputStreamContent(@NonNull InputStream inputStream) throws IOException {
+        return new String(readFully(inputStream, -1, true), Charset.defaultCharset());
     }
 
     @NonNull
     public static String getContentFromAssets(@NonNull Context context, String fileName) {
-        try {
-            InputStream inputStream = context.getResources().getAssets().open(fileName);
+        try (InputStream inputStream = context.getResources().getAssets().open(fileName)) {
             return getInputStreamContent(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
@@ -272,9 +270,10 @@ public final class IOUtils {
     @NonNull
     public static String getFileContent(@NonNull ContentResolver contentResolver, @NonNull Uri file)
             throws IOException {
-        InputStream inputStream = contentResolver.openInputStream(file);
-        if (inputStream == null) throw new IOException("Failed to open " + file.toString());
-        return getInputStreamContent(inputStream);
+        try (InputStream inputStream = contentResolver.openInputStream(file)) {
+            if (inputStream == null) throw new IOException("Failed to open " + file.toString());
+            return getInputStreamContent(inputStream);
+        }
     }
 
     /**
