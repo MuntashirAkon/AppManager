@@ -17,22 +17,35 @@
 
 package io.github.muntashirakon.AppManager.crypto;
 
-import java.io.Closeable;
 import java.io.File;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.WorkerThread;
 
-public interface Crypto extends Closeable {
-    @WorkerThread
-    boolean encrypt(@NonNull File[] files);
-
-    @WorkerThread
-    boolean decrypt(@NonNull File[] files);
-
-    @NonNull
-    File[] getNewFiles();
+public class DummyCrypto implements Crypto {
+    File[] newFiles;
 
     @Override
-    void close();
+    public boolean encrypt(@NonNull File[] files) {
+        // Have to return new files to be processed further
+        newFiles = files;
+        return true;
+    }
+
+    @Override
+    public boolean decrypt(@NonNull File[] files) {
+        // The new files will be deleted, so don't send
+        newFiles = null;
+        return true;
+    }
+
+    @NonNull
+    @Override
+    public File[] getNewFiles() {
+        if (newFiles == null) return new File[0];
+        return newFiles;
+    }
+
+    @Override
+    public void close() {
+    }
 }

@@ -65,7 +65,7 @@ public final class MetadataManager {
         public long backupTime;  // backup_time
         public String checksumAlgo = "sha256";  // checksum_algo
         @BackupMode.Mode
-        public int mode = BackupMode.MODE_NO_ENCRYPTION;  // mode
+        public int mode;  // mode
         public int version = 1;  // version
         public String apkName;  // apk_name
         public String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);  // instruction_set
@@ -202,7 +202,7 @@ public final class MetadataManager {
         metadata.flags = requestedFlags;
         metadata.userHandle = userHandle;
         metadata.tarType = (String) AppPref.get(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR);
-//        metadata.mode = BackupMode.getMode(); TODO(30/9/20)
+        metadata.mode = BackupMode.getMode();
         // Verify tar type
         if (ArrayUtils.indexOf(TAR_TYPES, metadata.tarType) == -1) {
             // Unknown tar type, set default

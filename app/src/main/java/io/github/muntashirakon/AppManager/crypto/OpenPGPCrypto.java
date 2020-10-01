@@ -27,13 +27,12 @@ import org.openintents.openpgp.OpenPgpError;
 import org.openintents.openpgp.util.OpenPgpApi;
 import org.openintents.openpgp.util.OpenPgpServiceConnection;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
@@ -51,8 +50,10 @@ public class OpenPGPCrypto implements Crypto {
     public static final int OPEN_PGP_REQUEST_DECRYPT = 4;
 
     private OpenPgpServiceConnection service;
-    private boolean successFlag, errorFlag, testFlag;
+    private boolean successFlag, errorFlag;
     private File[] files;
+    @NonNull
+    private List<File> newFiles = new ArrayList<>();
     @NonNull
     private long[] keyIds;
     private final String provider;
@@ -92,23 +93,20 @@ public class OpenPGPCrypto implements Crypto {
     private boolean handleFiles(Context context, Intent intent, int requestCode, @NonNull File[] filesList) {
         if (!waitForServiceBound()) return false;
         files = filesList;
+        newFiles.clear();
         return doAction(context, intent, requestCode);
     }
 
     private boolean doAction(Context context, Intent intent, int requestCode) {
         errorFlag = false;
-        if (!testFlag) {
-            testResponse(context, new Intent());
-            waitForResult();
-        }
         if (files.length > 0) {  // files is never null here
             for (File file : files) {
-                String outputFilename;
+                File outputFilename;
                 if (requestCode == OPEN_PGP_REQUEST_DECRYPT) {
-                    outputFilename = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(GPG_EXT));
-                } else outputFilename = file.getAbsolutePath() + GPG_EXT;
-                Log.i(TAG, "Input: " + file.getAbsolutePath() +
-                        "\nOutput: " + outputFilename);
+                    outputFilename = new File(file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(GPG_EXT)));
+                } else outputFilename = new File(file.getAbsolutePath() + GPG_EXT);
+                newFiles.add(outputFilename);
+                Log.i(TAG, "Input: " + file + "\nOutput: " + outputFilename);
                 try (FileInputStream is = new FileInputStream(file);
                      FileOutputStream os = new FileOutputStream(outputFilename)) {
                     OpenPgpApi api = new OpenPgpApi(context, service.getService());
@@ -117,12 +115,19 @@ public class OpenPGPCrypto implements Crypto {
                     waitForResult();
                     if (errorFlag) {
                         os.close();
-                        IOUtils.deleteSilently(new File(outputFilename));
+                        IOUtils.deleteSilently(outputFilename);
                         return false;
                     }
                 } catch (IOException e) {
                     Log.e(TAG, "Error: " + e.toString(), e);
                     return false;
+                }
+                // Delete unencrypted file
+                if (requestCode == OPEN_PGP_REQUEST_ENCRYPT) {
+                    if (!file.delete()) {
+                        Log.e(TAG, "Couldn't delete old file " + file);
+                        return false;
+                    }
                 }
             }
             // Total success
@@ -130,6 +135,12 @@ public class OpenPGPCrypto implements Crypto {
             Log.d(TAG, "No files to de/encrypt");
         }
         return true;
+    }
+
+    @NonNull
+    @Override
+    public File[] getNewFiles() {
+        return newFiles.toArray(new File[0]);
     }
 
     private void bind() {
@@ -171,8 +182,7 @@ public class OpenPGPCrypto implements Crypto {
         try {
             int i = 0;
             while (!successFlag && !errorFlag) {
-                if (i % 200 == 0)
-                    Log.i(TAG, "waiting for openpgp-api user interaction");
+                if (i % 200 == 0) Log.i(TAG, "Waiting for user interaction");
                 Thread.sleep(100);
                 if (i > 1000)
                     break;
@@ -184,24 +194,15 @@ public class OpenPGPCrypto implements Crypto {
         }
     }
 
-    private void testResponse(Context context, @NonNull Intent intent) {
-        InputStream is = new ByteArrayInputStream(new byte[]{0});
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        intent.setAction(OpenPgpApi.ACTION_ENCRYPT);
-        intent.putExtra(OpenPgpApi.EXTRA_KEY_IDS, keyIds);
-        OpenPgpApi api = new OpenPgpApi(context, service.getService());
-        Intent result = api.executeApi(intent, is, os);
-        handleResult(context, result);
-    }
-
     private void handleResult(Context context, @NonNull Intent result) {
         successFlag = false;
         switch (result.getIntExtra(OpenPgpApi.RESULT_CODE, OpenPgpApi.RESULT_CODE_ERROR)) {
             case OpenPgpApi.RESULT_CODE_SUCCESS:
-                testFlag = true;
+                Log.i(TAG, "en/decryption successful.");
                 successFlag = true;
                 break;
             case OpenPgpApi.RESULT_CODE_USER_INTERACTION_REQUIRED:
+                Log.i(TAG, "User interaction required. Sending intent...");
                 PendingIntent pi = result.getParcelableExtra(OpenPgpApi.RESULT_INTENT);
                 if (pi == null) {
                     errorFlag = true;

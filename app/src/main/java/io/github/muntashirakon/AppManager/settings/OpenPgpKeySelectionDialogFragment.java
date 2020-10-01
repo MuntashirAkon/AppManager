@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -121,9 +122,11 @@ public class OpenPgpKeySelectionDialogFragment extends DialogFragment {
                         AppPref.set(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR, "");
                         AppPref.set(AppPref.PrefKey.PREF_OPEN_PGP_PACKAGE_STR, "");
                     } else {
-                        StringBuilder keyIdSb = new StringBuilder();
-                        for (long keyId : keyIds) keyIdSb.append(',').append(keyId);
-                        AppPref.set(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR, keyIdSb.toString());
+                        String[] keyIdsStr = new String[keyIds.length];
+                        for (int i = 0; i < keyIds.length; ++i) {
+                            keyIdsStr[i] = String.valueOf(keyIds[i]);
+                        }
+                        AppPref.set(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR, TextUtils.join(",", keyIdsStr));
                     }
                     break;
                 }

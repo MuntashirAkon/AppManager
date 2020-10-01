@@ -34,7 +34,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 public class BackupFiles {
     static final String APK_SAVING_DIRECTORY = "apks";
@@ -76,7 +75,6 @@ public class BackupFiles {
         @NonNull
         private PrivilegedFile tmpBackupPath;
         private boolean isTemporary;
-        private Checksum checksum;
 
         public BackupFile(@NonNull PrivilegedFile backupPath, boolean hasTemporary) {
             this.backupPath = backupPath;
@@ -99,26 +97,18 @@ public class BackupFiles {
         }
 
         @NonNull
-        public Checksum getChecksum(String mode) throws IOException {
-            if (checksum == null) {
-                checksum = new Checksum(new PrivilegedFile(getBackupPath(), BackupManager.CHECKSUMS_TXT), mode);
-            }
-            return checksum;
+        public PrivilegedFile getChecksumFile(@BackupMode.Mode int mode) {
+            return new PrivilegedFile(getBackupPath(), BackupManager.CHECKSUMS_TXT + BackupMode.getExtension(mode));
         }
 
         @NonNull
-        public PrivilegedFile getChecksumFile() {
-            return new PrivilegedFile(getBackupPath(), BackupManager.CHECKSUMS_TXT);
+        public PrivilegedFile getPermsFile(@BackupMode.Mode int mode) {
+            return new PrivilegedFile(getBackupPath(), BackupManager.PERMS_TSV + BackupMode.getExtension(mode));
         }
 
         @NonNull
-        public PrivilegedFile getPermsFile() {
-            return new PrivilegedFile(getBackupPath(), BackupManager.PERMS_TSV);
-        }
-
-        @NonNull
-        public PrivilegedFile getRulesFile() {
-            return new PrivilegedFile(getBackupPath(), BackupManager.RULES_TSV);
+        public PrivilegedFile getRulesFile(@BackupMode.Mode int mode) {
+            return new PrivilegedFile(getBackupPath(), BackupManager.RULES_TSV + BackupMode.getExtension(mode));
         }
 
         public boolean commit() {
@@ -129,7 +119,6 @@ public class BackupFiles {
         }
 
         public boolean cleanup() {
-            IOUtils.closeSilently(checksum);
             if (isTemporary) {
                 //noinspection ResultOfMethodCallIgnored
                 tmpBackupPath.forceDelete();
@@ -217,7 +206,7 @@ public class BackupFiles {
             return certChecksums.toArray(new String[0]);
         }
 
-        private Checksum(@NonNull File checksumFile, String mode) throws IOException {
+        Checksum(@NonNull File checksumFile, String mode) throws IOException {
             this.mode = mode;
             if ("w".equals(mode)) {
                 writer = new PrintWriter(new BufferedWriter(new FileWriter(checksumFile)));

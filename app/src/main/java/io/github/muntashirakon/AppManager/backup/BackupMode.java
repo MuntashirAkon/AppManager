@@ -24,8 +24,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import androidx.annotation.IntDef;
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
+import io.github.muntashirakon.AppManager.crypto.DummyCrypto;
 import io.github.muntashirakon.AppManager.crypto.OpenPGPCrypto;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
@@ -51,14 +52,37 @@ public class BackupMode {
         return MODE_NO_ENCRYPTION;
     }
 
-    @Nullable
+    public static String getExtension(@Mode int mode) {
+        switch (mode) {
+            case MODE_OPEN_PGP:
+                return OpenPGPCrypto.GPG_EXT;
+            case MODE_NO_ENCRYPTION:
+            default:
+                return "";
+        }
+    }
+
+    @NonNull
     public static Crypto getCrypto(@Mode int mode) {
         switch (mode) {
             case MODE_OPEN_PGP:
                 return new OpenPGPCrypto();
             case MODE_NO_ENCRYPTION:
             default:
-                return null;
+                // Dummy crypto to generalise and return nonNull
+                return new DummyCrypto();
+        }
+    }
+
+    public static boolean isAvailable(@Mode int mode) {
+        switch (mode) {
+            case MODE_OPEN_PGP:
+                String keyIds = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR);
+                // FIXME(1/10/20): Check for the availability of the provider
+                return !TextUtils.isEmpty(keyIds);
+            case MODE_NO_ENCRYPTION:
+            default:
+                return true;
         }
     }
 }
