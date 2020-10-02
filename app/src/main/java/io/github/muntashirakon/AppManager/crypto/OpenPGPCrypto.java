@@ -23,7 +23,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.IntentSender;
 
 import org.openintents.openpgp.IOpenPgpService2;
 import org.openintents.openpgp.OpenPgpError;
@@ -78,7 +77,7 @@ public class OpenPGPCrypto implements Crypto {
                 case ACTION_OPEN_PGP_INTERACTION_BEGIN:
                     break;
                 case ACTION_OPEN_PGP_INTERACTION_END:
-                    doAction(lastIntent, lastRequestCode);
+                    doAction(lastIntent, lastRequestCode, false);
                     break;
             }
         }
@@ -122,10 +121,10 @@ public class OpenPGPCrypto implements Crypto {
         newFiles.clear();
         lastIntent = intent;
         lastRequestCode = requestCode;
-        return doAction(intent, requestCode);
+        return doAction(intent, requestCode, true);
     }
 
-    private boolean doAction(Intent intent, int requestCode) {
+    private boolean doAction(Intent intent, int requestCode, boolean waitForResult) {
         errorFlag = false;
         if (files.length > 0) {  // files is never null here
             for (File file : files) {
@@ -140,7 +139,7 @@ public class OpenPGPCrypto implements Crypto {
                     OpenPgpApi api = new OpenPgpApi(context, service.getService());
                     Intent result = api.executeApi(intent, is, os);
                     handleResult(result);
-                    waitForResult();
+                    if (waitForResult) waitForResult();
                     if (errorFlag) {
                         os.close();
                         IOUtils.deleteSilently(outputFilename);
