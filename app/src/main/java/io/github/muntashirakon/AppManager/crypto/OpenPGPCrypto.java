@@ -17,9 +17,12 @@
 
 package io.github.muntashirakon.AppManager.crypto;
 
+import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 
 import org.openintents.openpgp.IOpenPgpService2;
@@ -36,13 +39,20 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
+import androidx.core.app.NotificationCompat;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class OpenPGPCrypto implements Crypto {
     public static final String TAG = "OpenPGPCrypto";
+
+    public static final String ACTION_OPEN_PGP_INTERACTION_BEGIN = BuildConfig.APPLICATION_ID + ".action.OPEN_PGP_INTERACTION_BEGIN";
+    public static final String ACTION_OPEN_PGP_INTERACTION_END = BuildConfig.APPLICATION_ID + ".action.OPEN_PGP_INTERACTION_END";
 
     public static final String GPG_EXT = ".gpg";
 
@@ -57,10 +67,24 @@ public class OpenPGPCrypto implements Crypto {
     @NonNull
     private long[] keyIds;
     private final String provider;
-    private final Context context;
+    private Intent lastIntent;
+    private int lastRequestCode;
+    private final Context context = AppManager.getContext();
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, @NonNull Intent intent) {
+            if (intent.getAction() == null) return;
+            switch (intent.getAction()) {
+                case ACTION_OPEN_PGP_INTERACTION_BEGIN:
+                    break;
+                case ACTION_OPEN_PGP_INTERACTION_END:
+                    doAction(lastIntent, lastRequestCode);
+                    break;
+            }
+        }
+    };
 
     public OpenPGPCrypto() {
-        context = AppManager.getContext();
         String keyIdsStr = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR);
         String[] keyIds = keyIdsStr.split(",");
         this.keyIds = new long[keyIds.length];
@@ -73,13 +97,15 @@ public class OpenPGPCrypto implements Crypto {
     public void close() {
         // Unbind service
         if (service != null) service.unbindFromService();
+        // Unregister receiver
+        context.unregisterReceiver(receiver);
     }
 
     @WorkerThread
     @Override
     public boolean decrypt(@NonNull File[] files) {
         Intent intent = new Intent(OpenPgpApi.ACTION_DECRYPT_VERIFY);
-        return handleFiles(context, intent, OPEN_PGP_REQUEST_DECRYPT, files);
+        return handleFiles(intent, OPEN_PGP_REQUEST_DECRYPT, files);
     }
 
     @WorkerThread
@@ -87,17 +113,19 @@ public class OpenPGPCrypto implements Crypto {
     public boolean encrypt(@NonNull File[] filesList) {
         Intent intent = new Intent(OpenPgpApi.ACTION_ENCRYPT);
         intent.putExtra(OpenPgpApi.EXTRA_KEY_IDS, keyIds);
-        return handleFiles(context, intent, OPEN_PGP_REQUEST_ENCRYPT, filesList);
+        return handleFiles(intent, OPEN_PGP_REQUEST_ENCRYPT, filesList);
     }
 
-    private boolean handleFiles(Context context, Intent intent, int requestCode, @NonNull File[] filesList) {
+    private boolean handleFiles(Intent intent, int requestCode, @NonNull File[] filesList) {
         if (!waitForServiceBound()) return false;
         files = filesList;
         newFiles.clear();
-        return doAction(context, intent, requestCode);
+        lastIntent = intent;
+        lastRequestCode = requestCode;
+        return doAction(intent, requestCode);
     }
 
-    private boolean doAction(Context context, Intent intent, int requestCode) {
+    private boolean doAction(Intent intent, int requestCode) {
         errorFlag = false;
         if (files.length > 0) {  // files is never null here
             for (File file : files) {
@@ -111,7 +139,7 @@ public class OpenPGPCrypto implements Crypto {
                      FileOutputStream os = new FileOutputStream(outputFilename)) {
                     OpenPgpApi api = new OpenPgpApi(context, service.getService());
                     Intent result = api.executeApi(intent, is, os);
-                    handleResult(context, result);
+                    handleResult(result);
                     waitForResult();
                     if (errorFlag) {
                         os.close();
@@ -158,6 +186,10 @@ public class OpenPGPCrypto implements Crypto {
                 }
         );
         service.bindToService();
+        // Start broadcast receiver
+        IntentFilter filter = new IntentFilter(ACTION_OPEN_PGP_INTERACTION_BEGIN);
+        filter.addAction(ACTION_OPEN_PGP_INTERACTION_END);
+        context.registerReceiver(receiver, filter);
     }
 
     private boolean waitForServiceBound() {
@@ -194,7 +226,7 @@ public class OpenPGPCrypto implements Crypto {
         }
     }
 
-    private void handleResult(Context context, @NonNull Intent result) {
+    private void handleResult(@NonNull Intent result) {
         successFlag = false;
         switch (result.getIntExtra(OpenPgpApi.RESULT_CODE, OpenPgpApi.RESULT_CODE_ERROR)) {
             case OpenPgpApi.RESULT_CODE_SUCCESS:
@@ -203,16 +235,25 @@ public class OpenPGPCrypto implements Crypto {
                 break;
             case OpenPgpApi.RESULT_CODE_USER_INTERACTION_REQUIRED:
                 Log.i(TAG, "User interaction required. Sending intent...");
-                PendingIntent pi = result.getParcelableExtra(OpenPgpApi.RESULT_INTENT);
-                if (pi == null) {
-                    errorFlag = true;
-                    return;
-                }
-                try {
-                    context.startIntentSender(pi.getIntentSender(), null, 0, 0, 0);
-                } catch (IntentSender.SendIntentException e2) {
-                    Log.e(TAG, "handleResult: error " + e2.toString(), e2);
-                }
+                Intent broadcastIntent = new Intent(OpenPGPCrypto.ACTION_OPEN_PGP_INTERACTION_BEGIN);
+                context.sendBroadcast(broadcastIntent);
+                // Intent wrapper
+                Intent intent = new Intent(context, OpenPGPCryptoActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(OpenPgpApi.RESULT_INTENT, (PendingIntent) result.getParcelableExtra(OpenPgpApi.RESULT_INTENT));
+                String openPGP = "Open PGP";
+                // We don't need a delete intent since the time will be expired anyway
+                NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(context)
+                        .setAutoCancel(true)
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setWhen(System.currentTimeMillis())
+                        .setSmallIcon(R.drawable.ic_launcher_foreground)
+                        .setTicker(openPGP)
+                        .setContentTitle(openPGP)
+                        .setSubText(openPGP)
+                        .setContentText(context.getString(R.string.allow_open_pgp_operation));
+                builder.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT));
+                NotificationUtils.displayHighPriorityNotification(builder.build());
                 break;
             case OpenPgpApi.RESULT_CODE_ERROR:
                 errorFlag = true;

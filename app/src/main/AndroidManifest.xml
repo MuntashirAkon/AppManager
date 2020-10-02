@@ -194,6 +194,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".crypto.OpenPGPCryptoActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.TransparentBackground" />
+        <activity
             android:name=".profiles.ProfilesActivity"
             android:label="@string/profiles"
             android:exported="false" />
