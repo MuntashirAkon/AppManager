@@ -214,9 +214,9 @@
     <string name="disable">禁用</string>
     <string name="enable">启用</string>
     <string name="failed_to_disable">无法禁用 %s.</string>
-    <string name="failed_to_enable">无法启用 %s</string>
+    <string name="failed_to_enable">无法启用 %s。</string>
     <string name="force_stop">强行停止</string>
-    <string name="failed_to_stop">无法停用 %s</string>
+    <string name="failed_to_stop">无法停用 %s。</string>
     <string name="storage_and_cache">存储和缓存</string>
     <string name="total_size">总计</string>
     <string name="app_size">应用程序</string>
@@ -244,7 +244,7 @@
         <item quantity="other">%d 次</item>
     </plurals>
     <string name="sort_by_last_used">上次使用</string>
-    <string name="sort_by_screen_time">屏幕开启时间：</string>
+    <string name="sort_by_screen_time">屏幕开启时间</string>
     <string name="sort_by_times_opened">打开次数</string>
     <string name="sort_by_mobile_data">移动数据</string>
     <string name="pref_import_export_blocking_rules">导入/导出阻止规则</string>
@@ -303,7 +303,7 @@
     <string name="export_options">导入选项</string>
     <string name="import_failed">导入失败 ！</string>
     <string name="export_failed">导出失败 ！</string>
-    <string name="keyboard_type">键盘类型：</string>
+    <string name="keyboard_type">键盘类型</string>
     <string name="navigation">网站链接</string>
     <string name="touchscreen">触摸屏</string>
     <string name="pref_export_msg">导出应用管理器中配置的阻止规则到外部存储</string>
@@ -318,7 +318,7 @@
     <string name="select_theme">主题</string>
     <string name="apply">应用</string>
     <string name="current_theme">当前主题: %s</string>
-    <string name="pref_about_msg">应用程序管理器版本，许可，积分等</string>
+    <string name="pref_about_msg">应用程序管理器版本、许可、致谢等。</string>
     <string name="version">版本</string>
     <string name="sort_by_wifi_data">Wi-Fi 数据</string>
     <string name="block_trackers">屏蔽所有追踪器</string>
@@ -346,7 +346,7 @@
     <string name="failed_to_deny_dangerous_app_ops">无法撤消所有危险的应用程序操作</string>
     <string name="launch_app">启动</string>
     <string name="never_ask">从不询问</string>
-    <string name="one_click_ops">1-Click Ops</string>
+    <string name="one_click_ops">一键操作</string>
     <string name="changelog">更新日志</string>
     <string name="external_apk_no_app_op">外部APK没有任何应用程序操作</string>
     <string name="manifest_viewer">清单查看器</string>
@@ -373,7 +373,7 @@
     <string name="clear_data_from_uninstalled_apps_description">清除使用DONT_DELETE_DATA标志卸载的应用中的数据</string>
     <string name="clear_app_cache">清除缓存</string>
     <string name="clear_app_cache_description">清除所有应用程序的缓存</string>
-    <string name="no_tracker_found">没有发现跟踪器。</string>
+    <string name="no_tracker_found">没有发现跟踪器</string>
     <string name="failed_packages">错误的软件包</string>
     <string name="input_signatures">输入签名</string>
     <string name="input_signatures_description">用空格隔开输入的签名，如(com.facebook org.app2 com.app3) 等。</string>
@@ -467,7 +467,7 @@
     <string name="failed_to_fetch_package_info">无法获取软件包信息</string>
     <string name="batch_ops">批量操作</string>
     <string name="operation_running">运行中的操作……</string>
-    <string name="full_stop_tap_to_see_details">点按即可查看详情</string>
+    <string name="full_stop_tap_to_see_details">. 点按查看详情.</string>
     <string name="try_again">再试一次</string>
     <string name="info">详情</string>
     <string name="install_app_message">安装应用？</string>
@@ -569,4 +569,10 @@
     <string name="filter_apps">应用程序</string>
     <string name="no_apps">没有应用</string>
     <string name="apps">应用程序</string>
+    <string name="compression_method">压缩方法：%s</string>
+    <string name="pref_backup_flags_msg">为备份选项添加预设消除了每次备份/恢复时选择flag的负担</string>
+    <string name="pref_compression_method">压缩方法</string>
+    <string name="rules">规则</string>
+    <string name="other">其他</string>
+    <string name="changes_not_saved">未保存更改</string>
 </resources>
