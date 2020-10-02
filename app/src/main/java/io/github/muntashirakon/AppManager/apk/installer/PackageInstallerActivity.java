@@ -89,6 +89,11 @@ public class PackageInstallerActivity extends BaseActivity {
             finish();
             return;
         }
+        Log.d("PIA", "On create, intent: " + intent.toString());
+        if (ACTION_PACKAGE_INSTALLED.equals(intent.getAction())) {
+            onNewIntent(intent);
+            return;
+        }
         final Uri apkUri = intent.getData();
         apkFileKey = intent.getIntExtra(EXTRA_APK_FILE_KEY, -1);
         if (apkUri == null && apkFileKey == -1) {
@@ -286,12 +291,13 @@ public class PackageInstallerActivity extends BaseActivity {
         intent.putExtra(PackageInstallerService.EXTRA_CLOSE_APK_FILE, closeApkFile);
         ContextCompat.startForegroundService(this, intent);
         closeApkFile = false;
-        if (AppPref.isRootOrAdbEnabled()) finish();
+        finish();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        Log.d("PIA", "New intent called: " + intent.toString());
         // Check for action first
         if (ACTION_PACKAGE_INSTALLED.equals(intent.getAction())) {
             sessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);

@@ -152,6 +152,7 @@ public class PackageInstallerService extends IntentService {
         packageName = apkFile.getPackageName();
         piReceiver.setPackageName(packageName);
         appLabel = intent.getStringExtra(EXTRA_APP_LABEL);
+        piReceiver.setAppLabel(appLabel);
         closeApkFile = intent.getBooleanExtra(EXTRA_CLOSE_APK_FILE, false);
         // Set package name in the ongoing notification
         builder.setContentTitle(appLabel);
