@@ -242,11 +242,14 @@ public final class PackageUtils {
             String service, line;
             ListIterator<String> it = serviceDump.listIterator();
             if (it.hasNext()) {
-                matcher = SERVICE_REGEX.matcher(it.next());
+                line = it.next();
+                if ("Last ANR service:".equals(line.trim())) return false;
+                matcher = SERVICE_REGEX.matcher(line);
                 while (it.hasNext()) {
                     if (matcher.find(0)) {
                         service = matcher.group(1);
                         line = it.next();
+                        if ("Last ANR service:".equals(line.trim())) break;
                         matcher = SERVICE_REGEX.matcher(line);
                         while (it.hasNext()) {
                             if (matcher.find(0)) break;
