@@ -41,7 +41,7 @@ public final class TarUtils {
     public static final String TAR_BZIP2 = "j";
 
     // source, type, filters, exclude, size, destination
-    private static final String TAR_CREATE = "cd \"%s\" && " + Runner.TOYBOX + " tar -c%sf - %s %s | " + Runner.TOYBOX + " split -b %s - \"%s\"";
+    private static final String TAR_CREATE = "cd \"%s\" && " + Runner.TOYBOX + " tar -ch%sf - %s %s | " + Runner.TOYBOX + " split -b %s - \"%s\"";
     // sources, type, filters, exclude, destination
     private static final String TAR_EXTRACT = Runner.TOYBOX + " cat %s | " + Runner.TOYBOX + "  tar -x%sf - %s %s -C \"%s\"";
 
