@@ -58,6 +58,7 @@ public final class RunnerUtils {
     public static final String CMD_ENABLE_PACKAGE = CMD_PM + " enable --user %s %s";
     public static final String CMD_DISABLE_PACKAGE = CMD_PM + " disable-user --user %s %s";
     public static final String CMD_FORCE_STOP_PACKAGE = CMD_AM + " force-stop --user %s %s";
+    public static final String CMD_INSTALL_EXISTING_PACKAGE = CMD_PM + " install-existing --user %s %s";
     public static final String CMD_UNINSTALL_PACKAGE = CMD_PM + " uninstall -k --user %s %s";
     public static final String CMD_UNINSTALL_PACKAGE_WITH_DATA = CMD_PM + " uninstall --user %s %s";
 
@@ -202,6 +203,13 @@ public final class RunnerUtils {
     @NonNull
     public static Runner.Result forceStopPackage(String packageName, int userHandle) {
         return Runner.runCommand(String.format(CMD_FORCE_STOP_PACKAGE, userHandleToUser(userHandle), packageName));
+    }
+
+    @NonNull
+    public static Runner.Result uninstallPackageUpdate(String packageName, int userHandle) {
+        String cmd = String.format(CMD_UNINSTALL_PACKAGE_WITH_DATA, userHandleToUser(USER_ALL), packageName) + " && "
+                + String.format(CMD_INSTALL_EXISTING_PACKAGE, userHandleToUser(userHandle), packageName);
+        return Runner.runCommand(cmd);
     }
 
     @NonNull

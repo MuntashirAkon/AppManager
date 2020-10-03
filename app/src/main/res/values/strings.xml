@@ -646,4 +646,7 @@
     <string name="compression_method">Compression method: %s</string>
     <string name="confirm_installation">Confirm installation</string>
     <string name="allow_open_pgp_operation">Click to allow AM to use OpenPGP</string>
+    <string name="uninstall_updates">Uninstall Updates</string>
+    <string name="update_uninstalled_successfully">Updates for %s has been uninstalled.</string>
+    <string name="failed_to_uninstall_updates">Could not uninstall updates for %s.</string>
 </resources>

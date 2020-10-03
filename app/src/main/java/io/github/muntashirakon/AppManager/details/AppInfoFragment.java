@@ -481,7 +481,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
                 final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
                 if (isRootEnabled) {
-                    new MaterialAlertDialogBuilder(mActivity)
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
                             .setTitle(mPackageLabel)
                             .setMessage(isSystemApp ?
                                     R.string.uninstall_system_app_message : R.string.uninstall_app_message)
@@ -498,8 +498,20 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             }).start())
                             .setNegativeButton(R.string.cancel, (dialog, which) -> {
                                 if (dialog != null) dialog.cancel();
-                            })
-                            .show();
+                            });
+                    if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
+                        builder.setNeutralButton(R.string.uninstall_updates, (dialog, which) ->
+                                new Thread(() -> {
+                                    if (RunnerUtils.uninstallPackageUpdate(mPackageName, Users.getCurrentUserHandle()).isSuccessful()) {
+                                        runOnUiThread(() -> {
+                                            Toast.makeText(mActivity, getString(R.string.update_uninstalled_successfully, mPackageLabel), Toast.LENGTH_LONG).show();
+                                        });
+                                    } else {
+                                        runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_uninstall_updates, mPackageLabel), Toast.LENGTH_LONG).show());
+                                    }
+                                }).start());
+                    }
+                    builder.show();
                 } else {
                     Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
                     uninstallIntent.setData(Uri.parse("package:" + mPackageName));
