@@ -22,7 +22,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -38,6 +37,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,8 +50,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-
-import static io.github.muntashirakon.AppManager.utils.Utils.requestExternalStoragePermissions;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class BackupDialogFragment extends DialogFragment {
     public static final String TAG = "BackupDialogFragment";
@@ -74,7 +74,11 @@ public class BackupDialogFragment extends DialogFragment {
     private int mode = MODE_BACKUP;
     private List<String> packageNames;
     private int baseBackupCount = 0;
+    private boolean permsGranted = false;
     private FragmentActivity activity;
+    private ActivityResultLauncher<String[]> askStoragePerm = registerForActivityResult(
+            new ActivityResultContracts.RequestMultiplePermissions(), result ->
+                    permsGranted =  Utils.getExternalStoragePermissions(activity) == null);
     private BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -107,6 +111,17 @@ public class BackupDialogFragment extends DialogFragment {
         this.actionBeginInterface = actionBeginInterface;
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        activity = requireActivity();
+        String[] permissions = Utils.getExternalStoragePermissions(activity);
+        permsGranted = permissions == null;
+        if (!permsGranted) {
+            askStoragePerm.launch(permissions);
+        }
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -137,22 +152,16 @@ public class BackupDialogFragment extends DialogFragment {
                         });
         builder.setPositiveButton(R.string.backup, (dialog, which) -> {
             mode = MODE_BACKUP;
-            if (requestExternalStoragePermissions(activity)) {
-                handleMode();
-            }
+            if (permsGranted) handleMode();
         });
         if (baseBackupCount == packageNames.size()) {
             // Display restore and delete only if backups of all the selected package exist
             builder.setNegativeButton(R.string.restore, (dialog, which) -> {
                 mode = MODE_RESTORE;
-                if (requestExternalStoragePermissions(activity)) {
-                    handleMode();
-                }
+                if (permsGranted) handleMode();
             }).setNeutralButton(R.string.delete_backup, (dialog, which) -> {
                 mode = MODE_DELETE;
-                if (requestExternalStoragePermissions(activity)) {
-                    handleMode();
-                }
+                if (permsGranted) handleMode();
             });
         } else {
             if (baseBackupCount == 1) {
@@ -160,13 +169,6 @@ public class BackupDialogFragment extends DialogFragment {
             }
         }
         return builder.create();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                && grantResults[1] == PackageManager.PERMISSION_GRANTED) handleMode();
     }
 
     public void handleMode() {
