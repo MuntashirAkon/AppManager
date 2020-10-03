@@ -373,7 +373,8 @@
     <string name="source_code">Quellcode</string>
     <string name="community">Telegram-Gemeinschaft</string>
     <string name="community_links">Telegram-Update-Channel: https://t.me/AppManagerChannel
-        \nHilfe-Gruppe (auf Englisch): https://t.me/AppManagerAndroid</string>
+\nHilfe-Gruppe (auf Englisch): https://t.me/AppManagerAndroid
+\nTwitter: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">Existierende Regeln importieren</string>
     <string name="pref_import_existing_msg">Fügt Komponenten zum App-Manager hinzu, die von anderen Anwendungen deaktiviert wurden. Sei vorsichtig, wenn Du dies tust: Es kann hierbei zu sehr vielen falschen positiven Meldungen kommen. Wähle nur die Anwendungen aus, bei denen Du Dir sicher bist.</string>
     <string name="failed_to_get_data_usage_information">Abfrage der Datennutzung nicht möglich</string>
@@ -612,4 +613,6 @@
     <string name="rules">Regeln</string>
     <string name="other">Andere</string>
     <string name="changes_not_saved">Änderungen nicht gespeichert</string>
+    <string name="allow_open_pgp_operation">Klicken Sie hier, um AM die Verwendung von OpenPGP zu erlauben</string>
+    <string name="confirm_installation">Installation bestätigen</string>
 </resources>
