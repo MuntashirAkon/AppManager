@@ -45,7 +45,7 @@ import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public final class MetadataManager {
-    public static final String META_FILE = "meta.am.v1";
+    public static final String META_FILE = "meta_v2.am.json";
     public static final String[] TAR_TYPES = new String[]{TarUtils.TAR_GZIP, TarUtils.TAR_BZIP2};
 
     // For an extended documentation, see https://github.com/MuntashirAkon/AppManager/issues/30
@@ -66,7 +66,7 @@ public final class MetadataManager {
         public String checksumAlgo = "sha256";  // checksum_algo
         @BackupMode.Mode
         public int mode;  // mode
-        public int version = 1;  // version
+        public int version = 2;  // version
         public String apkName;  // apk_name
         public String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);  // instruction_set
         public BackupFlags flags;  // flags
