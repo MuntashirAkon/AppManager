@@ -71,7 +71,6 @@ import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
-import io.github.muntashirakon.AppManager.misc.RequestCodes;
 import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
 import io.github.muntashirakon.AppManager.profiles.ProfilesActivity;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
@@ -86,7 +85,6 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static androidx.appcompat.app.ActionBar.LayoutParams;
-import static io.github.muntashirakon.AppManager.utils.Utils.requestExternalStoragePermissions;
 
 public class MainActivity extends BaseActivity implements
         SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener,
@@ -174,6 +172,13 @@ public class MainActivity extends BaseActivity implements
     private MenuItem sortByBlockedComponentMenu;
     @SortOrder
     private int mSortBy;
+
+    private ActivityResultLauncher<String[]> askStoragePermForBackupApk = registerForActivityResult(
+            new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+                if (Utils.getExternalStoragePermissions(this) == null) {
+                    handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
+                }
+            });
 
     private ActivityResultLauncher<String> batchExportRules = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
         RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
@@ -286,17 +291,6 @@ public class MainActivity extends BaseActivity implements
         }
         // Start local server
         new Thread(LocalServer::getInstance).start();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == RequestCodes.REQUEST_CODE_EXTERNAL_STORAGE_PERMISSIONS) {
-            if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
-            }
-        }
     }
 
     @Override
@@ -502,9 +496,10 @@ public class MainActivity extends BaseActivity implements
                 handleSelection();
                 return true;
             case R.id.action_backup_apk:
-                if (requestExternalStoragePermissions(this)) {
-                    handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
-                }
+                String[] permissions = Utils.getExternalStoragePermissions(this);
+                if (permissions != null) {
+                    askStoragePermForBackupApk.launch(permissions);
+                } else handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
                 return true;
             case R.id.action_block_trackers:
                 handleBatchOp(BatchOpsManager.OP_BLOCK_TRACKERS);
@@ -522,8 +517,7 @@ public class MainActivity extends BaseActivity implements
                 handleBatchOp(BatchOpsManager.OP_DISABLE_BACKGROUND);
                 return true;
             case R.id.action_export_blocking_rules:
-                @SuppressLint("SimpleDateFormat")
-                final String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
+                @SuppressLint("SimpleDateFormat") final String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
                 batchExportRules.launch(fileName);
                 return true;
             case R.id.action_force_stop:
