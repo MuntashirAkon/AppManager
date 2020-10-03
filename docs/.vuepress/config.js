@@ -76,6 +76,7 @@ module.exports = {
               '/guide/exodus-page',
               '/guide/shared-pref-editor-page',
               '/guide/settings-page',
+              '/guide/backup-restore',
             ]
           },
           {
