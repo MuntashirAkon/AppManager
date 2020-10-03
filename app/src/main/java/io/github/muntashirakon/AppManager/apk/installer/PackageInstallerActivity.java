@@ -217,6 +217,7 @@ public class PackageInstallerActivity extends BaseActivity {
         }).start();
     }
 
+//        String newVersionName = packageInfo.versionName;
     @NonNull
     private PackageInfo getPackageInfo() throws PackageManager.NameNotFoundException, IOException {
         String apkPath = apkFile.getBaseEntry().getCachedFile().getAbsolutePath();

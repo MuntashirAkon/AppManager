@@ -18,6 +18,29 @@
 <p>App Manager is now on F-Droid! Link: https://f-droid.org/packages/io.github.muntashirakon.AppManager</p><br />
 <p>Visit App Manager docs here: https://muntashirakon.github.io/AppManager</p><br />
 
+<h5>v2.5.16 (364) pre-release:</h5>
+&#x2022; <font color="#09868B">[Feature]</font> Added a KeyStore tag for apps that has keystore items in the App Info tab. It has red colour if the phone has screen lock<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added an option to choose between Gzip (default) and BZip2 for backups (in settings)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added an option to set presets for backup/restore options (in settings)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added backup/restore support using OpenPGP client (such as OpenKeychain)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added Portuguese language (and updates for other languages)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added sort and filter for running apps<br />
+&#x2022; <font color="#09868B">[Feature]</font> Allow backup/restore of app permissions (enabled by default)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Automatically select required/recommended apk files in the apk selection screen for apps with splits (for apk installer)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Clear existing data before restoring data backups<br />
+&#x2022; <font color="#09868B">[Feature]</font> Improved navigation using a keyboard (incomplete)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Migrate to Androidx preference library<br />
+&#x2022; <font color="#09868B">[Feature]</font> View SELinux context for running apps<br />
+&#x2022; <font color="red">[Fix]</font> Check for keystore only when data backup is requested<br />
+&#x2022; <font color="red">[Fix]</font> Fixed wrong memory usage in the running apps<br />
+&#x2022; <font color="red">[Fix]</font> Prevent installer from hanging indefinitely (actually for 5 hours) when installing a huge (x)apk(s) file<br />
+&#x2022; <font color="red">[Fix]</font> Prevent false-positive when checking for keystore items for an app<br />
+&#x2022; <font color="red">[Fix]</font> Removed old am.jar on app update<br />
+&#x2022; <font color="red">[Fix]</font> Set non-IFW rules based on current user ID<br />
+&#x2022; <font color="red">[Fix]</font> Store checksums in a different file (that can be encrypted) instead of <tt>meta.am.v1</tt><br />
+&#x2022; <font color="red">[Fix]</font> Use apk-parser to parse manifest of installed apps<br />
+<p>Backup/restore is more or less finalised now. But use it only for testing as the metadata version will be incremented to 2 in the final release.</p>
+
 <h5>v2.5.15 (362) pre-release:</h5>
 &#x2022; <font color="#09868B">[Feature]</font> Added a tag for running apps in the App Info tab<br />
 &#x2022; <font color="#09868B">[Feature]</font> Added a tag for system apps installed/injected through Magisk in the App Info tab<br />
@@ -139,21 +162,6 @@
 &#x2022; <font color="red">[Fix]</font> Update external apk info on install/uninstall events<br />
 <p>To use Termux features, make sure you are using Termux v0.96 or later and <tt>allow-external-apps=true</tt> is added in <tt>~/.termux/termux.properties</tt>.</p><br />
 <p>Data backup feature is still considered experimental and please do not rely on it to manage your backups yet.</p><br />
-
-<h5>v2.5.11 (333):</h5>
-&#x2022; <font color="#09868B">[Feature]</font> Added experimental support for app data backup. Please test only on apps you don't need. (root only)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added sharing split apk files as apks (can be installed via SAI).<br />
-&#x2022; <font color="#09868B">[Feature]</font> Implemented saving apk files in batch selection mode.<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added what's new for apk file that needs an update (when opening external apk files).<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added an option to apply 1-click ops to system apps (disabled by default).<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added installed app version info in the App Info tab. Clicking the <i>i</i> icon opens the installed App Info tab.<br />
-&#x2022; <font color="#09868B">[Feature]</font> New on-demand permissions <tt>READ_EXTERNAL_STORAGE</tt> &amp; <tt>WRITE_EXTERNAL_STORAGE</tt> for app backup support<br />
-&#x2022; <font color="#09868B">[Feature]</font> Display apps that are uninstalled but have backups in the main window<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added a disclaimer<br />
-&#x2022; <font color="red">[Fix]</font> Fixed selections being not cleared after the task is completed in the main window<br />
-&#x2022; <font color="red">[Fix]</font> Convert various info in the configurations and features tab to text to improve readability<br />
-&#x2022; <font color="red">[Fix]</font> Fix crash in the main window while filtering apps by search query<br />
-&#x2022; <font color="red">[Fix]</font> Fix crash in the App Info tab when existence of external data directory has false-positive result<br />
 <p>
     <b>Note:</b> Backup data are stored at <tt>/sdcard/AppManager</tt> and apk backups are stored at <tt>/sdcard/AppManager/apks</tt>. Data backups are currently not working on Android Lollipop.
 </p><br />

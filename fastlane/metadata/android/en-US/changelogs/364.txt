@@ -1,0 +1,6 @@
+F-Droid doesn't support extended changelog. View in-app changelog for a more helpful changelog.
+- New language: Portuguese
+- Backup: OpenPGP support, Gzip (default), BZip2 compression methods, backup presets, restoring permissions
+- Sort & filter for running apps
+- Auto-select required apk files
+Backup/restore's been finalised but use it only for testing until the final release.
