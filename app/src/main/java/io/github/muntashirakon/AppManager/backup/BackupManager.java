@@ -516,7 +516,7 @@ public class BackupManager {
             // Get checksums
             try {
                 checksumFile = this.backupFile.getChecksumFile(BackupMode.MODE_NO_ENCRYPTION);
-                decryptedFiles.add(checksumFile);
+                decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
                 this.checksum = new BackupFiles.Checksum(checksumFile, "r");
             } catch (IOException e) {
                 this.backupFile.cleanup();
@@ -801,7 +801,7 @@ public class BackupManager {
                 }
                 // Get decrypted file
                 permsFile = backupFile.getPermsFile(BackupMode.MODE_NO_ENCRYPTION);
-                decryptedFiles.add(permsFile);
+                decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
                 try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()))) {
                     importer.addRulesFromUri(Uri.fromFile(permsFile), userHandle);
                     importer.setPackagesToImport(Collections.singletonList(packageName));
@@ -834,7 +834,7 @@ public class BackupManager {
                 }
                 // Get decrypted file
                 rulesFile = backupFile.getRulesFile(BackupMode.MODE_NO_ENCRYPTION);
-                decryptedFiles.add(rulesFile);
+                decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
                 try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()))) {
                     importer.addRulesFromUri(Uri.fromFile(rulesFile), userHandle);
                     importer.setPackagesToImport(Collections.singletonList(packageName));
