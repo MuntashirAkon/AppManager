@@ -24,10 +24,12 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public abstract class Runner {
+    public static final String TAG = "Runner";
     public static final String TOYBOX;
 
     static final String TOYBOX_SO_NAME = "libtoybox.so";
@@ -53,25 +55,30 @@ public abstract class Runner {
         String getOutput();
     }
 
-    private static Runner runner;
-    private static boolean isAdb = false;
-    private static boolean isRoot = false;
+    private static RootShellRunner rootShellRunner;
+    private static AdbShellRunner adbShellRunner;
+    private static UserShellRunner userShellRunner;
 
     public static Runner getInstance() {
-        if (runner == null || isAdb != AppPref.isAdbEnabled() || isRoot != AppPref.isRootEnabled()) {
-            isAdb = false;
-            isRoot = false;
-            if (AppPref.isRootEnabled()) {
-                isRoot = true;
-                runner = new RootShellRunner();
-            } else if (AppPref.isAdbEnabled()) {
-                isAdb = true;
-                runner = new AdbShellRunner();
-            } else {
-                runner = new UserShellRunner();
+        if (AppPref.isRootEnabled()) {
+            if (rootShellRunner == null) {
+                rootShellRunner = new RootShellRunner();
+                Log.d(TAG, "RootShellRunner");
             }
+            return rootShellRunner;
+        } else if (AppPref.isAdbEnabled()) {
+            if (adbShellRunner == null) {
+                adbShellRunner = new AdbShellRunner();
+                Log.d(TAG, "AdbShellRunner");
+            }
+            return adbShellRunner;
+        } else {
+            if (userShellRunner == null) {
+                userShellRunner = new UserShellRunner();
+                Log.d(TAG, "UserShellRunner");
+            }
+            return userShellRunner;
         }
-        return runner;
     }
 
     @NonNull
