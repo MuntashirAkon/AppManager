@@ -815,9 +815,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
             switch (sortOrderComponents) {
                 // No need to sort by name since we've already done it
                 case AppDetailsFragment.SORT_BY_BLOCKED:
-                    return -Utils.compareBooleans(((AppDetailsComponentItem) o1).isBlocked, ((AppDetailsComponentItem) o2).isBlocked);
+                    return -Boolean.compare(((AppDetailsComponentItem) o1).isBlocked, ((AppDetailsComponentItem) o2).isBlocked);
                 case AppDetailsFragment.SORT_BY_TRACKERS:
-                    return -Utils.compareBooleans(((AppDetailsComponentItem) o1).isTracker, ((AppDetailsComponentItem) o2).isTracker);
+                    return -Boolean.compare(((AppDetailsComponentItem) o1).isTracker, ((AppDetailsComponentItem) o2).isTracker);
             }
             return 0;
         });
@@ -964,9 +964,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 case AppDetailsFragment.SORT_BY_NAME:
                     return o1.name.compareToIgnoreCase(o2.name);
                 case AppDetailsFragment.SORT_BY_DANGEROUS_PERMS:
-                    return -Utils.compareBooleans(((AppDetailsPermissionItem) o1).isDangerous, ((AppDetailsPermissionItem) o2).isDangerous);
+                    return -Boolean.compare(((AppDetailsPermissionItem) o1).isDangerous, ((AppDetailsPermissionItem) o2).isDangerous);
                 case AppDetailsFragment.SORT_BY_DENIED_PERMS:
-                    return Utils.compareBooleans(((AppDetailsPermissionItem) o1).isGranted, ((AppDetailsPermissionItem) o2).isGranted);
+                    return Boolean.compare(((AppDetailsPermissionItem) o1).isGranted, ((AppDetailsPermissionItem) o2).isGranted);
             }
             return 0;
         });

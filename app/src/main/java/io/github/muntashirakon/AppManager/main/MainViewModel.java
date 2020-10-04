@@ -348,7 +348,7 @@ public class MainViewModel extends AndroidViewModel {
                 case MainActivity.SORT_BY_DOMAIN:
                     boolean isSystem1 = (o1.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
                     boolean isSystem2 = (o2.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                    return Utils.compareBooleans(isSystem1, isSystem2);
+                    return Boolean.compare(isSystem1, isSystem2);
                 case MainActivity.SORT_BY_LAST_UPDATE:
                     // Sort in decreasing order
                     return -o1.lastUpdateTime.compareTo(o2.lastUpdateTime);
@@ -372,7 +372,7 @@ public class MainViewModel extends AndroidViewModel {
                         return -o1.blockedCount.compareTo(o2.blockedCount);
                     break;
                 case MainActivity.SORT_BY_DISABLED_APP:
-                    return Utils.compareBooleans(!o1.isDisabled, !o2.isDisabled);
+                    return -Boolean.compare(o1.isDisabled, o2.isDisabled);
                 case MainActivity.SORT_BY_BACKUP:
                     return -Boolean.compare(o1.metadata != null, o2.metadata != null);
             }

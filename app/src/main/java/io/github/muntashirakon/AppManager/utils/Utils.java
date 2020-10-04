@@ -118,12 +118,6 @@ public class Utils {
                 context.getResources().getDisplayMetrics());
     }
 
-    public static int compareBooleans(boolean b1, boolean b2) {
-        if (b1 && !b2) return +1;
-        if (!b1 && b2) return -1;
-        return 0;
-    }
-
     @NonNull
     public static String camelCaseToSpaceSeparatedString(@NonNull String str) {
         return TextUtils.join(" ", splitByCharacterType(str, true)).replace(" _", "");
