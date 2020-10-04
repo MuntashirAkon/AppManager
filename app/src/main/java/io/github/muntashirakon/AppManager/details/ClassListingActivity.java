@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -47,10 +48,14 @@ import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.classysharkandroid.dex.DexLoaderBuilder;
 import com.google.classysharkandroid.reflector.Reflector;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -68,8 +73,6 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
-
-import static com.google.classysharkandroid.utils.PackageUtils.apkCert;
 
 public class ClassListingActivity extends BaseActivity implements SearchView.OnQueryTextListener {
     private static final String APP_DEX = "app_dex";
@@ -554,5 +557,28 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                 };
             return mFilter;
         }
+    }
+
+    private static String apkCert(@NonNull PackageInfo p) {
+        Signature[] signatures = p.signatures;
+        String s = "";
+        X509Certificate c;
+        byte[] certBytes;
+        try {
+            for (Signature signature : signatures) {
+                certBytes = signature.toByteArray();
+                c = (X509Certificate) CertificateFactory.getInstance("X.509")
+                        .generateCertificate(new ByteArrayInputStream(certBytes));
+                s = "\n\n<b>Issuer:</b> " + c.getIssuerX500Principal().getName() +
+                        "\n\n<b>Algorithm:</b> " + c.getSigAlgName() +
+                        "\n\n<b>Certificate fingerprints:</b>" +
+                        "\n  <b>md5:</b> " + DigestUtils.getHexDigest(DigestUtils.MD5, certBytes) +
+                        "\n  <b>sha1:</b> " + DigestUtils.getHexDigest(DigestUtils.SHA_1, certBytes) +
+                        "\n  <b>sha256:</b> " + DigestUtils.getHexDigest(DigestUtils.SHA_256, certBytes);
+
+            }
+        } catch (CertificateException ignored) {
+        }
+        return s;
     }
 }
