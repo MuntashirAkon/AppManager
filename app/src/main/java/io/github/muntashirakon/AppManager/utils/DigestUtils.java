@@ -55,7 +55,7 @@ public class DigestUtils {
     @NonNull
     public static String getHexDigest(@Algorithm String algo, @NonNull File file) {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
-            return DigestUtils.getHexDigest(DigestUtils.SHA_256, fileInputStream);
+            return DigestUtils.getHexDigest(algo, fileInputStream);
         } catch (IOException e) {
             e.printStackTrace();
             return Utils.bytesToHex(new byte[0]);
@@ -93,10 +93,5 @@ public class DigestUtils {
             e.printStackTrace();
             return new byte[0];
         }
-    }
-
-    @NonNull
-    public static MessageDigest getMD(@Algorithm String algo) throws NoSuchAlgorithmException {
-        return MessageDigest.getInstance(algo);
     }
 }
