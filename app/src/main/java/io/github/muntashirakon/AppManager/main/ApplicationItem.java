@@ -20,12 +20,12 @@ package io.github.muntashirakon.AppManager.main;
 import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.util.Pair;
 
 import java.util.Objects;
 
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
-import io.github.muntashirakon.AppManager.utils.Tuple;
 
 /**
  * Stores an application info
@@ -42,8 +42,8 @@ public class ApplicationItem extends PackageItemInfo {
     /**
      * Backup info
      */
-    public @Nullable
-    MetadataManager.Metadata metadata;
+    @Nullable
+    public MetadataManager.Metadata metadata;
     /**
      * Application flags.
      * See {@link android.content.pm.ApplicationInfo#flags}
@@ -82,7 +82,8 @@ public class ApplicationItem extends PackageItemInfo {
     /**
      * Issuer and signature
      */
-    public @Nullable Tuple<String, String> sha;
+    @Nullable
+    public Pair<String, String> sha;
     /**
      * Blocked components count
      */

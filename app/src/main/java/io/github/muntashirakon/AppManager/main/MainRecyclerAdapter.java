@@ -201,15 +201,15 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             // Set issuer
             String issuer;
             try {
-                issuer = "CN=" + (item.sha.getFirst()).split("CN=", 2)[1];
+                issuer = "CN=" + (item.sha.first).split("CN=", 2)[1];
             } catch (ArrayIndexOutOfBoundsException e) {
-                issuer = item.sha.getFirst();
+                issuer = item.sha.first;
             }
             holder.issuer.setVisibility(View.VISIBLE);
             holder.issuer.setText(issuer);
             // Set signature type
             holder.sha.setVisibility(View.VISIBLE);
-            holder.sha.setText(item.sha.getSecond());
+            holder.sha.setText(item.sha.second);
         } else {
             holder.issuer.setVisibility(View.GONE);
             holder.sha.setVisibility(View.GONE);

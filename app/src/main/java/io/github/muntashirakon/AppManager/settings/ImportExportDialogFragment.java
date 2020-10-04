@@ -25,6 +25,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -49,7 +50,6 @@ import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.Tuple;
 
 public class ImportExportDialogFragment extends DialogFragment {
     public static final String TAG = "ImportExportDialogFragment";
@@ -83,20 +83,20 @@ public class ImportExportDialogFragment extends DialogFragment {
         if (getDialog() != null) getDialog().cancel();
     });
     private ActivityResultLauncher<String> importFromWatt = registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), uris -> {
-        Tuple<Boolean, Integer> status = ExternalComponentsImporter.applyFromWatt(activity.getApplicationContext(), uris);
-        if (!status.getFirst()) {  // Not failed
+        Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromWatt(activity.getApplicationContext(), uris);
+        if (!status.first) {  // Not failed
             Toast.makeText(getContext(), R.string.the_import_was_successful, Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(getContext(), getResources().getQuantityString(R.plurals.failed_to_import_files, status.getSecond(), status.getSecond()), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getResources().getQuantityString(R.plurals.failed_to_import_files, status.second, status.second), Toast.LENGTH_LONG).show();
         }
         if (getDialog() != null) getDialog().cancel();
     });
     private ActivityResultLauncher<String> importFromBlocker = registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), uris -> {
-        Tuple<Boolean, Integer> status = ExternalComponentsImporter.applyFromBlocker(activity.getApplicationContext(), uris);
-        if (!status.getFirst()) {  // Not failed
+        Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromBlocker(activity.getApplicationContext(), uris);
+        if (!status.first) {  // Not failed
             Toast.makeText(getContext(), R.string.the_import_was_successful, Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(getContext(), getResources().getQuantityString(R.plurals.failed_to_import_files, status.getSecond(), status.getSecond()), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getResources().getQuantityString(R.plurals.failed_to_import_files, status.second, status.second), Toast.LENGTH_LONG).show();
         }
         if (getDialog() != null) getDialog().cancel();
     });

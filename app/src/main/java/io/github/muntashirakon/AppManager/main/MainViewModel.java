@@ -361,12 +361,13 @@ public class MainViewModel extends AndroidViewModel {
                     else if (o1.sha == null) return -1;
                     else if (o2.sha == null) return +1;
                     else {
-                        try {
-                            return o1.sha.compareTo(o2.sha);
-                        } catch (NullPointerException ignored) {
-                        }
+                        int i = o1.sha.first.compareToIgnoreCase(o2.sha.first);
+                        if (i == 0) {
+                            return o1.sha.second.compareToIgnoreCase(o2.sha.second);
+                        } else if (i < 0) {
+                            return -1;
+                        } else return +1;
                     }
-                    break;
                 case MainActivity.SORT_BY_BLOCKED_COMPONENTS:
                     if (isRootEnabled)
                         return -o1.blockedCount.compareTo(o2.blockedCount);

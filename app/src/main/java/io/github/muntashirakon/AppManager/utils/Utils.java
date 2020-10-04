@@ -34,6 +34,7 @@ import android.os.Build;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
+import android.util.Pair;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.WindowManager;
@@ -533,21 +534,22 @@ public class Utils {
     }
 
     @NonNull
-    public static Tuple<String, String> getIssuerAndAlg(@NonNull PackageInfo p) {
+    public static Pair<String, String> getIssuerAndAlg(@NonNull PackageInfo p) {
         Signature[] signatures = PackageUtils.getSigningInfo(p, false);
         X509Certificate c;
-        Tuple<String, String> t = new Tuple<>("", "");
-        if (signatures == null) return t;
+        if (signatures == null) return new Pair<>("", "");
+        String name = "";
+        String algoName = "";
         try {
             for (Signature sg : signatures) {
                 c = (X509Certificate) CertificateFactory.getInstance("X.509")
                         .generateCertificate(new ByteArrayInputStream(sg.toByteArray()));
-                t.setFirst(c.getIssuerX500Principal().getName());
-                t.setSecond(c.getSigAlgName());
+                name = c.getIssuerX500Principal().getName();
+                algoName = c.getSigAlgName();
             }
         } catch (CertificateException ignored) {
         }
-        return t;
+        return new Pair<>(name, algoName);
     }
 
     /**

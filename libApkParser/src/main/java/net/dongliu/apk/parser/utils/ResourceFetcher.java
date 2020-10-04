@@ -1,5 +1,7 @@
 package net.dongliu.apk.parser.utils;
 
+import android.util.Pair;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -7,6 +9,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -14,6 +17,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,7 +73,7 @@ public class ResourceFetcher {
         };
         parser.parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)), dh);
         for (Pair<Integer, String> pair : attrIds) {
-            System.out.println(String.format("%s=%d", pair.getRight(), pair.getLeft()));
+            System.out.println(String.format(Locale.ROOT, "%s=%d", pair.second, pair.first));
         }
     }
 

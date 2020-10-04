@@ -37,6 +37,7 @@ import android.os.Bundle;
 import android.os.Process;
 import android.provider.Settings;
 import android.text.format.Formatter;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -106,7 +107,6 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
@@ -115,8 +115,8 @@ import static io.github.muntashirakon.AppManager.utils.Utils.TERMUX_PERM_RUN_COM
 
 public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private static final String UID_STATS_PATH = "/proc/uid_stat/";
-    private static final String UID_STATS_TR = "tcp_rcv";
-    private static final String UID_STATS_RC = "tcp_snd";
+    private static final String UID_STATS_TX = "tcp_rcv";
+    private static final String UID_STATS_RX = "tcp_snd";
 
     private static final String PACKAGE_NAME_FDROID = "org.fdroid.fdroid";
     private static final String PACKAGE_NAME_AURORA_DROID = "com.aurora.adroid";
@@ -867,12 +867,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
                     try {
-                        final Tuple<Tuple<Long, Long>, Tuple<Long, Long>> dataUsage;
+                        final Pair<Pair<Long, Long>, Pair<Long, Long>> dataUsage;
                         dataUsage = AppUsageStatsManager.getWifiMobileUsageForPackage(mActivity,
                                 mPackageName, UsageUtils.USAGE_LAST_BOOT);
-                        setDataUsageHelper(getReadableSize(dataUsage.getFirst().getFirst() +
-                                dataUsage.getSecond().getFirst()), getReadableSize(dataUsage
-                                .getFirst().getSecond() + dataUsage.getSecond().getSecond()));
+                        setDataUsageHelper(getReadableSize(dataUsage.first.first +
+                                dataUsage.second.first), getReadableSize(dataUsage
+                                .first.second + dataUsage.second.second));
                     } catch (SecurityException e) {
                         runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_get_data_usage_information, Toast.LENGTH_SHORT).show());
                         e.printStackTrace();
@@ -881,8 +881,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     }
                 }
             } else {
-                final Tuple<String, String> uidNetStats = getNetStats(mApplicationInfo.uid);
-                setDataUsageHelper(uidNetStats.getFirst(), uidNetStats.getSecond());
+                final Pair<String, String> uidNetStats = getNetStats(mApplicationInfo.uid);
+                setDataUsageHelper(uidNetStats.first, uidNetStats.second);
             }
         } catch (Exception e) {
             runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_get_data_usage_information, Toast.LENGTH_LONG).show());
@@ -1092,19 +1092,19 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
      * @return A tuple consisting of transmitted and received data
      */
     @NonNull
-    private Tuple<String, String> getNetStats(int uid) {
-        Tuple<String, String> tuple = new Tuple<>(getReadableSize(0), getReadableSize(0));
+    private Pair<String, String> getNetStats(int uid) {
+        String tx = getReadableSize(0);
+        String rx = getReadableSize(0);
         File uidStatsDir = new File(UID_STATS_PATH + uid);
-
         if (uidStatsDir.exists() && uidStatsDir.isDirectory()) {
             for (File child : Objects.requireNonNull(uidStatsDir.listFiles())) {
-                if (child.getName().equals(UID_STATS_TR))
-                    tuple.setFirst(getReadableSize(Long.parseLong(IOUtils.getFileContent(child, "-1").trim())));
-                else if (child.getName().equals(UID_STATS_RC))
-                    tuple.setSecond(getReadableSize(Long.parseLong(IOUtils.getFileContent(child, "-1").trim())));
+                if (child.getName().equals(UID_STATS_TX))
+                    tx = getReadableSize(Long.parseLong(IOUtils.getFileContent(child, "-1").trim()));
+                else if (child.getName().equals(UID_STATS_RX))
+                    rx = getReadableSize(Long.parseLong(IOUtils.getFileContent(child, "-1").trim()));
             }
         }
-        return tuple;
+        return new Pair<>(tx, rx);
     }
 
     /**

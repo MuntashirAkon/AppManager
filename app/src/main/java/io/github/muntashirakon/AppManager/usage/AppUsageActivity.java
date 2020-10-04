@@ -26,6 +26,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.format.Formatter;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,7 +61,6 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.usage.UsageUtils.IntervalType;
-import io.github.muntashirakon.AppManager.utils.Tuple;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_LAST_BOOT;
@@ -254,8 +254,8 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
                 case SORT_BY_LAST_USED:
                     return -o1.lastUsageTime.compareTo(o2.lastUsageTime);
                 case SORT_BY_MOBILE_DATA:
-                    Long o1MData = o1.mobileData.getFirst() + o1.mobileData.getSecond();
-                    Long o2MData = o2.mobileData.getFirst() + o2.mobileData.getSecond();
+                    Long o1MData = o1.mobileData.first + o1.mobileData.second;
+                    Long o2MData = o2.mobileData.first + o2.mobileData.second;
                     return -o1MData.compareTo(o2MData);
                 case SORT_BY_PACKAGE_NAME:
                     return o1.packageName.compareToIgnoreCase(o2.packageName);
@@ -264,8 +264,8 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
                 case SORT_BY_TIMES_OPENED:
                     return -o1.timesOpened.compareTo(o2.timesOpened);
                 case SORT_BY_WIFI_DATA:
-                    Long o1WData = o1.wifiData.getFirst() + o1.wifiData.getSecond();
-                    Long o2WData = o2.wifiData.getFirst() + o2.wifiData.getSecond();
+                    Long o1WData = o1.wifiData.first + o1.wifiData.second;
+                    Long o2WData = o2.wifiData.first + o2.wifiData.second;
                     return -o1WData.compareTo(o2WData);
             }
             return 0;
@@ -415,15 +415,15 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
             holder.screenTime.setText(screenTimesWithTimesOpened);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // Set data usage
-                final Tuple<Long, Long> mobileData = packageUS.mobileData;
-                if (mobileData.getFirst() != 0 || mobileData.getSecond() != 0) {
-                    holder.mobileDataUsage.setText("M: \u2191 " + Formatter.formatFileSize(mActivity, mobileData.getFirst())
-                            + " \u2193 " + Formatter.formatFileSize(mActivity, mobileData.getSecond()));
+                final Pair<Long, Long> mobileData = packageUS.mobileData;
+                if (mobileData.first != 0 || mobileData.second != 0) {
+                    holder.mobileDataUsage.setText("M: \u2191 " + Formatter.formatFileSize(mActivity, mobileData.first)
+                            + " \u2193 " + Formatter.formatFileSize(mActivity, mobileData.second));
                 } else holder.mobileDataUsage.setText("");
-                final Tuple<Long, Long> wifiData = packageUS.wifiData;
-                if (wifiData.getFirst() != 0 || wifiData.getSecond() != 0) {
-                    holder.wifiDataUsage.setText("W: \u2191 " + Formatter.formatFileSize(mActivity, wifiData.getFirst())
-                            + " \u2193 " + Formatter.formatFileSize(mActivity, wifiData.getSecond()));
+                final Pair<Long, Long> wifiData = packageUS.wifiData;
+                if (wifiData.first != 0 || wifiData.second != 0) {
+                    holder.wifiDataUsage.setText("W: \u2191 " + Formatter.formatFileSize(mActivity, wifiData.first)
+                            + " \u2193 " + Formatter.formatFileSize(mActivity, wifiData.second));
                 } else holder.wifiDataUsage.setText("");
 
             }

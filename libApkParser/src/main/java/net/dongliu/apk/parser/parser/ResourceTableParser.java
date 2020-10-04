@@ -1,5 +1,7 @@
 package net.dongliu.apk.parser.parser;
 
+import android.util.Pair;
+
 import net.dongliu.apk.parser.exception.ParserException;
 import net.dongliu.apk.parser.struct.ChunkHeader;
 import net.dongliu.apk.parser.struct.ChunkType;
@@ -7,7 +9,6 @@ import net.dongliu.apk.parser.struct.StringPool;
 import net.dongliu.apk.parser.struct.StringPoolHeader;
 import net.dongliu.apk.parser.struct.resource.*;
 import net.dongliu.apk.parser.utils.Buffers;
-import net.dongliu.apk.parser.utils.Pair;
 import net.dongliu.apk.parser.utils.ParseUtils;
 
 import java.nio.ByteBuffer;
@@ -15,6 +16,8 @@ import java.nio.ByteOrder;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+
+import androidx.annotation.NonNull;
 
 import static net.dongliu.apk.parser.struct.ChunkType.UNKNOWN_YET;
 
@@ -61,18 +64,17 @@ public class ResourceTableParser {
             PackageHeader packageHeader = (PackageHeader) readChunkHeader();
             for (int i = 0; i < resourceTableHeader.getPackageCount(); i++) {
                 Pair<ResourcePackage, PackageHeader> pair = readPackage(packageHeader);
-                resourceTable.addPackage(pair.getLeft());
-                packageHeader = pair.getRight();
+                resourceTable.addPackage(pair.first);
+                packageHeader = pair.second;
             }
         }
     }
 
-    // read one package
+    @NonNull // read one package
     private Pair<ResourcePackage, PackageHeader> readPackage(PackageHeader packageHeader) {
-        Pair<ResourcePackage, PackageHeader> pair = new Pair<>();
         //read packageHeader
         ResourcePackage resourcePackage = new ResourcePackage(packageHeader);
-        pair.setLeft(resourcePackage);
+        PackageHeader header = null;
 
         long beginPos = buffer.position();
         // read type string pool
@@ -137,7 +139,7 @@ public class ResourceTableParser {
                     break;
                 case ChunkType.TABLE_PACKAGE:
                     // another package. we should read next package here
-                    pair.setRight((PackageHeader) chunkHeader);
+                    header = (PackageHeader) chunkHeader;
                     break outer;
                 case ChunkType.TABLE_LIBRARY:
                     // read entries
@@ -159,7 +161,7 @@ public class ResourceTableParser {
             }
         }
 
-        return pair;
+        return new Pair<>(resourcePackage, header);
 
     }
 

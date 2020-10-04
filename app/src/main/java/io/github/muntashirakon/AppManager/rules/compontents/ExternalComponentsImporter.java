@@ -25,6 +25,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.net.Uri;
+import android.util.Pair;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -45,7 +46,6 @@ import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.RootShellRunner;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.Tuple;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 
@@ -98,7 +98,7 @@ public class ExternalComponentsImporter {
     }
 
     @NonNull
-    public static Tuple<Boolean, Integer> applyFromBlocker(@NonNull Context context, @NonNull List<Uri> uriList) {
+    public static Pair<Boolean, Integer> applyFromBlocker(@NonNull Context context, @NonNull List<Uri> uriList) {
         boolean failed = false;
         Integer failedCount = 0;
         for(Uri uri: uriList) {
@@ -110,11 +110,11 @@ public class ExternalComponentsImporter {
                 ++failedCount;
             }
         }
-        return new Tuple<>(failed, failedCount);
+        return new Pair<>(failed, failedCount);
     }
 
     @NonNull
-    public static Tuple<Boolean, Integer> applyFromWatt(@NonNull Context context, @NonNull List<Uri> uriList) {
+    public static Pair<Boolean, Integer> applyFromWatt(@NonNull Context context, @NonNull List<Uri> uriList) {
         boolean failed = false;
         Integer failedCount = 0;
         for(Uri uri: uriList) {
@@ -126,7 +126,7 @@ public class ExternalComponentsImporter {
                 ++failedCount;
             }
         }
-        return new Tuple<>(failed, failedCount);
+        return new Pair<>(failed, failedCount);
     }
 
     /**

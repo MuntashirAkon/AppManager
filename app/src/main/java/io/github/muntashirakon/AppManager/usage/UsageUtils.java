@@ -18,13 +18,13 @@
 package io.github.muntashirakon.AppManager.usage;
 
 import android.os.SystemClock;
+import android.util.Pair;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
-import io.github.muntashirakon.AppManager.utils.Tuple;
 
 public final class UsageUtils {
     public static final int ONE_DAY = 86400000;
@@ -42,8 +42,8 @@ public final class UsageUtils {
     public static final int USAGE_LAST_BOOT = 5;
 
     @NonNull
-    public static Tuple<Long, Long> getTimeInterval(@IntervalType int sort) {
-        Tuple<Long, Long> interval;
+    public static Pair<Long, Long> getTimeInterval(@IntervalType int sort) {
+        Pair<Long, Long> interval;
         switch (sort) {
             case USAGE_YESTERDAY:
                 interval = getYesterday();
@@ -62,23 +62,23 @@ public final class UsageUtils {
     }
 
     @NonNull
-    private static Tuple<Long, Long> getSinceLastBoot() {
-        return new Tuple<>(SystemClock.elapsedRealtime(), System.currentTimeMillis());
+    private static Pair<Long, Long> getSinceLastBoot() {
+        return new Pair<>(SystemClock.elapsedRealtime(), System.currentTimeMillis());
     }
 
     @NonNull
-    private static Tuple<Long, Long> getToday() {
+    private static Pair<Long, Long> getToday() {
         long timeNow = System.currentTimeMillis();
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-        return new Tuple<>(cal.getTimeInMillis(), timeNow);
+        return new Pair<>(cal.getTimeInMillis(), timeNow);
     }
 
     @NonNull
-    private static Tuple<Long, Long> getYesterday() {
+    private static Pair<Long, Long> getYesterday() {
         long timeNow = System.currentTimeMillis();
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(timeNow - ONE_DAY);
@@ -87,14 +87,14 @@ public final class UsageUtils {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         long start = cal.getTimeInMillis();
-        return new Tuple<>(start, Math.min(start + ONE_DAY, timeNow));
+        return new Pair<>(start, Math.min(start + ONE_DAY, timeNow));
     }
 
     @NonNull
-    private static Tuple<Long, Long> getWeeklyInterval() {
+    private static Pair<Long, Long> getWeeklyInterval() {
         long timeEnd = System.currentTimeMillis();
         long timeStart = timeEnd - TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS);
-        return new Tuple<>(timeStart, timeEnd);
+        return new Pair<>(timeStart, timeEnd);
     }
 
 }

@@ -30,6 +30,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.RemoteException;
+import android.util.Pair;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,7 +44,6 @@ import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.Tuple;
 
 public class AppUsageStatsManager {
     public static final int USAGE_TIME_MAX = 5000;
@@ -76,8 +76,8 @@ public class AppUsageStatsManager {
         packageUS.appLabel = PackageUtils.getPackageLabel(mPackageManager, packageName);
         if (mUsageStatsManager == null) return packageUS;
 
-        Tuple<Long, Long> range = UsageUtils.getTimeInterval(usage_interval);
-        UsageEvents events = mUsageStatsManager.queryEvents(range.getFirst(), range.getSecond());
+        Pair<Long, Long> range = UsageUtils.getTimeInterval(usage_interval);
+        UsageEvents events = mUsageStatsManager.queryEvents(range.first, range.second);
         UsageEvents.Event event = new UsageEvents.Event();
         List<USEntry> usEntries = new ArrayList<>();
         long startTime = 0;
@@ -118,8 +118,8 @@ public class AppUsageStatsManager {
         Map<String, Long> lastUse = new HashMap<>();
         Map<String, Integer> accessCount = new HashMap<>();
         // Get events
-        Tuple<Long, Long> interval = UsageUtils.getTimeInterval(usage_interval);
-        UsageEvents events = mUsageStatsManager.queryEvents(interval.getFirst(), interval.getSecond());
+        Pair<Long, Long> interval = UsageUtils.getTimeInterval(usage_interval);
+        UsageEvents events = mUsageStatsManager.queryEvents(interval.first, interval.second);
         UsageEvents.Event event = new UsageEvents.Event();
         long startTime;
         long endTime;
@@ -158,8 +158,8 @@ public class AppUsageStatsManager {
                 }
             }
         }
-        Map<String, Tuple<Long, Long>> mobileData = new HashMap<>();
-        Map<String, Tuple<Long, Long>> wifiData = new HashMap<>();
+        Map<String, Pair<Long, Long>> mobileData = new HashMap<>();
+        Map<String, Pair<Long, Long>> wifiData = new HashMap<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             NetworkStatsManager networkStatsManager = (NetworkStatsManager) context.getSystemService(Context.NETWORK_STATS_SERVICE);
             try {
@@ -181,10 +181,10 @@ public class AppUsageStatsManager {
                 String key = "u" + PackageUtils.getAppUid(mPackageManager, packageName);
                 if (mobileData.containsKey(key))
                     packageUS.mobileData = mobileData.get(key);
-                else packageUS.mobileData = new Tuple<>(0L, 0L);
+                else packageUS.mobileData = new Pair<>(0L, 0L);
                 if (wifiData.containsKey(key))
                     packageUS.wifiData = wifiData.get(key);
-                else packageUS.wifiData = new Tuple<>(0L, 0L);
+                else packageUS.wifiData = new Pair<>(0L, 0L);
             }
             screenTimeList.add(packageUS);
         }
@@ -194,14 +194,14 @@ public class AppUsageStatsManager {
 
     @TargetApi(23)
     @NonNull
-    private Map<String, Tuple<Long, Long>> getMobileData(@NonNull NetworkStatsManager nsm, @UsageUtils.IntervalType int usage_interval) {
-        Map<String, Tuple<Long, Long>> result = new HashMap<>();
-        Tuple<Long, Long> range  = UsageUtils.getTimeInterval(usage_interval);
+    private Map<String, Pair<Long, Long>> getMobileData(@NonNull NetworkStatsManager nsm, @UsageUtils.IntervalType int usage_interval) {
+        Map<String, Pair<Long, Long>> result = new HashMap<>();
+        Pair<Long, Long> range  = UsageUtils.getTimeInterval(usage_interval);
         Map<String, Long> txData = new HashMap<>();
         Map<String, Long> rxData = new HashMap<>();
         NetworkStats networkStats;
         try {
-            networkStats = nsm.querySummary(NetworkCapabilities.TRANSPORT_CELLULAR, null, range.getFirst(), range.getSecond());
+            networkStats = nsm.querySummary(NetworkCapabilities.TRANSPORT_CELLULAR, null, range.first, range.second);
             if (networkStats != null) {
                 while (networkStats.hasNextBucket()) {
                     NetworkStats.Bucket bucket = new NetworkStats.Bucket();
@@ -219,7 +219,7 @@ public class AppUsageStatsManager {
                 }
             }
             for (String uid: txData.keySet()) {
-                result.put(uid, new Tuple<>(txData.get(uid), rxData.get(uid)));
+                result.put(uid, new Pair<>(txData.get(uid), rxData.get(uid)));
             }
         } catch (RemoteException ignore) {}
         return result;
@@ -228,14 +228,14 @@ public class AppUsageStatsManager {
 
     @TargetApi(23)
     @NonNull
-    private Map<String, Tuple<Long, Long>> getWifiData(@NonNull NetworkStatsManager nsm, @UsageUtils.IntervalType int usage_interval) {
-        Map<String, Tuple<Long, Long>> result = new HashMap<>();
-        Tuple<Long, Long> range  = UsageUtils.getTimeInterval(usage_interval);
+    private Map<String, Pair<Long, Long>> getWifiData(@NonNull NetworkStatsManager nsm, @UsageUtils.IntervalType int usage_interval) {
+        Map<String, Pair<Long, Long>> result = new HashMap<>();
+        Pair<Long, Long> range  = UsageUtils.getTimeInterval(usage_interval);
         Map<String, Long> txData = new HashMap<>();
         Map<String, Long> rxData = new HashMap<>();
         NetworkStats networkStats;
         try {
-            networkStats = nsm.querySummary(NetworkCapabilities.TRANSPORT_WIFI, null, range.getFirst(), range.getSecond());
+            networkStats = nsm.querySummary(NetworkCapabilities.TRANSPORT_WIFI, null, range.first, range.second);
             if (networkStats != null) {
                 while (networkStats.hasNextBucket()) {
                     NetworkStats.Bucket bucket = new NetworkStats.Bucket();
@@ -253,7 +253,7 @@ public class AppUsageStatsManager {
                 }
             }
             for (String uid: txData.keySet()) {
-                result.put(uid, new Tuple<>(txData.get(uid), rxData.get(uid)));
+                result.put(uid, new Pair<>(txData.get(uid), rxData.get(uid)));
             }
         } catch (RemoteException ignore) {}
         return result;
@@ -261,7 +261,7 @@ public class AppUsageStatsManager {
 
     @TargetApi(23)
     @NonNull
-    public static Tuple<Tuple<Long, Long>, Tuple<Long, Long>> getWifiMobileUsageForPackage(
+    public static Pair<Pair<Long, Long>, Pair<Long, Long>> getWifiMobileUsageForPackage(
             @NonNull Context context, String mPackageName, @UsageUtils.IntervalType int usage_interval) {
         long totalWifiTx = 0;
         long totalWifiRx = 0;
@@ -269,10 +269,10 @@ public class AppUsageStatsManager {
         long totalMobileRx = 0;
         NetworkStatsManager networkStatsManager = (NetworkStatsManager) context.getSystemService(Context.NETWORK_STATS_SERVICE);
         int targetUid = PackageUtils.getAppUid(context.getPackageManager(), mPackageName);
-        Tuple<Long, Long> range = UsageUtils.getTimeInterval(usage_interval);
+        Pair<Long, Long> range = UsageUtils.getTimeInterval(usage_interval);
         try {
             if (networkStatsManager != null) {
-                NetworkStats networkStats = networkStatsManager.querySummary(NetworkCapabilities.TRANSPORT_WIFI, null, range.getFirst(), range.getSecond());
+                NetworkStats networkStats = networkStatsManager.querySummary(NetworkCapabilities.TRANSPORT_WIFI, null, range.first, range.second);
                 if (networkStats != null) {
                     while (networkStats.hasNextBucket()) {
                         NetworkStats.Bucket bucket = new NetworkStats.Bucket();
@@ -283,7 +283,7 @@ public class AppUsageStatsManager {
                         }
                     }
                 }
-                NetworkStats networkStatsM = networkStatsManager.querySummary(NetworkCapabilities.TRANSPORT_CELLULAR, null, range.getFirst(), range.getSecond());
+                NetworkStats networkStatsM = networkStatsManager.querySummary(NetworkCapabilities.TRANSPORT_CELLULAR, null, range.first, range.second);
                 if (networkStatsM != null) {
                     while (networkStatsM.hasNextBucket()) {
                         NetworkStats.Bucket bucket = new NetworkStats.Bucket();
@@ -296,7 +296,7 @@ public class AppUsageStatsManager {
                 }
             }
         } catch (RemoteException ignore) {}
-        return new Tuple<>(new Tuple<>(totalWifiTx, totalWifiRx), new Tuple<>(totalMobileTx, totalMobileRx));
+        return new Pair<>(new Pair<>(totalWifiTx, totalWifiRx), new Pair<>(totalMobileTx, totalMobileRx));
     }
 
     public static class PackageUS implements Parcelable {
@@ -305,8 +305,8 @@ public class AppUsageStatsManager {
         public Long screenTime = 0L;
         public Long lastUsageTime = 0L;
         public Integer timesOpened = 0;
-        public Tuple<Long, Long> mobileData;  // Tx, Rx
-        public Tuple<Long, Long> wifiData;  // Tx, Rx
+        public Pair<Long, Long> mobileData;  // Tx, Rx
+        public Pair<Long, Long> wifiData;  // Tx, Rx
         public @Nullable List<USEntry> entries;
 
         public PackageUS(@NonNull String packageName) {
