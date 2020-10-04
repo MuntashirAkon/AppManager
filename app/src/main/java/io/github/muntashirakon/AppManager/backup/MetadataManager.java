@@ -40,6 +40,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -63,7 +64,8 @@ public final class MetadataManager {
         public String[] splitNames;  // split_names
         public boolean hasRules;  // has_rules
         public long backupTime;  // backup_time
-        public String checksumAlgo = "sha256";  // checksum_algo
+        @DigestUtils.Algorithm
+        public String checksumAlgo = DigestUtils.SHA_256;  // checksum_algo
         @BackupMode.Mode
         public int mode;  // mode
         public int version = 2;  // version
