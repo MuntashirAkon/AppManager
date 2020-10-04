@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2020 Muntashir Al-Islam
   ~
   ~ This program is free software: you can redistribute it and/or modify
@@ -16,8 +15,8 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_instructions"
         android:icon="@drawable/ic_info_outline_black_24dp"
@@ -69,6 +68,10 @@
                     android:id="@+id/action_sort_by_blocked_components"
                     android:title="@string/sort_by_blocked_components" />
 
+                <item
+                    android:id="@+id/action_sort_by_backup"
+                    android:title="@string/sort_by_backup" />
+
             </group>
         </menu>
     </item>
@@ -101,6 +104,10 @@
                 <item
                     android:id="@+id/action_filter_apps_with_rules"
                     android:title="@string/filter_apps_with_rules" />
+
+                <item
+                    android:id="@+id/action_filter_apps_with_backups"
+                    android:title="@string/filter_apps_with_backups" />
 
             </group>
         </menu>

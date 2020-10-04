@@ -649,4 +649,6 @@
     <string name="uninstall_updates">Uninstall Updates</string>
     <string name="update_uninstalled_successfully">Updates for %s has been uninstalled.</string>
     <string name="failed_to_uninstall_updates">Could not uninstall updates for %s.</string>
+    <string name="sort_by_backup">Backup first</string>
+    <string name="filter_apps_with_backups">Apps with backups</string>
 </resources>

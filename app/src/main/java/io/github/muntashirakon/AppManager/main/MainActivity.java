@@ -109,8 +109,9 @@ public class MainActivity extends BaseActivity implements
     private static final int[] sSortMenuItemIdsMap = {R.id.action_sort_by_domain,
             R.id.action_sort_by_app_label, R.id.action_sort_by_package_name,
             R.id.action_sort_by_last_update, R.id.action_sort_by_shared_user_id,
-            R.id.action_sort_by_target_sdk, R.id.action_sort_by_sha, R.id.action_sort_by_disabled_app,
-            R.id.action_sort_by_blocked_components};
+            R.id.action_sort_by_target_sdk, R.id.action_sort_by_sha,
+            R.id.action_sort_by_disabled_app, R.id.action_sort_by_blocked_components,
+            R.id.action_sort_by_backup};
 
     @IntDef(value = {
             SORT_BY_DOMAIN,
@@ -121,7 +122,8 @@ public class MainActivity extends BaseActivity implements
             SORT_BY_TARGET_SDK,
             SORT_BY_SHA,
             SORT_BY_DISABLED_APP,
-            SORT_BY_BLOCKED_COMPONENTS
+            SORT_BY_BLOCKED_COMPONENTS,
+            SORT_BY_BACKUP,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface SortOrder {
@@ -136,6 +138,7 @@ public class MainActivity extends BaseActivity implements
     public static final int SORT_BY_SHA = 6;  // Signature
     public static final int SORT_BY_DISABLED_APP = 7;
     public static final int SORT_BY_BLOCKED_COMPONENTS = 8;
+    public static final int SORT_BY_BACKUP = 9;
 
     @IntDef(flag = true, value = {
             FILTER_NO_FILTER,
@@ -143,7 +146,8 @@ public class MainActivity extends BaseActivity implements
             FILTER_SYSTEM_APPS,
             FILTER_DISABLED_APPS,
             FILTER_APPS_WITH_RULES,
-            FILTER_APPS_WITH_ACTIVITIES
+            FILTER_APPS_WITH_ACTIVITIES,
+            FILTER_APPS_WITH_BACKUPS,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface Filter {
@@ -155,6 +159,7 @@ public class MainActivity extends BaseActivity implements
     public static final int FILTER_DISABLED_APPS = 1 << 2;
     public static final int FILTER_APPS_WITH_RULES = 1 << 3;
     public static final int FILTER_APPS_WITH_ACTIVITIES = 1 << 4;
+    public static final int FILTER_APPS_WITH_BACKUPS = 1 << 5;
 
     MainViewModel mModel;
 
@@ -410,6 +415,9 @@ public class MainActivity extends BaseActivity implements
                 setSortBy(SORT_BY_BLOCKED_COMPONENTS);
                 item.setChecked(true);
                 return true;
+            case R.id.action_sort_by_backup:
+                setSortBy(SORT_BY_BACKUP);
+                item.setChecked(true);
             // Filter
             case R.id.action_filter_user_apps:
                 if (!item.isChecked()) mModel.addFilterFlag(FILTER_USER_APPS);
@@ -436,6 +444,12 @@ public class MainActivity extends BaseActivity implements
                 else mModel.removeFilterFlag(FILTER_APPS_WITH_ACTIVITIES);
                 item.setChecked(!item.isChecked());
                 return true;
+            case R.id.action_filter_apps_with_backups:
+                if (!item.isChecked()) mModel.addFilterFlag(FILTER_APPS_WITH_BACKUPS);
+                else mModel.removeFilterFlag(FILTER_APPS_WITH_BACKUPS);
+                item.setChecked(!item.isChecked());
+                return true;
+            // Others
             case R.id.action_app_usage:
                 Intent usageIntent = new Intent(this, AppUsageActivity.class);
                 startActivity(usageIntent);

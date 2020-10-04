@@ -309,6 +309,8 @@ public class MainViewModel extends AndroidViewModel {
                     continue;
                 } else if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_ACTIVITIES) != 0 && !item.hasActivities) {
                     continue;
+                } else if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_BACKUPS) != 0 && item.metadata == null) {
+                    continue;
                 }
                 filteredApplicationItems.add(item);
             }
@@ -371,6 +373,8 @@ public class MainViewModel extends AndroidViewModel {
                     break;
                 case MainActivity.SORT_BY_DISABLED_APP:
                     return Utils.compareBooleans(!o1.isDisabled, !o2.isDisabled);
+                case MainActivity.SORT_BY_BACKUP:
+                    return -Boolean.compare(o1.metadata != null, o2.metadata != null);
             }
             return 0;
         });
