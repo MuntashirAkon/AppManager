@@ -19,8 +19,13 @@ package io.github.muntashirakon.AppManager.utils;
 
 import android.annotation.TargetApi;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -48,10 +53,43 @@ public class DigestUtils {
     }
 
     @NonNull
+    public static String getHexDigest(@Algorithm String algo, @NonNull File file) {
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            return DigestUtils.getHexDigest(DigestUtils.SHA_256, fileInputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Utils.bytesToHex(new byte[0]);
+        }
+    }
+
+    @NonNull
+    public static String getHexDigest(@Algorithm String algo, @NonNull InputStream stream) {
+        return Utils.bytesToHex(getDigest(algo, stream));
+    }
+
+    @NonNull
     public static byte[] getDigest(@Algorithm String algo, @NonNull byte[] bytes) {
         try {
             return MessageDigest.getInstance(algo).digest(bytes);
         } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return new byte[0];
+        }
+    }
+
+    @NonNull
+    public static byte[] getDigest(@Algorithm String algo, @NonNull InputStream stream) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance(algo);
+            try (DigestInputStream digestInputStream = new DigestInputStream(stream, messageDigest)) {
+                byte[] buffer = new byte[1024 * 8];
+                //noinspection StatementWithEmptyBody
+                while (digestInputStream.read(buffer) != -1) {
+                }
+                digestInputStream.close();
+                return messageDigest.digest();
+            }
+        } catch (NoSuchAlgorithmException | IOException e) {
             e.printStackTrace();
             return new byte[0];
         }

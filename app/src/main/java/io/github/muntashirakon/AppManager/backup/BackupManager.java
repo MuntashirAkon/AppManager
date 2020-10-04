@@ -59,6 +59,7 @@ import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.FreshFile;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -298,7 +299,7 @@ public class BackupManager {
                 this.checksum = new BackupFiles.Checksum(
                         this.backupFile.getChecksumFile(BackupMode.MODE_NO_ENCRYPTION),
                         "w");
-                String[] certChecksums = PackageUtils.getSigningCertSha256Checksum(packageInfo);
+                String[] certChecksums = PackageUtils.getSigningCertChecksums(metadata.checksumAlgo, packageInfo, false);
                 for (int i = 0; i < certChecksums.length; ++i) {
                     checksum.add(CERT_PREFIX + i, certChecksums[i]);
                 }
@@ -344,7 +345,7 @@ public class BackupManager {
                 return backupFile.cleanup();
             }
             // Store checksum for metadata
-            checksum.add(MetadataManager.META_FILE, PackageUtils.getSha256Checksum(backupFile.getMetadataFile()));
+            checksum.add(MetadataManager.META_FILE, DigestUtils.getHexDigest(metadata.checksumAlgo, backupFile.getMetadataFile()));
             checksum.close();
             // Encrypt checksum
             File checksumFile = backupFile.getChecksumFile(BackupMode.MODE_NO_ENCRYPTION);
@@ -380,7 +381,7 @@ public class BackupManager {
             // Overwrite with the new files
             sourceFiles = crypto.getNewFiles();
             for (File file : sourceFiles) {
-                checksum.add(file.getName(), PackageUtils.getSha256Checksum(file));
+                checksum.add(file.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, file));
             }
         }
 
@@ -400,7 +401,7 @@ public class BackupManager {
                 // Overwrite with the new files
                 dataFiles = crypto.getNewFiles();
                 for (File file : dataFiles) {
-                    checksum.add(file.getName(), PackageUtils.getSha256Checksum(file));
+                    checksum.add(file.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, file));
                 }
             }
         }
@@ -440,7 +441,7 @@ public class BackupManager {
             // Overwrite with the new file
             permsFile = backupFile.getPermsFile(metadata.mode);
             // Store checksum
-            checksum.add(permsFile.getName(), PackageUtils.getSha256Checksum(permsFile));
+            checksum.add(permsFile.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, permsFile));
         }
 
         private void backupRules() throws BackupException {
@@ -461,7 +462,7 @@ public class BackupManager {
             // Overwrite with the new file
             rulesFile = backupFile.getRulesFile(metadata.mode);
             // Store checksum
-            checksum.add(rulesFile.getName(), PackageUtils.getSha256Checksum(rulesFile));
+            checksum.add(rulesFile.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, rulesFile));
         }
     }
 
@@ -525,7 +526,7 @@ public class BackupManager {
             // Verify metadata
             if (!requestedFlags.skipSignatureCheck()) {
                 File metadataFile = this.backupFile.getMetadataFile();
-                String checksum = PackageUtils.getSha256Checksum(metadataFile);
+                String checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, metadataFile);
                 if (!checksum.equals(this.checksum.get(metadataFile.getName()))) {
                     throw new BackupException("Couldn't verify permission file." +
                             "\nFile: " + metadataFile +
@@ -581,7 +582,7 @@ public class BackupManager {
             boolean reinstallNeeded = false;
             if (packageInfo != null) {
                 // Check signature of the installed app
-                List<String> certChecksumList = Arrays.asList(PackageUtils.getSigningCertSha256Checksum(packageInfo));
+                List<String> certChecksumList = Arrays.asList(PackageUtils.getSigningCertChecksums(metadata.checksumAlgo, packageInfo, false));
                 String[] certChecksums = BackupFiles.Checksum.getCertChecksums(checksum);
                 boolean isVerified = true;
                 for (String checksum : certChecksums) {
@@ -606,7 +607,7 @@ public class BackupManager {
             if (!requestedFlags.skipSignatureCheck()) {
                 String checksum;
                 for (File file : backupSourceFiles) {
-                    checksum = PackageUtils.getSha256Checksum(file);
+                    checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, file);
                     if (!checksum.equals(this.checksum.get(file.getName()))) {
                         throw new BackupException("Source file verification failed." +
                                 "\nFile: " + file +
@@ -703,7 +704,7 @@ public class BackupManager {
                         throw new BackupException("Data restore is requested but there are no data files for index " + i + ".");
                     }
                     for (File file : dataFiles) {
-                        checksum = PackageUtils.getSha256Checksum(file);
+                        checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, file);
                         if (!checksum.equals(this.checksum.get(file.getName()))) {
                             throw new BackupException("Data file verification failed for index " + i + "." +
                                     "\nFile: " + file +
@@ -787,7 +788,7 @@ public class BackupManager {
             File permsFile = backupFile.getPermsFile(metadata.mode);
             if (permsFile.exists()) {
                 if (!requestedFlags.skipSignatureCheck()) {
-                    String checksum = PackageUtils.getSha256Checksum(permsFile);
+                    String checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, permsFile);
                     if (!checksum.equals(this.checksum.get(permsFile.getName()))) {
                         throw new BackupException("Couldn't verify permission file." +
                                 "\nFile: " + permsFile +
@@ -820,7 +821,7 @@ public class BackupManager {
             File rulesFile = backupFile.getRulesFile(metadata.mode);
             if (rulesFile.exists()) {
                 if (!requestedFlags.skipSignatureCheck()) {
-                    String checksum = PackageUtils.getSha256Checksum(rulesFile);
+                    String checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, rulesFile);
                     if (!checksum.equals(this.checksum.get(rulesFile.getName()))) {
                         throw new BackupException("Couldn't verify permission file." +
                                 "\nFile: " + rulesFile +

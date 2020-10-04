@@ -30,11 +30,7 @@ import android.os.Build;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -412,33 +408,20 @@ public final class PackageUtils {
 
     @NonNull
     public static String[] getSigningCertSha256Checksum(PackageInfo packageInfo, boolean isExternal) {
+        return getSigningCertChecksums(DigestUtils.SHA_256, packageInfo, isExternal);
+    }
+
+    @NonNull
+    public static String[] getSigningCertChecksums(@DigestUtils.Algorithm String algo,
+                                                   PackageInfo packageInfo, boolean isExternal) {
         Signature[] signatureArray = getSigningInfo(packageInfo, isExternal);
         ArrayList<String> checksums = new ArrayList<>();
         if (signatureArray != null) {
             for (Signature signature : signatureArray) {
-                checksums.add(DigestUtils.getHexDigest(DigestUtils.SHA_256, signature.toByteArray()));
+                checksums.add(DigestUtils.getHexDigest(algo, signature.toByteArray()));
             }
         }
         return checksums.toArray(new String[0]);
-    }
-
-    @NonNull
-    public static String getSha256Checksum(File file) {
-        try {
-            MessageDigest messageDigest = DigestUtils.getMD(DigestUtils.SHA_256);
-            try (FileInputStream fileInputStream = new FileInputStream(file)) {
-                DigestInputStream digestInputStream = new DigestInputStream(fileInputStream, messageDigest);
-                byte[] buffer = new byte[1024 * 8];
-                //noinspection StatementWithEmptyBody
-                while (digestInputStream.read(buffer) != -1) {
-                }
-                digestInputStream.close();
-                return byteToHexString(messageDigest.digest());
-            }
-        } catch (NoSuchAlgorithmException | IOException e) {
-            e.printStackTrace();
-        }
-        return "";
     }
 
     @NonNull
