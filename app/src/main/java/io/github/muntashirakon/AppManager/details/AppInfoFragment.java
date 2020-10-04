@@ -480,7 +480,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // Set uninstall
             addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
                 final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                if (isRootEnabled) {
+                if (AppPref.isRootOrAdbEnabled()) {
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
                             .setTitle(mPackageLabel)
                             .setMessage(isSystemApp ?
@@ -503,9 +503,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         builder.setNeutralButton(R.string.uninstall_updates, (dialog, which) ->
                                 new Thread(() -> {
                                     if (RunnerUtils.uninstallPackageUpdate(mPackageName, Users.getCurrentUserHandle()).isSuccessful()) {
-                                        runOnUiThread(() -> {
-                                            Toast.makeText(mActivity, getString(R.string.update_uninstalled_successfully, mPackageLabel), Toast.LENGTH_LONG).show();
-                                        });
+                                        runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.update_uninstalled_successfully, mPackageLabel), Toast.LENGTH_LONG).show());
                                     } else {
                                         runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_uninstall_updates, mPackageLabel), Toast.LENGTH_LONG).show());
                                     }
