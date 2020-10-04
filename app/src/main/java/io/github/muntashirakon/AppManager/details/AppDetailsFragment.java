@@ -1332,8 +1332,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         private void getSignatureView(@NonNull ViewHolder holder, int index) {
             TextView textView = (TextView) holder.itemView;
             final Signature signature = (Signature) mAdapterList.get(index).vanillaItem;
-            textView.setText(String.format(Locale.ROOT, "%s\n%s",
-                    Utils.signCert(signature), signature.toCharsString()));
+            textView.setText(PackageUtils.getSigningCertificateInfo(signature));
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             textView.setTextIsSelectable(true);
             int medium_size = mActivity.getResources().getDimensionPixelSize(R.dimen.padding_medium);

@@ -47,8 +47,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -510,42 +508,18 @@ public class Utils {
         } else return "1"; // Lack of property means OpenGL ES version 1
     }
 
-    @NonNull
-    public static String convertToHex(@NonNull byte[] data) { // https://stackoverflow.com/questions/5980658/how-to-sha1-hash-a-string-in-android
-        StringBuilder buf = new StringBuilder();
-        for (byte b : data) {
-            int halfbyte = (b >>> 4) & 0x0F;
-            int two_halfs = 0;
-            do {
-                buf.append(halfbyte <= 9 ? (char) ('0' + halfbyte) : (char) ('a' + halfbyte - 10));
-                halfbyte = b & 0x0F;
-            } while (two_halfs++ < 1);
-        }
-        return buf.toString();
-    }
+    // http://stackoverflow.com/questions/9655181/convert-from-byte-array-to-hex-string-in-java
+    private static final char[] hexArray = "0123456789abcdef".toCharArray();
 
-    // FIXME Add translation support
     @NonNull
-    public static String signCert(@NonNull Signature sign) {
-        String s = "";
-        try {
-            X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X.509")
-                    .generateCertificate(new ByteArrayInputStream(sign.toByteArray()));
-
-            s = "\n" + cert.getIssuerX500Principal().getName()
-                    + "\nCertificate fingerprints:"
-                    + "\nmd5: " + Utils.convertToHex(MessageDigest.getInstance("md5").digest(sign.toByteArray()))
-                    + "\nsha1: " + Utils.convertToHex(MessageDigest.getInstance("sha1").digest(sign.toByteArray()))
-                    + "\nsha256: " + Utils.convertToHex(MessageDigest.getInstance("sha256").digest(sign.toByteArray()))
-                    + "\n" + cert.toString()
-                    + "\n" + cert.getPublicKey().getAlgorithm()
-                    + "---" + cert.getSigAlgName() + "---" + cert.getSigAlgOID()
-                    + "\n" + cert.getPublicKey()
-                    + "\n";
-        } catch (NoSuchAlgorithmException | CertificateException e) {
-            return e.toString() + s;
+    public static String bytesToHex(@NonNull byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
         }
-        return s;
+        return new String(hexChars);
     }
 
     @NonNull

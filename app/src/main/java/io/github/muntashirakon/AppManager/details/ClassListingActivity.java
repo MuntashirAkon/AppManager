@@ -51,8 +51,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -66,12 +64,12 @@ import dalvik.system.DexClassLoader;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static com.google.classysharkandroid.utils.PackageUtils.apkCert;
-import static com.google.classysharkandroid.utils.PackageUtils.convertS;
 
 public class ClassListingActivity extends BaseActivity implements SearchView.OnQueryTextListener {
     private static final String APP_DEX = "app_dex";
@@ -324,12 +322,9 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         public void run() {
             try {
                 Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-                try {
-                    packageInfo += "\n<b>MD5sum:</b> " + convertS(MessageDigest.getInstance("md5").digest(bytes))
-                            + "\n<b>SHA1sum:</b> " + convertS(MessageDigest.getInstance("sha1").digest(bytes))
-                            + "\n<b>SHA256sum:</b> " + convertS(MessageDigest.getInstance("sha256").digest(bytes));
-                } catch (NoSuchAlgorithmException ignored) {
-                }
+                packageInfo += "\n<b>MD5sum:</b> " + DigestUtils.getHexDigest(DigestUtils.MD5, bytes) +
+                        "\n<b>SHA1sum:</b> " + DigestUtils.getHexDigest(DigestUtils.SHA_1, bytes) +
+                        "\n<b>SHA256sum:</b> " + DigestUtils.getHexDigest(DigestUtils.SHA_256, bytes);
                 // Test if this path is readable
                 if (!apkFile.exists() || !apkFile.canRead()) {
                     try {

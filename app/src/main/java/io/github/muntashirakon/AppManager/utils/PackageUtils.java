@@ -28,12 +28,16 @@ import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.os.Build;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -412,26 +416,16 @@ public final class PackageUtils {
         ArrayList<String> checksums = new ArrayList<>();
         if (signatureArray != null) {
             for (Signature signature : signatureArray) {
-                checksums.add(getSha256Checksum(signature.toByteArray()));
+                checksums.add(DigestUtils.getHexDigest(DigestUtils.SHA_256, signature.toByteArray()));
             }
         }
         return checksums.toArray(new String[0]);
     }
 
     @NonNull
-    public static String getSha256Checksum(byte[] input) {
-        try {
-            return byteToHexString(MessageDigest.getInstance("sha256").digest(input));
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
-    @NonNull
     public static String getSha256Checksum(File file) {
         try {
-            MessageDigest messageDigest = MessageDigest.getInstance("sha256");
+            MessageDigest messageDigest = DigestUtils.getMD(DigestUtils.SHA_256);
             try (FileInputStream fileInputStream = new FileInputStream(file)) {
                 DigestInputStream digestInputStream = new DigestInputStream(fileInputStream, messageDigest);
                 byte[] buffer = new byte[1024 * 8];
@@ -445,6 +439,33 @@ public final class PackageUtils {
             e.printStackTrace();
         }
         return "";
+    }
+
+    @NonNull
+    public static String getSigningCertificateInfo(@NonNull Signature sign) {
+        return getSigningCertificateInfo(sign.toByteArray());
+    }
+
+    @NonNull
+    public static String getSigningCertificateInfo(@NonNull byte[] certBytes) {
+        String s = "";
+        try {
+            X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X.509")
+                    .generateCertificate(new ByteArrayInputStream(certBytes));
+
+            s = "\n" + cert.getIssuerX500Principal().getName() +
+                    "\nCertificate fingerprints:" +
+                    "\nmd5: " + DigestUtils.getHexDigest(DigestUtils.MD5, certBytes) +
+                    "\nsha1: " + DigestUtils.getHexDigest(DigestUtils.SHA_1, certBytes) +
+                    "\nsha256: " + DigestUtils.getHexDigest(DigestUtils.SHA_256, certBytes) +
+                    "\n" + cert.toString() +
+                    "\n" + cert.getPublicKey().getAlgorithm() +
+                    "---" + cert.getSigAlgName() + "---" + cert.getSigAlgOID() +
+                    "\n" + cert.getPublicKey() + "\n";
+        } catch (CertificateException e) {
+            return e.toString() + s;
+        }
+        return s;
     }
 
     @NonNull
