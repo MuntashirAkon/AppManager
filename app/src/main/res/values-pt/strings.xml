@@ -246,8 +246,8 @@
     <string name="saving_failed">Falha ao gravar, tente novamente.</string>
     <string name="saved_successfully">Salvo</string>
     <string name="deletion_failed">Falha ao excluir</string>
-    <string name="deleted_successfully">Excluído</string>
-    <string name="delete">Excluir</string>
+    <string name="deleted_successfully">Apagado</string>
+    <string name="delete">Apagar</string>
     <string name="discard">Descartar</string>
     <string name="save">Salvar</string>
     <string name="databases">Banco de dados</string>
