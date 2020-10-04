@@ -28,16 +28,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.zip.CRC32;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
 
 public class DigestUtils {
-    @StringDef({MD2, MD5, SHA_1, SHA_224, SHA_256, SHA_384, SHA_512})
+    @StringDef({CRC32, MD2, MD5, SHA_1, SHA_224, SHA_256, SHA_384, SHA_512})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Algorithm {
     }
 
+    public static final String CRC32 = "CRC32";
     public static final String MD2 = "MD2";
     public static final String MD5 = "MD5";
     public static final String SHA_1 = "SHA-1";
@@ -69,6 +71,11 @@ public class DigestUtils {
 
     @NonNull
     public static byte[] getDigest(@Algorithm String algo, @NonNull byte[] bytes) {
+        if (CRC32.equals(algo)) {
+            java.util.zip.CRC32 crc32 = new CRC32();
+            crc32.update(bytes);
+            return Utils.longToBytes(crc32.getValue());
+        }
         try {
             return MessageDigest.getInstance(algo).digest(bytes);
         } catch (NoSuchAlgorithmException e) {
@@ -79,6 +86,18 @@ public class DigestUtils {
 
     @NonNull
     public static byte[] getDigest(@Algorithm String algo, @NonNull InputStream stream) {
+        if (CRC32.equals(algo)) {
+            java.util.zip.CRC32 crc32 = new CRC32();
+            byte[] buffer = new byte[1024 * 1024];
+            int read;
+            try {
+                while ((read = stream.read(buffer)) > 0) {
+                    crc32.update(buffer, 0, read);
+                }
+            } catch (IOException ignore) {
+            }
+            return Utils.longToBytes(crc32.getValue());
+        }
         try {
             MessageDigest messageDigest = MessageDigest.getInstance(algo);
             try (DigestInputStream digestInputStream = new DigestInputStream(stream, messageDigest)) {

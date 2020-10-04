@@ -523,6 +523,16 @@ public class Utils {
     }
 
     @NonNull
+    public static byte[] longToBytes(long l) {
+        byte[] result = new byte[8];
+        for (int i = 7; i >= 0; i--) {
+            result[i] = (byte) (l & 0xFF);
+            l >>= 8;
+        }
+        return result;
+    }
+
+    @NonNull
     public static Tuple<String, String> getIssuerAndAlg(@NonNull PackageInfo p) {
         Signature[] signatures = PackageUtils.getSigningInfo(p, false);
         X509Certificate c;

@@ -41,7 +41,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -449,14 +448,5 @@ public final class PackageUtils {
             return e.toString() + s;
         }
         return s;
-    }
-
-    @NonNull
-    public static String byteToHexString(@NonNull byte[] digest) {
-        StringBuilder s = new StringBuilder();
-        for (byte b : digest) {
-            s.append(String.format("%02X", b).toLowerCase(Locale.ROOT));
-        }
-        return s.toString();
     }
 }
