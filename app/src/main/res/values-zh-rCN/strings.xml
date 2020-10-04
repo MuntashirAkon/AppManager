@@ -359,7 +359,8 @@
     <string name="source_code">源代碼</string>
     <string name="community">Telegram 社区</string>
     <string name="community_links">更新频道: https://t.me/AppManagerChannel
-        \n支持小组: https://t.me/AppManagerAndroid</string>
+\n支持小组: https://t.me/AppManagerAndroid
+\n推特: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">导入现有规则</string>
     <string name="pref_import_existing_msg">将被其他应用禁用的组件添加到应用管理器。 在使用此工具时要小心，因为可能有许多误报。 只选择您确定的应用</string>
     <string name="failed_to_get_data_usage_information">无法获取数据使用情况</string>
@@ -575,4 +576,6 @@
     <string name="rules">规则</string>
     <string name="other">其他</string>
     <string name="changes_not_saved">未保存更改</string>
+    <string name="allow_open_pgp_operation">点击以允许App Manager使用OpenPGP</string>
+    <string name="confirm_installation">确认安装</string>
 </resources>
