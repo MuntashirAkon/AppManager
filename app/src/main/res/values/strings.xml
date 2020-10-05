@@ -651,4 +651,25 @@
     <string name="failed_to_uninstall_updates">Could not uninstall updates for %s.</string>
     <string name="sort_by_backup">Backup first</string>
     <string name="filter_apps_with_backups">Apps with backups</string>
+    <string name="subject">Subject</string>
+    <string name="issuer">Issuer</string>
+    <string name="issued_date">Issued date</string>
+    <string name="expiry_date">Expiry date</string>
+    <string name="type">Type</string>
+    <string name="validity">Validity</string>
+    <string name="valid">Valid</string>
+    <string name="expired">Expired</string>
+    <string name="not_yet_valid">Not yet valid</string>
+    <string name="serial_no">Serial Number</string>
+    <string name="checksums">Checksums</string>
+    <string name="signature">Signature</string>
+    <string name="algorithm">Algorithm</string>
+    <string name="public_key">Public Key</string>
+    <string name="format">Format</string>
+    <string name="rsa_exponent">Exponent</string>
+    <string name="rsa_modulus">Modulus</string>
+    <string name="dsa_affine_x">Affine x coordinate</string>
+    <string name="dsa_affine_y">Affine y coordinate</string>
+    <string name="critical_exts">Critical Extensions</string>
+    <string name="non_critical_exts">Non-critical Extensions</string>
 </resources>
