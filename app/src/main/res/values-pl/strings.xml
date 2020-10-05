@@ -190,4 +190,7 @@
     <string name="other">Inne</string>
     <string name="rules">Zasady</string>
     <string name="pref_compression_method">Metoda kompresji</string>
+    <string name="filter_user_apps">Aplikacje użytkownika</string>
+    <string name="filter">Filtr</string>
+    <string name="obb_files_extracted_successfully">Wyodrębniono pliki OBB</string>
 </resources>
