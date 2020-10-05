@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -31,12 +30,8 @@ import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.os.Build;
-import android.text.Spannable;
 import android.text.TextUtils;
-import android.text.style.BackgroundColorSpan;
 import android.util.Pair;
-import android.util.TypedValue;
-import android.view.ContextThemeWrapper;
 import android.view.WindowManager;
 
 import org.w3c.dom.Document;
@@ -79,19 +74,6 @@ public class Utils {
     public static final String TERMUX_LOGIN_PATH = OsEnvironment.getDataDataDirectory() + "/com.termux/files/usr/bin/login";
     public static final String TERMUX_PERM_RUN_COMMAND = "com.termux.permission.RUN_COMMAND";
 
-    static final Spannable.Factory sSpannableFactory = Spannable.Factory.getInstance();
-
-    @NonNull
-    public static Spannable getHighlightedText(@NonNull String text, @NonNull String constraint,
-                                               int color) {
-        Spannable spannable = sSpannableFactory.newSpannable(text);
-        int start = text.toLowerCase(Locale.ROOT).indexOf(constraint);
-        int end = start + constraint.length();
-        spannable.setSpan(new BackgroundColorSpan(color), start, end,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return spannable;
-    }
-
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean checkUsageStatsPermission(@NonNull Context context) {
         AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
@@ -110,11 +92,6 @@ public class Utils {
                     == PackageManager.PERMISSION_GRANTED;
         }
         return mode == AppOpsManager.MODE_ALLOWED;
-    }
-
-    public static int dpToPx(@NonNull Context context, int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-                context.getResources().getDisplayMetrics());
     }
 
     @NonNull
@@ -546,6 +523,7 @@ public class Utils {
                         .generateCertificate(new ByteArrayInputStream(sg.toByteArray()));
                 name = c.getIssuerX500Principal().getName();
                 algoName = c.getSigAlgName();
+                break;
             }
         } catch (CertificateException ignored) {
         }
@@ -627,25 +605,6 @@ public class Utils {
             if (count == 0) fTime = context.getString(R.string.usage_less_than_a_minute);
         }
         return fTime;
-    }
-
-    @TargetApi(29)
-    public static int getSystemColor(@NonNull Context context, int resAttrColor) { // Ex. android.R.attr.colorPrimary
-        // Get accent color
-        TypedValue typedValue = new TypedValue();
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context,
-                android.R.style.Theme_DeviceDefault_DayNight);
-        contextThemeWrapper.getTheme().resolveAttribute(resAttrColor,
-                typedValue, true);
-        return typedValue.data;
-    }
-
-    public static int getThemeColor(@NonNull Context context, int resAttrColor) { // Ex. android.R.attr.colorPrimary
-        // Get accent color
-        TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(resAttrColor,
-                typedValue, true);
-        return typedValue.data;
     }
 
     public static boolean isRootGiven() {

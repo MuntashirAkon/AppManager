@@ -27,14 +27,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -72,6 +68,9 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getBiggerText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
 
 public final class PackageUtils {
     public static final File PACKAGE_STAGING_DIRECTORY = new File("/data/local/tmp");
@@ -547,18 +546,5 @@ public final class PackageUtils {
         } catch (CertificateException e) {
             return new SpannableString("");
         }
-    }
-
-    @NonNull
-    private static Spannable getBiggerText(@NonNull Spannable spannable) {
-        spannable.setSpan(new RelativeSizeSpan(1.2f), 0, spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return spannable;
-    }
-
-    @NonNull
-    private static Spannable getBoldString(@NonNull String text) {
-        Spannable ss = new SpannableString(text);
-        ss.setSpan(new StyleSpan(Typeface.BOLD), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return ss;
     }
 }

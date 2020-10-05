@@ -52,7 +52,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
-import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>
         implements SectionIndexer {
@@ -85,8 +85,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         mColorDisabled = ContextCompat.getColor(mActivity, R.color.disabled_user);
         mColorStopped = ContextCompat.getColor(mActivity, R.color.stopped);
         mColorOrange = ContextCompat.getColor(mActivity, R.color.orange);
-        mColorPrimary = Utils.getThemeColor(mActivity, android.R.attr.textColorPrimary);
-        mColorSecondary = Utils.getThemeColor(mActivity, android.R.attr.textColorSecondary);
+        mColorPrimary = UIUtils.getThemeColor(mActivity, android.R.attr.textColorPrimary);
+        mColorSecondary = UIUtils.getThemeColor(mActivity, android.R.attr.textColorSecondary);
         mColorRed = ContextCompat.getColor(mActivity, R.color.red);
     }
 
@@ -220,7 +220,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         // Set app label
         if (!TextUtils.isEmpty(mSearchQuery) && item.label.toLowerCase(Locale.ROOT).contains(mSearchQuery)) {
             // Highlight searched query
-            holder.label.setText(Utils.getHighlightedText(item.label, mSearchQuery, mColorRed));
+            holder.label.setText(UIUtils.getHighlightedText(item.label, mSearchQuery, mColorRed));
         } else holder.label.setText(item.label);
         // Set app label color to red if clearing user data not allowed
         if (item.isInstalled && (item.flags & ApplicationInfo.FLAG_ALLOW_CLEAR_USER_DATA) == 0)
@@ -229,7 +229,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         // Set package name
         if (!TextUtils.isEmpty(mSearchQuery) && item.packageName.toLowerCase(Locale.ROOT).contains(mSearchQuery)) {
             // Highlight searched query
-            holder.packageName.setText(Utils.getHighlightedText(item.packageName, mSearchQuery, mColorRed));
+            holder.packageName.setText(UIUtils.getHighlightedText(item.packageName, mSearchQuery, mColorRed));
         } else holder.packageName.setText(item.packageName);
         // Set package name color to dark cyan if the app is in stopped/force closed state
         if ((item.flags & ApplicationInfo.FLAG_STOPPED) != 0)

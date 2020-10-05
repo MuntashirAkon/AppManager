@@ -61,6 +61,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.usage.UsageUtils.IntervalType;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_LAST_BOOT;
@@ -127,8 +128,8 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
         mPackageManager = getPackageManager();
 
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
-        mSwipeRefresh.setColorSchemeColors(Utils.getThemeColor(this, android.R.attr.colorAccent));
-        mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(this, android.R.attr.colorPrimary));
+        mSwipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(this));
+        mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getThemeColor(this, android.R.attr.colorPrimary));
         mSwipeRefresh.setOnRefreshListener(this);
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> listView.canScrollVertically(-1));
 

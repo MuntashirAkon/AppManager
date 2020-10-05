@@ -45,7 +45,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class ProfilesActivity extends BaseActivity {
     private ListView listView;
@@ -145,7 +145,7 @@ public class ProfilesActivity extends BaseActivity {
             String profName = mAdapterList[position];
             if (mConstraint != null && profName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                viewHolder.item_name.setText(Utils.getHighlightedText(profName, mConstraint, mColorRed));
+                viewHolder.item_name.setText(UIUtils.getHighlightedText(profName, mConstraint, mColorRed));
             } else {
                 viewHolder.item_name.setText(profName);
             }

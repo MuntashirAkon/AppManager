@@ -107,6 +107,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
@@ -199,7 +200,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         isRootEnabled = AppPref.isRootEnabled();
         isAdbEnabled = AppPref.isAdbEnabled();
         mPackageManager = mActivity.getPackageManager();
-        mAccentColor = Utils.getThemeColor(mActivity, android.R.attr.colorAccent);
+        mAccentColor = UIUtils.getAccentColor(mActivity);
     }
 
     @Nullable
@@ -214,7 +215,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setColorSchemeColors(mAccentColor);
-        mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(mActivity, android.R.attr.colorPrimary));
+        mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getThemeColor(mActivity, android.R.attr.colorPrimary));
         mSwipeRefresh.setOnRefreshListener(this);
         // Recycler view
         RecyclerView recyclerView = view.findViewById(android.R.id.list);

@@ -82,6 +82,7 @@ import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static androidx.appcompat.app.ActionBar.LayoutParams;
@@ -221,9 +222,9 @@ public class MainActivity extends BaseActivity implements
             mSearchView.setQueryHint(getString(R.string.search));
 
             ((ImageView) mSearchView.findViewById(androidx.appcompat.R.id.search_button))
-                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
+                    .setColorFilter(UIUtils.getAccentColor(this));
             ((ImageView) mSearchView.findViewById(androidx.appcompat.R.id.search_close_btn))
-                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
+                    .setColorFilter(UIUtils.getAccentColor(this));
 
             LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -241,11 +242,11 @@ public class MainActivity extends BaseActivity implements
         mBottomAppBarCounter = findViewById(R.id.bottom_appbar_counter);
         mMainLayout = findViewById(R.id.main_layout);
 
-        mSwipeRefresh.setColorSchemeColors(Utils.getThemeColor(this, android.R.attr.colorAccent));
-        mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(this, android.R.attr.colorPrimary));
+        mSwipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(this));
+        mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getThemeColor(this, android.R.attr.colorPrimary));
         mSwipeRefresh.setOnRefreshListener(this);
 
-        int margin = Utils.dpToPx(this, 56);
+        int margin = UIUtils.dpToPx(this, 56);
         mLayoutParamsSelection = new CoordinatorLayout.LayoutParams(
                 CoordinatorLayout.LayoutParams.MATCH_PARENT,
                 CoordinatorLayout.LayoutParams.MATCH_PARENT);

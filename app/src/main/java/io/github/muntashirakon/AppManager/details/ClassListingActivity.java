@@ -72,7 +72,7 @@ import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class ClassListingActivity extends BaseActivity implements SearchView.OnQueryTextListener {
     private static final String APP_DEX = "app_dex";
@@ -133,9 +133,9 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
             searchView.setQueryHint(getString(R.string.search));
 
             ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_button))
-                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
+                    .setColorFilter(UIUtils.getAccentColor(this));
             ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn))
-                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
+                    .setColorFilter(UIUtils.getAccentColor(this));
 
             ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -510,7 +510,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
             TextView textView = (TextView) convertView;
             if (mConstraint != null && className.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                textView.setText(Utils.getHighlightedText(className, mConstraint, mColorRed));
+                textView.setText(UIUtils.getHighlightedText(className, mConstraint, mColorRed));
             } else {
                 textView.setText(className);
             }

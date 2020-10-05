@@ -81,6 +81,7 @@ import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTextListener,
@@ -209,8 +210,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         super.onViewCreated(view, savedInstanceState);
         // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
-        mSwipeRefresh.setColorSchemeColors(Utils.getThemeColor(mActivity, android.R.attr.colorAccent));
-        mSwipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(mActivity, android.R.attr.colorPrimary));
+        mSwipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(mActivity));
+        mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getThemeColor(mActivity, android.R.attr.colorPrimary));
         mSwipeRefresh.setOnRefreshListener(this);
         RecyclerViewWithEmptyView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -804,7 +805,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Name
             if (mConstraint != null && activityName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.textView2.setText(Utils.getHighlightedText(activityName, mConstraint, mColorRed));
+                holder.textView2.setText(UIUtils.getHighlightedText(activityName, mConstraint, mColorRed));
             } else {
                 holder.textView2.setText(activityName.startsWith(mPackageName) ?
                         activityName.replaceFirst(mPackageName, "") : activityName);
@@ -908,7 +909,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Name
             if (mConstraint != null && serviceInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.textView2.setText(Utils.getHighlightedText(serviceInfo.name, mConstraint, mColorRed));
+                holder.textView2.setText(UIUtils.getHighlightedText(serviceInfo.name, mConstraint, mColorRed));
             } else {
                 holder.textView2.setText(serviceInfo.name.startsWith(mPackageName) ?
                         serviceInfo.name.replaceFirst(mPackageName, "") : serviceInfo.name);
@@ -952,7 +953,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Name
             if (mConstraint != null && activityInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.textView2.setText(Utils.getHighlightedText(activityInfo.name, mConstraint, mColorRed));
+                holder.textView2.setText(UIUtils.getHighlightedText(activityInfo.name, mConstraint, mColorRed));
             } else {
                 holder.textView2.setText(activityInfo.name.startsWith(mPackageName) ?
                         activityInfo.name.replaceFirst(mPackageName, "")
@@ -1045,7 +1046,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Name
             if (mConstraint != null && providerName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.textView2.setText(Utils.getHighlightedText(providerName, mConstraint, mColorRed));
+                holder.textView2.setText(UIUtils.getHighlightedText(providerName, mConstraint, mColorRed));
             } else {
                 holder.textView2.setText(providerName.startsWith(mPackageName) ?
                         providerName.replaceFirst(mPackageName, "") : providerName);
@@ -1087,7 +1088,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             } else {
                 if (mConstraint != null && opStr.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                     // Highlight searched query
-                    opName.append(Utils.getHighlightedText(opStr, mConstraint, mColorRed));
+                    opName.append(UIUtils.getHighlightedText(opStr, mConstraint, mColorRed));
                 } else opName.append(opStr);
             }
             holder.textView1.setText(opName);
@@ -1192,7 +1193,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Set permission name
             if (mConstraint != null && permName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.textView1.setText(Utils.getHighlightedText(permName, mConstraint, mColorRed));
+                holder.textView1.setText(UIUtils.getHighlightedText(permName, mConstraint, mColorRed));
             } else holder.textView1.setText(permName);
             // Set others
             // Description
@@ -1273,7 +1274,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Name
             if (mConstraint != null && permissionInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.textView2.setText(Utils.getHighlightedText(permissionInfo.name, mConstraint, mColorRed));
+                holder.textView2.setText(UIUtils.getHighlightedText(permissionInfo.name, mConstraint, mColorRed));
             } else {
                 holder.textView2.setText(permissionInfo.name.startsWith(mPackageName) ?
                         permissionInfo.name.replaceFirst(mPackageName, "") : permissionInfo.name);

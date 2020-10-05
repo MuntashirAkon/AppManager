@@ -45,7 +45,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class AppDetailsActivity extends BaseActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
@@ -84,9 +84,9 @@ public class AppDetailsActivity extends BaseActivity {
             searchView.setQueryHint(getString(R.string.search));
 
             ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_button))
-                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
+                    .setColorFilter(UIUtils.getAccentColor(this));
             ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn))
-                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
+                    .setColorFilter(UIUtils.getAccentColor(this));
 
             ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);

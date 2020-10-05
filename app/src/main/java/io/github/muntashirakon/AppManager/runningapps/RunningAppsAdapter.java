@@ -46,7 +46,7 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.ViewHolder> {
     private RunningAppsActivity mActivity;
@@ -94,7 +94,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
         // Set process name
         if (mModel.getQuery() != null && processName.toLowerCase(Locale.ROOT).contains(mModel.getQuery())) {
             // Highlight searched query
-            holder.processName.setText(Utils.getHighlightedText(processName, mModel.getQuery(), mColorRed));
+            holder.processName.setText(UIUtils.getHighlightedText(processName, mModel.getQuery(), mColorRed));
         } else {
             holder.processName.setText(processName);
         }

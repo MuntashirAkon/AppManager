@@ -60,7 +60,7 @@ import androidx.fragment.app.DialogFragment;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class SharedPrefsActivity extends BaseActivity implements
         SearchView.OnQueryTextListener, EditPrefItemFragment.InterfaceCommunicator {
@@ -112,9 +112,9 @@ public class SharedPrefsActivity extends BaseActivity implements
             searchView.setQueryHint(getString(R.string.search));
 
             ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_button))
-                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
+                    .setColorFilter(UIUtils.getAccentColor(this));
             ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn))
-                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
+                    .setColorFilter(UIUtils.getAccentColor(this));
 
             ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -419,7 +419,7 @@ public class SharedPrefsActivity extends BaseActivity implements
             String prefName = mAdapterList[position];
             if (mConstraint != null && prefName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                viewHolder.item_name.setText(Utils.getHighlightedText(prefName, mConstraint, mColorRed));
+                viewHolder.item_name.setText(UIUtils.getHighlightedText(prefName, mConstraint, mColorRed));
             } else {
                 viewHolder.item_name.setText(prefName);
             }

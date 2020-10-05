@@ -42,7 +42,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class RunningAppsActivity extends BaseActivity implements
         SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
@@ -103,9 +103,9 @@ public class RunningAppsActivity extends BaseActivity implements
             searchView.setQueryHint(getString(R.string.search));
 
             ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_button))
-                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
+                    .setColorFilter(UIUtils.getAccentColor(this));
             ((ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn))
-                    .setColorFilter(Utils.getThemeColor(this, android.R.attr.colorAccent));
+                    .setColorFilter(UIUtils.getAccentColor(this));
 
             ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);

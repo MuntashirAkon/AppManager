@@ -34,7 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
-import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class ConfFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     AppsProfileActivity activity;
@@ -60,8 +60,8 @@ public class ConfFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         super.onViewCreated(view, savedInstanceState);
         // Swipe refresh
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
-        swipeRefresh.setColorSchemeColors(Utils.getThemeColor(activity, android.R.attr.colorAccent));
-        swipeRefresh.setProgressBackgroundColorSchemeColor(Utils.getThemeColor(activity, android.R.attr.colorPrimary));
+        swipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(activity));
+        swipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getThemeColor(activity, android.R.attr.colorPrimary));
         swipeRefresh.setOnRefreshListener(this);
         RecyclerViewWithEmptyView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
