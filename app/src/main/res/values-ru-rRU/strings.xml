@@ -129,7 +129,7 @@
     <string name="view_summary">Просмотр сводки</string>
     <string name="toggle_class_listing">Переключить список классов</string>
     <string name="trackers_and_classes">%d трекеров с %d классами</string>
-    <string name="tested_signatures_on_classes_and_time_taken">Протестировано %d подписей на %d классах.\nВыполнено за %d мс. (%d итераций).\n\n%s</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Протестировано %d подписей на %d классах.\nВыполнено за %d мс. (%d итераций).</string>
     <string name="found_trackers">Найденные трекеры:</string>
     <string name="tracker_details">О трекере</string>
     <string name="tracker_classes">Классы трекера</string>

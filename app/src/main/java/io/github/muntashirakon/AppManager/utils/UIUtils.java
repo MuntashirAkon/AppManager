@@ -56,6 +56,13 @@ public class UIUtils {
     }
 
     @NonNull
+    public static Spannable getUnderlinedString(@NonNull Spannable spannable) {
+        spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, spannable.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
+    }
+
+    @NonNull
     public static Spannable getBoldString(@NonNull String text) {
         Spannable ss = sSpannableFactory.newSpannable(text);
         ss.setSpan(new StyleSpan(Typeface.BOLD), 0, ss.length(),

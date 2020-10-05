@@ -28,7 +28,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
-import android.text.method.ScrollingMovementMethod;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,6 +46,7 @@ import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.textview.MaterialTextView;
 import com.google.classysharkandroid.dex.DexLoaderBuilder;
 import com.google.classysharkandroid.reflector.Reflector;
 
@@ -64,7 +66,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
-import androidx.core.text.HtmlCompat;
 import dalvik.system.DexClassLoader;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
@@ -73,6 +74,10 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getBiggerText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getUnderlinedString;
 
 public class ClassListingActivity extends BaseActivity implements SearchView.OnQueryTextListener {
     private static final String APP_DEX = "app_dex";
@@ -83,7 +88,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     private TextView mEmptyView;
     private int totalTrackersFound = 0;
     private int totalClassesScanned = 0;
-    private String foundTrackerList = "";
+    private SpannableStringBuilder foundTrackerList = new SpannableStringBuilder();
     private String[] signatures;
     private int[] signatureCount;
     private boolean[] signaturesFound;
@@ -92,7 +97,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     private int totalIteration = 0;
     private long totalTimeTaken = 0;
     private ClassListingAdapter mClassListingAdapter;
-    private String packageInfo = "";
+    private SpannableStringBuilder packageInfo = new SpannableStringBuilder();
     private CharSequence mAppName;
     private ActionBar mActionBar;
     private ProgressIndicator mProgressIndicator;
@@ -183,7 +188,8 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
 
         new Thread(() -> {
             classList = new ArrayList<>();
-            packageInfo = "<b>" + getString(R.string.source_dir) + ": </b>" + apkUri.toString() + "\n";
+            packageInfo.append(getBiggerText(getBoldString("\u27a4 " + getString(R.string.source_dir))))
+                    .append("\n").append(apkUri.toString()).append("\n");
             tracker_names = StaticDataset.getTrackerNames();
             signatures = StaticDataset.getTrackerCodeSignatures();
             try {
@@ -267,31 +273,32 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
             Toast.makeText(this, R.string.scanning_is_still_in_progress, Toast.LENGTH_SHORT).show();
             return;
         }
-        StringBuilder foundTrackersInfo = new StringBuilder();
+        SpannableStringBuilder foundTrackersInfo = new SpannableStringBuilder();
         if (totalTrackersFound > 0)
-            foundTrackersInfo.append("\n").append(getString(R.string.tracker_details)).append(":");
+            foundTrackersInfo.append(getBiggerText(getBoldString("\u27a4 " + getString(R.string.tracker_details)))).append("\n");
         for (int i = 0, j = 0; i < signatures.length; i++) {
             if (signaturesFound[i]) {
-                if (!foundTrackersInfo.toString().contains(tracker_names[i]))
-                    foundTrackersInfo.append("\n<b><u>").append(++j).append(". ").append(tracker_names[i]).append("</b></u>\n");
-                foundTrackersInfo.append("  ").append(signatures[i]).append(" (").append(signatureCount[i]).append(")\n");
+                if (!foundTrackersInfo.toString().contains(tracker_names[i])) {
+                    foundTrackersInfo.append(getUnderlinedString(getBoldString((++j) + ". " + tracker_names[i]))).append("\n");
+                }
+                foundTrackersInfo.append("  ").append(signatures[i]).append(" (").append(String.valueOf(signatureCount[i])).append(")\n");
             }
         }
-        if (totalTrackersFound > 0)
-            foundTrackersInfo.append("\n");
-
         // Display as dialog
-        TextView showText = new TextView(this);
-        int paddingSize = getResources().getDimensionPixelSize(R.dimen.padding_medium);
-        showText.setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
-        showText.setText(HtmlCompat.fromHtml(getString(R.string.tested_signatures_on_classes_and_time_taken,
-                signatures.length, totalClassesScanned, totalTimeTaken, totalIteration, foundTrackerList + foundTrackersInfo + packageInfo)
-                .replaceAll(" ", "&nbsp;").replaceAll("\n", "<br/>"), HtmlCompat.FROM_HTML_MODE_LEGACY));
-        showText.setMovementMethod(new ScrollingMovementMethod());
-        showText.setTextIsSelectable(true);
+        View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
+        MaterialTextView summaryTV = view.findViewById(R.id.content);
+        SpannableStringBuilder builder = new SpannableStringBuilder()
+                .append(getString(R.string.tested_signatures_on_classes_and_time_taken,
+                        signatures.length, totalClassesScanned, totalTimeTaken, totalIteration))
+                .append("\n")
+                .append(foundTrackerList)
+                .append(foundTrackersInfo)
+                .append(packageInfo);
+        summaryTV.setText(builder);
+        summaryTV.setTextIsSelectable(true);
         new MaterialAlertDialogBuilder(this)
                 .setTitle(getString(R.string.trackers_and_classes, totalTrackersFound, classList.size()))
-                .setView(showText)
+                .setView(view)
                 .setIcon(R.drawable.ic_frost_classysharkexodus_black_24dp)
                 .setNegativeButton(R.string.ok, null)
                 .setNeutralButton(R.string.exodus_link, (dialog, which) -> {
@@ -325,9 +332,17 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         public void run() {
             try {
                 Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-                packageInfo += "\n<b>MD5sum:</b> " + DigestUtils.getHexDigest(DigestUtils.MD5, bytes) +
-                        "\n<b>SHA1sum:</b> " + DigestUtils.getHexDigest(DigestUtils.SHA_1, bytes) +
-                        "\n<b>SHA256sum:</b> " + DigestUtils.getHexDigest(DigestUtils.SHA_256, bytes);
+                packageInfo.append(getBoldString(getString(R.string.checksums))).append("\n")
+                        .append(getBoldString(DigestUtils.MD5 + ": "))
+                        .append(DigestUtils.getHexDigest(DigestUtils.MD5, bytes)).append("\n")
+                        .append(getBoldString(DigestUtils.SHA_1 + ": "))
+                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_1, bytes)).append("\n")
+                        .append(getBoldString(DigestUtils.SHA_256 + ": "))
+                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_256, bytes)).append("\n")
+                        .append(getBoldString(DigestUtils.SHA_384 + ": "))
+                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_384, bytes)).append("\n")
+                        .append(getBoldString(DigestUtils.SHA_512 + ": "))
+                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_512, bytes)).append("\n");
                 // Test if this path is readable
                 if (!apkFile.exists() || !apkFile.canRead()) {
                     try {
@@ -341,7 +356,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                 @SuppressLint("WrongConstant")
                 PackageInfo packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
                 if (packageInfo != null) {
-                    ClassListingActivity.this.packageInfo += apkCert(packageInfo);
+                    ClassListingActivity.this.packageInfo.append(getCertificateInfo(packageInfo));
                     mPackageName = packageInfo.packageName;
                     final ApplicationInfo applicationInfo = packageInfo.applicationInfo;
                     applicationInfo.publicSourceDir = archiveFilePath;
@@ -354,11 +369,11 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                         }
                     });
                 } else {
-                    ClassListingActivity.this.packageInfo += "\n<i><b>FAILED to retrieve PackageInfo!</b></i>";
+                    ClassListingActivity.this.packageInfo.append("\n").append(UIUtils.getBoldString(getString(R.string.failed_to_fetch_package_info)));
                 }
                 classListAll = PackageUtils.getClassNames(apkFile);
                 totalClassesScanned = classListAll.size();
-                StringBuilder found = new StringBuilder();
+                SpannableStringBuilder found = new SpannableStringBuilder();
                 signatureCount = new int[signatures.length];
                 signaturesFound = new boolean[signatures.length];
                 long t_start, t_end;
@@ -372,8 +387,9 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                                 signatureCount[i]++;
                                 signaturesFound[i] = true;
                                 if (found.toString().contains(tracker_names[i])) break;
-                                else found.append("<b>").append(++totalTrackersFound)
-                                        .append(". ").append(tracker_names[i]).append("</b>\n");
+                                else {
+                                    found.append(getBoldString(++totalTrackersFound + ". " + tracker_names[i])).append("\n");
+                                }
                                 break;
                             }
                         }
@@ -382,7 +398,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                 t_end = System.currentTimeMillis();
                 totalTimeTaken = t_end - t_start;
                 if (totalTrackersFound > 0)
-                    foundTrackerList = getString(R.string.found_trackers) + "\n" + found;
+                    foundTrackerList.append(getString(R.string.found_trackers)).append("\n").append(found);
             } catch (Exception e) {
                 // ODEX, need to see how to handle
                 e.printStackTrace();
@@ -559,26 +575,39 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         }
     }
 
-    private static String apkCert(@NonNull PackageInfo p) {
+    @NonNull
+    private Spannable getCertificateInfo(@NonNull PackageInfo p) {
         Signature[] signatures = p.signatures;
-        String s = "";
-        X509Certificate c;
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        X509Certificate cert;
         byte[] certBytes;
         try {
             for (Signature signature : signatures) {
                 certBytes = signature.toByteArray();
-                c = (X509Certificate) CertificateFactory.getInstance("X.509")
+                cert = (X509Certificate) CertificateFactory.getInstance("X.509")
                         .generateCertificate(new ByteArrayInputStream(certBytes));
-                s = "\n\n<b>Issuer:</b> " + c.getIssuerX500Principal().getName() +
-                        "\n\n<b>Algorithm:</b> " + c.getSigAlgName() +
-                        "\n\n<b>Certificate fingerprints:</b>" +
-                        "\n  <b>md5:</b> " + DigestUtils.getHexDigest(DigestUtils.MD5, certBytes) +
-                        "\n  <b>sha1:</b> " + DigestUtils.getHexDigest(DigestUtils.SHA_1, certBytes) +
-                        "\n  <b>sha256:</b> " + DigestUtils.getHexDigest(DigestUtils.SHA_256, certBytes);
-
+                builder.append(getBiggerText(getBoldString("\u27a4 " + getString(R.string.signature))))
+                        .append("\n")
+                        .append(getBoldString(getString(R.string.issuer) + ": "))
+                        .append(cert.getIssuerX500Principal().getName()).append("\n")
+                        .append(getBoldString(getString(R.string.algorithm) + ": "))
+                        .append(cert.getSigAlgName()).append("\n");
+                // Checksums
+                builder.append(getBoldString(getString(R.string.checksums)))
+                        .append("\n")
+                        .append(getBoldString(DigestUtils.MD5 + ": "))
+                        .append(DigestUtils.getHexDigest(DigestUtils.MD5, certBytes)).append("\n")
+                        .append(getBoldString(DigestUtils.SHA_1 + ": "))
+                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_1, certBytes)).append("\n")
+                        .append(getBoldString(DigestUtils.SHA_256 + ": "))
+                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_256, certBytes)).append("\n")
+                        .append(getBoldString(DigestUtils.SHA_384 + ": "))
+                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_384, certBytes)).append("\n")
+                        .append(getBoldString(DigestUtils.SHA_512 + ": "))
+                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_512, certBytes)).append("\n");
             }
         } catch (CertificateException ignored) {
         }
-        return s;
+        return builder;
     }
 }

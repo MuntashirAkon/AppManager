@@ -128,7 +128,7 @@
     <string name="view_summary">查看摘要</string>
     <string name="toggle_class_listing">切换类列表</string>
     <string name="trackers_and_classes">%d 个tracker 和 %d 个类</string>
-    <string name="tested_signatures_on_classes_and_time_taken">在 %d 类上测试了 %d 个签名。\n耗时 %d ms (%d 迭代)。\n\n%s</string>
+    <string name="tested_signatures_on_classes_and_time_taken">在 %d 类上测试了 %d 个签名。\n耗时 %d ms (%d 迭代)。</string>
     <string name="found_trackers">已找到tracker:</string>
     <string name="tracker_details">Tracker 详细信息</string>
     <string name="tracker_classes">Tracker 类</string>

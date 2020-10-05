@@ -303,10 +303,7 @@
     <string name="tracker_classes">Classes do rastreador</string>
     <string name="tracker_details">Detalhes do reastreador</string>
     <string name="found_trackers">Rastreadores encontrados:</string>
-    <string name="tested_signatures_on_classes_and_time_taken">%d assinaturas testadas em %d classes.
-\nTempo total: %d ms (%d iterações).
-\n
-\n%s</string>
+    <string name="tested_signatures_on_classes_and_time_taken">%d assinaturas testadas em %d classes.\nTempo total: %d ms (%d iterações).</string>
     <string name="trackers_and_classes">%d rastreadores com %d classes</string>
     <string name="toggle_class_listing">Alternar lista de classes</string>
     <string name="view_summary">Ver resumo</string>

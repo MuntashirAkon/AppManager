@@ -474,18 +474,17 @@ public final class PackageUtils {
                     .append(getBoldString(ctx.getString(R.string.serial_no) + ": "))
                     .append(Utils.bytesToHex(cert.getSerialNumber().toByteArray())).append("\n");
             // Checksums
-            builder.append(getBiggerText(getBoldString("\u27a4 " + ctx.getString(R.string.checksums))))
-                    .append(getBoldString("\nMD5: "))
-                    .append(DigestUtils.getHexDigest(DigestUtils.MD5, certBytes))
-                    .append(getBoldString("\nSHA-1: "))
-                    .append(DigestUtils.getHexDigest(DigestUtils.SHA_1, certBytes))
-                    .append(getBoldString("\nSHA-256: "))
-                    .append(DigestUtils.getHexDigest(DigestUtils.SHA_256, certBytes))
-                    .append(getBoldString("\nSHA-384: "))
-                    .append(DigestUtils.getHexDigest(DigestUtils.SHA_384, certBytes))
-                    .append(getBoldString("\nSHA-512: "))
-                    .append(DigestUtils.getHexDigest(DigestUtils.SHA_512, certBytes))
-                    .append("\n");
+            builder.append(getBiggerText(getBoldString("\u27a4 " + ctx.getString(R.string.checksums)))).append("\n")
+                    .append(getBoldString(DigestUtils.MD5 + ": "))
+                    .append(DigestUtils.getHexDigest(DigestUtils.MD5, certBytes)).append("\n")
+                    .append(getBoldString(DigestUtils.SHA_1 + ": "))
+                    .append(DigestUtils.getHexDigest(DigestUtils.SHA_1, certBytes)).append("\n")
+                    .append(getBoldString(DigestUtils.SHA_256 + ": "))
+                    .append(DigestUtils.getHexDigest(DigestUtils.SHA_256, certBytes)).append("\n")
+                    .append(getBoldString(DigestUtils.SHA_384 + ": "))
+                    .append(DigestUtils.getHexDigest(DigestUtils.SHA_384, certBytes)).append("\n")
+                    .append(getBoldString(DigestUtils.SHA_512 + ": "))
+                    .append(DigestUtils.getHexDigest(DigestUtils.SHA_512, certBytes)).append("\n");
             // Signature
             builder.append(getBiggerText(getBoldString("\u27a4 " + ctx.getString(R.string.signature))))
                     .append("\n")

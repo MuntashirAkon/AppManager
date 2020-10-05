@@ -129,7 +129,7 @@
     <string name="view_summary">Zusammenfassung ansehen</string>
     <string name="toggle_class_listing">Auflisten von Klassen ein-/ausschalten</string>
     <string name="trackers_and_classes">%d Verfolger und %d Klassen</string>
-    <string name="tested_signatures_on_classes_and_time_taken">%d Signaturen von%d Klassen getestet.\nDauer: %d ms (%d Durchläufe).\n\n%s</string>
+    <string name="tested_signatures_on_classes_and_time_taken">%d Signaturen von%d Klassen getestet.\nDauer: %d ms (%d Durchläufe).</string>
     <string name="found_trackers">Gefundene Verfolger:</string>
     <string name="tracker_details">Verfolger-Details</string>
     <string name="tracker_classes">Verfolger-Klassen</string>

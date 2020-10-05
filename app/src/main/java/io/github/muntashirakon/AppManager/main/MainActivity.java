@@ -26,6 +26,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.util.Linkify;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -645,8 +646,10 @@ public class MainActivity extends BaseActivity implements
             new Thread(() -> {
                 final Spanned spannedChangelog = HtmlCompat.fromHtml(IOUtils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
                 runOnUiThread(() -> {
-                    View view = getLayoutInflater().inflate(R.layout.dialog_changelog, null);
-                    ((MaterialTextView) view.findViewById(R.id.content)).setText(spannedChangelog);
+                    View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
+                    MaterialTextView textView = view.findViewById(R.id.content);
+                    textView.setText(spannedChangelog);
+                    Linkify.addLinks(textView, Linkify.ALL);
                     new MaterialAlertDialogBuilder(this)
                             .setTitle(R.string.changelog)
                             .setView(view)

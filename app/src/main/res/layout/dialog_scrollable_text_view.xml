@@ -17,8 +17,11 @@
   -->
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:scrollIndicators="top|bottom"
+    tools:ignore="UnusedAttribute">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/content"
@@ -26,7 +29,7 @@
         android:paddingBottom="@dimen/padding_small"
         android:paddingStart="@dimen/padding_medium"
         android:paddingEnd="@dimen/padding_medium"
-        android:autoLink="web"
+        android:textIsSelectable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
