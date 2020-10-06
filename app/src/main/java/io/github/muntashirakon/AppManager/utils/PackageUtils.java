@@ -419,6 +419,18 @@ public final class PackageUtils {
         return getSigningCertSha256Checksum(packageInfo, false);
     }
 
+    public static boolean isSignatureDifferent(PackageInfo newPkgInfo, PackageInfo oldPkgInfo) {
+        String[] newChecksums = getSigningCertSha256Checksum(newPkgInfo, true);
+        List<String> oldChecksums = new ArrayList<>(Arrays.asList(getSigningCertSha256Checksum(oldPkgInfo)));
+        // Signature is different if the number of signatures don't match
+        if (newChecksums.length != oldChecksums.size()) return true;
+        for (String newChecksum : newChecksums) {
+            oldChecksums.remove(newChecksum);
+        }
+        // Old checksums should contain no values if the checksums are the same
+        return oldChecksums.size() != 0;
+    }
+
     @NonNull
     public static String[] getSigningCertSha256Checksum(PackageInfo packageInfo, boolean isExternal) {
         return getSigningCertChecksums(DigestUtils.SHA_256, packageInfo, isExternal);

@@ -98,13 +98,17 @@ public class ApkWhatsNewFinder {
         Change[][] changes = new Change[INFO_COUNT][];
         String[] componentInfo = context.getResources().getStringArray(R.array.whats_new_titles);
         // Version info
-        String newVersionInfo = newPkgInfo.versionName + " (" + PackageUtils.getVersionCode(newPkgInfo) + ')';
-        String oldVersionInfo = oldPkgInfo.versionName + " (" + PackageUtils.getVersionCode(oldPkgInfo) + ')';
-        changes[VERSION_INFO] = new Change[]{
-                new Change(CHANGE_INFO, componentInfo[VERSION_INFO]),
-                new Change(CHANGE_ADD, newVersionInfo),
-                new Change(CHANGE_REMOVED, oldVersionInfo)
-        };
+        long newVersionCode = PackageUtils.getVersionCode(newPkgInfo);
+        long oldVersionCode = PackageUtils.getVersionCode(oldPkgInfo);
+        if (newVersionCode != oldVersionCode) {
+            String newVersionInfo = newPkgInfo.versionName + " (" + newVersionCode + ')';
+            String oldVersionInfo = oldPkgInfo.versionName + " (" + oldVersionCode + ')';
+            changes[VERSION_INFO] = new Change[]{
+                    new Change(CHANGE_INFO, componentInfo[VERSION_INFO]),
+                    new Change(CHANGE_ADD, newVersionInfo),
+                    new Change(CHANGE_REMOVED, oldVersionInfo)
+            };
+        } else changes[VERSION_INFO] = ArrayUtils.emptyArray(Change.class);
         // Tracker info
         HashMap<String, RulesStorageManager.Type> newPkgComponents = PackageUtils.collectComponentClassNames(newPkgInfo);
         HashMap<String, RulesStorageManager.Type> oldPkgComponents = PackageUtils.collectComponentClassNames(oldPkgInfo);

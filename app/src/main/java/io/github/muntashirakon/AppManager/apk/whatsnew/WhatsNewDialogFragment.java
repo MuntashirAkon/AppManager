@@ -21,6 +21,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -92,7 +93,10 @@ public class WhatsNewDialogFragment extends DialogFragment {
                 .setTitle(R.string.whats_new)
                 .setView(view);
         if (installInterface != null) {
-            builder.setNegativeButton(R.string.cancel, (dialog, which) -> installInterface.triggerCancel())
+            PackageManager pm = activity.getPackageManager();
+            builder.setTitle(pm.getApplicationLabel(newPkgInfo.applicationInfo))
+                    .setIcon(pm.getApplicationIcon(newPkgInfo.applicationInfo))
+                    .setNegativeButton(R.string.cancel, (dialog, which) -> installInterface.triggerCancel())
                     .setPositiveButton(installName, (dialog, which) -> installInterface.triggerInstall());
         } else builder.setNegativeButton(R.string.ok, null);
         return builder.create();
