@@ -1,69 +1,99 @@
+/*
+ * Copyright (c) 2020, Muntashir Al-Islam
+ * Copyright (c) 2015, Liu Dong
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the <organization> nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 package net.dongliu.apk.parser.parser;
+
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PermissionInfo;
+import android.view.WindowManager;
 
 import net.dongliu.apk.parser.utils.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+
 /**
  * attribute value constant
- *
- * @author Liu Dong
  */
 public class AttributeValues {
-
-
-    // Activity constants begin. see:
-    // http://developer.android.com/reference/android/content/pm/ActivityInfo.html
-    // http://developer.android.com/guide/topics/manifest/activity-element.html
+    @NonNull
     public static String getScreenOrientation(int value) {
         switch (value) {
-            case 0x00000003:
-                return "behind";
-            case 0x0000000a:
-                return "fullSensor";
-            case 0x0000000d:
-                return "fullUser";
-            case 0x00000000:
+            case ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE:
                 return "landscape";
-            case 0x0000000e:
-                return "locked";
-            case 0x00000005:
-                return "nosensor";
-            case 0x00000001:
+            case ActivityInfo.SCREEN_ORIENTATION_PORTRAIT:
                 return "portrait";
-            case 0x00000008:
-                return "reverseLandscape";
-            case 0x00000009:
-                return "reversePortrait";
-            case 0x00000004:
-                return "sensor";
-            case 0x00000006:
-                return "sensorLandscape";
-            case 0x00000007:
-                return "sensorPortrait";
-            case 0xffffffff:
-                return "unspecified";
-            case 0x00000002:
+            case ActivityInfo.SCREEN_ORIENTATION_USER:
                 return "user";
-            case 0x0000000b:
+            case ActivityInfo.SCREEN_ORIENTATION_BEHIND:
+                return "behind";
+            case ActivityInfo.SCREEN_ORIENTATION_SENSOR:
+                return "sensor";
+            case ActivityInfo.SCREEN_ORIENTATION_NOSENSOR:
+                return "nosensor";
+            case ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE:
+                return "sensorLandscape";
+            case ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT:
+                return "sensorPortrait";
+            case ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE:
+                return "reverseLandscape";
+            case ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT:
+                return "reversePortrait";
+            case ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR:
+                return "fullSensor";
+            case ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE:
                 return "userLandscape";
-            case 0x0000000c:
+            case ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT:
                 return "userPortrait";
+            case ActivityInfo.SCREEN_ORIENTATION_FULL_USER:
+                return "fullUser";
+            case ActivityInfo.SCREEN_ORIENTATION_LOCKED:
+                return "locked";
+            case ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED:
+                return "unspecified";
             default:
                 return "ScreenOrientation:" + Integer.toHexString(value);
         }
     }
 
+    @NonNull
     public static String getLaunchMode(int value) {
         switch (value) {
-            case 0x00000000:
+            case ActivityInfo.LAUNCH_MULTIPLE:
                 return "standard";
-            case 0x00000001:
+            case ActivityInfo.LAUNCH_SINGLE_TOP:
                 return "singleTop";
-            case 0x00000002:
+            case ActivityInfo.LAUNCH_SINGLE_TASK:
                 return "singleTask";
-            case 0x00000003:
+            case ActivityInfo.LAUNCH_SINGLE_INSTANCE:
                 return "singleInstance";
             default:
                 return "LaunchMode:" + Integer.toHexString(value);
@@ -73,36 +103,38 @@ public class AttributeValues {
 
     public static String getConfigChanges(int value) {
         List<String> list = new ArrayList<>();
-        if ((value & 0x00001000) != 0) {
+        if ((value & ActivityInfo.CONFIG_DENSITY) != 0) {
             list.add("density");
-        } else if ((value & 0x40000000) != 0) {
+        } else if ((value & ActivityInfo.CONFIG_FONT_SCALE) != 0) {
             list.add("fontScale");
-        } else if ((value & 0x00000010) != 0) {
+        } else if ((value & ActivityInfo.CONFIG_KEYBOARD) != 0) {
             list.add("keyboard");
-        } else if ((value & 0x00000020) != 0) {
+        } else if ((value & ActivityInfo.CONFIG_KEYBOARD_HIDDEN) != 0) {
             list.add("keyboardHidden");
-        } else if ((value & 0x00002000) != 0) {
+        } else if ((value & ActivityInfo.CONFIG_LAYOUT_DIRECTION) != 0) {
             list.add("direction");
-        } else if ((value & 0x00000004) != 0) {
+        } else if ((value & ActivityInfo.CONFIG_LOCALE) != 0) {
             list.add("locale");
-        } else if ((value & 0x00000001) != 0) {
+        } else if ((value & ActivityInfo.CONFIG_MCC) != 0) {
             list.add("mcc");
-        } else if ((value & 0x00000002) != 0) {
+        } else if ((value & ActivityInfo.CONFIG_MNC) != 0) {
             list.add("mnc");
-        } else if ((value & 0x00000040) != 0) {
+        } else if ((value & ActivityInfo.CONFIG_NAVIGATION) != 0) {
             list.add("navigation");
-        } else if ((value & 0x00000080) != 0) {
+        } else if ((value & ActivityInfo.CONFIG_ORIENTATION) != 0) {
             list.add("orientation");
-        } else if ((value & 0x00000100) != 0) {
+        } else if ((value & ActivityInfo.CONFIG_SCREEN_LAYOUT) != 0) {
             list.add("screenLayout");
-        } else if ((value & 0x00000400) != 0) {
+        } else if ((value & ActivityInfo.CONFIG_SCREEN_SIZE) != 0) {
             list.add("screenSize");
-        } else if ((value & 0x00000800) != 0) {
+        } else if ((value & ActivityInfo.CONFIG_SMALLEST_SCREEN_SIZE) != 0) {
             list.add("smallestScreenSize");
-        } else if ((value & 0x00000008) != 0) {
+        } else if ((value & ActivityInfo.CONFIG_TOUCHSCREEN) != 0) {
             list.add("touchscreen");
-        } else if ((value & 0x00000200) != 0) {
+        } else if ((value & ActivityInfo.CONFIG_UI_MODE) != 0) {
             list.add("uiMode");
+        } else if ((value & ActivityInfo.CONFIG_COLOR_MODE) != 0) {
+            list.add("colorMode");
         }
         return Strings.join(list, "|");
     }
@@ -112,39 +144,39 @@ public class AttributeValues {
         int state = value & 0x0000000f;
         List<String> list = new ArrayList<>(2);
         switch (adjust) {
-            case 0x00000030:
+            case WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING:
                 list.add("adjustNothing");
                 break;
-            case 0x00000020:
+            case WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN:
                 list.add("adjustPan");
                 break;
-            case 0x00000010:
+            case WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE:
                 list.add("adjustResize");
                 break;
-            case 0x00000000:
-                //levels.add("adjustUnspecified");
+            case WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED:
+                list.add("adjustUnspecified");
                 break;
             default:
                 list.add("WindowInputModeAdjust:" + Integer.toHexString(adjust));
         }
         switch (state) {
-            case 0x00000003:
-                list.add("stateAlwaysHidden");
+            case WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED:
+                list.add("stateUnspecified");
                 break;
-            case 0x00000005:
-                list.add("stateAlwaysVisible");
-                break;
-            case 0x00000002:
-                list.add("stateHidden");
-                break;
-            case 0x00000001:
+            case WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED:
                 list.add("stateUnchanged");
                 break;
-            case 0x00000004:
+            case WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN:
+                list.add("stateHidden");
+                break;
+            case WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN:
+                list.add("stateAlwaysHidden");
+                break;
+            case WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE:
                 list.add("stateVisible");
                 break;
-            case 0x00000000:
-                //levels.add("stateUnspecified");
+            case WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE:
+                list.add("stateAlwaysVisible");
                 break;
             default:
                 list.add("WindowInputModeState:" + Integer.toHexString(state));
@@ -154,28 +186,27 @@ public class AttributeValues {
         //mode_changed(0x00000200),
     }
 
-    //http://developer.android.com/reference/android/content/pm/PermissionInfo.html
     public static String getProtectionLevel(int value) {
         List<String> levels = new ArrayList<>(3);
-        if ((value & 0x10) != 0) {
-            value = value ^ 0x10;
+        if ((value & PermissionInfo.PROTECTION_FLAG_SYSTEM) != 0) {
+            value = value ^ PermissionInfo.PROTECTION_FLAG_SYSTEM;
             levels.add("system");
         }
-        if ((value & 0x20) != 0) {
-            value = value ^ 0x20;
+        if ((value & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0) {
+            value = value ^ PermissionInfo.PROTECTION_FLAG_DEVELOPMENT;
             levels.add("development");
         }
         switch (value) {
-            case 0:
+            case PermissionInfo.PROTECTION_NORMAL:
                 levels.add("normal");
                 break;
-            case 1:
+            case PermissionInfo.PROTECTION_DANGEROUS:
                 levels.add("dangerous");
                 break;
-            case 2:
+            case PermissionInfo.PROTECTION_SIGNATURE:
                 levels.add("signature");
                 break;
-            case 3:
+            case PermissionInfo.PROTECTION_SIGNATURE_OR_SYSTEM:
                 levels.add("signatureOrSystem");
                 break;
             default:
@@ -184,19 +215,17 @@ public class AttributeValues {
         return Strings.join(levels, "|");
     }
 
-
-    // Activity constants end
-
     /**
      * get Installation string values from int
      */
+    @NonNull
     public static String getInstallLocation(int value) {
         switch (value) {
-            case 0:
+            case PackageInfo.INSTALL_LOCATION_AUTO:
                 return "auto";
-            case 1:
+            case PackageInfo.INSTALL_LOCATION_INTERNAL_ONLY:
                 return "internalOnly";
-            case 2:
+            case PackageInfo.INSTALL_LOCATION_PREFER_EXTERNAL:
                 return "preferExternal";
             default:
                 return "installLocation:" + Integer.toHexString(value);
