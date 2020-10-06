@@ -58,6 +58,7 @@ public class PackageInstallerActivity extends BaseActivity {
     private ApkFile apkFile;
     private String appLabel;
     private PackageInfo packageInfo;
+    private PackageInfo installedPackageInfo;
     private String actionName;
     private PackageManager mPackageManager;
     private FragmentManager fm;
@@ -111,7 +112,6 @@ public class PackageInstallerActivity extends BaseActivity {
                 }
                 apkFile = ApkFile.getInstance(apkFileKey);
                 packageInfo = getPackageInfo();
-                PackageInfo installedPackageInfo = null;
                 try {
                     installedPackageInfo = getInstalledPackageInfo(packageInfo.packageName);
                 } catch (PackageManager.NameNotFoundException ignore) {
@@ -139,33 +139,18 @@ public class PackageInstallerActivity extends BaseActivity {
                     // App is installed
                     long installedVersionCode = PackageUtils.getVersionCode(installedPackageInfo);
                     long thisVersionCode = PackageUtils.getVersionCode(packageInfo);
-                    if (installedVersionCode < thisVersionCode) {  // FIXME: Check for signature
+                    boolean isSignatureDifferent = PackageUtils.isSignatureDifferent(packageInfo, installedPackageInfo);
+                    if (installedVersionCode < thisVersionCode) {
                         // Needs update
                         actionName = getString(R.string.update);
-                        Bundle args = new Bundle();
-                        args.putParcelable(WhatsNewDialogFragment.ARG_NEW_PKG_INFO, packageInfo);
-                        args.putParcelable(WhatsNewDialogFragment.ARG_OLD_PKG_INFO, installedPackageInfo);
-                        args.putString(WhatsNewDialogFragment.ARG_INSTALL_NAME, actionName);
-                        WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
-                        dialogFragment.setCancelable(false);
-                        dialogFragment.setArguments(args);
-                        dialogFragment.setOnTriggerInstall(
-                                new WhatsNewDialogFragment.InstallInterface() {
-                                    @Override
-                                    public void triggerInstall() {
-                                        install();
-                                    }
-
-                                    @Override
-                                    public void triggerCancel() {
-                                        finish();
-                                    }
-                                });
-                        runOnUiThread(() -> dialogFragment.show(fm, WhatsNewDialogFragment.TAG));
+                        displayWhatsNewDialog();
                     } else if (installedVersionCode == thisVersionCode) {
                         // Issue reinstall
                         actionName = getString(R.string.reinstall);
-                        if (AppPref.isRootOrAdbEnabled()) {
+                        if (isSignatureDifferent) {
+                            // Display what's new dialog
+                            displayWhatsNewDialog();
+                        } else if (AppPref.isRootOrAdbEnabled()) {
                             if (apkFile.isSplit()) {
                                 install();
                             } else {
@@ -182,26 +167,7 @@ public class PackageInstallerActivity extends BaseActivity {
                     } else {
                         actionName = getString(R.string.downgrade);
                         if (AppPref.isRootOrAdbEnabled()) {
-                            Bundle args = new Bundle();
-                            args.putParcelable(WhatsNewDialogFragment.ARG_NEW_PKG_INFO, packageInfo);
-                            args.putParcelable(WhatsNewDialogFragment.ARG_OLD_PKG_INFO, installedPackageInfo);
-                            args.putString(WhatsNewDialogFragment.ARG_INSTALL_NAME, actionName);
-                            WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
-                            dialogFragment.setCancelable(false);
-                            dialogFragment.setArguments(args);
-                            dialogFragment.setOnTriggerInstall(
-                                    new WhatsNewDialogFragment.InstallInterface() {
-                                        @Override
-                                        public void triggerInstall() {
-                                            install();
-                                        }
-
-                                        @Override
-                                        public void triggerCancel() {
-                                            finish();
-                                        }
-                                    });
-                            runOnUiThread(() -> dialogFragment.show(fm, WhatsNewDialogFragment.TAG));
+                            displayWhatsNewDialog();
                         } else {
                             runOnUiThread(() -> {
                                 Toast.makeText(this, R.string.downgrade_not_possible, Toast.LENGTH_SHORT).show();
@@ -245,6 +211,29 @@ public class PackageInstallerActivity extends BaseActivity {
         if (packageInfo == null)
             throw new PackageManager.NameNotFoundException("Package not found.");
         return packageInfo;
+    }
+
+    private void displayWhatsNewDialog() {
+        Bundle args = new Bundle();
+        args.putParcelable(WhatsNewDialogFragment.ARG_NEW_PKG_INFO, packageInfo);
+        args.putParcelable(WhatsNewDialogFragment.ARG_OLD_PKG_INFO, installedPackageInfo);
+        args.putString(WhatsNewDialogFragment.ARG_INSTALL_NAME, actionName);
+        WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
+        dialogFragment.setCancelable(false);
+        dialogFragment.setArguments(args);
+        dialogFragment.setOnTriggerInstall(
+                new WhatsNewDialogFragment.InstallInterface() {
+                    @Override
+                    public void triggerInstall() {
+                        install();
+                    }
+
+                    @Override
+                    public void triggerCancel() {
+                        finish();
+                    }
+                });
+        runOnUiThread(() -> dialogFragment.show(fm, WhatsNewDialogFragment.TAG));
     }
 
     private void install() {
