@@ -91,22 +91,10 @@ import static androidx.appcompat.app.ActionBar.LayoutParams;
 public class MainActivity extends BaseActivity implements
         SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener,
         Toolbar.OnMenuItemClickListener {
-    public static final String EXTRA_PACKAGE_LIST = "EXTRA_PACKAGE_LIST";
-    public static final String EXTRA_LIST_NAME = "EXTRA_LIST_NAME";
-
     private static final String PACKAGE_NAME_APK_UPDATER = "com.apkupdater";
     private static final String ACTIVITY_NAME_APK_UPDATER = "com.apkupdater.activity.MainActivity";
     private static final String PACKAGE_NAME_TERMUX = "com.termux";
     private static final String ACTIVITY_NAME_TERMUX = "com.termux.app.TermuxActivity";
-
-    /**
-     * A list of packages separated by \r\n.
-     */
-    public static String packageList;
-    /**
-     * The name of this particular package list
-     */
-    public static String listName;
 
     private static final int[] sSortMenuItemIdsMap = {R.id.action_sort_by_domain,
             R.id.action_sort_by_app_label, R.id.action_sort_by_package_name,
@@ -232,9 +220,6 @@ public class MainActivity extends BaseActivity implements
             layoutParams.gravity = Gravity.END;
             actionBar.setCustomView(mSearchView, layoutParams);
         }
-        packageList = getIntent().getStringExtra(EXTRA_PACKAGE_LIST);
-        listName = getIntent().getStringExtra(EXTRA_LIST_NAME);
-        if (listName == null) listName = "Onboard.packages";
 
         mProgressIndicator = findViewById(R.id.progress_linear);
         RecyclerView recyclerView = findViewById(R.id.item_list);
@@ -420,7 +405,7 @@ public class MainActivity extends BaseActivity implements
             case R.id.action_sort_by_backup:
                 setSortBy(SORT_BY_BACKUP);
                 item.setChecked(true);
-            // Filter
+                // Filter
             case R.id.action_filter_user_apps:
                 if (!item.isChecked()) mModel.addFilterFlag(FILTER_USER_APPS);
                 else mModel.removeFilterFlag(FILTER_USER_APPS);
@@ -587,9 +572,8 @@ public class MainActivity extends BaseActivity implements
                 // Set title and subtitle
                 ActionBar actionBar = getSupportActionBar();
                 if (actionBar != null) {
-                    actionBar.setTitle(listName.substring(0, listName.lastIndexOf(".")));
-                    actionBar.setSubtitle(MainActivity.listName.substring(listName
-                            .lastIndexOf(".") + 1).toLowerCase(Locale.ROOT));
+                    actionBar.setTitle(R.string.onboard);
+                    actionBar.setSubtitle(R.string.packages);
                 }
             });
             // Set filter

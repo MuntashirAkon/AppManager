@@ -673,4 +673,6 @@
     <string name="critical_exts">Critical Extensions</string>
     <string name="non_critical_exts">Non-critical Extensions</string>
     <string name="usage_access_not_supported">Could not request usage access as the corresponding settings page does not exist.</string>
+    <string name="packages">packages</string>
+    <string name="onboard">Onboard</string>
 </resources>

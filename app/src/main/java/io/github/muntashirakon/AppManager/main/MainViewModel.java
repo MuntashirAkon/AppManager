@@ -186,67 +186,34 @@ public class MainViewModel extends AndroidViewModel {
                 applicationItems.clear();
                 backupApplications = BackupUtils.getBackupApplications();
                 Log.d("backupApplications", backupApplications.toString());
-                if (MainActivity.packageList != null) {
-                    String[] packageList = MainActivity.packageList.split("[\\r\\n]+");
-                    for (String packageName : packageList) {
-                        try {
-                            @SuppressLint("WrongConstant")
-                            PackageInfo packageInfo = mPackageManager.getPackageInfo(packageName,
-                                    PackageManager.GET_META_DATA | flagSigningInfo |
-                                            PackageManager.GET_ACTIVITIES | flagDisabledComponents);
-                            ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-                            ApplicationItem item = new ApplicationItem(applicationInfo);
-                            item.versionName = packageInfo.versionName;
-                            item.versionCode = PackageUtils.getVersionCode(packageInfo);
-                            if (backupApplications.contains(packageName)) {
-                                item.metadata = BackupUtils.getBackupInfo(packageName);
-                                backupApplications.remove(packageName);
-                            }
-                            item.flags = applicationInfo.flags;
-                            item.uid = applicationInfo.uid;
-                            item.sharedUserId = packageInfo.sharedUserId;
-                            item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-                            item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
-                            item.isDisabled = !applicationInfo.enabled;
-                            item.hasActivities = packageInfo.activities != null;
-                            item.label = applicationInfo.loadLabel(mPackageManager).toString();
-                            item.firstInstallTime = packageInfo.firstInstallTime;
-                            item.lastUpdateTime = packageInfo.lastUpdateTime;
-                            item.sha = Utils.getIssuerAndAlg(packageInfo);
-                            item.sdk = applicationInfo.targetSdkVersion;
-                            applicationItems.add(item);
-                        } catch (PackageManager.NameNotFoundException ignored) {
-                        }
+                @SuppressLint("WrongConstant")
+                List<PackageInfo> packageInfoList = mPackageManager.getInstalledPackages(flagSigningInfo | PackageManager.GET_ACTIVITIES | flagDisabledComponents);
+                ApplicationInfo applicationInfo;
+                for (PackageInfo packageInfo : packageInfoList) {
+                    applicationInfo = packageInfo.applicationInfo;
+                    ApplicationItem item = new ApplicationItem(applicationInfo);
+                    if (backupApplications.contains(applicationInfo.packageName)) {
+                        item.metadata = BackupUtils.getBackupInfo(applicationInfo.packageName);
+                        backupApplications.remove(applicationInfo.packageName);
                     }
-                } else {
-                    @SuppressLint("WrongConstant")
-                    List<PackageInfo> packageInfoList = mPackageManager.getInstalledPackages(flagSigningInfo | PackageManager.GET_ACTIVITIES | flagDisabledComponents);
-                    ApplicationInfo applicationInfo;
-                    for (PackageInfo packageInfo : packageInfoList) {
-                        applicationInfo = packageInfo.applicationInfo;
-                        ApplicationItem item = new ApplicationItem(applicationInfo);
-                        if (backupApplications.contains(applicationInfo.packageName)) {
-                            item.metadata = BackupUtils.getBackupInfo(applicationInfo.packageName);
-                            backupApplications.remove(applicationInfo.packageName);
-                        }
-                        item.flags = applicationInfo.flags;
-                        item.uid = applicationInfo.uid;
-                        item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-                        item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
-                        item.isDisabled = !applicationInfo.enabled;
-                        item.label = applicationInfo.loadLabel(mPackageManager).toString();
-                        item.sdk = applicationInfo.targetSdkVersion;
-                        item.versionName = packageInfo.versionName;
-                        item.versionCode = PackageUtils.getVersionCode(packageInfo);
-                        item.sharedUserId = packageInfo.sharedUserId;
-                        item.sha = Utils.getIssuerAndAlg(packageInfo);
-                        item.firstInstallTime = packageInfo.firstInstallTime;
-                        item.lastUpdateTime = packageInfo.lastUpdateTime;
-                        item.hasActivities = packageInfo.activities != null;
-                        item.blockedCount = 0;
-                        applicationItems.add(item);
-                    }
+                    item.flags = applicationInfo.flags;
+                    item.uid = applicationInfo.uid;
+                    item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+                    item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
+                    item.isDisabled = !applicationInfo.enabled;
+                    item.label = applicationInfo.loadLabel(mPackageManager).toString();
+                    item.sdk = applicationInfo.targetSdkVersion;
+                    item.versionName = packageInfo.versionName;
+                    item.versionCode = PackageUtils.getVersionCode(packageInfo);
+                    item.sharedUserId = packageInfo.sharedUserId;
+                    item.sha = Utils.getIssuerAndAlg(packageInfo);
+                    item.firstInstallTime = packageInfo.firstInstallTime;
+                    item.lastUpdateTime = packageInfo.lastUpdateTime;
+                    item.hasActivities = packageInfo.activities != null;
+                    item.blockedCount = 0;
+                    applicationItems.add(item);
                 }
+                // Add rest of the backup items, i.e., items that aren't installed
                 for (String packageName : backupApplications) {
                     ApplicationItem item = new ApplicationItem();
                     item.packageName = packageName;
