@@ -650,4 +650,25 @@
     <string name="pref_backup_flags_msg">Добавление предустановки для параметров резервного копирования снимает бремя выбора флагов при каждом резервном копировании/восстановлении</string>
     <string name="compression_method">Метод сжатия: %s</string>
     <string name="state_trace_stop">Остановить отслеживание</string>
+    <string name="confirm_installation">Подтвердить установку</string>
+    <string name="allow_open_pgp_operation">Щёлкните, чтобы разрешить AM использовать OpenPGP</string>
+    <string name="uninstall_updates">Удалить обновления</string>
+    <string name="update_uninstalled_successfully">Обновления для %s были удалены.</string>
+    <string name="failed_to_uninstall_updates">Не удалось удалить обновления для %s.</string>
+    <string name="filter_apps_with_backups">Приложения с резервными копиями</string>
+    <string name="issued_date">Дата выпуска</string>
+    <string name="expiry_date">Дата истечения</string>
+    <string name="type">Тип</string>
+    <string name="validity">Срок действия</string>
+    <string name="valid">Действительный</string>
+    <string name="expired">Истёк</string>
+    <string name="not_yet_valid">Ещё недействительный</string>
+    <string name="serial_no">Серийный номер</string>
+    <string name="checksums">Контрольные суммы</string>
+    <string name="signature">Подпись</string>
+    <string name="algorithm">Алгоритм</string>
+    <string name="public_key">Публичный ключ</string>
+    <string name="format">Формат</string>
+    <string name="critical_exts">Критические расширения</string>
+    <string name="non_critical_exts">Некритические расширения</string>
 </resources>
