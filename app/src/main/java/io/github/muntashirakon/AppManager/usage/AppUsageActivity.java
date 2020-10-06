@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.usage;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -61,6 +62,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.usage.UsageUtils.IntervalType;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -296,8 +298,22 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
         new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.grant_usage_access)
                 .setMessage(R.string.grant_usage_acess_message)
-                .setPositiveButton(R.string.go, (dialog, which) -> startActivity(new Intent(
-                        Settings.ACTION_USAGE_ACCESS_SETTINGS)))
+                .setPositiveButton(R.string.go, (dialog, which) -> {
+                    try {
+                        startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+                    } catch (ActivityNotFoundException e) {
+                        // Usage access isn't available
+                        new MaterialAlertDialogBuilder(this)
+                                .setCancelable(false)
+                                .setTitle(R.string.grant_usage_access)
+                                .setMessage(R.string.usage_access_not_supported)
+                                .setPositiveButton(R.string.go_back, (dialog1, which1) -> {
+                                    AppPref.set(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL, false);
+                                    finish();
+                                })
+                                .show();
+                    }
+                })
                 .setNegativeButton(getString(R.string.go_back), (dialog, which) -> finish())
                 .setCancelable(false)
                 .show();
