@@ -215,7 +215,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setColorSchemeColors(mAccentColor);
-        mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getThemeColor(mActivity, android.R.attr.colorPrimary));
+        mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getPrimaryColor(mActivity));
         mSwipeRefresh.setOnRefreshListener(this);
         // Recycler view
         RecyclerView recyclerView = view.findViewById(android.R.id.list);

@@ -76,21 +76,23 @@ public class UIUtils {
         TypedValue typedValue = new TypedValue();
         ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context,
                 android.R.style.Theme_DeviceDefault_DayNight);
-        contextThemeWrapper.getTheme().resolveAttribute(resAttrColor,
-                typedValue, true);
+        contextThemeWrapper.getTheme().resolveAttribute(resAttrColor, typedValue, true);
         return typedValue.data;
     }
 
     public static int getThemeColor(@NonNull Context context, int resAttrColor) { // Ex. android.R.attr.colorPrimary
         // Get accent color
         TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(resAttrColor,
-                typedValue, true);
+        context.getTheme().resolveAttribute(resAttrColor, typedValue, true);
         return typedValue.data;
     }
 
     public static int getAccentColor(@NonNull Context context) {
         return ContextCompat.getColor(context, R.color.colorAccent);
+    }
+
+    public static int getPrimaryColor(@NonNull Context context) {
+        return ContextCompat.getColor(context, R.color.colorPrimary);
     }
 
     public static int dpToPx(@NonNull Context context, int dp) {

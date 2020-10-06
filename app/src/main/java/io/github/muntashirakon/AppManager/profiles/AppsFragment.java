@@ -68,7 +68,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         // Swipe refresh
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(activity));
-        swipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getThemeColor(activity, android.R.attr.colorPrimary));
+        swipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getPrimaryColor(activity));
         swipeRefresh.setOnRefreshListener(this);
         RecyclerViewWithEmptyView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);

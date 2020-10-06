@@ -85,8 +85,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         mColorDisabled = ContextCompat.getColor(mActivity, R.color.disabled_user);
         mColorStopped = ContextCompat.getColor(mActivity, R.color.stopped);
         mColorOrange = ContextCompat.getColor(mActivity, R.color.orange);
-        mColorPrimary = UIUtils.getThemeColor(mActivity, android.R.attr.textColorPrimary);
-        mColorSecondary = UIUtils.getThemeColor(mActivity, android.R.attr.textColorSecondary);
+        mColorPrimary = ContextCompat.getColor(mActivity, R.color.textColorPrimary);
+        mColorSecondary = ContextCompat.getColor(mActivity, R.color.textColorSecondary);
         mColorRed = ContextCompat.getColor(mActivity, R.color.red);
     }
 

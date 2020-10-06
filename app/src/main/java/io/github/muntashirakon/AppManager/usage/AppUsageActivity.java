@@ -129,7 +129,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
 
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(this));
-        mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getThemeColor(this, android.R.attr.colorPrimary));
+        mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getPrimaryColor(this));
         mSwipeRefresh.setOnRefreshListener(this);
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> listView.canScrollVertically(-1));
 

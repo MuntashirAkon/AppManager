@@ -244,7 +244,7 @@ public class MainActivity extends BaseActivity implements
         mMainLayout = findViewById(R.id.main_layout);
 
         mSwipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(this));
-        mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getThemeColor(this, android.R.attr.colorPrimary));
+        mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getPrimaryColor(this));
         mSwipeRefresh.setOnRefreshListener(this);
 
         int margin = UIUtils.dpToPx(this, 56);

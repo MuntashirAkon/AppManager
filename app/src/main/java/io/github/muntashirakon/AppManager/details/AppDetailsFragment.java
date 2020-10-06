@@ -211,7 +211,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setColorSchemeColors(UIUtils.getAccentColor(mActivity));
-        mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getThemeColor(mActivity, android.R.attr.colorPrimary));
+        mSwipeRefresh.setProgressBackgroundColorSchemeColor(UIUtils.getPrimaryColor(mActivity));
         mSwipeRefresh.setOnRefreshListener(this);
         RecyclerViewWithEmptyView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
