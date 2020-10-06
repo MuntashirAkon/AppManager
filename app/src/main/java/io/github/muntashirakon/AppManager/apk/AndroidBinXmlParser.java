@@ -16,6 +16,8 @@
 
 package io.github.muntashirakon.AppManager.apk;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
@@ -24,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -37,6 +40,16 @@ import androidx.annotation.Nullable;
  */
 @SuppressWarnings("unused")
 public class AndroidBinXmlParser {
+    @IntDef({
+            EVENT_START_DOCUMENT,
+            EVENT_END_DOCUMENT,
+            EVENT_START_ELEMENT,
+            EVENT_END_ELEMENT
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Event {
+    }
+
     /**
      * Event: start of document.
      */
@@ -54,6 +67,19 @@ public class AndroidBinXmlParser {
      * Event: end of an document.
      */
     public static final int EVENT_END_ELEMENT = 4;
+
+    @IntDef({
+            VALUE_TYPE_UNSUPPORTED,
+            VALUE_TYPE_STRING,
+            VALUE_TYPE_INT,
+            VALUE_TYPE_REFERENCE,
+            VALUE_TYPE_BOOLEAN,
+            VALUE_TYPE_FLOAT
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ValueType {
+    }
+
     /**
      * Attribute value type is not supported by this parser.
      */
@@ -80,10 +106,12 @@ public class AndroidBinXmlParser {
     public static final int VALUE_TYPE_FLOAT = 5;
 
     private static final long NO_NAMESPACE = 0xffffffffL;
+
     private final ByteBuffer mXml;
     private StringPool mStringPool;
     private ResourceMap mResourceMap;
     private int mDepth;
+    @Event
     private int mCurrentEvent = EVENT_START_DOCUMENT;
     private String mCurrentElementName;
     private String mCurrentElementNamespace;
@@ -207,8 +235,9 @@ public class AndroidBinXmlParser {
      *                                   {@code start element} event
      * @throws XmlParserException        if a parsing error is occurred
      */
+    @ValueType
     public int getAttributeValueType(int index) throws XmlParserException {
-        int type = getAttribute(index).getValueType();
+        @Attribute.Type int type = getAttribute(index).getValueType();
         switch (type) {
             case Attribute.TYPE_STRING:
                 return VALUE_TYPE_STRING;
@@ -378,8 +407,9 @@ public class AndroidBinXmlParser {
                     }
                     mResourceMap = new ResourceMap(chunk);
                     break;
+                case Chunk.TYPE_RES_XML:
                 default:
-                    // Unknown chunk type -- ignore
+                    // Unknown/impossible chunk type -- ignore
                     break;
             }
         }
@@ -416,14 +446,28 @@ public class AndroidBinXmlParser {
     }
 
     private static class Attribute {
+        @IntDef({
+                TYPE_REFERENCE,
+                TYPE_STRING,
+                TYPE_FLOAT,
+                TYPE_INT_DEC,
+                TYPE_INT_HEX,
+                TYPE_INT_BOOLEAN,
+        })
+        @Retention(RetentionPolicy.SOURCE)
+        public @interface Type {
+        }
+
         private static final int TYPE_REFERENCE = 1;
         private static final int TYPE_STRING = 3;
         private static final int TYPE_FLOAT = 0x4;
         private static final int TYPE_INT_DEC = 0x10;
         private static final int TYPE_INT_HEX = 0x11;
         private static final int TYPE_INT_BOOLEAN = 0x12;
+
         private final long mNsId;
         private final long mNameId;
+        @Type
         private final int mValueType;
         private final int mValueData;
         private final StringPool mStringPool;
@@ -432,7 +476,7 @@ public class AndroidBinXmlParser {
         private Attribute(
                 long nsId,
                 long nameId,
-                int valueType,
+                @Type int valueType,
                 int valueData,
                 StringPool stringPool,
                 ResourceMap resourceMap) {
@@ -467,6 +511,8 @@ public class AndroidBinXmlParser {
                 case TYPE_INT_HEX:
                 case TYPE_INT_BOOLEAN:
                     return mValueData;
+                case TYPE_FLOAT:
+                case TYPE_STRING:
                 default:
                     throw new XmlParserException("Cannot coerce to int: value type " + mValueType);
             }
@@ -512,17 +558,31 @@ public class AndroidBinXmlParser {
      * contents.
      */
     private static class Chunk {
+        @IntDef({
+                TYPE_STRING_POOL,
+                TYPE_RES_XML,
+                RES_XML_TYPE_START_ELEMENT,
+                RES_XML_TYPE_END_ELEMENT,
+                RES_XML_TYPE_RESOURCE_MAP,
+        })
+        @Retention(RetentionPolicy.SOURCE)
+        public @interface Type {
+        }
+
         public static final int TYPE_STRING_POOL = 1;
         public static final int TYPE_RES_XML = 3;
         public static final int RES_XML_TYPE_START_ELEMENT = 0x0102;
         public static final int RES_XML_TYPE_END_ELEMENT = 0x0103;
         public static final int RES_XML_TYPE_RESOURCE_MAP = 0x0180;
+
         static final int HEADER_MIN_SIZE_BYTES = 8;
+
+        @Type
         private final int mType;
         private final ByteBuffer mHeader;
         private final ByteBuffer mContents;
 
-        public Chunk(int type, ByteBuffer header, ByteBuffer contents) {
+        public Chunk(@Type int type, ByteBuffer header, ByteBuffer contents) {
             mType = type;
             mHeader = header;
             mContents = contents;
@@ -540,6 +600,7 @@ public class AndroidBinXmlParser {
             return result;
         }
 
+        @Type
         public int getType() {
             return mType;
         }
@@ -592,6 +653,7 @@ public class AndroidBinXmlParser {
      */
     private static class StringPool {
         private static final int FLAG_UTF8 = 1 << 8;
+
         private final ByteBuffer mChunkContents;
         private final ByteBuffer mStringsSection;
         private final int mStringCount;
