@@ -201,7 +201,7 @@
     <string name="storage_and_cache">Armazenamento e Cache</string>
     <string name="total_size">Total</string>
     <string name="app_size">Aplicativo</string>
-    <string name="app_ops">Operações de Aplicativo</string>
+    <string name="app_ops">App Ops</string>
     <string name="no_app_ops">Nenhuma operação de aplicativo</string>
     <string name="failed_to_enable_op">A operação do aplicativo solicitada não pôde ser ativada</string>
     <string name="failed_to_disable_op">A operação do aplicativo solicitada não pôde ser desativada</string>
@@ -352,7 +352,7 @@
     <string name="block_components_description">Bloquear todos os componentes identificados pelas assinaturas especificadas</string>
     <string name="deny_app_ops_dots">Negar app ops…</string>
     <string name="clear_data_from_uninstalled_apps">Limpar dados dos apps desinstalados</string>
-    <string name="clear_data_from_uninstalled_apps_description">Limpar dados dos apps que foram desinstalados e que continham a flag DONT_DELETE_DATA</string>
+    <string name="clear_data_from_uninstalled_apps_description">Limpar dados dos apps que foram desinstalados com a flag DONT_DELETE_DATA</string>
     <string name="clear_app_cache">Limpar cache do app</string>
     <string name="clear_app_cache_description">Limpar o cache de todos os aplicativos</string>
     <string name="no_tracker_found">Nenhum rastreador encontrado</string>
@@ -479,7 +479,7 @@
     <string name="debuggable">Depurável</string>
     <string name="requested_large_heap">Grande pilha</string>
     <string name="native_library_dir">Diretório Nativo da Biblioteca JNI</string>
-    <string name="sdk_flags">Bandeiras</string>
+    <string name="sdk_flags">Flags</string>
     <string name="obb_size">Obb</string>
     <string name="sort_by_target_sdk">SDK de destino</string>
     <string name="manifest">Manifesto</string>
@@ -488,7 +488,7 @@
     <string name="sort_by_shared_user_id">ID de usuário compartilhado</string>
     <string name="gles_ver">Versão requerida do GL ES</string>
     <string name="shared_libs">Bibliotecas compartilhadas</string>
-    <string name="flags">Bandeiras</string>
+    <string name="flags">Flags</string>
     <string name="soft_input">Modo de input suave</string>
     <string name="task_affinity">Afinidade de tarefas</string>
     <string name="providers">Provedores</string>
@@ -510,4 +510,5 @@
         <item quantity="one">O backup existe. Tem certeza\?</item>
         <item quantity="other">O backup existe para mais de um app. Tem certeza\?</item>
     </plurals>
+    <string name="pref_backup_flags_msg">Adicionar predefinições para opções de backup remove o fardo de selecionar flags toda vez que você faz backup/restaura</string>
 </resources>
