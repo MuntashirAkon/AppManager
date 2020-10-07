@@ -605,4 +605,5 @@
     <string name="failed_to_uninstall_updates">无法卸载 %s 的更新。</string>
     <string name="update_uninstalled_successfully">已卸载 %s 的更新。</string>
     <string name="uninstall_updates">卸载更新</string>
+    <string name="launch_mode_single_top">栈顶</string>
 </resources>
