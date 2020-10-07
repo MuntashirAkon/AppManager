@@ -49,6 +49,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -235,15 +236,20 @@ public class BackupDialogFragment extends DialogFragment {
                     String[] readableBackupNames = new String[metadata.length];
                     String backupName;
                     int userHandle;
+                    int choice = -1;
+                    int currentUserHandle = Users.getCurrentUserHandle();
                     for (int i = 0; i < backupNames.length; ++i) {
                         backupNames[i] = metadata[i].backupName;
                         backupName = BackupUtils.getShortBackupName(backupNames[i]);
                         userHandle = metadata[i].userHandle;
+                        if (backupName == null && userHandle == currentUserHandle) {
+                            choice = i;
+                        }
                         readableBackupNames[i] = backupName == null ? "Base backup for user " + userHandle : backupName + " for user " + userHandle;
                     }
                     new MaterialAlertDialogBuilder(activity)
                             .setTitle(PackageUtils.getPackageLabel(activity.getPackageManager(), packageNames.get(0)))
-                            .setSingleChoiceItems(readableBackupNames, -1, (dialog, which) -> selectedItem.set(which))
+                            .setSingleChoiceItems(readableBackupNames, choice, (dialog, which) -> selectedItem.set(which))
                             .setNegativeButton(R.string.cancel, null)
                             .setPositiveButton(R.string.restore, (dialog, which) -> {
                                 if (selectedItem.get() != -1) {
