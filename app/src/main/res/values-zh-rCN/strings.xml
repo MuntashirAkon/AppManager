@@ -388,7 +388,7 @@
     </plurals>
     <string name="split_no">拆分#%d: %s</string>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">无法获取安装包信息，可能是一个拆分APK</string>
-    <string name="termux">Termux</string>
+    <string name="termux">Termux 终端模拟器</string>
     <string name="package_name_is_installed_successfully">已安装 %s</string>
     <string name="failed_to_install_package_name">无法安装 %s</string>
     <string name="filter">筛选器</string>
@@ -578,4 +578,31 @@
     <string name="changes_not_saved">未保存更改</string>
     <string name="allow_open_pgp_operation">点击以允许App Manager使用OpenPGP</string>
     <string name="confirm_installation">确认安装</string>
+    <string name="touchscreen_no_touch">无触控</string>
+    <string name="non_critical_exts">非关键扩展</string>
+    <string name="critical_exts">关键扩展</string>
+    <string name="dsa_affine_y">仿射 y 坐标</string>
+    <string name="dsa_affine_x">仿射 x 坐标</string>
+    <string name="rsa_modulus">RSA模数</string>
+    <string name="rsa_exponent">RSA指数</string>
+    <string name="format">格式</string>
+    <string name="public_key">公钥</string>
+    <string name="algorithm">算法</string>
+    <string name="signature">签名</string>
+    <string name="checksums">校验和</string>
+    <string name="serial_no">序列号</string>
+    <string name="not_yet_valid">尚未生效</string>
+    <string name="expired">已过期</string>
+    <string name="valid">有效</string>
+    <string name="validity">有效性</string>
+    <string name="type">类别</string>
+    <string name="expiry_date">到期日</string>
+    <string name="issued_date">发布日期</string>
+    <string name="issuer">发行商</string>
+    <string name="subject">名称</string>
+    <string name="filter_apps_with_backups">有备份的应用程序</string>
+    <string name="sort_by_backup">先备份</string>
+    <string name="failed_to_uninstall_updates">无法卸载 %s 的更新。</string>
+    <string name="update_uninstalled_successfully">已卸载 %s 的更新。</string>
+    <string name="uninstall_updates">卸载更新</string>
 </resources>
