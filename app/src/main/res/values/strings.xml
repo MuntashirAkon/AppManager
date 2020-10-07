@@ -675,4 +675,7 @@
     <string name="usage_access_not_supported">Could not request usage access as the corresponding settings page does not exist.</string>
     <string name="packages">packages</string>
     <string name="onboard">Onboard</string>
+    <string name="do_you_want_to_uninstall_and_install">Do you want to uninstall and install the app again?</string>
+    <string name="signature_mismatch_for_system_apps">Could not install app because the installed app is a system app with different signature.</string>
+    <string name="app_data_will_be_lost">The existing data will be lost.</string>
 </resources>

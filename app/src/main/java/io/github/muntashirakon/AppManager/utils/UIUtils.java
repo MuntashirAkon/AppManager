@@ -70,6 +70,14 @@ public class UIUtils {
         return ss;
     }
 
+    @NonNull
+    public static Spannable getItalicString(@NonNull String text) {
+        Spannable ss = sSpannableFactory.newSpannable(text);
+        ss.setSpan(new StyleSpan(Typeface.ITALIC), 0, ss.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return ss;
+    }
+
     @TargetApi(29)
     public static int getSystemColor(@NonNull Context context, int resAttrColor) { // Ex. android.R.attr.colorPrimary
         // Get accent color
