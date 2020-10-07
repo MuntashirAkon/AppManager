@@ -2,4 +2,14 @@
 <resources>
     <string name="disclaimer_agree">Kabul Ediyorum</string>
     <string name="disclaimer_exit">Çıkış</string>
+    <string name="disclaimer_body">App Manager, yanlış kullanıldığında aygıtınıza zarar verebilecek root işlevleri sunar. App Manager, bu uygulama kullanılarak yapılan herhangi bir zarardan sorumlu değildir. Root\'un nasıl çalıştığını tam olarak bilmiyorsanız, risklerin tam olarak farkına varana kadar root seçeneklerini kullanmaktan kaçınmalısınız.
+\n
+\nDiğer uygulamalara ve web sitelerine sağladığım herhangi bir bağlantı, kullanıcılara yardım etmek içindir. Dış bağlantılara giderek bulabileceğiniz hiçbir içerikten sorumlu değilim.
+\n
+\nApp Manager kullanarak kendi kullanımınızın tüm sorumluluğunu kabul edersiniz ve kötüye kullanım nedeniyle hiçbir hasar, hak talebi veya parasal değer verilmeyeceğini kabul edersiniz.
+\n
+\nBu uygulamayı kullanarak onu kullanmanın tüm sorumluluğunu üzerinize alırsınız ve aygıtınızı olumsuz yönde etkileyen herhangi bir eylemden sorumlu olmadığımı kabul edersiniz.</string>
+    <string name="disclaimer_agree_forever">Bunu bir daha gösterme</string>
+    <string name="disclaimer_footer">© 2020 Muntashir Al-Islam</string>
+    <string name="disclaimer_header">SORUMLULUK REDDİ</string>
 </resources>
