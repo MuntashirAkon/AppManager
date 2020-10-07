@@ -39,7 +39,6 @@ import net.dongliu.apk.parser.ApkParser;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,16 +75,19 @@ public class ManifestViewerActivity extends BaseActivity {
     private String archiveFilePath;
     private String packageName;
     private ApkFile apkFile;
-    private ActivityResultLauncher<String> exportManifest = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
-        try (OutputStream outputStream = getContentResolver().openOutputStream(uri)) {
-            Objects.requireNonNull(outputStream).write(code.getBytes());
-            outputStream.flush();
-            Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
-        }
-    });
+    private ActivityResultLauncher<String> exportManifest = registerForActivityResult(
+            new ActivityResultContracts.CreateDocument(),
+            uri -> {
+                try (OutputStream outputStream = getContentResolver().openOutputStream(uri)) {
+                    if (outputStream == null) throw new IOException();
+                    outputStream.write(code.getBytes());
+                    outputStream.flush();
+                    Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+                }
+            });
 
     @SuppressLint("WrongConstant")
     @Override
@@ -150,6 +152,12 @@ public class ManifestViewerActivity extends BaseActivity {
     protected void onDestroy() {
         IOUtils.closeSilently(apkFile);
         super.onDestroy();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.clear();
     }
 
     @Override
