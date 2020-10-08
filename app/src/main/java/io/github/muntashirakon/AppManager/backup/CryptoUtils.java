@@ -23,7 +23,6 @@ import android.text.TextUtils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
@@ -68,14 +67,24 @@ public class CryptoUtils {
     }
 
     @NonNull
-    public static Crypto getCrypto(@NonNull @Mode String mode) {
-        switch (mode) {
+    public static Crypto getCrypto(@NonNull MetadataManager.Metadata metadata) {
+        switch (metadata.crypto) {
             case MODE_OPEN_PGP:
-                return new OpenPGPCrypto((String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR));
+                return new OpenPGPCrypto(metadata.keyIds);
             case MODE_NO_ENCRYPTION:
             default:
                 // Dummy crypto to generalise and return nonNull
                 return new DummyCrypto();
+        }
+    }
+
+    public static void setupCrypto(@NonNull MetadataManager.Metadata metadata) {
+        switch (metadata.crypto) {
+            case MODE_OPEN_PGP:
+                metadata.keyIds = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR);
+                break;
+            case MODE_NO_ENCRYPTION:
+            default:
         }
     }
 

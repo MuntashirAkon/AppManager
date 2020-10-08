@@ -289,8 +289,10 @@ public class BackupManager {
                 this.applicationInfo = packageInfo.applicationInfo;
                 // Override existing metadata
                 this.metadata = metadataManager.setupMetadata(packageInfo, userHandle, backupFlags);
+                // Setup crypto
+                CryptoUtils.setupCrypto(this.metadata);
                 // Set mode
-                this.crypto = CryptoUtils.getCrypto(metadata.crypto);
+                this.crypto = CryptoUtils.getCrypto(metadata);
             } catch (Exception e) {
                 this.backupFile.cleanup();
                 throw new BackupException("Failed to setup metadata.", e);
@@ -508,7 +510,7 @@ public class BackupManager {
             if (!CryptoUtils.isAvailable(metadata.crypto)) {
                 throw new BackupException("Mode " + metadata.crypto + " is currently unavailable.");
             }
-            crypto = CryptoUtils.getCrypto(metadata.crypto);
+            crypto = CryptoUtils.getCrypto(metadata);
             File checksumFile = this.backupFile.getChecksumFile(metadata.crypto);
             // Decrypt checksum
             if (!crypto.decrypt(new File[]{checksumFile})) {

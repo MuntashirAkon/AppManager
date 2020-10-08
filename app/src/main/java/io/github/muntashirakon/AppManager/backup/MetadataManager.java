@@ -68,6 +68,8 @@ public final class MetadataManager {
         public String checksumAlgo = DigestUtils.SHA_256;  // checksum_algo
         @CryptoUtils.Mode
         public String crypto;  // crypto
+        public String iv;  // iv
+        public String keyIds;  // key_ids
         public int version = 2;  // version
         public String apkName;  // apk_name
         public String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);  // instruction_set
@@ -156,6 +158,7 @@ public final class MetadataManager {
         this.metadata.backupTime = rootObject.getLong("backup_time");
         this.metadata.checksumAlgo = rootObject.getString("checksum_algo");
         this.metadata.crypto = rootObject.getString("crypto");
+        readCrypto(rootObject);
         this.metadata.version = rootObject.getInt("version");
         this.metadata.apkName = rootObject.getString("apk_name");
         this.metadata.instructionSet = rootObject.getString("instruction_set");
@@ -163,6 +166,20 @@ public final class MetadataManager {
         this.metadata.userHandle = rootObject.getInt("user_handle");
         this.metadata.tarType = rootObject.getString("tar_type");
         this.metadata.keyStore = rootObject.getBoolean("key_store");
+    }
+
+    private void readCrypto(JSONObject rootObj) throws JSONException {
+        switch (metadata.crypto) {
+            case CryptoUtils.MODE_OPEN_PGP:
+                this.metadata.keyIds = rootObj.getString("key_ids");
+                break;
+            case CryptoUtils.MODE_AES:
+            case CryptoUtils.MODE_RSA:
+                this.metadata.iv = rootObj.getString("iv");
+                break;
+            case CryptoUtils.MODE_NO_ENCRYPTION:
+            default:
+        }
     }
 
     synchronized public void writeMetadata(@NonNull BackupFiles.BackupFile backupFile)
@@ -184,6 +201,8 @@ public final class MetadataManager {
             rootObject.put("backup_time", metadata.backupTime);
             rootObject.put("checksum_algo", metadata.checksumAlgo);
             rootObject.put("crypto", metadata.crypto);
+            rootObject.put("key_ids", metadata.keyIds);
+            rootObject.put("iv", metadata.iv);
             rootObject.put("version", metadata.version);
             rootObject.put("apk_name", metadata.apkName);
             rootObject.put("instruction_set", metadata.instructionSet);
