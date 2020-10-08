@@ -399,7 +399,8 @@
     <string name="source_code">Исходный код</string>
     <string name="community">Сообщество Telegram</string>
     <string name="community_links">Канал с обновлениями: https://t.me/AppManagerChannel
-        \nГруппа поддержки: https://t.me/AppManagerAndroid</string>
+\nГруппа поддержки: https://t.me/AppManagerAndroid
+\nTwitter: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">Импорт существующих правил</string>
     <string name="pref_import_existing_msg">Добавить компоненты, отключенные другими приложениями, в App Manager. Будьте осторожны при использовании этого инструмента, так как может быть много ложных срабатываний. Выбирайте только те приложения, в которых вы уверены</string>
     <string name="failed_to_get_data_usage_information">Не удалось получить информацию об использовании данных</string>
@@ -648,4 +649,5 @@
     <string name="pref_compression_method">Метод сжатия</string>
     <string name="pref_backup_flags_msg">Добавление предустановки для параметров резервного копирования снимает бремя выбора флагов при каждом резервном копировании/восстановлении</string>
     <string name="compression_method">Метод сжатия: %s</string>
+    <string name="state_trace_stop">Остановить отслеживание</string>
 </resources>
