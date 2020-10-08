@@ -673,4 +673,10 @@
     <string name="non_critical_exts">Некритические расширения</string>
     <string name="other">Другое</string>
     <string name="state_locked_memory">Заблокированная память</string>
+    <string name="usage_access_not_supported">Не удалось запросить доступ к использованию, так как соответствующая страница настроек не существует.</string>
+    <string name="do_you_want_to_uninstall_and_install">Вы хотите удалить и снова установить приложение\?</string>
+    <string name="signature_mismatch_for_system_apps">Не удалось установить приложение, так как установленное приложение является системным с другой подписью.</string>
+    <string name="app_data_will_be_lost">Существующие данные будут потеряны.</string>
+    <string name="only_install">Только установить</string>
+    <string name="install_without_data_loss">Если вы отключили проверку подписи, вы можете использовать параметр <b>только установить</b>, чтобы установить приложение без потери данных.</string>
 </resources>
