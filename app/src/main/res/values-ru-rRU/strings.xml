@@ -671,4 +671,6 @@
     <string name="format">Формат</string>
     <string name="critical_exts">Критические расширения</string>
     <string name="non_critical_exts">Некритические расширения</string>
+    <string name="other">Другое</string>
+    <string name="state_locked_memory">Заблокированная память</string>
 </resources>
