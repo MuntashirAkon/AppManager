@@ -27,6 +27,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
 import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -266,7 +268,13 @@ public class PackageInstallerActivity extends BaseActivity {
                             }
                             SpannableStringBuilder builder = new SpannableStringBuilder()
                                     .append(getString(R.string.do_you_want_to_uninstall_and_install)).append(" ")
-                                    .append(UIUtils.getItalicString(getString(R.string.app_data_will_be_lost)));
+                                    .append(UIUtils.getItalicString(getString(R.string.app_data_will_be_lost)))
+                                    .append("\n\n");
+                            CharSequence only_install_message = getText(R.string.install_without_data_loss);
+                            int start = builder.length();
+                            builder.append(only_install_message);
+                            builder.setSpan(new RelativeSizeSpan(0.8f), start, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
                             new MaterialAlertDialogBuilder(PackageInstallerActivity.this)
                                     .setIcon(getPackageManager().getApplicationIcon(info))
                                     .setTitle(appLabel)
@@ -286,6 +294,7 @@ public class PackageInstallerActivity extends BaseActivity {
                                         }
                                     })
                                     .setNegativeButton(R.string.no, (dialog, which) -> finish())
+                                    .setNeutralButton(R.string.only_install, (dialog, which) -> install())
                                     .show();
                         } else {
                             // Signature is either matched or the app isn't installed

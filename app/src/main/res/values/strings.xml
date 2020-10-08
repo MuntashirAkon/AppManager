@@ -678,4 +678,6 @@
     <string name="do_you_want_to_uninstall_and_install">Do you want to uninstall and install the app again?</string>
     <string name="signature_mismatch_for_system_apps">Could not install app because the installed app is a system app with different signature.</string>
     <string name="app_data_will_be_lost">The existing data will be lost.</string>
+    <string name="install_without_data_loss">If you have disabled signature verification, you can use the <b>only install</b> option to install the app without losing data.</string>
+    <string name="only_install">Only Install</string>
 </resources>
