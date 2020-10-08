@@ -83,8 +83,7 @@ public class OpenPGPCrypto implements Crypto {
         }
     };
 
-    public OpenPGPCrypto() {
-        String keyIdsStr = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR);
+    public OpenPGPCrypto(@NonNull String keyIdsStr) {
         String[] keyIds = keyIdsStr.split(",");
         this.keyIds = new long[keyIds.length];
         for (int i = 0; i < keyIds.length; ++i) this.keyIds[i] = Long.parseLong(keyIds[i]);

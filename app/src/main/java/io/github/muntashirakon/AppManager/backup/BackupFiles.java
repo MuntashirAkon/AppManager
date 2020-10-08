@@ -97,18 +97,18 @@ public class BackupFiles {
         }
 
         @NonNull
-        public PrivilegedFile getChecksumFile(@BackupMode.Mode int mode) {
-            return new PrivilegedFile(getBackupPath(), BackupManager.CHECKSUMS_TXT + BackupMode.getExtension(mode));
+        public PrivilegedFile getChecksumFile(@CryptoUtils.Mode String mode) {
+            return new PrivilegedFile(getBackupPath(), BackupManager.CHECKSUMS_TXT + CryptoUtils.getExtension(mode));
         }
 
         @NonNull
-        public PrivilegedFile getPermsFile(@BackupMode.Mode int mode) {
-            return new PrivilegedFile(getBackupPath(), BackupManager.PERMS_TSV + BackupMode.getExtension(mode));
+        public PrivilegedFile getPermsFile(@CryptoUtils.Mode String mode) {
+            return new PrivilegedFile(getBackupPath(), BackupManager.PERMS_TSV + CryptoUtils.getExtension(mode));
         }
 
         @NonNull
-        public PrivilegedFile getRulesFile(@BackupMode.Mode int mode) {
-            return new PrivilegedFile(getBackupPath(), BackupManager.RULES_TSV + BackupMode.getExtension(mode));
+        public PrivilegedFile getRulesFile(@CryptoUtils.Mode String mode) {
+            return new PrivilegedFile(getBackupPath(), BackupManager.RULES_TSV + CryptoUtils.getExtension(mode));
         }
 
         public boolean commit() {

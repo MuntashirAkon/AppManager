@@ -25,25 +25,30 @@ import java.lang.annotation.RetentionPolicy;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringDef;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.DummyCrypto;
 import io.github.muntashirakon.AppManager.crypto.OpenPGPCrypto;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
-public class BackupMode {
-    @IntDef(value = {
+public class CryptoUtils {
+    @StringDef(value = {
             MODE_NO_ENCRYPTION,
+            MODE_AES,
+            MODE_RSA,
             MODE_OPEN_PGP,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface Mode {
     }
 
-    public static final int MODE_NO_ENCRYPTION = 0;
-    public static final int MODE_OPEN_PGP = 1;
+    public static final String MODE_NO_ENCRYPTION = "none";
+    public static final String MODE_AES = "aes";
+    public static final String MODE_RSA = "rsa";
+    public static final String MODE_OPEN_PGP = "pgp";
 
     @Mode
-    public static int getMode() {
+    public static String getMode() {
         String keyIds = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR);
         if (!TextUtils.isEmpty(keyIds)) {
             // FIXME(1/10/20): Check for the availability of the provider
@@ -52,7 +57,7 @@ public class BackupMode {
         return MODE_NO_ENCRYPTION;
     }
 
-    public static String getExtension(@Mode int mode) {
+    public static String getExtension(@NonNull @Mode String mode) {
         switch (mode) {
             case MODE_OPEN_PGP:
                 return OpenPGPCrypto.GPG_EXT;
@@ -63,10 +68,10 @@ public class BackupMode {
     }
 
     @NonNull
-    public static Crypto getCrypto(@Mode int mode) {
+    public static Crypto getCrypto(@NonNull @Mode String mode) {
         switch (mode) {
             case MODE_OPEN_PGP:
-                return new OpenPGPCrypto();
+                return new OpenPGPCrypto((String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR));
             case MODE_NO_ENCRYPTION:
             default:
                 // Dummy crypto to generalise and return nonNull
@@ -74,7 +79,7 @@ public class BackupMode {
         }
     }
 
-    public static boolean isAvailable(@Mode int mode) {
+    public static boolean isAvailable(@NonNull @Mode String mode) {
         switch (mode) {
             case MODE_OPEN_PGP:
                 String keyIds = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR);

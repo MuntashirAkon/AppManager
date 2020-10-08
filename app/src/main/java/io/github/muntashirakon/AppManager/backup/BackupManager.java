@@ -290,14 +290,14 @@ public class BackupManager {
                 // Override existing metadata
                 this.metadata = metadataManager.setupMetadata(packageInfo, userHandle, backupFlags);
                 // Set mode
-                this.crypto = BackupMode.getCrypto(metadata.mode);
+                this.crypto = CryptoUtils.getCrypto(metadata.crypto);
             } catch (Exception e) {
                 this.backupFile.cleanup();
                 throw new BackupException("Failed to setup metadata.", e);
             }
             try {
                 this.checksum = new BackupFiles.Checksum(
-                        this.backupFile.getChecksumFile(BackupMode.MODE_NO_ENCRYPTION),
+                        this.backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION),
                         "w");
                 String[] certChecksums = PackageUtils.getSigningCertChecksums(metadata.checksumAlgo, packageInfo, false);
                 for (int i = 0; i < certChecksums.length; ++i) {
@@ -348,7 +348,7 @@ public class BackupManager {
             checksum.add(MetadataManager.META_FILE, DigestUtils.getHexDigest(metadata.checksumAlgo, backupFile.getMetadataFile()));
             checksum.close();
             // Encrypt checksum
-            File checksumFile = backupFile.getChecksumFile(BackupMode.MODE_NO_ENCRYPTION);
+            File checksumFile = backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
             if (!crypto.encrypt(new File[]{checksumFile})) {
                 Log.e(TAG, "Failed to encrypt " + checksumFile.getName());
                 return backupFile.cleanup();
@@ -407,7 +407,7 @@ public class BackupManager {
         }
 
         private void backupPermissions() throws BackupException {
-            File permsFile = backupFile.getPermsFile(BackupMode.MODE_NO_ENCRYPTION);
+            File permsFile = backupFile.getPermsFile(CryptoUtils.MODE_NO_ENCRYPTION);
             String[] permissions = packageInfo.requestedPermissions;
             int[] permissionFlags = packageInfo.requestedPermissionsFlags;
             if (permissions == null) return;
@@ -439,13 +439,13 @@ public class BackupManager {
                 throw new BackupException("Failed to encrypt " + permsFile.getName());
             }
             // Overwrite with the new file
-            permsFile = backupFile.getPermsFile(metadata.mode);
+            permsFile = backupFile.getPermsFile(metadata.crypto);
             // Store checksum
             checksum.add(permsFile.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, permsFile));
         }
 
         private void backupRules() throws BackupException {
-            File rulesFile = backupFile.getRulesFile(BackupMode.MODE_NO_ENCRYPTION);
+            File rulesFile = backupFile.getRulesFile(CryptoUtils.MODE_NO_ENCRYPTION);
             try (OutputStream outputStream = new FileOutputStream(rulesFile);
                  ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, userHandle)) {
                 for (RulesStorageManager.Entry entry : cb.getAll()) {
@@ -460,7 +460,7 @@ public class BackupManager {
                 throw new BackupException("Failed to encrypt " + rulesFile.getName());
             }
             // Overwrite with the new file
-            rulesFile = backupFile.getRulesFile(metadata.mode);
+            rulesFile = backupFile.getRulesFile(metadata.crypto);
             // Store checksum
             checksum.add(rulesFile.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, rulesFile));
         }
@@ -505,18 +505,18 @@ public class BackupManager {
                 throw new BackupException("Failed to read metadata. Possibly due to malformed json file.", e);
             }
             // Setup crypto
-            if (!BackupMode.isAvailable(metadata.mode)) {
-                throw new BackupException("Mode " + metadata.mode + " is currently unavailable.");
+            if (!CryptoUtils.isAvailable(metadata.crypto)) {
+                throw new BackupException("Mode " + metadata.crypto + " is currently unavailable.");
             }
-            crypto = BackupMode.getCrypto(metadata.mode);
-            File checksumFile = this.backupFile.getChecksumFile(metadata.mode);
+            crypto = CryptoUtils.getCrypto(metadata.crypto);
+            File checksumFile = this.backupFile.getChecksumFile(metadata.crypto);
             // Decrypt checksum
             if (!crypto.decrypt(new File[]{checksumFile})) {
                 throw new BackupException("Failed to decrypt " + checksumFile.getName());
             }
             // Get checksums
             try {
-                checksumFile = this.backupFile.getChecksumFile(BackupMode.MODE_NO_ENCRYPTION);
+                checksumFile = this.backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
                 decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
                 this.checksum = new BackupFiles.Checksum(checksumFile, "r");
             } catch (IOException e) {
@@ -785,7 +785,7 @@ public class BackupManager {
             if (!isInstalled) {
                 throw new BackupException("Permission restore is requested but the app isn't installed.");
             }
-            File permsFile = backupFile.getPermsFile(metadata.mode);
+            File permsFile = backupFile.getPermsFile(metadata.crypto);
             if (permsFile.exists()) {
                 if (!requestedFlags.skipSignatureCheck()) {
                     String checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, permsFile);
@@ -801,7 +801,7 @@ public class BackupManager {
                     throw new BackupException("Failed to decrypt " + permsFile.getName());
                 }
                 // Get decrypted file
-                permsFile = backupFile.getPermsFile(BackupMode.MODE_NO_ENCRYPTION);
+                permsFile = backupFile.getPermsFile(CryptoUtils.MODE_NO_ENCRYPTION);
                 decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
                 try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()))) {
                     importer.addRulesFromUri(Uri.fromFile(permsFile), userHandle);
@@ -818,7 +818,7 @@ public class BackupManager {
             if (!isInstalled) {
                 throw new BackupException("Rules restore is requested but the app isn't installed.");
             }
-            File rulesFile = backupFile.getRulesFile(metadata.mode);
+            File rulesFile = backupFile.getRulesFile(metadata.crypto);
             if (rulesFile.exists()) {
                 if (!requestedFlags.skipSignatureCheck()) {
                     String checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, rulesFile);
@@ -834,7 +834,7 @@ public class BackupManager {
                     throw new BackupException("Failed to decrypt " + rulesFile.getName());
                 }
                 // Get decrypted file
-                rulesFile = backupFile.getRulesFile(BackupMode.MODE_NO_ENCRYPTION);
+                rulesFile = backupFile.getRulesFile(CryptoUtils.MODE_NO_ENCRYPTION);
                 decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
                 try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()))) {
                     importer.addRulesFromUri(Uri.fromFile(rulesFile), userHandle);

@@ -66,8 +66,8 @@ public final class MetadataManager {
         public long backupTime;  // backup_time
         @DigestUtils.Algorithm
         public String checksumAlgo = DigestUtils.SHA_256;  // checksum_algo
-        @BackupMode.Mode
-        public int mode;  // mode
+        @CryptoUtils.Mode
+        public String crypto;  // crypto
         public int version = 2;  // version
         public String apkName;  // apk_name
         public String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);  // instruction_set
@@ -155,7 +155,7 @@ public final class MetadataManager {
         this.metadata.hasRules = rootObject.getBoolean("has_rules");
         this.metadata.backupTime = rootObject.getLong("backup_time");
         this.metadata.checksumAlgo = rootObject.getString("checksum_algo");
-        this.metadata.mode = rootObject.getInt("mode");
+        this.metadata.crypto = rootObject.getString("crypto");
         this.metadata.version = rootObject.getInt("version");
         this.metadata.apkName = rootObject.getString("apk_name");
         this.metadata.instructionSet = rootObject.getString("instruction_set");
@@ -183,7 +183,7 @@ public final class MetadataManager {
             rootObject.put("has_rules", metadata.hasRules);
             rootObject.put("backup_time", metadata.backupTime);
             rootObject.put("checksum_algo", metadata.checksumAlgo);
-            rootObject.put("mode", metadata.mode);
+            rootObject.put("crypto", metadata.crypto);
             rootObject.put("version", metadata.version);
             rootObject.put("apk_name", metadata.apkName);
             rootObject.put("instruction_set", metadata.instructionSet);
@@ -204,7 +204,7 @@ public final class MetadataManager {
         metadata.flags = requestedFlags;
         metadata.userHandle = userHandle;
         metadata.tarType = (String) AppPref.get(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR);
-        metadata.mode = BackupMode.getMode();
+        metadata.crypto = CryptoUtils.getMode();
         // Verify tar type
         if (ArrayUtils.indexOf(TAR_TYPES, metadata.tarType) == -1) {
             // Unknown tar type, set default
