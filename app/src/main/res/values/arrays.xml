@@ -90,6 +90,7 @@
         <item>Português</item>
         <item>Português Brasileiro</item>
         <item>Русский</item>
+        <item>Türkçe</item>
         <item>简体中文</item>
     </string-array>
     <string-array name="languages_key">
@@ -101,6 +102,7 @@
         <item>pt</item>
         <item>pt-BR</item>
         <item>ru-RU</item>
+        <item>tr-TR</item>
         <item>zh-CN</item>
     </string-array>
 </resources>
