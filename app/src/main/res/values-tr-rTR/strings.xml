@@ -640,4 +640,12 @@
     <string name="edit_shortcut">Kısayolu Düzenle</string>
     <string name="create_shortcut">Kısayol Oluştur</string>
     <string name="sort_by_target_sdk">Hedef SDK</string>
+    <string name="only_install">Yalnızca Kur</string>
+    <string name="install_without_data_loss">İmza doğrulamayı devre dışı bıraktıysanız, uygulamayı veri kaybetmeden kurmak için <b>yalnızca kur</b> seçeneğini kullanabilirsiniz.</string>
+    <string name="app_data_will_be_lost">Mevcut veriler kaybolacak.</string>
+    <string name="signature_mismatch_for_system_apps">Kurulu uygulama, farklı imzaya sahip bir sistem uygulaması olduğundan uygulama kurulamadı.</string>
+    <string name="do_you_want_to_uninstall_and_install">Uygulamayı kaldırıp tekrar kurmak istiyor musunuz\?</string>
+    <string name="onboard">Yerleşik</string>
+    <string name="packages">paketler</string>
+    <string name="usage_access_not_supported">İlgili ayarlar sayfası olmadığı için kullanım erişimi istenemedi.</string>
 </resources>
