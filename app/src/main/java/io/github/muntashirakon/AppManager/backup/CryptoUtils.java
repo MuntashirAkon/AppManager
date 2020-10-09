@@ -22,10 +22,13 @@ import android.text.TextUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.security.SecureRandom;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
+import io.github.muntashirakon.AppManager.crypto.AESCrypto;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
+import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.crypto.DummyCrypto;
 import io.github.muntashirakon.AppManager.crypto.OpenPGPCrypto;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -60,6 +63,8 @@ public class CryptoUtils {
         switch (mode) {
             case MODE_OPEN_PGP:
                 return OpenPGPCrypto.GPG_EXT;
+            case MODE_AES:
+                return AESCrypto.AES_EXT;
             case MODE_NO_ENCRYPTION:
             default:
                 return "";
@@ -67,10 +72,12 @@ public class CryptoUtils {
     }
 
     @NonNull
-    public static Crypto getCrypto(@NonNull MetadataManager.Metadata metadata) {
+    public static Crypto getCrypto(@NonNull MetadataManager.Metadata metadata) throws CryptoException {
         switch (metadata.crypto) {
             case MODE_OPEN_PGP:
                 return new OpenPGPCrypto(metadata.keyIds);
+            case MODE_AES:
+                return new AESCrypto(metadata.iv);
             case MODE_NO_ENCRYPTION:
             default:
                 // Dummy crypto to generalise and return nonNull
@@ -83,6 +90,12 @@ public class CryptoUtils {
             case MODE_OPEN_PGP:
                 metadata.keyIds = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR);
                 break;
+            case MODE_AES:
+            case MODE_RSA:
+                SecureRandom random = new SecureRandom();
+                metadata.iv = new byte[AESCrypto.GCM_IV_LENGTH];
+                random.nextBytes(metadata.iv);
+                break;
             case MODE_NO_ENCRYPTION:
             default:
         }
@@ -94,6 +107,9 @@ public class CryptoUtils {
                 String keyIds = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR);
                 // FIXME(1/10/20): Check for the availability of the provider
                 return !TextUtils.isEmpty(keyIds);
+            // Others are available
+            case MODE_AES:
+            case MODE_RSA:
             case MODE_NO_ENCRYPTION:
             default:
                 return true;

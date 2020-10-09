@@ -47,6 +47,7 @@ import dalvik.system.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerShell;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
+import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.misc.Users;
@@ -289,13 +290,17 @@ public class BackupManager {
                 this.applicationInfo = packageInfo.applicationInfo;
                 // Override existing metadata
                 this.metadata = metadataManager.setupMetadata(packageInfo, userHandle, backupFlags);
-                // Setup crypto
-                CryptoUtils.setupCrypto(this.metadata);
-                // Set mode
-                this.crypto = CryptoUtils.getCrypto(metadata);
             } catch (Exception e) {
                 this.backupFile.cleanup();
                 throw new BackupException("Failed to setup metadata.", e);
+            }
+            try {
+                // Setup crypto
+                CryptoUtils.setupCrypto(this.metadata);
+                this.crypto = CryptoUtils.getCrypto(metadata);
+            } catch (CryptoException e) {
+                this.backupFile.cleanup();
+                throw new BackupException("Failed to get crypto " + metadata.crypto, e);
             }
             try {
                 this.checksum = new BackupFiles.Checksum(
@@ -510,7 +515,11 @@ public class BackupManager {
             if (!CryptoUtils.isAvailable(metadata.crypto)) {
                 throw new BackupException("Mode " + metadata.crypto + " is currently unavailable.");
             }
-            crypto = CryptoUtils.getCrypto(metadata);
+            try {
+                crypto = CryptoUtils.getCrypto(metadata);
+            } catch (CryptoException e) {
+                throw new BackupException("Failed to get crypto " + metadata.crypto, e);
+            }
             File checksumFile = this.backupFile.getChecksumFile(metadata.crypto);
             // Decrypt checksum
             if (!crypto.decrypt(new File[]{checksumFile})) {

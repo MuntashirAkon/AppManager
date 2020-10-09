@@ -82,10 +82,14 @@ public class OpenPGPCrypto implements Crypto {
         }
     };
 
-    public OpenPGPCrypto(@NonNull String keyIdsStr) {
-        String[] keyIds = keyIdsStr.split(",");
-        this.keyIds = new long[keyIds.length];
-        for (int i = 0; i < keyIds.length; ++i) this.keyIds[i] = Long.parseLong(keyIds[i]);
+    public OpenPGPCrypto(@NonNull String keyIdsStr) throws CryptoException {
+        try {
+            String[] keyIds = keyIdsStr.split(",");
+            this.keyIds = new long[keyIds.length];
+            for (int i = 0; i < keyIds.length; ++i) this.keyIds[i] = Long.parseLong(keyIds[i]);
+        } catch (NumberFormatException e) {
+            throw new CryptoException(e);
+        }
         this.provider = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_PACKAGE_STR);
         bind();
     }
