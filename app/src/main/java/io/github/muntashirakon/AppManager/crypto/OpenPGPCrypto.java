@@ -36,6 +36,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.crypto.Cipher;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.core.app.NotificationCompat;
@@ -55,9 +57,6 @@ public class OpenPGPCrypto implements Crypto {
 
     public static final String GPG_EXT = ".gpg";
 
-    public static final int OPEN_PGP_REQUEST_ENCRYPT = 3;
-    public static final int OPEN_PGP_REQUEST_DECRYPT = 4;
-
     private OpenPgpServiceConnection service;
     private boolean successFlag, errorFlag;
     private File[] files;
@@ -67,7 +66,7 @@ public class OpenPGPCrypto implements Crypto {
     private long[] keyIds;
     private final String provider;
     private Intent lastIntent;
-    private int lastRequestCode;
+    private int lastMode;
     private final Context context = AppManager.getContext();
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -77,7 +76,7 @@ public class OpenPGPCrypto implements Crypto {
                 case ACTION_OPEN_PGP_INTERACTION_BEGIN:
                     break;
                 case ACTION_OPEN_PGP_INTERACTION_END:
-                    doAction(lastIntent, lastRequestCode, false);
+                    doAction(lastIntent, lastMode, false);
                     break;
             }
         }
@@ -103,7 +102,7 @@ public class OpenPGPCrypto implements Crypto {
     @Override
     public boolean decrypt(@NonNull File[] files) {
         Intent intent = new Intent(OpenPgpApi.ACTION_DECRYPT_VERIFY);
-        return handleFiles(intent, OPEN_PGP_REQUEST_DECRYPT, files);
+        return handleFiles(intent, Cipher.DECRYPT_MODE, files);
     }
 
     @WorkerThread
@@ -111,24 +110,24 @@ public class OpenPGPCrypto implements Crypto {
     public boolean encrypt(@NonNull File[] filesList) {
         Intent intent = new Intent(OpenPgpApi.ACTION_ENCRYPT);
         intent.putExtra(OpenPgpApi.EXTRA_KEY_IDS, keyIds);
-        return handleFiles(intent, OPEN_PGP_REQUEST_ENCRYPT, filesList);
+        return handleFiles(intent, Cipher.ENCRYPT_MODE, filesList);
     }
 
-    private boolean handleFiles(Intent intent, int requestCode, @NonNull File[] filesList) {
+    private boolean handleFiles(Intent intent, int mode, @NonNull File[] filesList) {
         if (!waitForServiceBound()) return false;
         files = filesList;
         newFiles.clear();
         lastIntent = intent;
-        lastRequestCode = requestCode;
-        return doAction(intent, requestCode, true);
+        lastMode = mode;
+        return doAction(intent, mode, true);
     }
 
-    private boolean doAction(Intent intent, int requestCode, boolean waitForResult) {
+    private boolean doAction(Intent intent, int mode, boolean waitForResult) {
         errorFlag = false;
         if (files.length > 0) {  // files is never null here
             for (File file : files) {
                 File outputFilename;
-                if (requestCode == OPEN_PGP_REQUEST_DECRYPT) {
+                if (mode == Cipher.DECRYPT_MODE) {
                     outputFilename = new File(file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(GPG_EXT)));
                 } else outputFilename = new File(file.getAbsolutePath() + GPG_EXT);
                 newFiles.add(outputFilename);
@@ -149,7 +148,7 @@ public class OpenPGPCrypto implements Crypto {
                     return false;
                 }
                 // Delete unencrypted file
-                if (requestCode == OPEN_PGP_REQUEST_ENCRYPT) {
+                if (mode == Cipher.ENCRYPT_MODE) {
                     if (!file.delete()) {
                         Log.e(TAG, "Couldn't delete old file " + file);
                         return false;
