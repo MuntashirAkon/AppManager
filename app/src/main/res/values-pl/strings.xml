@@ -193,4 +193,18 @@
     <string name="filter_user_apps">Aplikacje użytkownika</string>
     <string name="filter">Filtr</string>
     <string name="obb_files_extracted_successfully">Wyodrębniono pliki OBB</string>
+    <plurals name="alert_failed_to_uninstall">
+        <item quantity="one">Nie udało się odinstalować %d aplikacji</item>
+        <item quantity="few">Nie udało się odinstalować %d aplikacji</item>
+        <item quantity="many">Nie udało się odinstalować %d aplikacji</item>
+        <item quantity="other">Nie udało się odinstalować %d aplikacji</item>
+    </plurals>
+    <plurals name="failed_to_import_files">
+        <item quantity="one">Nie udało się zaimportować %d pliku.</item>
+        <item quantity="few">Nie udało się zaimportować %d plików.</item>
+        <item quantity="many">Nie udało się zaimportować %d plików.</item>
+        <item quantity="other">Nie udało się zaimportować %d plików.</item>
+    </plurals>
+    <string name="the_export_was_successful">Wyeksportowano</string>
+    <string name="the_import_was_successful">Importowano</string>
 </resources>
