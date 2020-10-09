@@ -641,4 +641,12 @@
     <string name="failed_to_uninstall_updates">Updates für %s konnten nicht deinstalliert werden.</string>
     <string name="update_uninstalled_successfully">Updates für %s wurden deinstalliert.</string>
     <string name="uninstall_updates">Updates deinstallieren</string>
+    <string name="only_install">Nur installieren</string>
+    <string name="install_without_data_loss">Wenn Sie die Signaturprüfung deaktiviert haben, können Sie die Option <b>nur installieren</b> verwenden, um die Anwendung ohne Datenverlust zu installieren.</string>
+    <string name="app_data_will_be_lost">Die vorhandenen Daten gehen dabei verloren.</string>
+    <string name="signature_mismatch_for_system_apps">Konnte die Anwendung nicht installieren, weil die installierte Anwendung eine Systemanwendung mit einer anderen Signatur ist.</string>
+    <string name="do_you_want_to_uninstall_and_install">Möchten Sie die Anwendung deinstallieren und erneut installieren\?</string>
+    <string name="onboard">auf</string>
+    <string name="packages">Pakete</string>
+    <string name="usage_access_not_supported">Konnte keinen Nutzungszugriff anfordern, da die entsprechende Einstellungsseite nicht existiert.</string>
 </resources>
