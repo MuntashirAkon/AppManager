@@ -606,4 +606,11 @@
     <string name="update_uninstalled_successfully">已卸载 %s 的更新。</string>
     <string name="uninstall_updates">卸载更新</string>
     <string name="launch_mode_single_top">栈顶</string>
+    <string name="only_install">仅安装</string>
+    <string name="install_without_data_loss">如果您已经禁用了签名验证，您可以使用<b>仅安装</b>选项在不丢失数据情况下安装这个应用程序。</string>
+    <string name="app_data_will_be_lost">现有数据将丢失。</string>
+    <string name="signature_mismatch_for_system_apps">无法安装应用程序，因为安装的应用程序是一个具有不同签名的系统应用程序。</string>
+    <string name="do_you_want_to_uninstall_and_install">您想要卸载并重新安装该应用程序吗\?</string>
+    <string name="packages">包</string>
+    <string name="usage_access_not_supported">无法请求使用情况访问权限，因为相应的设置页不存在。</string>
 </resources>
