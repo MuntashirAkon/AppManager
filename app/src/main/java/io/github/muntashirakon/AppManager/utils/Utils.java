@@ -500,6 +500,37 @@ public class Utils {
         return new String(hexChars);
     }
 
+    /**
+     * Decodes a hex string.
+     * <p>
+     * Note that this function does <em>NOT</em> convert a hexadecimal number to a
+     * binary number.
+     *
+     * @param hex Hexadecimal representation of data.
+     * @return The byte[] representation of the given data.
+     * @throws NumberFormatException If the hexadecimal input string is of odd
+     *                               length or invalid hexadecimal string.
+     */
+    @NonNull
+    public static byte[] hexToBytes(@NonNull String hex) throws NumberFormatException {
+        if (hex.length() % 2 > 0) {
+            throw new NumberFormatException("Hexadecimal input string must have an even length.");
+        }
+        byte[] r = new byte[hex.length() / 2];
+        for (int i = hex.length(); i > 0; ) {
+            r[i / 2 - 1] = (byte) (digit(hex.charAt(--i)) | (digit(hex.charAt(--i)) << 4));
+        }
+        return r;
+    }
+
+    private static int digit(char ch) {
+        int r = Character.digit(ch, 16);
+        if (r < 0) {
+            throw new NumberFormatException("Invalid hexadecimal string: " + ch);
+        }
+        return r;
+    }
+
     @NonNull
     public static byte[] longToBytes(long l) {
         byte[] result = new byte[8];

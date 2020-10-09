@@ -44,6 +44,7 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 public final class MetadataManager {
     public static final String META_FILE = "meta_v2.am.json";
@@ -68,7 +69,7 @@ public final class MetadataManager {
         public String checksumAlgo = DigestUtils.SHA_256;  // checksum_algo
         @CryptoUtils.Mode
         public String crypto;  // crypto
-        public String iv;  // iv
+        public byte[] iv;  // iv
         public String keyIds;  // key_ids
         public int version = 2;  // version
         public String apkName;  // apk_name
@@ -175,7 +176,7 @@ public final class MetadataManager {
                 break;
             case CryptoUtils.MODE_AES:
             case CryptoUtils.MODE_RSA:
-                this.metadata.iv = rootObj.getString("iv");
+                this.metadata.iv = Utils.hexToBytes(rootObj.getString("iv"));
                 break;
             case CryptoUtils.MODE_NO_ENCRYPTION:
             default:
@@ -202,7 +203,7 @@ public final class MetadataManager {
             rootObject.put("checksum_algo", metadata.checksumAlgo);
             rootObject.put("crypto", metadata.crypto);
             rootObject.put("key_ids", metadata.keyIds);
-            rootObject.put("iv", metadata.iv);
+            rootObject.put("iv", Utils.bytesToHex(metadata.iv));
             rootObject.put("version", metadata.version);
             rootObject.put("apk_name", metadata.apkName);
             rootObject.put("instruction_set", metadata.instructionSet);
