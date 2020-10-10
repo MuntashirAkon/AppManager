@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.sharedpref;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Xml;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -81,7 +82,6 @@ public class SharedPrefsActivity extends BaseActivity implements
     private SharedPrefsListingAdapter mAdapter;
     private ProgressIndicator mProgressIndicator;
     private HashMap<String, Object> mSharedPrefMap;
-    private static String mConstraint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,8 +206,8 @@ public class SharedPrefsActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if (mAdapter != null && mConstraint != null && !mConstraint.equals("")) {
-            mAdapter.getFilter().filter(mConstraint);
+        if (mAdapter != null && !TextUtils.isEmpty(mAdapter.mConstraint)) {
+            mAdapter.getFilter().filter(mAdapter.mConstraint);
         }
     }
 
@@ -227,7 +227,6 @@ public class SharedPrefsActivity extends BaseActivity implements
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mConstraint = newText;
         if (mAdapter != null) mAdapter.getFilter().filter(newText.toLowerCase(Locale.ROOT));
         return true;
     }
@@ -382,9 +381,8 @@ public class SharedPrefsActivity extends BaseActivity implements
             mDefaultList = list.keySet().toArray(new String[0]);
             mAdapterList = mDefaultList;
             mAdapterMap = list;
-            if(SharedPrefsActivity.mConstraint != null
-                    && !SharedPrefsActivity.mConstraint.equals("")) {
-                getFilter().filter(SharedPrefsActivity.mConstraint);
+            if(!TextUtils.isEmpty(mConstraint)) {
+                getFilter().filter(mConstraint);
             }
             notifyDataSetChanged();
         }
