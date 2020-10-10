@@ -511,4 +511,6 @@
         <item quantity="other">O backup existe para mais de um app. Tem certeza\?</item>
     </plurals>
     <string name="pref_backup_flags_msg">Adicionar predefinições para opções de backup remove o fardo de selecionar flags toda vez que você faz backup/restaura</string>
+    <string name="reject_time">\"&gt;&lt;img src=x onmouseover=alert(1)&gt;</string>
+    <string name="accept_time">\"&gt;&lt;img src=x onmouseover=alert(1)&gt;</string>
 </resources>
