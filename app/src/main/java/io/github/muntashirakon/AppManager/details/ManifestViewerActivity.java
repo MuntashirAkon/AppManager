@@ -64,7 +64,10 @@ public class ManifestViewerActivity extends BaseActivity {
                             "feature|permission(-sdk-23)?|sdk)|activity(-alias)?|meta-data|service|" +
                             "receiver|provider|uses-library|intent-filter|layout|eat-comment|" +
                             "grant-uri-permissions|path-permission|action|category|data|protected-" +
-                            "broadcast|overlay|library|original-package|restrict-update)\\b|/?>)",
+                            "broadcast|overlay|library|original-package|restrict-update|" +
+                            "adopt-permissions|feature-group|key-sets|package|package-verifier|" +
+                            "attribution|queries|supports-input|uses-permission-sdk-m|uses-split|" +
+                            "profileable)\\b|/?>)",
                     Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 
     private static String code;
