@@ -587,7 +587,9 @@ public final class ApkFile implements AutoCloseable {
         @Override
         public void close() {
             IOUtils.deleteSilently(cachedFile);
-            IOUtils.deleteSilently(source);
+            if (source != null && !source.getAbsolutePath().startsWith("/proc/self")) {
+                IOUtils.deleteSilently(source);
+            }
         }
 
         @WorkerThread
