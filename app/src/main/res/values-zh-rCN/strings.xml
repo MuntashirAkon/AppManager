@@ -511,7 +511,7 @@
         <item quantity="other">无法启用％s个应用</item>
     </plurals>
     <string name="unknown_split_for_feature">特性 %s的 %s</string>
-    <string name="density_split_for_feature">%s 特性的 %s (%d DPI) 资源</string>
+    <string name="density_split_for_feature">%s (%d DPI) 资源用于特性 %s</string>
     <string name="density_split_for_base_apk">基础 APK 的 %s (%d DPI) 资源</string>
     <string name="unknown_split_for_base_apk">基础 APK 的 %s</string>
     <string name="touchscreen_finger">手指</string>
@@ -613,4 +613,6 @@
     <string name="do_you_want_to_uninstall_and_install">您想要卸载并重新安装该应用程序吗\?</string>
     <string name="packages">包</string>
     <string name="usage_access_not_supported">无法请求使用情况访问权限，因为相应的设置页不存在。</string>
+    <string name="onboard">内置</string>
+    <string name="navigation_trackball">轨迹球</string>
 </resources>
