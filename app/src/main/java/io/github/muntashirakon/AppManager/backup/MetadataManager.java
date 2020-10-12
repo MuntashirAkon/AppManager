@@ -203,7 +203,7 @@ public final class MetadataManager {
             rootObject.put("checksum_algo", metadata.checksumAlgo);
             rootObject.put("crypto", metadata.crypto);
             rootObject.put("key_ids", metadata.keyIds);
-            rootObject.put("iv", Utils.bytesToHex(metadata.iv));
+            rootObject.put("iv", metadata.iv == null ? null : Utils.bytesToHex(metadata.iv));
             rootObject.put("version", metadata.version);
             rootObject.put("apk_name", metadata.apkName);
             rootObject.put("instruction_set", metadata.instructionSet);
