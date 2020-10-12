@@ -450,7 +450,7 @@
     <string name="external_data">Внешние данные</string>
     <string name="data">Данные</string>
     <string name="apk">APK</string>
-    <string name="backup">Резервное копирование</string>
+    <string name="backup">Резервная копия</string>
     <string name="restore">Восстановление</string>
     <string name="delete_backup">Удалить резервную копию</string>
     <string name="backup_options">Параметры резервного копирования</string>
@@ -647,7 +647,7 @@
     <string name="changes_not_saved">Изменения не сохранены</string>
     <string name="rules">Правила</string>
     <string name="pref_compression_method">Метод сжатия</string>
-    <string name="pref_backup_flags_msg">Добавление предустановки для параметров резервного копирования снимает бремя выбора флагов при каждом резервном копировании/восстановлении</string>
+    <string name="pref_backup_flags_msg">Добавление предустановки для параметров резервного копирования избавляет от необходимости выбора флагов при каждом резервном копировании/восстановлении</string>
     <string name="compression_method">Метод сжатия: %s</string>
     <string name="state_trace_stop">Остановить отслеживание</string>
     <string name="confirm_installation">Подтвердить установку</string>
@@ -679,4 +679,5 @@
     <string name="app_data_will_be_lost">Существующие данные будут потеряны.</string>
     <string name="only_install">Только установить</string>
     <string name="install_without_data_loss">Если вы отключили проверку подписи, вы можете использовать параметр <b>только установить</b>, чтобы установить приложение без потери данных.</string>
+    <string name="sort_by_backup">Сначала резервные копии</string>
 </resources>
