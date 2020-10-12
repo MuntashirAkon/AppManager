@@ -17,7 +17,7 @@ Batch operations or operation on multiple apps are also available within this pa
 - Backup/restore/delete app data (apk, dex, app data, etc.)
 - Clear data from apps
 - Disable/uninstall/kill apps
-- Disable run in background, ads and trackers
+- Disable run in background, ads and tracker components
 - Export blocking rules
 
 ## Color Codes

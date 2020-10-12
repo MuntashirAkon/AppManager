@@ -16,11 +16,11 @@ Unfortunately, yes. But as of v2.5.13, you don't need to keep AoT enabled all th
 ## Cannot enable USB debugging. What to do?
 See [enable USB debugging][aott].
 
-## Can I block trackers or any other application components using ADB over TCP?
+## Can I block tracker or any other application components using ADB over TCP?
 Sadly, no. ADB has limited [permissions][adb_perms] and controlling application components is not one of them.
 
 ## Which features can be used in ADB mode?
-Most of the features supported by ADB mode are enabled by default once ADB support is detected by AM. These include disable, force-stop, clear data, grant/revok app ops and permissions. You can also install applications without any prompt as well as display [running apps/processes][running_apps].
+Most of the features supported by ADB mode are enabled by default once ADB support is detected by AM. These include disable, force-stop, clear data, grant/revoke app ops and permissions. You can also install applications without any prompt and view [running apps/processes][running_apps].
 
 [aot]: ../guide/adb-over-tcp.md
 [aott]: ../guide/adb-over-tcp.md#_2-enable-usb-debugging

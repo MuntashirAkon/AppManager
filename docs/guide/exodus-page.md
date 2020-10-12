@@ -13,7 +13,10 @@ tags:
 - `µ` - Micro non-intrusive
 - `?` - Unconfirmed
 
+_See also: [FAQ: Tracker vs tracker components][t_vs_tc]_
+
 [1]: ./app-details-page.md#app-info-tab
 [2]: ./app-details-page.md
 [3]: https://gitlab.com/oF2pks/3xodusprivacy-toolbox
 [4]: https://etip.exodus-privacy.eu.org
+[t_vs_tc]: ../faq/app-components.md#tracker-classes-versus-tracker-components
