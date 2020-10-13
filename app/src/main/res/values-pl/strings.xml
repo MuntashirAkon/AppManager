@@ -207,4 +207,83 @@
     </plurals>
     <string name="the_export_was_successful">Wyeksportowano</string>
     <string name="the_import_was_successful">Importowano</string>
+    <string name="reinstall_app_message">Czy chcesz ponownie zainstalować tę aplikację\?</string>
+    <string name="install_app_message">Czy chcesz zainstalować tę aplikację\?</string>
+    <string name="info">Info</string>
+    <string name="try_again">Spróbuj ponownie</string>
+    <string name="full_stop_tap_to_see_details">. Naciśnij, aby wyświetlić szczegóły.</string>
+    <string name="operation_running">Praca w toku…</string>
+    <string name="apply_to_system_apps_question">Zastosować też do aplikacji systemowych\? Wybierz „Nie”, jeśli nie masz pewności.</string>
+    <string name="apply_to_system_apps">Zastosuj do aplikacji systemowych</string>
+    <string name="failed_to_restore_backup">Nie udało się przywrócić kopii zapasowej</string>
+    <string name="failed_to_delete_backup">Nie udało się usunąć kopii zapasowej</string>
+    <plurals name="alert_failed_to_enable">
+        <item quantity="one">Nie udało się włączyć %s aplikacji</item>
+        <item quantity="few">Nie udało się włączyć %s aplikacji</item>
+        <item quantity="many">Nie udało się włączyć %s aplikacji</item>
+        <item quantity="other">Nie udało się włączyć %s aplikacji</item>
+    </plurals>
+    <plurals name="alert_failed_to_block_components">
+        <item quantity="one">Nie udało się zablokować komponentów dla %d aplikacji</item>
+        <item quantity="few">Nie udało się zablokować komponentów dla %d aplikacji</item>
+        <item quantity="many">Nie udało się zablokować komponentów dla %d aplikacji</item>
+        <item quantity="other">Nie udało się zablokować komponentów dla %d aplikacji</item>
+    </plurals>
+    <plurals name="alert_failed_to_unblock_trackers">
+        <item quantity="one">Nie można odblokować elementów śledzących w %d aplikacji</item>
+        <item quantity="few">Nie można odblokować elementów śledzących w %d aplikacjach</item>
+        <item quantity="many">Nie można odblokować elementów śledzących w %d aplikacjach</item>
+        <item quantity="other">Nie można odblokować elementów śledzących w %d aplikacjach</item>
+    </plurals>
+    <plurals name="alert_failed_to_delete_backup">
+        <item quantity="one">Nie można usunąć %d kopii zapasowej</item>
+        <item quantity="few">Nie można usunąć %d kopii zapasowych</item>
+        <item quantity="many">Nie można usunąć %d kopii zapasowych</item>
+        <item quantity="other">Nie można usunąć %d kopii zapasowych</item>
+    </plurals>
+    <plurals name="alert_failed_to_restore">
+        <item quantity="one">Nie można przywrócić %d aplikacji</item>
+        <item quantity="few">Nie można przywrócić %d aplikacji</item>
+        <item quantity="many">Nie można przywrócić %d aplikacji</item>
+        <item quantity="other">Nie można przywrócić %d aplikacji</item>
+    </plurals>
+    <plurals name="alert_failed_to_backup">
+        <item quantity="one">Nie można utworzyć kopii zapasowej %d aplikacji</item>
+        <item quantity="few">Nie można utworzyć kopii zapasowej %d aplikacji</item>
+        <item quantity="many">Nie można utworzyć kopii zapasowej %d aplikacji</item>
+        <item quantity="other">Nie można utworzyć kopii zapasowej %d aplikacji</item>
+    </plurals>
+    <plurals name="failed_to_backup_some_apk_files">
+        <item quantity="one">Nie można utworzyć kopii zapasowej %d aplikacji</item>
+        <item quantity="few">Nie można utworzyć kopii zapasowej %d aplikacji</item>
+        <item quantity="many">Nie można utworzyć kopii zapasowej %d aplikacji</item>
+        <item quantity="other">Nie można utworzyć kopii zapasowej %d aplikacji</item>
+    </plurals>
+    <string name="backup_options">Opcje tworzenia kopii zapasowych</string>
+    <string name="delete_backup">Usuń kopię zapasową</string>
+    <string name="apk">APK</string>
+    <string name="data">Dane</string>
+    <string name="installed_version">Zainstalowana wersja</string>
+    <string name="filter_disabled_apps">Wyłączone aplikacje</string>
+    <string name="select_all">Zaznacz wszystko</string>
+    <string name="filter_apps_with_rules">Aplikacje z regułami</string>
+    <string name="filter_system_apps">Aplikacje systemowe</string>
+    <string name="failed_to_install_package_name">Nie można było zainstalować %s</string>
+    <string name="exclude_cache">Wyklucz pamięć podręczną</string>
+    <string name="blocking_rules">Reguły blokowania</string>
+    <string name="whats_new">Co nowego</string>
+    <string name="components">Komponenty</string>
+    <string name="trackers">Elementy śledzące</string>
+    <string name="reset_to_default">Przywróć ustawienia domyślne</string>
+    <string name="sort_by_component_name">Nazwa komponentu</string>
+    <string name="block_trackers">Blokuj elementy śledzące</string>
+    <string name="version">Wersja</string>
+    <string name="pref_about_msg">Wersja App Manager, licencja, autorzy itp.</string>
+    <string name="current_theme">Aktualny motyw: %s</string>
+    <string name="apply">Zastosuj</string>
+    <string name="select_theme">Motyw</string>
+    <string name="night">Ciemny</string>
+    <string name="day">Jasny</string>
+    <string name="follow_system">Zgodny z systemowym</string>
+    <string name="pref_app_theme">Motyw aplikacji</string>
 </resources>
