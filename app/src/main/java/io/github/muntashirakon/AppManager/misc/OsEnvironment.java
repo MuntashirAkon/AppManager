@@ -41,16 +41,36 @@ public final class OsEnvironment {
     private static final String TAG = "OsEnvironment";
 
     private static final String ENV_EXTERNAL_STORAGE = "EXTERNAL_STORAGE";
+    private static final String ENV_ANDROID_ROOT = "ANDROID_ROOT";
     private static final String ENV_ANDROID_DATA = "ANDROID_DATA";
+    private static final String ENV_ANDROID_EXPAND = "ANDROID_EXPAND";
+    private static final String ENV_ANDROID_STORAGE = "ANDROID_STORAGE";
+    private static final String ENV_DOWNLOAD_CACHE = "DOWNLOAD_CACHE";
+    private static final String ENV_OEM_ROOT = "OEM_ROOT";
+    private static final String ENV_ODM_ROOT = "ODM_ROOT";
+    private static final String ENV_VENDOR_ROOT = "VENDOR_ROOT";
+    private static final String ENV_PRODUCT_ROOT = "PRODUCT_ROOT";
+    private static final String ENV_SYSTEM_EXT_ROOT = "SYSTEM_EXT_ROOT";
+    private static final String ENV_APEX_ROOT = "APEX_ROOT";
 
-    private static final String DIR_ANDROID = "Android";
+    public static final String DIR_ANDROID = "Android";
     private static final String DIR_DATA = "data";
     private static final String DIR_MEDIA = "media";
     private static final String DIR_OBB = "obb";
     private static final String DIR_FILES = "files";
     private static final String DIR_CACHE = "cache";
 
-    private static final File DIR_ANDROID_DATA = getDirectory(ENV_ANDROID_DATA, "/data");
+    private static final PrivilegedFile DIR_ANDROID_ROOT = getDirectory(ENV_ANDROID_ROOT, "/system");
+    private static final PrivilegedFile DIR_ANDROID_DATA = getDirectory(ENV_ANDROID_DATA, "/data");
+    private static final PrivilegedFile DIR_ANDROID_EXPAND = getDirectory(ENV_ANDROID_EXPAND, "/mnt/expand");
+    private static final PrivilegedFile DIR_ANDROID_STORAGE = getDirectory(ENV_ANDROID_STORAGE, "/storage");
+    private static final PrivilegedFile DIR_DOWNLOAD_CACHE = getDirectory(ENV_DOWNLOAD_CACHE, "/cache");
+    private static final PrivilegedFile DIR_OEM_ROOT = getDirectory(ENV_OEM_ROOT, "/oem");
+    private static final PrivilegedFile DIR_ODM_ROOT = getDirectory(ENV_ODM_ROOT, "/odm");
+    private static final PrivilegedFile DIR_VENDOR_ROOT = getDirectory(ENV_VENDOR_ROOT, "/vendor");
+    private static final PrivilegedFile DIR_PRODUCT_ROOT = getDirectory(ENV_PRODUCT_ROOT, "/product");
+    private static final PrivilegedFile DIR_SYSTEM_EXT_ROOT = getDirectory(ENV_SYSTEM_EXT_ROOT, "/system_ext");
+    private static final PrivilegedFile DIR_APEX_ROOT = getDirectory(ENV_APEX_ROOT, "/apex");
 
     private static UserEnvironment sCurrentUser;
     private static boolean sUserRequired;
@@ -163,14 +183,76 @@ public final class OsEnvironment {
         }
     }
 
+    /**
+     * Return root of the "system" partition holding the core Android OS.
+     * Always present and mounted read-only.
+     */
+    @NonNull
+    public static PrivilegedFile getRootDirectory() {
+        return DIR_ANDROID_ROOT;
+    }
+
+    /**
+     * Return root directory of the "oem" partition holding OEM customizations,
+     * if any. If present, the partition is mounted read-only.
+     */
+    @NonNull
+    public static PrivilegedFile getOemDirectory() {
+        return DIR_OEM_ROOT;
+    }
+
+    /**
+     * Return root directory of the "odm" partition holding ODM customizations,
+     * if any. If present, the partition is mounted read-only.
+     */
+    @NonNull
+    public static PrivilegedFile getOdmDirectory() {
+        return DIR_ODM_ROOT;
+    }
+
+    /**
+     * Return root directory of the "vendor" partition that holds vendor-provided
+     * software that should persist across simple reflashing of the "system" partition.
+     */
+    public static @NonNull PrivilegedFile getVendorDirectory() {
+        return DIR_VENDOR_ROOT;
+    }
+
+    /**
+     * Return root directory of the "product" partition holding product-specific
+     * customizations if any. If present, the partition is mounted read-only.
+     */
+    public static @NonNull PrivilegedFile getProductDirectory() {
+        return DIR_PRODUCT_ROOT;
+    }
+
+    /**
+     * Return root directory of the "system_ext" partition holding system partition's extension
+     * If present, the partition is mounted read-only.
+     */
+    public static @NonNull PrivilegedFile getSystemExtDirectory() {
+        return DIR_SYSTEM_EXT_ROOT;
+    }
+
+    /**
+     * Return the user data directory.
+     */
+    public static PrivilegedFile getDataDirectory() {
+        return DIR_ANDROID_DATA;
+    }
+
+    public static PrivilegedFile getDataSystemDirectory() {
+        return new PrivilegedFile(getDataDirectory(), "system");
+    }
+
     @NonNull
     public static PrivilegedFile getDataAppDirectory() {
-        return new PrivilegedFile(DIR_ANDROID_DATA, "app");
+        return new PrivilegedFile(getDataDirectory(), "app");
     }
 
     @NonNull
     public static PrivilegedFile getDataDataDirectory() {
-        return new PrivilegedFile(DIR_ANDROID_DATA, "data");
+        return new PrivilegedFile(getDataDirectory(), "data");
     }
 
     /**
