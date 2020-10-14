@@ -680,4 +680,6 @@
     <string name="only_install">Только установить</string>
     <string name="install_without_data_loss">Если вы отключили проверку подписи, вы можете использовать параметр <b>только установить</b>, чтобы установить приложение без потери данных.</string>
     <string name="sort_by_backup">Сначала резервные копии</string>
+    <string name="onboard">Доступные</string>
+    <string name="packages">пакеты</string>
 </resources>
