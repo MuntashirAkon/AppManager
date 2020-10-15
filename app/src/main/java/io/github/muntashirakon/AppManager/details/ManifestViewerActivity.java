@@ -153,7 +153,7 @@ public class ManifestViewerActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        IOUtils.closeSilently(apkFile);
+        IOUtils.closeQuietly(apkFile);
         super.onDestroy();
     }
 

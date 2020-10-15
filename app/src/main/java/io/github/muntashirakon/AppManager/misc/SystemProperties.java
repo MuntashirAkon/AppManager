@@ -27,4 +27,10 @@ public final class SystemProperties {
         if (result.isSuccessful()) return result.getOutput().trim();
         else return defaultVal;
     }
+
+    public static boolean getBoolean(@NonNull String key, boolean defaultVal) {
+        String val = get(key, String.valueOf(defaultVal));
+        if ("1".equals(val)) return true;
+        return Boolean.parseBoolean(val);
+    }
 }

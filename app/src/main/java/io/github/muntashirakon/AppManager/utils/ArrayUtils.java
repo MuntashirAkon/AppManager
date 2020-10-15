@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -497,6 +498,10 @@ public class ArrayUtils {
      */
     public static @Nullable <T> T[] cloneOrNull(@Nullable T[] array) {
         return (array != null) ? array.clone() : null;
+    }
+
+    public static @Nullable <T> HashSet<T> cloneOrNull(@Nullable HashSet<T> array) {
+        return (array != null) ? new HashSet<>(array) : null;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

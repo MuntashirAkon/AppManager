@@ -1267,7 +1267,7 @@ public class SystemConfig {
         } catch (XmlPullParserException | IOException e) {
             Log.w(TAG, "Got exception parsing permissions.", e);
         } finally {
-            IOUtils.closeSilently(permReader);
+            IOUtils.closeQuietly(permReader);
         }
 
         // Some devices can be field-converted to FBE, so offer to splice in

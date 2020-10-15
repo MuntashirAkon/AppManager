@@ -110,7 +110,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     protected void onDestroy() {
         IOUtils.deleteDir(new File(getCacheDir().getParent(), APP_DEX));
         IOUtils.deleteDir(getCodeCacheDir());
-        IOUtils.closeSilently(fd);
+        IOUtils.closeQuietly(fd);
         if (!apkFile.getAbsolutePath().startsWith("/data/app/")) {
             // Only attempt to delete the apk file if it's cached
             IOUtils.deleteSilently(apkFile);
