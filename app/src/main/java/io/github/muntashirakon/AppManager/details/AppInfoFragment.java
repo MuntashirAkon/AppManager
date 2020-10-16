@@ -225,6 +225,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mHorizontalLayout = view.findViewById(R.id.horizontal_layout);
         // Progress indicator
         mProgressIndicator = view.findViewById(R.id.progress_linear);
+        mProgressIndicator.setVisibilityAfterHide(View.GONE);
         // Header
         mTagCloud = view.findViewById(R.id.tag_cloud);
         labelView = view.findViewById(R.id.label);
@@ -1120,13 +1121,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void showProgressIndicator(boolean show) {
         if (mProgressIndicator == null) return;
-        if (show) {
-            mProgressIndicator.setVisibility(View.VISIBLE);
-            mProgressIndicator.show();
-        } else {
-            mProgressIndicator.hide();
-            mProgressIndicator.setVisibility(View.GONE);
-        }
+        if (show) mProgressIndicator.show();
+        else mProgressIndicator.hide();
     }
 
     private void runOnUiThread(Runnable runnable) {

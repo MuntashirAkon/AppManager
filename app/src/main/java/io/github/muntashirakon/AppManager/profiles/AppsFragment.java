@@ -77,6 +77,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         emptyView.setText(R.string.no_apps);
         recyclerView.setEmptyView(emptyView);
         progressIndicator = view.findViewById(R.id.progress_linear);
+        progressIndicator.setVisibilityAfterHide(View.GONE);
         progressIndicator.show();
         alertText = view.findViewById(R.id.alert_text);
         alertText.setVisibility(View.GONE);

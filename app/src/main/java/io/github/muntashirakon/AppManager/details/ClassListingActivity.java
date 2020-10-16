@@ -157,6 +157,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         mListView.setEmptyView(mEmptyView);
 
         mProgressIndicator = findViewById(R.id.progress_linear);
+        mProgressIndicator.setVisibilityAfterHide(View.GONE);
         showProgress(true);
 
         final Uri apkUri = intent.getData();

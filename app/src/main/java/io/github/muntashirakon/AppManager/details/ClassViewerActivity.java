@@ -100,6 +100,7 @@ public class ClassViewerActivity extends BaseActivity {
         setContentView(R.layout.activity_any_viewer);
         setSupportActionBar(findViewById(R.id.toolbar));
         mProgressIndicator = findViewById(R.id.progress_linear);
+        mProgressIndicator.setVisibilityAfterHide(View.GONE);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             CharSequence appName = getIntent().getCharSequenceExtra(EXTRA_APP_NAME);

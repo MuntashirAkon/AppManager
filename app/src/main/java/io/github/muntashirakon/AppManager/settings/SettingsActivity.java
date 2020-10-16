@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.settings;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.material.progressindicator.ProgressIndicator;
 
@@ -35,6 +36,7 @@ public class SettingsActivity extends BaseActivity {
         setContentView(R.layout.activity_settings);
         setSupportActionBar(findViewById(R.id.toolbar));
         progressIndicator = findViewById(R.id.progress_linear);
+        progressIndicator.setVisibilityAfterHide(View.GONE);
         progressIndicator.hide();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new MainPreferences()).commit();

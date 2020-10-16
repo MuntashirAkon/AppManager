@@ -60,6 +60,7 @@ public class ProfilesActivity extends BaseActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         model = new ViewModelProvider(this).get(ProfilesViewModel.class);
         progressIndicator = findViewById(R.id.progress_linear);
+        progressIndicator.setVisibilityAfterHide(View.GONE);
         listView = findViewById(android.R.id.list);
         listView.setEmptyView(findViewById(android.R.id.empty));
         adapter = new ProfilesAdapter(this);

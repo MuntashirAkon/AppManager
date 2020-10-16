@@ -66,6 +66,7 @@ public class OneClickOpsActivity extends BaseActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         mItemCreator = new ListItemCreator(this, R.id.container);
         mProgressIndicator = findViewById(R.id.progress_linear);
+        mProgressIndicator.setVisibilityAfterHide(View.GONE);
         setItems();
     }
 

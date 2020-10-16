@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.profiles;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.progressindicator.ProgressIndicator;
@@ -50,7 +51,9 @@ public class AppsProfileActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apps_profile);
         setSupportActionBar(findViewById(R.id.toolbar));
-        ((ProgressIndicator) findViewById(R.id.progress_linear)).hide();
+        ProgressIndicator progressIndicator = findViewById(R.id.progress_linear);
+        progressIndicator.setVisibilityAfterHide(View.GONE);
+        progressIndicator.hide();
         if (getIntent() == null) {
             finish();
             return;

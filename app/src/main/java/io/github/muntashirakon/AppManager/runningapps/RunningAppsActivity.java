@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -114,6 +115,7 @@ public class RunningAppsActivity extends BaseActivity implements
         }
         mModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(RunningAppsViewModel.class);
         mProgressIndicator = findViewById(R.id.progress_linear);
+        mProgressIndicator.setVisibilityAfterHide(View.GONE);
         mCounterView = findViewById(R.id.bottom_appbar_counter);
         BottomAppBar bottomAppBar = findViewById(R.id.bottom_appbar);
         bottomAppBar.setNavigationOnClickListener(v -> mModel.clearSelections());

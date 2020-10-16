@@ -222,6 +222,7 @@ public class MainActivity extends BaseActivity implements
         }
 
         mProgressIndicator = findViewById(R.id.progress_linear);
+        mProgressIndicator.setVisibilityAfterHide(View.GONE);
         RecyclerView recyclerView = findViewById(R.id.item_list);
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
         mBottomAppBar = findViewById(R.id.bottom_appbar);

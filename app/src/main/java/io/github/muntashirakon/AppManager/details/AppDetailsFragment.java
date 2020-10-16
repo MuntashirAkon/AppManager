@@ -220,6 +220,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         emptyView.setText(getNotFoundString(neededProperty));
         recyclerView.setEmptyView(emptyView);
         mProgressIndicator = view.findViewById(R.id.progress_linear);
+        mProgressIndicator.setVisibilityAfterHide(View.GONE);
         showProgressIndicator(true);
         mRulesNotAppliedMsg = view.findViewById(R.id.alert_text);
         mRulesNotAppliedMsg.setVisibility(View.GONE);
@@ -239,7 +240,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             runOnUiThread(() -> recyclerView.setAdapter(mAdapter));
         }).start();
         mainModel.get(neededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
-            if (mAdapter != null && mainModel.isPackageExist()) mAdapter.setDefaultList(appDetailsItems);
+            if (mAdapter != null && mainModel.isPackageExist())
+                mAdapter.setDefaultList(appDetailsItems);
         });
         mainModel.getRuleApplicationStatus().observe(getViewLifecycleOwner(), status -> {
             if (neededProperty > APP_INFO && neededProperty <= PROVIDERS) {
@@ -498,13 +500,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     private void showProgressIndicator(boolean show) {
         if (mProgressIndicator == null) return;
-        if (show) {
-            mProgressIndicator.setVisibility(View.VISIBLE);
-            mProgressIndicator.show();
-        } else {
-            mProgressIndicator.hide();
-            mProgressIndicator.setVisibility(View.GONE);
-        }
+        if (show) mProgressIndicator.show();
+        else mProgressIndicator.hide();
+
     }
 
     public static boolean isComponentDisabled(@NonNull PackageManager pm, @NonNull ComponentInfo componentInfo) {

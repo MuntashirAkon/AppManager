@@ -122,6 +122,7 @@ public class SharedPrefsActivity extends BaseActivity implements
             actionBar.setCustomView(searchView, layoutParams);
         }
         mProgressIndicator = findViewById(R.id.progress_linear);
+        mProgressIndicator.setVisibilityAfterHide(View.GONE);
         mProgressIndicator.show();
         ListView listView = findViewById(android.R.id.list);
         listView.setTextFilterEnabled(true);

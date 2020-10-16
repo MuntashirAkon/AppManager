@@ -99,6 +99,7 @@ public class ManifestViewerActivity extends BaseActivity {
         setContentView(R.layout.activity_any_viewer);
         setSupportActionBar(findViewById(R.id.toolbar));
         mProgressIndicator = findViewById(R.id.progress_linear);
+        mProgressIndicator.setVisibilityAfterHide(View.GONE);
         final Intent intent = getIntent();
         final Uri packageUri = intent.getData();
         packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
