@@ -31,6 +31,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.logs.Log;
 
 public final class LangUtils {
     public static final String LANG_AUTO = "auto";
@@ -42,16 +45,22 @@ public final class LangUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             sDefaultLocale = LocaleList.getDefault().get(0);
         } else sDefaultLocale = Locale.getDefault();
-        sLocaleMap.put("bn-BD", new Locale("bn", "BD"));
-        sLocaleMap.put("en", Locale.ENGLISH);
-        sLocaleMap.put("de", Locale.GERMAN);
-        sLocaleMap.put("nb-NO", new Locale("nb", "NO"));
-        sLocaleMap.put("pl", new Locale("pl"));
-        sLocaleMap.put("pt", new Locale("pt"));
-        sLocaleMap.put("pt-BR", new Locale("pt", "BR"));
-        sLocaleMap.put("ru-RU", new Locale("ru", "RU"));
-        sLocaleMap.put("tr-TR", new Locale("tr", "TR"));
-        sLocaleMap.put("zh-CN", Locale.SIMPLIFIED_CHINESE);
+        String[] languages = AppManager.getContext().getResources().getStringArray(R.array.languages_key);
+        for (String language : languages) {
+            if (LANG_AUTO.equals(language)) {
+                sLocaleMap.put(LANG_AUTO, sDefaultLocale);
+            } else {
+                String[] langComponents = language.split("-", 2);
+                if (langComponents.length == 1) {
+                    sLocaleMap.put(language, new Locale(langComponents[0]));
+                } else if (langComponents.length == 2) {
+                    sLocaleMap.put(language, new Locale(langComponents[0], langComponents[1]));
+                } else {
+                    Log.d("LangUtils", "Invalid language: " + language);
+                    sLocaleMap.put(LANG_AUTO, sDefaultLocale);
+                }
+            }
+        }
     }
 
     public static Locale updateLanguage(@NonNull Context context) {
@@ -70,9 +79,6 @@ public final class LangUtils {
 
     public static Locale getLocaleByLanguage() {
         String language = (String) AppPref.get(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR);
-        if (LANG_AUTO.equals(language)) {
-            return sDefaultLocale;
-        }
         Locale locale = sLocaleMap.get(language);
         return locale != null ? locale : sDefaultLocale;
     }
