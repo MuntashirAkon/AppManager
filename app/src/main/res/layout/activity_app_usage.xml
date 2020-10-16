@@ -39,7 +39,9 @@
             <ListView
                 android:id="@android:id/list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                tools:listheader="@layout/header_app_usage"
+                tools:listitem="@layout/item_app_usage" />
 
             <TextView
                 android:id="@android:id/empty"

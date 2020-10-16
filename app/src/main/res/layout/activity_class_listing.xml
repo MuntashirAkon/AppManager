@@ -35,7 +35,8 @@
             android:id="@android:id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fastScrollEnabled="true" />
+            android:fastScrollEnabled="true"
+            tools:listitem="@android:layout/simple_list_item_1" />
 
         <TextView
             android:id="@android:id/empty"

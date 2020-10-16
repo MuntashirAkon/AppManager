@@ -26,6 +26,4 @@
     android:paddingStart="@dimen/padding_medium"
     android:paddingEnd="@dimen/padding_medium"
     android:stretchMode="spacingWidthUniform"
-    android:verticalSpacing="8dp">
-
-</GridView>
+    android:verticalSpacing="8dp" />

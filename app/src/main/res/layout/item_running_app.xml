@@ -34,6 +34,7 @@
         android:layout_height="match_parent"
         android:layout_marginEnd="@dimen/padding_small"
         android:layout_weight="0"
+        tools:srcCompat="@tools:sample/avatars"
         tools:ignore="ContentDescription" />
 
     <LinearLayout
