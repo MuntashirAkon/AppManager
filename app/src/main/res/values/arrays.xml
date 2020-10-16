@@ -87,6 +87,7 @@
         <item>English</item>
         <item>Deutsch</item>
         <item>Norsk (bokmål)</item>
+        <item>Polski</item>
         <item>Português</item>
         <item>Português Brasileiro</item>
         <item>Русский</item>
@@ -99,6 +100,7 @@
         <item>en</item>
         <item>de</item>
         <item>nb-NO</item>
+        <item>pl</item>
         <item>pt</item>
         <item>pt-BR</item>
         <item>ru-RU</item>
