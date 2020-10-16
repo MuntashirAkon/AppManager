@@ -446,6 +446,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
             }
             // Set usage percentage
             holder.percentUsage.setText(String.format(Locale.ROOT, "%d%%", percentUsage));
+            holder.usageIndicator.show();
             holder.usageIndicator.setProgress(percentUsage);
             return convertView;
         }
