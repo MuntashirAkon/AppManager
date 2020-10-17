@@ -140,20 +140,18 @@ public class PackageInstallerActivity extends BaseActivity {
                 if (installedPackageInfo == null) {
                     // App not installed
                     actionName = getString(R.string.install);
-                    if (AppPref.isRootOrAdbEnabled()) {
-                        if (apkFile.isSplit()) {
-                            install();
-                        } else {
-                            runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
-                                    .setCancelable(false)
-                                    .setTitle(appLabel)
-                                    .setIcon(appIcon)
-                                    .setMessage(R.string.install_app_message)
-                                    .setPositiveButton(R.string.install, (dialog, which) -> install())
-                                    .setNegativeButton(R.string.cancel, (dialog, which) -> finish())
-                                    .show());
-                        }
-                    } else install();
+                    if (apkFile.isSplit()) {
+                        install();
+                    } else {
+                        runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
+                                .setCancelable(false)
+                                .setTitle(appLabel)
+                                .setIcon(appIcon)
+                                .setMessage(R.string.install_app_message)
+                                .setPositiveButton(R.string.install, (dialog, which) -> install())
+                                .setNegativeButton(R.string.cancel, (dialog, which) -> finish())
+                                .show());
+                    }
                 } else {
                     // App is installed
                     long installedVersionCode = PackageUtils.getVersionCode(installedPackageInfo);
@@ -169,7 +167,7 @@ public class PackageInstallerActivity extends BaseActivity {
                         if (isSignatureDifferent) {
                             // Display what's new dialog
                             displayWhatsNewDialog();
-                        } else if (AppPref.isRootOrAdbEnabled()) {
+                        } else {
                             if (apkFile.isSplit()) {
                                 install();
                             } else {
@@ -182,7 +180,7 @@ public class PackageInstallerActivity extends BaseActivity {
                                         .setNegativeButton(R.string.cancel, (dialog, which) -> finish())
                                         .show());
                             }
-                        } else install();
+                        }
                     } else {
                         actionName = getString(R.string.downgrade);
                         if (AppPref.isRootOrAdbEnabled()) {
