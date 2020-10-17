@@ -208,6 +208,10 @@
             android:name=".profiles.AppsProfileActivity"
             android:exported="false" />
         <activity
+            android:name=".sysconfig.SysConfigActivity"
+            android:exported="false"
+            android:label="@string/sys_config" />
+        <activity
             android:name=".misc.AlertDialogActivity"
             android:excludeFromRecents="true"
             android:exported="false"

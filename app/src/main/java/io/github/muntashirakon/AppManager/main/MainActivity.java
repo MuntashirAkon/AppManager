@@ -79,6 +79,7 @@ import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
+import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -340,6 +341,9 @@ public class MainActivity extends BaseActivity implements
             runningAppsMenu.setVisible(false);
             sortByBlockedComponentMenu.setVisible(false);
         }
+        if (AppPref.isRootEnabled()) {
+            menu.findItem(R.id.action_sys_config).setVisible(true);
+        } else menu.findItem(R.id.action_sys_config).setVisible(false);
         if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
             appUsageMenu.setVisible(true);
         } else appUsageMenu.setVisible(false);
@@ -471,6 +475,10 @@ public class MainActivity extends BaseActivity implements
             case R.id.action_running_apps:
                 Intent runningAppsIntent = new Intent(this, RunningAppsActivity.class);
                 startActivity(runningAppsIntent);
+                return true;
+            case R.id.action_sys_config:
+                Intent sysConfigIntent = new Intent(this, SysConfigActivity.class);
+                startActivity(sysConfigIntent);
                 return true;
             case R.id.action_profiles:
                 Intent profilesIntent = new Intent(this, ProfilesActivity.class);

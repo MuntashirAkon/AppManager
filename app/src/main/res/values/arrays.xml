@@ -81,4 +81,38 @@
         <item>@string/backup_multiple</item>
         <item>@string/declared_permission</item>
     </string-array>
+    <string-array name="sys_config_names">
+        <!-- Must be aligned with SysConfigType -->
+        <item>group</item>
+        <item>permission</item>
+        <item>assign-permission</item>
+        <item>split-permission</item>
+        <item>library</item>
+        <item>feature</item>
+        <item>unavailable-feature</item>
+        <item>allow-in-power-save-except-idle</item>
+        <item>allow-in-power-save</item>
+        <item>allow-in-data-usage-save</item>
+        <item>allow-unthrottled-location</item>
+        <item>allow-ignore-location-settings</item>
+        <item>allow-implicit-broadcast</item>
+        <item>app-link</item>
+        <item>system-user-whitelisted-app</item>
+        <item>system-user-blacklisted-app</item>
+        <item>default-enabled-vr-app</item>
+        <item>component-override</item>
+        <item>backup-transport-whitelisted-service</item>
+        <item>disabled-until-used-preinstalled-carrier-associated-app</item>
+        <item>disabled-until-used-preinstalled-carrier-app</item>
+        <item>privapp-permissions</item>
+        <item>oem-permissions</item>
+        <item>hidden-api-whitelisted-app</item>
+        <item>allow-association</item>
+        <item>app-data-isolation-whitelisted-app</item>
+        <item>bugreport-whitelisted</item>
+        <item>install-in-user-type</item>
+        <item>named-actor</item>
+        <item>rollback-whitelisted-app</item>
+        <item>whitelisted-staged-installer</item>
+    </string-array>
 </resources>

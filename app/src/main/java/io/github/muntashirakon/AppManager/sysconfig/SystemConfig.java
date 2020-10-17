@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager.misc;
+package io.github.muntashirakon.AppManager.sysconfig;
 
 import android.content.ComponentName;
 import android.content.pm.FeatureInfo;
@@ -42,6 +42,8 @@ import java.util.Set;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.misc.SystemProperties;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
@@ -54,7 +56,6 @@ import io.github.muntashirakon.AppManager.utils.XmlUtils;
  * accessed by the system_server process.
  */
 // Source: https://cs.android.com/android/_/android/platform/frameworks/base/+/9c0d523bc0b1ac3ebba92acb7e5d9675aff08aef:core/java/com/android/server/SystemConfig.java;l=36;bpv=1;bpt=0;drc=1172ffa7c261a499132fb59e18c2f972b1f57f45
-@SuppressWarnings("unused")
 public class SystemConfig {
     static final String TAG = "SystemConfig";
 
@@ -689,13 +690,13 @@ public class SystemConfig {
                     break;
                 }
 
-                String name = parser.getName();
+                @SysConfigType String name = parser.getName();
                 if (name == null) {
                     XmlUtils.skipCurrentTag(parser);
                     continue;
                 }
                 switch (name) {
-                    case "group": {
+                    case SysConfigType.TYPE_GROUP: {
                         if (allowAll) {
                             String gidStr = parser.getAttributeValue(null, "gid");
                             if (gidStr != null) {
@@ -711,7 +712,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "permission": {
+                    case SysConfigType.TYPE_PERMISSION: {
                         if (allowPermissions) {
                             String perm = parser.getAttributeValue(null, "name");
                             if (perm == null) {

@@ -135,6 +135,11 @@
         android:title="@string/running_apps" />
 
     <item
+        android:id="@+id/action_sys_config"
+        android:icon="@drawable/ic_tune_black_24dp"
+        android:title="@string/sys_config" />
+
+    <item
         android:id="@+id/action_profiles"
         android:icon="@drawable/ic_view_list_black_24dp"
         android:title="@string/profiles" />
