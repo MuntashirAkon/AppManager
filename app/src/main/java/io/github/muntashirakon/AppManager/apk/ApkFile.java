@@ -467,7 +467,7 @@ public final class ApkFile implements AutoCloseable {
          * Name of the file, for split apk, name of the split instead
          */
         @NonNull
-        public String name;
+        public final String name;
         @ApkType
         public final int type;
         @Nullable
@@ -503,10 +503,10 @@ public final class ApkFile implements AutoCloseable {
         }
 
         Entry(@NonNull String name, @NonNull ZipEntry zipEntry, @ApkType int type, @NonNull HashMap<String, String> manifest) {
-            this.name = name;
             this.zipEntry = zipEntry;
             this.manifest = manifest;
             if (type == APK_BASE) {
+                this.name = name;
                 this.selected = this.required = true;
                 this.isolated = false;
                 this.type = APK_BASE;
@@ -556,6 +556,7 @@ public final class ApkFile implements AutoCloseable {
                     } else this.type = APK_SPLIT_UNKNOWN;
                 }
             } else {
+                this.name = name;
                 this.type = APK_SPLIT_UNKNOWN;
                 this.required = this.isolated = false;
             }
@@ -638,6 +639,7 @@ public final class ApkFile implements AutoCloseable {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
+            if (o instanceof String) return name.equals(o);
             if (!(o instanceof Entry)) return false;
             Entry entry = (Entry) o;
             return name.equals(entry.name);
