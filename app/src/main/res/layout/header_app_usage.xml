@@ -29,10 +29,7 @@
         android:layout_height="30dp"
         android:layout_gravity="center"
         android:layout_margin="@dimen/padding_large"
-        android:background="@drawable/spinner_rounded_border"
-        android:gravity="center"
-        android:paddingStart="@dimen/padding_small"
-        android:paddingEnd="@dimen/padding_large" />
+        style="@style/AppTheme.Spinner" />
 
     <TextView
         android:id="@+id/time_used"
