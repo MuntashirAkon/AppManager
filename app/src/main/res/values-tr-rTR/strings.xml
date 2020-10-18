@@ -648,4 +648,5 @@
     <string name="onboard">Yerleşik</string>
     <string name="packages">paketler</string>
     <string name="usage_access_not_supported">İlgili ayarlar sayfası olmadığı için kullanım erişimi istenemedi.</string>
+    <string name="sys_config">Sistem Yapılandırması</string>
 </resources>
