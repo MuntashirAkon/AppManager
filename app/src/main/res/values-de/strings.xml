@@ -649,4 +649,5 @@
     <string name="onboard">auf</string>
     <string name="packages">Pakete</string>
     <string name="usage_access_not_supported">Konnte keinen Nutzungszugriff anfordern, da die entsprechende Einstellungsseite nicht existiert.</string>
+    <string name="sys_config">Systemkonfiguration</string>
 </resources>
