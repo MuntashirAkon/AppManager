@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="disclaimer_header">अस्वीकरण</string>
+    <string name="disclaimer_exit">निकास</string>
+    <string name="disclaimer_agree">मैं सहमत हूँ</string>
+    <string name="disclaimer_agree_forever">यह फिर से न दिखाएँ</string>
+</resources>
