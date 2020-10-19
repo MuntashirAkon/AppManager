@@ -615,4 +615,5 @@
     <string name="usage_access_not_supported">无法请求使用情况访问权限，因为相应的设置页不存在。</string>
     <string name="onboard">内置</string>
     <string name="navigation_trackball">轨迹球</string>
+    <string name="sys_config">系统配置</string>
 </resources>
