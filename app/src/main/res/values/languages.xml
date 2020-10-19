@@ -20,8 +20,9 @@
     <string-array name="languages">
         <item>@string/auto</item>
         <item>বাংলা</item>
-        <item>English</item>
         <item>Deutsch</item>
+        <item>English</item>
+        <item>हिंदी</item>
         <item>Norsk (bokmål)</item>
         <item>Polski</item>
         <item>Português</item>
@@ -33,8 +34,9 @@
     <string-array name="languages_key">
         <item>auto</item>
         <item>bn-BD</item>
-        <item>en</item>
         <item>de</item>
+        <item>en</item>
+        <item>hi</item>
         <item>nb-NO</item>
         <item>pl</item>
         <item>pt</item>
