@@ -403,4 +403,8 @@
         <item quantity="other">%s %d dni</item>
     </plurals>
     <string name="all_classes">Wszystkie klasy</string>
+    <string name="expired">Wygasły</string>
+    <string name="valid">Ważny</string>
+    <string name="expiry_date">Data ważności</string>
+    <string name="issued_date">Data wydania</string>
 </resources>
