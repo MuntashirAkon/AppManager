@@ -244,6 +244,7 @@ public class BackupDialogFragment extends DialogFragment {
                         userHandle = metadata[i].userHandle;
                         if (backupName == null && userHandle == currentUserHandle) {
                             choice = i;
+                            selectedItem.set(i);
                         }
                         readableBackupNames[i] = backupName == null ? "Base backup for user " + userHandle : backupName + " for user " + userHandle;
                     }
