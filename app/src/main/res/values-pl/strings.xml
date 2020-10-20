@@ -407,4 +407,7 @@
     <string name="valid">Ważny</string>
     <string name="expiry_date">Data ważności</string>
     <string name="issued_date">Data wydania</string>
+    <string name="no_content">Brak zawartości</string>
+    <string name="no_usage_in_this_time_range">Brak użycia w tym zakresie czasowym</string>
+    <string name="key_name_cannot_be_null">Nazwa klucza nie może być pusta</string>
 </resources>
