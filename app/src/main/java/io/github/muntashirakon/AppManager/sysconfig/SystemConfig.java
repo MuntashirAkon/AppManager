@@ -311,8 +311,8 @@ public class SystemConfig {
     private final Set<String> mAppDataIsolationWhitelistedApps = new HashSet<>();
 
     // Map of packagesNames to userTypes. Stored temporarily until cleared by UserManagerService().
-    private ArrayMap<String, Set<String>> mPackageToUserTypeWhitelist = new ArrayMap<>();
-    private ArrayMap<String, Set<String>> mPackageToUserTypeBlacklist = new ArrayMap<>();
+    ArrayMap<String, Set<String>> mPackageToUserTypeWhitelist = new ArrayMap<>();
+    ArrayMap<String, Set<String>> mPackageToUserTypeBlacklist = new ArrayMap<>();
 
     private final Set<String> mRollbackWhitelistedPackages = new HashSet<>();
     private final Set<String> mWhitelistedStagedInstallers = new HashSet<>();
@@ -321,7 +321,7 @@ public class SystemConfig {
      * Map of system pre-defined, uniquely named actors; keys are namespace,
      * value maps actor name to package name.
      */
-    private Map<String, Map<String, String>> mNamedActors = null;
+    private ArrayMap<String, ArrayMap<String, String>> mNamedActors = new ArrayMap<>();
 
     public static SystemConfig getInstance() {
         synchronized (SystemConfig.class) {
@@ -511,8 +511,8 @@ public class SystemConfig {
     }
 
     @NonNull
-    public Map<String, Map<String, String>> getNamedActors() {
-        return mNamedActors != null ? mNamedActors : Collections.emptyMap();
+    public ArrayMap<String, ArrayMap<String, String>> getNamedActors() {
+        return mNamedActors;
     }
 
     /**
@@ -729,7 +729,7 @@ public class SystemConfig {
                         }
                     }
                     break;
-                    case "assign-permission": {
+                    case SysConfigType.TYPE_ASSIGN_PERMISSION: {
                         if (allowPermissions) {
                             String perm = parser.getAttributeValue(null, "name");
                             if (perm == null) {
@@ -766,7 +766,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "split-permission": {
+                    case SysConfigType.TYPE_SPLIT_PERMISSION: {
                         if (allowPermissions) {
                             readSplitPermission(parser, permFile);
                         } else {
@@ -775,7 +775,7 @@ public class SystemConfig {
                         }
                     }
                     break;
-                    case "library": {
+                    case SysConfigType.TYPE_LIBRARY: {
                         if (allowLibs) {
                             String lname = parser.getAttributeValue(null, "name");
                             String lfile = parser.getAttributeValue(null, "file");
@@ -798,16 +798,16 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "feature": {
+                    case SysConfigType.TYPE_FEATURE: {
                         if (allowFeatures) {
                             String fname = parser.getAttributeValue(null, "name");
                             int fversion = XmlUtils.readIntAttribute(parser, "version", 0);
-                            boolean allowed;
+                            boolean allowed = true;  // FIXME
 //                            if (!lowRam) {
 //                                allowed = true;
 //                            } else {
-                            String notLowRam = parser.getAttributeValue(null, "notLowRam");
-                            allowed = !"true".equals(notLowRam);
+//                            String notLowRam = parser.getAttributeValue(null, "notLowRam");
+//                            allowed = !"true".equals(notLowRam);
 //                            }
                             if (fname == null) {
                                 Log.w(TAG, "<" + name + "> without name in " + permFile + " at "
@@ -821,7 +821,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "unavailable-feature": {
+                    case SysConfigType.TYPE_UNAVAILABLE_FEATURE: {
                         if (allowFeatures) {
                             String fname = parser.getAttributeValue(null, "name");
                             if (fname == null) {
@@ -836,7 +836,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "allow-in-power-save-except-idle": {
+                    case SysConfigType.TYPE_ALLOW_IN_POWER_SAVE_EXCEPT_IDLE: {
                         if (allowAll) {
                             String pkgname = parser.getAttributeValue(null, "package");
                             if (pkgname == null) {
@@ -851,7 +851,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "allow-in-power-save": {
+                    case SysConfigType.TYPE_ALLOW_IN_POWER_SAVE: {
                         if (allowAll) {
                             String pkgname = parser.getAttributeValue(null, "package");
                             if (pkgname == null) {
@@ -866,7 +866,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "allow-in-data-usage-save": {
+                    case SysConfigType.TYPE_ALLOW_IN_DATA_USAGE_SAVE: {
                         if (allowAll) {
                             String pkgname = parser.getAttributeValue(null, "package");
                             if (pkgname == null) {
@@ -881,7 +881,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "allow-unthrottled-location": {
+                    case SysConfigType.TYPE_ALLOW_UNTHROTTLED_LOCATION: {
                         if (allowAll) {
                             String pkgname = parser.getAttributeValue(null, "package");
                             if (pkgname == null) {
@@ -896,7 +896,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "allow-ignore-location-settings": {
+                    case SysConfigType.TYPE_ALLOW_IGNORE_LOCATION_SETTINGS: {
                         if (allowAll) {
                             String pkgname = parser.getAttributeValue(null, "package");
                             if (pkgname == null) {
@@ -911,7 +911,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "allow-implicit-broadcast": {
+                    case SysConfigType.TYPE_ALLOW_IMPLICIT_BROADCAST: {
                         if (allowAll) {
                             String action = parser.getAttributeValue(null, "action");
                             if (action == null) {
@@ -926,7 +926,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "app-link": {
+                    case SysConfigType.TYPE_APP_LINK: {
                         if (allowAppConfigs) {
                             String pkgname = parser.getAttributeValue(null, "package");
                             if (pkgname == null) {
@@ -941,7 +941,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "system-user-whitelisted-app": {
+                    case SysConfigType.TYPE_SYSTEM_USER_WHITELISTED_APP: {
                         if (allowAppConfigs) {
                             String pkgname = parser.getAttributeValue(null, "package");
                             if (pkgname == null) {
@@ -956,7 +956,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "system-user-blacklisted-app": {
+                    case SysConfigType.TYPE_SYSTEM_USER_BLACKLISTED_APP: {
                         if (allowAppConfigs) {
                             String pkgname = parser.getAttributeValue(null, "package");
                             if (pkgname == null) {
@@ -971,7 +971,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "default-enabled-vr-app": {
+                    case SysConfigType.TYPE_DEFAULT_ENABLED_VR_APP: {
                         if (allowAppConfigs) {
                             String pkgname = parser.getAttributeValue(null, "package");
                             String clsname = parser.getAttributeValue(null, "class");
@@ -990,11 +990,11 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "component-override": {
+                    case SysConfigType.TYPE_COMPONENT_OVERRIDE: {
                         readComponentOverrides(parser, permFile);
                     }
                     break;
-                    case "backup-transport-whitelisted-service": {
+                    case SysConfigType.TYPE_BACKUP_TRANSPORT_WHITELISTED_SERVICE: {
                         if (allowFeatures) {
                             String serviceName = parser.getAttributeValue(null, "service");
                             if (serviceName == null) {
@@ -1016,7 +1016,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "disabled-until-used-preinstalled-carrier-associated-app": {
+                    case SysConfigType.TYPE_DISABLED_UNTIL_USED_PREINSTALLED_CARRIER_ASSOCIATED_APP: {
                         if (allowAppConfigs) {
                             String pkgname = parser.getAttributeValue(null, "package");
                             String carrierPkgname = parser.getAttributeValue(null,
@@ -1059,7 +1059,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "disabled-until-used-preinstalled-carrier-app": {
+                    case SysConfigType.TYPE_DISABLED_UNTIL_USED_PREINSTALLED_CARRIER_APP: {
                         if (allowAppConfigs) {
                             String pkgname = parser.getAttributeValue(null, "package");
                             if (pkgname == null) {
@@ -1076,7 +1076,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "privapp-permissions": {
+                    case SysConfigType.TYPE_PRIVAPP_PERMISSIONS: {
                         if (allowPrivappPermissions) {
                             // privapp permissions from system, vendor, product and system_ext
                             // partitions are stored separately. This is to prevent xml files in
@@ -1109,7 +1109,7 @@ public class SystemConfig {
                         }
                     }
                     break;
-                    case "oem-permissions": {
+                    case SysConfigType.TYPE_OEM_PERMISSIONS: {
                         if (allowOemPermissions) {
                             readOemPermissions(parser);
                         } else {
@@ -1118,7 +1118,7 @@ public class SystemConfig {
                         }
                     }
                     break;
-                    case "hidden-api-whitelisted-app": {
+                    case SysConfigType.TYPE_HIDDEN_API_WHITELISTED_APP: {
                         if (allowApiWhitelisting) {
                             String pkgname = parser.getAttributeValue(null, "package");
                             if (pkgname == null) {
@@ -1133,7 +1133,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "allow-association": {
+                    case SysConfigType.TYPE_ALLOW_ASSOCIATION: {
                         if (allowAssociations) {
                             String target = parser.getAttributeValue(null, "target");
                             if (target == null) {
@@ -1164,7 +1164,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "app-data-isolation-whitelisted-app": {
+                    case SysConfigType.TYPE_APP_DATA_ISOLATION_WHITELISTED_APP: {
                         String pkgname = parser.getAttributeValue(null, "package");
                         if (pkgname == null) {
                             Log.w(TAG, "<" + name + "> without package in " + permFile
@@ -1175,7 +1175,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "bugreport-whitelisted": {
+                    case SysConfigType.TYPE_BUGREPORT_WHITELISTED: {
                         String pkgname = parser.getAttributeValue(null, "package");
                         if (pkgname == null) {
                             Log.w(TAG, "<" + name + "> without package in " + permFile
@@ -1186,13 +1186,13 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "install-in-user-type": {
+                    case SysConfigType.TYPE_INSTALL_IN_USER_TYPE: {
                         // NB: We allow any directory permission to declare install-in-user-type.
                         readInstallInUserType(parser,
                                 mPackageToUserTypeWhitelist, mPackageToUserTypeBlacklist);
                     }
                     break;
-                    case "named-actor": {
+                    case SysConfigType.TYPE_NAMED_ACTOR: {
                         String namespace = TextUtils.safeIntern(
                                 parser.getAttributeValue(null, "namespace"));
                         String actorName = parser.getAttributeValue(null, "name");
@@ -1211,11 +1211,7 @@ public class SystemConfig {
                             throw new IllegalStateException("Defining " + actorName + " as "
                                     + pkgName + " for the android namespace is not allowed");
                         } else {
-                            if (mNamedActors == null) {
-                                mNamedActors = new ArrayMap<>();
-                            }
-
-                            Map<String, String> nameToPkgMap = mNamedActors.get(namespace);
+                            ArrayMap<String, String> nameToPkgMap = mNamedActors.get(namespace);
                             if (nameToPkgMap == null) {
                                 nameToPkgMap = new ArrayMap<>();
                                 mNamedActors.put(namespace, nameToPkgMap);
@@ -1231,7 +1227,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "rollback-whitelisted-app": {
+                    case SysConfigType.TYPE_ROLLBACK_WHITELISTED_APP: {
                         String pkgname = parser.getAttributeValue(null, "package");
                         if (pkgname == null) {
                             Log.w(TAG, "<" + name + "> without package in " + permFile
@@ -1242,7 +1238,7 @@ public class SystemConfig {
                         XmlUtils.skipCurrentTag(parser);
                     }
                     break;
-                    case "whitelisted-staged-installer": {
+                    case SysConfigType.TYPE_WHITELISTED_STAGED_INSTALLER: {
                         if (allowAppConfigs) {
                             String pkgname = parser.getAttributeValue(null, "package");
                             if (pkgname == null) {

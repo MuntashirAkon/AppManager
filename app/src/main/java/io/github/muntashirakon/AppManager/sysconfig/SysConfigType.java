@@ -62,7 +62,7 @@ import androidx.annotation.StringDef;
     String TYPE_ASSIGN_PERMISSION = "assign-permission";
     String TYPE_SPLIT_PERMISSION = "split-permission";
     String TYPE_LIBRARY = "library";
-    String TYPE_FEATURE = "feature";
+    String TYPE_FEATURE = "feature";  // available-feature
     String TYPE_UNAVAILABLE_FEATURE = "unavailable-feature";
     String TYPE_ALLOW_IN_POWER_SAVE_EXCEPT_IDLE = "allow-in-power-save-except-idle";
     String TYPE_ALLOW_IN_POWER_SAVE = "allow-in-power-save";
