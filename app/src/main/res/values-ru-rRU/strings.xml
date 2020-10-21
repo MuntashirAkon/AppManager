@@ -77,7 +77,7 @@
     <string name="system">Системные</string>
     <string name="user">Пользовательские</string>
     <string name="sort">Сортировка</string>
-    <string name="version_name_with_code">Версия %s (%d)</string>
+    <string name="version_name_with_code">Версия <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="app_info">О приложении</string>
     <string name="system_app">Системное</string>
     <string name="user_app">Пользовательское</string>
@@ -128,7 +128,8 @@
     <string name="view_trackers">Просмотр трекеров</string>
     <string name="view_summary">Просмотр сводки</string>
     <string name="toggle_class_listing">Переключить список классов</string>
-    <string name="trackers_and_classes">%d трекеров с %d классами</string>
+    <string name="trackers_and_classes"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="tracker_no" example="5">%1$d</xliff:g> трекеров с 
+\n<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="class_no" example="50">%2$d</xliff:g> классами</string>
     <string name="tested_signatures_on_classes_and_time_taken">Протестировано <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="signature_no" example="342">%1$d</xliff:g> подписей на <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="class_no" example="6000">%2$d</xliff:g> классах.
 \nВыполнено за <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="time" example="10000">%3$d</xliff:g> мс. (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="iteration_no" example="100000">%4$d</xliff:g> итераций).</string>
     <string name="found_trackers">Найденные трекеры:</string>
@@ -169,7 +170,7 @@
         <item quantity="many">%d ч.</item>
         <item quantity="other">%d ч.</item>
     </plurals>
-    <string name="usage_min">%d мин.</string>
+    <string name="usage_min">%1$d мин</string>
     <string name="usage_less_than_a_minute">Меньше минуты</string>
     <string name="usage_last_used">Последний запуск:</string>
     <string name="go_back">Вернуться</string>
@@ -221,7 +222,7 @@
     <string name="no_content">Нет содержания</string>
     <string name="view_in_settings">Показать в настройках</string>
     <string name="uninstall_app_message">Вы хотите удалить это приложение?</string>
-    <string name="failed_to_uninstall">Не удалось удалить %s.</string>
+    <string name="failed_to_uninstall">Не удалось удалить <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="uninstalled_successfully"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> было удалено.</string>
     <string name="uninstall_system_app_message">Это системное приложение. Вы уверены, что хотите удалить его?</string>
     <string name="stopped">Остановлено</string>
@@ -253,7 +254,7 @@
     <string name="sort_by_disabled_app">Сначала отключенные</string>
     <string name="sort_by_blocked_components">Сначала заблокированные</string>
     <string name="external_data_dir">Внешний каталог данных</string>
-    <string name="external_multiple_data_dir">Внешний каталог данных %d</string>
+    <string name="external_multiple_data_dir">Внешний каталог данных <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="dir_no" example="1">%1$d</xliff:g></string>
     <plurals name="no_of_times_opened">
         <item quantity="one">%d раз</item>
         <item quantity="few">%d раза</item>
@@ -290,7 +291,7 @@
     <string name="backup_restore">Резервное копирование/восстановление</string>
     <string name="disable_background">Отключить фоновый режим</string>
     <string name="export_blocking_rules">Экспортировать правила блокировки</string>
-    <string name="some_items_selected">%d выбрано</string>
+    <string name="some_items_selected"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="selection_no" example="20">%1$d</xliff:g> выбрано</string>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">Не удалось очистить данные %d приложения</item>
         <item quantity="few">Не удалось очистить данные %d приложений</item>
@@ -352,7 +353,7 @@
     <string name="night">Темная тема</string>
     <string name="select_theme">Тема</string>
     <string name="apply">Применить</string>
-    <string name="current_theme">Текущая тема: %s</string>
+    <string name="current_theme">Текущая тема: %1$s</string>
     <string name="pref_about_msg">Версия App Manager, лицензия, авторы и т. д.</string>
     <string name="version">Версия</string>
     <string name="sort_by_wifi_data">Данные Wi-Fi</string>
@@ -433,8 +434,8 @@
     <string name="split_no">Часть#%1$d: %2$s</string>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">Не удалось получить информацию о пакете, возможно, это разделенный файл APK</string>
     <string name="termux">Termux</string>
-    <string name="package_name_is_installed_successfully">%s установлено</string>
-    <string name="failed_to_install_package_name">Не удалось установить %s</string>
+    <string name="package_name_is_installed_successfully"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> установлено</string>
+    <string name="failed_to_install_package_name">Не удалось установить <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="filter">Фильтр</string>
     <string name="filter_user_apps">Пользовательские приложения</string>
     <string name="filter_system_apps">Системные приложения</string>
@@ -523,7 +524,7 @@
     <string name="toggle_default_app_ops">Переключение операций приложения по умолчанию</string>
     <string name="installer_error_aborted">Установка не удалась, потому что либо она была отменена, либо сеанс неожиданно закрылся</string>
     <string name="installer_error_blocked_device">устройством</string>
-    <string name="installer_error_blocked">Установка заблокирована %s</string>
+    <string name="installer_error_blocked">Установка заблокирована <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="installer_error_conflict">Невозможно установить приложение, потому что установленное приложение уже имеет это имя пакета</string>
     <string name="installer_error_incompatible">Приложение несовместимо с этим устройством</string>
     <string name="installer_error_bad_apks">Выбраны недопустимые файлы APK</string>
@@ -556,7 +557,7 @@
     <string name="backup_all_users">Все пользователи</string>
     <string name="pref_app_language">Язык</string>
     <string name="auto">Авто</string>
-    <string name="current_language">Язык: %s</string>
+    <string name="current_language">Язык: %1$s</string>
     <string name="choose_language">Изменить язык</string>
     <string name="launch_mode_single_top">Единственный сверху</string>
     <string name="touchscreen_finger">Палец</string>
@@ -598,7 +599,7 @@
     <string name="density_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="dpi_no" example="480">%2$d</xliff:g> DPI) ресурсы для функции <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%3$s</xliff:g></string>
     <string name="unknown_split_for_base_apk"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="some_split">%1$s</xliff:g> для базового APK</string>
     <string name="unknown_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="some_split">%1$s</xliff:g> для функции <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%2$s</xliff:g></string>
-    <string name="split_feature_name">Функции: %s</string>
+    <string name="split_feature_name">Функции: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <string name="base_apk">Базовый APK</string>
     <plurals name="alert_failed_to_enable">
         <item quantity="one">Не удалось включить %s приложение</item>
@@ -615,7 +616,7 @@
     <string name="downgrade_not_possible">Понижение версии невозможно без root или ADB</string>
     <string name="downgrade">Понизить</string>
     <string name="process_state_with_extra">Состояние: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="state_extra" example="High priority">%2$s</xliff:g>)</string>
-    <string name="process_state">Состояние: %s</string>
+    <string name="process_state">Состояние: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <string name="state_multithreaded">Многопоточный</string>
     <string name="state_unknown">Неизвестный</string>
     <string name="state_idle">Простой</string>
@@ -649,7 +650,7 @@
     <string name="rules">Правила</string>
     <string name="pref_compression_method">Метод сжатия</string>
     <string name="pref_backup_flags_msg">Добавление предустановки для параметров резервного копирования избавляет от необходимости выбора флагов при каждом резервном копировании/восстановлении</string>
-    <string name="compression_method">Метод сжатия: %s</string>
+    <string name="compression_method">Метод сжатия: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="state_trace_stop">Остановить отслеживание</string>
     <string name="confirm_installation">Подтвердить установку</string>
     <string name="allow_open_pgp_operation">Щёлкните, чтобы разрешить AM использовать OpenPGP</string>
@@ -684,4 +685,9 @@
     <string name="onboard">Доступные</string>
     <string name="packages">пакеты</string>
     <string name="state_session_leader">Лидер сессии</string>
+    <string name="sys_config">Конфигурация системы</string>
+    <string name="rsa_modulus">Модуль</string>
+    <string name="rsa_exponent">Экспонента</string>
+    <string name="issuer">Издатель</string>
+    <string name="subject">Тема</string>
 </resources>
