@@ -931,24 +931,24 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (getPackageInfo() == null || usesPermissions == null) return;
         if (usesPermissionItems == null) {
             usesPermissionItems = new CopyOnWriteArrayList<>();
-            if (packageInfo.requestedPermissions == null) {
-                // No requested permissions
-                usesPermissions.postValue(new ArrayList<>());
-                return;
-            }
-            for (int i = 0; i < packageInfo.requestedPermissions.length; ++i) {
-                try {
-                    PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(
-                            packageInfo.requestedPermissions[i], PackageManager.GET_META_DATA);
-                    AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionInfo);
-                    appDetailsItem.name = packageInfo.requestedPermissions[i];
-                    appDetailsItem.flags = packageInfo.requestedPermissionsFlags[i];
-                    int basePermissionType = PackageUtils.getBasePermissionType(permissionInfo);
-                    appDetailsItem.isDangerous = basePermissionType == PermissionInfo.PROTECTION_DANGEROUS;
-                    appDetailsItem.isGranted = (appDetailsItem.flags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
-                    usesPermissionItems.add(appDetailsItem);
-                } catch (PackageManager.NameNotFoundException ignore) {
-                }
+        } else usesPermissionItems.clear();
+        if (packageInfo.requestedPermissions == null) {
+            // No requested permissions
+            usesPermissions.postValue(new ArrayList<>());
+            return;
+        }
+        for (int i = 0; i < packageInfo.requestedPermissions.length; ++i) {
+            try {
+                PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(
+                        packageInfo.requestedPermissions[i], PackageManager.GET_META_DATA);
+                AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionInfo);
+                appDetailsItem.name = packageInfo.requestedPermissions[i];
+                appDetailsItem.flags = packageInfo.requestedPermissionsFlags[i];
+                int basePermissionType = PackageUtils.getBasePermissionType(permissionInfo);
+                appDetailsItem.isDangerous = basePermissionType == PermissionInfo.PROTECTION_DANGEROUS;
+                appDetailsItem.isGranted = (appDetailsItem.flags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
+                usesPermissionItems.add(appDetailsItem);
+            } catch (PackageManager.NameNotFoundException ignore) {
             }
         }
         // Filter items
