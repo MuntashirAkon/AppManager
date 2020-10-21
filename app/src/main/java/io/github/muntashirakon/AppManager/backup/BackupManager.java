@@ -46,6 +46,7 @@ import androidx.annotation.Nullable;
 import dalvik.system.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerShell;
+import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -56,10 +57,13 @@ import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.server.common.OpEntry;
+import io.github.muntashirakon.AppManager.server.common.PackageOps;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.FreshFile;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -415,14 +419,20 @@ public class BackupManager {
 
         private void backupPermissions() throws BackupException {
             File permsFile = backupFile.getPermsFile(CryptoUtils.MODE_NO_ENCRYPTION);
-            String[] permissions = packageInfo.requestedPermissions;
+            @NonNull String[] permissions = ArrayUtils.defeatNullable(packageInfo.requestedPermissions);
             int[] permissionFlags = packageInfo.requestedPermissionsFlags;
-            if (permissions == null) return;
             PackageManager pm = AppManager.getContext().getPackageManager();
+            List<OpEntry> opEntries = new ArrayList<>();
+            try {
+                List<PackageOps> packageOpsList = new AppOpsService().getOpsForPackage(-1, packageName, null);
+                if (packageOpsList.size() == 1) opEntries.addAll(packageOpsList.get(0).getOps());
+            } catch (Exception ignore) {
+            }
             PermissionInfo info;
             int basePermissionType;
             int protectionLevels;
             try (OutputStream outputStream = new FileOutputStream(permsFile)) {
+                // Backup permissions
                 for (int i = 0; i < permissions.length; ++i) {
                     try {
                         info = pm.getPermissionInfo(permissions[i], 0);
@@ -438,6 +448,10 @@ public class BackupManager {
                                         & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0).getBytes());
                     } catch (PackageManager.NameNotFoundException ignore) {
                     }
+                }
+                // Backup app ops
+                for (OpEntry entry : opEntries) {
+                    outputStream.write(String.format("%s\t%s\t%s\t%s\n", packageName, entry.getOp(), RulesStorageManager.Type.APP_OP, entry.getMode()).getBytes());
                 }
             } catch (IOException e) {
                 throw new BackupException("Error during creating permission file.", e);
