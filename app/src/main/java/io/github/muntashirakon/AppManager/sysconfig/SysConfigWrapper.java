@@ -294,7 +294,7 @@ class SysConfigWrapper {
                 ArrayMap<String, Set<String>> associations = config.getAllowedAssociations();
                 for (int i = 0; i < associations.size(); ++i) {
                     SysConfigInfo info = new SysConfigInfo(SysConfigType.TYPE_ALLOW_ASSOCIATION, associations.keyAt(i), true);
-                    info.associations = associations.valueAt(i).toArray(new String[0]);
+                    info.packages = associations.valueAt(i).toArray(new String[0]);
                     list.add(info);
                 }
             }
