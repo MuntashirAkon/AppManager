@@ -77,7 +77,7 @@
     <string name="system">System</string>
     <string name="user">Nutzer</string>
     <string name="sort">Sortieren</string>
-    <string name="version_name_with_code">Version %s (%d)</string>
+    <string name="version_name_with_code">Version <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="app_info">App-Informationen</string>
     <string name="system_app">System-Anwendung</string>
     <string name="user_app">Benutzer-Anwendung</string>
@@ -98,7 +98,7 @@
     <string name="instructions">Anleitungen</string>
     <string name="error_creating_shortcut">Konnte Verknüpfung nicht erstellen</string>
     <string name="error_verbose_pin_shortcut">Der aktuelle Launcher unterstützt PinShortcut nicht. Konnte Verknüpfung nicht erstellen.</string>
-    <string name="starting_activity">Starte Activity: %s</string>
+    <string name="starting_activity">Starte Aktivität: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="create_shortcut">Verknüpfung erstellen</string>
     <string name="edit_shortcut">Verknüpfung bearbeiten</string>
     <string name="shortcut_name">Name der Verknüpfung</string>
@@ -128,15 +128,16 @@
     <string name="view_trackers">Verfolger ansehen</string>
     <string name="view_summary">Zusammenfassung ansehen</string>
     <string name="toggle_class_listing">Auflisten von Klassen ein-/ausschalten</string>
-    <string name="trackers_and_classes">%d Verfolger und %d Klassen</string>
-    <string name="tested_signatures_on_classes_and_time_taken">%d Signaturen von%d Klassen getestet.\nDauer: %d ms (%d Durchläufe).</string>
+    <string name="trackers_and_classes"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="tracker_no" example="5">%1$d</xliff:g> trackers with <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="class_no" example="50">%2$d</xliff:g> Klassen</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Getestete <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="signature_no" example="342">%1$d</xliff:g> Signaturen von <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="class_no" example="6000">%2$d</xliff:g> Klassen.
+\nDauer: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="time" example="10000">%3$d</xliff:g> ms (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="iteration_no" example="100000">%4$d</xliff:g> Durchläufe).</string>
     <string name="found_trackers">Gefundene Verfolger:</string>
     <string name="tracker_details">Verfolger-Details</string>
     <string name="tracker_classes">Verfolger-Klassen</string>
     <string name="all_classes">Alle Klassen</string>
     <plurals name="main_list_date_days">
-        <item quantity="one">%s %d Tag</item>
-        <item quantity="other">%s %d Tage</item>
+        <item quantity="one"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="day_no" example="5">%2$d</xliff:g> Tag</item>
+        <item quantity="other"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="day_no" example="5">%2$d</xliff:g> Tage</item>
     </plurals>
     <string name="no_shared_libs">Keine geteilten Bibliotheken</string>
     <string name="no_tracker_class">Keine Verfolger-Klassen</string>
@@ -149,18 +150,18 @@
     <string name="usage_30_days">Letzte 30 Tage</string>
     <string name="usage_365_days">Letzte 365 Tage</string>
     <plurals name="usage_months">
-        <item quantity="one">%d Mt</item>
-        <item quantity="other">%d Mte</item>
+        <item quantity="one">%1$d Mt</item>
+        <item quantity="other">%1$d Mte</item>
     </plurals>
     <plurals name="usage_days">
-        <item quantity="one">%d Tag</item>
-        <item quantity="other">%d Tage</item>
+        <item quantity="one">%1$d Tag</item>
+        <item quantity="other">%1$d Tage</item>
     </plurals>
     <plurals name="usage_hours">
-        <item quantity="one">%d Std.</item>
-        <item quantity="other">%d Stdn.</item>
+        <item quantity="one">%1$d Std</item>
+        <item quantity="other">%1$d Stde</item>
     </plurals>
-    <string name="usage_min">%d min</string>
+    <string name="usage_min">%1$d min</string>
     <string name="usage_less_than_a_minute">Weniger als eine Minute</string>
     <string name="usage_last_used">Zuletzt verwendet:</string>
     <string name="go_back">Zurück</string>
@@ -212,16 +213,16 @@
     <string name="no_content">Keine Inhalte</string>
     <string name="view_in_settings">In Einstellungen öffnen</string>
     <string name="uninstall_app_message">Möchtest Du diese Anwendung deinstallieren?</string>
-    <string name="failed_to_uninstall">Konnte %s nicht deinstallieren.</string>
-    <string name="uninstalled_successfully">%s wurde deinstalliert.</string>
+    <string name="failed_to_uninstall">Konnte <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> nicht deinstallieren.</string>
+    <string name="uninstalled_successfully"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> wurde deinstalliert.</string>
     <string name="uninstall_system_app_message">Dies ist eine Systemanwendung. Möchtest Du sie wirklich deinstallieren?</string>
     <string name="stopped">Beendet</string>
     <string name="disable">Deaktivieren</string>
     <string name="enable">Aktivieren</string>
-    <string name="failed_to_disable">%s konnte nicht deaktiviert werden.</string>
-    <string name="failed_to_enable">%s konnte nicht aktiviert werden.</string>
+    <string name="failed_to_disable"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> konnte nicht deaktiviert werden..</string>
+    <string name="failed_to_enable"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> konnte nicht aktiviert werden.</string>
     <string name="force_stop">Erzwungener Stopp</string>
-    <string name="failed_to_stop">Konnte %s nicht beenden.</string>
+    <string name="failed_to_stop">Konnte <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> nicht beenden.</string>
     <string name="storage_and_cache">Speicher und Cache</string>
     <string name="total_size">Insgesamt</string>
     <string name="app_size">Anwendung</string>
@@ -244,10 +245,10 @@
     <string name="sort_by_disabled_app">Deaktivierte zuerst</string>
     <string name="sort_by_blocked_components">Blockierte zuerst</string>
     <string name="external_data_dir">Externes Daten-Verzeichnis</string>
-    <string name="external_multiple_data_dir">Externes Daten-Verzeichnis %d</string>
+    <string name="external_multiple_data_dir">Externes Daten-Verzeichnis <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="dir_no" example="1">%1$d</xliff:g></string>
     <plurals name="no_of_times_opened">
-        <item quantity="one">%d mal</item>
-        <item quantity="other">%d mal</item>
+        <item quantity="one">%1$d mal</item>
+        <item quantity="other">%1$d mal</item>
     </plurals>
     <string name="sort_by_last_used">Zuletzt verwendet</string>
     <string name="sort_by_screen_time">Zeit im Vordergrund</string>
@@ -260,8 +261,8 @@
     <string name="the_import_was_successful">Importiert</string>
     <string name="the_export_was_successful">Exportiert</string>
     <plurals name="failed_to_import_files">
-        <item quantity="one">%d Datei konnte nicht importiert werden.</item>
-        <item quantity="other">%d Dateien konnten nicht importiert werden.</item>
+        <item quantity="one">%1$d Datei konnte nicht importiert werden.</item>
+        <item quantity="other">%1$d Dateien konnten nicht importiert werden.</item>
     </plurals>
     <string name="apk_updater">APK-Aktualisierung</string>
     <string name="store">Store</string>
@@ -269,35 +270,35 @@
     <string name="no_running_apps">Keine laufenden Anwendungen</string>
     <string name="kill_process">Beenden erzwingen</string>
     <string name="disable_background_run">Ausführung im Hintergrund deaktivieren</string>
-    <string name="pid_and_ppid">Prozess-ID: %d, ID des übergeordneten Prozesses: %d</string>
-    <string name="memory_virtual_memory">RAM: %s, virtueller RAM: %s</string>
-    <string name="user_and_uid">Benutzer: %s (%d)</string>
+    <string name="pid_and_ppid">Prozess-ID: %1$d, ID des übergeordneten Prozesses: %2$d</string>
+    <string name="memory_virtual_memory">RAM: %1$s, virtueller RAM: %2$s</string>
+    <string name="user_and_uid">Benutzer: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="user_name" example="root">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="clear_data">Daten löschen</string>
     <string name="backup_apk">APK kopieren</string>
     <string name="backup_restore">Sichern/Wiederherstellen</string>
     <string name="disable_background">Hinterausführung deaktivieren</string>
     <string name="export_blocking_rules">Blockierregeln exportieren</string>
-    <string name="some_items_selected">%d ausgewählt</string>
+    <string name="some_items_selected"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="selection_no" example="20">%1$d</xliff:g> ausgewählt</string>
     <plurals name="alert_failed_to_clear_data">
-        <item quantity="one">Löschen der Daten von %d Anwendung nicht möglich</item>
-        <item quantity="other">Löschen der Daten von %d Anwendungen nicht mglich</item>
+        <item quantity="one">Löschen der Daten von %1$d Anwendung nicht möglich</item>
+        <item quantity="other">Löschen der Daten von %1$d Anwendungen nicht möglich</item>
     </plurals>
     <plurals name="alert_failed_to_disable">
-        <item quantity="one">Deaktivieren von %d Anwendung nicht möglich</item>
-        <item quantity="other">Deaktivieren von %d Anwendungen nicht möglich</item>
+        <item quantity="one">Deaktivieren von %1$d Anwendung nicht möglich</item>
+        <item quantity="other">Deaktivieren von %1$d Anwendungen nicht möglich</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
-        <item quantity="one">Deinstallieren von %d Anwendung nicht möglich</item>
-        <item quantity="other">Deinstallieren von %d Anwendungen nicht möglich</item>
+        <item quantity="one">Deinstallieren von %1$d Anwendung nicht möglich</item>
+        <item quantity="other">Deinstallieren von %1$d Anwendungen nicht möglich</item>
     </plurals>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">Konnte die Hintergrundausführung von %d Anwendung nicht verhindern</item>
-        <item quantity="other">Konnte die Hintergrundausführung von %d Anwendungen nicht verhindern</item>
+        <item quantity="one">Konnte die Hintergrundausführung von %1$d Anwendung nicht verhindern</item>
+        <item quantity="other">Konnte die Hintergrundausführung von %1$d Anwendungen nicht verhindern</item>
     </plurals>
     <string name="the_operation_was_successful">Erledigt</string>
     <plurals name="alert_failed_to_force_stop">
-        <item quantity="one">Beenden erzwingen von %d Anwendung nicht möglich</item>
-        <item quantity="other">Beenden erzwingen von %d Anwendungen nicht möglich</item>
+        <item quantity="one">"Forcierte Beenden  von %1$d Anwendung nicht möglich"</item>
+        <item quantity="other">Forcierte Beenden von %1$d Anwendungen nicht möglich</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">„Beenden erzwingen“ für System-Anwendungen ein- oder ausschalten</string>
     <string name="app_op_cannot_be_enabled">Dieser App Op kann nicht aktiviert werden, unter Umständen weil ein nicht-beschreibbarer App Op von einem anderen App Op abhängt.</string>
@@ -329,7 +330,7 @@
     <string name="night">Nacht</string>
     <string name="select_theme">Farbschema</string>
     <string name="apply">Anwenden</string>
-    <string name="current_theme">Aktuelles Farbschema: %s</string>
+    <string name="current_theme">Aktuelles Farbschema: %1$s</string>
     <string name="pref_about_msg">App Manager-Version und -Lizenz, Danksagungen, etc.</string>
     <string name="version">Version</string>
     <string name="sort_by_wifi_data">Wlan-Daten</string>
@@ -349,7 +350,7 @@
     <string name="failed_to_disable_trackers">Konnte Verfolger nicht deaktivieren</string>
     <string name="trackers_disabled_successfully">Verfolger sind nun deaktiviert</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">Konnte Verfolger von %d Anwendung nicht deaktivieren</item>
+        <item quantity="one">Konnte Verfolger von %1$d Anwendung nicht deaktivieren</item>
         <item quantity="other">Konnte Verfolger von %d Anwendungen nicht deaktivieren</item>
     </plurals>
     <string name="failed_to_grant_permission">Erteilen der Berechtigung nicht möglich</string>
@@ -365,8 +366,8 @@
     <string name="manifest_viewer">Manifest einsehen</string>
     <string name="scanning_is_still_in_progress">Suche läuft</string>
     <plurals name="no_of_trackers">
-        <item quantity="one">%d Verfolger</item>
-        <item quantity="other">%d Verfolger</item>
+        <item quantity="one">%1$d Verfolger</item>
+        <item quantity="other">%1$d Verfolger</item>
     </plurals>
     <string name="install">Installieren</string>
     <string name="update">Aktualisieren</string>
@@ -398,14 +399,14 @@
     <string name="only_works_in_root_or_adb_mode">Nur im Root- oder ADB-Modus verfügbar</string>
     <string name="failed_to_parse_some_numbers">Einlesen mancher Zahlen nicht möglich</string>
     <plurals name="no_of_splits">
-        <item quantity="one">%d Teil</item>
-        <item quantity="other">%d Teile</item>
+        <item quantity="one">%1$d Teil</item>
+        <item quantity="other">%1$d Teile</item>
     </plurals>
-    <string name="split_no">Teil#%d: %s</string>
+    <string name="split_no">Teil#%1$d: %1$s</string>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">Laden von Paket-Informationen nicht möglich, es könnte eine geteilte APK sein</string>
     <string name="termux">Termux</string>
-    <string name="package_name_is_installed_successfully">%s ist installiert</string>
-    <string name="failed_to_install_package_name">Installation von %s nicht möglich</string>
+    <string name="package_name_is_installed_successfully"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> ist installiert</string>
+    <string name="failed_to_install_package_name">Installation von <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> nicht möglich</string>
     <string name="filter">Filter</string>
     <string name="filter_user_apps">Benutzer-Anwendungen</string>
     <string name="filter_system_apps">System-Anwendungen</string>
@@ -427,24 +428,24 @@
     <string name="delete_backup">Sicherung löschen</string>
     <string name="backup_options">Sicherungsoptionen</string>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="one">Erstellen der Sicherung von %d Anwendung nicht möglich</item>
-        <item quantity="other">Erstellen der Sicherungen von %d Anwendungen nicht möglich</item>
+        <item quantity="one">Erstellen der Sicherung von %1$d Anwendung nicht möglich</item>
+        <item quantity="other">Erstellen der Sicherungen von %1$d Anwendungen nicht möglich</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
-        <item quantity="one">Sichern von %d APK-Datei nicht möglich</item>
-        <item quantity="other">Sichern von %d APK-Dateien nicht möglich</item>
+        <item quantity="one">Sichern von %1$d APK-Datei nicht möglich</item>
+        <item quantity="other">Sichern von %1$d APK-Dateien nicht möglich</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
-        <item quantity="one">Wiederherstellen von %d Anwendung nicht möglich</item>
-        <item quantity="other">Wiederherstellen von %d Anwendungen nicht möglich</item>
+        <item quantity="one">Wiederherstellen von %1$d Anwendung nicht möglich</item>
+        <item quantity="other">Wiederherstellen von %1$d Anwendungen nicht möglich</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="one">Konnte %d Sicherung nicht löschen</item>
-        <item quantity="other">Konnte %d Sicherungen nicht löschen</item>
+        <item quantity="one">Konnte %1$d Sicherung nicht löschen</item>
+        <item quantity="other">Konnte %1$d Sicherungen nicht löschen</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="one">Deaktivieren der Verfolger aus %d Anwendung nicht möglich</item>
-        <item quantity="other">Deaktivieren der Verfolger aus %d Anwendungen nicht möglich</item>
+        <item quantity="one">Deaktivieren der Verfolger aus %1$d Anwendung nicht möglich</item>
+        <item quantity="other">Deaktivieren der Verfolger aus %1$d Anwendungen nicht möglich</item>
     </plurals>
     <string name="failed_to_delete_backup">Löschen der Sicherung nicht möglich</string>
     <string name="failed_to_restore_backup">Wiederherstellen der Sicherung nicht möglich</string>
@@ -472,7 +473,7 @@
     <string name="toggle_default_app_ops">Voreingestellte App Ops ein-/ausschalten</string>
     <string name="installer_error_aborted">Die Installation ist fehlgeschlagen, weil sie entweder abgebrochen oder die Sitzung unerwartet geschlossen wurde</string>
     <string name="installer_error_blocked_device">Gerät</string>
-    <string name="installer_error_blocked">Installation ist von %s blockiert</string>
+    <string name="installer_error_blocked">Installation ist von <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> blockiert</string>
     <string name="installer_error_conflict">Die Anwendung kann nicht installiert werden, da bereits eine Anwendung mit demselben Paketnamen installiert ist</string>
     <string name="installer_error_incompatible">Anwendung ist nicht mit diesem Gerät kompatibel</string>
     <string name="installer_error_bad_apks">Ungültige APK-Dateien ausgewählt</string>
@@ -505,7 +506,7 @@
     <string name="backup_all_users">Alle Benutzer</string>
     <string name="pref_app_language">Sprache</string>
     <string name="auto">Automatisch</string>
-    <string name="current_language">Sprache: %s</string>
+    <string name="current_language">Sprache: %1$s</string>
     <string name="choose_language">Wähle eine Sprache</string>
     <string name="touchscreen_finger">Finger</string>
     <string name="touchscreen_stylus">Schreibstift</string>
@@ -537,27 +538,27 @@
     <string name="launch_mode_single_task">Einzelne Aufgabe</string>
     <string name="launch_mode_single_instance">Einzelne Instanz</string>
     <string name="launch_mode_multiple">mehrfach</string>
-    <string name="locale_split_for_base_apk">%s Lokalisierung für die Basis-APK</string>
-    <string name="locale_split_for_feature">%s Lokalisierung für %s</string>
-    <string name="abi_split_for_base_apk">%s Code für die Basis-APK</string>
-    <string name="abi_split_for_feature">%s Code für %s</string>
-    <string name="density_split_for_base_apk">%s (%d DPI) Ressourcen für die Basis-APK</string>
-    <string name="density_split_for_feature">%s (%d DPI) Ressourcen für das Merkmal %s</string>
+    <string name="locale_split_for_base_apk"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="English">%1$s</xliff:g> Lokalisierung für die Basis-APK</string>
+    <string name="locale_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="English">%1$s</xliff:g> Lokalisierung für <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="abi_split_for_base_apk"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="arm64_v8a">%1$s</xliff:g> Code für die Basis-APK</string>
+    <string name="abi_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="arm64_v8a">%1$s</xliff:g> Code für <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="density_split_for_base_apk"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="dpi_no" example="480">%2$d</xliff:g> DPI) Ressourcen für die Basis-APK</string>
+    <string name="density_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="dpi_no" example="480">%2$d</xliff:g> DPI) Ressourcen für das Merkmal <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%3$s</xliff:g></string>
     <string name="base_apk">Basis-APK</string>
-    <string name="unknown_split_for_base_apk">%s für die Basis-APK</string>
-    <string name="unknown_split_for_feature">%s für Merkmal %s</string>
-    <string name="split_feature_name">Merkmal: %s</string>
+    <string name="unknown_split_for_base_apk"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="some_split">%1$s</xliff:g> für die Basis-APK</string>
+    <string name="unknown_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="some_split">%1$s</xliff:g> für Merkmal <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="split_feature_name">Merkmal: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <plurals name="alert_failed_to_enable">
-        <item quantity="one">%s Anwendung konnte nicht aktiviert werden</item>
-        <item quantity="other">%s Anwendungen konnten nicht aktiviert werden</item>
+        <item quantity="one">%1$d Anwendung konnte nicht aktiviert werden</item>
+        <item quantity="other">%1$d Anwendungen konnten nicht aktiviert werden</item>
     </plurals>
     <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="one">Verweigern der App-Operationen für %d Anwendung nicht möglich</item>
-        <item quantity="other">Verweigern der App-Operationen für %d Anwendungen nicht möglich</item>
+        <item quantity="one">Verweigern der App-Operationen für %1$d Anwendung nicht möglich</item>
+        <item quantity="other">Verweigern der App-Operationen für %1$d Anwendungen nicht möglich</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
-        <item quantity="one">Komponenten für %d Anwendung konnte nicht blockiert werden</item>
-        <item quantity="other">Komponenten für %d Anwendungen konnten nicht blockiert werden</item>
+        <item quantity="one">Komponenten für %1$d Anwendung konnte nicht blockiert werden</item>
+        <item quantity="other">Komponenten für %1$d Anwendungen konnten nicht blockiert werden</item>
     </plurals>
     <string name="orientation_user_landscape">Horizontale Ansicht</string>
     <string name="orientation_user_portrait">Vertikale Ansicht</string>
@@ -576,8 +577,8 @@
     <string name="input_backup_name">Bezeichnung der Sicherung</string>
     <string name="downgrade_not_possible">Ein Downgrade ist ohne Root oder ADB nicht möglich</string>
     <string name="downgrade">Zurückstufen</string>
-    <string name="process_state_with_extra">Zustand: %s (%s)</string>
-    <string name="process_state">Zustand: %s</string>
+    <string name="process_state_with_extra">Zustand: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="state_extra" example="High priority">%2$s</xliff:g>)</string>
+    <string name="process_state">Zustand: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <string name="state_multithreaded">mehrfach</string>
     <string name="state_foreground">Vordergrund</string>
     <string name="state_session_leader">Sitzungsleiter</string>
@@ -607,7 +608,7 @@
     <string name="filter_apps">Apps</string>
     <string name="no_apps">Keine Apps</string>
     <string name="apps">Apps</string>
-    <string name="compression_method">Kompressionsverfahren: % s</string>
+    <string name="compression_method">Kompressionsverfahren: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_backup_flags_msg">Durch Hinzufügen von Voreinstellungen für Sicherungsoptionen entfällt die Auswahl von Flags bei jeder Sicherung / Wiederherstellung</string>
     <string name="pref_compression_method">Kompressionsverfahren</string>
     <string name="rules">Regeln</string>
@@ -638,8 +639,8 @@
     <string name="issuer">Herausgeber</string>
     <string name="subject">Gegenstand</string>
     <string name="filter_apps_with_backups">Anwendungen mit Sicherungen</string>
-    <string name="failed_to_uninstall_updates">Updates für %s konnten nicht deinstalliert werden.</string>
-    <string name="update_uninstalled_successfully">Updates für %s wurden deinstalliert.</string>
+    <string name="failed_to_uninstall_updates">Updates für <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> konnten nicht deinstalliert werden.</string>
+    <string name="update_uninstalled_successfully">Updates für <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> wurden deinstalliert.</string>
     <string name="uninstall_updates">Updates deinstallieren</string>
     <string name="only_install">Nur installieren</string>
     <string name="install_without_data_loss">Wenn Sie die Signaturprüfung deaktiviert haben, können Sie die Option <b>nur installieren</b> verwenden, um die Anwendung ohne Datenverlust zu installieren.</string>
