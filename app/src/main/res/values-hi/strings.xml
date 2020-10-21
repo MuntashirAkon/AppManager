@@ -17,8 +17,8 @@
     <string name="update">अपडेट</string>
     <string name="install">इनस्टॉल करें</string>
     <plurals name="no_of_trackers">
-        <item quantity="one">%d ट्रैकर</item>
-        <item quantity="other">%d ट्रैकर्स</item>
+        <item quantity="one">%1$d ट्रैकर</item>
+        <item quantity="other">%1$d ट्रैकर्स</item>
     </plurals>
     <string name="scanning_is_still_in_progress">स्कैन अभी भी जारी है</string>
     <string name="manifest_viewer">मेनिफेस्ट दर्शक</string>
@@ -50,7 +50,7 @@
     <string name="sort_by_wifi_data">वाई-फाई डेटा</string>
     <string name="version">संस्करण</string>
     <string name="pref_about_msg">ऐप मैनेजर संस्करण, लाइसेंस, क्रेडिट इत्यादि।</string>
-    <string name="current_theme">वर्तमान थीम: %s</string>
+    <string name="current_theme">वर्तमान थीम: %1$s</string>
     <string name="apply">लागू करें</string>
     <string name="select_theme">रात</string>
     <string name="night">रात</string>
@@ -82,44 +82,44 @@
     <string name="app_op_cannot_be_disabled">इस ऐप ऑप को बंद नहीं किया जा सकता, संभवतः एक रीड-ओनली ऐप ऑप है जो अन्य ऐप ऑप पर निर्भर है।</string>
     <string name="toggle_kill_for_system_apps">टॉगल किल सिस्टम एप्स</string>
     <plurals name="alert_failed_to_force_stop">
-        <item quantity="one">%d ऐप को जबरदस्ती बंद नहीं किया जा सका</item>
-        <item quantity="other">%d ऐप्स को जबरदस्ती बंद नहीं किया जा सका</item>
+        <item quantity="one">%1$d ऐप को जबरदस्ती बंद नहीं किया जा सका</item>
+        <item quantity="other">%1$d ऐप्स को जबरदस्ती बंद नहीं किया जा सका</item>
     </plurals>
     <string name="the_operation_was_successful">हो गया</string>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">%d ऐप को बैकग्राउंड में चलने से नहीं रोक सका</item>
-        <item quantity="other">%d ऐप्स को बैकग्राउंड चलने से नहीं रोक सका</item>
+        <item quantity="one">%1$d ऐप को बैकग्राउंड में चलने से नहीं रोक सका</item>
+        <item quantity="other">%1$d ऐप्स को बैकग्राउंड चलने से नहीं रोक सका</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
-        <item quantity="one">%d ऐप को अनइंस्टॉल नहीं कर सका</item>
-        <item quantity="other">%d ऐप्स को अनइंस्टॉल नहीं कर सका</item>
+        <item quantity="one">%1$d ऐप को अनइंस्टॉल नहीं कर सका</item>
+        <item quantity="other">%1$d ऐप्स को अनइंस्टॉल नहीं कर सका</item>
     </plurals>
     <plurals name="alert_failed_to_disable">
-        <item quantity="one">%d ऐप को बंद नही किया जा सका</item>
-        <item quantity="other">%d ऐप्स को बंद नही किया जा सका</item>
+        <item quantity="one">%1$d ऐप को बंद नही किया जा सका</item>
+        <item quantity="other">%1$d ऐप्स को बंद नही किया जा सका</item>
     </plurals>
     <plurals name="alert_failed_to_clear_data">
-        <item quantity="one">%d ऐप से डेटा नहीं मिटा सका</item>
-        <item quantity="other">%d ऐप्स से डेटा नहीं मिटा सका</item>
+        <item quantity="one">%1$d ऐप से डेटा नहीं मिटा सका</item>
+        <item quantity="other">%1$d ऐप्स से डेटा नहीं मिटा सका</item>
     </plurals>
-    <string name="some_items_selected">%d चयनित</string>
+    <string name="some_items_selected"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="selection_no" example="20">%1$d</xliff:g> चयनित</string>
     <string name="export_blocking_rules">ब्लॉकिंग रूल्स को निर्यात करें</string>
     <string name="disable_background">बैकग्राउंड में चलना बंद करें</string>
     <string name="backup_restore">बैकअप/रिस्टोर</string>
-    <string name="backup_apk">बैकअप APK</string>
+    <string name="backup_apk">बैकअप एपीके</string>
     <string name="clear_data">डाटा मिटायें</string>
-    <string name="user_and_uid">यूज़र: %s (%d)</string>
-    <string name="memory_virtual_memory">मेमोरी: %s, वर्चुअल मेमोरी: %s</string>
-    <string name="pid_and_ppid">प्रोसेस आईडी: %d, पैरेंट प्रोसेस आईडी: %d</string>
+    <string name="user_and_uid">यूज़र: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="user_name" example="root">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="user_id" example="0">%2$d</xliff:g>)</string>
+    <string name="memory_virtual_memory">मेमोरी: %1$s, वर्चुअल मेमोरी: %2$s</string>
+    <string name="pid_and_ppid">प्रोसेस आईडी: %1$d, पैरेंट प्रोसेस आईडी: %2$d</string>
     <string name="disable_background_run">बैकग्राउंड में चलना बंद करें</string>
     <string name="kill_process">जबरदस्ती रोकें</string>
     <string name="no_running_apps">कोई ऐप नहीं चल रहा</string>
     <string name="running_apps">चल रहे ऐप</string>
     <string name="store">स्टोर</string>
-    <string name="apk_updater">APK अपडेटर</string>
+    <string name="apk_updater">एपीके अपडेटर</string>
     <plurals name="failed_to_import_files">
-        <item quantity="one">%d फ़ाइल आयात नहीं कर सका।</item>
-        <item quantity="other">%d फ़ाइलें आयात नहीं कर सके।</item>
+        <item quantity="one">%1$d फ़ाइल आयात नहीं कर सका।</item>
+        <item quantity="other">%1$d फ़ाइलें आयात नहीं कर सके।</item>
     </plurals>
     <string name="the_export_was_successful">निर्यात सफल हुआ</string>
     <string name="the_import_was_successful">आयात सफल हुआ</string>
@@ -132,10 +132,10 @@
     <string name="sort_by_screen_time">स्क्रीन समय</string>
     <string name="sort_by_last_used">अंतिम उपयोग</string>
     <plurals name="no_of_times_opened">
-        <item quantity="one">%d बार</item>
-        <item quantity="other">%d बार</item>
+        <item quantity="one">%1$d बार</item>
+        <item quantity="other">%1$d बार</item>
     </plurals>
-    <string name="external_multiple_data_dir">एक्सटर्नल डेटा डायरेक्टरी %d</string>
+    <string name="external_multiple_data_dir">एक्सटर्नल डेटा डायरेक्टरी <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="external_data_dir">एक्सटर्नल डेटा डायरेक्टरी</string>
     <string name="sort_by_blocked_components">पहले ब्लॉक्ड किये हुए</string>
     <string name="sort_by_disabled_app">पहले बंद किये हुए</string>
@@ -158,16 +158,16 @@
     <string name="app_size">ऐप</string>
     <string name="total_size">कुल</string>
     <string name="storage_and_cache">स्टोरेज और कैश</string>
-    <string name="failed_to_stop">%s को नहीं रोक सके।</string>
+    <string name="failed_to_stop"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> को नहीं रोक सके।</string>
     <string name="force_stop">ज़बरदस्ती रोकें</string>
-    <string name="failed_to_enable">%s को चालू नहीं किया जा सका।</string>
-    <string name="failed_to_disable">%s को बंद नहीं किया जा सका।</string>
+    <string name="failed_to_enable"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> को चालू नहीं किया जा सका।</string>
+    <string name="failed_to_disable"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> को बंद नहीं किया जा सका।</string>
     <string name="enable">चालू करें</string>
     <string name="disable">बंद करें</string>
     <string name="stopped">रोका गया</string>
     <string name="uninstall_system_app_message">यह एक सिस्टम ऐप है। क्या आप सुनिश्चित हैं कि इस ऐप को अनइंस्टॉल करना चाहते हैं\?</string>
-    <string name="uninstalled_successfully">%s को अनइंस्टॉल किया गया।</string>
-    <string name="failed_to_uninstall">%s को अनइंस्टॉल नहीं कर सके।</string>
+    <string name="uninstalled_successfully"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> को अनइंस्टॉल किया गया।</string>
+    <string name="failed_to_uninstall"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> को अनइंस्टॉल नहीं कर सके।</string>
     <string name="uninstall_app_message">क्या आप इस ऐप को अनइंस्टॉल करना चाहते हैं\?</string>
     <string name="view_in_settings">सेटिंग में देखें</string>
     <string name="no_content">कोई सामग्री नहीं</string>
@@ -212,25 +212,25 @@
     <string name="menu_apply_rules">रूल्स लागू करें</string>
     <string name="menu_remove_rules">रूल्स हटाएँ</string>
     <string name="failed_to_extract_apk_file">एपीके फाइल एक्सट्रैक्ट नहीं कर सका</string>
-    <string name="share_apk">APK शेयर करें</string>
+    <string name="share_apk">एपीके शेयर करें</string>
     <string name="grant_usage_acess_message">ऐप उपयोग जानकारी प्रदर्शित करने के लिए इस्तेमाल एक्सेस की अनुमति अनिवार्य है।</string>
     <string name="grant_usage_access">इस्तेमाल एक्सेस की अनुमति दें</string>
     <string name="go">जाएँ</string>
     <string name="go_back">पीछे जाएँ</string>
     <string name="usage_last_used">अंतिम उपयोग:</string>
     <string name="usage_less_than_a_minute">एक मिनट से भी कम</string>
-    <string name="usage_min">%d मिनट</string>
+    <string name="usage_min">%1$d मिनट</string>
     <plurals name="usage_hours">
-        <item quantity="one">%d घंटा</item>
-        <item quantity="other">%d घंटे</item>
+        <item quantity="one">%1$d घंटा</item>
+        <item quantity="other">%1$d घंटे</item>
     </plurals>
     <plurals name="usage_days">
-        <item quantity="one">%d दिन</item>
-        <item quantity="other">%d दिनों</item>
+        <item quantity="one">%1$d दिन</item>
+        <item quantity="other">%1$d दिन</item>
     </plurals>
     <plurals name="usage_months">
-        <item quantity="one">%d महीना</item>
-        <item quantity="other">%d महीने</item>
+        <item quantity="one">%1$d महीना</item>
+        <item quantity="other">%1$d महीने</item>
     </plurals>
     <string name="usage_365_days">पिछले 365 दिन</string>
     <string name="usage_30_days">पिछले 30 दिन</string>
@@ -243,16 +243,16 @@
     <string name="no_tracker_class">कोई ट्रैकर क्लास नहीं</string>
     <string name="no_shared_libs">कोई साझा लाइब्रेरी नहीं</string>
     <plurals name="main_list_date_days">
-        <item quantity="one">%s %d दिन</item>
-        <item quantity="other">%s %d दिनों</item>
+        <item quantity="one"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="day_no" example="5">%2$d</xliff:g> दिन</item>
+        <item quantity="other"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="day_no" example="5">%2$d</xliff:g> दिन</item>
     </plurals>
     <string name="all_classes">सभी क्लासेज</string>
     <string name="tracker_classes">ट्रैकर क्लासेज</string>
     <string name="tracker_details">ट्रैकर विवरण</string>
     <string name="found_trackers">ट्रैकर्स मिले:</string>
-    <string name="tested_signatures_on_classes_and_time_taken">टेस्ट किया %d हस्ताक्षरों को %d क्लासेज पर ।
-\nसमय लिया %d मिलिसेकंड (%d पुनरावृत्तियां) ।</string>
-    <string name="trackers_and_classes">%d ट्रैकर्स %d क्लासेज के साथ</string>
+    <string name="tested_signatures_on_classes_and_time_taken">टेस्ट किया <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="signature_no" example="342">%1$d</xliff:g> हस्ताक्षरों को <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="class_no" example="6000">%2$d</xliff:g> क्लासेज पर ।
+\nसमय लिया <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="time" example="10000">%3$d</xliff:g> मिलिसेकंड (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="iteration_no" example="100000">%4$d</xliff:g> पुनरावृत्तियां).</string>
+    <string name="trackers_and_classes"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="tracker_no" example="5">%1$d</xliff:g> ट्रैकर्स <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="class_no" example="50">%2$d</xliff:g> क्लासेज के साथ</string>
     <string name="toggle_class_listing">टॉगल वर्ग सूचीकरण</string>
     <string name="view_summary">सारांश देखें</string>
     <string name="view_trackers">ट्रैकर्स देखें</string>
@@ -281,7 +281,7 @@
     <string name="shortcut_name">शॉर्टकट का नाम</string>
     <string name="edit_shortcut">शॉर्टकट संपादित करें</string>
     <string name="create_shortcut">शॉर्टकट बनाएं</string>
-    <string name="starting_activity">एक्टिविटी शुरू: %s</string>
+    <string name="starting_activity">एक्टिविटी शुरू: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_verbose_pin_shortcut">वर्तमान लांचर PinShortcut का समर्थन नहीं करता है। शॉर्टकट बनाने में असमर्थ।</string>
     <string name="error_creating_shortcut">शॉर्टकट बनाने में त्रुटि</string>
     <string name="instructions">निर्देश</string>
@@ -291,7 +291,7 @@
     <string name="user_id">यूज़र आईडी</string>
     <string name="installer_app">जिस ऐप से इंस्टाल किया</string>
     <string name="date_installed">इंस्टॉल तिथि</string>
-    <string name="date_updated">अद्यतन तिथि</string>
+    <string name="date_updated">अपडेट तिथि</string>
     <string name="more_info">अधिक जानकारी</string>
     <string name="sdk_flags">फ्लैग्स</string>
     <string name="sdk_max">अधिकतम</string>
@@ -302,7 +302,7 @@
     <string name="user_app">यूजर ऐप</string>
     <string name="system_app">सिस्टम ऐप</string>
     <string name="app_info">ऐप जानकारी</string>
-    <string name="version_name_with_code">संस्करण %s (%d)</string>
+    <string name="version_name_with_code">संस्करण <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="sort">प्रकार</string>
     <string name="user">उपयोगकर्ता</string>
     <string name="system">सिस्टम</string>
@@ -338,8 +338,8 @@
     <string name="shared_libs">साझा लाइब्रेरीज़</string>
     <string name="declared_permission">अनुमतियाँ</string>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="one">%d ऐप का बैकअप नहीं हुआ</item>
-        <item quantity="other">%d ऐप्स का बैकअप नहीं हुआ</item>
+        <item quantity="one">%1$d ऐप का बैकअप नहीं हुआ</item>
+        <item quantity="other">%1$d ऐप्स का बैकअप नहीं हुआ</item>
     </plurals>
     <string name="backup_options">बैकअप विकल्प</string>
     <string name="delete_backup">बैकअप हटाएं</string>
@@ -361,14 +361,14 @@
     <string name="filter_system_apps">सिस्टम ऐप्स</string>
     <string name="filter_user_apps">यूज़र ऐप्स</string>
     <string name="filter">फ़िल्टर</string>
-    <string name="failed_to_install_package_name">%s को इंस्टॉल नहीं कर सके</string>
-    <string name="package_name_is_installed_successfully">%s इंस्टॉल पूर्ण हुआ</string>
+    <string name="failed_to_install_package_name"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> को इंस्टॉल नहीं कर सके</string>
+    <string name="package_name_is_installed_successfully"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> इंस्टॉल पूर्ण हुआ</string>
     <string name="termux">टर्मक्स</string>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">पैकेज की जानकारी प्राप्त नहीं कर सके, संभवतः एक स्प्लिट एपीके है</string>
-    <string name="split_no">स्प्लिट#%d: %s</string>
+    <string name="split_no">स्प्लिट#%1$d: %2$s</string>
     <plurals name="no_of_splits">
-        <item quantity="one">%d स्प्लिट</item>
-        <item quantity="other">%d स्प्लिट्स</item>
+        <item quantity="one">%1$d स्प्लिट</item>
+        <item quantity="other">%1$d स्प्लिट्स</item>
     </plurals>
     <string name="failed_to_parse_some_numbers">कुछ नंबर पार्स नहीं कर सके</string>
     <string name="only_works_in_root_or_adb_mode">केवल रूट या एडीबी मोड में काम करता है</string>
@@ -448,12 +448,12 @@
     <string name="subject">विषय</string>
     <string name="filter_apps_with_backups">बैकअप वाले ऐप्स</string>
     <string name="sort_by_backup">पहले बैकअप</string>
-    <string name="failed_to_uninstall_updates">%s के अपडेट को अनइंस्टॉल नहीं कर सके।</string>
-    <string name="update_uninstalled_successfully">%s के अपडेट को अनइंस्टॉल कर दिया गया है।</string>
+    <string name="failed_to_uninstall_updates"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> के अपडेट को अनइंस्टॉल नहीं कर सके।</string>
+    <string name="update_uninstalled_successfully"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> के अपडेट को अनइंस्टॉल कर दिया गया है।</string>
     <string name="uninstall_updates">अप्डेट्स अनइंस्टॉल करें</string>
     <string name="allow_open_pgp_operation">ऐप मैनेजर को ओपनपीजीपी का उपयोग करने की अनुमति देने के लिए क्लिक करें</string>
     <string name="confirm_installation">इंस्टालेशन की पुष्टि करें</string>
-    <string name="compression_method">कंप्रेशन विधि: %s</string>
+    <string name="compression_method">कंप्रेशन विधि: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_compression_method">कंप्रेशन विधि</string>
     <string name="rules">रूल्स</string>
     <string name="other">अन्य</string>
@@ -481,8 +481,8 @@
     <string name="input_backup_name">बैकअप नाम</string>
     <string name="downgrade_not_possible">डाउनग्रेड रूट या एडीबी के बिना संभव नहीं है</string>
     <string name="downgrade">डाउनग्रेड</string>
-    <string name="process_state_with_extra">स्तिथि: %s (%s)</string>
-    <string name="process_state">स्तिथि: %s</string>
+    <string name="process_state_with_extra">स्तिथि: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="state_extra" example="High priority">%2$s</xliff:g>)</string>
+    <string name="process_state">स्तिथि: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <string name="state_multithreaded">बहुआयामी</string>
     <string name="state_foreground">अग्रभूमि</string>
     <string name="state_session_leader">सेशन लीडर</string>
@@ -528,18 +528,18 @@
     <string name="launch_mode_single_task">एक टास्क</string>
     <string name="launch_mode_single_instance">एक इंस्टैंस</string>
     <string name="launch_mode_multiple">एकाधिक</string>
-    <string name="locale_split_for_base_apk">%s बेस एपीके के लिए भाषा</string>
-    <string name="locale_split_for_feature">%s भाषा के लिए %s</string>
-    <string name="abi_split_for_base_apk">बेस एपीके के लिए %s कोड</string>
-    <string name="abi_split_for_feature">%s कोड के लिए %s</string>
-    <string name="density_split_for_base_apk">%s (%d डीपीआई) बेस एपीके के लिए संसाधन</string>
-    <string name="density_split_for_feature">%s (%d डीपीआई) फीचर के लिए संसाधन %s</string>
-    <string name="unknown_split_for_base_apk">बेस एपीके के लिए %s</string>
-    <string name="unknown_split_for_feature">%s के लिए फ़ीचर %s</string>
-    <string name="split_feature_name">फ़ीचर: %s</string>
+    <string name="locale_split_for_base_apk"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="English">%1$s</xliff:g> बेस एपीके के लिए भाषा</string>
+    <string name="locale_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="English">%1$s</xliff:g> भाषा के लिए <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="abi_split_for_base_apk">बेस एपीके के लिए <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="arm64_v8a">%1$s</xliff:g> कोड</string>
+    <string name="abi_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="arm64_v8a">%1$s</xliff:g> कोड के लिए <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="density_split_for_base_apk"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="dpi_no" example="480">%2$d</xliff:g> डीपीआई) बेस एपीके के लिए संसाधन</string>
+    <string name="density_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="dpi_no" example="480">%2$d</xliff:g> डीपीआई) फीचर के लिए संसाधन <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%3$s</xliff:g></string>
+    <string name="unknown_split_for_base_apk">बेस एपीके के लिए <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="some_split">%1$s</xliff:g></string>
+    <string name="unknown_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="some_split">%1$s</xliff:g> के लिए फ़ीचर <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="split_feature_name">फ़ीचर: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <string name="base_apk">बेस एपीके</string>
     <string name="choose_language">भाषा बदलें</string>
-    <string name="current_language">भाषा: %s</string>
+    <string name="current_language">भाषा: %1$s</string>
     <string name="auto">स्वतः</string>
     <string name="pref_app_language">भाषा</string>
     <string name="backup_all_users">सभी यूज़र्स</string>
@@ -572,7 +572,7 @@
     <string name="installer_error_bad_apks">अमान्य एपीके फ़ाइलें चयनित</string>
     <string name="installer_error_incompatible">यह ऐप इस डिवाइस के साथ असंगत है</string>
     <string name="installer_error_conflict">ऐप इंस्टॉल नहीं किया जा सकता क्योंकि एक इंस्टॉल किए गए ऐप में इस पैकेज का नाम पहले से ही है</string>
-    <string name="installer_error_blocked">इंस्टालेशन को %s के द्वारा ब्लॉक किया गया</string>
+    <string name="installer_error_blocked">इंस्टालेशन को <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> के द्वारा ब्लॉक किया गया</string>
     <string name="installer_error_blocked_device">डिवाइस</string>
     <string name="installer_error_aborted">इंस्टॉल विफल रहा क्योंकि या तो यह रद्द कर दिया गया था, या सत्र अप्रत्याशित रूप से बंद हो गया था</string>
     <string name="toggle_default_app_ops">डिफ़ॉल्ट ऐप ऑप्स को टॉगल करें</string>
@@ -602,35 +602,35 @@
         <item quantity="other">एक से ज्यादा ऐप के लिए बैकअप मौजूद है। क्या आपको यकीन है\?</item>
     </plurals>
     <plurals name="alert_failed_to_enable">
-        <item quantity="one">%s ऐप को चालू नहीं कर सका</item>
-        <item quantity="other">%s ऐप्स को चालू नहीं कर सके</item>
+        <item quantity="one">%1$d ऐप को चालू नहीं कर सका</item>
+        <item quantity="other">%1$d ऐप्स को चालू नहीं कर सके</item>
     </plurals>
     <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="one">%d ऐप के ऐप ऑप्स को अस्वीकार नहीं कर सका</item>
-        <item quantity="other">%d ऐप्स के ऐप ऑप्स को अस्वीकार नहीं कर सके</item>
+        <item quantity="one">%1$d ऐप के ऐप ऑप्स को अस्वीकार नहीं कर सका</item>
+        <item quantity="other">%1$d ऐप्स के ऐप ऑप्स को अस्वीकार नहीं कर सके</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
-        <item quantity="one">%d ऐप के कंपोनेंट्स को ब्लॉक नहीं किया जा सका</item>
-        <item quantity="other">%d ऐप्स के कंपोनेंट्स को ब्लॉक नहीं किया जा सका</item>
+        <item quantity="one">%1$d ऐप के कंपोनेंट्स को ब्लॉक नहीं किया जा सका</item>
+        <item quantity="other">%1$d ऐप्स के कंपोनेंट्स को ब्लॉक नहीं किया जा सका</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="one">%d ऐप से ट्रैकर्स को बंद नहीं कर सके</item>
-        <item quantity="other">%d ऐप्स से ट्रैकर्स को बंद नहीं कर सके</item>
+        <item quantity="one">%1$d ऐप से ट्रैकर्स को बंद नहीं कर सके</item>
+        <item quantity="other">%1$d ऐप्स से ट्रैकर्स को बंद नहीं कर सके</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="one">%d बैकअप को हटा नहीं सके</item>
-        <item quantity="other">%d बैकअप्स को हटा नहीं सके</item>
+        <item quantity="one">%1$d बैकअप को हटा नहीं सके</item>
+        <item quantity="other">%1$d बैकअप्स को हटा नहीं सके</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
-        <item quantity="one">%d ऐप को रिस्टोर नहीं किया जा सका</item>
-        <item quantity="other">%d ऐप्स को रिस्टोर नहीं किया जा सका</item>
+        <item quantity="one">%1$d ऐप को रिस्टोर नहीं किया जा सका</item>
+        <item quantity="other">%1$d ऐप्स को रिस्टोर नहीं किया जा सका</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
-        <item quantity="one">%d ऐप का बैकअप नहीं ले सका</item>
-        <item quantity="other">%d ऐप्स का बैकअप नहीं ले सके</item>
+        <item quantity="one">%1$d ऐप का बैकअप नहीं ले सका</item>
+        <item quantity="other">%1$d ऐप्स का बैकअप नहीं ले सके</item>
     </plurals>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">%d ऐप से ट्रैकर्स को बंद नहीं कर सके</item>
-        <item quantity="other">%d ऐप्स से ट्रैकर्स को बंद नहीं कर सके</item>
+        <item quantity="one">%1$d ऐप से ट्रैकर्स को बंद नहीं कर सके</item>
+        <item quantity="other">%1$d ऐप्स से ट्रैकर्स को बंद नहीं कर सके</item>
     </plurals>
 </resources>
