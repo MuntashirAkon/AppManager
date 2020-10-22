@@ -116,7 +116,6 @@ public class Reflector {
             constructors = currentClass.getDeclaredConstructors();
             methods = currentClass.getDeclaredMethods();
         } catch (NoClassDefFoundError e) {
-            e.printStackTrace();
             return e.toString();
 
         }
@@ -163,10 +162,13 @@ public class Reflector {
                 }
             }
 
-            Class<?>[] xType = method.getExceptionTypes();
+            try {
+                Class<?>[] xType = method.getExceptionTypes();
 
-            for (Class<?> aClass : xType) {
-                ClassTypeAlgorithm.TypeName(aClass.getName(), classRef);
+                for (Class<?> aClass : xType) {
+                    ClassTypeAlgorithm.TypeName(aClass.getName(), classRef);
+                }
+            } catch (NoClassDefFoundError ignore) {
             }
         }
         return classRef;
