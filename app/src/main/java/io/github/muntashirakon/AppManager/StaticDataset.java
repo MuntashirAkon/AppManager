@@ -25,7 +25,7 @@ import android.util.DisplayMetrics;
 import java.util.HashMap;
 import java.util.Map;
 
-import dalvik.system.VMRuntime;
+import io.github.muntashirakon.AppManager.misc.VMRuntime;
 
 public class StaticDataset {
     private static String[] trackerCodeSignatures;

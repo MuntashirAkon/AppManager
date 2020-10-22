@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dalvik.system;
+package io.github.muntashirakon.AppManager.misc;
 
 import java.util.HashMap;
 import java.util.Map;
