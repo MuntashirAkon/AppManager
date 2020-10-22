@@ -359,7 +359,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void runInTermux() {
-        runWithTermux(new String[]{"run-as", mPackageName});
+        runWithTermux(new String[]{"su", "-c", "run-as", mPackageName});
     }
 
     private void runWithTermux(String[] command) {
