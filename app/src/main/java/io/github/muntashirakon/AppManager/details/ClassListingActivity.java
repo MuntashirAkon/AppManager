@@ -72,6 +72,7 @@ import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.scanner.DexClasses;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.TextUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBiggerText;
@@ -100,7 +101,6 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     private CharSequence mAppName;
     private ActionBar mActionBar;
     private ProgressIndicator mProgressIndicator;
-    private static String mConstraint;
     private String mPackageName;
     private ParcelFileDescriptor fd;
     private File apkFile;
@@ -216,8 +216,8 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     @Override
     protected void onResume() {
         super.onResume();
-        if (mClassListingAdapter != null && mConstraint != null && !mConstraint.equals("")) {
-            mClassListingAdapter.getFilter().filter(mConstraint);
+        if (mClassListingAdapter != null && !TextUtils.isEmpty(mClassListingAdapter.mConstraint)) {
+            mClassListingAdapter.getFilter().filter(mClassListingAdapter.mConstraint);
         }
     }
 
@@ -228,7 +228,6 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mConstraint = newText;
         if (mClassListingAdapter != null)
             mClassListingAdapter.getFilter().filter(newText.toLowerCase(Locale.ROOT));
         return true;
@@ -475,9 +474,8 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         void setDefaultList(List<String> list) {
             mDefaultList = list;
             mAdapterList = list;
-            if (ClassListingActivity.mConstraint != null
-                    && !ClassListingActivity.mConstraint.equals("")) {
-                getFilter().filter(ClassListingActivity.mConstraint);
+            if (!TextUtils.isEmpty(mConstraint)) {
+                getFilter().filter(mConstraint);
             }
             notifyDataSetChanged();
         }
