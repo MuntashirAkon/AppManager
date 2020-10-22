@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-package com.google.classysharkandroid.reflector;
+package io.github.muntashirakon.AppManager.scanner.reflector;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
 
-@SuppressWarnings({"unused", "rawtypes"})
+@SuppressWarnings("rawtypes")
 public class Reflector {
     private Class clazz;
     private List<TaggedWord> words;
@@ -67,8 +69,23 @@ public class Reflector {
         }
     }
 
-    public List<TaggedWord> getWords() {
-        return this.words;
+    public Set<String> getImports() {
+        Constructor[] constructors;
+        Method[] methods;
+        Field[] fields;
+        Class currentClass;
+        Hashtable<String, String> classRef;
+        currentClass = clazz;
+        try {
+            fields = currentClass.getDeclaredFields(); // NoClassDefFoundError ccc71/at/xposed/blocks/at_block_manage_accounts$5
+            constructors = currentClass.getDeclaredConstructors();
+            methods = currentClass.getDeclaredMethods();
+        } catch (NoClassDefFoundError e) {
+            e.printStackTrace();
+            return Collections.emptySet();
+        }
+        classRef = generateDependencies(constructors, methods, fields);
+        return classRef.keySet();
     }
 
     public String generateClassData() {
@@ -98,7 +115,7 @@ public class Reflector {
             fields = currentClass.getDeclaredFields(); // NoClassDefFoundError ccc71/at/xposed/blocks/at_block_manage_accounts$5
             constructors = currentClass.getDeclaredConstructors();
             methods = currentClass.getDeclaredMethods();
-        } catch (NoClassDefFoundError e){
+        } catch (NoClassDefFoundError e) {
             e.printStackTrace();
             return e.toString();
 
@@ -113,13 +130,15 @@ public class Reflector {
         long finish = System.currentTimeMillis();
 
         System.out.println("* " + (finish - start) + "ms");
-        return (constructors.length +" constructors\n"
-                + methods.length +" methods\n"
-                + fields.length +" fields\n");
+        return (constructors.length + " constructors\n"
+                + methods.length + " methods\n"
+                + fields.length + " fields\n");
     }
 
     @NonNull
-    private Hashtable<String, String> generateDependencies(Constructor[] constructors, Method[] methods, @NonNull Field[] fields) {
+    private Hashtable<String, String> generateDependencies(Constructor[] constructors,
+                                                           Method[] methods,
+                                                           @NonNull Field[] fields) {
         Hashtable<String, String> classRef = new Hashtable<>();
 
         for (Field field : fields) {
@@ -153,7 +172,11 @@ public class Reflector {
         return classRef;
     }
 
-    private void fillTaggedText(Constructor[] constructors, Method[] methods, Field[] fields, Class currentClass, @NonNull Hashtable<String, String> classRef) {
+    private void fillTaggedText(Constructor[] constructors,
+                                Method[] methods,
+                                Field[] fields,
+                                Class currentClass,
+                                @NonNull Hashtable<String, String> classRef) {
         Class supClass;
         String x;
 

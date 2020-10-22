@@ -35,23 +35,38 @@ public class DexLoaderBuilder {
     private DexLoaderBuilder() {}
 
     @NonNull
-    public static DexClassLoader fromBytes(@NonNull Context context, final byte[] dexBytes) throws Exception {
+    public static ClassLoader fromBytes(@NonNull Context context, final byte[] dexBytes) {
         String dexFileName = "internal.dex";
         final File dexInternalStoragePath = new File(context.getDir("dex", Context.MODE_PRIVATE), dexFileName);
         if (!dexInternalStoragePath.exists()) prepareDex(dexBytes, dexInternalStoragePath);
 
         final File optimizedDexOutputPath = context.getCodeCacheDir();
-        DexClassLoader loader = new DexClassLoader(dexInternalStoragePath.getAbsolutePath(),
+        ClassLoader loader = new DexClassLoader(dexInternalStoragePath.getAbsolutePath(),
                 optimizedDexOutputPath.getAbsolutePath(), null,
                 context.getClassLoader().getParent());
 
+        //noinspection ResultOfMethodCallIgnored
         dexInternalStoragePath.delete();
+        //noinspection ResultOfMethodCallIgnored
         optimizedDexOutputPath.delete();
 
         return loader;
     }
 
-    private static boolean prepareDex(byte[] bytes, File dexInternalStoragePath) {
+    @NonNull
+    public static ClassLoader fromFile(@NonNull Context context, @NonNull File dexInternalStoragePath) {
+        final File optimizedDexOutputPath = context.getCodeCacheDir();
+        ClassLoader loader = new DexClassLoader(dexInternalStoragePath.getAbsolutePath(),
+                optimizedDexOutputPath.getAbsolutePath(), null,
+                context.getClassLoader().getParent());
+        //noinspection ResultOfMethodCallIgnored
+        dexInternalStoragePath.delete();
+        //noinspection ResultOfMethodCallIgnored
+        optimizedDexOutputPath.delete();
+        return loader;
+    }
+
+    private static void prepareDex(byte[] bytes, File dexInternalStoragePath) {
         BufferedInputStream bis = null;
         OutputStream dexWriter = null;
 
@@ -65,7 +80,6 @@ public class DexLoaderBuilder {
             }
             dexWriter.close();
             bis.close();
-            return true;
         } catch (IOException e) {
             if (dexWriter != null) {
                 try {
@@ -79,7 +93,6 @@ public class DexLoaderBuilder {
             } catch (IOException ioe) {
                 throw new RuntimeException(ioe);
             }
-            return false;
         }
     }
 }

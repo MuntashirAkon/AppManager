@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.classysharkandroid.reflector;
+package io.github.muntashirakon.AppManager.scanner.reflector;
 
 import java.util.Hashtable;
 
 import androidx.annotation.NonNull;
 
-public class ClassTypeAlgorithm {
+class ClassTypeAlgorithm {
     private ClassTypeAlgorithm() {}
 
     @NonNull

@@ -47,8 +47,7 @@ import android.widget.Toast;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
-import com.google.classysharkandroid.dex.DexLoaderBuilder;
-import com.google.classysharkandroid.reflector.Reflector;
+import io.github.muntashirakon.AppManager.scanner.reflector.Reflector;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -66,10 +65,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
-import dalvik.system.DexClassLoader;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.scanner.DexClasses;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -438,27 +437,21 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
         public void run() {
             try {
                 Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-
-                final DexClassLoader loader = DexLoaderBuilder.fromBytes(ClassListingActivity.this, bytes);
+                final DexClasses dexClasses = new DexClasses(ClassListingActivity.this, bytes);
 
                 ClassListingActivity.this.runOnUiThread(
                         () -> mListView.setOnItemClickListener((parent, view, position, id) -> {
-                            Class<?> loadClass;
+                            String className = (!trackerClassesOnly ? classList : classListAll)
+                                    .get((int) (parent.getAdapter()).getItemId(position));
                             try {
-                                loadClass = loader.loadClass((!trackerClassesOnly ? classList
-                                        : classListAll).get((int) (parent.getAdapter())
-                                        .getItemId(position)));
-
-                                Reflector reflector = new Reflector(loadClass);
+                                Reflector reflector = dexClasses.getReflector(className);
 
                                 Toast.makeText(ClassListingActivity.this,
                                         reflector.generateClassData(), Toast.LENGTH_LONG).show();
 
                                 Intent intent = new Intent(ClassListingActivity.this,
                                         ClassViewerActivity.class);
-                                intent.putExtra(ClassViewerActivity.EXTRA_CLASS_NAME,
-                                        (!trackerClassesOnly ? classList : classListAll).get((int)
-                                                (parent.getAdapter()).getItemId(position)));
+                                intent.putExtra(ClassViewerActivity.EXTRA_CLASS_NAME, className);
                                 intent.putExtra(ClassViewerActivity.EXTRA_CLASS_DUMP, reflector.toString());
                                 intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, mAppName);
                                 startActivity(intent);
