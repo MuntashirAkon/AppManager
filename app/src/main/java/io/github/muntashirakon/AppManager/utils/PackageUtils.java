@@ -34,7 +34,6 @@ import android.text.SpannableStringBuilder;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.security.PublicKey;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
@@ -46,7 +45,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -56,7 +54,6 @@ import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import dalvik.system.DexFile;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
@@ -163,24 +160,6 @@ public final class PackageUtils {
             }
         }
         return filteredAppOps;
-    }
-
-    @NonNull
-    public static List<String> getClassNames(File incomeFile) {
-        ArrayList<String> classNames = new ArrayList<>();
-        File optimizedFile = null;
-        try {
-            File cacheDir = AppManager.getContext().getCacheDir();
-            optimizedFile = File.createTempFile("opt_" + System.currentTimeMillis(), ".dex", cacheDir);
-            DexFile dexFile = DexFile.loadDex(incomeFile.getPath(), optimizedFile.getPath(), 0);
-            classNames = Collections.list(dexFile.entries());
-            dexFile.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            IOUtils.deleteSilently(optimizedFile);
-        }
-        return classNames;
     }
 
     @NonNull

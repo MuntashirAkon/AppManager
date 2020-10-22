@@ -47,6 +47,7 @@ import android.widget.Toast;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
+
 import io.github.muntashirakon.AppManager.scanner.reflector.Reflector;
 
 import java.io.ByteArrayInputStream;
@@ -71,7 +72,6 @@ import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.scanner.DexClasses;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBiggerText;
@@ -104,6 +104,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     private String mPackageName;
     private ParcelFileDescriptor fd;
     private File apkFile;
+    private DexClasses dexClasses;
 
     @Override
     protected void onDestroy() {
@@ -114,6 +115,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
             // Only attempt to delete the apk file if it's cached
             IOUtils.deleteSilently(apkFile);
         }
+        IOUtils.closeQuietly(dexClasses);
         super.onDestroy();
     }
 
@@ -193,12 +195,17 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
             tracker_names = StaticDataset.getTrackerNames();
             signatures = StaticDataset.getTrackerCodeSignatures();
             try {
-                final byte[] bytes;
-                try (InputStream uriStream = getContentResolver().openInputStream(apkUri)) {
-                    bytes = IOUtils.readFully(uriStream, -1, true);
+                // Test if this path is readable
+                if (!apkFile.exists() || !apkFile.canRead()) {
+                    // Not readable, cache the file
+                    try (InputStream uriStream = getContentResolver().openInputStream(apkUri)) {
+                        apkFile = IOUtils.getCachedFile(uriStream);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-                new FillClassesNamesThread(bytes).start();
-                new StartDexLoaderThread(bytes).start();
+                new FillClassesNamesThread().start();
+                new StartDexLoaderThread().start();
             } catch (Exception e) {
                 e.printStackTrace();
                 finishAffinity();
@@ -322,36 +329,35 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     }
 
     private class FillClassesNamesThread extends Thread {
-        private final byte[] bytes;
-
-        FillClassesNamesThread(byte[] bytes) {
-            this.bytes = bytes;
-        }
-
         @Override
         public void run() {
             try {
                 Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
                 packageInfo.append(getBoldString(getString(R.string.checksums))).append("\n")
                         .append(getBoldString(DigestUtils.MD5 + ": "))
-                        .append(DigestUtils.getHexDigest(DigestUtils.MD5, bytes)).append("\n")
+                        .append(DigestUtils.getHexDigest(DigestUtils.MD5, apkFile)).append("\n")
                         .append(getBoldString(DigestUtils.SHA_1 + ": "))
-                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_1, bytes)).append("\n")
+                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_1, apkFile)).append("\n")
                         .append(getBoldString(DigestUtils.SHA_256 + ": "))
-                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_256, bytes)).append("\n")
+                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_256, apkFile)).append("\n")
                         .append(getBoldString(DigestUtils.SHA_384 + ": "))
-                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_384, bytes)).append("\n")
+                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_384, apkFile)).append("\n")
                         .append(getBoldString(DigestUtils.SHA_512 + ": "))
-                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_512, bytes)).append("\n");
-                // Test if this path is readable
-                if (!apkFile.exists() || !apkFile.canRead()) {
-                    try {
-                        apkFile = IOUtils.getCachedFile(bytes);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_512, apkFile)).append("\n");
+            } catch (Exception e) {
+                // ODEX, need to see how to handle
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class StartDexLoaderThread extends Thread {
+        @Override
+        public void run() {
+            try {
+                Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
                 final PackageManager pm = getApplicationContext().getPackageManager();
+                dexClasses = new DexClasses(ClassListingActivity.this, apkFile);
                 final String archiveFilePath = apkFile.getAbsolutePath();
                 @SuppressLint("WrongConstant")
                 PackageInfo packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);  // PackageManager.GET_SIGNATURES (Android Bug)
@@ -371,7 +377,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                 } else {
                     ClassListingActivity.this.packageInfo.append("\n").append(UIUtils.getBoldString(getString(R.string.failed_to_fetch_package_info)));
                 }
-                classListAll = PackageUtils.getClassNames(apkFile);
+                classListAll = dexClasses.getClassNames();
                 totalClassesScanned = classListAll.size();
                 SpannableStringBuilder found = new SpannableStringBuilder();
                 signatureCount = new int[signatures.length];
@@ -397,70 +403,50 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
                 }
                 t_end = System.currentTimeMillis();
                 totalTimeTaken = t_end - t_start;
-                if (totalTrackersFound > 0)
+                if (totalTrackersFound > 0) {
                     foundTrackerList.append(getString(R.string.found_trackers)).append("\n").append(found);
-            } catch (Exception e) {
-                // ODEX, need to see how to handle
-                e.printStackTrace();
-            }
-
-            ClassListingActivity.this.runOnUiThread(() -> {
-                mClassListingAdapter = new ClassListingAdapter(ClassListingActivity.this);
-                if (!trackerClassesOnly) {
-                    mClassListingAdapter.setDefaultList(classList);
-                    mActionBar.setSubtitle(getString(R.string.tracker_classes));
-                } else {
-                    mClassListingAdapter.setDefaultList(classListAll);
-                    mActionBar.setSubtitle(getString(R.string.all_classes));
                 }
-                mListView.setAdapter(mClassListingAdapter);
-                showProgress(false);
-                if (classList.isEmpty() && totalClassesScanned == 0) {
-                    // FIXME: Add support for odex (using root)
-                    Toast.makeText(ClassListingActivity.this, R.string.system_odex_not_supported, Toast.LENGTH_LONG).show();
-                    finish();
-                } else {
-                    viewScanSummary();
-                }
-            });
-        }
-    }
 
-    private class StartDexLoaderThread extends Thread {
-        private final byte[] bytes;
+                ClassListingActivity.this.runOnUiThread(() -> {
+                    mClassListingAdapter = new ClassListingAdapter(ClassListingActivity.this);
+                    if (!trackerClassesOnly) {
+                        mClassListingAdapter.setDefaultList(classList);
+                        mActionBar.setSubtitle(getString(R.string.tracker_classes));
+                    } else {
+                        mClassListingAdapter.setDefaultList(classListAll);
+                        mActionBar.setSubtitle(getString(R.string.all_classes));
+                    }
+                    mListView.setAdapter(mClassListingAdapter);
+                    showProgress(false);
+                    if (classList.isEmpty() && totalClassesScanned == 0) {
+                        // FIXME: Add support for odex (using root)
+                        Toast.makeText(ClassListingActivity.this, R.string.system_odex_not_supported, Toast.LENGTH_LONG).show();
+                        finish();
+                    } else {
+                        viewScanSummary();
+                    }
+                    mListView.setOnItemClickListener((parent, view, position, id) -> {
+                        String className = (!trackerClassesOnly ? classList : classListAll)
+                                .get((int) (parent.getAdapter()).getItemId(position));
+                        try {
+                            Reflector reflector = dexClasses.getReflector(className);
 
-        StartDexLoaderThread(byte[] bytes) {
-            this.bytes = bytes;
-        }
+                            Toast.makeText(ClassListingActivity.this,
+                                    reflector.generateClassData(), Toast.LENGTH_LONG).show();
 
-        @Override
-        public void run() {
-            try {
-                Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-                final DexClasses dexClasses = new DexClasses(ClassListingActivity.this, bytes);
-
-                ClassListingActivity.this.runOnUiThread(
-                        () -> mListView.setOnItemClickListener((parent, view, position, id) -> {
-                            String className = (!trackerClassesOnly ? classList : classListAll)
-                                    .get((int) (parent.getAdapter()).getItemId(position));
-                            try {
-                                Reflector reflector = dexClasses.getReflector(className);
-
-                                Toast.makeText(ClassListingActivity.this,
-                                        reflector.generateClassData(), Toast.LENGTH_LONG).show();
-
-                                Intent intent = new Intent(ClassListingActivity.this,
-                                        ClassViewerActivity.class);
-                                intent.putExtra(ClassViewerActivity.EXTRA_CLASS_NAME, className);
-                                intent.putExtra(ClassViewerActivity.EXTRA_CLASS_DUMP, reflector.toString());
-                                intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, mAppName);
-                                startActivity(intent);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Toast.makeText(ClassListingActivity.this, e.toString(),
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        }));
+                            Intent intent = new Intent(ClassListingActivity.this,
+                                    ClassViewerActivity.class);
+                            intent.putExtra(ClassViewerActivity.EXTRA_CLASS_NAME, className);
+                            intent.putExtra(ClassViewerActivity.EXTRA_CLASS_DUMP, reflector.toString());
+                            intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, mAppName);
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(ClassListingActivity.this, e.toString(),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+                });
             } catch (Exception e) {
                 e.printStackTrace();
             }

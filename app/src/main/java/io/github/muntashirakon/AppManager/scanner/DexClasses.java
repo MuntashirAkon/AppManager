@@ -19,23 +19,52 @@ package io.github.muntashirakon.AppManager.scanner;
 
 import android.content.Context;
 
-import com.google.classysharkandroid.dex.DexLoaderBuilder;
-
+import java.io.Closeable;
 import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import androidx.annotation.NonNull;
+import dalvik.system.DexClassLoader;
+import dalvik.system.DexFile;
 import io.github.muntashirakon.AppManager.scanner.reflector.Reflector;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 
-public class DexClasses {
+public class DexClasses implements Closeable {
     ClassLoader loader;
+    DexFile dexFile;
+    Context context;
+    File apkFile;
 
-    public DexClasses(@NonNull Context ctx, byte[] dexBytes) {
-        loader = DexLoaderBuilder.fromBytes(ctx, dexBytes);
+    public DexClasses(@NonNull Context ctx, File apkFile) {
+        this.context = ctx;
+        this.apkFile = apkFile;
+        // ClassLoader
+        final File optimizedDexFilePath = context.getCodeCacheDir();
+        this.loader = new DexClassLoader(this.apkFile.getAbsolutePath(),
+                optimizedDexFilePath.getAbsolutePath(), null,
+                context.getClassLoader().getParent());
+        IOUtils.deleteSilently(optimizedDexFilePath);
+        // Load dexClass
+        File optimizedFile = null;
+        try {
+            File cacheDir = context.getCacheDir();
+            optimizedFile = File.createTempFile("opt_", ".dex", cacheDir);
+            dexFile = DexFile.loadDex(this.apkFile.getPath(), optimizedFile.getPath(), 0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.deleteSilently(optimizedFile);
+        }
     }
 
-    public DexClasses(@NonNull Context ctx, File dexFile) {
-        loader = DexLoaderBuilder.fromFile(ctx, dexFile);
+    @NonNull
+    public List<String> getClassNames() {
+        if (dexFile != null) {
+            return Collections.list(dexFile.entries());
+        } else return Collections.emptyList();
     }
 
     public Class<?> loadClass(String className) throws ClassNotFoundException {
@@ -48,5 +77,10 @@ public class DexClasses {
 
     public Reflector getReflector(String className) throws ClassNotFoundException {
         return new Reflector(loadClass(className));
+    }
+
+    @Override
+    public void close() throws IOException {
+        dexFile.close();
     }
 }
