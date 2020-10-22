@@ -22,7 +22,9 @@ import android.content.Context;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -33,26 +35,22 @@ import io.github.muntashirakon.AppManager.scanner.reflector.Reflector;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 public class DexClasses implements Closeable {
-    ClassLoader loader;
-    DexFile dexFile;
-    Context context;
-    File apkFile;
+    private ClassLoader loader;
+    private DexFile dexFile;
 
-    public DexClasses(@NonNull Context ctx, File apkFile) {
-        this.context = ctx;
-        this.apkFile = apkFile;
+    public DexClasses(@NonNull Context ctx, @NonNull File apkFile) {
         // ClassLoader
-        final File optimizedDexFilePath = context.getCodeCacheDir();
-        this.loader = new DexClassLoader(this.apkFile.getAbsolutePath(),
+        final File optimizedDexFilePath = ctx.getCodeCacheDir();
+        this.loader = new DexClassLoader(apkFile.getAbsolutePath(),
                 optimizedDexFilePath.getAbsolutePath(), null,
-                context.getClassLoader().getParent());
+                ctx.getClassLoader().getParent());
         IOUtils.deleteSilently(optimizedDexFilePath);
         // Load dexClass
         File optimizedFile = null;
         try {
-            File cacheDir = context.getCacheDir();
+            File cacheDir = ctx.getCacheDir();
             optimizedFile = File.createTempFile("opt_", ".dex", cacheDir);
-            dexFile = DexFile.loadDex(this.apkFile.getPath(), optimizedFile.getPath(), 0);
+            dexFile = DexFile.loadDex(apkFile.getPath(), optimizedFile.getPath(), 0);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -62,9 +60,20 @@ public class DexClasses implements Closeable {
 
     @NonNull
     public List<String> getClassNames() {
+        Set<String> classes = new HashSet<>();
         if (dexFile != null) {
-            return Collections.list(dexFile.entries());
-        } else return Collections.emptyList();
+            Enumeration<String> enumeration = dexFile.entries();
+            String className;
+            // Get imports for each class
+            while (enumeration.hasMoreElements()) {
+                className = enumeration.nextElement();
+                try {
+                    classes.addAll(getImports(className));
+                } catch (ClassNotFoundException ignore) {
+                }
+            }
+        }
+        return new ArrayList<>(classes);
     }
 
     public Class<?> loadClass(String className) throws ClassNotFoundException {
