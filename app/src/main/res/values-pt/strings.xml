@@ -144,12 +144,12 @@
         <item quantity="other">%d apps não pôdem ser impedidas de serem executadas em segundo plano</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
-        <item quantity="one">Não foi possível desinstalar %d app</item>
-        <item quantity="other">Não foi possível desinstalar %d apps</item>
+        <item quantity="one">Não foi possível desinstalar %d das app</item>
+        <item quantity="other">Não foi possível desinstalar %d das apps</item>
     </plurals>
     <plurals name="alert_failed_to_disable">
         <item quantity="one">Não foi possível desativar %d app</item>
-        <item quantity="other">Não foi possível desativar %d apps</item>
+        <item quantity="other">Não foi possível desativar %d das apps</item>
     </plurals>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">Não foi possível limpar os dados de %d app</item>
@@ -163,7 +163,7 @@
     <string name="clear_data">Limpar dados</string>
     <string name="user_and_uid">Utilizador: %s (%d)</string>
     <string name="memory_virtual_memory">Memória: %s; Memória virtual: %s</string>
-    <string name="pid_and_ppid">ID do processo: %d; ID do processo principal: %d</string>
+    <string name="pid_and_ppid">ID do processo: %d; ID do processo parental: %d</string>
     <string name="disable_background_run">Desativar execução em segundo plano</string>
     <string name="kill_process">Encerrar</string>
     <string name="no_running_apps">Nenhuma app em execução</string>
@@ -171,8 +171,8 @@
     <string name="store">Loja</string>
     <string name="apk_updater">Atualizador de APK</string>
     <plurals name="failed_to_import_files">
-        <item quantity="one">%d ficheiro não pôde ser importado.</item>
-        <item quantity="other">Não foi possível importar %d ficheiros.</item>
+        <item quantity="one">%d do ficheiro não pôde ser importado.</item>
+        <item quantity="other">Não foi possível importar %d dos ficheiros.</item>
     </plurals>
     <string name="the_export_was_successful">Exportado</string>
     <string name="the_import_was_successful">Importado</string>
