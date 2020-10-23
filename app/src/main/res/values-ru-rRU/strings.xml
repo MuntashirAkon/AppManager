@@ -104,7 +104,7 @@
     <string name="shortcut_name">Название ярлыка</string>
     <string name="package_name">Название пакета</string>
     <string name="class_name">Название класса</string>
-    <string name="insert_icon">Вставить иконку</string>
+    <string name="insert_icon">Вставить значек</string>
     <string name="error_invalid_icon_resource">Недействительный ресурс значка</string>
     <string name="error_invalid_icon_format">Неверный формат значка</string>
     <string name="icon_picker">Выбор иконок</string>
@@ -416,7 +416,7 @@
     <string name="clear_app_cache">Очистить кэш приложения</string>
     <string name="clear_app_cache_description">Очистить кэш всех приложений</string>
     <string name="no_tracker_found">Трекеров не найдено</string>
-    <string name="failed_packages">Неудачные пакеты</string>
+    <string name="failed_packages">Сбойные пакеты</string>
     <string name="input_signatures">Ввод подписей</string>
     <string name="input_signatures_description">Введите подписи с пробелами, например (com.facebook org.app2 com.app3) и т. д.</string>
     <string name="filtered_packages">Отфильтрованные пакеты</string>
