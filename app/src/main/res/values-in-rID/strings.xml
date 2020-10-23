@@ -16,13 +16,13 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   --><resources>
     <string name="instructions_header">[Instruksi ini sudah usang dan tidak akan lagi diperbarui. Kunjungi situs dokumen resmi (https://muntashirakon.github.io/AppManager) untuk mendapatkan informasi terbaru]</string>
-    <string name="uninstall">Lepas Pemasangan</string>
-    <string name="permissions">Minta Izin</string>
-    <string name="require_no_permission">Tanpa meminta izin apapun</string>
+    <string name="uninstall">Hapus Pemasangan</string>
+    <string name="permissions">Memerlukan Izin</string>
+    <string name="require_no_permission">Tidak memerlukan izin</string>
     <string name="activities">Aktifitas</string>
-    <string name="launch">Jalankan</string>
-    <string name="unsupported">Tidak Didukung</string>
-    <string name="refresh">Muat Ulang</string>
+    <string name="launch">Luncurkan</string>
+    <string name="unsupported">Tidak didukung</string>
+    <string name="refresh">Muat ulang</string>
     <string name="no_activities">Tidak ada aktifitas</string>
     <!-- &#8230; = ... -->
     <string name="installer_error_blocked_device">Perangkat</string>
