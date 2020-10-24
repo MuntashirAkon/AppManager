@@ -145,21 +145,27 @@ public class Reflector {
         }
 
         for (Constructor constructor : constructors) {
-            Class[] cx = constructor.getParameterTypes();
-            if (cx.length > 0) {
-                for (Class aClass : cx) {
-                    ClassTypeAlgorithm.TypeName(aClass.getName(), classRef);
+            try {
+                Class[] cx = constructor.getParameterTypes();
+                if (cx.length > 0) {
+                    for (Class aClass : cx) {
+                        ClassTypeAlgorithm.TypeName(aClass.getName(), classRef);
+                    }
                 }
+            } catch (NoClassDefFoundError ignore) {
             }
         }
 
         for (Method method : methods) {
             ClassTypeAlgorithm.TypeName(method.getReturnType().getName(), classRef);
-            Class[] cx = method.getParameterTypes();
-            if (cx.length > 0) {
-                for (Class aClass : cx) {
-                    ClassTypeAlgorithm.TypeName(aClass.getName(), classRef);
+            try {
+                Class[] cx = method.getParameterTypes();
+                if (cx.length > 0) {
+                    for (Class aClass : cx) {
+                        ClassTypeAlgorithm.TypeName(aClass.getName(), classRef);
+                    }
                 }
+            } catch (NoClassDefFoundError ignore) {
             }
 
             try {
