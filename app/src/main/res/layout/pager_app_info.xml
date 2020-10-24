@@ -26,7 +26,8 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -68,6 +69,8 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="?android:attr/textColorPrimary"
+                    android:focusable="true"
+                    android:nextFocusDown="@id/packageName"
                     tools:text="@tools:sample/lorem" />
 
                 <TextView
@@ -77,6 +80,9 @@
                     android:gravity="center"
                     android:textIsSelectable="true"
                     android:textStyle="italic"
+                    android:focusable="true"
+                    android:nextFocusUp="@id/label"
+                    android:nextFocusDown="@id/version"
                     tools:text="@tools:sample/lorem" />
 
                 <TextView
@@ -85,6 +91,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textIsSelectable="true"
+                    android:focusable="true"
+                    android:nextFocusUp="@id/packageName"
                     tools:text="@tools:sample/us_zipcodes" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
