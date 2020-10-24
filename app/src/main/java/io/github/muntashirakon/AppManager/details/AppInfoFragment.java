@@ -155,33 +155,44 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @GuardedBy("mListItems")
     private final List<ListItem> mListItems = new ArrayList<>();
 
-    private ActivityResultLauncher<String> exportRules = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
-        RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
-        Bundle exportArgs = new Bundle();
-        ArrayList<String> packages = new ArrayList<>();
-        packages.add(mPackageName);
-        exportArgs.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
-        exportArgs.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
-        exportArgs.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, packages);
-        dialogFragment.setArguments(exportArgs);
-        dialogFragment.show(mActivity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-    });
-    private ActivityResultLauncher<String> exportIcon = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
-        try {
-            if (uri == null) return;
-            try (OutputStream outputStream = mActivity.getContentResolver().openOutputStream(uri)) {
-                if (outputStream == null)
-                    throw new IOException("Unable to open output stream.");
-                Bitmap bitmap = IOUtils.getBitmapFromDrawable(mApplicationInfo.loadIcon(mPackageManager));
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-                outputStream.flush();
-                Toast.makeText(mActivity, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(mActivity, R.string.saving_failed, Toast.LENGTH_SHORT).show();
-        }
-    });
+    private ActivityResultLauncher<String> exportRules = registerForActivityResult(
+            new ActivityResultContracts.CreateDocument(),
+            uri -> {
+                if (uri == null) {
+                    // Back button pressed.
+                    return;
+                }
+                RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
+                Bundle exportArgs = new Bundle();
+                ArrayList<String> packages = new ArrayList<>();
+                packages.add(mPackageName);
+                exportArgs.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
+                exportArgs.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
+                exportArgs.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, packages);
+                dialogFragment.setArguments(exportArgs);
+                dialogFragment.show(mActivity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+            });
+    private ActivityResultLauncher<String> exportIcon = registerForActivityResult(
+            new ActivityResultContracts.CreateDocument(),
+            uri -> {
+                try {
+                    if (uri == null) {
+                        // Back button pressed.
+                        return;
+                    }
+                    try (OutputStream outputStream = mActivity.getContentResolver().openOutputStream(uri)) {
+                        if (outputStream == null)
+                            throw new IOException("Unable to open output stream.");
+                        Bitmap bitmap = IOUtils.getBitmapFromDrawable(mApplicationInfo.loadIcon(mPackageManager));
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                        outputStream.flush();
+                        Toast.makeText(mActivity, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(mActivity, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+                }
+            });
     private ActivityResultLauncher<String> permOpenInTermux = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) openInTermux();

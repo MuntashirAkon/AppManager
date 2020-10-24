@@ -83,16 +83,22 @@ public class ClassViewerActivity extends BaseActivity {
     private AppCompatEditText container;
     private ProgressIndicator mProgressIndicator;
     private String className;
-    private ActivityResultLauncher<String> exportManifest = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
-        try (OutputStream outputStream = getContentResolver().openOutputStream(uri)) {
-            Objects.requireNonNull(outputStream).write(classDump.getBytes());
-            outputStream.flush();
-            Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
-        }
-    });
+    private ActivityResultLauncher<String> exportManifest = registerForActivityResult(
+            new ActivityResultContracts.CreateDocument(),
+            uri -> {
+                if (uri == null) {
+                    // Back button pressed.
+                    return;
+                }
+                try (OutputStream outputStream = getContentResolver().openOutputStream(uri)) {
+                    Objects.requireNonNull(outputStream).write(classDump.getBytes());
+                    outputStream.flush();
+                    Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

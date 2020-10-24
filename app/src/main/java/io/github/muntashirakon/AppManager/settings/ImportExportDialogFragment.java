@@ -60,17 +60,23 @@ public class ImportExportDialogFragment extends DialogFragment {
 
     private int userHandle = Users.getCurrentUserHandle();
     private SettingsActivity activity;
-    private ActivityResultLauncher<String> exportRules = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
-        RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
-        Bundle args = new Bundle();
-        args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
-        args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
-        args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, null);
-        dialogFragment.setArguments(args);
-        activity.getSupportFragmentManager().popBackStackImmediate();
-        dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-        if (getDialog() != null) getDialog().cancel();
-    });
+    private ActivityResultLauncher<String> exportRules = registerForActivityResult(
+            new ActivityResultContracts.CreateDocument(),
+            uri -> {
+                if (uri == null) {
+                    // Back button pressed.
+                    return;
+                }
+                RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
+                Bundle args = new Bundle();
+                args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
+                args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
+                args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, null);
+                dialogFragment.setArguments(args);
+                activity.getSupportFragmentManager().popBackStackImmediate();
+                dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+                if (getDialog() != null) getDialog().cancel();
+            });
     private ActivityResultLauncher<String> importRules = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
         RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
         Bundle args = new Bundle();

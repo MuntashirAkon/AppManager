@@ -176,17 +176,23 @@ public class MainActivity extends BaseActivity implements
                 }
             });
 
-    private ActivityResultLauncher<String> batchExportRules = registerForActivityResult(new ActivityResultContracts.CreateDocument(), uri -> {
-        RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
-        Bundle args = new Bundle();
-        args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
-        args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
-        args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, new ArrayList<>(mModel.getSelectedPackages()));
-        dialogFragment.setArguments(args);
-        dialogFragment.show(getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-        mAdapter.clearSelection();
-        handleSelection();
-    });
+    private ActivityResultLauncher<String> batchExportRules = registerForActivityResult(
+            new ActivityResultContracts.CreateDocument(),
+            uri -> {
+                if (uri == null) {
+                    // Back button pressed.
+                    return;
+                }
+                RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
+                Bundle args = new Bundle();
+                args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
+                args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
+                args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, new ArrayList<>(mModel.getSelectedPackages()));
+                dialogFragment.setArguments(args);
+                dialogFragment.show(getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+                mAdapter.clearSelection();
+                handleSelection();
+            });
 
     private BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
         @Override

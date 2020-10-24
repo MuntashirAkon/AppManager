@@ -81,6 +81,10 @@ public class ManifestViewerActivity extends BaseActivity {
     private ActivityResultLauncher<String> exportManifest = registerForActivityResult(
             new ActivityResultContracts.CreateDocument(),
             uri -> {
+                if (uri == null) {
+                    // Back button pressed.
+                    return;
+                }
                 try (OutputStream outputStream = getContentResolver().openOutputStream(uri)) {
                     if (outputStream == null) throw new IOException();
                     outputStream.write(code.getBytes());
