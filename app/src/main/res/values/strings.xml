@@ -495,6 +495,10 @@
         <item quantity="one">%1$d library</item>
         <item quantity="other">%1$d libraries</item>
     </plurals>
+    <plurals name="missing_signatures">
+        <item quantity="one">%1$d signature missing</item>
+        <item quantity="other">%1$d signatures missing</item>
+    </plurals>
     <string name="apply_to_system_apps">Apply to system apps</string>
     <string name="apply_to_system_apps_question">Apply to system apps too? Select \"No\" if unsure.</string>
     <string name="no">No</string>
@@ -683,4 +687,6 @@
     <string name="no_libs">No libraries</string>
     <string name="lib_details">Library Details</string>
     <string name="tap_to_see_details">Tap to see details</string>
+    <string name="view_missing_signatures">Tap to view signatures that are not yet present in App Manager\'s database of libraries. You can also send them to me if you want.</string>
+    <string name="copy">Copy</string>
 </resources>

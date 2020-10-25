@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.scanner;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -61,6 +62,7 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getUnderlinedStri
 
 public class ScannerActivity extends BaseActivity {
     private static final String APP_DEX = "app_dex";
+    private static final String SIG_TO_IGNORE = "^(android(|x)|com\\.android|com\\.google\\.android|java(|x)|j\\$\\.(util|time)|\\w(\\.\\w)+)\\..*$";
 
     /* package */ static List<String> classListAll;
     /* package */ static List<String> trackerClassList = new ArrayList<>();
@@ -89,7 +91,6 @@ public class ScannerActivity extends BaseActivity {
         classListAll = null;
         trackerClassList.clear();
         libClassList.clear();
-        ;
         dexClasses = null;
         super.onDestroy();
     }
@@ -176,12 +177,11 @@ public class ScannerActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                 }).start();
+                final PackageManager pm = getApplicationContext().getPackageManager();
+                final String archiveFilePath = apkFile.getAbsolutePath();
+                @SuppressLint("WrongConstant") final PackageInfo packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);
                 // Fetch signature
                 new Thread(() -> {
-                    final PackageManager pm = getApplicationContext().getPackageManager();
-                    final String archiveFilePath = apkFile.getAbsolutePath();
-                    @SuppressLint("WrongConstant")
-                    PackageInfo packageInfo = pm.getPackageArchiveInfo(archiveFilePath, 64);
                     if (packageInfo != null) {
                         Spannable certInfo = getCertificateInfo(packageInfo);
                         runOnUiThread(() -> ((TextView) findViewById(R.id.checksum_description)).setText(certInfo));
@@ -346,6 +346,7 @@ public class ScannerActivity extends BaseActivity {
     }
 
     private void setLibraryInfo() {
+        List<String> missingLibs = new ArrayList<>();
         String[] libNames = getResources().getStringArray(R.array.lib_names);
         String[] libSignatures = getResources().getStringArray(R.array.lib_signatures);
         String[] libTypes = getResources().getStringArray(R.array.lib_types);
@@ -356,8 +357,10 @@ public class ScannerActivity extends BaseActivity {
         int totalLibsFound = 0;
         for (String className : classListAll) {
             if (className.length() > 8 && className.contains(".")) {
+                boolean matched = false;
                 for (int i = 0; i < libSignatures.length; i++) {
                     if (className.contains(libSignatures[i])) {
+                        matched = true;
                         libClassList.add(className);
                         signatureCount[i]++;
                         signaturesFound[i] = true;
@@ -369,6 +372,9 @@ public class ScannerActivity extends BaseActivity {
                         }
                         break;
                     }
+                }
+                if (!matched && !className.startsWith(mPackageName) && !className.matches(SIG_TO_IGNORE)) {
+                    missingLibs.add(className);
                 }
             }
         }
@@ -403,6 +409,22 @@ public class ScannerActivity extends BaseActivity {
                         .setNegativeButton(R.string.ok, null)
                         .show();
             });
+            // Missing libs
+            if (missingLibs.size() > 0) {
+                ((TextView) findViewById(R.id.missing_libs_title)).setText(getResources().getQuantityString(R.plurals.missing_signatures, missingLibs.size(), missingLibs.size()));
+                View view = findViewById(R.id.missing_libs);
+                view.setVisibility(View.VISIBLE);
+                view.setOnClickListener(v -> new MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string.signatures)
+                        .setItems(missingLibs.toArray(new String[0]), null)
+                        .setNegativeButton(R.string.ok, null)
+                        .setNeutralButton(R.string.copy, (dialog, which) -> {
+                            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                            android.content.ClipData clip = android.content.ClipData.newPlainText(getString(R.string.signatures), missingLibs.toString());
+                            clipboard.setPrimaryClip(clip);
+                        })
+                        .show());
+            }
         });
     }
 
