@@ -17,7 +17,7 @@
   -->
 
 <resources>
-    <string-array name="lib_signatures">
+    <array name="lib_signatures">
         <item>com.getjar.sdk.vending.billing.</item>
         <item>org.mapsforge.android.maps.mapgenerator.tiledownloader.</item>
         <item>org.mapsforge</item>
@@ -102,7 +102,7 @@
         <item>com.mopub.mobileads.</item>
         <item>com.mopub.mobileads</item>
         <item>com.vividsolutions.jtsexample</item>
-        <item>com.itextpdf.text.</item>
+        <item>com.itextpdf.</item>
         <item>com.itextpdf</item>
         <item>adswizz</item>
         <item>agency.tango.materialintroscreen</item>
@@ -2241,8 +2241,8 @@
         <item>yuku.ambilwarna</item>
         <item>za.co.riggaroo.materialhelptutorial</item>
         <item>zlc.season.rxdownload3</item>
-    </string-array>
-    <string-array name="lib_names">
+    </array>
+    <array name="lib_names">
         <item>GetJar Billing</item>
         <item>MapsForge</item>
         <item>MapsForge</item>
@@ -4466,8 +4466,8 @@
         <item>AmbilWarna Color Picker library</item>
         <item>MaterialIntroTutorial</item>
         <item>RxDownload</item>
-    </string-array>
-    <string-array name="lib_types">
+    </array>
+    <array name="lib_types">
         <item>Payment</item>
         <item>Map</item>
         <item>Map</item>
@@ -6691,8 +6691,8 @@
         <item>UI Component</item>
         <item>Utility</item>
         <item>Utility</item>
-    </string-array>
-    <string-array name="lib_website">
+    </array>
+    <array name="lib_website">
         <item>http://www.getjar.com/</item>
         <item>https://github.com/mapsforge/mapsforge</item>
         <item>https://github.com/mapsforge/mapsforge</item>
@@ -8916,5 +8916,5 @@
         <item>https://github.com/yukuku/ambilwarna</item>
         <item>https://github.com/riggaroo/MaterialIntroTutorial</item>
         <item>https://github.com/ssseasonnn/RxDownload</item>
-    </string-array>
+    </array>
 </resources>
