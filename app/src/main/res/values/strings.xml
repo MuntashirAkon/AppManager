@@ -146,12 +146,12 @@
     <string name="class_viewer">Class Viewer</string>
     <string name="toggle_class_listing">Toggle Class Listing</string>
     <plurals name="tracker_and_classes">
-        <item quantity="one">1 tracker with <xliff:g id="class_no" example="50">%2$d</xliff:g> class</item>
-        <item quantity="other">1 tracker with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
+        <item quantity="one">1 tracker with <xliff:g id="class_no" example="50">%1$d</xliff:g> class</item>
+        <item quantity="other">1 tracker with <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="one">2 trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
-        <item quantity="other">2 trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
+        <item quantity="one">2 trackers with <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
+        <item quantity="other">2 trackers with <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
     </plurals>
     <plurals name="other_trackers_and_classes">
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
