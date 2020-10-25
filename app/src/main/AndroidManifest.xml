@@ -67,12 +67,15 @@
             android:name=".usage.AppUsageActivity"
             android:exported="false" />
         <activity
-            android:name=".details.ClassViewerActivity"
+            android:name=".scanner.ClassViewerActivity"
             android:exported="false" />
         <activity
-            android:name=".details.ClassListingActivity"
+            android:name=".scanner.ClassListingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".scanner.ScannerActivity"
             android:exported="true"
-            android:label="@string/exodus">
+            android:label="@string/scanner">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

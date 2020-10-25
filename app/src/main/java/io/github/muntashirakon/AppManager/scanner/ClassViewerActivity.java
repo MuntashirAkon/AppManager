@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager.details;
+package io.github.muntashirakon.AppManager.scanner;
 
 // NOTE: Some patterns here are taken from https://github.com/billthefarmer/editor
 
@@ -184,10 +184,14 @@ public class ClassViewerActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home: finish(); return true;
-            case R.id.action_wrap: setWrapped(); return true;
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.action_wrap:
+                setWrapped();
+                return true;
             case R.id.action_save:
-                String fileName = className +  ".java";
+                String fileName = className + ".java";
                 exportManifest.launch(fileName);
         }
         return super.onOptionsItemSelected(item);

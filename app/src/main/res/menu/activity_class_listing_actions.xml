@@ -18,20 +18,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.apisolutions.classysharkandroid.activities.MainActivity">
+    tools:context=".scanner.ClassListingActivity">
     <group android:menuCategory="container">
-
-        <item
-            android:id="@+id/action_view_trackers"
-            android:icon="@drawable/ic_public_black_24dp"
-            android:title="@string/view_trackers"
-            app:showAsAction="never" />
-
-        <item
-            android:id="@+id/action_view_summary"
-            android:icon="@drawable/ic_assignment_black_24dp"
-            android:title="@string/view_summary"
-            app:showAsAction="never" />
 
         <item
             android:id="@+id/action_toggle_class_listing"

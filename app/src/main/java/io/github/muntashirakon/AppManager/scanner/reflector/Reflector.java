@@ -77,7 +77,7 @@ public class Reflector {
         Hashtable<String, String> classRef;
         currentClass = clazz;
         try {
-            fields = currentClass.getDeclaredFields(); // NoClassDefFoundError ccc71/at/xposed/blocks/at_block_manage_accounts$5
+            fields = currentClass.getDeclaredFields();
             constructors = currentClass.getDeclaredConstructors();
             methods = currentClass.getDeclaredMethods();
         } catch (NoClassDefFoundError e) {

@@ -151,6 +151,18 @@
     <string name="view_trackers">View Trackers</string>
     <string name="view_summary">View Summary</string>
     <string name="toggle_class_listing">Toggle Class Listing</string>
+    <plurals name="tracker_and_classes">
+        <item quantity="one">1 tracker with <xliff:g id="class_no" example="50">%2$d</xliff:g> class</item>
+        <item quantity="other">1 tracker with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
+    </plurals>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="one">2 trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
+        <item quantity="other">2 trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
+    </plurals>
+    <plurals name="other_trackers_and_classes">
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
+    </plurals>
     <string name="trackers_and_classes"><xliff:g id="tracker_no" example="5">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</string>
     <string name="tested_signatures_on_classes_and_time_taken">Tested <xliff:g id="signature_no" example="342">%1$d</xliff:g> signatures on <xliff:g id="class_no" example="6000">%2$d</xliff:g> classes.\nTime taken <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iterations).</string>
     <string name="found_trackers">Found Trackers:</string>
@@ -491,6 +503,14 @@
         <item quantity="one">Backup exists. Are you sure?</item>
         <item quantity="other">Backup exists for more than one app. Are you sure?</item>
     </plurals>
+    <plurals name="classes">
+        <item quantity="one">%1$d class</item>
+        <item quantity="other">%1$d classes</item>
+    </plurals>
+    <plurals name="libraries">
+        <item quantity="one">%1$d library</item>
+        <item quantity="other">%1$d libraries</item>
+    </plurals>
     <string name="failed_to_delete_backup">Could not delete backup</string>
     <string name="failed_to_restore_backup">Could not restore backup</string>
     <string name="apply_to_system_apps">Apply to system apps</string>
@@ -681,4 +701,8 @@
     <string name="install_without_data_loss">If you have disabled signature verification, you can use the <b>only install</b> option to install the app without losing data.</string>
     <string name="only_install">Only Install</string>
     <string name="sys_config">System Config</string>
+    <string name="scanner">Scanner</string>
+    <string name="no_libs">No libraries</string>
+    <string name="lib_details">Library Details</string>
+    <string name="tap_to_see_details">Tap to see details</string>
 </resources>
