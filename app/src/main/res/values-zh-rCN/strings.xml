@@ -76,7 +76,7 @@
     <string name="system">系统</string>
     <string name="user">用户</string>
     <string name="sort">排序</string>
-    <string name="version_name_with_code">版本 %s (%d)</string>
+    <string name="version_name_with_code">版本<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="app_info">应用信息</string>
     <string name="system_app">系统应用</string>
     <string name="user_app">用户应用</string>
@@ -96,7 +96,7 @@
     <string name="instructions">说明</string>
     <string name="error_creating_shortcut">无法创建快捷方式</string>
     <string name="error_verbose_pin_shortcut">当前启动器尚不支持 “PinShortcut”。无法创建快捷方式。</string>
-    <string name="starting_activity">启动活动：%s</string>
+    <string name="starting_activity">启动活动: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="create_shortcut">创建快捷方式</string>
     <string name="edit_shortcut">编辑快捷方式</string>
     <string name="shortcut_name">快捷方式名称</string>
@@ -122,13 +122,14 @@
     <string name="word_wrap">自动换行</string>
     <string name="class_viewer">类查看器</string>
     <string name="toggle_class_listing">切换类列表</string>
-    <string name="tested_signatures_on_classes_and_time_taken">在 %d 类上测试了 %d 个签名。\n耗时 %d ms (%d 迭代)。</string>
+    <string name="tested_signatures_on_classes_and_time_taken">测试了 <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="signature_no" example="342">%1$d</xliff:g> 个签名在 <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="class_no" example="6000">%2$d</xliff:g> 个 classes 上.
+\n所花时间 <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="time" example="10000">%3$d</xliff:g> 毫秒(<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="iteration_no" example="100000">%4$d</xliff:g> 迭代器).</string>
     <string name="found_trackers">已找到tracker:</string>
     <string name="tracker_details">Tracker 详细信息</string>
     <string name="tracker_classes">Tracker 类</string>
     <string name="all_classes">全部类</string>
     <plurals name="main_list_date_days">
-        <item quantity="other">%s %d 天</item>
+        <item quantity="other"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="day_no" example="5">%2$d</xliff:g> 天</item>
     </plurals>
     <string name="no_shared_libs">无共享库</string>
     <string name="no_tracker_class">无 tracker 类</string>
@@ -137,15 +138,15 @@
     <string name="usage_today">今天</string>
     <string name="usage_7_days">最近七天</string>
     <plurals name="usage_months">
-        <item quantity="other">%d 个月</item>
+        <item quantity="other">%1$d 个月</item>
     </plurals>
     <plurals name="usage_days">
-        <item quantity="other">%d 天</item>
+        <item quantity="other">%1$d 天</item>
     </plurals>
     <plurals name="usage_hours">
-        <item quantity="other">%d 小时</item>
+        <item quantity="other">%1$d 小时</item>
     </plurals>
-    <string name="usage_min">%d 分钟</string>
+    <string name="usage_min">%1$d 分钟</string>
     <string name="usage_less_than_a_minute">不足一分钟</string>
     <string name="go_back">返回</string>
     <string name="go">前进</string>
@@ -196,16 +197,16 @@
     <string name="no_content">没有内容</string>
     <string name="view_in_settings">在设置中查看</string>
     <string name="uninstall_app_message">要卸载此应用吗？</string>
-    <string name="failed_to_uninstall">无法卸载 %s.</string>
-    <string name="uninstalled_successfully">%s 已被卸载.</string>
+    <string name="failed_to_uninstall">无法卸载 <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="uninstalled_successfully"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> 已被卸载.</string>
     <string name="uninstall_system_app_message">这是一个系统应用。您确定要卸载此应用吗？</string>
     <string name="stopped">已停止</string>
     <string name="disable">禁用</string>
     <string name="enable">启用</string>
-    <string name="failed_to_disable">无法禁用 %s.</string>
-    <string name="failed_to_enable">无法启用 %s。</string>
+    <string name="failed_to_disable">无法禁用 <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_enable">无法启用 <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">强行停止</string>
-    <string name="failed_to_stop">无法停用 %s。</string>
+    <string name="failed_to_stop">无法停用 <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="storage_and_cache">存储和缓存</string>
     <string name="total_size">总计</string>
     <string name="app_size">应用程序</string>
@@ -228,9 +229,9 @@
     <string name="sort_by_disabled_app">首次禁用</string>
     <string name="sort_by_blocked_components">首次屏蔽</string>
     <string name="external_data_dir">外部资料目录</string>
-    <string name="external_multiple_data_dir">外部数据路径 %d</string>
+    <string name="external_multiple_data_dir">外部数据目录 <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="dir_no" example="1">%1$d</xliff:g></string>
     <plurals name="no_of_times_opened">
-        <item quantity="other">%d 次</item>
+        <item quantity="other">%1$d 次</item>
     </plurals>
     <string name="sort_by_last_used">上次使用</string>
     <string name="sort_by_screen_time">屏幕开启时间</string>
@@ -243,37 +244,37 @@
     <string name="the_import_was_successful">已导入</string>
     <string name="the_export_was_successful">已导出</string>
     <plurals name="failed_to_import_files">
-        <item quantity="other">无法导入％d个文件。</item>
+        <item quantity="other">无法导入 %1$d 个文件。</item>
     </plurals>
     <string name="apk_updater">APK更新器</string>
     <string name="store">商店</string>
     <string name="running_apps">正在运行的应用</string>
     <string name="kill_process">终止</string>
     <string name="disable_background_run">禁用后台运行</string>
-    <string name="pid_and_ppid">进程ID: %d, 父进程 ID: %d</string>
-    <string name="memory_virtual_memory">内存: %s, 虚拟内存: %s</string>
-    <string name="user_and_uid">用户: %s (%d)</string>
+    <string name="pid_and_ppid">进程ID: %1$d, 父进程 ID: %2$d</string>
+    <string name="memory_virtual_memory">内存: %1$s, 虚拟内存: %2$s</string>
+    <string name="user_and_uid">用户: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="user_name" example="root">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="clear_data">删除数据</string>
     <string name="backup_apk">备份APK</string>
     <string name="backup_restore">备份/还原</string>
     <string name="disable_background">停用后台</string>
     <string name="export_blocking_rules">导出屏蔽规则</string>
-    <string name="some_items_selected">%d 已选择</string>
+    <string name="some_items_selected"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="selection_no" example="20">%1$d</xliff:g> 个已选中</string>
     <plurals name="alert_failed_to_clear_data">
-        <item quantity="other">无法清除％d个应用中的数据</item>
+        <item quantity="other">无法清除数据从%1$d个应用</item>
     </plurals>
     <plurals name="alert_failed_to_disable">
-        <item quantity="other">无法禁用％d个应用</item>
+        <item quantity="other">无法禁用%1$d个应用</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
-        <item quantity="other">无法卸载％d个应用</item>
+        <item quantity="other">无法卸载%1$d个应用</item>
     </plurals>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="other">无法阻止％d个应用在后台运行</item>
+        <item quantity="other">无法阻止%1$d个应用在后台运行</item>
     </plurals>
     <string name="the_operation_was_successful">操作成功</string>
     <plurals name="alert_failed_to_force_stop">
-        <item quantity="other">无法强制停止％d个应用</item>
+        <item quantity="other">无法强制停止%1$d个应用</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">切换杀死系统应用程序</string>
     <string name="app_op_cannot_be_disabled">此应用无法禁用，可能是一个只读的应用依赖于另一个应用操作。</string>
@@ -304,11 +305,11 @@
     <string name="night">夜间模式</string>
     <string name="select_theme">主题</string>
     <string name="apply">应用</string>
-    <string name="current_theme">当前主题: %s</string>
+    <string name="current_theme">当前主题: %1$s</string>
     <string name="pref_about_msg">应用程序管理器版本、许可、致谢等。</string>
     <string name="version">版本</string>
     <string name="sort_by_wifi_data">Wi-Fi 数据</string>
-    <string name="block_trackers">屏蔽所有追踪器</string>
+    <string name="block_trackers">屏蔽所有跟踪器</string>
     <string name="sort_by_component_name">组件名称</string>
     <string name="reset_to_default">重置为默认值</string>
     <string name="deny_dangerous_app_ops">拒绝危险的应用程序</string>
@@ -322,9 +323,9 @@
     <string name="sort_by_tracker_components">优先的跟踪器</string>
     <string name="unknown_op">未知的操作</string>
     <string name="failed_to_disable_trackers">无法禁用跟踪器</string>
-    <string name="trackers_disabled_successfully">已禁用追踪器</string>
+    <string name="trackers_disabled_successfully">已禁用跟踪器</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="other">无法从％d个应用禁用跟踪器</item>
+        <item quantity="other">无法禁用来自%1$d个应用的跟踪器</item>
     </plurals>
     <string name="failed_to_grant_permission">无法授予权限</string>
     <string name="failed_to_revoke_permission">无法撤销权限</string>
@@ -338,7 +339,7 @@
     <string name="external_apk_no_app_op">外部APK没有任何应用程序操作</string>
     <string name="manifest_viewer">清单查看器</string>
     <plurals name="no_of_trackers">
-        <item quantity="other">%d 个追踪器</item>
+        <item quantity="other">%1$d个跟踪器</item>
     </plurals>
     <string name="install">安装</string>
     <string name="update">升级</string>
@@ -370,13 +371,13 @@
     <string name="only_works_in_root_or_adb_mode">仅在 root 或 ADB 模式下工作</string>
     <string name="failed_to_parse_some_numbers">无法解析某些数字</string>
     <plurals name="no_of_splits">
-        <item quantity="other">%d 拆分</item>
+        <item quantity="other">%1$d 个拆分</item>
     </plurals>
-    <string name="split_no">拆分#%d: %s</string>
+    <string name="split_no">拆分#%1$d:%2$s</string>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">无法获取安装包信息，可能是一个拆分APK</string>
     <string name="termux">Termux 终端模拟器</string>
-    <string name="package_name_is_installed_successfully">已安装 %s</string>
-    <string name="failed_to_install_package_name">无法安装 %s</string>
+    <string name="package_name_is_installed_successfully"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> 已安装</string>
+    <string name="failed_to_install_package_name">无法安装<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="filter">筛选器</string>
     <string name="filter_user_apps">用户应用</string>
     <string name="filter_system_apps">系统应用</string>
@@ -397,25 +398,25 @@
     <string name="delete_backup">删除备份</string>
     <string name="backup_options">备份选项</string>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="other">无法备份 %d 个应用</item>
+        <item quantity="other">无法备份 %1$d个应用</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
-        <item quantity="other">无法备份％d个应用</item>
+        <item quantity="other">无法备份%1$d个应用</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
-        <item quantity="other">无法还原％d个应用</item>
+        <item quantity="other">无法还原%1$d个应用</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="other">无法删除％d个备份</item>
+        <item quantity="other">无法删除%1$d个备份</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="other">无法解除封锁％d个应用程式中的追踪器</item>
+        <item quantity="other">无法解封来自%1$d个应用的跟踪器</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
-        <item quantity="other">无法阻止％d个应用的组件</item>
+        <item quantity="other">无法拦截%1$d个应用的组件</item>
     </plurals>
     <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="other">无法拒绝％d个应用的应用操作</item>
+        <item quantity="other">无法拒绝%1$d个应用的应用操作</item>
     </plurals>
     <string name="apply_to_system_apps">应用到系统应用</string>
     <string name="apply_to_system_apps_question">也应用于系统应用？如果不确定，请选择“否”。</string>
@@ -440,7 +441,7 @@
     <string name="toggle_default_app_ops">切换默认应用</string>
     <string name="installer_error_aborted">安装失败，要么因为它被取消，要么因为会话意外关闭</string>
     <string name="installer_error_blocked_device">设备</string>
-    <string name="installer_error_blocked">安装被 %s阻止</string>
+    <string name="installer_error_blocked">安装被阻止, 由 <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="installer_error_conflict">无法安装这个应用程序，因为一个已安装的应用程序的包名和它一样</string>
     <string name="installer_error_incompatible">应用程序与此设备不兼容</string>
     <string name="installer_error_bad_apks">无效的 APK 文件</string>
@@ -472,7 +473,7 @@
     <string name="backup_all_users">所有用户</string>
     <string name="pref_app_language">语言</string>
     <string name="auto">自动</string>
-    <string name="current_language">语言：%s</string>
+    <string name="current_language">语言: %1$s</string>
     <string name="choose_language">更改语言</string>
     <string name="navigation_dial_pad">拨号键盘</string>
     <string name="keyboard_12_keys">12 键</string>
@@ -487,24 +488,24 @@
     <string name="launch_mode_single_task">单任务</string>
     <string name="launch_mode_single_instance">单实例</string>
     <string name="base_apk">Base APK</string>
-    <string name="split_feature_name">特点：%s</string>
+    <string name="split_feature_name">特性: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <plurals name="alert_failed_to_enable">
-        <item quantity="other">无法启用％s个应用</item>
+        <item quantity="other">无法启用%1$d个应用</item>
     </plurals>
-    <string name="unknown_split_for_feature">特性 %s的 %s</string>
-    <string name="density_split_for_feature">%s (%d DPI) 资源用于特性 %s</string>
-    <string name="density_split_for_base_apk">基础 APK 的 %s (%d DPI) 资源</string>
-    <string name="unknown_split_for_base_apk">基础 APK 的 %s</string>
+    <string name="unknown_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="some_split">%1$s</xliff:g> 用于特性 <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="density_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="dpi_no" example="480">%2$d</xliff:g> DPI) 资源, 用于特性 <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%3$s</xliff:g></string>
+    <string name="density_split_for_base_apk"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="dpi_no" example="480">%2$d</xliff:g> DPI) 资源, 用于基础APK</string>
+    <string name="unknown_split_for_base_apk"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="some_split">%1$s</xliff:g>拆分，用于基础 APK</string>
     <string name="touchscreen_finger">手指</string>
     <string name="required">必需的</string>
     <string name="orientation_sensor">传感器</string>
     <string name="orientation_no_sensor">无传感器</string>
     <string name="orientation_locked">已锁定</string>
     <string name="launch_mode_multiple">多个</string>
-    <string name="locale_split_for_base_apk">基础 APK 的 %s 语言环境</string>
-    <string name="locale_split_for_feature">%s 的 %s 语言环境</string>
-    <string name="abi_split_for_base_apk">基础 APK 的 %s 代码</string>
-    <string name="abi_split_for_feature">%s 的 %s 代码</string>
+    <string name="locale_split_for_base_apk"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="English"> %1$s</xliff:g>语言环境，用于基础APK</string>
+    <string name="locale_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="English">%1$s</xliff:g> 语言环境, 用于特性 <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="abi_split_for_base_apk"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="arm64_v8a">%1$s</xliff:g>代码，属于基础APK</string>
+    <string name="abi_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="arm64_v8a">%1$s</xliff:g> 代码, 用于 <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="touchscreen_stylus">触控笔</string>
     <string name="pref_open_pgp_provider_msg">添加一个OpenPGP提供商使您能够加密敏感信息，如应用程序数据备份</string>
     <string name="open_pgp_provider">OpenPGP 提供商</string>
@@ -515,8 +516,8 @@
     <string name="input_backup_name">备份文件名</string>
     <string name="downgrade_not_possible">没有root权限或通过ADB，应用降级不可能</string>
     <string name="downgrade">降级</string>
-    <string name="process_state_with_extra">状态: %s (%s)</string>
-    <string name="process_state">状态: %s</string>
+    <string name="process_state_with_extra">状态: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="state_extra" example="High priority">%2$s</xliff:g>)</string>
+    <string name="process_state">状态: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <string name="state_multithreaded">多线程</string>
     <string name="state_foreground">前台</string>
     <string name="state_session_leader">会话首领</string>
@@ -549,7 +550,7 @@
     <string name="filter_apps">应用程序</string>
     <string name="no_apps">没有应用</string>
     <string name="apps">应用程序</string>
-    <string name="compression_method">压缩方法：%s</string>
+    <string name="compression_method">压缩方法: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_backup_flags_msg">为备份选项添加预设消除了每次备份/恢复时选择flag的负担</string>
     <string name="pref_compression_method">压缩方法</string>
     <string name="rules">规则</string>
@@ -581,8 +582,8 @@
     <string name="subject">名称</string>
     <string name="filter_apps_with_backups">有备份的应用程序</string>
     <string name="sort_by_backup">先备份</string>
-    <string name="failed_to_uninstall_updates">无法卸载 %s 的更新。</string>
-    <string name="update_uninstalled_successfully">已卸载 %s 的更新。</string>
+    <string name="failed_to_uninstall_updates">无法卸载更新,它属于 <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="update_uninstalled_successfully">用于 <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g>更新已被卸载.</string>
     <string name="uninstall_updates">卸载更新</string>
     <string name="launch_mode_single_top">栈顶</string>
     <string name="only_install">仅安装</string>

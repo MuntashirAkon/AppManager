@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="user_id">ID użytkownika</string>
     <string name="date_updated">Data aktualizacji</string>
     <string name="date_installed">Data instalacji</string>
@@ -394,4 +394,21 @@
     <string name="no_content">Brak zawartości</string>
     <string name="no_usage_in_this_time_range">Brak użycia w tym zakresie czasowym</string>
     <string name="key_name_cannot_be_null">Nazwa klucza nie może być pusta</string>
+    <string name="storage_and_cache">Dane i pamięć podręczna</string>
+    <string name="failed_to_stop">Nie udało się zatrzymać &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="force_stop">Wymuś zatrzymanie</string>
+    <string name="failed_to_enable">Nie udało się włączyć &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_disable">Nie udało się wyłączyć &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="enable">Włącz</string>
+    <string name="uninstall_system_app_message">To jest aplikacja systemowa. Czy na pewno chcesz odinstalować tę aplikację\?</string>
+    <string name="uninstalled_successfully">Aplikacja &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; została odinstalowana.<xliff:g id="app_name" example="App Manager">%1$s</xliff:g> has been uninstalled.</string>
+    <string name="uninstall_app_message">Czy chcesz odinstalować tę aplikację\?</string>
+    <string name="view_in_settings">Wyświetl w ustawieniach</string>
+    <string name="disabled_app">Wyłączona</string>
+    <string name="kill_process">Zakończ</string>
+    <string name="pref_import_blocker">Importuj z Blocker</string>
+    <string name="pref_import_watt">Importuj z Watt</string>
+    <string name="pref_import_export_blocking_rules">Importuj/eksportuj reguły blokowania</string>
+    <string name="sort_by_mobile_data">Dane komórkowe</string>
+    <string name="sort_by_last_used">Ostatnio używane</string>
 </resources>

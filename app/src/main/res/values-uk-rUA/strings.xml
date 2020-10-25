@@ -14,10 +14,9 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-<resources>
+  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="uninstall">Видалити</string>
-    <string name="activities">Активність</string>
+    <string name="activities">Activities</string>
     <string name="launch">Запустити</string>
     <string name="refresh">Оновити</string>
     <string name="providers">Провайдери</string>
@@ -25,10 +24,10 @@
     <string name="launch_mode">Режим запуску</string>
     <string name="sort_by_last_update">Останнє оновлення</string>
     <string name="service">Служби</string>
-    <string name="no_service">Немає сервісів</string>
+    <string name="no_service">Немає служб</string>
     <string name="read">Читання</string>
     <string name="write">Запис</string>
-    <string name="patterns_allowed">Дозволені шаблони</string>
+    <string name="patterns_allowed">Графічні ключі дозволено</string>
     <string name="declared_permission">Дозволи</string>
     <string name="group">Група</string>
     <string name="protection_level">Рівень захисту</string>
@@ -38,7 +37,7 @@
     <string name="configurations">Конфігурації</string>
     <string name="manifest">Маніфест</string>
     <string name="error">Помилка</string>
-    <string name="loading">Завантаження …</string>
+    <string name="loading">Завантаження…</string>
     <!-- &#8230; = ... -->
     <string name="about">Про додаток</string>
     <string name="cache_size">Кеш</string>
@@ -51,4 +50,649 @@
     <string name="license">Ліцензія</string>
     <string name="third_party">Сторонні бібліотеки та іконки</string>
     <string name="credits">Автори</string>
+    <string name="toggle_default_app_ops">Перемкнути дозволи за замовчуванням</string>
+    <string name="pref_remove_all_rules_msg">Всі налаштовані заблоковані компоненти будуть включені, для app ops буде встановлено значення за замовчуванням і дозволи будуть надані</string>
+    <plurals name="alert_failed_to_deny_app_ops">
+        <item quantity="one">Не вдалося заборонити дозвіл додатку %1$d</item>
+        <item quantity="few">Не вдалося заборонити дозвіл додатків %1$d</item>
+        <item quantity="many">Не вдалося заборонити дозвіл додатків %1$d</item>
+        <item quantity="other">Не вдалося заборонити дозвіл додатків %1$d</item>
+    </plurals>
+    <string name="split_no">Спліт#%1$d: %2$s</string>
+    <plurals name="no_of_splits">
+        <item quantity="one">%1$d спліт</item>
+        <item quantity="few">%1$d спліти</item>
+        <item quantity="many">%1$d сплітів</item>
+        <item quantity="other">%1$d сплітів</item>
+    </plurals>
+    <string name="input_app_ops_description">Введіть константи дозволу з пробілами, наприклад (63 72 12) та ін. Ви можете знайти константи додатків на вкладці додатків під дужками.</string>
+    <string name="input_app_ops">Програма вводу дозволу</string>
+    <string name="deny_app_ops_dots">Забороняю дозволи…</string>
+    <string name="external_apk_no_app_op">Зовнішній файл .apk не має жодних операцій з додатками</string>
+    <string name="failed_to_deny_dangerous_app_ops">Не вдалося відкликати всі небезпечні дозволи</string>
+    <string name="failed_to_reset_app_ops">Не вдалося провести скидання дозволів</string>
+    <string name="sort_by_app_ops_values">Значення дозволу</string>
+    <string name="sort_by_app_ops_names">Назва дозволу</string>
+    <string name="deny_dangerous_app_ops">Заборонити небезпечні дозволи</string>
+    <string name="app_op_cannot_be_disabled">Цей дозвіл неможливо заборонити, можливо він лише для читання, або залежить від іншого дозволу.</string>
+    <string name="app_op_cannot_be_enabled">Цей дозвіл неможливо активувати, можливо він лише для читання, або залежить від іншого дозволу.</string>
+    <string name="failed_to_enable_op">Сталася помилка під час спроби надати дозвіл</string>
+    <string name="no_app_ops">Немає операцій з дозволами</string>
+    <string name="app_ops">Керування дозволами</string>
+    <string name="sys_config">Конфігурація системи</string>
+    <string name="only_install">Тільки встановити</string>
+    <string name="install_without_data_loss">Якщо ви вимкнули перевірку підпису, ви можете використовувати опцію <b> лише встановити </b>, для установки додатка без втрати даних.</string>
+    <string name="app_data_will_be_lost">Існуючі дані буде втрачено.</string>
+    <string name="signature_mismatch_for_system_apps">Не вдалося встановити додаток, оскільки встановлений додаток є системним, з іншим підписом.</string>
+    <string name="do_you_want_to_uninstall_and_install">Ви хочете видалити та встановити додаток знову\?</string>
+    <string name="packages">пакети</string>
+    <string name="onboard">Доступні</string>
+    <string name="usage_access_not_supported">Не вдалося запросити доступ до використання, оскільки відповідна сторінка налаштувань не існує.</string>
+    <string name="non_critical_exts">Некритичні розширення</string>
+    <string name="critical_exts">Критичні розширення</string>
+    <string name="rsa_modulus">Модуль</string>
+    <string name="rsa_exponent">Експонента</string>
+    <string name="format">Формат</string>
+    <string name="public_key">Відкритий ключ</string>
+    <string name="algorithm">Алгоритм</string>
+    <string name="signature">Підпис</string>
+    <string name="checksums">Контрольна сума</string>
+    <string name="serial_no">Серійний номер</string>
+    <string name="not_yet_valid">Ще не дійсний</string>
+    <string name="expired">Закінчений</string>
+    <string name="valid">Дійсний</string>
+    <string name="validity">Строк дії</string>
+    <string name="type">Тип</string>
+    <string name="issued_date">Дата видачі</string>
+    <string name="issuer">Видавець</string>
+    <string name="filter_apps_with_backups">Додатки з резервними копіями</string>
+    <string name="sort_by_backup">Спочатку резервні копії</string>
+    <string name="failed_to_uninstall_updates">Не вдалося видалити оновлення &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt; %1$s &lt;/xliff:g&gt;.<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="update_uninstalled_successfully">Оновлення &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; було видалено.<xliff:g id="app_name" example="App Manager">%1$s</xliff:g> has been uninstalled.</string>
+    <string name="uninstall_updates">Видалити оновлення</string>
+    <string name="allow_open_pgp_operation">Клацніть, щоб дозволити AM використовувати OpenPGP</string>
+    <string name="confirm_installation">Підтвердьте встановлення</string>
+    <string name="compression_method">Метод стиснення: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"compression_method\" example=\"GZip\"&gt;%1$s&lt;/xliff:g&gt;<xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
+    <string name="pref_backup_flags_msg">Додавання попередньо встановлених параметрів резервного копіювання позбавляє від необхідності вибору пунктів під час кожного резервного копіювання / відновлення</string>
+    <string name="pref_compression_method">Метод стиснення</string>
+    <string name="rules">Правила</string>
+    <string name="other">Інше</string>
+    <string name="changes_not_saved">Зміни не збережено</string>
+    <string name="sort_by_priority">Пріоритет</string>
+    <string name="sort_by_memory_usage">Використання пам\'яті</string>
+    <string name="sort_by_user_apps_first">Спочатку додатки користувача</string>
+    <string name="sort_by_apps_first">Додатки в першу чергу</string>
+    <string name="sort_by_process_name">Ім\'я процесу</string>
+    <string name="sort_by_process_id">Ідентифікатор процесу</string>
+    <string name="filter_apps">Додатки</string>
+    <string name="no_apps">Немає додатків</string>
+    <string name="apps">Додатки</string>
+    <string name="routine_ops">Звичайні операції</string>
+    <string name="apply_now">Застосувати зараз…</string>
+    <string name="keystore">Сховище ключів</string>
+    <string name="no_profiles">Немає профілів</string>
+    <string name="presets">Пресети</string>
+    <string name="profiles">Профілі</string>
+    <string name="pref_open_pgp_provider_msg">Додавання постачальника OpenPGP дозволяє шифрувати конфіденційну інформацію, таку як резервні копії даних додатків</string>
+    <string name="open_pgp_provider">Постачальник OpenPGP</string>
+    <string name="systemless_app">Позасистемний додаток</string>
+    <string name="cancel">Скасувати</string>
+    <string name="ok">ОК</string>
+    <string name="input_backup_name_description">Ім\'я резервної копії не повинно починатися з цифри і не повинно містити пробілу. Залиште поле порожнім, якщо ви хочете використовувати поточну дату-час.</string>
+    <string name="input_backup_name">Ім\'я резервної копії</string>
+    <string name="downgrade_not_possible">Пониження версії неможливе без ROOT або ADB</string>
+    <string name="downgrade">Понизити версію</string>
+    <string name="process_state_with_extra">Стан: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"process_state\" example=\"Sleeping\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"state_extra\" example=\"High priority\"&gt;%2$s&lt;/xliff:g&gt;)<xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
+    <string name="process_state">Стан: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"process_state\" example=\"Sleeping\"&gt;%1$s&lt;/xliff:g&gt;<xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
+    <string name="state_multithreaded">Багатопотокові</string>
+    <string name="state_foreground">Передній план</string>
+    <string name="state_session_leader">Лідер сесії</string>
+    <string name="state_locked_memory">Заблокована пам\'ять</string>
+    <string name="state_low_priority">Низький пріоритет</string>
+    <string name="state_high_priority">Високий пріоритет</string>
+    <string name="state_unknown">Невідомий</string>
+    <string name="state_idle">Очікування</string>
+    <string name="state_zombie">Зомбі</string>
+    <string name="state_dead">Мертвий</string>
+    <string name="state_sleeping">Сплячий</string>
+    <string name="touchscreen_finger">Палець</string>
+    <string name="touchscreen_stylus">Стилус</string>
+    <string name="touchscreen_no_touch">Без дотику</string>
+    <string name="navigation_wheel">Колесо</string>
+    <string name="navigation_trackball">Трекбол</string>
+    <string name="navigation_dial_pad">Цифрова клавішна панель</string>
+    <string name="navigation_no_nav">Немає навігації</string>
+    <string name="keyboard_12_keys">12 клавіш</string>
+    <string name="keyboard_qwerty">QWERTY</string>
+    <string name="keyboard_no_keys">Немає ключів</string>
+    <string name="_undefined">Невизначено</string>
+    <string name="orientation_user">Користувача</string>
+    <string name="orientation_reverse_landscape">Зворотня горизонтальна</string>
+    <string name="orientation_reverse_portrait">Зворотня вертикальна</string>
+    <string name="orientation_portrait">Вертикальна</string>
+    <string name="orientation_landscape">Горизонтальна</string>
+    <string name="orientation_locked">Заблоковано</string>
+    <string name="orientation_behind">Позаду</string>
+    <string name="orientation_unspecified">Невизначено</string>
+    <string name="launch_mode_single_task">Єдине завдання</string>
+    <string name="launch_mode_single_instance">Один екземпляр</string>
+    <string name="launch_mode_multiple">Кілька</string>
+    <string name="locale_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt;%1$s&lt;/xliff:g&gt;локаль базового АРК<xliff:g id="split_name" example="English">%1$s</xliff:g> locale for base APK</string>
+    <string name="locale_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt;%1$s&lt;/xliff:g&gt; локаль &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;<xliff:g id="split_name" example="English">%1$s</xliff:g> locale for feature <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="abi_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; код для базового АРК<xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> code for base APK</string>
+    <string name="abi_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; код &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;<xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> code for <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="density_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI) ресурсів для базового АРК<xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) resources for base APK</string>
+    <string name="density_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI) ресурси для функції&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%3$s&lt;/xliff:g&gt;<xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) resources for feature <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
+    <string name="unknown_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt; базового АРК<xliff:g id="split_name" example="some_split">%1$s</xliff:g> for base APK</string>
+    <string name="unknown_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt; для функції &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;<xliff:g id="split_name" example="some_split">%1$s</xliff:g> for feature <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="split_feature_name">Функції: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%1$s&lt;/xliff:g&gt;<xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
+    <string name="base_apk">Базовий файл .apk</string>
+    <string name="choose_language">Змінити мову</string>
+    <string name="current_language">Мова: %1$s</string>
+    <string name="auto">Авто</string>
+    <string name="pref_app_language">Мова</string>
+    <string name="backup_all_users">Всі користувачі</string>
+    <string name="backup_multiple">Резервне копіювання декількох</string>
+    <string name="source">Джерело</string>
+    <string name="obb_files_extracted_successfully">Файли OBB витягнуто</string>
+    <string name="failed_to_extract_obb_files">Не вдалося витягти файли OBB</string>
+    <string name="backup_obb_media">OBB та медіа</string>
+    <string name="backup_apk_only">Лише APK</string>
+    <string name="installer_error_session_abandon">Не вдалося перервати сеанс програми встановлення</string>
+    <string name="installer_error_session_commit">Не вдалося зафіксувати файли .apk</string>
+    <string name="installer_error_session_write">Не вдалося записати до сеансу програми встановлення</string>
+    <string name="installer_error_session_create">Не вдалося створити сеанс програми встановлення</string>
+    <string name="installer_error_security">Не вдається отримати доступ до файлів .apk</string>
+    <string name="install_in_progress">Триває встановлення</string>
+    <string name="package_installer">Інсталятор пакетів</string>
+    <string name="unblock_trackers">Розблокування трекерів</string>
+    <string name="reinstall">Переустановка</string>
+    <string name="reinstall_app_message">Ви хочете перевстановити цей додаток\?</string>
+    <string name="install_app_message">Ви хочете встановити цей додаток\?</string>
+    <string name="info">Інформація</string>
+    <string name="try_again">Спробуйте ще раз</string>
+    <string name="full_stop_tap_to_see_details">. Торкніться, щоб переглянути деталі.</string>
+    <string name="operation_running">Операція запущена…</string>
+    <string name="batch_ops">Пакетні операції</string>
+    <string name="failed_to_fetch_package_info">Не вдалося отримати інформацію про пакет</string>
+    <string name="installer_error_lidl_rom">Ваша прошивка несумісна з без-ROOT-овим інсталятором.</string>
+    <string name="installer_error_generic">Помилка встановлення</string>
+    <string name="installer_error_storage">Недостатньо місця для встановлення додатку</string>
+    <string name="installer_error_bad_apks">Вибрано пошкоджені файли .apk</string>
+    <string name="installer_error_incompatible">Додаток несумісний з цим пристроєм</string>
+    <string name="installer_error_blocked">Установка заблокована &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;<xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
+    <string name="installer_error_blocked_device">пристрій</string>
+    <string name="installer_error_aborted">Не вдалося виконати установку, оскільки її скасовано, або сеанс несподівано закрито</string>
+    <string name="filter_apps_with_activities">Додатки з activities</string>
+    <string name="are_you_sure">Ви впевнені\?</string>
+    <string name="pref_remove_all_rules">Видалити всі правила</string>
+    <string name="website">Веб-сайт</string>
+    <string name="run_in_termux">Запустити в Termux</string>
+    <string name="open_in_termux">Відкрити в Termux</string>
+    <string name="export_icon">Витягти іконку</string>
+    <string name="no_matching_package_found">Не знайдено відповідного пакета</string>
+    <string name="block_unblock_trackers">Заблокувати/розблокувати трекери</string>
+    <string name="unblock">Розблокувати</string>
+    <string name="block">Блокувати</string>
+    <string name="failed_to_backup">Не вдалося створити резервну копію</string>
+    <string name="clear">Очистити</string>
+    <string name="failed_packages">Збійні пакети</string>
+    <string name="deny_app_ops_description">Заборонити вказані операції програми, визначені константами, наприклад 63 означає RUN_IN_BACKGROUND</string>
+    <string name="manifest_viewer">Переглядач маніфесту</string>
+    <string name="never_ask">Не запитувати</string>
+    <string name="unknown_op">Невідома операція</string>
+    <string name="sort_by_tracker_components">Спочатку трекери</string>
+    <string name="sort_by_denied_permissions">Спочатку заборонені</string>
+    <string name="sort_by_denied_app_ops">Спочатку заборонені</string>
+    <string name="keyboard_type">Тип клавіатури</string>
+    <string name="reject_time">Час відхилення</string>
+    <string name="accept_time">Час підтвердження</string>
+    <string name="pref_global_blocking_enabled_msg">Дозволяє блокувати будь-який компонент будь-якого додатку, не вмикаючи явно блокування додатку</string>
+    <string name="rules_not_applied">Правила не застосовані</string>
+    <string name="error_evaluating_input">Не вдалося оцінити вхідні дані</string>
+    <string name="shared_prefs">Спільні налаштування</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Перевірені &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"signature_no\" example=\"342\"&gt;%1$d&lt;/xliff:g&gt; підписи в &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"6000\"&gt;%2$d&lt;/xliff:g&gt; класах.
+\nЗайняло часу &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"time\" example=\"10000\"&gt;%3$d&lt;/xliff:g&gt; мс(&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"iteration_no\" example=\"100000\"&gt;%4$d&lt;/xliff:g&gt; ітерації).<xliff:g id="signature_no" example="342">%1$d</xliff:g> signatures on <xliff:g id="class_no" example="6000">%2$d</xliff:g> classes.\nTime taken <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iterations).</string>
+    <string name="trackers_and_classes">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"5\"&gt;%1$d&lt;/xliff:g&gt; трекерів з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; класами<xliff:g id="tracker_no" example="5">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</string>
+    <plurals name="main_list_date_days">
+        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; день</item>
+        <item quantity="few">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; дні</item>
+        <item quantity="many">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; днів</item>
+        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; днів</item>
+    </plurals>
+    <string name="main_activity">Головне аctivity</string>
+    <string name="sdk_max">Макс.</string>
+    <string name="sdk_min">Мін.</string>
+    <string name="path_permissions">Шляхи дозволів</string>
+    <string name="authority">Права</string>
+    <string name="restore">Відновити</string>
+    <string name="clear_data_message">Ви впевнені, що хочете очистити дані цього додатка\?</string>
+    <string name="skip_signature_checks">Пропустити перевірку підписів</string>
+    <string name="yes">Так</string>
+    <string name="no">Ні</string>
+    <string name="apply_to_system_apps_question">Застосувати до системних додатків теж\? Виберіть \"Ні\", якщо не впевнені.</string>
+    <string name="apply_to_system_apps">Застосувати до системних додатків</string>
+    <string name="failed_to_restore_backup">Не вдалося відновити резервну копію</string>
+    <string name="failed_to_delete_backup">Не вдалося видалити резервну копію</string>
+    <plurals name="backup_exists_are_you_sure">
+        <item quantity="one">Резервна копія існує. Ви впевнені\?</item>
+        <item quantity="few">Резервні копії існують. Ви впевнені\?</item>
+        <item quantity="many">Резервні копії існують. Ви впевнені\?</item>
+        <item quantity="other">Резервні копії існують. Ви впевнені\?</item>
+    </plurals>
+    <plurals name="alert_failed_to_enable">
+        <item quantity="one">Не вдалося ввімкнути додаток %1$d</item>
+        <item quantity="few">Не вдалося ввімкнути додатки %1$d</item>
+        <item quantity="many">Не вдалося ввімкнути додатки %1$d</item>
+        <item quantity="other">Не вдалося ввімкнути додатки %1$d</item>
+    </plurals>
+    <plurals name="alert_failed_to_block_components">
+        <item quantity="one">Не вдалося заблокувати компоненти в додатку %1$d</item>
+        <item quantity="few">Не вдалося заблокувати компоненти в додатках %1$d</item>
+        <item quantity="many">Не вдалося заблокувати компоненти в додатках %1$d</item>
+        <item quantity="other">Не вдалося заблокувати компоненти в додатках %1$d</item>
+    </plurals>
+    <plurals name="alert_failed_to_delete_backup">
+        <item quantity="one">Не вдалося видалити резервну копію %1$d</item>
+        <item quantity="few">Не вдалося видалити резервні копії %1$d</item>
+        <item quantity="many">Не вдалося видалити резервні копії %1$d</item>
+        <item quantity="other">Не вдалося видалити резервні копії %1$d</item>
+    </plurals>
+    <plurals name="alert_failed_to_restore">
+        <item quantity="one">Не вдалося відновити додаток %1$d</item>
+        <item quantity="few">Не вдалося відновити додатки %1$d</item>
+        <item quantity="many">Не вдалося відновити додатки %1$d</item>
+        <item quantity="other">Не вдалося відновити додатки %1$d</item>
+    </plurals>
+    <plurals name="alert_failed_to_backup">
+        <item quantity="one">Не вдалося зробити резервну копію додатка %1$d</item>
+        <item quantity="few">Не вдалося зробити резервну копію додатків %1$d</item>
+        <item quantity="many">Не вдалося зробити резервну копію додатків %1$d</item>
+        <item quantity="other">Не вдалося зробити резервну копію додатків %1$d</item>
+    </plurals>
+    <plurals name="failed_to_backup_some_apk_files">
+        <item quantity="one">Не вдалося зробити резервну копію додатка %1$d</item>
+        <item quantity="few">Не вдалося зробити резервну копію додатків %1$d</item>
+        <item quantity="many">Не вдалося зробити резервну копію додатків %1$d</item>
+        <item quantity="other">Не вдалося зробити резервну копію додатків %1$d</item>
+    </plurals>
+    <string name="backup_options">Параметри резервного копіювання</string>
+    <string name="delete_backup">Видалити резервну копію</string>
+    <string name="backup">Резервна копія</string>
+    <string name="apk">APK</string>
+    <string name="data">Дані</string>
+    <string name="external_data">Зовнішні дані</string>
+    <string name="exclude_cache">Виключити кеш</string>
+    <string name="blocking_rules">Правила блокування</string>
+    <string name="whats_new">Що нового</string>
+    <string name="features">Функції</string>
+    <string name="components">Компоненти</string>
+    <string name="trackers">Трекери</string>
+    <string name="installed_version">Встановлена версія</string>
+    <string name="filter_disabled_apps">Вимкнені додатки</string>
+    <string name="select_all">Вибрати все</string>
+    <string name="filter_apps_with_rules">Додатки з правилами</string>
+    <string name="filter_system_apps">Системні додатки</string>
+    <string name="filter_user_apps">Користувацькі додатки</string>
+    <string name="filter">Фільтр</string>
+    <string name="failed_to_install_package_name">Не вдалося встановити &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt; %1$s &lt;/xliff:g&gt;<xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
+    <string name="package_name_is_installed_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; встановлено<xliff:g id="app_name" example="App Manager">%1$s</xliff:g> installed</string>
+    <string name="termux">Termux</string>
+    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Не вдалося отримати відомості про пакунок, можливо split .apk</string>
+    <string name="failed_to_parse_some_numbers">Не вдалося проаналізувати деякі цифри</string>
+    <string name="only_works_in_root_or_adb_mode">Працює лише в режимі ROOT або ADB</string>
+    <string name="filtered_packages">Відфільтровані пакети</string>
+    <string name="input_signatures_description">Вхідні підписи з пробілами, наприклад (com.facebook org.app2 com.app3) тощо.</string>
+    <string name="input_signatures">Вхідні підписи</string>
+    <string name="no_tracker_found">Не знайдено жодного трекера</string>
+    <string name="clear_app_cache_description">Очищення кешу всіх додатків</string>
+    <string name="clear_app_cache">Очищення кешу додатків</string>
+    <string name="clear_data_from_uninstalled_apps_description">Очистити дані видалених додатків, котрі відмічені прапорцем DONT_DELETE_DATA</string>
+    <string name="block_components_description">Блокувати всі компоненти, визначені заданими підписами</string>
+    <string name="block_unblock_trackers_description">Блокування або розблокування реклами і компонентів трекерів з усіх встановлених програм</string>
+    <string name="clear_cache">Очистити кеш</string>
+    <string name="failed_to_get_data_usage_information">Не вдалося отримати інформацію про використання даних</string>
+    <string name="pref_import_existing_msg">Додавайте компоненти, вимкнені іншими програмами, до App Manager. Будьте обережні при використанні цього інструменту, оскільки може бути багато помилкових позитивних результатів. Виберіть лише програми, в котрих ви впевнені</string>
+    <string name="pref_import_existing">Імпорт існуючих правил</string>
+    <string name="community_links">Канал оновлення: https://t.me/AppManagerChannel
+\nГрупа підтримки: https://t.me/AppManagerAndroid
+\nTwitter: https://twitter.com/AMUpdateChannel</string>
+    <string name="source_code">Вихідний код</string>
+    <string name="update">Оновлення</string>
+    <string name="install">Встановити</string>
+    <plurals name="no_of_trackers">
+        <item quantity="one">%1$d трекер</item>
+        <item quantity="few">%1$d трекери</item>
+        <item quantity="many">%1$d трекерів</item>
+        <item quantity="other">%1$d трекерів</item>
+    </plurals>
+    <string name="scanning_is_still_in_progress">Сканування все ще триває</string>
+    <string name="changelog">Чейнджлог</string>
+    <string name="one_click_ops">Операції в 1 клік</string>
+    <string name="launch_app">Запустити</string>
+    <string name="failed_to_deny_dangerous_perms">Не вдалося відкликати всі небезпечні дозволи</string>
+    <string name="failed_to_revoke_permission">Не вдалося відкликати дозвіл</string>
+    <string name="failed_to_grant_permission">Не вдалося надати дозвіл</string>
+    <plurals name="alert_failed_to_disable_trackers">
+        <item quantity="one">Не вдалося вимкнути трекери в додатку %1$d</item>
+        <item quantity="few">Не вдалося вимкнути трекери в додатках %1$d</item>
+        <item quantity="many">Не вдалося вимкнути трекери в додатках %1$d</item>
+        <item quantity="other">Не вдалося вимкнути трекери в додатках %1$d</item>
+    </plurals>
+    <string name="trackers_disabled_successfully">Трекери відключені</string>
+    <string name="failed_to_disable_trackers">Не вдалося вимкнути трекери</string>
+    <string name="deny_dangerous_permissions">Заборонити небезпечні дозволи</string>
+    <string name="sort_by_dangerous_permissions">Спочатку небезпечні</string>
+    <string name="sort_by_permission_names">Ім\'я дозволу</string>
+    <string name="reset_to_default">Відновити за замовчуванням</string>
+    <string name="sort_by_component_name">Ім\'я компонента</string>
+    <string name="block_trackers">Блокувати трекери</string>
+    <string name="sort_by_wifi_data">Дані Wi-Fi</string>
+    <string name="version">Версія</string>
+    <string name="pref_about_msg">Версія App Manager, ліцензія, автори тощо.</string>
+    <string name="current_theme">Поточна тема: %1$s</string>
+    <string name="apply">Застосувати</string>
+    <string name="select_theme">Тема</string>
+    <string name="night">Ніч</string>
+    <string name="day">День</string>
+    <string name="battery_mode">Режим батареї</string>
+    <string name="pref_app_theme">Тема додатка</string>
+    <string name="pref_import_blocker_msg">Імпорт правил блокування з Blocker, кожен файл містить правила для одного пакета</string>
+    <string name="pref_import_watt_msg">Імпортуйте правила блокування з Watt, кожен файл, що містить правила для однієї назви пакета як packagename.xml тощо.</string>
+    <string name="pref_import_msg">Імпортуйте раніше експортовані правила блокування з App Manager</string>
+    <string name="pref_export_msg">Експортувати правила блокування, налаштовані в App Manager, у зовнішнє сховище</string>
+    <string name="touchscreen">Сенсорний екран</string>
+    <string name="navigation">Навігація</string>
+    <string name="export_failed">Не вдалося експортувати!</string>
+    <string name="import_failed">Не вдалося імпортувати!</string>
+    <string name="export_options">Експорт параметрів</string>
+    <string name="import_options">Імпорт параметрів</string>
+    <string name="pref_export">Експорт</string>
+    <string name="pref_import">Імпорт</string>
+    <string name="ago">тому</string>
+    <string name="duration">Тривалість</string>
+    <string name="running">Запущено</string>
+    <string name="mode">Режим</string>
+    <string name="permission_name">Ім\'я дозволу</string>
+    <string name="toggle_kill_for_system_apps">Перемикач вбивства системних додатків</string>
+    <plurals name="alert_failed_to_force_stop">
+        <item quantity="one">Не вдалося примусово зупинити додаток %1$d</item>
+        <item quantity="few">Не вдалося примусово зупинити додатки %1$d</item>
+        <item quantity="many">Не вдалося примусово зупинити додатки%1$d</item>
+        <item quantity="other">Не вдалося примусово зупинити додатки%1$d</item>
+    </plurals>
+    <string name="the_operation_was_successful">Завершено</string>
+    <plurals name="alert_failed_to_disable_background">
+        <item quantity="one">Не вдалося заборонити додатку %1$d працювати у фоновому режимі</item>
+        <item quantity="few">Не вдалося заборонити додаткам %1$d працювати у фоновому режимі</item>
+        <item quantity="many">Не вдалося заборонити додаткам %1$d працювати у фоновому режимі</item>
+        <item quantity="other">Не вдалося заборонити додаткам %1$d працювати у фоновому режимі</item>
+    </plurals>
+    <plurals name="alert_failed_to_uninstall">
+        <item quantity="one">Не вдалося видалити додаток %1$d</item>
+        <item quantity="few">Не вдалося видалити додатки %1$d</item>
+        <item quantity="many">Не вдалося видалити додатки %1$d</item>
+        <item quantity="other">Не вдалося видалити додатки %1$d</item>
+    </plurals>
+    <plurals name="alert_failed_to_disable">
+        <item quantity="one">Не вдалося вимкнути додаток %1$d</item>
+        <item quantity="few">Не вдалося вимкнути додатки %1$d</item>
+        <item quantity="many">Не вдалося вимкнути додатки %1$d</item>
+        <item quantity="other">Не вдалося вимкнути додатки %1$d</item>
+    </plurals>
+    <plurals name="alert_failed_to_clear_data">
+        <item quantity="one">Не вдалося очистити дані додатку %1$d</item>
+        <item quantity="few">Не вдалося очистити дані додатків %1$d</item>
+        <item quantity="many">Не вдалося очистити дані додатків %1$d</item>
+        <item quantity="other">Не вдалося очистити дані додатків %1$d</item>
+    </plurals>
+    <string name="some_items_selected">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"selection_no\" example=\"20\"&gt;%1$d&lt;/xliff:g&gt; вибрано<xliff:g id="selection_no" example="20">%1$d</xliff:g> selected</string>
+    <string name="export_blocking_rules">Експорт правил блокування</string>
+    <string name="disable_background">Вимкнути фон</string>
+    <string name="backup_restore">Резервне копіювання/відновлення</string>
+    <string name="backup_apk">Резервне копіювання APK</string>
+    <string name="clear_data">Очистити дані</string>
+    <string name="user_and_uid">Користувач: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_name\" example=\"root\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%2$d&lt;/xliff:g&gt;)<xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
+    <string name="memory_virtual_memory">Пам\'ять: %1$s, Віртуальна пам\'ять: %2$s</string>
+    <string name="disable_background_run">Заборонити роботу в фоні</string>
+    <string name="kill_process">Вбити</string>
+    <string name="no_running_apps">Немає запущених служб</string>
+    <string name="running_apps">Запущені служби</string>
+    <plurals name="failed_to_import_files">
+        <item quantity="one">Не вдалося імпортувати %1$d файл.</item>
+        <item quantity="few">Не вдалося імпортувати %1$d файли.</item>
+        <item quantity="many">Не вдалося імпортувати %1$d файлів.</item>
+        <item quantity="other">Не вдалося імпортувати %1$d файлів.</item>
+    </plurals>
+    <string name="the_export_was_successful">Експортовано</string>
+    <string name="the_import_was_successful">Імпортовано</string>
+    <string name="pref_import_blocker">Імпорт з Blocker</string>
+    <string name="pref_import_watt">Імпорт з Watt</string>
+    <string name="pref_import_export_blocking_rules">Імпорт/Експорт правил блокування</string>
+    <string name="sort_by_mobile_data">Мобільні дані</string>
+    <string name="sort_by_times_opened">Кількість запусків</string>
+    <string name="sort_by_screen_time">Час роботи екрану</string>
+    <string name="sort_by_last_used">Останнє використання</string>
+    <plurals name="no_of_times_opened">
+        <item quantity="one">%1$d раз</item>
+        <item quantity="few">%1$d рази</item>
+        <item quantity="many">%1$d раз</item>
+        <item quantity="other">%1$d раз</item>
+    </plurals>
+    <string name="external_multiple_data_dir">Каталог зовнішніх даних &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dir_no\" example=\"1\"&gt;%1$d&lt;/xliff:g&gt;<xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
+    <string name="external_data_dir">Каталог зовнішніх даних</string>
+    <string name="sort_by_blocked_components">Спочатку заблоковані</string>
+    <string name="sort_by_disabled_app">Спочатку вимкнені</string>
+    <string name="exodus_link">εxodus посилання</string>
+    <string name="usage_yesterday">Вчора</string>
+    <string name="only_works_in_root_mode">Працює тільки в ROOT режимі</string>
+    <string name="app_settings">Налаштування</string>
+    <string name="pref_usage_access_enabled_msg">Дозволяє переглянути статистику використання додатка та інформацію про них</string>
+    <string name="pref_usage_access_enabled">Доступ до статистики використання</string>
+    <string name="pref_global_blocking_enabled">Глобальне блокування компонентів</string>
+    <string name="pref_root_mode_enabled_msg">Активує всі ROOT функції цього додатка. Режим ADB виявляється автоматично, коли ROOT режим вимкнено</string>
+    <string name="str_logo">Логотип</string>
+    <string name="app_size">Додаток</string>
+    <string name="total_size">Всього</string>
+    <string name="storage_and_cache">Сховище і кеш</string>
+    <string name="failed_to_stop">Не вдалося зупинити &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="force_stop">Зупинити примусово</string>
+    <string name="failed_to_enable">Не вдалося ввімкнути &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_disable">Не вдалося вимкнути &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="enable">Ввімкнути</string>
+    <string name="disable">Відключено</string>
+    <string name="stopped">Зупинено</string>
+    <string name="uninstall_system_app_message">Це системний додаток. Ви впевнені, що хочете видалити його\?</string>
+    <string name="uninstalled_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; видалено.<xliff:g id="app_name" example="App Manager">%1$s</xliff:g> has been uninstalled.</string>
+    <string name="failed_to_uninstall">Не вдалося видалити &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="uninstall_app_message">Видалити цей додаток\?</string>
+    <string name="view_in_settings">Переглянути в налаштуваннях</string>
+    <string name="no_content">Немає вмісту</string>
+    <string name="no_usage_in_this_time_range">Немає використання в цьому часовому діапазоні</string>
+    <string name="disabled_app">Відключено</string>
+    <string name="key_name_cannot_be_null">Ім\'я ключа не може бути порожнім</string>
+    <string name="type_string">Символів</string>
+    <string name="type_long">Довге ціле число</string>
+    <string name="type_int">Ціле число</string>
+    <string name="type_float">Десяткове число</string>
+    <string name="type_boolean">Правда/хибність</string>
+    <string name="done">Завершено</string>
+    <string name="add_item">Додати елемент</string>
+    <string name="system_odex_not_supported">.odex-овані і деякі системні додатки не підтримуються!</string>
+    <string name="select_type">Виберіть тип</string>
+    <string name="key_name">Назва ключа</string>
+    <string name="boolean_value">Логічне значення</string>
+    <string name="decimal_value">Десяткове значення</string>
+    <string name="expiry_date">Придатний до</string>
+    <string name="orientation_user_portrait">Вертикальна, користувацька</string>
+    <string name="installer_error_conflict">Не вдається встановити додаток, оскільки встановлений вже має цю назву пакета</string>
+    <plurals name="alert_failed_to_unblock_trackers">
+        <item quantity="one">Не вдалося розблокувати трекери в додатку %1$d</item>
+        <item quantity="few">Не вдалося розблокувати трекери в додатках %1$d</item>
+        <item quantity="many">Не вдалося розблокувати трекери в додатках %1$d</item>
+        <item quantity="other">Не вдалося розблокувати трекери в додатках %1$d</item>
+    </plurals>
+    <string name="clear_data_from_uninstalled_apps">Очистити дані видалених додатків</string>
+    <string name="block_components_dots">Блокування компонентів …</string>
+    <string name="community">Група Telegram</string>
+    <string name="follow_system">Як в системі</string>
+    <string name="pid_and_ppid">Ідентифікатор процесу: %1$d, ідентифікатор батьківського процесу: %2$d</string>
+    <string name="pref_import_export_blocking_rules_msg">Імпорт/Експорт правил, імпорт зовнішніх правил з Watt або Blocker</string>
+    <string name="pref_root_mode_enabled">ROOT режим</string>
+    <string name="failed_to_disable_op">Сталася помилка під час спроби заборонити дозвіл</string>
+    <string name="debuggable">Налагоджується</string>
+    <string name="error_invalid_icon_format">Пошкоджений формат іконки</string>
+    <string name="error_invalid_icon_resource">Пошкоджений ресурс іконки</string>
+    <string name="installer_app">Інсталятор додатку</string>
+    <string name="sort_by_package_name">Ім’я пакету</string>
+    <string name="require_no_permission">Не вимагає дозволів</string>
+    <string name="required">Вимагається</string>
+    <string name="subject">Тема</string>
+    <string name="state_waking">Waking</string>
+    <string name="state_trace_stop">Трасування зупинки</string>
+    <string name="sdk_flags">Прапорці</string>
+    <string name="flags">Прапорці</string>
+    <string name="soft_input">Режим \"софт\" введення</string>
+    <string name="task_affinity">Спорідненість завдань</string>
+    <string name="store">Aurora Store</string>
+    <string name="orientation_user_landscape">Користувацька, горизонтальна</string>
+    <string name="orientation_sensor">Датчик</string>
+    <string name="orientation_sensor_portrait">Вертикальна по датчику</string>
+    <string name="orientation_sensor_landscape">Горизонтальна по датчику</string>
+    <string name="orientation_no_sensor">Без датчика</string>
+    <string name="orientation_full_user">Повністю користувацька</string>
+    <string name="orientation_full_sensor">Повністю згідно датчика</string>
+    <string name="integer_value">Ціле значення</string>
+    <string name="long_integer_value">Довге ціле значення</string>
+    <string name="string_value">Значення рядка</string>
+    <string name="saving_failed">Помилка збереження. Повторіть спробу.</string>
+    <string name="saved_successfully">Збережено</string>
+    <string name="deletion_failed">Видалення не вдалося</string>
+    <string name="deleted_successfully">Видалено</string>
+    <string name="delete">Видалити</string>
+    <string name="discard">Відхилити</string>
+    <string name="save">Зберегти</string>
+    <string name="databases">Бази даних</string>
+    <string name="test_only">Тільки тест</string>
+    <string name="updated_app">Оновлено</string>
+    <string name="requested_large_heap">Великий розмір heap</string>
+    <string name="no_code">Немає коду</string>
+    <string name="process_name">Назва процесу</string>
+    <string name="native_library_dir">Рідний каталог бібліотеки JNI</string>
+    <string name="dev_protected_data_dir">Каталог даних, захищений пристроєм</string>
+    <string name="aurora">Aurora</string>
+    <string name="search">Пошук</string>
+    <string name="menu_apply_rules">Застосувати правила</string>
+    <string name="menu_remove_rules">Видалити правила</string>
+    <string name="failed_to_extract_apk_file">Не вдалося видобути файл APK</string>
+    <string name="share_apk">Поділитися APK</string>
+    <string name="grant_usage_acess_message">Доступ до статистики використання є обов\'язковим для відображення інформації про використання додатка.</string>
+    <string name="grant_usage_access">Надати доступ до статистики використання</string>
+    <string name="go">Далі</string>
+    <string name="go_back">← Назад</string>
+    <string name="usage_last_used">Останнє використання:</string>
+    <string name="usage_less_than_a_minute">Менше хвилини</string>
+    <string name="usage_min">%1$d хв.</string>
+    <plurals name="usage_hours">
+        <item quantity="one">%1$d година</item>
+        <item quantity="few">%1$d години</item>
+        <item quantity="many">%1$d годин</item>
+        <item quantity="other">%1$d годин</item>
+    </plurals>
+    <plurals name="usage_days">
+        <item quantity="one">%1$d день</item>
+        <item quantity="few">%1$d дні</item>
+        <item quantity="many">%1$d днів</item>
+        <item quantity="other">%1$d днів</item>
+    </plurals>
+    <plurals name="usage_months">
+        <item quantity="one">%1$d місяць</item>
+        <item quantity="few">%1$d місяці</item>
+        <item quantity="many">%1$d місяців</item>
+        <item quantity="other">%1$d місяців</item>
+    </plurals>
+    <string name="usage_365_days">За останні 365 днів</string>
+    <string name="usage_30_days">За останні 30 днів</string>
+    <string name="usage_7_days">За останні 7 днів</string>
+    <string name="usage_today">Сьогодні</string>
+    <string name="usage_yearly">Щороку</string>
+    <string name="usage_monthly">Щомісяця</string>
+    <string name="usage_weekly">Щотижня</string>
+    <string name="app_usage">Використання додатків</string>
+    <string name="no_tracker_class">Немає класів трекера</string>
+    <string name="no_shared_libs">Немає спільних бібліотек</string>
+    <string name="all_classes">Всі класи</string>
+    <string name="tracker_classes">Класи трекера</string>
+    <string name="tracker_details">Відомості про трекер</string>
+    <string name="found_trackers">Знайдені трекери:</string>
+    <string name="toggle_class_listing">Переключити перелік класів</string>
+    <string name="view_summary">Переглянути резюме</string>
+    <string name="view_trackers">Переглянути трекери</string>
+    <string name="class_viewer">Переглядач класів</string>
+    <string name="word_wrap">Переключити перенесення слів</string>
+    <string name="credits_message">"Подяка розробникам
+\n- The Android Open Source Project
+\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Editor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;AppsMonitor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
+\nРозробник лого: &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "<a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+        \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+        \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+        \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+        \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+        \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+        \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+        \nLogo credit: <a href="https://github.com/Atrate">Atrate</a>.
+    </string>
+    <string name="error_loading_icons">Неможливо завантажити іконки</string>
+    <string name="icon_picker">Вибір іконки</string>
+    <string name="insert_icon">Вставити іконку</string>
+    <string name="package_name">Назва пакету</string>
+    <string name="shortcut_name">Назва ярлика</string>
+    <string name="starting_activity">Стартове activity: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;<xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
+    <string name="error_verbose_pin_shortcut">Поточний лаунчер не підтримує прикріплення ярликів. Неможливо створили ярлик.</string>
+    <string name="no_activities">Немає activities</string>
+    <string name="empty_package_name">Порожнє імя пакету</string>
+    <string name="show_details">Показати деталі</string>
+    <string name="user_id">Ідентифікатор користувача</string>
+    <string name="date_updated">Дата оновлення</string>
+    <string name="date_installed">Дата установки</string>
+    <string name="more_info">Детальна інформація</string>
+    <string name="source_dir">Каталог-джерело</string>
+    <string name="data_dir">Каталоги даних</string>
+    <string name="paths_and_directories">Шлях і каталоги</string>
+    <string name="user_app">Додаток користувача</string>
+    <string name="system_app">Системний додаток</string>
+    <string name="app_info">Про додаток</string>
+    <string name="version_name_with_code">Версія &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;%2$d&lt;/xliff:g&gt;)<xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
+    <string name="sort">Сортування</string>
+    <string name="user">Користувацькі</string>
+    <string name="system">Системні</string>
+    <string name="app_not_installed">Додаток не встановлено</string>
+    <string name="input_features">Функції введення</string>
+    <string name="shared_user_id">Спільний ідентифікатор користувача</string>
+    <string name="sort_by_shared_user_id">Спільний ідентифікатор користувача</string>
+    <string name="no_feature">Немає функцій</string>
+    <string name="gles_ver">Запит. версія GL ES</string>
+    <string name="uses_feature">Використовує функції</string>
+    <string name="shared_libs">Спільні бібліотеки</string>
+    <string name="media_size">Медіа</string>
+    <string name="data_size">Дані</string>
+    <string name="data_usage_msg">Використання даних з моменту останнього завантаження</string>
+    <string name="data_transmitted">Даних відправлено</string>
+    <string name="data_received">Даних отримано</string>
+    <string name="sort_by_target_sdk">Цільова SDK</string>
+    <string name="sort_by_domain">Спочатку користувацькі додатки</string>
+    <string name="sort_by_app_label">Назва додатку</string>
+    <string name="no_configurations">Немає конфігурацій</string>
+    <string name="grant_uri_permission">Надати дозволи URI</string>
+    <string name="orientation">Орієнтація</string>
+    <string name="no_receivers">Немає ресіверів</string>
+    <string name="receivers">Ресівери</string>
+    <string name="permissions">Використовує дозволи</string>
+    <string name="instructions_header">[Ці інструкції застаріли і більше не будуть оновлюватися. Щоб отримати актуальну інформацію відвідайте офіційний сайт документації за адресою (https://muntashirakon.github.io/AppManager)]</string>
 </resources>
