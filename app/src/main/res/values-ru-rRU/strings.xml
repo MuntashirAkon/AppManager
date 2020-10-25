@@ -98,7 +98,7 @@
     <string name="instructions">Инструкции</string>
     <string name="error_creating_shortcut">Ошибка при создании ярлыка</string>
     <string name="error_verbose_pin_shortcut">Текущий лончер не поддерживает закрепление ярлыков. Невозможно создать ярлык.</string>
-    <string name="starting_activity">Стартовое активити: %s</string>
+    <string name="starting_activity">Стартовое активити: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="create_shortcut">Создать ярлык</string>
     <string name="edit_shortcut">Изменить ярлык</string>
     <string name="shortcut_name">Название ярлыка</string>
@@ -129,7 +129,8 @@
     <string name="view_summary">Просмотр сводки</string>
     <string name="toggle_class_listing">Переключить список классов</string>
     <string name="trackers_and_classes">%d трекеров с %d классами</string>
-    <string name="tested_signatures_on_classes_and_time_taken">Протестировано %d подписей на %d классах.\nВыполнено за %d мс. (%d итераций).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Протестировано <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="signature_no" example="342">%1$d</xliff:g> подписей на <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="class_no" example="6000">%2$d</xliff:g> классах.
+\nВыполнено за <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="time" example="10000">%3$d</xliff:g> мс. (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="iteration_no" example="100000">%4$d</xliff:g> итераций).</string>
     <string name="found_trackers">Найденные трекеры:</string>
     <string name="tracker_details">О трекере</string>
     <string name="tracker_classes">Классы трекера</string>
@@ -221,15 +222,15 @@
     <string name="view_in_settings">Показать в настройках</string>
     <string name="uninstall_app_message">Вы хотите удалить это приложение?</string>
     <string name="failed_to_uninstall">Не удалось удалить %s.</string>
-    <string name="uninstalled_successfully">%s было удалено.</string>
+    <string name="uninstalled_successfully"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> было удалено.</string>
     <string name="uninstall_system_app_message">Это системное приложение. Вы уверены, что хотите удалить его?</string>
     <string name="stopped">Остановлено</string>
     <string name="disable">Отключить</string>
     <string name="enable">Включить</string>
-    <string name="failed_to_disable">Не удалось отключить %s.</string>
-    <string name="failed_to_enable">Не удалось включить %s.</string>
+    <string name="failed_to_disable">Не удалось отключить <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_enable">Не удалось включить <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Остановить принудительно</string>
-    <string name="failed_to_stop">Не удалось остановить %s.</string>
+    <string name="failed_to_stop">Не удалось остановить <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="storage_and_cache">Хранилище и кэш</string>
     <string name="total_size">Всего</string>
     <string name="app_size">Приложение</string>
@@ -281,9 +282,9 @@
     <string name="no_running_apps">Нет работающих приложений</string>
     <string name="kill_process">Закрыть</string>
     <string name="disable_background_run">Запретить работу в фоне</string>
-    <string name="pid_and_ppid">Идентификатор процесса: %d, идентификатор родительского процесса: %d</string>
-    <string name="memory_virtual_memory">Память: %s, виртуальная память: %s</string>
-    <string name="user_and_uid">Пользователь: %s (%d)</string>
+    <string name="pid_and_ppid">Идентификатор процесса: %1$d, идентификатор родительского процесса: %2$d</string>
+    <string name="memory_virtual_memory">Память: %1$s, виртуальная память: %2$s</string>
+    <string name="user_and_uid">Пользователь: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="user_name" example="root">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="clear_data">Очистить данные</string>
     <string name="backup_apk">Резервное копирование APK</string>
     <string name="backup_restore">Резервное копирование/восстановление</string>
@@ -429,7 +430,7 @@
         <item quantity="many">%d частей</item>
         <item quantity="other">%d частей</item>
     </plurals>
-    <string name="split_no">Часть#%d: %s</string>
+    <string name="split_no">Часть#%1$d: %2$s</string>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">Не удалось получить информацию о пакете, возможно, это разделенный файл APK</string>
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully">%s установлено</string>
@@ -589,14 +590,14 @@
     <string name="launch_mode_single_task">Одна задача</string>
     <string name="launch_mode_single_instance">Единичный экземпляр</string>
     <string name="launch_mode_multiple">Несколько</string>
-    <string name="locale_split_for_base_apk">%s локаль для базового APK</string>
-    <string name="locale_split_for_feature">%s локаль для %s</string>
-    <string name="abi_split_for_base_apk">%s код для базового APK</string>
-    <string name="abi_split_for_feature">%s код для %s</string>
-    <string name="density_split_for_base_apk">%s (%d DPI) ресурсы для базового APK</string>
-    <string name="density_split_for_feature">%s (%d DPI) ресурсы для функции %s</string>
-    <string name="unknown_split_for_base_apk">%s для базового APK</string>
-    <string name="unknown_split_for_feature">%s для функции %s</string>
+    <string name="locale_split_for_base_apk"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="English">%1$s</xliff:g> локаль для базового APK</string>
+    <string name="locale_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="English">%1$s</xliff:g> локаль для <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="abi_split_for_base_apk"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="arm64_v8a">%1$s</xliff:g> код для базового APK</string>
+    <string name="abi_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="arm64_v8a">%1$s</xliff:g> код для <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="density_split_for_base_apk"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="dpi_no" example="480">%2$d</xliff:g> DPI) ресурсов для базового APK</string>
+    <string name="density_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="dpi_no" example="480">%2$d</xliff:g> DPI) ресурсы для функции <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%3$s</xliff:g></string>
+    <string name="unknown_split_for_base_apk"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="some_split">%1$s</xliff:g> для базового APK</string>
+    <string name="unknown_split_for_feature"><xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="split_name" example="some_split">%1$s</xliff:g> для функции <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="split_feature_name">Функции: %s</string>
     <string name="base_apk">Базовый APK</string>
     <plurals name="alert_failed_to_enable">
@@ -613,7 +614,7 @@
     <string name="input_backup_name_description">Имя резервной копии не должно начинаться с цифры и содержать пробелы. Оставьте это поле пустым, если хотите использовать текущую дату и время.</string>
     <string name="downgrade_not_possible">Понижение версии невозможно без root или ADB</string>
     <string name="downgrade">Понизить</string>
-    <string name="process_state_with_extra">Состояние: %s (%s)</string>
+    <string name="process_state_with_extra">Состояние: <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="process_state">Состояние: %s</string>
     <string name="state_multithreaded">Многопоточный</string>
     <string name="state_unknown">Неизвестный</string>
@@ -653,8 +654,8 @@
     <string name="confirm_installation">Подтвердить установку</string>
     <string name="allow_open_pgp_operation">Щёлкните, чтобы разрешить AM использовать OpenPGP</string>
     <string name="uninstall_updates">Удалить обновления</string>
-    <string name="update_uninstalled_successfully">Обновления для %s были удалены.</string>
-    <string name="failed_to_uninstall_updates">Не удалось удалить обновления для %s.</string>
+    <string name="update_uninstalled_successfully">Обновления для <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g> были удалены.</string>
+    <string name="failed_to_uninstall_updates">Не удалось удалить обновления для <xliff:g xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="filter_apps_with_backups">Приложения с резервными копиями</string>
     <string name="issued_date">Дата выпуска</string>
     <string name="expiry_date">Дата истечения</string>
@@ -682,4 +683,5 @@
     <string name="sort_by_backup">Сначала резервные копии</string>
     <string name="onboard">Доступные</string>
     <string name="packages">пакеты</string>
+    <string name="state_session_leader">Лидер сессии</string>
 </resources>
