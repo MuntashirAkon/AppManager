@@ -26,7 +26,6 @@
     <string name="user_and_uid">Bruker: %s (%d)</string>
     <string name="memory_virtual_memory">Minne: %s, virtuelt minne: %s</string>
     <string name="kill_process">Drep</string>
-    <string name="no_running_apps">Ingen kjørende programmer</string>
     <string name="running_apps">Kjørende programmer</string>
     <string name="store">Butikk</string>
     <string name="apk_updater">APK-oppdaterer</string>
@@ -51,7 +50,6 @@
     <string name="credits">Bidragsytere</string>
     <string name="third_party">Tredjepartsbibliotek og ikoner</string>
     <string name="license">Lisens</string>
-    <string name="error_loading_icons">Klarte ikke å laste inn ikoner</string>
     <string name="icon_picker">Ikonvelger</string>
     <string name="error_invalid_icon_format">Ugyldig ikonformat</string>
     <string name="error_invalid_icon_resource">Ugyldig ikonressurs</string>
@@ -64,7 +62,6 @@
     <string name="error_creating_shortcut">Klarte ikke å opprette snarvei</string>
     <string name="instructions">Instruks</string>
     <string name="empty_package_name">Tomt pakkenavn</string>
-    <string name="show_details">Vis detaljer</string>
     <string name="main_activity">Hovedaktivitet</string>
     <string name="user_id">Bruker-ID</string>
     <string name="installer_app">Installasjonsprogram</string>
@@ -129,7 +126,6 @@
     <string name="receivers">Mottagere</string>
     <string name="no_activities">Ingen aktiviteter</string>
     <string name="refresh">Gjenoppfrisk</string>
-    <string name="unsupported">Ustøttet</string>
     <string name="launch">Start</string>
     <string name="activities">Aktiviteter</string>
     <string name="require_no_permission">Ingen tilganger kreves</string>
@@ -188,24 +184,20 @@
     <string name="reinstall">Reinstaller</string>
     <string name="reinstall_app_message">Ønsker du å reinstallere dette programmet\?</string>
     <string name="install_app_message">Ønsker du å installere dette programmet\?</string>
-    <string name="info">Info</string>
     <string name="try_again">Prøv igjen</string>
     <string name="export_icon">Pakk ut ikon</string>
     <string name="unblock">Avblokker</string>
     <string name="block">Blokker</string>
-    <string name="failed_to_backup">Kunne ikke opprette sikkerhetskopi</string>
     <string name="clear">Tøm</string>
     <string name="skip_signature_checks">Hopp over signatursjekker</string>
     <string name="yes">Ja</string>
     <string name="no">Nei</string>
-    <string name="failed_to_restore_backup">Kunne ikke gjenopprette sikkerhetskopi</string>
     <plurals name="alert_failed_to_delete_backup">
         <item quantity="one">Kunne ikke slette %d sikkerhetskopi</item>
         <item quantity="other">Kunne ikke slette %d sikkerhetskopier</item>
     </plurals>
     <string name="delete_backup">Slett sikkerhetskopi</string>
     <string name="restore">Gjenopprett</string>
-    <string name="apk">APK</string>
     <string name="block_components_dots">Blokker komponenter …</string>
     <string name="clear_cache">Tøm hurtiglager</string>
     <string name="community">Telegram-gemenskap</string>
@@ -274,7 +266,6 @@
     <string name="share_apk">Del APK</string>
     <string name="grant_usage_access">Innvilg brukstilgang</string>
     <string name="go_back">Gå tilbake</string>
-    <string name="usage_last_used">Sist brukt:</string>
     <string name="usage_less_than_a_minute">Mindre enn ett minutt</string>
     <string name="usage_min">%d min</string>
     <plurals name="usage_hours">
@@ -285,15 +276,8 @@
         <item quantity="one">%d dag</item>
         <item quantity="other">%d dager</item>
     </plurals>
-    <string name="usage_365_days">Siste 365 dager</string>
-    <string name="usage_30_days">Siste 30 dager</string>
     <string name="usage_7_days">Siste 7 dager</string>
-    <string name="trackers_and_classes">%d sporere med %d klasser</string>
-    <string name="view_summary">Vis sammendrag</string>
-    <string name="view_trackers">Vis sporere</string>
-    <string name="sort_by_priority">Prioritet</string>
     <string name="sort_by_memory_usage">Minnebruk</string>
-    <string name="sort_by_user_apps_first">Brukerprogrammer først</string>
     <string name="sort_by_apps_first">Programmer først</string>
     <string name="sort_by_process_name">Prosessnavn</string>
     <string name="sort_by_process_id">Prosess-ID</string>
@@ -332,7 +316,6 @@
     <string name="clear_data_message">Er du sikker på at du vil tømme data fra dette programmet\?</string>
     <string name="apply_to_system_apps_question">Bruk også for systemprogrammer\? Velg \"Nei\" hvis du er usikker.</string>
     <string name="apply_to_system_apps">Bruk for systemprogrammer</string>
-    <string name="failed_to_delete_backup">Kunne ikke slette sikkerhetskopi</string>
     <plurals name="alert_failed_to_restore">
         <item quantity="one">Kunne ikke gjenopprette %d program</item>
         <item quantity="other">Kunne ikke gjenopprette %d programmer</item>
@@ -392,9 +375,7 @@
     <string name="decimal_value">Desimalverdi</string>
     <string name="updated_app">Oppdatert</string>
     <string name="go">Start</string>
-    <string name="usage_yearly">Årlig</string>
     <string name="usage_today">I dag</string>
-    <string name="usage_monthly">Månedlig</string>
     <string name="usage_weekly">Ukentlig</string>
     <string name="app_usage">Programbruk</string>
     <string name="no_tracker_class">Ingen sporer-klasse</string>

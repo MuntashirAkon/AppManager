@@ -24,7 +24,6 @@
     <string name="require_no_permission">No se requiere ningún permiso</string>
     <string name="activities">Actividades</string>
     <string name="launch">Lanzar</string>
-    <string name="unsupported">Sin soporte</string>
     <string name="refresh">Actualizar</string>
     <string name="no_activities">Sin actividades</string>
     <string name="receivers">Receptores</string>

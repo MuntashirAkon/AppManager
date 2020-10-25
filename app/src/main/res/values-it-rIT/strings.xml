@@ -23,7 +23,6 @@
     <string name="require_no_permission">Nessun permesso richiesto</string>
     <string name="activities">Attività</string>
     <string name="launch">Avvia</string>
-    <string name="unsupported">Non supportato</string>
     <string name="refresh">Aggiorna</string>
     <string name="no_activities">Nessuna attività</string>
     <string name="receivers">Receiver</string>
@@ -54,11 +53,8 @@
     <string name="instructions">Istruzioni</string>
     <string name="insert_icon">Inserisci icona</string>
     <string name="license">Licenza</string>
-    <string name="view_trackers">Visualizza tracker</string>
     <string name="usage_today">Oggi</string>
     <string name="usage_7_days">Ultimi 7 giorni</string>
-    <string name="usage_30_days">Ultimi 30 giorni</string>
-    <string name="usage_365_days">Ultimi 365 giorni</string>
     <string name="search">Cerca</string>
     <string name="aurora">Aurora</string>
     <string name="process_name">Nome processo</string>

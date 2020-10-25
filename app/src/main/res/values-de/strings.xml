@@ -21,7 +21,6 @@
     <string name="require_no_permission">Keine Berechtigungen benötigt</string>
     <string name="activities">Aktivitäten</string>
     <string name="launch">Starten</string>
-    <string name="unsupported">Nicht unterstützt</string>
     <string name="refresh">Neu laden</string>
     <string name="no_activities">Keine Aktivitäten</string>
     <string name="receivers">Empfänger</string>
@@ -93,7 +92,6 @@
     <string name="installer_app">Installationsprogramm</string>
     <string name="user_id">Nutzer-ID</string>
     <string name="main_activity">Haupt-Activity</string>
-    <string name="show_details">Details</string>
     <string name="empty_package_name">Leerer Paketname</string>
     <string name="instructions">Anleitungen</string>
     <string name="error_creating_shortcut">Konnte Verknüpfung nicht erstellen</string>
@@ -108,7 +106,6 @@
     <string name="error_invalid_icon_resource">Ungültige Icon-Ressource</string>
     <string name="error_invalid_icon_format">Ungültiges Icon-Format</string>
     <string name="icon_picker">Icon-Auswahl</string>
-    <string name="error_loading_icons">Icon konnten nicht geladen werden</string>
     <string name="license">Lizenz</string>
     <string name="third_party">Drittanbieter-Lizenzen und -Icons</string>
     <string name="credits">Danksagungen</string>
@@ -125,10 +122,7 @@
     </string>
     <string name="word_wrap">Zeilenumbruch ein-/ausschalten</string>
     <string name="class_viewer">Klassen-Betrachter</string>
-    <string name="view_trackers">Verfolger ansehen</string>
-    <string name="view_summary">Zusammenfassung ansehen</string>
     <string name="toggle_class_listing">Auflisten von Klassen ein-/ausschalten</string>
-    <string name="trackers_and_classes">%d Verfolger und %d Klassen</string>
     <string name="tested_signatures_on_classes_and_time_taken">%d Signaturen von%d Klassen getestet.\nDauer: %d ms (%d Durchläufe).</string>
     <string name="found_trackers">Gefundene Verfolger:</string>
     <string name="tracker_details">Verfolger-Details</string>
@@ -142,12 +136,8 @@
     <string name="no_tracker_class">Keine Verfolger-Klassen</string>
     <string name="app_usage">App-Nutzung</string>
     <string name="usage_weekly">Wöchentlich</string>
-    <string name="usage_monthly">Monatlich</string>
-    <string name="usage_yearly">Jährlich</string>
     <string name="usage_today">Heute</string>
     <string name="usage_7_days">Letzte 7 Tage</string>
-    <string name="usage_30_days">Letzte 30 Tage</string>
-    <string name="usage_365_days">Letzte 365 Tage</string>
     <plurals name="usage_months">
         <item quantity="one">%d Mt</item>
         <item quantity="other">%d Mte</item>
@@ -162,7 +152,6 @@
     </plurals>
     <string name="usage_min">%d min</string>
     <string name="usage_less_than_a_minute">Weniger als eine Minute</string>
-    <string name="usage_last_used">Zuletzt verwendet:</string>
     <string name="go_back">Zurück</string>
     <string name="go">Weiter</string>
     <string name="grant_usage_access">Zugriff auf Nutzungsdaten erlauben</string>
@@ -266,7 +255,6 @@
     <string name="apk_updater">APK-Aktualisierung</string>
     <string name="store">Store</string>
     <string name="running_apps">Laufende Anwendungen</string>
-    <string name="no_running_apps">Keine laufenden Anwendungen</string>
     <string name="kill_process">Beenden erzwingen</string>
     <string name="disable_background_run">Ausführung im Hintergrund deaktivieren</string>
     <string name="pid_and_ppid">Prozess-ID: %d, ID des übergeordneten Prozesses: %d</string>
@@ -300,7 +288,6 @@
         <item quantity="other">Beenden erzwingen von %d Anwendungen nicht möglich</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">„Beenden erzwingen“ für System-Anwendungen ein- oder ausschalten</string>
-    <string name="app_op_cannot_be_enabled">Dieser App Op kann nicht aktiviert werden, unter Umständen weil ein nicht-beschreibbarer App Op von einem anderen App Op abhängt.</string>
     <string name="app_op_cannot_be_disabled">Dieser App Op kann nicht deaktiviert werden, unter Umständen weil ein nicht-beschreibbarer App Op von einem anderen App Op abhängt.</string>
     <string name="permission_name">Name der Berechtigung</string>
     <string name="mode">Modus</string>
@@ -363,7 +350,6 @@
     <string name="changelog">Änderungen</string>
     <string name="external_apk_no_app_op">Eine externe APK hat keine App-Operationen</string>
     <string name="manifest_viewer">Manifest einsehen</string>
-    <string name="scanning_is_still_in_progress">Suche läuft</string>
     <plurals name="no_of_trackers">
         <item quantity="one">%d Verfolger</item>
         <item quantity="other">%d Verfolger</item>
@@ -421,7 +407,6 @@
     <string name="exclude_cache">Cache nicht einbeziehen</string>
     <string name="external_data">Externe Daten</string>
     <string name="data">Daten</string>
-    <string name="apk">APK</string>
     <string name="backup">Sichern</string>
     <string name="restore">Wiederherstellen</string>
     <string name="delete_backup">Sicherung löschen</string>
@@ -446,8 +431,6 @@
         <item quantity="one">Deaktivieren der Verfolger aus %d Anwendung nicht möglich</item>
         <item quantity="other">Deaktivieren der Verfolger aus %d Anwendungen nicht möglich</item>
     </plurals>
-    <string name="failed_to_delete_backup">Löschen der Sicherung nicht möglich</string>
-    <string name="failed_to_restore_backup">Wiederherstellen der Sicherung nicht möglich</string>
     <string name="apply_to_system_apps">Auf Systemanwendungen anwenden</string>
     <string name="apply_to_system_apps_question">Soll dies auch auf Systemanwendungen angewendet werden\? Im Zweifelsfall „Nein“ auswählen.</string>
     <string name="no">Nein</string>
@@ -455,7 +438,6 @@
     <string name="skip_signature_checks">Signaturprüfungen überspringen</string>
     <string name="clear_data_message">Sollen die Daten dieser Anwendung wirklich gelöscht werden?</string>
     <string name="clear">Löschen</string>
-    <string name="failed_to_backup">Sicherung konnte nicht erstellt werden</string>
     <string name="block">Blockieren</string>
     <string name="unblock">Freigeben</string>
     <string name="block_unblock_trackers">Verfolger blockieren/freigeben</string>
@@ -484,7 +466,6 @@
     <string name="operation_running">Vorgang erfolgt…</string>
     <string name="full_stop_tap_to_see_details">. Berühren für mehr Details.</string>
     <string name="try_again">Erneut versuchen</string>
-    <string name="info">Info</string>
     <string name="install_app_message">Möchtest du diese App installieren?</string>
     <string name="reinstall_app_message">Willst du diese App wiederherstellen?</string>
     <string name="reinstall">Erneut installieren</string>
@@ -598,9 +579,7 @@
         <item quantity="one">Sind Sie sicher, dass ein Backup vorhanden ist\?</item>
         <item quantity="other">Sind Sie sicher, dass ein Backup für mehr als eine Anwendung vorhanden ist\?</item>
     </plurals>
-    <string name="sort_by_priority">Priorität</string>
     <string name="sort_by_memory_usage">Speicherauslastung</string>
-    <string name="sort_by_user_apps_first">Benutzerapps zuerst</string>
     <string name="sort_by_apps_first">Apps zuerst</string>
     <string name="sort_by_process_id">Prozess-ID</string>
     <string name="sort_by_process_name">Prozess-Name</string>

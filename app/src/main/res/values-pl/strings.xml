@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="show_details">Pokaż szczegóły</string>
     <string name="user_id">ID użytkownika</string>
     <string name="date_updated">Data aktualizacji</string>
     <string name="date_installed">Data instalacji</string>
@@ -42,7 +41,6 @@
     <string name="flags">Flagi</string>
     <string name="task_affinity">Koligacja zadania</string>
     <string name="launch_mode">Tryb uruchamiania</string>
-    <string name="unsupported">Nieobsługiwane</string>
     <string name="require_no_permission">Nie jest wymagane żadne uprawnienie</string>
     <string name="installer_error_lidl_rom">Twój ROM jest niekompatybilny z instalatorem niewymagającym roota.</string>
     <string name="installer_error_generic">Instalacja nie powiodła się</string>
@@ -64,7 +62,6 @@
     <string name="block_unblock_trackers">Zablokuj/odblokuj elementy śledzące</string>
     <string name="unblock">Odblokuj</string>
     <string name="block">Blokuj</string>
-    <string name="failed_to_backup">Nie udało się utworzyć kopii zapasowej</string>
     <string name="clear">Wyczyść</string>
     <string name="clear_data_message">Czy na pewno chcesz wyczyścić dane tej aplikacji\?</string>
     <string name="skip_signature_checks">Pomiń sprawdzanie podpisów</string>
@@ -91,7 +88,6 @@
     <string name="memory_virtual_memory">Pamięć: %s, Pamięć wirtualna: %s</string>
     <string name="pid_and_ppid">Identyfikator procesu: %d, identyfikator procesu nadrzędnego: %d</string>
     <string name="disable_background_run">Wyłącz działanie w tle</string>
-    <string name="no_running_apps">Brak uruchomionych aplikacji</string>
     <string name="running_apps">Uruchomione aplikacje</string>
     <string name="permissions">Użycie uprawnień</string>
     <string name="instructions_header">[Te instrukcje są przestarzałe i nie będą już aktualizowane.] Odwiedź oficjalną stronę dokumentów (https://muntashirakon.github.io/AppManager), aby uzyskać aktualne informacje]</string>
@@ -124,7 +120,6 @@
     <string name="installer_error_security">Nie można uzyskać dostępu do plików APK</string>
     <string name="install_in_progress">Instalacja w toku</string>
     <string name="license">Licencja</string>
-    <string name="error_loading_icons">Ładowanie ikon nie powiodło się</string>
     <string name="error_invalid_icon_format">Nieprawidłowy format ikony</string>
     <string name="insert_icon">Wstaw ikonę</string>
     <string name="class_name">Nazwa klasy</string>
@@ -183,9 +178,7 @@
     <string name="sort_by_process_id">Identyfikator procesu</string>
     <string name="sort_by_process_name">Nazwa procesu</string>
     <string name="sort_by_apps_first">Najpierw aplikacje</string>
-    <string name="sort_by_user_apps_first">Najpierw aplikacje użytkownika</string>
     <string name="sort_by_memory_usage">Wykorzystanie pamięci</string>
-    <string name="sort_by_priority">Priorytet</string>
     <string name="changes_not_saved">Zmiany nie zostały zapisane</string>
     <string name="other">Inne</string>
     <string name="rules">Zasady</string>
@@ -209,14 +202,11 @@
     <string name="the_import_was_successful">Importowano</string>
     <string name="reinstall_app_message">Czy chcesz ponownie zainstalować tę aplikację\?</string>
     <string name="install_app_message">Czy chcesz zainstalować tę aplikację\?</string>
-    <string name="info">Info</string>
     <string name="try_again">Spróbuj ponownie</string>
     <string name="full_stop_tap_to_see_details">. Naciśnij, aby wyświetlić szczegóły.</string>
     <string name="operation_running">Praca w toku…</string>
     <string name="apply_to_system_apps_question">Zastosować też do aplikacji systemowych\? Wybierz „Nie”, jeśli nie masz pewności.</string>
     <string name="apply_to_system_apps">Zastosuj do aplikacji systemowych</string>
-    <string name="failed_to_restore_backup">Nie udało się przywrócić kopii zapasowej</string>
-    <string name="failed_to_delete_backup">Nie udało się usunąć kopii zapasowej</string>
     <plurals name="alert_failed_to_enable">
         <item quantity="one">Nie udało się włączyć %s aplikacji</item>
         <item quantity="few">Nie udało się włączyć %s aplikacji</item>
@@ -261,7 +251,6 @@
     </plurals>
     <string name="backup_options">Opcje tworzenia kopii zapasowych</string>
     <string name="delete_backup">Usuń kopię zapasową</string>
-    <string name="apk">APK</string>
     <string name="data">Dane</string>
     <string name="installed_version">Zainstalowana wersja</string>
     <string name="filter_disabled_apps">Wyłączone aplikacje</string>
@@ -286,7 +275,6 @@
     <string name="day">Jasny</string>
     <string name="follow_system">Zgodny z systemowym</string>
     <string name="pref_app_theme">Motyw aplikacji</string>
-    <string name="view_trackers">Wyświetl elementy śledzące</string>
     <string name="class_viewer">Przeglądarka klas</string>
     <string name="word_wrap">Przełącz zawijanie słów</string>
     <string name="credits_message">Dla autorów:
@@ -386,12 +374,8 @@
         <item quantity="many">%d mies</item>
         <item quantity="other">%d mies</item>
     </plurals>
-    <string name="usage_365_days">Ostatnie 365 dni</string>
-    <string name="usage_30_days">Ostatnie 30 dni</string>
     <string name="usage_7_days">Ostatnie 7 dni</string>
     <string name="usage_today">Dziś</string>
-    <string name="usage_yearly">Roczne</string>
-    <string name="usage_monthly">Miesięczne</string>
     <string name="usage_weekly">Tygodniowe</string>
     <string name="app_usage">Użycie aplikacji</string>
     <string name="no_tracker_class">Brak śledzącej klasy</string>

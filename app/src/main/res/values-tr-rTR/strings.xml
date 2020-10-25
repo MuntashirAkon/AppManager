@@ -20,7 +20,6 @@
     <string name="require_no_permission">İzin gerektirmez</string>
     <string name="activities">Etkinlikler</string>
     <string name="launch">Başlat</string>
-    <string name="unsupported">Desteklenmiyor</string>
     <string name="refresh">Yenile</string>
     <string name="no_activities">Etkinlik yok</string>
     <string name="receivers">Alıcılar</string>
@@ -90,7 +89,6 @@
     <string name="installer_app">Uygulama Kurucu</string>
     <string name="user_id">Kullanıcı ID</string>
     <string name="main_activity">Asıl Faaliyet</string>
-    <string name="show_details">Detayları Göster</string>
     <string name="empty_package_name">Boş paket adı</string>
     <string name="instructions">Açıklamalar</string>
     <string name="error_creating_shortcut">Kısayol oluşturulurken hata oluştu</string>
@@ -119,13 +117,10 @@
     <string name="exclude_cache">Önbelleği hariç tut</string>
     <string name="external_data">Harici veri</string>
     <string name="data">Veri</string>
-    <string name="apk">APK</string>
     <string name="backup">Yedekleme</string>
     <string name="restore">Geri Yükle</string>
     <string name="delete_backup">Yedeklemeyi sil</string>
     <string name="backup_options">Yedekleme Seçenekleri</string>
-    <string name="failed_to_delete_backup">Yedek silinemedi</string>
-    <string name="failed_to_restore_backup">Yedek geri yüklenemedi</string>
     <string name="apply_to_system_apps">Sistem uygulamalarına Uygula</string>
     <string name="apply_to_system_apps_question">Sistem uygulamaları için de geçerli mi\? Emin değilseniz \"Hayır\"ı seçin.</string>
     <string name="no">Hayır</string>
@@ -133,10 +128,8 @@
     <string name="skip_signature_checks">İmza denetimlerini atla</string>
     <string name="clear_data_message">Bu uygulamadan verileri temizlemek istediğinizden emin misiniz?</string>
     <string name="clear">Temizle</string>
-    <string name="failed_to_backup">Yedek oluşturulamadı</string>
     <string name="third_party">Üçüncü Parti Kütüphaneler ve Simgeler</string>
     <string name="license">Lisans</string>
-    <string name="error_loading_icons">Simgeler yüklenemiyor</string>
     <string name="icon_picker">Simge Seçici</string>
     <string name="error_invalid_icon_format">Geçersiz Simge Biçimi</string>
     <string name="error_invalid_icon_resource">Geçersiz Simge Kaynağı</string>
@@ -195,9 +188,7 @@
     <string name="rules">Kurallar</string>
     <string name="other">Diğer</string>
     <string name="changes_not_saved">Değişiklikler kaydedilmedi</string>
-    <string name="sort_by_priority">Öncelik</string>
     <string name="sort_by_memory_usage">Bellek kullanımı</string>
-    <string name="sort_by_user_apps_first">Önce kullanıcı uygulamaları</string>
     <string name="sort_by_apps_first">Önce uygulamalar</string>
     <string name="sort_by_process_name">İşlem adı</string>
     <string name="sort_by_process_id">İşlem kimliği</string>
@@ -284,7 +275,6 @@
     <string name="reinstall">Yeniden kur</string>
     <string name="reinstall_app_message">Bu uygulamayı yeniden kurmak istiyor musunuz\?</string>
     <string name="install_app_message">Bu uygulamayı kurmak istiyor musunuz\?</string>
-    <string name="info">Bilgi</string>
     <string name="try_again">Tekrar dene</string>
     <string name="full_stop_tap_to_see_details">. Ayrıntıları görmek için dokunun.</string>
     <string name="operation_running">İşlem gerçekleştiriliyor…</string>
@@ -363,7 +353,6 @@
     <string name="failed_to_parse_some_numbers">Bazı numaralar ayrıştırılamadı</string>
     <string name="only_works_in_root_or_adb_mode">Yalnızca root veya ADB modunda çalışır</string>
     <string name="input_app_ops_description">Uygulama işlemlerini aralarında boşluk olacak şekilde girin, örn. (63 72 12) gibi. Uygulama işlem sabitlerini, parantezlerin altındaki uygulama işlemleri sekmesinde bulabilirsiniz.</string>
-    <string name="trackers_and_classes">%d izleyici, %d sınıf ile</string>
     <string name="starting_activity">Başlangıç etkinliği: %s</string>
     <string name="input_app_ops">Uygulama işlemlerini gir</string>
     <string name="filtered_packages">Filtrelenmiş paketler</string>
@@ -395,7 +384,6 @@
         <item quantity="one">%d izleyici</item>
         <item quantity="other">%d izleyici</item>
     </plurals>
-    <string name="scanning_is_still_in_progress">Tarama devam ediyor</string>
     <string name="manifest_viewer">Bildirim Görüntüleyici</string>
     <string name="external_apk_no_app_op">Harici APK\'nın herhangi bir uygulama işlemi yok</string>
     <string name="changelog">Değişiklikler</string>
@@ -458,7 +446,6 @@
     <string name="mode">Mod</string>
     <string name="permission_name">İzin Adı</string>
     <string name="app_op_cannot_be_disabled">Bu uygulama işlemi devre dışı bırakılamıyor, muhtemelen başka bir uygulama işlemine bağlı olan salt okunur bir uygulama işlemi.</string>
-    <string name="app_op_cannot_be_enabled">Bu uygulama işlemi etkinleştirilemiyor, muhtemelen başka bir uygulama işlemine bağlı olan salt okunur bir uygulama işlemi.</string>
     <string name="toggle_kill_for_system_apps">Sistem uygulamalarını sonlandırmayı etkinleştir/devre dışı bırak</string>
     <plurals name="alert_failed_to_force_stop">
         <item quantity="one">%d uygulama durmaya zorlanamadı</item>
@@ -503,7 +490,6 @@
     <string name="pid_and_ppid">İşlem Kimliği: %d, Üst İşlem Kimliği: %d</string>
     <string name="disable_background_run">Arka Planda Çalışmayı Devre Dışı Bırak</string>
     <string name="kill_process">Sonlandır</string>
-    <string name="no_running_apps">Çalışan uygulama yok</string>
     <string name="running_apps">Çalışan Uygulamalar</string>
     <string name="store">Mağaza</string>
     <string name="apk_updater">APK Güncelleyici</string>
@@ -587,7 +573,6 @@
     <string name="databases">Veri tabanları</string>
     <string name="grant_usage_access">Kullanım Erişimi Ver</string>
     <string name="go_back">Geri git</string>
-    <string name="usage_last_used">Son kullanma:</string>
     <string name="usage_less_than_a_minute">Bir dakikadan az</string>
     <string name="usage_min">%d dak</string>
     <plurals name="usage_hours">
@@ -602,12 +587,8 @@
         <item quantity="one">%d ay</item>
         <item quantity="other">%d ay</item>
     </plurals>
-    <string name="usage_365_days">Son 365 gün</string>
-    <string name="usage_30_days">Son 30 gün</string>
     <string name="usage_7_days">Son 7 gün</string>
     <string name="usage_today">Bugün</string>
-    <string name="usage_yearly">Yıllık</string>
-    <string name="usage_monthly">Aylık</string>
     <string name="usage_weekly">Haftalık</string>
     <string name="app_usage">Uygulama Kullanımı</string>
     <string name="no_tracker_class">İzleyici sınıf yok</string>
@@ -621,8 +602,6 @@
     <string name="tracker_details">İzleyici ayrıntıları</string>
     <string name="found_trackers">Bulunan İzleyiciler:</string>
     <string name="toggle_class_listing">Sınıf Listesini Aç/Kapat</string>
-    <string name="view_summary">Özeti Görüntüle</string>
-    <string name="view_trackers">İzleyicileri Görüntüle</string>
     <string name="class_viewer">Sınıf Görüntüleyici</string>
     <string name="word_wrap">Sözcük kaydırmayı aç/kapat</string>
     <string name="credits_message">Aşağıdaki projelerin yazarlarına

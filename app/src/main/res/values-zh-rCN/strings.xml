@@ -21,7 +21,6 @@
     <string name="require_no_permission">无需任何权限</string>
     <string name="activities">活动</string>
     <string name="launch">打开</string>
-    <string name="unsupported">不支持</string>
     <string name="refresh">刷新</string>
     <string name="no_activities">无 activities</string>
     <string name="receivers">接收器</string>
@@ -93,7 +92,6 @@
     <string name="installer_app">安装来源</string>
     <string name="user_id">用户 ID</string>
     <string name="main_activity">主活动</string>
-    <string name="show_details">显示详情</string>
     <string name="empty_package_name">包名为空</string>
     <string name="instructions">说明</string>
     <string name="error_creating_shortcut">无法创建快捷方式</string>
@@ -108,7 +106,6 @@
     <string name="error_invalid_icon_resource">无效的图标</string>
     <string name="error_invalid_icon_format">无效图标格式</string>
     <string name="icon_picker">选择图标</string>
-    <string name="error_loading_icons">无法加载图标</string>
     <string name="license">许可协议</string>
     <string name="third_party">第三方库和图标</string>
     <string name="credits">鸣谢</string>
@@ -124,10 +121,7 @@
         \nLogo credit: <a href="https://github.com/Atrate">Atrate</a>.    </string>
     <string name="word_wrap">自动换行</string>
     <string name="class_viewer">类查看器</string>
-    <string name="view_trackers">查看 Tracker</string>
-    <string name="view_summary">查看摘要</string>
     <string name="toggle_class_listing">切换类列表</string>
-    <string name="trackers_and_classes">%d 个tracker 和 %d 个类</string>
     <string name="tested_signatures_on_classes_and_time_taken">在 %d 类上测试了 %d 个签名。\n耗时 %d ms (%d 迭代)。</string>
     <string name="found_trackers">已找到tracker:</string>
     <string name="tracker_details">Tracker 详细信息</string>
@@ -140,12 +134,8 @@
     <string name="no_tracker_class">无 tracker 类</string>
     <string name="app_usage">应用使用情况</string>
     <string name="usage_weekly">每周</string>
-    <string name="usage_monthly">每月</string>
-    <string name="usage_yearly">每年</string>
     <string name="usage_today">今天</string>
     <string name="usage_7_days">最近七天</string>
-    <string name="usage_30_days">过去 30 天</string>
-    <string name="usage_365_days">过去 365 天</string>
     <plurals name="usage_months">
         <item quantity="other">%d 个月</item>
     </plurals>
@@ -157,7 +147,6 @@
     </plurals>
     <string name="usage_min">%d 分钟</string>
     <string name="usage_less_than_a_minute">不足一分钟</string>
-    <string name="usage_last_used">最近使用：</string>
     <string name="go_back">返回</string>
     <string name="go">前进</string>
     <string name="grant_usage_access">授予查看使用情况权限</string>
@@ -259,7 +248,6 @@
     <string name="apk_updater">APK更新器</string>
     <string name="store">商店</string>
     <string name="running_apps">正在运行的应用</string>
-    <string name="no_running_apps">没有运行的应用</string>
     <string name="kill_process">终止</string>
     <string name="disable_background_run">禁用后台运行</string>
     <string name="pid_and_ppid">进程ID: %d, 父进程 ID: %d</string>
@@ -288,7 +276,6 @@
         <item quantity="other">无法强制停止％d个应用</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">切换杀死系统应用程序</string>
-    <string name="app_op_cannot_be_enabled">这个应用无法启用，它可能是依赖于另一个应用操作的一个只读应用。</string>
     <string name="app_op_cannot_be_disabled">此应用无法禁用，可能是一个只读的应用依赖于另一个应用操作。</string>
     <string name="permission_name">权限名称</string>
     <string name="mode">模式</string>
@@ -350,7 +337,6 @@
     <string name="changelog">更新日志</string>
     <string name="external_apk_no_app_op">外部APK没有任何应用程序操作</string>
     <string name="manifest_viewer">清单查看器</string>
-    <string name="scanning_is_still_in_progress">扫描仍在进行中</string>
     <plurals name="no_of_trackers">
         <item quantity="other">%d 个追踪器</item>
     </plurals>
@@ -406,7 +392,6 @@
     <string name="exclude_cache">不包括缓存</string>
     <string name="external_data">外部数据</string>
     <string name="data">数据 </string>
-    <string name="apk">安装包</string>
     <string name="backup">备份</string>
     <string name="restore">还原</string>
     <string name="delete_backup">删除备份</string>
@@ -432,8 +417,6 @@
     <plurals name="alert_failed_to_deny_app_ops">
         <item quantity="other">无法拒绝％d个应用的应用操作</item>
     </plurals>
-    <string name="failed_to_delete_backup">无法删除备份</string>
-    <string name="failed_to_restore_backup">无法恢复备份</string>
     <string name="apply_to_system_apps">应用到系统应用</string>
     <string name="apply_to_system_apps_question">也应用于系统应用？如果不确定，请选择“否”。</string>
     <string name="no">取消</string>
@@ -441,7 +424,6 @@
     <string name="skip_signature_checks">跳过签名检查</string>
     <string name="clear_data_message">您确定要清除此应用的数据吗？</string>
     <string name="clear">清除</string>
-    <string name="failed_to_backup">无法创建备份</string>
     <string name="block">屏蔽</string>
     <string name="unblock">取消屏蔽</string>
     <string name="block_unblock_trackers">阻止/解除阻止跟踪器</string>
@@ -470,7 +452,6 @@
     <string name="operation_running">运行中的操作……</string>
     <string name="full_stop_tap_to_see_details">. 点按查看详情.</string>
     <string name="try_again">再试一次</string>
-    <string name="info">详情</string>
     <string name="install_app_message">安装应用？</string>
     <string name="reinstall_app_message">重新安装应用？</string>
     <string name="reinstall">重新安装</string>
@@ -561,9 +542,7 @@
     <string name="keystore">密钥库</string>
     <string name="routine_ops">日常操作</string>
     <string name="apply_now">现在应用…</string>
-    <string name="sort_by_priority">优先级</string>
     <string name="sort_by_memory_usage">内存使用</string>
-    <string name="sort_by_user_apps_first">用户应用优先</string>
     <string name="sort_by_apps_first">应用程序优先</string>
     <string name="sort_by_process_name">进程名</string>
     <string name="sort_by_process_id">进程ID</string>

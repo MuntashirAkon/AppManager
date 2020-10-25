@@ -42,7 +42,6 @@
                 app:indicatorColor="?colorAccent" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/details_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"

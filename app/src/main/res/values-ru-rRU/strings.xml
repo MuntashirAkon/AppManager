@@ -21,7 +21,6 @@
     <string name="require_no_permission">Не требует разрешений</string>
     <string name="activities">Активити</string>
     <string name="launch">Запуск</string>
-    <string name="unsupported">Не поддерживается</string>
     <string name="refresh">Обновить</string>
     <string name="no_activities">Нет активити</string>
     <string name="receivers">Приемники</string>
@@ -93,7 +92,6 @@
     <string name="installer_app">Установщик приложения</string>
     <string name="user_id">Идентификатор пользователя</string>
     <string name="main_activity">Главное активити</string>
-    <string name="show_details">Показать детали</string>
     <string name="empty_package_name">Пустое имя пакета</string>
     <string name="instructions">Инструкции</string>
     <string name="error_creating_shortcut">Ошибка при создании ярлыка</string>
@@ -108,7 +106,6 @@
     <string name="error_invalid_icon_resource">Недействительный ресурс значка</string>
     <string name="error_invalid_icon_format">Неверный формат значка</string>
     <string name="icon_picker">Выбор иконок</string>
-    <string name="error_loading_icons">Не удалось загрузить иконки</string>
     <string name="license">Лицензия</string>
     <string name="third_party">Сторонние библиотеки и значки</string>
     <string name="credits">Авторы</string>
@@ -125,10 +122,7 @@
     </string>
     <string name="word_wrap">Перенос слов</string>
     <string name="class_viewer">Просмотр классов</string>
-    <string name="view_trackers">Просмотр трекеров</string>
-    <string name="view_summary">Просмотр сводки</string>
     <string name="toggle_class_listing">Переключить список классов</string>
-    <string name="trackers_and_classes">%d трекеров с %d классами</string>
     <string name="tested_signatures_on_classes_and_time_taken">Протестировано %d подписей на %d классах.\nВыполнено за %d мс. (%d итераций).</string>
     <string name="found_trackers">Найденные трекеры:</string>
     <string name="tracker_details">О трекере</string>
@@ -144,12 +138,8 @@
     <string name="no_tracker_class">Нет классов трекера</string>
     <string name="app_usage">Использование приложений</string>
     <string name="usage_weekly">Еженедельно</string>
-    <string name="usage_monthly">Ежемесячно</string>
-    <string name="usage_yearly">Год</string>
     <string name="usage_today">Сегодня</string>
     <string name="usage_7_days">Последние 7 дней</string>
-    <string name="usage_30_days">Последние 30 дней</string>
-    <string name="usage_365_days">Последние 365 дней</string>
     <plurals name="usage_months">
         <item quantity="one">%d мес.</item>
         <item quantity="few">%d мес.</item>
@@ -170,7 +160,6 @@
     </plurals>
     <string name="usage_min">%d мин.</string>
     <string name="usage_less_than_a_minute">Меньше минуты</string>
-    <string name="usage_last_used">Последний запуск:</string>
     <string name="go_back">Вернуться</string>
     <string name="go">Разрешить</string>
     <string name="grant_usage_access">Предоставьте доступ к использованию</string>
@@ -278,7 +267,6 @@
     <string name="apk_updater">APK Updater</string>
     <string name="store">Магазин</string>
     <string name="running_apps">Работающие приложения</string>
-    <string name="no_running_apps">Нет работающих приложений</string>
     <string name="kill_process">Закрыть</string>
     <string name="disable_background_run">Запретить работу в фоне</string>
     <string name="pid_and_ppid">Идентификатор процесса: %d, идентификатор родительского процесса: %d</string>
@@ -322,7 +310,6 @@
         <item quantity="other">Не удалось принудительно остановить %d приложений</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">Переключение закрытия системных приложений</string>
-    <string name="app_op_cannot_be_enabled">Эта операция приложения не может быть включена, возможно, операция приложения только для чтения зависела от операции другого приложения.</string>
     <string name="app_op_cannot_be_disabled">Эта операция приложения не может быть отключена, возможно, операция приложения только для чтения зависела от операции другого приложения.</string>
     <string name="permission_name">Имя разрешения</string>
     <string name="mode">Режим</string>
@@ -387,7 +374,6 @@
     <string name="changelog">Список изменений</string>
     <string name="external_apk_no_app_op">Внешний APK не работает с приложением</string>
     <string name="manifest_viewer">Просмотр манифеста</string>
-    <string name="scanning_is_still_in_progress">Сканирование всё ещё продолжается</string>
     <plurals name="no_of_trackers">
         <item quantity="one">%d трекер</item>
         <item quantity="few">%d трекера</item>
@@ -449,7 +435,6 @@
     <string name="exclude_cache">Исключить кэш</string>
     <string name="external_data">Внешние данные</string>
     <string name="data">Данные</string>
-    <string name="apk">APK</string>
     <string name="backup">Резервная копия</string>
     <string name="restore">Восстановление</string>
     <string name="delete_backup">Удалить резервную копию</string>
@@ -496,8 +481,6 @@
         <item quantity="many">Не удалось запретить операции приложения для %d приложений</item>
         <item quantity="other">Не удалось запретить операции приложения для %d приложений</item>
     </plurals>
-    <string name="failed_to_delete_backup">Не удалось удалить резервную копию</string>
-    <string name="failed_to_restore_backup">Не удалось восстановить резервную копию</string>
     <string name="apply_to_system_apps">Применить к системным приложениям</string>
     <string name="apply_to_system_apps_question">Применить и к системным приложениям\? Если не уверены, выберите \"Нет\".</string>
     <string name="no">Нет</string>
@@ -505,7 +488,6 @@
     <string name="skip_signature_checks">Пропустить проверку подписи</string>
     <string name="clear_data_message">Вы действительно хотите очистить данные этого приложения?</string>
     <string name="clear">Очистить</string>
-    <string name="failed_to_backup">Не удалось создать резервную копию</string>
     <string name="block">Заблокировать</string>
     <string name="unblock">Разблокировать</string>
     <string name="block_unblock_trackers">Блокировать/разблокировать трекеры</string>
@@ -534,7 +516,6 @@
     <string name="operation_running">Выполнение операции…</string>
     <string name="full_stop_tap_to_see_details">. Нажмите, чтобы увидеть детали.</string>
     <string name="try_again">Повторить попытку</string>
-    <string name="info">Информация</string>
     <string name="install_app_message">Вы хотите установить это приложение?</string>
     <string name="reinstall_app_message">Вы хотите переустановить это приложение?</string>
     <string name="reinstall">Переустановить</string>
@@ -629,9 +610,7 @@
     <string name="state_foreground">Передний план</string>
     <string name="state_low_priority">Низкий приоритет</string>
     <string name="state_high_priority">Высокий приоритет</string>
-    <string name="sort_by_priority">Приоритет</string>
     <string name="sort_by_memory_usage">Использование памяти</string>
-    <string name="sort_by_user_apps_first">Пользовательские приложения в первую очередь</string>
     <string name="sort_by_apps_first">Приложения в первую очередь</string>
     <string name="sort_by_process_name">Имя процесса</string>
     <string name="sort_by_process_id">ID процесса</string>

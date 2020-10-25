@@ -20,7 +20,6 @@
     <string name="reinstall">Reinstalar</string>
     <string name="reinstall_app_message">Deseja reinstalar este app\?</string>
     <string name="install_app_message">Deseja instalar este app\?</string>
-    <string name="info">Informações</string>
     <string name="try_again">Tentar novamente</string>
     <string name="full_stop_tap_to_see_details">. Toque para ver detalhes.</string>
     <string name="operation_running">Operação em execução…</string>
@@ -48,7 +47,6 @@
     <string name="block_unblock_trackers">Bloquear/desbloquear rastreadores</string>
     <string name="unblock">Desbloquear</string>
     <string name="block">Bloquear</string>
-    <string name="failed_to_backup">O backup não pôde ser restaurado</string>
     <string name="clear">Limpar</string>
     <string name="clear_data_message">Tem certeza que deseja deletar os dados desse app\?</string>
     <string name="skip_signature_checks">Pular verificação de assinatura</string>
@@ -56,8 +54,6 @@
     <string name="no">Não</string>
     <string name="apply_to_system_apps_question">Também aplicar às apps do sistema\? Selecione \"Não\" se não tiver certeza.</string>
     <string name="apply_to_system_apps">Aplicar aos apps de sistema</string>
-    <string name="failed_to_restore_backup">O backup não pôde ser restaurado</string>
-    <string name="failed_to_delete_backup">O backup não pôde ser apagado</string>
     <plurals name="alert_failed_to_enable">
         <item quantity="one">Não foi possível ativar %s app</item>
         <item quantity="other">Não foi possível ativar %s apps</item>
@@ -94,7 +90,6 @@
     <string name="delete_backup">Deletar backup</string>
     <string name="restore">Restaurar</string>
     <string name="backup">Backup</string>
-    <string name="apk">APK</string>
     <string name="data">Dados</string>
     <string name="external_data">Dados externos</string>
     <string name="sort_by_denied_app_ops">Primeiro rejeitadas</string>
@@ -132,7 +127,6 @@
     <string name="mode">Modo</string>
     <string name="permission_name">Nome de Permissão</string>
     <string name="app_op_cannot_be_disabled">Esta operação de app não pode ser desativada. É provável que seja somente leitura ou depende de outro operação de app.</string>
-    <string name="app_op_cannot_be_enabled">Esta operação de app não pode ser ativada. É provável que seja somente leitura ou depende de outra operação de app.</string>
     <string name="toggle_kill_for_system_apps">Alternar encerramento de apps de sistema</string>
     <plurals name="alert_failed_to_force_stop">
         <item quantity="one">Não foi possível forçar parada de %d app</item>
@@ -166,7 +160,6 @@
     <string name="pid_and_ppid">ID do processo: %d; ID do processo principal: %d</string>
     <string name="disable_background_run">Desativar execução em segundo plano</string>
     <string name="kill_process">Encerrar</string>
-    <string name="no_running_apps">Nenhuma app em execução</string>
     <string name="running_apps">Apps em execução</string>
     <string name="store">Loja</string>
     <string name="apk_updater">Atualizador de APK</string>
@@ -270,7 +263,6 @@
     <string name="grant_usage_access">Conceder Acesso de Uso</string>
     <string name="go">Ir</string>
     <string name="go_back">Voltar</string>
-    <string name="usage_last_used">Último usado:</string>
     <string name="usage_less_than_a_minute">Menos de um minuto</string>
     <string name="usage_min">%d minutos</string>
     <plurals name="usage_hours">
@@ -285,12 +277,8 @@
         <item quantity="one">%d mês</item>
         <item quantity="other">%d meses</item>
     </plurals>
-    <string name="usage_365_days">Últimos 365 dias</string>
-    <string name="usage_30_days">Últimos 30 dias</string>
     <string name="usage_7_days">Últimos 7 dias</string>
     <string name="usage_today">Hoje</string>
-    <string name="usage_yearly">Anual</string>
-    <string name="usage_monthly">Mensal</string>
     <string name="usage_weekly">Semanal</string>
     <string name="app_usage">Uso de app</string>
     <string name="no_tracker_class">Nenhuma classe de rastreador</string>
@@ -304,10 +292,7 @@
     <string name="tracker_details">Detalhes do reastreador</string>
     <string name="found_trackers">Rastreadores encontrados:</string>
     <string name="tested_signatures_on_classes_and_time_taken">%d assinaturas testadas em %d classes.\nTempo total: %d ms (%d iterações).</string>
-    <string name="trackers_and_classes">%d rastreadores com %d classes</string>
     <string name="toggle_class_listing">Alternar lista de classes</string>
-    <string name="view_summary">Ver resumo</string>
-    <string name="view_trackers">Ver rastreadores</string>
     <string name="class_viewer">Visualizador de classe</string>
     <string name="word_wrap">Alternar quebra de palavra</string>
     <string name="credits_message">"Aos autores do
@@ -331,7 +316,6 @@
     <string name="credits">Méritos</string>
     <string name="third_party">Bibliotecas e Ícones de terceiros</string>
     <string name="license">Licença</string>
-    <string name="error_loading_icons">Não foi possível carregar os ícones</string>
     <string name="icon_picker">Seletor de ícone</string>
     <string name="error_invalid_icon_format">Formato de ícone inválido</string>
     <string name="error_invalid_icon_resource">Recurso de ícone inválido</string>
@@ -346,7 +330,6 @@
     <string name="error_creating_shortcut">Erro ao criar atalho</string>
     <string name="instructions">Instruções</string>
     <string name="empty_package_name">Nome do pacote vazio</string>
-    <string name="show_details">Mostrar detalhes</string>
     <string name="main_activity">Atividade principal</string>
     <string name="user_id">ID do utilizador</string>
     <string name="installer_app">App instalador</string>
@@ -438,7 +421,6 @@
         <item quantity="one">%d rastreador</item>
         <item quantity="other">%d rastreadores</item>
     </plurals>
-    <string name="scanning_is_still_in_progress">Escaneamento ainda em andamento</string>
     <string name="manifest_viewer">Visualizador de Manifest</string>
     <string name="external_apk_no_app_op">APKs externos não possuem nenhuma operação de app</string>
     <string name="never_ask">Nunca perguntar</string>
@@ -490,7 +472,6 @@
     <string name="receivers">Receptores</string>
     <string name="no_activities">Nenhuma atividade</string>
     <string name="refresh">Atualizar</string>
-    <string name="unsupported">Não suportado</string>
     <string name="launch">Iniciar</string>
     <string name="activities">Atividades</string>
     <string name="require_no_permission">Nenhuma permissão requerida</string>

@@ -25,7 +25,6 @@
     <string name="require_no_permission">No permission required</string>
     <string name="activities">Activities</string>
     <string name="launch">Launch</string>
-    <string name="unsupported">Unsupported</string>
     <string name="refresh">Refresh</string>
     <string name="no_activities">No activities</string>
     <string name="receivers">Receivers</string>
@@ -83,7 +82,6 @@
     <string name="sort">Sort</string>
     <string name="version_name_with_code">Version <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="app_info">App Info</string>
-    <string name="exodus" translatable="false">\u03b5xodus</string>
     <string name="fdroid" translatable="false">F-Droid</string>
     <string name="system_app">System App</string>
     <string name="user_app">User App</string>
@@ -99,7 +97,6 @@
     <string name="installer_app">Installer App</string>
     <string name="user_id">User ID</string>
     <string name="main_activity">Main Activity</string>
-    <string name="show_details">Show Details</string>
     <string name="empty_package_name">Empty package name</string>
     <string name="instructions">Instructions</string>
     <string name="error_creating_shortcut">Error creating shortcut</string>
@@ -114,7 +111,6 @@
     <string name="error_invalid_icon_resource">Invalid icon resource</string>
     <string name="error_invalid_icon_format">Invalid icon format</string>
     <string name="icon_picker">Icon Picker</string>
-    <string name="error_loading_icons">Could not load icons</string>
     <string name="license">License</string>
     <string name="license_message" translatable="false"><a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General
         Public License v3.0</a></string>
@@ -148,8 +144,6 @@
     </string>
     <string name="word_wrap">Toggle word wrap</string>
     <string name="class_viewer">Class Viewer</string>
-    <string name="view_trackers">View Trackers</string>
-    <string name="view_summary">View Summary</string>
     <string name="toggle_class_listing">Toggle Class Listing</string>
     <plurals name="tracker_and_classes">
         <item quantity="one">1 tracker with <xliff:g id="class_no" example="50">%2$d</xliff:g> class</item>
@@ -163,7 +157,6 @@
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
     </plurals>
-    <string name="trackers_and_classes"><xliff:g id="tracker_no" example="5">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</string>
     <string name="tested_signatures_on_classes_and_time_taken">Tested <xliff:g id="signature_no" example="342">%1$d</xliff:g> signatures on <xliff:g id="class_no" example="6000">%2$d</xliff:g> classes.\nTime taken <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iterations).</string>
     <string name="found_trackers">Found Trackers:</string>
     <string name="tracker_details">Tracker details</string>
@@ -177,12 +170,8 @@
     <string name="no_tracker_class">No tracker class</string>
     <string name="app_usage">App Usage</string>
     <string name="usage_weekly">Weekly</string>
-    <string name="usage_monthly">Monthly</string>
-    <string name="usage_yearly">Yearly</string>
     <string name="usage_today">Today</string>
     <string name="usage_7_days">Last 7 days</string>
-    <string name="usage_30_days">Last 30 days</string>
-    <string name="usage_365_days">Last 365 days</string>
     <plurals name="usage_months">
         <item quantity="one">%1$d mo</item>
         <item quantity="other">%1$d mos</item>
@@ -197,7 +186,6 @@
     </plurals>
     <string name="usage_min">%1$d min</string>
     <string name="usage_less_than_a_minute">Less than a minute</string>
-    <string name="usage_last_used">Last used:</string>
     <string name="go_back">Go back</string>
     <string name="go">Go</string>
     <string name="grant_usage_access">Grant Usage Access</string>
@@ -301,7 +289,6 @@
     <string name="apk_updater">APK Updater</string>
     <string name="store">Store</string>
     <string name="running_apps">Running Apps</string>
-    <string name="no_running_apps">No running apps</string>
     <string name="kill_process">Kill</string>
     <string name="disable_background_run">Disable Background Run</string>
     <string name="pid_and_ppid">Process ID: %1$d, Parent Process ID: %2$d</string>
@@ -335,7 +322,6 @@
         <item quantity="other">Could not force-stop %1$d apps</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">Toggle kill system apps</string>
-    <string name="app_op_cannot_be_enabled">This app op cannot be enabled, possibly a read-only app op depended on another app op.</string>
     <string name="app_op_cannot_be_disabled">This app op cannot be disabled, possibly a read-only app op depended on another app op.</string>
     <string name="permission_name">Permission Name</string>
     <string name="mode">Mode</string>
@@ -398,7 +384,6 @@
     <string name="changelog">Changelog</string>
     <string name="external_apk_no_app_op">External APK does not have any app operation</string>
     <string name="manifest_viewer">Manifest Viewer</string>
-    <string name="scanning_is_still_in_progress">Scanning still in progress</string>
     <plurals name="no_of_trackers">
         <item quantity="one">%1$d tracker</item>
         <item quantity="other">%1$d trackers</item>
@@ -462,7 +447,6 @@
     <string name="exclude_cache">Exclude cache</string>
     <string name="external_data">External data</string>
     <string name="data">Data</string>
-    <string name="apk">APK</string>
     <string name="backup">Backup</string>
     <string name="restore">Restore</string>
     <string name="delete_backup">Delete backup</string>
@@ -511,8 +495,6 @@
         <item quantity="one">%1$d library</item>
         <item quantity="other">%1$d libraries</item>
     </plurals>
-    <string name="failed_to_delete_backup">Could not delete backup</string>
-    <string name="failed_to_restore_backup">Could not restore backup</string>
     <string name="apply_to_system_apps">Apply to system apps</string>
     <string name="apply_to_system_apps_question">Apply to system apps too? Select \"No\" if unsure.</string>
     <string name="no">No</string>
@@ -520,7 +502,6 @@
     <string name="skip_signature_checks">Skip signature checks</string>
     <string name="clear_data_message">Are you sure want to clear data from this app?</string>
     <string name="clear">Clear</string>
-    <string name="failed_to_backup">Could not create backup</string>
     <string name="block">Block</string>
     <string name="unblock">Unblock</string>
     <string name="block_unblock_trackers">Block/unblock trackers</string>
@@ -549,7 +530,6 @@
     <string name="operation_running">Operation running…</string>
     <string name="full_stop_tap_to_see_details">. Tap to see details.</string>
     <string name="try_again">Try again</string>
-    <string name="info">Info</string>
     <string name="install_app_message">Do you want to install this app?</string>
     <string name="reinstall_app_message">Do you want to reinstall this app?</string>
     <string name="reinstall">Reinstall</string>
@@ -655,9 +635,7 @@
     <string name="sort_by_process_id">Process ID</string>
     <string name="sort_by_process_name">Process name</string>
     <string name="sort_by_apps_first">Apps first</string>
-    <string name="sort_by_user_apps_first">User apps first</string>
     <string name="sort_by_memory_usage">Memory usage</string>
-    <string name="sort_by_priority">Priority</string>
     <string name="changes_not_saved">Changes not saved</string>
     <string name="other">Other</string>
     <string name="rules">Rules</string>

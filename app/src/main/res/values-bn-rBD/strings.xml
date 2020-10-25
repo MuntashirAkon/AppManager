@@ -20,7 +20,6 @@
     <string name="require_no_permission">কোন অনুমতির প্রয়োজন নেই</string>
     <string name="activities">কার্যকলাপ</string>
     <string name="launch">চালু করুন</string>
-    <string name="unsupported">অসমর্থিত</string>
     <string name="refresh">রিফ্রেশ</string>
     <string name="no_activities">কোন কার্যক্রম নেই</string>
     <string name="sort_by_last_update">সর্বশেষ আপডেট</string>
@@ -61,7 +60,6 @@
     <string name="date_updated">আপডেটের তারিখ</string>
     <string name="user_id">ব্যবহারকারীর আইডি</string>
     <string name="main_activity">মূল একটিভিটি</string>
-    <string name="show_details">বিস্তারিত দেখান</string>
     <string name="empty_package_name">প্যাকেজের নাম খালি</string>
     <string name="instructions">নির্দেশনা</string>
     <string name="error_verbose_pin_shortcut">বর্তমান লঞ্চার পিনশোর্টকট সমর্থন করে না। শর্টকাট তৈরি করতে ব্যর্থ।</string>
@@ -70,8 +68,6 @@
     <string name="license">লাইসেন্স</string>
     <string name="third_party">তৃতীয় পক্ষের লাইব্রেরী এবং আইকন</string>
     <string name="credits">কৃতিত্ব</string>
-    <string name="view_trackers">ট্র্যাকারগুলি দেখুন</string>
-    <string name="view_summary">সারাংশ দেখুন</string>
     <string name="toggle_class_listing">ক্লাস লিস্টিং টগল করুন</string>
     <string name="found_trackers">পাওয়া ট্র্যাকার গুলো:</string>
     <string name="tracker_details">ট্র্যাকারের বিস্তারিত</string>
@@ -81,12 +77,8 @@
     </plurals>
     <string name="app_usage">অ্যাপ ব্যবহারের ডাটা</string>
     <string name="usage_weekly">সাপ্তাহিক</string>
-    <string name="usage_monthly">মাসিক</string>
-    <string name="usage_yearly">বার্ষিক</string>
     <string name="usage_today">আজ</string>
     <string name="usage_7_days">গত ৭ দিন</string>
-    <string name="usage_30_days">গত ৩০ দিন</string>
-    <string name="usage_365_days">গত ৩৬৫ দিন</string>
     <plurals name="usage_months">
         <item quantity="one">%d মাস</item>
         <item quantity="other">%d মাস</item>
@@ -101,7 +93,6 @@
     </plurals>
     <string name="usage_min">%d মিনিট</string>
     <string name="usage_less_than_a_minute">এক মিনিটেরও কম</string>
-    <string name="usage_last_used">সর্বশেষ ব্যবহৃত:</string>
     <string name="go_back">পিছনে যান</string>
     <string name="go">এগিয়ে যান</string>
     <string name="grant_usage_access">ইউসেজ একসেস প্রদান করুন</string>
@@ -183,7 +174,6 @@
     <string name="apk_updater">এপিকে আপডেটর</string>
     <string name="store">স্টোর</string>
     <string name="running_apps">চলমান এপ্স</string>
-    <string name="no_running_apps">কোনও চলমান অ্যাপ নেই</string>
     <string name="kill_process">কাটুন</string>
     <string name="pid_and_ppid">প্রক্রিয়ার আইডি: %d, প্রক্রিয়ার প্যারেন্ট আইডি: %d</string>
     <string name="memory_virtual_memory">মেমোরি: %s, ভার্চুয়াল মেমোরি: %s</string>
@@ -245,7 +235,6 @@
     <string name="never_ask">কখনও জিজ্ঞাসা করবেন না</string>
     <string name="one_click_ops">১-ক্লিক অপস</string>
     <string name="changelog">পরিবর্তনসূচী</string>
-    <string name="scanning_is_still_in_progress">স্ক্যান করা এখনও চলছে</string>
     <plurals name="no_of_trackers">
         <item quantity="one">%d ট্র্যাকার</item>
         <item quantity="other">%d টি ট্র্যাকার</item>
@@ -280,7 +269,6 @@
     <string name="exclude_cache">ক্যাশে বাদ দিন</string>
     <string name="external_data">বাহ্যিক ডাটা</string>
     <string name="data">ডাটা</string>
-    <string name="apk">এপিকে</string>
     <string name="backup">ব্যাকআপ</string>
     <string name="restore">পুনরুদ্ধার</string>
     <string name="delete_backup">ব্যাকআপ মুছুন</string>
@@ -296,15 +284,12 @@
         <item quantity="one">%d অ্যাপটির ব্যাকআপ মুছতে করতে ব্যর্থ</item>
         <item quantity="other">%d অ্যাপস গুলোর ব্যাকআপ মুছতে করতে ব্যর্থ</item>
     </plurals>
-    <string name="failed_to_delete_backup">ব্যাকআপ মুছতে ব্যর্থ</string>
-    <string name="failed_to_restore_backup">ব্যাকআপ পুনরুদ্ধার করতে ব্যর্থ</string>
     <string name="apply_to_system_apps">সিস্টেম অ্যাপ্লিকেশনগুলিতে প্রয়োগ করুন</string>
     <string name="apply_to_system_apps_question">সিস্টেম অ্যাপ গুলোতেও প্রয়োগ করবেন\? অনিশ্চিত হলে \'না\' বাছুন।</string>
     <string name="no">না</string>
     <string name="yes">হ্যাঁ</string>
     <string name="clear_data_message">আপনি কি এই অ্যাপ্লিকেশনটি থেকে ডাটা মুছার বিষয়ে নিশ্চিত\?</string>
     <string name="clear">মুছুন</string>
-    <string name="failed_to_backup">ব্যাকআপ তৈরী করতে ব্যর্থ</string>
     <string name="block">ব্লক</string>
     <string name="unblock">আনব্লক</string>
     <string name="block_unblock_trackers">ট্র্যাকার গুলো ব্লক/আনব্লক করুন</string>
@@ -369,7 +354,6 @@
     <string name="reject_time">প্রত্যাখ্যানের সময়</string>
     <string name="accept_time">গ্রহণের সময়</string>
     <string name="app_op_cannot_be_disabled">এই অ্যাপ অপটি নিষ্ক্রিয় করা যাবে না, সম্ভবত এটি একটি রিড-ওনলি অ্যাপ অপ যা অন্য অ্যাপ অপের উপর নির্ভর করে।</string>
-    <string name="app_op_cannot_be_enabled">এই অ্যাপ অপটি সক্রিয় করা যাবে না, সম্ভবত এটি একটি রিড-ওনলি অ্যাপ অপ যা অন্য অ্যাপ অপের উপর নির্ভর করে।</string>
     <plurals name="failed_to_import_files">
         <item quantity="one">%d ফাইলটি ইম্পোর্ট করতে ব্যর্থ।</item>
         <item quantity="other">%d ফাইলগুলো ইম্পোর্ট করতে ব্যর্থ।</item>
@@ -391,7 +375,6 @@
     <string name="failed_to_disable_op">অনুরোধকৃত অ্যাপ অপটিকে নিষ্ক্রিয় করা যায়নি</string>
     <string name="no_shared_libs">কোন শেয়ার্ড লাইব্রেরি নেই</string>
     <string name="all_classes">সকল ক্লাস</string>
-    <string name="trackers_and_classes">%dটি ক্লাস সহ %d ট্র্যাকারসমূহ</string>
     <string name="class_name">শ্রেণির নাম</string>
     <string name="installer_app">যে অ্যাপ দ্বারা ইনস্টলড হয়েছে</string>
     <string name="about">সম্পর্কে</string>
@@ -439,7 +422,6 @@
     <string name="no_tracker_class">কোনও ট্র্যাকার শ্রেণি নেই</string>
     <string name="tracker_classes">ট্র্যাকার ক্লাস</string>
     <string name="word_wrap">শব্দ মোড়ক টগল করুন</string>
-    <string name="error_loading_icons">আইকন লোড করতে ব্যর্থ</string>
     <string name="icon_picker">আইকন পিকার</string>
     <string name="no_configurations">কোন কনফিগারেশন নেই</string>
     <string name="deny_dangerous_app_ops">বিপজ্জনক অ্যাপস অপস গুলো প্রত্যাখ্যান করুন</string>

@@ -69,7 +69,7 @@ public class DexClasses implements Closeable {
                 className = enumeration.nextElement();
                 try {
                     classes.addAll(getImports(className));
-                } catch (ClassNotFoundException ignore) {
+                } catch (ClassNotFoundException|LinkageError ignore) {
                 }
             }
         }

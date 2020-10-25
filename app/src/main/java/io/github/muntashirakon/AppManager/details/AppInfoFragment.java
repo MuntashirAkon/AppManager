@@ -618,8 +618,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             } else intent.putExtra(ManifestViewerActivity.EXTRA_PACKAGE_NAME, mPackageName);
             startActivity(intent);
         });
-        // Set exodus
-        addToHorizontalLayout(R.string.exodus, R.drawable.ic_frost_classysharkexodus_black_24dp).setOnClickListener(v -> {
+        // Set scanner
+        addToHorizontalLayout(R.string.scanner, R.drawable.ic_baseline_security_24).setOnClickListener(v -> {
             Intent intent = new Intent(mActivity, ScannerActivity.class);
             File file = new File(mApplicationInfo.publicSourceDir);
             intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));

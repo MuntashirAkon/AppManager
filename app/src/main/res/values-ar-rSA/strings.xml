@@ -20,7 +20,6 @@
     <string name="require_no_permission">لا توجد أذونات مطلوبة</string>
     <string name="activities">الأنشطة</string>
     <string name="launch">البدء</string>
-    <string name="unsupported">غير مدعوم</string>
     <string name="refresh">تحديث</string>
     <string name="no_activities">لا توجد أي أنشطة</string>
     <string name="receivers">الاستقبال</string>

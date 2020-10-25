@@ -20,7 +20,6 @@
         <item quantity="one">%d ट्रैकर</item>
         <item quantity="other">%d ट्रैकर्स</item>
     </plurals>
-    <string name="scanning_is_still_in_progress">स्कैन अभी भी जारी है</string>
     <string name="manifest_viewer">मेनिफेस्ट दर्शक</string>
     <string name="external_apk_no_app_op">एक्सटर्नल एपीके में कोई ऐप ऑप नही है</string>
     <string name="changelog">बदलाव लॉग</string>
@@ -78,7 +77,6 @@
     <string name="running">चल रहे</string>
     <string name="mode">मोड</string>
     <string name="permission_name">अनुमति नाम</string>
-    <string name="app_op_cannot_be_enabled">इस ऐप ऑप को चालू नहीं किया जा सकता, संभवतः एक रीड-ओनली ऐप ऑप है जो अन्य ऐप ऑप पर निर्भर है।</string>
     <string name="app_op_cannot_be_disabled">इस ऐप ऑप को बंद नहीं किया जा सकता, संभवतः एक रीड-ओनली ऐप ऑप है जो अन्य ऐप ऑप पर निर्भर है।</string>
     <string name="toggle_kill_for_system_apps">टॉगल किल सिस्टम एप्स</string>
     <plurals name="alert_failed_to_force_stop">
@@ -113,7 +111,6 @@
     <string name="pid_and_ppid">प्रोसेस आईडी: %d, पैरेंट प्रोसेस आईडी: %d</string>
     <string name="disable_background_run">बैकग्राउंड में चलना बंद करें</string>
     <string name="kill_process">जबरदस्ती रोकें</string>
-    <string name="no_running_apps">कोई ऐप नहीं चल रहा</string>
     <string name="running_apps">चल रहे ऐप</string>
     <string name="store">स्टोर</string>
     <string name="apk_updater">APK अपडेटर</string>
@@ -217,7 +214,6 @@
     <string name="grant_usage_access">इस्तेमाल एक्सेस की अनुमति दें</string>
     <string name="go">जाएँ</string>
     <string name="go_back">पीछे जाएँ</string>
-    <string name="usage_last_used">अंतिम उपयोग:</string>
     <string name="usage_less_than_a_minute">एक मिनट से भी कम</string>
     <string name="usage_min">%d मिनट</string>
     <plurals name="usage_hours">
@@ -232,12 +228,8 @@
         <item quantity="one">%d महीना</item>
         <item quantity="other">%d महीने</item>
     </plurals>
-    <string name="usage_365_days">पिछले 365 दिन</string>
-    <string name="usage_30_days">पिछले 30 दिन</string>
     <string name="usage_7_days">पिछले 7 दिन</string>
     <string name="usage_today">आज</string>
-    <string name="usage_yearly">वार्षिक</string>
-    <string name="usage_monthly">मासिक</string>
     <string name="usage_weekly">साप्ताहिक</string>
     <string name="app_usage">ऐप उपयोग</string>
     <string name="no_tracker_class">कोई ट्रैकर क्लास नहीं</string>
@@ -252,10 +244,7 @@
     <string name="found_trackers">ट्रैकर्स मिले:</string>
     <string name="tested_signatures_on_classes_and_time_taken">टेस्ट किया %d हस्ताक्षरों को %d क्लासेज पर ।
 \nसमय लिया %d मिलिसेकंड (%d पुनरावृत्तियां) ।</string>
-    <string name="trackers_and_classes">%d ट्रैकर्स %d क्लासेज के साथ</string>
     <string name="toggle_class_listing">टॉगल वर्ग सूचीकरण</string>
-    <string name="view_summary">सारांश देखें</string>
-    <string name="view_trackers">ट्रैकर्स देखें</string>
     <string name="class_viewer">क्लास दर्शक</string>
     <string name="word_wrap">वर्ड व्रैप चालू/बंद करें</string>
     <string name="credits_message">के लेखकों को
@@ -271,7 +260,6 @@
     <string name="credits">श्रेय</string>
     <string name="third_party">थर्ड पार्टी लाइब्रेरी और आइकन्स</string>
     <string name="license">लाइसेंस</string>
-    <string name="error_loading_icons">आइकन लोड नहीं किए जा सके</string>
     <string name="icon_picker">आइकन पिकर</string>
     <string name="error_invalid_icon_format">अमान्य आइकन प्रारूप</string>
     <string name="error_invalid_icon_resource">अमान्य आइकन संसाधन</string>
@@ -286,7 +274,6 @@
     <string name="error_creating_shortcut">शॉर्टकट बनाने में त्रुटि</string>
     <string name="instructions">निर्देश</string>
     <string name="empty_package_name">पैकेज का नाम खाली है</string>
-    <string name="show_details">विवरण दिखाएं</string>
     <string name="main_activity">मुख्य एक्टिविटी</string>
     <string name="user_id">यूज़र आईडी</string>
     <string name="installer_app">जिस ऐप से इंस्टाल किया</string>
@@ -345,7 +332,6 @@
     <string name="delete_backup">बैकअप हटाएं</string>
     <string name="restore">रिस्टोर</string>
     <string name="backup">बैकअप</string>
-    <string name="apk">APK</string>
     <string name="data">डेटा</string>
     <string name="external_data">एक्सटर्नल डेटा</string>
     <string name="exclude_cache">कैश को शामिल न करें</string>
@@ -403,7 +389,6 @@
     <string name="receivers">रिसीवर</string>
     <string name="no_activities">कोई एक्टिविटीज नहीं हैं</string>
     <string name="refresh">रीफ़्रेश करें</string>
-    <string name="unsupported">असमर्थित</string>
     <string name="launch">प्रारंभ करें</string>
     <string name="activities">एक्टिविटी</string>
     <string name="require_no_permission">किसी भी अनुमति की आवश्यकता नहीं</string>
@@ -458,9 +443,7 @@
     <string name="rules">रूल्स</string>
     <string name="other">अन्य</string>
     <string name="changes_not_saved">परिवर्तन सहेजे नहीं गए</string>
-    <string name="sort_by_priority">प्राथमिकता</string>
     <string name="sort_by_memory_usage">मेमोरी उपयोग</string>
-    <string name="sort_by_user_apps_first">पहले यूजर ऐप्स</string>
     <string name="sort_by_apps_first">पहले ऐप्स</string>
     <string name="sort_by_process_name">प्रोसेस नाम</string>
     <string name="sort_by_process_id">प्रोसेस आइडी</string>
@@ -560,7 +543,6 @@
     <string name="reinstall">पुनः इंस्टॉल करें</string>
     <string name="reinstall_app_message">क्या आप इस ऐप को पुनः इंस्टॉल करना चाहते हैं\?</string>
     <string name="install_app_message">क्या आप यह ऐप इंस्टॉल करना चाहते हैं\?</string>
-    <string name="info">जानकारी</string>
     <string name="try_again">पुन: प्रयास करें</string>
     <string name="full_stop_tap_to_see_details">। विवरण देखने के लिए टैप करें।</string>
     <string name="operation_running">ऑपेरशन चल रहा है…</string>
@@ -588,15 +570,12 @@
     <string name="block_unblock_trackers">ट्रेकर्स को ब्लॉक/अनब्लॉक करें</string>
     <string name="unblock">अनब्लॉक करें</string>
     <string name="block">ब्लॉक करें</string>
-    <string name="failed_to_backup">बैकअप नहीं बना सके</string>
     <string name="clear">साफ़ करें</string>
     <string name="clear_data_message">क्या आप सुनिश्चित हैं कि इस ऐप का डेटा साफ़ करना चाहते हैं\?</string>
     <string name="skip_signature_checks">हस्ताक्षर चेक छोड़ें</string>
     <string name="yes">हाँ</string>
     <string name="apply_to_system_apps_question">सिस्टम ऐप्स पर भी लागू करें\? यदि अनिश्चित हैं तो \"नहीं\" का चयन करें।</string>
     <string name="apply_to_system_apps">सिस्टम ऐप्स पर लागू करें</string>
-    <string name="failed_to_restore_backup">बैकअप को रिस्टोर नहीं किया जा सका</string>
-    <string name="failed_to_delete_backup">बैकअप नहीं हटा सके</string>
     <plurals name="backup_exists_are_you_sure">
         <item quantity="one">बैकअप मौजूद है। क्या आपको यकीन है\?</item>
         <item quantity="other">एक से ज्यादा ऐप के लिए बैकअप मौजूद है। क्या आपको यकीन है\?</item>
