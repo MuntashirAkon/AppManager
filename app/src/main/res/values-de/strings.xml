@@ -654,4 +654,10 @@
         <item quantity="one">1 Verfolger mit &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; Klasse</item>
         <item quantity="other">1 Verfolger mit &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; Klassen</item>
     </plurals>
+    <string name="copy">Kopieren</string>
+    <string name="view_missing_signatures">Tippen Sie darauf , um Signaturen anzuzeigen, die noch nicht in der Bibliotheksdatenbank des App Managers vorhanden sind. Sie können diese auch an mich senden, wenn Sie möchten.</string>
+    <plurals name="missing_signatures">
+        <item quantity="one">%1$d Signatur fehlt</item>
+        <item quantity="other">%1$d Signaturen fehlen</item>
+    </plurals>
 </resources>
