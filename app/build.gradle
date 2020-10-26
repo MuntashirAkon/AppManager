@@ -67,7 +67,7 @@ android {
     }
     splits {
         abi {
-            enable true
+            enable gradle.startParameter.taskNames.any { it.contains("Debug") || it.contains("PreRelease") }
             reset()
             include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
             universalApk true

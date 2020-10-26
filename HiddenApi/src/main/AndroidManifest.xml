@@ -15,4 +15,4 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<manifest package="io.github.muntashirakon.appmanager.hiddenapi" />
+<manifest package="io.github.muntashirakon.AppManager.hiddenapi" />
