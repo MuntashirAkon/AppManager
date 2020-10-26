@@ -26,11 +26,13 @@ import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class OpenPgpUtils {
 
@@ -78,19 +80,14 @@ public class OpenPgpUtils {
     }
 
     @NonNull
-    public static List<ServiceInfo> getPgpClientServices(Context context) {
-        Intent intent = new Intent(OpenPgpApi.SERVICE_INTENT_2);
-        List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentServices(intent, 0);
-        List<ServiceInfo> serviceInfoList = new ArrayList<>(resolveInfoList.size());
-        for (ResolveInfo resolveInfo : resolveInfoList) {
-            if (resolveInfo.serviceInfo == null) {
-                continue;
-            }
-            serviceInfoList.add(resolveInfo.serviceInfo);
-        }
-        intent = new Intent("org.openintents.openpgp.IOpenPgpService");
+    public static List<ServiceInfo> getPgpClientServices(@NonNull Context context) {
+        PackageManager pm = context.getPackageManager();
+        final List<ResolveInfo> resolveInfoList = new ArrayList<>(pm.queryIntentServices(
+                new Intent(OpenPgpApi.SERVICE_INTENT_2), 0));
+        Intent intent = new Intent("org.openintents.openpgp.IOpenPgpService");
         intent.setPackage("org.thialfihar.android.apg");
-        resolveInfoList = context.getPackageManager().queryIntentServices(intent, 0);
+        resolveInfoList.addAll(pm.queryIntentServices(intent, 0));
+        List<ServiceInfo> serviceInfoList = new ArrayList<>(resolveInfoList.size());
         for (ResolveInfo resolveInfo : resolveInfoList) {
             if (resolveInfo.serviceInfo == null) {
                 continue;
