@@ -14,7 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources>
+  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="instructions_header">[এই নির্দেশাবলী পুরানো এবং আর আপডেট করা হবে না আপডেটেড তথ্য পেতে অফিসিয়াল ডক সাইট (https://muntashirakon.github.io/AppManager) ভিজিট করুন]</string>
     <string name="uninstall">আনইনস্টল</string>
     <string name="require_no_permission">কোন অনুমতির প্রয়োজন নেই</string>
@@ -46,7 +46,7 @@
     <string name="system">সিস্টেম</string>
     <string name="user">ব্যবহারকারী</string>
     <string name="sort">বাছাই</string>
-    <string name="version_name_with_code">সংস্করণ %s (%d)</string>
+    <string name="version_name_with_code">সংস্করণ &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;)</string>
     <string name="app_info">অ্যাপ্লিকেশন তথ্য</string>
     <string name="system_app">সিস্টেম অ্যাপ</string>
     <string name="user_app">ব্যবহারকারী অ্যাপ্লিকেশন</string>
@@ -72,26 +72,26 @@
     <string name="found_trackers">পাওয়া ট্র্যাকার গুলো:</string>
     <string name="tracker_details">ট্র্যাকারের বিস্তারিত</string>
     <plurals name="main_list_date_days">
-        <item quantity="one">%s %d দিন</item>
-        <item quantity="other">%s %d দিন</item>
+        <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> দিন</item>
+        <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> দিন</item>
     </plurals>
     <string name="app_usage">অ্যাপ ব্যবহারের ডাটা</string>
     <string name="usage_weekly">সাপ্তাহিক</string>
     <string name="usage_today">আজ</string>
     <string name="usage_7_days">গত ৭ দিন</string>
     <plurals name="usage_months">
-        <item quantity="one">%d মাস</item>
-        <item quantity="other">%d মাস</item>
+        <item quantity="one">%1$d মাস</item>
+        <item quantity="other">%1$d মাস</item>
     </plurals>
     <plurals name="usage_days">
-        <item quantity="one">%d দিন</item>
-        <item quantity="other">%d দিন</item>
+        <item quantity="one">%1$d দিন</item>
+        <item quantity="other">%1$d দিন</item>
     </plurals>
     <plurals name="usage_hours">
-        <item quantity="one">%d ঘন্টা</item>
-        <item quantity="other">%d ঘন্টা</item>
+        <item quantity="one">%1$d ঘন্টা</item>
+        <item quantity="other">%1$d ঘন্টা</item>
     </plurals>
-    <string name="usage_min">%d মিনিট</string>
+    <string name="usage_min">%1$d মিনিট</string>
     <string name="usage_less_than_a_minute">এক মিনিটেরও কম</string>
     <string name="go_back">পিছনে যান</string>
     <string name="go">এগিয়ে যান</string>
@@ -133,8 +133,8 @@
     <string name="disabled_app">নিস্ক্রিয় করা</string>
     <string name="view_in_settings">সেটিংসে দেখুন</string>
     <string name="uninstall_app_message">আপনি কি এই অ্যাপটি আনইনস্টল করতে চান?</string>
-    <string name="failed_to_uninstall">%s আনইনস্টল করতে ব্যর্থ।</string>
-    <string name="uninstalled_successfully">%s আনইনস্টল হয়েছে।</string>
+    <string name="failed_to_uninstall"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> আনইন্সটল করতে ব্যর্থ।</string>
+    <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> আনইন্সটল করা হয়েছে।</string>
     <string name="uninstall_system_app_message">এটি একটি সিস্টেম অ্যাপ। আপনি কি এটি আনইনস্টল করার ব্যাপারে নিশ্চিত?</string>
     <string name="stopped">স্থগিত</string>
     <string name="disable">নিষ্ক্রিয় করুন</string>
@@ -161,8 +161,8 @@
     <string name="external_data_dir">বাহ্যিক ডাটা ডিরেক্টরি</string>
     <string name="external_multiple_data_dir">বাহ্যিক ডাটা ডিরেক্টরি %d</string>
     <plurals name="no_of_times_opened">
-        <item quantity="one">%d বার</item>
-        <item quantity="other">%d বার</item>
+        <item quantity="one">%1$d বার</item>
+        <item quantity="other">%1$d বার</item>
     </plurals>
     <string name="sort_by_last_used">সর্বশেষ ব্যবহৃত</string>
     <string name="sort_by_mobile_data">মোবাইল ডাটা</string>
@@ -175,17 +175,17 @@
     <string name="store">স্টোর</string>
     <string name="running_apps">চলমান এপ্স</string>
     <string name="kill_process">কাটুন</string>
-    <string name="pid_and_ppid">প্রক্রিয়ার আইডি: %d, প্রক্রিয়ার প্যারেন্ট আইডি: %d</string>
-    <string name="memory_virtual_memory">মেমোরি: %s, ভার্চুয়াল মেমোরি: %s</string>
-    <string name="user_and_uid">ব্যবহারকারী: %s (%d)</string>
+    <string name="pid_and_ppid">প্রসেস আইডি: %1$d, প্যারেন্ট প্রসেস আইডি: %2$d</string>
+    <string name="memory_virtual_memory">মেমোরি: %1$s, ভার্চুয়াল মেমোরি: %2$s</string>
+    <string name="user_and_uid">ব্যবহারকারী: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="clear_data">ডাটা মুছুন</string>
     <string name="backup_apk">এপিকের ব্যাকআপ নিন</string>
     <string name="backup_restore">ব্যাকআপ/পুনরুদ্ধার</string>
     <string name="export_blocking_rules">ব্লকিং বিধিগুলো এক্সপোর্ট করুন</string>
-    <string name="some_items_selected">%d টি নির্বাচিত</string>
+    <string name="some_items_selected">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"selection_no\" example=\"20\"&gt;টি নির্বাচিত</string>
     <plurals name="alert_failed_to_clear_data">
-        <item quantity="one">%d অ্যাপটি থেকে ডাটা মুছতে ব্যর্থ</item>
-        <item quantity="other">%d অ্যাপগুলো থেকে ডাটা মুছতে ব্যর্থ</item>
+        <item quantity="one">%1$dটি অ্যাপ থেকে ডাটা মুছতে ব্যর্থ</item>
+        <item quantity="other">%1$dটি অ্যাপ থেকে ডাটা মুছতে ব্যর্থ</item>
     </plurals>
     <plurals name="alert_failed_to_disable">
         <item quantity="one">%d অ্যাপটি ডিজ্যাবল করতে ব্যর্থ</item>
@@ -209,7 +209,7 @@
     <string name="night">রাত</string>
     <string name="select_theme">থিম নির্বাচন করুন</string>
     <string name="apply">প্রয়োগ করুন</string>
-    <string name="current_theme">বর্তমান থিম: %s</string>
+    <string name="current_theme">বর্তমান থিম: %1$s</string>
     <string name="version">সংস্করণ</string>
     <string name="sort_by_wifi_data">ওয়াইফাই ডাটা</string>
     <string name="block_trackers">ট্র্যাকার গুলো ব্লক করুন</string>
@@ -223,8 +223,8 @@
     <string name="failed_to_disable_trackers">ট্র্যাকারগুলো নিষ্ক্রিয় করতে ব্যর্থ</string>
     <string name="trackers_disabled_successfully">ট্র্যাকারগুলো এখন নিষ্ক্রিয়</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">%d অ্যাপ থেকে ট্র্যাকার নিষ্ক্রিয় করা যায়নি</item>
-        <item quantity="other">%d অ্যাপগুলো থেকে ট্র্যাকার নিষ্ক্রিয় করা যায়নি</item>
+        <item quantity="one">%dটি অ্যাপ থেকে ট্র্যাকার নিষ্ক্রিয় করা যায়নি</item>
+        <item quantity="other">%dটি অ্যাপ থেকে ট্র্যাকার নিষ্ক্রিয় করা যায়নি</item>
     </plurals>
     <string name="failed_to_grant_permission">অনুমতি দেওয়া যায়নি</string>
     <string name="failed_to_revoke_permission">অনুমতি বাতিল করা যায়নি</string>
@@ -236,15 +236,16 @@
     <string name="one_click_ops">১-ক্লিক অপস</string>
     <string name="changelog">পরিবর্তনসূচী</string>
     <plurals name="no_of_trackers">
-        <item quantity="one">%d ট্র্যাকার</item>
-        <item quantity="other">%d টি ট্র্যাকার</item>
+        <item quantity="one">%1$dটি ট্র্যাকার</item>
+        <item quantity="other">%1$dটি ট্র্যাকার</item>
     </plurals>
     <string name="install">ইনস্টল করুন</string>
     <string name="update">হালনাগাদ</string>
     <string name="source_code">সোর্স কোড</string>
     <string name="community">টেলিগ্রাম কমিউনিটি</string>
-    <string name="community_links">আপডেটের চ্যানেল: https://t.me/AppManagerChannel
-\nসহায়তা গ্রুপ: https://t.me/AppManagerAndroid</string>
+    <string name="community_links">আপডেট চ্যানেল: https://t.me/AppManagerChannel
+\nগ্রুপ: https://t.me/AppManagerAndroid
+\nটুইটার: https://twitter.com/AMUpdateChannel</string>
     <string name="clear_cache">ক্যাশে মুছুন</string>
     <string name="block_unblock_trackers_description">সকল ইনস্টলড থাকা অ্যাপ গুলো থেকে বিজ্ঞাপন এবং ট্র্যাকিং উপাদানগুলিকে ব্লক/আনব্লক করুন</string>
     <string name="clear_data_from_uninstalled_apps">আনইনস্টলড অ্যাপগুলো থেকে ডাটা মুছুন</string>
@@ -255,8 +256,8 @@
     <string name="input_app_ops">অ্যাপ অপস এর মান ইনপুট করুন</string>
     <string name="only_works_in_root_or_adb_mode">শুধুমাত্র রুট অথবা এডিবি মোডে ব্যবহারযোগ্য</string>
     <string name="termux">টার্মাক্স</string>
-    <string name="package_name_is_installed_successfully">%sটি সফলভাবে ইনস্টলড হয়েছে</string>
-    <string name="failed_to_install_package_name">%s টি ইনস্টল করতে ব্যর্থ</string>
+    <string name="package_name_is_installed_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt; সফলভাবে ইনস্টল হয়েছে</string>
+    <string name="failed_to_install_package_name">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt; ইনস্টল করতে ব্যর্থ</string>
     <string name="filter_user_apps">ব্যবহারকারীর এপ</string>
     <string name="filter_system_apps">সিস্টেম এপ্স</string>
     <string name="select_all">সবগুলো নির্বাচন করুন</string>
@@ -456,4 +457,16 @@
     <string name="class_viewer">ক্লাস ভিউয়ার</string>
     <string name="insert_icon">আইকন যোগ করুন</string>
     <string name="failed_to_enable_op">অনুরোধকৃত অ্যাপ অপটিকে সক্রিয় করা যায়নি</string>
+    <plurals name="other_trackers_and_classes">
+        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt;টি ট্র্যাকার এবং &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt;টি ক্লাস</item>
+        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt;টি ট্র্যাকার এবং &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; ক্লাস</item>
+    </plurals>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="one">২টি ট্র্যাকার এবং &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; ক্লাস</item>
+        <item quantity="other">২টি ট্র্যাকার এবং &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; ক্লাস</item>
+    </plurals>
+    <plurals name="tracker_and_classes">
+        <item quantity="one">১টি ট্র্যাকার এবং &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt;টি ক্লাস</item>
+        <item quantity="other">১টি ট্র্যাকার এবং &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt;টি ক্লাস</item>
+    </plurals>
 </resources>
