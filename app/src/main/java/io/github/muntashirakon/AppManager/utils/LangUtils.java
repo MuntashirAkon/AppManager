@@ -31,42 +31,25 @@ import java.util.Locale;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 
 public final class LangUtils {
     public static final String LANG_AUTO = "auto";
 
-    private static Map<String, Locale> sLocaleMap = new HashMap<>();
+    private static Map<String, Locale> sLocaleMap;
     private static Locale sDefaultLocale;
 
     static {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             sDefaultLocale = LocaleList.getDefault().get(0);
         } else sDefaultLocale = Locale.getDefault();
-        String[] languages = AppManager.getContext().getResources().getStringArray(R.array.languages_key);
-        for (String language : languages) {
-            if (LANG_AUTO.equals(language)) {
-                sLocaleMap.put(LANG_AUTO, sDefaultLocale);
-            } else {
-                String[] langComponents = language.split("-", 2);
-                if (langComponents.length == 1) {
-                    sLocaleMap.put(language, new Locale(langComponents[0]));
-                } else if (langComponents.length == 2) {
-                    sLocaleMap.put(language, new Locale(langComponents[0], langComponents[1]));
-                } else {
-                    Log.d("LangUtils", "Invalid language: " + language);
-                    sLocaleMap.put(LANG_AUTO, sDefaultLocale);
-                }
-            }
-        }
     }
 
     public static Locale updateLanguage(@NonNull Context context) {
         Resources resources = context.getResources();
         Configuration config = resources.getConfiguration();
-        Locale currentLocale = getLocaleByLanguage();
+        Locale currentLocale = getLocaleByLanguage(context);
         config.setLocale(currentLocale);
         DisplayMetrics dm = resources.getDisplayMetrics();
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N){
@@ -77,8 +60,27 @@ public final class LangUtils {
         return currentLocale;
     }
 
-    public static Locale getLocaleByLanguage() {
-        String language = (String) AppPref.get(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR);
+    public static Locale getLocaleByLanguage(Context context) {
+        String language = AppPref.getNewInstance(context).getString(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR);
+        if (sLocaleMap == null) {
+            String[] languages = context.getResources().getStringArray(R.array.languages_key);
+            sLocaleMap = new HashMap<>(languages.length);
+            for (String lang : languages) {
+                if (LANG_AUTO.equals(lang)) {
+                    sLocaleMap.put(LANG_AUTO, sDefaultLocale);
+                } else {
+                    String[] langComponents = lang.split("-", 2);
+                    if (langComponents.length == 1) {
+                        sLocaleMap.put(lang, new Locale(langComponents[0]));
+                    } else if (langComponents.length == 2) {
+                        sLocaleMap.put(lang, new Locale(langComponents[0], langComponents[1]));
+                    } else {
+                        Log.d("LangUtils", "Invalid language: " + lang);
+                        sLocaleMap.put(LANG_AUTO, sDefaultLocale);
+                    }
+                }
+            }
+        }
         Locale locale = sLocaleMap.get(language);
         return locale != null ? locale : sDefaultLocale;
     }
@@ -94,7 +96,7 @@ public final class LangUtils {
     @TargetApi(Build.VERSION_CODES.N)
     private static Context updateResources(@NonNull Context context) {
         Resources resources = context.getResources();
-        Locale locale = getLocaleByLanguage();
+        Locale locale = getLocaleByLanguage(context);
         Configuration configuration = resources.getConfiguration();
         configuration.setLocale(locale);
         configuration.setLocales(new LocaleList(locale));

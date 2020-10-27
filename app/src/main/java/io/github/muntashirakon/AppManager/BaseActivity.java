@@ -49,7 +49,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (currentLocale != LangUtils.getLocaleByLanguage()) recreate();
+        if (currentLocale != LangUtils.getLocaleByLanguage(this)) recreate();
     }
 
     @SuppressLint("RestrictedApi")

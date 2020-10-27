@@ -133,12 +133,17 @@ public class AppPref {
 
     private static AppPref appPref;
 
+    @NonNull
     public static AppPref getInstance() {
         if (appPref == null) {
-            Context context = AppManager.getInstance();
-            appPref = new AppPref(context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE));
+            appPref = new AppPref(AppManager.getInstance());
         }
         return appPref;
+    }
+
+    @NonNull
+    public static AppPref getNewInstance(@NonNull Context context) {
+        return new AppPref(context);
     }
 
     @NonNull
@@ -186,8 +191,8 @@ public class AppPref {
     private SharedPreferences.Editor editor;
 
     @SuppressLint("CommitPrefEdits")
-    private AppPref(@NonNull SharedPreferences preferences) {
-        this.preferences = preferences;
+    private AppPref(@NonNull Context context) {
+        this.preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = preferences.edit();
         init();
     }
@@ -200,6 +205,12 @@ public class AppPref {
     public int getInt(PrefKey key) {
         int index = PrefKey.indexOf(key);
         return preferences.getInt(PrefKey.keys[index], (int) getDefaultValue(PrefKey.prefKeyList.get(index)));
+    }
+
+    @NonNull
+    public String getString(PrefKey key) {
+        int index = PrefKey.indexOf(key);
+        return Objects.requireNonNull(preferences.getString(PrefKey.keys[index], (String) getDefaultValue(PrefKey.prefKeyList.get(index))));
     }
 
     public void setPref(PrefKey key, Object value) {

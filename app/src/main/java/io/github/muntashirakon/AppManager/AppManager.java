@@ -22,6 +22,8 @@ import android.content.Context;
 
 import com.topjohnwu.superuser.Shell;
 
+import androidx.annotation.NonNull;
+
 public class AppManager extends Application {
     private static AppManager instance;
 
@@ -32,12 +34,14 @@ public class AppManager extends Application {
                 .setTimeout(10));
     }
 
+    @NonNull
     public static AppManager getInstance() {
         return instance;
     }
 
-    public static Context getContext(){
-        return instance;
+    @NonNull
+    public static Context getContext() {
+        return instance.getBaseContext();
     }
 
     @Override
