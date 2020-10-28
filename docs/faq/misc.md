@@ -9,6 +9,29 @@ sidebarDepth: 2
 :::
 
 ## Any plans for Shizuku?
+
+**Update:** In 12 September 2020, The authors of Shizuku have finally added a [license][shizuku_license] (Apache 2.0 License) with the following exceptions to the license:
+> 1. You are FORBIDDEN to use image files listed below in any way.
+>    ```
+>    manager/src/main/res/mipmap-hdpi/ic_launcher.png
+>    manager/src/main/res/mipmap-hdpi/ic_launcher_background.png
+>    manager/src/main/res/mipmap-hdpi/ic_launcher_foreground.png
+>    manager/src/main/res/mipmap-xhdpi/ic_launcher.png
+>    manager/src/main/res/mipmap-xhdpi/ic_launcher_background.png
+>    manager/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png
+>    manager/src/main/res/mipmap-xxhdpi/ic_launcher.png
+>    manager/src/main/res/mipmap-xxhdpi/ic_launcher_background.png
+>    manager/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png
+>    manager/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+>    manager/src/main/res/mipmap-xxxhdpi/ic_launcher_background.png
+>    manager/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png
+>    ```
+> 2. You are FORBIDDEN to distribute the apk compiled by you (including modified, e.g., rename "Shizuku" to something else) to any store (IBNLT Google Play Store, etc.).
+
+I absolutely welcome this change (although as far as I know Apache 2.0 doesn't support exceptions) but I don't agree with the exceptions and therefore no support for Shizuku will be added. But it gives me the ability to incorporate similar features to AM as copying features from Shizuku complies with the license.
+
+**Original Texts:**
+
 It would definitely be nice if I added support for Shizuku. But the problem is not with me or my app, it's them.
 
 Although [Shizuku][shizuku] is an open source app, it doesn't use any license. Hence, it's a non-free (non-libre) software. Initially thinking it as an oversight, a number of people had [suggested the authors][shizuku_56] to add a license for their app as F-Droid scanners would not build a library without a free license. In response, the authors have separated the API library responsible for accessing Shizuku with a free (libre) license and closed the issue. It implicitly implies that <mark>the authors have no intention to make the app free,</mark> and therefore, being a strong supporter of freedom, I cannot add support for Shizuku.
@@ -40,6 +63,7 @@ In most cases, you cannot completely debloat your device. Therefore, it is recom
 
 [shizuku]: https://shizuku.rikka.app
 [shizuku_56]: https://github.com/RikkaApps/Shizuku/issues/56
+[shizuku_license]: https://github.com/RikkaApps/Shizuku/commit/c079e47637b9becd57bfb6e225c91168cbe228ff
 [cal]: https://choosealicense.com/no-permission/
 [shizuku_discussion]: https://github.com/MuntashirAkon/AppManager/issues/55
 [free_sw]: https://www.gnu.org/philosophy/free-sw.html
