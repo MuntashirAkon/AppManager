@@ -542,17 +542,33 @@ public final class ApkFile implements AutoCloseable {
                         // This split is an ABI
                         this.type = APK_SPLIT_ABI;
                         int index = ArrayUtils.indexOf(Build.SUPPORTED_ABIS, StaticDataset.ALL_ABIS.get(splitSuffix));
-                        if (index != -1) this.rank = index;
+                        if (index != -1) {
+                            this.rank = index;
+                            if (this.forFeature == null) {
+                                // Increment rank for base APK
+                                this.rank -= 1000;
+                            }
+                        }
                     } else if (StaticDataset.DENSITY_NAME_TO_DENSITY.containsKey(splitSuffix)) {
                         // This split is for Screen Density
                         this.type = APK_SPLIT_DENSITY;
                         //noinspection ConstantConditions
                         this.rank = Math.abs(StaticDataset.DEVICE_DENSITY - StaticDataset.DENSITY_NAME_TO_DENSITY.get(splitSuffix));
+                        if (this.forFeature == null) {
+                            // Increment rank for base APK
+                            this.rank -= 1000;
+                        }
                     } else if (LangUtils.isValidLocale(splitSuffix)) {
                         // This split is for Locale
                         this.type = APK_SPLIT_LOCALE;
                         Integer rank = StaticDataset.LOCALE_RANKING.get(splitSuffix);
-                        if (rank != null) this.rank = rank;
+                        if (rank != null) {
+                            this.rank = rank;
+                            if (this.forFeature == null) {
+                                // Increment rank for base APK
+                                this.rank -= 1000;
+                            }
+                        }
                     } else this.type = APK_SPLIT_UNKNOWN;
                 }
             } else {
