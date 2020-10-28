@@ -15,8 +15,40 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<p>App Manager is now on F-Droid! Link: https://f-droid.org/packages/io.github.muntashirakon.AppManager</p><br />
 <p>Visit App Manager docs here: https://muntashirakon.github.io/AppManager</p><br />
+<p>Visit https://muntashirakon.github.io/AppManager/changelog.html for a more helpful changelog.</p><br />
+
+<h5>v2.5.17 (368):</h5>
+All the changes introduced in v2.5.14 to v2.5.16 except backup/restore which is not yet stable.<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added an option to uninstall updates from system apps<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added Hindi, Polish, Turkish and Ukrainian languages<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added lib scanning in the scanner page<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added localization and more checksums in the signatures tab<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added more undocumented tags on app manifest<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added only install option on signature mismatch, useful for devices with signature verification disabled<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added sort and filter for backups in the main page<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added the option to view system configurations (known as System Config), available in the main page (root only)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added AES encryption/decryption for backup/restore but no GUI is added to configure them yet<br />
+&#x2022; <font color="#09868B">[Feature]</font> Backup/restore app ops along with permissions when permissions is checked<br />
+&#x2022; <font color="#09868B">[Feature]</font> Display changes on reinstalling an app if the signature of the new apk is different<br />
+&#x2022; <font color="#09868B">[Feature]</font> Display confirmation message for non-root users when installing an apk<br />
+&#x2022; <font color="#09868B">[Feature]</font> Offer to uninstall & install app again on signature mismatch<br />
+&#x2022; <font color="#09868B">[Feature]</font> Recommend splits from the installed app<br />
+&#x2022; <font color="#09868B">[Feature]</font> Replaced exodus with scanner<br />
+&#x2022; <font color="#09868B">[Feature]</font> Updated the list of trackers<br />
+&#x2022; <font color="red">[Fix]</font> Added custom focus instructions for label, pkg name and version in the app info page<br />
+&#x2022; <font color="red">[Fix]</font> Display warning if usage access settings can't be opened to prevent crash<br />
+&#x2022; <font color="red">[Fix]</font> Don't delete files if they are not decrypted for backup/restore<br />
+&#x2022; <font color="red">[Fix]</font> Fixed crash on resume if the manifest is very large<br />
+&#x2022; <font color="red">[Fix]</font> Fixed NullPointerException while fetching OpenPGP intent services<br />
+&#x2022; <font color="red">[Fix]</font> Fixed scrolling behaviour in the App Info tab<br />
+&#x2022; <font color="red">[Fix]</font> Follow symbolic links when backing up app data<br />
+&#x2022; <font color="red">[Fix]</font> Increment meta version for backup/restore<br />
+&#x2022; <font color="red">[Fix]</font> Mark the base backup for current user on restore by default<br />
+&#x2022; <font color="red">[Fix]</font> <tt>run-as</tt> as root since Termux doesn't support ADB<br />
+&#x2022; <font color="red">[Fix]</font> Update permission info on refreshing the uses permissions tab<br />
+&#x2022; <font color="red">[Fix]</font> Use pm uninstall for ADB users<br />
+
 
 <h5>v2.5.16 (364) pre-release:</h5>
 &#x2022; <font color="#09868B">[Feature]</font> Added a KeyStore tag for apps that has keystore items in the App Info tab. It has red colour if the phone has screen lock<br />
@@ -133,35 +165,3 @@
 
 <p>Data backup feature is still considered experimental and please do not rely on it to manage your backups yet.</p><br />
 <p>Visit https://muntashirakon.github.io/AppManager/changelog.html for a more helpful changelog.</p><br />
-
-<h5>v2.5.12 (341):</h5>
-&#x2022; <font color="#09868B">[Feature]</font> Added support for splitting data backups into 1GB files to circumvent the limitation of FAT32 file system<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added the ability to unblock trackers<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added an option to skip signature checks while restoring backups<br />
-&#x2022; <font color="#09868B">[Feature]</font> Termux support: <code>run-as</code> for debuggable app or run new session as app (in the App Info tab)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Display backup app info in the main page<br />
-&#x2022; <font color="#09868B">[Feature]</font> Restoring source files (except apk files) disabled on unsupported architecture<br />
-&#x2022; <font color="#09868B">[Feature]</font> Display confirmation dialog before clearing app data<br />
-&#x2022; <font color="#09868B">[Feature]</font> Ability to import components disabled using IFW on MAT<br />
-&#x2022; <font color="#09868B">[Feature]</font> Include external media and obb directory for backups<br />
-&#x2022; <font color="#09868B">[Feature]</font> Allow importing existing rules by other apps or tools<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added an option to extract app icon (in App Info tab)<br />
-&#x2022; <font color="red">[Fix]</font> Display restore and delete backups only for apps with backup<br />
-&#x2022; <font color="red">[Fix]</font> Display progress indicator while taking backups<br />
-&#x2022; <font color="red">[Fix]</font> Display progress indicator while loading app ops<br />
-&#x2022; <font color="red">[Fix]</font> Fixed app not opening in the latest and the only supported Aurora Droid (v1.0.6)<br />
-&#x2022; <font color="red">[Fix]</font> Fixed crash on night mode change while browsing App Details page<br />
-&#x2022; <font color="red">[Fix]</font> Fixed crash when trying to open external apk file<br />
-&#x2022; <font color="red">[Fix]</font> Fixed NullPointerException when an external data directory is null<br />
-&#x2022; <font color="red">[Fix]</font> Fixed toolbar in full screen dialog<br />
-&#x2022; <font color="red">[Fix]</font> Fixed case insensitive searching<br />
-&#x2022; <font color="red">[Fix]</font> Optimized app theme<br />
-&#x2022; <font color="red">[Fix]</font> Replaced AndroidShell with LibSuperuser<br />
-&#x2022; <font color="red">[Fix]</font> Request external storage permission when saving apk files<br />
-&#x2022; <font color="red">[Fix]</font> Workaround for AppBarLayout bug in Material Design<br />
-&#x2022; <font color="red">[Fix]</font> Update external apk info on install/uninstall events<br />
-<p>To use Termux features, make sure you are using Termux v0.96 or later and <tt>allow-external-apps=true</tt> is added in <tt>~/.termux/termux.properties</tt>.</p><br />
-<p>Data backup feature is still considered experimental and please do not rely on it to manage your backups yet.</p><br />
-<p>
-    <b>Note:</b> Backup data are stored at <tt>/sdcard/AppManager</tt> and apk backups are stored at <tt>/sdcard/AppManager/apks</tt>. Data backups are currently not working on Android Lollipop.
-</p><br />
