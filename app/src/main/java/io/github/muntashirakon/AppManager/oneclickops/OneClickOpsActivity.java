@@ -85,12 +85,12 @@ public class OneClickOpsActivity extends BaseActivity {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.deny_app_ops_dots),
                 getString(R.string.deny_app_ops_description))
                 .setOnClickListener(v -> blockAppOps());
-//        mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_data_from_uninstalled_apps),
-//                getString(R.string.clear_data_from_uninstalled_apps_description))
-//                .setOnClickListener(v -> clearData());
-//        mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_app_cache),
-//                getString(R.string.clear_app_cache_description))
-//                .setOnClickListener(v -> clearAppCache());
+        mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_data_from_uninstalled_apps),
+                getString(R.string.clear_data_from_uninstalled_apps_description))
+                .setOnClickListener(v -> clearData());
+        mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_app_cache),
+                getString(R.string.clear_app_cache_description))
+                .setOnClickListener(v -> clearAppCache());
         mProgressIndicator.hide();
     }
 

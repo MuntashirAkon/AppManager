@@ -60,7 +60,6 @@
         android:id="@+id/action_backup"
         android:title="@string/backup_restore"
         android:icon="@drawable/ic_baseline_save_24"
-        android:visible="false"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_disable_background"

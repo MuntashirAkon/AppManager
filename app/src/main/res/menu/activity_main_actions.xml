@@ -142,7 +142,6 @@
     <item
         android:id="@+id/action_profiles"
         android:icon="@drawable/ic_view_list_black_24dp"
-        android:visible="false"
         android:title="@string/profiles" />
 
     <item
