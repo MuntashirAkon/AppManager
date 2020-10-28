@@ -79,6 +79,9 @@ _See also: [1-Click Ops Page][5]_
 ### App Usage
 App usage statistics such as _screen time_, _data usage_ (both mobile and Wifi), _number of times an app was opened_ can be accessed by clicking on the **App Usage** option in the menu (requires _Usage Access_ permission).
 
+### System Config
+Display various system configurations and whitelists/blacklists included in Android by either OEM/vendor, AOSP or even some Magisk modules.
+
 ### Running Apps
 A list of running apps or processes can be viewed by clicking on the **Running Apps** option in the menu (requires root or [ADB][1]). Running apps or processes can also be force-closed or killed within the resultant page.
 

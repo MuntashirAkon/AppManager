@@ -23,8 +23,11 @@ As promised, it is now possible to select splits. AM also provides recommendatio
 - Large app can take a long time to fetch app info and therefore it may take a long time display the install prompt.
 - If the apk is not located in the internal storage, the app has to be cached first which might also take a long time depending on the size of the apk.
 
-### Introducing Scanner
+### Scanner: Replacement for Exodus Page
 exodus page is now replaced with scanner page. [Scanner page][scanner] contains not only a list of trackers but also a list of used libraries. This is just a start. In future, this page will contain more in depth analysis of the app.
+
+### Introducing System Config
+System Config lists various system configurations and whitelists/blacklists included in Android by either OEM/vendor, AOSP or even some Magisk modules. Root users can access this option from the overflow menu in the main page. There isn't any official documentation for these options therefore it's difficult to write a complete documentation for this page. But I will gradually add documentations using my own knowledge. But some of the functions should be understandable by their name.
 
 ### More Languages
 Thanks to the contributors, AM now has more than 12 languages. New languages include Bengali, Hindi, Norwegian, Polish, Russian, Simplified Chinese, Turkish and Ukrainian. You can add more languages or improve existing translations at [Weblate](https://hosted.weblate.org/engage/app-manager).
