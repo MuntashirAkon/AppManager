@@ -27,7 +27,7 @@ When you block a component in the [App Details][6] page, the blocking is not app
 _See also: [Global Component Blocking][7]_
 
 ## Tracker classes versus tracker components
-All app components are classes but not all classes are components. In fact, only a few of the classes are components. That being said, [εxodus page][exodus] displays a list of trackers along with the number of classes, not just the components. In all other pages, trackers and tracker components are used synonymously to denote tracker components, i.e. blocking tracker means blocking tracker components, not tracker classes.
+All app components are classes but not all classes are components. In fact, only a few of the classes are components. That being said, [scanner page][scanner] displays a list of trackers along with the number of classes, not just the components. In all other pages, trackers and tracker components are used synonymously to denote tracker components, i.e. blocking tracker means blocking tracker components, not tracker classes.
 
 ::: tip Info
 Tracker classes cannot be blocked. They can only be removed by editing the app itself.
@@ -59,4 +59,4 @@ If you have **Google Play Services** (`com.google.android.gms`) installed, unblo
 [9]: ../guide/settings-page.md#import-existing-rules
 [10]: ../guide/app-details-page.md#color-codes
 [services]: ../guide/app-details-page.md#services
-[exodus]: ../guide/exodus-page.md
+[scanner]: ../guide/scanner-page.md

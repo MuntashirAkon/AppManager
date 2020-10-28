@@ -23,7 +23,7 @@ The list below is in the same order as listed in the App Info tab.
 - **App Icon.** The application icon, if an app doesn't have a icon, the system default icon is displayed.
 - **App Label.** The application label or application name.
 - **Version.** Application version is divided into two parts. The first part is called _version name_, the format of this part varies but it often consists of multiple integers separated by dots. The second part is called _version code_ and it is closed under first brackets. Version code is an integer which is usually used to differentiate between app versions (as version name can often be unreadable by a machine). In general, new version of an app has higher version code than the old ones. For instance, if `123` and `125` are two version codes of an app, we can say that the latter is more updated than the former because the version code of the latter is higher. For applications that depend on platforms (mobile, tabs, desktops, etc.), these version numbers can be misleading as they use prefixes for each platform.
-- **Tags.** (Also known as tag clouds) Tags include the basic, concise and most useful info of an app. Tags contain _tracker info_ (i.e., number of tracker components), _app type_ (user app or system app and whether the app is an updated version of the system app), _split apk info_ (i.e., number of splits), _debuggable_ (the app is a debug version), _test only_ (the app is a test only app), _large heap_ (the app has requested a large heap size), _stopped_ (the app is force stopped), _disabled_ (the app is disabled) and _no code_ (the app doesn't have any code associated with it). The importance of including _test only_ and _debuggable_ is that app with these properties can do additional tasks or these apps can be `run-as` without root which can cause potential security problems if these apps store any private information. _large heap_ denotes that the app will be allocated a higher amount of memory (RAM) if needed. While this may not be harmful for most cases, any suspicious apps requesting large heap should be taken seriously.
+- **Tags.** (Also known as tag clouds) Tags include the basic, concise and most useful info of an app. Tags contain _tracker info_ (i.e., number of tracker components), _app type_ (user app or system app and whether the app is an updated version of the system app or if the app is installed systemless-ly using Magisk), _running_ (i.e. one or more services of the app is running in the background), _split apk info_ (i.e., number of splits), _debuggable_ (the app is a debug version), _test only_ (the app is a test only app), _large heap_ (the app has requested a large heap size), _stopped_ (the app is force stopped), _disabled_ (the app is disabled), _KeyStore_ (the app has items in the Android KeyStore) and _no code_ (the app doesn't have any code associated with it). The importance of including _test only_ and _debuggable_ is that app with these properties can do additional tasks or these apps can be `run-as` without root which can cause potential security problems if these apps store any private information. _large heap_ denotes that the app will be allocated a higher amount of memory (RAM) if needed. While this may not be harmful for most cases, any suspicious apps requesting large heap should be taken seriously.
 - **Horizontal Action Panel.** This is a action panel containing various actions regarding the app. See [below](#horizontal-action-panel) for a complete list of actions available there.
 - **Paths & Directories.** Contains various information regarding application paths including _app directory_ (where the apk files are stored), _data directories_ (internal, device protected and externals), _split apk directories_ (along with the split names), and _native JNI library_ (if present). JNI libraries are used to invoke native codes usually written in C/C++. Use of native library can make the app run faster or help an app use third-pary libraries written using languages other than Java like in most games. You can also open these directories using your favourite file managers (provided they support it and have necessary permissions) by clicking on the launch icon on the right-hand side of each item.
 - **Data Usage Since Last Boot.** A rather self explanatory option. But beware that due to some issues, the results might often be misleading and simply wrong. This part remains hidden if _Usage Access_ permission is not granted in newer devices.
@@ -50,9 +50,11 @@ Horizontal Action Panel, as described in the previous section, consists of vario
 - **Clear Cache.** Clear app cache only. There is not any Android-way to clear app cache. Therefore, it needs root permission to clear cache from the app's internal storage.
 - **Install.** Install an apk opened using any third-party app. This button is only displayed for an external apk that hasn't been installed.
 - **What's New.** This button is displayed for an apk that has higher version code than the installed one. Clicking on this button displays a dialog consisting of differences in a version control manner. The information it displays include _version_, _trackers_, _permissions_, _components_, _signatures_ (checksum changes), _features_, _shared libraries_ and _sdk_.
-- **Update.** Displayed for an apk that has the higher version code than the installed one.
+- **Update.** Displayed for an app that has a higher version code than the installed app.
+- **Reinstall.** Displayed for an app that has the same version code as the installed app.
+- **Downgrade.** Displayed for an app that has a lower version code than the installed app.
 - **Manifest.** Clicking on this button displays the app's manifest file in a separate page. The manifest file can be wrapped or unwrapped using the corresponding toggle button (on the top-right side) or can be saved to you shared storage using the save button.
-- **εxodus.** Clicking on this button displays the app's tracker information. At first, it scans the app to extract a list of classes. Then the class list is matched with a number of tracking signatures. After that, a scan summary is displayed in an alert dialog. If you accidentally close this dialog box, you can see it again using the corresponding option in the menu. If the app has tracker classes, they will be displayed as a list within this page. _See also: [εxodus page][exodus_page]_
+- **Scanner.** Clicking on this button displays the app's tracker and library information. At first, it scans the app to extract a list of classes. Then the class list is matched with a number of signatures. After that, a scan summary is displayed. _See also: [Scanner page][scanner]_
 - **Shared Prefs.** Clicking on this button displays a list of shared preferences used by the app. Clicking on a preference item in the list opens the [Shared Preferences Editor page][3]. This option is only visible to the root users.
 - **Databases.** Clicking on this button displays a list of databases used by the app. This needs more improvements and a database editor which might be added in future. This option is only visible to the root users.
 - **Aurora.** Opens the app in _Aurora Droid_. The option is only visible if _Aurora Droid_ is installed.
@@ -121,7 +123,7 @@ By the way, both activities and services are run in the same looper called the m
 Unlike non-root users who are just spectators in these tabs, root users can perform various operations. On the right-most side of each component item, there is a “block” icon (which becomes a “unblock/restore” icon when the component is being blocked). This icon can be used to toggle blocking status of that particular component. If you do not have [Global Component Blocking][settings_gcb] enabled or haven't applied blocking for the app before, you have to apply the changes using the **Apply rules** option in the top-right menu. You can also remove already applied rules using the same option (which would be read as **Remove rules** this time). You also have the ability to sort the component list to display blocked or tracker components on top of the list using the **Sort** option in the same menu. You can also disable all ad and tracker components using the **Block tracker** option in the menu.
 
 _See also:_
-- _[εxodus Page](./exodus-page.md)_
+- _[Scanner Page][scanner]_
 - _[FAQ: App Components][faq_ac]_
 
 ## Permission Tabs
@@ -161,6 +163,10 @@ _See also: [Technical Info: App Ops][1]_
 Since dangerous permissions are revoked by default by the system, revoking all dangerous permissions is the same as resetting all permissions.
 :::
 
+::: tip Notice
+Permissions cannot be changed for apps targeting API 23 or earlier. Therefore, permission toggles are disabled for such apps.
+:::
+
 Users can sort the permissions by permission name (in ascending order) or choose to display denied or dangerous permissions at first using the corresponding options in the menu. 
 
 ### Permissions
@@ -195,5 +201,5 @@ Other tabs list android manifest components such as features, configurations, sh
 [faq_ac]: ../faq/app-components.md
 [app_flags]: https://developer.android.com/reference/android/content/pm/ApplicationInfo#flags
 [wiki_android_versions]: https://en.wikipedia.org/wiki/Android_version_history#Overview
-[exodus_page]: ./exodus-page.md
+[scanner]: ./scanner-page.md
 [sai]: https://github.com/Aefyr/SAI

@@ -73,7 +73,7 @@ module.exports = {
               '/guide/main-page',
               '/guide/app-details-page',
               '/guide/one-click-ops-page',
-              '/guide/exodus-page',
+              '/guide/scanner-page',
               '/guide/shared-pref-editor-page',
               '/guide/settings-page',
               '/guide/backup-restore',

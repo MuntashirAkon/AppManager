@@ -15,6 +15,52 @@ Currently supported versions are [v2.5.13](#v2-5-13-348), [v2.5.12](#v2-5-12-341
 [[toc]]
 :::
 
+## v2.5.17 (368)
+### App Installer
+As promised, it is now possible to select splits. AM also provides recommendations based on device configurations. If the app is already installed, recommendations are provided based on the installed app. It is also possible to downgrade to a lower version without data loss if the device has root or ADB. But it should be noted that not all app can be downgraded. Installer is also improved to speed up the install process, especially, for root users. If the app has already been installed and the new (x)apk(s) is newer or older or the same version with a different signature, AM will display a list of changes similar to [what's new][whats_new] before prompting the user to install the app. This is useful if the app has introduced tracker components, new permissions, etc.
+
+**Known Limitations:**
+- Large app can take a long time to fetch app info and therefore it may take a long time display the install prompt.
+- If the apk is not located in the internal storage, the app has to be cached first which might also take a long time depending on the size of the apk.
+
+### Introducing Scanner
+exodus page is now replaced with scanner page. [Scanner page][scanner] contains not only a list of trackers but also a list of used libraries. This is just a start. In future, this page will contain more in depth analysis of the app.
+
+### More Languages
+Thanks to the contributors, AM now has more than 12 languages. New languages include Bengali, Hindi, Norwegian, Polish, Russian, Simplified Chinese, Turkish and Ukrainian. You can add more languages or improve existing translations at [Weblate](https://hosted.weblate.org/engage/app-manager).
+
+### App Info Tab
+More tags are added in the [app info tab][app_info] such as **KeyStore** (apps with KeyStore items), **Systemless app** (apps installed via Magisk), **Running** (apps that are running). For external apk, two more options are added namely **Reinstall** and **Downgrade**. Now it is possible to share an apk via Bluetooth. For system apps, it is possible to uninstall updates for root/ADB users. But like the similar option in the system settings, this operation will clear all app data. As stated above, exodus has been replaced with scanner.
+
+### Navigation Improvements
+It's now relatively easy to navigate to various UI components just by using keyboard. You can use up/down button to navigate between list items and tab button to navigate to UI components inside an item.
+
+### Running Apps Page
+It is now possible to sort and filter processes in this tab. Also the three big buttons are replaced with an easy to use three dot menu. Previously the memory usage was wrong which is fixed in this version.
+
+### Built-in Toybox
+Toybox (an alternative to busybox) is bundled with AM. Although Android has this utility built-in from API 23, toybox is bundled in order to prevent buggy implementations and to support API < 23.
+
+### Component Blocker Improvements
+Component blocker seemed to be problematic in the previous version, especially when global component blocking is enabled. The issues are mostly fixed now.
+
+::: warning Caution
+The component blocking mechanism is no longer compatible with v2.5.6 due to various security issues. If you have this version, upgrade to v2.5.13 or earlier versions first. After that enable [global component blocking][5] and disable it again.
+:::
+
+### Improvements in the App Details Page
+Value of various app ops depend on their parent app ops. Therefore, when you allow/deny an app op, the parent of the app op gets modified. This fixes the issues some users have been complaining regarding some app ops that couldn't be changed.
+
+If an app has the target API 23 or less, its permissions cannot be modified using the `pm grant ...` command. Therefore, for such apps, option to toggle permission has been disabled.
+
+The signature tab is improved to support localization. It also displays multiple checksums for a signature.
+
+### App Manifest
+Manifest no longer crashes if the size of the manifest is too long. Generated manifest are now more accurate than before.
+
+[scanner]: ./guide/scanner-page.md
+[whats_new]: ./guide/app-details-page.md#horizontal-action-panel
+
 ## v2.5.13 (348)
 ### Bundled App (Split APK)
 Bundled app formats such as **apks** and **xapk** are now supported. You can install these apps using the regular install buttons. For root and adb users, apps are installed using shell, and for non-root users, the platform default method is used.

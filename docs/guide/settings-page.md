@@ -10,7 +10,7 @@ Settings can be used to customize the behavior of the app.
 :::
 
 ## Language
-Configure in-app language. App Manager current supports 8 (eight) languages.
+Configure in-app language. App Manager current supports 12 (twelve) languages.
 
 ## App Theme
 Configure in-app theme.
