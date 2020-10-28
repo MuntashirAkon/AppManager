@@ -86,7 +86,10 @@ public class OpenPgpUtils {
                 new Intent(OpenPgpApi.SERVICE_INTENT_2), 0));
         Intent intent = new Intent("org.openintents.openpgp.IOpenPgpService");
         intent.setPackage("org.thialfihar.android.apg");
-        resolveInfoList.addAll(pm.queryIntentServices(intent, 0));
+        try {
+            resolveInfoList.addAll(pm.queryIntentServices(intent, 0));
+        } catch (NullPointerException ignore) {
+        }
         List<ServiceInfo> serviceInfoList = new ArrayList<>(resolveInfoList.size());
         for (ResolveInfo resolveInfo : resolveInfoList) {
             if (resolveInfo.serviceInfo == null) {
