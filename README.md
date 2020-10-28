@@ -73,6 +73,46 @@ Translate **App Manager Docs** at _Crowdin_: https://crwd.in/app-manager-docs
 
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/14.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/10.png" height="500dp" />
 
-### Credits and Libraries
+### Build Instructions
+* **System Requirements:** Any PC/Mac with 4GB RAM (8GB recommended)
+* **Operating System:** Linux/macOS (no support for Windows)
+* **Software:** Android Studio, gradle
+* Active internet connection
 
+#### macOS
+- Install command line tools: (No need to install Xcode)
+  ```bash
+  xcode-select --install
+  ```
+- Install `gnu-sed`: (Goto https://brew.sh/ if you don't have `brew` installed)
+  ```bash
+  brew install gnu-sed
+  ```
+
+#### Linux
+You need to install development tools.
+
+For Debian/Ubuntu:
+```bash
+sudo apt-get install build-essential
+```
+For Fedora/CentOS/RHEL:
+```bash
+sudo yum groupinstall "Development Tools"
+```
+For Arch/Artix/Manjaro:
+```bash
+sudo pacman -S base-devel
+```
+
+#### Clone and Build App Manager
+1. Clone the repo along with submodules:
+  ```bash
+  git clone --recurse-submodules https://github.com/MuntashirAkon/AppManager.git
+  ```
+  You can use the `--depth 1` argument if you don't want to clone past commits.
+2. Open the project **AppManager** using Android Studio. Android Studio should start syncing automatically. It will also download all the necessary files automatically (provided you have Internet connection).
+3. Build debug version of App Manager from Menu > Build > Make Project
+
+### Credits and Libraries
 A list of credits and libraries are available in the **About** section of the app.
