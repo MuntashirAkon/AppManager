@@ -91,7 +91,7 @@
     <string name="date_updated">Aktualisiert am</string>
     <string name="installer_app">Installationsprogramm</string>
     <string name="user_id">Nutzer-ID</string>
-    <string name="main_activity">Haupt-Activity</string>
+    <string name="main_activity">Haupt-Aktivität</string>
     <string name="empty_package_name">Leerer Paketname</string>
     <string name="instructions">Anleitungen</string>
     <string name="error_creating_shortcut">Konnte Verknüpfung nicht erstellen</string>
