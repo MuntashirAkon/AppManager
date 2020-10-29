@@ -46,7 +46,7 @@
     <string name="system">সিস্টেম</string>
     <string name="user">ব্যবহারকারী</string>
     <string name="sort">বাছাই</string>
-    <string name="version_name_with_code">সংস্করণ &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;)</string>
+    <string name="version_name_with_code">সংস্করণ <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%1$d</xliff:g>)</string>
     <string name="app_info">অ্যাপ্লিকেশন তথ্য</string>
     <string name="system_app">সিস্টেম অ্যাপ</string>
     <string name="user_app">ব্যবহারকারী অ্যাপ্লিকেশন</string>
@@ -182,7 +182,7 @@
     <string name="backup_apk">এপিকের ব্যাকআপ নিন</string>
     <string name="backup_restore">ব্যাকআপ/পুনরুদ্ধার</string>
     <string name="export_blocking_rules">ব্লকিং বিধিগুলো এক্সপোর্ট করুন</string>
-    <string name="some_items_selected">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"selection_no\" example=\"20\"&gt;টি নির্বাচিত</string>
+    <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g>টি নির্বাচিত</string>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">%1$dটি অ্যাপ থেকে ডাটা মুছতে ব্যর্থ</item>
         <item quantity="other">%1$dটি অ্যাপ থেকে ডাটা মুছতে ব্যর্থ</item>
@@ -256,8 +256,8 @@
     <string name="input_app_ops">অ্যাপ অপস এর মান ইনপুট করুন</string>
     <string name="only_works_in_root_or_adb_mode">শুধুমাত্র রুট অথবা এডিবি মোডে ব্যবহারযোগ্য</string>
     <string name="termux">টার্মাক্স</string>
-    <string name="package_name_is_installed_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt; সফলভাবে ইনস্টল হয়েছে</string>
-    <string name="failed_to_install_package_name">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt; ইনস্টল করতে ব্যর্থ</string>
+    <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> সফলভাবে ইনস্টল হয়েছে</string>
+    <string name="failed_to_install_package_name"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> ইনস্টল করতে ব্যর্থ</string>
     <string name="filter_user_apps">ব্যবহারকারীর এপ</string>
     <string name="filter_system_apps">সিস্টেম এপ্স</string>
     <string name="select_all">সবগুলো নির্বাচন করুন</string>
@@ -458,15 +458,15 @@
     <string name="insert_icon">আইকন যোগ করুন</string>
     <string name="failed_to_enable_op">অনুরোধকৃত অ্যাপ অপটিকে সক্রিয় করা যায়নি</string>
     <plurals name="other_trackers_and_classes">
-        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt;টি ট্র্যাকার এবং &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt;টি ক্লাস</item>
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt;টি ট্র্যাকার এবং &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; ক্লাস</item>
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g>টি ট্র্যাকার এবং <xliff:g id="class_no" example="50">%2$d</xliff:g>টি ক্লাস</item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g>টি ট্র্যাকার এবং <xliff:g id="class_no" example="50">%2$d</xliff:g> ক্লাস</item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="one">২টি ট্র্যাকার এবং &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; ক্লাস</item>
-        <item quantity="other">২টি ট্র্যাকার এবং &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; ক্লাস</item>
+        <item quantity="one">২টি ট্র্যাকার এবং <xliff:g id="class_no" example="50">%1$d</xliff:g> ক্লাস</item>
+        <item quantity="other">২টি ট্র্যাকার এবং <xliff:g id="class_no" example="50">%1$d</xliff:g> ক্লাস</item>
     </plurals>
     <plurals name="tracker_and_classes">
-        <item quantity="one">১টি ট্র্যাকার এবং &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt;টি ক্লাস</item>
-        <item quantity="other">১টি ট্র্যাকার এবং &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt;টি ক্লাস</item>
+        <item quantity="one">১টি ট্র্যাকার এবং <xliff:g id="class_no" example="50">%1$d</xliff:g>টি ক্লাস</item>
+        <item quantity="other">১টি ট্র্যাকার এবং <xliff:g id="class_no" example="50">%1$d</xliff:g>টি ক্লাস</item>
     </plurals>
 </resources>

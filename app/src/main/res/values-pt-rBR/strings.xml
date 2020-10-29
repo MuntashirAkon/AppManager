@@ -63,7 +63,7 @@
     <string name="system">Sistema</string>
     <string name="user">Usuário</string>
     <string name="sort">Ordenar</string>
-    <string name="version_name_with_code">Versão &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;%2$d&lt;/xliff:g&gt;)</string>
+    <string name="version_name_with_code">Versão <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="app_info">Informações do aplicativo</string>
     <string name="system_app">Aplicativo do sistema</string>
     <string name="user_app">Aplicativo do usuário</string>
@@ -82,7 +82,7 @@
     <string name="instructions">Instruções</string>
     <string name="error_creating_shortcut">Erro ao criar atalho</string>
     <string name="error_verbose_pin_shortcut">O launcher atual não suporta PinShortcut. Não foi possível criar o atalho.</string>
-    <string name="starting_activity">Iniciando atividade:: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="starting_activity">Iniciando atividade:: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="create_shortcut">Criar atalho</string>
     <string name="edit_shortcut">Editar atalho</string>
     <string name="shortcut_name">Nome do atalho</string>
@@ -506,15 +506,15 @@
     <string name="keyboard_no_keys">Sem keys</string>
     <string name="orientation_no_sensor">Sem sensor</string>
     <plurals name="other_trackers_and_classes">
-        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; rastreadores com &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; classes</item>
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; rastreadores com &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; classes</item>
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores com <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores com <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="one">2 rastreadores com &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; classes</item>
-        <item quantity="other">2 rastreadores com &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; classes</item>
+        <item quantity="one">2 rastreadores com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
+        <item quantity="other">2 rastreadores com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
     </plurals>
     <plurals name="tracker_and_classes">
-        <item quantity="one">1 rastreador com &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; classe</item>
-        <item quantity="other">1 rastreador com &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; classes</item>
+        <item quantity="one">1 rastreador com <xliff:g id="class_no" example="50">%1$d</xliff:g> classe</item>
+        <item quantity="other">1 rastreador com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
     </plurals>
 </resources>
