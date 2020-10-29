@@ -103,14 +103,16 @@ dependencies {
 }
 
 task toybox {
-    println("=== toybox: start ===")
-    File file = new File("${rootProject.projectDir.absolutePath}/app/src/main/jniLibs/arm64-v8a/libtoybox.so")
-    if (!file.exists()) {
-        buildToybox()
-    } else {
-        println("Skipping toybox since the files already exists.")
+    doLast {
+        println("=== toybox: start ===")
+        File file = new File("${rootProject.projectDir.absolutePath}/app/src/main/jniLibs/arm64-v8a/libtoybox.so")
+        if (!file.exists()) {
+            buildToybox()
+        } else {
+            println("Skipping toybox since the files already exists.")
+        }
+        println("=== toybox: finish ===")
     }
-    println("=== toybox: finish ===")
 }
 
 def buildToybox() {

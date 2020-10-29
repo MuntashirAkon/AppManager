@@ -24,10 +24,13 @@ fi
 
 # Check current OS, only macOS and Linux are supported
 os=`uname -s`
+ncpu=
 if [[ "${os}" == "Darwin" ]]; then
     BUILD_TAG=darwin-x86_64
+    ncpu=`sysctl -n hw.ncpu`
 elif [[ "${os}" == "Linux" ]]; then
     BUILD_TAG=linux-x86_64
+    ncpu=`nproc`
 else
     echo "Unsupported OS."
     exit 1
@@ -64,9 +67,9 @@ for (( i = 0; i < 4; ++i )); do
     export RANLIB="${TOOLCHAIN}/bin/${BIN_UTILS[i]}-ranlib"
     export STRIP="${TOOLCHAIN}/bin/${BIN_UTILS[i]}-strip"
     # Run defconfig first
-    make clean && make defconfig
+    make clean && make -j ${ncpu} defconfig
     # create executable
-    make
+    make -j ${ncpu}
     if [[ $? -ne 0 ]]; then exit 1; fi
     chmod 755 toybox
     # move to jni dir
