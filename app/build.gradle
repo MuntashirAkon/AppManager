@@ -115,6 +115,16 @@ task toybox {
     }
 }
 
+task cleanToybox {
+    doLast {
+        println("=== toybox: clean ===")
+        File file = new File("${rootProject.projectDir.absolutePath}/app/src/main/jniLibs")
+        if (file.exists()) {
+            deleteDir(file)
+        }
+    }
+}
+
 def buildToybox() {
     def ndkPath = android.ndkDirectory
     def buildExec = "${rootProject.projectDir.absolutePath}/toybox-all.sh"
@@ -128,4 +138,19 @@ def buildToybox() {
     }
 }
 
+def deleteDir(File dir) {
+    if (dir != null && dir.isDirectory()) {
+        String[] children = dir.list()
+        if (children == null) return false
+        for (String child : children) {
+            boolean success = deleteDir(new File(dir, child))
+            if (!success) return false
+        }
+        return dir.delete()
+    } else if (dir != null && dir.isFile()) {
+        return dir.delete()
+    } else return false
+}
+
 preBuild.dependsOn ":AppManagerServer:build", toybox
+clean.dependsOn cleanToybox
