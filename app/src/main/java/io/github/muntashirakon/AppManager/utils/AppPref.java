@@ -37,6 +37,7 @@ import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.TarUtils;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.main.MainActivity;
+import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
 
 public class AppPref {
     private static final String PREF_NAME = "preferences";
@@ -67,6 +68,8 @@ public class AppPref {
         PREF_OPEN_PGP_USER_ID_STR,
         PREF_PERMISSIONS_SORT_ORDER_INT,
         PREF_ROOT_MODE_ENABLED_BOOL,
+        PREF_RUNNING_APPS_FILTER_FLAGS_INT,
+        PREF_RUNNING_APPS_SORT_ORDER_INT,
         PREF_SHOW_DISCLAIMER_BOOL,
         PREF_USAGE_ACCESS_ENABLED_BOOL;
 
@@ -315,6 +318,10 @@ public class AppPref {
             case PREF_COMPONENTS_SORT_ORDER_INT:
             case PREF_PERMISSIONS_SORT_ORDER_INT:
                 return AppDetailsFragment.SORT_BY_NAME;
+            case PREF_RUNNING_APPS_SORT_ORDER_INT:
+                return RunningAppsActivity.SORT_BY_PID;
+            case PREF_RUNNING_APPS_FILTER_FLAGS_INT:
+                return RunningAppsActivity.FILTER_NONE;
             case PREF_OPEN_PGP_PACKAGE_STR:
             case PREF_OPEN_PGP_USER_ID_STR:
                 return "";

@@ -36,15 +36,18 @@ import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class RunningAppsViewModel extends AndroidViewModel {
     @RunningAppsActivity.SortOrder
-    private int sortOrder = RunningAppsActivity.SORT_BY_PID;
+    private int sortOrder;
     @RunningAppsActivity.Filter
-    private int filter = RunningAppsActivity.FILTER_NONE;
+    private int filter;
 
     public RunningAppsViewModel(@NonNull Application application) {
         super(application);
+        sortOrder = (int) AppPref.get(AppPref.PrefKey.PREF_RUNNING_APPS_SORT_ORDER_INT);
+        filter = (int) AppPref.get(AppPref.PrefKey.PREF_RUNNING_APPS_FILTER_FLAGS_INT);
     }
 
     private MutableLiveData<List<Integer>> processLiveData;
@@ -106,6 +109,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
 
     public void setSortOrder(int sortOrder) {
         this.sortOrder = sortOrder;
+        AppPref.set(AppPref.PrefKey.PREF_RUNNING_APPS_SORT_ORDER_INT, this.sortOrder);
         new Thread(this::filterAndSort).start();
     }
 
@@ -115,11 +119,13 @@ public class RunningAppsViewModel extends AndroidViewModel {
 
     public void addFilter(int filter) {
         this.filter |= filter;
+        AppPref.set(AppPref.PrefKey.PREF_RUNNING_APPS_FILTER_FLAGS_INT, this.filter);
         new Thread(this::filterAndSort).start();
     }
 
     public void removeFilter(int filter) {
         this.filter &= ~filter;
+        AppPref.set(AppPref.PrefKey.PREF_RUNNING_APPS_FILTER_FLAGS_INT, this.filter);
         new Thread(this::filterAndSort).start();
     }
 

@@ -141,8 +141,12 @@ public class RunningAppsActivity extends BaseActivity implements
     public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         menu.findItem(sortOrderIds[mModel.getSortOrder()]).setChecked(true);
         int filter = mModel.getFilter();
-        menu.findItem(R.id.action_filter_apps).setChecked((filter & FILTER_APPS) != 0);
-        menu.findItem(R.id.action_filter_user_apps).setChecked((filter & FILTER_USER_APPS) != 0);
+        if ((filter & FILTER_APPS) != 0) {
+            menu.findItem(R.id.action_filter_apps).setChecked(true);
+        }
+        if ((filter & FILTER_USER_APPS) != 0) {
+            menu.findItem(R.id.action_filter_user_apps).setChecked(true);
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -177,14 +181,14 @@ public class RunningAppsActivity extends BaseActivity implements
                 return true;
             // Filter
             case R.id.action_filter_apps:
-                if ((mModel.getFilter() & FILTER_APPS) == 0) mModel.addFilter(FILTER_APPS);
+                if (!item.isChecked()) mModel.addFilter(FILTER_APPS);
                 else mModel.removeFilter(FILTER_APPS);
-                item.setChecked((mModel.getFilter() & FILTER_APPS) != 0);
+                item.setChecked(!item.isChecked());
                 return true;
             case R.id.action_filter_user_apps:
-                if ((mModel.getFilter() & FILTER_USER_APPS) == 0) mModel.addFilter(FILTER_USER_APPS);
+                if (!item.isChecked()) mModel.addFilter(FILTER_USER_APPS);
                 else mModel.removeFilter(FILTER_USER_APPS);
-                item.setChecked((mModel.getFilter() & FILTER_APPS) != 0);
+                item.setChecked(!item.isChecked());
                 return true;
         }
         return super.onOptionsItemSelected(item);
