@@ -344,10 +344,10 @@
     <string name="clear_app_cache">Limpar cache do app</string>
     <string name="clear_app_cache_description">Limpar o cache de todos os apps</string>
     <string name="no_tracker_found">Sem rastreadores encontrados</string>
-    <string name="failed_packages">Pacotes que falharam</string>
+    <string name="failed_packages">Pacotes falhados</string>
     <string name="input_signatures_description">assinaturas de input com espaços, ex. (com.facebook org.app2 com.app3) etc.</string>
     <string name="filtered_packages">Pacotes filtrados</string>
-    <string name="only_works_in_root_or_adb_mode">Somente funciona no modo Root ou ADB</string>
+    <string name="only_works_in_root_or_adb_mode">Funciona apenas no modo Root ou ADB</string>
     <string name="failed_to_parse_some_numbers">Não foi possível analisar alguns números</string>
     <plurals name="no_of_splits">
         <item quantity="one">%d APK</item>
@@ -361,7 +361,7 @@
     <string name="filter_user_apps">Apps do usuário</string>
     <string name="filter_system_apps">Apps do sistema</string>
     <string name="filter_apps_with_rules">Apps com regras</string>
-    <string name="select_all">Selecionar todos</string>
+    <string name="select_all">Selecionar tudo</string>
     <string name="filter_disabled_apps">Apps desativados</string>
     <string name="installed_version">Versão instalada</string>
     <string name="trackers">Rastreadores</string>
@@ -372,7 +372,7 @@
     <string name="exclude_cache">Excluir o cache</string>
     <string name="external_data">Dados externos</string>
     <string name="data">Dados</string>
-    <string name="backup">Backup</string>
+    <string name="backup">Fazer backup</string>
     <string name="restore">Restaurar</string>
     <string name="delete_backup">Deletar backup</string>
     <string name="backup_options">Opções do backup</string>
@@ -517,4 +517,5 @@
         <item quantity="one">1 rastreador com <xliff:g id="class_no" example="50">%1$d</xliff:g> classe</item>
         <item quantity="other">1 rastreador com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
     </plurals>
+    <string name="termux">Termux</string>
 </resources>
