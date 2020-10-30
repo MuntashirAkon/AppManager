@@ -51,6 +51,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -179,6 +180,12 @@ public class MainViewModel extends AndroidViewModel {
         }).start();
     }
 
+    public void onResume() {
+        if ((mFilterFlags & MainActivity.FILTER_RUNNING_APPS) != 0) {
+            loadRunningApps();
+        }
+    }
+
     @SuppressLint("PackageManagerGetSignatures")
     public void loadApplicationItems() {
         new Thread(() -> {
@@ -260,6 +267,9 @@ public class MainViewModel extends AndroidViewModel {
             if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_RULES) != 0) {
                 loadBlockingRules();
             }
+            if ((mFilterFlags & MainActivity.FILTER_RUNNING_APPS) != 0) {
+                loadRunningApps();
+            }
             ApplicationItem item;
             for (int i = 0; i < applicationItems.size(); ++i) {
                 item = applicationItems.get(i);
@@ -277,6 +287,8 @@ public class MainViewModel extends AndroidViewModel {
                 } else if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_ACTIVITIES) != 0 && !item.hasActivities) {
                     continue;
                 } else if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_BACKUPS) != 0 && item.metadata == null) {
+                    continue;
+                } else if ((mFilterFlags & MainActivity.FILTER_RUNNING_APPS) != 0 && !item.isRunning) {
                     continue;
                 }
                 filteredApplicationItems.add(item);
@@ -298,6 +310,18 @@ public class MainViewModel extends AndroidViewModel {
                 applicationItem.blockedCount = cb.componentCount();
             }
             applicationItems.set(i, applicationItem);
+        }
+    }
+
+    private void loadRunningApps() {
+        Runner.Result result = Runner.runCommand(new String[]{Runner.TOYBOX, "ps", "-dw", "-o", "NAME"});
+        if (result.isSuccessful()) {
+            List<String> processInfoLines = result.getOutputAsList(1);
+            for (int i = 0; i < applicationItems.size(); ++i) {
+                ApplicationItem applicationItem = applicationItems.get(i);
+                applicationItem.isRunning = processInfoLines.contains(applicationItem.packageName);
+                applicationItems.set(i, applicationItem);
+            }
         }
     }
 

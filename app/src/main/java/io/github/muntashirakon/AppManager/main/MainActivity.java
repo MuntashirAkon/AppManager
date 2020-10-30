@@ -139,6 +139,7 @@ public class MainActivity extends BaseActivity implements
             FILTER_APPS_WITH_RULES,
             FILTER_APPS_WITH_ACTIVITIES,
             FILTER_APPS_WITH_BACKUPS,
+            FILTER_RUNNING_APPS,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface Filter {
@@ -151,6 +152,7 @@ public class MainActivity extends BaseActivity implements
     public static final int FILTER_APPS_WITH_RULES = 1 << 3;
     public static final int FILTER_APPS_WITH_ACTIVITIES = 1 << 4;
     public static final int FILTER_APPS_WITH_BACKUPS = 1 << 5;
+    public static final int FILTER_RUNNING_APPS = 1 << 6;
 
     MainViewModel mModel;
 
@@ -324,20 +326,23 @@ public class MainActivity extends BaseActivity implements
         menu.findItem(sSortMenuItemIdsMap[mSortBy]).setChecked(true);
         if (mModel != null) {
             int flags = mModel.getFilterFlags();
-            if ((flags & MainActivity.FILTER_USER_APPS) != 0) {
+            if ((flags & FILTER_USER_APPS) != 0) {
                 menu.findItem(R.id.action_filter_user_apps).setChecked(true);
             }
-            if ((flags & MainActivity.FILTER_SYSTEM_APPS) != 0) {
+            if ((flags & FILTER_SYSTEM_APPS) != 0) {
                 menu.findItem(R.id.action_filter_system_apps).setChecked(true);
             }
-            if ((flags & MainActivity.FILTER_DISABLED_APPS) != 0) {
+            if ((flags & FILTER_DISABLED_APPS) != 0) {
                 menu.findItem(R.id.action_filter_disabled_apps).setChecked(true);
             }
-            if ((flags & MainActivity.FILTER_APPS_WITH_RULES) != 0) {
+            if ((flags & FILTER_APPS_WITH_RULES) != 0) {
                 menu.findItem(R.id.action_filter_apps_with_rules).setChecked(true);
             }
-            if ((flags & MainActivity.FILTER_APPS_WITH_ACTIVITIES) != 0) {
+            if ((flags & FILTER_APPS_WITH_ACTIVITIES) != 0) {
                 menu.findItem(R.id.action_filter_apps_with_activities).setChecked(true);
+            }
+            if ((flags & FILTER_RUNNING_APPS) != 0) {
+                menu.findItem(R.id.action_filter_running_apps).setChecked(true);
             }
         }
         if (AppPref.isRootOrAdbEnabled()) {
@@ -445,6 +450,11 @@ public class MainActivity extends BaseActivity implements
             case R.id.action_filter_apps_with_backups:
                 if (!item.isChecked()) mModel.addFilterFlag(FILTER_APPS_WITH_BACKUPS);
                 else mModel.removeFilterFlag(FILTER_APPS_WITH_BACKUPS);
+                item.setChecked(!item.isChecked());
+                return true;
+            case R.id.action_filter_running_apps:
+                if (!item.isChecked()) mModel.addFilterFlag(FILTER_RUNNING_APPS);
+                else mModel.removeFilterFlag(FILTER_RUNNING_APPS);
                 item.setChecked(!item.isChecked());
                 return true;
             // Others
@@ -618,6 +628,7 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        mModel.onResume();
         registerReceiver(mBatchOpsBroadCastReceiver, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS_COMPLETED));
     }
 

@@ -689,4 +689,5 @@
     <string name="tap_to_see_details">Tap to see details</string>
     <string name="view_missing_signatures">Tap to view signatures that are not yet present in App Manager\'s database of libraries. You can also send them to me if you want.</string>
     <string name="copy">Copy</string>
+    <string name="filter_running_apps">Running apps</string>
 </resources>

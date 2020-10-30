@@ -97,6 +97,10 @@ public class ApplicationItem extends PackageItemInfo {
      */
     public boolean isDisabled;
     /**
+     * Whether the app is currently running
+     */
+    public boolean isRunning = false;
+    /**
      * Whether the app is installed
      */
     public boolean isInstalled = true;
