@@ -658,4 +658,5 @@
         <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; sınıfla 1 izleyici</item>
         <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; sınıfla 1 izleyici</item>
     </plurals>
+    <string name="filter_running_apps">Çalışan uygulamalar</string>
 </resources>
