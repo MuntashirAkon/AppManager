@@ -666,4 +666,47 @@
     <string name="receivers">Ресівери</string>
     <string name="permissions">Використовує дозволи</string>
     <string name="instructions_header">[Ці інструкції застаріли і більше не будуть оновлюватися. Щоб отримати актуальну інформацію відвідайте офіційний сайт документації за адресою (https://muntashirakon.github.io/AppManager)]</string>
+    <string name="filter_running_apps">Запущені служби</string>
+    <string name="copy">Копіювати</string>
+    <string name="view_missing_signatures">Торкніться, щоб переглянути підписи, яких ще немає у базі даних бібліотек Менеджера програм. Ви також можете надіслати їх мені, якщо хочете.</string>
+    <string name="tap_to_see_details">Торкніться, щоб переглянути деталі</string>
+    <string name="lib_details">Відомості про бібліотеку</string>
+    <string name="no_libs">Немає бібліотек</string>
+    <string name="scanner">Сканер</string>
+    <plurals name="missing_signatures">
+        <item quantity="one">%1$d підис відсутній</item>
+        <item quantity="few">%1$d підписи відсутні</item>
+        <item quantity="many">%1$d підписів відсутньо</item>
+        <item quantity="other">%1$d підписів відсутньо</item>
+    </plurals>
+    <plurals name="libraries">
+        <item quantity="one">%1$d бібліотека</item>
+        <item quantity="few">%1$d бібліотеки</item>
+        <item quantity="many">%1$d бібліотек</item>
+        <item quantity="other">%1$d бібліотек</item>
+    </plurals>
+    <plurals name="classes">
+        <item quantity="one">%1$d клас</item>
+        <item quantity="few">%1$d класи</item>
+        <item quantity="many">%1$d класів</item>
+        <item quantity="other">%1$d класів</item>
+    </plurals>
+    <plurals name="other_trackers_and_classes">
+        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; трекер з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; класами</item>
+        <item quantity="few">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; трекери з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; класами</item>
+        <item quantity="many">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; трекерів з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; класами</item>
+        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; трекерів з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; класами</item>
+    </plurals>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="one">2 трекери з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; класами</item>
+        <item quantity="few">2 трекери з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; класами</item>
+        <item quantity="many">2 трекери з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; класами</item>
+        <item quantity="other">2 трекери з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; класами</item>
+    </plurals>
+    <plurals name="tracker_and_classes">
+        <item quantity="one">1 трекер з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; класом</item>
+        <item quantity="few">1 трекер з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; класами</item>
+        <item quantity="many">1 трекер з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; класами</item>
+        <item quantity="other">1 трекер з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; класами</item>
+    </plurals>
 </resources>
