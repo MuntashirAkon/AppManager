@@ -299,9 +299,9 @@
     </plurals>
     <plurals name="alert_failed_to_disable_background">
         <item quantity="one">Не удалось отключить работу в фоне для %d приложения</item>
-        <item quantity="few">Не удалось отключить запуск в фоновом режиме для %d приложений</item>
-        <item quantity="many">Не удалось отключить запуск в фоновом режиме для %d приложений</item>
-        <item quantity="other">Не удалось отключить запуск в фоновом режиме для %d приложений</item>
+        <item quantity="few">Не удалось отключить работу в фоне для %d приложений</item>
+        <item quantity="many">Не удалось отключить работу в фоне для %d приложений</item>
+        <item quantity="other">Не удалось отключить работу в фоне для %d приложений</item>
     </plurals>
     <string name="the_operation_was_successful">Готово</string>
     <plurals name="alert_failed_to_force_stop">
