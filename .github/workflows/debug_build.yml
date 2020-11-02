@@ -3,8 +3,22 @@ name: Debug Build
 on:
   push:
     branches: [ master ]
+    paths-ignore:
+    - 'docs/**'
+    - 'fastlane/**'
+    - 'scripts/**'
+    - 'README.md'
+    - 'yarn.lock'
+    - 'package.json'
   pull_request:
     branches: [ master ]
+    paths-ignore:
+      - 'docs/**'
+      - 'fastlane/**'
+      - 'scripts/**'
+      - 'README.md'
+      - 'yarn.lock'
+      - 'package.json'
 
 jobs:
   build:
