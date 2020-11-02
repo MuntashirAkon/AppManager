@@ -66,7 +66,7 @@
     <string name="sort_by_target_sdk">Ziel-SDK</string>
     <string name="data_received">Daten empfangen</string>
     <string name="data_transmitted">Daten gesendet</string>
-    <string name="data_usage_msg">Datenverbrauch seit dem letzten Hochfahren</string>
+    <string name="data_usage_msg">Datenverbrauch seit letztem Hochfahren</string>
     <string name="about">Über App Manager</string>
     <string name="data_size">Daten</string>
     <string name="cache_size">Cache</string>
@@ -285,8 +285,8 @@
     </plurals>
     <string name="the_operation_was_successful">Erledigt</string>
     <plurals name="alert_failed_to_force_stop">
-        <item quantity="one">"Forcierte Beenden  von %1$d Anwendung nicht möglich"</item>
-        <item quantity="other">Forcierte Beenden von %1$d Anwendungen nicht möglich</item>
+        <item quantity="one">Forciertes Beenden von %1$d Anwendung nicht möglich</item>
+        <item quantity="other">Forciertes Beenden von %1$d Anwendungen nicht möglich</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">„Beenden erzwingen“ für System-Anwendungen ein- oder ausschalten</string>
     <string name="app_op_cannot_be_disabled">Dieser App Op kann nicht deaktiviert werden, unter Umständen weil ein nicht-beschreibbarer App Op von einem anderen App Op abhängt.</string>
@@ -660,4 +660,5 @@
         <item quantity="one">%1$d Signatur fehlt</item>
         <item quantity="other">%1$d Signaturen fehlen</item>
     </plurals>
+    <string name="filter_running_apps">Aktive Anwendungen</string>
 </resources>
