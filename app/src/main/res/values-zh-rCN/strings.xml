@@ -343,7 +343,7 @@
     </plurals>
     <string name="install">安装</string>
     <string name="update">升级</string>
-    <string name="source_code">源代碼</string>
+    <string name="source_code">源代码</string>
     <string name="community">Telegram 社区</string>
     <string name="community_links">更新频道: https://t.me/AppManagerChannel
 \n支持小组: https://t.me/AppManagerAndroid
@@ -593,7 +593,7 @@
     <string name="do_you_want_to_uninstall_and_install">您想要卸载并重新安装该应用程序吗\?</string>
     <string name="packages">包</string>
     <string name="usage_access_not_supported">无法请求使用情况访问权限，因为相应的设置页不存在。</string>
-    <string name="onboard">内置</string>
+    <string name="onboard">机载</string>
     <string name="navigation_trackball">轨迹球</string>
     <string name="sys_config">系统配置</string>
     <string name="tap_to_see_details">点击查看详情</string>
@@ -621,4 +621,5 @@
         <item quantity="other">%1$d 个签名缺失</item>
     </plurals>
     <string name="orientation_behind">Behind</string>
+    <string name="filter_running_apps">运行中的应用</string>
 </resources>
