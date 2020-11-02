@@ -1,3 +1,6 @@
 [submodule "toybox"]
 	path = toybox
 	url = https://github.com/MuntashirAkon/toybox.git
+[submodule "lazysodium-android"]
+	path = lazysodium-android
+	url = https://github.com/MuntashirAkon/lazysodium-android

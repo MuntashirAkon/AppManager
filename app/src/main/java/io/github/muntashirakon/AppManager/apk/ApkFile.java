@@ -30,8 +30,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
@@ -54,6 +56,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.apk.apkm.UnApkm;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
@@ -122,6 +125,7 @@ public final class ApkFile implements AutoCloseable {
 
     static {
         SUPPORTED_EXTENSIONS.add("apk");
+        SUPPORTED_EXTENSIONS.add("apkm");
         SUPPORTED_EXTENSIONS.add("apks");
         SUPPORTED_EXTENSIONS.add("xapk");
     }
@@ -150,7 +154,7 @@ public final class ApkFile implements AutoCloseable {
         String name = IOUtils.getFileName(cr, apkUri);
         if (name == null)
             throw new ApkFileException("Could not extract package name from the URI.");
-        String extension;
+        @NonNull String extension;
         try {
             extension = IOUtils.getExtension(name).toLowerCase(Locale.ROOT);
             if (!SUPPORTED_EXTENSIONS.contains(extension)) {
@@ -159,24 +163,38 @@ public final class ApkFile implements AutoCloseable {
         } catch (IndexOutOfBoundsException e) {
             throw new ApkFileException("Invalid package extension.");
         }
-        // Open file descriptor
-        try {
-            ParcelFileDescriptor fd = cr.openFileDescriptor(apkUri, "r");
-            if (fd == null) {
-                throw new FileNotFoundException("Could not get file descriptor from the Uri");
-            }
-            this.fd = fd;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            throw new ApkFileException(e);
-        }
-        this.cacheFilePath = IOUtils.getFileFromFd(fd);
-        if (!this.cacheFilePath.exists() || !this.cacheFilePath.canRead()) {
-            // Cache manually
+        if (extension.equals("apkm")) {
+            // Convert to apks if the file ends with apkm
             try {
-                this.cacheFilePath = IOUtils.getCachedFile(cr.openInputStream(apkUri));
+                this.cacheFilePath = IOUtils.getTempFile();
+                try (InputStream inputStream = cr.openInputStream(apkUri);
+                     OutputStream outputStream = new FileOutputStream(this.cacheFilePath)) {
+                    if (inputStream == null) throw new IOException("Apk URI inaccessible or empty.");
+                    UnApkm.decryptFile(inputStream, outputStream);
+                }
             } catch (IOException e) {
-                throw new ApkFileException("Could not cache the input file.");
+                throw new ApkFileException(e);
+            }
+        } else {
+            // Open file descriptor
+            try {
+                ParcelFileDescriptor fd = cr.openFileDescriptor(apkUri, "r");
+                if (fd == null) {
+                    throw new FileNotFoundException("Could not get file descriptor from the Uri");
+                }
+                this.fd = fd;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                throw new ApkFileException(e);
+            }
+            this.cacheFilePath = IOUtils.getFileFromFd(fd);
+            if (!this.cacheFilePath.exists() || !this.cacheFilePath.canRead()) {
+                // Cache manually
+                try {
+                    this.cacheFilePath = IOUtils.getCachedFile(cr.openInputStream(apkUri));
+                } catch (IOException e) {
+                    throw new ApkFileException("Could not cache the input file.");
+                }
             }
         }
         String packageName = null;
