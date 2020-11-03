@@ -411,4 +411,7 @@
     <string name="pref_import_export_blocking_rules">Importuj/eksportuj reguły blokowania</string>
     <string name="sort_by_mobile_data">Dane komórkowe</string>
     <string name="sort_by_last_used">Ostatnio używane</string>
+    <string name="toggle_class_listing">Pokaż/ukryj listę klas</string>
+    <string name="credits">Podziękowania</string>
+    <string name="third_party">Biblioteki i ikony osób trzecich</string>
 </resources>
