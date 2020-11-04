@@ -64,7 +64,6 @@
         <item>@string/declared_permission</item>
         <item>@string/components</item>
         <item>@string/features</item>
-        <item>@string/shared_libs</item>
         <item>@string/sdk</item>
     </string-array>
     <string-array name="backup_flags">
