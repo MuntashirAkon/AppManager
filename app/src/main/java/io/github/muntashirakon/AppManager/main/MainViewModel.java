@@ -40,6 +40,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
+import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
@@ -96,36 +97,45 @@ public class MainViewModel extends AndroidViewModel {
         return applicationItemsLiveData;
     }
 
+    @GuardedBy("applicationItems")
     public ApplicationItem deselect(@NonNull ApplicationItem item) {
-        int i = applicationItems.indexOf(item);
-        if (i == -1) return item;
-        selectedPackages.remove(item.packageName);
-        selectedApplicationItems.remove(item);
-        item.isSelected = false;
-        applicationItems.set(i, item);
-        return item;
-    }
-
-    public ApplicationItem select(@NonNull ApplicationItem item) {
-        int i = applicationItems.indexOf(item);
-        if (i == -1) return item;
-        selectedPackages.add(item.packageName);
-        item.isSelected = true;
-        applicationItems.set(i, item);
-        selectedApplicationItems.add(item);
-        return item;
-    }
-
-    public void clearSelection() {
-        selectedPackages.clear();
-        int i;
-        for (ApplicationItem item : selectedApplicationItems) {
-            i = applicationItems.indexOf(item);
-            if (i == -1) continue;
+        synchronized (applicationItems) {
+            int i = applicationItems.indexOf(item);
+            if (i == -1) return item;
+            selectedPackages.remove(item.packageName);
+            selectedApplicationItems.remove(item);
             item.isSelected = false;
             applicationItems.set(i, item);
+            return item;
         }
-        selectedApplicationItems.clear();
+    }
+
+    @GuardedBy("applicationItems")
+    public ApplicationItem select(@NonNull ApplicationItem item) {
+        synchronized (applicationItems) {
+            int i = applicationItems.indexOf(item);
+            if (i == -1) return item;
+            selectedPackages.add(item.packageName);
+            item.isSelected = true;
+            applicationItems.set(i, item);
+            selectedApplicationItems.add(item);
+            return item;
+        }
+    }
+
+    @GuardedBy("applicationItems")
+    public void clearSelection() {
+        synchronized (applicationItems) {
+            selectedPackages.clear();
+            int i;
+            for (ApplicationItem item : selectedApplicationItems) {
+                i = applicationItems.indexOf(item);
+                if (i == -1) continue;
+                item.isSelected = false;
+                applicationItems.set(i, item);
+            }
+            selectedApplicationItems.clear();
+        }
     }
 
     public Set<String> getSelectedPackages() {
@@ -163,30 +173,23 @@ public class MainViewModel extends AndroidViewModel {
     public void addFilterFlag(@MainActivity.Filter int filterFlag) {
         mFilterFlags |= filterFlag;
         AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT, mFilterFlags);
-        new Thread(() -> {
-            synchronized (applicationItems) {
-                filterItemsByFlags();
-            }
-        }).start();
+        new Thread(this::filterItemsByFlags).start();
     }
 
     public void removeFilterFlag(@MainActivity.Filter int filterFlag) {
         mFilterFlags &= ~filterFlag;
         AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT, mFilterFlags);
-        new Thread(() -> {
-            synchronized (applicationItems) {
-                filterItemsByFlags();
-            }
-        }).start();
+        new Thread(this::filterItemsByFlags).start();
     }
 
     public void onResume() {
         if ((mFilterFlags & MainActivity.FILTER_RUNNING_APPS) != 0) {
-            loadRunningApps();
+            // Reload filters to get running apps again
+            filterItemsByFlags();
         }
     }
 
-    @SuppressLint("PackageManagerGetSignatures")
+    @GuardedBy("applicationItems")
     public void loadApplicationItems() {
         new Thread(() -> {
             synchronized (applicationItems) {
@@ -255,121 +258,134 @@ public class MainViewModel extends AndroidViewModel {
         mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
     }
 
+    @GuardedBy("applicationItems")
     private void filterItemsByFlags() {
-        if (mFilterFlags == MainActivity.FILTER_NO_FILTER) {
-            if (!TextUtils.isEmpty(searchQuery)) {
-                filterItemsByQuery(applicationItems);
-            } else {
-                mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
-            }
-        } else {
-            List<ApplicationItem> filteredApplicationItems = new ArrayList<>();
-            if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_RULES) != 0) {
-                loadBlockingRules();
-            }
-            if ((mFilterFlags & MainActivity.FILTER_RUNNING_APPS) != 0) {
-                loadRunningApps();
-            }
-            ApplicationItem item;
-            for (int i = 0; i < applicationItems.size(); ++i) {
-                item = applicationItems.get(i);
-                // Filter user and system apps first (if requested)
-                if ((mFilterFlags & MainActivity.FILTER_USER_APPS) != 0 && !item.isUser) {
-                    continue;
-                } else if ((mFilterFlags & MainActivity.FILTER_SYSTEM_APPS) != 0 && item.isUser) {
-                    continue;
+        synchronized (applicationItems) {
+            if (mFilterFlags == MainActivity.FILTER_NO_FILTER) {
+                if (!TextUtils.isEmpty(searchQuery)) {
+                    filterItemsByQuery(applicationItems);
+                } else {
+                    mHandler.post(() -> applicationItemsLiveData.postValue(applicationItems));
                 }
-                // Filter rests
-                if ((mFilterFlags & MainActivity.FILTER_DISABLED_APPS) != 0 && !item.isDisabled) {
-                    continue;
-                } else if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_RULES) != 0 && item.blockedCount <= 0) {
-                    continue;
-                } else if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_ACTIVITIES) != 0 && !item.hasActivities) {
-                    continue;
-                } else if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_BACKUPS) != 0 && item.metadata == null) {
-                    continue;
-                } else if ((mFilterFlags & MainActivity.FILTER_RUNNING_APPS) != 0 && !item.isRunning) {
-                    continue;
-                }
-                filteredApplicationItems.add(item);
-            }
-            if (!TextUtils.isEmpty(searchQuery)) {
-                filterItemsByQuery(filteredApplicationItems);
             } else {
-                mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
+                List<ApplicationItem> filteredApplicationItems = new ArrayList<>();
+                if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_RULES) != 0) {
+                    loadBlockingRules();
+                }
+                if ((mFilterFlags & MainActivity.FILTER_RUNNING_APPS) != 0) {
+                    loadRunningApps();
+                }
+                ApplicationItem item;
+                for (int i = 0; i < applicationItems.size(); ++i) {
+                    item = applicationItems.get(i);
+                    // Filter user and system apps first (if requested)
+                    if ((mFilterFlags & MainActivity.FILTER_USER_APPS) != 0 && !item.isUser) {
+                        continue;
+                    } else if ((mFilterFlags & MainActivity.FILTER_SYSTEM_APPS) != 0 && item.isUser) {
+                        continue;
+                    }
+                    // Filter rests
+                    if ((mFilterFlags & MainActivity.FILTER_DISABLED_APPS) != 0 && !item.isDisabled) {
+                        continue;
+                    } else if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_RULES) != 0 && item.blockedCount <= 0) {
+                        continue;
+                    } else if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_ACTIVITIES) != 0 && !item.hasActivities) {
+                        continue;
+                    } else if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_BACKUPS) != 0 && item.metadata == null) {
+                        continue;
+                    } else if ((mFilterFlags & MainActivity.FILTER_RUNNING_APPS) != 0 && !item.isRunning) {
+                        continue;
+                    }
+                    filteredApplicationItems.add(item);
+                }
+                if (!TextUtils.isEmpty(searchQuery)) {
+                    filterItemsByQuery(filteredApplicationItems);
+                } else {
+                    mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
+                }
             }
         }
     }
 
+    @GuardedBy("applicationItems")
     private void loadBlockingRules() {
-        // Only load blocking rules for the current user
-        int userHandle = Users.getCurrentUserHandle();
-        for (int i = 0; i < applicationItems.size(); ++i) {
-            ApplicationItem applicationItem = applicationItems.get(i);
-            try (ComponentsBlocker cb = ComponentsBlocker.getInstance(applicationItem.packageName, userHandle, true)) {
-                applicationItem.blockedCount = cb.componentCount();
-            }
-            applicationItems.set(i, applicationItem);
-        }
-    }
-
-    private void loadRunningApps() {
-        Runner.Result result = Runner.runCommand(new String[]{Runner.TOYBOX, "ps", "-dw", "-o", "NAME"});
-        if (result.isSuccessful()) {
-            List<String> processInfoLines = result.getOutputAsList(1);
+        synchronized (applicationItems) {
+            // Only load blocking rules for the current user
+            int userHandle = Users.getCurrentUserHandle();
             for (int i = 0; i < applicationItems.size(); ++i) {
                 ApplicationItem applicationItem = applicationItems.get(i);
-                applicationItem.isRunning = processInfoLines.contains(applicationItem.packageName);
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(applicationItem.packageName, userHandle, true)) {
+                    applicationItem.blockedCount = cb.componentCount();
+                }
                 applicationItems.set(i, applicationItem);
             }
         }
     }
 
-    private void sortApplicationList(@MainActivity.SortOrder int sortBy) {
-        final boolean isRootEnabled = AppPref.isRootEnabled();
-        if (sortBy != MainActivity.SORT_BY_APP_LABEL)
-            sortApplicationList(MainActivity.SORT_BY_APP_LABEL);
-        if (sortBy == MainActivity.SORT_BY_BLOCKED_COMPONENTS && isRootEnabled) loadBlockingRules();
-        Collections.sort(applicationItems, (o1, o2) -> {
-            switch (sortBy) {
-                case MainActivity.SORT_BY_APP_LABEL:
-                    return sCollator.compare(o1.label, o2.label);
-                case MainActivity.SORT_BY_PACKAGE_NAME:
-                    return o1.packageName.compareTo(o2.packageName);
-                case MainActivity.SORT_BY_DOMAIN:
-                    boolean isSystem1 = (o1.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                    boolean isSystem2 = (o2.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                    return Boolean.compare(isSystem1, isSystem2);
-                case MainActivity.SORT_BY_LAST_UPDATE:
-                    // Sort in decreasing order
-                    return -o1.lastUpdateTime.compareTo(o2.lastUpdateTime);
-                case MainActivity.SORT_BY_TARGET_SDK:
-                    return -o1.sdk.compareTo(o2.sdk);
-                case MainActivity.SORT_BY_SHARED_ID:
-                    return o2.uid - o1.uid;
-                case MainActivity.SORT_BY_SHA:
-                    if (o1.sha == null && o2.sha != null) return 0;
-                    else if (o1.sha == null) return -1;
-                    else if (o2.sha == null) return +1;
-                    else {
-                        int i = o1.sha.first.compareToIgnoreCase(o2.sha.first);
-                        if (i == 0) {
-                            return o1.sha.second.compareToIgnoreCase(o2.sha.second);
-                        } else if (i < 0) {
-                            return -1;
-                        } else return +1;
-                    }
-                case MainActivity.SORT_BY_BLOCKED_COMPONENTS:
-                    if (isRootEnabled)
-                        return -o1.blockedCount.compareTo(o2.blockedCount);
-                    break;
-                case MainActivity.SORT_BY_DISABLED_APP:
-                    return -Boolean.compare(o1.isDisabled, o2.isDisabled);
-                case MainActivity.SORT_BY_BACKUP:
-                    return -Boolean.compare(o1.metadata != null, o2.metadata != null);
+    @GuardedBy("applicationItems")
+    private void loadRunningApps() {
+        synchronized (applicationItems) {
+            Runner.Result result = Runner.runCommand(new String[]{Runner.TOYBOX, "ps", "-dw", "-o", "NAME"});
+            if (result.isSuccessful()) {
+                List<String> processInfoLines = result.getOutputAsList(1);
+                for (int i = 0; i < applicationItems.size(); ++i) {
+                    ApplicationItem applicationItem = applicationItems.get(i);
+                    applicationItem.isRunning = processInfoLines.contains(applicationItem.packageName);
+                    applicationItems.set(i, applicationItem);
+                }
             }
-            return 0;
-        });
+        }
+    }
+
+    @GuardedBy("applicationItems")
+    private void sortApplicationList(@MainActivity.SortOrder int sortBy) {
+        synchronized (applicationItems) {
+            final boolean isRootEnabled = AppPref.isRootEnabled();
+            if (sortBy != MainActivity.SORT_BY_APP_LABEL)
+                sortApplicationList(MainActivity.SORT_BY_APP_LABEL);
+            if (sortBy == MainActivity.SORT_BY_BLOCKED_COMPONENTS && isRootEnabled)
+                loadBlockingRules();
+            Collections.sort(applicationItems, (o1, o2) -> {
+                switch (sortBy) {
+                    case MainActivity.SORT_BY_APP_LABEL:
+                        return sCollator.compare(o1.label, o2.label);
+                    case MainActivity.SORT_BY_PACKAGE_NAME:
+                        return o1.packageName.compareTo(o2.packageName);
+                    case MainActivity.SORT_BY_DOMAIN:
+                        boolean isSystem1 = (o1.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+                        boolean isSystem2 = (o2.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+                        return Boolean.compare(isSystem1, isSystem2);
+                    case MainActivity.SORT_BY_LAST_UPDATE:
+                        // Sort in decreasing order
+                        return -o1.lastUpdateTime.compareTo(o2.lastUpdateTime);
+                    case MainActivity.SORT_BY_TARGET_SDK:
+                        return -o1.sdk.compareTo(o2.sdk);
+                    case MainActivity.SORT_BY_SHARED_ID:
+                        return o2.uid - o1.uid;
+                    case MainActivity.SORT_BY_SHA:
+                        if (o1.sha == null && o2.sha != null) return 0;
+                        else if (o1.sha == null) return -1;
+                        else if (o2.sha == null) return +1;
+                        else {
+                            int i = o1.sha.first.compareToIgnoreCase(o2.sha.first);
+                            if (i == 0) {
+                                return o1.sha.second.compareToIgnoreCase(o2.sha.second);
+                            } else if (i < 0) {
+                                return -1;
+                            } else return +1;
+                        }
+                    case MainActivity.SORT_BY_BLOCKED_COMPONENTS:
+                        if (isRootEnabled)
+                            return -o1.blockedCount.compareTo(o2.blockedCount);
+                        break;
+                    case MainActivity.SORT_BY_DISABLED_APP:
+                        return -Boolean.compare(o1.isDisabled, o2.isDisabled);
+                    case MainActivity.SORT_BY_BACKUP:
+                        return -Boolean.compare(o1.metadata != null, o2.metadata != null);
+                }
+                return 0;
+            });
+        }
     }
 
     private void updateInfoForUid(int uid, String action) {
@@ -414,32 +430,41 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
+    @GuardedBy("applicationItems")
     private void removePackageIfNoBackup(String packageName) {
-        ApplicationItem item = getApplicationItemFromApplicationItems(packageName);
-        if (item != null) {
-            if (item.metadata == null) applicationItems.remove(item);
-            else {
-                ApplicationItem changedItem = getNewApplicationItem(packageName);
-                if (changedItem != null) insertOrAddApplicationItem(changedItem);
+        synchronized (applicationItems) {
+            ApplicationItem item = getApplicationItemFromApplicationItems(packageName);
+            if (item != null) {
+                if (item.metadata == null) applicationItems.remove(item);
+                else {
+                    ApplicationItem changedItem = getNewApplicationItem(packageName);
+                    if (changedItem != null) insertOrAddApplicationItem(changedItem);
+                }
             }
         }
     }
 
+    @GuardedBy("applicationItems")
     private void insertOrAddApplicationItem(ApplicationItem item) {
-        if (!insertApplicationItem(item)) {
-            applicationItems.add(item);
+        synchronized (applicationItems) {
+            if (!insertApplicationItem(item)) {
+                applicationItems.add(item);
+            }
         }
     }
 
+    @GuardedBy("applicationItems")
     private boolean insertApplicationItem(ApplicationItem item) {
-        boolean isInserted = false;
-        for (int i = 0; i < applicationItems.size(); ++i) {
-            if (applicationItems.get(i).equals(item)) {
-                applicationItems.set(i, item);
-                isInserted = true;
+        synchronized (applicationItems) {
+            boolean isInserted = false;
+            for (int i = 0; i < applicationItems.size(); ++i) {
+                if (applicationItems.get(i).equals(item)) {
+                    applicationItems.set(i, item);
+                    isInserted = true;
+                }
             }
+            return isInserted;
         }
-        return isInserted;
     }
 
     @Nullable
@@ -477,25 +502,31 @@ public class MainViewModel extends AndroidViewModel {
         return null;
     }
 
+    @GuardedBy("applicationItems")
     @Nullable
     private ApplicationItem getApplicationItemFromApplicationItems(String packageName) {
-        ApplicationItem item;
-        for (int i = 0; i < applicationItems.size(); ++i) {
-            item = applicationItems.get(i);
-            if (item.packageName.equals(packageName)) return item;
+        synchronized (applicationItems) {
+            ApplicationItem item;
+            for (int i = 0; i < applicationItems.size(); ++i) {
+                item = applicationItems.get(i);
+                if (item.packageName.equals(packageName)) return item;
+            }
+            return null;
         }
-        return null;
     }
 
+    @GuardedBy("applicationItems")
     @NonNull
     private String[] getPackagesForUid(int uid) {
-        List<String> packages = new LinkedList<>();
-        ApplicationItem item;
-        for (int i = 0; i < applicationItems.size(); ++i) {
-            item = applicationItems.get(i);
-            if (item.uid == uid) packages.add(item.packageName);
+        synchronized (applicationItems) {
+            List<String> packages = new LinkedList<>();
+            ApplicationItem item;
+            for (int i = 0; i < applicationItems.size(); ++i) {
+                item = applicationItems.get(i);
+                if (item.uid == uid) packages.add(item.packageName);
+            }
+            return packages.toArray(new String[0]);
         }
-        return packages.toArray(new String[0]);
     }
 
     @Override
