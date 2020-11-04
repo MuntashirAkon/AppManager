@@ -647,4 +647,17 @@
     <string name="routine_ops">Operações de rotina</string>
     <string name="input_app_ops_description">Insira constantes de operações de aplicativo com espaços, por exemplo (63 72 12) etc. Você pode encontrar constantes de operações de aplicativo na guia app ops sob os suportes.</string>
     <string name="input_app_ops">Inserir operações de aplicativo</string>
+    <string name="packages">packages</string>
+    <string name="onboard">Onboard</string>
+    <string name="state_waking">Acordando</string>
+    <string name="state_parked">Estacionado</string>
+    <string name="state_wake_kill">Wake kill</string>
+    <string name="state_zombie">Zumbi</string>
+    <string name="state_dead">Morto</string>
+    <string name="state_trace_stop">Rastreamento parado</string>
+    <string name="state_sleeping">Dormindo</string>
+    <string name="state_multithreaded">Multithreaded</string>
+    <string name="systemless_app">Systemless App</string>
+    <string name="presets">Presets</string>
+    <string name="keystore">KeyStore</string>
 </resources>
