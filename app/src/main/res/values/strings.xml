@@ -690,4 +690,7 @@
     <string name="view_missing_signatures">Tap to view signatures that are not yet present in App Manager\'s database of libraries. You can also send them to me if you want.</string>
     <string name="copy">Copy</string>
     <string name="filter_running_apps">Running apps</string>
+    <string name="am_crashed">AM is just crashed</string>
+    <string name="tap_to_submit_crash_report">Tap to submit the crash report.</string>
+    <string name="send_crash_report">Send crash report</string>
 </resources>

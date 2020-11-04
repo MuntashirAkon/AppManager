@@ -28,6 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.view.menu.MenuBuilder;
+import io.github.muntashirakon.AppManager.misc.AMExceptionHandler;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 
@@ -38,6 +39,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         currentLocale = LangUtils.updateLanguage(this);
         super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler(new AMExceptionHandler(this));
         AppCompatDelegate.setDefaultNightMode((int) AppPref.get(AppPref.PrefKey.PREF_APP_THEME_INT));
     }
 
