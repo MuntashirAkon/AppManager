@@ -355,7 +355,7 @@
     </plurals>
     <string name="split_no">Split#%1$d: %2$s</string>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">Não foi possível obter informações do pacote, possivelmente um APK dividido</string>
-    <string name="package_name_is_installed_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; instalado</string>
+    <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> instalado</string>
     <string name="failed_to_install_package_name"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> não pôde ser instalado</string>
     <string name="filter">Filtro</string>
     <string name="filter_user_apps">Apps do usuário</string>
@@ -426,7 +426,7 @@
     <string name="toggle_default_app_ops">Alternar operações de aplicativo padrões</string>
     <string name="installer_error_aborted">A instalação falhou porque foi cancelada ou a sessão foi encerrada inesperadamente</string>
     <string name="installer_error_blocked_device">dispositivo</string>
-    <string name="installer_error_blocked">Instalação bloqueada por &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="installer_error_blocked">Instalação bloqueada por <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="installer_error_conflict">Não é possível instalar o aplicativo porque um aplicativo já instalado já tem esse nome de pacote</string>
     <string name="installer_error_incompatible">O aplicativo é incompatível com esse dispositivo</string>
     <string name="installer_error_bad_apks">Os arquivos APK selecionados são inválidos</string>
@@ -518,7 +518,7 @@
         <item quantity="other">1 rastreador com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
     </plurals>
     <string name="termux">Termux</string>
-    <string name="split_feature_name">Função: &amp;lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&amp;gt;%1$s&amp;lt;/xliff:g&amp;gt;&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%1$s&lt;/xliff:g&gt;<xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
+    <string name="split_feature_name">Função: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <string name="base_apk">APK Base</string>
     <string name="auto">Automático</string>
     <string name="backup_obb_media">OBB e Mídia</string>
@@ -552,12 +552,12 @@
     <string name="subject">Assunto</string>
     <string name="filter_apps_with_backups">Aplicativos com backups</string>
     <string name="sort_by_backup">Backup primeiro</string>
-    <string name="failed_to_uninstall_updates">Não foi possível desinstalar atualizações para &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
-    <string name="update_uninstalled_successfully">Atualizações para &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; has been uninstalled.<xliff:g id="app_name" example="App Manager">%1$s</xliff:g> has been uninstalled.</string>
+    <string name="failed_to_uninstall_updates">Não foi possível desinstalar atualizações para <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="update_uninstalled_successfully">Atualizações para <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="uninstall_updates">Desinstalar Atualizações</string>
     <string name="allow_open_pgp_operation">Clique para permitir que o AM use o OpenPGP</string>
     <string name="confirm_installation">Confirmar instalação</string>
-    <string name="compression_method">Método de compressão: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"compression_method\" example=\"GZip\"&gt;%1$s&lt;/xliff:g&gt;<xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
+    <string name="compression_method">Método de compressão: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_compression_method">Método de compressão</string>
     <string name="rules">Regras</string>
     <string name="other">Outros</string>
@@ -578,8 +578,8 @@
     <string name="input_backup_name">Nome do backup</string>
     <string name="downgrade">Downgrade</string>
     <string name="downgrade_not_possible">Downgrade não é possível sem root ou ADB</string>
-    <string name="process_state_with_extra">Estado: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"process_state\" example=\"Sleeping\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"state_extra\" example=\"High priority\"&gt;%2$s&lt;/xliff:g&gt;)<xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
-    <string name="process_state">Estado: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"process_state\" example=\"Sleeping\"&gt;%1$s&lt;/xliff:g&gt;<xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
+    <string name="process_state_with_extra">Estado: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
+    <string name="process_state">Estado: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <string name="state_foreground">Primeiro</string>
     <string name="state_session_leader">Líder da sessão</string>
     <string name="state_locked_memory">Memória trancada</string>
@@ -595,7 +595,7 @@
     <string name="do_you_want_to_uninstall_and_install">Deseja desinstalar e instalar o aplicativo novamente\?</string>
     <string name="signature_mismatch_for_system_apps">Não foi possível instalar o aplicativo porque o aplicativo instalado é um aplicativo do sistema com assinatura diferente.</string>
     <string name="app_data_will_be_lost">Os dados existentes serão perdidos.</string>
-    <string name="install_without_data_loss">Se você tiver desativado a verificação de assinatura, você pode usar a opção &lt;b&gt;apenas instalar&lt;/b&gt; para instalar o aplicativo sem perder dados.<b>only install</b> option to install the app without losing data.</string>
+    <string name="install_without_data_loss">Se você tiver desativado a verificação de assinatura, você pode usar a opção <b>apenas instalar</b> para instalar o aplicativo sem perder dados.</string>
     <string name="only_install">Apenas Instalar</string>
     <string name="sys_config">Configurações do Sistema</string>
     <string name="scanner">Scanner</string>
@@ -636,14 +636,14 @@
     <string name="launch_mode_single_task">Tarefa única</string>
     <string name="launch_mode_single_instance">Instância única</string>
     <string name="launch_mode_multiple">Vários</string>
-    <string name="locale_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt;%1$s&lt;/xliff:g&gt; localização para APK base<xliff:g id="split_name" example="English">%1$s</xliff:g> locale for base APK</string>
-    <string name="abi_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; código para APK base<xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> code for base APK</string>
-    <string name="density_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI) recursos para APK base<xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) resources for base APK</string>
-    <string name="locale_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt;%1$s&lt;/xliff:g&gt; localização para recurso &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;<xliff:g id="split_name" example="English">%1$s</xliff:g> locale for feature <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
-    <string name="abi_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; código para &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;<xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> code for <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
-    <string name="density_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI) recursos para função &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%3$s&lt;/xliff:g&gt;<xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) resources for feature <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
-    <string name="unknown_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt; para função &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;<xliff:g id="split_name" example="some_split">%1$s</xliff:g> for feature <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
-    <string name="unknown_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt; para APK base<xliff:g id="split_name" example="some_split">%1$s</xliff:g> for base APK</string>
+    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> localização para APK base</string>
+    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> código para APK base</string>
+    <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) recursos para APK base</string>
+    <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> localização para recurso <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> código para <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) recursos para função <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
+    <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para função <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para APK base</string>
     <string name="routine_ops">Operações de rotina</string>
     <string name="input_app_ops_description">Insira constantes de operações de aplicativo com espaços, por exemplo (63 72 12) etc. Você pode encontrar constantes de operações de aplicativo na guia app ops sob os suportes.</string>
     <string name="input_app_ops">Inserir operações de aplicativo</string>

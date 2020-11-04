@@ -643,16 +643,16 @@
         <item quantity="other">%1$d Klassen</item>
     </plurals>
     <plurals name="other_trackers_and_classes">
-        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; Verfolger mit &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; Klassen</item>
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; Verfolger mit &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; Klassen</item>
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> Verfolger mit <xliff:g id="class_no" example="50">%2$d</xliff:g> Klassen</item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> Verfolger mit <xliff:g id="class_no" example="50">%2$d</xliff:g> Klassen</item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="one">2 Verfolger mit &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; Klasse</item>
-        <item quantity="other">2 Verfolger mit &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; Klassen</item>
+        <item quantity="one">2 Verfolger mit <xliff:g id="class_no" example="50">%1$d</xliff:g> Klasse</item>
+        <item quantity="other">2 Verfolger mit <xliff:g id="class_no" example="50">%1$d</xliff:g> Klassen</item>
     </plurals>
     <plurals name="tracker_and_classes">
-        <item quantity="one">1 Verfolger mit &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; Klasse</item>
-        <item quantity="other">1 Verfolger mit &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; Klassen</item>
+        <item quantity="one">1 Verfolger mit <xliff:g id="class_no" example="50">%1$d</xliff:g> Klasse</item>
+        <item quantity="other">1 Verfolger mit <xliff:g id="class_no" example="50">%1$d</xliff:g> Klassen</item>
     </plurals>
     <string name="copy">Kopieren</string>
     <string name="view_missing_signatures">Tippen Sie darauf , um Signaturen anzuzeigen, die noch nicht in der Bibliotheksdatenbank des App Managers vorhanden sind. Sie können diese auch an mich senden, wenn Sie möchten.</string>

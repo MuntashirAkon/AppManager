@@ -247,23 +247,16 @@
     <string name="toggle_class_listing">टॉगल वर्ग सूचीकरण</string>
     <string name="class_viewer">क्लास दर्शक</string>
     <string name="word_wrap">वर्ड व्रैप चालू/बंद करें</string>
-    <string name="credits_message">"के लेखकों को
+    <string name="credits_message">के लेखकों को
 \n- एंड्रॉइड ओपन सोर्स प्रोजेक्ट
-\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Monitor&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;AppsMonitor &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
-\nलोगो का श्रेय: &lt;a href=\"https://github.com/Atrate\"&gt; Atrate &lt;/a&gt;। "<a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info </a>
-\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher </a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://github.com/billthefarmer/editor">AppsMonitor</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor </a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt </a>
-\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX </a>
-\n- <a href="https://github.com/Aefyr/SAI"> SAI </a>
-\nलोगो का श्रेय: <a href="https://github.com/Atrate"> Atrate </a>। </string>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\nलोगो का श्रेय: <a href="https://github.com/Atrate">Atrate</a>।</string>
     <string name="credits">श्रेय</string>
     <string name="third_party">थर्ड पार्टी लाइब्रेरी और आइकन्स</string>
     <string name="license">लाइसेंस</string>
@@ -620,8 +613,8 @@
         <item quantity="other">%1$d ऐप्स से ट्रैकर्स को बंद नहीं कर सके</item>
     </plurals>
     <plurals name="tracker_and_classes">
-        <item quantity="one">1 ट्रैकर &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; क्लास के साथ</item>
-        <item quantity="other">1 ट्रैकर &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; क्लासेस के साथ</item>
+        <item quantity="one">1 ट्रैकर <xliff:g id="class_no" example="50">%1$d</xliff:g> क्लास के साथ</item>
+        <item quantity="other">1 ट्रैकर <xliff:g id="class_no" example="50">%1$d</xliff:g> क्लासेस के साथ</item>
     </plurals>
     <string name="copy">कॉपी करें</string>
     <string name="view_missing_signatures">उन हस्ताक्षरों को देखने के लिए टैप करें जो अभी तक ऐप मैनेजर के लाइब्रेरी डेटाबेस में मौजूद नहीं हैं। आप चाहें तो उन्हें मेरे पास भी भेज सकते हैं।</string>
@@ -642,12 +635,12 @@
         <item quantity="other">%1$d क्लासेस</item>
     </plurals>
     <plurals name="other_trackers_and_classes">
-        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; ट्रैकर्स &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; क्लासेस के साथ</item>
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; ट्रैकर्स &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; क्लासेस के साथ</item>
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> ट्रैकर्स <xliff:g id="class_no" example="50">%2$d</xliff:g> क्लासेस के साथ</item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> ट्रैकर्स <xliff:g id="class_no" example="50">%2$d</xliff:g> क्लासेस के साथ</item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="one">2 ट्रैकर्स &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; क्लासेस के साथ</item>
-        <item quantity="other">2 ट्रेकर्स &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; क्लासेस के साथ</item>
+        <item quantity="one">2 ट्रैकर्स <xliff:g id="class_no" example="50">%1$d</xliff:g> क्लासेस के साथ</item>
+        <item quantity="other">2 ट्रेकर्स <xliff:g id="class_no" example="50">%1$d</xliff:g> क्लासेस के साथ</item>
     </plurals>
     <string name="filter_running_apps">चल रहे ऐप्स</string>
 </resources>

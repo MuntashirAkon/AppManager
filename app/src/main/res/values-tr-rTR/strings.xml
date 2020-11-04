@@ -74,7 +74,7 @@
     <string name="system">Sistem</string>
     <string name="user">Kullanıcı</string>
     <string name="sort">Sıralama</string>
-    <string name="version_name_with_code">Sürüm &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;%2$d&lt;/xliff:g&gt;)</string>
+    <string name="version_name_with_code">Sürüm <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="app_info">Uygulama Bilgisi</string>
     <string name="system_app">Sistem uygulamaları</string>
     <string name="user_app">Kullanıcı uygulaması</string>
@@ -353,7 +353,7 @@
     <string name="failed_to_parse_some_numbers">Bazı numaralar ayrıştırılamadı</string>
     <string name="only_works_in_root_or_adb_mode">Yalnızca root veya ADB modunda çalışır</string>
     <string name="input_app_ops_description">Uygulama işlemlerini aralarında boşluk olacak şekilde girin, örn. (63 72 12) gibi. Uygulama işlem sabitlerini, parantezlerin altındaki uygulama işlemleri sekmesinde bulabilirsiniz.</string>
-    <string name="starting_activity">Başlangıç etkinliği: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="starting_activity">Başlangıç etkinliği: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="input_app_ops">Uygulama işlemlerini gir</string>
     <string name="filtered_packages">Filtrelenmiş paketler</string>
     <string name="input_signatures_description">İmzaları aralarında boşluk olacak şekilde girin, örn. (com.facebook org.app2 com.app3) gibi.</string>
@@ -647,16 +647,16 @@
         <item quantity="other">%1$d sınıf</item>
     </plurals>
     <plurals name="other_trackers_and_classes">
-        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; sınıfla &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; izleyici</item>
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; sınıfla &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; izleyici</item>
+        <item quantity="one"><xliff:g id="class_no" example="50">%2$d</xliff:g> sınıfla <xliff:g id="tracker_no" example="8">%1$d</xliff:g> izleyici</item>
+        <item quantity="other"><xliff:g id="class_no" example="50">%2$d</xliff:g> sınıfla <xliff:g id="tracker_no" example="8">%1$d</xliff:g> izleyici</item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; sınıfla 2 izleyici</item>
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; sınıfla 2 izleyici</item>
+        <item quantity="one"><xliff:g id="class_no" example="50">%1$d</xliff:g> sınıfla 2 izleyici</item>
+        <item quantity="other"><xliff:g id="class_no" example="50">%1$d</xliff:g> sınıfla 2 izleyici</item>
     </plurals>
     <plurals name="tracker_and_classes">
-        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; sınıfla 1 izleyici</item>
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; sınıfla 1 izleyici</item>
+        <item quantity="one"><xliff:g id="class_no" example="50">%1$d</xliff:g> sınıfla 1 izleyici</item>
+        <item quantity="other"><xliff:g id="class_no" example="50">%1$d</xliff:g> sınıfla 1 izleyici</item>
     </plurals>
     <string name="filter_running_apps">Çalışan uygulamalar</string>
 </resources>

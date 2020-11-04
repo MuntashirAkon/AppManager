@@ -395,13 +395,13 @@
     <string name="no_usage_in_this_time_range">Brak użycia w tym zakresie czasowym</string>
     <string name="key_name_cannot_be_null">Nazwa klucza nie może być pusta</string>
     <string name="storage_and_cache">Dane i pamięć podręczna</string>
-    <string name="failed_to_stop">Nie udało się zatrzymać &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_stop">Nie udało się zatrzymać <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Wymuś zatrzymanie</string>
-    <string name="failed_to_enable">Nie udało się włączyć &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
-    <string name="failed_to_disable">Nie udało się wyłączyć &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_enable">Nie udało się włączyć <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_disable">Nie udało się wyłączyć <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Włącz</string>
     <string name="uninstall_system_app_message">To jest aplikacja systemowa. Czy na pewno chcesz odinstalować tę aplikację\?</string>
-    <string name="uninstalled_successfully">Aplikacja &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; została odinstalowana.<xliff:g id="app_name" example="App Manager">%1$s</xliff:g> has been uninstalled.</string>
+    <string name="uninstalled_successfully">Aplikacja <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> została odinstalowana.</string>
     <string name="uninstall_app_message">Czy chcesz odinstalować tę aplikację\?</string>
     <string name="view_in_settings">Wyświetl w ustawieniach</string>
     <string name="disabled_app">Wyłączona</string>

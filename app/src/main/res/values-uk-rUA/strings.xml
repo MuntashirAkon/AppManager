@@ -692,21 +692,21 @@
         <item quantity="other">%1$d класів</item>
     </plurals>
     <plurals name="other_trackers_and_classes">
-        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; трекер з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; класами</item>
-        <item quantity="few">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; трекери з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; класами</item>
-        <item quantity="many">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; трекерів з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; класами</item>
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; трекерів з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; класами</item>
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> трекер з <xliff:g id="class_no" example="50">%2$d</xliff:g> класами</item>
+        <item quantity="few"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> трекери з <xliff:g id="class_no" example="50">%2$d</xliff:g> класами</item>
+        <item quantity="many"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> трекерів з <xliff:g id="class_no" example="50">%2$d</xliff:g> класами</item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> трекерів з <xliff:g id="class_no" example="50">%2$d</xliff:g> класами</item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="one">2 трекери з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; класами</item>
-        <item quantity="few">2 трекери з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; класами</item>
-        <item quantity="many">2 трекери з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; класами</item>
-        <item quantity="other">2 трекери з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; класами</item>
+        <item quantity="one">2 трекери з <xliff:g id="class_no" example="50">%1$d</xliff:g> класами</item>
+        <item quantity="few">2 трекери з <xliff:g id="class_no" example="50">%1$d</xliff:g> класами</item>
+        <item quantity="many">2 трекери з <xliff:g id="class_no" example="50">%1$d</xliff:g> класами</item>
+        <item quantity="other">2 трекери з <xliff:g id="class_no" example="50">%1$d</xliff:g> класами</item>
     </plurals>
     <plurals name="tracker_and_classes">
-        <item quantity="one">1 трекер з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; класом</item>
-        <item quantity="few">1 трекер з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; класами</item>
-        <item quantity="many">1 трекер з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; класами</item>
-        <item quantity="other">1 трекер з &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; класами</item>
+        <item quantity="one">1 трекер з <xliff:g id="class_no" example="50">%1$d</xliff:g> класом</item>
+        <item quantity="few">1 трекер з <xliff:g id="class_no" example="50">%1$d</xliff:g> класами</item>
+        <item quantity="many">1 трекер з <xliff:g id="class_no" example="50">%1$d</xliff:g> класами</item>
+        <item quantity="other">1 трекер з <xliff:g id="class_no" example="50">%1$d</xliff:g> класами</item>
     </plurals>
 </resources>
