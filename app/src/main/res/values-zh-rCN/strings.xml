@@ -620,4 +620,5 @@
     <plurals name="missing_signatures">
         <item quantity="other">%1$d 个签名缺失</item>
     </plurals>
+    <string name="orientation_behind">Behind</string>
 </resources>
