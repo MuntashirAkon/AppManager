@@ -709,4 +709,7 @@
         <item quantity="many">1 трекер с <xliff:g id="class_no" example="50">%1$d</xliff:g> классами</item>
         <item quantity="other">1 трекер с <xliff:g id="class_no" example="50">%1$d</xliff:g> классами</item>
     </plurals>
+    <string name="tap_to_submit_crash_report">Нажмите, чтобы отправить отчет о сбое.</string>
+    <string name="send_crash_report">Отправить отчет о сбое</string>
+    <string name="select_apk">Выбрать apk</string>
 </resources>
