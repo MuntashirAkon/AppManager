@@ -609,10 +609,10 @@
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> 个跟踪器，共<xliff:g id="class_no" example="50">%2$d</xliff:g> 个类</item>
     </plurals>
     <plurals name="tracker_and_classes">
-        <item quantity="other">1 个跟踪器 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; 个 class</item>
+        <item quantity="other">1 个跟踪器 <xliff:g id="class_no" example="50">%1$d</xliff:g> 个 class</item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="other">2 个跟踪器 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; 个 classes</item>
+        <item quantity="other">2 个跟踪器 <xliff:g id="class_no" example="50">%1$d</xliff:g> 个 classes</item>
     </plurals>
     <string name="copy">复制</string>
     <string name="view_missing_signatures">点击可以查看App Manager库数据库中还没有的签名。如果你愿意，也可以发送给我。</string>
