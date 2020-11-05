@@ -144,15 +144,23 @@ public final class IOUtils {
     }
 
     @Nullable
-    public static String getFileName(@NonNull ContentResolver resolver, Uri uri) {
-        Cursor returnCursor =
-                resolver.query(uri, null, null, null, null);
-        if (returnCursor == null) return null;
-        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-        returnCursor.moveToFirst();
-        String name = returnCursor.getString(nameIndex);
-        returnCursor.close();
-        return name;
+    public static String getFileName(@NonNull ContentResolver resolver, @NonNull Uri uri) {
+        if (uri.getScheme() == null) return null;
+        switch (uri.getScheme()) {
+            case ContentResolver.SCHEME_CONTENT:
+                Cursor cursor = resolver.query(uri, null, null, null, null);
+                if (cursor == null) return null;
+                int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                cursor.moveToFirst();
+                String name = cursor.getString(nameIndex);
+                cursor.close();
+                return name;
+            case ContentResolver.SCHEME_FILE:
+                if (uri.getPath() == null) return null;
+                return new File(uri.getPath()).getName();
+            default:
+                return null;
+        }
     }
 
     @NonNull
