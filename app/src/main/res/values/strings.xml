@@ -692,4 +692,5 @@
     <string name="am_crashed">AM is just crashed</string>
     <string name="tap_to_submit_crash_report">Tap to submit the crash report.</string>
     <string name="send_crash_report">Send crash report</string>
+    <string name="select_apk">Select apk</string>
 </resources>

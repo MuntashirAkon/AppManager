@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;
@@ -139,7 +138,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         Log.d("ADVM", "Package name is being set");
         isExternalApk = false;
         setPackageName(packageName);
-        apkFileKey = ApkFile.createInstance(getPackageInfo());
+        apkFileKey = ApkFile.createInstance(getPackageInfo().applicationInfo);
         apkFile = ApkFile.getInstance(apkFileKey);
     }
 
@@ -569,10 +568,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     public int getSplitCount() {
-        ApplicationInfo info = packageInfo.applicationInfo;
-        if (isExternalApk && apkFile.isSplit()) return apkFile.getEntries().size() - 1;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && info.splitNames != null)
-            return info.splitNames.length;
+        if (apkFile.isSplit()) return apkFile.getEntries().size() - 1;
         return 0;
     }
 

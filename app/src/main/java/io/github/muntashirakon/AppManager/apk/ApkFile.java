@@ -20,7 +20,6 @@ package io.github.muntashirakon.AppManager.apk;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -104,9 +103,9 @@ public final class ApkFile implements AutoCloseable {
     }
 
     @WorkerThread
-    public static int createInstance(PackageInfo packageInfo) throws ApkFileException {
+    public static int createInstance(ApplicationInfo info) throws ApkFileException {
         int key = ThreadLocalRandom.current().nextInt();
-        ApkFile apkFile = new ApkFile(packageInfo, key);
+        ApkFile apkFile = new ApkFile(info, key);
         apkFiles.put(key, apkFile);
         return key;
     }
@@ -301,10 +300,9 @@ public final class ApkFile implements AutoCloseable {
         this.packageName = packageName;
     }
 
-    public ApkFile(@NonNull PackageInfo packageInfo, int sparseArrayKey) throws ApkFileException {
+    public ApkFile(@NonNull ApplicationInfo info, int sparseArrayKey) throws ApkFileException {
         this.sparseArrayKey = sparseArrayKey;
-        ApplicationInfo info = packageInfo.applicationInfo;
-        this.packageName = packageInfo.packageName;
+        this.packageName = info.packageName;
         this.cacheFilePath = new File(info.publicSourceDir);
         File sourceDir = cacheFilePath.getParentFile();
         if (sourceDir == null || "/data/app".equals(sourceDir.getAbsolutePath())) {
@@ -698,13 +696,15 @@ public final class ApkFile implements AutoCloseable {
         @Override
         public void close() {
             IOUtils.deleteSilently(cachedFile);
-            if (source != null && !source.getAbsolutePath().startsWith("/proc/self")) {
+            if (source != null && !source.getAbsolutePath().startsWith("/proc/self")
+                    && !source.getAbsolutePath().startsWith("/data/app")) {
                 IOUtils.deleteSilently(source);
             }
         }
 
         @WorkerThread
         public File getCachedFile() throws IOException {
+            if (source != null && source.canRead()) return source;
             File destDir = AppManager.getContext().getExternalFilesDir("apks");
             if (destDir == null || !Environment.getExternalStorageState(destDir).equals(Environment.MEDIA_MOUNTED))
                 throw new RuntimeException("External media not present");

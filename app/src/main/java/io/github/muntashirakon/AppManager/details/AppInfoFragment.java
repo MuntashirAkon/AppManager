@@ -613,11 +613,37 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Set manifest
         addToHorizontalLayout(R.string.manifest, R.drawable.ic_tune_black_24dp).setOnClickListener(v -> {
             Intent intent = new Intent(mActivity, ManifestViewerActivity.class);
-            if (mainModel.getIsExternalApk() || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && mApplicationInfo.splitNames != null)) {
-                File file = new File(mApplicationInfo.publicSourceDir);
-                intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-            } else intent.putExtra(ManifestViewerActivity.EXTRA_PACKAGE_NAME, mPackageName);
-            startActivity(intent);
+            ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey());
+            if (apkFile.isSplit()) {
+                // Display a list of apks
+                List<ApkFile.Entry> apkEntries = apkFile.getEntries();
+                String[] entryNames = new String[apkEntries.size()];
+                for (int i = 0; i < apkEntries.size(); ++i) {
+                    entryNames[i] = apkEntries.get(i).toLocalizedString(requireActivity());
+                }
+                new MaterialAlertDialogBuilder(mActivity)
+                        .setTitle(R.string.select_apk)
+                        .setItems(entryNames, (dialog, which) -> new Thread(() -> {
+                            try {
+                                File file = apkEntries.get(which).getCachedFile();
+                                intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+                                runOnUiThread(() -> startActivity(intent));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }).start())
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+            } else {
+                // Open directly
+                if (mainModel.getIsExternalApk()) {
+                    File file = new File(mApplicationInfo.publicSourceDir);
+                    intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+                } else {
+                    intent.putExtra(ManifestViewerActivity.EXTRA_PACKAGE_NAME, mPackageName);
+                }
+                startActivity(intent);
+            }
         });
         // Set scanner
         addToHorizontalLayout(R.string.scanner, R.drawable.ic_baseline_security_24).setOnClickListener(v -> {
