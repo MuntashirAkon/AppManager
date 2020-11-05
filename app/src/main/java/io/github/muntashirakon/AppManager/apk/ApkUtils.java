@@ -20,7 +20,6 @@ package io.github.muntashirakon.AppManager.apk;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -96,7 +95,7 @@ public final class ApkUtils {
         }
     }
 
-    public static boolean isSplitApk(ApplicationInfo info) {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && info.splitNames != null;
+    public static boolean isSplitApk(@NonNull ApplicationInfo info) {
+        return info.splitPublicSourceDirs != null && info.splitPublicSourceDirs.length > 0;
     }
 }

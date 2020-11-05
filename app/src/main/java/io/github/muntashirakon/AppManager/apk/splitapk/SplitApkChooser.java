@@ -21,12 +21,12 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -99,11 +99,14 @@ public class SplitApkChooser extends DialogFragment {
         boolean[] choices = new boolean[apkEntries.size()];
         Arrays.fill(choices, false);
         ApkFile.Entry apkEntry;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            try {
-                ApplicationInfo info = pm.getApplicationInfo(apkFile.getPackageName(), 0);
-                if (info.splitNames != null) {
-                    List<String> splitNames = Arrays.asList(info.splitNames);
+        try {
+            ApplicationInfo info = pm.getApplicationInfo(apkFile.getPackageName(), 0);
+            try (ApkFile installedApkFile = ApkFile.getInstance(ApkFile.createInstance(info))) {
+                List<String> splitNames = new ArrayList<>();
+                for (ApkFile.Entry apkEntry1 : installedApkFile.getEntries()) {
+                    splitNames.add(apkEntry1.name);
+                }
+                if (splitNames.size() > 0) {
                     for (int i = 0; i < apkEntries.size(); ++i) {
                         apkEntry = apkEntries.get(i);
                         if (splitNames.contains(apkEntry.name) || apkEntry.type == ApkFile.APK_BASE) {
@@ -113,8 +116,8 @@ public class SplitApkChooser extends DialogFragment {
                     }
                     return choices;
                 }
-            } catch (PackageManager.NameNotFoundException ignored) {
             }
+        } catch (PackageManager.NameNotFoundException | ApkFile.ApkFileException ignored) {
         }
         SparseBooleanArray seenSplit = new SparseBooleanArray(3);
         for (int i = 0; i < apkEntries.size(); ++i) {

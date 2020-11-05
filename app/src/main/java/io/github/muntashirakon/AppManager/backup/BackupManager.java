@@ -655,13 +655,13 @@ public class BackupManager {
             }
             // Setup apk files, including split apk
             FreshFile baseApk = new FreshFile(packageStagingDirectory, metadata.apkName);
-            final int splitCount = metadata.splitNames.length;
+            final int splitCount = metadata.splitConfigs.length;
             String[] allApkNames = new String[splitCount + 1];
             FreshFile[] allApks = new FreshFile[splitCount + 1];
             allApks[0] = baseApk;
             allApkNames[0] = metadata.apkName;
             for (int i = 1; i < allApkNames.length; ++i) {
-                allApkNames[i] = metadata.splitNames[i - 1];
+                allApkNames[i] = metadata.splitConfigs[i - 1];
                 allApks[i] = new FreshFile(packageStagingDirectory, allApkNames[i]);
             }
             // Decrypt sources

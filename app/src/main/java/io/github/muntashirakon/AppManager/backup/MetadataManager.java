@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.misc.Users;
@@ -62,7 +63,6 @@ public final class MetadataManager {
         public boolean isSystem;  // is_system
         public boolean isSplitApk;  // is_split_apk
         public String[] splitConfigs;  // split_configs
-        public String[] splitNames;  // split_names
         public boolean hasRules;  // has_rules
         public long backupTime;  // backup_time
         @DigestUtils.Algorithm
@@ -154,7 +154,6 @@ public final class MetadataManager {
         this.metadata.isSystem = rootObject.getBoolean("is_system");
         this.metadata.isSplitApk = rootObject.getBoolean("is_split_apk");
         this.metadata.splitConfigs = JSONUtils.getArray(String.class, rootObject.getJSONArray("split_configs"));
-        this.metadata.splitNames = JSONUtils.getArray(String.class, rootObject.getJSONArray("split_names"));
         this.metadata.hasRules = rootObject.getBoolean("has_rules");
         this.metadata.backupTime = rootObject.getLong("backup_time");
         this.metadata.checksumAlgo = rootObject.getString("checksum_algo");
@@ -197,7 +196,6 @@ public final class MetadataManager {
             rootObject.put("is_system", metadata.isSystem);
             rootObject.put("is_split_apk", metadata.isSplitApk);
             rootObject.put("split_configs", JSONUtils.getJSONArray(metadata.splitConfigs));
-            rootObject.put("split_names", JSONUtils.getJSONArray(metadata.splitNames));
             rootObject.put("has_rules", metadata.hasRules);
             rootObject.put("backup_time", metadata.backupTime);
             rootObject.put("checksum_algo", metadata.checksumAlgo);
@@ -244,18 +242,21 @@ public final class MetadataManager {
         metadata.dataDirs = ArrayUtils.defeatNullable(metadata.dataDirs);
         metadata.isSystem = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         metadata.isSplitApk = false;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            metadata.splitConfigs = applicationInfo.splitNames;
-            if (metadata.splitConfigs != null) {
-                metadata.isSplitApk = true;
-                metadata.splitNames = new String[metadata.splitConfigs.length];
-                for (int i = 0; i < applicationInfo.splitPublicSourceDirs.length; ++i) {
-                    metadata.splitNames[i] = new File(applicationInfo.splitPublicSourceDirs[i]).getName();
+        try {
+            ApkFile apkFile = ApkFile.getInstance(ApkFile.createInstance(applicationInfo));
+            if (apkFile.isSplit()) {
+                List<ApkFile.Entry> apkEntries = apkFile.getEntries();
+                int splitCount = apkEntries.size() - 1;
+                metadata.isSplitApk = splitCount > 0;
+                metadata.splitConfigs = new String[splitCount];
+                for (int i = 0; i < splitCount; ++i) {
+                    metadata.splitConfigs[i] = apkEntries.get(i+1).name;
                 }
             }
+        } catch (ApkFile.ApkFileException e) {
+            e.printStackTrace();
         }
         metadata.splitConfigs = ArrayUtils.defeatNullable(metadata.splitConfigs);
-        metadata.splitNames = ArrayUtils.defeatNullable(metadata.splitNames);
         metadata.hasRules = false;
         if (requestedFlags.backupRules()) {
             try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageInfo.packageName, userHandle)) {
