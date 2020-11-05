@@ -345,7 +345,6 @@
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> kuruldu</string>
     <string name="termux">Termux</string>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">Paket bilgisi alınamadı, bölünmüş bir APK dosyası olabilir</string>
-    <string name="split_no">Bölüm#%1$d: %2$s</string>
     <plurals name="no_of_splits">
         <item quantity="one">%1$d bölüm</item>
         <item quantity="other">%1$d bölüm</item>

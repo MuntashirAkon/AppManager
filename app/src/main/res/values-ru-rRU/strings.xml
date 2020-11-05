@@ -416,7 +416,6 @@
         <item quantity="many">%d частей</item>
         <item quantity="other">%d частей</item>
     </plurals>
-    <string name="split_no">Часть#%1$d: %2$s</string>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">Не удалось получить информацию о пакете, возможно, это разделенный файл APK</string>
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> установлено</string>

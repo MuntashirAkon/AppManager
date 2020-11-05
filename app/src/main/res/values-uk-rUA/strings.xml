@@ -57,7 +57,6 @@
         <item quantity="many">Не вдалося заборонити дозвіл додатків %1$d</item>
         <item quantity="other">Не вдалося заборонити дозвіл додатків %1$d</item>
     </plurals>
-    <string name="split_no">Спліт#%1$d: %2$s</string>
     <plurals name="no_of_splits">
         <item quantity="one">%1$d спліт</item>
         <item quantity="few">%1$d спліти</item>

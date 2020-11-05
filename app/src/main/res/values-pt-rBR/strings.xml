@@ -353,7 +353,6 @@
         <item quantity="one">%1$d split</item>
         <item quantity="other">%1$d splits</item>
     </plurals>
-    <string name="split_no">Split#%1$d: %2$s</string>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">Não foi possível obter informações do pacote, possivelmente um APK dividido</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> instalado</string>
     <string name="failed_to_install_package_name"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> não pôde ser instalado</string>

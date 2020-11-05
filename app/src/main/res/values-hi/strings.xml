@@ -351,7 +351,6 @@
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> इंस्टॉल पूर्ण हुआ</string>
     <string name="termux">टर्मक्स</string>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">पैकेज की जानकारी प्राप्त नहीं कर सके, संभवतः एक स्प्लिट एपीके है</string>
-    <string name="split_no">स्प्लिट#%1$d: %2$s</string>
     <plurals name="no_of_splits">
         <item quantity="one">%1$d स्प्लिट</item>
         <item quantity="other">%1$d स्प्लिट्स</item>

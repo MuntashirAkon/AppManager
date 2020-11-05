@@ -380,7 +380,6 @@
     <string name="failed_to_install_package_name">O %s não pôde ser instalado</string>
     <string name="package_name_is_installed_successfully">%s instalado</string>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">Não foi possível obter informações do pacote, possivelmente um APK dividido</string>
-    <string name="split_no">APK#%d: %s</string>
     <plurals name="no_of_splits">
         <item quantity="one">%d APK</item>
         <item quantity="other">%d APKs</item>

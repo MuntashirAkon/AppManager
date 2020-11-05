@@ -388,7 +388,6 @@
         <item quantity="one">%1$d Teil</item>
         <item quantity="other">%1$d Teile</item>
     </plurals>
-    <string name="split_no">Teil#%1$d: %1$s</string>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">Laden von Paket-Informationen nicht möglich, es könnte eine geteilte APK sein</string>
     <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> ist installiert</string>

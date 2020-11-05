@@ -373,7 +373,6 @@
     <plurals name="no_of_splits">
         <item quantity="other">%1$d 个拆分</item>
     </plurals>
-    <string name="split_no">拆分#%1$d:%2$s</string>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">无法获取安装包信息，可能是一个拆分APK</string>
     <string name="termux">Termux 终端模拟器</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> 已安装</string>
