@@ -19,6 +19,8 @@ package io.github.muntashirakon.AppManager.apk;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -55,6 +57,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.apkm.UnApkm;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
@@ -100,6 +103,14 @@ public final class ApkFile implements AutoCloseable {
         return key;
     }
 
+    @WorkerThread
+    public static int createInstance(PackageInfo packageInfo) throws ApkFileException {
+        int key = ThreadLocalRandom.current().nextInt();
+        ApkFile apkFile = new ApkFile(packageInfo, key);
+        apkFiles.put(key, apkFile);
+        return key;
+    }
+
     @IntDef(value = {
             APK_BASE,
             APK_SPLIT_FEATURE,
@@ -141,7 +152,7 @@ public final class ApkFile implements AutoCloseable {
     private List<ZipEntry> obbFiles = new ArrayList<>();
     @NonNull
     private File cacheFilePath;
-    @NonNull
+    @Nullable
     private ParcelFileDescriptor fd;
     @Nullable
     private ZipFile zipFile;
@@ -169,7 +180,8 @@ public final class ApkFile implements AutoCloseable {
                 this.cacheFilePath = IOUtils.getTempFile();
                 try (InputStream inputStream = cr.openInputStream(apkUri);
                      OutputStream outputStream = new FileOutputStream(this.cacheFilePath)) {
-                    if (inputStream == null) throw new IOException("Apk URI inaccessible or empty.");
+                    if (inputStream == null)
+                        throw new IOException("Apk URI inaccessible or empty.");
                     UnApkm.decryptFile(inputStream, outputStream);
                 }
             } catch (IOException e) {
@@ -287,6 +299,56 @@ public final class ApkFile implements AutoCloseable {
         }
         if (packageName == null) throw new ApkFileException("Package name not found.");
         this.packageName = packageName;
+    }
+
+    public ApkFile(@NonNull PackageInfo packageInfo, int sparseArrayKey) throws ApkFileException {
+        this.sparseArrayKey = sparseArrayKey;
+        ApplicationInfo info = packageInfo.applicationInfo;
+        this.packageName = packageInfo.packageName;
+        this.cacheFilePath = new File(info.publicSourceDir);
+        File sourceDir = cacheFilePath.getParentFile();
+        if (sourceDir == null || "/data/app".equals(sourceDir.getAbsolutePath())) {
+            entries.add(baseEntry = new Entry(cacheFilePath));
+        } else {
+            File[] apks = sourceDir.listFiles((dir, name) -> name.endsWith(".apk"));
+            if (apks == null) throw new ApkFileException("No apk files found");
+            boolean foundBaseApk = false;
+            String fileName;
+            for (File apk : apks) {
+                fileName = IOUtils.getLastPathComponent(apk.getAbsolutePath());
+                try (InputStream zipInputStream = new FileInputStream(apk)) {
+                    // Extract manifest file
+                    ByteBuffer manifestBytes = getManifestFromApk(zipInputStream);
+                    if (manifestBytes == null) throw new Exception("Manifest not found.");
+                    // Get manifest attributes
+                    HashMap<String, String> manifestAttrs = getManifestAttributes(manifestBytes);
+                    if (manifestAttrs.containsKey("split")) {
+                        Entry entry = new Entry(fileName, apk, APK_SPLIT, manifestAttrs);
+                        entries.add(entry);
+                    } else {
+                        if (foundBaseApk) {
+                            throw new RuntimeException("Duplicate base apk found.");
+                        }
+                        baseEntry = new Entry(fileName, apk, APK_BASE, manifestAttrs);
+                        entries.add(baseEntry);
+                        foundBaseApk = true;
+                    }
+                } catch (Exception e) {
+                    throw new ApkFileException(e);
+                }
+            }
+            if (baseEntry == null) throw new ApkFileException("No base apk found.");
+            // Sort the entries based on type
+            Collections.sort(entries, (o1, o2) -> {
+                Integer int1 = o1.type;
+                int int2 = o2.type;
+                int typeCmp;
+                if ((typeCmp = int1.compareTo(int2)) != 0) return typeCmp;
+                int1 = o1.rank;
+                int2 = o2.rank;
+                return int1.compareTo(int2);
+            });
+        }
     }
 
     public Entry getBaseEntry() {
@@ -521,7 +583,16 @@ public final class ApkFile implements AutoCloseable {
         }
 
         Entry(@NonNull String name, @NonNull ZipEntry zipEntry, @ApkType int type, @NonNull HashMap<String, String> manifest) {
+            this(name, type, manifest);
             this.zipEntry = zipEntry;
+        }
+
+        Entry(@NonNull String name, @NonNull File source, @ApkType int type, @NonNull HashMap<String, String> manifest) {
+            this(name, type, manifest);
+            this.source = source;
+        }
+
+        private Entry(@NonNull String name, @ApkType int type, @NonNull HashMap<String, String> manifest) {
             this.manifest = manifest;
             if (type == APK_BASE) {
                 this.name = name;
@@ -619,6 +690,11 @@ public final class ApkFile implements AutoCloseable {
             else throw new IOException("Neither zipEntry nor source is defined.");
         }
 
+        @Nullable
+        public String getApkSource() {
+            return source == null ? null : source.getAbsolutePath();
+        }
+
         @Override
         public void close() {
             IOUtils.deleteSilently(cachedFile);
@@ -668,6 +744,43 @@ public final class ApkFile implements AutoCloseable {
             if (splitSuffix != null && type == APK_SPLIT_LOCALE)
                 return new Locale.Builder().setLanguageTag(splitSuffix).build();
             throw new RuntimeException("Attempt to fetch Locale for invalid apk");
+        }
+
+        public String toLocalizedString(Context context) {
+            switch (type) {
+                case ApkFile.APK_BASE:
+                    return context.getString(R.string.base_apk);
+                case ApkFile.APK_SPLIT_DENSITY:
+                    if (forFeature != null) {
+                        return context.getString(R.string.density_split_for_feature, splitSuffix, getDensity(), forFeature);
+                    } else {
+                        return context.getString(R.string.density_split_for_base_apk, splitSuffix, getDensity());
+                    }
+                case ApkFile.APK_SPLIT_ABI:
+                    if (forFeature != null) {
+                        return context.getString(R.string.abi_split_for_feature, getAbi(), forFeature);
+                    } else {
+                        return context.getString(R.string.abi_split_for_base_apk, getAbi());
+                    }
+                case ApkFile.APK_SPLIT_LOCALE:
+                    if (forFeature != null) {
+                        return context.getString(R.string.locale_split_for_feature, getLocale().getDisplayLanguage(), forFeature);
+                    } else {
+                        return context.getString(R.string.locale_split_for_base_apk, getLocale().getDisplayLanguage());
+                    }
+                case ApkFile.APK_SPLIT_FEATURE:
+                    return context.getString(R.string.split_feature_name, name);
+                case ApkFile.APK_SPLIT_UNKNOWN:
+                    return name;
+                case ApkFile.APK_SPLIT:
+                    if (forFeature != null) {
+                        return context.getString(R.string.unknown_split_for_feature, name, forFeature);
+                    } else {
+                        return context.getString(R.string.unknown_split_for_base_apk, name);
+                    }
+                default:
+                    throw new RuntimeException("Invalid split type.");
+            }
         }
 
         @Override

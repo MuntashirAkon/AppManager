@@ -99,21 +99,20 @@ public class AppDetailsActivity extends BaseActivity {
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
         new Thread(() -> {
-            if (packageName != null) model.setPackageName(packageName);
-            else {
-                try {
-                    model.setPackageUri(apkUri);
-                } catch (ApkFile.ApkFileException | IOException e) {
-                    e.printStackTrace();
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, getString(R.string.failed_to_fetch_package_info), Toast.LENGTH_LONG).show();
-                        finish();
-                    });
-                }
+            try {
+                if (packageName != null) model.setPackage(packageName);
+                else model.setPackage(apkUri);
+            } catch (ApkFile.ApkFileException | IOException e) {
+                Log.e("ADA", "Could not fetch package info.", e);
+                runOnUiThread(() -> {
+                    Toast.makeText(this, getString(R.string.failed_to_fetch_package_info), Toast.LENGTH_LONG).show();
+                    finish();
+                });
+                return;
             }
             if (model.getPackageInfo() == null) {
                 runOnUiThread(() -> {
-                    Toast.makeText(this, getString(R.string.failed_to_fetch_package_info_possibly_a_split_apk), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.failed_to_fetch_package_info), Toast.LENGTH_LONG).show();
                     finish();
                 });
                 return;

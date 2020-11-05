@@ -90,6 +90,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
@@ -742,19 +743,22 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // Paths and directories
             mListItems.add(ListItem.getGroupHeader(getString(R.string.paths_and_directories)));
             // Source directory (apk path)
-            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.source_dir), mApplicationInfo.publicSourceDir,
-                    openAsFolderInFM(new File(mApplicationInfo.publicSourceDir).getParent())));
+            String sourceDir = new File(mApplicationInfo.publicSourceDir).getParent();
+            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.source_dir),
+                    mApplicationInfo.publicSourceDir, openAsFolderInFM(sourceDir)));
             // Split source directories
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && mApplicationInfo.splitNames != null) {
-                int countSplits = mApplicationInfo.splitNames.length;
-                for (int i = 0; i < countSplits; ++i) {
-                    mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.split_no, (i + 1),
-                            mApplicationInfo.splitNames[i]), mApplicationInfo.splitSourceDirs[i],
-                            openAsFolderInFM(new File(mApplicationInfo.splitSourceDirs[i]).getParent())));
-                }
+            ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey());
+            int countSplits = apkFile.getEntries().size() - 1;
+            ApkFile.Entry entry;
+            // Base.apk is always on top, so count from 1
+            for (int i = 1; i <= countSplits; ++i) {
+                entry = apkFile.getEntries().get(i);
+                mListItems.add(ListItem.getSelectableRegularItem(entry.toLocalizedString(mActivity),
+                        entry.getApkSource(), openAsFolderInFM(entry.getApkSource())));
             }
             // Data dir
-            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.data_dir), mApplicationInfo.dataDir, openAsFolderInFM(mApplicationInfo.dataDir)));
+            mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.data_dir),
+                    mApplicationInfo.dataDir, openAsFolderInFM(mApplicationInfo.dataDir)));
             // Device-protected data dir
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.dev_protected_data_dir),

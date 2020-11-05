@@ -68,6 +68,7 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.server.common.OpEntry;
 import io.github.muntashirakon.AppManager.server.common.PackageOps;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
@@ -120,17 +121,26 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }).start();
         if (receiver != null) getApplication().unregisterReceiver(receiver);
         receiver = null;
-        if (apkFile != null) apkFile.close();
+        IOUtils.closeQuietly(apkFile);
         super.onCleared();
     }
 
     @WorkerThread
-    public void setPackageUri(@NonNull Uri packageUri) throws ApkFile.ApkFileException, IOException {
+    public void setPackage(@NonNull Uri packageUri) throws ApkFile.ApkFileException, IOException {
         Log.d("ADVM", "Package Uri is being set");
         isExternalApk = true;
         apkFileKey = ApkFile.createInstance(packageUri);
         apkFile = ApkFile.getInstance(apkFileKey);
         apkPath = apkFile.getBaseEntry().getCachedFile().getAbsolutePath();
+    }
+
+    @WorkerThread
+    public void setPackage(@NonNull String packageName) throws ApkFile.ApkFileException {
+        Log.d("ADVM", "Package name is being set");
+        isExternalApk = false;
+        setPackageName(packageName);
+        apkFileKey = ApkFile.createInstance(getPackageInfo());
+        apkFile = ApkFile.getInstance(apkFileKey);
     }
 
     @WorkerThread

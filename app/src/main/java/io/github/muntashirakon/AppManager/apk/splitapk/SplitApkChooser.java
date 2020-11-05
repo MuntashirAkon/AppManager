@@ -71,52 +71,8 @@ public class SplitApkChooser extends DialogFragment {
         List<ApkFile.Entry> apkEntries = apkFile.getEntries();
         String[] entryNames = new String[apkEntries.size()];
         final boolean[] choices = getChoices(apkEntries);
-        ApkFile.Entry apkEntry;
-        String name;
         for (int i = 0; i < apkEntries.size(); ++i) {
-            apkEntry = apkEntries.get(i);
-            switch (apkEntry.type) {
-                case ApkFile.APK_BASE:
-                    name = getString(R.string.base_apk);
-                    break;
-                case ApkFile.APK_SPLIT_DENSITY:
-                    if (apkEntry.forFeature != null) {
-                        name = getString(R.string.density_split_for_feature, apkEntry.splitSuffix, apkEntry.getDensity(), apkEntry.forFeature);
-                    } else {
-                        name = getString(R.string.density_split_for_base_apk, apkEntry.splitSuffix, apkEntry.getDensity());
-                    }
-                    break;
-                case ApkFile.APK_SPLIT_ABI:
-                    if (apkEntry.forFeature != null) {
-                        name = getString(R.string.abi_split_for_feature, apkEntry.getAbi(), apkEntry.forFeature);
-                    } else {
-                        name = getString(R.string.abi_split_for_base_apk, apkEntry.getAbi());
-                    }
-                    break;
-                case ApkFile.APK_SPLIT_LOCALE:
-                    if (apkEntry.forFeature != null) {
-                        name = getString(R.string.locale_split_for_feature, apkEntry.getLocale().getDisplayLanguage(), apkEntry.forFeature);
-                    } else {
-                        name = getString(R.string.locale_split_for_base_apk, apkEntry.getLocale().getDisplayLanguage());
-                    }
-                    break;
-                case ApkFile.APK_SPLIT_FEATURE:
-                    name = getString(R.string.split_feature_name, apkEntry.name);
-                    break;
-                case ApkFile.APK_SPLIT_UNKNOWN:
-                    name = apkEntry.name;
-                    break;
-                case ApkFile.APK_SPLIT:
-                    if (apkEntry.forFeature != null) {
-                        name = getString(R.string.unknown_split_for_feature, apkEntry.name, apkEntry.forFeature);
-                    } else {
-                        name = getString(R.string.unknown_split_for_base_apk, apkEntry.name);
-                    }
-                    break;
-                default:
-                    throw new RuntimeException("Invalid split type.");
-            }
-            entryNames[i] = name;
+            entryNames[i] = apkEntries.get(i).toLocalizedString(requireActivity());
         }
         if (installInterface == null) throw new RuntimeException("No install action has been set.");
         return new MaterialAlertDialogBuilder(requireActivity())
