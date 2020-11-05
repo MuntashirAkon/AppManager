@@ -124,7 +124,7 @@
     <string name="toggle_class_listing">切换类列表</string>
     <string name="tested_signatures_on_classes_and_time_taken">测试了 <xliff:g id="signature_no" example="342">%1$d</xliff:g> 个签名在 <xliff:g id="class_no" example="6000">%2$d</xliff:g> 个 classes 上.
 \n所花时间 <xliff:g id="time" example="10000">%3$d</xliff:g> 毫秒(<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> 迭代器).</string>
-    <string name="found_trackers">已找到tracker:</string>
+    <string name="found_trackers">已找到跟踪器数目:</string>
     <string name="tracker_details">Tracker 详细信息</string>
     <string name="tracker_classes">Tracker 类</string>
     <string name="all_classes">全部类</string>
@@ -610,16 +610,16 @@
         <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; 个跟踪器，共&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; 个类</item>
     </plurals>
     <plurals name="tracker_and_classes">
-        <item quantity="other">1个追踪器有&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; 个类</item>
+        <item quantity="other">1 个跟踪器 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; 个 class</item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="other">2个跟踪器有&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; 个类</item>
+        <item quantity="other">2 个跟踪器 &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; 个 classes</item>
     </plurals>
     <string name="copy">复制</string>
     <string name="view_missing_signatures">点击可以查看App Manager库数据库中还没有的签名。如果你愿意，也可以发送给我。</string>
     <plurals name="missing_signatures">
         <item quantity="other">%1$d 个签名缺失</item>
     </plurals>
-    <string name="orientation_behind">Behind</string>
+    <string name="orientation_behind">与在活动堆栈下的活动相同方向</string>
     <string name="filter_running_apps">运行中的应用</string>
 </resources>
