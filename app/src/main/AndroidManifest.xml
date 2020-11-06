@@ -217,6 +217,30 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".apk.apkm.UnApkmActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/un_apkm"
+            android:theme="@style/AppTheme.TransparentBackground">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:host="*" />
+                <data android:mimeType="*/*" />
+                <data android:pathPattern=".*\\.apkm" />
+                <data android:pathPattern=".*\\..*\\.apkm" />
+                <data android:pathPattern=".*\\..*\\..*\\.apkm" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.apkm" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.apkm" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.apkm" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.apkm" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".crypto.OpenPGPCryptoActivity"
             android:excludeFromRecents="true"
             android:exported="false"

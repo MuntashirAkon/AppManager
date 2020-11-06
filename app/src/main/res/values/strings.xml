@@ -693,4 +693,7 @@
     <string name="tap_to_submit_crash_report">Tap to submit the crash report.</string>
     <string name="send_crash_report">Send crash report</string>
     <string name="select_apk">Select apk</string>
+    <string name="conversion_failed">Conversion failed.</string>
+    <string name="in_progress">In progress</string>
+    <string name="un_apkm">UnApkm</string>
 </resources>
