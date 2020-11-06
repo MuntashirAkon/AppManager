@@ -19,15 +19,12 @@ package io.github.muntashirakon.AppManager.apk.installer;
 
 import android.app.IntentService;
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInstaller;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
@@ -35,6 +32,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
@@ -65,7 +63,7 @@ public class PackageInstallerService extends IntentService {
     private int sessionId = -1;
     private ApkFile apkFile;
     private NotificationCompat.Builder builder;
-    private NotificationManager notificationManager;
+    private NotificationManagerCompat notificationManager;
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, @NonNull Intent intent) {
@@ -118,7 +116,8 @@ public class PackageInstallerService extends IntentService {
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        createNotificationChannel();
+        notificationManager = NotificationUtils.getNewNotificationManager(this, CHANNEL_ID,
+                "Install Progress", NotificationManagerCompat.IMPORTANCE_LOW);
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0);
@@ -225,7 +224,7 @@ public class PackageInstallerService extends IntentService {
         if (intent != null) {
             builder.setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT));
         }
-        NotificationUtils.displayHighPriorityNotification(builder.build());
+        NotificationUtils.displayHighPriorityNotification(this, builder.build());
     }
 
     @NonNull
@@ -263,14 +262,5 @@ public class PackageInstallerService extends IntentService {
                 return getString(R.string.installer_error_lidl_rom);
         }
         return getString(R.string.installer_error_generic);
-    }
-
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel serviceChannel = new NotificationChannel(CHANNEL_ID,
-                    "Install Progress", NotificationManager.IMPORTANCE_LOW);
-            notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(serviceChannel);
-        }
     }
 }

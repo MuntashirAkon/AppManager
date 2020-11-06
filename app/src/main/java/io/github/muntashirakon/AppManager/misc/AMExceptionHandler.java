@@ -71,7 +71,7 @@ public class AMExceptionHandler implements Thread.UncaughtExceptionHandler {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
                 Intent.createChooser(i, context.getText(R.string.send_crash_report)), PendingIntent.FLAG_ONE_SHOT);
         builder.setContentIntent(pendingIntent);
-        NotificationUtils.displayHighPriorityNotification(builder.build());
+        NotificationUtils.displayHighPriorityNotification(context, builder.build());
         //
         defaultUEH.uncaughtException(t, e);
     }

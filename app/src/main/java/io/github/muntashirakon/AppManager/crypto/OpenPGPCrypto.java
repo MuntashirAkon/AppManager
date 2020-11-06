@@ -254,7 +254,7 @@ public class OpenPGPCrypto implements Crypto {
                         .setSubText(openPGP)
                         .setContentText(context.getString(R.string.allow_open_pgp_operation));
                 builder.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT));
-                NotificationUtils.displayHighPriorityNotification(builder.build());
+                NotificationUtils.displayHighPriorityNotification(context, builder.build());
                 break;
             case OpenPgpApi.RESULT_CODE_ERROR:
                 errorFlag = true;

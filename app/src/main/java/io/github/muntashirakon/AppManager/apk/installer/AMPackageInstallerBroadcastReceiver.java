@@ -91,7 +91,7 @@ class AMPackageInstallerBroadcastReceiver extends BroadcastReceiver {
                         .setContentText(context.getString(R.string.confirm_installation))
                         .setContentIntent(PendingIntent.getActivity(context, 0, intent2, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT))
                         .setDeleteIntent(PendingIntent.getBroadcast(context, 0, broadcastCancel, PendingIntent.FLAG_UPDATE_CURRENT));
-                NotificationUtils.displayHighPriorityNotification(builder.build());
+                NotificationUtils.displayHighPriorityNotification(context, builder.build());
                 break;
             case PackageInstaller.STATUS_SUCCESS:
                 Log.d(TAG, "Install success!");

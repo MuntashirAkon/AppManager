@@ -20,15 +20,12 @@ package io.github.muntashirakon.AppManager.batchops;
 import android.app.Activity;
 import android.app.IntentService;
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 
 import java.util.ArrayList;
@@ -37,6 +34,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.main.MainActivity;
@@ -132,7 +130,7 @@ public class BatchOpsService extends IntentService {
     Bundle args;
     private String header;
     private NotificationCompat.Builder builder;
-    NotificationManager notificationManager;
+    NotificationManagerCompat notificationManager;
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, @NonNull Intent intent) {
@@ -161,7 +159,8 @@ public class BatchOpsService extends IntentService {
             header = intent.getStringExtra(EXTRA_HEADER);
         }
         if (header == null) header = getString(R.string.batch_ops);
-        createNotificationChannel();
+        notificationManager = NotificationUtils.getNewNotificationManager(this, CHANNEL_ID,
+                "Batch Ops Progress", NotificationManagerCompat.IMPORTANCE_LOW);
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0);
@@ -224,15 +223,6 @@ public class BatchOpsService extends IntentService {
         sendNotification(result, failedPackages);
     }
 
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel serviceChannel = new NotificationChannel(CHANNEL_ID,
-                    "Batch Ops Progress", NotificationManager.IMPORTANCE_LOW);
-            notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(serviceChannel);
-        }
-    }
-
     private void sendNotification(int result, @Nullable ArrayList<String> failedPackages) {
         String contentTitle = getDesiredOpTitle();
         NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this);
@@ -264,7 +254,7 @@ public class BatchOpsService extends IntentService {
                     builder.setContentText(message + detailsMessage);
                 } else builder.setContentText(getString(R.string.error) + detailsMessage);
         }
-        NotificationUtils.displayHighPriorityNotification(builder.build());
+        NotificationUtils.displayHighPriorityNotification(this, builder.build());
     }
 
     @Nullable

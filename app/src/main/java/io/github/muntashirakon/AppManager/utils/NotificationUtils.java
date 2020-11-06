@@ -18,14 +18,12 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
-import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationChannelCompat;
 import androidx.core.app.NotificationCompat;
-import io.github.muntashirakon.AppManager.AppManager;
+import androidx.core.app.NotificationManagerCompat;
 import io.github.muntashirakon.AppManager.BuildConfig;
 
 public final class NotificationUtils {
@@ -33,20 +31,10 @@ public final class NotificationUtils {
 
     private static final int HIGH_PRIORITY_NOTIFICATION_ID = 2;
 
-    private static NotificationManager highPriorityNotificationManager;
-
     @NonNull
-    private static NotificationManager getHighPriorityNotificationManager() {
-        if (highPriorityNotificationManager == null) {
-            highPriorityNotificationManager = (NotificationManager) AppManager.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel notificationChannel = new NotificationChannel(
-                        HIGH_PRIORITY_CHANNEL_ID, "HighPriorityChannel",
-                        NotificationManager.IMPORTANCE_HIGH);
-                highPriorityNotificationManager.createNotificationChannel(notificationChannel);
-            }
-        }
-        return highPriorityNotificationManager;
+    private static NotificationManagerCompat getHighPriorityNotificationManager(@NonNull Context context) {
+        return getNewNotificationManager(context, HIGH_PRIORITY_CHANNEL_ID,
+                "HighPriorityChannel", NotificationManagerCompat.IMPORTANCE_HIGH);
     }
 
     @NonNull
@@ -55,7 +43,15 @@ public final class NotificationUtils {
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
     }
 
-    public static void displayHighPriorityNotification(Notification notification) {
-        getHighPriorityNotificationManager().notify(HIGH_PRIORITY_NOTIFICATION_ID, notification);
+    public static void displayHighPriorityNotification(@NonNull Context context, Notification notification) {
+        getHighPriorityNotificationManager(context).notify(HIGH_PRIORITY_NOTIFICATION_ID, notification);
+    }
+
+    @NonNull
+    public static NotificationManagerCompat getNewNotificationManager(@NonNull Context context, @NonNull String channelId, String channelName, int importance) {
+        NotificationChannelCompat channel = new NotificationChannelCompat.Builder(channelId, importance).setName(channelName).build();
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
+        managerCompat.createNotificationChannel(channel);
+        return managerCompat;
     }
 }
