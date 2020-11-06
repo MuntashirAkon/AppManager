@@ -130,7 +130,7 @@ task cleanToybox {
 
 def buildToybox() {
     def ndkPath = android.ndkDirectory
-    def buildExec = "${rootProject.projectDir.absolutePath}/toybox-all.sh"
+    def buildExec = "${rootProject.projectDir.absolutePath}/scripts/toybox-all.sh"
     def cmdArgs = [ndkPath]
     println("NDK Path: ${ndkPath}")
     println("Exec Path: ${buildExec}")

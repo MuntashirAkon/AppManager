@@ -107,12 +107,14 @@ sudo pacman -S base-devel
 
 #### Clone and Build App Manager
 1. Clone the repo along with submodules:
-  ```bash
-  git clone --recurse-submodules https://github.com/MuntashirAkon/AppManager.git
-  ```
-  You can use the `--depth 1` argument if you don't want to clone past commits.
+    ```bash
+    git clone --recurse-submodules https://github.com/MuntashirAkon/AppManager.git
+    ```
+    You can use the `--depth 1` argument if you don't want to clone past commits.
 2. Open the project **AppManager** using Android Studio. Android Studio should start syncing automatically. It will also download all the necessary files automatically (provided you have Internet connection).
 3. Build debug version of App Manager from Menu > Build > Make Project
+
+**Note:** If you're going to build a pre-release, you have to execute `./scripts/lazysodium_apply_prerelease_patch.sh` first.
 
 ### Credits and Libraries
 A list of credits and libraries are available in the **About** section of the app.
