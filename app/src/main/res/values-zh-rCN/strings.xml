@@ -621,4 +621,8 @@
     </plurals>
     <string name="orientation_behind">与在活动堆栈下的活动相同方向</string>
     <string name="filter_running_apps">运行中的应用</string>
+    <string name="select_apk">选择 apk</string>
+    <string name="send_crash_report">发送崩溃报告</string>
+    <string name="tap_to_submit_crash_report">点击提交崩溃报告。</string>
+    <string name="am_crashed">应用崩溃了</string>
 </resources>
