@@ -659,4 +659,8 @@
     <string name="systemless_app">Systemless App</string>
     <string name="presets">Presets</string>
     <string name="keystore">KeyStore</string>
+    <string name="send_crash_report">Enviar relatório de travamento</string>
+    <string name="tap_to_submit_crash_report">Toque para enviar o relatório de travamento.</string>
+    <string name="am_crashed">AM acabou de travar</string>
+    <string name="select_apk">Selecionar apk</string>
 </resources>
