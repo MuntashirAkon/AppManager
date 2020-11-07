@@ -642,4 +642,8 @@
         <item quantity="other">2 ट्रेकर्स <xliff:g id="class_no" example="50">%1$d</xliff:g> क्लासेस के साथ</item>
     </plurals>
     <string name="filter_running_apps">चल रहे ऐप्स</string>
+    <string name="un_apkm">UnApkm</string>
+    <string name="in_progress">प्रगति पर है</string>
+    <string name="conversion_failed">बदलाव करने में त्रुटि हुई।</string>
+    <string name="select_apk">Apk चुनें</string>
 </resources>
