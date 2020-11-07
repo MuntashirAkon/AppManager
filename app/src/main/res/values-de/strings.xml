@@ -660,4 +660,11 @@
         <item quantity="other">%1$d Signaturen fehlen</item>
     </plurals>
     <string name="filter_running_apps">Aktive Anwendungen</string>
+    <string name="un_apkm">UnApkm</string>
+    <string name="in_progress">In Bearbeitung</string>
+    <string name="conversion_failed">Konvertierung fehlgeschlagen.</string>
+    <string name="select_apk">Apk auswählen</string>
+    <string name="send_crash_report">Crash-Bericht senden</string>
+    <string name="tap_to_submit_crash_report">Tippen Sie hier, um den Absturzbericht zu senden.</string>
+    <string name="am_crashed">AM ist gerade abgestürzt</string>
 </resources>
