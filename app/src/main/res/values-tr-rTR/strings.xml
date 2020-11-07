@@ -662,4 +662,7 @@
     <string name="send_crash_report">Çökme bildirimi gönder</string>
     <string name="tap_to_submit_crash_report">Çökme bildirimini göndermek için dokunun.</string>
     <string name="am_crashed">AM az önce çöktü</string>
+    <string name="un_apkm">UnApkm</string>
+    <string name="in_progress">Devam ediyor</string>
+    <string name="conversion_failed">Dönüştürme başarısız oldu.</string>
 </resources>
