@@ -40,7 +40,7 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 
 public class ProfileMetaManager {
-    public static final String PROFILE_EXT = ".am.prof";
+    public static final String PROFILE_EXT = ".am.json";
 
     public static class Profile {
         public int type = 0;  // type
@@ -113,7 +113,7 @@ public class ProfileMetaManager {
         if (packages != null) this.profile = new Profile(profileName, packages);
         if (getProfilePath().exists()) {
             try {
-                readProfile();
+                readProfile(IOUtils.getFileContent(getProfilePath()));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -124,9 +124,23 @@ public class ProfileMetaManager {
         return profile = new Profile(profileName, packages);
     }
 
-    public void readProfile() throws JSONException {
-        String profileStr = IOUtils.getFileContent(getProfilePath());
+    @NonNull
+    public String getProfileName() {
+        return profileName;
+    }
+
+    @NonNull
+    public static ProfileMetaManager readProfile(@NonNull String profileName,
+                                                 @NonNull String profileContents)
+            throws JSONException {
+        ProfileMetaManager manager = new ProfileMetaManager(profileName);
+        manager.readProfile(profileContents);
+        return manager;
+    }
+
+    public void readProfile(@Nullable String profileStr) throws JSONException {
         if (TextUtils.isEmpty(profileStr)) throw new JSONException("Empty JSON string");
+        @SuppressWarnings("ConstantConditions")
         JSONObject profileObj = new JSONObject(profileStr);
         String profileName = profileObj.getString("name");
         String[] packageNames = JSONUtils.getArray(String.class, profileObj.getJSONArray("packages"));

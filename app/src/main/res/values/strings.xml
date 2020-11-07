@@ -696,4 +696,7 @@
     <string name="conversion_failed">Conversion failed.</string>
     <string name="in_progress">In progress</string>
     <string name="un_apkm">UnApkm</string>
+    <string name="input_profile_name">Profile name</string>
+    <string name="input_profile_name_description">Profile name should not contain any space.</string>
+    <string name="new_profile">New profile</string>
 </resources>

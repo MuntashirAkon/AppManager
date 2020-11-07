@@ -33,15 +33,17 @@ public class ProfileViewModel extends AndroidViewModel {
     private final Object profileLock = new Object();
     @GuardedBy("profileLock")
     private String profileName;
+    private boolean isNew;
 
     public ProfileViewModel(@NonNull Application application) {
         super(application);
     }
 
     @GuardedBy("profileLock")
-    public void setProfileName(String profileName) {
+    public void setProfileName(String profileName, boolean isNew) {
         synchronized (profileLock) {
             this.profileName = profileName;
+            this.isNew = isNew;
         }
     }
 

@@ -20,8 +20,11 @@ package io.github.muntashirakon.AppManager.profiles;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -29,14 +32,23 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.textfield.TextInputEditText;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
@@ -45,13 +57,41 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class ProfilesActivity extends BaseActivity {
-    private ListView listView;
+    private static final String TAG = "ProfilesActivity";
+
     private ProfilesAdapter adapter;
     private ProfilesViewModel model;
     private ProgressIndicator progressIndicator;
+
+    private ActivityResultLauncher<String> importProfile = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            uri -> {
+                if (uri == null) return;
+                try {
+                    // Verify
+                    String fileName = IOUtils.getFileName(getContentResolver(), uri);
+                    if (fileName == null) throw new IOException("File name cannot be empty.");
+                    fileName = IOUtils.trimExtension(fileName);
+                    String fileContent = IOUtils.getFileContent(getContentResolver(), uri);
+                    ProfileMetaManager manager = ProfileMetaManager.readProfile(fileName, fileContent);
+                    // Save
+                    manager.writeProfile();
+                    // Reload page
+                    new Thread(() -> model.loadProfiles()).start();
+                    // Load imported profile
+                    Intent intent = new Intent(this, AppsProfileActivity.class);
+                    intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, manager.getProfileName());
+                    startActivity(intent);
+                } catch (IOException | JSONException e) {
+                    Log.e(TAG, "Error: ", e);
+                    Toast.makeText(this, R.string.import_failed, Toast.LENGTH_SHORT).show();
+                }
+            });
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,10 +101,29 @@ public class ProfilesActivity extends BaseActivity {
         model = new ViewModelProvider(this).get(ProfilesViewModel.class);
         progressIndicator = findViewById(R.id.progress_linear);
         progressIndicator.setVisibilityAfterHide(View.GONE);
-        listView = findViewById(android.R.id.list);
+        ListView listView = findViewById(android.R.id.list);
         listView.setEmptyView(findViewById(android.R.id.empty));
         adapter = new ProfilesAdapter(this);
         listView.setAdapter(adapter);
+        FloatingActionButton fab = findViewById(R.id.floatingActionButton);
+        fab.setOnClickListener(v -> {
+            View view = getLayoutInflater().inflate(R.layout.dialog_input_profile_name, null);
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.new_profile)
+                    .setView(view)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.go, (dialog, which) -> {
+                        Editable profName = ((TextInputEditText) view.findViewById(R.id.input_backup_name)).getText();
+                        if (!TextUtils.isEmpty(profName)) {
+                            Intent intent = new Intent(this, AppsProfileActivity.class);
+                            //noinspection ConstantConditions
+                            intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profName.toString());
+                            intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE, true);
+                            startActivity(intent);
+                        }
+                    })
+                    .show();
+        });
     }
 
     @Override
@@ -80,6 +139,22 @@ public class ProfilesActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_profiles_actions, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.action_import:
+                importProfile.launch("*/*");
+                return true;
+            case R.id.action_refresh:
+                new Thread(() -> model.loadProfiles()).start();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     static class ProfilesAdapter extends BaseAdapter implements Filterable {

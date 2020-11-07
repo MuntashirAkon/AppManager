@@ -39,6 +39,7 @@ import io.github.muntashirakon.AppManager.R;
 public class AppsProfileActivity extends BaseActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener{
     public static final String EXTRA_PROFILE_NAME = "prof";
+    public static final String EXTRA_NEW_PROFILE = "new";
 
     private ViewPager viewPager;
     private BottomNavigationView bottomNavigationView;
@@ -63,8 +64,12 @@ public class AppsProfileActivity extends BaseActivity
             finish();
             return;
         }
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(profileName);
+        }
+        boolean newProfile = getIntent().getBooleanExtra(EXTRA_NEW_PROFILE, false);
         model = new ViewModelProvider(this).get(ProfileViewModel.class);
-        model.setProfileName(profileName);
+        model.setProfileName(profileName, newProfile);
         viewPager = findViewById(R.id.pager);
         viewPager.addOnPageChangeListener(this);
         viewPager.setAdapter(new ProfileFragmentPagerAdapter(getSupportFragmentManager()));

@@ -34,10 +34,6 @@
                 android:checkableBehavior="single"
                 android:menuCategory="container">
 
-                <item
-                    android:id="@+id/action_sort_by_blocked_components"
-                    android:title="@string/sort_by_blocked_components" />
-
             </group>
         </menu>
     </item>
