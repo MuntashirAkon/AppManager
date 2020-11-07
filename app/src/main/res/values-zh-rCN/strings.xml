@@ -625,4 +625,7 @@
     <string name="send_crash_report">发送崩溃报告</string>
     <string name="tap_to_submit_crash_report">点击提交崩溃报告。</string>
     <string name="am_crashed">应用崩溃了</string>
+    <string name="un_apkm">对Apkm安装包进行格式转换</string>
+    <string name="in_progress">进行中</string>
+    <string name="conversion_failed">转换失败。</string>
 </resources>
