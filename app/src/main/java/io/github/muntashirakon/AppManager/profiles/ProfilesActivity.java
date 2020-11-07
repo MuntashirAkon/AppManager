@@ -270,7 +270,13 @@ public class ProfilesActivity extends BaseActivity {
                             Toast.makeText(activity, "Not yet implemented", Toast.LENGTH_SHORT).show();
                             return true;
                         case R.id.action_delete:
-                            // TODO(7/11/20): Delete the profile
+                            ProfileMetaManager manager = new ProfileMetaManager(profName);
+                            if (manager.deleteProfile()) {
+                                Toast.makeText(activity, R.string.deleted_successfully, Toast.LENGTH_SHORT).show();
+                                new Thread(() -> activity.model.loadProfiles()).start();
+                            } else {
+                                Toast.makeText(activity, R.string.deletion_failed, Toast.LENGTH_SHORT).show();
+                            }
                             return true;
                         case R.id.action_routine_ops:
                             // TODO(7/11/20): Setup routine operations for this profile

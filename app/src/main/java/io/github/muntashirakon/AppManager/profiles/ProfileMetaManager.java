@@ -232,6 +232,14 @@ public class ProfileMetaManager {
         outputStream.write(profileObj.toString().getBytes());
     }
 
+    public boolean deleteProfile() {
+        if (getProfilePath().exists()) {
+            return getProfilePath().delete();
+        }
+        // Profile doesn't exist
+        return true;
+    }
+
     @NonNull
     public List<String> getLocalisedSummary(Context context) {
         List<String> arrayList = new ArrayList<>();
