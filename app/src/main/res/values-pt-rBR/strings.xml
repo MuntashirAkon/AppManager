@@ -17,19 +17,19 @@
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="instructions_header">[Estas instruções estão desatualizadas e não serão mais atualizadas. Visite o site de documentação oficial (https://muntashirakon.github.io/AppManager) para obter mais informações]</string>
     <string name="uninstall">Desinstalar</string>
-    <string name="permissions">Usa permissões</string>
-    <string name="require_no_permission">Sem permissão requerida</string>
+    <string name="permissions">Permissões utilizadas</string>
+    <string name="require_no_permission">Nenhuma permissão requerida</string>
     <string name="activities">Atividades</string>
     <string name="launch">Iniciar</string>
     <string name="refresh">Atualizar</string>
-    <string name="no_activities">Sem atividades</string>
-    <string name="no_receivers">Sem receptores</string>
-    <string name="no_providers">Sem provedores</string>
+    <string name="no_activities">Nenhuma atividade</string>
+    <string name="no_receivers">Nenhum receptor</string>
+    <string name="no_providers">Nenhum provedor</string>
     <string name="launch_mode">Modo de inicialização</string>
     <string name="sort_by_last_update">Última atualização</string>
     <string name="authority">Autoridade</string>
     <string name="service">Serviços</string>
-    <string name="no_service">Sem serviços</string>
+    <string name="no_service">Nenhum serviço</string>
     <string name="orientation">Orientação</string>
     <string name="grant_uri_permission">Conceder permissões de URI</string>
     <string name="path_permissions">Permissões do caminho</string>
@@ -40,12 +40,12 @@
     <string name="group">Grupo</string>
     <string name="protection_level">Nível de proteção</string>
     <string name="uses_feature">Funções utilizadas</string>
-    <string name="no_feature">Sem funções</string>
+    <string name="no_feature">Nenhuma função</string>
     <string name="sort_by_sha">Assinatura</string>
     <string name="signatures">Assinaturas</string>
-    <string name="no_signatures">Sem assinaturas</string>
+    <string name="no_signatures">Nenhuma assinatura</string>
     <string name="configurations">Configurações</string>
-    <string name="no_configurations">Sem configurações</string>
+    <string name="no_configurations">Nenhuma configuração</string>
     <string name="error">Erro</string>
     <string name="loading">Carregando…</string>
     <!-- &#8230; = ... -->
@@ -85,9 +85,9 @@
     <string name="starting_activity">Iniciando atividade:: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="create_shortcut">Criar atalho</string>
     <string name="edit_shortcut">Editar atalho</string>
-    <string name="shortcut_name">Nome do atalho</string>
-    <string name="package_name">Nome do pacote</string>
-    <string name="class_name">Nome da classe</string>
+    <string name="shortcut_name">Nome do Atalho</string>
+    <string name="package_name">Nome do Pacote</string>
+    <string name="class_name">Nome da Classe</string>
     <string name="insert_icon">Inserir ícone</string>
     <string name="error_invalid_icon_resource">Recurso de ícone inválido</string>
     <string name="error_invalid_icon_format">Formato de ícone inválido</string>
@@ -191,7 +191,7 @@
     <string name="storage_and_cache">Armazenamento e Cache</string>
     <string name="total_size">Total</string>
     <string name="app_size">Aplicativo</string>
-    <string name="app_ops">App Ops</string>
+    <string name="app_ops">Operações de Aplicativo</string>
     <string name="no_app_ops">Sem operações de aplicativo</string>
     <string name="failed_to_enable_op">A operação do aplicativo solicitada não pôde ser ativada</string>
     <string name="failed_to_disable_op">A operação do aplicativo solicitada não pôde ser desativada</string>
@@ -293,12 +293,12 @@
     <string name="version">Versão</string>
     <string name="sort_by_wifi_data">Dados Wi-Fi</string>
     <string name="block_trackers">Bloquear rastreadores</string>
-    <string name="sort_by_component_name">Nome</string>
+    <string name="sort_by_component_name">Nome do componente</string>
     <string name="reset_to_default">Restaurar ao padrão</string>
     <string name="deny_dangerous_app_ops">Negar operações de aplicativo perigosas</string>
     <string name="sort_by_app_ops_names">Nome das operações de aplicativo</string>
     <string name="sort_by_denied_app_ops">Negado primeiro</string>
-    <string name="sort_by_app_ops_values">Valor da operação de aplicativo</string>
+    <string name="sort_by_app_ops_values">Valor das operações de aplicativo</string>
     <string name="sort_by_permission_names">Nome da permissão</string>
     <string name="sort_by_dangerous_permissions">Perigoso primeiro</string>
     <string name="sort_by_denied_permissions">Bloqueado primeiro</string>
@@ -315,7 +315,7 @@
     <string name="failed_to_revoke_permission">A permissão não pôde ser revogada</string>
     <string name="failed_to_reset_app_ops">Não foi possível redefinir as operações de aplicativo</string>
     <string name="failed_to_deny_dangerous_perms">Não foi possível negar todas as permissões perigosas</string>
-    <string name="failed_to_deny_dangerous_app_ops">Não foi possível negar todas as operações de aplicativos perigosas</string>
+    <string name="failed_to_deny_dangerous_app_ops">Não foi possível negar todas as operações de aplicativo perigosas</string>
     <string name="launch_app">Iniciar</string>
     <string name="never_ask">Nunca perguntar</string>
     <string name="external_apk_no_app_op">APKs externos não possuem nenhuma operação de aplicativo</string>
@@ -350,8 +350,8 @@
     <string name="only_works_in_root_or_adb_mode">Funciona apenas no modo Root ou ADB</string>
     <string name="failed_to_parse_some_numbers">Não foi possível analisar alguns números</string>
     <plurals name="no_of_splits">
-        <item quantity="one">%1$d split</item>
-        <item quantity="other">%1$d splits</item>
+        <item quantity="one">%1$d dividido</item>
+        <item quantity="other">%1$d divididos</item>
     </plurals>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">Não foi possível obter informações do pacote, possivelmente um APK dividido</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> instalado</string>
@@ -496,8 +496,8 @@
     <string name="reject_time">Tempo de Rejeição</string>
     <string name="accept_time">Tempo de Aceitação</string>
     <string name="deny_app_ops_description">Nega determinadas operações de aplicativo identificadas pelos valores constantes, ou seja, 63 significa RUN_IN_BACKGROUND</string>
-    <string name="changelog">Changelog</string>
-    <string name="one_click_ops">1-Click Ops</string>
+    <string name="changelog">Histórico de Atualizações</string>
+    <string name="one_click_ops">Operações em 1 Clique</string>
     <string name="touchscreen">Touchscreen</string>
     <string name="no_libs">Sem bibliotecas</string>
     <string name="no_apps">Sem aplicativos</string>
@@ -582,7 +582,7 @@
     <string name="state_foreground">Primeiro</string>
     <string name="state_session_leader">Líder da sessão</string>
     <string name="state_locked_memory">Memória trancada</string>
-    <string name="orientation_locked">Trancado</string>
+    <string name="orientation_locked">Bloqueado</string>
     <string name="state_low_priority">Baixa prioridade</string>
     <string name="state_high_priority">Alta prioridade</string>
     <string name="dsa_affine_y">Atribuir coordenada y</string>
@@ -604,29 +604,29 @@
     <string name="copy">Copiar</string>
     <string name="filter_running_apps">Aplicativos sendo executados</string>
     <string name="profiles">Perfis</string>
-    <string name="state_idle">Idle</string>
-    <string name="state_device_io">Device I/O</string>
-    <string name="touchscreen_finger">Finger</string>
+    <string name="state_idle">Ocioso</string>
+    <string name="state_device_io">I/O do dispositivo</string>
+    <string name="touchscreen_finger">Dedo</string>
     <string name="touchscreen_stylus">Stylus</string>
-    <string name="touchscreen_no_touch">No touch</string>
-    <string name="navigation_wheel">Wheel</string>
+    <string name="touchscreen_no_touch">Sem touch</string>
+    <string name="navigation_wheel">Roda</string>
     <string name="navigation_trackball">Trackball</string>
     <string name="navigation_dial_pad">Dial pad</string>
-    <string name="navigation_no_nav">No nav</string>
+    <string name="navigation_no_nav">Sem nav</string>
     <string name="keyboard_12_keys">12 key</string>
     <string name="keyboard_qwerty">QWERTY</string>
     <string name="_undefined">Indefinido</string>
     <string name="required">Necessário</string>
-    <string name="orientation_user_portrait">User portrait</string>
-    <string name="orientation_user_landscape">User landscape</string>
+    <string name="orientation_user_portrait">Retrato, seguindo o usuário</string>
+    <string name="orientation_user_landscape">Paisagem, seguindo o usuário</string>
     <string name="orientation_sensor">Sensor</string>
-    <string name="orientation_sensor_portrait">Sensor portrait</string>
-    <string name="orientation_sensor_landscape">Sensor landscape</string>
+    <string name="orientation_sensor_portrait">Retrato, seguindo o sensor</string>
+    <string name="orientation_sensor_landscape">Paisagem, seguindo o sensor</string>
     <string name="orientation_user">Usuário</string>
-    <string name="orientation_reverse_landscape">Reverse landscape</string>
-    <string name="orientation_reverse_portrait">Reverse portrait</string>
-    <string name="orientation_portrait">Portrait</string>
-    <string name="orientation_landscape">Landscape</string>
+    <string name="orientation_reverse_landscape">Paisagem invertida</string>
+    <string name="orientation_reverse_portrait">Retrato invertido</string>
+    <string name="orientation_portrait">Retrato</string>
+    <string name="orientation_landscape">Paisagem</string>
     <string name="orientation_full_user">Usuário completo</string>
     <string name="orientation_full_sensor">Sensor completo</string>
     <string name="orientation_behind">Atrás</string>
@@ -644,7 +644,7 @@
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para função <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para APK base</string>
     <string name="routine_ops">Operações de rotina</string>
-    <string name="input_app_ops_description">Insira constantes de operações de aplicativo com espaços, por exemplo (63 72 12) etc. Você pode encontrar constantes de operações de aplicativo na guia app ops sob os suportes.</string>
+    <string name="input_app_ops_description">Insira constantes de operações de aplicativo com espaços, por exemplo (63 72 12) etc. Você pode encontrar constantes de operações de aplicativo na guia operações de aplicativo sob os suportes.</string>
     <string name="input_app_ops">Inserir operações de aplicativo</string>
     <string name="packages">packages</string>
     <string name="onboard">Onboard</string>
@@ -656,11 +656,14 @@
     <string name="state_trace_stop">Rastreamento parado</string>
     <string name="state_sleeping">Dormindo</string>
     <string name="state_multithreaded">Multithreaded</string>
-    <string name="systemless_app">Systemless App</string>
+    <string name="systemless_app">Aplicativo sem sistema</string>
     <string name="presets">Presets</string>
     <string name="keystore">KeyStore</string>
     <string name="send_crash_report">Enviar relatório de travamento</string>
     <string name="tap_to_submit_crash_report">Toque para enviar o relatório de travamento.</string>
     <string name="am_crashed">AM acabou de travar</string>
     <string name="select_apk">Selecionar apk</string>
+    <string name="un_apkm">UnApkm</string>
+    <string name="in_progress">Em andamento</string>
+    <string name="conversion_failed">Falha na conversão.</string>
 </resources>
