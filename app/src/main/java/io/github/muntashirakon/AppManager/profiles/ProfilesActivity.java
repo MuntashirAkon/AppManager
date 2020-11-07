@@ -42,6 +42,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +54,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
@@ -67,11 +67,35 @@ public class ProfilesActivity extends BaseActivity {
     private ProfilesAdapter adapter;
     private ProfilesViewModel model;
     private ProgressIndicator progressIndicator;
+    @Nullable
+    private String profileName;
 
+    private ActivityResultLauncher<String> exportProfile = registerForActivityResult(
+            new ActivityResultContracts.CreateDocument(),
+            uri -> {
+                if (uri == null) {
+                    // Back button pressed.
+                    return;
+                }
+                if (profileName != null) {
+                    // Export profile
+                    try (OutputStream os = getContentResolver().openOutputStream(uri)) {
+                        ProfileMetaManager manager = new ProfileMetaManager(profileName);
+                        manager.writeProfile(os);
+                        Toast.makeText(this, R.string.the_export_was_successful, Toast.LENGTH_SHORT).show();
+                    } catch (IOException | JSONException e) {
+                        Log.e(TAG, "Error: ", e);
+                        Toast.makeText(this, R.string.export_failed, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
     private ActivityResultLauncher<String> importProfile = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
             uri -> {
-                if (uri == null) return;
+                if (uri == null) {
+                    // Back button pressed.
+                    return;
+                }
                 try {
                     // Verify
                     String fileName = IOUtils.getFileName(getContentResolver(), uri);
@@ -81,6 +105,7 @@ public class ProfilesActivity extends BaseActivity {
                     ProfileMetaManager manager = ProfileMetaManager.readProfile(fileName, fileContent);
                     // Save
                     manager.writeProfile();
+                    Toast.makeText(this, R.string.the_import_was_successful, Toast.LENGTH_SHORT).show();
                     // Reload page
                     new Thread(() -> model.loadProfiles()).start();
                     // Load imported profile
@@ -148,7 +173,7 @@ public class ProfilesActivity extends BaseActivity {
                 finish();
                 return true;
             case R.id.action_import:
-                importProfile.launch("*/*");
+                importProfile.launch("application/json");
                 return true;
             case R.id.action_refresh:
                 new Thread(() -> model.loadProfiles()).start();
@@ -164,7 +189,7 @@ public class ProfilesActivity extends BaseActivity {
         private String[] mDefaultList;
         private String[] mAdapterList;
         private HashMap<String, String> mAdapterMap;
-        private FragmentActivity activity;
+        private ProfilesActivity activity;
 
         private int mColorTransparent;
         private int mColorSemiTransparent;
@@ -175,7 +200,7 @@ public class ProfilesActivity extends BaseActivity {
             TextView item_value;
         }
 
-        ProfilesAdapter(@NonNull FragmentActivity activity) {
+        ProfilesAdapter(@NonNull ProfilesActivity activity) {
             this.activity = activity;
             mLayoutInflater = activity.getLayoutInflater();
 
@@ -238,7 +263,27 @@ public class ProfilesActivity extends BaseActivity {
             convertView.setOnLongClickListener(v -> {
                 PopupMenu popupMenu = new PopupMenu(activity, finalConvertView);
                 popupMenu.inflate(R.menu.activity_profiles_popup_actions);
-                // TODO(23/9/20): Process popup menu
+                popupMenu.setOnMenuItemClickListener(item -> {
+                    switch (item.getItemId()) {
+                        case R.id.action_apply:
+                            // TODO(7/11/20): Apply the profile: display enable/disable first
+                            Toast.makeText(activity, "Not yet implemented", Toast.LENGTH_SHORT).show();
+                            return true;
+                        case R.id.action_delete:
+                            // TODO(7/11/20): Delete the profile
+                            return true;
+                        case R.id.action_routine_ops:
+                            // TODO(7/11/20): Setup routine operations for this profile
+                            Toast.makeText(activity, "Not yet implemented", Toast.LENGTH_SHORT).show();
+                            return true;
+                        case R.id.action_export:
+                            activity.profileName = profName;
+                            activity.exportProfile.launch(profName + ".am.json");
+                            return true;
+                        default:
+                            return false;
+                    }
+                });
                 popupMenu.show();
                 return true;
             });

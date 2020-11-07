@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -190,41 +191,45 @@ public class ProfileMetaManager {
     }
 
     public void writeProfile() throws IOException, JSONException {
-        if (profile == null) throw new IOException("Profile is not set");
         try (FileOutputStream outputStream = new FileOutputStream(getProfilePath())) {
-            JSONObject profileObj = new JSONObject();
-            profileObj.put("type", profile.type);
-            profileObj.put("version", profile.version);
-            if (!profile.allowRoutine) {
-                // Only save allow_routine if it's set to false
-                profileObj.put("allow_routine", false);
-            }
-            profileObj.put("name", profile.name);
-            profileObj.put("state", profile.state);
-            profileObj.put("packages", JSONUtils.getJSONArray(profile.packages));
-            profileObj.put("components", JSONUtils.getJSONArray(profile.components));
-            profileObj.put("app_ops", JSONUtils.getJSONArray(profile.appOps));
-            profileObj.put("permissions", JSONUtils.getJSONArray(profile.permissions));
-            // Backup info
-            if (profile.backupData != null) {
-                JSONObject backupInfo = new JSONObject();
-                backupInfo.put("name", profile.backupData.name);
-                backupInfo.put("flags", profile.backupData.flags);
-                backupInfo.put("mode", profile.backupData.mode);
-                profileObj.put("backup_data", backupInfo);
-            }
-            profileObj.put("export_rules", profile.exportRules);
-            // Misc
-            JSONArray jsonArray = new JSONArray();
-            if (profile.disable) jsonArray.put("disable");
-            if (profile.forceStop) jsonArray.put("force_stop");
-            if (profile.clearCache) jsonArray.put("clear_cache");
-            if (profile.clearData) jsonArray.put("clear_data");
-            if (profile.blockTrackers) jsonArray.put("block_trackers");
-            if (profile.backupApk) jsonArray.put("backup_apk");
-            if (jsonArray.length() > 0) profileObj.put("misc", jsonArray);
-            outputStream.write(profileObj.toString().getBytes());
+            writeProfile(outputStream);
         }
+    }
+
+    public void writeProfile(OutputStream outputStream) throws IOException, JSONException {
+        if (profile == null) throw new IOException("Profile is not set");
+        JSONObject profileObj = new JSONObject();
+        profileObj.put("type", profile.type);
+        profileObj.put("version", profile.version);
+        if (!profile.allowRoutine) {
+            // Only save allow_routine if it's set to false
+            profileObj.put("allow_routine", false);
+        }
+        profileObj.put("name", profile.name);
+        profileObj.put("state", profile.state);
+        profileObj.put("packages", JSONUtils.getJSONArray(profile.packages));
+        profileObj.put("components", JSONUtils.getJSONArray(profile.components));
+        profileObj.put("app_ops", JSONUtils.getJSONArray(profile.appOps));
+        profileObj.put("permissions", JSONUtils.getJSONArray(profile.permissions));
+        // Backup info
+        if (profile.backupData != null) {
+            JSONObject backupInfo = new JSONObject();
+            backupInfo.put("name", profile.backupData.name);
+            backupInfo.put("flags", profile.backupData.flags);
+            backupInfo.put("mode", profile.backupData.mode);
+            profileObj.put("backup_data", backupInfo);
+        }
+        profileObj.put("export_rules", profile.exportRules);
+        // Misc
+        JSONArray jsonArray = new JSONArray();
+        if (profile.disable) jsonArray.put("disable");
+        if (profile.forceStop) jsonArray.put("force_stop");
+        if (profile.clearCache) jsonArray.put("clear_cache");
+        if (profile.clearData) jsonArray.put("clear_data");
+        if (profile.blockTrackers) jsonArray.put("block_trackers");
+        if (profile.backupApk) jsonArray.put("backup_apk");
+        if (jsonArray.length() > 0) profileObj.put("misc", jsonArray);
+        outputStream.write(profileObj.toString().getBytes());
     }
 
     @NonNull
