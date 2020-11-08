@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,6 +30,9 @@ import android.widget.TextView;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +43,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -90,6 +95,36 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             progressIndicator.hide();
             adapter.setList(packages);
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        activity.fab.setOnClickListener(v -> new Thread(() -> {
+            // List apps
+            PackageManager pm = activity.getPackageManager();
+            List<PackageInfo> packageInfoList = pm.getInstalledPackages(0);
+            ArrayList<String> items = new ArrayList<>(packageInfoList.size());
+            ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
+            for (PackageInfo info : packageInfoList) {
+                items.add(info.packageName);
+                itemNames.add(pm.getApplicationLabel(info.applicationInfo));
+            }
+            SearchableMultiChoiceDialogFragment fragment = new SearchableMultiChoiceDialogFragment();
+            Bundle args = new Bundle();
+            args.putCharSequenceArrayList(SearchableMultiChoiceDialogFragment.EXTRA_ITEM_NAMES, itemNames);
+            args.putStringArrayList(SearchableMultiChoiceDialogFragment.EXTRA_ITEMS, items);
+            args.putStringArrayList(SearchableMultiChoiceDialogFragment.EXTRA_SELECTED_ITEMS, model.getCurrentPackages());
+            fragment.setArguments(args);
+            fragment.setOnSelectionComplete(selectedItems -> new Thread(() -> {
+                try {
+                    model.setPackages(selectedItems);
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                }
+            }).start());
+            activity.runOnUiThread(() -> fragment.show(getParentFragmentManager(), SearchableMultiChoiceDialogFragment.TAG));
+        }).start());
     }
 
     @Override

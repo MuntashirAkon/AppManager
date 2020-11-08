@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.ProgressIndicator;
 
 import java.util.Objects;
@@ -46,6 +47,7 @@ public class AppsProfileActivity extends BaseActivity
     private MenuItem prevMenuItem;
     private Fragment[] fragments = new Fragment[2];
     ProfileViewModel model;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class AppsProfileActivity extends BaseActivity
         ProgressIndicator progressIndicator = findViewById(R.id.progress_linear);
         progressIndicator.setVisibilityAfterHide(View.GONE);
         progressIndicator.hide();
+        fab = findViewById(R.id.floatingActionButton);
         if (getIntent() == null) {
             finish();
             return;

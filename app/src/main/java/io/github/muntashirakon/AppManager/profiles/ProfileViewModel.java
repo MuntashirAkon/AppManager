@@ -19,8 +19,12 @@ package io.github.muntashirakon.AppManager.profiles;
 
 import android.app.Application;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
@@ -28,6 +32,7 @@ import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import io.github.muntashirakon.AppManager.logs.Log;
 
 public class ProfileViewModel extends AndroidViewModel {
     private final Object profileLock = new Object();
@@ -64,6 +69,18 @@ public class ProfileViewModel extends AndroidViewModel {
 
     private MutableLiveData<ArrayList<String>> packagesLiveData;
 
+    @WorkerThread
+    @GuardedBy("profileLock")
+    public void setPackages(@NonNull List<String> packages) throws IOException, JSONException {
+        synchronized (profileLock) {
+            profile.packages = packages.toArray(new String[0]);
+            Log.e("TaG", packages.toString());
+            profileMetaManager.profile = profile;
+            profileMetaManager.writeProfile();
+            loadPackages();
+        }
+    }
+
     @NonNull
     public LiveData<ArrayList<String>> getPackages() {
         if (packagesLiveData == null) {
@@ -71,6 +88,10 @@ public class ProfileViewModel extends AndroidViewModel {
             new Thread(this::loadPackages).start();
         }
         return packagesLiveData;
+    }
+
+    public ArrayList<String> getCurrentPackages() {
+        return new ArrayList<>(Arrays.asList(profile.packages));
     }
 
     @WorkerThread
