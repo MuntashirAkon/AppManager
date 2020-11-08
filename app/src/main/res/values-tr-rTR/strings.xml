@@ -665,4 +665,7 @@
     <string name="un_apkm">UnApkm</string>
     <string name="in_progress">Devam ediyor</string>
     <string name="conversion_failed">Dönüştürme başarısız oldu.</string>
+    <string name="new_profile">Yeni profil</string>
+    <string name="input_profile_name_description">Profil adı boşluk içermemelidir.</string>
+    <string name="input_profile_name">Profil adı</string>
 </resources>
