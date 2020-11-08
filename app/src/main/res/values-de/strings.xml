@@ -667,4 +667,7 @@
     <string name="send_crash_report">Crash-Bericht senden</string>
     <string name="tap_to_submit_crash_report">Tippen Sie hier, um den Absturzbericht zu senden.</string>
     <string name="am_crashed">AM ist gerade abgestürzt</string>
+    <string name="new_profile">Neues Profil</string>
+    <string name="input_profile_name_description">Der Profilname sollte kein Leerzeichen enthalten.</string>
+    <string name="input_profile_name">Bezeichnung des Profils</string>
 </resources>
