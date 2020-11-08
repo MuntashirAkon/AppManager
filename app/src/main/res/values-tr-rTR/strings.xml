@@ -668,4 +668,5 @@
     <string name="new_profile">Yeni profil</string>
     <string name="input_profile_name_description">Profil adı boşluk içermemelidir.</string>
     <string name="input_profile_name">Profil adı</string>
+    <string name="duplicate">Kopyala</string>
 </resources>
