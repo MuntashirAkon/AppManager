@@ -666,4 +666,8 @@
     <string name="un_apkm">UnApkm</string>
     <string name="in_progress">Em andamento</string>
     <string name="conversion_failed">Falha na conversão.</string>
+    <string name="duplicate">Duplicado</string>
+    <string name="new_profile">Novo perfil</string>
+    <string name="input_profile_name_description">O nome do perfil não deve conter nenhum espaço.</string>
+    <string name="input_profile_name">Nome do perfil</string>
 </resources>
