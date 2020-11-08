@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager.profiles;
+package io.github.muntashirakon.AppManager.types;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -42,10 +42,9 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 
-public class SearchableMultiChoiceDialogFragment extends DialogFragment {
+public class SearchableMultiChoiceDialog extends DialogFragment {
     public static final String TAG = "MultiChoiceDialogFragment";
     public static final String EXTRA_ITEMS = "items";
     public static final String EXTRA_ITEM_NAMES = "item_names";
@@ -112,6 +111,8 @@ public class SearchableMultiChoiceDialogFragment extends DialogFragment {
         @NonNull
         private final List<String> items;
         @NonNull
+        private final List<String> notFoundItems = new ArrayList<>();
+        @NonNull
         private final ArrayList<Integer> filteredItems = new ArrayList<>();
         @NonNull
         private final ArrayList<Integer> selectedItems = new ArrayList<>();
@@ -124,7 +125,7 @@ public class SearchableMultiChoiceDialogFragment extends DialogFragment {
                     int index = items.indexOf(item);
                     if (index != -1) {
                         selectedItems.add(index);
-                    }
+                    } else notFoundItems.add(item);
                 }
             }
             for (int i = 0; i < items.size(); ++i) {
@@ -145,7 +146,7 @@ public class SearchableMultiChoiceDialogFragment extends DialogFragment {
         }
 
         ArrayList<String> getSelectedItems() {
-            ArrayList<String> selections = new ArrayList<>();
+            ArrayList<String> selections = new ArrayList<>(notFoundItems);
             for (int item : selectedItems) {
                 selections.add(items.get(item));
             }

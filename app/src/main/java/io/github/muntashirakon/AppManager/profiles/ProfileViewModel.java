@@ -71,13 +71,37 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @WorkerThread
     @GuardedBy("profileLock")
-    public void setPackages(@NonNull List<String> packages) throws IOException, JSONException {
+    public void setPackages(@NonNull List<String> packages) {
         synchronized (profileLock) {
             profile.packages = packages.toArray(new String[0]);
             Log.e("TaG", packages.toString());
+            loadPackages();
+        }
+    }
+
+    @WorkerThread
+    @GuardedBy("profileLock")
+    public void save() throws IOException, JSONException {
+        synchronized (profileLock) {
             profileMetaManager.profile = profile;
             profileMetaManager.writeProfile();
+        }
+    }
+
+    @WorkerThread
+    @GuardedBy("profileLock")
+    public void discard() {
+        synchronized (profileLock) {
+            loadProfile();
             loadPackages();
+        }
+    }
+
+    @WorkerThread
+    @GuardedBy("profileLock")
+    public boolean delete() {
+        synchronized (profileLock) {
+            return profileMetaManager.deleteProfile();
         }
     }
 

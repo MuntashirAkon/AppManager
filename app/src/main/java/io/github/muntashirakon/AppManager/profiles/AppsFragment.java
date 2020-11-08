@@ -43,9 +43,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
+import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialog;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -110,20 +110,14 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 items.add(info.packageName);
                 itemNames.add(pm.getApplicationLabel(info.applicationInfo));
             }
-            SearchableMultiChoiceDialogFragment fragment = new SearchableMultiChoiceDialogFragment();
+            SearchableMultiChoiceDialog fragment = new SearchableMultiChoiceDialog();
             Bundle args = new Bundle();
-            args.putCharSequenceArrayList(SearchableMultiChoiceDialogFragment.EXTRA_ITEM_NAMES, itemNames);
-            args.putStringArrayList(SearchableMultiChoiceDialogFragment.EXTRA_ITEMS, items);
-            args.putStringArrayList(SearchableMultiChoiceDialogFragment.EXTRA_SELECTED_ITEMS, model.getCurrentPackages());
+            args.putCharSequenceArrayList(SearchableMultiChoiceDialog.EXTRA_ITEM_NAMES, itemNames);
+            args.putStringArrayList(SearchableMultiChoiceDialog.EXTRA_ITEMS, items);
+            args.putStringArrayList(SearchableMultiChoiceDialog.EXTRA_SELECTED_ITEMS, model.getCurrentPackages());
             fragment.setArguments(args);
-            fragment.setOnSelectionComplete(selectedItems -> new Thread(() -> {
-                try {
-                    model.setPackages(selectedItems);
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                }
-            }).start());
-            activity.runOnUiThread(() -> fragment.show(getParentFragmentManager(), SearchableMultiChoiceDialogFragment.TAG));
+            fragment.setOnSelectionComplete(selectedItems -> new Thread(() -> model.setPackages(selectedItems)).start());
+            activity.runOnUiThread(() -> fragment.show(getParentFragmentManager(), SearchableMultiChoiceDialog.TAG));
         }).start());
     }
 
