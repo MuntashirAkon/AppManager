@@ -670,4 +670,5 @@
     <string name="new_profile">Neues Profil</string>
     <string name="input_profile_name_description">Der Profilname sollte kein Leerzeichen enthalten.</string>
     <string name="input_profile_name">Bezeichnung des Profils</string>
+    <string name="duplicate">Kopie</string>
 </resources>
