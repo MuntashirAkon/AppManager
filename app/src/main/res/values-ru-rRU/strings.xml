@@ -712,4 +712,13 @@
     <string name="tap_to_submit_crash_report">Нажмите, чтобы отправить отчет о сбое.</string>
     <string name="send_crash_report">Отправить отчет о сбое</string>
     <string name="select_apk">Выбрать apk</string>
+    <string name="systemless_app">Внесистемное приложение</string>
+    <string name="duplicate">Дубликат</string>
+    <string name="new_profile">Новый профиль</string>
+    <string name="input_profile_name_description">Название профиля не должно содержать пробелов.</string>
+    <string name="input_profile_name">Название профиля</string>
+    <string name="in_progress">В процессе</string>
+    <string name="conversion_failed">Преобразование не удалось.</string>
+    <string name="am_crashed">Произошло падение АМ</string>
+    <string name="filter_running_apps">Работающие приложения</string>
 </resources>
