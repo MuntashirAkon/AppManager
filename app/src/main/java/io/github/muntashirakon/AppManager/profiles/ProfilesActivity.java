@@ -149,15 +149,17 @@ public class ProfilesActivity extends BaseActivity {
                     })
                     .show();
         });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         model.getProfiles().observe(this, profiles -> {
             progressIndicator.hide();
             adapter.setDefaultList(profiles);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        progressIndicator.show();
+        new Thread(() -> model.loadProfiles()).start();
     }
 
     @Override
@@ -176,6 +178,7 @@ public class ProfilesActivity extends BaseActivity {
                 importProfile.launch("application/json");
                 return true;
             case R.id.action_refresh:
+                progressIndicator.show();
                 new Thread(() -> model.loadProfiles()).start();
                 return true;
         }
