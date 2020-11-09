@@ -708,4 +708,14 @@
         <item quantity="many">1 трекер з <xliff:g id="class_no" example="50">%1$d</xliff:g> класами</item>
         <item quantity="other">1 трекер з <xliff:g id="class_no" example="50">%1$d</xliff:g> класами</item>
     </plurals>
+    <string name="am_crashed">АМ впав</string>
+    <string name="duplicate">Дублікат</string>
+    <string name="new_profile">Новий профіль</string>
+    <string name="input_profile_name_description">Назва профілю не повинна містити пробілу.</string>
+    <string name="input_profile_name">Назва профілю</string>
+    <string name="in_progress">В процесі</string>
+    <string name="conversion_failed">Не вдалося виконати перетворення.</string>
+    <string name="select_apk">Виберіть APK</string>
+    <string name="send_crash_report">Надсилати звіт про падіння</string>
+    <string name="tap_to_submit_crash_report">Торкніться, щоб надіслати звіт про аварійне завершення роботи.</string>
 </resources>
