@@ -628,4 +628,8 @@
     <string name="un_apkm">对Apkm安装包进行格式转换</string>
     <string name="in_progress">进行中</string>
     <string name="conversion_failed">转换失败。</string>
+    <string name="input_profile_name">配置文件名称</string>
+    <string name="duplicate">重复</string>
+    <string name="new_profile">新配置文件</string>
+    <string name="input_profile_name_description">配置文件名不应包含任何空格。</string>
 </resources>
