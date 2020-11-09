@@ -414,4 +414,6 @@
     <string name="toggle_class_listing">Pokaż/ukryj listę klas</string>
     <string name="credits">Podziękowania</string>
     <string name="third_party">Biblioteki i ikony osób trzecich</string>
+    <string name="no_receivers">Brak odbiorników</string>
+    <string name="no_activities">Brak działań</string>
 </resources>
