@@ -162,7 +162,7 @@ public class SearchableMultiChoiceDialog extends DialogFragment {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            int index = filteredItems.get(position);
+            Integer index = filteredItems.get(position);
             boolean selected = selectedItems.contains(index);
             holder.item.setText(itemNames.get(index));
             holder.item.setChecked(selected);
