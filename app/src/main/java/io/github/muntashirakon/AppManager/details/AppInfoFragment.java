@@ -440,7 +440,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             mTagCloud.removeAllViews();
             // Add tracker chip
             if (!trackerComponents.isEmpty())
-                addChip(getResources().getQuantityString(R.plurals.no_of_trackers, trackerComponents.size(), trackerComponents.size()), R.color.red);
+                addChip(getResources().getQuantityString(R.plurals.no_of_trackers, trackerComponents.size(), trackerComponents.size()), R.color.tracker);
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
                 if (isSystemlessPath) {
                     addChip(R.string.systemless_app);
@@ -458,7 +458,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) == 0)
                 addChip(R.string.no_code);
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)
-                addChip(R.string.requested_large_heap, R.color.red);
+                addChip(R.string.requested_large_heap, R.color.tracker);
             if (isRunning) {
                 addChip(R.string.running, R.color.running).setOnClickListener(v ->
                         mActivity.viewPager.setCurrentItem(AppDetailsFragment.SERVICES));
@@ -467,7 +467,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 addChip(R.string.stopped, R.color.stopped);
             if (!mApplicationInfo.enabled) addChip(R.string.disabled_app, R.color.disabled_user);
             if (hasKeystore) {
-                if (hasMasterkey) addChip(R.string.keystore, R.color.red);
+                if (hasMasterkey) addChip(R.string.keystore, R.color.tracker);
                 else addChip(R.string.keystore);
             }
         });
