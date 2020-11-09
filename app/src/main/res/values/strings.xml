@@ -126,9 +126,10 @@
         \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
         (Apache 2.0)
         \n- <a href="https://github.com/jaredrummler/AndroidShell">Android Shell</a> (Apache 2.0)
-        \n- <a href="https://github.com/tananaev/adblib">ADB Library</a> (BSD-3-Clause License)
-        \n- <a href="https://github.com/MuntashirAkon/toybox">Toybox</a> (0BSD License)
-        \n- <a href="https://github.com/MuntashirAkon/apk-parser">Apk-parser</a> (BSD-2-Clause License)
+        \n- <a href="https://github.com/tananaev/adblib">ADB Library</a> (BSD-3-Clause)
+        \n- <a href="https://github.com/MuntashirAkon/toybox">Toybox</a> (0BSD)
+        \n- <a href="https://github.com/MuntashirAkon/apk-parser">Apk-parser</a> (BSD-2-Clause)
+        \n- <a href="https://github.com/topjohnwu/libsu">libsu</a> (Apache 2.0)
     </string>
     <string name="credits">Credits</string>
     <string name="credits_message">To the authors of
