@@ -51,6 +51,7 @@ import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -121,8 +122,8 @@ public class ManifestViewerActivity extends BaseActivity {
                         apkFile = ApkFile.getInstance(key);
                         archiveFilePath = apkFile.getBaseEntry().getCachedFile().getAbsolutePath();
                     } catch (IOException | ApkFile.ApkFileException e) {
-                        e.printStackTrace();
-                        showErrorAndFinish();
+                        Log.e("Manifest", "Error: ", e);
+                        runOnUiThread(this::showErrorAndFinish);
                         return;
                     }
                 } else archiveFilePath = packageUri.getPath();
@@ -144,7 +145,7 @@ public class ManifestViewerActivity extends BaseActivity {
                 setTitle(applicationInfo.loadLabel(pm));
                 setWrapped();
             } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
+                Log.e("Manifest", "Error: ", e);
                 showErrorAndFinish();
             }
         }
