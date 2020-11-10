@@ -34,7 +34,6 @@ import java.util.StringTokenizer;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 
 /**
@@ -42,13 +41,18 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
  * from settings and app data restore sections (although can be exported from various places).
  * <br>
  * Format: <code>package_name component_name type [mode|is_applied|is_granted]</code>
+ *
  * @see RulesExporter
  */
 public class RulesImporter implements Closeable {
-    private  @NonNull Context mContext;
-    private @NonNull HashMap<String, ComponentsBlocker> mComponentsBlockers;
-    private @NonNull List<RulesStorageManager.Type> mTypesToImport;
-    private @Nullable List<String> mPackagesToImport;
+    @NonNull
+    private Context mContext;
+    @NonNull
+    private HashMap<String, ComponentsBlocker> mComponentsBlockers;
+    @NonNull
+    private List<RulesStorageManager.Type> mTypesToImport;
+    @Nullable
+    private List<String> mPackagesToImport;
 
     public RulesImporter(@NonNull List<RulesStorageManager.Type> typesToImport) {
         mContext = AppManager.getContext();
@@ -62,13 +66,15 @@ public class RulesImporter implements Closeable {
                 StringTokenizer tokenizer;
                 String dataRow;
                 String packageName;
-                while ((dataRow = TSVFile.readLine()) != null){
-                    tokenizer = new StringTokenizer(dataRow,"\t");
+                while ((dataRow = TSVFile.readLine()) != null) {
+                    tokenizer = new StringTokenizer(dataRow, "\t");
                     RulesStorageManager.Entry entry = new RulesStorageManager.Entry();
-                    if (tokenizer.hasMoreElements()) packageName = tokenizer.nextElement().toString();
-                    else throw new IOException("Malformed file.");
-                    if (tokenizer.hasMoreElements()) entry.name = tokenizer.nextElement().toString();
-                    else throw new IOException("Malformed file.");
+                    if (tokenizer.hasMoreElements()) {
+                        packageName = tokenizer.nextElement().toString();
+                    } else throw new IOException("Malformed file.");
+                    if (tokenizer.hasMoreElements()) {
+                        entry.name = tokenizer.nextElement().toString();
+                    } else throw new IOException("Malformed file.");
                     if (tokenizer.hasMoreElements()) {
                         try {
                             entry.type = RulesStorageManager.Type.valueOf(tokenizer.nextElement().toString());
@@ -76,14 +82,17 @@ public class RulesImporter implements Closeable {
                             entry.type = RulesStorageManager.Type.UNKNOWN;
                         }
                     } else throw new IOException("Malformed file.");
-                    if (tokenizer.hasMoreElements()) entry.extra = RulesStorageManager.getExtra(entry.type, tokenizer.nextElement().toString());
-                    else throw new IOException("Malformed file.");
+                    if (tokenizer.hasMoreElements()) {
+                        entry.extra = RulesStorageManager.getExtra(entry.type, tokenizer.nextElement().toString());
+                    } else throw new IOException("Malformed file.");
                     if (mComponentsBlockers.get(packageName) == null) {
                         // Get a read-only instance, commit will be called manually
                         mComponentsBlockers.put(packageName, ComponentsBlocker.getInstance(packageName, userHandle));
                     }
-                    if (mTypesToImport.contains(entry.type))
+                    if (mTypesToImport.contains(entry.type)) {
+                        // Returned ComponentsBlocker will never be null here
                         Objects.requireNonNull(mComponentsBlockers.get(packageName)).addEntry(entry);
+                    }
                 }
             }
         }
@@ -99,9 +108,11 @@ public class RulesImporter implements Closeable {
 
     public void applyRules() {
         if (mPackagesToImport == null) mPackagesToImport = getPackages();
-        @NonNull ComponentsBlocker cb;
-        for (String packageName: mPackagesToImport) {
-            cb = Objects.requireNonNull(mComponentsBlockers.get(packageName));
+        // When #setPackagesToImport(List<String>) is used, ComponentBlocker can be null
+        @Nullable ComponentsBlocker cb;
+        for (String packageName : mPackagesToImport) {
+            cb = mComponentsBlockers.get(packageName);
+            if (cb == null) continue;
             cb.readOnly = false;
             // Apply component blocking rules
             cb.applyRules(true);
@@ -114,8 +125,11 @@ public class RulesImporter implements Closeable {
 
     @Override
     public void close() {
-        for (String packageName: mComponentsBlockers.keySet()) {
-            Objects.requireNonNull(mComponentsBlockers.get(packageName)).close();
+        // When #setPackagesToImport(List<String>) is used, ComponentBlocker can be null
+        @Nullable ComponentsBlocker cb;
+        for (String packageName : mComponentsBlockers.keySet()) {
+            cb = mComponentsBlockers.get(packageName);
+            if (cb != null) cb.close();
         }
     }
 }
