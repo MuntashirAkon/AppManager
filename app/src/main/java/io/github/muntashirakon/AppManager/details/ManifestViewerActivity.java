@@ -118,7 +118,7 @@ public class ManifestViewerActivity extends BaseActivity {
                 PackageInfo packageInfo = null;
                 if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
                     try {
-                        int key = ApkFile.createInstance(packageUri);
+                        int key = ApkFile.createInstance(packageUri, intent.getType());
                         apkFile = ApkFile.getInstance(key);
                         archiveFilePath = apkFile.getBaseEntry().getCachedFile().getAbsolutePath();
                     } catch (IOException | ApkFile.ApkFileException e) {

@@ -68,6 +68,7 @@ public class AppDetailsActivity extends BaseActivity {
         // Check for package name
         final String packageName = intent.getStringExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME);
         final Uri apkUri = intent.getData();
+        final String apkType = intent.getType();
         // Initialize tabs
         mTabTitleIds = getResources().obtainTypedArray(R.array.TAB_TITLES);
         fragments = new Fragment[mTabTitleIds.length()];
@@ -101,7 +102,7 @@ public class AppDetailsActivity extends BaseActivity {
         new Thread(() -> {
             try {
                 if (packageName != null) model.setPackage(packageName);
-                else model.setPackage(apkUri);
+                else model.setPackage(apkUri, apkType);
             } catch (ApkFile.ApkFileException | IOException e) {
                 Log.e("ADA", "Could not fetch package info.", e);
                 runOnUiThread(() -> {

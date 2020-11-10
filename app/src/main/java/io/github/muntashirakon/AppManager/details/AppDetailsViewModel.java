@@ -51,6 +51,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -125,10 +126,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @WorkerThread
-    public void setPackage(@NonNull Uri packageUri) throws ApkFile.ApkFileException, IOException {
+    public void setPackage(@NonNull Uri packageUri, @Nullable String type) throws ApkFile.ApkFileException, IOException {
         Log.d("ADVM", "Package Uri is being set");
         isExternalApk = true;
-        apkFileKey = ApkFile.createInstance(packageUri);
+        apkFileKey = ApkFile.createInstance(packageUri, type);
         apkFile = ApkFile.getInstance(apkFileKey);
         apkPath = apkFile.getBaseEntry().getCachedFile().getAbsolutePath();
     }

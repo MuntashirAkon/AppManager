@@ -124,7 +124,7 @@ public class PackageInstallerActivity extends BaseActivity {
         new Thread(() -> {
             try {
                 if (apkUri != null) {
-                    apkFileKey = ApkFile.createInstance(apkUri);
+                    apkFileKey = ApkFile.createInstance(apkUri, intent.getType());
                 } else {
                     closeApkFile = false;  // Internal request, don't close the ApkFile
                 }

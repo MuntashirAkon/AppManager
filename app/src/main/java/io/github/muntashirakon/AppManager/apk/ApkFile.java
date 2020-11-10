@@ -59,6 +59,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.apkm.UnApkm;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
@@ -95,9 +96,9 @@ public final class ApkFile implements AutoCloseable {
     }
 
     @WorkerThread
-    public static int createInstance(Uri apkUri) throws ApkFileException {
+    public static int createInstance(Uri apkUri, @Nullable String mimeType) throws ApkFileException {
         int key = ThreadLocalRandom.current().nextInt();
-        ApkFile apkFile = new ApkFile(apkUri, key);
+        ApkFile apkFile = new ApkFile(apkUri, mimeType, key);
         apkFiles.put(key, apkFile);
         return key;
     }
@@ -132,12 +133,15 @@ public final class ApkFile implements AutoCloseable {
     public static final int APK_SPLIT = 6;
 
     public static List<String> SUPPORTED_EXTENSIONS = new ArrayList<>();
+    public static List<String> SUPPORTED_MIMES = new ArrayList<>();
 
     static {
         SUPPORTED_EXTENSIONS.add("apk");
         SUPPORTED_EXTENSIONS.add("apkm");
         SUPPORTED_EXTENSIONS.add("apks");
         SUPPORTED_EXTENSIONS.add("xapk");
+        SUPPORTED_MIMES.add("application/vnd.android.package-archive");
+        SUPPORTED_MIMES.add("application/xapk-package-archive");
     }
 
     private int sparseArrayKey;
@@ -156,22 +160,32 @@ public final class ApkFile implements AutoCloseable {
     @Nullable
     private ZipFile zipFile;
 
-    private ApkFile(@NonNull Uri apkUri, int sparseArrayKey) throws ApkFileException {
+    private ApkFile(@NonNull Uri apkUri, @Nullable String mimeType, int sparseArrayKey) throws ApkFileException {
         this.sparseArrayKey = sparseArrayKey;
         Context context = AppManager.getContext();
         ContentResolver cr = context.getContentResolver();
-        // Check extension
-        String name = IOUtils.getFileName(cr, apkUri);
-        if (name == null)
-            throw new ApkFileException("Could not extract package name from the URI.");
         @NonNull String extension;
-        try {
-            extension = IOUtils.getExtension(name).toLowerCase(Locale.ROOT);
-            if (!SUPPORTED_EXTENSIONS.contains(extension)) {
+        // Check type
+        if (mimeType == null) mimeType = cr.getType(apkUri);
+        if (mimeType == null || !SUPPORTED_MIMES.contains(mimeType)) {
+            Log.e(TAG, "Invalid mime: " + mimeType);
+            // Check extension
+            String name = IOUtils.getFileName(cr, apkUri);
+            if (name == null) {
+                throw new ApkFileException("Could not extract package name from the URI.");
+            }
+            try {
+                extension = IOUtils.getExtension(name).toLowerCase(Locale.ROOT);
+                if (!SUPPORTED_EXTENSIONS.contains(extension)) {
+                    throw new ApkFileException("Invalid package extension.");
+                }
+            } catch (IndexOutOfBoundsException e) {
                 throw new ApkFileException("Invalid package extension.");
             }
-        } catch (IndexOutOfBoundsException e) {
-            throw new ApkFileException("Invalid package extension.");
+        } else {
+            if (mimeType.equals("application/xapk-package-archive")) {
+                extension = "xapk";
+            } else extension = "apk";
         }
         if (extension.equals("apkm")) {
             // Convert to apks if the file ends with apkm
