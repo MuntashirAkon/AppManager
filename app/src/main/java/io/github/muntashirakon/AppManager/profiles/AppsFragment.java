@@ -30,9 +30,6 @@ import android.widget.TextView;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,25 +97,31 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onResume() {
         super.onResume();
-        activity.fab.setOnClickListener(v -> new Thread(() -> {
-            // List apps
-            PackageManager pm = activity.getPackageManager();
-            List<PackageInfo> packageInfoList = pm.getInstalledPackages(0);
-            ArrayList<String> items = new ArrayList<>(packageInfoList.size());
-            ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
-            for (PackageInfo info : packageInfoList) {
-                items.add(info.packageName);
-                itemNames.add(pm.getApplicationLabel(info.applicationInfo));
-            }
-            SearchableMultiChoiceDialog fragment = new SearchableMultiChoiceDialog();
-            Bundle args = new Bundle();
-            args.putCharSequenceArrayList(SearchableMultiChoiceDialog.EXTRA_ITEM_NAMES, itemNames);
-            args.putStringArrayList(SearchableMultiChoiceDialog.EXTRA_ITEMS, items);
-            args.putStringArrayList(SearchableMultiChoiceDialog.EXTRA_SELECTED_ITEMS, model.getCurrentPackages());
-            fragment.setArguments(args);
-            fragment.setOnSelectionComplete(selectedItems -> new Thread(() -> model.setPackages(selectedItems)).start());
-            activity.runOnUiThread(() -> fragment.show(getParentFragmentManager(), SearchableMultiChoiceDialog.TAG));
-        }).start());
+        activity.fab.setOnClickListener(v -> {
+            progressIndicator.show();
+            new Thread(() -> {
+                // List apps
+                PackageManager pm = activity.getPackageManager();
+                List<PackageInfo> packageInfoList = pm.getInstalledPackages(0);
+                ArrayList<String> items = new ArrayList<>(packageInfoList.size());
+                ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
+                for (PackageInfo info : packageInfoList) {
+                    items.add(info.packageName);
+                    itemNames.add(pm.getApplicationLabel(info.applicationInfo));
+                }
+                SearchableMultiChoiceDialog fragment = new SearchableMultiChoiceDialog();
+                Bundle args = new Bundle();
+                args.putCharSequenceArrayList(SearchableMultiChoiceDialog.EXTRA_ITEM_NAMES, itemNames);
+                args.putStringArrayList(SearchableMultiChoiceDialog.EXTRA_ITEMS, items);
+                args.putStringArrayList(SearchableMultiChoiceDialog.EXTRA_SELECTED_ITEMS, model.getCurrentPackages());
+                fragment.setArguments(args);
+                fragment.setOnSelectionComplete(selectedItems -> new Thread(() -> model.setPackages(selectedItems)).start());
+                activity.runOnUiThread(() -> {
+                    progressIndicator.hide();
+                    fragment.show(getParentFragmentManager(), SearchableMultiChoiceDialog.TAG);
+                });
+            }).start();
+        });
     }
 
     @Override
