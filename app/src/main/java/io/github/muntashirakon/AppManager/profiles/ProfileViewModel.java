@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 public class ProfileViewModel extends AndroidViewModel {
     private final Object profileLock = new Object();
@@ -88,7 +90,15 @@ public class ProfileViewModel extends AndroidViewModel {
     public void setPackages(@NonNull List<String> packages) {
         synchronized (profileLock) {
             profile.packages = packages.toArray(new String[0]);
-            Log.e("TaG", packages.toString());
+            Log.e("Packages", packages.toString());
+            loadPackages();
+        }
+    }
+
+    @GuardedBy("profileLock")
+    public void deletePackage(@NonNull String packageName) {
+        synchronized (profileLock) {
+            profile.packages = Objects.requireNonNull(ArrayUtils.removeString(profile.packages, packageName));
             loadPackages();
         }
     }

@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
@@ -35,6 +36,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -173,6 +175,15 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 holder.subtitle.setVisibility(View.VISIBLE);
                 holder.subtitle.setText(packageName);
             }
+            holder.itemView.setOnLongClickListener(v -> {
+                PopupMenu popupMenu = new PopupMenu(activity, holder.itemView);
+                popupMenu.getMenu().add(R.string.delete).setOnMenuItemClickListener(item -> {
+                    model.deletePackage(packageName);
+                    return true;
+                });
+                popupMenu.show();
+                return true;
+            });
         }
 
         @Override
