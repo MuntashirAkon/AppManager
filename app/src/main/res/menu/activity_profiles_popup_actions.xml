@@ -34,6 +34,11 @@
         android:title="@string/routine_ops" />
 
     <item
+        android:id="@+id/action_duplicate"
+        android:icon="@drawable/ic_assignment_black_24dp"
+        android:title="@string/duplicate" />
+
+    <item
         android:id="@+id/action_export"
         android:icon="@drawable/ic_block_black_24dp"
         android:title="@string/pref_export" />

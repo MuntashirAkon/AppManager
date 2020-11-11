@@ -701,4 +701,5 @@
     <string name="input_profile_name_description">Profile name should not contain any space.</string>
     <string name="new_profile">New profile</string>
     <string name="duplicate">Duplicate</string>
+    <string name="failed_to_duplicate_profile">Could not duplicate profile</string>
 </resources>

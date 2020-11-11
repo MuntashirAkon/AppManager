@@ -67,6 +67,20 @@ public class ProfileViewModel extends AndroidViewModel {
         }
     }
 
+    @WorkerThread
+    @GuardedBy("profileLock")
+    public void cloneProfile(String profileName) {
+        setProfileName(profileName, true);
+        synchronized (profileLock) {
+            ProfileMetaManager.Profile profile1 = profile;
+            profileMetaManager = null;
+            profileMetaManager = new ProfileMetaManager(profileName);
+            profileMetaManager.profile = profile1;
+            profile = profileMetaManager.profile;
+            if (profile == null) profile = profileMetaManager.newProfile(new String[]{});
+        }
+    }
+
     private MutableLiveData<ArrayList<String>> packagesLiveData;
 
     @WorkerThread

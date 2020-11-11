@@ -18,14 +18,18 @@
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONException;
 
@@ -46,6 +50,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 public class AppsProfileActivity extends BaseActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
     public static final String EXTRA_PROFILE_NAME = "prof";
+    public static final String EXTRA_NEW_PROFILE_NAME = "new_prof";
     public static final String EXTRA_NEW_PROFILE = "new";
 
     private ViewPager viewPager;
@@ -54,31 +59,43 @@ public class AppsProfileActivity extends BaseActivity
     private Fragment[] fragments = new Fragment[2];
     ProfileViewModel model;
     FloatingActionButton fab;
+    ProgressIndicator progressIndicator;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apps_profile);
         setSupportActionBar(findViewById(R.id.toolbar));
-        ProgressIndicator progressIndicator = findViewById(R.id.progress_linear);
+        progressIndicator = findViewById(R.id.progress_linear);
         progressIndicator.setVisibilityAfterHide(View.GONE);
-        progressIndicator.hide();
         fab = findViewById(R.id.floatingActionButton);
         if (getIntent() == null) {
             finish();
             return;
         }
-        String profileName = getIntent().getStringExtra(EXTRA_PROFILE_NAME);
-        if (profileName == null) {
+        boolean newProfile = getIntent().getBooleanExtra(EXTRA_NEW_PROFILE, false);
+        @Nullable String newProfileName;
+        if (newProfile) {
+            newProfileName = getIntent().getStringExtra(EXTRA_NEW_PROFILE_NAME);
+        } else newProfileName = null;
+        @Nullable String profileName = getIntent().getStringExtra(EXTRA_PROFILE_NAME);
+        if (profileName == null && newProfileName == null) {
             finish();
             return;
         }
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(profileName);
+            getSupportActionBar().setTitle(newProfile ? newProfileName : profileName);
         }
-        boolean newProfile = getIntent().getBooleanExtra(EXTRA_NEW_PROFILE, false);
         model = new ViewModelProvider(this).get(ProfileViewModel.class);
-        model.setProfileName(profileName, newProfile);
+        model.setProfileName(profileName == null ? newProfileName : profileName, newProfile);
+        if (newProfileName != null) {
+            new Thread(() -> {
+                model.loadProfile();
+                // Requested a new profile, clone profile
+                model.cloneProfile(newProfileName);
+                runOnUiThread(() -> progressIndicator.hide());
+            }).start();
+        } else progressIndicator.hide();
         viewPager = findViewById(R.id.pager);
         viewPager.addOnPageChangeListener(this);
         viewPager.setAdapter(new ProfileFragmentPagerAdapter(getSupportFragmentManager()));
@@ -129,8 +146,33 @@ public class AppsProfileActivity extends BaseActivity
                 }).start();
                 return true;
             case R.id.action_duplicate:
-                // TODO(8/11/20): Duplicate profile
-                Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show();
+                View view = getLayoutInflater().inflate(R.layout.dialog_input_profile_name, null);
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string.new_profile)
+                        .setView(view)
+                        .setNegativeButton(R.string.cancel, null)
+                        .setPositiveButton(R.string.go, (dialog, which) -> {
+                            Editable profName = ((TextInputEditText) view.findViewById(R.id.input_backup_name)).getText();
+                            progressIndicator.show();
+                            if (!TextUtils.isEmpty(profName)) {
+                                if (getSupportActionBar() != null) {
+                                    //noinspection ConstantConditions
+                                    getSupportActionBar().setTitle(profName.toString());
+                                }
+                                new Thread(() -> {
+                                    //noinspection ConstantConditions
+                                    model.cloneProfile(profName.toString());
+                                    runOnUiThread(() -> {
+                                        Toast.makeText(this, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
+                                        progressIndicator.hide();
+                                    });
+                                }).start();
+                            } else {
+                                progressIndicator.hide();
+                                Toast.makeText(this, R.string.failed_to_duplicate_profile, Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .show();
                 return true;
         }
         return super.onOptionsItemSelected(item);

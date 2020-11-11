@@ -142,7 +142,7 @@ public class ProfilesActivity extends BaseActivity {
                         if (!TextUtils.isEmpty(profName)) {
                             Intent intent = new Intent(this, AppsProfileActivity.class);
                             //noinspection ConstantConditions
-                            intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profName.toString());
+                            intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE_NAME, profName.toString());
                             intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE, true);
                             startActivity(intent);
                         }
@@ -285,6 +285,26 @@ public class ProfilesActivity extends BaseActivity {
                             // TODO(7/11/20): Setup routine operations for this profile
                             Toast.makeText(activity, "Not yet implemented", Toast.LENGTH_SHORT).show();
                             return true;
+                        case R.id.action_duplicate: {
+                            View view = activity.getLayoutInflater().inflate(R.layout.dialog_input_profile_name, null);
+                            new MaterialAlertDialogBuilder(activity)
+                                    .setTitle(R.string.new_profile)
+                                    .setView(view)
+                                    .setNegativeButton(R.string.cancel, null)
+                                    .setPositiveButton(R.string.go, (dialog, which) -> {
+                                        Editable editable = ((TextInputEditText) view.findViewById(R.id.input_backup_name)).getText();
+                                        if (!TextUtils.isEmpty(editable)) {
+                                            Intent intent = new Intent(activity, AppsProfileActivity.class);
+                                            intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profName);
+                                            //noinspection ConstantConditions
+                                            intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE_NAME, editable.toString());
+                                            intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE, true);
+                                            activity.startActivity(intent);
+                                        }
+                                    })
+                                    .show();
+                            return true;
+                        }
                         case R.id.action_export:
                             activity.profileName = profName;
                             activity.exportProfile.launch(profName + ".am.json");
