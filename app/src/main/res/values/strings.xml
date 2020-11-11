@@ -702,4 +702,7 @@
     <string name="new_profile">New profile</string>
     <string name="duplicate">Duplicate</string>
     <string name="failed_to_duplicate_profile">Could not duplicate profile</string>
+    <string name="pref_show_users_in_installer">Show users in installer</string>
+    <string name="pref_show_users_in_installer_msg">Display a list of users to select before installing an external app. Requires root or ADB</string>
+    <string name="select_user">Select user</string>
 </resources>

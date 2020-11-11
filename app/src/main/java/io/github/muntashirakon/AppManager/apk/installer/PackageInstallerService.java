@@ -38,6 +38,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.main.MainActivity;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -45,6 +46,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 public class PackageInstallerService extends IntentService {
     public static final String EXTRA_APK_FILE_KEY = "EXTRA_APK_FILE_KEY";
     public static final String EXTRA_APP_LABEL = "EXTRA_APP_LABEL";
+    public static final String EXTRA_USER_ID = "EXTRA_USER_ID";
     public static final String EXTRA_CLOSE_APK_FILE = "EXTRA_CLOSE_APK_FILE";
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.INSTALL";
     public static final int NOTIFICATION_ID = 3;
@@ -162,7 +164,7 @@ public class PackageInstallerService extends IntentService {
                 boolean tmpCloseApkFile = closeApkFile;
                 // Disable closing apk file in case the install is finished already.
                 closeApkFile = false;
-                if (!apkFile.extractObb()) {
+                if (!apkFile.extractObb()) {  // FIXME: Extract OBB for user handle
                     new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(this,
                             R.string.failed_to_extract_obb_files, Toast.LENGTH_LONG).show());
                 } else {
@@ -180,7 +182,8 @@ public class PackageInstallerService extends IntentService {
         }).start();
         // Install package
         if (AppPref.isRootOrAdbEnabled()) {
-            PackageInstallerShell.getInstance().install(apkFile);
+            int userHandle = intent.getIntExtra(EXTRA_USER_ID, Users.getCurrentUserHandle());
+            PackageInstallerShell.getInstance(userHandle).install(apkFile);
         } else {
             PackageInstallerNoRoot.getInstance().install(apkFile);
         }

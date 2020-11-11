@@ -38,6 +38,11 @@
         app:title="@string/pref_root_mode_enabled"
         app:summary="@string/pref_root_mode_enabled_msg" />
 
+    <SwitchPreferenceCompat
+        app:key="show_users_in_installer"
+        app:title="@string/pref_show_users_in_installer"
+        app:summary="@string/pref_show_users_in_installer_msg" />
+
     <PreferenceCategory
         app:key="rules"
         app:title="@string/rules">

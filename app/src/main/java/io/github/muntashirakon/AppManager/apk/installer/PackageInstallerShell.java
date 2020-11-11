@@ -44,8 +44,8 @@ public final class PackageInstallerShell extends AMPackageInstaller {
     @SuppressLint("StaticFieldLeak")
     private static PackageInstallerShell INSTANCE;
 
-    public static PackageInstallerShell getInstance() {
-        if (INSTANCE == null) INSTANCE = new PackageInstallerShell();
+    public static PackageInstallerShell getInstance(int userHandle) {
+        if (INSTANCE == null) INSTANCE = new PackageInstallerShell(userHandle);
         return INSTANCE;
     }
 

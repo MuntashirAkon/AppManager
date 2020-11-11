@@ -71,6 +71,7 @@ public class AppPref {
         PREF_RUNNING_APPS_FILTER_FLAGS_INT,
         PREF_RUNNING_APPS_SORT_ORDER_INT,
         PREF_SHOW_DISCLAIMER_BOOL,
+        PREF_SHOW_USERS_IN_INSTALLER_BOOL,
         PREF_USAGE_ACCESS_ENABLED_BOOL;
 
         public static final String[] keys = new String[values().length];
@@ -299,6 +300,7 @@ public class AppPref {
             case PREF_ADB_MODE_ENABLED_BOOL:
             case PREF_ENABLE_KILL_FOR_SYSTEM_BOOL:
             case PREF_GLOBAL_BLOCKING_ENABLED_BOOL:
+            case PREF_SHOW_USERS_IN_INSTALLER_BOOL:
                 return false;
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_USAGE_ACCESS_ENABLED_BOOL:

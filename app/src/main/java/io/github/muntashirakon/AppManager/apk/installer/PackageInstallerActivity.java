@@ -23,6 +23,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
+import android.content.pm.UserInfo;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,6 +35,8 @@ import android.widget.Toast;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -48,7 +51,9 @@ import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -347,9 +352,43 @@ public class PackageInstallerActivity extends BaseActivity {
     }
 
     private void launchInstallService() {
+        // Select user
+        if (AppPref.isRootOrAdbEnabled() && (boolean) AppPref.get(AppPref.PrefKey.PREF_SHOW_USERS_IN_INSTALLER_BOOL)) {
+            new Thread(() -> {
+                // Init local server first
+                LocalServer.getInstance();
+                List<UserInfo> users = Users.getUsers();
+                if (users != null && users.size() > 1) {
+                    String[] userNames = new String[users.size() + 1];
+                    int[] userHandles = new int[users.size() + 1];
+                    userNames[0] = getString(R.string.backup_all_users);
+                    userHandles[0] = RunnerUtils.USER_ALL;
+                    int i = 1;
+                    for (UserInfo info : users) {
+                        userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
+                        userHandles[i] = info.id;
+                        ++i;
+                    }
+                    AtomicInteger userHandle = new AtomicInteger(RunnerUtils.USER_ALL);
+                    runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
+                            .setCancelable(false)
+                            .setTitle(R.string.select_user)
+                            .setSingleChoiceItems(userNames, 0, (dialog, which) ->
+                                    userHandle.set(userHandles[which]))
+                            .setPositiveButton(R.string.ok, (dialog, which) ->
+                                    doLaunchInstallerService(userHandle.get()))
+                            .setNegativeButton(R.string.cancel, (dialog, which) -> finish())
+                            .show());
+                } else runOnUiThread(() -> doLaunchInstallerService(Users.getCurrentUserHandle()));
+            }).start();
+        } else doLaunchInstallerService(Users.getCurrentUserHandle());
+    }
+
+    private void doLaunchInstallerService(int userHandle) {
         Intent intent = new Intent(this, PackageInstallerService.class);
         intent.putExtra(PackageInstallerService.EXTRA_APK_FILE_KEY, apkFileKey);
         intent.putExtra(PackageInstallerService.EXTRA_APP_LABEL, appLabel);
+        intent.putExtra(PackageInstallerService.EXTRA_USER_ID, userHandle);
         intent.putExtra(PackageInstallerService.EXTRA_CLOSE_APK_FILE, closeApkFile);
         ContextCompat.startForegroundService(this, intent);
         closeApkFile = false;

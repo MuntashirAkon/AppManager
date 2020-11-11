@@ -130,6 +130,9 @@ public class MainPreferences extends PreferenceFragmentCompat {
             }
             return true;
         });
+        // Show users in installer
+        SwitchPreferenceCompat users_in_installer = findPreference("show_users_in_installer");
+        users_in_installer.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_SHOW_USERS_IN_INSTALLER_BOOL));
         // Import/export rules
         findPreference("import_export_rules").setOnPreferenceClickListener(preference -> {
             new ImportExportDialogFragment().show(getParentFragmentManager(), ImportExportDialogFragment.TAG);
