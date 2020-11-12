@@ -668,4 +668,14 @@
     <string name="input_profile_name_description">Profil adı boşluk içermemelidir.</string>
     <string name="input_profile_name">Profil adı</string>
     <string name="duplicate">Kopyala</string>
+    <string name="ecc">Eliptik eğri şifrelemesi</string>
+    <string name="rsa">RSA</string>
+    <string name="aes">AES</string>
+    <string name="none">Yok</string>
+    <string name="pref_encryption_msg">Yedeklemeler için şifreleme ekle</string>
+    <string name="encryption">Şifreleme</string>
+    <string name="select_user">Kullanıcı seç</string>
+    <string name="pref_show_users_in_installer_msg">Harici bir uygulamayı kurmadan önce seçilecek bir kullanıcı listesi görüntüle. Root veya ADB gerektirir</string>
+    <string name="pref_show_users_in_installer">Kurucuda kullanıcıları göster</string>
+    <string name="failed_to_duplicate_profile">Profil kopyalanamadı</string>
 </resources>
