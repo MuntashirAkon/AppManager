@@ -589,7 +589,6 @@
     <string name="routine_ops">Обычные операции</string>
     <string name="no_profiles">Нет профилей</string>
     <string name="presets">Предустановки</string>
-    <string name="pref_open_pgp_provider_msg">Добавление поставщика OpenPGP позволяет шифровать конфиденциальную информацию, такую как резервные копии данных приложений</string>
     <string name="open_pgp_provider">Поставщик OpenPGP</string>
     <string name="input_backup_name_description">Имя резервной копии не должно начинаться с цифры и содержать пробелы. Оставьте это поле пустым, если хотите использовать текущую дату и время.</string>
     <string name="downgrade_not_possible">Понижение версии невозможно без root или ADB</string>

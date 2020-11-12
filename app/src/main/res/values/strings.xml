@@ -626,7 +626,6 @@
     <string name="cancel">Cancel</string>
     <string name="systemless_app">Systemless App</string>
     <string name="open_pgp_provider">OpenPGP Provider</string>
-    <string name="pref_open_pgp_provider_msg">Adding an OpenPGP provider enables you to encrypt sensitive info such as app data backups</string>
     <string name="profiles">Profiles</string>
     <string name="presets">Presets</string>
     <string name="no_profiles">No profiles</string>
@@ -705,4 +704,10 @@
     <string name="pref_show_users_in_installer">Show users in installer</string>
     <string name="pref_show_users_in_installer_msg">Display a list of users to select before installing an external app. Requires root or ADB</string>
     <string name="select_user">Select user</string>
+    <string name="encryption">Encryption</string>
+    <string name="pref_encryption_msg">Add encryption for backups</string>
+    <string name="none">None</string>
+    <string name="aes">AES</string>
+    <string name="rsa">RSA</string>
+    <string name="ecc">Elliptic curve cryptography</string>
 </resources>

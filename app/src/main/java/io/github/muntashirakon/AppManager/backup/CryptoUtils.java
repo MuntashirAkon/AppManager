@@ -38,6 +38,7 @@ public class CryptoUtils {
             MODE_NO_ENCRYPTION,
             MODE_AES,
             MODE_RSA,
+            MODE_ECC,
             MODE_OPEN_PGP,
     })
     @Retention(RetentionPolicy.SOURCE)
@@ -47,15 +48,19 @@ public class CryptoUtils {
     public static final String MODE_NO_ENCRYPTION = "none";
     public static final String MODE_AES = "aes";
     public static final String MODE_RSA = "rsa";
+    public static final String MODE_ECC = "ecc";
     public static final String MODE_OPEN_PGP = "pgp";
 
     @Mode
     public static String getMode() {
-        String keyIds = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR);
-        if (!TextUtils.isEmpty(keyIds)) {
-            // FIXME(1/10/20): Check for the availability of the provider
-            return MODE_OPEN_PGP;
-        }
+        String currentMode = (String) AppPref.get(AppPref.PrefKey.PREF_ENCRYPTION_STR);
+        if (MODE_OPEN_PGP.equals(currentMode)) {
+            String keyIds = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR);
+            if (!TextUtils.isEmpty(keyIds)) {
+                // FIXME(1/10/20): Check for the availability of the provider
+                return MODE_OPEN_PGP;
+            }
+        } else return currentMode;
         return MODE_NO_ENCRYPTION;
     }
 

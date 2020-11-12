@@ -548,7 +548,6 @@
     <string name="no_profiles">Keine Profile</string>
     <string name="presets">Voreinstellungen</string>
     <string name="profiles">Profile</string>
-    <string name="pref_open_pgp_provider_msg">Durch Hinzufügen eines OpenPGP-Anbieters können Sie vertrauliche Informationen wie App-Datensicherungen verschlüsseln</string>
     <string name="open_pgp_provider">OpenPGP-Anbieter</string>
     <string name="systemless_app">Systemlose App</string>
     <string name="cancel">Abbrechen</string>

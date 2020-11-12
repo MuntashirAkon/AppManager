@@ -34,6 +34,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
+import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.TarUtils;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.main.MainActivity;
@@ -60,6 +61,7 @@ public class AppPref {
         PREF_COMPONENTS_SORT_ORDER_INT,
         PREF_CUSTOM_LOCALE_STR,
         PREF_ENABLE_KILL_FOR_SYSTEM_BOOL,
+        PREF_ENCRYPTION_STR,
         PREF_GLOBAL_BLOCKING_ENABLED_BOOL,
         PREF_LAST_VERSION_CODE_LONG,
         PREF_MAIN_WINDOW_FILTER_FLAGS_INT,
@@ -324,6 +326,8 @@ public class AppPref {
                 return RunningAppsActivity.SORT_BY_PID;
             case PREF_RUNNING_APPS_FILTER_FLAGS_INT:
                 return RunningAppsActivity.FILTER_NONE;
+            case PREF_ENCRYPTION_STR:
+                return CryptoUtils.MODE_NO_ENCRYPTION;
             case PREF_OPEN_PGP_PACKAGE_STR:
             case PREF_OPEN_PGP_USER_ID_STR:
                 return "";

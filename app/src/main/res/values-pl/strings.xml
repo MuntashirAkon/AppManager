@@ -165,7 +165,6 @@
     <string name="ok">OK</string>
     <string name="cancel">Anuluj</string>
     <string name="open_pgp_provider">Aplikacja OpenPGP</string>
-    <string name="pref_open_pgp_provider_msg">Dodanie aplikacji OpenPGP umożliwia szyfrowanie poufnych informacji, takich jak kopie zapasowe danych aplikacji</string>
     <string name="profiles">Profile</string>
     <string name="presets">Szablony</string>
     <string name="no_profiles">Brak profili</string>

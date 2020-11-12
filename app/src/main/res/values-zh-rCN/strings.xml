@@ -506,7 +506,6 @@
     <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g>代码，属于基础APK</string>
     <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> 代码, 用于 <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="touchscreen_stylus">触控笔</string>
-    <string name="pref_open_pgp_provider_msg">添加一个OpenPGP提供商使您能够加密敏感信息，如应用程序数据备份</string>
     <string name="open_pgp_provider">OpenPGP 提供商</string>
     <string name="systemless_app">Systemless 应用</string>
     <string name="cancel">取消</string>

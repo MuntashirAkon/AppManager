@@ -569,7 +569,6 @@
     <string name="apps">Aplicativos</string>
     <string name="apply_now">Aplicar agora…</string>
     <string name="no_profiles">Sem perfis</string>
-    <string name="pref_open_pgp_provider_msg">Adicionar um provedor OpenPGP permite criptografar informações confidenciais, como backups de dados de aplicativos</string>
     <string name="open_pgp_provider">Provedor OpenPGP</string>
     <string name="cancel">Cancelar</string>
     <string name="ok">OK</string>

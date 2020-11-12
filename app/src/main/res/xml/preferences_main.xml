@@ -79,9 +79,9 @@
             app:summary="@string/pref_backup_flags_msg" />
 
         <Preference
-            app:key="open_pgp_provider"
-            app:title="@string/open_pgp_provider"
-            app:summary="@string/pref_open_pgp_provider_msg">
+            app:key="encryption"
+            app:title="@string/encryption"
+            app:summary="@string/pref_encryption_msg">
         </Preference>
 
     </PreferenceCategory>

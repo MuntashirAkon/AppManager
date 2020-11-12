@@ -454,7 +454,6 @@
     <string name="keystore">कीस्टोर</string>
     <string name="no_profiles">कोई प्रोफाइल्स नहीं</string>
     <string name="profiles">प्रोफाइल्स</string>
-    <string name="pref_open_pgp_provider_msg">ओपनपीजीपी प्रोवाइडर जोड़ने से आप ऐप डेटा बैकअप जैसी संवेदनशील जानकारी को एन्क्रिप्ट कर सकते हैं</string>
     <string name="open_pgp_provider">ओपनपीजीपी प्रोवाइडर</string>
     <string name="systemless_app">सिस्टमलेस ऐप</string>
     <string name="cancel">रद्द करें</string>

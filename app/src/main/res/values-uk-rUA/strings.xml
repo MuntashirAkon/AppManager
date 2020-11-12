@@ -128,7 +128,6 @@
     <string name="no_profiles">Немає профілів</string>
     <string name="presets">Пресети</string>
     <string name="profiles">Профілі</string>
-    <string name="pref_open_pgp_provider_msg">Додавання постачальника OpenPGP дозволяє шифрувати конфіденційну інформацію, таку як резервні копії даних додатків</string>
     <string name="open_pgp_provider">Постачальник OpenPGP</string>
     <string name="systemless_app">Позасистемний додаток</string>
     <string name="cancel">Скасувати</string>

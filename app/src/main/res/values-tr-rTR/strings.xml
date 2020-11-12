@@ -201,7 +201,6 @@
     <string name="no_profiles">Profil yok</string>
     <string name="presets">Ön ayarlar</string>
     <string name="profiles">Profiller</string>
-    <string name="pref_open_pgp_provider_msg">Bir OpenPGP sağlayıcısı eklemek, uygulama veri yedeklemeleri gibi hassas bilgileri şifrelemenize olanak sağlar</string>
     <string name="open_pgp_provider">OpenPGP Sağlayıcısı</string>
     <string name="systemless_app">Sistemsiz Uygulama</string>
     <string name="cancel">İptal</string>

@@ -32,6 +32,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.text.HtmlCompat;
 import androidx.preference.Preference;
@@ -40,6 +42,7 @@ import androidx.preference.SwitchPreferenceCompat;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
+import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -57,6 +60,14 @@ public class MainPreferences extends PreferenceFragmentCompat {
             AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY,
             AppCompatDelegate.MODE_NIGHT_NO,
             AppCompatDelegate.MODE_NIGHT_YES);
+    @StringRes
+    private static final int[] encryptionNames = new int[]{
+            R.string.none,
+            R.string.aes,
+            R.string.rsa,
+            R.string.ecc,
+            R.string.open_pgp_provider
+    };
 
     SettingsActivity activity;
     private int currentTheme;
@@ -195,6 +206,36 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .show();
             return true;
         });
+        // Encryption
+        findPreference("encryption").setOnPreferenceClickListener(preference -> {
+            CharSequence[] encryptionNamesText = new CharSequence[encryptionNames.length];
+            for (int i = 0; i < encryptionNames.length; ++i) {
+                encryptionNamesText[i] = getString(encryptionNames[i]);
+            }
+            int choice = encModeToIndex((String) AppPref.get(AppPref.PrefKey.PREF_ENCRYPTION_STR));
+            new MaterialAlertDialogBuilder(activity)
+                    .setTitle(R.string.encryption)
+                    .setSingleChoiceItems(encryptionNamesText, choice, (dialog, which) -> {
+                        String encryptionMode = indexToEncMode(which);
+                        switch (encryptionMode) {
+                            case CryptoUtils.MODE_NO_ENCRYPTION:
+                                AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, encryptionMode);
+                                break;
+                            case CryptoUtils.MODE_AES:
+                            case CryptoUtils.MODE_RSA:
+                            case CryptoUtils.MODE_ECC:
+                                // TODO(12/11/20): Implement encryption options
+                                Toast.makeText(activity, "Not implemented yet.", Toast.LENGTH_SHORT).show();
+                                break;
+                            case CryptoUtils.MODE_OPEN_PGP:
+                                AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, encryptionMode);
+                                new OpenPgpKeySelectionDialogFragment().show(getParentFragmentManager(), OpenPgpKeySelectionDialogFragment.TAG);
+                        }
+                    })
+                    .setPositiveButton(R.string.ok, null)
+                    .show();
+            return true;
+        });
         // OpenPGP Provider
         findPreference("open_pgp_provider").setOnPreferenceClickListener(preference -> {
             new OpenPgpKeySelectionDialogFragment().show(getParentFragmentManager(), OpenPgpKeySelectionDialogFragment.TAG);
@@ -227,5 +268,38 @@ public class MainPreferences extends PreferenceFragmentCompat {
             }).start();
             return true;
         });
+    }
+
+    @CryptoUtils.Mode
+    private String indexToEncMode(int index) {
+        switch (index) {
+            default:
+            case 0:
+                return CryptoUtils.MODE_NO_ENCRYPTION;
+            case 1:
+                return CryptoUtils.MODE_AES;
+            case 2:
+                return CryptoUtils.MODE_RSA;
+            case 3:
+                return CryptoUtils.MODE_ECC;
+            case 4:
+                return CryptoUtils.MODE_OPEN_PGP;
+        }
+    }
+
+    private int encModeToIndex(@NonNull @CryptoUtils.Mode String mode) {
+        switch (mode) {
+            default:
+            case CryptoUtils.MODE_NO_ENCRYPTION:
+                return 0;
+            case CryptoUtils.MODE_AES:
+                return 1;
+            case CryptoUtils.MODE_RSA:
+                return 2;
+            case CryptoUtils.MODE_ECC:
+                return 3;
+            case CryptoUtils.MODE_OPEN_PGP:
+                return 4;
+        }
     }
 }
