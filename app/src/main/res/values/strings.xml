@@ -128,7 +128,7 @@
         \n- <a href="https://github.com/jaredrummler/AndroidShell">Android Shell</a> (Apache 2.0)
         \n- <a href="https://github.com/tananaev/adblib">ADB Library</a> (BSD-3-Clause)
         \n- <a href="https://github.com/MuntashirAkon/toybox">Toybox</a> (0BSD)
-        \n- <a href="https://github.com/MuntashirAkon/apk-parser">APK Parser</a> (BSD-2-Clause)
+        \n- <a href="https://github.com/MuntashirAkon/apk-parser">APK-parser</a> (BSD-2-Clause)
         \n- <a href="https://github.com/topjohnwu/libsu">libsu</a> (Apache 2.0)
     </string>
     <string name="credits">Credits</string>
@@ -256,11 +256,11 @@
     <string name="rules_not_applied">Rules are not applied</string>
     <string name="str_logo">Logo</string>
     <string name="pref_root_mode_enabled">Root mode</string>
-    <string name="pref_root_mode_enabled_msg">Activates all the root features of this app, ADB mode is detected automatically when this is disabled</string>
+    <string name="pref_root_mode_enabled_msg">Activates all the root features of this app, ADB mode is detected automatically when this is off.</string>
     <string name="pref_global_blocking_enabled">Global component blocking</string>
-    <string name="pref_global_blocking_enabled_msg">Lets you block any component of any app without explicitly enabling blocking for the app</string>
+    <string name="pref_global_blocking_enabled_msg">Lets you block any component of any app without explicitly turning on enabling blocking for the app.</string>
     <string name="pref_usage_access_enabled">Usage access</string>
-    <string name="pref_usage_access_enabled_msg">Lets you see your app usage statistics and app data info</string>
+    <string name="pref_usage_access_enabled_msg">Lets you see your app usage statistics and app data info.</string>
     <string name="app_settings">Settings</string>
     <string name="only_works_in_root_mode">Only works in root mode</string>
     <string name="usage_yesterday">Yesterday</string>
@@ -278,7 +278,7 @@
     <string name="sort_by_times_opened">Times opened</string>
     <string name="sort_by_mobile_data">Mobile data</string>
     <string name="pref_import_export_blocking_rules">Import/Export blocking rules</string>
-    <string name="pref_import_export_blocking_rules_msg">Import/export rules, import external rules from Watt or Blocker</string>
+    <string name="pref_import_export_blocking_rules_msg">Import/export rules, import external rules from Watt or Blocker.</string>
     <string name="pref_import_watt">Import from Watt</string>
     <string name="pref_import_blocker">Import from Blocker</string>
     <string name="the_import_was_successful">Imported</string>
@@ -340,10 +340,10 @@
     <string name="keyboard_type">Keyboard Type</string>
     <string name="navigation">Navigation</string>
     <string name="touchscreen">Touchscreen</string>
-    <string name="pref_export_msg">Export blocking rules configured within App Manager to external storage</string>
-    <string name="pref_import_msg">Import previously exported blocking rules from App Manager</string>
+    <string name="pref_export_msg">Export blocking rules configured within App Manager to external storage.</string>
+    <string name="pref_import_msg">Import previously exported blocking rules from App Manager.</string>
     <string name="pref_import_watt_msg">Import blocking rules from Watt, each file containing rules for a single named package as packagename.xml etc.</string>
-    <string name="pref_import_blocker_msg">Import blocking rules from Blocker, each file containing rules for a single package</string>
+    <string name="pref_import_blocker_msg">Import blocking rules from Blocker, each file containing rules for a single package.</string>
     <string name="pref_app_theme">App theme</string>
     <string name="follow_system">Follow system</string>
     <string name="battery_mode">Battery mode</string>
@@ -402,7 +402,7 @@
         \nTwitter: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">Import existing rules</string>
     <string name="pref_import_existing_msg">Add components disabled by others apps to App Manager.
-        Be careful when using this tool as there can be many false positives. Choose only the apps you\'re certain about</string>
+        Be careful when using this tool as there can be many false positives. Choose only the apps you\'re certain about.</string>
     <string name="failed_to_get_data_usage_information">Could not fetch data usage info</string>
     <string name="clear_cache">Clear Cache</string>
     <string name="block_unblock_trackers_description">Block or unblock ad and tracking components from all the installed apps</string>
@@ -516,14 +516,14 @@
     <string name="website">Website</string>
     <string name="website_message" translatable="false">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">Remove all rules</string>
-    <string name="pref_remove_all_rules_msg">All configured blocked components will be enabled, app ops will be set to default values and permissions will be granted</string>
+    <string name="pref_remove_all_rules_msg">No components will be blocked, app ops will be set to default values and permissions granted.</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="filter_apps_with_activities">Apps with activities</string>
     <string name="toggle_default_app_ops">Toggle default app ops</string>
     <string name="installer_error_aborted">Installation failed because either because it was cancelled, or the session closed unexpectedly</string>
     <string name="installer_error_blocked_device">device</string>
     <string name="installer_error_blocked">Installation blocked by <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
-    <string name="installer_error_conflict">Cannot install the app because an installed one has this package name already</string>
+    <string name="installer_error_conflict">Could not install app because the package name is in use</string>
     <string name="installer_error_incompatible">The app is incompatible with this device</string>
     <string name="installer_error_bad_apks">Invalid APK files selected</string>
     <string name="installer_error_storage">Not enough storage space to install the app</string>
@@ -677,7 +677,7 @@
     <string name="packages">packages</string>
     <string name="onboard">Onboard</string>
     <string name="do_you_want_to_uninstall_and_install">Do you want to uninstall and install the app again?</string>
-    <string name="signature_mismatch_for_system_apps">Could not install app because the installed one is a system app with different signature.</string>
+    <string name="signature_mismatch_for_system_apps">Could not install app because a system app with a different signature has this package name.</string>
     <string name="app_data_will_be_lost">The existing data will be lost.</string>
     <string name="install_without_data_loss">If you have turned off signature verification, you can use the <b>Only install</b> option to install the app without losing data.</string>
     <string name="only_install">Only Install</string>
@@ -697,7 +697,7 @@
     <string name="in_progress">In progress</string>
     <string name="un_apkm">UnApkm</string>
     <string name="input_profile_name">Profile name</string>
-    <string name="input_profile_name_description">The profile name can not contain any spaces.</string>
+    <string name="input_profile_name_description">The profile name cannot contain any spaces.</string>
     <string name="new_profile">New profile</string>
     <string name="duplicate">Duplicate</string>
     <string name="failed_to_duplicate_profile">Could not duplicate profile</string>
@@ -705,7 +705,7 @@
     <string name="pref_show_users_in_installer_msg">Display a list of users to select before installing an external app. Requires root or ADB.</string>
     <string name="select_user">Select user</string>
     <string name="encryption">Encryption</string>
-    <string name="pref_encryption_msg">Add encryption for backups</string>
+    <string name="pref_encryption_msg">Add encryption for backups.</string>
     <string name="none">None</string>
     <string name="aes">AES</string>
     <string name="rsa">RSA</string>
