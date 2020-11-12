@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="choose_language">Velg et språk</string>
     <string name="current_language">Nåværende språk: %s</string>
     <string name="auto">Automatisk</string>
@@ -387,4 +387,46 @@
     <string name="all_classes">Alle klasser</string>
     <string name="tracker_classes">Sporer-klasser</string>
     <string name="tracker_details">Sporer-detaljer</string>
+    <string name="select_apk">Velg APK</string>
+    <string name="send_crash_report">Send krasjrapport</string>
+    <string name="filter_running_apps">Kjørende programmer</string>
+    <string name="copy">Kopier</string>
+    <string name="tap_to_see_details">Trykk for å se detaljer</string>
+    <string name="lib_details">Biblioteksdetaljer</string>
+    <string name="no_libs">Ingen bibliotek</string>
+    <string name="scanner">Skanner</string>
+    <string name="sys_config">Systemoppsett</string>
+    <string name="app_data_will_be_lost">Eksisterende data vil gå tapt.</string>
+    <string name="do_you_want_to_uninstall_and_install">Ønsker du å avinstallere og installere programmet igjen\?</string>
+    <string name="format">Format</string>
+    <string name="public_key">Offentlig nøkkel</string>
+    <string name="algorithm">Algoritme</string>
+    <string name="signature">Signatur</string>
+    <string name="checksums">Sjekksummer</string>
+    <string name="serial_no">Serienummer</string>
+    <string name="not_yet_valid">Ikke gyldig enda</string>
+    <string name="expired">Utløpt</string>
+    <string name="valid">Gyldig</string>
+    <string name="validity">Gyldighet</string>
+    <string name="type">Type</string>
+    <string name="expiry_date">Utløpsdato</string>
+    <string name="issued_date">Utstedelsesdato</string>
+    <string name="issuer">Utsteder</string>
+    <string name="abi_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; kode for &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
+    <plurals name="missing_signatures">
+        <item quantity="one">%1$d signatur mangler</item>
+        <item quantity="other">%1$d signaturer mangler</item>
+    </plurals>
+    <plurals name="libraries">
+        <item quantity="one">%1$d bibliotek</item>
+        <item quantity="other">%1$d bibliotek</item>
+    </plurals>
+    <plurals name="classes">
+        <item quantity="one">%1$d klasse</item>
+        <item quantity="other">%1$d klasser</item>
+    </plurals>
+    <string name="failed_to_parse_some_numbers">Noen tall kunne ikke tolkes</string>
+    <string name="clear_data_from_uninstalled_apps_description">Tøm data fra avinstallerte programmer med DONT_DELETE_DATA-flagg</string>
+    <string name="clear_data_from_uninstalled_apps">Tøm data fra avinstallerte programmer</string>
+    <string name="instructions_header">[Disse instruksjonene er utdaterte, og vil ikke lenger oppdateres. Besøk den offisielle dokumentasjonssiden på (https://muntashirakon.github.io/AppManager) for oppdatert info]</string>
 </resources>
