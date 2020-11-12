@@ -516,7 +516,7 @@
     <string name="website">Website</string>
     <string name="website_message" translatable="false">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">Remove all rules</string>
-    <string name="pref_remove_all_rules_msg">Apps you have blocked won't be, and will instead have default persmissions and values.</string>
+    <string name="pref_remove_all_rules_msg">Permissions are granted, app ops and components will return to default values.</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="filter_apps_with_activities">Apps with activities</string>
     <string name="toggle_default_app_ops">Toggle default app ops</string>
