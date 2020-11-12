@@ -669,4 +669,14 @@
     <string name="new_profile">Novo perfil</string>
     <string name="input_profile_name_description">O nome do perfil não deve conter nenhum espaço.</string>
     <string name="input_profile_name">Nome do perfil</string>
+    <string name="pref_encryption_msg">Adicionar criptografia aos backups</string>
+    <string name="ecc">Criptografia de curva elíptica</string>
+    <string name="rsa">RSA</string>
+    <string name="aes">AES</string>
+    <string name="none">Nenhuma</string>
+    <string name="encryption">Criptografia</string>
+    <string name="select_user">Selecionar usuário</string>
+    <string name="pref_show_users_in_installer_msg">Exibir uma lista de usuários para selecionar antes de instalar um aplicativo externo. Requer root ou ADB</string>
+    <string name="failed_to_duplicate_profile">Não foi possível duplicar o perfil</string>
+    <string name="pref_show_users_in_installer">Mostrar usuários no instalador</string>
 </resources>
