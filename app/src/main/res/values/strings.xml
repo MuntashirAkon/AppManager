@@ -258,7 +258,7 @@
     <string name="pref_root_mode_enabled">Root mode</string>
     <string name="pref_root_mode_enabled_msg">Activates all the root features of this app, ADB mode is detected automatically when this is off.</string>
     <string name="pref_global_blocking_enabled">Global component blocking</string>
-    <string name="pref_global_blocking_enabled_msg">Lets you block any component of any app without explicitly turning on enabling blocking for the app.</string>
+    <string name="pref_global_blocking_enabled_msg">Lets you block any component of any app without explicitly turning on blocking for the app.</string>
     <string name="pref_usage_access_enabled">Usage access</string>
     <string name="pref_usage_access_enabled_msg">Lets you see your app usage statistics and app data info.</string>
     <string name="app_settings">Settings</string>
@@ -516,7 +516,7 @@
     <string name="website">Website</string>
     <string name="website_message" translatable="false">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">Remove all rules</string>
-    <string name="pref_remove_all_rules_msg">No components will be blocked, app ops will be set to default values and permissions granted.</string>
+    <string name="pref_remove_all_rules_msg">Apps you have blocked won't be, and will instead have default persmissions and values.</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="filter_apps_with_activities">Apps with activities</string>
     <string name="toggle_default_app_ops">Toggle default app ops</string>
