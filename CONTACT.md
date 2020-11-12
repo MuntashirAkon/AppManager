@@ -1,4 +1,4 @@
-Welcome to the AppManager community
+Welcome to the App Manager community
 
 Accept and offer criticism constructively. Let anyone have the privacy they desire.
 Settle differences within these boundaries.
