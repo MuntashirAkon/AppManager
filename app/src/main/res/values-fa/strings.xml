@@ -1,2 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="external_multiple_data_dir">دایرکتوری داده‌های خارجی &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dir_no\" example=\"1\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="external_data_dir">دایرکتوری داده های خارجی</string>
+    <string name="sort_by_blocked_components">اول مسدود</string>
+    <string name="sort_by_disabled_app">اول غیرفعال</string>
+    <string name="exodus_link">پیوند εxodus</string>
+    <string name="usage_yesterday">دیروز</string>
+    <string name="only_works_in_root_mode">فقط در حالت روت کار می کند</string>
+    <string name="app_settings">تنظیمات</string>
+    <string name="pref_usage_access_enabled_msg">به شما امکان می دهد آمار استفاده از برنامه و اطلاعات داده برنامه را مشاهده کنید</string>
+    <string name="pref_usage_access_enabled">دسترسی به استفاده</string>
+    <string name="pref_global_blocking_enabled_msg">به شما اجازه می دهد تا هر جزء از هر برنامه ای را مسدود کنید بدون اینکه به صراحت مسدود کردن برنامه را فعال کنید</string>
+    <string name="pref_global_blocking_enabled">مسدود کردن جزء گلوبال</string>
+    <string name="pref_root_mode_enabled_msg">تمام ویژگی های روت این برنامه را فعال می‌کند، اگر غیر فعال باشد حالت ADB به طور خودکار شناسایی می‌شود</string>
+    <string name="pref_root_mode_enabled">حالت روت</string>
+    <string name="str_logo">لوگو</string>
+    <string name="rules_not_applied">قوانین اعمال نمی شوند</string>
+    <string name="failed_to_disable_op">قادر به فعال کردن عملیات برنامه درخواست شده نبود</string>
+    <string name="failed_to_enable_op">قادر به فعال کردن عملیات برنامه درخواست شده نبود</string>
+    <string name="no_app_ops">بدون عملیات برنامه</string>
+    <string name="app_ops">عملیات برنامه</string>
+    <string name="app_size">برنامه</string>
+    <string name="total_size">مجموع</string>
+    <string name="storage_and_cache">ذخیره سازی و حافظه پنهان</string>
+    <string name="failed_to_stop">نتوانست &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt; را متوقف کند.</string>
+    <string name="force_stop">توقف اجباری</string>
+    <string name="failed_to_enable">نمی توان &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt; %1$s &lt;/xliff:g&gt; را فعال کرد.</string>
+    <string name="failed_to_disable">نتوانست&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; را غیر‌فعال کند.</string>
+    <string name="enable">فعال کن</string>
+    <string name="disable">غیرفعال کردن</string>
+    <string name="stopped">متوقف شد</string>
+    <string name="uninstall_system_app_message">این یک برنامه سیستم است. آیا مطمئن هستید که می خواهید این برنامه را حذف کنید؟</string>
+    <string name="uninstalled_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; حذف شده است.</string>
+    <string name="failed_to_uninstall">نتوانست &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; را حذف کند.</string>
+    <string name="uninstall_app_message">آیا می خواهید این برنامه را حذف کنید؟</string>
+    <string name="view_in_settings">مشاهده در تنظیمات</string>
+    <string name="no_content">بدون محتوا</string>
+    <string name="no_usage_in_this_time_range">بدون استفاده در این محدوده زمانی</string>
+    <string name="disabled_app">غیرفعال</string>
+    <string name="key_name_cannot_be_null">نام کلید نمی تواند خالی باشد</string>
+    <string name="error_evaluating_input">نتوانست ورودی را ارزیابی کند</string>
+    <string name="type_string">کاراکتر‌ها</string>
+    <string name="type_long">عدد صحیح طولانی</string>
+    <string name="type_int">عدد صحیح</string>
+    <string name="type_float">عدد اعشاری</string>
+    <string name="type_boolean">درست/نادرست</string>
+    <string name="done">انجام شد</string>
+    <string name="add_item">افزودن مورد</string>
+    <string name="system_odex_not_supported">.odex و برخی از برنامه های سیستم فاقد پشتیبانی هستند!</string>
+    <string name="select_type">نوعی را انتخاب کنید</string>
+    <string name="key_name">نام کلید</string>
+    <string name="boolean_value">ارزش بولی</string>
+    <string name="decimal_value">ارزش اعشاری</string>
+    <string name="integer_value">مقدار عدد صحیح</string>
+    <string name="long_integer_value">مقدار صحیح طولانی</string>
+    <string name="string_value">مقدار رشته</string>
+    <string name="saving_failed">ذخیره نشد ، دوباره امتحان کنید.</string>
+    <string name="saved_successfully">ذخیره شد</string>
+    <string name="deletion_failed">پاک‌سازی شکست خورد</string>
+    <string name="deleted_successfully">پاک شد</string>
+    <string name="delete">پاک کن</string>
+    <string name="save">ذخیره کن</string>
+    <string name="discard">دور بینداز</string>
+    <string name="databases">پایگاه داده‌ها</string>
+    <string name="shared_prefs">Perf های به اشتراک گذاشته شده</string>
+    <string name="test_only">تنها تست</string>
+    <string name="debuggable">قابل اشکال‌زدایی</string>
+    <string name="updated_app">به‌روز شده</string>
+    <string name="requested_large_heap">پشته بزرگ</string>
+    <string name="no_code">بدون کد</string>
+    <string name="process_name">نام فرآیند</string>
+    <string name="native_library_dir">دایرکتوری کتابخانه JNI بومی</string>
+    <string name="dev_protected_data_dir">دایرکتوری داده های محافظت شده توسط دستگاه</string>
+    <string name="aurora">سپیده دم</string>
+    <string name="search">جست‌وجو</string>
+    <string name="menu_apply_rules">اعمال قوانین</string>
+    <string name="menu_remove_rules">حذف قوانین</string>
+    <string name="failed_to_extract_apk_file">نتوانست فایل APK را استخراج کند</string>
+    <string name="share_apk">اشتراک گذاری APK</string>
+    <string name="grant_usage_acess_message">برای نمایش اطلاعات استفاده از برنامه ، دسترسی به استفاده از آن اجباری است.</string>
+    <string name="grant_usage_access">دسترسی استفاده را اعطا کنید</string>
+    <string name="go">برو</string>
+    <string name="go_back">برگرد عقب</string>
+    <string name="usage_less_than_a_minute">کمتر از یک دقیقه</string>
+    <string name="usage_min">%1$d دقیقه</string>
+    <plurals name="usage_hours">
+        <item quantity="one">%1$d ساعت</item>
+        <item quantity="other">%1$d ساعت</item>
+    </plurals>
+    <plurals name="usage_days">
+        <item quantity="one">%1$d روز</item>
+        <item quantity="other">%1$d روز</item>
+    </plurals>
+    <plurals name="usage_months">
+        <item quantity="one">%1$d ماه</item>
+        <item quantity="other">%1$d ماه</item>
+    </plurals>
+    <string name="usage_7_days">7 روز گذشته</string>
+    <string name="usage_today">امروز</string>
+    <string name="usage_weekly">هفتگی</string>
+    <string name="app_usage">استفاده از برنامه</string>
+    <string name="no_tracker_class">بدون کلاس ردیاب</string>
+    <string name="no_shared_libs">کتابخانه مشترک وجود ندارد</string>
+    <plurals name="main_list_date_days">
+        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt; %1$s &lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt; %2$d &lt;/xliff:g&gt; روز</item>
+        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt; %1$s &lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt; %2$d &lt;/xliff:g&gt; روز‌</item>
+    </plurals>
+    <string name="all_classes">همه کلاس‌ها</string>
+    <string name="tracker_classes">کلاس های ردیاب</string>
+    <string name="tracker_details">جزئیات ردیاب</string>
+    <string name="ecc">رمزنگاری منحنی بیضوی</string>
+    <string name="found_trackers">ردیاب‌های یافت شده:</string>
+    <string name="tested_signatures_on_classes_and_time_taken">امضاهای &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"signature_no\" example=\"342\"&gt; %1$d &lt;/xliff:g&gt; در کلاس‌های &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"6000\"&gt; %2$d &lt;/xliff:g&gt; امتحان شده است.
+\nزمان صرف شده &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"time\" example=\"10000\"&gt; %3$d &lt;/xliff:g&gt; میلی ثانیه (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"iteration_no\" example=\"100000\"&gt; %4$d &lt;/xliff:g&gt; تکرار).</string>
+    <plurals name="other_trackers_and_classes">
+        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt; %1$d &lt;/xliff:g&gt; ردیاب با کلاس‌های &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt; %2$d &lt;/xliff:g&gt;</item>
+        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt; %1$d &lt;/xliff:g&gt; ردیاب با کلاس‌های &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt; %2$d &lt;/xliff:g&gt;</item>
+    </plurals>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="one">2 ردیاب با کلاس‌های &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt; %1$d &lt;/xliff:g&gt;</item>
+        <item quantity="other">2 ردیاب با کلاس‌های &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt; %1$d &lt;/xliff:g&gt;</item>
+    </plurals>
+    <plurals name="tracker_and_classes">
+        <item quantity="one">1 ردیاب با کلاس &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt; %1$d &lt;/xliff:g&gt;</item>
+        <item quantity="other">1 ردیاب با کلاس‌های &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt; %1$d &lt;/xliff:g&gt;</item>
+    </plurals>
+    <string name="toggle_class_listing">تغییر وضع لیست کردن کلاس</string>
+    <string name="class_viewer">بیننده کلاس</string>
+    <string name="word_wrap">تغییر وضع بسته بندی کلمه</string>
+    <string name="credits_message">"به نویسندگان
+\n- پروژه منبع باز اندروید
+\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt; اطلاعات Apps_packages &lt;/a&gt;
+\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt; راه انداز فعالیت &lt;/a&gt;
+\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt; ویرایشگر &lt;/a&gt;
+\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt; AppsMonitor &lt;/a&gt;
+\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt; وات &lt;/a&gt;
+\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt; AppOpsX &lt;/a&gt;
+\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt; SAI &lt;/a&gt;
+\nاعتبار لوگو: &lt;a href=\"https://github.com/Atrate\"&gt; Atrate &lt;/a&gt;. "</string>
+    <string name="credits">مشارکت‌کنندگان</string>
+    <string name="third_party">کتابخانه‌ها و نمادهای شخص ثالث</string>
+    <string name="license">پروانه</string>
+    <string name="icon_picker">انتخاب‌گر نماد</string>
+    <string name="error_invalid_icon_format">فرمت نماد نامعتبر</string>
+    <string name="error_invalid_icon_resource">منبع نماد نامعتبر</string>
+    <string name="insert_icon">درج نماد</string>
+    <string name="class_name">نام کلاس</string>
+    <string name="package_name">نام بسته</string>
+    <string name="shortcut_name">نام میانبر</string>
+    <string name="edit_shortcut">ویرایش میانبر</string>
+    <string name="create_shortcut">ایجاد میانبر</string>
+    <string name="starting_activity">شروع فعالیت:
+\n&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;</string>
+    <string name="error_verbose_pin_shortcut">راه انداز کنونی از PinShortcut پشتیبانی نمی‌کند. ایجاد میانبر امکان‌پذیر نیست.</string>
+    <string name="error_creating_shortcut">خطا در ایجاد میانبر</string>
+    <string name="instructions">دستورالعمل‌ها</string>
+    <string name="empty_package_name">نام بسته خالی</string>
+    <string name="main_activity">فعالیت اصلی</string>
+    <string name="user_id">شناسه کاربر</string>
+    <string name="installer_app">برنامه نصب کننده</string>
+    <string name="date_updated">تاریخ به‌روزرسانی</string>
+    <string name="date_installed">تاریخ نصب</string>
+    <string name="more_info">اطلاعات بیشتر</string>
+    <string name="sdk_flags">پرچم‌ها</string>
+    <string name="sdk_max">بیشترین</string>
+    <string name="sdk_min">کمترین</string>
+    <string name="data_dir">دایرکتوری داده‌ها</string>
+    <string name="source_dir">دایرکتوری منبع</string>
+    <string name="paths_and_directories">مسیرها و راهنماها</string>
+    <string name="user_app">برنامه کاربر</string>
+    <string name="system_app">برنامه سیستم</string>
+    <string name="app_info">اطلاعات برنامه</string>
+    <string name="version_name_with_code">نسخه &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;%2$d&lt;/xliff:g&gt;)</string>
+    <string name="sort">مرتب سازی</string>
+    <string name="user">کاربر</string>
+    <string name="system">سیستم</string>
+    <string name="app_not_installed">برنامه نصب نشده است</string>
+    <string name="media_size">رسانه</string>
+    <string name="obb_size">Obb</string>
+    <string name="cache_size">حافظه پنهان</string>
+    <string name="data_size">داده‌ها</string>
+    <string name="about">درباره</string>
+    <string name="data_usage_msg">استفاده از داده‌ها از زمان آخرین بوت شدن</string>
+    <string name="data_transmitted">داده‌های منتقل شده</string>
+    <string name="data_received">داده دریافت‌شده</string>
+    <string name="sort_by_target_sdk">SDK هدف</string>
+    <string name="sort_by_domain">ابتدا برنامه کاربر</string>
+    <string name="sort_by_package_name">نام بسته</string>
+    <string name="sort_by_app_label">برچسب برنامه</string>
+    <string name="loading">درحال بارگذاری…</string>
+    <string name="error">خطا</string>
+    <string name="manifest">اظهار‌نامه</string>
+    <string name="input_features">ویژگی های ورودی</string>
+    <string name="no_configurations">بدون پیکربندی</string>
+    <string name="configurations">پیکربندی‌ها</string>
+    <string name="no_signatures">بدون امضا</string>
+    <string name="signatures">امضاها</string>
+    <string name="sort_by_sha">امضا</string>
+    <string name="shared_user_id">شناسه کاربر مشترک</string>
+    <string name="sort_by_shared_user_id">شناسه کاربر مشترک</string>
+    <string name="no_feature">بدون ویژگی</string>
+    <string name="gles_ver">درخواست نسخه GL ES</string>
+    <string name="uses_feature">از امکانات استفاده می کند</string>
+    <string name="protection_level">سطح حفاظت</string>
+    <string name="group">گروه</string>
+    <string name="shared_libs">کتاب‌خانه های مشترک</string>
+    <string name="declared_permission">مجوزها</string>
+    <string name="patterns_allowed">الگوها مجاز است</string>
+    <string name="write">بنویس</string>
+    <string name="read">بخوان</string>
+    <string name="path_permissions">مجوزهای مسیر</string>
+    <string name="grant_uri_permission">اعطای دسترسی URI</string>
+    <string name="flags">پرچم ها</string>
+    <string name="soft_input">حالت ورودی نرم</string>
+    <string name="orientation">جهت</string>
+    <string name="no_service">بدون خدمات</string>
+    <string name="service">سرویس‌ها</string>
+    <string name="authority">مسئول</string>
+    <string name="sort_by_last_update">آخرین به‌روزرسانی</string>
+    <string name="task_affinity">قرابت وظیفه</string>
+    <string name="launch_mode">حالت راه‌اندازی</string>
+    <string name="no_providers">بدون ارائه دهنده</string>
+    <string name="providers">ارائه دهندگان</string>
+    <string name="no_receivers">بدون گیرنده</string>
+    <string name="receivers">گیرنده ها</string>
+    <string name="no_activities">بدون فعالیت</string>
+    <string name="refresh">نوسازی</string>
+    <string name="launch">راه‌اندازی</string>
+    <string name="activities">فعالیت ها</string>
+    <string name="require_no_permission">مجوز لازم نیست</string>
+    <string name="permissions">از مجوزها استفاده می کند</string>
+    <string name="uninstall">حذف نصب</string>
+    <string name="instructions_header">[این دستورالعمل ها قدیمی است و دیگر به روز نخواهد شد. برای به روزرسانی اطلاعات به سایت اسناد رسمی (https://muntashirakon.github.io/AppManager) مراجعه کنید]</string>
+</resources>
