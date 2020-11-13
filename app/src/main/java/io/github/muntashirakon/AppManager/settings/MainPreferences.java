@@ -236,11 +236,6 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .show();
             return true;
         });
-        // OpenPGP Provider
-        findPreference("open_pgp_provider").setOnPreferenceClickListener(preference -> {
-            new OpenPgpKeySelectionDialogFragment().show(getParentFragmentManager(), OpenPgpKeySelectionDialogFragment.TAG);
-            return true;
-        });
         // About
         findPreference("about").setOnPreferenceClickListener(preference -> {
             @SuppressLint("InflateParams")
