@@ -717,4 +717,12 @@
     <string name="select_apk">Виберіть APK</string>
     <string name="send_crash_report">Надсилати звіт про падіння</string>
     <string name="tap_to_submit_crash_report">Торкніться, щоб надіслати звіт про аварійне завершення роботи.</string>
+    <string name="none">Без шифрування</string>
+    <string name="ecc">Еліптична криптографія (ЕСС)</string>
+    <string name="pref_encryption_msg">Додавання шифрування для резервних копій</string>
+    <string name="encryption">Шифрування</string>
+    <string name="select_user">Виберіть користувача</string>
+    <string name="pref_show_users_in_installer_msg">Відображення списку користувачів, котрих потрібно вибрати перед інсталяцією зовнішнього додатка. Потрібен ROOT або ADB</string>
+    <string name="pref_show_users_in_installer">Показати користувачів у програмі встановлення</string>
+    <string name="failed_to_duplicate_profile">Не вдалося дублювати профіль</string>
 </resources>
