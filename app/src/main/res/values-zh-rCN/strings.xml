@@ -631,4 +631,14 @@
     <string name="duplicate">重复</string>
     <string name="new_profile">新配置文件</string>
     <string name="input_profile_name_description">配置文件名不应包含任何空格。</string>
+    <string name="ecc">椭圆曲线加密法</string>
+    <string name="rsa">RSA 加密演算法</string>
+    <string name="aes">高级加密标准</string>
+    <string name="none">无</string>
+    <string name="pref_encryption_msg">为备份添加加密</string>
+    <string name="encryption">加密</string>
+    <string name="select_user">选择用户</string>
+    <string name="pref_show_users_in_installer_msg">安装外部应用程序之前，显示要选择的用户列表。需要root 或 ADB</string>
+    <string name="pref_show_users_in_installer">在安装包中显示用户</string>
+    <string name="failed_to_duplicate_profile">无法复制配置文件</string>
 </resources>
