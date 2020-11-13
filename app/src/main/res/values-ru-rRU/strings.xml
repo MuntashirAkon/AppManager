@@ -726,4 +726,8 @@
     <string name="state_wake_kill">Отключение пробуждения</string>
     <string name="state_parked">Оформлено</string>
     <string name="state_device_io">Ввод/вывод устройства</string>
+    <string name="rsa">RSA</string>
+    <string name="aes">AES</string>
+    <string name="un_apkm">UnApkm</string>
+    <string name="keystore">Хранилище ключей</string>
 </resources>
