@@ -217,11 +217,11 @@
     <string name="rules_not_applied">规则未被应用</string>
     <string name="str_logo">Logo</string>
     <string name="pref_root_mode_enabled">Root 模式</string>
-    <string name="pref_root_mode_enabled_msg">激活此应用程序的所有根功能，禁用此功能会自动检测ADB模式</string>
+    <string name="pref_root_mode_enabled_msg">激活此应用程序的所有root功能，禁用此功能会自动检测ADB模式。</string>
     <string name="pref_global_blocking_enabled">实时拦截组件</string>
-    <string name="pref_global_blocking_enabled_msg">使您可以阻止任何应用程序的任何组件，而无需显式启用阻止该应用程序</string>
+    <string name="pref_global_blocking_enabled_msg">允许您拦截任何应用程序的任何组件，而无需拦截该应用程序。</string>
     <string name="pref_usage_access_enabled">使用情况访问权限</string>
-    <string name="pref_usage_access_enabled_msg">让您查看应用程序使用统计数据和应用程序数据信息</string>
+    <string name="pref_usage_access_enabled_msg">让您查看应用程序使用统计数据和应用程序数据信息。</string>
     <string name="app_settings">设置</string>
     <string name="only_works_in_root_mode">仅在 root 或 ADB 模式下工作</string>
     <string name="usage_yesterday">昨天</string>
@@ -238,7 +238,7 @@
     <string name="sort_by_times_opened">打开次数</string>
     <string name="sort_by_mobile_data">移动数据</string>
     <string name="pref_import_export_blocking_rules">导入/导出阻止规则</string>
-    <string name="pref_import_export_blocking_rules_msg">导入/导出规则，从 Watt 或 Blocker 导入外部规则</string>
+    <string name="pref_import_export_blocking_rules_msg">导入/导出规则，从 Watt 或 Blocker 导入外部规则。</string>
     <string name="pref_import_watt">从 Watt导入</string>
     <string name="pref_import_blocker">从Blocker 导入</string>
     <string name="the_import_was_successful">已导入</string>
@@ -294,10 +294,10 @@
     <string name="keyboard_type">键盘类型</string>
     <string name="navigation">网站链接</string>
     <string name="touchscreen">触摸屏</string>
-    <string name="pref_export_msg">导出应用管理器中配置的阻止规则到外部存储</string>
-    <string name="pref_import_msg">从应用管理器导入先前导出的屏蔽规则</string>
+    <string name="pref_export_msg">导出应用管理器中配置的阻止规则到外部存储。</string>
+    <string name="pref_import_msg">导入先前从应用管理器导出的拦截规则。</string>
     <string name="pref_import_watt_msg">从Watt导入阻止规则，每个文件都包含单个命名包的规则，诸如packagename.xml。</string>
-    <string name="pref_import_blocker_msg">从Blocker导入阻止规则，每个文件包含单个软件包的规则</string>
+    <string name="pref_import_blocker_msg">从Blocker导入拦截规则，每个文件包含单个软件包的规则。</string>
     <string name="pref_app_theme">应用主题</string>
     <string name="follow_system">跟随系统</string>
     <string name="battery_mode">电量模式</string>
@@ -349,7 +349,7 @@
 \n支持小组: https://t.me/AppManagerAndroid
 \n推特: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">导入现有规则</string>
-    <string name="pref_import_existing_msg">将被其他应用禁用的组件添加到应用管理器。 在使用此工具时要小心，因为可能有许多误报。 只选择您确定的应用</string>
+    <string name="pref_import_existing_msg">将被其他应用禁用的组件添加到应用管理器。 使用此工具时要小心，因为可能有许多误报。 只选择您确定的应用。</string>
     <string name="failed_to_get_data_usage_information">无法获取数据使用情况</string>
     <string name="clear_cache">清除缓存</string>
     <string name="block_unblock_trackers_description">阻止或取消屏蔽所有已安装应用的广告和跟踪组件</string>
@@ -434,14 +434,14 @@
     <string name="website">网址</string>
     <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">删除所有规则</string>
-    <string name="pref_remove_all_rules_msg">所有已配置的被阻止的组件将被启用，应用操作将被设置为默认值，权限将被授予</string>
+    <string name="pref_remove_all_rules_msg">已授予权限，应用操作和组件将回到默认值。</string>
     <string name="are_you_sure">您确定吗？</string>
     <string name="filter_apps_with_activities">有活动的应用程序</string>
     <string name="toggle_default_app_ops">切换默认应用</string>
     <string name="installer_error_aborted">安装失败，要么因为它被取消，要么因为会话意外关闭</string>
     <string name="installer_error_blocked_device">设备</string>
     <string name="installer_error_blocked">安装被阻止, 由 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
-    <string name="installer_error_conflict">无法安装这个应用程序，因为一个已安装的应用程序的包名和它一样</string>
+    <string name="installer_error_conflict">无法安装这个应用程序，因为软件包名称正在使用中</string>
     <string name="installer_error_incompatible">应用程序与此设备不兼容</string>
     <string name="installer_error_bad_apks">无效的 APK 文件</string>
     <string name="installer_error_storage">没有足够的存储空间安装应用程序</string>
@@ -549,7 +549,7 @@
     <string name="no_apps">没有应用</string>
     <string name="apps">应用程序</string>
     <string name="compression_method">压缩方法: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
-    <string name="pref_backup_flags_msg">为备份选项添加预设消除了每次备份/恢复时选择flag的负担</string>
+    <string name="pref_backup_flags_msg">为备份选项添加一个预设消除了每次备份/恢复时选择flags的负担。</string>
     <string name="pref_compression_method">压缩方法</string>
     <string name="rules">规则</string>
     <string name="other">其他</string>
@@ -585,9 +585,9 @@
     <string name="uninstall_updates">卸载更新</string>
     <string name="launch_mode_single_top">栈顶</string>
     <string name="only_install">仅安装</string>
-    <string name="install_without_data_loss">如果您已经禁用了签名验证，您可以使用<b>仅安装</b>选项在不丢失数据情况下安装这个应用程序。</string>
+    <string name="install_without_data_loss">如果您已经关闭了签名验证，您可以使用&lt;b&gt;仅安装&lt;/b&gt;选项在不丢失数据情况下安装这个应用程序。</string>
     <string name="app_data_will_be_lost">现有数据将丢失。</string>
-    <string name="signature_mismatch_for_system_apps">无法安装应用程序，因为安装的应用程序是一个具有不同签名的系统应用程序。</string>
+    <string name="signature_mismatch_for_system_apps">无法安装应用程序，因为一个具有不同签名的系统应用程序的包名和它一样。</string>
     <string name="do_you_want_to_uninstall_and_install">您想要卸载并重新安装该应用程序吗\?</string>
     <string name="packages">包</string>
     <string name="usage_access_not_supported">无法请求使用情况访问权限，因为相应的设置页不存在。</string>
@@ -614,13 +614,13 @@
         <item quantity="other">2 个跟踪器 <xliff:g id="class_no" example="50">%1$d</xliff:g> 个 classes</item>
     </plurals>
     <string name="copy">复制</string>
-    <string name="view_missing_signatures">点击可以查看App Manager库数据库中还没有的签名。如果你愿意，也可以发送给我。</string>
+    <string name="view_missing_signatures">点击以查看或发送App Manager的库数据库中还没有的签名。</string>
     <plurals name="missing_signatures">
         <item quantity="other">%1$d 个签名缺失</item>
     </plurals>
     <string name="orientation_behind">与在活动堆栈下的活动相同方向</string>
     <string name="filter_running_apps">运行中的应用</string>
-    <string name="select_apk">选择 apk</string>
+    <string name="select_apk">选择 APK</string>
     <string name="send_crash_report">发送崩溃报告</string>
     <string name="tap_to_submit_crash_report">点击提交崩溃报告。</string>
     <string name="am_crashed">应用崩溃了</string>
@@ -630,15 +630,16 @@
     <string name="input_profile_name">配置文件名称</string>
     <string name="duplicate">重复</string>
     <string name="new_profile">新配置文件</string>
-    <string name="input_profile_name_description">配置文件名不应包含任何空格。</string>
+    <string name="input_profile_name_description">配置文件名不能包含任何空格。</string>
     <string name="ecc">椭圆曲线加密法</string>
     <string name="rsa">RSA 加密演算法</string>
     <string name="aes">高级加密标准</string>
     <string name="none">无</string>
-    <string name="pref_encryption_msg">为备份添加加密</string>
+    <string name="pref_encryption_msg">为备份添加加密。</string>
     <string name="encryption">加密</string>
     <string name="select_user">选择用户</string>
-    <string name="pref_show_users_in_installer_msg">安装外部应用程序之前，显示要选择的用户列表。需要root 或 ADB</string>
+    <string name="pref_show_users_in_installer_msg">安装外部应用程序之前，显示要选择的用户列表。需要root 或 ADB。</string>
     <string name="pref_show_users_in_installer">在安装包中显示用户</string>
     <string name="failed_to_duplicate_profile">无法复制配置文件</string>
+    <string name="keyboard_no_keys">无按键</string>
 </resources>
