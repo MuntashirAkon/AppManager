@@ -196,11 +196,11 @@
     <string name="failed_to_enable_op">A operação do aplicativo solicitada não pôde ser ativada</string>
     <string name="failed_to_disable_op">A operação do aplicativo solicitada não pôde ser desativada</string>
     <string name="pref_root_mode_enabled">Modo root</string>
-    <string name="pref_root_mode_enabled_msg">Ativa todas as funções root deste aplicativo, o modo ADB é detectado automaticamente quando isto está desativado</string>
+    <string name="pref_root_mode_enabled_msg">Ativa todas as funções root deste aplicativo, o modo ADB é detectado automaticamente quando isto está desligado.</string>
     <string name="pref_global_blocking_enabled">Bloquear componentes globalmente</string>
-    <string name="pref_global_blocking_enabled_msg">Permite bloquear qualquer componente de qualquer aplicativo sem ativar explicitamente o bloqueio para o aplicativo</string>
+    <string name="pref_global_blocking_enabled_msg">Permite bloquear qualquer componente de qualquer aplicativo sem ligar explicitamente o bloqueio para o aplicativo.</string>
     <string name="pref_usage_access_enabled">Acesso ao uso</string>
-    <string name="pref_usage_access_enabled_msg">Permite ver as estatísticas de uso do aplicativo e suas informações de dados</string>
+    <string name="pref_usage_access_enabled_msg">Permite ver as estatísticas de uso do aplicativo e suas informações de dados.</string>
     <string name="app_settings">Configurações</string>
     <string name="only_works_in_root_mode">Funciona apenas no modo root</string>
     <string name="usage_yesterday">Ontem</string>
@@ -218,7 +218,7 @@
     <string name="sort_by_times_opened">Vezes abertas</string>
     <string name="sort_by_mobile_data">Dados móveis</string>
     <string name="pref_import_export_blocking_rules">Importar/Exportar regras de bloqueio</string>
-    <string name="pref_import_export_blocking_rules_msg">Importar/exportar regras, importar regras externas do Watt ou do Blocker</string>
+    <string name="pref_import_export_blocking_rules_msg">Importar/exportar regras, importar regras externas do Watt ou Blocker.</string>
     <string name="pref_import_watt">Importar do Watt</string>
     <string name="pref_import_blocker">Importar do Blocker</string>
     <string name="the_import_was_successful">Importado</string>
@@ -240,7 +240,7 @@
     <string name="backup_restore">Backup/Restauração</string>
     <string name="disable_background">Desativar Segundo plano</string>
     <string name="export_blocking_rules">Exportar Regras de Bloqueio</string>
-    <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selecionados</string>
+    <string name="some_items_selected">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"selection_no\" example=\"20\"&gt;%1$d&lt;/xliff:g&gt; selecionado(s)</string>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">Não foi possível limpar os dados de %1$d aplicativo</item>
         <item quantity="other">Não foi possível limpar os dados de %1$d aplicativos</item>
@@ -264,7 +264,7 @@
     </plurals>
     <string name="toggle_kill_for_system_apps">Alternar encerramento de aplicativos de sistema</string>
     <string name="app_op_cannot_be_disabled">Esta operação de aplicativo não pode ser desativada. É provável que seja somente leitura ou depende de outro operação de aplicativo.</string>
-    <string name="permission_name">Nome de Permissão</string>
+    <string name="permission_name">Nome da Permissão</string>
     <string name="mode">Modo</string>
     <string name="running">Executando</string>
     <string name="duration">Duração</string>
@@ -277,10 +277,10 @@
     <string name="export_failed">Falha ao exportar!</string>
     <string name="keyboard_type">Tipo de Teclado</string>
     <string name="navigation">Navegação</string>
-    <string name="pref_export_msg">Exportar regras de bloqueio configuradas no App Manager para o armazenamento externo</string>
-    <string name="pref_import_msg">Importar regras de bloqueio exportadas anteriormente no App Manager</string>
+    <string name="pref_export_msg">Exportar regras de bloqueio configuradas no App Manager para o armazenamento externo.</string>
+    <string name="pref_import_msg">Importar regras de bloqueio exportadas anteriormente do App Manager.</string>
     <string name="pref_import_watt_msg">Importar regras de bloqueio do Watt, cada arquivo contendo regras para um único pacote nomeado como packagename.xml etc.</string>
-    <string name="pref_import_blocker_msg">Importar regras de bloqueio do Blocker. Cada arquivo contém regras para um único pacote</string>
+    <string name="pref_import_blocker_msg">Importar regras de bloqueio do Blocker. Cada arquivo contém regras para um único pacote.</string>
     <string name="pref_app_theme">Tema do aplicativo</string>
     <string name="follow_system">Seguir o sistema</string>
     <string name="battery_mode">Modo de bateria</string>
@@ -332,7 +332,7 @@
 \nGrupo de suporte: https://t.me/AppManagerAndroid
 \nTwitter: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">Importar regras existentes</string>
-    <string name="pref_import_existing_msg">Adicione componentes desativados por outros aplicativoss ao App Manager. Tenha cuidado ao usar essa ferramenta, pois podem haver muitos falsos positivos. Escolha apenas os aplicativos sobre os quais você tem certeza</string>
+    <string name="pref_import_existing_msg">Adicione componentes desativados por outros aplicativoss ao App Manager. Tenha cuidado ao usar essa ferramenta, pois podem haver muitos falsos positivos. Escolha apenas os aplicativos sobre os quais você tem certeza.</string>
     <string name="failed_to_get_data_usage_information">Não foi possível obter informações de uso de dados</string>
     <string name="clear_cache">Limpar cache</string>
     <string name="block_unblock_trackers_description">Bloquear ou desbloquear componentes de propagandas e rastreamento em todos os apps instalados</string>
@@ -350,8 +350,8 @@
     <string name="only_works_in_root_or_adb_mode">Funciona apenas no modo Root ou ADB</string>
     <string name="failed_to_parse_some_numbers">Não foi possível analisar alguns números</string>
     <plurals name="no_of_splits">
-        <item quantity="one">%1$d dividido</item>
-        <item quantity="other">%1$d divididos</item>
+        <item quantity="one">%1$d divisão</item>
+        <item quantity="other">%1$d divisões</item>
     </plurals>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">Não foi possível obter informações do pacote, possivelmente um APK dividido</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> instalado</string>
@@ -400,8 +400,8 @@
         <item quantity="other">Não foi possível bloquear componentes de %1$d aplicativos</item>
     </plurals>
     <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="one">Não foi possível negar operações de aplicativo para %1$d aplicativo</item>
-        <item quantity="other">Não foi possível negar operações de aplicativo para %1$d aplicativos</item>
+        <item quantity="one">Não foi possível negar operações de aplicativo de %1$d aplicativo</item>
+        <item quantity="other">Não foi possível negar operações de aplicativo de %1$d aplicativos</item>
     </plurals>
     <string name="apply_to_system_apps">Aplicar aos apps de sistema</string>
     <string name="apply_to_system_apps_question">Aplicar aos aplicativos do sistema também\? Selecione \"Não\" se não tiver certeza.</string>
@@ -419,14 +419,14 @@
     <string name="run_in_termux">Executar no Termux</string>
     <string name="website">Site</string>
     <string name="pref_remove_all_rules">Remover todas as regras</string>
-    <string name="pref_remove_all_rules_msg">Todos os componentes atualmente bloqueados serão ativados, as configurações de operações de aplicativo serão alteradas para os valores padrões e as permissões serão concedidas</string>
+    <string name="pref_remove_all_rules_msg">As permissões são concedidas, as operações de aplicativo e os componentes retornarão aos valores padrão.</string>
     <string name="are_you_sure">Tem certeza?</string>
     <string name="filter_apps_with_activities">Apps com atividades</string>
     <string name="toggle_default_app_ops">Alternar operações de aplicativo padrões</string>
     <string name="installer_error_aborted">A instalação falhou porque foi cancelada ou a sessão foi encerrada inesperadamente</string>
     <string name="installer_error_blocked_device">dispositivo</string>
     <string name="installer_error_blocked">Instalação bloqueada por <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
-    <string name="installer_error_conflict">Não é possível instalar o aplicativo porque um aplicativo já instalado já tem esse nome de pacote</string>
+    <string name="installer_error_conflict">Não foi possível instalar o aplicativo porque o nome do pacote está em uso</string>
     <string name="installer_error_incompatible">O aplicativo é incompatível com esse dispositivo</string>
     <string name="installer_error_bad_apks">Os arquivos APK selecionados são inválidos</string>
     <string name="installer_error_storage">Não há espaço suficiente no armazenamento para instalar esse app</string>
@@ -490,9 +490,9 @@
     </plurals>
     <plurals name="backup_exists_are_you_sure">
         <item quantity="one">O backup existe. Tem certeza\?</item>
-        <item quantity="other">O backup existe para mais de um app. Tem certeza\?</item>
+        <item quantity="other">O backup existe para mais de um aplicativo. Tem certeza\?</item>
     </plurals>
-    <string name="pref_backup_flags_msg">Adicionar predefinições para opções de backup remove o fardo de selecionar flags toda vez que você faz backup/restaura</string>
+    <string name="pref_backup_flags_msg">Adicionar uma predefinição para opções de backup remove o fardo de selecionar flags toda vez que você faz backup/restaura.</string>
     <string name="reject_time">Tempo de Rejeição</string>
     <string name="accept_time">Tempo de Aceitação</string>
     <string name="deny_app_ops_description">Nega determinadas operações de aplicativo identificadas pelos valores constantes, ou seja, 63 significa RUN_IN_BACKGROUND</string>
@@ -551,8 +551,8 @@
     <string name="subject">Assunto</string>
     <string name="filter_apps_with_backups">Aplicativos com backups</string>
     <string name="sort_by_backup">Backup primeiro</string>
-    <string name="failed_to_uninstall_updates">Não foi possível desinstalar atualizações para <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
-    <string name="update_uninstalled_successfully">Atualizações para <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_uninstall_updates">Não foi possível desinstalar as atualizações do aplicativo &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="update_uninstalled_successfully">As atualizações do aplicativo &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; foram desinstaladas.</string>
     <string name="uninstall_updates">Desinstalar Atualizações</string>
     <string name="allow_open_pgp_operation">Clique para permitir que o AM use o OpenPGP</string>
     <string name="confirm_installation">Confirmar instalação</string>
@@ -589,17 +589,17 @@
     <string name="rsa_modulus">Módulo</string>
     <string name="critical_exts">Extensões Críticas</string>
     <string name="non_critical_exts">Extensões Não-críticas</string>
-    <string name="usage_access_not_supported">Não foi possível solicitar acesso de uso pois a página de configurações correspondentes não existe.</string>
+    <string name="usage_access_not_supported">Não foi possível solicitar acesso de uso, pois a página de configurações correspondentes não existe.</string>
     <string name="do_you_want_to_uninstall_and_install">Deseja desinstalar e instalar o aplicativo novamente\?</string>
-    <string name="signature_mismatch_for_system_apps">Não foi possível instalar o aplicativo porque o aplicativo instalado é um aplicativo do sistema com assinatura diferente.</string>
+    <string name="signature_mismatch_for_system_apps">Não foi possível instalar o aplicativo porque um aplicativo do sistema com uma assinatura diferente tem esse nome de pacote.</string>
     <string name="app_data_will_be_lost">Os dados existentes serão perdidos.</string>
-    <string name="install_without_data_loss">Se você tiver desativado a verificação de assinatura, você pode usar a opção <b>apenas instalar</b> para instalar o aplicativo sem perder dados.</string>
+    <string name="install_without_data_loss">Se você desligou a verificação de assinatura, você pode usar a opção &lt;b&gt;Apenas instalar&lt;/b&gt; para instalar o aplicativo sem perder dados.</string>
     <string name="only_install">Apenas Instalar</string>
     <string name="sys_config">Configurações do Sistema</string>
     <string name="scanner">Scanner</string>
     <string name="lib_details">Detalhes da biblioteca</string>
     <string name="tap_to_see_details">Toque para ver detalhes</string>
-    <string name="view_missing_signatures">Toque para exibir assinaturas que ainda não estão presentes no banco de dados de bibliotecas do App Manager. Você também pode enviá-los para mim se quiser.</string>
+    <string name="view_missing_signatures">Toque para visualizar ou enviar assinaturas ainda não presentes no banco de dados de bibliotecas do App Manager.</string>
     <string name="copy">Copiar</string>
     <string name="filter_running_apps">Aplicativos sendo executados</string>
     <string name="profiles">Perfis</string>
@@ -634,14 +634,14 @@
     <string name="launch_mode_single_task">Tarefa única</string>
     <string name="launch_mode_single_instance">Instância única</string>
     <string name="launch_mode_multiple">Vários</string>
-    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> localização para APK base</string>
-    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> código para APK base</string>
-    <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) recursos para APK base</string>
-    <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> localização para recurso <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
-    <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> código para <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
-    <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) recursos para função <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
-    <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para função <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
-    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para APK base</string>
+    <string name="locale_split_for_base_apk">Idioma &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt;%1$s&lt;/xliff:g&gt; para o APK base</string>
+    <string name="abi_split_for_base_apk">Código &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; para o APK base</string>
+    <string name="density_split_for_base_apk">Recursos &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI) para o APK base</string>
+    <string name="locale_split_for_feature">Idioma &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt;%1$s&lt;/xliff:g&gt; para a função &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
+    <string name="abi_split_for_feature">Código &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; para &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
+    <string name="density_split_for_feature">Recursos &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI) para a função &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%3$s&lt;/xliff:g&gt;</string>
+    <string name="unknown_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt; para a função &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
+    <string name="unknown_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt; para o APK base</string>
     <string name="routine_ops">Operações de rotina</string>
     <string name="input_app_ops_description">Insira constantes de operações de aplicativo com espaços, por exemplo (63 72 12) etc. Você pode encontrar constantes de operações de aplicativo na guia operações de aplicativo sob os suportes.</string>
     <string name="input_app_ops">Inserir operações de aplicativo</string>
@@ -661,22 +661,22 @@
     <string name="send_crash_report">Enviar relatório de travamento</string>
     <string name="tap_to_submit_crash_report">Toque para enviar o relatório de travamento.</string>
     <string name="am_crashed">AM acabou de travar</string>
-    <string name="select_apk">Selecionar apk</string>
+    <string name="select_apk">Selecionar APK</string>
     <string name="un_apkm">UnApkm</string>
     <string name="in_progress">Em andamento</string>
     <string name="conversion_failed">Falha na conversão.</string>
     <string name="duplicate">Duplicado</string>
     <string name="new_profile">Novo perfil</string>
-    <string name="input_profile_name_description">O nome do perfil não deve conter nenhum espaço.</string>
+    <string name="input_profile_name_description">O nome do perfil não pode conter espaços.</string>
     <string name="input_profile_name">Nome do perfil</string>
-    <string name="pref_encryption_msg">Adicionar criptografia aos backups</string>
+    <string name="pref_encryption_msg">Adicionar criptografia aos backups.</string>
     <string name="ecc">Criptografia de curva elíptica</string>
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
     <string name="none">Nenhuma</string>
     <string name="encryption">Criptografia</string>
     <string name="select_user">Selecionar usuário</string>
-    <string name="pref_show_users_in_installer_msg">Exibir uma lista de usuários para selecionar antes de instalar um aplicativo externo. Requer root ou ADB</string>
+    <string name="pref_show_users_in_installer_msg">Mostrar uma lista de usuários para selecionar antes de instalar um aplicativo externo. Requer root ou ADB.</string>
     <string name="failed_to_duplicate_profile">Não foi possível duplicar o perfil</string>
     <string name="pref_show_users_in_installer">Mostrar usuários no instalador</string>
 </resources>
