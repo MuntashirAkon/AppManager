@@ -183,7 +183,7 @@
     <string name="allow_open_pgp_operation">AM\'nin OpenPGP\'yi kullanmasına izin vermek için tıklayın</string>
     <string name="confirm_installation">Kurulumu onayla</string>
     <string name="compression_method">Sıkıştırma yöntemi: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
-    <string name="pref_backup_flags_msg">Yedekleme seçenekleri için ön ayar eklemek, her yedekleme/geri yükleme işleminizde işaretleri seçme yükünü ortadan kaldırır</string>
+    <string name="pref_backup_flags_msg">Yedekleme seçenekleri için bir ön ayar eklemek, her yedekleme/geri yükleme işleminizde işaretleri seçme yükünü ortadan kaldırır.</string>
     <string name="pref_compression_method">Sıkıştırma yöntemi</string>
     <string name="rules">Kurallar</string>
     <string name="other">Diğer</string>
@@ -284,14 +284,14 @@
     <string name="installer_error_storage">Uygulamayı kurmak için yeterli depolama alanı yok</string>
     <string name="installer_error_bad_apks">Geçersiz APK dosyaları seçildi</string>
     <string name="installer_error_incompatible">Uygulama bu aygıtla uyumlu değil</string>
-    <string name="installer_error_conflict">Kurulu bir uygulama bu paket adına zaten sahip olduğu için uygulama kurulamıyor</string>
+    <string name="installer_error_conflict">Paket adı kullanımda olduğundan uygulama kurulamadı</string>
     <string name="installer_error_blocked">Kurulum <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> tarafından engellendi</string>
     <string name="installer_error_blocked_device">aygıt</string>
     <string name="installer_error_aborted">İptal edildiği için veya oturum beklenmedik şekilde kapandığı için kurulum başarısız oldu</string>
     <string name="toggle_default_app_ops">Öntanımlı uygulama işlemlerini değiştir</string>
     <string name="filter_apps_with_activities">Etkinlikleri olan uygulamalar</string>
     <string name="are_you_sure">Emin misiniz\?</string>
-    <string name="pref_remove_all_rules_msg">Yapılandırılmış tüm engellenen bileşenler etkinleştirilecek, uygulama işlemleri öntanımlı değerlere ayarlanacak ve izinler verilecek</string>
+    <string name="pref_remove_all_rules_msg">İzinler verilir, uygulama işlemleri ve bileşenleri öntanımlı değerlere dönecektir.</string>
     <string name="pref_remove_all_rules">Tüm kuralları kaldır</string>
     <string name="website">Web sitesi</string>
     <string name="run_in_termux">Termux\'ta çalıştır</string>
@@ -369,7 +369,7 @@
     <string name="block_unblock_trackers_description">Tüm kurulu uygulamalardan reklam ve izleme bileşenlerini engelleyin veya engelini kaldırın</string>
     <string name="clear_cache">Önbelleği Temizle</string>
     <string name="failed_to_get_data_usage_information">Veri kullanım bilgileri alınamadı</string>
-    <string name="pref_import_existing_msg">Diğer uygulamalar tarafından devre dışı bırakılan bileşenleri App Manager\'e ekleyin. Çok sayıda yanlış pozitif olabileceğinden, bu aracı kullanırken dikkatli olun. Yalnızca emin olduğunuz uygulamaları seçin</string>
+    <string name="pref_import_existing_msg">Diğer uygulamalar tarafından devre dışı bırakılan bileşenleri App Manager\'e ekleyin. Çok sayıda yanlış pozitif olabileceğinden bu aracı kullanırken dikkatli olun. Yalnızca emin olduğunuz uygulamaları seçin.</string>
     <string name="pref_import_existing">Var olan kuralları içe aktar</string>
     <string name="community_links">Güncelleme Kanalı: https://t.me/AppManagerChannel
 \nDestek Grubu: https://t.me/AppManagerAndroid
@@ -423,10 +423,10 @@
     <string name="battery_mode">Pil modu</string>
     <string name="follow_system">Sisteme uy</string>
     <string name="pref_app_theme">Uygulama teması</string>
-    <string name="pref_import_blocker_msg">Engelleme kurallarını Blocker\'dan içe aktarın, her dosya tek bir paket için kurallar içerir</string>
+    <string name="pref_import_blocker_msg">Engelleme kurallarını Blocker\'dan içe aktarın, her dosya tek bir paket için kurallar içerir.</string>
     <string name="pref_import_watt_msg">Engelleme kurallarını Watt\'tan içe aktarın, her dosya paket_adı.xml olarak adlandırılmış tek bir paket için kurallar içerir.</string>
-    <string name="pref_import_msg">App Manager\'den daha önce dışa aktarılan engelleme kurallarını içe aktarın</string>
-    <string name="pref_export_msg">App Manager içinde yapılandırılan engelleme kurallarını harici depolamaya aktarın</string>
+    <string name="pref_import_msg">App Manager\'den daha önce dışa aktarılan engelleme kurallarını içe aktarın.</string>
+    <string name="pref_export_msg">App Manager içinde yapılandırılan engelleme kurallarını harici depolamaya aktarın.</string>
     <string name="touchscreen">Dokunmatik ekran</string>
     <string name="navigation">Gezinme</string>
     <string name="keyboard_type">Klavye Türü</string>
@@ -499,7 +499,7 @@
     <string name="the_import_was_successful">İçe aktarıldı</string>
     <string name="pref_import_blocker">Blocker\'dan içe aktar</string>
     <string name="pref_import_watt">Watt\'tan içe aktar</string>
-    <string name="pref_import_export_blocking_rules_msg">Kuralları içe/dışa aktar, Watt veya Blocker\'dan harici kuralları içe aktar</string>
+    <string name="pref_import_export_blocking_rules_msg">Kuralları içe/dışa aktarın, Watt veya Blocker\'dan harici kuralları içe aktarın.</string>
     <string name="pref_import_export_blocking_rules">Engelleme kurallarını içe/dışa aktar</string>
     <string name="sort_by_mobile_data">Mobil veri</string>
     <string name="sort_by_times_opened">Açılma sayısı</string>
@@ -515,11 +515,11 @@
     <string name="usage_yesterday">Dün</string>
     <string name="only_works_in_root_mode">Yalnızca root modunda çalışır</string>
     <string name="app_settings">Ayarlar</string>
-    <string name="pref_usage_access_enabled_msg">Uygulama kullanım istatistiklerinizi ve uygulama verisi bilgilerini görmenizi sağlar</string>
+    <string name="pref_usage_access_enabled_msg">Uygulama kullanım istatistiklerinizi ve uygulama verisi bilgilerini görmenizi sağlar.</string>
     <string name="pref_usage_access_enabled">Kullanım erişimi</string>
-    <string name="pref_global_blocking_enabled_msg">Uygulama için engellemeyi açıkça etkinleştirmeden herhangi bir uygulamanın herhangi bir bileşenini engellemenize izin verir</string>
+    <string name="pref_global_blocking_enabled_msg">Uygulama için açıkça engellemeyi açmadan herhangi bir uygulamanın herhangi bir bileşenini engellemenize izin verir.</string>
     <string name="pref_global_blocking_enabled">Genel bileşen engelleme</string>
-    <string name="pref_root_mode_enabled_msg">Bu uygulamanın tüm root özelliklerini etkinleştirir, bu devre dışı bırakıldığında ADB modu otomatik olarak algılanır</string>
+    <string name="pref_root_mode_enabled_msg">Bu uygulamanın tüm root özelliklerini etkinleştirir, bu kapalı olduğunda ADB modu otomatik olarak algılanır.</string>
     <string name="pref_root_mode_enabled">Root modu</string>
     <string name="str_logo">Logo</string>
     <string name="rules_not_applied">Kurallar uygulanmadı</string>
@@ -618,16 +618,16 @@
     <string name="create_shortcut">Kısayol Oluştur</string>
     <string name="sort_by_target_sdk">Hedef SDK</string>
     <string name="only_install">Yalnızca Kur</string>
-    <string name="install_without_data_loss">İmza doğrulamayı devre dışı bıraktıysanız, uygulamayı veri kaybetmeden kurmak için <b>yalnızca kur</b> seçeneğini kullanabilirsiniz.</string>
+    <string name="install_without_data_loss">İmza doğrulamayı kapattıysanız, uygulamayı veri kaybetmeden kurmak için &lt;b&gt;Yalnızca kur&lt;/b&gt; seçeneğini kullanabilirsiniz.</string>
     <string name="app_data_will_be_lost">Mevcut veriler kaybolacak.</string>
-    <string name="signature_mismatch_for_system_apps">Kurulu uygulama, farklı imzaya sahip bir sistem uygulaması olduğundan uygulama kurulamadı.</string>
+    <string name="signature_mismatch_for_system_apps">Farklı imzaya sahip bir sistem uygulaması bu paket adına sahip olduğu için uygulama kurulamadı.</string>
     <string name="do_you_want_to_uninstall_and_install">Uygulamayı kaldırıp tekrar kurmak istiyor musunuz\?</string>
     <string name="onboard">Yerleşik</string>
     <string name="packages">paketler</string>
     <string name="usage_access_not_supported">İlgili ayarlar sayfası olmadığı için kullanım erişimi istenemedi.</string>
     <string name="sys_config">Sistem Yapılandırması</string>
     <string name="copy">Kopyala</string>
-    <string name="view_missing_signatures">Henüz App Manager\'ın kütüphane veri tabanında bulunmayan imzaları görüntülemek için dokunun. İsterseniz bana da gönderebilirsiniz.</string>
+    <string name="view_missing_signatures">Henüz App Manager\'ın kütüphane veri tabanında bulunmayan imzaları görüntülemek veya göndermek için dokunun.</string>
     <string name="tap_to_see_details">Ayrıntıları görmek için dokunun</string>
     <string name="lib_details">Kütüphane Ayrıntıları</string>
     <string name="no_libs">Kütüphane yok</string>
@@ -665,17 +665,17 @@
     <string name="in_progress">Devam ediyor</string>
     <string name="conversion_failed">Dönüştürme başarısız oldu.</string>
     <string name="new_profile">Yeni profil</string>
-    <string name="input_profile_name_description">Profil adı boşluk içermemelidir.</string>
+    <string name="input_profile_name_description">Profil adı boşluk içeremez.</string>
     <string name="input_profile_name">Profil adı</string>
     <string name="duplicate">Kopyala</string>
     <string name="ecc">Eliptik eğri şifrelemesi</string>
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
     <string name="none">Yok</string>
-    <string name="pref_encryption_msg">Yedeklemeler için şifreleme ekle</string>
+    <string name="pref_encryption_msg">Yedeklemeler için şifreleme ekleyin.</string>
     <string name="encryption">Şifreleme</string>
     <string name="select_user">Kullanıcı seç</string>
-    <string name="pref_show_users_in_installer_msg">Harici bir uygulamayı kurmadan önce seçilecek bir kullanıcı listesi görüntüle. Root veya ADB gerektirir</string>
+    <string name="pref_show_users_in_installer_msg">Harici bir uygulamayı kurmadan önce seçilecek bir kullanıcı listesi görüntüle. Root veya ADB gerektirir.</string>
     <string name="pref_show_users_in_installer">Kurucuda kullanıcıları göster</string>
     <string name="failed_to_duplicate_profile">Profil kopyalanamadı</string>
 </resources>
