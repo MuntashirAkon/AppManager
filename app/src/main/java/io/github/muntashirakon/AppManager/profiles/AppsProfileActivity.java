@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,10 +25,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.ProgressIndicator;
-import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONException;
 
@@ -46,6 +43,7 @@ import androidx.viewpager.widget.ViewPager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 
 public class AppsProfileActivity extends BaseActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
@@ -146,13 +144,11 @@ public class AppsProfileActivity extends BaseActivity
                 }).start();
                 return true;
             case R.id.action_duplicate:
-                View view = getLayoutInflater().inflate(R.layout.dialog_input_profile_name, null);
-                new MaterialAlertDialogBuilder(this)
+                new TextInputDialogBuilder(this, R.string.input_profile_name)
                         .setTitle(R.string.new_profile)
-                        .setView(view)
+                        .setHelperText(R.string.input_profile_name_description)
                         .setNegativeButton(R.string.cancel, null)
-                        .setPositiveButton(R.string.go, (dialog, which) -> {
-                            Editable profName = ((TextInputEditText) view.findViewById(R.id.input_backup_name)).getText();
+                        .setPositiveButton(R.string.go, (dialog, which, profName, isChecked) -> {
                             progressIndicator.show();
                             if (!TextUtils.isEmpty(profName)) {
                                 if (getSupportActionBar() != null) {

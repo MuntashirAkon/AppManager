@@ -23,12 +23,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -50,6 +47,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -283,12 +281,10 @@ public class BackupDialogFragment extends DialogFragment {
                     // Multiple backup is requested, no need to warn users about backups since the
                     // user has a choice between overwriting the existing backup or create a new one
                     // TODO(18/9/20): Add overwrite option
-                    View view = activity.getLayoutInflater().inflate(R.layout.dialog_input_backup_name, null);
-                    new MaterialAlertDialogBuilder(activity)
+                    new TextInputDialogBuilder(activity, R.string.input_backup_name)
                             .setTitle(R.string.backup)
-                            .setView(view)
-                            .setPositiveButton(R.string.ok, (dialog, which) -> {
-                                Editable backupName = ((TextInputEditText) view.findViewById(R.id.input_backup_name)).getText();
+                            .setHelperText(R.string.input_backup_name_description)
+                            .setPositiveButton(R.string.ok, (dialog, which, backupName, isChecked) -> {
                                 if (!TextUtils.isEmpty(backupName)) {
                                     //noinspection ConstantConditions backupName is never null here
                                     startOperation(op, new String[]{backupName.toString()});

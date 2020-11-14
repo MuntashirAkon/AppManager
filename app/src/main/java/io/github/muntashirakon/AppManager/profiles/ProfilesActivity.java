@@ -20,7 +20,6 @@ package io.github.muntashirakon.AppManager.profiles;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,10 +33,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.ProgressIndicator;
-import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONException;
 
@@ -58,6 +55,7 @@ import androidx.lifecycle.ViewModelProvider;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
@@ -131,24 +129,20 @@ public class ProfilesActivity extends BaseActivity {
         adapter = new ProfilesAdapter(this);
         listView.setAdapter(adapter);
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
-        fab.setOnClickListener(v -> {
-            View view = getLayoutInflater().inflate(R.layout.dialog_input_profile_name, null);
-            new MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.new_profile)
-                    .setView(view)
-                    .setNegativeButton(R.string.cancel, null)
-                    .setPositiveButton(R.string.go, (dialog, which) -> {
-                        Editable profName = ((TextInputEditText) view.findViewById(R.id.input_backup_name)).getText();
-                        if (!TextUtils.isEmpty(profName)) {
-                            Intent intent = new Intent(this, AppsProfileActivity.class);
-                            //noinspection ConstantConditions
-                            intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE_NAME, profName.toString());
-                            intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE, true);
-                            startActivity(intent);
-                        }
-                    })
-                    .show();
-        });
+        fab.setOnClickListener(v -> new TextInputDialogBuilder(this, R.string.input_profile_name)
+                .setTitle(R.string.new_profile)
+                .setHelperText(R.string.input_profile_name_description)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.go, (dialog, which, profName, isChecked) -> {
+                    if (!TextUtils.isEmpty(profName)) {
+                        Intent intent = new Intent(this, AppsProfileActivity.class);
+                        //noinspection ConstantConditions
+                        intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE_NAME, profName.toString());
+                        intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE, true);
+                        startActivity(intent);
+                    }
+                })
+                .show());
         model.getProfiles().observe(this, profiles -> {
             progressIndicator.hide();
             adapter.setDefaultList(profiles);
@@ -286,18 +280,16 @@ public class ProfilesActivity extends BaseActivity {
                             Toast.makeText(activity, "Not yet implemented", Toast.LENGTH_SHORT).show();
                             return true;
                         case R.id.action_duplicate: {
-                            View view = activity.getLayoutInflater().inflate(R.layout.dialog_input_profile_name, null);
-                            new MaterialAlertDialogBuilder(activity)
+                            new TextInputDialogBuilder(activity, R.string.input_profile_name)
                                     .setTitle(R.string.new_profile)
-                                    .setView(view)
+                                    .setHelperText(R.string.input_profile_name_description)
                                     .setNegativeButton(R.string.cancel, null)
-                                    .setPositiveButton(R.string.go, (dialog, which) -> {
-                                        Editable editable = ((TextInputEditText) view.findViewById(R.id.input_backup_name)).getText();
-                                        if (!TextUtils.isEmpty(editable)) {
+                                    .setPositiveButton(R.string.go, (dialog, which, newProfName, isChecked) -> {
+                                        if (!TextUtils.isEmpty(newProfName)) {
                                             Intent intent = new Intent(activity, AppsProfileActivity.class);
                                             intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profName);
                                             //noinspection ConstantConditions
-                                            intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE_NAME, editable.toString());
+                                            intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE_NAME, newProfName.toString());
                                             intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE, true);
                                             activity.startActivity(intent);
                                         }

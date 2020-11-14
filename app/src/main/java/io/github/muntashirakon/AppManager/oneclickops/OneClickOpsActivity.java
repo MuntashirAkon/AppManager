@@ -24,15 +24,12 @@ import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +42,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -174,17 +172,16 @@ public class OneClickOpsActivity extends BaseActivity {
             Toast.makeText(this, R.string.only_works_in_root_mode, Toast.LENGTH_SHORT).show();
             return;
         }
-        View view = getLayoutInflater().inflate(R.layout.dialog_input_signatures, null);
-        new MaterialAlertDialogBuilder(this)
+        new TextInputDialogBuilder(this, R.string.input_signatures)
+                .setHelperText(R.string.input_signatures_description)
+                .setCheckboxLabel(R.string.apply_to_system_apps)
                 .setTitle(R.string.block_components_dots)
-                .setView(view)
-                .setPositiveButton(R.string.search, (dialog, which) -> {
-                    final Editable signaturesEditable = ((TextInputEditText) view.findViewById(R.id.input_signatures)).getText();
-                    final boolean systemApps = ((MaterialCheckBox) view.findViewById(R.id.checkbox_system_apps)).isChecked();
-                    if (signaturesEditable == null) return;
+                .setPositiveButton(R.string.search, (dialog, which, signatureNames, isChecked) -> {
+                    final boolean systemApps = isChecked;
+                    if (signatureNames == null) return;
                     mProgressIndicator.show();
                     new Thread(() -> {
-                        String[] signatures = signaturesEditable.toString().split("\\s+");
+                        String[] signatures = signatureNames.toString().split("\\s+");
                         if (signatures.length == 0) return;
                         final List<ItemCount> componentCounts = new ArrayList<>();
                         for (ApplicationInfo applicationInfo : getPackageManager().getInstalledApplications(0)) {
@@ -211,8 +208,8 @@ public class OneClickOpsActivity extends BaseActivity {
                             runOnUiThread(() -> {
                                 mProgressIndicator.hide();
                                 new MaterialAlertDialogBuilder(this)
-                                        .setMultiChoiceItems(filteredPackagesWithComponentCount, checkedItems, (dialog1, which1, isChecked) -> {
-                                            if (!isChecked)
+                                        .setMultiChoiceItems(filteredPackagesWithComponentCount, checkedItems, (dialog1, which1, isChecked1) -> {
+                                            if (!isChecked1)
                                                 selectedPackages.remove(filteredPackages[which1]);
                                             else selectedPackages.add(filteredPackages[which1]);
                                         })
@@ -248,17 +245,16 @@ public class OneClickOpsActivity extends BaseActivity {
             Toast.makeText(this, R.string.only_works_in_root_or_adb_mode, Toast.LENGTH_SHORT).show();
             return;
         }
-        View view = getLayoutInflater().inflate(R.layout.dialog_input_app_ops, null);
-        new MaterialAlertDialogBuilder(this)
+        new TextInputDialogBuilder(this, R.string.input_app_ops)
                 .setTitle(R.string.deny_app_ops_dots)
-                .setView(view)
-                .setPositiveButton(R.string.search, (dialog, which) -> {
-                    final Editable appOpsEditable = ((TextInputEditText) view.findViewById(R.id.input_app_ops)).getText();
-                    final boolean systemApps = ((MaterialCheckBox) view.findViewById(R.id.checkbox_system_apps)).isChecked();
-                    if (appOpsEditable == null) return;
+                .setCheckboxLabel(R.string.apply_to_system_apps)
+                .setHelperText(R.string.input_app_ops_description)
+                .setPositiveButton(R.string.search, (dialog, which, appOpNames, isChecked) -> {
+                    final boolean systemApps = isChecked;
+                    if (appOpNames == null) return;
                     mProgressIndicator.show();
                     new Thread(() -> {
-                        String[] appOpsStr = appOpsEditable.toString().split("\\s+");
+                        String[] appOpsStr = appOpNames.toString().split("\\s+");
                         if (appOpsStr.length == 0) return;
                         int[] appOps = new int[appOpsStr.length];
                         try {
@@ -297,8 +293,8 @@ public class OneClickOpsActivity extends BaseActivity {
                             runOnUiThread(() -> {
                                 mProgressIndicator.hide();
                                 new MaterialAlertDialogBuilder(this)
-                                        .setMultiChoiceItems(filteredPackagesWithAppOpCount, checkedItems, (dialog1, which1, isChecked) -> {
-                                            if (!isChecked)
+                                        .setMultiChoiceItems(filteredPackagesWithAppOpCount, checkedItems, (dialog1, which1, isChecked1) -> {
+                                            if (!isChecked1)
                                                 selectedPackages.remove(filteredPackages[which1]);
                                             else selectedPackages.add(filteredPackages[which1]);
                                         })

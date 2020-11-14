@@ -31,15 +31,17 @@
         android:paddingEnd="@dimen/padding_medium">
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@android:id/text1"
             style="@style/AppTheme.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/input_profile_name"
+            tools:hint="@string/input_app_ops"
+            tools:helperText="@string/input_app_ops_description"
             app:hintAnimationEnabled="true"
             app:hintEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/input_backup_name"
+                android:id="@android:id/input"
                 style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,10 +50,11 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:layout_width="match_parent"
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@android:id/checkbox"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/input_profile_name_description" />
+            tools:text="@string/apply_to_system_apps" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </ScrollView>
