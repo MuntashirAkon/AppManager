@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="external_multiple_data_dir">دایرکتوری داده‌های خارجی &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dir_no\" example=\"1\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="external_multiple_data_dir">دایرکتوری داده‌های خارجی <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="external_data_dir">دایرکتوری داده های خارجی</string>
     <string name="sort_by_blocked_components">اول مسدود</string>
     <string name="sort_by_disabled_app">اول غیرفعال</string>
@@ -23,16 +23,16 @@
     <string name="app_size">برنامه</string>
     <string name="total_size">مجموع</string>
     <string name="storage_and_cache">ذخیره سازی و حافظه پنهان</string>
-    <string name="failed_to_stop">نتوانست &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt; را متوقف کند.</string>
+    <string name="failed_to_stop">نتوانست <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> را متوقف کند.</string>
     <string name="force_stop">توقف اجباری</string>
-    <string name="failed_to_enable">نمی توان &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt; %1$s &lt;/xliff:g&gt; را فعال کرد.</string>
-    <string name="failed_to_disable">نتوانست&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; را غیر‌فعال کند.</string>
+    <string name="failed_to_enable">نمی توان <xliff:g id="app_name" example="App Manager"> %1$s </xliff:g> را فعال کرد.</string>
+    <string name="failed_to_disable">نتوانست<xliff:g id="app_name" example="App Manager">%1$s</xliff:g> را غیر‌فعال کند.</string>
     <string name="enable">فعال کن</string>
     <string name="disable">غیرفعال کردن</string>
     <string name="stopped">متوقف شد</string>
     <string name="uninstall_system_app_message">این یک برنامه سیستم است. آیا مطمئن هستید که می خواهید این برنامه را حذف کنید؟</string>
-    <string name="uninstalled_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; حذف شده است.</string>
-    <string name="failed_to_uninstall">نتوانست &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; را حذف کند.</string>
+    <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> حذف شده است.</string>
+    <string name="failed_to_uninstall">نتوانست <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> را حذف کند.</string>
     <string name="uninstall_app_message">آیا می خواهید این برنامه را حذف کنید؟</string>
     <string name="view_in_settings">مشاهده در تنظیمات</string>
     <string name="no_content">بدون محتوا</string>
@@ -103,41 +103,41 @@
     <string name="no_tracker_class">بدون کلاس ردیاب</string>
     <string name="no_shared_libs">کتابخانه مشترک وجود ندارد</string>
     <plurals name="main_list_date_days">
-        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt; %1$s &lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt; %2$d &lt;/xliff:g&gt; روز</item>
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt; %1$s &lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt; %2$d &lt;/xliff:g&gt; روز‌</item>
+        <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020"> %1$s </xliff:g> <xliff:g id="day_no" example="5"> %2$d </xliff:g> روز</item>
+        <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020"> %1$s </xliff:g> <xliff:g id="day_no" example="5"> %2$d </xliff:g> روز‌</item>
     </plurals>
     <string name="all_classes">همه کلاس‌ها</string>
     <string name="tracker_classes">کلاس های ردیاب</string>
     <string name="tracker_details">جزئیات ردیاب</string>
     <string name="ecc">رمزنگاری منحنی بیضوی</string>
     <string name="found_trackers">ردیاب‌های یافت شده:</string>
-    <string name="tested_signatures_on_classes_and_time_taken">امضاهای &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"signature_no\" example=\"342\"&gt; %1$d &lt;/xliff:g&gt; در کلاس‌های &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"6000\"&gt; %2$d &lt;/xliff:g&gt; امتحان شده است.
-\nزمان صرف شده &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"time\" example=\"10000\"&gt; %3$d &lt;/xliff:g&gt; میلی ثانیه (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"iteration_no\" example=\"100000\"&gt; %4$d &lt;/xliff:g&gt; تکرار).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">امضاهای <xliff:g id="signature_no" example="342"> %1$d </xliff:g> در کلاس‌های <xliff:g id="class_no" example="6000"> %2$d </xliff:g> امتحان شده است.
+\nزمان صرف شده <xliff:g id="time" example="10000"> %3$d </xliff:g> میلی ثانیه (<xliff:g id="iteration_no" example="100000"> %4$d </xliff:g> تکرار).</string>
     <plurals name="other_trackers_and_classes">
-        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt; %1$d &lt;/xliff:g&gt; ردیاب با کلاس‌های &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt; %2$d &lt;/xliff:g&gt;</item>
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt; %1$d &lt;/xliff:g&gt; ردیاب با کلاس‌های &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt; %2$d &lt;/xliff:g&gt;</item>
+        <item quantity="one"><xliff:g id="tracker_no" example="8"> %1$d </xliff:g> ردیاب با کلاس‌های <xliff:g id="class_no" example="50"> %2$d </xliff:g></item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8"> %1$d </xliff:g> ردیاب با کلاس‌های <xliff:g id="class_no" example="50"> %2$d </xliff:g></item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="one">2 ردیاب با کلاس‌های &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt; %1$d &lt;/xliff:g&gt;</item>
-        <item quantity="other">2 ردیاب با کلاس‌های &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt; %1$d &lt;/xliff:g&gt;</item>
+        <item quantity="one">2 ردیاب با کلاس‌های <xliff:g id="class_no" example="50"> %1$d </xliff:g></item>
+        <item quantity="other">2 ردیاب با کلاس‌های <xliff:g id="class_no" example="50"> %1$d </xliff:g></item>
     </plurals>
     <plurals name="tracker_and_classes">
-        <item quantity="one">1 ردیاب با کلاس &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt; %1$d &lt;/xliff:g&gt;</item>
-        <item quantity="other">1 ردیاب با کلاس‌های &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt; %1$d &lt;/xliff:g&gt;</item>
+        <item quantity="one">1 ردیاب با کلاس <xliff:g id="class_no" example="50"> %1$d </xliff:g></item>
+        <item quantity="other">1 ردیاب با کلاس‌های <xliff:g id="class_no" example="50"> %1$d </xliff:g></item>
     </plurals>
     <string name="toggle_class_listing">تغییر وضع لیست کردن کلاس</string>
     <string name="class_viewer">بیننده کلاس</string>
     <string name="word_wrap">تغییر وضع بسته بندی کلمه</string>
-    <string name="credits_message">"به نویسندگان
+    <string name="credits_message">به نویسندگان
 \n- پروژه منبع باز اندروید
-\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt; اطلاعات Apps_packages &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt; راه انداز فعالیت &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt; ویرایشگر &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt; AppsMonitor &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt; وات &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt; AppOpsX &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt; SAI &lt;/a&gt;
-\nاعتبار لوگو: &lt;a href=\"https://github.com/Atrate\"&gt; Atrate &lt;/a&gt;. "</string>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info"> اطلاعات Apps_packages </a>
+\n- <a href="https://github.com/butzist/ActivityLauncher"> راه انداز فعالیت </a>
+\n- <a href="https://github.com/billthefarmer/editor"> ویرایشگر </a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor"> AppsMonitor </a>
+\n- <a href="https://github.com/tuyafeng/Watt"> وات </a>
+\n- <a href="https://github.com/8enet/AppOpsX"> AppOpsX </a>
+\n- <a href="https://github.com/Aefyr/SAI"> SAI </a>
+\nاعتبار لوگو: <a href="https://github.com/Atrate"> Atrate </a>.</string>
     <string name="credits">مشارکت‌کنندگان</string>
     <string name="third_party">کتابخانه‌ها و نمادهای شخص ثالث</string>
     <string name="license">پروانه</string>
@@ -151,7 +151,7 @@
     <string name="edit_shortcut">ویرایش میانبر</string>
     <string name="create_shortcut">ایجاد میانبر</string>
     <string name="starting_activity">شروع فعالیت:
-\n&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;</string>
+\n<xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_verbose_pin_shortcut">راه انداز کنونی از PinShortcut پشتیبانی نمی‌کند. ایجاد میانبر امکان‌پذیر نیست.</string>
     <string name="error_creating_shortcut">خطا در ایجاد میانبر</string>
     <string name="instructions">دستورالعمل‌ها</string>
@@ -171,7 +171,7 @@
     <string name="user_app">برنامه کاربر</string>
     <string name="system_app">برنامه سیستم</string>
     <string name="app_info">اطلاعات برنامه</string>
-    <string name="version_name_with_code">نسخه &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;%2$d&lt;/xliff:g&gt;)</string>
+    <string name="version_name_with_code">نسخه <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="sort">مرتب سازی</string>
     <string name="user">کاربر</string>
     <string name="system">سیستم</string>

@@ -412,7 +412,7 @@
     <string name="expiry_date">Utløpsdato</string>
     <string name="issued_date">Utstedelsesdato</string>
     <string name="issuer">Utsteder</string>
-    <string name="abi_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; kode for &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
+    <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> kode for <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <plurals name="missing_signatures">
         <item quantity="one">%1$d signatur mangler</item>
         <item quantity="other">%1$d signaturer mangler</item>
