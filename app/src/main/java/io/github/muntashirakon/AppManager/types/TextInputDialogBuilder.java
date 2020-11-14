@@ -43,8 +43,6 @@ public class TextInputDialogBuilder {
     @NonNull
     private MaterialCheckBox checkBox;
     @NonNull
-    private View view;
-    @NonNull
     private MaterialAlertDialogBuilder builder;
 
     public interface OnClickListener {
@@ -54,7 +52,7 @@ public class TextInputDialogBuilder {
     @SuppressLint("InflateParams")
     public TextInputDialogBuilder(@NonNull FragmentActivity activity, @NonNull CharSequence inputTextLabel) {
         this.activity = activity;
-        this.view = activity.getLayoutInflater().inflate(R.layout.dialog_text_input, null);
+        View view = activity.getLayoutInflater().inflate(R.layout.dialog_text_input, null);
         this.textInputLayout = view.findViewById(android.R.id.text1);
         this.textInputLayout.setHint(inputTextLabel);
         this.editText = view.findViewById(android.R.id.input);
@@ -65,14 +63,7 @@ public class TextInputDialogBuilder {
 
     @SuppressLint("InflateParams")
     public TextInputDialogBuilder(@NonNull FragmentActivity activity, @StringRes int inputTextLabel) {
-        this.activity = activity;
-        this.view = activity.getLayoutInflater().inflate(R.layout.dialog_text_input, null);
-        this.textInputLayout = view.findViewById(android.R.id.text1);
-        this.textInputLayout.setHint(inputTextLabel);
-        this.editText = view.findViewById(android.R.id.input);
-        this.checkBox = view.findViewById(android.R.id.checkbox);
-        this.checkBox.setVisibility(View.GONE);
-        this.builder = new MaterialAlertDialogBuilder(activity).setView(view);
+        this(activity, activity.getText(inputTextLabel));
     }
 
     public TextInputDialogBuilder setTitle(@Nullable CharSequence title) {
