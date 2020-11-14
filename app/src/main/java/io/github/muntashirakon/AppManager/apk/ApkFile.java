@@ -485,7 +485,9 @@ public final class ApkFile implements AutoCloseable {
         }
         IOUtils.closeQuietly(zipFile);
         IOUtils.closeQuietly(fd);
-        IOUtils.deleteSilently(cacheFilePath);
+        if (!cacheFilePath.getAbsolutePath().startsWith("/data/app")) {
+            IOUtils.deleteSilently(cacheFilePath);
+        }
         // Ensure that entries are not accessible if accidentally accessed
         entries.clear();
         baseEntry = null;
