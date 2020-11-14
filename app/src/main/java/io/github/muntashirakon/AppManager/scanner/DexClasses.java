@@ -68,6 +68,7 @@ public class DexClasses implements Closeable {
             while (enumeration.hasMoreElements()) {
                 className = enumeration.nextElement();
                 try {
+                    classes.add(className);
                     classes.addAll(getImports(className));
                 } catch (ClassNotFoundException|LinkageError ignore) {
                 }
