@@ -42,6 +42,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import io.github.muntashirakon.AppManager.BaseActivity;
@@ -124,8 +125,10 @@ public class PackageInstallerActivity extends BaseActivity {
             finish();
             return;
         }
+        final AlertDialog progressDialog = UIUtils.getProgressDialog(this, getText(R.string.loading));
         mPackageManager = getPackageManager();
         fm = getSupportFragmentManager();
+        progressDialog.show();
         new Thread(() -> {
             try {
                 if (apkUri != null) {
@@ -142,6 +145,7 @@ public class PackageInstallerActivity extends BaseActivity {
                 }
                 appLabel = mPackageManager.getApplicationLabel(packageInfo.applicationInfo).toString();
                 Drawable appIcon = mPackageManager.getApplicationIcon(packageInfo.applicationInfo);
+                runOnUiThread(progressDialog::dismiss);
                 if (installedPackageInfo == null) {
                     // App not installed
                     actionName = getString(R.string.install);

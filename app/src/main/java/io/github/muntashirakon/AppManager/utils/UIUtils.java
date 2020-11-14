@@ -27,11 +27,18 @@ import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
+import android.view.View;
+import android.widget.TextView;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
 
 public class UIUtils {
@@ -106,5 +113,23 @@ public class UIUtils {
     public static int dpToPx(@NonNull Context context, int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 context.getResources().getDisplayMetrics());
+    }
+
+    @NonNull
+    public static AlertDialog getProgressDialog(@NonNull FragmentActivity activity) {
+        return getProgressDialog(activity, null);
+    }
+
+    @NonNull
+    public static AlertDialog getProgressDialog(@NonNull FragmentActivity activity, @Nullable CharSequence text) {
+        View view = activity.getLayoutInflater().inflate(R.layout.dialog_progress, null);
+        if (text != null) {
+            TextView tv = view.findViewById(android.R.id.text1);
+            tv.setText(text);
+        }
+        return new MaterialAlertDialogBuilder(activity)
+                .setCancelable(false)
+                .setView(view)
+                .create();
     }
 }

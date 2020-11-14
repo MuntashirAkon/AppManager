@@ -37,6 +37,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class UnApkmActivity extends AppCompatActivity {
     private InputStream inputStream;
@@ -67,15 +68,10 @@ public class UnApkmActivity extends AppCompatActivity {
             finish();
             return;
         }
-        dialog = new MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.app_name)
-                .setCancelable(false)
-                .setView(getLayoutInflater().inflate(R.layout.dialog_progress, null))
-                .create();
+        dialog = UIUtils.getProgressDialog(this);
         // Open input stream
         try {
             String fileName = IOUtils.getFileName(getContentResolver(), uri);
-            if (fileName != null) dialog.setTitle(fileName);
             inputStream = getContentResolver().openInputStream(uri);
             if (inputStream == null) finish();
             exportManifest.launch(fileName != null ? IOUtils.trimExtension(fileName) + ".apks" : null);

@@ -23,7 +23,7 @@
     android:paddingStart="16dp"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
-    android:paddingEnd="16dp">
+    android:paddingEnd="8dp">
 
     <ProgressBar
         android:layout_width="wrap_content"
@@ -31,12 +31,14 @@
         android:layout_weight="0" />
 
     <TextView
+        android:id="@android:id/text1"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
-        android:paddingStart="8dp"
+        android:paddingStart="16dp"
         android:paddingEnd="8dp"
         android:gravity="center_vertical"
+        android:textSize="24sp"
         android:text="@string/in_progress" />
 
 </LinearLayout>
