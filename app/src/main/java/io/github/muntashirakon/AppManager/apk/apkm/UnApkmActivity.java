@@ -23,9 +23,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -47,6 +44,7 @@ public class UnApkmActivity extends AppCompatActivity {
             uri -> {
                 if (uri == null) {
                     // Back button pressed.
+                    finish();
                     return;
                 }
                 new UnApkmThread(uri).start();
@@ -72,10 +70,11 @@ public class UnApkmActivity extends AppCompatActivity {
         // Open input stream
         try {
             String fileName = IOUtils.getFileName(getContentResolver(), uri);
+            if (fileName != null && !fileName.endsWith(".apkm")) throw new IOException("Invalid file.");
             inputStream = getContentResolver().openInputStream(uri);
             if (inputStream == null) finish();
             exportManifest.launch(fileName != null ? IOUtils.trimExtension(fileName) + ".apks" : null);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(this, R.string.conversion_failed, Toast.LENGTH_SHORT).show();
             finish();

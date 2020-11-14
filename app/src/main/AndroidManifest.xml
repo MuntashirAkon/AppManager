@@ -84,7 +84,9 @@
 
                 <data android:scheme="file" />
                 <data android:scheme="content" />
+                <data android:host="*" />
                 <data android:mimeType="application/vnd.android.package-archive" />
+                <data android:mimeType="application/octet-stream" />
             </intent-filter>
         </activity>
         <activity
@@ -112,8 +114,10 @@
 
                 <data android:scheme="file" />
                 <data android:scheme="content" />
+                <data android:host="*" />
                 <data android:mimeType="application/vnd.android.package-archive" />
                 <data android:mimeType="application/xapk-package-archive" />
+                <data android:mimeType="application/octet-stream" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -161,7 +165,9 @@
 
                 <data android:scheme="file" />
                 <data android:scheme="content" />
+                <data android:host="*" />
                 <data android:mimeType="application/vnd.android.package-archive" />
+                <data android:mimeType="application/octet-stream" />
             </intent-filter>
         </activity>
         <activity
@@ -180,8 +186,10 @@
 
                 <data android:scheme="file" />
                 <data android:scheme="content" />
+                <data android:host="*" />
                 <data android:mimeType="application/vnd.android.package-archive" />
                 <data android:mimeType="application/xapk-package-archive" />
+                <data android:mimeType="application/octet-stream" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -221,6 +229,17 @@
             android:excludeFromRecents="true"
             android:label="@string/un_apkm"
             android:theme="@style/AppTheme.TransparentBackground">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:host="*" />
+                <data android:mimeType="application/octet-stream" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
