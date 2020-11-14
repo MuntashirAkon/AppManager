@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
@@ -44,7 +43,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
-import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialog;
+import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -111,16 +110,15 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     items.add(info.packageName);
                     itemNames.add(pm.getApplicationLabel(info.applicationInfo));
                 }
-                SearchableMultiChoiceDialog fragment = new SearchableMultiChoiceDialog();
-                Bundle args = new Bundle();
-                args.putCharSequenceArrayList(SearchableMultiChoiceDialog.EXTRA_ITEM_NAMES, itemNames);
-                args.putStringArrayList(SearchableMultiChoiceDialog.EXTRA_ITEMS, items);
-                args.putStringArrayList(SearchableMultiChoiceDialog.EXTRA_SELECTED_ITEMS, model.getCurrentPackages());
-                fragment.setArguments(args);
-                fragment.setOnSelectionComplete(selectedItems -> new Thread(() -> model.setPackages(selectedItems)).start());
                 activity.runOnUiThread(() -> {
                     progressIndicator.hide();
-                    fragment.show(getParentFragmentManager(), SearchableMultiChoiceDialog.TAG);
+                    new SearchableMultiChoiceDialogBuilder(activity, items, itemNames)
+                            .setSelections(model.getCurrentPackages())
+                            .setTitle(R.string.apps)
+                            .setPositiveButton(R.string.ok, (dialog, which, selectedItems) ->
+                                    new Thread(() -> model.setPackages(selectedItems)).start())
+                            .setNegativeButton(R.string.cancel, null)
+                            .show();
                 });
             }).start();
         });

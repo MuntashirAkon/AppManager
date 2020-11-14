@@ -18,9 +18,7 @@
 package io.github.muntashirakon.AppManager.types;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.content.Context;
-import android.os.Bundle;
+import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -37,47 +35,42 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 
-public class SearchableMultiChoiceDialog extends DialogFragment {
-    public static final String TAG = "MultiChoiceDialogFragment";
-    public static final String EXTRA_ITEMS = "items";
-    public static final String EXTRA_ITEM_NAMES = "item_names";
-    public static final String EXTRA_SELECTED_ITEMS = "selected_items";
-
-    public interface SelectionCompleteInterface {
-        void onSelectionComplete(@NonNull List<String> selectedItems);
-    }
-
-    SelectionCompleteInterface selectionCompleteInterface;
-
-    public void setOnSelectionComplete(SelectionCompleteInterface selectionCompleteInterface) {
-        this.selectionCompleteInterface = selectionCompleteInterface;
-    }
-
+public class SearchableMultiChoiceDialogBuilder {
     @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        FragmentActivity activity = requireActivity();
-        List<String> items = requireArguments().getStringArrayList(EXTRA_ITEMS);
-        List<CharSequence> itemNames = requireArguments().getCharSequenceArrayList(EXTRA_ITEM_NAMES);
-        List<String> selectedItems = requireArguments().getStringArrayList(EXTRA_SELECTED_ITEMS);
-        if (items == null || itemNames == null || items.size() != itemNames.size())
-            return super.onCreateDialog(savedInstanceState);
-        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (inflater == null) return super.onCreateDialog(savedInstanceState);
-        @SuppressLint("InflateParams")
-        View view = inflater.inflate(R.layout.dialog_searchable_multi_choice, null);
-        RecyclerView recyclerView = view.findViewById(android.R.id.list);
+    private FragmentActivity activity;
+    @NonNull
+    private List<String> items;
+    @NonNull
+    private List<CharSequence> itemNames;
+    @Nullable
+    private List<String> selectedItems;
+    @NonNull
+    private MaterialAlertDialogBuilder builder;
+    @NonNull
+    private RecyclerView recyclerView;
+    SearchableRecyclerViewAdapter adapter;
+
+    public interface OnClickListener {
+        void onClick(DialogInterface dialog, int which, @NonNull List<String> selectedItems);
+    }
+
+    @SuppressLint("InflateParams")
+    public SearchableMultiChoiceDialogBuilder(@NonNull FragmentActivity activity, @NonNull List<String> items, @NonNull List<CharSequence> itemNames) {
+        this.activity = activity;
+        this.items = items;
+        this.itemNames = itemNames;
+        View view = activity.getLayoutInflater().inflate(R.layout.dialog_searchable_multi_choice, null);
+        recyclerView = view.findViewById(android.R.id.list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
-        SearchableRecyclerViewAdapter adapter = new SearchableRecyclerViewAdapter(itemNames, items, selectedItems);
-        recyclerView.setAdapter(adapter);
         TextInputEditText editText = view.findViewById(R.id.search_bar);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -93,16 +86,74 @@ public class SearchableMultiChoiceDialog extends DialogFragment {
             public void afterTextChanged(Editable s) {
             }
         });
-        return new MaterialAlertDialogBuilder(activity)
-                .setView(view)
-                .setTitle(R.string.apps)
-                .setPositiveButton(R.string.ok, (dialog, which) -> {
-                    if (selectionCompleteInterface != null) {
-                        selectionCompleteInterface.onSelectionComplete(adapter.getSelectedItems());
-                    }
-                })
-                .setNegativeButton(R.string.cancel, null)
-                .create();
+        builder = new MaterialAlertDialogBuilder(activity).setView(view);
+    }
+
+    public SearchableMultiChoiceDialogBuilder setSelections(@Nullable List<String> selectedItems) {
+        this.selectedItems = selectedItems;
+        return this;
+    }
+
+    public SearchableMultiChoiceDialogBuilder setTitle(@Nullable CharSequence title) {
+        builder.setTitle(title);
+        return this;
+    }
+
+    public SearchableMultiChoiceDialogBuilder setTitle(@StringRes int title) {
+        builder.setTitle(title);
+        return this;
+    }
+
+    public SearchableMultiChoiceDialogBuilder setPositiveButton(@StringRes int textId, OnClickListener listener) {
+        builder.setPositiveButton(textId, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
+        });
+        return this;
+    }
+
+    public SearchableMultiChoiceDialogBuilder setPositiveButton(@NonNull CharSequence text, OnClickListener listener) {
+        builder.setPositiveButton(text, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
+        });
+        return this;
+    }
+
+    public SearchableMultiChoiceDialogBuilder setNegativeButton(@StringRes int textId, OnClickListener listener) {
+        builder.setNegativeButton(textId, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
+        });
+        return this;
+    }
+
+    public SearchableMultiChoiceDialogBuilder setNegativeButton(@NonNull CharSequence text, OnClickListener listener) {
+        builder.setNegativeButton(text, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
+        });
+        return this;
+    }
+
+    public SearchableMultiChoiceDialogBuilder setNeutralButton(@StringRes int textId, OnClickListener listener) {
+        builder.setNeutralButton(textId, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
+        });
+        return this;
+    }
+
+    public SearchableMultiChoiceDialogBuilder setNeutralButton(@NonNull CharSequence text, OnClickListener listener) {
+        builder.setNeutralButton(text, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
+        });
+        return this;
+    }
+
+    public AlertDialog create() {
+        adapter = new SearchableRecyclerViewAdapter(itemNames, items, selectedItems);
+        recyclerView.setAdapter(adapter);
+        return builder.create();
+    }
+
+    public void show() {
+        create().show();
     }
 
     class SearchableRecyclerViewAdapter extends RecyclerView.Adapter<SearchableRecyclerViewAdapter.ViewHolder> {
@@ -134,7 +185,7 @@ public class SearchableMultiChoiceDialog extends DialogFragment {
         }
 
         void setFilteredItems(CharSequence constraint) {
-            Locale locale = LangUtils.getLocaleByLanguage(requireActivity());
+            Locale locale = LangUtils.getLocaleByLanguage(activity);
             filteredItems.clear();
             for (int i = 0; i < items.size(); ++i) {
                 if (itemNames.get(i).toString().toLowerCase(locale).contains(constraint)
@@ -155,13 +206,14 @@ public class SearchableMultiChoiceDialog extends DialogFragment {
 
         @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public SearchableRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            @SuppressLint("PrivateResource")
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mtrl_alert_select_dialog_multichoice, parent, false);
-            return new ViewHolder(view);
+            return new SearchableRecyclerViewAdapter.ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull SearchableRecyclerViewAdapter.ViewHolder holder, int position) {
             Integer index = filteredItems.get(position);
             boolean selected = selectedItems.contains(index);
             holder.item.setText(itemNames.get(index));
