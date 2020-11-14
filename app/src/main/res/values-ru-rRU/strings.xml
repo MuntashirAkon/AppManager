@@ -720,4 +720,10 @@
     <string name="conversion_failed">Преобразование не удалось.</string>
     <string name="am_crashed">Произошло падение АМ</string>
     <string name="filter_running_apps">Работающие приложения</string>
+    <string name="dsa_affine_y">Аффина координаты y</string>
+    <string name="dsa_affine_x">Аффинная координата x</string>
+    <string name="state_waking">Пробуждение</string>
+    <string name="state_wake_kill">Отключение пробуждения</string>
+    <string name="state_parked">Оформлено</string>
+    <string name="state_device_io">Ввод/вывод устройства</string>
 </resources>
