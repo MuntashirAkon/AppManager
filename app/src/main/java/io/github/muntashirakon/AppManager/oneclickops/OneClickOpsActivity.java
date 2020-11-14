@@ -42,6 +42,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
@@ -196,28 +197,21 @@ public class OneClickOpsActivity extends BaseActivity {
                         if (!componentCounts.isEmpty()) {
                             ItemCount componentCount;
                             final ArrayList<String> selectedPackages = new ArrayList<>();
-                            final String[] filteredPackagesWithComponentCount = new String[componentCounts.size()];
+                            List<CharSequence> packageNamesWithComponentCount = new ArrayList<>();
                             for (int i = 0; i < componentCounts.size(); ++i) {
                                 componentCount = componentCounts.get(i);
                                 selectedPackages.add(componentCount.packageName);
-                                filteredPackagesWithComponentCount[i] = "(" + componentCount.count + ") " + componentCount.packageLabel;
+                                packageNamesWithComponentCount.add("(" + componentCount.count + ") " + componentCount.packageLabel);
                             }
-                            final String[] filteredPackages = selectedPackages.toArray(new String[0]);
-                            final boolean[] checkedItems = new boolean[selectedPackages.size()];
-                            Arrays.fill(checkedItems, true);
                             runOnUiThread(() -> {
                                 mProgressIndicator.hide();
-                                new MaterialAlertDialogBuilder(this)
-                                        .setMultiChoiceItems(filteredPackagesWithComponentCount, checkedItems, (dialog1, which1, isChecked1) -> {
-                                            if (!isChecked1)
-                                                selectedPackages.remove(filteredPackages[which1]);
-                                            else selectedPackages.add(filteredPackages[which1]);
-                                        })
+                                new SearchableMultiChoiceDialogBuilder(this, selectedPackages, packageNamesWithComponentCount)
+                                        .setSelections(selectedPackages)
                                         .setTitle(R.string.filtered_packages)
-                                        .setPositiveButton(R.string.apply, (dialog1, which1) -> {
+                                        .setPositiveButton(R.string.apply, (dialog1, which1, selectedItems) -> {
                                             mProgressIndicator.show();
                                             Intent intent = new Intent(this, BatchOpsService.class);
-                                            intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedPackages);
+                                            intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedItems);
                                             intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_BLOCK_COMPONENTS);
                                             intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
                                             Bundle args = new Bundle();
@@ -225,7 +219,7 @@ public class OneClickOpsActivity extends BaseActivity {
                                             intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
                                             ContextCompat.startForegroundService(this, intent);
                                         })
-                                        .setNegativeButton(R.string.cancel, (dialog1, which1) -> mProgressIndicator.hide())
+                                        .setNegativeButton(R.string.cancel, (dialog1, which1, selectedItems) -> mProgressIndicator.hide())
                                         .show();
                             });
                         } else {
@@ -281,28 +275,21 @@ public class OneClickOpsActivity extends BaseActivity {
                         if (!appOpCounts.isEmpty()) {
                             ItemCount appOpCount;
                             final ArrayList<String> selectedPackages = new ArrayList<>();
-                            final String[] filteredPackagesWithAppOpCount = new String[appOpCounts.size()];
+                            List<CharSequence> packagesWithAppOpCount = new ArrayList<>();
                             for (int i = 0; i < appOpCounts.size(); ++i) {
                                 appOpCount = appOpCounts.get(i);
                                 selectedPackages.add(appOpCount.packageName);
-                                filteredPackagesWithAppOpCount[i] = "(" + appOpCount.count + ") " + appOpCount.packageLabel;
+                                packagesWithAppOpCount.add("(" + appOpCount.count + ") " + appOpCount.packageLabel);
                             }
-                            final String[] filteredPackages = selectedPackages.toArray(new String[0]);
-                            final boolean[] checkedItems = new boolean[selectedPackages.size()];
-                            Arrays.fill(checkedItems, true);
                             runOnUiThread(() -> {
                                 mProgressIndicator.hide();
-                                new MaterialAlertDialogBuilder(this)
-                                        .setMultiChoiceItems(filteredPackagesWithAppOpCount, checkedItems, (dialog1, which1, isChecked1) -> {
-                                            if (!isChecked1)
-                                                selectedPackages.remove(filteredPackages[which1]);
-                                            else selectedPackages.add(filteredPackages[which1]);
-                                        })
+                                new SearchableMultiChoiceDialogBuilder(this, selectedPackages, packagesWithAppOpCount)
+                                        .setSelections(selectedPackages)
                                         .setTitle(R.string.filtered_packages)
-                                        .setPositiveButton(R.string.apply, (dialog1, which1) -> {
+                                        .setPositiveButton(R.string.apply, (dialog1, which1, selectedItems) -> {
                                             mProgressIndicator.show();
                                             Intent intent = new Intent(this, BatchOpsService.class);
-                                            intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedPackages);
+                                            intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedItems);
                                             intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_IGNORE_APP_OPS);
                                             intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
                                             Bundle args = new Bundle();
@@ -310,7 +297,7 @@ public class OneClickOpsActivity extends BaseActivity {
                                             intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
                                             ContextCompat.startForegroundService(this, intent);
                                         })
-                                        .setNegativeButton(R.string.cancel, (dialog1, which1) -> mProgressIndicator.hide())
+                                        .setNegativeButton(R.string.cancel, (dialog1, which1, selectedItems) -> mProgressIndicator.hide())
                                         .show();
                             });
                         } else {

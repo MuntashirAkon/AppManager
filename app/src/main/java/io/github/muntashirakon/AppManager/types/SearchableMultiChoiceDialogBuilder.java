@@ -59,7 +59,7 @@ public class SearchableMultiChoiceDialogBuilder {
     SearchableRecyclerViewAdapter adapter;
 
     public interface OnClickListener {
-        void onClick(DialogInterface dialog, int which, @NonNull List<String> selectedItems);
+        void onClick(DialogInterface dialog, int which, @NonNull ArrayList<String> selectedItems);
     }
 
     @SuppressLint("InflateParams")
