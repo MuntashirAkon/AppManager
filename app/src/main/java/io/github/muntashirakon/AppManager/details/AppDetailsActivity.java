@@ -35,6 +35,7 @@ import java.io.IOException;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -99,6 +100,11 @@ public class AppDetailsActivity extends BaseActivity {
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
+        final AlertDialog progressDialog = UIUtils.getProgressDialog(this, getText(R.string.loading));
+        if (packageName == null) {
+            // Display progress dialog only for external apk files
+            progressDialog.show();
+        }
         new Thread(() -> {
             try {
                 if (packageName != null) model.setPackage(packageName);
@@ -107,6 +113,7 @@ public class AppDetailsActivity extends BaseActivity {
                 Log.e("ADA", "Could not fetch package info.", e);
                 runOnUiThread(() -> {
                     Toast.makeText(this, getString(R.string.failed_to_fetch_package_info), Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
                     finish();
                 });
                 return;
@@ -114,12 +121,14 @@ public class AppDetailsActivity extends BaseActivity {
             if (model.getPackageInfo() == null) {
                 runOnUiThread(() -> {
                     Toast.makeText(this, getString(R.string.failed_to_fetch_package_info), Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
                     finish();
                 });
                 return;
             }
             ApplicationInfo applicationInfo = model.getPackageInfo().applicationInfo;
             runOnUiThread(() -> {
+                progressDialog.dismiss();
                 // Set title
                 setTitle(applicationInfo.loadLabel(getPackageManager()));
                 // Check for the existence of package
