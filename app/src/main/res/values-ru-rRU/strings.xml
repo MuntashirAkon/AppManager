@@ -230,11 +230,11 @@
     <string name="rules_not_applied">Правила не применены</string>
     <string name="str_logo">Логотип</string>
     <string name="pref_root_mode_enabled">Режим root</string>
-    <string name="pref_root_mode_enabled_msg">Активирует все root функции этого приложения, режим ADB определяется автоматически, когда он отключен</string>
+    <string name="pref_root_mode_enabled_msg">Активирует все root-функции этого приложения, режим ADB определяется автоматически, когда он отключен.</string>
     <string name="pref_global_blocking_enabled">Глобальная блокировка компонентов</string>
-    <string name="pref_global_blocking_enabled_msg">Позволяет вам блокировать любой компонент любого приложения без явного включения блокировки для приложения</string>
+    <string name="pref_global_blocking_enabled_msg">Позволяет вам блокировать любой компонент любого приложения без явного включения блокировки для приложения.</string>
     <string name="pref_usage_access_enabled">Доступ к использованию</string>
-    <string name="pref_usage_access_enabled_msg">Позволяет просматривать статистику использования вашего приложения и информацию о данных приложения</string>
+    <string name="pref_usage_access_enabled_msg">Позволяет просматривать статистику использования вашего приложения и информацию о данных приложения.</string>
     <string name="app_settings">Настройки</string>
     <string name="only_works_in_root_mode">Доступно только в режиме root</string>
     <string name="usage_yesterday">Вчера</string>
@@ -254,7 +254,7 @@
     <string name="sort_by_times_opened">Количество запусков</string>
     <string name="sort_by_mobile_data">Мобильные данные</string>
     <string name="pref_import_export_blocking_rules">Импорт/экспорт правил блокировки</string>
-    <string name="pref_import_export_blocking_rules_msg">Импорт/экспорт правил, импорт внешних правил из Watt или Blocker</string>
+    <string name="pref_import_export_blocking_rules_msg">Импорт/экспорт правил, импорт внешних правил из Watt или Blocker.</string>
     <string name="pref_import_watt">Импорт из Watt</string>
     <string name="pref_import_blocker">Импорт из Blocker</string>
     <string name="the_import_was_successful">Импортировано</string>
@@ -328,10 +328,10 @@
     <string name="keyboard_type">Тип клавиатуры</string>
     <string name="navigation">Навигация</string>
     <string name="touchscreen">Сенсорный экран</string>
-    <string name="pref_export_msg">Экспортировать правила блокировки, настроенные в App Manager на внешнее хранилище</string>
-    <string name="pref_import_msg">Импортировать ранее экспортированные правила блокировки из App Manager</string>
+    <string name="pref_export_msg">Экспортировать правила блокировки, настроенные в App Manager на внешнее хранилище.</string>
+    <string name="pref_import_msg">Импортировать ранее экспортированные правила блокировки из App Manager.</string>
     <string name="pref_import_watt_msg">Импортировать правила блокировки из Watt, каждый файл содержит правила для одного названного пакета как packagename.xml и т. д.</string>
-    <string name="pref_import_blocker_msg">Импортировать правила блокировки из Blocker, каждый файл содержит правила для одного пакета</string>
+    <string name="pref_import_blocker_msg">Импортировать правила блокировки из Blocker, каждый файл содержит правила для одного пакета.</string>
     <string name="pref_app_theme">Тема приложения</string>
     <string name="follow_system">Согласно системным настройкам</string>
     <string name="battery_mode">Режим батареи</string>
@@ -389,7 +389,7 @@
 \nГруппа поддержки: https://t.me/AppManagerAndroid
 \nTwitter: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">Импорт существующих правил</string>
-    <string name="pref_import_existing_msg">Добавить компоненты, отключенные другими приложениями, в App Manager. Будьте осторожны при использовании этого инструмента, так как может быть много ложных срабатываний. Выбирайте только те приложения, в которых вы уверены</string>
+    <string name="pref_import_existing_msg">Добавить компоненты, отключенные другими приложениями, в App Manager. Будьте осторожны при использовании этого инструмента, так как может быть много ложных срабатываний. Выбирайте только те приложения, в которых вы уверены.</string>
     <string name="failed_to_get_data_usage_information">Не удалось получить информацию об использовании данных</string>
     <string name="clear_cache">Очистить кэш</string>
     <string name="block_unblock_trackers_description">Блокировать или разблокировать рекламу и компоненты отслеживания из всех установленных приложений</string>
@@ -498,14 +498,14 @@
     <string name="website">Веб-сайт</string>
     <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">Очистить все правила</string>
-    <string name="pref_remove_all_rules_msg">Все настроенные заблокированные компоненты будут включены, операциям приложений будут присвоены значения по умолчанию и будут предоставлены разрешения</string>
+    <string name="pref_remove_all_rules_msg">Разрешения предоставлены, функции и компоненты приложений вернутся к значениям по умолчанию.</string>
     <string name="are_you_sure">Вы уверены?</string>
     <string name="filter_apps_with_activities">Приложения с активити</string>
     <string name="toggle_default_app_ops">Переключение операций приложения по умолчанию</string>
     <string name="installer_error_aborted">Установка не удалась, потому что либо она была отменена, либо сеанс неожиданно закрылся</string>
     <string name="installer_error_blocked_device">устройством</string>
     <string name="installer_error_blocked">Установка заблокирована <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
-    <string name="installer_error_conflict">Невозможно установить приложение, потому что установленное приложение уже имеет это имя пакета</string>
+    <string name="installer_error_conflict">Не удалось установить приложение, потому что используется имя пакета</string>
     <string name="installer_error_incompatible">Приложение несовместимо с этим устройством</string>
     <string name="installer_error_bad_apks">Выбраны недопустимые файлы APK</string>
     <string name="installer_error_storage">Недостаточно места для установки приложения</string>
@@ -625,7 +625,7 @@
     <string name="changes_not_saved">Изменения не сохранены</string>
     <string name="rules">Правила</string>
     <string name="pref_compression_method">Метод сжатия</string>
-    <string name="pref_backup_flags_msg">Добавление предустановки для параметров резервного копирования избавляет от необходимости выбора флагов при каждом резервном копировании/восстановлении</string>
+    <string name="pref_backup_flags_msg">Добавление предустановки для параметров резервного копирования избавляет от необходимости выбора флагов при каждом резервном копировании/восстановлении.</string>
     <string name="compression_method">Метод сжатия: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="state_trace_stop">Остановить отслеживание</string>
     <string name="confirm_installation">Подтвердить установку</string>
@@ -651,12 +651,12 @@
     <string name="non_critical_exts">Некритические расширения</string>
     <string name="other">Другое</string>
     <string name="state_locked_memory">Заблокированная память</string>
-    <string name="usage_access_not_supported">Не удалось запросить доступ к использованию, так как соответствующая страница настроек не существует.</string>
+    <string name="usage_access_not_supported">Не удалось запросить разрешения доступа к статистике использования, так как соответствующая страница настроек не существует.</string>
     <string name="do_you_want_to_uninstall_and_install">Вы хотите удалить и снова установить приложение\?</string>
-    <string name="signature_mismatch_for_system_apps">Не удалось установить приложение, так как установленное приложение является системным с другой подписью.</string>
+    <string name="signature_mismatch_for_system_apps">Не удалось установить приложение, поскольку системное приложение с другой подписью имеет такое же имя пакета.</string>
     <string name="app_data_will_be_lost">Существующие данные будут потеряны.</string>
     <string name="only_install">Только установить</string>
-    <string name="install_without_data_loss">Если вы отключили проверку подписи, вы можете использовать параметр <b>только установить</b>, чтобы установить приложение без потери данных.</string>
+    <string name="install_without_data_loss">Если у вас отключена проверка подписи, вы можете использовать параметр &lt;b&gt;«Только установка»&lt;/b&gt;, чтобы установить приложение без потери данных.</string>
     <string name="sort_by_backup">Сначала резервные копии</string>
     <string name="onboard">Доступные</string>
     <string name="packages">пакеты</string>
@@ -667,7 +667,7 @@
     <string name="issuer">Издатель</string>
     <string name="subject">Тема</string>
     <string name="copy">Копировать</string>
-    <string name="view_missing_signatures">Коснитесь, чтобы просмотреть подписи, которых еще нет в базе данных библиотек App Manager. Вы также можете отправить их мне, если хотите.</string>
+    <string name="view_missing_signatures">Нажмите, чтобы просмотреть или отправить подписи, которых еще нет в базе библиотек App Manager.</string>
     <string name="tap_to_see_details">Нажмите, чтобы увидеть подробности</string>
     <string name="lib_details">Подробности библиотеки</string>
     <string name="no_libs">Нет библиотек</string>
@@ -710,11 +710,11 @@
     </plurals>
     <string name="tap_to_submit_crash_report">Нажмите, чтобы отправить отчет о сбое.</string>
     <string name="send_crash_report">Отправить отчет о сбое</string>
-    <string name="select_apk">Выбрать apk</string>
+    <string name="select_apk">Выбрать APK</string>
     <string name="systemless_app">Внесистемное приложение</string>
     <string name="duplicate">Дубликат</string>
     <string name="new_profile">Новый профиль</string>
-    <string name="input_profile_name_description">Название профиля не должно содержать пробелов.</string>
+    <string name="input_profile_name_description">Имя профиля не может содержать пробелов.</string>
     <string name="input_profile_name">Название профиля</string>
     <string name="in_progress">В процессе</string>
     <string name="conversion_failed">Преобразование не удалось.</string>
@@ -732,10 +732,10 @@
     <string name="keystore">Хранилище ключей</string>
     <string name="ecc">Эллиптическая криптография (ЕСС)</string>
     <string name="none">Никакой</string>
-    <string name="pref_encryption_msg">Добавить шифрование для резервных копий</string>
+    <string name="pref_encryption_msg">Добавить шифрование для резервных копий.</string>
     <string name="encryption">Шифрование</string>
     <string name="select_user">Выбрать пользователя</string>
-    <string name="pref_show_users_in_installer_msg">Отображение списка пользователей для выбора, перед установкой внешнего приложения. Требуется ROOT или ADB</string>
+    <string name="pref_show_users_in_installer_msg">Отображение списка пользователей для выбора, перед установкой внешнего приложения. Требуется root-доступ или ADB.</string>
     <string name="pref_show_users_in_installer">Показать пользователей в установщике</string>
     <string name="failed_to_duplicate_profile">Не удалось продублировать профиль</string>
 </resources>
