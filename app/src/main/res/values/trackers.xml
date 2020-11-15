@@ -187,7 +187,9 @@
         <item>com.quantcast.measurement.service.</item>
         <item>com.apptimize.</item>
         <item>com.appbrain.</item>
-        <item>com.dynatrace.android.app.</item>
+        <item>com.dynatrace.android.app</item>
+        <item>com.dynatrace.agent</item>
+        <item>com.dynatrace.tools</item>
         <item>org.piwik</item>
         <item>org.piwik.mobile</item>
         <item>org.matomo</item>
@@ -405,12 +407,6 @@
         <item>com.aarki</item>
         <item>me.actv8</item>
         <item>com.iab.omid.library</item>
-        <item>com.amazon.insights</item>
-        <item>com.amazonaws.mobileconnectors.pinpoint.analytics.</item>
-        <item>com.amazonaws.mobileconnectors.amazonmobileanalytics</item>
-        <item>com.applovin</item>
-        <item>com.krux.androidsdk</item>
-        <item>com.danielcwilson.plugins.analytics</item>
         <item>cat.ereza.customactivityoncrash</item>
         <item>org.acra.</item>
         <item>ch.acra.</item>
@@ -449,17 +445,23 @@
         <item>ru.tachos.admitadstatisticsdk</item>
         <item>com.adzerk.android.sdk</item>
         <item>com.airpush.</item>
+        <item>com.akamai.android.sdk.AkaMap</item>
+        <item>com.anvato.androidsdk.</item>
         <item>com.anysdk.framework.AnalyticsWrapper</item>
         <item>com.anysdk.framework.AdsWrapper</item>
+        <item>cn.jpush.android</item>
         <item>com.beemray.</item>
         <item>com.blesh.sdk.</item>
         <item>com.bluecats.sdk</item>
+        <item>com.usebutton.sdk.</item>
         <item>com.nutiteq</item>
         <item>com.carto</item>
         <item>com.cirasoft</item>
+        <item>com.cooladata.android.</item>
         <item>io.didomi.sdk.Didomi</item>
         <item>com.evrythng</item>
         <item>com.hawk</item>
+        <item>com\.estimote</item>
         <item>com.evidon.</item>
         <item>com.fluzo.sdk.</item>
         <item>com.gpshopper</item>
@@ -473,9 +475,8 @@
         <item>co.acoustic.mobile.push.sdk.</item>
         <item>com.xtify.mce.sdk.</item>
         <item>com.indooratlas.android.sdk</item>
-        <item>com.instreamatic</item>
         <item>com.intrasonics.</item>
-        <item>com.jumio.</item>
+        <item>com.jumio.MobileSDK</item>
         <item>com.lenddo.mobile</item>
         <item>ru.mail.mrgservice.advertising</item>
         <item>ru.mail.mrgservice.analytics</item>
@@ -488,6 +489,7 @@
         <item>com.pinterest.android.pdk.</item>
         <item>com.pointinside</item>
         <item>io.proximi.proximiiolibrary</item>
+        <item>com.pubnub.api.</item>
         <item>com.skplanet.tad</item>
         <item>com.scoreloop.client.android</item>
         <item>com.wirelessregistry.observersdk.</item>
@@ -515,7 +517,7 @@
         <item>Teemo</item>
         <item>Teemo</item>
         <item>FidZup</item>
-        <item>Krux</item>
+        <item>Audience Studio (Krux)</item>
         <item>Ad4Screen</item>
         <item>Weborama</item>
         <item>Smart</item>
@@ -567,7 +569,7 @@
         <item>Omniture</item>
         <item>OpenLocate</item>
         <item>OpenLocate</item>
-        <item>Tag Commander</item>
+        <item>TagCommander (Commanders Act.)</item>
         <item>Facebook Audience</item>
         <item>Google Analytics</item>
         <item>Google Analytics</item>
@@ -597,7 +599,7 @@
         <item>Facebook Notifications</item>
         <item>Facebook Places</item>
         <item>Facebook Share</item>
-        <item>AppLovin</item>
+        <item>AppLovin (MAX and SparkLabs)</item>
         <item>Glispa Connect (Formerly Avocarrot)</item>
         <item>NativeX</item>
         <item>Baidu Maps</item>
@@ -634,9 +636,9 @@
         <item>Amazon Advertisement</item>
         <item>Amazon Mobile Associates</item>
         <item>Radius Networks</item>
-        <item>Amazon Analytics</item>
-        <item>Amazon Analytics</item>
-        <item>Amazon Analytics</item>
+        <item>Amazon Analytics (Amazon insights)</item>
+        <item>Amazon Analytics (Amazon insights)</item>
+        <item>Amazon Analytics (Amazon insights)</item>
         <item>Baidu APPX</item>
         <item>Baidu Location</item>
         <item>Baidu Map</item>
@@ -681,6 +683,8 @@
         <item>Quantcast</item>
         <item>Apptimize</item>
         <item>AppBrain</item>
+        <item>Dynatrace</item>
+        <item>Dynatrace</item>
         <item>Dynatrace</item>
         <item>Matomo (Piwik)</item>
         <item>Matomo (Piwik)</item>
@@ -751,7 +755,7 @@
         <item>Gimbal</item>
         <item>Conviva</item>
         <item>Auditude</item>
-        <item>Instreamatic</item>
+        <item>Instreamatic (Adman)</item>
         <item>GameAnalytics</item>
         <item>Instabug</item>
         <item>Instabug</item>
@@ -792,7 +796,7 @@
         <item>Kissmetrics</item>
         <item>Microsoft Visual Studio App Center Crashes</item>
         <item>Webtrekk</item>
-        <item>google-analytics-plugin</item>
+        <item>Google Analytics Plugin (Cordova)</item>
         <item>Bugsee</item>
         <item>Splunk MINT</item>
         <item>Microsoft Visual Studio App Center Analytics</item>
@@ -899,12 +903,6 @@
         <item>Aarki</item>
         <item>Actv8me</item>
         <item>IAB Open Measurement</item>
-        <item>Amazon Analytics (Amazon insights)</item>
-        <item>Amazon Analytics (Amazon insights)</item>
-        <item>Amazon Analytics (Amazon insights)</item>
-        <item>AppLovin (MAX and SparkLabs)</item>
-        <item>Audience Studio (Krux)</item>
-        <item>Google Analytics Plugin (Cordova)</item>
         <item>µ?Custom Activity On Crash</item>
         <item>µ?ACRA</item>
         <item>µ?ACRA</item>
@@ -943,17 +941,23 @@
         <item>²Admitad</item>
         <item>²Adzerk</item>
         <item>²Airpush</item>
+        <item>²Akamai MAP</item>
+        <item>²Anvato (A Google Company)</item>
         <item>²AnySDK</item>
         <item>²AnySDK</item>
+        <item>²Aurora Mobile JPush</item>
         <item>²Beemray</item>
         <item>²Blesh</item>
         <item>²Bluecats</item>
+        <item>²Button</item>
         <item>²Carto (formerly Nutiteq)</item>
         <item>²Carto (formerly Nutiteq)</item>
         <item>²Cifrasoft</item>
+        <item>²CoolaData</item>
         <item>²Didomi</item>
         <item>²EVRYTHNG</item>
         <item>²Ehawk</item>
+        <item>²Estimote Proximity</item>
         <item>²Evidon (now Crownpeak)</item>
         <item>²FLUZO</item>
         <item>²GPShopper</item>
@@ -967,7 +971,6 @@
         <item>²IBM Mobile Marketing (Acoustic)</item>
         <item>²IBM Mobile Marketing (Acoustic)</item>
         <item>²IndoorAtlas</item>
-        <item>²Instreamatic (Adman)</item>
         <item>²Intrasonics</item>
         <item>²Jumio</item>
         <item>²Lenddo</item>
@@ -982,6 +985,7 @@
         <item>²Pinterest</item>
         <item>²Point Inside</item>
         <item>²Proximi</item>
+        <item>²PubNub</item>
         <item>²SK planet Tad</item>
         <item>²ScoreLoop</item>
         <item>²Signalframe  (prev Wireless Registry)</item>
