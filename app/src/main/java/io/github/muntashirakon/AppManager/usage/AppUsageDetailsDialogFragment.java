@@ -87,13 +87,13 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
     static class AppUsageDetailsAdapter extends BaseAdapter {
         static DateFormat sSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
 
-        private LayoutInflater mLayoutInflater;
+        private final LayoutInflater mLayoutInflater;
         private List<AppUsageStatsManager.USEntry> mDefaultList;
         private List<AppUsageStatsManager.USEntry> mAdapterList;
-        private Context context;
+        private final Context context;
 
-        private int mColorTransparent;
-        private int mColorSemiTransparent;
+        private final int mColorTransparent;
+        private final int mColorSemiTransparent;
 
         AppUsageDetailsAdapter(@NonNull Activity activity) {
             context = activity;

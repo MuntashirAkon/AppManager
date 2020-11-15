@@ -126,7 +126,7 @@ public final class MetadataManager {
     }
 
     private Metadata metadata;
-    private AppManager appManager;
+    private final AppManager appManager;
 
     private MetadataManager() {
         this.appManager = AppManager.getInstance();

@@ -49,14 +49,14 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.ViewHolder> {
-    private RunningAppsActivity mActivity;
-    private RunningAppsViewModel mModel;
+    private final RunningAppsActivity mActivity;
+    private final RunningAppsViewModel mModel;
     private boolean isAdbMode = false;
 
-    private int mColorTransparent;
-    private int mColorSemiTransparent;
-    private int mColorRed;
-    private int mColorSelection;
+    private final int mColorTransparent;
+    private final int mColorSemiTransparent;
+    private final int mColorRed;
+    private final int mColorSelection;
 
     RunningAppsAdapter(@NonNull RunningAppsActivity activity) {
         mActivity = activity;
@@ -128,7 +128,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
                 killItem.setVisible(true).setOnMenuItemClickListener(item -> {
                     new Thread(() -> {
                         if (Runner.runCommand(new String[]{Runner.TOYBOX, "kill", "-9", String.valueOf(processItem.pid)}).isSuccessful()) {
-                            mActivity.runOnUiThread(() -> mActivity.refresh());
+                            mActivity.runOnUiThread(mActivity::refresh);
                         } else {
                             mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_stop, processName), Toast.LENGTH_LONG).show());
                         }
@@ -143,7 +143,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
                 forceStopItem.setVisible(true).setOnMenuItemClickListener(item -> {
                     new Thread(() -> {
                         if (RunnerUtils.forceStopPackage(applicationInfo.packageName, Users.getUserHandle(applicationInfo.uid)).isSuccessful()) {
-                            mActivity.runOnUiThread(() -> mActivity.refresh());
+                            mActivity.runOnUiThread(mActivity::refresh);
                         } else {
                             mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_stop, processName), Toast.LENGTH_LONG).show());
                         }
@@ -166,7 +166,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
                                         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(applicationInfo.packageName, Users.getUserHandle(applicationInfo.uid))) {
                                             cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
                                         }
-                                        mActivity.runOnUiThread(() -> mActivity.refresh());
+                                        mActivity.runOnUiThread(mActivity::refresh);
                                     } catch (Exception e) {
                                         mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_disable_op), Toast.LENGTH_LONG).show());
                                     }

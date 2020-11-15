@@ -46,11 +46,11 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
  */
 public class RulesImporter implements Closeable {
     @NonNull
-    private Context mContext;
+    private final Context mContext;
     @NonNull
-    private HashMap<String, ComponentsBlocker> mComponentsBlockers;
+    private final HashMap<String, ComponentsBlocker> mComponentsBlockers;
     @NonNull
-    private List<RulesStorageManager.Type> mTypesToImport;
+    private final List<RulesStorageManager.Type> mTypesToImport;
     @Nullable
     private List<String> mPackagesToImport;
 

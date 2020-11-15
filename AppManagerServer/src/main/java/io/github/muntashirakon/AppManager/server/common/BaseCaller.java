@@ -29,7 +29,7 @@ public class BaseCaller implements Parcelable {
     public static final int TYPE_STATIC_METHOD = 2;
     public static final int TYPE_CLASS = 3;
 
-    private int type;
+    private final int type;
     private byte[] rawBytes;
 
     public BaseCaller(@NonNull Caller method) {

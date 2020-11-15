@@ -35,15 +35,15 @@ import io.github.muntashirakon.AppManager.R;
 
 public class TextInputDialogBuilder {
     @NonNull
-    private FragmentActivity activity;
+    private final FragmentActivity activity;
     @NonNull
-    private TextInputLayout textInputLayout;
+    private final TextInputLayout textInputLayout;
     @NonNull
-    private TextInputEditText editText;
+    private final TextInputEditText editText;
     @NonNull
-    private MaterialCheckBox checkBox;
+    private final MaterialCheckBox checkBox;
     @NonNull
-    private MaterialAlertDialogBuilder builder;
+    private final MaterialAlertDialogBuilder builder;
 
     public interface OnClickListener {
         void onClick(DialogInterface dialog, int which, @Nullable CharSequence inputText, boolean isChecked);

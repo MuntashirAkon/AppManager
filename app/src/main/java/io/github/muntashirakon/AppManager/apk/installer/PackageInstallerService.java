@@ -66,7 +66,7 @@ public class PackageInstallerService extends IntentService {
     private ApkFile apkFile;
     private NotificationCompat.Builder builder;
     private NotificationManagerCompat notificationManager;
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, @NonNull Intent intent) {
             if (intent.getAction() == null) return;

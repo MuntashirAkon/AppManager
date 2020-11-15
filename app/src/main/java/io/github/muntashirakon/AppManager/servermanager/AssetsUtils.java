@@ -70,7 +70,7 @@ class AssetsUtils {
 
             fos = new FileOutputStream(destFile);
             byte[] buff = new byte[1024 * 16];
-            int len = -1;
+            int len;
             open = openFd.createInputStream();
 
             while ((len = open.read(buff)) != -1) {
@@ -99,61 +99,6 @@ class AssetsUtils {
         }
     }
 
-
-    public static void copyFile(String src, File destFile, boolean force) {
-        FileInputStream fis = null;
-        FileOutputStream fos = null;
-        try {
-            File srcFile = new File(src);
-            if (force) {
-                destFile.delete();
-            } else {
-                if (destFile.exists()) {
-                    if (destFile.length() != srcFile.length()) {
-                        destFile.delete();
-                    } else {
-                        return;
-                    }
-                }
-            }
-
-            if (!destFile.exists()) {
-                destFile.createNewFile();
-            }
-            destFile.setReadable(true, false);
-            destFile.setExecutable(true, false);
-
-
-            fos = new FileOutputStream(destFile);
-            byte[] buff = new byte[1024 * 16];
-            int len = -1;
-            fis = new FileInputStream(srcFile);
-
-            while ((len = fis.read(buff)) != -1) {
-                fos.write(buff, 0, len);
-            }
-            fos.flush();
-            fos.getFD().sync();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (fos != null) {
-                    fos.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                if (fis != null) {
-                    fis.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     static void writeScript(@NonNull LocalServer.Config config) {
         BufferedWriter bw = null;
@@ -227,20 +172,20 @@ class AssetsUtils {
     }
 
     @NonNull
-    static String generateToken(int len) {
+    static String generateToken() {
         SecureRandom secureRandom = new SecureRandom();
-        byte[] bytes = new byte[len];
+        byte[] bytes = new byte[16];
         secureRandom.nextBytes(bytes);
-        return new String(encodeHex(bytes, DIGITS_LOWER));
+        return new String(encodeHex(bytes));
     }
 
     @NonNull
-    private static char[] encodeHex(@NonNull final byte[] data, final char[] toDigits) {
+    private static char[] encodeHex(@NonNull final byte[] data) {
         final int l = data.length;
         final char[] out = new char[l << 1];
         for (int i = 0, j = 0; i < l; i++) {
-            out[j++] = toDigits[(0xF0 & data[i]) >>> 4];
-            out[j++] = toDigits[0x0F & data[i]];
+            out[j++] = AssetsUtils.DIGITS_LOWER[(0xF0 & data[i]) >>> 4];
+            out[j++] = AssetsUtils.DIGITS_LOWER[0x0F & data[i]];
         }
         return out;
     }

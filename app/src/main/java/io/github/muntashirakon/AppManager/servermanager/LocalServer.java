@@ -56,8 +56,8 @@ public class LocalServer {
         return INSTANCE;
     }
 
-    private LocalServerManager mLocalServerManager;
-    private Context mContext;
+    private final LocalServerManager mLocalServerManager;
+    private final Context mContext;
 
     private LocalServer() {
         mContext = AppManager.getContext();
@@ -191,7 +191,6 @@ public class LocalServer {
         try {
             exec = Runtime.getRuntime().exec("su -C 'ps'");
             br = new BufferedReader(new InputStreamReader(exec.getInputStream()));
-            StringBuilder sb = new StringBuilder();
             String line = br.readLine();
             while (line != null) {
                 Log.e("test", "readProcess --> " + line);
@@ -199,7 +198,7 @@ public class LocalServer {
                 //sb.append("\n");
                 line = br.readLine();
             }
-            return sb.toString();
+            return "";
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

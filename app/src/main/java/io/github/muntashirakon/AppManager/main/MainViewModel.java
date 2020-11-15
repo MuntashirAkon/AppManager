@@ -61,19 +61,19 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabled
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
 
 public class MainViewModel extends AndroidViewModel {
-    private static Collator sCollator = Collator.getInstance();
+    private static final Collator sCollator = Collator.getInstance();
 
-    private PackageManager mPackageManager;
-    private PackageIntentReceiver mPackageObserver;
-    private Handler mHandler;
-    private @MainActivity.SortOrder
-    int mSortBy;
-    private @MainActivity.Filter
-    int mFilterFlags;
+    private final PackageManager mPackageManager;
+    private final PackageIntentReceiver mPackageObserver;
+    private final Handler mHandler;
+    @MainActivity.SortOrder
+    private int mSortBy;
+    @MainActivity.Filter
+    private int mFilterFlags;
     private String searchQuery;
     private List<String> backupApplications;
-    private Set<String> selectedPackages = new HashSet<>();
-    private List<ApplicationItem> selectedApplicationItems = new LinkedList<>();
+    private final Set<String> selectedPackages = new HashSet<>();
+    private final List<ApplicationItem> selectedApplicationItems = new LinkedList<>();
 
     public MainViewModel(@NonNull Application application) {
         super(application);

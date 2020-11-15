@@ -197,7 +197,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
         return selectionLiveData;
     }
 
-    private Set<Integer> selections = new HashSet<>();
+    private final Set<Integer> selections = new HashSet<>();
 
     public void select(int pid) {
         try {

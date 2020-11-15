@@ -31,9 +31,10 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import io.github.muntashirakon.AppManager.R;
 
 public class ListItemCreator {
-    private LinearLayoutCompat mListContainer;
-    private LayoutInflater mLayoutInflater;
     private static final int EMPTY = -1;
+
+    private final LinearLayoutCompat mListContainer;
+    private final LayoutInflater mLayoutInflater;
 
     public View list_item;
     public TextView item_title;

@@ -44,9 +44,10 @@ import java.util.function.Predicate;
  * ArrayUtils contains some methods that you can call to find out
  * the most efficient increments by which to grow arrays.
  */
+@SuppressWarnings("unused")
 public class ArrayUtils {
     private static final int CACHE_SIZE = 73;
-    private static Object[] sCache = new Object[CACHE_SIZE];
+    private static final Object[] sCache = new Object[CACHE_SIZE];
 
     public static final File[] EMPTY_FILE = new File[0];
 
@@ -457,8 +458,8 @@ public class ArrayUtils {
         }
         final int N = cur.length;
         if (!allowDuplicates) {
-            for (int i = 0; i < N; i++) {
-                if (cur[i] == val) {
+            for (long l : cur) {
+                if (l == val) {
                     return cur;
                 }
             }
@@ -517,7 +518,7 @@ public class ArrayUtils {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public static @Nullable <T> ArraySet<T> cloneOrNull(@Nullable ArraySet<T> array) {
-        return (array != null) ? new ArraySet<T>(array) : null;
+        return (array != null) ? new ArraySet<>(array) : null;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -636,8 +637,8 @@ public class ArrayUtils {
         }
 
         // leftIdx is now at the end.
-        for (int i = size - 1; i >= leftIdx; i--) {
-            collection.remove(i);
+        if (size > leftIdx) {
+            collection.subList(leftIdx, size).clear();
         }
         return size - leftIdx;
     }

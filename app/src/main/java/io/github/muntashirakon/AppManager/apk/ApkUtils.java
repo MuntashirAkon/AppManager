@@ -42,20 +42,20 @@ public final class ApkUtils {
         ApplicationInfo info = packageInfo.applicationInfo;
         PackageManager pm = AppManager.getContext().getPackageManager();
         String outputName = info.loadLabel(pm).toString() + "_" + packageInfo.versionName;
+        File tmpPublicSource;
         if (isSplitApk(info)) {
             // Split apk
-            File tmpPublicSource = new File(AppManager.getContext().getExternalCacheDir(), outputName + EXT_APKS);
+            tmpPublicSource = new File(AppManager.getContext().getExternalCacheDir(), outputName + EXT_APKS);
             SplitApkExporter.saveApks(packageInfo, tmpPublicSource);
-            return tmpPublicSource;
         } else {
             // Regular apk
-            File tmpPublicSource = new File(AppManager.getContext().getExternalCacheDir(), outputName + EXT_APK);
+            tmpPublicSource = new File(AppManager.getContext().getExternalCacheDir(), outputName + EXT_APK);
             try (FileInputStream apkInputStream = new FileInputStream(packageInfo.applicationInfo.publicSourceDir);
                  FileOutputStream apkOutputStream = new FileOutputStream(tmpPublicSource)) {
                 copy(apkInputStream, apkOutputStream);
             }
-            return tmpPublicSource;
         }
+        return tmpPublicSource;
     }
 
     /**
@@ -75,20 +75,20 @@ public final class ApkUtils {
             PackageInfo packageInfo = pm.getPackageInfo(packageName, 0);
             ApplicationInfo info = packageInfo.applicationInfo;
             String outputName = info.loadLabel(pm).toString() + "_" + packageInfo.versionName;
+            File tmpPublicSource;
             if (isSplitApk(info)) {
                 // Split apk
-                File tmpPublicSource = new File(backupPath, outputName + EXT_APKS);
+                tmpPublicSource = new File(backupPath, outputName + EXT_APKS);
                 SplitApkExporter.saveApks(packageInfo, tmpPublicSource);
-                return true;
             } else {
                 // Regular apk
-                File tmpPublicSource = new File(backupPath, outputName + EXT_APK);
+                tmpPublicSource = new File(backupPath, outputName + EXT_APK);
                 try (FileInputStream apkInputStream = new FileInputStream(info.publicSourceDir);
                      FileOutputStream apkOutputStream = new FileOutputStream(tmpPublicSource)) {
                     IOUtils.copy(apkInputStream, apkOutputStream);
                 }
-                return true;
             }
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;

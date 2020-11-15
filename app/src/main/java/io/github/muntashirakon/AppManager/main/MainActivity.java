@@ -170,14 +170,14 @@ public class MainActivity extends BaseActivity implements
     @SortOrder
     private int mSortBy;
 
-    private ActivityResultLauncher<String[]> askStoragePermForBackupApk = registerForActivityResult(
+    private final ActivityResultLauncher<String[]> askStoragePermForBackupApk = registerForActivityResult(
             new ActivityResultContracts.RequestMultiplePermissions(), result -> {
                 if (Utils.getExternalStoragePermissions(this) == null) {
                     handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
                 }
             });
 
-    private ActivityResultLauncher<String> batchExportRules = registerForActivityResult(
+    private final ActivityResultLauncher<String> batchExportRules = registerForActivityResult(
             new ActivityResultContracts.CreateDocument(),
             uri -> {
                 if (uri == null) {
@@ -195,7 +195,7 @@ public class MainActivity extends BaseActivity implements
                 handleSelection();
             });
 
-    private BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             showProgressIndicator(false);
@@ -351,210 +351,171 @@ public class MainActivity extends BaseActivity implements
             runningAppsMenu.setVisible(false);
             sortByBlockedComponentMenu.setVisible(false);
         }
-        if (AppPref.isRootEnabled()) {
-            menu.findItem(R.id.action_sys_config).setVisible(true);
-        } else menu.findItem(R.id.action_sys_config).setVisible(false);
-        if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL)) {
-            appUsageMenu.setVisible(true);
-        } else appUsageMenu.setVisible(false);
+        menu.findItem(R.id.action_sys_config).setVisible(AppPref.isRootEnabled());
+        appUsageMenu.setVisible((boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL));
         return true;
     }
 
     @SuppressLint("InflateParams")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_instructions:
-                new FullscreenDialog(this)
-                        .setTitle(R.string.instructions)
-                        .setView(R.layout.dialog_instructions)
-                        .show();
-                return true;
-            case R.id.action_refresh:
-                if (mModel != null) {
-                    showProgressIndicator(true);
-                    mModel.loadApplicationItems();
-                }
-                return true;
-            case R.id.action_settings:
-                Intent settingsIntent = new Intent(this, SettingsActivity.class);
-                startActivity(settingsIntent);
-                return true;
-            // Sort
-            case R.id.action_sort_by_app_label:
-                setSortBy(SORT_BY_APP_LABEL);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_package_name:
-                setSortBy(SORT_BY_PACKAGE_NAME);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_domain:
-                setSortBy(SORT_BY_DOMAIN);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_last_update:
-                setSortBy(SORT_BY_LAST_UPDATE);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_shared_user_id:
-                setSortBy(SORT_BY_SHARED_ID);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_sha:
-                setSortBy(SORT_BY_SHA);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_target_sdk:
-                setSortBy(SORT_BY_TARGET_SDK);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_disabled_app:
-                setSortBy(SORT_BY_DISABLED_APP);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_blocked_components:
-                setSortBy(SORT_BY_BLOCKED_COMPONENTS);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_backup:
-                setSortBy(SORT_BY_BACKUP);
-                item.setChecked(true);
-                // Filter
-            case R.id.action_filter_user_apps:
-                if (!item.isChecked()) mModel.addFilterFlag(FILTER_USER_APPS);
-                else mModel.removeFilterFlag(FILTER_USER_APPS);
-                item.setChecked(!item.isChecked());
-                return true;
-            case R.id.action_filter_system_apps:
-                if (!item.isChecked()) mModel.addFilterFlag(FILTER_SYSTEM_APPS);
-                else mModel.removeFilterFlag(FILTER_SYSTEM_APPS);
-                item.setChecked(!item.isChecked());
-                return true;
-            case R.id.action_filter_disabled_apps:
-                if (!item.isChecked()) mModel.addFilterFlag(FILTER_DISABLED_APPS);
-                else mModel.removeFilterFlag(FILTER_DISABLED_APPS);
-                item.setChecked(!item.isChecked());
-                return true;
-            case R.id.action_filter_apps_with_rules:
-                if (!item.isChecked()) mModel.addFilterFlag(FILTER_APPS_WITH_RULES);
-                else mModel.removeFilterFlag(FILTER_APPS_WITH_RULES);
-                item.setChecked(!item.isChecked());
-                return true;
-            case R.id.action_filter_apps_with_activities:
-                if (!item.isChecked()) mModel.addFilterFlag(FILTER_APPS_WITH_ACTIVITIES);
-                else mModel.removeFilterFlag(FILTER_APPS_WITH_ACTIVITIES);
-                item.setChecked(!item.isChecked());
-                return true;
-            case R.id.action_filter_apps_with_backups:
-                if (!item.isChecked()) mModel.addFilterFlag(FILTER_APPS_WITH_BACKUPS);
-                else mModel.removeFilterFlag(FILTER_APPS_WITH_BACKUPS);
-                item.setChecked(!item.isChecked());
-                return true;
-            case R.id.action_filter_running_apps:
-                if (!item.isChecked()) mModel.addFilterFlag(FILTER_RUNNING_APPS);
-                else mModel.removeFilterFlag(FILTER_RUNNING_APPS);
-                item.setChecked(!item.isChecked());
-                return true;
-            // Others
-            case R.id.action_app_usage:
-                Intent usageIntent = new Intent(this, AppUsageActivity.class);
-                startActivity(usageIntent);
-                return true;
-            case R.id.action_one_click_ops:
-                Intent onClickOpsIntent = new Intent(this, OneClickOpsActivity.class);
-                startActivity(onClickOpsIntent);
-                return true;
-            case R.id.action_apk_updater:
-                try {
-                    if (!getPackageManager().getApplicationInfo(PACKAGE_NAME_APK_UPDATER, 0).enabled)
-                        throw new PackageManager.NameNotFoundException();
-                    Intent intent = new Intent();
-                    intent.setClassName(PACKAGE_NAME_APK_UPDATER, ACTIVITY_NAME_APK_UPDATER);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                } catch (Exception ignored) {
-                }
-                return true;
-            case R.id.action_termux:
-                try {
-                    if (!getPackageManager().getApplicationInfo(PACKAGE_NAME_TERMUX, 0).enabled)
-                        throw new PackageManager.NameNotFoundException();
-                    Intent intent = new Intent();
-                    intent.setClassName(PACKAGE_NAME_TERMUX, ACTIVITY_NAME_TERMUX);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                } catch (Exception ignored) {
-                }
-                return true;
-            case R.id.action_running_apps:
-                Intent runningAppsIntent = new Intent(this, RunningAppsActivity.class);
-                startActivity(runningAppsIntent);
-                return true;
-            case R.id.action_sys_config:
-                Intent sysConfigIntent = new Intent(this, SysConfigActivity.class);
-                startActivity(sysConfigIntent);
-                return true;
-            case R.id.action_profiles:
-                Intent profilesIntent = new Intent(this, ProfilesActivity.class);
-                startActivity(profilesIntent);
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        int id = item.getItemId();
+        if (id == R.id.action_instructions) {
+            new FullscreenDialog(this)
+                    .setTitle(R.string.instructions)
+                    .setView(R.layout.dialog_instructions)
+                    .show();
+        } else if (id == R.id.action_refresh) {
+            if (mModel != null) {
+                showProgressIndicator(true);
+                mModel.loadApplicationItems();
+            }
+        } else if (id == R.id.action_settings) {
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
+        // Sort
+        } else if (id == R.id.action_sort_by_app_label) {
+            setSortBy(SORT_BY_APP_LABEL);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_package_name) {
+            setSortBy(SORT_BY_PACKAGE_NAME);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_domain) {
+            setSortBy(SORT_BY_DOMAIN);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_last_update) {
+            setSortBy(SORT_BY_LAST_UPDATE);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_shared_user_id) {
+            setSortBy(SORT_BY_SHARED_ID);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_sha) {
+            setSortBy(SORT_BY_SHA);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_target_sdk) {
+            setSortBy(SORT_BY_TARGET_SDK);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_disabled_app) {
+            setSortBy(SORT_BY_DISABLED_APP);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_blocked_components) {
+            setSortBy(SORT_BY_BLOCKED_COMPONENTS);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_backup) {
+            setSortBy(SORT_BY_BACKUP);
+            item.setChecked(true);
+        // Filter
+        } else if (id == R.id.action_filter_user_apps) {
+            if (!item.isChecked()) mModel.addFilterFlag(FILTER_USER_APPS);
+            else mModel.removeFilterFlag(FILTER_USER_APPS);
+            item.setChecked(!item.isChecked());
+        } else if (id == R.id.action_filter_system_apps) {
+            if (!item.isChecked()) mModel.addFilterFlag(FILTER_SYSTEM_APPS);
+            else mModel.removeFilterFlag(FILTER_SYSTEM_APPS);
+            item.setChecked(!item.isChecked());
+        } else if (id == R.id.action_filter_disabled_apps) {
+            if (!item.isChecked()) mModel.addFilterFlag(FILTER_DISABLED_APPS);
+            else mModel.removeFilterFlag(FILTER_DISABLED_APPS);
+            item.setChecked(!item.isChecked());
+        } else if (id == R.id.action_filter_apps_with_rules) {
+            if (!item.isChecked()) mModel.addFilterFlag(FILTER_APPS_WITH_RULES);
+            else mModel.removeFilterFlag(FILTER_APPS_WITH_RULES);
+            item.setChecked(!item.isChecked());
+        } else if (id == R.id.action_filter_apps_with_activities) {
+            if (!item.isChecked()) mModel.addFilterFlag(FILTER_APPS_WITH_ACTIVITIES);
+            else mModel.removeFilterFlag(FILTER_APPS_WITH_ACTIVITIES);
+            item.setChecked(!item.isChecked());
+        } else if (id == R.id.action_filter_apps_with_backups) {
+            if (!item.isChecked()) mModel.addFilterFlag(FILTER_APPS_WITH_BACKUPS);
+            else mModel.removeFilterFlag(FILTER_APPS_WITH_BACKUPS);
+            item.setChecked(!item.isChecked());
+        } else if (id == R.id.action_filter_running_apps) {
+            if (!item.isChecked()) mModel.addFilterFlag(FILTER_RUNNING_APPS);
+            else mModel.removeFilterFlag(FILTER_RUNNING_APPS);
+            item.setChecked(!item.isChecked());
+        // Others
+        } else if (id == R.id.action_app_usage) {
+            Intent usageIntent = new Intent(this, AppUsageActivity.class);
+            startActivity(usageIntent);
+        } else if (id == R.id.action_one_click_ops) {
+            Intent onClickOpsIntent = new Intent(this, OneClickOpsActivity.class);
+            startActivity(onClickOpsIntent);
+        } else if (id == R.id.action_apk_updater) {
+            try {
+                if (!getPackageManager().getApplicationInfo(PACKAGE_NAME_APK_UPDATER, 0).enabled)
+                    throw new PackageManager.NameNotFoundException();
+                Intent intent = new Intent();
+                intent.setClassName(PACKAGE_NAME_APK_UPDATER, ACTIVITY_NAME_APK_UPDATER);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            } catch (Exception ignored) {
+            }
+        } else if (id == R.id.action_termux) {
+            try {
+                if (!getPackageManager().getApplicationInfo(PACKAGE_NAME_TERMUX, 0).enabled)
+                    throw new PackageManager.NameNotFoundException();
+                Intent intent = new Intent();
+                intent.setClassName(PACKAGE_NAME_TERMUX, ACTIVITY_NAME_TERMUX);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            } catch (Exception ignored) {
+            }
+        } else if (id == R.id.action_running_apps) {
+            Intent runningAppsIntent = new Intent(this, RunningAppsActivity.class);
+            startActivity(runningAppsIntent);
+        } else if (id == R.id.action_sys_config) {
+            Intent sysConfigIntent = new Intent(this, SysConfigActivity.class);
+            startActivity(sysConfigIntent);
+        } else if (id == R.id.action_profiles) {
+            Intent profilesIntent = new Intent(this, ProfilesActivity.class);
+            startActivity(profilesIntent);
+        } else return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
     public boolean onMenuItemClick(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_select_all:
-                mAdapter.selectAll();
-                return true;
-            case R.id.action_backup:
-                BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
-                Bundle args = new Bundle();
-                args.putStringArrayList(BackupDialogFragment.ARG_PACKAGES, new ArrayList<>(mModel.getSelectedPackages()));
-                backupDialogFragment.setArguments(args);
-                backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
-                backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
-                backupDialogFragment.show(getSupportFragmentManager(), BackupDialogFragment.TAG);
-                mAdapter.clearSelection();
-                handleSelection();
-                return true;
-            case R.id.action_backup_apk:
-                String[] permissions = Utils.getExternalStoragePermissions(this);
-                if (permissions != null) {
-                    askStoragePermForBackupApk.launch(permissions);
-                } else handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
-                return true;
-            case R.id.action_block_trackers:
-                handleBatchOp(BatchOpsManager.OP_BLOCK_TRACKERS);
-                return true;
-            case R.id.action_clear_data:
-                handleBatchOp(BatchOpsManager.OP_CLEAR_DATA);
-                return true;
-            case R.id.action_enable:
-                handleBatchOp(BatchOpsManager.OP_ENABLE);
-                return true;
-            case R.id.action_disable:
-                handleBatchOp(BatchOpsManager.OP_DISABLE);
-                return true;
-            case R.id.action_disable_background:
-                handleBatchOp(BatchOpsManager.OP_DISABLE_BACKGROUND);
-                return true;
-            case R.id.action_export_blocking_rules:
-                @SuppressLint("SimpleDateFormat") final String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
-                batchExportRules.launch(fileName);
-                return true;
-            case R.id.action_force_stop:
-                handleBatchOp(BatchOpsManager.OP_FORCE_STOP);
-                return true;
-            case R.id.action_uninstall:
-                handleBatchOp(BatchOpsManager.OP_UNINSTALL);
-                return true;
+        int id = item.getItemId();
+        if (id == R.id.action_select_all) {
+            mAdapter.selectAll();
+        } else if (id == R.id.action_backup) {
+            BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
+            Bundle args = new Bundle();
+            args.putStringArrayList(BackupDialogFragment.ARG_PACKAGES, new ArrayList<>(mModel.getSelectedPackages()));
+            backupDialogFragment.setArguments(args);
+            backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
+            backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
+            backupDialogFragment.show(getSupportFragmentManager(), BackupDialogFragment.TAG);
+            mAdapter.clearSelection();
+            handleSelection();
+        } else if (id == R.id.action_backup_apk) {
+            String[] permissions = Utils.getExternalStoragePermissions(this);
+            if (permissions != null) {
+                askStoragePermForBackupApk.launch(permissions);
+            } else handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
+        } else if (id == R.id.action_block_trackers) {
+            handleBatchOp(BatchOpsManager.OP_BLOCK_TRACKERS);
+        } else if (id == R.id.action_clear_data) {
+            handleBatchOp(BatchOpsManager.OP_CLEAR_DATA);
+        } else if (id == R.id.action_enable) {
+            handleBatchOp(BatchOpsManager.OP_ENABLE);
+        } else if (id == R.id.action_disable) {
+            handleBatchOp(BatchOpsManager.OP_DISABLE);
+        } else if (id == R.id.action_disable_background) {
+            handleBatchOp(BatchOpsManager.OP_DISABLE_BACKGROUND);
+        } else if (id == R.id.action_export_blocking_rules) {
+            @SuppressLint("SimpleDateFormat") final String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
+            batchExportRules.launch(fileName);
+        } else if (id == R.id.action_force_stop) {
+            handleBatchOp(BatchOpsManager.OP_FORCE_STOP);
+        } else if (id == R.id.action_uninstall) {
+            handleBatchOp(BatchOpsManager.OP_UNINSTALL);
+        } else {
+            mAdapter.clearSelection();
+            handleSelection();
+            return false;
         }
-        mAdapter.clearSelection();
-        handleSelection();
-        return false;
+        return true;
     }
 
     @Override
@@ -608,9 +569,7 @@ public class MainActivity extends BaseActivity implements
         }
         // Show/hide app usage menu
         if (appUsageMenu != null) {
-            if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL))
-                appUsageMenu.setVisible(true);
-            else appUsageMenu.setVisible(false);
+            appUsageMenu.setVisible((Boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL));
         }
         // Set sort by
         mSortBy = (int) AppPref.get(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT);

@@ -47,9 +47,9 @@ public class ApiSupporter {
     }
 
     private static final String TAG = "ApiSupporter";
-    private LocalServer localServer;
-    private String packageName;
-    private int userHandle;
+    private final LocalServer localServer;
+    private final String packageName;
+    private final int userHandle;
 
     ApiSupporter(@NonNull LocalServer localServer) {
         this.localServer = localServer;
@@ -68,6 +68,7 @@ public class ApiSupporter {
             Object replyObj = callerResult.getReplyObj();
             if (replyObj instanceof List) {
                 try {
+                    //noinspection unchecked
                     return ((List<PackageInfo>) replyObj);
                 } catch (ClassCastException ignore) {
                 }

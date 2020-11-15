@@ -51,7 +51,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 public class OneClickOpsActivity extends BaseActivity {
     private ListItemCreator mItemCreator;
     private ProgressIndicator mProgressIndicator;
-    private BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             mProgressIndicator.hide();

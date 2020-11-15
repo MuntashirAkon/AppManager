@@ -84,7 +84,7 @@ public final class ApkFile implements AutoCloseable {
     private static final String OBB_DIR = "Android/obb";
 
     // There's hardly any chance of using multiple instances of ApkFile but still kept for convenience
-    private static SparseArray<ApkFile> apkFiles = new SparseArray<>(2);
+    private static final SparseArray<ApkFile> apkFiles = new SparseArray<>(2);
 
     @NonNull
     public static ApkFile getInstance(int sparseArrayKey) {
@@ -144,15 +144,15 @@ public final class ApkFile implements AutoCloseable {
         SUPPORTED_MIMES.add("application/xapk-package-archive");
     }
 
-    private int sparseArrayKey;
+    private final int sparseArrayKey;
     @NonNull
-    private List<Entry> entries = new ArrayList<>();
+    private final List<Entry> entries = new ArrayList<>();
     private Entry baseEntry;
     @NonNull
-    private String packageName;
+    private final String packageName;
     private boolean hasObb = false;
     @NonNull
-    private List<ZipEntry> obbFiles = new ArrayList<>();
+    private final List<ZipEntry> obbFiles = new ArrayList<>();
     @NonNull
     private File cacheFilePath;
     @Nullable
@@ -655,7 +655,6 @@ public final class ApkFile implements AutoCloseable {
                     } else if (StaticDataset.DENSITY_NAME_TO_DENSITY.containsKey(splitSuffix)) {
                         // This split is for Screen Density
                         this.type = APK_SPLIT_DENSITY;
-                        //noinspection ConstantConditions
                         this.rank = Math.abs(StaticDataset.DEVICE_DENSITY - StaticDataset.DENSITY_NAME_TO_DENSITY.get(splitSuffix));
                         if (this.forFeature == null) {
                             // Increment rank for base APK
@@ -743,14 +742,12 @@ public final class ApkFile implements AutoCloseable {
 
         @NonNull
         public String getAbi() {
-            if (type == APK_SPLIT_ABI) //noinspection ConstantConditions
-                return splitSuffix;
+            if (type == APK_SPLIT_ABI) return splitSuffix;
             throw new RuntimeException("Attempt to fetch ABI for invalid apk");
         }
 
         public int getDensity() {
             if (type == APK_SPLIT_DENSITY)
-                //noinspection ConstantConditions
                 return StaticDataset.DENSITY_NAME_TO_DENSITY.get(splitSuffix);
             throw new RuntimeException("Attempt to fetch Density for invalid apk");
         }

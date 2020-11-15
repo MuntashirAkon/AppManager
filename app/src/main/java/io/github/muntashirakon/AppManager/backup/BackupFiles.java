@@ -71,10 +71,10 @@ public class BackupFiles {
 
     public static class BackupFile {
         @NonNull
-        private PrivilegedFile backupPath;
+        private final PrivilegedFile backupPath;
         @NonNull
-        private PrivilegedFile tmpBackupPath;
-        private boolean isTemporary;
+        private final PrivilegedFile tmpBackupPath;
+        private final boolean isTemporary;
 
         public BackupFile(@NonNull PrivilegedFile backupPath, boolean hasTemporary) {
             this.backupPath = backupPath;
@@ -135,12 +135,12 @@ public class BackupFiles {
     }
 
     @NonNull
-    private String packageName;
-    private int userHandle;
+    private final String packageName;
+    private final int userHandle;
     @NonNull
-    private String[] backupNames;
+    private final String[] backupNames;
     @NonNull
-    private PrivilegedFile packagePath;
+    private final PrivilegedFile packagePath;
 
     /**
      * Create and handle {@link BackupFile}.
@@ -192,8 +192,8 @@ public class BackupFiles {
 
     static class Checksum implements Closeable {
         private PrintWriter writer;
-        private HashMap<String, String> checksums = new HashMap<>();
-        private String mode;
+        private final HashMap<String, String> checksums = new HashMap<>();
+        private final String mode;
 
         @NonNull
         public static String[] getCertChecksums(@NonNull Checksum checksum) {

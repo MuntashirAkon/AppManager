@@ -188,17 +188,13 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_toggle_class_listing:
-                trackerClassesOnly = !trackerClassesOnly;
-                setAdapterList();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        if (id == android.R.id.home) {
+            finish();
+        } else if(id == R.id.action_toggle_class_listing) {
+            trackerClassesOnly = !trackerClassesOnly;
+            setAdapterList();
+        } else return super.onOptionsItemSelected(item);
+        return true;
     }
 
     private void showProgress(boolean willShow) {
@@ -212,15 +208,15 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     }
 
     static class ClassListingAdapter extends BaseAdapter implements Filterable {
-        private LayoutInflater mLayoutInflater;
+        private final LayoutInflater mLayoutInflater;
         private Filter mFilter;
         private String mConstraint;
         private List<String> mDefaultList;
         private List<String> mAdapterList;
 
-        private int mColorTransparent;
-        private int mColorSemiTransparent;
-        private int mColorRed;
+        private final int mColorTransparent;
+        private final int mColorSemiTransparent;
+        private final int mColorRed;
 
         ClassListingAdapter(@NonNull Activity activity) {
             mLayoutInflater = activity.getLayoutInflater();

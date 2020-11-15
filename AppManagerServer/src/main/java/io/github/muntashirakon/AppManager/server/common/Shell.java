@@ -41,7 +41,7 @@ public final class Shell {
     private final Process proc;
     private final BufferedReader in;
     private final OutputStream out;
-    private LinkedBlockingQueue<Command> commandQueue = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<Command> commandQueue = new LinkedBlockingQueue<>();
     private final AtomicInteger mNextCmdID = new AtomicInteger(0);
     private volatile boolean close = false;
 

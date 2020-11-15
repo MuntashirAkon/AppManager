@@ -50,7 +50,7 @@ public class ProfileMetaManager {
         @Nullable
         private String state;  // state
         @NonNull
-        private String name;  // name (name of the profile)
+        private final String name;  // name (name of the profile)
         @NonNull
         public String[] packages;  // packages (a list of packages)
         @Nullable
@@ -96,8 +96,10 @@ public class ProfileMetaManager {
     }
 
     @NonNull
-    private String profileName;
-    private File profilePath;
+    private final String profileName;
+    @NonNull
+    private final File profilePath;
+    @Nullable
     public Profile profile;
 
     public ProfileMetaManager(@NonNull String profileName) {
@@ -121,7 +123,8 @@ public class ProfileMetaManager {
         }
     }
 
-    public Profile newProfile(String[] packages) {
+    @NonNull
+    public Profile newProfile(@NonNull String[] packages) {
         return profile = new Profile(profileName, packages);
     }
 
@@ -141,7 +144,6 @@ public class ProfileMetaManager {
 
     public void readProfile(@Nullable String profileStr) throws JSONException {
         if (TextUtils.isEmpty(profileStr)) throw new JSONException("Empty JSON string");
-        @SuppressWarnings("ConstantConditions")
         JSONObject profileObj = new JSONObject(profileStr);
         String profileName = profileObj.getString("name");
         String[] packageNames = JSONUtils.getArray(String.class, profileObj.getJSONArray("packages"));

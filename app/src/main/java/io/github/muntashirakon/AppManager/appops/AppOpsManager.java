@@ -393,7 +393,7 @@ public class AppOpsManager {
      * presented to the user as one switch then this can be used to
      * make them all controlled by the same single operation.
      */
-    private static int[] sOpToSwitch = new int[]{
+    private static final int[] sOpToSwitch = new int[]{
             OP_COARSE_LOCATION,                 // COARSE_LOCATION
             OP_COARSE_LOCATION,                 // FINE_LOCATION
             OP_COARSE_LOCATION,                 // GPS
@@ -499,7 +499,7 @@ public class AppOpsManager {
     /**
      * This maps each operation to the public string constant for it.
      */
-    private static String[] sOpToString = new String[]{
+    private static final String[] sOpToString = new String[]{
             OPSTR_COARSE_LOCATION,
             OPSTR_FINE_LOCATION,
             OPSTR_GPS,
@@ -606,7 +606,7 @@ public class AppOpsManager {
      * This provides a simple name for each operation to be used
      * in debug output.
      */
-    private static String[] sOpNames = new String[]{
+    private static final String[] sOpNames = new String[]{
             "COARSE_LOCATION",
             "FINE_LOCATION",
             "GPS",
@@ -714,7 +714,7 @@ public class AppOpsManager {
      * This optionally maps a permission to an operation.  If there
      * is no permission associated with an operation, it is null.
      */
-    private static String[] sOpPerms = new String[]{
+    private static final String[] sOpPerms = new String[]{
             android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.ACCESS_FINE_LOCATION,
             null, // no permission for gps
@@ -822,7 +822,7 @@ public class AppOpsManager {
      * Each Op should be filled with a restriction string from UserManager or
      * null to specify it is not affected by any user restriction.
      */
-    private static String[] sOpRestrictions = new String[]{
+    private static final String[] sOpRestrictions = new String[]{
             UserManager.DISALLOW_SHARE_LOCATION, //COARSE_LOCATION
             UserManager.DISALLOW_SHARE_LOCATION, //FINE_LOCATION
             UserManager.DISALLOW_SHARE_LOCATION, //GPS
@@ -928,7 +928,7 @@ public class AppOpsManager {
     /**
      * In which cases should an app be allowed to bypass the user restriction for a certain app-op.
      */
-    private static RestrictionBypass[] sOpAllowSystemRestrictionBypass = new RestrictionBypass[]{
+    private static final RestrictionBypass[] sOpAllowSystemRestrictionBypass = new RestrictionBypass[]{
             new RestrictionBypass(true, false), //COARSE_LOCATION
             new RestrictionBypass(true, false), //FINE_LOCATION
             null, //GPS
@@ -1034,7 +1034,7 @@ public class AppOpsManager {
     /**
      * This specifies the default mode for each operation.
      */
-    private static int[] sOpDefaultMode = new int[]{
+    private static final int[] sOpDefaultMode = new int[]{
             AppOpsManager.MODE_ALLOWED, // COARSE_LOCATION
             AppOpsManager.MODE_ALLOWED, // FINE_LOCATION
             AppOpsManager.MODE_ALLOWED, // GPS
@@ -1150,7 +1150,7 @@ public class AppOpsManager {
      * system (such as OP_WRITE_SMS, which should be allowed only
      * for whichever app is selected as the current SMS app).
      */
-    private static boolean[] sOpDisableReset = new boolean[]{
+    private static final boolean[] sOpDisableReset = new boolean[]{
             false, // COARSE_LOCATION
             false, // FINE_LOCATION
             false, // GPS
@@ -1256,12 +1256,12 @@ public class AppOpsManager {
     /**
      * Mapping from an app op name to the app op code.
      */
-    private static HashMap<String, Integer> sOpStrToOp = new HashMap<>();
+    private static final HashMap<String, Integer> sOpStrToOp = new HashMap<>();
 
     /**
      * Mapping from a permission to the corresponding app op.
      */
-    private static HashMap<String, Integer> sPermToOp = new HashMap<>();
+    private static final HashMap<String, Integer> sPermToOp = new HashMap<>();
 
     /**
      * Some ops doesn't have any permissions associated with them and are enabled by default.

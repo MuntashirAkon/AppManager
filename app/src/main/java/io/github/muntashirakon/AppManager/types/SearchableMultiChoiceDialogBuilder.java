@@ -45,17 +45,17 @@ import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public class SearchableMultiChoiceDialogBuilder {
     @NonNull
-    private FragmentActivity activity;
+    private final FragmentActivity activity;
     @NonNull
-    private List<String> items;
+    private final List<String> items;
     @NonNull
-    private List<CharSequence> itemNames;
+    private final List<CharSequence> itemNames;
     @Nullable
     private List<String> selectedItems;
     @NonNull
-    private MaterialAlertDialogBuilder builder;
+    private final MaterialAlertDialogBuilder builder;
     @NonNull
-    private RecyclerView recyclerView;
+    private final RecyclerView recyclerView;
     SearchableRecyclerViewAdapter adapter;
 
     public interface OnClickListener {

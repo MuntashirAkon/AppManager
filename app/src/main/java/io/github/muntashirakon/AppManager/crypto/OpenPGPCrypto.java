@@ -61,9 +61,9 @@ public class OpenPGPCrypto implements Crypto {
     private boolean successFlag, errorFlag;
     private File[] files;
     @NonNull
-    private List<File> newFiles = new ArrayList<>();
+    private final List<File> newFiles = new ArrayList<>();
     @NonNull
-    private long[] keyIds;
+    private final long[] keyIds;
     private final String provider;
     private Intent lastIntent;
     private int lastMode;

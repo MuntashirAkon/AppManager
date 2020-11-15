@@ -111,8 +111,8 @@ public class EditPrefItemFragment extends DialogFragment {
         };
     }
 
-    private LinearLayout[] mLayoutTypes = new LinearLayout[5];
-    private TextView[] mValues = new TextView[5];
+    private final LinearLayout[] mLayoutTypes = new LinearLayout[5];
+    private final TextView[] mValues = new TextView[5];
     private @Type int currentType;
     @NonNull
     @Override

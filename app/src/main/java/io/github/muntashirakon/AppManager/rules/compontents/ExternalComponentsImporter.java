@@ -183,7 +183,6 @@ public class ExternalComponentsImporter {
                 String componentName = component.getString("name");
                 if (!packageComponents.containsKey(packageName))
                     packageComponents.put(packageName, new HashMap<>());
-                //noinspection ConstantConditions
                 packageComponents.get(packageName).put(componentName, getType(componentName, packageInfoList.get(packageName)));
             }
             if (packageComponents.size() > 0) {
@@ -191,7 +190,6 @@ public class ExternalComponentsImporter {
                 int userHandle = Users.getCurrentUserHandle();
                 for (String packageName: packageComponents.keySet()) {
                     HashMap<String, RulesStorageManager.Type> disabledComponents = packageComponents.get(packageName);
-                    //noinspection ConstantConditions
                     if (disabledComponents.size() > 0) {
                         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)){
                             for (String component: disabledComponents.keySet()) {

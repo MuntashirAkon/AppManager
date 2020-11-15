@@ -68,17 +68,17 @@ public class BackupDialogFragment extends DialogFragment {
     public static final int MODE_RESTORE = 169;
     public static final int MODE_DELETE = 642;
 
-    private BackupFlags flags = BackupFlags.fromPref();
+    private final BackupFlags flags = BackupFlags.fromPref();
     @ActionMode
     private int mode = MODE_BACKUP;
     private List<String> packageNames;
     private int baseBackupCount = 0;
     private boolean permsGranted = false;
     private FragmentActivity activity;
-    private ActivityResultLauncher<String[]> askStoragePerm = registerForActivityResult(
+    private final ActivityResultLauncher<String[]> askStoragePerm = registerForActivityResult(
             new ActivityResultContracts.RequestMultiplePermissions(), result ->
                     permsGranted =  Utils.getExternalStoragePermissions(activity) == null);
-    private BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (actionCompleteInterface != null) {
@@ -286,7 +286,6 @@ public class BackupDialogFragment extends DialogFragment {
                             .setHelperText(R.string.input_backup_name_description)
                             .setPositiveButton(R.string.ok, (dialog, which, backupName, isChecked) -> {
                                 if (!TextUtils.isEmpty(backupName)) {
-                                    //noinspection ConstantConditions backupName is never null here
                                     startOperation(op, new String[]{backupName.toString()});
                                 } else startOperation(op, null);
                             })

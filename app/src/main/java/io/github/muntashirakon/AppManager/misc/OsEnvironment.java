@@ -122,7 +122,6 @@ public final class OsEnvironment {
                 // Device has emulated storage; external storage paths should have
                 // userId burned into them.
                 final String rawUserId = Integer.toString(mUserHandle);
-                //noinspection ConstantConditions
                 final File emulatedTargetBase = new File(rawEmulatedTarget);
 
                 // /storage/emulated/0
@@ -134,7 +133,6 @@ public final class OsEnvironment {
                     rawExternalStorage = "/storage/sdcard0";
                 }
                 // /storage/sdcard0
-                //noinspection ConstantConditions
                 externalForApp.add(new PrivilegedFile(rawExternalStorage));
             }
             return externalForApp.toArray(new PrivilegedFile[0]);

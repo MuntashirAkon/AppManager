@@ -112,10 +112,10 @@ public class SysConfigActivity extends BaseActivity {
     }
 
     public static class SysConfigRecyclerAdapter extends RecyclerView.Adapter<SysConfigRecyclerAdapter.ViewHolder> {
-        private List<SysConfigInfo> list = new ArrayList<>();
-        private PackageManager pm = AppManager.getInstance().getPackageManager();
-        private int mColorTransparent;
-        private int mColorSemiTransparent;
+        private final List<SysConfigInfo> list = new ArrayList<>();
+        private final PackageManager pm = AppManager.getInstance().getPackageManager();
+        private final int mColorTransparent;
+        private final int mColorSemiTransparent;
 
         SysConfigRecyclerAdapter() {
             mColorTransparent = Color.TRANSPARENT;

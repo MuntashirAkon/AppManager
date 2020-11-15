@@ -29,7 +29,7 @@ public class LineReader implements Closeable {
     private static final int LF = 10;
     private static final int EOF = -1;
 
-    private AdbStream adbStream;
+    private final AdbStream adbStream;
     private String charsetName = "US-ASCII";
 
     public LineReader(AdbStream adbStream, String charsetName) {
@@ -41,9 +41,9 @@ public class LineReader implements Closeable {
         this.adbStream = adbStream;
     }
 
-    private ByteBuffer byteBuffer = ByteBuffer.allocate(8192);
+    private final ByteBuffer byteBuffer = ByteBuffer.allocate(8192);
 
-    private Stack<String> remainLines = new Stack<>();
+    private final Stack<String> remainLines = new Stack<>();
 
     public String readLine() throws IOException, InterruptedException {
         while (!adbStream.isClosed()) {

@@ -318,90 +318,76 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_refresh_details:
-                refreshDetails();
-                return true;
-            case R.id.action_toggle_blocking:  // Components
-                if (mainModel != null) new Thread(() -> mainModel.applyRules()).start();
-                return true;
-            case R.id.action_block_trackers:  // Components
-                new Thread(() -> {
-                    List<String> failedPkgList = ComponentUtils.blockTrackingComponents(Collections.singletonList(mPackageName), Users.getCurrentUserHandle());
-                    if (failedPkgList.contains(mPackageName)) {
-                        runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_disable_trackers, Toast.LENGTH_SHORT).show());
-                    } else {
-                        runOnUiThread(() -> {
-                            Toast.makeText(mActivity, R.string.trackers_disabled_successfully, Toast.LENGTH_SHORT).show();
-                            refreshDetails();
-                        });
-                    }
-                    runOnUiThread(() -> mainModel.setRuleApplicationStatus());
-                }).start();
-                return true;
-            case R.id.action_reset_to_default:  // App ops
-                new Thread(() -> {
-                    if (mainModel == null || !mainModel.resetAppOps()) {
-                        runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_reset_app_ops, Toast.LENGTH_SHORT).show());
-                    } else runOnUiThread(() -> showProgressIndicator(true));
-                }).start();
-                return true;
-            case R.id.action_deny_dangerous_app_ops:  // App ops
-                showProgressIndicator(true);
-                new Thread(() -> {
-                    if (mainModel == null || !mainModel.ignoreDangerousAppOps()) {
-                        runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_deny_dangerous_app_ops, Toast.LENGTH_SHORT).show());
-                    }
-                    runOnUiThread(this::refreshDetails);
-                }).start();
-                return true;
-            case R.id.action_toggle_default_app_ops:  // App ops
-                showProgressIndicator(true);
-                // Turn filter on/off
-                boolean curr = (boolean) AppPref.get(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL);
-                AppPref.set(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL, !curr);
-                refreshDetails();
-                return true;
-            case R.id.action_deny_dangerous_permissions:  // permissions
-                showProgressIndicator(true);
-                new Thread(() -> {
-                    if (mainModel == null || !mainModel.revokeDangerousPermissions()) {
-                        runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_deny_dangerous_perms, Toast.LENGTH_SHORT).show());
-                    }
-                    runOnUiThread(this::refreshDetails);
-                }).start();
-                return true;
-            // Sorting
-            case R.id.action_sort_by_name:  // All
-                setSortBy(SORT_BY_NAME);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_blocked_components:  // Components
-                setSortBy(SORT_BY_BLOCKED);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_tracker_components:  // Components
-                setSortBy(SORT_BY_TRACKERS);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_app_ops_values:  // App ops
-                setSortBy(SORT_BY_APP_OP_VALUES);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_denied_app_ops:  // App ops
-                setSortBy(SORT_BY_DENIED_APP_OPS);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_dangerous_permissions:  // App ops
-                setSortBy(SORT_BY_DANGEROUS_PERMS);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_denied_permissions:
-                setSortBy(SORT_BY_DENIED_PERMS);
-                item.setChecked(true);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+        int id = item.getItemId();
+        if (id == R.id.action_refresh_details) {
+            refreshDetails();
+        } else if (id == R.id.action_toggle_blocking) {  // Components
+            if (mainModel != null) new Thread(() -> mainModel.applyRules()).start();
+        } else if (id == R.id.action_block_trackers) {  // Components
+            new Thread(() -> {
+                List<String> failedPkgList = ComponentUtils.blockTrackingComponents(Collections.singletonList(mPackageName), Users.getCurrentUserHandle());
+                if (failedPkgList.contains(mPackageName)) {
+                    runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_disable_trackers, Toast.LENGTH_SHORT).show());
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(mActivity, R.string.trackers_disabled_successfully, Toast.LENGTH_SHORT).show();
+                        refreshDetails();
+                    });
+                }
+                runOnUiThread(() -> mainModel.setRuleApplicationStatus());
+            }).start();
+        } else if (id == R.id.action_reset_to_default) {  // App ops
+            new Thread(() -> {
+                if (mainModel == null || !mainModel.resetAppOps()) {
+                    runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_reset_app_ops, Toast.LENGTH_SHORT).show());
+                } else runOnUiThread(() -> showProgressIndicator(true));
+            }).start();
+        } else if (id == R.id.action_deny_dangerous_app_ops) {  // App ops
+            showProgressIndicator(true);
+            new Thread(() -> {
+                if (mainModel == null || !mainModel.ignoreDangerousAppOps()) {
+                    runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_deny_dangerous_app_ops, Toast.LENGTH_SHORT).show());
+                }
+                runOnUiThread(this::refreshDetails);
+            }).start();
+        } else if (id == R.id.action_toggle_default_app_ops) {  // App ops
+            showProgressIndicator(true);
+            // Turn filter on/off
+            boolean curr = (boolean) AppPref.get(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL);
+            AppPref.set(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL, !curr);
+            refreshDetails();
+        } else if (id == R.id.action_deny_dangerous_permissions) {  // permissions
+            showProgressIndicator(true);
+            new Thread(() -> {
+                if (mainModel == null || !mainModel.revokeDangerousPermissions()) {
+                    runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_deny_dangerous_perms, Toast.LENGTH_SHORT).show());
+                }
+                runOnUiThread(this::refreshDetails);
+            }).start();
+        // Sorting
+        } else if (id == R.id.action_sort_by_name) {  // All
+            setSortBy(SORT_BY_NAME);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_blocked_components) {  // Components
+            setSortBy(SORT_BY_BLOCKED);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_tracker_components) {  // Components
+            setSortBy(SORT_BY_TRACKERS);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_app_ops_values) {  // App ops
+            setSortBy(SORT_BY_APP_OP_VALUES);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_denied_app_ops) {  // App ops
+            setSortBy(SORT_BY_DENIED_APP_OPS);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_dangerous_permissions) {  // App ops
+            setSortBy(SORT_BY_DANGEROUS_PERMS);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_denied_permissions) {
+            setSortBy(SORT_BY_DENIED_PERMS);
+            item.setChecked(true);
+        } else return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
@@ -877,9 +863,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Blocking
             if (isRootEnabled && !isExternalApk) {
                 if (appDetailsItem.isBlocked) {
-                    holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
+                    holder.blockBtn.setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.ic_restore_black_24dp));
                 } else {
-                    holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
+                    holder.blockBtn.setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.ic_block_black_24dp));
                 }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
@@ -923,9 +909,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Blocking
             if (isRootEnabled && !isExternalApk) {
                 if (appDetailsItem.isBlocked) {
-                    holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
+                    holder.blockBtn.setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.ic_restore_black_24dp));
                 } else {
-                    holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
+                    holder.blockBtn.setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.ic_block_black_24dp));
                 }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
@@ -976,9 +962,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Blocking
             if (isRootEnabled && !isExternalApk) {
                 if (appDetailsItem.isBlocked) {
-                    holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
+                    holder.blockBtn.setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.ic_restore_black_24dp));
                 } else {
-                    holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
+                    holder.blockBtn.setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.ic_block_black_24dp));
                 }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
@@ -1052,9 +1038,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Blocking
             if (isRootEnabled && !isExternalApk) {
                 if (appDetailsItem.isBlocked) {
-                    holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_restore_black_24dp));
+                    holder.blockBtn.setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.ic_restore_black_24dp));
                 } else {
-                    holder.blockBtn.setImageDrawable(mActivity.getDrawable(R.drawable.ic_block_black_24dp));
+                    holder.blockBtn.setImageDrawable(ContextCompat.getDrawable(mActivity, R.drawable.ic_block_black_24dp));
                 }
                 holder.blockBtn.setVisibility(View.VISIBLE);
                 holder.blockBtn.setOnClickListener(v -> {
@@ -1153,10 +1139,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             else view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // Op Switch
             holder.toggleSwitch.setVisibility(View.VISIBLE);
-            if (opEntry.getMode() == AppOpsManager.MODE_ALLOWED) {
-                // op granted
-                holder.toggleSwitch.setChecked(true);
-            } else holder.toggleSwitch.setChecked(false);
+            // op granted
+            holder.toggleSwitch.setChecked(opEntry.getMode() == AppOpsManager.MODE_ALLOWED);
             holder.toggleSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (buttonView.isPressed()) {
                     new Thread(() -> {
@@ -1223,8 +1207,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if ((isRootEnabled || isADBEnabled) && !isExternalApk && ((permissionItem.isDangerous
                     && sdkVersion > 23) || protectionLevel.contains("development"))) {
                 holder.toggleSwitch.setVisibility(View.VISIBLE);
-                if (permissionItem.isGranted) holder.toggleSwitch.setChecked(true);
-                else holder.toggleSwitch.setChecked(false);
+                holder.toggleSwitch.setChecked(permissionItem.isGranted);
                 holder.toggleSwitch.setOnCheckedChangeListener((buttonView, isGranted) -> {
                     if (buttonView.isPressed()) {
                         new Thread(() -> {

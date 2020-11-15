@@ -131,7 +131,7 @@ public class BatchOpsService extends IntentService {
     private String header;
     private NotificationCompat.Builder builder;
     NotificationManagerCompat notificationManager;
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, @NonNull Intent intent) {
             if (intent.getAction() == null) return;

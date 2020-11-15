@@ -38,7 +38,7 @@ class AMPackageInstallerBroadcastReceiver extends BroadcastReceiver {
 
     private String packageName;
     private String appLabel;
-    private Context mContext;
+    private final Context mContext;
 
     public AMPackageInstallerBroadcastReceiver() {
         mContext = AppManager.getContext();

@@ -192,9 +192,9 @@ public class AppPref {
     }
 
     @NonNull
-    private SharedPreferences preferences;
+    private final SharedPreferences preferences;
     @NonNull
-    private SharedPreferences.Editor editor;
+    private final SharedPreferences.Editor editor;
 
     @SuppressLint("CommitPrefEdits")
     private AppPref(@NonNull Context context) {

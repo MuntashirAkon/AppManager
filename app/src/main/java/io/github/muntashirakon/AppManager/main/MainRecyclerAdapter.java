@@ -60,8 +60,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @SuppressLint("SimpleDateFormat")
     static final DateFormat sSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy"); // hh:mm:ss");
 
-    private MainActivity mActivity;
-    private PackageManager mPackageManager;
+    private final MainActivity mActivity;
+    private final PackageManager mPackageManager;
     private String mSearchQuery;
     private final List<ApplicationItem> mAdapterList = new ArrayList<>();
 

@@ -116,7 +116,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
         }
     }
 
-    private File localRulesFile;
+    private final File localRulesFile;
 
     protected ComponentsBlocker(Context context, String packageName, int userHandle) {
         super(context, packageName, userHandle);
@@ -316,7 +316,6 @@ public final class ComponentsBlocker extends RulesStorageManager {
             return;
         }
         try {
-            //noinspection ConstantConditions ruleXmlString is never null
             try (InputStream rulesStream = new ByteArrayInputStream(ruleXmlString.getBytes())) {
                 HashMap<String, Type> components = ComponentUtils.readIFWRules(rulesStream, packageName);
                 for (String componentName : components.keySet()) {

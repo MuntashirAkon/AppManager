@@ -39,8 +39,8 @@ public final class DataTransmission {
      */
     public static final String PROTOCOL_VERSION = "1.2.4";
 
-    private DataOutputStream outputStream;
-    private DataInputStream inputStream;
+    private final DataOutputStream outputStream;
+    private final DataInputStream inputStream;
     private OnReceiveCallback callback;
 
     private boolean running = true;

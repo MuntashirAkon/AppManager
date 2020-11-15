@@ -56,9 +56,9 @@ public class AppUsageStatsManager {
         return appUsageStatsManager;
     }
 
-    private UsageStatsManager mUsageStatsManager;
-    private Context context;
-    private PackageManager mPackageManager;
+    private final UsageStatsManager mUsageStatsManager;
+    private final Context context;
+    private final PackageManager mPackageManager;
 
     @SuppressLint("WrongConstant")
     private AppUsageStatsManager(@NonNull Context context) {
@@ -144,11 +144,10 @@ public class AppUsageStatsManager {
                             long time = endTime - startTime;
                             if (time > USAGE_TIME_MAX) {
                                 if (screenTimes.containsKey(packageName))
-                                    //noinspection ConstantConditions
                                     screenTimes.put(packageName, screenTimes.get(packageName) + time);
                                 else screenTimes.put(packageName, time);
                                 lastUse.put(packageName, endTime);
-                                if (accessCount.containsKey(packageName)) //noinspection ConstantConditions
+                                if (accessCount.containsKey(packageName))
                                     accessCount.put(packageName, accessCount.get(packageName) + 1);
                                 else accessCount.put(packageName, 1);
                             }
@@ -208,9 +207,7 @@ public class AppUsageStatsManager {
                     networkStats.getNextBucket(bucket);
                     String key = "u" + bucket.getUid();
                     if (result.containsKey(key)) {
-                        //noinspection ConstantConditions
                         txData.put(key, txData.get(key) + bucket.getTxBytes());
-                        //noinspection ConstantConditions
                         rxData.put(key, rxData.get(key) + bucket.getRxBytes());
                     } else {
                         txData.put(key, bucket.getTxBytes());
@@ -242,9 +239,7 @@ public class AppUsageStatsManager {
                     networkStats.getNextBucket(bucket);
                     String key = "u" + bucket.getUid();
                     if (result.containsKey(key)) {
-                        //noinspection ConstantConditions
                         txData.put(key, txData.get(key) + bucket.getTxBytes());
-                        //noinspection ConstantConditions
                         rxData.put(key, rxData.get(key) + bucket.getRxBytes());
                     } else {
                         txData.put(key, bucket.getTxBytes());

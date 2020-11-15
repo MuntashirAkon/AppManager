@@ -79,13 +79,13 @@ public class PackageInstallerActivity extends BaseActivity {
     private int sessionId = -1;
     private boolean closeApkFile = true;
     private int apkFileKey;
-    private ActivityResultLauncher<String[]> permInstallWithObb = registerForActivityResult(
+    private final ActivityResultLauncher<String[]> permInstallWithObb = registerForActivityResult(
             new ActivityResultContracts.RequestMultiplePermissions(), result -> {
                 if (Utils.getExternalStoragePermissions(this) == null) {
                     launchInstaller();
                 }
             });
-    private ActivityResultLauncher<Intent> confirmIntentLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> confirmIntentLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 // User did some interaction and the installer screen is closed now
                 Intent broadcastIntent = new Intent(AMPackageInstaller.ACTION_INSTALL_INTERACTION_END);
@@ -94,7 +94,7 @@ public class PackageInstallerActivity extends BaseActivity {
                 getApplicationContext().sendBroadcast(broadcastIntent);
                 finish();
             });
-    private ActivityResultLauncher<Intent> uninstallIntentLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> uninstallIntentLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 try {

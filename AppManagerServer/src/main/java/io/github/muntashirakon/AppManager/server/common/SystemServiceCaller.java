@@ -25,8 +25,8 @@ import androidx.annotation.NonNull;
 import static io.github.muntashirakon.AppManager.server.common.BaseCaller.TYPE_SYSTEM_SERVICE;
 
 public class SystemServiceCaller extends Caller {
-    private String serviceName;
-    private String methodName;
+    private final String serviceName;
+    private final String methodName;
 
     /**
      * Call a method from system service with parameters. The result is stored at

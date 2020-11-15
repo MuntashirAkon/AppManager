@@ -68,7 +68,7 @@ public class ProfilesActivity extends BaseActivity {
     @Nullable
     private String profileName;
 
-    private ActivityResultLauncher<String> exportProfile = registerForActivityResult(
+    private final ActivityResultLauncher<String> exportProfile = registerForActivityResult(
             new ActivityResultContracts.CreateDocument(),
             uri -> {
                 if (uri == null) {
@@ -87,7 +87,7 @@ public class ProfilesActivity extends BaseActivity {
                     }
                 }
             });
-    private ActivityResultLauncher<String> importProfile = registerForActivityResult(
+    private final ActivityResultLauncher<String> importProfile = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
             uri -> {
                 if (uri == null) {
@@ -136,7 +136,6 @@ public class ProfilesActivity extends BaseActivity {
                 .setPositiveButton(R.string.go, (dialog, which, profName, isChecked) -> {
                     if (!TextUtils.isEmpty(profName)) {
                         Intent intent = new Intent(this, AppsProfileActivity.class);
-                        //noinspection ConstantConditions
                         intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE_NAME, profName.toString());
                         intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE, true);
                         startActivity(intent);
@@ -164,33 +163,30 @@ public class ProfilesActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_import:
-                importProfile.launch("application/json");
-                return true;
-            case R.id.action_refresh:
-                progressIndicator.show();
-                new Thread(() -> model.loadProfiles()).start();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        } else if (id == R.id.action_import) {
+            importProfile.launch("application/json");
+        } else if (id == R.id.action_refresh) {
+            progressIndicator.show();
+            new Thread(() -> model.loadProfiles()).start();
+        } else return super.onOptionsItemSelected(item);
+        return true;
     }
 
     static class ProfilesAdapter extends BaseAdapter implements Filterable {
-        private LayoutInflater mLayoutInflater;
+        private final LayoutInflater mLayoutInflater;
         private Filter mFilter;
         private String mConstraint;
         private String[] mDefaultList;
         private String[] mAdapterList;
         private HashMap<String, String> mAdapterMap;
-        private ProfilesActivity activity;
+        private final ProfilesActivity activity;
 
-        private int mColorTransparent;
-        private int mColorSemiTransparent;
-        private int mColorRed;
+        private final int mColorTransparent;
+        private final int mColorSemiTransparent;
+        private final int mColorRed;
 
         static class ViewHolder {
             TextView item_name;
@@ -261,49 +257,41 @@ public class ProfilesActivity extends BaseActivity {
                 PopupMenu popupMenu = new PopupMenu(activity, finalConvertView);
                 popupMenu.inflate(R.menu.activity_profiles_popup_actions);
                 popupMenu.setOnMenuItemClickListener(item -> {
-                    switch (item.getItemId()) {
-                        case R.id.action_apply:
-                            // TODO(7/11/20): Apply the profile: display enable/disable first
-                            Toast.makeText(activity, "Not yet implemented", Toast.LENGTH_SHORT).show();
-                            return true;
-                        case R.id.action_delete:
-                            ProfileMetaManager manager = new ProfileMetaManager(profName);
-                            if (manager.deleteProfile()) {
-                                Toast.makeText(activity, R.string.deleted_successfully, Toast.LENGTH_SHORT).show();
-                                new Thread(() -> activity.model.loadProfiles()).start();
-                            } else {
-                                Toast.makeText(activity, R.string.deletion_failed, Toast.LENGTH_SHORT).show();
-                            }
-                            return true;
-                        case R.id.action_routine_ops:
-                            // TODO(7/11/20): Setup routine operations for this profile
-                            Toast.makeText(activity, "Not yet implemented", Toast.LENGTH_SHORT).show();
-                            return true;
-                        case R.id.action_duplicate: {
-                            new TextInputDialogBuilder(activity, R.string.input_profile_name)
-                                    .setTitle(R.string.new_profile)
-                                    .setHelperText(R.string.input_profile_name_description)
-                                    .setNegativeButton(R.string.cancel, null)
-                                    .setPositiveButton(R.string.go, (dialog, which, newProfName, isChecked) -> {
-                                        if (!TextUtils.isEmpty(newProfName)) {
-                                            Intent intent = new Intent(activity, AppsProfileActivity.class);
-                                            intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profName);
-                                            //noinspection ConstantConditions
-                                            intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE_NAME, newProfName.toString());
-                                            intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE, true);
-                                            activity.startActivity(intent);
-                                        }
-                                    })
-                                    .show();
-                            return true;
+                    int id = item.getItemId();
+                    if (id == R.id.action_apply) {
+                        // TODO(7/11/20): Apply the profile: display enable/disable first
+                        Toast.makeText(activity, "Not yet implemented", Toast.LENGTH_SHORT).show();
+                    } else if (id == R.id.action_delete) {
+                        ProfileMetaManager manager = new ProfileMetaManager(profName);
+                        if (manager.deleteProfile()) {
+                            Toast.makeText(activity, R.string.deleted_successfully, Toast.LENGTH_SHORT).show();
+                            new Thread(() -> activity.model.loadProfiles()).start();
+                        } else {
+                            Toast.makeText(activity, R.string.deletion_failed, Toast.LENGTH_SHORT).show();
                         }
-                        case R.id.action_export:
-                            activity.profileName = profName;
-                            activity.exportProfile.launch(profName + ".am.json");
-                            return true;
-                        default:
-                            return false;
-                    }
+                    } else if (id == R.id.action_routine_ops) {
+                        // TODO(7/11/20): Setup routine operations for this profile
+                        Toast.makeText(activity, "Not yet implemented", Toast.LENGTH_SHORT).show();
+                    } else if (id == R.id.action_duplicate) {
+                        new TextInputDialogBuilder(activity, R.string.input_profile_name)
+                                .setTitle(R.string.new_profile)
+                                .setHelperText(R.string.input_profile_name_description)
+                                .setNegativeButton(R.string.cancel, null)
+                                .setPositiveButton(R.string.go, (dialog, which, newProfName, isChecked) -> {
+                                    if (!TextUtils.isEmpty(newProfName)) {
+                                        Intent intent = new Intent(activity, AppsProfileActivity.class);
+                                        intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profName);
+                                        intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE_NAME, newProfName.toString());
+                                        intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE, true);
+                                        activity.startActivity(intent);
+                                    }
+                                })
+                                .show();
+                    } else if (id == R.id.action_export) {
+                        activity.profileName = profName;
+                        activity.exportProfile.launch(profName + ".am.json");
+                    } else return false;
+                    return true;
                 });
                 popupMenu.show();
                 return true;

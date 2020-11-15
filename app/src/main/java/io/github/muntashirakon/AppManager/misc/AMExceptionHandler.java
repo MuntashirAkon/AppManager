@@ -28,8 +28,8 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class AMExceptionHandler implements Thread.UncaughtExceptionHandler {
-    private Thread.UncaughtExceptionHandler defaultUEH;
-    private Context context;
+    private final Thread.UncaughtExceptionHandler defaultUEH;
+    private final Context context;
 
     public AMExceptionHandler(Context context) {
         this.defaultUEH = Thread.getDefaultUncaughtExceptionHandler();

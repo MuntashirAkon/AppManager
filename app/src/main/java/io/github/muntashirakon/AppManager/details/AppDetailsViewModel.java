@@ -75,7 +75,7 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabled
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
 
 public class AppDetailsViewModel extends AndroidViewModel {
-    private PackageManager mPackageManager;
+    private final PackageManager mPackageManager;
     private PackageInfo packageInfo;
     private String packageName;
     private final Object blockerLocker = new Object();
@@ -263,7 +263,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 blocker.addComponent(componentName, type);
             }
             // Apply rules if global blocking enable or already applied
-            //noinspection ConstantConditions
             if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL)
                     || (ruleApplicationStatus != null && ruleApplicationStatus.getValue() == RULE_APPLIED)) {
                 blocker.applyRules(true);
@@ -536,7 +535,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
     }
 
-    private MutableLiveData<Boolean> isPackageExistLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isPackageExistLiveData = new MutableLiveData<>();
     private boolean isPackageExist = true;
 
     public LiveData<Boolean> getIsPackageExistLiveData() {
@@ -550,7 +549,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    private MutableLiveData<Boolean> isPackageChanged = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isPackageChanged = new MutableLiveData<>();
 
     public LiveData<Boolean> getIsPackageChanged() {
         if (isPackageChanged.getValue() == null) {
@@ -629,7 +628,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
             isPackageExistLiveData.postValue(isPackageExist = false);
         } catch (Exception e) {
             e.printStackTrace();
-            //noinspection ConstantConditions
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && e instanceof DeadSystemException) {
                 // For some packages this exception might occur
                 setPackageInfo(false);

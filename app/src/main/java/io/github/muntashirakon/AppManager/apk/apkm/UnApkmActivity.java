@@ -39,7 +39,7 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 public class UnApkmActivity extends AppCompatActivity {
     private InputStream inputStream;
     private AlertDialog dialog;
-    private ActivityResultLauncher<String> exportManifest = registerForActivityResult(
+    private final ActivityResultLauncher<String> exportManifest = registerForActivityResult(
             new ActivityResultContracts.CreateDocument(),
             uri -> {
                 if (uri == null) {

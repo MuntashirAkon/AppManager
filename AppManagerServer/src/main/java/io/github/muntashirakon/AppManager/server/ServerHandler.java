@@ -65,11 +65,11 @@ class ServerHandler implements DataTransmission.OnReceiveCallback, AutoCloseable
     private static final int DEFAULT_TIMEOUT = 1000 * 60; // 1 min
     private static final int BG_TIMEOUT = DEFAULT_TIMEOUT * 10; // 10 min
 
-    private Server server;
+    private final Server server;
     private Handler handler;
     private volatile boolean isDead = false;
-    private int timeout = DEFAULT_TIMEOUT;
-    private volatile boolean runInBackground;
+    private final int timeout = DEFAULT_TIMEOUT;
+    private final boolean runInBackground;
 
     ServerHandler(@NonNull Map<String, String> configParams) throws IOException {
         // Set params

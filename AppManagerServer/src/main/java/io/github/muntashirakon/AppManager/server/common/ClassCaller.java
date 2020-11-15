@@ -30,8 +30,8 @@ import static io.github.muntashirakon.AppManager.server.common.BaseCaller.TYPE_C
 public class ClassCaller extends Caller {
     @SuppressWarnings("rawtypes")
     private static final Class[] paramsType = new Class[]{Bundle.class};
-    private String packageName;
-    private String className;
+    private final String packageName;
+    private final String className;
 
     /**
      * @param packageName Package name

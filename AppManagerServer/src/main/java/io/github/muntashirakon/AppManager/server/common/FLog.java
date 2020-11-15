@@ -36,13 +36,13 @@ public class FLog {
 
     public static boolean writeLog = false;
     private static FileOutputStream fos;
-    private static AtomicInteger sBufferSize = new AtomicInteger();
-    private static AtomicInteger sErrorCount = new AtomicInteger();
+    private static final AtomicInteger sBufferSize = new AtomicInteger();
+    private static final AtomicInteger sErrorCount = new AtomicInteger();
 
     private static void openFile() {
         try {
             if (writeLog && fos == null && sErrorCount.get() < 5) {
-                File file = new File("/data/local/tmp/opsx.txt");
+                File file = new File("/data/local/tmp/am.txt");
                 fos = new FileOutputStream(file);
 
                 fos.write("\n\n\n--------------------".getBytes());

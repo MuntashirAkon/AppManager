@@ -31,8 +31,8 @@ import androidx.annotation.NonNull;
 
 @SuppressWarnings("rawtypes")
 public class Reflector {
-    private Class clazz;
-    private List<TaggedWord> words;
+    private final Class clazz;
+    private final List<TaggedWord> words;
 
     public enum TAG {
         MODIFIER, IDENTIFIER, DOCUMENT

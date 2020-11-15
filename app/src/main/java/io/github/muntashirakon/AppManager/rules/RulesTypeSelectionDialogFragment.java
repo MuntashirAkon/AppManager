@@ -58,7 +58,7 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
     private Uri mUri;
     private List<String> mPackages = null;
     private HashSet<RulesStorageManager.Type> mSelectedTypes;
-    private RulesStorageManager.Type[] types = new RulesStorageManager.Type[]{
+    private final RulesStorageManager.Type[] types = new RulesStorageManager.Type[]{
             RulesStorageManager.Type.ACTIVITY,
             RulesStorageManager.Type.SERVICE,
             RulesStorageManager.Type.RECEIVER,

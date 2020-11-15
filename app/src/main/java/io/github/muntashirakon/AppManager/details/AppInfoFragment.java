@@ -137,7 +137,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private LinearLayout mHorizontalLayout;
     private ChipGroup mTagCloud;
     @SuppressLint("SimpleDateFormat")
-    private SimpleDateFormat mDateFormatter = new SimpleDateFormat("EE LLL dd yyyy kk:mm:ss");
+    private final SimpleDateFormat mDateFormatter = new SimpleDateFormat("EE LLL dd yyyy kk:mm:ss");
     private SwipeRefreshLayout mSwipeRefresh;
     private int mAccentColor;
     private CharSequence mPackageLabel;
@@ -157,7 +157,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @GuardedBy("mListItems")
     private final List<ListItem> mListItems = new ArrayList<>();
 
-    private ActivityResultLauncher<String> exportRules = registerForActivityResult(
+    private final ActivityResultLauncher<String> exportRules = registerForActivityResult(
             new ActivityResultContracts.CreateDocument(),
             uri -> {
                 if (uri == null) {
@@ -174,7 +174,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 dialogFragment.setArguments(exportArgs);
                 dialogFragment.show(mActivity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
             });
-    private ActivityResultLauncher<String> exportIcon = registerForActivityResult(
+    private final ActivityResultLauncher<String> exportIcon = registerForActivityResult(
             new ActivityResultContracts.CreateDocument(),
             uri -> {
                 try {
@@ -195,11 +195,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     Toast.makeText(mActivity, R.string.saving_failed, Toast.LENGTH_SHORT).show();
                 }
             });
-    private ActivityResultLauncher<String> permOpenInTermux = registerForActivityResult(
+    private final ActivityResultLauncher<String> permOpenInTermux = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) openInTermux();
             });
-    private ActivityResultLauncher<String> permRunInTermux = registerForActivityResult(
+    private final ActivityResultLauncher<String> permRunInTermux = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) runInTermux();
             });
@@ -1016,7 +1016,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         View view = getLayoutInflater().inflate(R.layout.item_app_info_actions, mHorizontalLayout, false);
         TextView textView = view.findViewById(R.id.item_text);
         textView.setText(stringResId);
-        textView.setCompoundDrawablesWithIntrinsicBounds(null, mActivity.getDrawable(iconResId), null, null);
+        textView.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(mActivity, iconResId), null, null);
         mHorizontalLayout.addView(view);
         return view;
     }
@@ -1334,9 +1334,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 case AppInfoFragment.LIST_ITEM_INLINE:
                     holder.title.setText(listItem.title);
                     holder.subtitle.setText(listItem.subtitle);
-                    if ((listItem.flags & AppInfoFragment.LIST_ITEM_FLAG_SELECTABLE) != 0)
-                        holder.subtitle.setTextIsSelectable(true);
-                    else holder.subtitle.setTextIsSelectable(false);
+                    holder.subtitle.setTextIsSelectable((listItem.flags & AppInfoFragment.LIST_ITEM_FLAG_SELECTABLE) != 0);
                     if ((listItem.flags & AppInfoFragment.LIST_ITEM_FLAG_MONOSPACE) != 0)
                         holder.subtitle.setTypeface(Typeface.MONOSPACE);
                     else holder.subtitle.setTypeface(Typeface.DEFAULT);
@@ -1344,9 +1342,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 case AppInfoFragment.LIST_ITEM_REGULAR:
                     holder.title.setText(listItem.title);
                     holder.subtitle.setText(listItem.subtitle);
-                    if ((listItem.flags & AppInfoFragment.LIST_ITEM_FLAG_SELECTABLE) != 0)
-                        holder.subtitle.setTextIsSelectable(true);
-                    else holder.subtitle.setTextIsSelectable(false);
+                    holder.subtitle.setTextIsSelectable((listItem.flags & AppInfoFragment.LIST_ITEM_FLAG_SELECTABLE) != 0);
                     if ((listItem.flags & AppInfoFragment.LIST_ITEM_FLAG_MONOSPACE) != 0)
                         holder.subtitle.setTypeface(Typeface.MONOSPACE);
                     else holder.subtitle.setTypeface(Typeface.DEFAULT);

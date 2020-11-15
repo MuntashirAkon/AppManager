@@ -58,9 +58,9 @@ public class ImportExportDialogFragment extends DialogFragment {
     private static final String MIME_TSV = "text/tab-separated-values";
     private static final String MIME_XML = "text/xml";
 
-    private int userHandle = Users.getCurrentUserHandle();
+    private final int userHandle = Users.getCurrentUserHandle();
     private SettingsActivity activity;
-    private ActivityResultLauncher<String> exportRules = registerForActivityResult(
+    private final ActivityResultLauncher<String> exportRules = registerForActivityResult(
             new ActivityResultContracts.CreateDocument(),
             uri -> {
                 if (uri == null) {
@@ -77,7 +77,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                 dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
                 if (getDialog() != null) getDialog().cancel();
             });
-    private ActivityResultLauncher<String> importRules = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+    private final ActivityResultLauncher<String> importRules = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
         RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
         Bundle args = new Bundle();
         args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_IMPORT);
@@ -88,7 +88,7 @@ public class ImportExportDialogFragment extends DialogFragment {
         dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
         if (getDialog() != null) getDialog().cancel();
     });
-    private ActivityResultLauncher<String> importFromWatt = registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), uris -> {
+    private final ActivityResultLauncher<String> importFromWatt = registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), uris -> {
         Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromWatt(activity.getApplicationContext(), uris);
         if (!status.first) {  // Not failed
             Toast.makeText(getContext(), R.string.the_import_was_successful, Toast.LENGTH_LONG).show();
@@ -97,7 +97,7 @@ public class ImportExportDialogFragment extends DialogFragment {
         }
         if (getDialog() != null) getDialog().cancel();
     });
-    private ActivityResultLauncher<String> importFromBlocker = registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), uris -> {
+    private final ActivityResultLauncher<String> importFromBlocker = registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), uris -> {
         Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromBlocker(activity.getApplicationContext(), uris);
         if (!status.first) {  // Not failed
             Toast.makeText(getContext(), R.string.the_import_was_successful, Toast.LENGTH_LONG).show();

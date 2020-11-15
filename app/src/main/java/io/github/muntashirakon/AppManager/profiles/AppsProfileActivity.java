@@ -54,7 +54,7 @@ public class AppsProfileActivity extends BaseActivity
     private ViewPager viewPager;
     private BottomNavigationView bottomNavigationView;
     private MenuItem prevMenuItem;
-    private Fragment[] fragments = new Fragment[2];
+    private final Fragment[] fragments = new Fragment[2];
     ProfileViewModel model;
     FloatingActionButton fab;
     ProgressIndicator progressIndicator;
@@ -152,11 +152,9 @@ public class AppsProfileActivity extends BaseActivity
                             progressIndicator.show();
                             if (!TextUtils.isEmpty(profName)) {
                                 if (getSupportActionBar() != null) {
-                                    //noinspection ConstantConditions
                                     getSupportActionBar().setTitle(profName.toString());
                                 }
                                 new Thread(() -> {
-                                    //noinspection ConstantConditions
                                     model.cloneProfile(profName.toString());
                                     runOnUiThread(() -> {
                                         Toast.makeText(this, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();

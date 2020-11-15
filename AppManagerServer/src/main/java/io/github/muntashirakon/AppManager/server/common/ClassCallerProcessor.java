@@ -33,9 +33,9 @@ import android.os.Bundle;
  */
 @SuppressWarnings("unused")
 public abstract class ClassCallerProcessor {
-    private Context mPackageContext;
-    private Context mSystemContext;
-    private ServerRunInfo mServerRunInfo;
+    private final Context mPackageContext;
+    private final Context mSystemContext;
+    private final ServerRunInfo mServerRunInfo;
 
     public ClassCallerProcessor(Context mPackageContext, Context mSystemContext, byte[] bytes) {
         this.mPackageContext = mPackageContext;

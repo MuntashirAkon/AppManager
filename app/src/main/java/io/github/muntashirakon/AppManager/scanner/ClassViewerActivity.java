@@ -83,7 +83,7 @@ public class ClassViewerActivity extends BaseActivity {
     private AppCompatEditText container;
     private ProgressIndicator mProgressIndicator;
     private String className;
-    private ActivityResultLauncher<String> exportManifest = registerForActivityResult(
+    private final ActivityResultLauncher<String> exportManifest = registerForActivityResult(
             new ActivityResultContracts.CreateDocument(),
             uri -> {
                 if (uri == null) {
@@ -183,17 +183,15 @@ public class ClassViewerActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_wrap:
-                setWrapped();
-                return true;
-            case R.id.action_save:
-                String fileName = className + ".java";
-                exportManifest.launch(fileName);
-        }
-        return super.onOptionsItemSelected(item);
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        } else if (id == R.id.action_wrap) {
+            setWrapped();
+        } else if (id == R.id.action_save) {
+            String fileName = className + ".java";
+            exportManifest.launch(fileName);
+        } else return super.onOptionsItemSelected(item);
+        return true;
     }
 }

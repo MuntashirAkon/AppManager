@@ -35,7 +35,7 @@ import io.github.muntashirakon.AppManager.scanner.reflector.Reflector;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 public class DexClasses implements Closeable {
-    private ClassLoader loader;
+    private final ClassLoader loader;
     private DexFile dexFile;
 
     public DexClasses(@NonNull Context ctx, @NonNull File apkFile) {

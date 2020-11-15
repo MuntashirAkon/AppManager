@@ -58,7 +58,7 @@ public class ServerConfig {
     static String getLocalToken() {
         String token = sPreferences.getString(LOCAL_TOKEN, null);
         if (TextUtils.isEmpty(token)) {
-            token = AssetsUtils.generateToken(16);
+            token = AssetsUtils.generateToken();
             sPreferences.edit().putString(LOCAL_TOKEN, token).apply();
         }
         return token;

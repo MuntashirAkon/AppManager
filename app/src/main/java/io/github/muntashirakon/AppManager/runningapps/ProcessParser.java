@@ -44,8 +44,8 @@ final class ProcessParser {
             "[\\t\\s]+(\\d+)[\\t\\s]+(\\d+)[\\t\\s]+(\\d+)[\\t\\s]+([^\\t\\s]+)[\\t\\s]+(\\d+)" +
             "[\\t\\s]+(\\w)([\\w+<])?[\\t\\s]+([^\\t\\s]+)$");
 
-    private Context context;
-    private PackageManager pm;
+    private final Context context;
+    private final PackageManager pm;
     private HashMap<String, PackageInfo> installedPackages;
 
     ProcessParser() {
@@ -89,18 +89,12 @@ final class ProcessParser {
                 processItem.name = processName;
             }
             processItem.context = matcher.group(1);
-            //noinspection ConstantConditions
             processItem.pid = Integer.parseInt(matcher.group(2));
-            //noinspection ConstantConditions
             processItem.ppid = Integer.parseInt(matcher.group(3));
-            //noinspection ConstantConditions
             processItem.rss = Integer.parseInt(matcher.group(4));
-            //noinspection ConstantConditions
             processItem.vsz = Integer.parseInt(matcher.group(5));
             processItem.user = matcher.group(6);
-            //noinspection ConstantConditions
             processItem.uid = Integer.parseInt(matcher.group(7));
-            //noinspection ConstantConditions
             processItem.state = context.getString(Utils.getProcessStateName(matcher.group(8)));
             processItem.state_extra = context.getString(Utils.getProcessStateExtraName(matcher.group(9)));
             return processItem;

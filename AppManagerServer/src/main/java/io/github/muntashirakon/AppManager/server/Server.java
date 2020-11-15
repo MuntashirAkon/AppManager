@@ -31,11 +31,11 @@ import io.github.muntashirakon.AppManager.server.common.FLog;
 
 class Server {
     private boolean running = true;
-    private IServer server;
+    private final IServer server;
     private DataTransmission dataTransmission;
-    private DataTransmission.OnReceiveCallback callback;
+    private final DataTransmission.OnReceiveCallback callback;
 
-    private String token;
+    private final String token;
     boolean runInBackground = false;
 
     /**
@@ -155,7 +155,7 @@ class Server {
     }
 
     private static class LocalServerImpl implements IServer {
-        private LocalServerSocket serverSocket;
+        private final LocalServerSocket serverSocket;
         private LocalSocket socket;
 
         public LocalServerImpl(String name) throws IOException {
@@ -185,7 +185,7 @@ class Server {
     }
 
     private static class NetSocketServerImpl implements IServer {
-        private ServerSocket serverSocket;
+        private final ServerSocket serverSocket;
         private Socket socket;
 
         public NetSocketServerImpl(int port) throws IOException {

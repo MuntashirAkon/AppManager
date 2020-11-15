@@ -91,8 +91,8 @@ public class IconPickerDialogFragment extends DialogFragment {
 
     static class IconListingAdapter extends BaseAdapter {
         private String[] icons;
-        private PackageManager pm;
-        private Context context;
+        private final PackageManager pm;
+        private final Context context;
 
         public IconListingAdapter(@NonNull Context context) {
             this.context = context;

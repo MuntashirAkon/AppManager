@@ -33,7 +33,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 
 public class OpenPGPCryptoActivity extends BaseActivity {
 
-    private ActivityResultLauncher<IntentSenderRequest> confirmationLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<IntentSenderRequest> confirmationLauncher = registerForActivityResult(
             new ActivityResultContracts.StartIntentSenderForResult(), result -> {
                 Intent broadcastIntent = new Intent(OpenPGPCrypto.ACTION_OPEN_PGP_INTERACTION_END);
                 sendBroadcast(broadcastIntent);

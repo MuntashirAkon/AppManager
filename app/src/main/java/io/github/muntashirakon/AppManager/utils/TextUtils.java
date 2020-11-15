@@ -225,7 +225,7 @@ public class TextUtils {
      */
     public static String[] split(@NonNull String text, String expression) {
         if (text.length() == 0) {
-            return EMPTY_STRING_ARRAY;
+            return EmptyArray.STRING;
         } else {
             return text.split(expression, -1);
         }
@@ -249,7 +249,7 @@ public class TextUtils {
      */
     public static String[] split(@NonNull String text, Pattern pattern) {
         if (text.length() == 0) {
-            return EMPTY_STRING_ARRAY;
+            return EmptyArray.STRING;
         } else {
             return pattern.split(text, -1);
         }
@@ -286,7 +286,7 @@ public class TextUtils {
      */
     public static class SimpleStringSplitter implements StringSplitter, Iterator<String> {
         private String mString;
-        private char mDelimiter;
+        private final char mDelimiter;
         private int mPosition;
         private int mLength;
 
@@ -1224,6 +1224,4 @@ public class TextUtils {
             return mOriginal.codePointAt(offset);
         }
     }
-
-    private static String[] EMPTY_STRING_ARRAY = new String[]{};
 }

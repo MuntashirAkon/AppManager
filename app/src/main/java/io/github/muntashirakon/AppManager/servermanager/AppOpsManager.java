@@ -17,9 +17,9 @@ import io.github.muntashirakon.AppManager.server.common.PackageOps;
 import io.github.muntashirakon.AppManager.servermanager.remote.AppOpsHandler;
 
 public class AppOpsManager {
-    private LocalServer localServer;
-    private int userHandle;
-    private String packageName;
+    private final LocalServer localServer;
+    private final int userHandle;
+    private final String packageName;
 
     @SuppressLint("StaticFieldLeak")
     private static AppOpsManager INSTANCE;

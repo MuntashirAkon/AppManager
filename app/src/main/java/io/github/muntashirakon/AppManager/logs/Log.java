@@ -59,7 +59,7 @@ public class Log {
     }
 
     @NonNull
-    private PrintWriter writer;
+    private final PrintWriter writer;
 
     private Log() {
         try {

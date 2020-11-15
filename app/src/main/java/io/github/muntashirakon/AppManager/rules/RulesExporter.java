@@ -40,9 +40,12 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
  * @see RulesImporter
  */
 public class RulesExporter {
-    private Context mContext;
-    private @Nullable List<String> mPackagesToExport;
-    private @NonNull List<RulesStorageManager.Type> mTypesToExport;
+    @NonNull
+    private final Context mContext;
+    @Nullable
+    private List<String> mPackagesToExport;
+    @NonNull
+    private final List<RulesStorageManager.Type> mTypesToExport;
 
     public RulesExporter(@NonNull List<RulesStorageManager.Type> typesToExport, @Nullable List<String> packagesToExport) {
         mContext = AppManager.getContext();

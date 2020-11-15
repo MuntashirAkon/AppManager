@@ -54,7 +54,7 @@ class AppOpsService implements IAppOpsService {
 
     private boolean isSuccessful = false;
     private List<String> output = null;
-    private io.github.muntashirakon.AppManager.servermanager.AppOpsManager appOpsManager;
+    private final io.github.muntashirakon.AppManager.servermanager.AppOpsManager appOpsManager;
 
     public AppOpsService() {
         appOpsManager = io.github.muntashirakon.AppManager.servermanager.AppOpsManager.getInstance(LocalServer.getInstance());
@@ -262,7 +262,6 @@ class AppOpsService implements IAppOpsService {
         for(int i = 0; i<5; ++i) {
             tmp = removeLastChar(matcher.group(start+i+1));
             if (!TextUtils.isEmpty(tmp)) {
-                //noinspection ConstantConditions
                 time += Long.parseLong(tmp) * TIME[i];
             }
         }

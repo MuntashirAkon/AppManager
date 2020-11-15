@@ -24,7 +24,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 
 public class OpsResult implements Parcelable {
-    private Throwable exception;
+    private final Throwable exception;
     private List<PackageOps> list;
     private int mode;
 

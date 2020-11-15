@@ -38,7 +38,7 @@ public final class LangUtils {
     public static final String LANG_AUTO = "auto";
 
     private static Map<String, Locale> sLocaleMap;
-    private static Locale sDefaultLocale;
+    private static final Locale sDefaultLocale;
 
     static {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

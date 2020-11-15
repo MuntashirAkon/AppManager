@@ -108,8 +108,8 @@ public class BatchOpsManager {
     public static final int OP_IGNORE_APP_OPS = 13;
     public static final int OP_ENABLE = 14;
 
-    private Runner runner;
-    private Handler handler;
+    private final Runner runner;
+    private final Handler handler;
 
     public BatchOpsManager() {
         this.runner = Runner.getInstance();

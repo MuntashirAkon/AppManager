@@ -100,13 +100,13 @@ public class BackupManager {
     }
 
     @NonNull
-    private String packageName;
+    private final String packageName;
     @NonNull
-    private MetadataManager metadataManager;
+    private final MetadataManager metadataManager;
     @NonNull
-    private BackupFlags requestedFlags;
+    private final BackupFlags requestedFlags;
     @NonNull
-    private int[] userHandles;
+    private final int[] userHandles;
 
     protected BackupManager(@NonNull String packageName, int flags) {
         this.packageName = packageName;
@@ -510,7 +510,7 @@ public class BackupManager {
         private final BackupFiles.Checksum checksum;
         private final int userHandle;
         private boolean isInstalled;
-        private List<File> decryptedFiles = new ArrayList<>();
+        private final List<File> decryptedFiles = new ArrayList<>();
 
         RestoreOp(@NonNull BackupFiles.BackupFile backupFile, int userHandle) throws BackupException {
             this.requestedFlags = BackupManager.this.requestedFlags;

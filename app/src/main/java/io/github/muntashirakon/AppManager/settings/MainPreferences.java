@@ -73,7 +73,6 @@ public class MainPreferences extends PreferenceFragmentCompat {
     private String currentLang;
     private int currentCompression;
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_main, rootKey);

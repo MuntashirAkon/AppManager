@@ -152,46 +152,39 @@ public class RunningAppsActivity extends BaseActivity implements
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_toggle_kill:
-                enableKillForSystem = !enableKillForSystem;
-                AppPref.set(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL, enableKillForSystem);
-            case R.id.action_refresh:
-                refresh();
-                return true;
-            // Sort
-            case R.id.action_sort_by_pid:
-                mModel.setSortOrder(SORT_BY_PID);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_process_name:
-                mModel.setSortOrder(SORT_BY_PROCESS_NAME);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_apps_first:
-                mModel.setSortOrder(SORT_BY_APPS_FIRST);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_memory_usage:
-                mModel.setSortOrder(SORT_BY_MEMORY_USAGE);
-                item.setChecked(true);
-                return true;
-            // Filter
-            case R.id.action_filter_apps:
-                if (!item.isChecked()) mModel.addFilter(FILTER_APPS);
-                else mModel.removeFilter(FILTER_APPS);
-                item.setChecked(!item.isChecked());
-                return true;
-            case R.id.action_filter_user_apps:
-                if (!item.isChecked()) mModel.addFilter(FILTER_USER_APPS);
-                else mModel.removeFilter(FILTER_USER_APPS);
-                item.setChecked(!item.isChecked());
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        } else if (id == R.id.action_toggle_kill) {
+            enableKillForSystem = !enableKillForSystem;
+            AppPref.set(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL, enableKillForSystem);
+            refresh();
+        } else if (id == R.id.action_refresh) {
+            refresh();
+        // Sort
+        } else if (id == R.id.action_sort_by_pid) {
+            mModel.setSortOrder(SORT_BY_PID);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_process_name) {
+            mModel.setSortOrder(SORT_BY_PROCESS_NAME);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_apps_first) {
+            mModel.setSortOrder(SORT_BY_APPS_FIRST);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_memory_usage) {
+            mModel.setSortOrder(SORT_BY_MEMORY_USAGE);
+            item.setChecked(true);
+        // Filter
+        } else if (id == R.id.action_filter_apps) {
+            if (!item.isChecked()) mModel.addFilter(FILTER_APPS);
+            else mModel.removeFilter(FILTER_APPS);
+            item.setChecked(!item.isChecked());
+        } else if (id == R.id.action_filter_user_apps) {
+            if (!item.isChecked()) mModel.addFilter(FILTER_USER_APPS);
+            else mModel.removeFilter(FILTER_USER_APPS);
+            item.setChecked(!item.isChecked());
+        } else return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override

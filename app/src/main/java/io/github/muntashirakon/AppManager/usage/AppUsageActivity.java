@@ -193,40 +193,32 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_sort_by_app_label:
-                setSortBy(SORT_BY_APP_LABEL);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_last_used:
-                setSortBy(SORT_BY_LAST_USED);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_mobile_data:
-                setSortBy(SORT_BY_MOBILE_DATA);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_package_name:
-                setSortBy(SORT_BY_PACKAGE_NAME);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_screen_time:
-                setSortBy(SORT_BY_SCREEN_TIME);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_times_opened:
-                setSortBy(SORT_BY_TIMES_OPENED);
-                item.setChecked(true);
-                return true;
-            case R.id.action_sort_by_wifi_data:
-                setSortBy(SORT_BY_WIFI_DATA);
-                item.setChecked(true);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        } else if (id == R.id.action_sort_by_app_label) {
+            setSortBy(SORT_BY_APP_LABEL);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_last_used) {
+            setSortBy(SORT_BY_LAST_USED);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_mobile_data) {
+            setSortBy(SORT_BY_MOBILE_DATA);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_package_name) {
+            setSortBy(SORT_BY_PACKAGE_NAME);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_screen_time) {
+            setSortBy(SORT_BY_SCREEN_TIME);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_times_opened) {
+            setSortBy(SORT_BY_TIMES_OPENED);
+            item.setChecked(true);
+        } else if (id == R.id.action_sort_by_wifi_data) {
+            setSortBy(SORT_BY_WIFI_DATA);
+            item.setChecked(true);
+        } else return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
@@ -341,9 +333,9 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
     static class AppUsageAdapter extends BaseAdapter {
         static DateFormat sSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
 
-        private LayoutInflater mLayoutInflater;
+        private final LayoutInflater mLayoutInflater;
         private List<AppUsageStatsManager.PackageUS> mAdapterList;
-        private Activity mActivity;
+        private final Activity mActivity;
 
         static class ViewHolder {
             ImageView appIcon;

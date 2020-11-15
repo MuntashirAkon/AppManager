@@ -31,7 +31,6 @@ import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -50,12 +49,8 @@ public final class PackageInstallerShell extends AMPackageInstaller {
     }
 
     private int sessionId = -1;
-    private int userHandle;
+    private final int userHandle;
     private String packageName;
-
-    private PackageInstallerShell() {
-        userHandle = Users.getCurrentUserHandle();
-    }
 
     public PackageInstallerShell(int userHandle) {
         this.userHandle = userHandle;
