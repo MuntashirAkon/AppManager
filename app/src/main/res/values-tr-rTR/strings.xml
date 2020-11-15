@@ -58,7 +58,6 @@
     <string name="manifest">Bildirim</string>
     <string name="error">Hata</string>
     <string name="loading">Yükleniyor…</string>
-    <!-- &#8230; = ... -->
     <string name="sort_by_app_label">Uygulama etiketleri</string>
     <string name="sort_by_package_name">Paket adı</string>
     <string name="sort_by_domain">Kullanıcı uygulaması bölümleri</string>
@@ -618,7 +617,7 @@
     <string name="create_shortcut">Kısayol Oluştur</string>
     <string name="sort_by_target_sdk">Hedef SDK</string>
     <string name="only_install">Yalnızca Kur</string>
-    <string name="install_without_data_loss">İmza doğrulamayı kapattıysanız, uygulamayı veri kaybetmeden kurmak için &lt;b&gt;Yalnızca kur&lt;/b&gt; seçeneğini kullanabilirsiniz.</string>
+    <string name="install_without_data_loss">İmza doğrulamayı kapattıysanız, uygulamayı veri kaybetmeden kurmak için <b>Yalnızca kur</b> seçeneğini kullanabilirsiniz.</string>
     <string name="app_data_will_be_lost">Mevcut veriler kaybolacak.</string>
     <string name="signature_mismatch_for_system_apps">Farklı imzaya sahip bir sistem uygulaması bu paket adına sahip olduğu için uygulama kurulamadı.</string>
     <string name="do_you_want_to_uninstall_and_install">Uygulamayı kaldırıp tekrar kurmak istiyor musunuz\?</string>

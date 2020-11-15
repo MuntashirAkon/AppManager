@@ -82,7 +82,7 @@
     <string name="instructions">Instruções</string>
     <string name="error_creating_shortcut">Erro ao criar atalho</string>
     <string name="error_verbose_pin_shortcut">O launcher atual não suporta PinShortcut. Não foi possível criar o atalho.</string>
-    <string name="starting_activity">Iniciando atividade: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="starting_activity">Iniciando atividade: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="create_shortcut">Criar atalho</string>
     <string name="edit_shortcut">Editar atalho</string>
     <string name="shortcut_name">Nome do Atalho</string>
@@ -240,7 +240,7 @@
     <string name="backup_restore">Backup/Restauração</string>
     <string name="disable_background">Desativar Segundo plano</string>
     <string name="export_blocking_rules">Exportar Regras de Bloqueio</string>
-    <string name="some_items_selected">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"selection_no\" example=\"20\"&gt;%1$d&lt;/xliff:g&gt; selecionado(s)</string>
+    <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> selecionado(s)</string>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">Não foi possível limpar os dados de %1$d aplicativo</item>
         <item quantity="other">Não foi possível limpar os dados de %1$d aplicativos</item>
@@ -551,8 +551,8 @@
     <string name="subject">Assunto</string>
     <string name="filter_apps_with_backups">Aplicativos com backups</string>
     <string name="sort_by_backup">Backup primeiro</string>
-    <string name="failed_to_uninstall_updates">Não foi possível desinstalar as atualizações do aplicativo &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
-    <string name="update_uninstalled_successfully">As atualizações do aplicativo &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; foram desinstaladas.</string>
+    <string name="failed_to_uninstall_updates">Não foi possível desinstalar as atualizações do aplicativo <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="update_uninstalled_successfully">As atualizações do aplicativo <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> foram desinstaladas.</string>
     <string name="uninstall_updates">Desinstalar Atualizações</string>
     <string name="allow_open_pgp_operation">Clique para permitir que o AM use o OpenPGP</string>
     <string name="confirm_installation">Confirmar instalação</string>
@@ -593,7 +593,7 @@
     <string name="do_you_want_to_uninstall_and_install">Deseja desinstalar e instalar o aplicativo novamente\?</string>
     <string name="signature_mismatch_for_system_apps">Não foi possível instalar o aplicativo porque um aplicativo do sistema com uma assinatura diferente tem esse nome de pacote.</string>
     <string name="app_data_will_be_lost">Os dados existentes serão perdidos.</string>
-    <string name="install_without_data_loss">Se você desligou a verificação de assinatura, você pode usar a opção &lt;b&gt;Apenas instalar&lt;/b&gt; para instalar o aplicativo sem perder dados.</string>
+    <string name="install_without_data_loss">Se você desligou a verificação de assinatura, você pode usar a opção <b>Apenas instalar</b> para instalar o aplicativo sem perder dados.</string>
     <string name="only_install">Apenas Instalar</string>
     <string name="sys_config">Configurações do Sistema</string>
     <string name="scanner">Scanner</string>
@@ -634,14 +634,14 @@
     <string name="launch_mode_single_task">Tarefa única</string>
     <string name="launch_mode_single_instance">Instância única</string>
     <string name="launch_mode_multiple">Vários</string>
-    <string name="locale_split_for_base_apk">Idioma &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt;%1$s&lt;/xliff:g&gt; para o APK base</string>
-    <string name="abi_split_for_base_apk">Código &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; para o APK base</string>
-    <string name="density_split_for_base_apk">Recursos &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI) para o APK base</string>
-    <string name="locale_split_for_feature">Idioma &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt;%1$s&lt;/xliff:g&gt; para a função &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
-    <string name="abi_split_for_feature">Código&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; para &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
-    <string name="density_split_for_feature">Recursos &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI) para a função &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%3$s&lt;/xliff:g&gt;</string>
-    <string name="unknown_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt; para a função &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
-    <string name="unknown_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt; para o APK base</string>
+    <string name="locale_split_for_base_apk">Idioma <xliff:g id="split_name" example="English">%1$s</xliff:g> para o APK base</string>
+    <string name="abi_split_for_base_apk">Código <xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> para o APK base</string>
+    <string name="density_split_for_base_apk">Recursos <xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) para o APK base</string>
+    <string name="locale_split_for_feature">Idioma <xliff:g id="split_name" example="English">%1$s</xliff:g> para a função <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="abi_split_for_feature">Código<xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> para <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="density_split_for_feature">Recursos <xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) para a função <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
+    <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para a função <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para o APK base</string>
     <string name="routine_ops">Operações de rotina</string>
     <string name="input_app_ops_description">Insira constantes de operações de aplicativo com espaços, por exemplo (63 72 12) etc. Você pode encontrar constantes de operações de aplicativo na guia operações de aplicativo sob os suportes.</string>
     <string name="input_app_ops">Inserir operações de aplicativo</string>
