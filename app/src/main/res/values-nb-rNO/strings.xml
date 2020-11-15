@@ -429,4 +429,20 @@
     <string name="clear_data_from_uninstalled_apps_description">Tøm data fra avinstallerte programmer med DONT_DELETE_DATA-flagg</string>
     <string name="clear_data_from_uninstalled_apps">Tøm data fra avinstallerte programmer</string>
     <string name="instructions_header">[Disse instruksjonene er utdaterte, og vil ikke lenger oppdateres. Besøk den offisielle dokumentasjonssiden på (https://muntashirakon.github.io/AppManager) for oppdatert info]</string>
+    <string name="no_usage_in_this_time_range">Ingen bruk i dette tidsrommet</string>
+    <string name="key_name_cannot_be_null">Nøkkelnavn kan ikke stå tomt</string>
+    <string name="type_float">Desimaltall</string>
+    <string name="shared_prefs">Delte innstillinger</string>
+    <string name="test_only">Kun for test</string>
+    <string name="debuggable">Avlusbar</string>
+    <string name="credits_message">"Til utviklerne av
+\n- Android Open Source-prosjektet
+\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Editor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;AppsMonitor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
+\nLogohenvisning: &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "</string>
 </resources>
