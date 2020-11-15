@@ -636,10 +636,10 @@
     <string name="launch_mode_multiple">Vários</string>
     <string name="locale_split_for_base_apk">Idioma <xliff:g id="split_name" example="English">%1$s</xliff:g> para o APK base</string>
     <string name="abi_split_for_base_apk">Código <xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> para o APK base</string>
-    <string name="density_split_for_base_apk">Recursos <xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) para o APK base</string>
+    <string name="density_split_for_base_apk">Recursos de &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI) para o APK base</string>
     <string name="locale_split_for_feature">Idioma <xliff:g id="split_name" example="English">%1$s</xliff:g> para a função <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
-    <string name="abi_split_for_feature">Código<xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> para <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
-    <string name="density_split_for_feature">Recursos <xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) para a função <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
+    <string name="abi_split_for_feature">Código &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; para &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
+    <string name="density_split_for_feature">Recursos de &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI) para a função &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%3$s&lt;/xliff:g&gt;</string>
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para a função <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para o APK base</string>
     <string name="routine_ops">Operações de rotina</string>
