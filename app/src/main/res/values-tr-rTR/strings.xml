@@ -677,4 +677,5 @@
     <string name="pref_show_users_in_installer_msg">Harici bir uygulamayı kurmadan önce seçilecek bir kullanıcı listesi görüntüle. Root veya ADB gerektirir.</string>
     <string name="pref_show_users_in_installer">Kurucuda kullanıcıları göster</string>
     <string name="failed_to_duplicate_profile">Profil kopyalanamadı</string>
+    <string name="send_selected">Seçileni gönder</string>
 </resources>
