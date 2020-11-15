@@ -1,4 +1,0 @@
-F-Droid doesn't support extended changelog. Visit https://muntashirakon.github.io/AppManager/changelog.html or view in-app changelog for an extensive changelog.
-- Extended Termux support
-- Improved app data backup
-- Import existing rules from other app or tools

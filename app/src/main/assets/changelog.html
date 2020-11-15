@@ -18,6 +18,30 @@
 <p>Visit App Manager docs here: https://muntashirakon.github.io/AppManager</p><br />
 <p>Visit https://muntashirakon.github.io/AppManager/changelog.html for a more helpful changelog.</p><br />
 
+<h5>v2.5.18 (371):</h5>
+&#x2022; <font color="#09868B">[Feature]</font> Added crash reporter<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added filter by running apps in the main page<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added option to copy lib or tracker info in their respective dialogs<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added multiple user support for apk installer. To use this, you need to enable it in settings<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added support for APKM files. Supported activities are: App Info, Installer and UnAPKM<br />
+&#x2022; <font color="#09868B">[Feature]</font> Display apk selection list on clicking the manifest button for bundled apps<br />
+&#x2022; <font color="#09868B">[Feature]</font> Display progress dialog until the apk is loaded<br />
+&#x2022; <font color="#09868B">[Feature]</font> Display split apk info in the App Info tab, not just the split name<br />
+&#x2022; <font color="#09868B">[Feature]</font> Generalise OpenPGP by replacing it with encryption in settings page<br />
+&#x2022; <font color="#09868B">[Feature]</font> Replaced red with orange in the tag cloud (in the App Info tab) to improve readability<br />
+&#x2022; <font color="#09868B">[Feature]</font> Replaced normal selection dialogs with filterable dialogs<br />
+&#x2022; <font color="#09868B">[Feature]</font> Updated list of libraries and trackers<br />
+&#x2022; <font color="#09868B">[Feature]</font> <i>Upcoming feature:</i> Profile. This version implements the following features: Create or import new profile, export profile, delete profile, duplicate profile and select apps, remove apps<br />
+&#x2022; <font color="red">[Fix]</font> Add missing classes while scanning for trackers in the scanner page<br />
+&#x2022; <font color="red">[Fix]</font> Backup/export support for bundled apps on Android 7 or below<br />
+&#x2022; <font color="red">[Fix]</font> Completely removed shared libs from what's new<br />
+&#x2022; <font color="red">[Fix]</font> Fixed crash when an app manifest cannot be read<br />
+&#x2022; <font color="red">[Fix]</font> Fixed detection of some apk formats<br />
+&#x2022; <font color="red">[Fix]</font> Fixed running apps page not remembering filters and sort order<br />
+&#x2022; <font color="red">[Fix]</font> Fixed wrong locale recommendations in apk installer<br />
+&#x2022; <font color="red">[Fix]</font> Handle empty values on importing blocking rules<br />
+&#x2022; <font color="red">[Fix]</font> Respect supplied mime type, infer if possible<br />
+
 <h5>v2.5.17 (368):</h5>
 All the changes introduced in v2.5.14 to v2.5.16 except backup/restore which is not yet stable.<br />
 &#x2022; <font color="#09868B">[Feature]</font> Added an option to uninstall updates from system apps<br />
@@ -147,21 +171,3 @@ All the changes introduced in v2.5.14 to v2.5.16 except backup/restore which is 
 
 <p>Due to some major changes, backup functionality has become incompatible with the previous versions. Data backup feature is still considered experimental and please do not rely on it to manage your backups yet.</p><br />
 <p>Compatibility for blocking rules is removed for v2.5.6. If you're still using this version, update to v2.5.13, enable global component blocking (and disable it again) and then update to v2.5.14.</p><br />
-
-<h5>v2.5.13 (348):</h5>
-&#x2022; <font color="#09868B">[Feature]</font> Split apk install support (apks and xapk)<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added an option to install apk (with apks and xapk) directly from FM or Browser<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added a new option to remove all blocking rules in settings page<br />
-&#x2022; <font color="#09868B">[Feature]</font> AppOpsX-like implementation for generating app ops as well as executing shell commands for ADB users. This is the "free" alternative of Shizuku.<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added an option to filter apps with activities in the main page<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added an option to display only the active app ops in the App Ops tab. This option is saved in the preferences<br />
-&#x2022; <font color="#09868B">[Feature]</font> Save apk files as "app name_version.extension"<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added a foreground service to run batch operations, result is displayed in the notifications<br />
-&#x2022; <font color="#09868B">[Feature]</font> Batch operations: Replaced kill with force-stop<br />
-&#x2022; <font color="#09868B">[Feature]</font> Batch operations: Added try again button for failed packages<br />
-&#x2022; <font color="#09868B">[Feature]</font> Added German and Portuguese (Brazilian) translations<br />
-&#x2022; <font color="red">[Fix]</font> Fixed broken ADB support<br />
-&#x2022; <font color="red">[Fix]</font> Install app only for the current user at the time of restoring backups<br />
-
-<p>Data backup feature is still considered experimental and please do not rely on it to manage your backups yet.</p><br />
-<p>Visit https://muntashirakon.github.io/AppManager/changelog.html for a more helpful changelog.</p><br />
