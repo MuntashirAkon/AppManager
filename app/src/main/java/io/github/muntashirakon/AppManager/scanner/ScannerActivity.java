@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.scanner;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -54,6 +53,8 @@ import androidx.appcompat.app.ActionBar;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
@@ -346,7 +347,7 @@ public class ScannerActivity extends BaseActivity {
     }
 
     private void setLibraryInfo() {
-        List<String> missingLibs = new ArrayList<>();
+        ArrayList<String> missingLibs = new ArrayList<>();
         String[] libNames = getResources().getStringArray(R.array.lib_names);
         String[] libSignatures = getResources().getStringArray(R.array.lib_signatures);
         String[] libTypes = getResources().getStringArray(R.array.lib_types);
@@ -414,14 +415,17 @@ public class ScannerActivity extends BaseActivity {
                 ((TextView) findViewById(R.id.missing_libs_title)).setText(getResources().getQuantityString(R.plurals.missing_signatures, missingLibs.size(), missingLibs.size()));
                 View view = findViewById(R.id.missing_libs);
                 view.setVisibility(View.VISIBLE);
-                view.setOnClickListener(v -> new MaterialAlertDialogBuilder(this)
+                view.setOnClickListener(v -> new SearchableMultiChoiceDialogBuilder(this,
+                        missingLibs, ArrayUtils.toCharSequence(missingLibs))
                         .setTitle(R.string.signatures)
-                        .setItems(missingLibs.toArray(new String[0]), null)
                         .setNegativeButton(R.string.ok, null)
-                        .setNeutralButton(R.string.copy, (dialog, which) -> {
-                            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                            android.content.ClipData clip = android.content.ClipData.newPlainText(getString(R.string.signatures), missingLibs.toString());
-                            clipboard.setPrimaryClip(clip);
+                        .setNeutralButton(R.string.send_selected, (dialog, which, selectedItems) -> {
+                            Intent i = new Intent(Intent.ACTION_SEND);
+                            i.setType("message/rfc822");
+                            i.putExtra(Intent.EXTRA_EMAIL, new String[]{"muntashirakon@riseup.net"});
+                            i.putExtra(Intent.EXTRA_SUBJECT, "App Manager: Missing signatures");
+                            i.putExtra(Intent.EXTRA_TEXT, selectedItems.toString());
+                            startActivity(Intent.createChooser(i, getText(R.string.signatures)));
                         })
                         .show());
             }

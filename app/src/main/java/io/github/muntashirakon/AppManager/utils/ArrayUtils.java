@@ -290,6 +290,17 @@ public class ArrayUtils {
         return array;
     }
 
+    @NonNull
+    public static <T> ArrayList<CharSequence> toCharSequence(@NonNull ArrayList<T> list) {
+        ArrayList<CharSequence> charSequenceList = new ArrayList<>(list.size());
+        try {
+            for (T item : list) charSequenceList.add((CharSequence) item);
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return charSequenceList;
+    }
+
     @SuppressWarnings("unchecked")
     public static @NonNull <T> T[] concatElements(Class<T> kind, @Nullable T[] a, @Nullable T[] b) {
         final int an = (a != null) ? a.length : 0;
