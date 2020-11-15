@@ -33,7 +33,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
 
 import java.io.ByteArrayInputStream;
@@ -57,6 +56,7 @@ import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuild
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getUnderlinedString;
@@ -327,22 +327,18 @@ public class ScannerActivity extends BaseActivity {
             ((TextView) findViewById(R.id.tracker_title)).setText(summary);
             ((TextView) findViewById(R.id.tracker_description)).setText(builder);
             if (finalTotalTrackersFound == 0) return;
-            findViewById(R.id.tracker).setOnClickListener(v -> {
-                View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
-                ((TextView) view.findViewById(R.id.content)).setText(foundTrackersInfo);
-                new MaterialAlertDialogBuilder(this)
-                        .setTitle(R.string.tracker_details)
-                        .setView(view)
-                        .setNegativeButton(R.string.ok, null)
-                        .setNeutralButton(R.string.exodus_link, (dialog, which) -> {
-                            Uri exodus_link = Uri.parse(String.format("https://reports.exodus-privacy.eu.org/en/reports/%s/latest/", mPackageName));
-                            Intent intent = new Intent(Intent.ACTION_VIEW, exodus_link);
-                            if (intent.resolveActivity(getPackageManager()) != null) {
-                                startActivity(intent);
-                            }
-                        })
-                        .show();
-            });
+            findViewById(R.id.tracker).setOnClickListener(v ->
+                    UIUtils.getDialogWithScrollableTextView(this, foundTrackersInfo, false)
+                            .setTitle(R.string.tracker_details)
+                            .setNegativeButton(R.string.ok, null)
+                            .setNeutralButton(R.string.exodus_link, (dialog, which) -> {
+                                Uri exodus_link = Uri.parse(String.format("https://reports.exodus-privacy.eu.org/en/reports/%s/latest/", mPackageName));
+                                Intent intent = new Intent(Intent.ACTION_VIEW, exodus_link);
+                                if (intent.resolveActivity(getPackageManager()) != null) {
+                                    startActivity(intent);
+                                }
+                            })
+                            .show());
         });
     }
 
@@ -401,15 +397,11 @@ public class ScannerActivity extends BaseActivity {
             ((TextView) findViewById(R.id.libs_title)).setText(summary);
             ((TextView) findViewById(R.id.libs_description)).setText(found);
             if (finalTotalLibsFound == 0) return;
-            findViewById(R.id.libs).setOnClickListener(v -> {
-                View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
-                ((TextView) view.findViewById(R.id.content)).setText(foundLibsInfo);
-                new MaterialAlertDialogBuilder(this)
-                        .setTitle(R.string.lib_details)
-                        .setView(view)
-                        .setNegativeButton(R.string.ok, null)
-                        .show();
-            });
+            findViewById(R.id.libs).setOnClickListener(v ->
+                    UIUtils.getDialogWithScrollableTextView(this, foundLibsInfo, false)
+                            .setTitle(R.string.lib_details)
+                            .setNegativeButton(R.string.ok, null)
+                            .show());
             // Missing libs
             if (missingLibs.size() > 0) {
                 ((TextView) findViewById(R.id.missing_libs_title)).setText(getResources().getQuantityString(R.plurals.missing_signatures, missingLibs.size(), missingLibs.size()));

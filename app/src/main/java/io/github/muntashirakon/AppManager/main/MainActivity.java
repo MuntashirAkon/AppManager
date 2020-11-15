@@ -26,7 +26,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.util.Linkify;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -655,22 +654,16 @@ public class MainActivity extends BaseActivity implements
             IOUtils.deleteSilently(ServerConfig.getDestJarFile());
             new Thread(() -> {
                 final Spanned spannedChangelog = HtmlCompat.fromHtml(IOUtils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
-                runOnUiThread(() -> {
-                    View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
-                    MaterialTextView textView = view.findViewById(R.id.content);
-                    textView.setText(spannedChangelog);
-                    Linkify.addLinks(textView, Linkify.ALL);
-                    new MaterialAlertDialogBuilder(this)
-                            .setTitle(R.string.changelog)
-                            .setView(view)
-                            .setNegativeButton(R.string.ok, null)
-                            .setNeutralButton(R.string.instructions, (dialog, which) ->
-                                    new FullscreenDialog(this)
-                                            .setTitle(R.string.instructions)
-                                            .setView(R.layout.dialog_instructions)
-                                            .show())
-                            .show();
-                });
+                runOnUiThread(() ->
+                        UIUtils.getDialogWithScrollableTextView(this, spannedChangelog, true)
+                                .setTitle(R.string.changelog)
+                                .setNegativeButton(R.string.ok, null)
+                                .setNeutralButton(R.string.instructions, (dialog, which) ->
+                                        new FullscreenDialog(this)
+                                                .setTitle(R.string.instructions)
+                                                .setView(R.layout.dialog_instructions)
+                                                .show())
+                                .show());
             }).start();
             AppPref.set(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
         }

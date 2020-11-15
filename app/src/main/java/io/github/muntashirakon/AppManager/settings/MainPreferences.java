@@ -20,13 +20,11 @@ package io.github.muntashirakon.AppManager.settings;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Spanned;
-import android.text.util.Linkify;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textview.MaterialTextView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,6 +51,7 @@ import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class MainPreferences extends PreferenceFragmentCompat {
     private static final List<Integer> themeConst = Arrays.asList(
@@ -249,17 +248,11 @@ public class MainPreferences extends PreferenceFragmentCompat {
         findPreference("changelog").setOnPreferenceClickListener(preference -> {
             new Thread(() -> {
                 final Spanned spannedChangelog = HtmlCompat.fromHtml(IOUtils.getContentFromAssets(activity, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
-                activity.runOnUiThread(() -> {
-                    View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
-                    MaterialTextView textView = view.findViewById(R.id.content);
-                    textView.setText(spannedChangelog);
-                    Linkify.addLinks(textView, Linkify.ALL);
-                    new MaterialAlertDialogBuilder(activity)
-                            .setTitle(R.string.changelog)
-                            .setView(view)
-                            .setNegativeButton(R.string.ok, null)
-                            .show();
-                });
+                activity.runOnUiThread(() ->
+                        UIUtils.getDialogWithScrollableTextView(activity, spannedChangelog, true)
+                                .setTitle(R.string.changelog)
+                                .setNegativeButton(R.string.ok, null)
+                                .show());
             }).start();
             return true;
         });
