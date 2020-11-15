@@ -18,6 +18,9 @@
 package io.github.muntashirakon.AppManager.scanner;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -330,7 +333,12 @@ public class ScannerActivity extends BaseActivity {
             findViewById(R.id.tracker).setOnClickListener(v ->
                     UIUtils.getDialogWithScrollableTextView(this, foundTrackersInfo, false)
                             .setTitle(R.string.tracker_details)
-                            .setNegativeButton(R.string.ok, null)
+                            .setPositiveButton(R.string.ok, null)
+                            .setNegativeButton(R.string.copy, (dialog, which) -> {
+                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData clip = ClipData.newPlainText(getString(R.string.signatures), foundTrackersInfo);
+                                clipboard.setPrimaryClip(clip);
+                            })
                             .setNeutralButton(R.string.exodus_link, (dialog, which) -> {
                                 Uri exodus_link = Uri.parse(String.format("https://reports.exodus-privacy.eu.org/en/reports/%s/latest/", mPackageName));
                                 Intent intent = new Intent(Intent.ACTION_VIEW, exodus_link);
@@ -401,6 +409,11 @@ public class ScannerActivity extends BaseActivity {
                     UIUtils.getDialogWithScrollableTextView(this, foundLibsInfo, false)
                             .setTitle(R.string.lib_details)
                             .setNegativeButton(R.string.ok, null)
+                            .setNeutralButton(R.string.copy, (dialog, which) -> {
+                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData clip = ClipData.newPlainText(getString(R.string.signatures), foundLibsInfo);
+                                clipboard.setPrimaryClip(clip);
+                            })
                             .show());
             // Missing libs
             if (missingLibs.size() > 0) {
