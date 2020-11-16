@@ -40,7 +40,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
@@ -48,7 +47,6 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -68,7 +66,6 @@ import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.runner.Runner;
 
 public class Utils {
     public static final String TERMUX_LOGIN_PATH = OsEnvironment.getDataDataDirectory() + "/com.termux/files/usr/bin/login";
@@ -636,29 +633,6 @@ public class Utils {
             if (count == 0) fTime = context.getString(R.string.usage_less_than_a_minute);
         }
         return fTime;
-    }
-
-    public static boolean isRootGiven() {
-        if (isRootAvailable()) {
-            String output = Runner.runCommand(Runner.getRootInstance(), "id").getOutput();
-            return output != null && output.toLowerCase(Locale.ROOT).contains("uid=0");
-        }
-        return false;
-    }
-
-    private static boolean isRootAvailable() {
-        String pathEnv = System.getenv("PATH");
-        if (pathEnv != null) {
-            for (String pathDir : pathEnv.split(":")) {
-                try {
-                    if (new File(pathDir, "su").exists()) {
-                        return true;
-                    }
-                } catch (NullPointerException ignore) {
-                }
-            }
-        }
-        return false;
     }
 
     public static boolean isAppUpdated() {

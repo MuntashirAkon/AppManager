@@ -43,21 +43,25 @@ class UserShellRunner extends Runner {
                 return result.isSuccess();
             }
 
+            @NonNull
             @Override
             public List<String> getOutputAsList() {
                 return stdout;
             }
 
+            @NonNull
             @Override
             public List<String> getOutputAsList(int first_index) {
                 return stdout.subList(first_index, stdout.size());
             }
 
+            @NonNull
             @Override
             public List<String> getOutputAsList(int first_index, int length) {
                 return stdout.subList(first_index, first_index + length);
             }
 
+            @NonNull
             @Override
             public String getOutput() {
                 return TextUtils.join("\n", stdout);

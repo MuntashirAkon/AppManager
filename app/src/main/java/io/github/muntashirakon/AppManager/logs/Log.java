@@ -55,6 +55,7 @@ public class Log {
     static {
         DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ROOT);
         LOG_FILE = new File(AppManager.getContext().getExternalFilesDir("cache"), "am.log");
+//        LOG_FILE = AppManager.getContext().getFileStreamPath("am.log");
         INSTANCE = new Log();
     }
 

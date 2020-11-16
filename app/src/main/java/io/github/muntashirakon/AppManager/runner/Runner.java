@@ -42,12 +42,16 @@ public abstract class Runner {
     public interface Result {
         boolean isSuccessful();
 
+        @NonNull
         List<String> getOutputAsList();
 
+        @NonNull
         List<String> getOutputAsList(int first_index);
 
+        @NonNull
         List<String> getOutputAsList(int first_index, int length);
 
+        @NonNull
         String getOutput();
     }
 

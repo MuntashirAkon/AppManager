@@ -74,6 +74,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
 import io.github.muntashirakon.AppManager.profiles.ProfilesActivity;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
@@ -287,11 +288,7 @@ public class MainActivity extends BaseActivity implements
         mBottomAppBar.setOnMenuItemClickListener(this);
         handleSelection();
         // Check root
-        if (Utils.isRootGiven()) {
-            AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
-        }
-        // Start local server
-        new Thread(LocalServer::getInstance).start();
+        AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, RunnerUtils.isRootGiven());
     }
 
     @Override
@@ -536,18 +533,22 @@ public class MainActivity extends BaseActivity implements
             // Check for adb
             new Thread(() -> {
                 try {
+                    LocalServer.getInstance().checkConnect();
                     AdbShell.CommandResult result = AdbShell.run("id");
                     if (!result.isSuccessful()) {
-                        AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
                         throw new IOException("Adb not available");
                     }
                     runOnUiThread(() -> Toast.makeText(this, "Working on ADB mode", Toast.LENGTH_SHORT).show());
-                } catch (Exception e) {
+                } catch (IOException e) {
                     AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
+                    LocalServer.updateConfig();
+                    try {
+                        LocalServer.getInstance().checkConnect();
+                    } catch (IOException ignore) {
+                    }
                 }
-                LocalServer.updateConfig();
             }).start();
-        }
+        } else new Thread(LocalServer::getInstance).start();
 
         if (mAdapter != null) {
             // Set observer

@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collections;
@@ -162,24 +163,28 @@ public final class RunnerUtils {
                     return false;
                 }
 
+                @NonNull
                 @Override
                 public List<String> getOutputAsList() {
-                    return null;
+                    return new ArrayList<>();
                 }
 
+                @NonNull
                 @Override
                 public List<String> getOutputAsList(int first_index) {
-                    return null;
+                    return new ArrayList<>();
                 }
 
+                @NonNull
                 @Override
                 public List<String> getOutputAsList(int first_index, int length) {
-                    return null;
+                    return new ArrayList<>();
                 }
 
+                @NonNull
                 @Override
                 public String getOutput() {
-                    return null;
+                    return "";
                 }
             };
         }
@@ -328,6 +333,29 @@ public final class RunnerUtils {
     public static String userHandleToUser(int userHandle) {
         if (userHandle == USER_ALL) return "all";
         else return String.valueOf(userHandle);
+    }
+
+    public static boolean isRootGiven() {
+        if (isRootAvailable()) {
+            String output = Runner.runCommand(Runner.getRootInstance(), "echo AMRootTest").getOutput();
+            return output.contains("AMRootTest");
+        }
+        return false;
+    }
+
+    private static boolean isRootAvailable() {
+        String pathEnv = System.getenv("PATH");
+        if (pathEnv != null) {
+            for (String pathDir : pathEnv.split(":")) {
+                try {
+                    if (new File(pathDir, "su").exists()) {
+                        return true;
+                    }
+                } catch (NullPointerException ignore) {
+                }
+            }
+        }
+        return false;
     }
 
     /**

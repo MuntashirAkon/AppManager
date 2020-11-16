@@ -29,8 +29,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.SocketTimeoutException;
 
+import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -85,8 +87,31 @@ public class LocalServer {
         return mContext;
     }
 
-    public synchronized void checkConnect() throws Exception {
-        mLocalServerManager.start();
+    private final Object connectLock = new Object();
+    private boolean connectStarted = false;
+
+    @GuardedBy("connectLock")
+    @WorkerThread
+    public void checkConnect() throws IOException {
+        synchronized (connectLock) {
+            if (connectStarted) {
+                try {
+                    connectLock.wait();
+                } catch (InterruptedException e) {
+                    return;
+                }
+            }
+            connectStarted = true;
+            try {
+                mLocalServerManager.start();
+            } catch (IOException e) {
+                connectStarted = false;
+                connectLock.notify();
+                throw new IOException(e);
+            }
+            connectStarted = false;
+            connectLock.notify();
+        }
     }
 
     public CallerResult exec(Caller caller) throws Exception {
@@ -138,11 +163,7 @@ public class LocalServer {
         // FIXME(10/9/20): These prefs are not saved anywhere
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(config.context);
         config.allowBgRunning = sp.getBoolean("allow_bg_running", true);
-        config.logFile = config.context.getFileStreamPath(LOG_FILE).getAbsolutePath();
-        config.useAdb = AppPref.isAdbEnabled() && !AppPref.isRootEnabled();
         config.adbPort = sp.getInt("adb_port", 5555);
-        config.rootOverAdb = sp.getBoolean("allow_root_over_adb", false);
-        Log.e("test", "buildConfig --> " + config.context.getFileStreamPath(LOG_FILE).getAbsolutePath());
         if (INSTANCE != null) INSTANCE.mLocalServerManager.updateConfig(config);
     }
 
@@ -219,10 +240,7 @@ public class LocalServer {
 
     public static class Config {
         public boolean allowBgRunning = false;
-        public String logFile;
         public boolean printLog = false;
-        public boolean useAdb = AppPref.isAdbEnabled() && !AppPref.isRootEnabled();
-        public boolean rootOverAdb = false;
         public String adbHost = "127.0.0.1";
         public int adbPort = 5555;
         Context context;

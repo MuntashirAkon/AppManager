@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.runner;
 import android.text.TextUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -40,21 +41,25 @@ class AdbShellRunner extends Runner {
                     return result.isSuccessful();
                 }
 
+                @NonNull
                 @Override
                 public List<String> getOutputAsList() {
                     return result.stdout;
                 }
 
+                @NonNull
                 @Override
                 public List<String> getOutputAsList(int first_index) {
                     return result.stdout.subList(first_index, result.stdout.size());
                 }
 
+                @NonNull
                 @Override
                 public List<String> getOutputAsList(int first_index, int length) {
                     return result.stdout.subList(first_index, first_index + length);
                 }
 
+                @NonNull
                 @Override
                 public String getOutput() {
                     return result.getStdout();
@@ -68,24 +73,28 @@ class AdbShellRunner extends Runner {
                     return false;
                 }
 
+                @NonNull
                 @Override
                 public List<String> getOutputAsList() {
-                    return null;
+                    return new ArrayList<>();
                 }
 
+                @NonNull
                 @Override
                 public List<String> getOutputAsList(int first_index) {
-                    return null;
+                    return new ArrayList<>();
                 }
 
+                @NonNull
                 @Override
                 public List<String> getOutputAsList(int first_index, int length) {
-                    return null;
+                    return new ArrayList<>();
                 }
 
+                @NonNull
                 @Override
                 public String getOutput() {
-                    return null;
+                    return "";
                 }
             };
         }

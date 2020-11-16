@@ -23,32 +23,24 @@ import android.text.TextUtils;
 import com.tananaev.adblib.AdbConnection;
 import com.tananaev.adblib.AdbStream;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.adb.LineReader;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.server.common.BaseCaller;
 import io.github.muntashirakon.AppManager.server.common.Caller;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.DataTransmission;
 import io.github.muntashirakon.AppManager.server.common.ParcelableUtil;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 
 class LocalServerManager {
     private static final String TAG = "LocalServerManager";
@@ -93,17 +85,20 @@ class LocalServerManager {
      * create one first.
      *
      * @return Currently running session
-     * @throws Exception When creating session fails or server couldn't be started
+     * @throws IOException When creating session fails or server couldn't be started
      */
-    private ClientSession getSession() throws Exception {
+    @WorkerThread
+    private ClientSession getSession() throws IOException {
         if (mSession == null || !mSession.isRunning()) {
             try {
                 mSession = createSession();
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "getSession: Failed to create session.", e);
             }
             if (mSession == null) {
-                startServer();
+                if (startServer()) {
+                    throw new IOException("Failed to start server.");
+                }
                 mSession = createSession();
             }
         }
@@ -143,7 +138,7 @@ class LocalServerManager {
         }
     }
 
-    void start() throws Exception {
+    void start() throws IOException {
         getSession();
     }
 
@@ -175,8 +170,7 @@ class LocalServerManager {
 
     CallerResult execNew(@NonNull Caller caller) throws Exception {
         byte[] result = execPre(ParcelableUtil.marshall(new BaseCaller(caller.wrapParams())));
-        return ParcelableUtil.unmarshall(
-                result, CallerResult.CREATOR);
+        return ParcelableUtil.unmarshall(result, CallerResult.CREATOR);
     }
 
     void closeBgServer() {
@@ -189,344 +183,121 @@ class LocalServerManager {
     }
 
     @NonNull
-    private List<String> getCommands() {
+    private String getExecCommand() {
         AssetsUtils.writeScript(mConfig);
         Log.e(TAG, "classpath --> " + ServerConfig.getClassPath());
         Log.e(TAG, "exec path --> " + ServerConfig.getExecPath());
-        List<String> commands = new ArrayList<>();
-        commands.add("sh " + ServerConfig.getExecPath());
-        return commands;
+        return "sh " + ServerConfig.getExecPath();
     }
 
     private AdbConnection connection;
     private AdbStream adbStream;
 
-    private boolean useAdbStartServer() throws Exception {
+    @WorkerThread
+    private boolean useAdbStartServer() {
         if (adbStream != null && !adbStream.isClosed()) {
             return true;
         }
         if (connection != null) {
-            connection.close();
+            try {
+                connection.close();
+            } catch (IOException e) {
+                Log.e(TAG, "useAdbStartServer: unable to close previous connection.", e);
+                return false;
+            }
         }
 
-        final AtomicBoolean connResult = new AtomicBoolean(false);
-        connection = AdbConnectionManager.buildConnect(mConfig.context, mConfig.adbHost, mConfig.adbPort);
-
-        Thread thread = new Thread(() -> {
-            try {
-                connection.connect();
-                connResult.set(true);
-            } catch (Exception e) {
-                connResult.set(false);
-                e.printStackTrace();
-                if (connection != null) {
-                    try {
-                        connection.close();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
+        Log.d(TAG, "useAdbStartServer: connecting...");
+        try {
+            connection = AdbConnectionManager.connect(mConfig.context, mConfig.adbHost, mConfig.adbPort);
+        } catch (Exception e) {
+            Log.e(TAG, "useAdbStartServer: unable to connect.", e);
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (IOException e1) {
+                    Log.e(TAG, "useAdbStartServer: unable to close previous connection.", e);
                 }
             }
-        });
+            return false;
+        }
+
+        Log.d(TAG, "useAdbStartServer: opening shell...");
+        try {
+            adbStream = connection.open("shell:");
+        } catch (IOException | InterruptedException e) {
+            Log.e(TAG, "useAdbStartServer: unable to open shell.", e);
+            return false;
+        }
+
+        // Logging thread
+        new Thread(() -> {
+            LineReader reader;
+            StringBuilder sb = new StringBuilder();
+            try {
+                reader = new LineReader(adbStream);
+                int line = 0;
+                String s;
+                while (!adbStream.isClosed()) {
+                    s = reader.readLine();
+                    if (s != null) sb.append(s);
+                    line++;
+                    if (!mConfig.printLog && (line >= 50 || (s != null && s.startsWith("runGet")))) {
+                        break;
+                    }
+                }
+            } catch (IOException | InterruptedException e) {
+                Log.e(TAG, "useAdbStartServer: unable to read from shell.", e);
+            }
+            Log.e(TAG, "useAdbStartServer: " + sb.toString());
+        }).start();
 
         try {
-            Log.e(TAG, "useAdbStartServer --> start");
-            thread.start();
-            thread.join(10000);
-            Log.e(TAG, "useAdbStartServer --> jion 10000");
-
-            if (!connResult.get()) {
-                connection.close();
-            }
-        } catch (InterruptedException e) {
-            connResult.set(false);
-            e.printStackTrace();
-            if (connection != null) {
-                connection.close();
-            }
-        }
-
-        if (!connResult.get()) {
-            throw new RuntimeException("please grant adb permission!");
-        }
-
-        adbStream = connection.open("shell:");
-
-        if (!TextUtils.isEmpty(mConfig.logFile)) {
-            new Thread(() -> {
-                BufferedWriter bw = null;
-                LineReader reader;
-                try {
-                    bw = new BufferedWriter(new FileWriter(mConfig.logFile, false));
-                    bw.write(new Date().toString());
-                    bw.newLine();
-                    bw.write("adb start log");
-                    bw.newLine();
-
-                    reader = new LineReader(adbStream);
-                    int line = 0;
-                    String s = reader.readLine();
-                    while (!adbStream.isClosed()) {
-                        Log.e(TAG, "log run --> " + s);
-                        s = reader.readLine();
-                        if (s != null) {
-                            bw.write(s);
-                            bw.newLine();
-                        }
-                        line++;
-                        if (!mConfig.printLog && (line >= 50 || (s != null && s.startsWith("runGet")))) {
-                            break;
-                        }
-                    }
-                    bw.flush();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        if (bw != null) {
-                            bw.close();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-        }
-
-        adbStream.write("\n\n".getBytes());
-        SystemClock.sleep(100);
-        adbStream.write("id\n".getBytes());
-        SystemClock.sleep(100);
-        List<String> commands = getCommands();
-
-        for (String cmd : commands) {
-            adbStream.write((cmd + "\n").getBytes());
+            adbStream.write("\n\n".getBytes());
             SystemClock.sleep(100);
+            adbStream.write("id\n".getBytes());
+            SystemClock.sleep(100);
+            String commands = getExecCommand();
+            adbStream.write(commands.getBytes());
+            SystemClock.sleep(3000);
+        } catch (IOException | InterruptedException e) {
+            Log.e(TAG, "useAdbStartServer: unable to write to shell.", e);
+            return false;
         }
-        SystemClock.sleep(3000);
 
-        Log.e(TAG, "startServer -->ADB server start ----- ");
-
+        Log.d(TAG, "useAdbStartServer: Server has started.");
         return true;
     }
 
-    private boolean useRootStartServer() throws Exception {
-        DataOutputStream outputStream = null;
-        RootChecker checker = null;
-        Process exec = null;
-        try {
-            Log.e(TAG, "useRootStartServer --> ");
-
-            exec = Runtime.getRuntime().exec("su");
-            checker = new RootChecker(exec);
-            checker.start();
-
-            try {
-                checker.join(20000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if (checker.exit == -1) {
-                throw new RuntimeException("grant root timeout");
-            }
-
-            if (checker.exit != 1) {
-                throw new RuntimeException(checker.errorMsg);
-            }
-
-            outputStream = new DataOutputStream(exec.getOutputStream());
-
-            List<String> cmds = getCommands();
-
-            //部分情况下selinux导致执行失败 exec  app_process
-            if (mConfig.rootOverAdb) {
-                cmds.clear();
-
-                cmds.add("echo 'root over adb mode'");
-                cmds.add("getenforce");
-                cmds.add("setprop service.adb.tcp.port " + mConfig.adbPort);
-                cmds.add("stop adbd");
-                cmds.add("start adbd");
-                cmds.add("echo $?");
-                cmds.add("echo end");
-
-                final OutputStream waitWriter = outputStream;
-                final Process waitProcess = exec;
-                new Thread(() -> {
-                    SystemClock.sleep(1000 * 20);
-                    try {
-                        Log.e(TAG, "run --> stop adb ");
-
-                        List<String> cls = new ArrayList<String>() {
-                            {
-                                add("echo 'stop adb!!!'");
-                                add("setprop service.adb.tcp.port -1");
-                                add("stop adbd");
-                                add("start adbd");
-                                add("getprop service.adb.tcp.port");
-                            }
-                        };
-                        writeCmds(cls, waitWriter);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        try {
-                            waitProcess.destroy();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-
-            }
-
-            //cmds.add(0,"supolicy --live \'allow qti_init_shell zygote_exec file execute\'");
-            writeCmds(cmds, outputStream);
-
-            final BufferedReader inputStream = new BufferedReader(new InputStreamReader(
-                    exec.getInputStream(), StandardCharsets.UTF_8));
-
-            //记录日志
-            if (!TextUtils.isEmpty(mConfig.logFile)) {
-                new Thread(() -> {
-                    BufferedWriter bw = null;
-                    try {
-                        boolean saveLog = !TextUtils.isEmpty(mConfig.logFile);
-                        if (saveLog) {
-                            bw = new BufferedWriter(new FileWriter(mConfig.logFile, false));
-                            bw.write(new Date().toString());
-                            bw.newLine();
-                            bw.write("root start log");
-                            bw.newLine();
-                        }
-
-                        int line = 0;
-                        String s = inputStream.readLine();
-                        while (s != null) {
-                            Log.e(TAG, "log run --> " + s);
-                            s = inputStream.readLine();
-                            if (saveLog && s != null) {
-                                bw.write(s);
-                                bw.newLine();
-                            }
-                            line++;
-                            if (!mConfig.printLog && (line >= 50 || (s != null && s.startsWith("runGet")))) {
-                                break;
-                            }
-
-                        }
-                        if (bw != null) {
-                            bw.flush();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        try {
-                            if (bw != null) {
-                                bw.close();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-            }
-
-            SystemClock.sleep(3000);
-
-            if (mConfig.rootOverAdb) {
-                Log.e(TAG, "startServer --- use root over adb,open adb server----");
-                return useAdbStartServer();
-            }
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (checker != null) {
-                checker.interrupt();
-            }
-            throw e;
-        } finally {
-            try {
-                if (exec != null) {
-                    //exec.destroy();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    @WorkerThread
+    private boolean useRootStartServer() {
+        if (!RunnerUtils.isRootGiven()) {
+            Log.e(TAG, "useRootStartServer: Root access denied.");
+            return false;
         }
+        String command = getExecCommand(); // + "\n" + "supolicy --live 'allow qti_init_shell zygote_exec file execute'";
+        Runner.Result result = Runner.runCommand(Runner.getRootInstance(), command);
 
-    }
-
-    private void writeCmds(@NonNull List<String> commands, OutputStream outputStream)
-            throws IOException {
-        for (String cmd : commands) {
-            outputStream.write((cmd + "\n").getBytes(StandardCharsets.UTF_8));
-            outputStream.flush();
+        Log.d(TAG, "useRootStartServer: " + result.getOutput());
+        if (!result.isSuccessful()) {
+            Log.e(TAG, "useRootStartServer: Failed to start server.");
+            return false;
         }
-        outputStream.flush();
+        SystemClock.sleep(3000);
+        Log.e(TAG, "useRootStartServer: Server has started.");
+        return true;
     }
 
     /**
      * Start root or ADB server based on config
-     *
-     * @throws Exception When server cannot be started
      */
-    private void startServer() throws Exception {
-        if (mConfig.useAdb) {
-            useAdbStartServer();
-        } else {
-            useRootStartServer();
-        }
-        Log.e(TAG, "startServer --> end ---");
-    }
-
-    /**
-     * The root checker thread
-     */
-    private static class RootChecker extends Thread {
-        int exit = -1;
-        String errorMsg = null;
-        Process process;
-
-        private RootChecker(Process process) {
-            this.process = process;
-        }
-
-        @Override
-        public void run() {
-            try {
-                BufferedReader inputStream = new BufferedReader(
-                        new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
-                BufferedWriter outputStream = new BufferedWriter(
-                        new OutputStreamWriter(this.process.getOutputStream(), StandardCharsets.UTF_8));
-                outputStream.write("echo U333L\n");
-                outputStream.flush();
-
-                while (true) {
-                    String line = inputStream.readLine();
-                    if (line == null) {
-                        throw new EOFException();
-                    }
-                    if ("".equals(line)) {
-                        continue;
-                    }
-                    if ("U333L".equals(line)) {
-                        this.exit = 1;
-                        break;
-                    }
-                    errorMsg = "Unknown error occurred.";
-                }
-            } catch (IOException e) {
-                exit = -42;
-                if (e.getMessage() != null) {
-                    errorMsg = e.getMessage();
-                } else {
-                    errorMsg = "RootAccess denied.";
-                }
-            }
-
-        }
+    @WorkerThread
+    private boolean startServer() {
+        if (AppPref.isAdbEnabled()) {
+            return useAdbStartServer();
+        } else if (AppPref.isRootEnabled()) {
+            return useRootStartServer();
+        } else return false;
     }
 
     /**
