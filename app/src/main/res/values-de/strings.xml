@@ -222,11 +222,11 @@
     <string name="rules_not_applied">Regeln wurden nicht angewendet</string>
     <string name="str_logo">Logo</string>
     <string name="pref_root_mode_enabled">Root-Modus</string>
-    <string name="pref_root_mode_enabled_msg">Aktiviert alle Root-Funktionen dieser Anwendung, der ADB-Modus wird automatisch erkannt, wenn er deaktiviert wird</string>
+    <string name="pref_root_mode_enabled_msg">Aktiviert alle Root-Funktionen dieser Anwendung, der ADB-Modus wird automatisch erkannt, wenn er ausgeschaltet ist.</string>
     <string name="pref_global_blocking_enabled">Globales Komponenten-Blockieren</string>
-    <string name="pref_global_blocking_enabled_msg">Erlaubt es Ihnen, jede Komponente einer Anwendung zu blockieren, ohne die Blockierung für die Anwendung explizit zu aktivieren</string>
+    <string name="pref_global_blocking_enabled_msg">Erlaubt jede Komponente einer Anwendung zu blockieren, ohne die Blockierung für die Anwendung explizit einzuschalten.</string>
     <string name="pref_usage_access_enabled">Zugriff auf Nutzungsdaten</string>
-    <string name="pref_usage_access_enabled_msg">Dies erlaubt Nutzungsstatistiken und Informationen über gespeicherte Daten einer Anwendung einzusehen</string>
+    <string name="pref_usage_access_enabled_msg">Dies erlaubt, Nutzungsstatistiken und Informationen über gespeicherte Daten einer Anwendung einzusehen.</string>
     <string name="app_settings">Einstellungen</string>
     <string name="only_works_in_root_mode">Diese Funktion ist nur im Root-Modus verfügbar</string>
     <string name="usage_yesterday">Gestern</string>
@@ -244,7 +244,7 @@
     <string name="sort_by_times_opened">Anzahl geöffnet</string>
     <string name="sort_by_mobile_data">Mobile Daten</string>
     <string name="pref_import_export_blocking_rules">Blockier-Regeln importieren/exportieren</string>
-    <string name="pref_import_export_blocking_rules_msg">Regeln importieren/exportieren, externe Regeln aus Watt oder Blocker importieren</string>
+    <string name="pref_import_export_blocking_rules_msg">Regeln importieren/exportieren, externe Regeln aus Watt oder Blocker importieren.</string>
     <string name="pref_import_watt">Aus Watt importieren</string>
     <string name="pref_import_blocker">Aus Blocker importieren</string>
     <string name="the_import_was_successful">Importiert</string>
@@ -306,10 +306,10 @@
     <string name="keyboard_type">Tastatur-Typ</string>
     <string name="navigation">Navigation</string>
     <string name="touchscreen">Berührungsempfindlicher Bildschirm</string>
-    <string name="pref_export_msg">Exportieren von Blockier-Regeln von App Manager in den externen Speicher</string>
-    <string name="pref_import_msg">Importieren von exportierten Blockier-Regeln von App Manager</string>
+    <string name="pref_export_msg">Exportieren von Blockier-Regeln von App Manager in den externen Speicher.</string>
+    <string name="pref_import_msg">Importieren von zuvor exportierten Blockier-Regeln vom App Manager.</string>
     <string name="pref_import_watt_msg">Importieren der Blockier-Regeln von Watt; jede Datei enthält Regeln für ein genanntes Paket „paketname.xml“ usw.</string>
-    <string name="pref_import_blocker_msg">Importieren von Blocker-Regeln (Jede Datei enthält eine Regel pro Paket.)</string>
+    <string name="pref_import_blocker_msg">Importieren von Blockier-Regeln aus Blocker, wobei jede Datei Regeln für ein einzelnes Paket enthält.</string>
     <string name="pref_app_theme">Farbschema der Anwendung</string>
     <string name="follow_system">Systemkonform</string>
     <string name="battery_mode">Energiesparmodus</string>
@@ -363,7 +363,7 @@
 \nHilfe-Gruppe (auf Englisch): https://t.me/AppManagerAndroid
 \nTwitter: https://twitter.com/AMUpdateChannel</string>
     <string name="pref_import_existing">Existierende Regeln importieren</string>
-    <string name="pref_import_existing_msg">Fügt Komponenten zum App-Manager hinzu, die von anderen Anwendungen deaktiviert wurden. Sei vorsichtig, wenn Du dies tust: Es kann hierbei zu sehr vielen falschen positiven Meldungen kommen. Wähle nur die Anwendungen aus, bei denen Du Dir sicher bist.</string>
+    <string name="pref_import_existing_msg">Hinzufügen von Komponenten zum App Manager, die von anderen Anwendungen deaktiviert wurden. Seien Sie bei der Verwendung dieses Tools vorsichtig, da es viele Fehlalarme geben kann. Wählen Sie nur die Anwendungen aus, bei denen Sie sich sicher sind.</string>
     <string name="failed_to_get_data_usage_information">Abfrage der Datennutzung nicht möglich</string>
     <string name="clear_cache">Cache leeren</string>
     <string name="block_unblock_trackers_description">Blockiere oder gebe Verfolger-Komponenten aller installierter Anwendungen frei</string>
@@ -448,14 +448,14 @@
     <string name="website">Webseite</string>
     <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">Alle Regeln entfernen</string>
-    <string name="pref_remove_all_rules_msg">Alle eingetragenen blockierten Komponenten werden aktiviert, App-Ops auf ihren ursprünglichen Wert gesetzt und Berechtigungen erteilt</string>
+    <string name="pref_remove_all_rules_msg">Berechtigungen werden erteilt, Anwendungen und Komponenten werden auf Standardwerte zurückgesetzt.</string>
     <string name="are_you_sure">Bist du Dir sicher?</string>
     <string name="filter_apps_with_activities">Anwendungen mit Activities</string>
     <string name="toggle_default_app_ops">Voreingestellte App Ops ein-/ausschalten</string>
     <string name="installer_error_aborted">Die Installation ist fehlgeschlagen, weil sie entweder abgebrochen oder die Sitzung unerwartet geschlossen wurde</string>
     <string name="installer_error_blocked_device">Gerät</string>
     <string name="installer_error_blocked">Installation ist von <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> blockiert</string>
-    <string name="installer_error_conflict">Die Anwendung kann nicht installiert werden, da bereits eine Anwendung mit demselben Paketnamen installiert ist</string>
+    <string name="installer_error_conflict">Die Anwendung konnte nicht installiert werden, weil das Paket verwendet wird.</string>
     <string name="installer_error_incompatible">Anwendung ist nicht mit diesem Gerät kompatibel</string>
     <string name="installer_error_bad_apks">Ungültige APK-Dateien ausgewählt</string>
     <string name="installer_error_storage">Nicht genügend Speicherplatz zur Installation verfügbar</string>
@@ -586,7 +586,7 @@
     <string name="no_apps">Keine Apps</string>
     <string name="apps">Apps</string>
     <string name="compression_method">Kompressionsverfahren: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
-    <string name="pref_backup_flags_msg">Durch Hinzufügen von Voreinstellungen für Sicherungsoptionen entfällt die Auswahl von Flags bei jeder Sicherung / Wiederherstellung</string>
+    <string name="pref_backup_flags_msg">Durch Hinzufügen von Voreinstellungen für Sicherungsoptionen entfällt die Auswahl von Flags bei jeder Sicherung / Wiederherstellung.</string>
     <string name="pref_compression_method">Kompressionsverfahren</string>
     <string name="rules">Regeln</string>
     <string name="other">Andere</string>
@@ -620,9 +620,9 @@
     <string name="update_uninstalled_successfully">Updates für <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> wurden deinstalliert.</string>
     <string name="uninstall_updates">Updates deinstallieren</string>
     <string name="only_install">Nur installieren</string>
-    <string name="install_without_data_loss">Wenn Sie die Signaturprüfung deaktiviert haben, können Sie die Option <b>nur installieren</b> verwenden, um die Anwendung ohne Datenverlust zu installieren.</string>
+    <string name="install_without_data_loss">Wenn Sie die Signaturprüfung deaktiviert haben, können Sie die Option &lt;b&gt;Nur installieren&lt;/b&gt; verwenden, um die Anwendung ohne Datenverlust zu installieren.</string>
     <string name="app_data_will_be_lost">Die vorhandenen Daten gehen dabei verloren.</string>
-    <string name="signature_mismatch_for_system_apps">Konnte die Anwendung nicht installieren, weil die installierte Anwendung eine Systemanwendung mit einer anderen Signatur ist.</string>
+    <string name="signature_mismatch_for_system_apps">Konnte die Anwendung nicht installieren, weil eine Systemanwendung mit einer anderen Signatur diesen Paketnamen hat.</string>
     <string name="do_you_want_to_uninstall_and_install">Möchten Sie die Anwendung deinstallieren und erneut installieren\?</string>
     <string name="onboard">auf</string>
     <string name="packages">Pakete</string>
@@ -653,7 +653,7 @@
         <item quantity="other">1 Verfolger mit <xliff:g id="class_no" example="50">%1$d</xliff:g> Klassen</item>
     </plurals>
     <string name="copy">Kopieren</string>
-    <string name="view_missing_signatures">Tippen Sie darauf , um Signaturen anzuzeigen, die noch nicht in der Bibliotheksdatenbank des App Managers vorhanden sind. Sie können diese auch an mich senden, wenn Sie möchten.</string>
+    <string name="view_missing_signatures">Tippen Sie darauf , um Signaturen anzuzeigen oder einzusenden, die noch nicht in der Bibliotheksdatenbank des App Managers vorhanden sind.</string>
     <plurals name="missing_signatures">
         <item quantity="one">%1$d Signatur fehlt</item>
         <item quantity="other">%1$d Signaturen fehlen</item>
@@ -667,7 +667,18 @@
     <string name="tap_to_submit_crash_report">Tippen Sie hier, um den Absturzbericht zu senden.</string>
     <string name="am_crashed">AM ist gerade abgestürzt</string>
     <string name="new_profile">Neues Profil</string>
-    <string name="input_profile_name_description">Der Profilname sollte kein Leerzeichen enthalten.</string>
+    <string name="input_profile_name_description">Der Profilname darf keine Leerzeichen enthalten.</string>
     <string name="input_profile_name">Bezeichnung des Profils</string>
     <string name="duplicate">Kopie</string>
+    <string name="send_selected">Ausgewählte senden</string>
+    <string name="ecc">Kryptographie mit elliptischen Kurven</string>
+    <string name="rsa">RSA</string>
+    <string name="aes">AES</string>
+    <string name="none">Keiner</string>
+    <string name="pref_encryption_msg">Verschlüsselung für Backups hinzufügen.</string>
+    <string name="encryption">Verschlüsselung</string>
+    <string name="select_user">Benutzer auswählen</string>
+    <string name="pref_show_users_in_installer_msg">Anzeigen einer Liste der Benutzer, die vor der Installation einer externen Anwendung ausgewählt werden müssen. Erfordert root oder ADB.</string>
+    <string name="pref_show_users_in_installer">Benutzer im Installationsprogramm anzeigen</string>
+    <string name="failed_to_duplicate_profile">Konnte Profil nicht duplizieren</string>
 </resources>
