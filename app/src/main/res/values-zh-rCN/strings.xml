@@ -642,4 +642,5 @@
     <string name="pref_show_users_in_installer">在安装包中显示用户</string>
     <string name="failed_to_duplicate_profile">无法复制配置文件</string>
     <string name="keyboard_no_keys">无按键</string>
+    <string name="send_selected">发送选中的应用</string>
 </resources>
