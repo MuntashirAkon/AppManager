@@ -114,6 +114,7 @@ public class LocalServer {
         }
     }
 
+    @WorkerThread
     public CallerResult exec(Caller caller) throws Exception {
         try {
             checkConnect();

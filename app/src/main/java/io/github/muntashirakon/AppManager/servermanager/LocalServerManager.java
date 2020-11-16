@@ -92,8 +92,7 @@ class LocalServerManager {
         if (mSession == null || !mSession.isRunning()) {
             try {
                 mSession = createSession();
-            } catch (Exception e) {
-                Log.e(TAG, "getSession: Failed to create session.", e);
+            } catch (Exception ignore) {
             }
             if (mSession == null) {
                 if (startServer()) {
@@ -138,10 +137,12 @@ class LocalServerManager {
         }
     }
 
+    @WorkerThread
     void start() throws IOException {
         getSession();
     }
 
+    @WorkerThread
     @NonNull
     private DataTransmission getSessionTransmission() throws Exception {
         ClientSession session = getSession();
@@ -155,6 +156,7 @@ class LocalServerManager {
         return transfer;
     }
 
+    @WorkerThread
     private byte[] execPre(byte[] params) throws Exception {
         try {
             return getSessionTransmission().sendAndReceiveMessage(params);
@@ -168,6 +170,7 @@ class LocalServerManager {
         }
     }
 
+    @WorkerThread
     CallerResult execNew(@NonNull Caller caller) throws Exception {
         byte[] result = execPre(ParcelableUtil.marshall(new BaseCaller(caller.wrapParams())));
         return ParcelableUtil.unmarshall(result, CallerResult.CREATOR);
@@ -258,7 +261,7 @@ class LocalServerManager {
             adbStream.write("id\n".getBytes());
             SystemClock.sleep(100);
             String commands = getExecCommand();
-            adbStream.write(commands.getBytes());
+            adbStream.write((commands + "\n").getBytes());
             SystemClock.sleep(3000);
         } catch (IOException | InterruptedException e) {
             Log.e(TAG, "useAdbStartServer: unable to write to shell.", e);

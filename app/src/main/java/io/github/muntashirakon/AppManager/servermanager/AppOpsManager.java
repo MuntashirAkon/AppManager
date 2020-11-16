@@ -6,6 +6,7 @@ import android.os.Bundle;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
@@ -46,6 +47,7 @@ public class AppOpsManager {
         return wrapOps(builder);
     }
 
+    @WorkerThread
     private OpsResult wrapOps(OpsCommands.Builder builder) throws Exception {
         Bundle args = new Bundle();
         args.putParcelable("args", builder);

@@ -525,11 +525,12 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+        // Update config
+        LocalServer.updateConfig();
         // Check root
         AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
         if (!AppPref.isRootEnabled()) {
             AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
-            LocalServer.updateConfig();
             // Check for adb
             new Thread(() -> {
                 try {
@@ -541,7 +542,6 @@ public class MainActivity extends BaseActivity implements
                     runOnUiThread(() -> Toast.makeText(this, "Working on ADB mode", Toast.LENGTH_SHORT).show());
                 } catch (IOException e) {
                     AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
-                    LocalServer.updateConfig();
                     try {
                         LocalServer.getInstance().checkConnect();
                     } catch (IOException ignore) {
