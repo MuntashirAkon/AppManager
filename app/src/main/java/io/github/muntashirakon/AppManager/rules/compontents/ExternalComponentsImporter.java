@@ -43,7 +43,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
-import io.github.muntashirakon.AppManager.runner.RootShellRunner;
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
@@ -87,7 +87,7 @@ public class ExternalComponentsImporter {
                     cb.addComponent(componentName, components.get(componentName));
                 }
                 // Remove IFW blocking rules if exists
-                RootShellRunner.runCommand(String.format("rm %s/%s*.xml", ComponentsBlocker.SYSTEM_RULES_PATH, packageName));
+                Runner.runCommand(Runner.getRootInstance(), String.format("rm %s/%s*.xml", ComponentsBlocker.SYSTEM_RULES_PATH, packageName));
                 cb.applyRules(true);
             } catch (Exception e) {
                 e.printStackTrace();

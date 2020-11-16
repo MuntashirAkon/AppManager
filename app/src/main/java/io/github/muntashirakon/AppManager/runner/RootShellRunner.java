@@ -27,19 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.logs.Log;
 
-public class RootShellRunner extends Runner {
-    private static RootShellRunner rootShellRunner;
-
-    public static RootShellRunner getInstance() {
-        if (rootShellRunner == null) rootShellRunner = new RootShellRunner();
-        return rootShellRunner;
-    }
-
-    @NonNull
-    public static Result runCommand(@NonNull String command) {
-        return getInstance().run(command);
-    }
-
+class RootShellRunner extends Runner {
     @WorkerThread
     @NonNull
     @Override

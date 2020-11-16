@@ -26,7 +26,6 @@ import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public abstract class Runner {
     public static final String TAG = "Runner";
@@ -34,13 +33,10 @@ public abstract class Runner {
 
     static final String TOYBOX_SO_NAME = "libtoybox.so";
     static final File TOYBOX_SO_PATH;
-    static final File DEFAULT_TOYBOX_BIN_PATH;
 
     static {
         TOYBOX_SO_PATH = new File(AppManager.getContext().getApplicationInfo().nativeLibraryDir, TOYBOX_SO_NAME);
         TOYBOX = TOYBOX_SO_PATH.getAbsolutePath();
-        // FIXME(21/9/20): We no longer need this unless Google removes executable permission from JNI directory as well
-        DEFAULT_TOYBOX_BIN_PATH = new File(PackageUtils.PACKAGE_STAGING_DIRECTORY, TOYBOX_SO_NAME);
     }
 
     public interface Result {
@@ -59,40 +55,65 @@ public abstract class Runner {
     private static AdbShellRunner adbShellRunner;
     private static UserShellRunner userShellRunner;
 
+    @NonNull
     public static Runner getInstance() {
         if (AppPref.isRootEnabled()) {
-            if (rootShellRunner == null) {
-                rootShellRunner = new RootShellRunner();
-                Log.d(TAG, "RootShellRunner");
-            }
-            return rootShellRunner;
+            return getRootInstance();
         } else if (AppPref.isAdbEnabled()) {
-            if (adbShellRunner == null) {
-                adbShellRunner = new AdbShellRunner();
-                Log.d(TAG, "AdbShellRunner");
-            }
-            return adbShellRunner;
+            return getAdbInstance();
         } else {
-            if (userShellRunner == null) {
-                userShellRunner = new UserShellRunner();
-                Log.d(TAG, "UserShellRunner");
-            }
-            return userShellRunner;
+            return getUserInstance();
         }
+    }
+
+    @NonNull
+    public static Runner getRootInstance() {
+        if (rootShellRunner == null) {
+            rootShellRunner = new RootShellRunner();
+            Log.d(TAG, "RootShellRunner");
+        }
+        return rootShellRunner;
+    }
+
+    @NonNull
+    public static Runner getAdbInstance() {
+        if (adbShellRunner == null) {
+            adbShellRunner = new AdbShellRunner();
+            Log.d(TAG, "AdbShellRunner");
+        }
+        return adbShellRunner;
+    }
+
+    public static Runner getUserInstance() {
+        if (userShellRunner == null) {
+            userShellRunner = new UserShellRunner();
+            Log.d(TAG, "UserShellRunner");
+        }
+        return userShellRunner;
     }
 
     @NonNull
     synchronized public static Result runCommand(@NonNull String command) {
-        return getInstance().run(command);
+        return runCommand(getInstance(), command);
     }
 
     @NonNull
     synchronized public static Result runCommand(@NonNull String[] command) {
+        return runCommand(getInstance(), command);
+    }
+
+    @NonNull
+    synchronized public static Result runCommand(@NonNull Runner runner, @NonNull String command) {
+        return runner.run(command);
+    }
+
+    @NonNull
+    synchronized public static Result runCommand(@NonNull Runner runner, @NonNull String[] command) {
         StringBuilder cmd = new StringBuilder();
         for (String part: command) {
             cmd.append(RunnerUtils.escape(part)).append(" ");
         }
-        return getInstance().run(cmd.toString());
+        return runCommand(runner, cmd.toString());
     }
 
     protected List<String> commands;

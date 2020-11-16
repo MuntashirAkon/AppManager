@@ -68,7 +68,7 @@ import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.runner.RootShellRunner;
+import io.github.muntashirakon.AppManager.runner.Runner;
 
 public class Utils {
     public static final String TERMUX_LOGIN_PATH = OsEnvironment.getDataDataDirectory() + "/com.termux/files/usr/bin/login";
@@ -640,7 +640,7 @@ public class Utils {
 
     public static boolean isRootGiven() {
         if (isRootAvailable()) {
-            String output = RootShellRunner.runCommand("id").getOutput();
+            String output = Runner.runCommand(Runner.getRootInstance(), "id").getOutput();
             return output != null && output.toLowerCase(Locale.ROOT).contains("uid=0");
         }
         return false;

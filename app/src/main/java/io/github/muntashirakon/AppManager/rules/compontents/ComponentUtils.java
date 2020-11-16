@@ -44,7 +44,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
-import io.github.muntashirakon.AppManager.runner.RootShellRunner;
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -198,12 +198,14 @@ public final class ComponentUtils {
     @NonNull
     public static HashMap<String, RulesStorageManager.Type> getIFWRulesForPackage(@NonNull String packageName) {
         HashMap<String, RulesStorageManager.Type> rules = new HashMap<>();
-        if (RootShellRunner.runCommand(String.format("ls %s/%s*.xml", ComponentsBlocker.SYSTEM_RULES_PATH, packageName)).isSuccessful()) {
-            List<String> ifwRulesFiles = RootShellRunner.getLastResult().getOutputAsList();
+        Runner.Result result = Runner.runCommand(Runner.getRootInstance(), String.format("ls %s/%s*.xml", ComponentsBlocker.SYSTEM_RULES_PATH, packageName));
+        if (result.isSuccessful()) {
+            List<String> ifwRulesFiles = result.getOutputAsList();
             for (String ifwRulesFile: ifwRulesFiles) {
                 // Get file contents
-                if (RootShellRunner.runCommand(String.format("cat %s", ifwRulesFile)).isSuccessful()) {
-                    String xmlContents = RootShellRunner.getLastResult().getOutput();
+                result = Runner.runCommand(Runner.getRootInstance(), String.format("cat %s", ifwRulesFile));
+                if (result.isSuccessful()) {
+                    String xmlContents = result.getOutput();
                     try (InputStream inputStream = new ByteArrayInputStream(xmlContents.getBytes(StandardCharsets.UTF_8))) {
                         // Read rules
                         rules.putAll(readIFWRules(inputStream, packageName));

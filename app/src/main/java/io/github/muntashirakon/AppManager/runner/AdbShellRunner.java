@@ -26,7 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
 
-public class AdbShellRunner extends Runner {
+class AdbShellRunner extends Runner {
     @WorkerThread
     @NonNull
     @Override

@@ -26,7 +26,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import io.github.muntashirakon.AppManager.runner.RootShellRunner;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -66,7 +65,7 @@ public final class BackupUtils {
         // Default UID and GID should be the same as the kernel user ID, and will fallback to it
         // if the stat command fails
         Pair<Integer, Integer> defaultUidGid = new Pair<>(uid, uid);
-        Runner.Result result = RootShellRunner.runCommand(String.format("stat -c \"%%u %%g\" \"%s\"", filepath));
+        Runner.Result result = Runner.runCommand(Runner.getRootInstance(), String.format("stat -c \"%%u %%g\" \"%s\"", filepath));
         if (!result.isSuccessful()) return defaultUidGid;
         String[] uidGid = result.getOutput().split(" ");
         if (uidGid.length != 2) return defaultUidGid;
