@@ -2265,6 +2265,31 @@
         <item>yuku.ambilwarna</item>
         <item>za.co.riggaroo.materialhelptutorial</item>
         <item>zlc.season.rxdownload3</item>
+        <item>org.brotli</item>
+        <item>org.json</item>
+        <item>dalvik.system</item>
+        <item>im.dacer.androidcharts</item>
+        <item>org.jetbrains.annotations</item>
+        <item>com.xwray.groupie</item>
+        <item>org.h2.</item>
+        <item>com.hbb20</item>
+        <item>io.michaelrocks.libphonenumber.android</item>
+        <item>io.lbry.lbrysdk</item>
+        <item>joptsimple</item>
+        <item>com.arthenica.mobileffmpeg</item>
+        <item>org.apache.sanselan</item>
+        <item>com.pixplicity.htmlcompat</item>
+        <item>com.google.vr.sdk</item>
+        <item>com.avito.android.krop</item>
+        <item>com.tiper.MaterialSpinner</item>
+        <item>org.eclipse.jgit</item>
+        <item>de.cotech.hw</item>
+        <item>de.cotech.sweetspot</item>
+        <item>org.apache.xpath</item>
+        <item>com.github.oxo42.stateless4j</item>
+        <item>io.noties.prism4j</item>
+        <item>com.googlecode.javaewah</item>
+        <item>com.hierynomus.asn1</item>
     </array>
     <array name="lib_names">
         <item>GetJar Billing</item>
@@ -4514,6 +4539,31 @@
         <item>AmbilWarna Color Picker library</item>
         <item>MaterialIntroTutorial</item>
         <item>RxDownload</item>
+        <item>Brotli</item>
+        <item>JSON-java</item>
+        <item>dalvik.system</item>
+        <item>AndroidCharts</item>
+        <item>JetBrains\' java-annotations</item>
+        <item>Groupie</item>
+        <item>H2 Database Engine</item>
+        <item>Country Code Picker Library</item>
+        <item>libphonenumber-android</item>
+        <item>LBRY Android SDK</item>
+        <item>JOpt Simple</item>
+        <item>MobileFFmpeg</item>
+        <item>Apache Sanselan</item>
+        <item>Pixplicity HtmlCompat</item>
+        <item>Google VR SDK for Android</item>
+        <item>Krop</item>
+        <item>MaterialSpinner</item>
+        <item>JGit</item>
+        <item>Hardware Security SDK</item>
+        <item>NFC Sweetspot Library</item>
+        <item>Apache XPath</item>
+        <item>stateless4j</item>
+        <item>Prism4j</item>
+        <item>JavaEWAH</item>
+        <item>ASN.1 library for Java</item>
     </array>
     <array name="lib_types">
         <item>Payment</item>
@@ -6763,6 +6813,31 @@
         <item>UI Component</item>
         <item>Utility</item>
         <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>UI Component</item>
+        <item>Development Aid</item>
+        <item>UI Component</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Development Aid</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Development Aid</item>
+        <item>Development Framework</item>
+        <item>UI Component</item>
+        <item>UI Component</item>
+        <item>Development Framework</item>
+        <item>Development Framework</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Development Aid</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Development Aid</item>
     </array>
     <array name="lib_website">
         <item>http://www.getjar.com/</item>
@@ -9012,5 +9087,30 @@
         <item>https://github.com/yukuku/ambilwarna</item>
         <item>https://github.com/riggaroo/MaterialIntroTutorial</item>
         <item>https://github.com/ssseasonnn/RxDownload</item>
+        <item>https://github.com/google/brotli/tree/master/java/org/brotli</item>
+        <item>https://www.json.org/json-en.html</item>
+        <item>https://developer.android.com/reference/dalvik/system/package-summary</item>
+        <item>https://github.com/HackPlan/AndroidCharts</item>
+        <item>https://github.com/JetBrains/java-annotations</item>
+        <item>https://github.com/lisawray/groupie</item>
+        <item>https://github.com/h2database/h2database</item>
+        <item>https://github.com/hbb20/CountryCodePickerProject</item>
+        <item>https://github.com/MichaelRocks/libphonenumber-android</item>
+        <item>https://github.com/lbryio/lbry-android-sdk</item>
+        <item>http://jopt-simple.github.io/jopt-simple/</item>
+        <item>https://github.com/tanersener/mobile-ffmpeg</item>
+        <item>http://commons.apache.org/sanselan/</item>
+        <item>https://github.com/Pixplicity/HtmlCompat</item>
+        <item>https://github.com/googlevr/gvr-android-sdk</item>
+        <item>https://github.com/avito-tech/krop</item>
+        <item>https://github.com/tiper/MaterialSpinner</item>
+        <item>http://www.eclipse.org/jgit/</item>
+        <item>https://github.com/cotechde/hwsecurity</item>
+        <item>https://github.com/morristech/nfc-sweetspot</item>
+        <item>http://xml.apache.org/xalan-j/apidocs/org/apache/xpath/package-summary.html#package_description</item>
+        <item>https://github.com/stateless4j/stateless4j</item>
+        <item>https://github.com/noties/Prism4j</item>
+        <item>https://github.com/lemire/javaewah</item>
+        <item>https://github.com/hierynomus/asn-one</item>
     </array>
 </resources>

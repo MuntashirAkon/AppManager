@@ -22,12 +22,14 @@
 define('LIB_RADAR', 'https://gitlab.com/IzzyOnDroid/repo/-/raw/master/libs/libradar.txt');
 define('LIB_RADAR_WILD', 'https://gitlab.com/IzzyOnDroid/repo/-/raw/master/libs/libradar_wild.txt');
 define('LIB_SMALI', 'https://gitlab.com/IzzyOnDroid/repo/-/raw/master/libs/libsmali.txt');
+define('AM_LIB_SMALI', './libs/libsmali.txt');
 
 $libs_info = array();
 
 addLibRadar(LIB_RADAR);
 addLibRadar(LIB_RADAR_WILD);
 addLibSmali(LIB_SMALI);
+addLibSmali(AM_LIB_SMALI);
 
 printf_AM();
 
