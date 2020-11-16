@@ -116,8 +116,4 @@ public class AppOpsManager {
         }
         return opsForPackage;
     }
-
-    public static boolean isEnableSELinux() {
-        return AssetsUtils.isEnableSELinux();
-    }
 }

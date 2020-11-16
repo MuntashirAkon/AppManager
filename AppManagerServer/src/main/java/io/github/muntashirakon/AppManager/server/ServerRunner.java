@@ -31,7 +31,7 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.server.common.ConfigParam;
-import io.github.muntashirakon.AppManager.server.common.DataTransmission;
+import io.github.muntashirakon.AppManager.server.common.Constants;
 import io.github.muntashirakon.AppManager.server.common.FLog;
 
 import static io.github.muntashirakon.AppManager.server.common.ConfigParam.PARAM_TYPE;
@@ -51,12 +51,9 @@ import static io.github.muntashirakon.AppManager.server.common.ConfigParam.PARAM
  * </ol>
  */
 public final class ServerRunner {
-    // Keep them in sync with run_server.sh
-    public static final String SERVER_NAME = "am_local_server";
-    public static final String PACKAGE_NAME = "io.github.muntashirakon.AppManager";
-
     /**
      * The main method
+     *
      * @param args See {@link ServerRunner}
      */
     public static void main(String[] args) {
@@ -72,7 +69,8 @@ public final class ServerRunner {
             if (args.length > 1) {
                 try {
                     oldPid = Integer.parseInt(args[1]);
-                } catch (Exception ignore) {}
+                } catch (Exception ignore) {
+                }
             }
             // Make it main looper
             Looper.prepareMainLooper();
@@ -102,16 +100,10 @@ public final class ServerRunner {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        new ServerRunner().runServer(params);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        FLog.log(e);
-                    } finally {
-                        // Exit current thread, regardless of whether the server started or not
-                        FLog.close();
-                        killSelfProcess();
-                    }
+                    new ServerRunner().runServer(params);
+                    // Exit current thread, regardless of whether the server started or not
+                    FLog.close();
+                    killSelfProcess();
                 }
             });
             thread.setName("AM-IPC");
@@ -130,12 +122,13 @@ public final class ServerRunner {
 
     /**
      * Kill old server by process ID, process name is verified before killed.
+     *
      * @param oldPid Process ID of the old server
      */
     private static void killOldServer(int oldPid) {
         try {
             String processName = getProcessName(oldPid);
-            if (SERVER_NAME.equals(processName)) {
+            if (Constants.SERVER_NAME.equals(processName)) {
                 Process.killProcess(oldPid);
                 FLog.log("Killed old server with pid " + oldPid);
             }
@@ -155,6 +148,7 @@ public final class ServerRunner {
 
     /**
      * Kill a process by process ID
+     *
      * @param pid Process ID to be killed
      */
     private static void killProcess(int pid) {
@@ -174,6 +168,7 @@ public final class ServerRunner {
 
     /**
      * Get the process name from process ID
+     *
      * @param pid Process ID
      * @return Process name or empty string
      */
@@ -207,14 +202,15 @@ public final class ServerRunner {
         return "";
     }
 
-    private ServerRunner() {}
+    private ServerRunner() {
+    }
 
     /**
      * Run the local server. The server is actually run by {@link ServerHandler}.
+     *
      * @param configParams The parameters to be used during and after the server starts.
-     * @throws Exception When server has failed to start.
      */
-    private void runServer(Map<String, String> configParams) throws Exception {
+    private void runServer(Map<String, String> configParams) {
         try (ServerHandler serverHandler = new ServerHandler(configParams)) {
             // Set params
             LifecycleAgent.sConfigParams = new HashMap<>(configParams);
@@ -225,12 +221,8 @@ public final class ServerRunner {
             LifecycleAgent.onStarted();
             // Start server
             serverHandler.start();
-        } catch (DataTransmission.ProtocolVersionException e) {
-            // Using an old protocol version, restart using custom script
-            Runtime.getRuntime().exec("sh /sdcard/Android/data/" + PACKAGE_NAME + "/files/run_server.sh " + Process.myPid());
-            SystemClock.sleep(1000);
-        } catch (Throwable throwable) {
-            FLog.log(throwable);
+        } catch (IOException | RuntimeException e) {
+            FLog.log(e);
         } finally {
             // Send broadcast message to the system that the server has stopped
             LifecycleAgent.onStopped();

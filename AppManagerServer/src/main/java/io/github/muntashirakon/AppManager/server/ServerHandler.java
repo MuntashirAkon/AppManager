@@ -108,7 +108,7 @@ class ServerHandler implements DataTransmission.OnReceiveCallback, AutoCloseable
         }
     }
 
-    void start() throws Exception {
+    void start() throws IOException, RuntimeException {
         server.run();
     }
 

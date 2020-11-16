@@ -26,15 +26,17 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.server.common.DataTransmission;
 import io.github.muntashirakon.AppManager.server.common.FLog;
 
 class Server {
     private boolean running = true;
+    @NonNull
     private final IServer server;
     private DataTransmission dataTransmission;
     private final DataTransmission.OnReceiveCallback callback;
-
+    @NonNull
     private final String token;
     boolean runInBackground = false;
 
@@ -46,7 +48,7 @@ class Server {
      * @param onReceiveCallback Callback for sending message (received by the calling class)
      * @throws IOException On failing to create a socket connection
      */
-    Server(String name, String token, DataTransmission.OnReceiveCallback onReceiveCallback)
+    Server(String name, @NonNull String token, DataTransmission.OnReceiveCallback onReceiveCallback)
             throws IOException {
         this.server = new LocalServerImpl(name);
         this.token = token;
@@ -61,7 +63,7 @@ class Server {
      * @param onReceiveCallback Callback for sending message (received by the calling class)
      * @throws IOException On failing to create a socket connection
      */
-    Server(int port, String token, DataTransmission.OnReceiveCallback onReceiveCallback)
+    Server(int port, @NonNull String token, DataTransmission.OnReceiveCallback onReceiveCallback)
             throws IOException {
         this.server = new NetSocketServerImpl(port);
         this.token = token;
@@ -71,16 +73,15 @@ class Server {
     /**
      * Run the server
      *
-     * @throws Exception When server has failed to shake hands or the connection cannot be made
+     * @throws IOException When server has failed to shake hands or the connection cannot be made
      */
-    void run() throws Exception {
+    void run() throws IOException, RuntimeException {
         while (running) {
             try {
                 // Allow only one client
                 server.accept();
                 // Prepare input and output streams for data interchange
-                dataTransmission = new DataTransmission(server.getOutputStream(),
-                        server.getInputStream(), callback);
+                dataTransmission = new DataTransmission(server.getOutputStream(), server.getInputStream(), callback);
                 // Handshake: check if tokens matched
                 dataTransmission.shakeHands(token, true);
                 // Send broadcast message to the system that the server has connected
@@ -88,6 +89,7 @@ class Server {
                 // Handle the data received initially from the client
                 dataTransmission.handleReceive();
             } catch (DataTransmission.ProtocolVersionException e) {
+                FLog.log(e);
                 throw e;
             } catch (IOException e) {
                 FLog.log(e);
@@ -111,11 +113,6 @@ class Server {
         }
     }
 
-    /**
-     *
-     * @param bytes
-     * @throws IOException
-     */
     public void sendResult(byte[] bytes) throws IOException {
         if (running && dataTransmission != null) {
             LifecycleAgent.serverRunInfo.txBytes += bytes.length;
@@ -123,18 +120,13 @@ class Server {
         }
     }
 
-    /**
-     *
-     */
     public void setStop() {
         running = false;
         if (dataTransmission != null) {
             dataTransmission.stop();
         }
         try {
-            if (server != null) {
-                server.close();
-            }
+            server.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

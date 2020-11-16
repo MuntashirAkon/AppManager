@@ -17,10 +17,7 @@
 
 package io.github.muntashirakon.AppManager.server.common;
 
-public final class Actions {
-    public static final String PACKAGE_NAME = "io.github.muntashirakon.AppManager";
-    public static final String ACTION_SERVER_STARTED = PACKAGE_NAME + ".action.SERVER_STARTED";
-    public static final String ACTION_SERVER_CONNECTED = PACKAGE_NAME + ".action.SERVER_CONNECTED";
-    public static final String ACTION_SERVER_DISCONNECTED = PACKAGE_NAME + ".action.SERVER_DISCONNECTED";
-    public static final String ACTION_SERVER_STOPPED = PACKAGE_NAME + ".action.SERVER_STOPED";
+public class Constants {
+    public static final String SERVER_NAME = "am_local_server";
+    public static final String JAR_NAME = "am.jar";
 }
