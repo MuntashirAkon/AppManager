@@ -33,6 +33,7 @@ import java.security.SecureRandom;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.server.common.ConfigParam;
 import io.github.muntashirakon.AppManager.server.common.Constants;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -84,11 +85,12 @@ class AssetsUtils {
                 destFile.delete();
             }
             StringBuilder sb = new StringBuilder();
-
-            sb.append("path:").append(ServerConfig.getPort());
-            sb.append(",token:").append(ServerConfig.getLocalToken());
-            if (config.allowBgRunning) sb.append(",bgrun:1");
-            if (BuildConfig.DEBUG) sb.append(",debug:1");
+            if (config.allowBgRunning) {
+                sb.append(',').append(ConfigParam.PARAM_RUN_IN_BACKGROUND).append(':').append(1);
+            }
+            if (BuildConfig.DEBUG) {
+                sb.append(',').append(ConfigParam.PARAM_DEBUG).append(':').append(1);
+            }
 
             String classpath = ServerConfig.getClassPath();
             String args = sb.toString();

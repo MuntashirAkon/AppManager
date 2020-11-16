@@ -190,7 +190,7 @@ class LocalServerManager {
         AssetsUtils.writeScript(mConfig);
         Log.e(TAG, "classpath --> " + ServerConfig.getClassPath());
         Log.e(TAG, "exec path --> " + ServerConfig.getExecPath());
-        return "sh " + ServerConfig.getExecPath();
+        return "sh " + ServerConfig.getExecPath() + " " + ServerConfig.getPort() + " " + ServerConfig.getLocalToken();
     }
 
     private AdbConnection connection;
@@ -260,8 +260,9 @@ class LocalServerManager {
             SystemClock.sleep(100);
             adbStream.write("id\n".getBytes());
             SystemClock.sleep(100);
-            String commands = getExecCommand();
-            adbStream.write((commands + "\n").getBytes());
+            String command = getExecCommand();
+            Log.d(TAG, "useAdbStartServer: " + command);
+            adbStream.write((command + "\n").getBytes());
             SystemClock.sleep(3000);
         } catch (IOException | InterruptedException e) {
             Log.e(TAG, "useAdbStartServer: unable to write to shell.", e);
@@ -279,6 +280,7 @@ class LocalServerManager {
             return false;
         }
         String command = getExecCommand(); // + "\n" + "supolicy --live 'allow qti_init_shell zygote_exec file execute'";
+        Log.d(TAG, "useRootStartServer: " + command);
         Runner.Result result = Runner.runCommand(Runner.getRootInstance(), command);
 
         Log.d(TAG, "useRootStartServer: " + result.getOutput());

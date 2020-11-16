@@ -1,10 +1,17 @@
 #!/system/bin/sh
 
+if [[ $# -lt 2 ]]; then
+    echo "USAGE: ./run_server.sh <path|port> <token>"
+    exit 1
+fi
+
 SERVER_NAME=
 JAR_NAME=
 JAR_PATH=
-ARGS=
 %ENV_VARS%
+PORT="path:$1"
+TOKEN=",token:$2"
+ARGS="${PORT}${ARGS}${TOKEN}"
 JAR_PACKAGE_NAME="io.github.muntashirakon.AppManager"
 JAR_MAIN_CLASS="${JAR_PACKAGE_NAME}.server.ServerRunner"
 TMP_PATH="/data/local/tmp"

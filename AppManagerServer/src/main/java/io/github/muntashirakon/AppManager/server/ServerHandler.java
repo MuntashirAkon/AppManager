@@ -82,6 +82,7 @@ class ServerHandler implements DataTransmission.OnReceiveCallback, AutoCloseable
         } catch (Exception ignore) {
         }
         String token = configParams.get(PARAM_TOKEN);
+        if (token == null) throw new IOException("Token is not found.");
         runInBackground = TextUtils.equals(configParams.get(PARAM_RUN_IN_BACKGROUND), "1");
         boolean debug = TextUtils.equals(configParams.get(PARAM_DEBUG), "1");
         // Set server
