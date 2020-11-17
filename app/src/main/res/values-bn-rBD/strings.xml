@@ -46,7 +46,7 @@
     <string name="system">সিস্টেম</string>
     <string name="user">ব্যবহারকারী</string>
     <string name="sort">বাছাই</string>
-    <string name="version_name_with_code">সংস্করণ <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%1$d</xliff:g>)</string>
+    <string name="version_name_with_code">সংস্করণ <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="app_info">অ্যাপ্লিকেশন তথ্য</string>
     <string name="system_app">সিস্টেম অ্যাপ</string>
     <string name="user_app">ব্যবহারকারী অ্যাপ্লিকেশন</string>

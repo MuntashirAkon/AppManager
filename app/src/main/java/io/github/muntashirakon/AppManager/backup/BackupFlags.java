@@ -67,7 +67,7 @@ public final class BackupFlags {
         return new BackupFlags((Integer) AppPref.get(AppPref.PrefKey.PREF_BACKUP_FLAGS_INT));
     }
 
-    BackupFlags(@BackupFlag int flags) {
+    public BackupFlags(@BackupFlag int flags) {
         this.flags = flags;
     }
 

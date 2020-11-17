@@ -18,13 +18,19 @@
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.NonNull;
 import androidx.preference.Preference;
@@ -32,6 +38,8 @@ import androidx.preference.PreferenceDataStore;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
+import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
@@ -51,6 +59,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
     private String[] components;
     private String[] app_ops;
     private String[] permissions;
+    private ProfileMetaManager.Profile.BackupInfo backupInfo;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -141,8 +150,69 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                     .show();
             return true;
         });
-        // TODO(17/11/20): Set backup/restore
         Preference backupDataPref = Objects.requireNonNull(findPreference("backup_data"));
+        backupInfo = model.getBackupInfo();
+        backupDataPref.setSummary(backupInfo != null ? R.string.enabled : R.string.disabled_app);
+        backupDataPref.setOnPreferenceClickListener(preference -> {
+            View view = activity.getLayoutInflater().inflate(R.layout.dialog_profile_backup_restore, null);
+            final Spinner spinner = view.findViewById(R.id.type_selector_spinner);
+            final AtomicInteger backupMode = new AtomicInteger(BackupDialogFragment.MODE_BACKUP);
+            final BackupFlags flags;
+            if (backupInfo != null) flags = new BackupFlags(backupInfo.flags);
+            else flags = BackupFlags.fromPref();
+            final AtomicInteger backupFlags = new AtomicInteger(flags.getFlags());
+            ArrayAdapter<CharSequence> spinnerAdapter = new ArrayAdapter<>(activity,
+                    android.R.layout.simple_spinner_dropdown_item, new CharSequence[]{
+                    getString(R.string.backup),
+                    getString(R.string.restore)
+            });
+            spinner.setAdapter(spinnerAdapter);
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    backupMode.set(position == 0 ? BackupDialogFragment.MODE_BACKUP : BackupDialogFragment.MODE_RESTORE);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+            view.findViewById(R.id.dialog_button).setOnClickListener(v -> new MaterialAlertDialogBuilder(activity)
+                    .setTitle(R.string.backup_options)
+                    .setMultiChoiceItems(R.array.backup_flags, flags.flagsToCheckedItems(),
+                            (dialog, flag, isChecked) -> {
+                                if (isChecked) flags.addFlag(flag);
+                                else flags.removeFlag(flag);
+                            })
+                    .setPositiveButton(R.string.save, (dialog, which) -> backupFlags.set(flags.getFlags()))
+                    .setNegativeButton(R.string.cancel, null)
+                    .show());
+            final TextInputEditText editText = view.findViewById(android.R.id.input);
+            if (backupInfo != null) {
+                editText.setText(backupInfo.name);
+                spinner.setSelection(backupInfo.mode == BackupDialogFragment.MODE_BACKUP ? 0 : 1);
+            }
+            new MaterialAlertDialogBuilder(activity)
+                    .setTitle(R.string.backup_restore)
+                    .setView(view)
+                    .setPositiveButton(R.string.ok, (dialog, which) -> {
+                        if (backupInfo == null) {
+                            backupInfo = new ProfileMetaManager.Profile.BackupInfo();
+                        }
+                        CharSequence backupName = editText.getText();
+                        backupInfo.flags = backupFlags.get();
+                        backupInfo.mode = backupMode.get();
+                        backupInfo.name = TextUtils.isEmpty(backupName) ? null : backupName.toString();
+                        model.setBackupInfo(backupInfo);
+                        backupDataPref.setSummary(R.string.enabled);
+                    })
+                    .setNegativeButton(R.string.disable, (dialog, which) -> {
+                        model.setBackupInfo(backupInfo = null);
+                        backupDataPref.setSummary(R.string.disabled_app);
+                    })
+                    .show();
+            return true;
+        });
         // Set export rules
         Preference exportRulesPref = Objects.requireNonNull(findPreference("export_rules"));
         int rulesCount = RulesTypeSelectionDialogFragment.types.length;

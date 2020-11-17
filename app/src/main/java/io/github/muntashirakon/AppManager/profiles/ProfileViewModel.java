@@ -250,4 +250,13 @@ public class ProfileViewModel extends AndroidViewModel {
         }
         return appOpsStr;
     }
+
+    public void setBackupInfo(@Nullable ProfileMetaManager.Profile.BackupInfo backupInfo) {
+        profile.backupData = backupInfo;
+    }
+
+    @Nullable
+    public ProfileMetaManager.Profile.BackupInfo getBackupInfo() {
+        return profile.backupData;
+    }
 }
