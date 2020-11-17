@@ -415,4 +415,31 @@
     <string name="third_party">Biblioteki i ikony osób trzecich</string>
     <string name="no_receivers">Brak odbiorników</string>
     <string name="no_activities">Brak działań</string>
+    <string name="only_works_in_root_or_adb_mode">Działa tylko w trybie root lub ADB</string>
+    <string name="no_tracker_found">Nie znaleziono elementów śledzących</string>
+    <string name="failed_packages">Nieudane pakiety</string>
+    <string name="clear_app_cache">Wyczyść pamięć podręczną aplikacji</string>
+    <string name="clear_data_from_uninstalled_apps_description">Wyczyść dane z aplikacji, które zostały odinstalowywane z flagą DONT_DELETE_DATA</string>
+    <string name="clear_data_from_uninstalled_apps">Wyczyść dane odinstalowanych aplikacji</string>
+    <string name="block_components_description">Zablokuj wszystkie komponenty identyfikowane przez daną sygnaturę</string>
+    <string name="block_components_dots">Zablokuj komponenty…</string>
+    <string name="block_unblock_trackers_description">Zablokuj lub odblokuj komponenty śledzące i reklamy we wszystkich zainstalowanych aplikacjach</string>
+    <string name="clear_cache">Wyczyść pamięć podręczną</string>
+    <string name="failed_to_get_data_usage_information">Nie udało się pobrać informacji o wykorzystaniu danych</string>
+    <string name="pref_import_existing_msg">Dodawanie składników wyłączonych przez inne aplikacje do App Manager. Zachowaj ostrożność podczas korzystania z tego narzędzia, ponieważ może wystąpić wiele fałszywych alarmów. Wybierz tylko te aplikacje, których jesteś pewien.</string>
+    <string name="pref_import_existing">Importuj istniejące reguły</string>
+    <string name="source_code">Kod źródłowy</string>
+    <string name="update">Zaktualizuj</string>
+    <string name="install">Zainstaluj</string>
+    <plurals name="no_of_trackers">
+        <item quantity="one">%1$d element śledzący</item>
+        <item quantity="few">%1$d elementy śledzące</item>
+        <item quantity="many">%1$d elementów śledzących</item>
+        <item quantity="other">%1$d elementów śledzących</item>
+    </plurals>
+    <string name="manifest_viewer">Przeglądarka manifestów</string>
+    <string name="changelog">Lista zmian</string>
+    <string name="one_click_ops">Operacje 1-Click</string>
+    <string name="never_ask">Nigdy nie pytaj</string>
+    <string name="launch_app">Uruchom</string>
 </resources>
