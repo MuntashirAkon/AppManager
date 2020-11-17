@@ -519,8 +519,8 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        // Autodetect root/ADB
-        RunnerUtils.autoDetectRootOrAdb(this);
+        // Set root/ADB
+        RunnerUtils.setModeOfOps(this);
 
         if (mAdapter != null) {
             // Set observer

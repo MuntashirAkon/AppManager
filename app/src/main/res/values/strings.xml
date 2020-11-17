@@ -711,4 +711,7 @@
     <string name="rsa">RSA</string>
     <string name="ecc">Elliptic-curve cryptography</string>
     <string name="send_selected">Send selected</string>
+    <string name="pref_mode_of_operations">Mode of operation</string>
+    <string name="adb_over_tcp">ADB over TCP</string>
+    <string name="current_mode">Current mode: %s</string>
 </resources>

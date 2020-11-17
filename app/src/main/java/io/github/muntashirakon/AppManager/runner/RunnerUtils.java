@@ -370,7 +370,7 @@ public final class RunnerUtils {
         return false;
     }
 
-    public static boolean isAdbAvailable(Context context) {
+    private static boolean isAdbAvailable(Context context) {
         try (AdbConnection connection = AdbConnectionManager.connect(context, ServerConfig.getHost(), ServerConfig.getAdbPort())) {
             return true;
         } catch (IOException | NoSuchAlgorithmException | InterruptedException e) {
@@ -378,7 +378,7 @@ public final class RunnerUtils {
         }
     }
 
-    public static void autoDetectRootOrAdb(Context context) {
+    private static void autoDetectRootOrAdb(Context context) {
         // Update config
         LocalServer.updateConfig();
         // Check root, ADB and load am_local_server
@@ -402,6 +402,27 @@ public final class RunnerUtils {
         } else {
             AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
             new Thread(LocalServer::getInstance).start();
+        }
+    }
+
+    public static void setModeOfOps(Context context) {
+        String mode = (String) AppPref.get(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
+        switch (mode) {
+            case Runner.MODE_AUTO:
+                RunnerUtils.autoDetectRootOrAdb(context);
+                break;
+            case Runner.MODE_ROOT:
+                AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
+                new Thread(LocalServer::getInstance).start();
+                break;
+            case Runner.MODE_ADB:
+                AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+                AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
+                new Thread(LocalServer::getInstance).start();
+                break;
+            case Runner.MODE_NO_ROOT:
+                AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+                AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
         }
     }
 

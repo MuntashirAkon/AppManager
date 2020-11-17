@@ -46,6 +46,7 @@ import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -54,11 +55,16 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class MainPreferences extends PreferenceFragmentCompat {
-    private static final List<Integer> themeConst = Arrays.asList(
+    private static final List<Integer> THEME_CONST = Arrays.asList(
             AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
             AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY,
             AppCompatDelegate.MODE_NIGHT_NO,
             AppCompatDelegate.MODE_NIGHT_YES);
+    private static final List<String> MODE_NAMES = Arrays.asList(
+            Runner.MODE_AUTO,
+            Runner.MODE_ROOT,
+            Runner.MODE_ADB,
+            Runner.MODE_NO_ROOT);
     @StringRes
     private static final int[] encryptionNames = new int[]{
             R.string.none,
@@ -71,6 +77,8 @@ public class MainPreferences extends PreferenceFragmentCompat {
     SettingsActivity activity;
     private int currentTheme;
     private String currentLang;
+    @Runner.Mode
+    private String currentMode;
     private int currentCompression;
 
     @Override
@@ -101,12 +109,12 @@ public class MainPreferences extends PreferenceFragmentCompat {
         final String[] themes = getResources().getStringArray(R.array.themes);
         currentTheme = (int) AppPref.get(AppPref.PrefKey.PREF_APP_THEME_INT);
         Preference appTheme = findPreference("app_theme");
-        appTheme.setSummary(getString(R.string.current_theme, themes[themeConst.indexOf(currentTheme)]));
+        appTheme.setSummary(getString(R.string.current_theme, themes[THEME_CONST.indexOf(currentTheme)]));
         appTheme.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.select_theme)
-                    .setSingleChoiceItems(themes, themeConst.indexOf(currentTheme),
-                            (dialog, which) -> currentTheme = themeConst.get(which))
+                    .setSingleChoiceItems(themes, THEME_CONST.indexOf(currentTheme),
+                            (dialog, which) -> currentTheme = THEME_CONST.get(which))
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_APP_THEME_INT, currentTheme);
                         AppCompatDelegate.setDefaultNightMode(currentTheme);
@@ -115,19 +123,27 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .show();
             return true;
         });
+        // Mode of operation
+        Preference mode = findPreference("mode_of_operations");
+        final String[] modes = getResources().getStringArray(R.array.modes);
+        currentMode = (String) AppPref.get(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
+        mode.setSummary(getString(R.string.current_mode, modes[MODE_NAMES.indexOf(currentMode)]));
+        mode.setOnPreferenceClickListener(preference -> {
+            new MaterialAlertDialogBuilder(activity)
+                    .setTitle(R.string.pref_mode_of_operations)
+                    .setSingleChoiceItems(modes, MODE_NAMES.indexOf(currentMode),
+                            (dialog, which) -> currentMode = MODE_NAMES.get(which))
+                    .setPositiveButton(R.string.apply, (dialog, which) -> {
+                        AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, currentMode);
+                        RunnerUtils.setModeOfOps(activity);
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+            return true;
+        });
         // App usage permission toggle
         SwitchPreferenceCompat usageEnabled = findPreference("usage_access_enabled");
         usageEnabled.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL));
-        // Root mode enabled
-        SwitchPreferenceCompat rootEnabled = findPreference("root_mode_enabled");
-        rootEnabled.setChecked(AppPref.isRootEnabled());
-        rootEnabled.setOnPreferenceChangeListener((preference, isEnabled) -> {
-            // Reset runner
-            Runner.getInstance();
-            // Change server type based on root status
-            LocalServer.updateConfig();
-            return true;
-        });
         // Global blocking enabled
         SwitchPreferenceCompat gcb = findPreference("global_blocking_enabled");
         gcb.setChecked(AppPref.isGlobalBlockingEnabled());

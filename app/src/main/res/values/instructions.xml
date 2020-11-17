@@ -17,7 +17,6 @@
   -->
 
 <resources>
-    <string name="adb_over_tcp" translatable="false">ADB over TCP</string>
     <string name="adb_over_tcp_description" translatable="false">Many root-only features can still be used by enabling
         ADB over TCP. To do that, a PC or Mac is required with ADB tools installed, and an Android
         phone with Developer Mode &amp; USB debugging enabled
