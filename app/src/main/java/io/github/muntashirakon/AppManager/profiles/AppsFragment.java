@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -43,7 +42,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
-import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -98,30 +96,10 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onResume() {
         super.onResume();
-        activity.fab.setOnClickListener(v -> {
-            progressIndicator.show();
-            new Thread(() -> {
-                // List apps
-                PackageManager pm = activity.getPackageManager();
-                List<PackageInfo> packageInfoList = pm.getInstalledPackages(0);
-                ArrayList<String> items = new ArrayList<>(packageInfoList.size());
-                ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
-                for (PackageInfo info : packageInfoList) {
-                    items.add(info.packageName);
-                    itemNames.add(pm.getApplicationLabel(info.applicationInfo));
-                }
-                activity.runOnUiThread(() -> {
-                    progressIndicator.hide();
-                    new SearchableMultiChoiceDialogBuilder(activity, items, itemNames)
-                            .setSelections(model.getCurrentPackages())
-                            .setTitle(R.string.apps)
-                            .setPositiveButton(R.string.ok, (dialog, which, selectedItems) ->
-                                    new Thread(() -> model.setPackages(selectedItems)).start())
-                            .setNegativeButton(R.string.cancel, null)
-                            .show();
-                });
-            }).start();
-        });
+        if (activity.getSupportActionBar() != null) {
+            activity.getSupportActionBar().setSubtitle(R.string.apps);
+        }
+        activity.fab.show();
     }
 
     @Override

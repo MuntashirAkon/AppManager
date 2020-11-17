@@ -420,7 +420,7 @@ public class ScannerActivity extends BaseActivity {
                 ((TextView) findViewById(R.id.missing_libs_title)).setText(getResources().getQuantityString(R.plurals.missing_signatures, missingLibs.size(), missingLibs.size()));
                 View view = findViewById(R.id.missing_libs);
                 view.setVisibility(View.VISIBLE);
-                view.setOnClickListener(v -> new SearchableMultiChoiceDialogBuilder(this,
+                view.setOnClickListener(v -> new SearchableMultiChoiceDialogBuilder<>(this,
                         missingLibs, ArrayUtils.toCharSequence(missingLibs))
                         .setTitle(R.string.signatures)
                         .setNegativeButton(R.string.ok, null)

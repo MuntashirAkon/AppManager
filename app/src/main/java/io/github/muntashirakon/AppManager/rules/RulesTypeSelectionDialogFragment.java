@@ -54,11 +54,7 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
     public static final int MODE_IMPORT = 1;
     public static final int MODE_EXPORT = 2;
 
-    private FragmentActivity activity;
-    private Uri mUri;
-    private List<String> mPackages = null;
-    private HashSet<RulesStorageManager.Type> mSelectedTypes;
-    private final RulesStorageManager.Type[] types = new RulesStorageManager.Type[]{
+    public static final RulesStorageManager.Type[] types = new RulesStorageManager.Type[]{
             RulesStorageManager.Type.ACTIVITY,
             RulesStorageManager.Type.SERVICE,
             RulesStorageManager.Type.RECEIVER,
@@ -66,6 +62,11 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
             RulesStorageManager.Type.APP_OP,
             RulesStorageManager.Type.PERMISSION,
     };
+
+    private FragmentActivity activity;
+    private Uri mUri;
+    private List<String> mPackages = null;
+    private HashSet<RulesStorageManager.Type> mSelectedTypes;
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {

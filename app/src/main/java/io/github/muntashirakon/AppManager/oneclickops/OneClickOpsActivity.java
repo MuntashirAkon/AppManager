@@ -205,7 +205,7 @@ public class OneClickOpsActivity extends BaseActivity {
                             }
                             runOnUiThread(() -> {
                                 mProgressIndicator.hide();
-                                new SearchableMultiChoiceDialogBuilder(this, selectedPackages, packageNamesWithComponentCount)
+                                new SearchableMultiChoiceDialogBuilder<>(this, selectedPackages, packageNamesWithComponentCount)
                                         .setSelections(selectedPackages)
                                         .setTitle(R.string.filtered_packages)
                                         .setPositiveButton(R.string.apply, (dialog1, which1, selectedItems) -> {
@@ -283,7 +283,7 @@ public class OneClickOpsActivity extends BaseActivity {
                             }
                             runOnUiThread(() -> {
                                 mProgressIndicator.hide();
-                                new SearchableMultiChoiceDialogBuilder(this, selectedPackages, packagesWithAppOpCount)
+                                new SearchableMultiChoiceDialogBuilder<>(this, selectedPackages, packagesWithAppOpCount)
                                         .setSelections(selectedPackages)
                                         .setTitle(R.string.filtered_packages)
                                         .setPositiveButton(R.string.apply, (dialog1, which1, selectedItems) -> {

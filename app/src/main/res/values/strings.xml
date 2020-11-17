@@ -714,4 +714,19 @@
     <string name="pref_mode_of_operations">Mode of operation</string>
     <string name="adb_over_tcp">ADB over TCP</string>
     <string name="current_mode">Current mode: %s</string>
+    <string name="allow_routine_ops">Allow routine ops</string>
+    <string name="profile_state">Profile state</string>
+    <string name="allow_routine_ops_msg">Allow the profile to be used in the routine operations</string>
+    <string name="profile_disable_msg">If enabled, apps will be disabled/enabled based on the value of the state</string>
+    <string name="profile_force_stop_msg">If enabled, apps will be force-stopped</string>
+    <string name="profile_clear_cache_msg">If enabled, cache will be cleared from the apps</string>
+    <string name="profile_clear_data_msg">If enabled, data will be cleared from the apps</string>
+    <string name="profile_block_trackers_msg">If enabled, trackers will be blocked from apps</string>
+    <string name="profile_backup_apk_msg">If enabled, apk files will be backed up</string>
+    <string name="profile_state_msg">Custom on/off state for this profile</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="options">Options</string>
+    <string name="input_permissions">Input permissions</string>
+    <string name="input_permissions_description">Input permissions with spaces, e.g. (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) etc.</string>
 </resources>

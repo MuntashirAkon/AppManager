@@ -54,8 +54,10 @@
         android:focusable="true"
         android:src="@drawable/ic_baseline_add_24"
         style="@style/AppTheme.FloatingActionButton"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="72dp"
-        android:layout_marginEnd="@dimen/padding_medium" />
+        android:layout_marginEnd="@dimen/padding_medium"
+        android:layout_marginBottom="@dimen/padding_medium"
+        app:layout_anchor="@id/bottom_navigation"
+        app:layout_anchorGravity="center"
+        />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

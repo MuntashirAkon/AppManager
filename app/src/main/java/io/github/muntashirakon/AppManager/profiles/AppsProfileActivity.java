@@ -17,6 +17,8 @@
 
 package io.github.muntashirakon.AppManager.profiles;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -31,6 +33,8 @@ import com.google.android.material.progressindicator.ProgressIndicator;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -43,6 +47,7 @@ import androidx.viewpager.widget.ViewPager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 
 public class AppsProfileActivity extends BaseActivity
@@ -99,6 +104,30 @@ public class AppsProfileActivity extends BaseActivity
         viewPager.setAdapter(new ProfileFragmentPagerAdapter(getSupportFragmentManager()));
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        fab.setOnClickListener(v -> {
+            progressIndicator.show();
+            new Thread(() -> {
+                // List apps
+                PackageManager pm = getPackageManager();
+                List<PackageInfo> packageInfoList = pm.getInstalledPackages(0);
+                ArrayList<String> items = new ArrayList<>(packageInfoList.size());
+                ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
+                for (PackageInfo info : packageInfoList) {
+                    items.add(info.packageName);
+                    itemNames.add(pm.getApplicationLabel(info.applicationInfo));
+                }
+                runOnUiThread(() -> {
+                    progressIndicator.hide();
+                    new SearchableMultiChoiceDialogBuilder<>(this, items, itemNames)
+                            .setSelections(model.getCurrentPackages())
+                            .setTitle(R.string.apps)
+                            .setPositiveButton(R.string.ok, (dialog, which, selectedItems) ->
+                                    new Thread(() -> model.setPackages(selectedItems)).start())
+                            .setNegativeButton(R.string.cancel, null)
+                            .show();
+                });
+            }).start();
+        });
     }
 
     @Override
@@ -109,67 +138,63 @@ public class AppsProfileActivity extends BaseActivity
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_apply:
-                // TODO(8/11/20): Apply profile
-                Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.action_save:
-                new Thread(() -> {
-                    try {
-                        model.save();
-                        runOnUiThread(() -> Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_SHORT).show());
-                    } catch (IOException | JSONException e) {
-                        Log.e("AppsProfileActivity", "Error: " + e);
-                        runOnUiThread(() -> Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show());
-                    }
-                }).start();
-                return true;
-            case R.id.action_discard:
-                new Thread(() -> model.discard()).start();
-                return true;
-            case R.id.action_delete:
-                new Thread(() -> {
-                    if (model.delete()) {
-                        runOnUiThread(() -> {
-                            Toast.makeText(this, R.string.deleted_successfully, Toast.LENGTH_SHORT).show();
-                            finish();
-                        });
-                    } else {
-                        runOnUiThread(() -> Toast.makeText(this, R.string.deletion_failed, Toast.LENGTH_SHORT).show());
-                    }
-                }).start();
-                return true;
-            case R.id.action_duplicate:
-                new TextInputDialogBuilder(this, R.string.input_profile_name)
-                        .setTitle(R.string.new_profile)
-                        .setHelperText(R.string.input_profile_name_description)
-                        .setNegativeButton(R.string.cancel, null)
-                        .setPositiveButton(R.string.go, (dialog, which, profName, isChecked) -> {
-                            progressIndicator.show();
-                            if (!TextUtils.isEmpty(profName)) {
-                                if (getSupportActionBar() != null) {
-                                    getSupportActionBar().setTitle(profName.toString());
-                                }
-                                new Thread(() -> {
-                                    model.cloneProfile(profName.toString());
-                                    runOnUiThread(() -> {
-                                        Toast.makeText(this, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
-                                        progressIndicator.hide();
-                                    });
-                                }).start();
-                            } else {
-                                progressIndicator.hide();
-                                Toast.makeText(this, R.string.failed_to_duplicate_profile, Toast.LENGTH_SHORT).show();
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        } else if (id == R.id.action_apply) {
+            // TODO(8/11/20): Apply profile
+            Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.action_save) {
+            new Thread(() -> {
+                try {
+                    model.save();
+                    runOnUiThread(() -> Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_SHORT).show());
+                } catch (IOException | JSONException e) {
+                    Log.e("AppsProfileActivity", "Error: " + e);
+                    runOnUiThread(() -> Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show());
+                }
+            }).start();
+        } else if (id == R.id.action_discard) {
+            new Thread(() -> model.discard()).start();
+        } else if (id == R.id.action_delete) {
+            new Thread(() -> {
+                if (model.delete()) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, R.string.deleted_successfully, Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
+                } else {
+                    runOnUiThread(() -> Toast.makeText(this, R.string.deletion_failed, Toast.LENGTH_SHORT).show());
+                }
+            }).start();
+        } else if (id == R.id.action_duplicate) {
+            new TextInputDialogBuilder(this, R.string.input_profile_name)
+                    .setTitle(R.string.new_profile)
+                    .setHelperText(R.string.input_profile_name_description)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.go, (dialog, which, profName, isChecked) -> {
+                        progressIndicator.show();
+                        if (!TextUtils.isEmpty(profName)) {
+                            if (getSupportActionBar() != null) {
+                                //noinspection ConstantConditions
+                                getSupportActionBar().setTitle(profName.toString());
                             }
-                        })
-                        .show();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+                            new Thread(() -> {
+                                //noinspection ConstantConditions
+                                model.cloneProfile(profName.toString());
+                                runOnUiThread(() -> {
+                                    Toast.makeText(this, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
+                                    progressIndicator.hide();
+                                });
+                            }).start();
+                        } else {
+                            progressIndicator.hide();
+                            Toast.makeText(this, R.string.failed_to_duplicate_profile, Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .show();
+        } else return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
@@ -180,15 +205,13 @@ public class AppsProfileActivity extends BaseActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_apps:
-                viewPager.setCurrentItem(0);
-                return true;
-            case R.id.action_conf:
-                viewPager.setCurrentItem(1);
-                return true;
-        }
-        return false;
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_apps) {
+            viewPager.setCurrentItem(0);
+        } else if (itemId == R.id.action_conf) {
+            viewPager.setCurrentItem(1);
+        } else return false;
+        return true;
     }
 
     @Override

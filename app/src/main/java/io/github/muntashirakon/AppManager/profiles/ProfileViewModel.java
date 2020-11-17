@@ -29,6 +29,7 @@ import java.util.Objects;
 
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -149,5 +150,104 @@ public class ProfileViewModel extends AndroidViewModel {
             if (profileMetaManager == null) loadProfile();
             packagesLiveData.postValue(new ArrayList<>(Arrays.asList(profile.packages)));
         }
+    }
+
+    public void putBoolean(@NonNull String key, boolean value) {
+        switch (key) {
+            case "disable":
+                profile.disable = value;
+                break;
+            case "force_stop":
+                profile.forceStop = value;
+                break;
+            case "clear_cache":
+                profile.clearCache = value;
+                break;
+            case "clear_data":
+                profile.clearData = value;
+                break;
+            case "block_trackers":
+                profile.blockTrackers = value;
+                break;
+            case "backup_apk":
+                profile.backupApk = value;
+                break;
+            case "allow_routine":
+                profile.allowRoutine = value;
+                break;
+        }
+    }
+
+    public boolean getBoolean(@NonNull String key, boolean defValue) {
+        switch (key) {
+            case "disable": return profile.disable;
+            case "force_stop": return profile.forceStop;
+            case "clear_cache": return profile.clearCache;
+            case "clear_data": return profile.clearData;
+            case "block_trackers": return profile.blockTrackers;
+            case "backup_apk": return profile.backupApk;
+            case "allow_routine": return profile.allowRoutine;
+            default: return defValue;
+        }
+    }
+
+    public void setState(@ProfileMetaManager.ProfileState String state) {
+        profile.state = state;
+    }
+
+    @NonNull
+    @ProfileMetaManager.ProfileState
+    public String getState() {
+        return profile.state == null ? ProfileMetaManager.STATE_OFF : profile.state;
+    }
+
+    public void setExportRules(@Nullable Integer flags) {
+        profile.exportRules = flags;
+    }
+
+    @Nullable
+    public Integer getExportRules() {
+        return profile.exportRules;
+    }
+
+    public void setComponents(@Nullable String[] components) {
+        profile.components = components;
+    }
+
+    @Nullable
+    public String[] getComponents() {
+        return profile.components;
+    }
+
+    public void setPermissions(@Nullable String[] permissions) {
+        profile.permissions = permissions;
+    }
+
+    @Nullable
+    public String[] getPermissions() {
+        return profile.permissions;
+    }
+
+    public void setAppOps(@Nullable String[] appOpsStr) {
+        if (appOpsStr == null) {
+            profile.appOps = null;
+            return;
+        }
+        int[] appOps = new int[appOpsStr.length];
+        for (int i = 0; i < appOps.length; ++i) {
+            appOps[i] = Integer.parseInt(appOpsStr[i]);
+        }
+        profile.appOps = appOps;
+    }
+
+    @Nullable
+    public String[] getAppOps() {
+        int[] appOps = profile.appOps;
+        if (appOps == null) return null;
+        String[] appOpsStr = new String[appOps.length];
+        for (int i = 0; i < appOps.length; ++i) {
+            appOpsStr[i] = String.valueOf(appOps[i]);
+        }
+        return appOpsStr;
     }
 }

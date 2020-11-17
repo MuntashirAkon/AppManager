@@ -28,11 +28,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringDef;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
@@ -43,12 +46,20 @@ import io.github.muntashirakon.AppManager.utils.JSONUtils;
 public class ProfileMetaManager {
     public static final String PROFILE_EXT = ".am.json";
 
+    @StringDef({STATE_ON, STATE_OFF})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ProfileState {}
+
+    public static final String STATE_ON = "on";
+    public static final String STATE_OFF = "off";
+
     public static class Profile {
         public int type = 0;  // type
         public int version = 1;  // version
         public boolean allowRoutine = true;  // allow_routine
         @Nullable
-        private String state;  // state
+        @ProfileState
+        public String state;  // state
         @NonNull
         private final String name;  // name (name of the profile)
         @NonNull
@@ -144,6 +155,7 @@ public class ProfileMetaManager {
 
     public void readProfile(@Nullable String profileStr) throws JSONException {
         if (TextUtils.isEmpty(profileStr)) throw new JSONException("Empty JSON string");
+        //noinspection ConstantConditions
         JSONObject profileObj = new JSONObject(profileStr);
         String profileName = profileObj.getString("name");
         String[] packageNames = JSONUtils.getArray(String.class, profileObj.getJSONArray("packages"));

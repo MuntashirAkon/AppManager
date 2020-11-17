@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2020 Muntashir Al-Islam
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <Preference
+        app:key="state"
+        app:summary="@string/profile_state_msg"
+        tools:title="State: On" />
+
+    <Preference
+        app:key="components"
+        app:title="@string/components"
+        tools:summary="Comma separated list of components" />
+
+    <Preference
+        app:key="app_ops"
+        app:title="@string/app_ops"
+        tools:summary="Comma separated list of app ops" />
+
+    <Preference
+        app:key="permissions"
+        app:title="@string/declared_permission"
+        tools:summary="Comma separated list of permissions" />
+
+    <Preference
+        app:key="backup_data"
+        app:title="@string/backup_restore"
+        tools:summary="Backup Info" />
+
+    <Preference
+        app:key="export_rules"
+        app:title="@string/export_blocking_rules"
+        tools:summary="Allowed flags" />
+
+    <SwitchPreferenceCompat
+        app:key="disable"
+        app:title="@string/disable"
+        app:summary="@string/profile_disable_msg" />
+
+    <SwitchPreferenceCompat
+        app:key="force_stop"
+        app:title="@string/force_stop"
+        app:summary="@string/profile_force_stop_msg" />
+
+    <SwitchPreferenceCompat
+        app:key="clear_cache"
+        app:title="@string/clear_cache"
+        app:summary="@string/profile_clear_cache_msg" />
+
+    <SwitchPreferenceCompat
+        app:key="clear_data"
+        app:title="@string/clear_data"
+        app:summary="@string/profile_clear_data_msg" />
+
+    <SwitchPreferenceCompat
+        app:key="block_trackers"
+        app:title="@string/block_trackers"
+        app:summary="@string/profile_block_trackers_msg" />
+
+    <SwitchPreferenceCompat
+        app:key="backup_apk"
+        app:title="@string/backup_apk"
+        app:summary="@string/profile_backup_apk_msg" />
+
+    <SwitchPreferenceCompat
+        app:key="allow_routine"
+        app:title="@string/allow_routine_ops"
+        app:summary="@string/allow_routine_ops_msg" />
+
+</PreferenceScreen>
