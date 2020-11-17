@@ -316,6 +316,9 @@ class LocalServerManager {
         if (isRunning()) {
             return mSession;
         }
+        if (!AppPref.isRootOrAdbEnabled()) {
+            throw new IOException("Root/ADB not enabled.");
+        }
         Socket socket = new Socket(ServerConfig.getHost(), ServerConfig.getPort());
         socket.setSoTimeout(1000 * 30);
         OutputStream os = socket.getOutputStream();

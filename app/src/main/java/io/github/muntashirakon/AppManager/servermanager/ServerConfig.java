@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import java.io.File;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.AppManager;
 
 public class ServerConfig {
     static String SOCKET_PATH = "am_socket";
@@ -19,7 +20,8 @@ public class ServerConfig {
 
     private static File destJarFile;
     private static File destExecFile;
-    private static SharedPreferences sPreferences;
+    private static final SharedPreferences sPreferences = AppManager.getContext()
+            .getSharedPreferences("server_config", Context.MODE_PRIVATE);
     private static volatile boolean sInitialised = false;
 
     static void init(Context context, int userHandleId) {
@@ -28,7 +30,6 @@ public class ServerConfig {
         }
         destJarFile = new File(context.getExternalFilesDir(null), JAR_NAME);
         destExecFile = new File(context.getExternalFilesDir(null), EXECUTABLE_FILE_NAME);
-        sPreferences = context.getSharedPreferences("server_config", Context.MODE_PRIVATE);
         if (userHandleId != 0) {
             SOCKET_PATH += userHandleId;
             DEFAULT_ADB_PORT += userHandleId;
@@ -53,6 +54,7 @@ public class ServerConfig {
 
     /**
      * Get existing or generate new 16-digit token for client session
+     *
      * @return Existing or new token
      */
     static String getLocalToken() {
@@ -64,8 +66,17 @@ public class ServerConfig {
         return token;
     }
 
+    static boolean getAllowBgRunning() {
+        return sPreferences.getBoolean("allow_bg_running", true);
+    }
+
+    public static int getAdbPort() {
+        return sPreferences.getInt("adb_port", 5555);
+    }
+
     /**
      * Get ADB port for client session
+     *
      * @return ADB port
      */
     static int getPort() {
@@ -74,9 +85,10 @@ public class ServerConfig {
 
     /**
      * Get ADB host for client session
+     *
      * @return ADB host (localhost)
      */
-    static String getHost() {
+    public static String getHost() {
         return DEFAULT_ADB_HOST;
     }
 }

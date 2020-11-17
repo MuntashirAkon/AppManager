@@ -19,8 +19,6 @@ package io.github.muntashirakon.AppManager.servermanager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -33,6 +31,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.server.common.Caller;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class LocalServer {
 
@@ -95,7 +94,7 @@ public class LocalServer {
             }
             connectStarted = true;
             try {
-                mLocalServerManager.start();
+                if (AppPref.isRootOrAdbEnabled()) mLocalServerManager.start();
             } catch (IOException e) {
                 connectStarted = false;
                 connectLock.notify();
@@ -152,18 +151,15 @@ public class LocalServer {
     }
 
     private static void updateConfig(@NonNull Config config) {
-        // FIXME: Use AppPref instead of SharedPreferences
-        // FIXME(10/9/20): These prefs are not saved anywhere
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(config.context);
-        config.allowBgRunning = sp.getBoolean("allow_bg_running", true);
-        config.adbPort = sp.getInt("adb_port", 5555);
+        config.allowBgRunning = ServerConfig.getAllowBgRunning();
+        config.adbPort = ServerConfig.getAdbPort();
         if (INSTANCE != null) INSTANCE.mLocalServerManager.updateConfig(config);
     }
 
     public static class Config {
         public boolean allowBgRunning = false;
         public boolean printLog = false;
-        public String adbHost = "127.0.0.1";
+        public String adbHost = ServerConfig.getHost();
         public int adbPort = 5555;
         Context context;
     }

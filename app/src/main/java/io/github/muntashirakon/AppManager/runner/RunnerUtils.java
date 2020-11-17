@@ -17,9 +17,15 @@
 
 package io.github.muntashirakon.AppManager.runner;
 
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
+
+import com.tananaev.adblib.AdbConnection;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +33,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.security.InvalidParameterException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -41,7 +48,12 @@ import java.util.zip.ZipFile;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
+import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
@@ -356,6 +368,41 @@ public final class RunnerUtils {
             }
         }
         return false;
+    }
+
+    public static boolean isAdbAvailable(Context context) {
+        try (AdbConnection connection = AdbConnectionManager.connect(context, ServerConfig.getHost(), ServerConfig.getAdbPort())) {
+            return true;
+        } catch (IOException | NoSuchAlgorithmException | InterruptedException e) {
+            return false;
+        }
+    }
+
+    public static void autoDetectRootOrAdb(Context context) {
+        // Update config
+        LocalServer.updateConfig();
+        // Check root, ADB and load am_local_server
+        if (!RunnerUtils.isRootGiven()) {
+            AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
+            // Check for adb
+            new Thread(() -> {
+                if (RunnerUtils.isAdbAvailable(context)) {
+                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
+                }
+                try {
+                    AdbShell.CommandResult result = AdbShell.run("echo AMAdbCheck");
+                    if (!result.isSuccessful() || !"AMAdbCheck".equals(result.getStdout())) {
+                        throw new IOException("Adb not available");
+                    }
+                    new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, "Working on ADB mode", Toast.LENGTH_SHORT).show());
+                } catch (IOException e) {
+                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
+                }
+            }).start();
+        } else {
+            AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
+            new Thread(LocalServer::getInstance).start();
+        }
     }
 
     /**

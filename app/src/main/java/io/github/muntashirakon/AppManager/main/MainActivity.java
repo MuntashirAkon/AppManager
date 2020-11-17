@@ -32,7 +32,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.checkbox.MaterialCheckBox;
@@ -40,7 +39,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.ProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
-import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.text.SimpleDateFormat;
@@ -67,7 +65,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
@@ -76,7 +73,6 @@ import io.github.muntashirakon.AppManager.profiles.ProfilesActivity;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
@@ -287,8 +283,6 @@ public class MainActivity extends BaseActivity implements
         });
         mBottomAppBar.setOnMenuItemClickListener(this);
         handleSelection();
-        // Check root
-        AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, RunnerUtils.isRootGiven());
     }
 
     @Override
@@ -370,7 +364,7 @@ public class MainActivity extends BaseActivity implements
         } else if (id == R.id.action_settings) {
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
             startActivity(settingsIntent);
-        // Sort
+            // Sort
         } else if (id == R.id.action_sort_by_app_label) {
             setSortBy(SORT_BY_APP_LABEL);
             item.setChecked(true);
@@ -401,7 +395,7 @@ public class MainActivity extends BaseActivity implements
         } else if (id == R.id.action_sort_by_backup) {
             setSortBy(SORT_BY_BACKUP);
             item.setChecked(true);
-        // Filter
+            // Filter
         } else if (id == R.id.action_filter_user_apps) {
             if (!item.isChecked()) mModel.addFilterFlag(FILTER_USER_APPS);
             else mModel.removeFilterFlag(FILTER_USER_APPS);
@@ -430,7 +424,7 @@ public class MainActivity extends BaseActivity implements
             if (!item.isChecked()) mModel.addFilterFlag(FILTER_RUNNING_APPS);
             else mModel.removeFilterFlag(FILTER_RUNNING_APPS);
             item.setChecked(!item.isChecked());
-        // Others
+            // Others
         } else if (id == R.id.action_app_usage) {
             Intent usageIntent = new Intent(this, AppUsageActivity.class);
             startActivity(usageIntent);
@@ -525,30 +519,8 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        // Update config
-        LocalServer.updateConfig();
-        // Check root
-        AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
-        if (!AppPref.isRootEnabled()) {
-            AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
-            // Check for adb
-            new Thread(() -> {
-                try {
-                    LocalServer.getInstance().checkConnect();
-                    AdbShell.CommandResult result = AdbShell.run("id");
-                    if (!result.isSuccessful()) {
-                        throw new IOException("Adb not available");
-                    }
-                    runOnUiThread(() -> Toast.makeText(this, "Working on ADB mode", Toast.LENGTH_SHORT).show());
-                } catch (IOException e) {
-                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
-                    try {
-                        LocalServer.getInstance().checkConnect();
-                    } catch (IOException ignore) {
-                    }
-                }
-            }).start();
-        } else new Thread(LocalServer::getInstance).start();
+        // Autodetect root/ADB
+        RunnerUtils.autoDetectRootOrAdb(this);
 
         if (mAdapter != null) {
             // Set observer
