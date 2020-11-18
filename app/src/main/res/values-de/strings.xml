@@ -620,7 +620,7 @@
     <string name="update_uninstalled_successfully">Updates für <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> wurden deinstalliert.</string>
     <string name="uninstall_updates">Updates deinstallieren</string>
     <string name="only_install">Nur installieren</string>
-    <string name="install_without_data_loss">Wenn Sie die Signaturprüfung deaktiviert haben, können Sie die Option &lt;b&gt;Nur installieren&lt;/b&gt; verwenden, um die Anwendung ohne Datenverlust zu installieren.</string>
+    <string name="install_without_data_loss">Wenn Sie die Signaturprüfung deaktiviert haben, können Sie die Option <b>Nur installieren</b> verwenden, um die Anwendung ohne Datenverlust zu installieren.</string>
     <string name="app_data_will_be_lost">Die vorhandenen Daten gehen dabei verloren.</string>
     <string name="signature_mismatch_for_system_apps">Konnte die Anwendung nicht installieren, weil eine Systemanwendung mit einer anderen Signatur diesen Paketnamen hat.</string>
     <string name="do_you_want_to_uninstall_and_install">Möchten Sie die Anwendung deinstallieren und erneut installieren\?</string>
