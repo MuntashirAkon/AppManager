@@ -168,8 +168,11 @@ public class ProfileManager {
         } else Log.d(TAG, "Skipped force stop.");
         // Clear cache
         if (profile.clearCache) {
-            Log.d(TAG, "Not implemented clear cache.");
-            // TODO(18/11/20): Clear app cache
+            Log.d(TAG, "Started clear cache.");
+            result = batchOpsManager.performOp(BatchOpsManager.OP_CLEAR_CACHE, packages);
+            if (!result.isSuccessful()) {
+                Log.d(TAG, "Failed packages: " + result.toString());
+            }
         } else Log.d(TAG, "Skipped clear cache.");
         // Clear data
         if (profile.clearData) {

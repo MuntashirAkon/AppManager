@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -77,6 +78,7 @@ public class BatchOpsManager {
             OP_BACKUP,
             OP_BLOCK_COMPONENTS,
             OP_BLOCK_TRACKERS,
+            OP_CLEAR_CACHE,
             OP_CLEAR_DATA,
             OP_DELETE_BACKUP,
             OP_DISABLE,
@@ -113,6 +115,7 @@ public class BatchOpsManager {
     public static final int OP_ENABLE = 14;
     public static final int OP_UNBLOCK_COMPONENTS = 15;
     public static final int OP_RESET_APP_OPS = 16;
+    public static final int OP_CLEAR_CACHE = 17;
 
     private final Runner runner;
     private final Handler handler;
@@ -169,6 +172,8 @@ public class BatchOpsManager {
                 return opUnblockComponents();
             case OP_RESET_APP_OPS:
                 return opResetAppOps();
+            case OP_CLEAR_CACHE:
+                return opClearCache();
             case OP_NONE:
                 break;
         }
@@ -289,6 +294,31 @@ public class BatchOpsManager {
             @Override
             public List<String> failedPackages() {
                 return failedPkgList;
+            }
+        };
+    }
+
+    @NonNull
+    private Result opClearCache() {
+        AtomicBoolean isSuccessful = new AtomicBoolean(true);
+        List<String> failedPackages = new ArrayList<>();
+        for (String packageName : packageNames) {
+            Runner.Result result = RunnerUtils.clearPackageCache(packageName);
+            if (!result.isSuccessful()) {
+                isSuccessful.set(false);
+                failedPackages.add(packageName);
+            }
+        }
+        return lastResult = new Result() {
+            @Override
+            public boolean isSuccessful() {
+                return isSuccessful.get();
+            }
+
+            @NonNull
+            @Override
+            public List<String> failedPackages() {
+                return failedPackages;
             }
         };
     }
