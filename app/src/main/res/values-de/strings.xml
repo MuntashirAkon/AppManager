@@ -681,4 +681,24 @@
     <string name="pref_show_users_in_installer_msg">Anzeigen einer Liste der Benutzer, die vor der Installation einer externen Anwendung ausgewählt werden müssen. Erfordert root oder ADB.</string>
     <string name="pref_show_users_in_installer">Benutzer im Installationsprogramm anzeigen</string>
     <string name="failed_to_duplicate_profile">Konnte Profil nicht duplizieren</string>
+    <string name="enabled">Aktiviert</string>
+    <string name="choose">Auswählen</string>
+    <string name="input_permissions_description">Eingabeberechtigungen mit Leerzeichen, z.B. (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) etc.</string>
+    <string name="input_permissions">Eingabeberechtigungen</string>
+    <string name="options">Optionen</string>
+    <string name="off">Aus</string>
+    <string name="on">Ein</string>
+    <string name="profile_state_msg">Benutzerdefinierter Ein/Aus-Zustand für dieses Profil</string>
+    <string name="profile_backup_apk_msg">Wenn aktiviert, werden APK-Dateien gesichert</string>
+    <string name="profile_block_trackers_msg">Wenn aktiviert, werden Blocker für Anwendungen blockiert</string>
+    <string name="profile_clear_data_msg">Wenn aktiviert, werden Daten aus den Anwendungen gelöscht</string>
+    <string name="profile_clear_cache_msg">Wenn aktiviert, wird der Cache aus den Anwendungen gelöscht</string>
+    <string name="profile_force_stop_msg">Wenn aktiviert, werden Apps zwangsweise gestoppt</string>
+    <string name="profile_disable_msg">Wenn aktiviert, werden Anwendungen basierend auf dem Wert des Status deaktiviert/ aktiviert</string>
+    <string name="allow_routine_ops_msg">Erlauben Sie die Verwendung des Profils in den Routineoperationen</string>
+    <string name="profile_state">Profilstatus</string>
+    <string name="allow_routine_ops">Routineoperationen zulassen</string>
+    <string name="current_mode">Aktueller Modus: %s</string>
+    <string name="adb_over_tcp">ADB über TCP</string>
+    <string name="pref_mode_of_operations">Arbeitsweise</string>
 </resources>
