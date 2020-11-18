@@ -345,7 +345,7 @@
     <string name="clear_app_cache_description">Limpar o cache de todos os apps</string>
     <string name="no_tracker_found">Sem rastreadores encontrados</string>
     <string name="failed_packages">Pacotes falhados</string>
-    <string name="input_signatures_description">assinaturas de input com espaços, ex. (com.facebook org.app2 com.app3) etc.</string>
+    <string name="input_signatures_description">Insira assinaturas com espaços, p. ex. (com.facebook org.app2 com.app3) etc.</string>
     <string name="filtered_packages">Pacotes filtrados</string>
     <string name="only_works_in_root_or_adb_mode">Funciona apenas no modo Root ou ADB</string>
     <string name="failed_to_parse_some_numbers">Não foi possível analisar alguns números</string>
@@ -471,15 +471,15 @@
     <string name="gles_ver">Versão requerida do GL ES</string>
     <string name="shared_libs">Bibliotecas compartilhadas</string>
     <string name="flags">Flags</string>
-    <string name="soft_input">Modo de input suave</string>
+    <string name="soft_input">Modo de entrada suave</string>
     <string name="task_affinity">Afinidade de tarefas</string>
     <string name="providers">Provedores</string>
     <string name="receivers">Receptores</string>
     <string name="str_logo">Logo</string>
     <string name="rules_not_applied">Regras não são aplicadas</string>
     <string name="key_name_cannot_be_null">O nome da chave não pode estar vazio</string>
-    <string name="error_evaluating_input">Não foi possível avaliar o input</string>
-    <string name="input_signatures">Assinaturas de input</string>
+    <string name="error_evaluating_input">Não foi possível avaliar a entrada</string>
+    <string name="input_signatures">Inserir assinaturas</string>
     <string name="type_long">Inteiro longo</string>
     <string name="system_odex_not_supported">.odex e alguns aplicativos do sistema não têm suporte!</string>
     <string name="key_name">Nome da Chave</string>
@@ -610,9 +610,9 @@
     <string name="touchscreen_no_touch">Sem touch</string>
     <string name="navigation_wheel">Roda</string>
     <string name="navigation_trackball">Trackball</string>
-    <string name="navigation_dial_pad">Dial pad</string>
+    <string name="navigation_dial_pad">Discador</string>
     <string name="navigation_no_nav">Sem nav</string>
-    <string name="keyboard_12_keys">12 key</string>
+    <string name="keyboard_12_keys">12 teclas</string>
     <string name="keyboard_qwerty">QWERTY</string>
     <string name="_undefined">Indefinido</string>
     <string name="required">Necessário</string>
@@ -643,10 +643,10 @@
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para a função <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para o APK base</string>
     <string name="routine_ops">Operações de rotina</string>
-    <string name="input_app_ops_description">Insira constantes de operações de aplicativo com espaços, por exemplo (63 72 12) etc. Você pode encontrar constantes de operações de aplicativo na guia operações de aplicativo sob os suportes.</string>
+    <string name="input_app_ops_description">Insira constantes de operações de aplicativo com espaços, p. ex. (63 72 12) etc. Você pode encontrar constantes de operações de aplicativo na guia operações de aplicativo sob os suportes.</string>
     <string name="input_app_ops">Inserir operações de aplicativo</string>
-    <string name="packages">packages</string>
-    <string name="onboard">Onboard</string>
+    <string name="packages">pacotes</string>
+    <string name="onboard">Todos os</string>
     <string name="state_waking">Acordando</string>
     <string name="state_parked">Estacionado</string>
     <string name="state_wake_kill">Wake kill</string>
@@ -680,4 +680,24 @@
     <string name="failed_to_duplicate_profile">Não foi possível duplicar o perfil</string>
     <string name="pref_show_users_in_installer">Mostrar usuários no instalador</string>
     <string name="send_selected">Enviar selecionado</string>
+    <string name="input_permissions_description">Insira permissões com espaços, p. ex. (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) etc.</string>
+    <string name="input_permissions">Inserir permissões</string>
+    <string name="enabled">Ativado</string>
+    <string name="choose">Escolher</string>
+    <string name="options">Opções</string>
+    <string name="off">Desligado</string>
+    <string name="on">Ligado</string>
+    <string name="profile_state_msg">Estado de ligado/desligado personalizado para este perfil</string>
+    <string name="profile_backup_apk_msg">Se ativado, serão feitos backups dos arquivos apk</string>
+    <string name="profile_block_trackers_msg">Se ativado, os rastreadores dos aplicativos serão bloqueados</string>
+    <string name="profile_clear_data_msg">Se ativado, os dados dos aplicativos serão limpos</string>
+    <string name="profile_clear_cache_msg">Se ativado, o cache dos aplicativos será limpo</string>
+    <string name="profile_force_stop_msg">Se ativado, os aplicativos serão parados à força</string>
+    <string name="profile_disable_msg">Se ativado, os aplicativos serão desativados/ativados com base no valor do estado</string>
+    <string name="allow_routine_ops_msg">Permitir que o perfil seja usado nas operações de rotina</string>
+    <string name="profile_state">Estado do perfil</string>
+    <string name="allow_routine_ops">Permitir operações de rotina</string>
+    <string name="current_mode">Modo atual: %s</string>
+    <string name="adb_over_tcp">ADB sobre TCP</string>
+    <string name="pref_mode_of_operations">Modo de operação</string>
 </resources>
