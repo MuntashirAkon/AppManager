@@ -139,6 +139,25 @@ public final class ComponentUtils {
     }
 
     @NonNull
+    public static List<String> unblockFilteredComponents(@NonNull Collection<String> packageNames, String[] signatures, int userHandle) {
+        List<String> failedPkgList = new ArrayList<>();
+        HashMap<String, RulesStorageManager.Type> components;
+        for (String packageName: packageNames) {
+            components = PackageUtils.getFilteredComponents(packageName, signatures);
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
+                for (String componentName: components.keySet()) {
+                    cb.removeComponent(componentName);
+                }
+                cb.applyRules(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                failedPkgList.add(packageName);
+            }
+        }
+        return failedPkgList;
+    }
+
+    @NonNull
     public static ItemCount getTrackerCountForApp(@NonNull ApplicationInfo applicationInfo) {
         PackageManager pm = AppManager.getContext().getPackageManager();
         ItemCount trackerCount = new ItemCount();

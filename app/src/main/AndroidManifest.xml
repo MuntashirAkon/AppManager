@@ -289,6 +289,9 @@
         <service
             android:name=".batchops.BatchOpsService"
             android:exported="false" />
+        <service
+            android:name=".profiles.ProfileApplierService"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

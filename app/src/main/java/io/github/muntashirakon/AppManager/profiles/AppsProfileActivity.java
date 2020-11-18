@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.profiles;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -142,8 +144,10 @@ public class AppsProfileActivity extends BaseActivity
         if (id == android.R.id.home) {
             finish();
         } else if (id == R.id.action_apply) {
-            // TODO(8/11/20): Apply profile
-            Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show();
+            // TODO(18/11/20): Display state if it is set to off
+            Intent intent = new Intent(this, ProfileApplierService.class);
+            intent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, model.getProfileName());
+            ContextCompat.startForegroundService(this, intent);
         } else if (id == R.id.action_save) {
             new Thread(() -> {
                 try {

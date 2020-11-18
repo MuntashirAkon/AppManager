@@ -136,6 +136,7 @@ public class ProfilesActivity extends BaseActivity {
                 .setPositiveButton(R.string.go, (dialog, which, profName, isChecked) -> {
                     if (!TextUtils.isEmpty(profName)) {
                         Intent intent = new Intent(this, AppsProfileActivity.class);
+                        //noinspection ConstantConditions
                         intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE_NAME, profName.toString());
                         intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE, true);
                         startActivity(intent);
@@ -259,8 +260,10 @@ public class ProfilesActivity extends BaseActivity {
                 popupMenu.setOnMenuItemClickListener(item -> {
                     int id = item.getItemId();
                     if (id == R.id.action_apply) {
-                        // TODO(7/11/20): Apply the profile: display enable/disable first
-                        Toast.makeText(activity, "Not yet implemented", Toast.LENGTH_SHORT).show();
+                        // TODO(18/11/20): Display state if it is set to off
+                        Intent intent = new Intent(activity, ProfileApplierService.class);
+                        intent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profName);
+                        ContextCompat.startForegroundService(activity, intent);
                     } else if (id == R.id.action_delete) {
                         ProfileMetaManager manager = new ProfileMetaManager(profName);
                         if (manager.deleteProfile()) {
@@ -281,6 +284,7 @@ public class ProfilesActivity extends BaseActivity {
                                     if (!TextUtils.isEmpty(newProfName)) {
                                         Intent intent = new Intent(activity, AppsProfileActivity.class);
                                         intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profName);
+                                        //noinspection ConstantConditions
                                         intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE_NAME, newProfName.toString());
                                         intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE, true);
                                         activity.startActivity(intent);

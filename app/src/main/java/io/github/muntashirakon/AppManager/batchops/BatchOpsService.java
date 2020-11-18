@@ -123,10 +123,10 @@ public class BatchOpsService extends IntentService {
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.BATCH_OPS";
     public static final int NOTIFICATION_ID = 1;
 
-    private @BatchOpsManager.OpType
-    int op = BatchOpsManager.OP_NONE;
-    private @Nullable
-    ArrayList<String> packages;
+    @BatchOpsManager.OpType
+    private int op = BatchOpsManager.OP_NONE;
+    @Nullable
+    private ArrayList<String> packages;
     Bundle args;
     private String header;
     private NotificationCompat.Builder builder;

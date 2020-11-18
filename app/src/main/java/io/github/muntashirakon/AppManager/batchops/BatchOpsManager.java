@@ -28,6 +28,7 @@ import android.text.TextUtils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,7 +51,8 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 public class BatchOpsManager {
     // Bundle args
     /**
-     * {@link Integer[]} value containing app op values to be used with {@link #OP_IGNORE_APP_OPS}.
+     * {@link Integer[]} value containing app op values to be used with {@link #OP_IGNORE_APP_OPS}
+     * and {@link #OP_RESET_APP_OPS}.
      */
     public static final String ARG_APP_OPS = "app_ops";
     /**
@@ -65,7 +67,7 @@ public class BatchOpsManager {
     public static final String ARG_BACKUP_NAMES = "backup_names";
     /**
      * {@link String[]} value containing signatures, e.g., org.acra. To be used with
-     * {@link #OP_BLOCK_COMPONENTS}.
+     * {@link #OP_BLOCK_COMPONENTS} and {@link #OP_UNBLOCK_COMPONENTS}.
      */
     public static final String ARG_SIGNATURES = "signatures";
 
@@ -83,7 +85,9 @@ public class BatchOpsManager {
             OP_EXPORT_RULES,
             OP_FORCE_STOP,
             OP_IGNORE_APP_OPS,
+            OP_RESET_APP_OPS,
             OP_RESTORE_BACKUP,
+            OP_UNBLOCK_COMPONENTS,
             OP_UNBLOCK_TRACKERS,
             OP_UNINSTALL,
     })
@@ -107,6 +111,8 @@ public class BatchOpsManager {
     public static final int OP_BLOCK_COMPONENTS = 12;
     public static final int OP_IGNORE_APP_OPS = 13;
     public static final int OP_ENABLE = 14;
+    public static final int OP_UNBLOCK_COMPONENTS = 15;
+    public static final int OP_RESET_APP_OPS = 16;
 
     private final Runner runner;
     private final Handler handler;
@@ -116,7 +122,7 @@ public class BatchOpsManager {
         this.handler = new Handler(Looper.getMainLooper());
     }
 
-    private List<String> packageNames;
+    private Collection<String> packageNames;
     private Result lastResult;
     private Bundle args;
 
@@ -125,7 +131,7 @@ public class BatchOpsManager {
     }
 
     @NonNull
-    public Result performOp(@OpType int op, List<String> packageNames) {
+    public Result performOp(@OpType int op, Collection<String> packageNames) {
         this.runner.clear();
         this.packageNames = packageNames;
         switch (op) {
@@ -159,6 +165,10 @@ public class BatchOpsManager {
                 return opBlockComponents();
             case OP_IGNORE_APP_OPS:
                 return opIgnoreAppOps();
+            case OP_UNBLOCK_COMPONENTS:
+                return opUnblockComponents();
+            case OP_RESET_APP_OPS:
+                return opResetAppOps();
             case OP_NONE:
                 break;
         }
@@ -339,6 +349,38 @@ public class BatchOpsManager {
 
     private Result opIgnoreAppOps() {
         final List<String> failedPkgList = ExternalComponentsImporter.denyFilteredAppOps(packageNames, args.getIntArray(ARG_APP_OPS), Users.getCurrentUserHandle());
+        return lastResult = new Result() {
+            @Override
+            public boolean isSuccessful() {
+                return failedPkgList.size() == 0;
+            }
+
+            @NonNull
+            @Override
+            public List<String> failedPackages() {
+                return failedPkgList;
+            }
+        };
+    }
+
+    private Result opResetAppOps() {
+        final List<String> failedPkgList = ExternalComponentsImporter.defaultFilteredAppOps(packageNames, args.getIntArray(ARG_APP_OPS), Users.getCurrentUserHandle());
+        return lastResult = new Result() {
+            @Override
+            public boolean isSuccessful() {
+                return failedPkgList.size() == 0;
+            }
+
+            @NonNull
+            @Override
+            public List<String> failedPackages() {
+                return failedPkgList;
+            }
+        };
+    }
+
+    private Result opUnblockComponents() {
+        final List<String> failedPkgList = ComponentUtils.unblockFilteredComponents(packageNames, args.getStringArray(ARG_SIGNATURES), Users.getCurrentUserHandle());
         return lastResult = new Result() {
             @Override
             public boolean isSuccessful() {

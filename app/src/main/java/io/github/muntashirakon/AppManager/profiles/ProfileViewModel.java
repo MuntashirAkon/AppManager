@@ -55,6 +55,10 @@ public class ProfileViewModel extends AndroidViewModel {
         }
     }
 
+    public String getProfileName() {
+        return profileName;
+    }
+
     @GuardedBy("profileLock")
     private ProfileMetaManager.Profile profile;
     @GuardedBy("profileLock")

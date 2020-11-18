@@ -77,6 +77,29 @@ public class ExternalComponentsImporter {
     }
 
     @NonNull
+    public static List<String> defaultFilteredAppOps(@NonNull Collection<String> packageNames, int[] appOps, int userHandle) {
+        List<String> failedPkgList = new ArrayList<>();
+        Collection<Integer> appOpList;
+        AppOpsService appOpsService = new AppOpsService();
+        for (String packageName: packageNames) {
+            appOpList = PackageUtils.getFilteredAppOps(packageName, appOps);
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
+                for (int appOp: appOpList) {
+                    try {
+                        appOpsService.setMode(appOp, -1, packageName, AppOpsManager.MODE_DEFAULT);
+                        cb.setAppOp(String.valueOf(appOp), AppOpsManager.MODE_DEFAULT);
+                    } catch (Exception ignore) {}
+                }
+                cb.applyRules(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+                failedPkgList.add(packageName);
+            }
+        }
+        return failedPkgList;
+    }
+
+    @NonNull
     public static List<String> applyFromExistingBlockList(@NonNull List<String> packageNames, int userHandle) {
         List<String> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
