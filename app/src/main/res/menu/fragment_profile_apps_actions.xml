@@ -48,4 +48,9 @@
         android:icon="@drawable/ic_assignment_black_24dp"
         android:title="@string/duplicate" />
 
+    <item
+        android:id="@+id/action_shortcut"
+        android:icon="@drawable/ic_image_black_24dp"
+        android:title="@string/create_shortcut" />
+
 </menu>

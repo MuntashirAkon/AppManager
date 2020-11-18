@@ -33,6 +33,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.ProgressIndicator;
 
@@ -41,6 +42,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -54,6 +56,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
@@ -260,10 +263,21 @@ public class ProfilesActivity extends BaseActivity {
                 popupMenu.setOnMenuItemClickListener(item -> {
                     int id = item.getItemId();
                     if (id == R.id.action_apply) {
-                        // TODO(18/11/20): Display state if it is set to off
-                        Intent intent = new Intent(activity, ProfileApplierService.class);
-                        intent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profName);
-                        ContextCompat.startForegroundService(activity, intent);
+                        final String[] statesL = new String[]{
+                                activity.getString(R.string.on),
+                                activity.getString(R.string.off)
+                        };
+                        @ProfileMetaManager.ProfileState final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
+                        new MaterialAlertDialogBuilder(activity)
+                                .setTitle(R.string.profile_state)
+                                .setSingleChoiceItems(statesL, -1, (dialog, which) -> {
+                                    Intent aIntent = new Intent(activity, ProfileApplierService.class);
+                                    aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profName);
+                                    aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, states.get(which));
+                                    ContextCompat.startForegroundService(activity, aIntent);
+                                    dialog.dismiss();
+                                })
+                                .show();
                     } else if (id == R.id.action_delete) {
                         ProfileMetaManager manager = new ProfileMetaManager(profName);
                         if (manager.deleteProfile()) {
@@ -294,6 +308,27 @@ public class ProfilesActivity extends BaseActivity {
                     } else if (id == R.id.action_export) {
                         activity.profileName = profName;
                         activity.exportProfile.launch(profName + ".am.json");
+                    } else if (id == R.id.action_shortcut) {
+                        final String[] shortcutTypesL = new String[]{
+                                activity.getString(R.string.simple),
+                                activity.getString(R.string.advanced)
+                        };
+                        final String[] shortcutTypes = new String[]{AppsProfileActivity.ST_SIMPLE, AppsProfileActivity.ST_ADVANCED};
+                        new MaterialAlertDialogBuilder(activity)
+                                .setTitle(R.string.profile_state)
+                                .setSingleChoiceItems(shortcutTypesL, -1, (dialog, which) -> {
+                                    Intent intent = new Intent(activity, AppsProfileActivity.class);
+                                    intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profName);
+                                    intent.putExtra(AppsProfileActivity.EXTRA_SHORTCUT_TYPE, shortcutTypes[which]);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    LauncherIconCreator.createLauncherIcon(activity, activity.getPackageName(),
+                                            profName + " - " + shortcutTypesL[which],
+                                            ContextCompat.getDrawable(activity, R.drawable.ic_launcher_foreground),
+                                            activity.getResources().getResourceName(R.drawable.ic_launcher_foreground), intent);
+                                    dialog.dismiss();
+                                })
+                                .show();
                     } else return false;
                     return true;
                 });

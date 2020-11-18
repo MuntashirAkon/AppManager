@@ -731,4 +731,6 @@
     <string name="input_permissions_description">Input permissions with spaces, e.g. (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) etc.</string>
     <string name="choose">Choose</string>
     <string name="enabled">Enabled</string>
+    <string name="simple">Simple</string>
+    <string name="advanced">Advanced</string>
 </resources>

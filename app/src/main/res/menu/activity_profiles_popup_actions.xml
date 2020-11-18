@@ -43,4 +43,9 @@
         android:icon="@drawable/ic_block_black_24dp"
         android:title="@string/pref_export" />
 
+    <item
+        android:id="@+id/action_shortcut"
+        android:icon="@drawable/ic_image_black_24dp"
+        android:title="@string/create_shortcut" />
+
 </menu>

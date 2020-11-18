@@ -28,6 +28,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.ProgressIndicator;
 
@@ -35,11 +36,13 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringDef;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -48,6 +51,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
@@ -57,6 +61,15 @@ public class AppsProfileActivity extends BaseActivity
     public static final String EXTRA_PROFILE_NAME = "prof";
     public static final String EXTRA_NEW_PROFILE_NAME = "new_prof";
     public static final String EXTRA_NEW_PROFILE = "new";
+    public static final String EXTRA_SHORTCUT_TYPE = "shortcut";
+
+    @StringDef({ST_NONE, ST_SIMPLE, ST_ADVANCED})
+    public @interface ShortcutType {
+    }
+
+    public static final String ST_NONE = "none";
+    public static final String ST_SIMPLE = "simple";
+    public static final String ST_ADVANCED = "advanced";
 
     private ViewPager viewPager;
     private BottomNavigationView bottomNavigationView;
@@ -78,6 +91,8 @@ public class AppsProfileActivity extends BaseActivity
             finish();
             return;
         }
+        @ShortcutType String shortcutType = getIntent().getStringExtra(EXTRA_SHORTCUT_TYPE);
+        if (shortcutType == null) shortcutType = ST_NONE;
         boolean newProfile = getIntent().getBooleanExtra(EXTRA_NEW_PROFILE, false);
         @Nullable String newProfileName;
         if (newProfile) {
@@ -87,6 +102,32 @@ public class AppsProfileActivity extends BaseActivity
         if (profileName == null && newProfileName == null) {
             finish();
             return;
+        }
+        switch (shortcutType) {
+            case ST_SIMPLE:
+                Intent intent = new Intent(this, ProfileApplierService.class);
+                intent.putExtra(EXTRA_PROFILE_NAME, profileName);
+                ContextCompat.startForegroundService(this, intent);
+                finish();
+                return;
+            case ST_ADVANCED:
+                final String[] statesL = new String[]{
+                        getString(R.string.on),
+                        getString(R.string.off)
+                };
+                @ProfileMetaManager.ProfileState final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string.profile_state)
+                        .setSingleChoiceItems(statesL, -1, (dialog, which) -> {
+                            Intent aIntent = new Intent(this, ProfileApplierService.class);
+                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profileName);
+                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, states.get(which));
+                            ContextCompat.startForegroundService(this, aIntent);
+                            dialog.dismiss();
+                        })
+                        .setOnDismissListener(dialog -> finish())
+                        .show();
+                return;
         }
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(newProfile ? newProfileName : profileName);
@@ -144,10 +185,22 @@ public class AppsProfileActivity extends BaseActivity
         if (id == android.R.id.home) {
             finish();
         } else if (id == R.id.action_apply) {
-            // TODO(18/11/20): Display state if it is set to off
-            Intent intent = new Intent(this, ProfileApplierService.class);
-            intent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, model.getProfileName());
-            ContextCompat.startForegroundService(this, intent);
+            final String[] statesL = new String[]{
+                    getString(R.string.on),
+                    getString(R.string.off)
+            };
+            @ProfileMetaManager.ProfileState final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.profile_state)
+                    .setSingleChoiceItems(statesL, -1, (dialog, which) -> {
+                        Intent aIntent = new Intent(this, ProfileApplierService.class);
+                        aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, model.getProfileName());
+                        aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, states.get(which));
+                        ContextCompat.startForegroundService(this, aIntent);
+                        dialog.dismiss();
+                    })
+                    .setOnDismissListener(dialog -> finish())
+                    .show();
         } else if (id == R.id.action_save) {
             new Thread(() -> {
                 try {
@@ -197,13 +250,36 @@ public class AppsProfileActivity extends BaseActivity
                         }
                     })
                     .show();
+        } else if (id == R.id.action_shortcut) {
+            final String[] shortcutTypesL = new String[]{
+                    getString(R.string.simple),
+                    getString(R.string.advanced)
+            };
+            final String[] shortcutTypes = new String[]{ST_SIMPLE, ST_ADVANCED};
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.profile_state)
+                    .setSingleChoiceItems(shortcutTypesL, -1, (dialog, which) -> {
+                        Intent intent = new Intent(this, AppsProfileActivity.class);
+                        intent.putExtra(EXTRA_PROFILE_NAME, model.getProfileName());
+                        intent.putExtra(EXTRA_SHORTCUT_TYPE, shortcutTypes[which]);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        LauncherIconCreator.createLauncherIcon(this, getPackageName(),
+                                model.getProfileName() + " - " + shortcutTypesL[which],
+                                ContextCompat.getDrawable(this, R.drawable.ic_launcher_foreground),
+                                getResources().getResourceName(R.drawable.ic_launcher_foreground), intent);
+                        dialog.dismiss();
+                    })
+                    .show();
         } else return super.onOptionsItemSelected(item);
         return true;
     }
 
     @Override
     protected void onDestroy() {
-        viewPager.removeOnPageChangeListener(this);
+        if (viewPager != null) {
+            viewPager.removeOnPageChangeListener(this);
+        }
         super.onDestroy();
     }
 

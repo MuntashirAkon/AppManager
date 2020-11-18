@@ -26,6 +26,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageItemInfo;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.graphics.Bitmap;
@@ -59,18 +60,45 @@ public class LauncherIconCreator {
      * Create launcher icon.
      *
      * @param context                  Activity context
-     * @param activityInfo             App package name
+     * @param packageItemInfo          App package name
      * @param activityName             Name/Label of the app
      * @param activityIcon             App icon
      * @param activityIconResourceName App icon resource name
      */
-    public static void createLauncherIcon(Context context, @NonNull ActivityInfo activityInfo,
+    public static void createLauncherIcon(Context context, @NonNull PackageItemInfo packageItemInfo,
                                           String activityName, Drawable activityIcon,
                                           @Nullable String activityIconResourceName) {
-        Intent activityIntent = getActivityIntent(activityInfo.packageName, activityInfo.name);
+        Intent activityIntent = getActivityIntent(packageItemInfo.packageName, packageItemInfo.name);
         if (activityIconResourceName != null) {
             final String pack = activityIconResourceName.substring(0, activityIconResourceName.indexOf(':'));
-            if (!pack.equals(activityInfo.packageName)) {  // Icon is not from the same package
+            if (!pack.equals(packageItemInfo.packageName)) {  // Icon is not from the same package
+                activityIconResourceName = null;
+            }
+        }
+        if (activityIconResourceName == null) Log.d("Launcher", "Empty resource");
+        if (Build.VERSION.SDK_INT >= 26) {
+            doCreateShortcut(context, activityName, activityIcon, activityIntent);
+        } else {
+            doCreateShortcut(context, activityName, activityIntent, activityIconResourceName);
+        }
+    }
+
+    /**
+     * Create launcher icon.
+     *
+     * @param context                  Activity context
+     * @param packageName              App package name
+     * @param activityName             Name/Label of the app
+     * @param activityIcon             App icon
+     * @param activityIconResourceName App icon resource name
+     */
+    public static void createLauncherIcon(Context context, @NonNull String packageName,
+                                          String activityName, Drawable activityIcon,
+                                          @Nullable String activityIconResourceName,
+                                          Intent activityIntent) {
+        if (activityIconResourceName != null) {
+            final String pack = activityIconResourceName.substring(0, activityIconResourceName.indexOf(':'));
+            if (!pack.equals(packageName)) {  // Icon is not from the same package
                 activityIconResourceName = null;
             }
         }
