@@ -45,7 +45,7 @@ public class ConfFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_view_tag, new ConfPreferences(activity)).commit();
+        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container_view_tag, new ConfPreferences()).commit();
     }
 
     @Override

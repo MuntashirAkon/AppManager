@@ -47,12 +47,7 @@ import io.github.muntashirakon.AppManager.utils.TextUtils;
 
 public class ConfPreferences extends PreferenceFragmentCompat {
     AppsProfileActivity activity;
-    private final ProfileViewModel model;
-
-    ConfPreferences(AppsProfileActivity activity) {
-        this.activity = activity;
-        this.model = this.activity.model;
-    }
+    private ProfileViewModel model;
 
     @ProfileMetaManager.ProfileState
     private final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
@@ -65,7 +60,8 @@ public class ConfPreferences extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_profile_config, rootKey);
         getPreferenceManager().setPreferenceDataStore(new ConfDataStore());
-
+        activity = (AppsProfileActivity) requireActivity();
+        model = this.activity.model;
         // Set state
         Preference statePref = Objects.requireNonNull(findPreference("state"));
         final String[] statesL = new String[]{
