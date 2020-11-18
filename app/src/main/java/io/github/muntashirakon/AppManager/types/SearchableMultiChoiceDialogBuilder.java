@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
@@ -40,6 +42,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.collection.ArraySet;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -187,7 +190,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         @NonNull
         private final ArrayList<Integer> filteredItems = new ArrayList<>();
         @NonNull
-        private final ArrayList<Integer> selectedItems = new ArrayList<>();
+        private final Set<Integer> selectedItems = new ArraySet<>();
 
         SearchableRecyclerViewAdapter(@NonNull List<CharSequence> itemNames, @NonNull List<T> items, @Nullable List<T> preSelectedItems) {
             this.itemNames = itemNames;
@@ -236,14 +239,15 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         @Override
         public void onBindViewHolder(@NonNull SearchableRecyclerViewAdapter.ViewHolder holder, int position) {
             Integer index = filteredItems.get(position);
-            boolean selected = selectedItems.contains(index);
+            final AtomicBoolean selected = new AtomicBoolean(selectedItems.contains(index));
             holder.item.setText(itemNames.get(index));
-            holder.item.setChecked(selected);
+            holder.item.setChecked(selected.get());
             holder.item.setOnClickListener(v -> {
-                if (selected) {
+                if (selected.get()) {
                     selectedItems.remove(index);
                 } else selectedItems.add(index);
-                holder.item.setChecked(!selected);
+                selected.set(!selected.get());
+                holder.item.setChecked(selected.get());
             });
         }
 
