@@ -61,6 +61,11 @@ public class ConfPreferences extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.preferences_profile_config, rootKey);
         getPreferenceManager().setPreferenceDataStore(new ConfDataStore());
         activity = (AppsProfileActivity) requireActivity();
+        if (activity.model == null) {
+            // ViewModel should never be null.
+            // If it's null, it means that we're on the wrong Fragment
+            return;
+        }
         model = this.activity.model;
         // Set state
         Preference statePref = Objects.requireNonNull(findPreference("state"));
