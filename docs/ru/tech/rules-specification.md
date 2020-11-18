@@ -49,5 +49,5 @@ sidebarDepth: 2
 Экспортированные правила имеют формат, отличный от внутреннего, и не должны копироваться непосредственно в папку **conf**.
 :::
 
-[mode_constants]: ./AppOps.md#mode-constants
+[mode_constants]: ./AppOps.md#константы-mode
 [gcb]: ../guide/settings-page.md#гnобаnьная-бnокировка-компонентов

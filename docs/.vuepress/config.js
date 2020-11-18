@@ -154,6 +154,7 @@ module.exports = {
             collapsable: false,
             children: [
               '/ru/faq/app-components',
+              '/ru/faq/adb',
               '/ru/faq/misc',
             ]
           },
