@@ -41,7 +41,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.collection.ArraySet;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -52,19 +51,15 @@ import io.github.muntashirakon.AppManager.utils.LangUtils;
 public class SearchableMultiChoiceDialogBuilder<T> {
     @NonNull
     private final FragmentActivity activity;
-    @NonNull
-    private final List<T> items;
-    @NonNull
-    private final List<CharSequence> itemNames;
     @Nullable
     private List<T> selectedItems;
     @NonNull
     private final MaterialAlertDialogBuilder builder;
     @NonNull
     private final RecyclerView recyclerView;
-    private final LinearLayoutCompat searchBar;
+    private final View searchBar;
 
-    SearchableRecyclerViewAdapter adapter;
+    private SearchableRecyclerViewAdapter adapter;
 
     public interface OnClickListener<T> {
         void onClick(DialogInterface dialog, int which, @NonNull ArrayList<T> selectedItems);
@@ -81,8 +76,6 @@ public class SearchableMultiChoiceDialogBuilder<T> {
     @SuppressLint("InflateParams")
     public SearchableMultiChoiceDialogBuilder(@NonNull FragmentActivity activity, @NonNull List<T> items, @NonNull List<CharSequence> itemNames) {
         this.activity = activity;
-        this.items = items;
-        this.itemNames = itemNames;
         View view = activity.getLayoutInflater().inflate(R.layout.dialog_searchable_multi_choice, null);
         recyclerView = view.findViewById(android.R.id.list);
         recyclerView.setHasFixedSize(true);
@@ -104,8 +97,12 @@ public class SearchableMultiChoiceDialogBuilder<T> {
             }
         });
         // Don't display search bar if items are less than 6
-        if (this.items.size() < 6) searchBar.setVisibility(View.GONE);
+        if (items.size() < 6) searchBar.setVisibility(View.GONE);
         builder = new MaterialAlertDialogBuilder(activity).setView(view);
+        new Thread(() -> {
+            adapter = new SearchableRecyclerViewAdapter(itemNames, items, selectedItems);
+            activity.runOnUiThread(() -> recyclerView.setAdapter(adapter));
+        }).start();
     }
 
     public SearchableMultiChoiceDialogBuilder<T> setSelections(@Nullable List<T> selectedItems) {
@@ -171,8 +168,6 @@ public class SearchableMultiChoiceDialogBuilder<T> {
     }
 
     public AlertDialog create() {
-        adapter = new SearchableRecyclerViewAdapter(itemNames, items, selectedItems);
-        recyclerView.setAdapter(adapter);
         return builder.create();
     }
 
@@ -230,10 +225,10 @@ public class SearchableMultiChoiceDialogBuilder<T> {
 
         @NonNull
         @Override
-        public SearchableRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             @SuppressLint("PrivateResource")
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mtrl_alert_select_dialog_multichoice, parent, false);
-            return new SearchableRecyclerViewAdapter.ViewHolder(view);
+            return new ViewHolder(view);
         }
 
         @Override
@@ -264,7 +259,5 @@ public class SearchableMultiChoiceDialogBuilder<T> {
                 item = itemView.findViewById(android.R.id.text1);
             }
         }
-
-
     }
 }
