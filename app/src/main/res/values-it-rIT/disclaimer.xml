@@ -5,4 +5,11 @@
     <string name="disclaimer_agree_forever">Non mostrare più</string>
     <string name="disclaimer_agree">Accetto</string>
     <string name="disclaimer_exit">Esci</string>
+    <string name="disclaimer_body">App Manager offre funzioni di root che potrebbero danneggiare il dispositivo se utilizzato in modo non corretto. App Manager non è responsabile per eventuali danni causati dall\'utilizzo di questa applicazione. Se non si è pienamente consapevoli di come funziona il root, allora si dovrebbe evitare di utilizzare le opzioni di root fino a quando non si è pienamente informati dei possibili rischi.
+\n
+\nQualsiasi link che fornisco ad altre applicazioni e siti web è a beneficio degli utenti. Non sono responsabile dei contenuti che potreste trovare andando su link esterni.
+\n
+\nUtilizzando App Manager, l\'utente si assume la piena responsabilità del proprio utilizzo e accetta che non sarà preso in considerazione alcun reclamo per un danneggiamento del dispositivo a causa di un uso improprio del programma.
+\n
+\nUtilizzando questa applicazione, l\'utente si assume ogni responsabilità per il suo utilizzo e accetta che io non sono responsabile per qualsiasi azione da parte sua che abbia un effetto negativo sul suo dispositivo.</string>
 </resources>
