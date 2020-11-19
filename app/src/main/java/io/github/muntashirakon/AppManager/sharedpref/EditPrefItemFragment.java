@@ -25,6 +25,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -38,7 +39,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
@@ -111,7 +111,7 @@ public class EditPrefItemFragment extends DialogFragment {
         };
     }
 
-    private final LinearLayoutCompat[] mLayoutTypes = new LinearLayoutCompat[5];
+    private final ViewGroup[] mLayoutTypes = new ViewGroup[5];
     private final TextView[] mValues = new TextView[5];
     private @Type int currentType;
     @NonNull
@@ -133,7 +133,7 @@ public class EditPrefItemFragment extends DialogFragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                for (LinearLayoutCompat layout: mLayoutTypes) layout.setVisibility(View.GONE);
+                for (ViewGroup layout: mLayoutTypes) layout.setVisibility(View.GONE);
                 mLayoutTypes[position].setVisibility(View.VISIBLE);
                 currentType = position;
             }
