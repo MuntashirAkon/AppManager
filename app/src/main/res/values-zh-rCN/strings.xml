@@ -643,4 +643,24 @@
     <string name="failed_to_duplicate_profile">无法复制配置文件</string>
     <string name="keyboard_no_keys">无按键</string>
     <string name="send_selected">发送选中的应用</string>
+    <string name="enabled">已启用</string>
+    <string name="choose">选择</string>
+    <string name="input_permissions_description">带空格的输入权限，例如 (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION)等。</string>
+    <string name="input_permissions">输入权限</string>
+    <string name="options">选项</string>
+    <string name="off">关闭</string>
+    <string name="on">开启</string>
+    <string name="profile_state_msg">自定义该配置文件的开启/关闭状态</string>
+    <string name="profile_backup_apk_msg">若启用选项，apk 文件将被备份</string>
+    <string name="profile_block_trackers_msg">若启用选项，将从应用程序中屏蔽跟踪器</string>
+    <string name="profile_clear_data_msg">若启用选项，将从应用程序中清除数据</string>
+    <string name="profile_clear_cache_msg">若启用选项，将从应用程序中清除缓存</string>
+    <string name="profile_force_stop_msg">若启用该选项，应用程序将被强行停止</string>
+    <string name="profile_disable_msg">若启用选项，则将基于状态值禁用/启用应用程序</string>
+    <string name="allow_routine_ops_msg">允许在例行操作中使用该配置文件</string>
+    <string name="profile_state">配置文件状态</string>
+    <string name="allow_routine_ops">允许例行操作</string>
+    <string name="current_mode">当前模式：%s</string>
+    <string name="adb_over_tcp">ADB over TCP</string>
+    <string name="pref_mode_of_operations">操作模式</string>
 </resources>
