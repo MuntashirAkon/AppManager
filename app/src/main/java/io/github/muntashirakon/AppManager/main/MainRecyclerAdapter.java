@@ -152,6 +152,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 else {
                     Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
                     appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, item.packageName);
+                    if (item.userHandles.length > 0) {
+                        appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, item.userHandles[0]);
+                    }
                     mActivity.startActivity(appDetailsIntent);
                 }
             } else toggleSelection(item, position);

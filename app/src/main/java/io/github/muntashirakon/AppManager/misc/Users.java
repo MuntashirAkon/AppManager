@@ -25,6 +25,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -52,6 +53,7 @@ public final class Users {
         PER_USER_RANGE = perUserRange;
     }
 
+    @WorkerThread
     @Nullable
     public static List<UserInfo> getUsers() {
         if (userInfoList == null) {
@@ -64,6 +66,7 @@ public final class Users {
         return userInfoList;
     }
 
+    @WorkerThread
     @NonNull
     public static int[] getUsersHandles() {
         getUsers();

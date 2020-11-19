@@ -58,6 +58,10 @@ public class ApiSupporter {
     }
 
     public List<PackageInfo> getInstalledPackages(int flags, int userHandle) throws Exception {
+        if (this.userHandle == userHandle) {
+            // Get using PackageManager if the handler are the same
+            return localServer.getContext().getPackageManager().getInstalledPackages(flags);
+        }
         SystemServiceCaller caller = new SystemServiceCaller("package",
                 "getInstalledPackages", new Class[]{int.class, int.class}, new Object[]{flags, userHandle});
         CallerResult callerResult = localServer.exec(caller);

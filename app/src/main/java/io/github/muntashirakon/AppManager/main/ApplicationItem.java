@@ -26,6 +26,7 @@ import java.util.Objects;
 
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.utils.EmptyArray;
 
 /**
  * Stores an application info
@@ -112,6 +113,8 @@ public class ApplicationItem extends PackageItemInfo {
      * Whether the item is selected
      */
     public boolean isSelected = false;
+
+    public int[] userHandles = EmptyArray.INT;
 
     public ApplicationItem() {
         super();

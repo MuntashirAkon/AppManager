@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.details;
 
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.UserInfo;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import android.widget.Toast;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,10 +48,13 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class AppDetailsActivity extends BaseActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
+    public static final String EXTRA_USER_HANDLE = "user";
 
     public AppDetailsViewModel model;
     public SearchView searchView;
@@ -67,9 +72,11 @@ public class AppDetailsActivity extends BaseActivity {
         // Get model
         Intent intent = getIntent();
         // Check for package name
-        final String packageName = intent.getStringExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME);
+        final String packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
         final Uri apkUri = intent.getData();
         final String apkType = intent.getType();
+        final int userHandle = intent.getIntExtra(EXTRA_USER_HANDLE, Users.getCurrentUserHandle());
+        model.setUserHandle(userHandle);
         // Initialize tabs
         mTabTitleIds = getResources().obtainTypedArray(R.array.TAB_TITLES);
         fragments = new Fragment[mTabTitleIds.length()];
@@ -127,10 +134,23 @@ public class AppDetailsActivity extends BaseActivity {
                 return;
             }
             ApplicationInfo applicationInfo = model.getPackageInfo().applicationInfo;
+            final List<UserInfo> userInfoList;
+            if (!model.getIsExternalApk() && AppPref.isRootOrAdbEnabled()) {
+                userInfoList = Users.getUsers();
+            } else userInfoList = null;
             runOnUiThread(() -> {
                 progressDialog.dismiss();
-                // Set title
+                // Set title as the package label
                 setTitle(applicationInfo.loadLabel(getPackageManager()));
+                // Set subtitle as the user name if more than one user exists
+                if (userInfoList != null && userInfoList.size() > 1) {
+                    for (UserInfo userInfo : userInfoList) {
+                        if (userInfo.id == userHandle) {
+                            getSupportActionBar().setSubtitle(getString(R.string.user_profile_with_id, userInfo.name, userInfo.id));
+                            break;
+                        }
+                    }
+                }
                 // Check for the existence of package
                 viewPager.setAdapter(new AppDetailsFragmentPagerAdapter(fragmentManager));
                 model.getIsPackageExistLiveData().observe(this, isPackageExist -> {

@@ -53,7 +53,10 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -196,32 +199,51 @@ public class MainViewModel extends AndroidViewModel {
                 applicationItems.clear();
                 backupApplications = BackupUtils.getBackupApplications();
                 Log.d("backupApplications", backupApplications.toString());
-                @SuppressLint("WrongConstant")
-                List<PackageInfo> packageInfoList = mPackageManager.getInstalledPackages(flagSigningInfo | PackageManager.GET_ACTIVITIES | flagDisabledComponents);
-                ApplicationInfo applicationInfo;
-                for (PackageInfo packageInfo : packageInfoList) {
-                    applicationInfo = packageInfo.applicationInfo;
-                    ApplicationItem item = new ApplicationItem(applicationInfo);
-                    if (backupApplications.contains(applicationInfo.packageName)) {
-                        item.metadata = BackupUtils.getBackupInfo(applicationInfo.packageName);
-                        backupApplications.remove(applicationInfo.packageName);
+                int[] userHandles = Users.getUsersHandles();
+                for (int userHandle : userHandles) {
+                    @SuppressLint("WrongConstant")
+                    List<PackageInfo> packageInfoList;
+                    try {
+                        packageInfoList = ApiSupporter.getInstance(LocalServer.getInstance()).getInstalledPackages(flagSigningInfo | PackageManager.GET_ACTIVITIES | flagDisabledComponents, userHandle);
+                    } catch (Exception e) {
+                        Log.e("MVM", "Could not retrieve package info list for user " + userHandle);
+                        e.printStackTrace();
+                        continue;
                     }
-                    item.flags = applicationInfo.flags;
-                    item.uid = applicationInfo.uid;
-                    item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-                    item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
-                    item.isDisabled = !applicationInfo.enabled;
-                    item.label = applicationInfo.loadLabel(mPackageManager).toString();
-                    item.sdk = applicationInfo.targetSdkVersion;
-                    item.versionName = packageInfo.versionName;
-                    item.versionCode = PackageUtils.getVersionCode(packageInfo);
-                    item.sharedUserId = packageInfo.sharedUserId;
-                    item.sha = Utils.getIssuerAndAlg(packageInfo);
-                    item.firstInstallTime = packageInfo.firstInstallTime;
-                    item.lastUpdateTime = packageInfo.lastUpdateTime;
-                    item.hasActivities = packageInfo.activities != null;
-                    item.blockedCount = 0;
-                    applicationItems.add(item);
+                    ApplicationInfo applicationInfo;
+
+                    for (PackageInfo packageInfo : packageInfoList) {
+                        applicationInfo = packageInfo.applicationInfo;
+                        ApplicationItem item = new ApplicationItem(applicationInfo);
+                        int i;
+                        if ((i = applicationItems.indexOf(item)) != -1) {
+                            // Add user handle and continue
+                            ApplicationItem oldItem = applicationItems.get(i);
+                            oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, userHandle);
+                            continue;
+                        }
+                        if (backupApplications.contains(applicationInfo.packageName)) {
+                            item.metadata = BackupUtils.getBackupInfo(applicationInfo.packageName);
+                            backupApplications.remove(applicationInfo.packageName);
+                        }
+                        item.flags = applicationInfo.flags;
+                        item.uid = applicationInfo.uid;
+                        item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+                        item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
+                        item.isDisabled = !applicationInfo.enabled;
+                        item.label = applicationInfo.loadLabel(mPackageManager).toString();
+                        item.sdk = applicationInfo.targetSdkVersion;
+                        item.versionName = packageInfo.versionName;
+                        item.versionCode = PackageUtils.getVersionCode(packageInfo);
+                        item.sharedUserId = packageInfo.sharedUserId;
+                        item.sha = Utils.getIssuerAndAlg(packageInfo);
+                        item.firstInstallTime = packageInfo.firstInstallTime;
+                        item.lastUpdateTime = packageInfo.lastUpdateTime;
+                        item.hasActivities = packageInfo.activities != null;
+                        item.blockedCount = 0;
+                        item.userHandles = ArrayUtils.appendInt(item.userHandles, userHandle);
+                        applicationItems.add(item);
+                    }
                 }
                 // Add rest of the backup items, i.e., items that aren't installed
                 for (String packageName : backupApplications) {
@@ -469,37 +491,47 @@ public class MainViewModel extends AndroidViewModel {
 
     @Nullable
     private ApplicationItem getNewApplicationItem(String packageName) {
-        try {
-            @SuppressLint("WrongConstant")
-            PackageInfo packageInfo = mPackageManager.getPackageInfo(packageName,
-                    PackageManager.GET_META_DATA | flagSigningInfo |
-                            PackageManager.GET_ACTIVITIES | flagDisabledComponents);
-            ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-            ApplicationItem item = new ApplicationItem(applicationInfo);
-            item.versionName = packageInfo.versionName;
-            item.versionCode = PackageUtils.getVersionCode(packageInfo);
-            item.metadata = BackupUtils.getBackupInfo(packageName);
-            item.flags = applicationInfo.flags;
-            item.uid = applicationInfo.uid;
-            item.sharedUserId = packageInfo.sharedUserId;
-            item.label = applicationInfo.loadLabel(mPackageManager).toString();
-            item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-            item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
-            item.isDisabled = !applicationInfo.enabled;
-            item.hasActivities = packageInfo.activities != null;
-            item.firstInstallTime = packageInfo.firstInstallTime;
-            item.lastUpdateTime = packageInfo.lastUpdateTime;
-            item.sha = Utils.getIssuerAndAlg(packageInfo);
-            item.sdk = applicationInfo.targetSdkVersion;
-            if (mSortBy == MainActivity.SORT_BY_BLOCKED_COMPONENTS && AppPref.isRootEnabled()) {
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, Users.getCurrentUserHandle(), true)) {
-                    item.blockedCount = cb.componentCount();
+        int[] userHandles = Users.getUsersHandles();
+        ApplicationItem oldItem = null;
+        for (int userHandle : userHandles) {
+            try {
+                @SuppressLint("WrongConstant")
+                PackageInfo packageInfo = ApiSupporter.getInstance(LocalServer.getInstance())
+                        .getPackageInfo(packageName, PackageManager.GET_META_DATA
+                                | flagSigningInfo | PackageManager.GET_ACTIVITIES
+                                | flagDisabledComponents, userHandle);
+                ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+                ApplicationItem item = new ApplicationItem(applicationInfo);
+                if (item.equals(oldItem)) {
+                    oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, userHandle);
+                    continue;
                 }
+                item.versionName = packageInfo.versionName;
+                item.versionCode = PackageUtils.getVersionCode(packageInfo);
+                item.metadata = BackupUtils.getBackupInfo(packageName);
+                item.flags = applicationInfo.flags;
+                item.uid = applicationInfo.uid;
+                item.sharedUserId = packageInfo.sharedUserId;
+                item.label = applicationInfo.loadLabel(mPackageManager).toString();
+                item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+                item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
+                item.isDisabled = !applicationInfo.enabled;
+                item.hasActivities = packageInfo.activities != null;
+                item.firstInstallTime = packageInfo.firstInstallTime;
+                item.lastUpdateTime = packageInfo.lastUpdateTime;
+                item.sha = Utils.getIssuerAndAlg(packageInfo);
+                item.sdk = applicationInfo.targetSdkVersion;
+                item.userHandles = ArrayUtils.appendInt(item.userHandles, userHandle);
+                if (mSortBy == MainActivity.SORT_BY_BLOCKED_COMPONENTS && AppPref.isRootEnabled()) {
+                    try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, Users.getCurrentUserHandle(), true)) {
+                        item.blockedCount = cb.componentCount();
+                    }
+                }
+                oldItem = item;
+            } catch (Exception ignore) {
             }
-            return item;
-        } catch (PackageManager.NameNotFoundException ignored) {
         }
-        return null;
+        return oldItem;
     }
 
     @GuardedBy("applicationItems")

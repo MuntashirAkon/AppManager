@@ -8,7 +8,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.ClassCaller;
 import io.github.muntashirakon.AppManager.server.common.OpEntry;
@@ -19,7 +18,6 @@ import io.github.muntashirakon.AppManager.servermanager.remote.AppOpsHandler;
 
 public class AppOpsManager {
     private final LocalServer localServer;
-    private final int userHandle;
     private final String packageName;
 
     @SuppressLint("StaticFieldLeak")
@@ -34,11 +32,10 @@ public class AppOpsManager {
 
     public AppOpsManager(@NonNull LocalServer localServer) {
         this.localServer = localServer;
-        userHandle = Users.getCurrentUserHandle();
         packageName = BuildConfig.APPLICATION_ID;
     }
 
-    public OpsResult getOpsForPackage(int uid, String packageName, int[] ops) throws Exception {
+    public OpsResult getOpsForPackage(int uid, String packageName, int[] ops, int userHandle) throws Exception {
         OpsCommands.Builder builder = new OpsCommands.Builder();
         builder.setAction(OpsCommands.ACTION_GET);
         builder.setPackageName(packageName);
@@ -57,7 +54,7 @@ public class AppOpsManager {
         return replyBundle.getParcelable("return");
     }
 
-    public OpsResult getPackagesForOps(int[] ops, boolean reqNet) throws Exception {
+    public OpsResult getPackagesForOps(int[] ops, boolean reqNet, int userHandle) throws Exception {
         OpsCommands.Builder builder = new OpsCommands.Builder();
         builder.setAction(OpsCommands.ACTION_GET_FOR_OPS);
         builder.setOps(ops);
@@ -66,7 +63,7 @@ public class AppOpsManager {
         return wrapOps(builder);
     }
 
-    public OpsResult setOpsMode(String packageName, int op, int mode) throws Exception {
+    public OpsResult setOpsMode(String packageName, int op, int mode, int userHandle) throws Exception {
         OpsCommands.Builder builder = new OpsCommands.Builder();
         builder.setAction(OpsCommands.ACTION_SET);
         builder.setPackageName(packageName);
@@ -76,7 +73,7 @@ public class AppOpsManager {
         return wrapOps(builder);
     }
 
-    public OpsResult resetAllModes(String packageName) throws Exception {
+    public OpsResult resetAllModes(String packageName, int userHandle) throws Exception {
         OpsCommands.Builder builder = new OpsCommands.Builder();
         builder.setAction(OpsCommands.ACTION_RESET);
         builder.setPackageName(packageName);
@@ -84,7 +81,7 @@ public class AppOpsManager {
         return wrapOps(builder);
     }
 
-    public OpsResult checkOperation(int op, String packageName) throws Exception {
+    public OpsResult checkOperation(int op, String packageName, int userHandle) throws Exception {
         OpsCommands.Builder builder = new OpsCommands.Builder();
         builder.setAction(OpsCommands.ACTION_CHECK);
         builder.setPackageName(packageName);
@@ -93,8 +90,8 @@ public class AppOpsManager {
         return wrapOps(builder);
     }
 
-    public OpsResult disableAllPermission(final String packageName) throws Exception {
-        OpsResult opsForPackage = getOpsForPackage(-1, packageName, null);
+    public OpsResult disableAllPermission(final String packageName, int userHandle) throws Exception {
+        OpsResult opsForPackage = getOpsForPackage(-1, packageName, null, userHandle);
         if (opsForPackage != null) {
             if (opsForPackage.getException() == null) {
                 List<PackageOps> list = opsForPackage.getList();
@@ -104,7 +101,7 @@ public class AppOpsManager {
                         if (ops != null) {
                             for (OpEntry op : ops) {
                                 if (op.getMode() != android.app.AppOpsManager.MODE_IGNORED) {
-                                    setOpsMode(packageName, op.getOp(), android.app.AppOpsManager.MODE_IGNORED);
+                                    setOpsMode(packageName, op.getOp(), android.app.AppOpsManager.MODE_IGNORED, userHandle);
                                 }
                             }
                         }

@@ -22,8 +22,8 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.server.common.PackageOps;
 
 interface IAppOpsService {
-    int checkOperation(int op, int uid, String packageName) throws Exception;
-    List<PackageOps> getOpsForPackage(int uid, String packageName, int[] ops) throws Exception;
-    void setMode(int op, int uid, String packageName, int mode) throws Exception;
-    void resetAllModes(int reqUserId, String reqPackageName) throws Exception;
+    int checkOperation(int op, int uid, String packageName, int userHandle) throws Exception;
+    List<PackageOps> getOpsForPackage(int uid, String packageName, int[] ops, int userHandle) throws Exception;
+    void setMode(int op, int uid, String packageName, int mode, int userHandle) throws Exception;
+    void resetAllModes(int reqUserId, String reqPackageName, int userHandle) throws Exception;
 }

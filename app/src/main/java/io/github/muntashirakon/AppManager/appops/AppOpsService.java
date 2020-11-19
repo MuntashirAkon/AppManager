@@ -68,14 +68,15 @@ class AppOpsService implements IAppOpsService {
      * @param op One of the OP_*
      * @param uid User ID for the package(s)
      * @param packageName Name of the package
+     * @param userHandle User handle
      * @return One of the MODE_*
      * @throws Exception Exception is thrown if neither uid nor package name is supplied or it is
      * an invalid operation name or mode name or there's an error parsing the output
      */
     @Override
-    public int checkOperation(int op, int uid, String packageName)
+    public int checkOperation(int op, int uid, String packageName, int userHandle)
             throws Exception {
-        OpsResult opsResult = appOpsManager.checkOperation(op, packageName);
+        OpsResult opsResult = appOpsManager.checkOperation(op, packageName, userHandle);
         if (opsResult == null) throw new Exception("OpsResult is null");
         if (opsResult.getException() != null) throw new Exception(opsResult.getException());
         return opsResult.getMode();
@@ -100,10 +101,10 @@ class AppOpsService implements IAppOpsService {
     }
 
     @Override
-    public List<PackageOps> getOpsForPackage(int uid, String packageName, int[] ops)
+    public List<PackageOps> getOpsForPackage(int uid, String packageName, int[] ops, int userHandle)
             throws Exception {
         List<PackageOps> packageOpsList = new ArrayList<>();
-        OpsResult opsResult = appOpsManager.getOpsForPackage(uid, packageName, ops);
+        OpsResult opsResult = appOpsManager.getOpsForPackage(uid, packageName, ops, userHandle);
         if (opsResult != null) {
             if (opsResult.getException() == null) {
                 packageOpsList = opsResult.getList();
@@ -155,8 +156,8 @@ class AppOpsService implements IAppOpsService {
     }
 
     @Override
-    public void setMode(int op, int uid, String packageName, int mode) throws Exception {
-        OpsResult opsResult = appOpsManager.setOpsMode(packageName, op, mode);
+    public void setMode(int op, int uid, String packageName, int mode, int userHandle) throws Exception {
+        OpsResult opsResult = appOpsManager.setOpsMode(packageName, op, mode, userHandle);
         if (opsResult.getException() != null) throw new Exception(opsResult.getException());
     }
 
@@ -172,8 +173,8 @@ class AppOpsService implements IAppOpsService {
     }
 
     @Override
-    public void resetAllModes(int reqUserId, @NonNull String reqPackageName) throws Exception {
-        appOpsManager.resetAllModes(reqPackageName);
+    public void resetAllModes(int reqUserId, @NonNull String reqPackageName, int userHandle) throws Exception {
+        appOpsManager.resetAllModes(reqPackageName, userHandle);
 //        if (reqUserId < 0)
 //            runCommand(String.format("appops reset %s", reqPackageName));
 //        else

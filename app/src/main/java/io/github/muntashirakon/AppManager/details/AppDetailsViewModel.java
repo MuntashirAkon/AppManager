@@ -67,6 +67,8 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.server.common.OpEntry;
 import io.github.muntashirakon.AppManager.server.common.PackageOps;
+import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -85,6 +87,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private String apkPath;
     private ApkFile apkFile;
     private int apkFileKey;
+    private int userHandle;
 
     @AppDetailsFragment.SortOrder
     private int sortOrderComponents = (int) AppPref.get(AppPref.PrefKey.PREF_COMPONENTS_SORT_ORDER_INT);
@@ -143,6 +146,14 @@ public class AppDetailsViewModel extends AndroidViewModel {
         apkFile = ApkFile.getInstance(apkFileKey);
     }
 
+    public void setUserHandle(int userHandle) {
+        this.userHandle = userHandle;
+    }
+
+    public int getUserHandle() {
+        return userHandle;
+    }
+
     @WorkerThread
     @GuardedBy("blockerLocker")
     public void setPackageName(String packageName) {
@@ -159,7 +170,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     blocker.setReadOnly();
                     blocker.close();
                 }
-                blocker = ComponentsBlocker.getInstance(packageName, Users.getCurrentUserHandle());
+                blocker = ComponentsBlocker.getInstance(packageName, userHandle);
                 waitForBlocker = false;
                 blockerLocker.notifyAll();
             }
@@ -345,7 +356,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (mAppOpsService == null) mAppOpsService = new AppOpsService();
         try {
             // Set mode
-            mAppOpsService.setMode(op, -1, packageName, mode);
+            mAppOpsService.setMode(op, -1, packageName, mode, userHandle);
             new Thread(() -> {
                 synchronized (blockerLocker) {
                     waitForBlockerOrExit();
@@ -369,7 +380,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (isExternalApk) return false;
         if (mAppOpsService != null) {
             try {
-                mAppOpsService.resetAllModes(-1, packageName);
+                mAppOpsService.resetAllModes(-1, packageName, userHandle);
                 new Thread(this::loadAppOps).start();
                 // Save values to the blocking rules
                 new Thread(() -> {
@@ -413,7 +424,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     if (basePermissionType == PermissionInfo.PROTECTION_DANGEROUS) {
                         // Set mode
                         try {
-                            mAppOpsService.setMode(opEntry.getOp(), -1, packageName, AppOpsManager.MODE_IGNORED);
+                            mAppOpsService.setMode(opEntry.getOp(), -1, packageName, AppOpsManager.MODE_IGNORED, userHandle);
                             opItems.add(opEntry.getOp());
                             appDetailsItem.vanillaItem = new OpEntry(opEntry.getOp(),
                                     AppOpsManager.MODE_IGNORED, opEntry.getTime(),
@@ -616,12 +627,14 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 packageInfo.applicationInfo.publicSourceDir = apkPath;
                 setPackageName(packageInfo.packageName);
             } else {
-                // TODO(14/9/20): Load PackageInfo using ApiSupporter
-                packageInfo = mPackageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
-                        | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                        | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
-                        | flagDisabledComponents | flagSigningInfo | PackageManager.GET_CONFIGURATIONS
-                        | PackageManager.GET_SHARED_LIBRARY_FILES);
+                packageInfo = ApiSupporter.getInstance(LocalServer.getInstance())
+                        .getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
+                                | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
+                                | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES
+                                | PackageManager.GET_URI_PERMISSION_PATTERNS
+                                | flagDisabledComponents | flagSigningInfo
+                                | PackageManager.GET_CONFIGURATIONS
+                                | PackageManager.GET_SHARED_LIBRARY_FILES, userHandle);
             }
             isPackageExistLiveData.postValue(isPackageExist = true);
         } catch (PackageManager.NameNotFoundException e) {
@@ -855,7 +868,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (!isExternalApk && AppPref.isRootOrAdbEnabled()) {
             if (mAppOpsService == null) mAppOpsService = new AppOpsService();
             try {
-                List<PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(-1, packageName, null);
+                List<PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(-1, packageName, null, userHandle);
                 List<OpEntry> opEntries = new ArrayList<>();
                 if (packageOpsList.size() == 1)
                     opEntries.addAll(packageOpsList.get(0).getOps());

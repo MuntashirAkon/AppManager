@@ -151,7 +151,7 @@ public final class RunnerUtils {
     }
 
     @NonNull
-    public static Runner.Result clearPackageCache(String packageName) {
+    public static Runner.Result clearPackageCache(String packageName) {  // TODO: Add user handle
         try {
             ApplicationInfo applicationInfo = AppManager.getContext().getPackageManager().getApplicationInfo(packageName, 0);
             StringBuilder command = new StringBuilder(CMD_CLEAR_CACHE_PREFIX);
