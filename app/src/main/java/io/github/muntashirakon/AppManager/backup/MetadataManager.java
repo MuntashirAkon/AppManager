@@ -250,7 +250,7 @@ public final class MetadataManager {
                 metadata.isSplitApk = splitCount > 0;
                 metadata.splitConfigs = new String[splitCount];
                 for (int i = 0; i < splitCount; ++i) {
-                    metadata.splitConfigs[i] = apkEntries.get(i+1).name;
+                    metadata.splitConfigs[i] = apkEntries.get(i+1).getFileName();
                 }
             }
         } catch (ApkFile.ApkFileException e) {

@@ -684,7 +684,7 @@ public final class ApkFile implements AutoCloseable {
         public String getFileName() {
             if (cachedFile != null && cachedFile.exists()) return cachedFile.getName();
             if (zipEntry != null) return IOUtils.getFileNameFromZipEntry(zipEntry);
-            if (source != null && source.exists()) return name;
+            if (source != null && source.exists()) return source.getName();
             else throw new RuntimeException("Neither zipEntry nor source is defined.");
         }
 
