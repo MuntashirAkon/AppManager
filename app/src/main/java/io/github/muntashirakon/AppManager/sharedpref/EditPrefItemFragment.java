@@ -28,13 +28,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -154,7 +154,7 @@ public class EditPrefItemFragment extends DialogFragment {
         mValues[TYPE_LONG] = view.findViewById(R.id.input_long);
         mValues[TYPE_STRING] = view.findViewById(R.id.input_string);
         // Key name
-        EditText editKeyName = view.findViewById(R.id.key_name);
+        TextInputEditText editKeyName = view.findViewById(R.id.key_name);
         if (prefItem != null) {
             String keyName = prefItem.keyName;
             Object keyValue = prefItem.keyValue;
@@ -164,7 +164,7 @@ public class EditPrefItemFragment extends DialogFragment {
             if (keyValue instanceof Boolean) {
                 currentType = TYPE_BOOLEAN;
                 mLayoutTypes[TYPE_BOOLEAN].setVisibility(View.VISIBLE);
-                ((Switch) mValues[TYPE_BOOLEAN]).setChecked((Boolean) keyValue);
+                ((SwitchMaterial) mValues[TYPE_BOOLEAN]).setChecked((Boolean) keyValue);
                 spinner.setSelection(TYPE_BOOLEAN);
             } else if (keyValue instanceof Float) {
                 currentType = TYPE_FLOAT;
@@ -206,7 +206,7 @@ public class EditPrefItemFragment extends DialogFragment {
                     try {
                         switch (currentType) {
                             case TYPE_BOOLEAN:
-                                newPrefItem.keyValue = ((Switch) mValues[currentType]).isChecked();
+                                newPrefItem.keyValue = ((SwitchMaterial) mValues[currentType]).isChecked();
                                 break;
                             case TYPE_FLOAT:
                                 newPrefItem.keyValue = Float.valueOf(mValues[currentType].getText().toString());
