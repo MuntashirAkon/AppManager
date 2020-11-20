@@ -701,4 +701,7 @@
     <string name="current_mode">Aktueller Modus: %s</string>
     <string name="adb_over_tcp">ADB über TCP</string>
     <string name="pref_mode_of_operations">Arbeitsweise</string>
+    <string name="user_profile_with_id">Profil: %1$s (%2$d)</string>
+    <string name="advanced">Erweitert</string>
+    <string name="simple">Einfach</string>
 </resources>
