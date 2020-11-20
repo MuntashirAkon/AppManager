@@ -50,7 +50,7 @@
     <string name="third_party">Сторонні бібліотеки та іконки</string>
     <string name="credits">Автори</string>
     <string name="toggle_default_app_ops">Перемкнути дозволи за замовчуванням</string>
-    <string name="pref_remove_all_rules_msg">Всі налаштовані заблоковані компоненти будуть включені, для app ops буде встановлено значення за замовчуванням і дозволи будуть надані</string>
+    <string name="pref_remove_all_rules_msg">Дозволи надано, керування дозволами (app ops) та компоненти повернуться до значень за замовчуванням.</string>
     <plurals name="alert_failed_to_deny_app_ops">
         <item quantity="one">Не вдалося заборонити дозвіл додатку %1$d</item>
         <item quantity="few">Не вдалося заборонити дозвіл додатків %1$d</item>
@@ -110,7 +110,7 @@
     <string name="allow_open_pgp_operation">Клацніть, щоб дозволити AM використовувати OpenPGP</string>
     <string name="confirm_installation">Підтвердьте встановлення</string>
     <string name="compression_method">Метод стиснення: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
-    <string name="pref_backup_flags_msg">Додавання попередньо встановлених параметрів резервного копіювання позбавляє від необхідності вибору пунктів під час кожного резервного копіювання / відновлення</string>
+    <string name="pref_backup_flags_msg">Додавання попередньо встановлених параметрів резервного копіювання позбавляє від необхідності вибору пунктів під час кожного резервного копіювання / відновлення.</string>
     <string name="pref_compression_method">Метод стиснення</string>
     <string name="rules">Правила</string>
     <string name="other">Інше</string>
@@ -239,7 +239,7 @@
     <string name="keyboard_type">Тип клавіатури</string>
     <string name="reject_time">Час відхилення</string>
     <string name="accept_time">Час підтвердження</string>
-    <string name="pref_global_blocking_enabled_msg">Дозволяє блокувати будь-який компонент будь-якого додатку, не вмикаючи явно блокування додатку</string>
+    <string name="pref_global_blocking_enabled_msg">Дозволяє блокувати будь-який компонент будь-якого додатку, не вмикаючи явно блокування додатку.</string>
     <string name="rules_not_applied">Правила не застосовані</string>
     <string name="error_evaluating_input">Не вдалося оцінити вхідні дані</string>
     <string name="shared_prefs">Спільні налаштування</string>
@@ -340,7 +340,7 @@
     <string name="block_unblock_trackers_description">Блокування або розблокування реклами і компонентів трекерів з усіх встановлених програм</string>
     <string name="clear_cache">Очистити кеш</string>
     <string name="failed_to_get_data_usage_information">Не вдалося отримати інформацію про використання даних</string>
-    <string name="pref_import_existing_msg">Додавайте компоненти, вимкнені іншими програмами, до App Manager. Будьте обережні при використанні цього інструменту, оскільки може бути багато помилкових позитивних результатів. Виберіть лише програми, в котрих ви впевнені</string>
+    <string name="pref_import_existing_msg">Додавайте компоненти, вимкнені іншими програмами, до App Manager. Будьте обережні при використанні цього інструменту, оскільки може бути багато помилкових позитивних результатів. Виберіть лише програми, в котрих ви впевнені.</string>
     <string name="pref_import_existing">Імпорт існуючих правил</string>
     <string name="community_links">Канал оновлення: https://t.me/AppManagerChannel
 \nГрупа підтримки: https://t.me/AppManagerAndroid
@@ -384,10 +384,10 @@
     <string name="day">День</string>
     <string name="battery_mode">Режим батареї</string>
     <string name="pref_app_theme">Тема додатка</string>
-    <string name="pref_import_blocker_msg">Імпорт правил блокування з Blocker, кожен файл містить правила для одного пакета</string>
+    <string name="pref_import_blocker_msg">Імпорт правил блокування з Blocker, кожен файл містить правила для одного пакета.</string>
     <string name="pref_import_watt_msg">Імпортуйте правила блокування з Watt, кожен файл, що містить правила для однієї назви пакета як packagename.xml тощо.</string>
-    <string name="pref_import_msg">Імпортуйте раніше експортовані правила блокування з App Manager</string>
-    <string name="pref_export_msg">Експортувати правила блокування, налаштовані в App Manager, у зовнішнє сховище</string>
+    <string name="pref_import_msg">Імпортуйте раніше експортовані правила блокування з App Manager.</string>
+    <string name="pref_export_msg">Експортувати правила блокування, налаштованих в App Manager, у зовнішнє сховище.</string>
     <string name="touchscreen">Сенсорний екран</string>
     <string name="navigation">Навігація</string>
     <string name="export_failed">Не вдалося експортувати!</string>
@@ -473,7 +473,7 @@
     <string name="usage_yesterday">Вчора</string>
     <string name="only_works_in_root_mode">Працює тільки в ROOT режимі</string>
     <string name="app_settings">Налаштування</string>
-    <string name="pref_usage_access_enabled_msg">Дозволяє переглянути статистику використання додатка та інформацію про них</string>
+    <string name="pref_usage_access_enabled_msg">Дозволяє переглянути статистику використання додатка та інформацію про них.</string>
     <string name="pref_usage_access_enabled">Доступ до статистики використання</string>
     <string name="pref_global_blocking_enabled">Глобальне блокування компонентів</string>
     <string name="pref_root_mode_enabled_msg">Активує всі ROOT функції цього додатка. Режим ADB виявляється автоматично, коли ROOT режим вимкнено</string>
@@ -523,7 +523,7 @@
     <string name="community">Група Telegram</string>
     <string name="follow_system">Як в системі</string>
     <string name="pid_and_ppid">Ідентифікатор процесу: %1$d, ідентифікатор батьківського процесу: %2$d</string>
-    <string name="pref_import_export_blocking_rules_msg">Імпорт/Експорт правил, імпорт зовнішніх правил з Watt або Blocker</string>
+    <string name="pref_import_export_blocking_rules_msg">Імпорт/Експорт правил, імпорт зовнішніх правил з Watt або Blocker.</string>
     <string name="pref_root_mode_enabled">ROOT режим</string>
     <string name="failed_to_disable_op">Сталася помилка під час спроби заборонити дозвіл</string>
     <string name="debuggable">Налагоджується</string>
