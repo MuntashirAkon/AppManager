@@ -128,16 +128,16 @@
     <string name="toggle_class_listing">تغییر وضع لیست کردن کلاس</string>
     <string name="class_viewer">بیننده کلاس</string>
     <string name="word_wrap">تغییر وضع بسته بندی کلمه</string>
-    <string name="credits_message">"به نویسندگان
+    <string name="credits_message">به نویسندگان
 \n- پروژه منبع باز اندروید
-\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt; اطلاعات Apps_packages &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt; راه انداز فعالیت &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt; ویرایشگر &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt; AppsMonitor &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt; وات &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt; AppOpsX &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt; SAI &lt;/a&gt;
-\nاعتبار لوگو: &lt;a href=\"https://github.com/Atrate\"&gt; Atrate &lt;/a&gt;. "</string>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info"> اطلاعات Apps_packages </a>
+\n- <a href="https://github.com/butzist/ActivityLauncher"> راه انداز فعالیت </a>
+\n- <a href="https://github.com/billthefarmer/editor"> ویرایشگر </a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor"> AppsMonitor </a>
+\n- <a href="https://github.com/tuyafeng/Watt"> وات </a>
+\n- <a href="https://github.com/8enet/AppOpsX"> AppOpsX </a>
+\n- <a href="https://github.com/Aefyr/SAI"> SAI </a>
+\nاعتبار لوگو: <a href="https://github.com/Atrate"> Atrate </a>.</string>
     <string name="credits">مشارکت‌کنندگان</string>
     <string name="third_party">کتابخانه‌ها و نمادهای شخص ثالث</string>
     <string name="license">پروانه</string>
@@ -150,7 +150,7 @@
     <string name="shortcut_name">نام میانبر</string>
     <string name="edit_shortcut">ویرایش میانبر</string>
     <string name="create_shortcut">ایجاد میانبر</string>
-    <string name="starting_activity">شروع فعالیت:&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="starting_activity">شروع فعالیت:<xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_verbose_pin_shortcut">راه انداز کنونی از PinShortcut پشتیبانی نمی‌کند. ایجاد میانبر امکان‌پذیر نیست.</string>
     <string name="error_creating_shortcut">خطا در ایجاد میانبر</string>
     <string name="instructions">دستورالعمل‌ها</string>
@@ -231,13 +231,13 @@
     <string name="permissions">از مجوزها استفاده می کند</string>
     <string name="uninstall">حذف نصب</string>
     <string name="instructions_header">[این دستورالعمل ها قدیمی است و دیگر به روز نخواهد شد. برای به روزرسانی اطلاعات به سایت اسناد رسمی (https://muntashirakon.github.io/AppManager) مراجعه کنید]</string>
-    <string name="some_items_selected">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"selection_no\" example=\"20\"&gt; %1$d &lt;/xliff:g&gt; انتخاب شد</string>
+    <string name="some_items_selected"><xliff:g id="selection_no" example="20"> %1$d </xliff:g> انتخاب شد</string>
     <string name="export_blocking_rules">قوانین مسدود سازی را صادر کن</string>
     <string name="disable_background">غیرفعال کردن پس‌زمینه</string>
     <string name="backup_restore">پشتیبان گیری/بازیابی</string>
     <string name="backup_apk">پشتیبان گیری APK</string>
     <string name="clear_data">پاک کردن داده‌ها</string>
-    <string name="user_and_uid">کاربر:&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_name\" example=\"root\"&gt;%1$s&lt;/xliff:g&gt;(&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%2$d&lt;/xliff:g&gt;)</string>
+    <string name="user_and_uid">کاربر:<xliff:g id="user_name" example="root">%1$s</xliff:g>(<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="memory_virtual_memory">حافظه: %1$s، حافظه مجازی: %2$s</string>
     <string name="pid_and_ppid">شناسه فرآیند: %1$d ، شناسه فرآیند والد: %2$d</string>
     <string name="disable_background_run">غیرفعال کردن اجرای پس زمینه</string>
