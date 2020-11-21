@@ -44,6 +44,8 @@ public final class TarUtils {
     private static final String TAR_CREATE = "cd \"%s\" && " + Runner.TOYBOX + " tar -ch%sf - %s %s | " + Runner.TOYBOX + " split -b %s - \"%s\"";
     // sources, type, filters, exclude, destination
     private static final String TAR_EXTRACT = Runner.TOYBOX + " cat %s | " + Runner.TOYBOX + "  tar -x%sf - %s %s -C \"%s\"";
+    // sources, type
+    private static final String TAR_VERIFY = Runner.TOYBOX + " cat %s | " + Runner.TOYBOX + "  tar -t%sf -";
 
     /**
      * Create a tar file using the given compression method and split it into multiple files based
@@ -60,10 +62,14 @@ public final class TarUtils {
     @NonNull
     static File[] create(@NonNull @TarType String type, @NonNull File source, @NonNull File dest, @Nullable String[] filters, @Nullable String splitSize, @Nullable String[] exclude) {
         if (splitSize == null) splitSize = "1G";
-        if (Runner.runCommand(String.format(TAR_CREATE, source.getAbsolutePath(),
-                type, getFilterStr(filters), getExcludeStr(exclude), splitSize,
-                dest.getAbsolutePath())).isSuccessful()) {
-            return getAddedFiles(dest);
+        if (Runner.runCommand(String.format(TAR_CREATE, source.getAbsolutePath(), type,
+                getFilterStr(filters), getExcludeStr(exclude), splitSize, dest.getAbsolutePath()))
+                .isSuccessful()) {
+            File[] files = getAddedFiles(dest);
+            // Verify
+            if (Runner.runCommand(String.format(TAR_VERIFY, getSourceStr(files), type)).isSuccessful()) {
+                return files;
+            }
         }
         return ArrayUtils.EMPTY_FILE;
     }
