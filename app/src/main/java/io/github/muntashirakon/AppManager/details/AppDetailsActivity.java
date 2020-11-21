@@ -120,16 +120,20 @@ public class AppDetailsActivity extends BaseActivity {
                 Log.e("ADA", "Could not fetch package info.", e);
                 runOnUiThread(() -> {
                     Toast.makeText(this, getString(R.string.failed_to_fetch_package_info), Toast.LENGTH_LONG).show();
-                    progressDialog.dismiss();
-                    finish();
+                    if (!isDestroyed()) {
+                        progressDialog.dismiss();
+                        finish();
+                    }
                 });
                 return;
             }
             if (model.getPackageInfo() == null) {
                 runOnUiThread(() -> {
                     Toast.makeText(this, getString(R.string.failed_to_fetch_package_info), Toast.LENGTH_LONG).show();
-                    progressDialog.dismiss();
-                    finish();
+                    if (!isDestroyed()) {
+                        progressDialog.dismiss();
+                        finish();
+                    }
                 });
                 return;
             }
@@ -139,6 +143,7 @@ public class AppDetailsActivity extends BaseActivity {
                 userInfoList = Users.getUsers();
             } else userInfoList = null;
             runOnUiThread(() -> {
+                if (isDestroyed()) return;
                 progressDialog.dismiss();
                 // Set title as the package label
                 setTitle(applicationInfo.loadLabel(getPackageManager()));
