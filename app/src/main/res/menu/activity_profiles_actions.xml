@@ -26,17 +26,10 @@
 
 
     <item
+        android:id="@+id/action_presets"
         android:icon="@drawable/ic_sort_black_24dp"
         android:title="@string/presets"
-        app:showAsAction="never">
-        <menu>
-            <group
-                android:checkableBehavior="single"
-                android:menuCategory="container">
-
-            </group>
-        </menu>
-    </item>
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_import"

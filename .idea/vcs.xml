@@ -5,6 +5,7 @@
     <mapping directory="$PROJECT_DIR$/lazysodium-android" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/lazysodium-android/lazysodium-java" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/lazysodium-android/libsodium" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/scripts/universal-android-debloater" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/toybox" vcs="Git" />
   </component>
 </project>

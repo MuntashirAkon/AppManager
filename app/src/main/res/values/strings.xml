@@ -734,4 +734,7 @@
     <string name="simple">Simple</string>
     <string name="advanced">Advanced</string>
     <string name="user_profile_with_id">Profile: %1$s (%2$d)</string>
+    <string name="root">Root</string>
+    <string name="no_root">No root</string>
+    <string name="close">Close</string>
 </resources>

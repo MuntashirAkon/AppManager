@@ -103,7 +103,7 @@ public class ProfilesActivity extends BaseActivity {
                     if (fileName == null) throw new IOException("File name cannot be empty.");
                     fileName = IOUtils.trimExtension(fileName);
                     String fileContent = IOUtils.getFileContent(getContentResolver(), uri);
-                    ProfileMetaManager manager = ProfileMetaManager.readProfile(fileName, fileContent);
+                    ProfileMetaManager manager = ProfileMetaManager.fromJSONString(fileName, fileContent);
                     // Save
                     manager.writeProfile();
                     Toast.makeText(this, R.string.the_import_was_successful, Toast.LENGTH_SHORT).show();
@@ -175,6 +175,31 @@ public class ProfilesActivity extends BaseActivity {
         } else if (id == R.id.action_refresh) {
             progressIndicator.show();
             new Thread(() -> model.loadProfiles()).start();
+        } else if (id == R.id.action_presets) {
+            String[] profiles = getResources().getStringArray(R.array.profiles);
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.presets)
+                    .setItems(profiles, (dialog, which) -> {
+                        String profile = profiles[which];
+                        new TextInputDialogBuilder(this, R.string.input_profile_name)
+                                .setTitle(R.string.new_profile)
+                                .setHelperText(R.string.input_profile_name_description)
+                                .setNegativeButton(R.string.cancel, null)
+                                .setPositiveButton(R.string.go, (dialog1, which1, profName, isChecked) -> {
+                                    if (!TextUtils.isEmpty(profName)) {
+                                        Intent intent = new Intent(this, AppsProfileActivity.class);
+                                        intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profile);
+                                        //noinspection ConstantConditions
+                                        intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE_NAME, profName.toString());
+                                        intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE, true);
+                                        intent.putExtra(AppsProfileActivity.EXTRA_IS_PRESET, true);
+                                        startActivity(intent);
+                                    }
+                                })
+                                .show();
+                    })
+                    .setNegativeButton(R.string.close, null)
+                    .show();
         } else return super.onOptionsItemSelected(item);
         return true;
     }

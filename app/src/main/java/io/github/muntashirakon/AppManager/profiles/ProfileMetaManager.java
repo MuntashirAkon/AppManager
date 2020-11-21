@@ -48,7 +48,8 @@ public class ProfileMetaManager {
 
     @StringDef({STATE_ON, STATE_OFF})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface ProfileState {}
+    public @interface ProfileState {
+    }
 
     public static final String STATE_ON = "on";
     public static final String STATE_OFF = "off";
@@ -107,6 +108,25 @@ public class ProfileMetaManager {
     }
 
     @NonNull
+    public static ProfileMetaManager fromPreset(@NonNull String profileName,
+                                                @NonNull String presetName)
+            throws JSONException {
+        ProfileMetaManager profileMetaManager = new ProfileMetaManager(profileName);
+        String fileContents = IOUtils.getContentFromAssets(AppManager.getContext(), "profiles/" + presetName + ".am.json");
+        profileMetaManager.readProfile(fileContents);
+        return profileMetaManager;
+    }
+
+    @NonNull
+    public static ProfileMetaManager fromJSONString(@NonNull String profileName,
+                                                    @NonNull String profileContents)
+            throws JSONException {
+        ProfileMetaManager manager = new ProfileMetaManager(profileName);
+        manager.readProfile(profileContents);
+        return manager;
+    }
+
+    @NonNull
     private final String profileName;
     @NonNull
     private final File profilePath;
@@ -144,15 +164,6 @@ public class ProfileMetaManager {
         return profileName;
     }
 
-    @NonNull
-    public static ProfileMetaManager readProfile(@NonNull String profileName,
-                                                 @NonNull String profileContents)
-            throws JSONException {
-        ProfileMetaManager manager = new ProfileMetaManager(profileName);
-        manager.readProfile(profileContents);
-        return manager;
-    }
-
     public void readProfile(@Nullable String profileStr) throws JSONException {
         if (TextUtils.isEmpty(profileStr)) throw new JSONException("Empty JSON string");
         //noinspection ConstantConditions
@@ -164,7 +175,8 @@ public class ProfileMetaManager {
         profile.version = profileObj.getInt("version");
         try {
             profile.allowRoutine = profileObj.getBoolean("allow_routine");
-        } catch (JSONException ignore) {}
+        } catch (JSONException ignore) {
+        }
         profile.state = JSONUtils.getStringOrNull(profileObj, "state");
         try {
             profile.components = JSONUtils.getArray(String.class, profileObj.getJSONArray("components"));

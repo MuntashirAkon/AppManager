@@ -76,13 +76,22 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @WorkerThread
     @GuardedBy("profileLock")
-    public void cloneProfile(String profileName) {
+    public void cloneProfile(String profileName, boolean isPreset, String oldProfileName) {
         setProfileName(profileName, true);
         synchronized (profileLock) {
-            ProfileMetaManager.Profile profile1 = profile;
-            profileMetaManager = null;
-            profileMetaManager = new ProfileMetaManager(profileName);
-            profileMetaManager.profile = profile1;
+            if (isPreset) {
+                try {
+                    profileMetaManager = ProfileMetaManager.fromPreset(profileName, oldProfileName);
+                } catch (JSONException e) {
+                    // Fallback to default
+                    profileMetaManager = new ProfileMetaManager(profileName);
+                }
+            } else {
+                ProfileMetaManager.Profile profile1 = profile;
+                profileMetaManager = null;
+                profileMetaManager = new ProfileMetaManager(profileName);
+                profileMetaManager.profile = profile1;
+            }
             profile = profileMetaManager.profile;
             if (profile == null) profile = profileMetaManager.newProfile(new String[]{});
         }
@@ -184,14 +193,22 @@ public class ProfileViewModel extends AndroidViewModel {
 
     public boolean getBoolean(@NonNull String key, boolean defValue) {
         switch (key) {
-            case "disable": return profile.disable;
-            case "force_stop": return profile.forceStop;
-            case "clear_cache": return profile.clearCache;
-            case "clear_data": return profile.clearData;
-            case "block_trackers": return profile.blockTrackers;
-            case "backup_apk": return profile.backupApk;
-            case "allow_routine": return profile.allowRoutine;
-            default: return defValue;
+            case "disable":
+                return profile.disable;
+            case "force_stop":
+                return profile.forceStop;
+            case "clear_cache":
+                return profile.clearCache;
+            case "clear_data":
+                return profile.clearData;
+            case "block_trackers":
+                return profile.blockTrackers;
+            case "backup_apk":
+                return profile.backupApk;
+            case "allow_routine":
+                return profile.allowRoutine;
+            default:
+                return defValue;
         }
     }
 

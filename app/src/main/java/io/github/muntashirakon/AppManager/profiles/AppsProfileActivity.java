@@ -61,6 +61,7 @@ public class AppsProfileActivity extends BaseActivity
     public static final String EXTRA_PROFILE_NAME = "prof";
     public static final String EXTRA_NEW_PROFILE_NAME = "new_prof";
     public static final String EXTRA_NEW_PROFILE = "new";
+    public static final String EXTRA_IS_PRESET = "preset";
     public static final String EXTRA_SHORTCUT_TYPE = "shortcut";
 
     @StringDef({ST_NONE, ST_SIMPLE, ST_ADVANCED})
@@ -94,6 +95,7 @@ public class AppsProfileActivity extends BaseActivity
         @ShortcutType String shortcutType = getIntent().getStringExtra(EXTRA_SHORTCUT_TYPE);
         if (shortcutType == null) shortcutType = ST_NONE;
         boolean newProfile = getIntent().getBooleanExtra(EXTRA_NEW_PROFILE, false);
+        boolean isPreset = getIntent().getBooleanExtra(EXTRA_IS_PRESET, false);
         @Nullable String newProfileName;
         if (newProfile) {
             newProfileName = getIntent().getStringExtra(EXTRA_NEW_PROFILE_NAME);
@@ -138,7 +140,7 @@ public class AppsProfileActivity extends BaseActivity
             new Thread(() -> {
                 model.loadProfile();
                 // Requested a new profile, clone profile
-                model.cloneProfile(newProfileName);
+                model.cloneProfile(newProfileName, isPreset, profileName);
                 runOnUiThread(() -> progressIndicator.hide());
             }).start();
         } else progressIndicator.hide();
@@ -238,7 +240,7 @@ public class AppsProfileActivity extends BaseActivity
                             }
                             new Thread(() -> {
                                 //noinspection ConstantConditions
-                                model.cloneProfile(profName.toString());
+                                model.cloneProfile(profName.toString(), false, "");
                                 runOnUiThread(() -> {
                                     Toast.makeText(this, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
                                     progressIndicator.hide();

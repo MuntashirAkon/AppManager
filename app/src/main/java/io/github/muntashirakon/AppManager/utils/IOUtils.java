@@ -52,12 +52,11 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
 public final class IOUtils {
-
-    public static void bytesToFile(byte[] bytes, File result) throws IOException {
-        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(result));
-        bos.write(bytes);
-        bos.flush();
-        bos.close();
+    public static void bytesToFile(byte[] bytes, File file) throws IOException {
+        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))) {
+            bos.write(bytes);
+            bos.flush();
+        }
     }
 
     /**
@@ -148,12 +147,13 @@ public final class IOUtils {
         if (uri.getScheme() == null) return null;
         switch (uri.getScheme()) {
             case ContentResolver.SCHEME_CONTENT:
-                Cursor cursor = resolver.query(uri, null, null, null, null);
-                if (cursor == null) return null;
-                int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                cursor.moveToFirst();
-                String name = cursor.getString(nameIndex);
-                cursor.close();
+                String name;
+                try (Cursor cursor = resolver.query(uri, null, null, null, null)) {
+                    if (cursor == null) return null;
+                    int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    cursor.moveToFirst();
+                    name = cursor.getString(nameIndex);
+                }
                 return name;
             case ContentResolver.SCHEME_FILE:
                 if (uri.getPath() == null) return null;
@@ -203,6 +203,10 @@ public final class IOUtils {
     }
 
     public static void closeQuietly(@Nullable AutoCloseable closeable) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            FileUtils.closeQuietly(closeable);
+            return;
+        }
         if (closeable == null) return;
         try {
             closeable.close();
@@ -213,11 +217,8 @@ public final class IOUtils {
 
     public static void deleteSilently(@Nullable File file) {
         if (file == null || !file.exists()) return;
-        try {
-            if (!file.delete())
-                throw new Exception("Could not delete file " + file.getAbsolutePath());
-        } catch (Exception e) {
-            Log.w("IOUtils", String.format("Unable to close %s", file.getClass().getCanonicalName()), e);
+        if (!file.delete()) {
+            Log.w("IOUtils", String.format("Unable to delete %s", file.getAbsoluteFile()));
         }
     }
 
