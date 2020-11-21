@@ -371,9 +371,9 @@
     <string name="exclude_cache">Excluir o cache</string>
     <string name="external_data">Dados externos</string>
     <string name="data">Dados</string>
-    <string name="backup">Fazer backup</string>
+    <string name="backup">Backup</string>
     <string name="restore">Restaurar</string>
-    <string name="delete_backup">Deletar backup</string>
+    <string name="delete_backup">Excluir backup</string>
     <string name="backup_options">Opções do backup</string>
     <plurals name="failed_to_backup_some_apk_files">
         <item quantity="one">Não foi possível fazer o backup de %1$d aplicativo</item>
@@ -389,7 +389,7 @@
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
         <item quantity="one">%1$d backup não pôde ser excluído</item>
-        <item quantity="other">Não foi possível excluir %1$d backups</item>
+        <item quantity="other">%1$d backups não puderam ser excluídos</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
         <item quantity="one">Não foi possível desbloquear rastreadores de %1$d aplicativo</item>
@@ -656,7 +656,7 @@
     <string name="state_sleeping">Dormindo</string>
     <string name="state_multithreaded">Multithreaded</string>
     <string name="systemless_app">Aplicativo sem sistema</string>
-    <string name="presets">Presets</string>
+    <string name="presets">Predefinições</string>
     <string name="keystore">KeyStore</string>
     <string name="send_crash_report">Enviar relatório de travamento</string>
     <string name="tap_to_submit_crash_report">Toque para enviar o relatório de travamento.</string>
@@ -700,4 +700,7 @@
     <string name="current_mode">Modo atual: %s</string>
     <string name="adb_over_tcp">ADB sobre TCP</string>
     <string name="pref_mode_of_operations">Modo de operação</string>
+    <string name="user_profile_with_id">Perfil: %1$s (%2$d)</string>
+    <string name="advanced">Avançado</string>
+    <string name="simple">Simples</string>
 </resources>
