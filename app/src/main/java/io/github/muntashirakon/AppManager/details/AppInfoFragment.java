@@ -95,6 +95,8 @@ import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -438,8 +440,33 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         runOnUiThread(() -> {
             mTagCloud.removeAllViews();
             // Add tracker chip
-            if (!trackerComponents.isEmpty())
-                addChip(getResources().getQuantityString(R.plurals.no_of_trackers, trackerComponents.size(), trackerComponents.size()), R.color.tracker);
+            if (!trackerComponents.isEmpty()) {
+                addChip(getResources().getQuantityString(R.plurals.no_of_trackers,
+                        trackerComponents.size(), trackerComponents.size()), R.color.tracker)
+                        .setOnClickListener(v -> {
+                            new MaterialAlertDialogBuilder(mActivity)
+                                    .setTitle(R.string.trackers)
+                                    .setItems(trackerComponents.keySet().toArray(new String[0]), null)
+                                    .setPositiveButton(R.string.block, (dialog, which) -> {
+                                        mProgressIndicator.show();
+                                        Intent intent = new Intent(mActivity, BatchOpsService.class);
+                                        intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(Collections.singletonList(mPackageName)));
+                                        intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_BLOCK_TRACKERS);
+                                        intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
+                                        ContextCompat.startForegroundService(mActivity, intent);
+                                    })
+                                    .setNeutralButton(R.string.unblock, (dialog, which) -> {
+                                        mProgressIndicator.show();
+                                        Intent intent = new Intent(mActivity, BatchOpsService.class);
+                                        intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(Collections.singletonList(mPackageName)));
+                                        intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_UNBLOCK_TRACKERS);
+                                        intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
+                                        ContextCompat.startForegroundService(mActivity, intent);
+                                    })
+                                    .setNegativeButton(R.string.cancel, null)
+                                    .show();
+                        });
+            }
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
                 if (isSystemlessPath) {
                     addChip(R.string.systemless_app);
@@ -991,11 +1018,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return chip;
     }
 
-    private void addChip(CharSequence text, @SuppressWarnings("SameParameterValue") @ColorRes int color) {
+    @NonNull
+    private Chip addChip(CharSequence text, @SuppressWarnings("SameParameterValue") @ColorRes int color) {
         Chip chip = new Chip(mActivity);
         chip.setText(text);
         chip.setChipBackgroundColorResource(color);
         mTagCloud.addView(chip);
+        return chip;
     }
 
     private void addChip(@StringRes int resId) {
