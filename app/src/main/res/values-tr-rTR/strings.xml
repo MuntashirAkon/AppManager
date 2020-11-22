@@ -678,4 +678,27 @@
     <string name="pref_show_users_in_installer">Kurucuda kullanıcıları göster</string>
     <string name="failed_to_duplicate_profile">Profil kopyalanamadı</string>
     <string name="send_selected">Seçileni gönder</string>
+    <string name="user_profile_with_id">Profil: %1$s (%2$d)</string>
+    <string name="advanced">Gelişmiş</string>
+    <string name="simple">Basit</string>
+    <string name="enabled">Etkin</string>
+    <string name="choose">Seç</string>
+    <string name="input_permissions_description">Aralarında boşluk olacak şekilde giriş izinleri, örn. (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) vb.</string>
+    <string name="input_permissions">Giriş izinleri</string>
+    <string name="options">Seçenekler</string>
+    <string name="off">Kapalı</string>
+    <string name="on">Açık</string>
+    <string name="profile_state_msg">Bu profil için özel açık/kapalı durumu</string>
+    <string name="profile_backup_apk_msg">Etkinleştirilirse, apk dosyaları yedeklenecek</string>
+    <string name="profile_block_trackers_msg">Etkinleştirilirse, izleyiciler uygulamalardan engellenecek</string>
+    <string name="profile_clear_data_msg">Etkinleştirilirse, uygulamaların verileri silinecek</string>
+    <string name="profile_clear_cache_msg">Etkinleştirilirse, uygulamaların önbelleği silinecek</string>
+    <string name="profile_force_stop_msg">Etkinleştirilirse, uygulamalar zorla durdurulacak</string>
+    <string name="profile_disable_msg">Etkinleştirilirse, uygulamalar durumun değerine göre devre dışı bırakılacak/etkinleştirilecek</string>
+    <string name="allow_routine_ops_msg">Profilin rutin işlemlerde kullanılmasına izin ver</string>
+    <string name="profile_state">Profil durumu</string>
+    <string name="allow_routine_ops">Rutin işlemlere izin ver</string>
+    <string name="current_mode">Geçerli mod: %s</string>
+    <string name="adb_over_tcp">TCP üzerinden ADB</string>
+    <string name="pref_mode_of_operations">İşlem modu</string>
 </resources>
