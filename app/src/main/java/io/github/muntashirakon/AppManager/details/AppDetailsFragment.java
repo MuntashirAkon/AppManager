@@ -1205,24 +1205,18 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Permission Switch
             int sdkVersion = mainModel.getPackageInfo().applicationInfo.targetSdkVersion;
             if ((isRootEnabled || isADBEnabled) && !isExternalApk && ((permissionItem.isDangerous
-                    && sdkVersion > 23) || protectionLevel.contains("development"))) {
+                    && sdkVersion > 23) || protectionLevel.contains("development")
+                    || permissionItem.appOp != AppOpsManager.OP_NONE)) {
                 holder.toggleSwitch.setVisibility(View.VISIBLE);
                 holder.toggleSwitch.setChecked(permissionItem.isGranted);
                 holder.toggleSwitch.setOnCheckedChangeListener((buttonView, isGranted) -> {
                     if (buttonView.isPressed()) {
                         new Thread(() -> {
                             if (mainModel.setPermission(permName, isGranted)) {
-                                try {
-                                    PermissionInfo newPermissionInfo = mPackageManager.getPermissionInfo(permissionItem.name, PackageManager.GET_META_DATA);
-                                    AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(newPermissionInfo);
-                                    appDetailsItem.name = permissionItem.name;
-                                    appDetailsItem.flags = permissionItem.flags;
-                                    appDetailsItem.isDangerous = permissionItem.isDangerous;
-                                    appDetailsItem.isGranted = isGranted;
-                                    runOnUiThread(() -> set(index, appDetailsItem));
-                                    mainModel.setUsesPermission(appDetailsItem.name, isGranted);
-                                } catch (PackageManager.NameNotFoundException ignore) {
-                                }
+                                AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionItem);
+                                appDetailsItem.isGranted = isGranted;
+                                runOnUiThread(() -> set(index, appDetailsItem));
+                                mainModel.setUsesPermission(appDetailsItem.name, isGranted);
                             } else {
                                 runOnUiThread(() -> {
                                     Toast.makeText(mActivity, isGranted ? R.string.failed_to_grant_permission : R.string.failed_to_revoke_permission, Toast.LENGTH_SHORT).show();

@@ -292,18 +292,37 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @GuardedBy("blockerLocker")
     public boolean setPermission(String permissionName, boolean isGranted) {
         if (isExternalApk) return false;
+        int appOp = AppOpsManager.permissionToOpCode(permissionName);
         if (isGranted) {
-            if (!RunnerUtils.grantPermission(packageName, permissionName, Users.getCurrentUserHandle()).isSuccessful())
+            if (appOp != AppOpsManager.OP_NONE) {
+                try {
+                    mAppOpsService.setMode(appOp, -1, packageName, AppOpsManager.MODE_ALLOWED, userHandle);
+                } catch (Exception e) {
+                    return false;
+                }
+            } else if (!RunnerUtils.grantPermission(packageName, permissionName, Users.getCurrentUserHandle()).isSuccessful()) {
                 return false;
+            }
         } else {
-            if (!RunnerUtils.revokePermission(packageName, permissionName, Users.getCurrentUserHandle()).isSuccessful())
+            if (appOp != AppOpsManager.OP_NONE) {
+                try {
+                    mAppOpsService.setMode(appOp, -1, packageName, AppOpsManager.MODE_IGNORED, userHandle);
+                } catch (Exception e) {
+                    return false;
+                }
+            } else if (!RunnerUtils.revokePermission(packageName, permissionName, Users.getCurrentUserHandle()).isSuccessful()) {
                 return false;
+            }
         }
         new Thread(() -> {
             synchronized (blockerLocker) {
                 waitForBlockerOrExit();
                 blocker.setMutable();
-                blocker.setPermission(permissionName, isGranted);
+                if (appOp != AppOpsManager.OP_NONE) {
+                    blocker.setAppOp(String.valueOf(appOp), isGranted ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED);
+                } else {
+                    blocker.setPermission(permissionName, isGranted);
+                }
                 blocker.commit();
                 blocker.setReadOnly();
                 blockerLocker.notifyAll();
@@ -965,6 +984,15 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 int basePermissionType = PackageUtils.getBasePermissionType(permissionInfo);
                 appDetailsItem.isDangerous = basePermissionType == PermissionInfo.PROTECTION_DANGEROUS;
                 appDetailsItem.isGranted = (appDetailsItem.flags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
+                appDetailsItem.appOp = AppOpsManager.permissionToOpCode(appDetailsItem.name);
+                if (appDetailsItem.appOp != AppOpsManager.OP_NONE) {
+                    // Override isGranted
+                    try {
+                        appDetailsItem.isGranted = mAppOpsService.checkOperation(appDetailsItem.appOp, -1, packageName, userHandle) == AppOpsManager.MODE_ALLOWED;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 usesPermissionItems.add(appDetailsItem);
             } catch (PackageManager.NameNotFoundException ignore) {
             }
