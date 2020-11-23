@@ -286,62 +286,54 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_refresh_detail:
-                refreshDetails();
-                return true;
-            case R.id.action_share_apk:
-                new Thread(() -> {
-                    try {
-                        File tmpApkSource = ApkUtils.getSharableApkFile(mPackageInfo);
-                        runOnUiThread(() -> {
-                            Intent intent = new Intent(Intent.ACTION_SEND)
-                                    .setType("application/*")
-                                    .putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID + ".provider", tmpApkSource))
-                                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            startActivity(Intent.createChooser(intent, getString(R.string.share_apk)));
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show());
-                    }
-                }).start();
-                return true;
-            case R.id.action_backup:
-                BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
-                Bundle args = new Bundle();
-                args.putStringArrayList(BackupDialogFragment.ARG_PACKAGES, new ArrayList<>(Collections.singleton(mPackageName)));
-                backupDialogFragment.setArguments(args);
-                backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
-                backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
-                backupDialogFragment.show(mActivity.getSupportFragmentManager(), BackupDialogFragment.TAG);
-                return true;
-            case R.id.action_view_settings:
-                Intent infoIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                infoIntent.addCategory(Intent.CATEGORY_DEFAULT);
-                infoIntent.setData(Uri.parse("package:" + mPackageName));
-                startActivity(infoIntent);
-                return true;
-            case R.id.action_export_blocking_rules:
-                @SuppressLint("SimpleDateFormat") final String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
-                exportRules.launch(fileName);
-                return true;
-            case R.id.action_open_in_termux:
-                if (ContextCompat.checkSelfPermission(mActivity, TERMUX_PERM_RUN_COMMAND) == PackageManager.PERMISSION_GRANTED) {
-                    openInTermux();
-                } else permOpenInTermux.launch(TERMUX_PERM_RUN_COMMAND);
-                return true;
-            case R.id.action_run_in_termux:
-                if (ContextCompat.checkSelfPermission(mActivity, TERMUX_PERM_RUN_COMMAND) == PackageManager.PERMISSION_GRANTED) {
-                    runInTermux();
-                } else permRunInTermux.launch(TERMUX_PERM_RUN_COMMAND);
-                return true;
-            case R.id.action_extract_icon:
-                String iconName = mPackageLabel + "_icon.png";
-                exportIcon.launch(iconName);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_refresh_detail) {
+            refreshDetails();
+        } else if (itemId == R.id.action_share_apk) {
+            new Thread(() -> {
+                try {
+                    File tmpApkSource = ApkUtils.getSharableApkFile(mPackageInfo);
+                    runOnUiThread(() -> {
+                        Intent intent = new Intent(Intent.ACTION_SEND)
+                                .setType("application/*")
+                                .putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(mActivity, BuildConfig.APPLICATION_ID + ".provider", tmpApkSource))
+                                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        startActivity(Intent.createChooser(intent, getString(R.string.share_apk)));
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show());
+                }
+            }).start();
+        } else if (itemId == R.id.action_backup) {
+            BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
+            Bundle args = new Bundle();
+            args.putStringArrayList(BackupDialogFragment.ARG_PACKAGES, new ArrayList<>(Collections.singleton(mPackageName)));
+            backupDialogFragment.setArguments(args);
+            backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
+            backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
+            backupDialogFragment.show(mActivity.getSupportFragmentManager(), BackupDialogFragment.TAG);
+        } else if (itemId == R.id.action_view_settings) {
+            Intent infoIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            infoIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            infoIntent.setData(Uri.parse("package:" + mPackageName));
+            startActivity(infoIntent);
+        } else if (itemId == R.id.action_export_blocking_rules) {
+            @SuppressLint("SimpleDateFormat") final String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
+            exportRules.launch(fileName);
+        } else if (itemId == R.id.action_open_in_termux) {
+            if (ContextCompat.checkSelfPermission(mActivity, TERMUX_PERM_RUN_COMMAND) == PackageManager.PERMISSION_GRANTED) {
+                openInTermux();
+            } else permOpenInTermux.launch(TERMUX_PERM_RUN_COMMAND);
+        } else if (itemId == R.id.action_run_in_termux) {
+            if (ContextCompat.checkSelfPermission(mActivity, TERMUX_PERM_RUN_COMMAND) == PackageManager.PERMISSION_GRANTED) {
+                runInTermux();
+            } else permRunInTermux.launch(TERMUX_PERM_RUN_COMMAND);
+        } else if (itemId == R.id.action_extract_icon) {
+            String iconName = mPackageLabel + "_icon.png";
+            exportIcon.launch(iconName);
+        } else return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
@@ -443,29 +435,27 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (!trackerComponents.isEmpty()) {
                 addChip(getResources().getQuantityString(R.plurals.no_of_trackers,
                         trackerComponents.size(), trackerComponents.size()), R.color.tracker)
-                        .setOnClickListener(v -> {
-                            new MaterialAlertDialogBuilder(mActivity)
-                                    .setTitle(R.string.trackers)
-                                    .setItems(trackerComponents.keySet().toArray(new String[0]), null)
-                                    .setPositiveButton(R.string.block, (dialog, which) -> {
-                                        mProgressIndicator.show();
-                                        Intent intent = new Intent(mActivity, BatchOpsService.class);
-                                        intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(Collections.singletonList(mPackageName)));
-                                        intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_BLOCK_TRACKERS);
-                                        intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
-                                        ContextCompat.startForegroundService(mActivity, intent);
-                                    })
-                                    .setNeutralButton(R.string.unblock, (dialog, which) -> {
-                                        mProgressIndicator.show();
-                                        Intent intent = new Intent(mActivity, BatchOpsService.class);
-                                        intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(Collections.singletonList(mPackageName)));
-                                        intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_UNBLOCK_TRACKERS);
-                                        intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
-                                        ContextCompat.startForegroundService(mActivity, intent);
-                                    })
-                                    .setNegativeButton(R.string.cancel, null)
-                                    .show();
-                        });
+                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
+                                .setTitle(R.string.trackers)
+                                .setItems(trackerComponents.keySet().toArray(new String[0]), null)
+                                .setPositiveButton(R.string.block, (dialog, which) -> {
+                                    mProgressIndicator.show();
+                                    Intent intent = new Intent(mActivity, BatchOpsService.class);
+                                    intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(Collections.singletonList(mPackageName)));
+                                    intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_BLOCK_TRACKERS);
+                                    intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
+                                    ContextCompat.startForegroundService(mActivity, intent);
+                                })
+                                .setNeutralButton(R.string.unblock, (dialog, which) -> {
+                                    mProgressIndicator.show();
+                                    Intent intent = new Intent(mActivity, BatchOpsService.class);
+                                    intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(Collections.singletonList(mPackageName)));
+                                    intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_UNBLOCK_TRACKERS);
+                                    intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
+                                    ContextCompat.startForegroundService(mActivity, intent);
+                                })
+                                .setNegativeButton(R.string.cancel, null)
+                                .show());
             }
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
                 if (isSystemlessPath) {
