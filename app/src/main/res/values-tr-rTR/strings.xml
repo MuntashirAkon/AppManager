@@ -701,4 +701,7 @@
     <string name="current_mode">Geçerli mod: %s</string>
     <string name="adb_over_tcp">TCP üzerinden ADB</string>
     <string name="pref_mode_of_operations">İşlem modu</string>
+    <string name="close">Kapat</string>
+    <string name="no_root">Root yok</string>
+    <string name="root">Root</string>
 </resources>
