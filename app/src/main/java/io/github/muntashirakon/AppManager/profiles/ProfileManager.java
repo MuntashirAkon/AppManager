@@ -50,7 +50,7 @@ public class ProfileManager {
         for (String profile: profilesFiles) {
             int index = profile.indexOf(ProfileMetaManager.PROFILE_EXT);
             profile = profile.substring(0, index);
-            summary = TextUtils.join(", ", new ProfileMetaManager(profile).getLocalisedSummary(context));
+            summary = TextUtils.join(", ", new ProfileMetaManager(profile).getLocalisedSummaryOrComment(context));
             if (summary.length() == 0) {
                 summary = context.getString(R.string.no_configurations);
             }

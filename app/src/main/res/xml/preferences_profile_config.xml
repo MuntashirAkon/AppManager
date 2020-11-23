@@ -20,6 +20,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <Preference
+        app:key="comment"
+        app:title="@string/comment"
+        tools:summary="@tools:sample/lorem[9]" />
+
+    <Preference
         app:key="state"
         app:summary="@string/profile_state_msg"
         tools:title="State: On" />

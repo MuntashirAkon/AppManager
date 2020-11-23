@@ -212,6 +212,15 @@ public class ProfileViewModel extends AndroidViewModel {
         }
     }
 
+    @Nullable
+    public String getComment() {
+        return profile.comment;
+    }
+
+    public void setComment(@Nullable String comment) {
+        profile.comment = comment;
+    }
+
     public void setState(@ProfileMetaManager.ProfileState String state) {
         profile.state = state;
     }

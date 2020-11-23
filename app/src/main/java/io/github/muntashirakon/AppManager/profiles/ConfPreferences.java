@@ -67,6 +67,21 @@ public class ConfPreferences extends PreferenceFragmentCompat {
             return;
         }
         model = this.activity.model;
+        // Set comment
+        Preference commentPref = Objects.requireNonNull(findPreference("comment"));
+        commentPref.setSummary(model.getComment());
+        commentPref.setOnPreferenceClickListener(preference -> {
+            new TextInputDialogBuilder(activity, R.string.comment)
+                    .setTitle(R.string.comment)
+                    .setInputText(model.getComment())
+                    .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
+                        model.setComment(TextUtils.isEmpty(inputText) ? null : inputText.toString());
+                        commentPref.setSummary(model.getComment());
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+            return true;
+        });
         // Set state
         Preference statePref = Objects.requireNonNull(findPreference("state"));
         final String[] statesL = new String[]{

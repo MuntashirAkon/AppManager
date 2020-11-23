@@ -31,6 +31,7 @@ import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -65,6 +66,8 @@ public class ProfileMetaManager {
         private final String name;  // name (name of the profile)
         @NonNull
         public String[] packages;  // packages (a list of packages)
+        @Nullable
+        public String comment;  // comment
         @Nullable
         public String[] components;  // components
         @Nullable
@@ -166,11 +169,14 @@ public class ProfileMetaManager {
 
     public void readProfile(@Nullable String profileStr) throws JSONException {
         if (TextUtils.isEmpty(profileStr)) throw new JSONException("Empty JSON string");
-        //noinspection ConstantConditions
         JSONObject profileObj = new JSONObject(profileStr);
         String profileName = profileObj.getString("name");
         String[] packageNames = JSONUtils.getArray(String.class, profileObj.getJSONArray("packages"));
         profile = new Profile(profileName, packageNames);
+        try {
+            profile.comment = profileObj.getString("comment");
+        } catch (JSONException ignore) {
+        }
         profile.type = profileObj.getInt("type");
         profile.version = profileObj.getInt("version");
         try {
@@ -232,6 +238,7 @@ public class ProfileMetaManager {
             profileObj.put("allow_routine", false);
         }
         profileObj.put("name", profile.name);
+        profileObj.put("comment", profile.comment);
         profileObj.put("state", profile.state);
         profileObj.put("packages", JSONUtils.getJSONArray(profile.packages));
         profileObj.put("components", JSONUtils.getJSONArray(profile.components));
@@ -267,7 +274,9 @@ public class ProfileMetaManager {
     }
 
     @NonNull
-    public List<String> getLocalisedSummary(Context context) {
+    public List<String> getLocalisedSummaryOrComment(Context context) {
+        if (profile.comment != null) return Collections.singletonList(profile.comment);
+
         List<String> arrayList = new ArrayList<>();
         if (profile == null) return arrayList;
         if (profile.components != null) arrayList.add(context.getString(R.string.components));

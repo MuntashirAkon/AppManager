@@ -737,4 +737,5 @@
     <string name="root">Root</string>
     <string name="no_root">No root</string>
     <string name="close">Close</string>
+    <string name="comment">Comment</string>
 </resources>
