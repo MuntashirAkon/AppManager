@@ -12,7 +12,7 @@
     <string name="installer_error_storage">Utilstrekkelig lagringsplass igjen til installering av programmet</string>
     <string name="installer_error_bad_apks">Ugyldige APK-filer valgt</string>
     <string name="installer_error_incompatible">Programmet er ukompatibelt med enheten</string>
-    <string name="installer_error_blocked">Installasjon blokkert av %s</string>
+    <string name="installer_error_blocked">Installasjon blokkert av &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;</string>
     <string name="filter_apps_with_activities">Programmer med aktiviteter</string>
     <string name="are_you_sure">Er du sikker\?</string>
     <string name="pref_remove_all_rules">Fjern alle regler</string>
@@ -23,7 +23,7 @@
     <string name="backup_restore">Sikkerhetskopier/gjenopprett</string>
     <string name="backup_apk">Sikkerhetskopier APK</string>
     <string name="clear_data">Tøm data</string>
-    <string name="user_and_uid">Bruker: %s (%d)</string>
+    <string name="user_and_uid">Bruker: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_name\" example=\"root\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%2$d&lt;/xliff:g&gt;)</string>
     <string name="memory_virtual_memory">Minne: %s, virtuelt minne: %s</string>
     <string name="kill_process">Drep</string>
     <string name="running_apps">Kjørende programmer</string>
@@ -35,8 +35,8 @@
     <string name="app_size">Program</string>
     <string name="stopped">Stoppet</string>
     <string name="uninstall_system_app_message">Dette er et systemprogram. Er du sikker på at du vil avinstallere dette programmet\?</string>
-    <string name="uninstalled_successfully">%s avinstallert.</string>
-    <string name="failed_to_uninstall">Klarte ikke å avinstallere %s.</string>
+    <string name="uninstalled_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; har blitt avinstallert.</string>
+    <string name="failed_to_uninstall">Klarte ikke å avinstallere &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
     <string name="uninstall_app_message">Ønsker du å avinstallere dette programmet\?</string>
     <string name="view_in_settings">Vis i innstillinger</string>
     <string name="disabled_app">Avskrudd</string>
@@ -77,7 +77,7 @@
     <string name="user_app">Brukerprogram</string>
     <string name="system_app">Systemprogram</string>
     <string name="app_info">Programinfo</string>
-    <string name="version_name_with_code">Versjon %s (%d)</string>
+    <string name="version_name_with_code">Versjon &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;%2$d&lt;/xliff:g&gt;)</string>
     <string name="sort">Sorter</string>
     <string name="user">Bruker</string>
     <string name="system">System</string>
@@ -244,7 +244,7 @@
         <item quantity="one">Kunne ikke skru av %d program</item>
         <item quantity="other">Kunne ikke skru av %d programmer</item>
     </plurals>
-    <string name="some_items_selected">%d valgt</string>
+    <string name="some_items_selected">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"selection_no\" example=\"20\"&gt;%1$d&lt;/xliff:g&gt; valgt</string>
     <plurals name="failed_to_import_files">
         <item quantity="one">Kunne ikke importere %d fil.</item>
         <item quantity="other">Kunne ikke importere %d filer.</item>
@@ -294,8 +294,8 @@
     <string name="input_backup_name">Sikkerhetskopinavn</string>
     <string name="downgrade_not_possible">Nedgradering er ikke mulig uten rot-tilgang eller ADB</string>
     <string name="downgrade">Nedgrader</string>
-    <string name="process_state_with_extra">Tilstand: %s (%s)</string>
-    <string name="process_state">Tilstand: %s</string>
+    <string name="process_state_with_extra">Tilstand: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"process_state\" example=\"Sleeping\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"state_extra\" example=\"High priority\"&gt;%2$s&lt;/xliff:g&gt;)</string>
+    <string name="process_state">Tilstand: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"process_state\" example=\"Sleeping\"&gt;%1$s&lt;/xliff:g&gt;</string>
     <string name="state_high_priority">Høy prioritet</string>
     <string name="state_foreground">Forgrunn</string>
     <string name="state_low_priority">Lav prioritet</string>
@@ -307,8 +307,8 @@
     <string name="state_device_io">Enhets-I/O</string>
     <string name="orientation_no_sensor">Ingen sensor</string>
     <string name="orientation_locked">Låst</string>
-    <string name="unknown_split_for_feature">%s for funksjon %s</string>
-    <string name="split_feature_name">Funksjon: %s</string>
+    <string name="unknown_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt; for funksjonen &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
+    <string name="split_feature_name">Funksjon: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%1$s&lt;/xliff:g&gt;</string>
     <string name="installer_error_session_create">Kunne ikke opprette installasjonsøkt</string>
     <string name="install_in_progress">Installasjon underveis</string>
     <string name="package_installer">Pakke-installerer</string>
@@ -329,12 +329,13 @@
         <item quantity="other">Kunne ikke sikkerhetskopiere %d programmer</item>
     </plurals>
     <string name="backup_options">Sikkerhetskopieringsinnstillinger</string>
-    <string name="failed_to_install_package_name">Kunne ikke installere %s</string>
-    <string name="package_name_is_installed_successfully">%s installert</string>
+    <string name="failed_to_install_package_name">Kunne ikke installere &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="package_name_is_installed_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; installert</string>
     <string name="termux">Termux</string>
     <string name="pref_import_existing">Importer eksisterende regler</string>
     <string name="community_links">Oppdateringskanal: https://t.me/AppManagerChannel
-\nBrukerstøttegruppe: https://t.me/AppManagerAndroid</string>
+\nBrukerstøttegruppe: https://t.me/AppManagerAndroid
+\nTwitter: https://twitter.com/AMUpdateChannel</string>
     <string name="update">Oppdater</string>
     <string name="install">Installer</string>
     <plurals name="no_of_trackers">
@@ -359,15 +360,15 @@
         <item quantity="one">%d gang</item>
         <item quantity="other">%d ganger</item>
     </plurals>
-    <string name="external_multiple_data_dir">Ekstern datamappe %d</string>
+    <string name="external_multiple_data_dir">Ekstern datamappe &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dir_no\" example=\"1\"&gt;%1$d&lt;/xliff:g&gt;</string>
     <string name="external_data_dir">Ekstern datamappe</string>
     <string name="sort_by_blocked_components">Blokkerte først</string>
     <string name="sort_by_disabled_app">Avskrudde først</string>
     <string name="exodus_link">εxodus-lenke</string>
-    <string name="failed_to_stop">Kunne ikke stoppe %s.</string>
+    <string name="failed_to_stop">Kunne ikke stoppe &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
     <string name="force_stop">Tving stopp</string>
-    <string name="failed_to_enable">Kunne ikke skru på %s.</string>
-    <string name="failed_to_disable">Kunne ikke skru av %s.</string>
+    <string name="failed_to_enable">Kunne ikke skru på &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="failed_to_disable">Kunne ikke skru av &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
     <string name="enable">Skru på</string>
     <string name="disable">Skru av</string>
     <string name="no_content">Mangler innhold</string>
@@ -381,8 +382,8 @@
     <string name="no_tracker_class">Ingen sporer-klasse</string>
     <string name="no_shared_libs">Ingen delte biblioteker</string>
     <plurals name="main_list_date_days">
-        <item quantity="one">%s %d dag</item>
-        <item quantity="other">%s %d dager</item>
+        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; dag</item>
+        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; dager</item>
     </plurals>
     <string name="all_classes">Alle klasser</string>
     <string name="tracker_classes">Sporer-klasser</string>
@@ -445,4 +446,59 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \nLogohenvisning: <a href="https://github.com/Atrate">Atrate</a>.</string>
+    <string name="close">Lukk</string>
+    <string name="user_profile_with_id">Profil: %1$s (%2$d)</string>
+    <string name="advanced">Avansert</string>
+    <string name="choose">Velg</string>
+    <string name="options">Innstillinger</string>
+    <string name="off">Avslått</string>
+    <string name="on">Påslått</string>
+    <string name="profile_state">Profiltilstand</string>
+    <string name="current_mode">Nåværende modus: %s</string>
+    <string name="rsa">RSA</string>
+    <string name="aes">AES</string>
+    <string name="encryption">Kryptering</string>
+    <string name="select_user">Velg bruker</string>
+    <string name="pref_show_users_in_installer">Vis brukere i installasjonskandidat</string>
+    <string name="new_profile">Ny profil</string>
+    <string name="input_profile_name_description">Profilnavnet kan ikke inneholde mellomrom.</string>
+    <string name="input_profile_name">Profilnavn</string>
+    <string name="full_stop_tap_to_see_details">. Trykk for å se detaljer.</string>
+    <string name="no_matching_package_found">Fant ingen samsvarende pakke</string>
+    <plurals name="alert_failed_to_enable">
+        <item quantity="one">Kunne ikke skru på %1$d program</item>
+        <item quantity="other">Kunne ikke skru på %1$d programmer</item>
+    </plurals>
+    <string name="exclude_cache">Utelukk hurtiglager</string>
+    <string name="failed_packages">Feilede pakker</string>
+    <string name="no_tracker_found">Fant ingen sporer</string>
+    <string name="clear_app_cache_description">Tøm hurtiglager for alle programmer</string>
+    <string name="clear_app_cache">Tøm programhurtiglager</string>
+    <plurals name="alert_failed_to_force_stop">
+        <item quantity="one">Kunne ikke påtvinge stopp av %1$d program</item>
+        <item quantity="other">Kunne ikke påtvinge stopp av %1$d programmer</item>
+    </plurals>
+    <plurals name="alert_failed_to_clear_data">
+        <item quantity="one">Kunne ikke tømme data fra %1$d program</item>
+        <item quantity="other">Kunne ikke tømme data fra %1$d programmer</item>
+    </plurals>
+    <string name="export_blocking_rules">Eksporter blokkeringsregler</string>
+    <string name="disable_background">Skru av bakgrunn</string>
+    <string name="found_trackers">Fant disse sporerne:</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Testet &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"signature_no\" example=\"342\"&gt;%1$d&lt;/xliff:g&gt; signaturer på &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"6000\"&gt;%2$d&lt;/xliff:g&gt; klasser.
+\nTidsforløp &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"time\" example=\"10000\"&gt;%3$d&lt;/xliff:g&gt; ms (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"iteration_no\" example=\"100000\"&gt;%4$d&lt;/xliff:g&gt; gjentagelser).</string>
+    <plurals name="other_trackers_and_classes">
+        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; sporere med &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; klasser</item>
+        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; sporere med &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; klasser</item>
+    </plurals>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="one">2 sporere med &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; klasser</item>
+        <item quantity="other">2 sporere med &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; klasser</item>
+    </plurals>
+    <plurals name="tracker_and_classes">
+        <item quantity="one">1 sporer med &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; klasse</item>
+        <item quantity="other">1 sporer med &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; klasser</item>
+    </plurals>
+    <string name="word_wrap">Veksle linjebryting</string>
+    <string name="starting_activity">Startaktivitet: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;</string>
 </resources>
