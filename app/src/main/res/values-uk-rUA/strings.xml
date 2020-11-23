@@ -78,7 +78,7 @@
     <string name="app_ops">Керування дозволами</string>
     <string name="sys_config">Конфігурація системи</string>
     <string name="only_install">Тільки встановити</string>
-    <string name="install_without_data_loss">Якщо ви вимкнули перевірку підпису, ви можете використовувати опцію &lt;b&gt; Лише встановити &lt;/b&gt;, для установки додатка без втрати даних.</string>
+    <string name="install_without_data_loss">Якщо ви вимкнули перевірку підпису, ви можете використовувати опцію <b> Лише встановити </b>, для установки додатка без втрати даних.</string>
     <string name="app_data_will_be_lost">Існуючі дані буде втрачено.</string>
     <string name="signature_mismatch_for_system_apps">Не вдалося встановити додаток, оскільки встановлений додаток є системним, з іншим підписом.</string>
     <string name="do_you_want_to_uninstall_and_install">Ви хочете видалити та встановити додаток знову\?</string>
