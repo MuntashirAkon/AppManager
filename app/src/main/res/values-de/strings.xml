@@ -704,4 +704,7 @@
     <string name="user_profile_with_id">Profil: %1$s (%2$d)</string>
     <string name="advanced">Erweitert</string>
     <string name="simple">Einfach</string>
+    <string name="close">Schließen</string>
+    <string name="no_root">kein root</string>
+    <string name="root">Nutzer root</string>
 </resources>
