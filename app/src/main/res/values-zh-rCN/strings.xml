@@ -666,4 +666,7 @@
     <string name="user_profile_with_id">配置文件：%1$s (%2$d)</string>
     <string name="advanced">高级</string>
     <string name="simple">简单</string>
+    <string name="close">关闭</string>
+    <string name="no_root">无 root</string>
+    <string name="root">Root</string>
 </resources>
