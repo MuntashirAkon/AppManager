@@ -15,10 +15,10 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="instructions_header">[Estas instruções estão desatualizadas e não serão mais atualizadas. Visite o site de documentação oficial (https://muntashirakon.github.io/AppManager) para obter mais informações]</string>
+    <string name="instructions_header">[Estas instruções estão desatualizadas e não serão mais atualizadas. Visite o site de documentação oficial (https://muntashirakon.github.io/AppManager) para obter informações atualizadas]</string>
     <string name="uninstall">Desinstalar</string>
     <string name="permissions">Permissões utilizadas</string>
-    <string name="require_no_permission">Nenhuma permissão requerida</string>
+    <string name="require_no_permission">Nenhuma permissão necessária</string>
     <string name="activities">Atividades</string>
     <string name="launch">Iniciar</string>
     <string name="refresh">Atualizar</string>
@@ -606,7 +606,7 @@
     <string name="state_idle">Ocioso</string>
     <string name="state_device_io">I/O do dispositivo</string>
     <string name="touchscreen_finger">Dedo</string>
-    <string name="touchscreen_stylus">Stylus</string>
+    <string name="touchscreen_stylus">Caneta</string>
     <string name="touchscreen_no_touch">Sem touch</string>
     <string name="navigation_wheel">Roda</string>
     <string name="navigation_trackball">Trackball</string>
@@ -703,4 +703,7 @@
     <string name="user_profile_with_id">Perfil: %1$s (%2$d)</string>
     <string name="advanced">Avançado</string>
     <string name="simple">Simples</string>
+    <string name="close">Fechar</string>
+    <string name="no_root">Sem root</string>
+    <string name="root">Root</string>
 </resources>
