@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.main;
 
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -26,6 +27,8 @@ import java.util.Objects;
 
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.EmptyArray;
 
 /**
@@ -126,10 +129,13 @@ public class ApplicationItem extends PackageItemInfo {
 
     @Override
     public Drawable loadIcon(PackageManager pm) {
-        if (isInstalled) {
+        if (userHandles.length > 0) {
             try {
-                return pm.getApplicationIcon(packageName);
-            } catch (PackageManager.NameNotFoundException ignore) {}
+                ApplicationInfo info = ApiSupporter.getInstance(LocalServer.getInstance()).getApplicationInfo(packageName, 0, userHandles[0]);
+                return info.loadIcon(pm);
+            } catch (Exception ignore) {
+                ignore.printStackTrace();
+            }
         }
         return pm.getDefaultActivityIcon();
     }

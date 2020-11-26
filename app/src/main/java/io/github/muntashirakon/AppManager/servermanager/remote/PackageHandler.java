@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.servermanager.remote;
 import android.app.ActivityThread;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -38,6 +39,7 @@ public class PackageHandler extends ClassCallerProcessor {
 
     public static final int ACTION_PACKAGE_INFO = 1;
     public static final int ACTION_COMPONENT_SETTING = 2;
+    public static final int ACTION_APPLICATION_INFO = 3;
 
     public PackageHandler(Context mPackageContext, Context mSystemContext, byte[] bytes) {
         super(mPackageContext, mSystemContext, bytes);
@@ -68,6 +70,13 @@ public class PackageHandler extends ClassCallerProcessor {
                 throw new IllegalArgumentException("Component name cannot be null");
             int state = args.getInt(ARG_COMPONENT_STATE, PackageManager.COMPONENT_ENABLED_STATE_DEFAULT);
             pm.setComponentEnabledSetting(new ComponentName(packageName, componentName), state, flags, userHandle);
+        } else if (action == ACTION_APPLICATION_INFO) {
+            ApplicationInfo applicationInfo = pm.getApplicationInfo(packageName, flags, userHandle);
+            if (applicationInfo == null) {
+                throw new PackageManager.NameNotFoundException("Package doesn't exist.");
+            }
+            args.clear();
+            args.putParcelable("return", applicationInfo);
         }
         return args;
     }

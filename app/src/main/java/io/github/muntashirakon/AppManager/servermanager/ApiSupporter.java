@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.servermanager;
 
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
@@ -120,6 +121,32 @@ public class ApiSupporter {
                 throw new PackageManager.NameNotFoundException("Package doesn't exist.");
             }
             return packageInfo;
+        }
+    }
+
+    @NonNull
+    public ApplicationInfo getApplicationInfo(String packageName, int flags, int userHandle) throws Exception {
+        if (this.userHandle == userHandle) {
+            // Get using PackageManager if the handler are the same
+            return localServer.getContext().getPackageManager().getApplicationInfo(packageName, flags);
+        }
+        Bundle args = new Bundle();
+        args.putInt(PackageHandler.ARG_ACTION, PackageHandler.ACTION_APPLICATION_INFO);
+        args.putString(PackageHandler.ARG_PACKAGE_NAME, packageName);
+        args.putInt(PackageHandler.ARG_FLAGS, flags);
+        args.putInt(PackageHandler.ARG_USER_HANDLE, userHandle);
+        ClassCaller classCaller = new ClassCaller(this.packageName, PackageHandler.class.getName(), args);
+        CallerResult result = localServer.exec(classCaller);
+        result.getReplyObj();
+        if (result.getThrowable() != null) {
+            throw new Exception(result.getThrowable());
+        } else {
+            Bundle reply = result.getReplyBundle();
+            ApplicationInfo applicationInfo = reply.getParcelable("return");
+            if (applicationInfo == null) {
+                throw new PackageManager.NameNotFoundException("Package doesn't exist.");
+            }
+            return applicationInfo;
         }
     }
 
