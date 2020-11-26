@@ -704,4 +704,9 @@
     <string name="close">Kapat</string>
     <string name="no_root">Root yok</string>
     <string name="root">Root</string>
+    <string name="install_location_prefer_external">Harici tercih et</string>
+    <string name="install_location_internal_only">Yalnızca dahili</string>
+    <string name="install_location">Kurulum konumu</string>
+    <string name="installer">Kurucu</string>
+    <string name="comment">Yorum</string>
 </resources>
