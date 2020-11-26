@@ -41,7 +41,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
@@ -126,32 +125,36 @@ public class ExternalComponentsImporter {
     }
 
     @NonNull
-    public static Pair<Boolean, Integer> applyFromBlocker(@NonNull Context context, @NonNull List<Uri> uriList) {
+    public static Pair<Boolean, Integer> applyFromBlocker(@NonNull Context context, @NonNull List<Uri> uriList, int[] userHandles) {
         boolean failed = false;
         Integer failedCount = 0;
         for (Uri uri : uriList) {
-            try {
-                applyFromBlocker(context, uri);
-            } catch (Exception e) {
-                e.printStackTrace();
-                failed = true;
-                ++failedCount;
+            for (int userHandle : userHandles) {
+                try {
+                    applyFromBlocker(context, uri, userHandle);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    failed = true;
+                    ++failedCount;
+                }
             }
         }
         return new Pair<>(failed, failedCount);
     }
 
     @NonNull
-    public static Pair<Boolean, Integer> applyFromWatt(@NonNull Context context, @NonNull List<Uri> uriList) {
+    public static Pair<Boolean, Integer> applyFromWatt(@NonNull Context context, @NonNull List<Uri> uriList, int[] userHandles) {
         boolean failed = false;
         Integer failedCount = 0;
         for (Uri uri : uriList) {
-            try {
-                applyFromWatt(context, uri);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                failed = true;
-                ++failedCount;
+            for (int userHandle : userHandles) {
+                try {
+                    applyFromWatt(context, uri, userHandle);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    failed = true;
+                    ++failedCount;
+                }
             }
         }
         return new Pair<>(failed, failedCount);
@@ -163,7 +166,7 @@ public class ExternalComponentsImporter {
      * @param context Application context
      * @param fileUri File URI
      */
-    private static void applyFromWatt(@NonNull Context context, Uri fileUri) throws FileNotFoundException {
+    private static void applyFromWatt(@NonNull Context context, Uri fileUri, int userHandle) throws FileNotFoundException {
         String filename = IOUtils.getFileName(context.getContentResolver(), fileUri);
         if (filename == null) {
             throw new FileNotFoundException("The requested content is not found.");
@@ -172,7 +175,7 @@ public class ExternalComponentsImporter {
             try (InputStream rulesStream = context.getContentResolver().openInputStream(fileUri)) {
                 if (rulesStream == null) throw new IOException("Failed to open input stream.");
                 String packageName = IOUtils.trimExtension(filename);
-                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, Users.getCurrentUserHandle())) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
                     HashMap<String, RulesStorageManager.Type> components = ComponentUtils.readIFWRules(rulesStream, packageName);
                     for (String componentName : components.keySet()) {
                         // Overwrite rules if exists
@@ -193,10 +196,8 @@ public class ExternalComponentsImporter {
      * @param uri     File URI
      */
     @SuppressLint("WrongConstant")
-    private static void applyFromBlocker(@NonNull Context context, Uri uri)
+    private static void applyFromBlocker(@NonNull Context context, Uri uri, int userHandle)
             throws Exception {
-        // Apply only for the current user
-        int userHandle = Users.getCurrentUserHandle();
         try {
             String jsonString = IOUtils.getFileContent(context.getContentResolver(), uri);
             HashMap<String, HashMap<String, RulesStorageManager.Type>> packageComponents = new HashMap<>();

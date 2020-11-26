@@ -72,6 +72,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                 args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
                 args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
                 args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, null);
+                args.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, Users.getUsersHandles());
                 dialogFragment.setArguments(args);
                 activity.getSupportFragmentManager().popBackStackImmediate();
                 dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
@@ -83,13 +84,14 @@ public class ImportExportDialogFragment extends DialogFragment {
         args.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_IMPORT);
         args.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
         args.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, null);
+        args.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, Users.getUsersHandles());
         dialogFragment.setArguments(args);
         activity.getSupportFragmentManager().popBackStackImmediate();
         dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
         if (getDialog() != null) getDialog().cancel();
     });
     private final ActivityResultLauncher<String> importFromWatt = registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), uris -> {
-        Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromWatt(activity.getApplicationContext(), uris);
+        Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromWatt(activity.getApplicationContext(), uris, Users.getUsersHandles());
         if (!status.first) {  // Not failed
             Toast.makeText(getContext(), R.string.the_import_was_successful, Toast.LENGTH_LONG).show();
         } else {
@@ -98,7 +100,7 @@ public class ImportExportDialogFragment extends DialogFragment {
         if (getDialog() != null) getDialog().cancel();
     });
     private final ActivityResultLauncher<String> importFromBlocker = registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), uris -> {
-        Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromBlocker(activity.getApplicationContext(), uris);
+        Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromBlocker(activity.getApplicationContext(), uris, Users.getUsersHandles());
         if (!status.first) {  // Not failed
             Toast.makeText(getContext(), R.string.the_import_was_successful, Toast.LENGTH_LONG).show();
         } else {

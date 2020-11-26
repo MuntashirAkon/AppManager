@@ -828,8 +828,8 @@ public class BackupManager {
                 // Get decrypted file
                 permsFile = backupFile.getPermsFile(CryptoUtils.MODE_NO_ENCRYPTION);
                 decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
-                try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()))) {
-                    importer.addRulesFromUri(Uri.fromFile(permsFile), userHandle);
+                try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()), new int[]{userHandle})) {
+                    importer.addRulesFromUri(Uri.fromFile(permsFile));
                     importer.setPackagesToImport(Collections.singletonList(packageName));
                     importer.applyRules();
                 } catch (IOException e) {
@@ -861,8 +861,8 @@ public class BackupManager {
                 // Get decrypted file
                 rulesFile = backupFile.getRulesFile(CryptoUtils.MODE_NO_ENCRYPTION);
                 decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
-                try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()))) {
-                    importer.addRulesFromUri(Uri.fromFile(rulesFile), userHandle);
+                try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()), new int[]{userHandle})) {
+                    importer.addRulesFromUri(Uri.fromFile(rulesFile));
                     importer.setPackagesToImport(Collections.singletonList(packageName));
                     importer.applyRules();
                 } catch (IOException e) {

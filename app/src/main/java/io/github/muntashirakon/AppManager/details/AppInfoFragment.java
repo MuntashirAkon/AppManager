@@ -174,6 +174,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 exportArgs.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
                 exportArgs.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
                 exportArgs.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, packages);
+                exportArgs.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, new int[]{mainModel.getUserHandle()});
                 dialogFragment.setArguments(exportArgs);
                 dialogFragment.show(mActivity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
             });
