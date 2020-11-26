@@ -102,6 +102,8 @@ import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
+import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
@@ -1116,13 +1118,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
         if (isExternalApk) {
             try {
-                mInstalledPackageInfo = mPackageManager.getPackageInfo(mPackageName,
+                mInstalledPackageInfo = ApiSupporter.getInstance(LocalServer.getInstance()).getPackageInfo(mPackageName,
                         PackageManager.GET_PERMISSIONS | PackageManager.GET_ACTIVITIES
                                 | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                                 | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
                                 | flagDisabledComponents | flagSigningInfo | PackageManager.GET_CONFIGURATIONS
-                                | PackageManager.GET_SHARED_LIBRARY_FILES);
-            } catch (PackageManager.NameNotFoundException e) {
+                                | PackageManager.GET_SHARED_LIBRARY_FILES, mainModel.getUserHandle());
+            } catch (Exception e) {
                 mInstalledPackageInfo = null;
             }
         }

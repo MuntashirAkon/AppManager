@@ -98,6 +98,7 @@ public class PackageInstallerActivity extends BaseActivity {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 try {
+                    // No need for user handle since it is only applicable for the current user (no-root)
                     getPackageManager().getPackageInfo(packageName, 0);
                     // The package is still installed meaning that the app uninstall wasn't successful
                     Toast.makeText(this, getString(R.string.failed_to_install_package_name, appLabel), Toast.LENGTH_SHORT).show();

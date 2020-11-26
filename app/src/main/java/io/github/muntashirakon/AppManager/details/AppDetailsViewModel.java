@@ -142,6 +142,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         Log.d("ADVM", "Package name is being set");
         isExternalApk = false;
         setPackageName(packageName);
+        if (getPackageInfo() == null) throw new ApkFile.ApkFileException("Package not installed.");
         apkFileKey = ApkFile.createInstance(getPackageInfo().applicationInfo);
         apkFile = ApkFile.getInstance(apkFileKey);
     }

@@ -198,6 +198,7 @@ public class BatchOpsManager {
 
     private Result opBackupApk() {
         List<String> failedPackages = new ArrayList<>();
+        int userHandle = Users.getCurrentUserHandle();
         int max = packageNames.size();
         int i = 0;
         Context context = AppManager.getContext();
@@ -208,7 +209,7 @@ public class BatchOpsManager {
             // Send progress
             sendProgress(context, PackageUtils.getPackageLabel(pm, packageName), max, ++i);
             // Do operation
-            if (!ApkUtils.backupApk(packageName)) failedPackages.add(packageName);
+            if (!ApkUtils.backupApk(packageName, userHandle)) failedPackages.add(packageName);
         }
         return lastResult = new Result() {
             @Override

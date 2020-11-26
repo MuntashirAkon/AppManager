@@ -23,6 +23,7 @@ import android.app.usage.UsageStatsManager;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.UserInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.text.Spannable;
@@ -36,6 +37,8 @@ import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -51,6 +54,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
@@ -153,9 +157,30 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
                     appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, item.packageName);
                     if (item.userHandles.length > 0) {
-                        appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, item.userHandles[0]);
-                    }
-                    mActivity.startActivity(appDetailsIntent);
+                        if (item.userHandles.length > 1) {
+                            List<UserInfo> users = Users.getUsers();
+                            String[] userNames = new String[item.userHandles.length];
+                            for (UserInfo info : users) {
+                                for (int i = 0; i < item.userHandles.length; ++i) {
+                                    if (info.id == item.userHandles[i]) {
+                                        userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
+                                    }
+                                }
+                            }
+                            new MaterialAlertDialogBuilder(mActivity)
+                                    .setTitle(R.string.select_user)
+                                    .setItems(userNames, (dialog, which) -> {
+                                        appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, item.userHandles[which]);
+                                        mActivity.startActivity(appDetailsIntent);
+                                        dialog.dismiss();
+                                    })
+                                    .setNegativeButton(R.string.cancel, null)
+                                    .show();
+                        } else {
+                            appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, item.userHandles[0]);
+                            mActivity.startActivity(appDetailsIntent);
+                        }
+                    } else mActivity.startActivity(appDetailsIntent);
                 }
             } else toggleSelection(item, position);
         });

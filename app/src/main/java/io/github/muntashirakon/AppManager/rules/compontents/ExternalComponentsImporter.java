@@ -44,6 +44,8 @@ import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
@@ -58,14 +60,15 @@ public class ExternalComponentsImporter {
         List<String> failedPkgList = new ArrayList<>();
         Collection<Integer> appOpList;
         AppOpsService appOpsService = new AppOpsService();
-        for (String packageName: packageNames) {
+        for (String packageName : packageNames) {
             appOpList = PackageUtils.getFilteredAppOps(packageName, appOps);
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
-                for (int appOp: appOpList) {
+                for (int appOp : appOpList) {
                     try {
                         appOpsService.setMode(appOp, -1, packageName, AppOpsManager.MODE_IGNORED, userHandle);
                         cb.setAppOp(String.valueOf(appOp), AppOpsManager.MODE_IGNORED);
-                    } catch (Exception ignore) {}
+                    } catch (Exception ignore) {
+                    }
                 }
                 cb.applyRules(true);
             } catch (Exception e) {
@@ -81,14 +84,15 @@ public class ExternalComponentsImporter {
         List<String> failedPkgList = new ArrayList<>();
         Collection<Integer> appOpList;
         AppOpsService appOpsService = new AppOpsService();
-        for (String packageName: packageNames) {
+        for (String packageName : packageNames) {
             appOpList = PackageUtils.getFilteredAppOps(packageName, appOps);
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
-                for (int appOp: appOpList) {
+                for (int appOp : appOpList) {
                     try {
                         appOpsService.setMode(appOp, -1, packageName, AppOpsManager.MODE_DEFAULT, userHandle);
                         cb.setAppOp(String.valueOf(appOp), AppOpsManager.MODE_DEFAULT);
-                    } catch (Exception ignore) {}
+                    } catch (Exception ignore) {
+                    }
                 }
                 cb.applyRules(true);
             } catch (Exception e) {
@@ -103,10 +107,10 @@ public class ExternalComponentsImporter {
     public static List<String> applyFromExistingBlockList(@NonNull List<String> packageNames, int userHandle) {
         List<String> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
-        for (String packageName: packageNames) {
+        for (String packageName : packageNames) {
             components = PackageUtils.getUserDisabledComponentsForPackage(packageName);
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
-                for (String componentName: components.keySet()) {
+                for (String componentName : components.keySet()) {
                     cb.addComponent(componentName, components.get(componentName));
                 }
                 // Remove IFW blocking rules if exists
@@ -124,7 +128,7 @@ public class ExternalComponentsImporter {
     public static Pair<Boolean, Integer> applyFromBlocker(@NonNull Context context, @NonNull List<Uri> uriList) {
         boolean failed = false;
         Integer failedCount = 0;
-        for(Uri uri: uriList) {
+        for (Uri uri : uriList) {
             try {
                 applyFromBlocker(context, uri);
             } catch (Exception e) {
@@ -140,7 +144,7 @@ public class ExternalComponentsImporter {
     public static Pair<Boolean, Integer> applyFromWatt(@NonNull Context context, @NonNull List<Uri> uriList) {
         boolean failed = false;
         Integer failedCount = 0;
-        for(Uri uri: uriList) {
+        for (Uri uri : uriList) {
             try {
                 applyFromWatt(context, uri);
             } catch (FileNotFoundException e) {
@@ -160,14 +164,16 @@ public class ExternalComponentsImporter {
      */
     private static void applyFromWatt(@NonNull Context context, Uri fileUri) throws FileNotFoundException {
         String filename = IOUtils.getFileName(context.getContentResolver(), fileUri);
-        if (filename == null) throw new FileNotFoundException("The requested content is not found.");
+        if (filename == null) {
+            throw new FileNotFoundException("The requested content is not found.");
+        }
         try {
             try (InputStream rulesStream = context.getContentResolver().openInputStream(fileUri)) {
                 if (rulesStream == null) throw new IOException("Failed to open input stream.");
                 String packageName = IOUtils.trimExtension(filename);
                 try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, Users.getCurrentUserHandle())) {
                     HashMap<String, RulesStorageManager.Type> components = ComponentUtils.readIFWRules(rulesStream, packageName);
-                    for (String componentName: components.keySet()) {
+                    for (String componentName : components.keySet()) {
                         // Overwrite rules if exists
                         cb.addComponent(componentName, components.get(componentName));
                     }
@@ -181,41 +187,44 @@ public class ExternalComponentsImporter {
 
     /**
      * Apply from blocker
+     *
      * @param context Application context
-     * @param uri File URI
+     * @param uri     File URI
      */
     @SuppressLint("WrongConstant")
     private static void applyFromBlocker(@NonNull Context context, Uri uri)
             throws Exception {
+        // Apply only for the current user
+        int userHandle = Users.getCurrentUserHandle();
         try {
             String jsonString = IOUtils.getFileContent(context.getContentResolver(), uri);
             HashMap<String, HashMap<String, RulesStorageManager.Type>> packageComponents = new HashMap<>();
             HashMap<String, PackageInfo> packageInfoList = new HashMap<>();
-            PackageManager packageManager = context.getPackageManager();
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONArray components = jsonObject.getJSONArray("components");
-            for (int i = 0; i<components.length(); ++i) {
+            for (int i = 0; i < components.length(); ++i) {
                 JSONObject component = (JSONObject) components.get(i);
                 String packageName = component.getString("packageName");
                 if (!packageInfoList.containsKey(packageName)) {
-                    packageInfoList.put(packageName, packageManager.getPackageInfo(packageName,
+                    packageInfoList.put(packageName, ApiSupporter.getInstance(LocalServer
+                            .getInstance()).getPackageInfo(packageName,
                             PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
                                     | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES
-                                    | flagDisabledComponents));
+                                    | flagDisabledComponents, userHandle));
                 }
                 String componentName = component.getString("name");
-                if (!packageComponents.containsKey(packageName))
+                if (!packageComponents.containsKey(packageName)) {
                     packageComponents.put(packageName, new HashMap<>());
+                }
+                // Fetch package components using PackageInfo since the type used in Blocker can be wrong
                 packageComponents.get(packageName).put(componentName, getType(componentName, packageInfoList.get(packageName)));
             }
             if (packageComponents.size() > 0) {
-                // Apply only for the current user
-                int userHandle = Users.getCurrentUserHandle();
-                for (String packageName: packageComponents.keySet()) {
+                for (String packageName : packageComponents.keySet()) {
                     HashMap<String, RulesStorageManager.Type> disabledComponents = packageComponents.get(packageName);
                     if (disabledComponents.size() > 0) {
-                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)){
-                            for (String component: disabledComponents.keySet()) {
+                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
+                            for (String component : disabledComponents.keySet()) {
                                 cb.addComponent(component, disabledComponents.get(component));
                             }
                             cb.applyRules(true);
@@ -231,13 +240,13 @@ public class ExternalComponentsImporter {
     }
 
     private static RulesStorageManager.Type getType(@NonNull String name, @NonNull PackageInfo packageInfo) {
-        for (ActivityInfo activityInfo: packageInfo.activities)
+        for (ActivityInfo activityInfo : packageInfo.activities)
             if (activityInfo.name.equals(name)) return RulesStorageManager.Type.ACTIVITY;
-        for (ProviderInfo providerInfo: packageInfo.providers)
+        for (ProviderInfo providerInfo : packageInfo.providers)
             if (providerInfo.name.equals(name)) return RulesStorageManager.Type.PROVIDER;
-        for (ActivityInfo receiverInfo: packageInfo.receivers)
+        for (ActivityInfo receiverInfo : packageInfo.receivers)
             if (receiverInfo.name.equals(name)) return RulesStorageManager.Type.RECEIVER;
-        for (ServiceInfo serviceInfo: packageInfo.services)
+        for (ServiceInfo serviceInfo : packageInfo.services)
             if (serviceInfo.name.equals(name)) return RulesStorageManager.Type.SERVICE;
         return RulesStorageManager.Type.UNKNOWN;
     }

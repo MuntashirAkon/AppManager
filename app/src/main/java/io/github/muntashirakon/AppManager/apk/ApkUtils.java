@@ -29,6 +29,8 @@ import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
+import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 import static io.github.muntashirakon.AppManager.utils.IOUtils.copy;
@@ -64,7 +66,7 @@ public final class ApkUtils {
      *
      * @return true on success, false on failure
      */
-    public static boolean backupApk(String packageName) {
+    public static boolean backupApk(String packageName, int userHandle) {
         File backupPath = BackupFiles.getApkBackupDirectory();
         if (!backupPath.exists()) {
             if (!backupPath.mkdirs()) return false;
@@ -72,7 +74,8 @@ public final class ApkUtils {
         // Fetch package info
         try {
             PackageManager pm = AppManager.getContext().getPackageManager();
-            PackageInfo packageInfo = pm.getPackageInfo(packageName, 0);
+            PackageInfo packageInfo = ApiSupporter.getInstance(LocalServer.getInstance())
+                    .getPackageInfo(packageName, 0, userHandle);
             ApplicationInfo info = packageInfo.applicationInfo;
             String outputName = info.loadLabel(pm).toString() + "_" + packageInfo.versionName;
             File tmpPublicSource;

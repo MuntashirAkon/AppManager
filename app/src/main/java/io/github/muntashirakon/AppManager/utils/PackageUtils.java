@@ -388,6 +388,7 @@ public final class PackageUtils {
     public static Signature[] getSigningInfo(@NonNull PackageInfo packageInfo, boolean isExternal) {
         if (!isExternal && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             SigningInfo signingInfo = packageInfo.signingInfo;
+            if (signingInfo == null) return null;
             return signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
                     : signingInfo.getSigningCertificateHistory();
         } else return packageInfo.signatures;
