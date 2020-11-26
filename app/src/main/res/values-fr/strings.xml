@@ -53,4 +53,5 @@
     <string name="require_no_permission">Aucune autorisation requise</string>
     <string name="permissions">Nécessite des autorisations</string>
     <string name="instructions_header">[Ces instructions sont dépassées et ne seront plus mises à jour. Visitez le site officiel de la documentation (https://muntashirakon.github.io/AppManager) pour obtenir des informations actualisées]</string>
+    <string name="installer_app">Installeur App</string>
 </resources>
