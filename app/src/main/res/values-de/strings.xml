@@ -707,4 +707,8 @@
     <string name="close">Schließen</string>
     <string name="no_root">kein root</string>
     <string name="root">Nutzer root</string>
+    <string name="install_location_prefer_external">Externe bevorzugen</string>
+    <string name="install_location_internal_only">Nur intern</string>
+    <string name="installer">Installationsprogramm</string>
+    <string name="comment">Anmerkung</string>
 </resources>
