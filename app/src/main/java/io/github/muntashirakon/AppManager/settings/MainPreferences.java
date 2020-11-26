@@ -18,6 +18,8 @@
 package io.github.muntashirakon.AppManager.settings;
 
 import android.annotation.SuppressLint;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.view.View;
@@ -26,6 +28,7 @@ import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -47,11 +50,11 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class MainPreferences extends PreferenceFragmentCompat {
@@ -74,12 +77,19 @@ public class MainPreferences extends PreferenceFragmentCompat {
             R.string.open_pgp_provider
     };
 
+    private static final int[] installLocationNames = new int[]{
+            R.string.auto,  // PackageInfo.INSTALL_LOCATION_AUTO
+            R.string.install_location_internal_only,  // PackageInfo.INSTALL_LOCATION_INTERNAL_ONLY
+            R.string.install_location_prefer_external,  // PackageInfo.INSTALL_LOCATION_PREFER_EXTERNAL
+    };
+
     SettingsActivity activity;
     private int currentTheme;
     private String currentLang;
     @Runner.Mode
     private String currentMode;
     private int currentCompression;
+    private String installerApp;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -135,6 +145,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
                             (dialog, which) -> currentMode = MODE_NAMES.get(which))
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, currentMode);
+                        mode.setSummary(getString(R.string.current_mode, modes[MODE_NAMES.indexOf(currentMode)]));
                         RunnerUtils.setModeOfOps(activity);
                     })
                     .setNegativeButton(R.string.cancel, null)
@@ -155,9 +166,6 @@ public class MainPreferences extends PreferenceFragmentCompat {
             }
             return true;
         });
-        // Show users in installer
-        SwitchPreferenceCompat users_in_installer = findPreference("show_users_in_installer");
-        users_in_installer.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_SHOW_USERS_IN_INSTALLER_BOOL));
         // Import/export rules
         findPreference("import_export_rules").setOnPreferenceClickListener(preference -> {
             new ImportExportDialogFragment().show(getParentFragmentManager(), ImportExportDialogFragment.TAG);
@@ -185,6 +193,64 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     })
                     .setNegativeButton(R.string.no, null)
                     .show();
+            return true;
+        });
+        // Display users in installer
+        SwitchPreferenceCompat installerDisplayUsersPref = findPreference("installer_display_users");
+        installerDisplayUsersPref.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_USERS_BOOL));
+        Preference installLocationPref = findPreference("installer_install_location");
+        int installLocation = (int) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT);
+        installLocationPref.setSummary(installLocationNames[installLocation]);
+        installLocationPref.setOnPreferenceClickListener(preference -> {
+            CharSequence[] installLocationTexts = new CharSequence[installLocationNames.length];
+            for (int i = 0; i < installLocationNames.length; ++i) {
+                installLocationTexts[i] = getString(installLocationNames[i]);
+            }
+            int choice = (int) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT);
+            new MaterialAlertDialogBuilder(activity)
+                    .setTitle(R.string.install_location)
+                    .setSingleChoiceItems(installLocationTexts, choice, (dialog, newInstallLocation) -> {
+                        AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT, newInstallLocation);
+                        installLocationPref.setSummary(installLocationNames[newInstallLocation]);
+                    })
+                    .setNegativeButton(R.string.cancel, (dialog, which) -> {
+                        // Revert
+                        AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT, installLocation);
+                        installLocationPref.setSummary(installLocationNames[installLocation]);
+                    })
+                    .show();
+            return true;
+        });
+        Preference installerAppPref = findPreference("installer_installer_app");
+        PackageManager pm = activity.getPackageManager();
+        installerApp = (String) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
+        installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
+        installerAppPref.setOnPreferenceClickListener(preference -> {
+            activity.progressIndicator.show();
+            new Thread(() -> {
+                // List apps
+                List<PackageInfo> packageInfoList = pm.getInstalledPackages(0);
+                ArrayList<String> items = new ArrayList<>(packageInfoList.size());
+                ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
+                for (PackageInfo info : packageInfoList) {
+                    items.add(info.packageName);
+                    itemNames.add(info.applicationInfo.loadLabel(pm));
+                }
+                int selectedApp = itemNames.indexOf(installerApp);
+                activity.runOnUiThread(() -> {
+                    activity.progressIndicator.hide();
+                    new MaterialAlertDialogBuilder(activity)
+                            .setTitle(R.string.installer_app)
+                            .setSingleChoiceItems(itemNames.toArray(new CharSequence[0]),
+                                    selectedApp, (dialog, which) -> installerApp = items.get(which))
+                            .setPositiveButton(R.string.ok, (dialog, which) -> {
+                                AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR, installerApp);
+                                installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .show();
+                });
+            }).start();
             return true;
         });
         // Backup compression method

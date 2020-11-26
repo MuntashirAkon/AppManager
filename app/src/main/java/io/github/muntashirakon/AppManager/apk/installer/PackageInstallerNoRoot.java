@@ -34,6 +34,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 public final class PackageInstallerNoRoot extends AMPackageInstaller {
@@ -125,6 +126,7 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
         cleanOldSessions();
         // Create install session
         PackageInstaller.SessionParams sessionParams = new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
+        sessionParams.setInstallLocation((Integer) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             sessionParams.setInstallReason(PackageManager.INSTALL_REASON_USER);
         try {

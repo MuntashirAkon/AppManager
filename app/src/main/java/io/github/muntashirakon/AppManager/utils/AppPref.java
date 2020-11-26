@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -64,6 +65,9 @@ public class AppPref {
         PREF_ENABLE_KILL_FOR_SYSTEM_BOOL,
         PREF_ENCRYPTION_STR,
         PREF_GLOBAL_BLOCKING_ENABLED_BOOL,
+        PREF_INSTALLER_DISPLAY_USERS_BOOL,
+        PREF_INSTALLER_INSTALL_LOCATION_INT,
+        PREF_INSTALLER_INSTALLER_APP_STR,
         PREF_LAST_VERSION_CODE_LONG,
         PREF_MAIN_WINDOW_FILTER_FLAGS_INT,
         PREF_MAIN_WINDOW_SORT_ORDER_INT,
@@ -75,7 +79,6 @@ public class AppPref {
         PREF_RUNNING_APPS_FILTER_FLAGS_INT,
         PREF_RUNNING_APPS_SORT_ORDER_INT,
         PREF_SHOW_DISCLAIMER_BOOL,
-        PREF_SHOW_USERS_IN_INSTALLER_BOOL,
         PREF_USAGE_ACCESS_ENABLED_BOOL;
 
         public static final String[] keys = new String[values().length];
@@ -304,7 +307,7 @@ public class AppPref {
             case PREF_ADB_MODE_ENABLED_BOOL:
             case PREF_ENABLE_KILL_FOR_SYSTEM_BOOL:
             case PREF_GLOBAL_BLOCKING_ENABLED_BOOL:
-            case PREF_SHOW_USERS_IN_INSTALLER_BOOL:
+            case PREF_INSTALLER_DISPLAY_USERS_BOOL:
                 return false;
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_USAGE_ACCESS_ENABLED_BOOL:
@@ -335,6 +338,10 @@ public class AppPref {
                 return "";
             case PREF_MODE_OF_OPS_STR:
                 return Runner.MODE_AUTO;
+            case PREF_INSTALLER_INSTALL_LOCATION_INT:
+                return PackageInfo.INSTALL_LOCATION_AUTO;
+            case PREF_INSTALLER_INSTALLER_APP_STR:
+                return AppManager.getContext().getPackageName();
         }
         throw new IllegalArgumentException("Pref key not found.");
     }

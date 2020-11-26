@@ -38,11 +38,6 @@
         app:title="@string/pref_usage_access_enabled"
         app:summary="@string/pref_usage_access_enabled_msg" />
 
-    <SwitchPreferenceCompat
-        app:key="show_users_in_installer"
-        app:title="@string/pref_show_users_in_installer"
-        app:summary="@string/pref_show_users_in_installer_msg" />
-
     <PreferenceCategory
         app:key="rules"
         app:title="@string/rules">
@@ -65,6 +60,27 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        app:key="installer"
+        app:title="@string/installer">
+
+        <SwitchPreferenceCompat
+            app:key="installer_display_users"
+            app:title="@string/pref_show_users_in_installer"
+            app:summary="@string/pref_show_users_in_installer_msg" />
+
+        <Preference
+            app:key="installer_install_location"
+            app:title="@string/install_location"
+            tools:summary="Auto" />
+
+        <Preference
+            app:key="installer_installer_app"
+            app:title="@string/installer_app"
+            tools:summary="App Manager" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         app:key="backup_restore"
         app:title="@string/backup_restore">
 
@@ -81,8 +97,7 @@
         <Preference
             app:key="encryption"
             app:title="@string/encryption"
-            app:summary="@string/pref_encryption_msg">
-        </Preference>
+            app:summary="@string/pref_encryption_msg" />
 
     </PreferenceCategory>
 

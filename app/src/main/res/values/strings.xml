@@ -738,4 +738,8 @@
     <string name="no_root">No root</string>
     <string name="close">Close</string>
     <string name="comment">Comment</string>
+    <string name="installer">Installer</string>
+    <string name="install_location">Install location</string>
+    <string name="install_location_internal_only">Internal only</string>
+    <string name="install_location_prefer_external">Prefer external</string>
 </resources>

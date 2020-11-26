@@ -358,7 +358,7 @@ public class PackageInstallerActivity extends BaseActivity {
 
     private void launchInstallService() {
         // Select user
-        if (AppPref.isRootOrAdbEnabled() && (boolean) AppPref.get(AppPref.PrefKey.PREF_SHOW_USERS_IN_INSTALLER_BOOL)) {
+        if (AppPref.isRootOrAdbEnabled() && (boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_USERS_BOOL)) {
             new Thread(() -> {
                 // Init local server first
                 LocalServer.getInstance();

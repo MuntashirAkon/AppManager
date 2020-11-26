@@ -28,7 +28,6 @@ import java.io.InputStream;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -129,7 +128,9 @@ public final class PackageInstallerShell extends AMPackageInstaller {
     @Override
     boolean openSession() {
         String cmd = installCmd + " install-create -r -d -t --user " +
-                RunnerUtils.userHandleToUser(userHandle) + " -i " + BuildConfig.APPLICATION_ID;
+                RunnerUtils.userHandleToUser(userHandle) + " -i " +
+                AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR) +
+                " --install-location " + AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT);
         Runner.Result result = Runner.runCommand(cmd);
         String buf = result.getOutput();
         if (!result.isSuccessful() || buf == null || !buf.contains("Success")) {
