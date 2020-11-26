@@ -25,11 +25,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,32 +35,42 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.misc.AlertDialogActivity;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class BatchOpsService extends IntentService {
     /**
-     * The string to be placed in the notification header. Default: "Batch Operations"
+     * The {@link String} to be placed in the notification header. Default: "Batch Operations"
      */
     public static final String EXTRA_HEADER = "EXTRA_HEADER";
     /**
-     * Name of the batch operation, integer value.
+     * Name of the batch operation, {@link Integer} value.
      */
     public static final String EXTRA_OP = "EXTRA_OP";
     /**
-     * An ArrayList of package names (string value) on which operations will be carried out.
+     * An {@link ArrayList} of package names (string value) on which operations will be carried out.
      */
     public static final String EXTRA_OP_PKG = "EXTRA_OP_PKG";
+    /**
+     * An {@link ArrayList} of user handles associated with each package.
+     */
+    public static final String EXTRA_OP_USERS = "EXTRA_OP_USERS";
+    /**
+     * Use this instead of {@link #EXTRA_OP_USERS} if all packages are associated with a single
+     * user. It is a single user handle of {@link Integer} type.
+     */
+    public static final String EXTRA_OP_USER = "EXTRA_OP_USER";
     /**
      * A {@link Bundle} containing additional arguments, these arguments are unwrapped by
      * {@link BatchOpsManager} based on necessity.
      */
     public static final String EXTRA_OP_EXTRA_ARGS = "EXTRA_OP_EXTRA_ARGS";
     /**
-     * An ArrayList of package name (string value) which are failed after the batch operation is
-     * complete.
+     * An {@link ArrayList} of package name (string value) which are failed after the batch
+     * operation is complete.
      */
     public static final String EXTRA_FAILED_PKG = "EXTRA_FAILED_PKG_ARR";
     /**
@@ -127,6 +135,7 @@ public class BatchOpsService extends IntentService {
     private int op = BatchOpsManager.OP_NONE;
     @Nullable
     private ArrayList<String> packages;
+    private ArrayList<Integer> userHandles;
     Bundle args;
     private String header;
     private NotificationCompat.Builder builder;
@@ -186,6 +195,12 @@ public class BatchOpsService extends IntentService {
         op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
         packages = intent.getStringArrayListExtra(EXTRA_OP_PKG);
         args = intent.getBundleExtra(EXTRA_OP_EXTRA_ARGS);
+        userHandles = intent.getIntegerArrayListExtra(EXTRA_OP_USERS);
+        int userHandle = intent.getIntExtra(EXTRA_OP_USER, Users.getCurrentUserHandle());
+        if (userHandles == null) {
+            userHandles = new ArrayList<>(packages.size());
+            for (String ignore : packages) userHandles.add(userHandle);
+        }
         if (op == BatchOpsManager.OP_NONE || packages == null) {
             sendResults(Activity.RESULT_CANCELED, null);
             return;
@@ -193,11 +208,11 @@ public class BatchOpsService extends IntentService {
         sendStarted();
         BatchOpsManager batchOpsManager = new BatchOpsManager();
         batchOpsManager.setArgs(args);
-        BatchOpsManager.Result result = batchOpsManager.performOp(op, packages);
+        BatchOpsManager.Result result = batchOpsManager.performOp(op, packages, userHandles);
         if (result.isSuccessful()) {
             sendResults(Activity.RESULT_OK, null);
         } else {
-            sendResults(Activity.RESULT_FIRST_USER, packagesToAppLabels(result.failedPackages()));
+            sendResults(Activity.RESULT_FIRST_USER, result);
         }
     }
 
@@ -214,16 +229,16 @@ public class BatchOpsService extends IntentService {
         sendBroadcast(broadcastIntent);
     }
 
-    private void sendResults(int result, @Nullable ArrayList<String> failedPackages) {
+    private void sendResults(int result, @Nullable BatchOpsManager.Result opResult) {
         Intent broadcastIntent = new Intent(ACTION_BATCH_OPS_COMPLETED);
         broadcastIntent.putExtra(EXTRA_OP, op);
         broadcastIntent.putExtra(EXTRA_OP_PKG, packages != null ? packages.toArray(new String[0]) : new String[0]);
-        broadcastIntent.putExtra(EXTRA_FAILED_PKG, failedPackages != null ? failedPackages.toArray(new String[0]) : new String[0]);
+        broadcastIntent.putExtra(EXTRA_FAILED_PKG, opResult != null ? opResult.getFailedPackages().toArray(new String[0]) : new String[0]);
         sendBroadcast(broadcastIntent);
-        sendNotification(result, failedPackages);
+        sendNotification(result, opResult);
     }
 
-    private void sendNotification(int result, @Nullable ArrayList<String> failedPackages) {
+    private void sendNotification(int result, BatchOpsManager.Result opResult) {
         String contentTitle = getDesiredOpTitle();
         NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this);
         builder.setAutoCancel(true)
@@ -241,13 +256,14 @@ public class BatchOpsService extends IntentService {
                 break;
             case Activity.RESULT_FIRST_USER:  // Failed
                 String detailsMessage = getString(R.string.full_stop_tap_to_see_details);
-                if (failedPackages != null) {
-                    String message = getDesiredErrorString(failedPackages.size());
+                if (opResult.getFailedPackages() != null) {
+                    String message = getDesiredErrorString(opResult.getFailedPackages().size());
                     Intent intent = new Intent(this, AlertDialogActivity.class);
                     intent.putExtra(EXTRA_OP, op);
                     intent.putExtra(EXTRA_OP_EXTRA_ARGS, args);
                     intent.putExtra(EXTRA_FAILURE_MESSAGE, message);
-                    intent.putStringArrayListExtra(EXTRA_FAILED_PKG, failedPackages);
+                    intent.putStringArrayListExtra(EXTRA_FAILED_PKG, opResult.getFailedPackages());
+                    intent.putIntegerArrayListExtra(EXTRA_OP_USERS, opResult.getAssociatedUserHandles());
                     PendingIntent pendingIntent = PendingIntent.getActivity(this,
                             0, intent, PendingIntent.FLAG_ONE_SHOT);
                     builder.setContentIntent(pendingIntent);
@@ -255,17 +271,6 @@ public class BatchOpsService extends IntentService {
                 } else builder.setContentText(getString(R.string.error) + detailsMessage);
         }
         NotificationUtils.displayHighPriorityNotification(this, builder.build());
-    }
-
-    @Nullable
-    private ArrayList<String> packagesToAppLabels(@Nullable List<String> packages) {
-        if (packages == null) return null;
-        ArrayList<String> appLabels = new ArrayList<>();
-        PackageManager pm = getPackageManager();
-        for (String packageName : packages) {
-            appLabels.add(PackageUtils.getPackageLabel(pm, packageName));
-        }
-        return appLabels;
     }
 
     @NonNull

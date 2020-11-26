@@ -33,12 +33,12 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
@@ -55,6 +55,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -75,7 +76,7 @@ public class MainViewModel extends AndroidViewModel {
     private int mFilterFlags;
     private String searchQuery;
     private List<String> backupApplications;
-    private final Set<String> selectedPackages = new HashSet<>();
+    private final Map<String, int[]> selectedPackages = new HashMap<>();
     private final List<ApplicationItem> selectedApplicationItems = new LinkedList<>();
 
     public MainViewModel(@NonNull Application application) {
@@ -118,7 +119,7 @@ public class MainViewModel extends AndroidViewModel {
         synchronized (applicationItems) {
             int i = applicationItems.indexOf(item);
             if (i == -1) return item;
-            selectedPackages.add(item.packageName);
+            selectedPackages.put(item.packageName, item.userHandles);
             item.isSelected = true;
             applicationItems.set(i, item);
             selectedApplicationItems.add(item);
@@ -141,8 +142,23 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
-    public Set<String> getSelectedPackages() {
+    public Map<String, int[]> getSelectedPackages() {
         return selectedPackages;
+    }
+
+    @NonNull
+    public ArrayList<UserPackagePair> getSelectedPackagesWithUsers(boolean onlyForCurrentUser) {
+        ArrayList<UserPackagePair> userPackagePairs = new ArrayList<>();
+        int currentUserHandle = Users.getCurrentUserHandle();
+        for (String packageName : selectedPackages.keySet()) {
+            int[] userHandles = selectedPackages.get(packageName);
+            if (userHandles == null) continue;
+            for (int userHandle : userHandles) {
+                if (onlyForCurrentUser && currentUserHandle != userHandle) continue;
+                userPackagePairs.add(new UserPackagePair(packageName, userHandle));
+            }
+        }
+        return userPackagePairs;
     }
 
     public List<ApplicationItem> getSelectedApplicationItems() {

@@ -23,16 +23,17 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.TextUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import androidx.annotation.CheckResult;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,6 +48,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class BatchOpsManager {
@@ -125,18 +127,41 @@ public class BatchOpsManager {
         this.handler = new Handler(Looper.getMainLooper());
     }
 
-    private Collection<String> packageNames;
-    private Result lastResult;
+    private static Result lastResult;
+
+    private UserPackagePair[] userPackagePairs;
     private Bundle args;
 
     public void setArgs(Bundle args) {
         this.args = args;
     }
 
+    @CheckResult
     @NonNull
-    public Result performOp(@OpType int op, Collection<String> packageNames) {
+    public Result performOp(@OpType int op, @NonNull Collection<String> packageNames) {
+        int userHandle = Users.getCurrentUserHandle();
+        return performOp(op, new ArrayList<>(packageNames), userHandle);
+    }
+
+    @CheckResult
+    @NonNull
+    public Result performOp(@OpType int op, @NonNull List<String> packageNames, int userHandle) {
+        List<Integer> userHandles = new ArrayList<>(packageNames.size());
+        for (String ignore : packageNames) userHandles.add(userHandle);
+        return performOp(op, packageNames, userHandles);
+    }
+
+    @CheckResult
+    @NonNull
+    public Result performOp(@OpType int op, @NonNull List<String> packageNames, @NonNull List<Integer> userHandles) {
         this.runner.clear();
-        this.packageNames = packageNames;
+        if (packageNames.size() != userHandles.size()) {
+            throw new IllegalArgumentException("Package names and user handles do not have the same size");
+        }
+        userPackagePairs = new UserPackagePair[packageNames.size()];
+        for (int i = 0; i < packageNames.size(); ++i) {
+            userPackagePairs[i] = new UserPackagePair(packageNames.get(i), userHandles.get(i));
+        }
         switch (op) {
             case OP_BACKUP_APK:
                 return opBackupApk();
@@ -177,182 +202,124 @@ public class BatchOpsManager {
             case OP_NONE:
                 break;
         }
-        return lastResult = new Result() {
-            @Override
-            public boolean isSuccessful() {
-                return false;
-            }
-
-            @NonNull
-            @Override
-            public List<String> failedPackages() {
-                return new ArrayList<>();
-            }
-        };
+        return lastResult = new Result(Arrays.asList(userPackagePairs));
     }
 
     @Nullable
-    public Result getLastResult() {
+    public static Result getLastResult() {
         return lastResult;
     }
 
     private Result opBackupApk() {
-        List<String> failedPackages = new ArrayList<>();
-        int userHandle = Users.getCurrentUserHandle();
-        int max = packageNames.size();
-        int i = 0;
+        List<UserPackagePair> failedPackages = new ArrayList<>();
+        int max = userPackagePairs.length;
         Context context = AppManager.getContext();
         PackageManager pm = context.getPackageManager();
         // Initial progress
         sendProgress(context, null, max, 0);
-        for (String packageName : packageNames) {
+        UserPackagePair pair;
+        for (int i = 0; i < max; ++i) {
+            pair = userPackagePairs[i];
             // Send progress
-            sendProgress(context, PackageUtils.getPackageLabel(pm, packageName), max, ++i);
+            sendProgress(context, PackageUtils.getPackageLabel(pm, pair.getPackageName(),
+                    pair.getUserHandle()).toString(), max, i + 1);
             // Do operation
-            if (!ApkUtils.backupApk(packageName, userHandle)) failedPackages.add(packageName);
+            if (!ApkUtils.backupApk(pair.getPackageName(), pair.getUserHandle())) {
+                failedPackages.add(pair);
+            }
         }
-        return lastResult = new Result() {
-            @Override
-            public boolean isSuccessful() {
-                return failedPackages.size() == 0;
-            }
-
-            @NonNull
-            @Override
-            public List<String> failedPackages() {
-                return failedPackages;
-            }
-        };
+        return lastResult = new Result(failedPackages);
     }
 
     private Result opBackupRestore(@BackupDialogFragment.ActionMode int mode) {
-        List<String> failedPackages = new ArrayList<>();
-        int max = packageNames.size();
-        int i = 0;
+        List<UserPackagePair> failedPackages = new ArrayList<>();
+        int max = userPackagePairs.length;
         Context context = AppManager.getContext();
         PackageManager pm = context.getPackageManager();
         // Initial progress
         sendProgress(context, null, max, 0);
-        for (String packageName : packageNames) {
+        UserPackagePair pair;
+        for (int i = 0; i < max; ++i) {
+            pair = userPackagePairs[i];
             // Send progress
-            sendProgress(context, PackageUtils.getPackageLabel(pm, packageName), max, ++i);
+            sendProgress(context, PackageUtils.getPackageLabel(pm, pair.getPackageName(),
+                    pair.getUserHandle()).toString(), max, i + 1);
             // Do operation
             String[] backupNames = args.getStringArray(ARG_BACKUP_NAMES);
-            BackupManager backupManager = BackupManager.getNewInstance(packageName, args.getInt(ARG_FLAGS));
+            BackupManager backupManager = BackupManager.getNewInstance(pair.getPackageName(), args.getInt(ARG_FLAGS));
             switch (mode) {
                 case BackupDialogFragment.MODE_BACKUP:
-                    if (!backupManager.backup(backupNames)) {
-                        failedPackages.add(packageName);
-                    }
+                    if (!backupManager.backup(backupNames)) failedPackages.add(pair);
                     break;
                 case BackupDialogFragment.MODE_DELETE:
-                    if (!backupManager.deleteBackup(backupNames)) failedPackages.add(packageName);
+                    if (!backupManager.deleteBackup(backupNames)) failedPackages.add(pair);
                     break;
                 case BackupDialogFragment.MODE_RESTORE:
-                    if (!backupManager.restore(backupNames)) failedPackages.add(packageName);
+                    if (!backupManager.restore(backupNames)) failedPackages.add(pair);
                     break;
             }
         }
-        return lastResult = new Result() {
-            @Override
-            public boolean isSuccessful() {
-                return failedPackages.size() == 0;
-            }
-
-            @NonNull
-            @Override
-            public List<String> failedPackages() {
-                return failedPackages;
-            }
-        };
+        return lastResult = new Result(failedPackages);
     }
 
     private Result opBlockComponents() {
-        final List<String> failedPkgList = ComponentUtils.blockFilteredComponents(packageNames, args.getStringArray(ARG_SIGNATURES), Users.getCurrentUserHandle());
-        return lastResult = new Result() {
-            @Override
-            public boolean isSuccessful() {
-                return failedPkgList.size() == 0;
-            }
-
-            @NonNull
-            @Override
-            public List<String> failedPackages() {
-                return failedPkgList;
-            }
-        };
+        final List<UserPackagePair> failedPkgList = ComponentUtils.blockFilteredComponents(
+                Arrays.asList(userPackagePairs), args.getStringArray(ARG_SIGNATURES));
+        return lastResult = new Result(failedPkgList);
     }
 
     private Result opBlockTrackers() {
-        final List<String> failedPkgList = ComponentUtils.blockTrackingComponents(packageNames, Users.getCurrentUserHandle());
-        return lastResult = new Result() {
-            @Override
-            public boolean isSuccessful() {
-                return failedPkgList.size() == 0;
-            }
-
-            @NonNull
-            @Override
-            public List<String> failedPackages() {
-                return failedPkgList;
-            }
-        };
+        final List<UserPackagePair> failedPkgList = ComponentUtils.blockTrackingComponents(Arrays.asList(userPackagePairs));
+        return lastResult = new Result(failedPkgList);
     }
 
     @NonNull
     private Result opClearCache() {
         AtomicBoolean isSuccessful = new AtomicBoolean(true);
-        List<String> failedPackages = new ArrayList<>();
-        for (String packageName : packageNames) {
-            Runner.Result result = RunnerUtils.clearPackageCache(packageName);
+        List<UserPackagePair> failedPackages = new ArrayList<>();
+        for (UserPackagePair pair : userPackagePairs) {
+            Runner.Result result = RunnerUtils.clearPackageCache(pair.getPackageName(), pair.getUserHandle());
             if (!result.isSuccessful()) {
                 isSuccessful.set(false);
-                failedPackages.add(packageName);
+                failedPackages.add(pair);
             }
         }
-        return lastResult = new Result() {
-            @Override
-            public boolean isSuccessful() {
-                return isSuccessful.get();
-            }
-
-            @NonNull
-            @Override
-            public List<String> failedPackages() {
-                return failedPackages;
-            }
-        };
+        return lastResult = new Result(failedPackages);
     }
 
     @NonNull
     private Result opClearData() {
-        for (String packageName : packageNames) {
-            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_CLEAR_PACKAGE_DATA,
-                    RunnerUtils.userHandleToUser(Users.getCurrentUserHandle()), packageName));
+        for (UserPackagePair pair : userPackagePairs) {
+            addCommand(pair.getPackageName(), pair.getUserHandle(), String.format(Locale.ROOT,
+                    RunnerUtils.CMD_CLEAR_PACKAGE_DATA, RunnerUtils.userHandleToUser(
+                            pair.getUserHandle()), pair.getPackageName()));
         }
         return runOpAndFetchResults();
     }
 
     @NonNull
     private Result opDisable() {
-        for (String packageName : packageNames) {
-            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_DISABLE_PACKAGE,
-                    RunnerUtils.userHandleToUser(Users.getCurrentUserHandle()), packageName));
+        for (UserPackagePair pair : userPackagePairs) {
+            addCommand(pair.getPackageName(), pair.getUserHandle(), String.format(Locale.ROOT,
+                    RunnerUtils.CMD_DISABLE_PACKAGE, RunnerUtils.userHandleToUser(
+                            pair.getUserHandle()), pair.getPackageName()));
         }
         return runOpAndFetchResults();
     }
 
     @NonNull
     private Result opDisableBackground() {
-        int userHandle = Users.getCurrentUserHandle();
-        for (String packageName : packageNames) {
-            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_APP_OPS_SET_MODE_INT, userHandle, packageName, AppOpsManager.OP_RUN_IN_BACKGROUND, AppOpsManager.MODE_IGNORED));
+        for (UserPackagePair pair : userPackagePairs) {
+            addCommand(pair.getPackageName(), pair.getUserHandle(), String.format(Locale.ROOT,
+                    RunnerUtils.CMD_APP_OPS_SET_MODE_INT, pair.getUserHandle(),
+                    pair.getPackageName(), AppOpsManager.OP_RUN_IN_BACKGROUND,
+                    AppOpsManager.MODE_IGNORED));
         }
         Result result = runOpAndFetchResults();
-        List<String> failedPackages = result.failedPackages();
-        for (String packageName : packageNames) {
-            if (!failedPackages.contains(packageName)) {
-                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
+        List<String> failedPackages = result.getFailedPackages();
+        for (UserPackagePair pair : userPackagePairs) {
+            if (!failedPackages.contains(pair.getPackageName())) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
                     cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
                 }
             }
@@ -362,91 +329,50 @@ public class BatchOpsManager {
 
     @NonNull
     private Result opEnable() {
-        for (String packageName : packageNames) {
-            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_ENABLE_PACKAGE,
-                    RunnerUtils.userHandleToUser(Users.getCurrentUserHandle()), packageName));
+        for (UserPackagePair pair : userPackagePairs) {
+            addCommand(pair.getPackageName(), pair.getUserHandle(), String.format(Locale.ROOT,
+                    RunnerUtils.CMD_ENABLE_PACKAGE, RunnerUtils.userHandleToUser(pair.getUserHandle()),
+                    pair.getPackageName()));
         }
         return runOpAndFetchResults();
     }
 
     @NonNull
     private Result opForceStop() {
-        for (String packageName : packageNames) {
-            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_FORCE_STOP_PACKAGE,
-                    RunnerUtils.userHandleToUser(Users.getCurrentUserHandle()), packageName), false);
+        for (UserPackagePair pair : userPackagePairs) {
+            addCommand(pair.getPackageName(), pair.getUserHandle(), String.format(Locale.ROOT,
+                    RunnerUtils.CMD_FORCE_STOP_PACKAGE, RunnerUtils.userHandleToUser(
+                            pair.getUserHandle()), pair.getPackageName()), false);
         }
         return runOpAndFetchResults();
     }
 
     private Result opIgnoreAppOps() {
-        final List<String> failedPkgList = ExternalComponentsImporter.denyFilteredAppOps(packageNames, args.getIntArray(ARG_APP_OPS), Users.getCurrentUserHandle());
-        return lastResult = new Result() {
-            @Override
-            public boolean isSuccessful() {
-                return failedPkgList.size() == 0;
-            }
-
-            @NonNull
-            @Override
-            public List<String> failedPackages() {
-                return failedPkgList;
-            }
-        };
+        final List<UserPackagePair> failedPkgList = ExternalComponentsImporter.denyFilteredAppOps(Arrays.asList(userPackagePairs), args.getIntArray(ARG_APP_OPS));
+        return lastResult = new Result(failedPkgList);
     }
 
     private Result opResetAppOps() {
-        final List<String> failedPkgList = ExternalComponentsImporter.defaultFilteredAppOps(packageNames, args.getIntArray(ARG_APP_OPS), Users.getCurrentUserHandle());
-        return lastResult = new Result() {
-            @Override
-            public boolean isSuccessful() {
-                return failedPkgList.size() == 0;
-            }
-
-            @NonNull
-            @Override
-            public List<String> failedPackages() {
-                return failedPkgList;
-            }
-        };
+        final List<UserPackagePair> failedPkgList = ExternalComponentsImporter.defaultFilteredAppOps(Arrays.asList(userPackagePairs), args.getIntArray(ARG_APP_OPS));
+        return lastResult = new Result(failedPkgList);
     }
 
     private Result opUnblockComponents() {
-        final List<String> failedPkgList = ComponentUtils.unblockFilteredComponents(packageNames, args.getStringArray(ARG_SIGNATURES), Users.getCurrentUserHandle());
-        return lastResult = new Result() {
-            @Override
-            public boolean isSuccessful() {
-                return failedPkgList.size() == 0;
-            }
-
-            @NonNull
-            @Override
-            public List<String> failedPackages() {
-                return failedPkgList;
-            }
-        };
+        final List<UserPackagePair> failedPkgList = ComponentUtils.unblockFilteredComponents(Arrays.asList(userPackagePairs), args.getStringArray(ARG_SIGNATURES));
+        return lastResult = new Result(failedPkgList);
     }
 
     private Result opUnblockTrackers() {
-        final List<String> failedPkgList = ComponentUtils.unblockTrackingComponents(packageNames, Users.getCurrentUserHandle());
-        return lastResult = new Result() {
-            @Override
-            public boolean isSuccessful() {
-                return failedPkgList.size() == 0;
-            }
-
-            @NonNull
-            @Override
-            public List<String> failedPackages() {
-                return failedPkgList;
-            }
-        };
+        final List<UserPackagePair> failedPkgList = ComponentUtils.unblockTrackingComponents(Arrays.asList(userPackagePairs));
+        return lastResult = new Result(failedPkgList);
     }
 
     @NonNull
     private Result opUninstall() {
-        for (String packageName : packageNames) {
-            addCommand(packageName, String.format(Locale.ROOT, RunnerUtils.CMD_UNINSTALL_PACKAGE_WITH_DATA,
-                    RunnerUtils.userHandleToUser(Users.getCurrentUserHandle()), packageName));
+        for (UserPackagePair pair : userPackagePairs) {
+            addCommand(pair.getPackageName(), pair.getUserHandle(), String.format(Locale.ROOT,
+                    RunnerUtils.CMD_UNINSTALL_PACKAGE_WITH_DATA, RunnerUtils.userHandleToUser(
+                            pair.getUserHandle()), pair.getPackageName()));
         }
         return runOpAndFetchResults();
     }
@@ -459,36 +385,63 @@ public class BatchOpsManager {
         handler.post(() -> context.sendBroadcast(broadcastIntent));
     }
 
-    private void addCommand(String packageName, String command) {
-        addCommand(packageName, command, true);
+    private void addCommand(String packageName, int userHandle, String command) {
+        addCommand(packageName, userHandle, command, true);
     }
 
-    private void addCommand(String packageName, String command, boolean isDevNull) {
-        runner.addCommand(String.format(Locale.ROOT, "%s %s || echo %s", command, isDevNull ? "> /dev/null 2>&1" : "", packageName));
+    private void addCommand(String packageName, int userHandle, String command, boolean isDevNull) {
+        runner.addCommand(String.format(Locale.ROOT, "%s %s || echo %s %d", command, isDevNull ? "> /dev/null 2>&1" : "", packageName, userHandle));
     }
 
     @NonNull
     private Result runOpAndFetchResults() {
         Runner.Result result = runner.runCommand();
-        lastResult = new Result() {
-            @Override
-            public boolean isSuccessful() {
-                return TextUtils.isEmpty(result.getOutput());
+        List<UserPackagePair> userPackagePairs = new ArrayList<>();
+        String[] packageAndUser;
+        for (String line : result.getOutputAsList()) {
+            packageAndUser = line.split(" ");
+            if (packageAndUser.length == 2) {
+                userPackagePairs.add(new UserPackagePair(packageAndUser[0], Integer.parseInt(packageAndUser[1])));
             }
-
-            @NonNull
-            @Override
-            public List<String> failedPackages() {
-                return result.getOutputAsList();
-            }
-        };
-        return lastResult;
+        }
+        return lastResult = new Result(userPackagePairs);
     }
 
-    public interface Result {
-        boolean isSuccessful();
+    public static class Result {
+        @NonNull
+        private final ArrayList<String> failedPackages;
+        @NonNull
+        private final ArrayList<Integer> associatedUserHandles;
+        @NonNull
+        private final List<UserPackagePair> userPackagePairs;
+
+        public Result(@NonNull List<UserPackagePair> userPackagePairs) {
+            this.userPackagePairs = userPackagePairs;
+            failedPackages = new ArrayList<>();
+            associatedUserHandles = new ArrayList<>();
+            for (UserPackagePair userPackagePair : userPackagePairs) {
+                failedPackages.add(userPackagePair.getPackageName());
+                associatedUserHandles.add(userPackagePair.getUserHandle());
+            }
+        }
+
+        public boolean isSuccessful() {
+            return failedPackages.size() == 0;
+        }
 
         @NonNull
-        List<String> failedPackages();
+        public List<UserPackagePair> getUserPackagePairs() {
+            return userPackagePairs;
+        }
+
+        @NonNull
+        public ArrayList<String> getFailedPackages() {
+            return failedPackages;
+        }
+
+        @NonNull
+        public ArrayList<Integer> getAssociatedUserHandles() {
+            return associatedUserHandles;
+        }
     }
 }

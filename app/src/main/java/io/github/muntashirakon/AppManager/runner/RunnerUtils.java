@@ -19,7 +19,6 @@ package io.github.muntashirakon.AppManager.runner;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -51,6 +50,8 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -151,23 +152,25 @@ public final class RunnerUtils {
     }
 
     @NonNull
-    public static Runner.Result clearPackageCache(String packageName) {  // TODO: Add user handle
+    public static Runner.Result clearPackageCache(String packageName, int userHandle) {
         try {
-            ApplicationInfo applicationInfo = AppManager.getContext().getPackageManager().getApplicationInfo(packageName, 0);
+            ApplicationInfo applicationInfo = ApiSupporter.getInstance(LocalServer.getInstance()).getApplicationInfo(packageName, 0, userHandle);
             StringBuilder command = new StringBuilder(CMD_CLEAR_CACHE_PREFIX);
             command.append(String.format(CMD_CLEAR_CACHE_DIR_SUFFIX, applicationInfo.dataDir, applicationInfo.dataDir));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !applicationInfo.dataDir.equals(applicationInfo.deviceProtectedDataDir)) {
                 command.append(String.format(CMD_CLEAR_CACHE_DIR_SUFFIX, applicationInfo.deviceProtectedDataDir, applicationInfo.deviceProtectedDataDir));
             }
             File[] cacheDirs = AppManager.getInstance().getExternalCacheDirs();
+            int currentUserHandle = Users.getCurrentUserHandle();
             for (File cacheDir : cacheDirs) {
                 if (cacheDir != null) {
-                    String extCache = cacheDir.getAbsolutePath().replace(BuildConfig.APPLICATION_ID, packageName);
+                    String extCache = cacheDir.getAbsolutePath().replace(BuildConfig.APPLICATION_ID,
+                            packageName).replace(String.valueOf(currentUserHandle), String.valueOf(userHandle));
                     command.append(" ").append(extCache);
                 }
             }
             return Runner.runCommand(command.toString());
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new Runner.Result() {
                 @Override

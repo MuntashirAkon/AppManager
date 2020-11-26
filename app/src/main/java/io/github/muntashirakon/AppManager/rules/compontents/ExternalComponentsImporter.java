@@ -46,6 +46,7 @@ import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
@@ -56,16 +57,16 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabled
  */
 public class ExternalComponentsImporter {
     @NonNull
-    public static List<String> denyFilteredAppOps(@NonNull Collection<String> packageNames, int[] appOps, int userHandle) {
-        List<String> failedPkgList = new ArrayList<>();
+    public static List<UserPackagePair> denyFilteredAppOps(@NonNull Collection<UserPackagePair> userPackagePairs, int[] appOps) {
+        List<UserPackagePair> failedPkgList = new ArrayList<>();
         Collection<Integer> appOpList;
         AppOpsService appOpsService = new AppOpsService();
-        for (String packageName : packageNames) {
-            appOpList = PackageUtils.getFilteredAppOps(packageName, appOps);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
+        for (UserPackagePair pair : userPackagePairs) {
+            appOpList = PackageUtils.getFilteredAppOps(pair.getPackageName(), appOps);
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
                 for (int appOp : appOpList) {
                     try {
-                        appOpsService.setMode(appOp, -1, packageName, AppOpsManager.MODE_IGNORED, userHandle);
+                        appOpsService.setMode(appOp, -1, pair.getPackageName(), AppOpsManager.MODE_IGNORED, pair.getUserHandle());
                         cb.setAppOp(String.valueOf(appOp), AppOpsManager.MODE_IGNORED);
                     } catch (Exception ignore) {
                     }
@@ -73,23 +74,23 @@ public class ExternalComponentsImporter {
                 cb.applyRules(true);
             } catch (Exception e) {
                 e.printStackTrace();
-                failedPkgList.add(packageName);
+                failedPkgList.add(pair);
             }
         }
         return failedPkgList;
     }
 
     @NonNull
-    public static List<String> defaultFilteredAppOps(@NonNull Collection<String> packageNames, int[] appOps, int userHandle) {
-        List<String> failedPkgList = new ArrayList<>();
+    public static List<UserPackagePair> defaultFilteredAppOps(@NonNull Collection<UserPackagePair> userPackagePairs, int[] appOps) {
+        List<UserPackagePair> failedPkgList = new ArrayList<>();
         Collection<Integer> appOpList;
         AppOpsService appOpsService = new AppOpsService();
-        for (String packageName : packageNames) {
-            appOpList = PackageUtils.getFilteredAppOps(packageName, appOps);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
+        for (UserPackagePair pair : userPackagePairs) {
+            appOpList = PackageUtils.getFilteredAppOps(pair.getPackageName(), appOps);
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
                 for (int appOp : appOpList) {
                     try {
-                        appOpsService.setMode(appOp, -1, packageName, AppOpsManager.MODE_DEFAULT, userHandle);
+                        appOpsService.setMode(appOp, -1, pair.getPackageName(), AppOpsManager.MODE_DEFAULT, pair.getUserHandle());
                         cb.setAppOp(String.valueOf(appOp), AppOpsManager.MODE_DEFAULT);
                     } catch (Exception ignore) {
                     }
@@ -97,7 +98,7 @@ public class ExternalComponentsImporter {
                 cb.applyRules(true);
             } catch (Exception e) {
                 e.printStackTrace();
-                failedPkgList.add(packageName);
+                failedPkgList.add(pair);
             }
         }
         return failedPkgList;

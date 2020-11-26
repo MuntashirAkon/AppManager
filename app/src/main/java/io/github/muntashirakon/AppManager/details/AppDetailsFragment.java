@@ -79,6 +79,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.server.common.OpEntry;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -325,8 +326,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (mainModel != null) new Thread(() -> mainModel.applyRules()).start();
         } else if (id == R.id.action_block_trackers) {  // Components
             new Thread(() -> {
-                List<String> failedPkgList = ComponentUtils.blockTrackingComponents(Collections.singletonList(mPackageName), Users.getCurrentUserHandle());
-                if (failedPkgList.contains(mPackageName)) {
+                List<UserPackagePair> failedPkgList = ComponentUtils.blockTrackingComponents(Collections.singletonList(new UserPackagePair(mPackageName, Users.getCurrentUserHandle())));
+                if (failedPkgList.size() > 0) {
                     runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_disable_trackers, Toast.LENGTH_SHORT).show());
                 } else {
                     runOnUiThread(() -> {

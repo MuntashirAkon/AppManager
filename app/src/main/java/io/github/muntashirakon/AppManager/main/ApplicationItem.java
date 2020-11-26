@@ -134,7 +134,6 @@ public class ApplicationItem extends PackageItemInfo {
                 ApplicationInfo info = ApiSupporter.getInstance(LocalServer.getInstance()).getApplicationInfo(packageName, 0, userHandles[0]);
                 return info.loadIcon(pm);
             } catch (Exception ignore) {
-                ignore.printStackTrace();
             }
         }
         return pm.getDefaultActivityIcon();

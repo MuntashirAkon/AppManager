@@ -64,6 +64,8 @@ import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBiggerText;
@@ -259,14 +261,35 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static String getPackageLabel(@NonNull PackageManager packageManager, String packageName) {
+    public static String getPackageLabel(@NonNull PackageManager pm, String packageName) {
         try {
-            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName,
-                    PackageManager.GET_META_DATA);
-            return packageManager.getApplicationLabel(applicationInfo).toString();
+            ApplicationInfo applicationInfo = pm.getApplicationInfo(packageName, 0);
+            return pm.getApplicationLabel(applicationInfo).toString();
         } catch (PackageManager.NameNotFoundException ignore) {
         }
         return packageName;
+    }
+
+    @NonNull
+    public static CharSequence getPackageLabel(@NonNull PackageManager pm, String packageName, int userHandle) {
+        try {
+            ApplicationInfo applicationInfo = ApiSupporter.getInstance(LocalServer.getInstance()).getApplicationInfo(packageName, 0, userHandle);
+            return applicationInfo.loadLabel(pm);
+        } catch (Exception ignore) {
+        }
+        return packageName;
+    }
+
+    @Nullable
+    public static ArrayList<String> packagesToAppLabels(@NonNull PackageManager pm, @Nullable List<String> packages, List<Integer> userHandles) {
+        if (packages == null) return null;
+        ArrayList<String> appLabels = new ArrayList<>();
+        int i = 0;
+        for (String packageName : packages) {
+            appLabels.add(PackageUtils.getPackageLabel(pm, packageName, userHandles.get(i)).toString());
+            ++i;
+        }
+        return appLabels;
     }
 
     public static boolean isInstalled(@NonNull PackageManager packageManager, String packageName) {

@@ -339,7 +339,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     public void toggleSelection(@NonNull ApplicationItem item, int position) {
-        if (mActivity.mModel.getSelectedPackages().contains(item.packageName)) {
+        if (mActivity.mModel.getSelectedPackages().containsKey(item.packageName)) {
             mAdapterList.set(position, mActivity.mModel.deselect(item));
         } else {
             mAdapterList.set(position, mActivity.mModel.select(item));

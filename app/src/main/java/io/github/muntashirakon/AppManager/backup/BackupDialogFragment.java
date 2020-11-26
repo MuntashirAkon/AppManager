@@ -82,8 +82,8 @@ public class BackupDialogFragment extends DialogFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (actionCompleteInterface != null) {
-                BatchOpsManager.Result result = new BatchOpsManager().getLastResult();
-                actionCompleteInterface.onActionComplete(mode, result != null ? result.failedPackages().toArray(new String[0]) : new String[0]);
+                BatchOpsManager.Result result = BatchOpsManager.getLastResult();
+                actionCompleteInterface.onActionComplete(mode, result != null ? result.getFailedPackages().toArray(new String[0]) : new String[0]);
             }
             activity.unregisterReceiver(mBatchOpsBroadCastReceiver);
         }
