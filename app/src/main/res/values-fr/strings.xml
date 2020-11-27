@@ -630,4 +630,13 @@
     <string name="failed_to_disable_op">Impossible de désactiver l\'autorisation demandée</string>
     <string name="failed_to_enable_op">Impossible d\'activer l\'autorisation demandée</string>
     <string name="gles_ver">Version GL ES Requise</string>
+    <string name="ago">il y a</string>
+    <string name="reject_time">Temps de re</string>
+    <string name="accept_time">Temps d\'acceptation</string>
+    <string name="pref_import_blocker">Importer depuis Blocker</string>
+    <string name="pref_import_watt">Importer depuis Watt</string>
+    <string name="external_multiple_data_dir">Répertoire de données externes &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dir_no\" example=\"1\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="sort_by_denied_app_ops">Refusées en premier</string>
+    <string name="deny_dangerous_app_ops">Refuser les autorisations dangereuses</string>
+    <string name="sort_by_app_ops_names">Nom de l\'autorisation</string>
 </resources>
