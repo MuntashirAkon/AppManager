@@ -669,4 +669,9 @@
     <string name="close">关闭</string>
     <string name="no_root">无 root</string>
     <string name="root">Root</string>
+    <string name="installer">安装器</string>
+    <string name="install_location_prefer_external">外部存储优先</string>
+    <string name="install_location_internal_only">仅内部存储</string>
+    <string name="install_location">安装位置</string>
+    <string name="comment">注解</string>
 </resources>
