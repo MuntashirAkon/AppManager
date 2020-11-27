@@ -264,8 +264,10 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .setTitle(R.string.pref_compression_method)
                     .setSingleChoiceItems(readableTarTypes, currentCompression,
                             (dialog, which) -> currentCompression = which)
-                    .setPositiveButton(R.string.save, (dialog, which) ->
-                            AppPref.set(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR, tarTypes[currentCompression]))
+                    .setPositiveButton(R.string.save, (dialog, which) -> {
+                        AppPref.set(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR, tarTypes[currentCompression]);
+                        compressionMethod.setSummary(getString(R.string.compression_method, readableTarTypes[currentCompression == -1 ? 0 : currentCompression]));
+                    })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
             return true;
