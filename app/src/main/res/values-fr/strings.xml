@@ -622,4 +622,11 @@
     <string name="system">Système</string>
     <string name="app_not_installed">Application non installée</string>
     <string name="media_size">Média</string>
+    <string name="app_op_cannot_be_disabled">Cette autorisation ne peut pas être désactivée, probablement parce-qu\'elle est en lecture seule et dépend d\'une autre autorisation.</string>
+    <string name="external_data_dir">Répertoire de données externes</string>
+    <string name="dev_protected_data_dir">Répertoire de données protégées par l\'appareil</string>
+    <string name="pref_global_blocking_enabled_msg">Permet de bloquer tout composant d\'une application sans la bloquer directement.</string>
+    <string name="pref_global_blocking_enabled">Blocage global de composant</string>
+    <string name="failed_to_disable_op">Impossible de désactiver l\'autorisation demandée</string>
+    <string name="failed_to_enable_op">Impossible d\'activer l\'autorisation demandée</string>
 </resources>
