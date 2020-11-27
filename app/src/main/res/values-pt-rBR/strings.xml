@@ -374,7 +374,7 @@
     <string name="backup">Backup</string>
     <string name="restore">Restaurar</string>
     <string name="delete_backup">Excluir backup</string>
-    <string name="backup_options">Opções do Backup</string>
+    <string name="backup_options">Opções de Backup</string>
     <plurals name="failed_to_backup_some_apk_files">
         <item quantity="one">%1$d aplicativo não pôde ter o backup feito</item>
         <item quantity="other">%1$d aplicativos não puderam ter o backup feito</item>
@@ -665,7 +665,7 @@
     <string name="un_apkm">UnApkm</string>
     <string name="in_progress">Em andamento</string>
     <string name="conversion_failed">Falha na conversão.</string>
-    <string name="duplicate">Duplicado</string>
+    <string name="duplicate">Duplicar</string>
     <string name="new_profile">Novo perfil</string>
     <string name="input_profile_name_description">O nome do perfil não pode conter espaços.</string>
     <string name="input_profile_name">Nome do perfil</string>
