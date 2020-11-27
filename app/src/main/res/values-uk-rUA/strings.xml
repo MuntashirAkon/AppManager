@@ -77,7 +77,7 @@
     <string name="no_app_ops">Немає операцій з дозволами</string>
     <string name="app_ops">Керування дозволами</string>
     <string name="sys_config">Конфігурація системи</string>
-    <string name="only_install">Тільки встановити</string>
+    <string name="only_install">Лише встановити</string>
     <string name="install_without_data_loss">Якщо ви вимкнули перевірку підпису, ви можете використовувати опцію <b> Лише встановити </b>, для установки додатка без втрати даних.</string>
     <string name="app_data_will_be_lost">Існуючі дані буде втрачено.</string>
     <string name="signature_mismatch_for_system_apps">Не вдалося встановити додаток, оскільки встановлений додаток є системним, з іншим підписом.</string>
@@ -200,7 +200,7 @@
     <string name="install_in_progress">Триває встановлення</string>
     <string name="package_installer">Інсталятор пакетів</string>
     <string name="unblock_trackers">Розблокування трекерів</string>
-    <string name="reinstall">Переустановка</string>
+    <string name="reinstall">Перевстановлення</string>
     <string name="reinstall_app_message">Ви хочете перевстановити цей додаток\?</string>
     <string name="install_app_message">Ви хочете встановити цей додаток\?</string>
     <string name="try_again">Спробуйте ще раз</string>
@@ -213,9 +213,9 @@
     <string name="installer_error_storage">Недостатньо місця для встановлення додатку</string>
     <string name="installer_error_bad_apks">Вибрано пошкоджені файли .apk</string>
     <string name="installer_error_incompatible">Додаток несумісний з цим пристроєм</string>
-    <string name="installer_error_blocked">Установка заблокована <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
+    <string name="installer_error_blocked">Встановленя заблоковано &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;</string>
     <string name="installer_error_blocked_device">пристрій</string>
-    <string name="installer_error_aborted">Не вдалося виконати установку, оскільки її скасовано, або сеанс несподівано закрито</string>
+    <string name="installer_error_aborted">Не вдалося виконати встановлення, оскільки воно скасовано, або сеанс несподівано закрито</string>
     <string name="filter_apps_with_activities">Додатки з activities</string>
     <string name="are_you_sure">Ви впевнені\?</string>
     <string name="pref_remove_all_rules">Видалити всі правила</string>
@@ -326,7 +326,7 @@
     <string name="failed_to_install_package_name">Не вдалося встановити <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> встановлено</string>
     <string name="termux">Termux</string>
-    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Не вдалося отримати відомості про пакунок, можливо split .apk</string>
+    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Не вдалося отримати відомості про пакет, можливо split .apk</string>
     <string name="failed_to_parse_some_numbers">Не вдалося проаналізувати деякі цифри</string>
     <string name="only_works_in_root_or_adb_mode">Працює лише в режимі ROOT або ADB</string>
     <string name="filtered_packages">Відфільтровані пакети</string>
@@ -354,7 +354,7 @@
         <item quantity="many">%1$d трекерів</item>
         <item quantity="other">%1$d трекерів</item>
     </plurals>
-    <string name="changelog">Чейнджлог</string>
+    <string name="changelog">Список змін</string>
     <string name="one_click_ops">Операції в 1 клік</string>
     <string name="launch_app">Запустити</string>
     <string name="failed_to_deny_dangerous_perms">Не вдалося відкликати всі небезпечні дозволи</string>
@@ -366,7 +366,7 @@
         <item quantity="many">Не вдалося вимкнути трекери в додатках %1$d</item>
         <item quantity="other">Не вдалося вимкнути трекери в додатках %1$d</item>
     </plurals>
-    <string name="trackers_disabled_successfully">Трекери відключені</string>
+    <string name="trackers_disabled_successfully">Трекери вимкнено</string>
     <string name="failed_to_disable_trackers">Не вдалося вимкнути трекери</string>
     <string name="deny_dangerous_permissions">Заборонити небезпечні дозволи</string>
     <string name="sort_by_dangerous_permissions">Спочатку небезпечні</string>
@@ -476,7 +476,7 @@
     <string name="pref_usage_access_enabled_msg">Дозволяє переглянути статистику використання додатка та інформацію про них.</string>
     <string name="pref_usage_access_enabled">Доступ до статистики використання</string>
     <string name="pref_global_blocking_enabled">Глобальне блокування компонентів</string>
-    <string name="pref_root_mode_enabled_msg">Активує всі ROOT функції цього додатка. Режим ADB виявляється автоматично, коли ROOT режим вимкнено</string>
+    <string name="pref_root_mode_enabled_msg">Активує всі ROOT функції цього додатка. Режим ADB виявляється автоматично, коли ROOT режим вимкнено.</string>
     <string name="str_logo">Логотип</string>
     <string name="app_size">Додаток</string>
     <string name="total_size">Всього</string>
@@ -486,7 +486,7 @@
     <string name="failed_to_enable">Не вдалося ввімкнути <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_disable">Не вдалося вимкнути <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Ввімкнути</string>
-    <string name="disable">Відключено</string>
+    <string name="disable">Вимкнути</string>
     <string name="stopped">Зупинено</string>
     <string name="uninstall_system_app_message">Це системний додаток. Ви впевнені, що хочете видалити його\?</string>
     <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> видалено.</string>
@@ -629,7 +629,7 @@
     <string name="empty_package_name">Порожнє імя пакету</string>
     <string name="user_id">Ідентифікатор користувача</string>
     <string name="date_updated">Дата оновлення</string>
-    <string name="date_installed">Дата установки</string>
+    <string name="date_installed">Дата встановлення</string>
     <string name="more_info">Детальна інформація</string>
     <string name="source_dir">Каталог-джерело</string>
     <string name="data_dir">Каталоги даних</string>
@@ -715,14 +715,14 @@
     <string name="in_progress">В процесі</string>
     <string name="conversion_failed">Не вдалося виконати перетворення.</string>
     <string name="select_apk">Виберіть APK</string>
-    <string name="send_crash_report">Надсилати звіт про падіння</string>
+    <string name="send_crash_report">Надіслати звіт про падіння</string>
     <string name="tap_to_submit_crash_report">Торкніться, щоб надіслати звіт про аварійне завершення роботи.</string>
     <string name="none">Без шифрування</string>
     <string name="ecc">Еліптична криптографія (ЕСС)</string>
     <string name="pref_encryption_msg">Додавання шифрування для резервних копій.</string>
     <string name="encryption">Шифрування</string>
     <string name="select_user">Виберіть користувача</string>
-    <string name="pref_show_users_in_installer_msg">Відображення списку користувачів, котрих потрібно вибрати перед інсталяцією зовнішнього додатка. Потрібен ROOT або ADB.</string>
+    <string name="pref_show_users_in_installer_msg">Відображення списку користувачів, котрих потрібно вибрати перед встановленям зовнішнього додатка. Потрібен ROOT або ADB.</string>
     <string name="pref_show_users_in_installer">Показати користувачів у програмі встановлення</string>
     <string name="failed_to_duplicate_profile">Не вдалося дублювати профіль</string>
     <string name="user_profile_with_id">Профіль: %1$s (%2$d)</string>
@@ -733,4 +733,21 @@
     <string name="adb_over_tcp">ADB через TCP</string>
     <string name="pref_mode_of_operations">Режим роботи</string>
     <string name="send_selected">Надіслати вибране</string>
+    <string name="profile_backup_apk_msg">Якщо увімкнено, будуть створені резервні копії файлів APK</string>
+    <string name="profile_block_trackers_msg">Якщо увімкнено, трекери будуть заблоковані в додатках</string>
+    <string name="profile_clear_data_msg">Якщо увімкнено, дані додатків буде видалено</string>
+    <string name="profile_clear_cache_msg">Якщо увімкнено, кеш програм буде видалено</string>
+    <string name="profile_force_stop_msg">Якщо увімкнено, додатки будуть зупинені примусово</string>
+    <string name="profile_disable_msg">Якщо ввімкнено, додатки буде вимкнено/увімкнено залежно від значення стану</string>
+    <string name="install_location">Місце встановлення</string>
+    <string name="installer">Інсталятор</string>
+    <string name="comment">Коментар</string>
+    <string name="close">Закрити</string>
+    <string name="no_root">Без-ROOT</string>
+    <string name="root">ROOT</string>
+    <string name="advanced">Розширений</string>
+    <string name="simple">Простий</string>
+    <string name="enabled">Увімкнено</string>
+    <string name="off">ВИМК.</string>
+    <string name="on">Увімкнено</string>
 </resources>
