@@ -146,7 +146,9 @@ public class PackageInstallerActivity extends BaseActivity {
                 }
                 appLabel = mPackageManager.getApplicationLabel(packageInfo.applicationInfo).toString();
                 Drawable appIcon = mPackageManager.getApplicationIcon(packageInfo.applicationInfo);
-                runOnUiThread(progressDialog::dismiss);
+                runOnUiThread(() -> {
+                    if (!isDestroyed()) progressDialog.dismiss();
+                });
                 if (installedPackageInfo == null) {
                     // App not installed
                     actionName = getString(R.string.install);
