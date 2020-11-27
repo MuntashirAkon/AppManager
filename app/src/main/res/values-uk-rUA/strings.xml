@@ -213,7 +213,7 @@
     <string name="installer_error_storage">Недостатньо місця для встановлення додатку</string>
     <string name="installer_error_bad_apks">Вибрано пошкоджені файли .apk</string>
     <string name="installer_error_incompatible">Додаток несумісний з цим пристроєм</string>
-    <string name="installer_error_blocked">Встановленя заблоковано &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="installer_error_blocked">Встановленя заблоковано <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="installer_error_blocked_device">пристрій</string>
     <string name="installer_error_aborted">Не вдалося виконати встановлення, оскільки воно скасовано, або сеанс несподівано закрито</string>
     <string name="filter_apps_with_activities">Додатки з activities</string>
