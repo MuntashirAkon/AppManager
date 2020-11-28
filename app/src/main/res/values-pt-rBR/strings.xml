@@ -649,7 +649,7 @@
     <string name="onboard">Todos os</string>
     <string name="state_waking">Acordando</string>
     <string name="state_parked">Estacionado</string>
-    <string name="state_wake_kill">Wake kill</string>
+    <string name="state_wake_kill">Encerrado ao acordar</string>
     <string name="state_zombie">Zumbi</string>
     <string name="state_dead">Morto</string>
     <string name="state_trace_stop">Rastreamento parado</string>
