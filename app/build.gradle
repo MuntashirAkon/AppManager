@@ -104,6 +104,8 @@ dependencies {
     implementation "com.github.topjohnwu.libsu:core:${libsuVersion}"
     implementation 'com.tananaev:adblib:1.2'
 
+    implementation 'me.weishu:free_reflection:3.0.1'
+
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 }
 
