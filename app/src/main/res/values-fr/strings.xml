@@ -635,7 +635,7 @@
     <string name="accept_time">Temps d\'acceptation</string>
     <string name="pref_import_blocker">Importer depuis Blocker</string>
     <string name="pref_import_watt">Importer depuis Watt</string>
-    <string name="external_multiple_data_dir">Répertoire de données externes &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dir_no\" example=\"1\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="external_multiple_data_dir">Répertoire de données externes <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="sort_by_denied_app_ops">Refusées en premier</string>
     <string name="deny_dangerous_app_ops">Refuser les autorisations dangereuses</string>
     <string name="sort_by_app_ops_names">Nom de l\'autorisation</string>
