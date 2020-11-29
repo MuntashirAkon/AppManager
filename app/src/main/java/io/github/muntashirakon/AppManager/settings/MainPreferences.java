@@ -27,11 +27,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.yariksoffice.lingver.Lingver;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
@@ -54,6 +56,7 @@ import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
@@ -100,7 +103,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         currentLang = (String) AppPref.get(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR);
         final String[] languages = getResources().getStringArray(R.array.languages);
         final String[] langKeys = getResources().getStringArray(R.array.languages_key);
-        Preference locale = findPreference("custom_locale");
+        Preference locale = Objects.requireNonNull(findPreference("custom_locale"));
         locale.setSummary(getString(R.string.current_language, languages[ArrayUtils.indexOf(langKeys, currentLang)]));
         locale.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
@@ -109,6 +112,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
                             (dialog, which) -> currentLang = langKeys[which])
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR, currentLang);
+                        Lingver.getInstance().setLocale(activity, LangUtils.getLocaleByLanguage(activity));
                         activity.recreate();
                     })
                     .setNegativeButton(R.string.cancel, null)

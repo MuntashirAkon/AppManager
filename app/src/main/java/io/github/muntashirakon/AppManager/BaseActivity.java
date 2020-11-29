@@ -18,11 +18,8 @@
 package io.github.muntashirakon.AppManager;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
-
-import java.util.Locale;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,28 +27,13 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.view.menu.MenuBuilder;
 import io.github.muntashirakon.AppManager.misc.AMExceptionHandler;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public class BaseActivity extends AppCompatActivity {
-    private Locale currentLocale;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        currentLocale = LangUtils.updateLanguage(this);
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new AMExceptionHandler(this));
         AppCompatDelegate.setDefaultNightMode((int) AppPref.get(AppPref.PrefKey.PREF_APP_THEME_INT));
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LangUtils.attachBaseContext(newBase));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (currentLocale != LangUtils.getLocaleByLanguage(this)) recreate();
     }
 
     @SuppressLint("RestrictedApi")

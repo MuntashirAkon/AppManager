@@ -21,8 +21,11 @@ import android.app.Application;
 import android.content.Context;
 
 import com.topjohnwu.superuser.Shell;
+import com.yariksoffice.lingver.Lingver;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
+import me.weishu.reflection.Reflection;
 
 public class AppManager extends Application {
     private static AppManager instance;
@@ -48,5 +51,12 @@ public class AppManager extends Application {
     public void onCreate() {
         instance = this;
         super.onCreate();
+        Lingver.init(instance, LangUtils.getLocaleByLanguage(instance));
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        Reflection.unseal(base);
     }
 }

@@ -17,20 +17,15 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.LocaleList;
-import android.util.DisplayMetrics;
 
 import java.util.HashMap;
 import java.util.IllformedLocaleException;
 import java.util.Locale;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 
@@ -44,20 +39,6 @@ public final class LangUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             sDefaultLocale = LocaleList.getDefault().get(0);
         } else sDefaultLocale = Locale.getDefault();
-    }
-
-    public static Locale updateLanguage(@NonNull Context context) {
-        Resources resources = context.getResources();
-        Configuration config = resources.getConfiguration();
-        Locale currentLocale = getLocaleByLanguage(context);
-        config.setLocale(currentLocale);
-        DisplayMetrics dm = resources.getDisplayMetrics();
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N){
-            context.getApplicationContext().createConfigurationContext(config);
-        } else {
-            resources.updateConfiguration(config, dm);
-        }
-        return currentLocale;
     }
 
     public static Locale getLocaleByLanguage(Context context) {
@@ -83,24 +64,6 @@ public final class LangUtils {
         }
         Locale locale = sLocaleMap.get(language);
         return locale != null ? locale : sDefaultLocale;
-    }
-
-    public static Context attachBaseContext(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return updateResources(context);
-        } else {
-            return context;
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.N)
-    private static Context updateResources(@NonNull Context context) {
-        Resources resources = context.getResources();
-        Locale locale = getLocaleByLanguage(context);
-        Configuration configuration = resources.getConfiguration();
-        configuration.setLocale(locale);
-        configuration.setLocales(new LocaleList(locale));
-        return context.createConfigurationContext(configuration);
     }
 
     public static boolean isValidLocale(String languageTag) {
