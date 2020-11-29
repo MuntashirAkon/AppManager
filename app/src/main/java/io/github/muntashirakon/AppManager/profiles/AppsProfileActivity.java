@@ -53,8 +53,14 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
+
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
 
 public class AppsProfileActivity extends BaseActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
@@ -154,23 +160,27 @@ public class AppsProfileActivity extends BaseActivity
             new Thread(() -> {
                 // List apps
                 PackageManager pm = getPackageManager();
-                List<PackageInfo> packageInfoList = pm.getInstalledPackages(0);
-                ArrayList<String> items = new ArrayList<>(packageInfoList.size());
-                ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
-                for (PackageInfo info : packageInfoList) {
-                    items.add(info.packageName);
-                    itemNames.add(pm.getApplicationLabel(info.applicationInfo));
+                try {
+                    List<PackageInfo> packageInfoList = ApiSupporter.getInstance(LocalServer.getInstance()).getInstalledPackages(flagSigningInfo | PackageManager.GET_ACTIVITIES | flagDisabledComponents, Users.getCurrentUserHandle());
+                    ArrayList<String> items = new ArrayList<>(packageInfoList.size());
+                    ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
+                    for (PackageInfo info : packageInfoList) {
+                        items.add(info.packageName);
+                        itemNames.add(pm.getApplicationLabel(info.applicationInfo));
+                    }
+                    runOnUiThread(() -> {
+                        progressIndicator.hide();
+                        new SearchableMultiChoiceDialogBuilder<>(this, items, itemNames)
+                                .setSelections(model.getCurrentPackages())
+                                .setTitle(R.string.apps)
+                                .setPositiveButton(R.string.ok, (dialog, which, selectedItems) ->
+                                        new Thread(() -> model.setPackages(selectedItems)).start())
+                                .setNegativeButton(R.string.cancel, null)
+                                .show();
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                runOnUiThread(() -> {
-                    progressIndicator.hide();
-                    new SearchableMultiChoiceDialogBuilder<>(this, items, itemNames)
-                            .setSelections(model.getCurrentPackages())
-                            .setTitle(R.string.apps)
-                            .setPositiveButton(R.string.ok, (dialog, which, selectedItems) ->
-                                    new Thread(() -> model.setPackages(selectedItems)).start())
-                            .setNegativeButton(R.string.cancel, null)
-                            .show();
-                });
             }).start();
         });
     }

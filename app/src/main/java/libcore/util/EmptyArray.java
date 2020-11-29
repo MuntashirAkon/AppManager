@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2020 Muntashir Al-Islam
+ * Copyright (C) 2006 The Android Open Source Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,14 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager.utils;
-
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
+package libcore.util;
 
 public final class EmptyArray {
-    private EmptyArray() {
-    }
+    private EmptyArray() {}
 
     public static final boolean[] BOOLEAN = new boolean[0];
     public static final byte[] BYTE = new byte[0];
@@ -37,6 +34,8 @@ public final class EmptyArray {
     public static final String[] STRING = new String[0];
     public static final Throwable[] THROWABLE = new Throwable[0];
     public static final StackTraceElement[] STACK_TRACE_ELEMENT = new StackTraceElement[0];
-    public static final Type[] TYPE = new Type[0];
-    public static final TypeVariable[] TYPE_VARIABLE = new TypeVariable[0];
+    public static final java.lang.reflect.Type[] TYPE = new java.lang.reflect.Type[0];
+    @SuppressWarnings("rawtypes")
+    public static final java.lang.reflect.TypeVariable[] TYPE_VARIABLE =
+            new java.lang.reflect.TypeVariable[0];
 }

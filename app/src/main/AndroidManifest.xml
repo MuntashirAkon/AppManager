@@ -22,10 +22,14 @@
     android:installLocation="auto">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.DUMP"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission
         android:name="android.permission.GET_PACKAGE_SIZE"
         android:maxSdkVersion="25" />
+    <uses-permission android:name="android.permission.GET_APP_OPS_STATS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
@@ -269,7 +273,7 @@
         <activity
             android:name=".profiles.ProfilesActivity"
             android:label="@string/profiles"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".profiles.AppsProfileActivity"
             android:exported="false" />

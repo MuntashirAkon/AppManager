@@ -27,6 +27,9 @@ import android.util.ArrayMap;
 import android.util.SparseArray;
 import android.util.Xml;
 
+import com.android.internal.util.TextUtils;
+import com.android.internal.util.XmlUtils;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -47,8 +50,6 @@ import io.github.muntashirakon.AppManager.misc.SystemProperties;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.AppManager.utils.TextUtils;
-import io.github.muntashirakon.AppManager.utils.XmlUtils;
 
 /**
  * Loads global system configuration info.

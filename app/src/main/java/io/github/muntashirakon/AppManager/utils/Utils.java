@@ -30,6 +30,7 @@ import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.os.Build;
+import android.os.Parcel;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.WindowManager;
@@ -684,5 +685,13 @@ public class Utils {
         start = end + replLength;
         buf.append(text, start, text.length());
         return buf.toString();
+    }
+
+    public static void writeBoolean(boolean b, @NonNull Parcel dest) {
+        dest.writeInt(b ? 1 : 0);
+    }
+
+    public static boolean readBoolean(@NonNull Parcel in) {
+        return in.readInt() != 0;
     }
 }

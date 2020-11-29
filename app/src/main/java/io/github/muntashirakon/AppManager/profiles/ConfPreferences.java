@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.android.internal.util.TextUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -43,7 +44,6 @@ import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
-import io.github.muntashirakon.AppManager.utils.TextUtils;
 
 public class ConfPreferences extends PreferenceFragmentCompat {
     AppsProfileActivity activity;

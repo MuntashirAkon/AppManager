@@ -35,6 +35,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.internal.util.TextUtils;
 import com.google.android.material.progressindicator.ProgressIndicator;
 
 import java.util.ArrayList;
@@ -49,7 +50,6 @@ import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.scanner.reflector.Reflector;
-import io.github.muntashirakon.AppManager.utils.TextUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class ClassListingActivity extends BaseActivity implements SearchView.OnQueryTextListener {

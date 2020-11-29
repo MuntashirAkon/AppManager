@@ -29,7 +29,7 @@ import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-import io.github.muntashirakon.AppManager.utils.EmptyArray;
+import libcore.util.EmptyArray;
 
 /**
  * Stores an application info

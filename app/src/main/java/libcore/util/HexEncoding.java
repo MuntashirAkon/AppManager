@@ -1,29 +1,28 @@
 /*
  * Copyright (C) 2020 Muntashir Al-Islam
- *
+ * Copyright (C) 2006 The Android Open Source Project
+ *                            
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ *                            
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ *                            
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager.utils;
-
-import androidx.annotation.NonNull;
+package libcore.util;
 
 /**
  * Hexadecimal encoding where each byte is represented by two hexadecimal digits.
  */
-// Source: libcore/luni/src/main/java/libcore/util/HexEncoding.java
 public class HexEncoding {
+
     private static final char[] LOWER_CASE_DIGITS = {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
     };
@@ -32,16 +31,12 @@ public class HexEncoding {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
     };
 
-    /**
-     * Hidden constructor to prevent instantiation.
-     */
-    private HexEncoding() {
-    }
+    /** Hidden constructor to prevent instantiation. */
+    private HexEncoding() {}
 
     /**
      * Encodes the provided byte as a two-digit hexadecimal String value.
      */
-    @NonNull
     public static String encodeToString(byte b, boolean upperCase) {
         char[] digits = upperCase ? UPPER_CASE_DIGITS : LOWER_CASE_DIGITS;
         char[] buf = new char[2]; // We always want two digits.
@@ -53,7 +48,6 @@ public class HexEncoding {
     /**
      * Encodes the provided data as a sequence of hexadecimal characters.
      */
-    @NonNull
     public static char[] encode(byte[] data) {
         return encode(data, 0, data.length, true /* upperCase */);
     }
@@ -61,7 +55,6 @@ public class HexEncoding {
     /**
      * Encodes the provided data as a sequence of hexadecimal characters.
      */
-    @NonNull
     public static char[] encode(byte[] data, boolean upperCase) {
         return encode(data, 0, data.length, upperCase);
     }
@@ -69,7 +62,6 @@ public class HexEncoding {
     /**
      * Encodes the provided data as a sequence of hexadecimal characters.
      */
-    @NonNull
     public static char[] encode(byte[] data, int offset, int len) {
         return encode(data, offset, len, true /* upperCase */);
     }
@@ -77,7 +69,6 @@ public class HexEncoding {
     /**
      * Encodes the provided data as a sequence of hexadecimal characters.
      */
-    @NonNull
     private static char[] encode(byte[] data, int offset, int len, boolean upperCase) {
         char[] digits = upperCase ? UPPER_CASE_DIGITS : LOWER_CASE_DIGITS;
         char[] result = new char[len * 2];
@@ -94,7 +85,6 @@ public class HexEncoding {
     /**
      * Encodes the provided data as a sequence of hexadecimal characters.
      */
-    @NonNull
     public static String encodeToString(byte[] data) {
         return encodeToString(data, true /* upperCase */);
     }
@@ -102,7 +92,6 @@ public class HexEncoding {
     /**
      * Encodes the provided data as a sequence of hexadecimal characters.
      */
-    @NonNull
     public static String encodeToString(byte[] data, boolean upperCase) {
         return new String(encode(data, upperCase));
     }
@@ -110,11 +99,10 @@ public class HexEncoding {
     /**
      * Decodes the provided hexadecimal string into a byte array.  Odd-length inputs
      * are not allowed.
-     * <p>
+     *
      * Throws an {@code IllegalArgumentException} if the input is malformed.
      */
-    @NonNull
-    public static byte[] decode(@NonNull String encoded) throws IllegalArgumentException {
+    public static byte[] decode(String encoded) throws IllegalArgumentException {
         return decode(encoded.toCharArray());
     }
 
@@ -122,11 +110,10 @@ public class HexEncoding {
      * Decodes the provided hexadecimal string into a byte array. If {@code allowSingleChar}
      * is {@code true} odd-length inputs are allowed and the first character is interpreted
      * as the lower bits of the first result byte.
-     * <p>
+     *
      * Throws an {@code IllegalArgumentException} if the input is malformed.
      */
-    @NonNull
-    public static byte[] decode(@NonNull String encoded, boolean allowSingleChar)
+    public static byte[] decode(String encoded, boolean allowSingleChar)
             throws IllegalArgumentException {
         return decode(encoded.toCharArray(), allowSingleChar);
     }
@@ -134,10 +121,9 @@ public class HexEncoding {
     /**
      * Decodes the provided hexadecimal string into a byte array.  Odd-length inputs
      * are not allowed.
-     * <p>
+     *
      * Throws an {@code IllegalArgumentException} if the input is malformed.
      */
-    @NonNull
     public static byte[] decode(char[] encoded) throws IllegalArgumentException {
         return decode(encoded, false);
     }
@@ -146,11 +132,10 @@ public class HexEncoding {
      * Decodes the provided hexadecimal string into a byte array. If {@code allowSingleChar}
      * is {@code true} odd-length inputs are allowed and the first character is interpreted
      * as the lower bits of the first result byte.
-     * <p>
+     *
      * Throws an {@code IllegalArgumentException} if the input is malformed.
      */
-    @NonNull
-    public static byte[] decode(@NonNull char[] encoded, boolean allowSingleChar)
+    public static byte[] decode(char[] encoded, boolean allowSingleChar)
             throws IllegalArgumentException {
         int encodedLength = encoded.length;
         int resultLengthBytes = (encodedLength + 1) / 2;
@@ -178,7 +163,7 @@ public class HexEncoding {
         return result;
     }
 
-    private static int toDigit(@NonNull char[] str, int offset) throws IllegalArgumentException {
+    private static int toDigit(char[] str, int offset) throws IllegalArgumentException {
         // NOTE: that this isn't really a code point in the traditional sense, since we're
         // just rejecting surrogate pairs outright.
         int pseudoCodePoint = str[offset];

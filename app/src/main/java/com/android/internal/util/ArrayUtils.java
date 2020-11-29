@@ -1,30 +1,30 @@
 /*
+ * Copyright (C) 2020 Muntashir Al-Islam
  * Copyright (C) 2006 The Android Open Source Project
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager.utils;
-
-// Source: https://cs.android.com/android/platform/superproject/+/master:frameworks/base/core/java/com/android/internal/util/ArrayUtils.java
+package com.android.internal.util;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import android.os.Build;
-import android.util.ArraySet;
+import android.compat.annotation.UnsupportedAppUsage;
 
-import androidx.annotation.RequiresApi;
+import androidx.collection.ArraySet;
+import libcore.util.EmptyArray;
 
 import java.io.File;
 import java.lang.reflect.Array;
@@ -32,24 +32,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.IntFunction;
-import java.util.function.Predicate;
-
-import libcore.util.EmptyArray;
 
 /**
  * ArrayUtils contains some methods that you can call to find out
  * the most efficient increments by which to grow arrays.
  */
-@SuppressWarnings("unused")
 public class ArrayUtils {
     private static final int CACHE_SIZE = 73;
-    private static final Object[] sCache = new Object[CACHE_SIZE];
+    private static Object[] sCache = new Object[CACHE_SIZE];
 
     public static final File[] EMPTY_FILE = new File[0];
 
@@ -87,6 +81,7 @@ public class ArrayUtils {
      * it will return the same empty array every time to avoid reallocation,
      * although this is not guaranteed.
      */
+    @UnsupportedAppUsage
     @SuppressWarnings("unchecked")
     public static <T> T[] emptyArray(Class<T> kind) {
         if (kind == Object.class) {
@@ -107,6 +102,14 @@ public class ArrayUtils {
     }
 
     /**
+     * Returns the same array or an empty one if it's null.
+     */
+    public static @NonNull
+    <T> T[] emptyIfNull(@Nullable T[] items, Class<T> kind) {
+        return items != null ? items : emptyArray(kind);
+    }
+
+    /**
      * Checks if given array is null or has zero elements.
      */
     public static boolean isEmpty(@Nullable Collection<?> array) {
@@ -123,6 +126,7 @@ public class ArrayUtils {
     /**
      * Checks if given array is null or has zero elements.
      */
+    @UnsupportedAppUsage
     public static <T> boolean isEmpty(@Nullable T[] array) {
         return array == null || array.length == 0;
     }
@@ -176,6 +180,7 @@ public class ArrayUtils {
      * @param value the value to check for
      * @return true if the value is present in the array
      */
+    @UnsupportedAppUsage
     public static <T> boolean contains(@Nullable T[] array, T value) {
         return indexOf(array, value) != -1;
     }
@@ -184,6 +189,7 @@ public class ArrayUtils {
      * Return first index of {@code value} in {@code array}, or {@code -1} if
      * not found.
      */
+    @UnsupportedAppUsage
     public static <T> int indexOf(@Nullable T[] array, T value) {
         if (array == null) return -1;
         for (int i = 0; i < array.length; i++) {
@@ -218,6 +224,7 @@ public class ArrayUtils {
         return false;
     }
 
+    @UnsupportedAppUsage
     public static boolean contains(@Nullable int[] array, int value) {
         if (array == null) return false;
         for (int element : array) {
@@ -271,18 +278,12 @@ public class ArrayUtils {
         return total;
     }
 
-    @NonNull
-    public static int[] convertToIntArray(@NonNull List<Integer> list) {
+    public static int[] convertToIntArray(List<Integer> list) {
         int[] array = new int[list.size()];
         for (int i = 0; i < list.size(); i++) {
             array[i] = list.get(i);
         }
         return array;
-    }
-
-    @NonNull
-    public static int[] convertToIntArray(@NonNull Set<Integer> set) {
-        return convertToIntArray(new ArrayList<>(set));
     }
 
     public static @Nullable
@@ -295,39 +296,65 @@ public class ArrayUtils {
         return array;
     }
 
-    @NonNull
-    public static <T> ArrayList<CharSequence> toCharSequence(@NonNull ArrayList<T> list) {
-        ArrayList<CharSequence> charSequenceList = new ArrayList<>(list.size());
-        try {
-            for (T item : list) charSequenceList.add((CharSequence) item);
-        } catch (ClassCastException e) {
-            throw new IllegalArgumentException(e);
-        }
-        return charSequenceList;
-    }
-
+    /**
+     * Combine multiple arrays into a single array.
+     *
+     * @param kind   The class of the array elements
+     * @param arrays The arrays to combine
+     * @param <T>    The class of the array elements (inferred from kind).
+     * @return A single array containing all the elements of the parameter arrays.
+     */
     @SuppressWarnings("unchecked")
     public static @NonNull
-    <T> T[] concatElements(Class<T> kind, @Nullable T[] a, @Nullable T[] b) {
-        final int an = (a != null) ? a.length : 0;
-        final int bn = (b != null) ? b.length : 0;
-        if (an == 0 && bn == 0) {
-            if (kind == String.class) {
-                return (T[]) EmptyArray.STRING;
-            } else if (kind == Object.class) {
-                return (T[]) EmptyArray.OBJECT;
-            }
+    <T> T[] concatElements(Class<T> kind, @Nullable T[]... arrays) {
+        if (arrays == null || arrays.length == 0) {
+            return createEmptyArray(kind);
         }
-        final T[] res = (T[]) Array.newInstance(kind, an + bn);
-        if (an > 0) System.arraycopy(a, 0, res, 0, an);
-        if (bn > 0) System.arraycopy(b, 0, res, an, bn);
-        return res;
+
+        int totalLength = 0;
+        for (T[] item : arrays) {
+            if (item == null) {
+                continue;
+            }
+
+            totalLength += item.length;
+        }
+
+        // Optimization for entirely empty arrays.
+        if (totalLength == 0) {
+            return createEmptyArray(kind);
+        }
+
+        final T[] all = (T[]) Array.newInstance(kind, totalLength);
+        int pos = 0;
+        for (T[] item : arrays) {
+            if (item == null || item.length == 0) {
+                continue;
+            }
+            System.arraycopy(item, 0, all, pos, item.length);
+            pos += item.length;
+        }
+        return all;
     }
+
+    private static @NonNull
+    <T> T[] createEmptyArray(Class<T> kind) {
+        if (kind == String.class) {
+            return (T[]) EmptyArray.STRING;
+        } else if (kind == Object.class) {
+            return (T[]) EmptyArray.OBJECT;
+        }
+
+        return (T[]) Array.newInstance(kind, 0);
+    }
+
 
     /**
      * Adds value to given array if not already present, providing set-like
      * behavior.
      */
+    @UnsupportedAppUsage
+    @SuppressWarnings("unchecked")
     public static @NonNull
     <T> T[] appendElement(Class<T> kind, @Nullable T[] array, T element) {
         return appendElement(kind, array, element, false);
@@ -358,6 +385,7 @@ public class ArrayUtils {
     /**
      * Removes value from given array if present, providing set-like behavior.
      */
+    @UnsupportedAppUsage
     @SuppressWarnings("unchecked")
     public static @Nullable
     <T> T[] removeElement(Class<T> kind, @Nullable T[] array, T element) {
@@ -390,8 +418,8 @@ public class ArrayUtils {
         }
         final int N = cur.length;
         if (!allowDuplicates) {
-            for (int value : cur) {
-                if (value == val) {
+            for (int i = 0; i < N; i++) {
+                if (cur[i] == val) {
                     return cur;
                 }
             }
@@ -406,6 +434,7 @@ public class ArrayUtils {
      * Adds value to given array if not already present, providing set-like
      * behavior.
      */
+    @UnsupportedAppUsage
     public static @NonNull
     int[] appendInt(@Nullable int[] cur, int val) {
         return appendInt(cur, val, false);
@@ -471,8 +500,8 @@ public class ArrayUtils {
         }
         final int N = cur.length;
         if (!allowDuplicates) {
-            for (long l : cur) {
-                if (l == val) {
+            for (int i = 0; i < N; i++) {
+                if (cur[i] == val) {
                     return cur;
                 }
             }
@@ -530,17 +559,10 @@ public class ArrayUtils {
     }
 
     public static @Nullable
-    <T> HashSet<T> cloneOrNull(@Nullable HashSet<T> array) {
-        return (array != null) ? new HashSet<>(array) : null;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public static @Nullable
     <T> ArraySet<T> cloneOrNull(@Nullable ArraySet<T> array) {
-        return (array != null) ? new ArraySet<>(array) : null;
+        return (array != null) ? new ArraySet<T>(array) : null;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public static @NonNull
     <T> ArraySet<T> add(@Nullable ArraySet<T> cur, T val) {
         if (cur == null) {
@@ -572,6 +594,15 @@ public class ArrayUtils {
         return cur;
     }
 
+    public static @NonNull
+    <T> ArrayList<T> add(@Nullable ArrayList<T> cur, int index, T val) {
+        if (cur == null) {
+            cur = new ArrayList<>();
+        }
+        cur.add(index, val);
+        return cur;
+    }
+
     public static @Nullable
     <T> ArrayList<T> remove(@Nullable ArrayList<T> cur, T val) {
         if (cur == null) {
@@ -586,7 +617,7 @@ public class ArrayUtils {
     }
 
     public static <T> boolean contains(@Nullable Collection<T> cur, T val) {
-        return cur != null && cur.contains(val);
+        return (cur != null) ? cur.contains(val) : false;
     }
 
     public static @Nullable
@@ -630,9 +661,8 @@ public class ArrayUtils {
      * @param predicate  The predicate that each element is tested against.
      * @return the number of elements removed.
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public static <T> int unstableRemoveIf(@Nullable ArrayList<T> collection,
-                                           @NonNull Predicate<T> predicate) {
+                                           @NonNull java.util.function.Predicate<T> predicate) {
         if (collection == null) {
             return 0;
         }
@@ -662,8 +692,8 @@ public class ArrayUtils {
         }
 
         // leftIdx is now at the end.
-        if (size > leftIdx) {
-            collection.subList(leftIdx, size).clear();
+        for (int i = size - 1; i >= leftIdx; i--) {
+            collection.remove(i);
         }
         return size - leftIdx;
     }
@@ -701,7 +731,6 @@ public class ArrayUtils {
      *
      * @param arrayConstructor typically {@code T[]::new} e.g. {@code String[]::new}
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public static <T> T[] filterNotNull(T[] val, IntFunction<T[]> arrayConstructor) {
         int nullCount = 0;
         int size = size(val);
@@ -723,6 +752,43 @@ public class ArrayUtils {
         return result;
     }
 
+    /**
+     * Returns an array containing elements from the given one that match the given predicate.
+     */
+    public static @Nullable
+    <T> T[] filter(@Nullable T[] items,
+                   @NonNull IntFunction<T[]> arrayConstructor,
+                   @NonNull java.util.function.Predicate<T> predicate) {
+        if (isEmpty(items)) {
+            return items;
+        }
+
+        int matchesCount = 0;
+        int size = size(items);
+        for (int i = 0; i < size; i++) {
+            if (predicate.test(items[i])) {
+                matchesCount++;
+            }
+        }
+        if (matchesCount == 0) {
+            return items;
+        }
+        if (matchesCount == items.length) {
+            return items;
+        }
+        if (matchesCount == 0) {
+            return null;
+        }
+        T[] result = arrayConstructor.apply(matchesCount);
+        int outIdx = 0;
+        for (int i = 0; i < size; i++) {
+            if (predicate.test(items[i])) {
+                result[outIdx++] = items[i];
+            }
+        }
+        return result;
+    }
+
     public static boolean startsWith(byte[] cur, byte[] val) {
         if (cur == null || val == null) return false;
         if (cur.length < val.length) return false;
@@ -736,9 +802,9 @@ public class ArrayUtils {
      * Returns the first element from the array for which
      * condition {@code predicate} is true, or null if there is no such element
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public static @Nullable
-    <T> T find(@Nullable T[] items, @NonNull Predicate<T> predicate) {
+    <T> T find(@Nullable T[] items,
+               @NonNull java.util.function.Predicate<T> predicate) {
         if (isEmpty(items)) return null;
         for (final T item : items) {
             if (predicate.test(item)) return item;
@@ -773,7 +839,7 @@ public class ArrayUtils {
     }
 
     public static @Nullable
-    <T> T firstOrNull(@NonNull T[] items) {
+    <T> T firstOrNull(T[] items) {
         return items.length > 0 ? items[0] : null;
     }
 }

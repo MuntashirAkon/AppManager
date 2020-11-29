@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -232,6 +233,46 @@ public final class IOUtils {
         }
     }
 
+    public static long fileSize(@Nullable File root) {
+        if (root == null) {
+            return 0;
+        }
+        if (root.isFile()) {
+            return root.length();
+        }
+        try {
+            if (isSymlink(root)) {
+                return 0;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+        long length = 0;
+        File[] files = root.listFiles();
+        if (files == null) {
+            return 0;
+        }
+        for (File file : files) {
+            length += fileSize(file);
+        }
+
+        return length;
+    }
+
+    private static boolean isSymlink(@NonNull File file) throws IOException {
+        File canon;
+        File parentFile = file.getParentFile();
+        if (parentFile == null) {
+            canon = file;
+        } else {
+            File canonDir = parentFile.getCanonicalFile();
+            canon = new File(canonDir, file.getName());
+        }
+        return !canon.getCanonicalFile().equals(canon.getAbsoluteFile());
+    }
+
     @NonNull
     public static String getFileContent(@NonNull File file) {
         return getFileContent(file, "");
@@ -312,6 +353,19 @@ public final class IOUtils {
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
         return bmp;
+    }
+
+    public static void copyFromAsset(@NonNull Context context, String fileName, File destFile) {
+        try (AssetFileDescriptor openFd = context.getAssets().openFd(fileName)) {
+            try (InputStream open = openFd.createInputStream();
+                 FileOutputStream fos = new FileOutputStream(destFile)) {
+                copy(open, fos);
+                fos.flush();
+                fos.getFD().sync();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @NonNull

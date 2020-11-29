@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2020 Muntashir Al-Islam
+ * Copyright (C) 2006 The Android Open Source Project
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager.utils;
+package com.android.internal.util;
 
 import android.annotation.SuppressLint;
 import android.os.Parcel;
@@ -39,6 +40,7 @@ import java.util.regex.Pattern;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Preconditions;
+import libcore.util.EmptyArray;
 
 @SuppressWarnings("unused")
 public class TextUtils {
