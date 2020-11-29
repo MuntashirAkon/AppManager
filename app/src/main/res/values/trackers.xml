@@ -385,10 +385,8 @@
         <item>com.mediba.jp</item>
         <item>mediba.ad.sdk.android.openx</item>
         <item>com.google.ads.</item>
-        <item>com.google.android.gms.ads.AdView</item>
-        <item>com.google.android.gms.ads.AdRequest</item>
-        <item>com.google.android.gms.ads.mediation</item>
-        <item>com.google.android.gms.ads.doubleclick</item>
+        <item>com.google.android.gms.ads.</item>
+        <item>com.google.unity.ads.</item>
         <item>com.pure.internal.</item>
         <item>com.pure.sdk.</item>
         <item>com.factual.engine</item>
@@ -407,6 +405,13 @@
         <item>com.aarki</item>
         <item>me.actv8</item>
         <item>com.iab.omid.library</item>
+        <item>com.huawei.hms.analytics</item>
+        <item>com.huawei.hms.location</item>
+        <item>com.huawei.hms.plugin.analytics</item>
+        <item>com.akamai.android.sdk.AkaMap</item>
+        <item>cn.jpush.android</item>
+        <item>ru.mail.mrgservice.advertising</item>
+        <item>ru.mail.mrgservice.analytics</item>
         <item>cat.ereza.customactivityoncrash</item>
         <item>org.acra.</item>
         <item>ch.acra.</item>
@@ -445,11 +450,9 @@
         <item>ru.tachos.admitadstatisticsdk</item>
         <item>com.adzerk.android.sdk</item>
         <item>com.airpush.</item>
-        <item>com.akamai.android.sdk.AkaMap</item>
         <item>com.anvato.androidsdk.</item>
         <item>com.anysdk.framework.AnalyticsWrapper</item>
         <item>com.anysdk.framework.AdsWrapper</item>
-        <item>cn.jpush.android</item>
         <item>com.beemray.</item>
         <item>com.blesh.sdk.</item>
         <item>com.bluecats.sdk</item>
@@ -461,15 +464,11 @@
         <item>io.didomi.sdk.Didomi</item>
         <item>com.evrythng</item>
         <item>com.hawk</item>
-        <item>com\.estimote</item>
         <item>com.evidon.</item>
         <item>com.fluzo.sdk.</item>
         <item>com.gpshopper</item>
         <item>com.timerazor.gravysdk.</item>
         <item>com.groundtruth.sdk</item>
-        <item>com.huawei.hms.analytics</item>
-        <item>com.huawei.hms.location</item>
-        <item>com.huawei.hms.plugin.analytics</item>
         <item>com.digitalanalytics.</item>
         <item>com.ibm.mce.sdk.</item>
         <item>co.acoustic.mobile.push.sdk.</item>
@@ -478,8 +477,6 @@
         <item>com.intrasonics.</item>
         <item>com.jumio.MobileSDK</item>
         <item>com.lenddo.mobile</item>
-        <item>ru.mail.mrgservice.advertising</item>
-        <item>ru.mail.mrgservice.analytics</item>
         <item>com.marketo</item>
         <item>com.mobiquitynetworks.</item>
         <item>com.innoquant.moca</item>
@@ -488,6 +485,7 @@
         <item>com.pokkt.sdk.</item>
         <item>com.pinterest.android.pdk.</item>
         <item>com.pointinside</item>
+        <item>org.prebid.mobile</item>
         <item>io.proximi.proximiiolibrary</item>
         <item>com.pubnub.api.</item>
         <item>com.skplanet.tad</item>
@@ -883,8 +881,6 @@
         <item>Google AdMob</item>
         <item>Google AdMob</item>
         <item>Google AdMob</item>
-        <item>Google AdMob</item>
-        <item>Google AdMob</item>
         <item>Unacast Pure</item>
         <item>Unacast Pure</item>
         <item>Factual</item>
@@ -903,6 +899,13 @@
         <item>Aarki</item>
         <item>Actv8me</item>
         <item>IAB Open Measurement</item>
+        <item>Huawei Mobile Services (HMS) Core</item>
+        <item>Huawei Mobile Services (HMS) Core</item>
+        <item>Huawei Mobile Services (HMS) Core</item>
+        <item>Akamai MAP</item>
+        <item>Aurora Mobile JPush</item>
+        <item>Mail.ru</item>
+        <item>Mail.ru</item>
         <item>µ?Custom Activity On Crash</item>
         <item>µ?ACRA</item>
         <item>µ?ACRA</item>
@@ -941,11 +944,9 @@
         <item>²Admitad</item>
         <item>²Adzerk</item>
         <item>²Airpush</item>
-        <item>²Akamai MAP</item>
         <item>²Anvato (A Google Company)</item>
         <item>²AnySDK</item>
         <item>²AnySDK</item>
-        <item>²Aurora Mobile JPush</item>
         <item>²Beemray</item>
         <item>²Blesh</item>
         <item>²Bluecats</item>
@@ -957,15 +958,11 @@
         <item>²Didomi</item>
         <item>²EVRYTHNG</item>
         <item>²Ehawk</item>
-        <item>²Estimote Proximity</item>
         <item>²Evidon (now Crownpeak)</item>
         <item>²FLUZO</item>
         <item>²GPShopper</item>
         <item>²Gravy Analytics</item>
         <item>²GroundTruth</item>
-        <item>²Huawei Mobile Services (HMS) Core</item>
-        <item>²Huawei Mobile Services (HMS) Core</item>
-        <item>²Huawei Mobile Services (HMS) Core</item>
         <item>²IBM Digital Analytics</item>
         <item>²IBM Mobile Marketing (Acoustic)</item>
         <item>²IBM Mobile Marketing (Acoustic)</item>
@@ -974,8 +971,6 @@
         <item>²Intrasonics</item>
         <item>²Jumio</item>
         <item>²Lenddo</item>
-        <item>²Mail.ru</item>
-        <item>²Mail.ru</item>
         <item>²Marketo (an Adobe Company)</item>
         <item>²Mobiquity Networks</item>
         <item>²Moca</item>
@@ -984,6 +979,7 @@
         <item>²POKKT</item>
         <item>²Pinterest</item>
         <item>²Point Inside</item>
+        <item>²Prebid Mobile</item>
         <item>²Proximi</item>
         <item>²PubNub</item>
         <item>²SK planet Tad</item>
