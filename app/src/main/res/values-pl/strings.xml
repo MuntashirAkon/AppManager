@@ -477,4 +477,7 @@
     <string name="failed_to_duplicate_profile">Nie udało się zduplikować profilu</string>
     <string name="duplicate">Duplikuj</string>
     <string name="new_profile">Nowy profil</string>
+    <string name="install_location">Miejsce instalacji</string>
+    <string name="installer">Instalator</string>
+    <string name="comment">Komentarz</string>
 </resources>
