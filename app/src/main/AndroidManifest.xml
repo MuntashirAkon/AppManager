@@ -95,7 +95,6 @@
         </activity>
         <activity
             android:name=".main.MainActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round">
             <intent-filter>
@@ -107,7 +106,6 @@
         </activity>
         <activity
             android:name=".details.AppDetailsActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:label="@string/app_info" >
             <intent-filter>
@@ -158,7 +156,6 @@
         </activity>
         <activity
             android:name=".details.ManifestViewerActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:label="@string/manifest_viewer">
             <intent-filter>
