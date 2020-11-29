@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -28,6 +29,7 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.os.Build;
+import android.os.DeadObjectException;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -93,16 +95,18 @@ public final class PackageUtils {
     @NonNull
     public static HashMap<String, RulesStorageManager.Type> collectComponentClassNames(String packageName) {
         try {
-            int apiCompatFlags;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                apiCompatFlags = PackageManager.MATCH_DISABLED_COMPONENTS;
-            else apiCompatFlags = PackageManager.GET_DISABLED_COMPONENTS;
+            @SuppressLint("WrongConstant")
             PackageInfo packageInfo = AppManager.getContext().getPackageManager().getPackageInfo(packageName,
                     PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
-                            | PackageManager.GET_PROVIDERS | apiCompatFlags | PackageManager.GET_SERVICES
-                            | PackageManager.GET_URI_PERMISSION_PATTERNS);
+                            | PackageManager.GET_PROVIDERS | flagDisabledComponents
+                            | PackageManager.GET_URI_PERMISSION_PATTERNS
+                            | PackageManager.GET_SERVICES);
             return collectComponentClassNames(packageInfo);
         } catch (PackageManager.NameNotFoundException ignore) {
+        } catch (RuntimeException e) {
+            if (!(e.getCause() instanceof DeadObjectException)) {
+                throw e;
+            }
         }
         return new HashMap<>();
     }
@@ -361,7 +365,7 @@ public final class PackageUtils {
                 + Runner.TOYBOX + " grep codePath");
         if (result.isSuccessful()) {
             List<String> paths = result.getOutputAsList();
-            if (paths != null && paths.size() > 0) {
+            if (paths.size() > 0) {
                 // Get only the last path
                 String codePath = paths.get(paths.size() - 1);
                 int start = codePath.indexOf('=');
