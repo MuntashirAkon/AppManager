@@ -209,7 +209,7 @@ public final class MetadataManager {
             rootObject.put("user_handle", metadata.userHandle);
             rootObject.put("tar_type", metadata.tarType);
             rootObject.put("key_store", metadata.keyStore);
-            fileOutputStream.write(rootObject.toString().getBytes());
+            fileOutputStream.write(rootObject.toString(4).getBytes());
         }
     }
 
