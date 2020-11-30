@@ -67,6 +67,7 @@ import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import aosp.libcore.util.HexEncoding;
 
 public class Utils {
     public static final String TERMUX_LOGIN_PATH = OsEnvironment.getDataDataDirectory() + "/com.termux/files/usr/bin/login";
@@ -484,18 +485,9 @@ public class Utils {
         } else return "1"; // Lack of property means OpenGL ES version 1
     }
 
-    // http://stackoverflow.com/questions/9655181/convert-from-byte-array-to-hex-string-in-java
-    private static final char[] hexArray = "0123456789abcdef".toCharArray();
-
     @NonNull
     public static String bytesToHex(@NonNull byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
-        for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
+        return HexEncoding.encodeToString(bytes, false /* lowercase */);
     }
 
     /**
@@ -511,22 +503,7 @@ public class Utils {
      */
     @NonNull
     public static byte[] hexToBytes(@NonNull String hex) throws NumberFormatException {
-        if (hex.length() % 2 > 0) {
-            throw new NumberFormatException("Hexadecimal input string must have an even length.");
-        }
-        byte[] r = new byte[hex.length() / 2];
-        for (int i = hex.length(); i > 0; ) {
-            r[i / 2 - 1] = (byte) (digit(hex.charAt(--i)) | (digit(hex.charAt(--i)) << 4));
-        }
-        return r;
-    }
-
-    private static int digit(char ch) {
-        int r = Character.digit(ch, 16);
-        if (r < 0) {
-            throw new NumberFormatException("Invalid hexadecimal string: " + ch);
-        }
-        return r;
+        return HexEncoding.decode(hex);
     }
 
     @NonNull

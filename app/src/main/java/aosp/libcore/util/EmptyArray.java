@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package libcore.util;
+package aosp.libcore.util;
 
 public final class EmptyArray {
     private EmptyArray() {}

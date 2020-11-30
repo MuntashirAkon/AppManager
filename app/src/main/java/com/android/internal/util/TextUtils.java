@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Preconditions;
-import libcore.util.EmptyArray;
+import aosp.libcore.util.EmptyArray;
 
 @SuppressWarnings("unused")
 public class TextUtils {

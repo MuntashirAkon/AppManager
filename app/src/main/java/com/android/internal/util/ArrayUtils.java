@@ -24,7 +24,7 @@ import androidx.annotation.Nullable;
 import android.compat.annotation.UnsupportedAppUsage;
 
 import androidx.collection.ArraySet;
-import libcore.util.EmptyArray;
+import aosp.libcore.util.EmptyArray;
 
 import java.io.File;
 import java.lang.reflect.Array;

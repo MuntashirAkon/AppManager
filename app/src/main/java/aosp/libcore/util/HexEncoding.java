@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package libcore.util;
+package aosp.libcore.util;
 
 /**
  * Hexadecimal encoding where each byte is represented by two hexadecimal digits.

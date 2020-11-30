@@ -40,7 +40,7 @@ import java.util.Set;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 
-import libcore.util.EmptyArray;
+import aosp.libcore.util.EmptyArray;
 
 /**
  * ArrayUtils contains some methods that you can call to find out

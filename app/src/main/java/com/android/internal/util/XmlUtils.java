@@ -28,7 +28,7 @@ import android.util.ArrayMap;
 import android.util.Base64;
 import android.util.Xml;
 
-import libcore.util.HexEncoding;
+import aosp.libcore.util.HexEncoding;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
