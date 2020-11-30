@@ -43,7 +43,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.text.Collator;
@@ -97,7 +97,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
             R.id.action_sort_by_screen_time, R.id.action_sort_by_times_opened,
             R.id.action_sort_by_wifi_data};
 
-    private ProgressIndicator mProgressIndicator;
+    private LinearProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
     private AppUsageAdapter mAppUsageAdapter;
     List<AppUsageStatsManager.PackageUS> mPackageUSList;
@@ -346,7 +346,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
             MaterialTextView wifiDataUsage;
             MaterialTextView screenTime;
             MaterialTextView percentUsage;
-            ProgressIndicator usageIndicator;
+            LinearProgressIndicator usageIndicator;
             IconLoaderThread iconLoader;
         }
 

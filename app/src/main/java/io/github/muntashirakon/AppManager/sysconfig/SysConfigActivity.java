@@ -32,7 +32,7 @@ import android.widget.ImageView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +53,7 @@ import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 
 public class SysConfigActivity extends BaseActivity {
     private SysConfigRecyclerAdapter adapter;
-    private ProgressIndicator progressIndicator;
+    private LinearProgressIndicator progressIndicator;
     @NonNull
     @SysConfigType
     private String type = SysConfigType.TYPE_GROUP;

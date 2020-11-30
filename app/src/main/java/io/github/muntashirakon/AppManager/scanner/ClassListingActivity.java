@@ -36,7 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.internal.util.TextUtils;
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,7 +60,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     private ClassListingAdapter mClassListingAdapter;
     private CharSequence mAppName;
     private ActionBar mActionBar;
-    private ProgressIndicator mProgressIndicator;
+    private LinearProgressIndicator mProgressIndicator;
 
     private List<String> classListAll;
     private List<String> trackerClassList = new ArrayList<>();

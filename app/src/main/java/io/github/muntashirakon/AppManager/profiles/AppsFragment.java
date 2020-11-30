@@ -26,7 +26,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     AppsProfileActivity activity;
     SwipeRefreshLayout swipeRefresh;
-    ProgressIndicator progressIndicator;
+    LinearProgressIndicator progressIndicator;
     ProfileViewModel model;
     MaterialTextView alertText;
 

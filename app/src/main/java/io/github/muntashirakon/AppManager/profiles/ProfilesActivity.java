@@ -35,7 +35,7 @@ import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import org.json.JSONException;
 
@@ -67,7 +67,7 @@ public class ProfilesActivity extends BaseActivity {
 
     private ProfilesAdapter adapter;
     private ProfilesViewModel model;
-    private ProgressIndicator progressIndicator;
+    private LinearProgressIndicator progressIndicator;
     @Nullable
     private String profileName;
 

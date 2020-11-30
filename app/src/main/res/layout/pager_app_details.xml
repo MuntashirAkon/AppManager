@@ -29,9 +29,10 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.material.progressindicator.ProgressIndicator
+        <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_linear"
-            style="@style/Widget.MaterialComponents.ProgressIndicator.Linear.Indeterminate"
+            style="@style/Widget.MaterialComponents.LinearProgressIndicator"
+            android:indeterminate="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:indicatorColor="?colorAccent" />

@@ -36,7 +36,7 @@ import android.widget.ImageView;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.lang.annotation.Retention;
@@ -155,7 +155,7 @@ public class MainActivity extends BaseActivity implements
 
     private MainRecyclerAdapter mAdapter;
     private SearchView mSearchView;
-    private ProgressIndicator mProgressIndicator;
+    private LinearProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
     private BottomAppBar mBottomAppBar;
     private MaterialTextView mBottomAppBarCounter;

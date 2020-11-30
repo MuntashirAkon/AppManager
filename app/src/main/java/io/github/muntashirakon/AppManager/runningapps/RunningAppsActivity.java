@@ -26,7 +26,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.lang.annotation.Retention;
@@ -86,7 +86,7 @@ public class RunningAppsActivity extends BaseActivity implements
     };
 
     private RunningAppsAdapter mAdapter;
-    private ProgressIndicator mProgressIndicator;
+    private LinearProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
     private MaterialTextView mCounterView;
     RunningAppsViewModel mModel;

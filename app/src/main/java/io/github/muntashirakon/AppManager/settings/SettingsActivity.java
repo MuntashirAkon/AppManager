@@ -21,14 +21,14 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 
 public class SettingsActivity extends BaseActivity {
-    public ProgressIndicator progressIndicator;
+    public LinearProgressIndicator progressIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

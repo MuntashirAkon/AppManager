@@ -49,7 +49,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.lang.annotation.Retention;
@@ -153,7 +153,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private AppDetailsRecyclerAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefresh;
     private MenuItem blockingToggler;
-    private ProgressIndicator mProgressIndicator;
+    private LinearProgressIndicator mProgressIndicator;
     private TextView mRulesNotAppliedMsg;
     private boolean isExternalApk;
     @Property
@@ -489,7 +489,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         if (mProgressIndicator == null) return;
         if (show) mProgressIndicator.show();
         else mProgressIndicator.hide();
-
     }
 
     public static boolean isComponentDisabled(@NonNull PackageManager pm, @NonNull ComponentInfo componentInfo) {

@@ -30,7 +30,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import org.json.JSONException;
 
@@ -84,7 +84,7 @@ public class AppsProfileActivity extends BaseActivity
     private final Fragment[] fragments = new Fragment[2];
     ProfileViewModel model;
     FloatingActionButton fab;
-    ProgressIndicator progressIndicator;
+    LinearProgressIndicator progressIndicator;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -32,7 +32,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import net.dongliu.apk.parser.ApkParser;
 
@@ -72,7 +72,7 @@ public class ManifestViewerActivity extends BaseActivity {
                     Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 
     private static String code;
-    private ProgressIndicator mProgressIndicator;
+    private LinearProgressIndicator mProgressIndicator;
     private boolean isWrapped = true;  // Wrap by default
     private AppCompatEditText container;
     private SpannableString formattedContent;

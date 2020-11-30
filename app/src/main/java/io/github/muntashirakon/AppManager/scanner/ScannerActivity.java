@@ -36,7 +36,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -75,7 +75,7 @@ public class ScannerActivity extends BaseActivity {
 
     private CharSequence mAppName;
     private ActionBar mActionBar;
-    private ProgressIndicator mProgressIndicator;
+    private LinearProgressIndicator mProgressIndicator;
     private String mPackageName;
     private ParcelFileDescriptor fd;
     private File apkFile;

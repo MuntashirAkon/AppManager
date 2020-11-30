@@ -29,7 +29,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +50,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class OneClickOpsActivity extends BaseActivity {
     private ListItemCreator mItemCreator;
-    private ProgressIndicator mProgressIndicator;
+    private LinearProgressIndicator mProgressIndicator;
     private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

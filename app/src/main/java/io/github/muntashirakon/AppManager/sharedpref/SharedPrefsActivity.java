@@ -37,7 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -80,7 +80,7 @@ public class SharedPrefsActivity extends BaseActivity implements
     private String mSharedPrefFile;
     private File mTempSharedPrefFile;
     private SharedPrefsListingAdapter mAdapter;
-    private ProgressIndicator mProgressIndicator;
+    private LinearProgressIndicator mProgressIndicator;
     private HashMap<String, Object> mSharedPrefMap;
 
     @Override
@@ -177,31 +177,25 @@ public class SharedPrefsActivity extends BaseActivity implements
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case android.R.id.home:
-            case R.id.action_discard:
+        if (id == android.R.id.home || id == R.id.action_discard) {
+            finish();
+        } else if (id == R.id.action_delete) {// Make sure it's a file and then delete
+            boolean isSuccess = Runner.runCommand(String.format("[ -f '%s' ] && " + Runner.TOYBOX + " rm -f '%s'",
+                    mSharedPrefFile, mSharedPrefFile)).isSuccessful();
+            if (isSuccess) {
+                Toast.makeText(this, R.string.deleted_successfully, Toast.LENGTH_LONG).show();
                 finish();
-                return true;
-            case R.id.action_delete:
-                // Make sure it's a file and then delete
-                boolean isSuccess = Runner.runCommand(String.format("[ -f '%s' ] && " + Runner.TOYBOX + " rm -f '%s'",
-                        mSharedPrefFile, mSharedPrefFile)).isSuccessful();
-                if (isSuccess) {
-                    Toast.makeText(this, R.string.deleted_successfully, Toast.LENGTH_LONG).show();
-                    finish();
-                } else {
-                    Toast.makeText(this, R.string.deletion_failed, Toast.LENGTH_LONG).show();
-                }
-                return true;
-            case R.id.action_save:
-                if (writeSharedPref(mTempSharedPrefFile, mSharedPrefMap)) {
-                    Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_LONG).show();
-                }
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+            } else {
+                Toast.makeText(this, R.string.deletion_failed, Toast.LENGTH_LONG).show();
+            }
+        } else if (id == R.id.action_save) {
+            if (writeSharedPref(mTempSharedPrefFile, mSharedPrefMap)) {
+                Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_LONG).show();
+            }
+        } else return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
@@ -354,16 +348,16 @@ public class SharedPrefsActivity extends BaseActivity implements
     }
 
     static class SharedPrefsListingAdapter extends BaseAdapter implements Filterable {
-        private LayoutInflater mLayoutInflater;
+        private final LayoutInflater mLayoutInflater;
         private Filter mFilter;
         private String mConstraint;
         private String[] mDefaultList;
         private String[] mAdapterList;
         private HashMap<String, Object> mAdapterMap;
 
-        private int mColorTransparent;
-        private int mColorSemiTransparent;
-        private int mColorRed;
+        private final int mColorTransparent;
+        private final int mColorSemiTransparent;
+        private final int mColorRed;
 
         static class ViewHolder {
             TextView item_name;

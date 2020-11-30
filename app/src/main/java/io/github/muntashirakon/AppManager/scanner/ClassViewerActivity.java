@@ -28,7 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -81,7 +81,7 @@ public class ClassViewerActivity extends BaseActivity {
     private SpannableString formattedContent;
     private boolean isWrapped = true;  // Wrap by default
     private AppCompatEditText container;
-    private ProgressIndicator mProgressIndicator;
+    private LinearProgressIndicator mProgressIndicator;
     private String className;
     private final ActivityResultLauncher<String> exportManifest = registerForActivityResult(
             new ActivityResultContracts.CreateDocument(),

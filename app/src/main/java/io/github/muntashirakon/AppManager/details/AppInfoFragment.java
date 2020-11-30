@@ -53,7 +53,7 @@ import android.widget.Toast;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.progressindicator.ProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.io.File;
 import java.io.IOException;
@@ -144,7 +144,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private SwipeRefreshLayout mSwipeRefresh;
     private int mAccentColor;
     private CharSequence mPackageLabel;
-    private ProgressIndicator mProgressIndicator;
+    private LinearProgressIndicator mProgressIndicator;
     private AppDetailsViewModel mainModel;
     private AppInfoRecyclerAdapter adapter;
     // Headers
