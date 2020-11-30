@@ -443,6 +443,7 @@
         <item>com.amazonaws.util.AWSRequestMetrics.</item>
         <item>com.bugsense.trace.</item>
         <item>io.palaima.debugdrawer.</item>
+        <item>com.bytedance.sdk.openadsdk</item>
         <item>mobi.mclick.ad.</item>
         <item>com.adlocus.</item>
         <item>com.adcenix.</item>
@@ -937,6 +938,7 @@
         <item>°AWS Kinesis</item>
         <item>°BugSense</item>
         <item>°?DebugDrawer</item>
+        <item>Pangle SDK</item>
         <item>²AdFlex</item>
         <item>²AdLocus</item>
         <item>²Adcenix</item>

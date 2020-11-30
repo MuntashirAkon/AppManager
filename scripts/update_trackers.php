@@ -259,6 +259,13 @@ $trackers = [
     "website" => "https://www.factual.com",
     "network_signature" => ""
   ],
+  $i => [
+    "id" => $i++,
+    "name" => "Pangle SDK",
+    "code_signature" => "com.bytedance.sdk.openadsdk",
+    "website" => "https://www.pangleglobal.com",
+    "network_signature" => ""
+  ],
 ];
 addToTrackerInfo($trackers);
 
