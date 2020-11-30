@@ -445,7 +445,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     mProgressIndicator.show();
                                     Intent intent = new Intent(mActivity, BatchOpsService.class);
                                     intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(Collections.singletonList(mPackageName)));
-                                    intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(Collections.singletonList(mainModel.getUserHandle())));
+                                    intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, new ArrayList<>(Collections.singletonList(mainModel.getUserHandle())));
                                     intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_BLOCK_TRACKERS);
                                     intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
                                     ContextCompat.startForegroundService(mActivity, intent);
@@ -454,7 +454,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     mProgressIndicator.show();
                                     Intent intent = new Intent(mActivity, BatchOpsService.class);
                                     intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(Collections.singletonList(mPackageName)));
-                                    intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(Collections.singletonList(mainModel.getUserHandle())));
+                                    intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, new ArrayList<>(Collections.singletonList(mainModel.getUserHandle())));
                                     intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_UNBLOCK_TRACKERS);
                                     intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
                                     ContextCompat.startForegroundService(mActivity, intent);
