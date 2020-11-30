@@ -18,6 +18,28 @@
 <p>Visit App Manager docs here: https://muntashirakon.github.io/AppManager</p><br />
 <p>Visit https://muntashirakon.github.io/AppManager/changelog.html for a more helpful changelog.</p><br />
 
+<h5>v2.5.19 (373):</h5>
+&#x2022; New feature: Profiles. New profiles can be added either by selecting from one of the presets or simply using the plus button (see below)<br />
+&#x2022; New feature: Multiple users. You can visit app details page for multiple users (see below). Multiple user support is also added for batch ops<br />
+&#x2022; New language: French<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added a settings entry to select mode of operations: auto, no-root, ADB, root<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added a settings entry to select app installer (default is App Manager)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added a settings entry to select app install location (default is auto)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added debloating profiles as presets<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added the ability to block trackers from the corresponding tag in the app info tab<br />
+&#x2022; <font color="#09868B">[Feature]</font> Prioritize app ops over permissions when available in the uses permission tab<br />
+&#x2022; <font color="#09868B">[Feature]</font> Update toybox to 0.8.4<br />
+&#x2022; <font color="#09868B">[Feature]</font> Update trackers and libraries<br />
+&#x2022; <font color="red">[Fix]</font> Check integrity of the compressed tar files before finalising backup<br />
+&#x2022; <font color="red">[Fix]</font> Fixed auto detection of root/ADB<br />
+&#x2022; <font color="red">[Fix]</font> Fixed custom locale settings which wasn't correctly applied to all app components<br />
+&#x2022; <font color="red">[Fix]</font> Fixed crashes when app details and installer pages are closed before they're loaded<br />
+&#x2022; <font color="red">[Fix]</font> Fixed restoring bundled apps<br />
+&#x2022; <font color="red">[Fix]</font> Update compression method on preference change<br />
+
+<p>Due to some complications, grant/revoking permissions and exporting rules is not working on profiles. Visit https://github.com/MuntashirAkon/AppManager/issues/72 until an official documentation is created.</p><br />
+<p>The components tabs in the app details page is empty for users other than the current user. This will be fixed in a future release.</p><br />
+
 <h5>v2.5.18 (371):</h5>
 &#x2022; <font color="#09868B">[Feature]</font> Added crash reporter<br />
 &#x2022; <font color="#09868B">[Feature]</font> Added filter by running apps in the main page<br />

@@ -131,6 +131,9 @@
         \n- <a href="https://github.com/MuntashirAkon/toybox">Toybox</a> (0BSD)
         \n- <a href="https://github.com/MuntashirAkon/apk-parser">APK-parser</a> (BSD-2-Clause)
         \n- <a href="https://github.com/topjohnwu/libsu">libsu</a> (Apache 2.0)
+        \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a> (MIT)
+        \n- <a href="https://github.com/tiann/FreeReflection">FreeReflection</a> (MIT)
+        \n- <a href="https://github.com/MuntashirAkon/lazysodium-android">Lazysodium for Android</a> (MPL-2.0)
     </string>
     <string name="credits">Credits</string>
     <string name="credits_message">To the authors of

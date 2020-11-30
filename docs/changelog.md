@@ -9,7 +9,7 @@ sidebar: auto
 ![GitHub Repo Size](https://img.shields.io/github/repo-size/MuntashirAkon/AppManager)
 ![GitHub Commit per Week](https://img.shields.io/github/commit-activity/w/MuntashirAkon/AppManager)
 
-Currently supported versions are [v2.5.13](#v2-5-13-348), [v2.5.12](#v2-5-12-341), [v2.5.11](#v2-5-11-333) and [v2.5.10](#v2-5-10-324). Please update App Manager if you are using a version older than these.
+Currently supported versions are [v2.5.19](https://github.com/MuntashirAkon/AppManager/releases/tag/pre-v2.5.19), [v2.5.18](https://github.com/MuntashirAkon/AppManager/releases/tag/pre-v2.5.18) and [v2.5.17](#v2-5-17-368). Please update App Manager if you are using a version older than these.
 
 ::: details Table of Contents
 [[toc]]
