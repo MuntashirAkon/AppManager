@@ -15,6 +15,7 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="_lang_tag" translatable="false">ru-RU</string>
     <string name="instructions_header">[Эти инструкции устарели и больше не будут обновляться. Посетите официальный сайт документации (https://muntashirakon.github.io/AppManager), чтобы получить самую свежую информацию]</string>
     <string name="uninstall">Удалить</string>
     <string name="permissions">Используемые разрешения</string>

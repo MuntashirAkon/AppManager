@@ -15,6 +15,7 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="_lang_tag" translatable="false">bn-BD</string>
     <string name="instructions_header">[এই নির্দেশাবলী পুরানো এবং আর আপডেট করা হবে না আপডেটেড তথ্য পেতে অফিসিয়াল ডক সাইট (https://muntashirakon.github.io/AppManager) ভিজিট করুন]</string>
     <string name="uninstall">আনইনস্টল</string>
     <string name="require_no_permission">কোন অনুমতির প্রয়োজন নেই</string>

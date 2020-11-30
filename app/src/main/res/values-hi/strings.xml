@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="_lang_tag" translatable="false">hi</string>
     <string name="deny_app_ops_description">कांस्टेंट वैल्यू द्वारा पहचाने गए ऐप ऑपरेशंस को अस्वीकार करें, यानी 63 का मतलब है RUN_IN_BACKGROUND</string>
     <string name="deny_app_ops_dots">ऐप्स ऑप्स अस्वीकार करें…</string>
     <string name="block_components_description">दिए गए हस्ताक्षर द्वारा पहचाने गए सभी कंपोनेंट को ब्लॉक करें</string>

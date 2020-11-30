@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="_lang_tag" translatable="false">pl</string>
     <string name="user_id">ID użytkownika</string>
     <string name="date_updated">Data aktualizacji</string>
     <string name="date_installed">Data instalacji</string>

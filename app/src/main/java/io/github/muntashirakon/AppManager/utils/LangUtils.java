@@ -18,21 +18,24 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.LocaleList;
+import android.util.DisplayMetrics;
 
-import java.util.HashMap;
 import java.util.IllformedLocaleException;
 import java.util.Locale;
-import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.collection.ArrayMap;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.logs.Log;
 
 public final class LangUtils {
     public static final String LANG_AUTO = "auto";
+    public static final String LANG_DEFAULT = "en";
 
-    private static Map<String, Locale> sLocaleMap;
+    private static ArrayMap<String, Locale> sLocaleMap;
     private static final Locale sDefaultLocale;
 
     static {
@@ -41,40 +44,51 @@ public final class LangUtils {
         } else sDefaultLocale = Locale.getDefault();
     }
 
-    public static Locale getLocaleByLanguage(Context context) {
-        String language = AppPref.getNewInstance(context).getString(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR);
-        if (sLocaleMap == null) {
-            String[] languages = context.getResources().getStringArray(R.array.languages_key);
-            sLocaleMap = new HashMap<>(languages.length);
-            for (String lang : languages) {
-                if (LANG_AUTO.equals(lang)) {
-                    sLocaleMap.put(LANG_AUTO, sDefaultLocale);
-                } else {
-                    String[] langComponents = lang.split("-", 2);
-                    if (langComponents.length == 1) {
-                        sLocaleMap.put(lang, new Locale(langComponents[0]));
-                    } else if (langComponents.length == 2) {
-                        sLocaleMap.put(lang, new Locale(langComponents[0], langComponents[1]));
-                    } else {
-                        Log.d("LangUtils", "Invalid language: " + lang);
-                        sLocaleMap.put(LANG_AUTO, sDefaultLocale);
-                    }
-                }
-            }
+    public static void setAppLanguages(@NonNull Context context) {
+        if (sLocaleMap == null) sLocaleMap = new ArrayMap<>();
+        DisplayMetrics metrics = new DisplayMetrics();
+        Resources res = context.getResources();
+        Configuration conf = res.getConfiguration();
+        String[] locales = context.getResources().getStringArray(R.array.languages_key);
+        Locale appDefaultLocale = Locale.forLanguageTag(LANG_DEFAULT);
+
+        for (String locale : locales) {
+            conf.locale = Locale.forLanguageTag(locale);
+            Resources langRes = new Resources(context.getAssets(), metrics, conf);
+            String langTag = langRes.getString(R.string._lang_tag);
+
+            if (LANG_AUTO.equals(locale)) {
+                sLocaleMap.put(LANG_AUTO, sDefaultLocale);
+            } else if (LANG_DEFAULT.equals(langTag)) {
+                sLocaleMap.put(LANG_DEFAULT, appDefaultLocale);
+            } else sLocaleMap.put(locale, conf.locale);
         }
+    }
+
+    @NonNull
+    public static ArrayMap<String, Locale> getAppLanguages(@NonNull Context context) {
+        if (sLocaleMap == null) setAppLanguages(context);
+        return sLocaleMap;
+    }
+
+    @NonNull
+    public static Locale getLocaleByLanguage(@NonNull Context context) {
+        String language = AppPref.getNewInstance(context).getString(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR);
+        getAppLanguages(context);
         Locale locale = sLocaleMap.get(language);
         return locale != null ? locale : sDefaultLocale;
     }
 
-    public static boolean isValidLocale(String languageTag) {
+    public static boolean isValidLocale(@NonNull String languageTag) {
         try {
-            Locale locale = new Locale.Builder().setLanguageTag(languageTag).build();
+            Locale locale = Locale.forLanguageTag(languageTag);
             for (Locale validLocale : Locale.getAvailableLocales()) {
                 if (validLocale.equals(locale)) {
                     return true;
                 }
             }
-        } catch (IllformedLocaleException ignore) {}
+        } catch (IllformedLocaleException ignore) {
+        }
         return false;
     }
 }

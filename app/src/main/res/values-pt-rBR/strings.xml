@@ -15,6 +15,7 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="_lang_tag" translatable="false">pt-BR</string>
     <string name="instructions_header">[Estas instruções estão desatualizadas e não serão mais atualizadas. Visite o site de documentação oficial (https://muntashirakon.github.io/AppManager) para obter informações atualizadas]</string>
     <string name="uninstall">Desinstalar</string>
     <string name="permissions">Permissões utilizadas</string>

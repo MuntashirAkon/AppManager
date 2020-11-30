@@ -38,6 +38,7 @@ import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.collection.ArrayMap;
 import androidx.core.text.HtmlCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -101,15 +102,15 @@ public class MainPreferences extends PreferenceFragmentCompat {
         activity = (SettingsActivity) requireActivity();
         // Custom locale
         currentLang = (String) AppPref.get(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR);
-        final String[] languages = getResources().getStringArray(R.array.languages);
-        final String[] langKeys = getResources().getStringArray(R.array.languages_key);
+        ArrayMap<String, Locale> locales = LangUtils.getAppLanguages(activity);
+        final CharSequence[] languages = getLanguagesL(locales);
         Preference locale = Objects.requireNonNull(findPreference("custom_locale"));
-        locale.setSummary(getString(R.string.current_language, languages[ArrayUtils.indexOf(langKeys, currentLang)]));
+        locale.setSummary(getString(R.string.current_language, languages[locales.indexOfKey(currentLang)]));
         locale.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.choose_language)
-                    .setSingleChoiceItems(languages, ArrayUtils.indexOf(langKeys, currentLang),
-                            (dialog, which) -> currentLang = langKeys[which])
+                    .setSingleChoiceItems(languages, locales.indexOfKey(currentLang),
+                            (dialog, which) -> currentLang = locales.keyAt(which))
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR, currentLang);
                         Lingver.getInstance().setLocale(activity, LangUtils.getLocaleByLanguage(activity));
@@ -122,7 +123,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         // App theme
         final String[] themes = getResources().getStringArray(R.array.themes);
         currentTheme = (int) AppPref.get(AppPref.PrefKey.PREF_APP_THEME_INT);
-        Preference appTheme = findPreference("app_theme");
+        Preference appTheme = Objects.requireNonNull(findPreference("app_theme"));
         appTheme.setSummary(getString(R.string.current_theme, themes[THEME_CONST.indexOf(currentTheme)]));
         appTheme.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
@@ -138,7 +139,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
             return true;
         });
         // Mode of operation
-        Preference mode = findPreference("mode_of_operations");
+        Preference mode = Objects.requireNonNull(findPreference("mode_of_operations"));
         final String[] modes = getResources().getStringArray(R.array.modes);
         currentMode = (String) AppPref.get(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
         mode.setSummary(getString(R.string.current_mode, modes[MODE_NAMES.indexOf(currentMode)]));
@@ -157,10 +158,10 @@ public class MainPreferences extends PreferenceFragmentCompat {
             return true;
         });
         // App usage permission toggle
-        SwitchPreferenceCompat usageEnabled = findPreference("usage_access_enabled");
+        SwitchPreferenceCompat usageEnabled = Objects.requireNonNull(findPreference("usage_access_enabled"));
         usageEnabled.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL));
         // Global blocking enabled
-        SwitchPreferenceCompat gcb = findPreference("global_blocking_enabled");
+        SwitchPreferenceCompat gcb = Objects.requireNonNull(findPreference("global_blocking_enabled"));
         gcb.setChecked(AppPref.isGlobalBlockingEnabled());
         gcb.setOnPreferenceChangeListener((preference, isEnabled) -> {
             if (AppPref.isRootEnabled() && (boolean) isEnabled) {
@@ -171,12 +172,12 @@ public class MainPreferences extends PreferenceFragmentCompat {
             return true;
         });
         // Import/export rules
-        findPreference("import_export_rules").setOnPreferenceClickListener(preference -> {
+        ((Preference) Objects.requireNonNull(findPreference("import_export_rules"))).setOnPreferenceClickListener(preference -> {
             new ImportExportDialogFragment().show(getParentFragmentManager(), ImportExportDialogFragment.TAG);
             return true;
         });
         // Remove all rules
-        findPreference("remove_all_rules").setOnPreferenceClickListener(preference -> {
+        ((Preference) Objects.requireNonNull(findPreference("remove_all_rules"))).setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.pref_remove_all_rules)
                     .setMessage(R.string.are_you_sure)
@@ -200,9 +201,9 @@ public class MainPreferences extends PreferenceFragmentCompat {
             return true;
         });
         // Display users in installer
-        SwitchPreferenceCompat installerDisplayUsersPref = findPreference("installer_display_users");
+        SwitchPreferenceCompat installerDisplayUsersPref = Objects.requireNonNull(findPreference("installer_display_users"));
         installerDisplayUsersPref.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_USERS_BOOL));
-        Preference installLocationPref = findPreference("installer_install_location");
+        Preference installLocationPref = Objects.requireNonNull(findPreference("installer_install_location"));
         int installLocation = (int) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT);
         installLocationPref.setSummary(installLocationNames[installLocation]);
         installLocationPref.setOnPreferenceClickListener(preference -> {
@@ -225,7 +226,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .show();
             return true;
         });
-        Preference installerAppPref = findPreference("installer_installer_app");
+        Preference installerAppPref = Objects.requireNonNull(findPreference("installer_installer_app"));
         PackageManager pm = activity.getPackageManager();
         installerApp = (String) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
         installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
@@ -261,7 +262,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         String[] tarTypes = MetadataManager.TAR_TYPES;
         String[] readableTarTypes = new String[]{"GZip", "BZip2"};
         currentCompression = ArrayUtils.indexOf(tarTypes, AppPref.get(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR));
-        Preference compressionMethod = findPreference("backup_compression_method");
+        Preference compressionMethod = Objects.requireNonNull(findPreference("backup_compression_method"));
         compressionMethod.setSummary(getString(R.string.compression_method, readableTarTypes[currentCompression == -1 ? 0 : currentCompression]));
         compressionMethod.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
@@ -278,7 +279,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         });
         // Backup flags
         BackupFlags flags = BackupFlags.fromPref();
-        findPreference("backup_flags").setOnPreferenceClickListener(preference -> {
+        ((Preference) Objects.requireNonNull(findPreference("backup_flags"))).setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.backup_options)
                     .setMultiChoiceItems(R.array.backup_flags, flags.flagsToCheckedItems(),
@@ -293,7 +294,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
             return true;
         });
         // Encryption
-        findPreference("encryption").setOnPreferenceClickListener(preference -> {
+        ((Preference) Objects.requireNonNull(findPreference("encryption"))).setOnPreferenceClickListener(preference -> {
             CharSequence[] encryptionNamesText = new CharSequence[encryptionNames.length];
             for (int i = 0; i < encryptionNames.length; ++i) {
                 encryptionNamesText[i] = getString(encryptionNames[i]);
@@ -323,7 +324,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
             return true;
         });
         // About
-        findPreference("about").setOnPreferenceClickListener(preference -> {
+        ((Preference) Objects.requireNonNull(findPreference("about"))).setOnPreferenceClickListener(preference -> {
             @SuppressLint("InflateParams")
             View view = getLayoutInflater().inflate(R.layout.dialog_about, null);
             ((TextView) view.findViewById(R.id.version)).setText(String.format(Locale.ROOT,
@@ -332,7 +333,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
             return true;
         });
         // Changelog
-        findPreference("changelog").setOnPreferenceClickListener(preference -> {
+        ((Preference) Objects.requireNonNull(findPreference("changelog"))).setOnPreferenceClickListener(preference -> {
             new Thread(() -> {
                 final Spanned spannedChangelog = HtmlCompat.fromHtml(IOUtils.getContentFromAssets(activity, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
                 activity.runOnUiThread(() ->
@@ -376,5 +377,18 @@ public class MainPreferences extends PreferenceFragmentCompat {
             case CryptoUtils.MODE_OPEN_PGP:
                 return 4;
         }
+    }
+
+    @NonNull
+    private CharSequence[] getLanguagesL(@NonNull ArrayMap<String, Locale> locales) {
+        CharSequence[] localesL = new CharSequence[locales.size()];
+        Locale locale;
+        for (int i = 0; i < locales.size(); ++i) {
+            locale = locales.valueAt(i);
+            if (LangUtils.LANG_AUTO.equals(locales.keyAt(i))) {
+                localesL[i] = activity.getString(R.string.auto);
+            } else localesL[i] = locale.getDisplayName(locale);
+        }
+        return localesL;
     }
 }

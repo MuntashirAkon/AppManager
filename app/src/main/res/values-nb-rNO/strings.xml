@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="_lang_tag" translatable="false">nb-NO</string>
     <string name="choose_language">Velg et språk</string>
     <string name="current_language">Nåværende språk: %s</string>
     <string name="auto">Automatisk</string>

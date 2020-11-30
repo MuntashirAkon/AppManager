@@ -17,22 +17,6 @@
   -->
 
 <resources>
-    <string-array name="languages">
-        <item>@string/auto</item>
-        <item>বাংলা</item>
-        <item>Deutsch</item>
-        <item>English</item>
-        <item>Français</item>
-        <item>हिंदी</item>
-        <item>Norsk (bokmål)</item>
-        <item>Polski</item>
-        <item>Português</item>
-        <item>Português Brasileiro</item>
-        <item>Русский</item>
-        <item>Türkçe</item>
-        <item>Українська</item>
-        <item>简体中文</item>
-    </string-array>
     <string-array name="languages_key">
         <item>auto</item>
         <item>bn-BD</item>
