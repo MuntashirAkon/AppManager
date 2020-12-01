@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.backup;
 import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -112,6 +113,7 @@ public final class TarUtils {
     @NonNull
     private static String getSourceStr(@NonNull File[] sources) {
         StringBuilder sourceBuilder = new StringBuilder();
+        Arrays.sort(sources);
         for (File source : sources) {
             sourceBuilder.append(" \"").append(source.getAbsolutePath()).append("\"");
         }
