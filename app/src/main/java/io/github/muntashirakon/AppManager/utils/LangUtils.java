@@ -22,13 +22,13 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.LocaleList;
-import android.util.DisplayMetrics;
 
 import java.util.IllformedLocaleException;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.collection.ArrayMap;
+import androidx.core.os.ConfigurationCompat;
 import io.github.muntashirakon.AppManager.R;
 
 public final class LangUtils {
@@ -46,22 +46,21 @@ public final class LangUtils {
 
     public static void setAppLanguages(@NonNull Context context) {
         if (sLocaleMap == null) sLocaleMap = new ArrayMap<>();
-        DisplayMetrics metrics = new DisplayMetrics();
         Resources res = context.getResources();
         Configuration conf = res.getConfiguration();
         String[] locales = context.getResources().getStringArray(R.array.languages_key);
         Locale appDefaultLocale = Locale.forLanguageTag(LANG_DEFAULT);
 
         for (String locale : locales) {
-            conf.locale = Locale.forLanguageTag(locale);
-            Resources langRes = new Resources(context.getAssets(), metrics, conf);
-            String langTag = langRes.getString(R.string._lang_tag);
+            conf.setLocale(Locale.forLanguageTag(locale));
+            Context ctx = context.createConfigurationContext(conf);
+            String langTag = ctx.getString(R.string._lang_tag);
 
             if (LANG_AUTO.equals(locale)) {
                 sLocaleMap.put(LANG_AUTO, sDefaultLocale);
             } else if (LANG_DEFAULT.equals(langTag)) {
                 sLocaleMap.put(LANG_DEFAULT, appDefaultLocale);
-            } else sLocaleMap.put(locale, conf.locale);
+            } else sLocaleMap.put(locale, ConfigurationCompat.getLocales(conf).get(0));
         }
     }
 

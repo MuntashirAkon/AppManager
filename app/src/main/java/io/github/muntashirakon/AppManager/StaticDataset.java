@@ -18,13 +18,13 @@
 package io.github.muntashirakon.AppManager;
 
 import android.content.Context;
-import android.os.Build;
-import android.os.LocaleList;
 import android.util.DisplayMetrics;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.core.os.ConfigurationCompat;
+import androidx.core.os.LocaleListCompat;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
 
 public class StaticDataset {
@@ -72,13 +72,9 @@ public class StaticDataset {
 
     static {
         Context context = AppManager.getContext();
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            LOCALE_RANKING.put(context.getResources().getConfiguration().locale.getLanguage(), 0);
-        } else {
-            LocaleList localeList = context.getResources().getConfiguration().getLocales();
-            for (int i = 0; i < localeList.size(); i++) {
-                LOCALE_RANKING.put(localeList.get(i).getLanguage(), i);
-            }
+        LocaleListCompat localeList = ConfigurationCompat.getLocales(context.getResources().getConfiguration());
+        for (int i = 0; i < localeList.size(); i++) {
+            LOCALE_RANKING.put(localeList.get(i).getLanguage(), i);
         }
     }
 
