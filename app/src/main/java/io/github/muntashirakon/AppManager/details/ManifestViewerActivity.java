@@ -120,7 +120,7 @@ public class ManifestViewerActivity extends BaseActivity {
                     try {
                         int key = ApkFile.createInstance(packageUri, intent.getType());
                         apkFile = ApkFile.getInstance(key);
-                        archiveFilePath = apkFile.getBaseEntry().getCachedFile().getAbsolutePath();
+                        archiveFilePath = apkFile.getBaseEntry().getRealCachedFile().getAbsolutePath();
                     } catch (IOException | ApkFile.ApkFileException e) {
                         Log.e("Manifest", "Error: ", e);
                         runOnUiThread(this::showErrorAndFinish);

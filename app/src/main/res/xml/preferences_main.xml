@@ -68,6 +68,11 @@
             app:title="@string/pref_show_users_in_installer"
             app:summary="@string/pref_show_users_in_installer_msg" />
 
+        <SwitchPreferenceCompat
+            app:key="installer_sign_apk"
+            app:title="@string/pref_sign_apk"
+            app:summary="@string/pref_sign_apk_msg" />
+
         <Preference
             app:key="installer_install_location"
             app:title="@string/install_location"

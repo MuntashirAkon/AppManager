@@ -477,6 +477,10 @@ public final class ApkFile implements AutoCloseable {
         entries.set(entry, tmpEntry);
     }
 
+    public boolean needSigning() {
+        return (boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_SIGN_APK_BOOL);
+    }
+
     @Override
     public void close() {
         apkFiles.delete(sparseArrayKey);
@@ -577,6 +581,8 @@ public final class ApkFile implements AutoCloseable {
         private ZipEntry zipEntry;
         @Nullable
         private File source;
+        @Nullable
+        private File signedFile;
         private boolean selected = false;
         private final boolean required;
         private final boolean isolated;
@@ -695,12 +701,33 @@ public final class ApkFile implements AutoCloseable {
             else throw new RuntimeException("Neither zipEntry nor source is defined.");
         }
 
-        @NonNull
-        public InputStream getInputStream() throws IOException {
-            if (cachedFile != null && cachedFile.exists()) return new FileInputStream(cachedFile);
-            if (zipEntry != null) return Objects.requireNonNull(zipFile).getInputStream(zipEntry);
-            if (source != null && source.exists()) return new FileInputStream(source);
-            else throw new IOException("Neither zipEntry nor source is defined.");
+        public File getSignedFile(Context context) throws IOException {
+            if (signedFile != null) return signedFile;
+            File realFile = getRealCachedFile();
+            if (!needSigning()) {
+                // Return original/real file if signing is not requested
+                return realFile;
+            }
+            signedFile = IOUtils.getTempFile();
+            try {
+                SignUtils signUtils = SignUtils.getInstance(context);
+                if (signUtils.sign(realFile, signedFile, -1)) {
+                    if (SignUtils.verify(signedFile)) {
+                        return signedFile;
+                    }
+                }
+                throw new IOException("Failed to sign " + realFile);
+            } catch (Exception e) {
+                throw new IOException(e);
+            }
+        }
+
+        public InputStream getSignedInputStream(Context context) throws IOException {
+            if (!needSigning()) {
+                // Return original/real input stream if signing is not requested
+                return getRealInputStream();
+            }
+            return new FileInputStream(getSignedFile(context));
         }
 
         @Nullable
@@ -711,21 +738,34 @@ public final class ApkFile implements AutoCloseable {
         @Override
         public void close() {
             IOUtils.deleteSilently(cachedFile);
+            IOUtils.deleteSilently(signedFile);
             if (source != null && !source.getAbsolutePath().startsWith("/proc/self")
                     && !source.getAbsolutePath().startsWith("/data/app")) {
                 IOUtils.deleteSilently(source);
             }
         }
 
+        @NonNull
+        private InputStream getRealInputStream() throws IOException {
+            if (cachedFile != null && cachedFile.exists()) return new FileInputStream(cachedFile);
+            if (zipEntry != null) return Objects.requireNonNull(zipFile).getInputStream(zipEntry);
+            if (source != null && source.exists()) return new FileInputStream(source);
+            else throw new IOException("Neither zipEntry nor source is defined.");
+        }
+
         @WorkerThread
-        public File getCachedFile() throws IOException {
+        public File getRealCachedFile() throws IOException {
             if (source != null && source.canRead()) return source;
+            if (cachedFile != null) {
+                if (cachedFile.canRead()) return cachedFile;
+                else IOUtils.deleteSilently(cachedFile);
+            }
             File destDir = AppManager.getContext().getExternalFilesDir("apks");
             if (destDir == null || !Environment.getExternalStorageState(destDir).equals(Environment.MEDIA_MOUNTED))
                 throw new RuntimeException("External media not present");
             if (!destDir.exists()) //noinspection ResultOfMethodCallIgnored
                 destDir.mkdirs();
-            return cachedFile = IOUtils.saveZipFile(getInputStream(), destDir, name);
+            return cachedFile = IOUtils.saveZipFile(getRealInputStream(), destDir, name);
         }
 
         public boolean isSelected() {

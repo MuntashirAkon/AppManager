@@ -134,7 +134,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         isExternalApk = true;
         apkFileKey = ApkFile.createInstance(packageUri, type);
         apkFile = ApkFile.getInstance(apkFileKey);
-        apkPath = apkFile.getBaseEntry().getCachedFile().getAbsolutePath();
+        apkPath = apkFile.getBaseEntry().getRealCachedFile().getAbsolutePath();
     }
 
     @WorkerThread

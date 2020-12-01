@@ -201,8 +201,9 @@ public class MainPreferences extends PreferenceFragmentCompat {
             return true;
         });
         // Display users in installer
-        SwitchPreferenceCompat installerDisplayUsersPref = Objects.requireNonNull(findPreference("installer_display_users"));
-        installerDisplayUsersPref.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_USERS_BOOL));
+        ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("installer_display_users")))
+                .setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_USERS_BOOL));
+        // Set install locations
         Preference installLocationPref = Objects.requireNonNull(findPreference("installer_install_location"));
         int installLocation = (int) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT);
         installLocationPref.setSummary(installLocationNames[installLocation]);
@@ -226,6 +227,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .show();
             return true;
         });
+        // Set installer app
         Preference installerAppPref = Objects.requireNonNull(findPreference("installer_installer_app"));
         PackageManager pm = activity.getPackageManager();
         installerApp = (String) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
@@ -258,6 +260,9 @@ public class MainPreferences extends PreferenceFragmentCompat {
             }).start();
             return true;
         });
+        // Sign apk before install
+        ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("installer_sign_apk")))
+                .setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_SIGN_APK_BOOL));
         // Backup compression method
         String[] tarTypes = MetadataManager.TAR_TYPES;
         String[] readableTarTypes = new String[]{"GZip", "BZip2"};

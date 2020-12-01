@@ -746,4 +746,6 @@
     <string name="install_location">Install location</string>
     <string name="install_location_internal_only">Internal only</string>
     <string name="install_location_prefer_external">Prefer external</string>
+    <string name="pref_sign_apk">Sign APK</string>
+    <string name="pref_sign_apk_msg">Sign APK files before installing them.</string>
 </resources>

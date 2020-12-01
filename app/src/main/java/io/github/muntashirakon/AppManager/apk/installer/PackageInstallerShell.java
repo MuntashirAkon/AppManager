@@ -57,7 +57,7 @@ public final class PackageInstallerShell extends AMPackageInstaller {
 
     @Override
     public boolean install(@NonNull ApkFile apkFile) {
-        if (AppPref.isAdbEnabled()) {
+        if (AppPref.isAdbEnabled() || apkFile.needSigning()) {
             // TODO(18/9/20): Find a way to pipe the stream directly like root users
             File[] apkFiles;
             try {
@@ -75,7 +75,7 @@ public final class PackageInstallerShell extends AMPackageInstaller {
             String buf;
             // Write apk files
             for (ApkFile.Entry entry : apkFile.getSelectedEntries()) {
-                try (InputStream apkInputStream = entry.getInputStream()) {
+                try (InputStream apkInputStream = entry.getSignedInputStream(context)) {
                     cmd = installCmd + " install-write -S " + entry.getFileSize() + " " + sessionId +
                             " " + entry.getFileName() + " -";
                     result = Shell.su(cmd).add(apkInputStream).exec();
@@ -197,7 +197,7 @@ public final class PackageInstallerShell extends AMPackageInstaller {
     @NonNull
     public static File[] getStagingApkFiles(@NonNull List<ApkFile.Entry> apkEntries) throws IOException {
         File[] apkFiles = new File[apkEntries.size()];
-        for (int i = 0; i < apkFiles.length; ++i) apkFiles[i] = apkEntries.get(i).getCachedFile();
+        for (int i = 0; i < apkFiles.length; ++i) apkFiles[i] = apkEntries.get(i).getSignedFile(context);
         return apkFiles;
     }
 

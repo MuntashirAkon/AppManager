@@ -65,7 +65,7 @@ public final class PackageInstallerNoRoot extends AMPackageInstaller {
         Log.d(TAG, "Install: selected entries: " + selectedEntries.size());
         // Write apk files
         for (ApkFile.Entry entry : selectedEntries) {
-            try (InputStream apkInputStream = entry.getInputStream();
+            try (InputStream apkInputStream = entry.getSignedInputStream(context);
                  OutputStream apkOutputStream = session.openWrite(entry.getFileName(), 0, entry.getFileSize())) {
                 IOUtils.copy(apkInputStream, apkOutputStream);
                 session.fsync(apkOutputStream);

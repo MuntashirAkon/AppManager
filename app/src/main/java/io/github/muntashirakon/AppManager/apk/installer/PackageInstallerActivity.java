@@ -226,7 +226,7 @@ public class PackageInstallerActivity extends BaseActivity {
 
     @NonNull
     private PackageInfo getPackageInfo() throws PackageManager.NameNotFoundException, IOException {
-        String apkPath = apkFile.getBaseEntry().getCachedFile().getAbsolutePath();
+        String apkPath = apkFile.getBaseEntry().getSignedFile(this).getAbsolutePath();
         @SuppressLint("WrongConstant")
         PackageInfo packageInfo = mPackageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS
                 | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS

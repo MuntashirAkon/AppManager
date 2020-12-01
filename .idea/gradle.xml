@@ -13,10 +13,12 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/AppManagerServer" />
             <option value="$PROJECT_DIR$/HiddenApi" />
+            <option value="$PROJECT_DIR$/apksig" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/lazysodium-android/app" />
             <option value="$PROJECT_DIR$/libApkParser" />
             <option value="$PROJECT_DIR$/libOpenPGP" />
+            <option value="$PROJECT_DIR$/sunJava" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
