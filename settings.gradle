@@ -4,6 +4,4 @@ include ':libApkParser'
 include ':HiddenApi'
 include ':AppManagerServer'
 include ':app'
-include ':lazysodium'
-project(':lazysodium').projectDir = new File(rootDir, 'lazysodium-android/app')
 rootProject.name = "AppManager"
