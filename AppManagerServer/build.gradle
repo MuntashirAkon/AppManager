@@ -194,3 +194,9 @@ def jar2dex() {
     }
     println("----jar2dex success, exec end----")
 }
+
+task cleanupJar() {
+    file("${rootProject.projectDir.absolutePath}/app/src/main/assets/am.jar").delete();
+}
+
+clean.dependsOn cleanupJar
