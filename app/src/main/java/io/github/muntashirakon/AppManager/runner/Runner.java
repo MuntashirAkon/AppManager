@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.runner;
 
-import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -26,13 +25,13 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
 import androidx.annotation.WorkerThread;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.toybox.ToyboxInitializer;
 
 public abstract class Runner {
     public static final String TAG = "Runner";
-    public static final String TOYBOX;
+    public static final String TOYBOX = ToyboxInitializer.TOYBOX;
 
     @StringDef({MODE_AUTO, MODE_ROOT, MODE_ADB, MODE_NO_ROOT})
     @Retention(RetentionPolicy.SOURCE)
@@ -43,14 +42,6 @@ public abstract class Runner {
     public static final String MODE_ROOT = "root";
     public static final String MODE_ADB = "adb";
     public static final String MODE_NO_ROOT = "no-root";
-
-    static final String TOYBOX_SO_NAME = "libtoybox.so";
-    static final File TOYBOX_SO_PATH;
-
-    static {
-        TOYBOX_SO_PATH = new File(AppManager.getContext().getApplicationInfo().nativeLibraryDir, TOYBOX_SO_NAME);
-        TOYBOX = TOYBOX_SO_PATH.getAbsolutePath();
-    }
 
     public interface Result {
         boolean isSuccessful();

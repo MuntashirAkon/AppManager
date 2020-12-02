@@ -49,11 +49,12 @@ public final class Shell {
     private static Shell sRootShell;
 
     @NonNull
-    public static Shell getShell() throws IOException {
+    public static Shell getShell(String path) throws IOException {
         if (sShell == null) {
             synchronized (Shell.class) {
                 if (sShell == null) {
-                    sShell = new Shell("sh");
+                    sShell = new Shell("sh", false);
+                    sShell.exec("export PATH=" + path + ":$PATH");
                 }
             }
         }
@@ -61,20 +62,16 @@ public final class Shell {
     }
 
     @NonNull
-    public static Shell getRootShell() throws IOException {
+    public static Shell getRootShell(String path) throws IOException {
         if (sRootShell == null) {
             synchronized (Shell.class) {
                 if (sRootShell == null) {
-                    sRootShell = openRootShell();
+                    sRootShell = new Shell("su", true);
+                    sShell.exec("export PATH=" + path + ":$PATH");
                 }
             }
         }
         return sRootShell;
-    }
-
-    @NonNull
-    public static Shell openRootShell() throws IOException {
-        return new Shell("su", true);
     }
 
     private Shell(String cmd, boolean checkRoot) throws IOException {
@@ -98,38 +95,6 @@ public final class Shell {
                 throw new RuntimeException(e);
             }
         }
-
-        Runnable shellRunnable = new Runnable() {
-            @Override
-            public void run() {
-                while (!close) {
-                    try {
-                        Command command = commandQueue.take();
-                        if (command != null && !close) {
-                            Shell.this.writeCommand(command);
-                            Shell.this.readCommand(command);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (close) {
-                    try {
-                        Shell.this.destroyShell();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-
-        new Thread(shellRunnable, "shell").start();
-    }
-
-    private Shell(String cmd) throws IOException {
-        proc = new ProcessBuilder(cmd).redirectErrorStream(true).start();
-        in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-        out = proc.getOutputStream();
 
         Runnable shellRunnable = new Runnable() {
             @Override
@@ -327,10 +292,10 @@ public final class Shell {
 
 
     abstract class Command {
-        private String[] commands;
+        private final String[] commands;
         private boolean isFinished;
         private int exitCode;
-        private long timeout;
+        private final long timeout;
         private int id;
 
         public abstract void onUpdate(int id, String message);

@@ -90,6 +90,7 @@ dependencies {
     implementation project(path: ':libApkParser')
     implementation project(path: ':libOpenPGP')
     implementation project(path: ':sunJava')
+    implementation project(path: ':toybox')
 
     implementation 'com.github.MuntashirAkon:apksig-android:4.1.1'
     implementation 'com.github.MuntashirAkon:lazysodium-android:4.3.0@aar'
@@ -112,55 +113,4 @@ dependencies {
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 }
 
-task toybox {
-    doLast {
-        println("=== toybox: start ===")
-        File file = new File("${rootProject.projectDir.absolutePath}/app/src/main/jniLibs/arm64-v8a/libtoybox.so")
-        if (!file.exists()) {
-            buildToybox()
-        } else {
-            println("Skipping toybox since the files already exists.")
-        }
-        println("=== toybox: finish ===")
-    }
-}
-
-task cleanToybox {
-    doLast {
-        println("=== toybox: clean ===")
-        File file = new File("${rootProject.projectDir.absolutePath}/app/src/main/jniLibs")
-        if (file.exists()) {
-            deleteDir(file)
-        }
-    }
-}
-
-def buildToybox() {
-    def ndkPath = android.ndkDirectory
-    def buildExec = "${rootProject.projectDir.absolutePath}/scripts/toybox-all.sh"
-    def cmdArgs = [ndkPath]
-    println("NDK Path: ${ndkPath}")
-    println("Exec Path: ${buildExec}")
-    exec {
-        workingDir = rootProject.projectDir.absolutePath
-        executable = buildExec
-        args = cmdArgs
-    }
-}
-
-def deleteDir(File dir) {
-    if (dir != null && dir.isDirectory()) {
-        String[] children = dir.list()
-        if (children == null) return false
-        for (String child : children) {
-            boolean success = deleteDir(new File(dir, child))
-            if (!success) return false
-        }
-        return dir.delete()
-    } else if (dir != null && dir.isFile()) {
-        return dir.delete()
-    } else return false
-}
-
-preBuild.dependsOn ":AppManagerServer:build", toybox
-clean.dependsOn cleanToybox
+preBuild.dependsOn ":AppManagerServer:build"

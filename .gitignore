@@ -9,7 +9,7 @@
 /app/preRelease
 /app/release
 /app/libs/am-common.jar
-/app/src/main/jniLibs
+/toybox/src/main/jniLibs
 /app/src/main/assets/am.jar
 pids
 logs
@@ -26,3 +26,4 @@ basement_dist
 *.iml
 *.jks
 *~
+scripts/KeyStore.sh

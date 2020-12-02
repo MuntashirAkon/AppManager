@@ -1,0 +1,68 @@
+apply plugin: "com.android.library"
+
+android {
+    compileSdkVersion 30
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 30
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    def libsuVersion = '3.0.2'
+    implementation "com.github.topjohnwu.libsu:core:${libsuVersion}"
+}
+
+task toybox {
+    doLast {
+        println("=== toybox: start ===")
+        File file = new File("${rootProject.projectDir.absolutePath}/toybox/src/main/jniLibs/arm64-v8a/libtoybox.so")
+        if (!file.exists()) {
+            buildToybox()
+        } else {
+            println("Skipping toybox since the files already exists.")
+        }
+        println("=== toybox: finish ===")
+    }
+}
+
+task cleanToybox {
+    doLast {
+        println("=== toybox: clean ===")
+        File file = new File("${rootProject.projectDir.absolutePath}/toybox/src/main/jniLibs")
+        if (file.exists()) {
+            deleteDir(file)
+        }
+    }
+}
+
+def buildToybox() {
+    def ndkPath = android.ndkDirectory
+    def buildExec = "${rootProject.projectDir.absolutePath}/toybox/build_toybox.sh"
+    def cmdArgs = [ndkPath]
+    println("NDK Path: ${ndkPath}")
+    println("Exec Path: ${buildExec}")
+    exec {
+        workingDir = "${rootProject.projectDir.absolutePath}/toybox"
+        executable = buildExec
+        args = cmdArgs
+    }
+}
+
+def deleteDir(File dir) {
+    if (dir != null && dir.isDirectory()) {
+        String[] children = dir.list()
+        if (children == null) return false
+        for (String child : children) {
+            boolean success = deleteDir(new File(dir, child))
+            if (!success) return false
+        }
+        return dir.delete()
+    } else if (dir != null && dir.isFile()) {
+        return dir.delete()
+    } else return false
+}
+
+preBuild.dependsOn toybox
+clean.dependsOn cleanToybox

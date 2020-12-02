@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/libApkParser" />
             <option value="$PROJECT_DIR$/libOpenPGP" />
             <option value="$PROJECT_DIR$/sunJava" />
+            <option value="$PROJECT_DIR$/toybox" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

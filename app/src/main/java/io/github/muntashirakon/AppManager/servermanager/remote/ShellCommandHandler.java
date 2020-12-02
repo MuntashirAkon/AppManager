@@ -33,8 +33,9 @@ public class ShellCommandHandler extends ClassCallerProcessor {
     @Override
     public Bundle proxyInvoke(@NonNull Bundle args) throws Throwable {
         String command = args.getString("command");
+        String path = args.getString("path");
         args.clear();
-        Shell shell = Shell.getShell();
+        Shell shell = Shell.getShell(path);
         Shell.Result result = shell.exec(command);
         args.putParcelable("return", result);
         return args;

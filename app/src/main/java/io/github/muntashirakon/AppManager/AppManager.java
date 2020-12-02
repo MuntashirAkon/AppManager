@@ -25,6 +25,7 @@ import com.yariksoffice.lingver.Lingver;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
+import io.github.muntashirakon.toybox.ToyboxInitializer;
 import me.weishu.reflection.Reflection;
 
 public class AppManager extends Application {
@@ -33,6 +34,7 @@ public class AppManager extends Application {
     static {
         Shell.enableVerboseLogging = BuildConfig.DEBUG;
         Shell.setDefaultBuilder(Shell.Builder.create()
+                .setInitializers(ToyboxInitializer.class)
                 .setFlags(Shell.FLAG_MOUNT_MASTER)
                 .setTimeout(10));
     }

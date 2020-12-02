@@ -52,7 +52,7 @@ export CXXFLAGS="--static -static -g0 -Os"
 export LDFLAGS="-s"
 # Copy to JNI dir: This is a clever workaround as Android doesn't have
 # any option to separate assets based on ABI
-jni_dir=../app/src/main/jniLibs
+jni_dir=../src/main/jniLibs
 target_name=libtoybox.so  # lib and .so is appended to fool Android into thinking that it's a JNI library
 target_dir=
 # Replace toybox with libtoybox in toys.h file

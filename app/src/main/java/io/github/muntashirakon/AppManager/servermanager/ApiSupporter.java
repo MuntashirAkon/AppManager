@@ -38,6 +38,7 @@ import io.github.muntashirakon.AppManager.server.common.ClassCaller;
 import io.github.muntashirakon.AppManager.server.common.SystemServiceCaller;
 import io.github.muntashirakon.AppManager.servermanager.remote.ShellCommandHandler;
 import io.github.muntashirakon.AppManager.servermanager.remote.UserHandler;
+import io.github.muntashirakon.toybox.ToyboxInitializer;
 
 public class ApiSupporter {
     private static ApiSupporter INSTANCE;
@@ -179,6 +180,7 @@ public class ApiSupporter {
     public Shell.Result runCommand(String command) throws Exception {
         Bundle args = new Bundle();
         args.putString("command", command);
+        args.putString("path", ToyboxInitializer.getToyboxLib(localServer.getContext()).getParent());
         ClassCaller classCaller = new ClassCaller(packageName, ShellCommandHandler.class.getName(), args);
         CallerResult result = localServer.exec(classCaller);
         Bundle replyBundle = result.getReplyBundle();
