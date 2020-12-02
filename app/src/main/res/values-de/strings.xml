@@ -713,4 +713,6 @@
     <string name="installer">Installationsprogramm</string>
     <string name="comment">Anmerkung</string>
     <string name="install_location">Installationsort</string>
+    <string name="pref_sign_apk_msg">APK-Dateien vor der Installation signieren.</string>
+    <string name="pref_sign_apk">APK signieren</string>
 </resources>
