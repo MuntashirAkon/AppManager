@@ -757,7 +757,7 @@ public final class ApkFile implements AutoCloseable {
 
         @WorkerThread
         public File getRealCachedFile() throws IOException {
-            if (source != null && source.canRead()) return source;
+            if (source != null && source.canRead() && !source.getAbsolutePath().startsWith("/proc/self")) return source;
             if (cachedFile != null) {
                 if (cachedFile.canRead()) return cachedFile;
                 else IOUtils.deleteSilently(cachedFile);
