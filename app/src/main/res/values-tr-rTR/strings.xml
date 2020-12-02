@@ -710,4 +710,6 @@
     <string name="install_location">Kurulum konumu</string>
     <string name="installer">Kurucu</string>
     <string name="comment">Yorum</string>
+    <string name="pref_sign_apk_msg">Kurmadan önce APK dosyalarını imzalayın.</string>
+    <string name="pref_sign_apk">APK imzala</string>
 </resources>
