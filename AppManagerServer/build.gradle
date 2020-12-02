@@ -18,13 +18,11 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 30
     }
 
     buildTypes {
@@ -68,6 +66,10 @@ ext {
 }
 
 build.doLast {
+    if (!isModified()) {
+        println("Files aren't modified, skip creating jar files.")
+        return
+    }
     println("Build success, creating jar files...")
     // Create am-orig.jar
     def pkgDir = ["io/github/muntashirakon/AppManager/server/"]
@@ -77,6 +79,16 @@ build.doLast {
     createJarFile(commonJar, pkgDir)
     // Apply dex optimization
     jar2dex()
+}
+
+def isModified() {
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        workingDir = project.rootDir
+        executable = "${project.rootDir}/scripts/check_am_server.sh"
+        standardOutput = stdout
+    }
+    return stdout.toString().trim() == "M"
 }
 
 def createJarFile(String jar, List pkgDirPath) {
