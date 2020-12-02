@@ -2,11 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/lazysodium-android" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/lazysodium-android/lazysodium-java" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/lazysodium-android/libsodium" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/scripts/universal-android-debloater" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/toybox" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/toybox/toybox" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../apksig-android" vcs="Git" />
   </component>
 </project>
