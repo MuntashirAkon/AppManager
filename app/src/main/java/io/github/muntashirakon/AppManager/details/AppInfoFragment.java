@@ -420,15 +420,19 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Tag cloud //
         HashMap<String, RulesStorageManager.Type> trackerComponents;
         trackerComponents = ComponentUtils.getTrackerComponentsForPackageInfo(mPackageInfo);
-        boolean isRunning = PackageUtils.hasRunningServices(mPackageName);
-        boolean isSystemlessPath = MagiskUtils.isSystemlessPath(PackageUtils
-                .getHiddenCodePathOrDefault(mPackageName, mApplicationInfo.publicSourceDir));
+        boolean isRunning;
+        if (isExternalApk) isRunning = false;
+        else isRunning = PackageUtils.hasRunningServices(mPackageName);
+        boolean isSystemlessPath;
         boolean hasMasterkey;
         boolean hasKeystore;
         if (!isExternalApk && isRootEnabled) {
+            isSystemlessPath = MagiskUtils.isSystemlessPath(PackageUtils
+                    .getHiddenCodePathOrDefault(mPackageName, mApplicationInfo.publicSourceDir));
             hasMasterkey = PackageUtils.hasMasterKey(mApplicationInfo.uid);
             hasKeystore = PackageUtils.hasKeyStore(mApplicationInfo.uid);
         } else {
+            isSystemlessPath = false;
             hasMasterkey = false;
             hasKeystore = false;
         }
@@ -438,10 +442,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (!trackerComponents.isEmpty()) {
                 addChip(getResources().getQuantityString(R.plurals.no_of_trackers,
                         trackerComponents.size(), trackerComponents.size()), R.color.tracker)
-                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
-                                .setTitle(R.string.trackers)
-                                .setItems(trackerComponents.keySet().toArray(new String[0]), null)
-                                .setPositiveButton(R.string.block, (dialog, which) -> {
+                        .setOnClickListener(v -> {
+                            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
+                                    .setTitle(R.string.trackers)
+                                    .setItems(trackerComponents.keySet().toArray(new String[0]), null);
+                            if (!isExternalApk) {
+                                builder.setPositiveButton(R.string.block, (dialog, which) -> {
                                     mProgressIndicator.show();
                                     Intent intent = new Intent(mActivity, BatchOpsService.class);
                                     intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(Collections.singletonList(mPackageName)));
@@ -449,8 +455,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_BLOCK_TRACKERS);
                                     intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
                                     ContextCompat.startForegroundService(mActivity, intent);
-                                })
-                                .setNeutralButton(R.string.unblock, (dialog, which) -> {
+                                }).setNeutralButton(R.string.unblock, (dialog, which) -> {
                                     mProgressIndicator.show();
                                     Intent intent = new Intent(mActivity, BatchOpsService.class);
                                     intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(Collections.singletonList(mPackageName)));
@@ -458,9 +463,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_UNBLOCK_TRACKERS);
                                     intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
                                     ContextCompat.startForegroundService(mActivity, intent);
-                                })
-                                .setNegativeButton(R.string.cancel, null)
-                                .show());
+                                }).setNegativeButton(R.string.cancel, null);
+                            } else builder.setNegativeButton(R.string.close, null);
+                            builder.show();
+                        });
             }
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
                 if (isSystemlessPath) {
