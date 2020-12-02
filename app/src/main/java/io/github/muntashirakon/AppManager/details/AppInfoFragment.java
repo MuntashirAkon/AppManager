@@ -448,7 +448,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     .setItems(trackerComponents.keySet().toArray(new String[0]), null);
                             if (!isExternalApk) {
                                 builder.setPositiveButton(R.string.block, (dialog, which) -> {
-                                    mProgressIndicator.show();
                                     Intent intent = new Intent(mActivity, BatchOpsService.class);
                                     intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(Collections.singletonList(mPackageName)));
                                     intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, new ArrayList<>(Collections.singletonList(mainModel.getUserHandle())));
@@ -456,7 +455,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
                                     ContextCompat.startForegroundService(mActivity, intent);
                                 }).setNeutralButton(R.string.unblock, (dialog, which) -> {
-                                    mProgressIndicator.show();
                                     Intent intent = new Intent(mActivity, BatchOpsService.class);
                                     intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(Collections.singletonList(mPackageName)));
                                     intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, new ArrayList<>(Collections.singletonList(mainModel.getUserHandle())));
