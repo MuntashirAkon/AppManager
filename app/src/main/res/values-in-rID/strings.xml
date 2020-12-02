@@ -24,4 +24,5 @@
     <string name="refresh">Muat ulang</string>
     <string name="no_activities">Tidak ada aktifitas</string>
     <string name="installer_error_blocked_device">Perangkat</string>
+    <string name="receivers">Penerima</string>
 </resources>
