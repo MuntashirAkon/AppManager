@@ -502,4 +502,29 @@
     </plurals>
     <string name="word_wrap">Veksle linjebryting</string>
     <string name="starting_activity">Startaktivitet: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
+    <string name="pref_sign_apk_msg">Signer APK-filer før de installeres</string>
+    <string name="pref_sign_apk">Signer APK</string>
+    <string name="adb_over_tcp">ADB over TCP</string>
+    <string name="pref_mode_of_operations">Operasjonsmodus</string>
+    <string name="send_selected">Send valgte</string>
+    <string name="ecc">Elliptisk kurve-kryptografi</string>
+    <string name="un_apkm">UnApkm</string>
+    <string name="in_progress">Underveis</string>
+    <string name="packages">pakker</string>
+    <string name="subject">Emne</string>
+    <string name="confirm_installation">Bekreft installasjon</string>
+    <string name="rules">Regler</string>
+    <string name="changes_not_saved">Endringer ble ikke lagret</string>
+    <string name="state_multithreaded">Flertrådet</string>
+    <string name="launch_mode_single_task">Enkelt oppgave</string>
+    <string name="installer_error_session_abandon">Kunne ikke forlate installasjonsøkten</string>
+    <string name="installer_error_session_write">Kunne ikke skrive til installasjonsøkt</string>
+    <string name="operation_running">Operasjon kjører …</string>
+    <plurals name="alert_failed_to_block_components">
+        <item quantity="one">Kunne ikke blokkere komponenter for %1$d program</item>
+        <item quantity="other">Kunne ikke blokkere komponenter for %1$d programmer</item>
+    </plurals>
+    <string name="failed_to_get_data_usage_information">Kunne ikke hente databruksinfo</string>
+    <string name="manifest_viewer">Manifest-viser</string>
+    <string name="rules_not_applied">Regler ikke tillagt</string>
 </resources>
