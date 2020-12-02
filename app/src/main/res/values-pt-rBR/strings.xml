@@ -712,4 +712,6 @@
     <string name="install_location_internal_only">Somente interno</string>
     <string name="installer">Instalador</string>
     <string name="comment">Comentário</string>
+    <string name="pref_sign_apk_msg">Assinar arquivos APK antes de instalá-los.</string>
+    <string name="pref_sign_apk">Assinar APK</string>
 </resources>
