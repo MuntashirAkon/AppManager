@@ -714,4 +714,13 @@
     <string name="comment">Comentário</string>
     <string name="pref_sign_apk_msg">Assinar arquivos APK antes de instalá-los.</string>
     <string name="pref_sign_apk">Assinar APK</string>
+    <string name="pref_signature_schemes_msg">Pelo menos os esquemas v1 e v2 devem ser selecionados para uma maior compatibilidade. O esquema v4 requer o v2 ou v3.</string>
+    <string name="v4_scheme">Esquema v4 (desde o Android 11)</string>
+    <string name="v3_scheme">Esquema v3 (desde o Android 9)</string>
+    <string name="v1_scheme">Esquema v1 (desde o Android 1.0)</string>
+    <string name="v2_scheme">Esquema v2 (desde o Android 7.0)</string>
+    <string name="pref_apk_signing_msg">Defina os esquemas de assinatura, chave de assinatura personalizada, etc.</string>
+    <string name="apk_signing">Assinatura do APK</string>
+    <string name="signing_keys">Chaves de assinatura</string>
+    <string name="signature_schemes">Esquemas de assinatura</string>
 </resources>
