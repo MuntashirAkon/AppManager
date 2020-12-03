@@ -522,7 +522,7 @@ public class MainActivity extends BaseActivity implements
     protected void onStart() {
         super.onStart();
         // Set root/ADB
-        RunnerUtils.setModeOfOps(this);
+        new Thread(() -> RunnerUtils.setModeOfOps(this)).start();
 
         if (mAdapter != null) {
             // Set observer

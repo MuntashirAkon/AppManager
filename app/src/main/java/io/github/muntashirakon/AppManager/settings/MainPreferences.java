@@ -151,7 +151,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, currentMode);
                         mode.setSummary(getString(R.string.current_mode, modes[MODE_NAMES.indexOf(currentMode)]));
-                        RunnerUtils.setModeOfOps(activity);
+                        new Thread(() -> RunnerUtils.setModeOfOps(activity)).start();
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();

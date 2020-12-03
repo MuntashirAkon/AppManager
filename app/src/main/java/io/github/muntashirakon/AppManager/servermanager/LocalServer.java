@@ -141,6 +141,13 @@ public class LocalServer {
         AssetsUtils.writeScript(getConfig());
     }
 
+    public static void restart() throws IOException {
+        LocalServerManager manager = getInstance().mLocalServerManager;
+        manager.closeBgServer();
+        manager.stop();
+        manager.start();
+    }
+
     public static void updateConfig() {
         if (INSTANCE != null) {
             Config config = INSTANCE.getConfig();

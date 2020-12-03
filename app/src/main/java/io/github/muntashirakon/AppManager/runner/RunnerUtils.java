@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
@@ -306,6 +307,7 @@ public final class RunnerUtils {
         else return String.valueOf(userHandle);
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isRootGiven() {
         if (isRootAvailable()) {
             String output = Runner.runCommand(Runner.getRootInstance(), "echo AMRootTest").getOutput();
@@ -337,6 +339,7 @@ public final class RunnerUtils {
         }
     }
 
+    @WorkerThread
     private static void autoDetectRootOrAdb(Context context) {
         // Update config
         LocalServer.updateConfig();
@@ -364,21 +367,22 @@ public final class RunnerUtils {
         }
     }
 
+    @WorkerThread
     public static void setModeOfOps(Context context) {
         String mode = (String) AppPref.get(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
         switch (mode) {
             case Runner.MODE_AUTO:
                 RunnerUtils.autoDetectRootOrAdb(context);
-                break;
+                return;
             case Runner.MODE_ROOT:
                 AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
                 AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
-                new Thread(LocalServer::getInstance).start();
+                LocalServer.getInstance();
                 break;
             case Runner.MODE_ADB:
                 AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
                 AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
-                new Thread(LocalServer::getInstance).start();
+                LocalServer.getInstance();
                 break;
             case Runner.MODE_NO_ROOT:
                 AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
