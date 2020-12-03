@@ -712,4 +712,13 @@
     <string name="comment">Yorum</string>
     <string name="pref_sign_apk_msg">Kurmadan önce APK dosyalarını imzalayın.</string>
     <string name="pref_sign_apk">APK imzala</string>
+    <string name="pref_signature_schemes_msg">Daha fazla uyumluluk için en az v1 ve v2 şemaları seçilmelidir. v4 şeması, v2 veya v3 gerektirir.</string>
+    <string name="v4_scheme">v4 şeması (Android 11\'den beri)</string>
+    <string name="v3_scheme">v3 şeması (Android 9\'dan beri)</string>
+    <string name="v2_scheme">v2 şeması (Android 7.0\'dan beri)</string>
+    <string name="v1_scheme">v1 şeması (Android 1.0\'dan beri)</string>
+    <string name="pref_apk_signing_msg">İmza şemaları, özel imzalama anahtarı vb. ayarlayın.</string>
+    <string name="apk_signing">APK imzalama</string>
+    <string name="signing_keys">İmzalama anahtarları</string>
+    <string name="signature_schemes">İmza şemaları</string>
 </resources>
