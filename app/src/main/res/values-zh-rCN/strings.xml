@@ -675,4 +675,6 @@
     <string name="install_location_internal_only">仅内部存储</string>
     <string name="install_location">安装位置</string>
     <string name="comment">注解</string>
+    <string name="pref_sign_apk_msg">安装 APK 前先对它们进行签名。</string>
+    <string name="pref_sign_apk">对 APK 进行签名</string>
 </resources>
