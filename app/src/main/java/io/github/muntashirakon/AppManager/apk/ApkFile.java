@@ -61,6 +61,8 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.apkm.UnApkm;
+import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
+import io.github.muntashirakon.AppManager.apk.signing.SignUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -585,6 +587,8 @@ public final class ApkFile implements AutoCloseable {
         private File source;
         @Nullable
         private File signedFile;
+        @Nullable
+        private File idsigFile;
         private boolean selected = false;
         private final boolean required;
         private final boolean isolated;
@@ -711,10 +715,15 @@ public final class ApkFile implements AutoCloseable {
                 return realFile;
             }
             signedFile = IOUtils.getTempFile();
+            SigSchemes sigSchemes = SigSchemes.fromPref();
             try {
-                SignUtils signUtils = SignUtils.getInstance(context);
+                SignUtils signUtils = SignUtils.getInstance(sigSchemes, context);
+                if (signUtils.isV4SchemeEnabled()) {
+                    idsigFile = IOUtils.getTempFile();
+                    signUtils.setIdsigFile(idsigFile);
+                }
                 if (signUtils.sign(realFile, signedFile, -1)) {
-                    if (SignUtils.verify(signedFile)) {
+                    if (SignUtils.verify(sigSchemes, signedFile, idsigFile)) {
                         return signedFile;
                     }
                 }
@@ -740,6 +749,7 @@ public final class ApkFile implements AutoCloseable {
         @Override
         public void close() {
             IOUtils.deleteSilently(cachedFile);
+            IOUtils.deleteSilently(idsigFile);
             IOUtils.deleteSilently(signedFile);
             if (source != null && !source.getAbsolutePath().startsWith("/proc/self")
                     && !source.getAbsolutePath().startsWith("/data/app")) {
@@ -784,20 +794,24 @@ public final class ApkFile implements AutoCloseable {
 
         @NonNull
         public String getAbi() {
-            if (type == APK_SPLIT_ABI) return splitSuffix;
+            if (type == APK_SPLIT_ABI) {
+                return Objects.requireNonNull(splitSuffix);
+            }
             throw new RuntimeException("Attempt to fetch ABI for invalid apk");
         }
 
         public int getDensity() {
-            if (type == APK_SPLIT_DENSITY)
-                return StaticDataset.DENSITY_NAME_TO_DENSITY.get(splitSuffix);
+            if (type == APK_SPLIT_DENSITY) {
+                return StaticDataset.DENSITY_NAME_TO_DENSITY.get(Objects.requireNonNull(splitSuffix));
+            }
             throw new RuntimeException("Attempt to fetch Density for invalid apk");
         }
 
         @NonNull
         public Locale getLocale() {
-            if (splitSuffix != null && type == APK_SPLIT_LOCALE)
-                return new Locale.Builder().setLanguageTag(splitSuffix).build();
+            if (type == APK_SPLIT_LOCALE) {
+                return new Locale.Builder().setLanguageTag(Objects.requireNonNull(splitSuffix)).build();
+            }
             throw new RuntimeException("Attempt to fetch Locale for invalid apk");
         }
 

@@ -15,12 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager.apk;
+package io.github.muntashirakon.AppManager.apk.signing;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.preference.PreferenceManager;
+import android.util.Pair;
 
 import com.android.apksig.ApkSigner;
 import com.android.apksig.ApkVerifier;
@@ -54,6 +55,7 @@ import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -62,8 +64,10 @@ import sun.security.pkcs.PKCS8Key;
 
 public class SignUtils {
     @NonNull
-    public static SignUtils getInstance(Context context) throws SignatureException {
+    public static SignUtils getInstance(SigSchemes sigSchemes, Context context)
+            throws SignatureException {
         msgId = null;
+        Pair<PrivateKey, X509Certificate> signingKey;
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         boolean isCustom = sp.getBoolean("custom_signature_file", false);
         if (isCustom) {
@@ -74,50 +78,44 @@ public class SignUtils {
             String key_pass = sp.getString("key_pass", "");
             try {
                 if (type == 3) {
-                    return loadKey(keyPath, cert_or_alias);
+                    signingKey = loadKey(keyPath, cert_or_alias);
                 } else {
-                    return loadKey(context, keyPath, type, cert_or_alias, store_pass, key_pass);
+                    signingKey = loadKey(context, keyPath, type, cert_or_alias, store_pass, key_pass);
                 }
             } catch (Exception e) {
                 throw new SignatureException("Unable to sign apk.", e);
             }
+        } else {
+            try {
+                signingKey = loadKey(context.getAssets());
+            } catch (Exception e) {
+                throw new SignatureException("Unable to sign apk.", e);
+            }
         }
-        try {
-            return loadKey(context.getAssets());
-        } catch (Exception e) {
-            throw new SignatureException("Unable to sign apk.", e);
-        }
+        return new SignUtils(sigSchemes, signingKey.first, signingKey.second);
     }
 
     @NonNull
-    private static SignUtils loadKey(AssetManager assets) throws IOException, InvalidKeyException, CertificateException {
-        SignUtils signUtils = new SignUtils();
-        signUtils.privateKey = getPrivateKey(assets);
-        signUtils.certificate = getCert(assets);
-        return signUtils;
-    }
-
-    @NonNull
-    private static X509Certificate getCert(AssetManager assets) throws IOException, CertificateException {
-        try (InputStream cert = assets.open("key/testkey.x509.pem")) {
-            return (X509Certificate) CertificateFactory.getInstance("X.509").
-                    generateCertificate(cert);
-        }
-    }
-
-    @NonNull
-    private static PrivateKey getPrivateKey(AssetManager assets) throws IOException, InvalidKeyException {
+    private static Pair<PrivateKey, X509Certificate> loadKey(@NonNull AssetManager assets)
+            throws IOException, InvalidKeyException, CertificateException {
+        PrivateKey privateKey;
+        X509Certificate certificate;
         try (InputStream key = assets.open("key/testkey.pk8")) {
-            PKCS8Key pkcs8 = new PKCS8Key();
-            pkcs8.decode(key);
-            return pkcs8;
+            PKCS8Key pkcs8Key = new PKCS8Key();
+            pkcs8Key.decode(key);
+            privateKey = pkcs8Key;
         }
+        try (InputStream cert = assets.open("key/testkey.x509.pem")) {
+            certificate = (X509Certificate) CertificateFactory.getInstance("X.509")
+                    .generateCertificate(cert);
+        }
+        return new Pair<>(privateKey, certificate);
     }
 
     private static final String[] types = {"JKS", "PKCS12", "BKS"};
 
     @NonNull
-    private static SignUtils loadKey(Context context, String keyPath, int type, String alias, String store_pass, String key_pass)
+    private static Pair<PrivateKey, X509Certificate> loadKey(Context context, String keyPath, int type, String alias, String store_pass, String key_pass)
             throws KeyStoreException, UnrecoverableKeyException, CertificateException, NoSuchAlgorithmException, IOException {
         if (!exists(keyPath)) throw new FileNotFoundException(keyPath + " not found.");
         String keyType = types[type];
@@ -155,23 +153,20 @@ public class SignUtils {
     }
 
     @NonNull
-    private static SignUtils loadKey(@NonNull KeyStore ks, String keyPath, @NonNull String alias, char[] storePass, char[] keyPass)
+    private static Pair<PrivateKey, X509Certificate> loadKey(@NonNull KeyStore ks, String keyPath, @NonNull String alias, char[] storePass, char[] keyPass)
             throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException {
         InputStream i = new FileInputStream(keyPath);
         ks.load(i, storePass);
         if (alias.isEmpty()) alias = ks.aliases().nextElement();
-        PrivateKey prk = (PrivateKey) ks.getKey(alias, keyPass);
+        PrivateKey privateKey = (PrivateKey) ks.getKey(alias, keyPass);
         X509Certificate cert = (X509Certificate) ks.getCertificate(alias);
-        SignUtils st = new SignUtils();
-        st.privateKey = prk;
-        st.certificate = cert;
-        return st;
+        return new Pair<>(privateKey, cert);
     }
 
     @NonNull
-    private static SignUtils loadKey(String keyPath, String certPath) throws Exception {
+    private static Pair<PrivateKey, X509Certificate> loadKey(String keyPath, String certPath) throws Exception {
         if (!exists(keyPath)) throw new FileNotFoundException(keyPath + " not found.");
-        if (!exists(certPath))  throw new FileNotFoundException(certPath + " not found.");
+        if (!exists(certPath)) throw new FileNotFoundException(certPath + " not found.");
         InputStream pk = new FileInputStream(keyPath);
         byte[] data = IOUtils.readFully(pk, -1, true);
         pk.close();
@@ -180,11 +175,8 @@ public class SignUtils {
                 generateCertificate(cer);
         cer.close();
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(data);
-        PrivateKey prk = KeyFactory.getInstance(cert.getPublicKey().getAlgorithm()).generatePrivate(spec);
-        SignUtils signUtils = new SignUtils();
-        signUtils.privateKey = prk;
-        signUtils.certificate = cert;
-        return signUtils;
+        PrivateKey privateKey = KeyFactory.getInstance(cert.getPublicKey().getAlgorithm()).generatePrivate(spec);
+        return new Pair<>(privateKey, cert);
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -196,10 +188,27 @@ public class SignUtils {
     }
 
     private static String msgId;
-    private PrivateKey privateKey;
-    private X509Certificate certificate;
+    @NonNull
+    private final PrivateKey privateKey;
+    @NonNull
+    private final X509Certificate certificate;
+    @NonNull
+    private final SigSchemes sigSchemes;
+    @Nullable
+    private File idsigFile;
 
-    private SignUtils() {
+    private SignUtils(@NonNull SigSchemes sigSchemes, @NonNull PrivateKey privateKey, @NonNull X509Certificate certificate) {
+        this.sigSchemes = sigSchemes;
+        this.privateKey = privateKey;
+        this.certificate = certificate;
+    }
+
+    public boolean isV4SchemeEnabled() {
+        return sigSchemes.v4SchemeEnabled();
+    }
+
+    public void setIdsigFile(@Nullable File idsigFile) {
+        this.idsigFile = idsigFile;
     }
 
     public boolean sign(File in, File out, int minSdk) {
@@ -211,8 +220,22 @@ public class SignUtils {
         builder.setOutputApk(out);
         builder.setCreatedBy("AppManager");
         if (minSdk != -1) builder.setMinSdkVersion(minSdk);
-        builder.setV1SigningEnabled(true);
-        builder.setV2SigningEnabled(true);
+        if (sigSchemes.v1SchemeEnabled()) {
+            builder.setV1SigningEnabled(true);
+        }
+        if (sigSchemes.v2SchemeEnabled()) {
+            builder.setV2SigningEnabled(true);
+        }
+        if (sigSchemes.v3SchemeEnabled()) {
+            builder.setV3SigningEnabled(true);
+        }
+        if (sigSchemes.v4SchemeEnabled()) {
+            if (idsigFile == null) {
+                throw new RuntimeException("idsig file is mandatory for v4 signature scheme.");
+            }
+            builder.setV4SigningEnabled(true);
+            builder.setV4SignatureOutputFile(idsigFile);
+        }
         ApkSigner signer = builder.build();
         Log.i("SignUtils::sign", String.format("SignApk: %s", in));
         try {
@@ -225,20 +248,32 @@ public class SignUtils {
         }
     }
 
-    public static boolean verify(File apk) {
+    public static boolean verify(@NonNull SigSchemes sigSchemes, @NonNull File apk, @Nullable File idsig) {
         ApkVerifier.Builder builder = new ApkVerifier.Builder(apk);
+        if (sigSchemes.v4SchemeEnabled()) {
+            if (idsig == null) {
+                throw new RuntimeException("idsig file is mandatory for v4 signature scheme.");
+            }
+            builder.setV4SignatureFile(idsig);
+        }
         ApkVerifier verifier = builder.build();
         try {
             ApkVerifier.Result result = verifier.verify();
             Log.i("SignUtils::verify", apk.toString());
             boolean isVerify = result.isVerified();
             if (isVerify) {
-                if (result.isVerifiedUsingV1Scheme())
+                if (sigSchemes.v1SchemeEnabled() && result.isVerifiedUsingV1Scheme())
                     Log.i("SignUtils::verify", "V1 signature verification succeeded.");
-                else Log.w("SignUtils::verify", "V1 signature verification failed.");
-                if (result.isVerifiedUsingV2Scheme())
+                else Log.w("SignUtils::verify", "V1 signature verification failed/disabled.");
+                if (sigSchemes.v2SchemeEnabled() && result.isVerifiedUsingV2Scheme())
                     Log.i("SignUtils::verify", "V2 signature verification succeeded.");
-                else Log.w("SignUtils::verify", "V2 signature verification failed.");
+                else Log.w("SignUtils::verify", "V2 signature verification failed/disabled.");
+                if (sigSchemes.v3SchemeEnabled() && result.isVerifiedUsingV3Scheme())
+                    Log.i("SignUtils::verify", "V3 signature verification succeeded.");
+                else Log.w("SignUtils::verify", "V3 signature verification failed/disabled.");
+                if (sigSchemes.v4SchemeEnabled() && result.isVerifiedUsingV4Scheme())
+                    Log.i("SignUtils::verify", "V4 signature verification succeeded.");
+                else Log.w("SignUtils::verify", "V4 signature verification failed/disabled.");
                 int i = 0;
                 List<X509Certificate> signerCertificates = result.getSignerCertificates();
                 Log.i("SignUtils::verify", "Number of signatures: " + signerCertificates.size());
@@ -253,13 +288,15 @@ public class SignUtils {
             for (ApkVerifier.IssueWithParams err : result.getErrors()) {
                 Log.e("SignUtils::verify", err.toString());
             }
-            for (ApkVerifier.Result.V1SchemeSignerInfo signer : result.getV1SchemeIgnoredSigners()) {
-                String name = signer.getName();
-                for (ApkVerifier.IssueWithParams err : signer.getErrors()) {
-                    Log.e("SignUtils::verify", "JAR signer" + name + ": " + err);
-                }
-                for (ApkVerifier.IssueWithParams err : signer.getWarnings()) {
-                    Log.w("SignUtils::verify", "JAR signer " + name + ": " + err);
+            if (sigSchemes.v1SchemeEnabled()) {
+                for (ApkVerifier.Result.V1SchemeSignerInfo signer : result.getV1SchemeIgnoredSigners()) {
+                    String name = signer.getName();
+                    for (ApkVerifier.IssueWithParams err : signer.getErrors()) {
+                        Log.e("SignUtils::verify", name + ": " + err);
+                    }
+                    for (ApkVerifier.IssueWithParams err : signer.getWarnings()) {
+                        Log.w("SignUtils::verify", name + ": " + err);
+                    }
                 }
             }
             return isVerify;

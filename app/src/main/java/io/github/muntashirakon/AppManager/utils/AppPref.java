@@ -34,6 +34,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.TarUtils;
@@ -79,6 +80,7 @@ public class AppPref {
         PREF_ROOT_MODE_ENABLED_BOOL,
         PREF_RUNNING_APPS_FILTER_FLAGS_INT,
         PREF_RUNNING_APPS_SORT_ORDER_INT,
+        PREF_SIGNATURE_SCHEMES_INT,
         PREF_SHOW_DISCLAIMER_BOOL,
         PREF_USAGE_ACCESS_ENABLED_BOOL;
 
@@ -296,7 +298,7 @@ public class AppPref {
     }
 
     @NonNull
-    private Object getDefaultValue(@NonNull PrefKey key) {
+    public Object getDefaultValue(@NonNull PrefKey key) {
         switch (key) {
             case PREF_BACKUP_FLAGS_INT:
                 return BackupFlags.BACKUP_SOURCE | BackupFlags.BACKUP_DATA
@@ -344,6 +346,8 @@ public class AppPref {
                 return PackageInfo.INSTALL_LOCATION_AUTO;
             case PREF_INSTALLER_INSTALLER_APP_STR:
                 return AppManager.getContext().getPackageName();
+            case PREF_SIGNATURE_SCHEMES_INT:
+                return SigSchemes.SIG_SCHEME_V1 | SigSchemes.SIG_SCHEME_V2;
         }
         throw new IllegalArgumentException("Pref key not found.");
     }

@@ -748,4 +748,13 @@
     <string name="install_location_prefer_external">Prefer external</string>
     <string name="pref_sign_apk">Sign APK</string>
     <string name="pref_sign_apk_msg">Sign APK files before installing them.</string>
+    <string name="signature_schemes">Signature schemes</string>
+    <string name="signing_keys">Signing keys</string>
+    <string name="apk_signing">APK signing</string>
+    <string name="pref_apk_signing_msg">Set signature schemes, custom signing key, etc.</string>
+    <string name="v1_scheme">v1 scheme (since Android 1.0)</string>
+    <string name="v2_scheme">v2 scheme (since Android 7.0)</string>
+    <string name="v3_scheme">v3 scheme (since Android 9)</string>
+    <string name="v4_scheme">v4 scheme (since Android 11)</string>
+    <string name="pref_signature_schemes_msg">At least v1 and v2 schemes should be selected for a greater compatibility. v4 scheme requires v2 or v3.</string>
 </resources>

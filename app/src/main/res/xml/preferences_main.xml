@@ -16,7 +16,8 @@
   -->
 
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Preference
         app:key="custom_locale"
@@ -37,6 +38,12 @@
         app:key="usage_access_enabled"
         app:title="@string/pref_usage_access_enabled"
         app:summary="@string/pref_usage_access_enabled_msg" />
+
+    <Preference
+        app:key="apk_signing_prefs"
+        app:title="@string/apk_signing"
+        app:summary="@string/pref_apk_signing_msg"
+        android:fragment="io.github.muntashirakon.AppManager.settings.ApkSigningPreferences" />
 
     <PreferenceCategory
         app:key="rules"

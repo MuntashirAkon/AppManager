@@ -143,4 +143,10 @@
         <item>xiaomi</item>
         <item>zte</item>
     </string-array>
+    <string-array name="sig_schemes">
+        <item>@string/v1_scheme</item>
+        <item>@string/v2_scheme</item>
+        <item>@string/v3_scheme</item>
+        <item>@string/v4_scheme</item>
+    </string-array>
 </resources>
