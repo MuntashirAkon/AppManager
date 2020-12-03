@@ -198,9 +198,10 @@ public final class PackageUtils {
     @NonNull
     public static List<String> getRunningServicesForPackage(String packageName) {
         List<String> runningServices = new ArrayList<>();
-        Runner.runCommand(new String[]{"dumpsys", "activity", "services", "-p", packageName});
-        if (Runner.getLastResult().isSuccessful()) {
-            List<String> serviceDump = Runner.getLastResult().getOutputAsList(1);
+        if (!PermissionUtils.hasDumpPermission()) return runningServices;
+        Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "activity", "services", "-p", packageName});
+        if (result.isSuccessful()) {
+            List<String> serviceDump = result.getOutputAsList(1);
             Matcher matcher;
             String service, line;
             ListIterator<String> it = serviceDump.listIterator();
@@ -230,7 +231,8 @@ public final class PackageUtils {
     }
 
     public static boolean hasRunningServices(String packageName) {
-        Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "activity", "services", "-p", packageName});
+        if (!PermissionUtils.hasDumpPermission()) return false;
+        Runner.Result result = Runner.runCommand(Runner.getUserInstance(), new String[]{"dumpsys", "activity", "services", "-p", packageName});
         if (result.isSuccessful()) {
             List<String> serviceDump = result.getOutputAsList(1);
             if (serviceDump.size() == 1 && SERVICE_NOTHING.equals(serviceDump.get(0).trim())) {
