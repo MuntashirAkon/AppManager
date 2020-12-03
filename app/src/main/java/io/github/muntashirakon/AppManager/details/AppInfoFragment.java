@@ -791,6 +791,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @GuardedBy("mListItems")
     private void setPathsAndDirectories() {
         synchronized (mListItems) {
+            if (isDetached()) return;
             // Paths and directories
             mListItems.add(ListItem.getGroupHeader(getString(R.string.paths_and_directories)));
             // Source directory (apk path)
@@ -854,6 +855,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @GuardedBy("mListItems")
     private void setMoreInfo() {
         synchronized (mListItems) {
+            if (isDetached()) return;
             // Set more info
             mListItems.add(ListItem.getGroupHeader(getString(R.string.more_info)));
 
@@ -964,6 +966,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void setVerticalView() {
         synchronized (mListItems) {
             mListItems.clear();
+            if (isDetached()) return;
             if (!isExternalApk) {
                 setPathsAndDirectories();
                 setDataUsage();
@@ -979,6 +982,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @GuardedBy("mListItems")
     private void setDataUsageHelper(String txData, String rxData) {
         synchronized (mListItems) {
+            if (isDetached()) return;
             mListItems.add(ListItem.getGroupHeader(getString(R.string.data_usage_msg)));
             mListItems.add(ListItem.getInlineItem(getString(R.string.data_transmitted), txData));
             mListItems.add(ListItem.getInlineItem(getString(R.string.data_received), rxData));
@@ -1099,6 +1103,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @GuardedBy("mListItems")
     private void setStorageInfo(long codeSize, long dataSize, long cacheSize, long obbSize, long mediaSize) {
         synchronized (mListItems) {
+            if (isDetached()) return;
             mListItems.add(ListItem.getGroupHeader(getString(R.string.storage_and_cache)));
             mListItems.add(ListItem.getInlineItem(getString(R.string.app_size), getReadableSize(codeSize)));
             mListItems.add(ListItem.getInlineItem(getString(R.string.data_size), getReadableSize(dataSize)));
