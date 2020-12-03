@@ -372,6 +372,7 @@ public final class RunnerUtils {
                 break;
             case Runner.MODE_ROOT:
                 AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
+                AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
                 new Thread(LocalServer::getInstance).start();
                 break;
             case Runner.MODE_ADB:
