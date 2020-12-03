@@ -715,4 +715,13 @@
     <string name="install_location">Installationsort</string>
     <string name="pref_sign_apk_msg">APK-Dateien vor der Installation signieren.</string>
     <string name="pref_sign_apk">APK signieren</string>
+    <string name="pref_signature_schemes_msg">Für eine bessere Kompatibilität sollten mindestens v1- und v2-Schemata ausgewählt werden. Für das v4-Schema ist v2 oder v3 erforderlich.</string>
+    <string name="v4_scheme">v4-Schema (seit Android 11)</string>
+    <string name="v3_scheme">v3-Schema (ab Android 9)</string>
+    <string name="v2_scheme">v2-Schema (seit Android 7.0)</string>
+    <string name="v1_scheme">v1-Schema (ab Android 1.0)</string>
+    <string name="pref_apk_signing_msg">Festlegen von Signaturschemata, benutzerdefinierten Signaturschlüsseln usw.</string>
+    <string name="apk_signing">APK-Signierung</string>
+    <string name="signing_keys">Signierschlüssel</string>
+    <string name="signature_schemes">Signaturschemata</string>
 </resources>
