@@ -269,14 +269,22 @@ public class AppDetailsViewModel extends AndroidViewModel {
         synchronized (blockerLocker) {
             waitForBlockerOrExit();
             blocker.setMutable();
-            if (blocker.hasComponent(componentName)) { // Remove from the list
-                blocker.removeComponent(componentName);
-            } else { // Add to the list
+            if (blocker.hasComponent(componentName)) {
+                // Component is in the list
+                if (blocker.isComponentBlocked(componentName)) {
+                    // Remove from the list
+                    blocker.removeComponent(componentName);
+                } else {
+                    // The component isn't being blocked, simply remove it
+                    blocker.removeEntry(componentName);
+                }
+            } else {
+                // Add to the list
                 blocker.addComponent(componentName, type);
             }
             // Apply rules if global blocking enable or already applied
             if ((Boolean) AppPref.get(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL)
-                    || (ruleApplicationStatus != null && ruleApplicationStatus.getValue() == RULE_APPLIED)) {
+                    || (ruleApplicationStatus != null && RULE_APPLIED == ruleApplicationStatus.getValue())) {
                 blocker.applyRules(true);
             }
             // Set new status
