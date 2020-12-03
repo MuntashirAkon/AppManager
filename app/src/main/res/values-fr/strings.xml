@@ -641,5 +641,5 @@
     <string name="deny_dangerous_app_ops">Refuser les autorisations dangereuses</string>
     <string name="sort_by_app_ops_names">Nom de l\'autorisation</string>
     <string name="sort_by_app_ops_values">Valeur de l\'autorisation</string>
-    <string name="native_library_dir">Répertoire de librairies natives JNI</string>
+    <string name="native_library_dir">Répertoire de bibliothèques natives JNI</string>
 </resources>
