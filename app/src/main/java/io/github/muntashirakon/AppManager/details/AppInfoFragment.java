@@ -446,7 +446,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
                                     .setTitle(R.string.trackers)
                                     .setItems(trackerComponents.keySet().toArray(new String[0]), null);
-                            if (!isExternalApk) {
+                            if (!isExternalApk && isRootEnabled) {
                                 builder.setPositiveButton(R.string.block, (dialog, which) -> {
                                     Intent intent = new Intent(mActivity, BatchOpsService.class);
                                     intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, new ArrayList<>(Collections.singletonList(mPackageName)));
