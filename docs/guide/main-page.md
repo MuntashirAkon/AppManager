@@ -88,6 +88,9 @@ A list of running apps or processes can be viewed by clicking on the **Running A
 ### APK Updater
 If you have the app [APK Updater][3] installed, you can use the corresponding option in the menu to open the app directly. The option is hidden if you do not have it installed.
 
+### Profiles
+Opens the [profiles page][profiles]. Profiles are a way to configure regularly used tasks. You can also add shortcuts of the profiles in the launcher to run them directly.
+
 ### Termux
 If you have [Termux][2] installed, you can directly go to the running session or open a new session using the **Termux** option in the menu.
 
@@ -100,3 +103,4 @@ You can go to in-app [Settings][settings] by clicking on the corresponding optio
 [4]: ./app-details-page.md
 [5]: ./one-click-ops-page.md
 [settings]: ./settings-page.md
+[profiles]: ./profiles-page.md

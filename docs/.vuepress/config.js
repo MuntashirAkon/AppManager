@@ -81,6 +81,8 @@ module.exports = {
               '/guide/scanner-page',
               '/guide/shared-pref-editor-page',
               '/guide/settings-page',
+              '/guide/profiles-page',
+              '/guide/profile-page',
               '/guide/backup-restore',
             ]
           },
