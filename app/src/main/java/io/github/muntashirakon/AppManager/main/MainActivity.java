@@ -81,6 +81,7 @@ import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -168,12 +169,7 @@ public class MainActivity extends BaseActivity implements
     @SortOrder
     private int mSortBy;
 
-    private final ActivityResultLauncher<String[]> askStoragePermForBackupApk = registerForActivityResult(
-            new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-                if (Utils.getExternalStoragePermissions(this) == null) {
-                    handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
-                }
-            });
+    private final StoragePermission storagePermission = StoragePermission.init(this);
 
     private final ActivityResultLauncher<String> batchExportRules = registerForActivityResult(
             new ActivityResultContracts.CreateDocument(),
@@ -227,6 +223,8 @@ public class MainActivity extends BaseActivity implements
             layoutParams.gravity = Gravity.END;
             actionBar.setCustomView(mSearchView, layoutParams);
         }
+
+        // Init storage permission
 
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
@@ -482,10 +480,9 @@ public class MainActivity extends BaseActivity implements
             mAdapter.clearSelection();
             handleSelection();
         } else if (id == R.id.action_backup_apk) {
-            String[] permissions = Utils.getExternalStoragePermissions(this);
-            if (permissions != null) {
-                askStoragePermForBackupApk.launch(permissions);
-            } else handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
+            storagePermission.request(granted -> {
+                if (granted) handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
+            });
         } else if (id == R.id.action_block_trackers) {
             handleBatchOp(BatchOpsManager.OP_BLOCK_TRACKERS);
         } else if (id == R.id.action_clear_data) {

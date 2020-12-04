@@ -20,6 +20,8 @@ package io.github.muntashirakon.AppManager.utils;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Environment;
 
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.AppManager;
@@ -31,9 +33,20 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 public final class PermissionUtils {
     public static boolean hasDumpPermission() {
         Context context = AppManager.getContext();
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.DUMP) == PackageManager.PERMISSION_DENIED) {
+        if (hasPermission(context, Manifest.permission.DUMP)) {
             Runner.Result result = RunnerUtils.grantPermission(context.getPackageName(), Manifest.permission.DUMP, Users.getCurrentUserHandle());
             return result.isSuccessful();
         } else return false;
+    }
+
+    public static boolean hasStoragePermission(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.isExternalStorageManager();
+        }
+        return hasPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
+
+    private static boolean hasPermission(Context context, String permissionName) {
+        return ContextCompat.checkSelfPermission(context, permissionName) == PackageManager.PERMISSION_GRANTED;
     }
 }

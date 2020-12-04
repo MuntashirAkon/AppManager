@@ -57,8 +57,8 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
@@ -79,12 +79,7 @@ public class PackageInstallerActivity extends BaseActivity {
     private int sessionId = -1;
     private boolean closeApkFile = true;
     private int apkFileKey;
-    private final ActivityResultLauncher<String[]> permInstallWithObb = registerForActivityResult(
-            new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-                if (Utils.getExternalStoragePermissions(this) == null) {
-                    launchInstaller();
-                }
-            });
+    private final StoragePermission storagePermission = StoragePermission.init(this);
     private final ActivityResultLauncher<Intent> confirmIntentLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 // User did some interaction and the installer screen is closed now
@@ -323,13 +318,10 @@ public class PackageInstallerActivity extends BaseActivity {
     private void install() {
         if (apkFile.hasObb() && !AppPref.isRootOrAdbEnabled()) {
             // Need to request permissions if not given
-            String[] permissions = Utils.getExternalStoragePermissions(this);
-            if (permissions != null) {
-                permInstallWithObb.launch(permissions);
-                return;
-            }
-        }
-        launchInstaller();
+            storagePermission.request(granted -> {
+                if (granted) launchInstaller();
+            });
+        } else launchInstaller();
     }
 
     private void launchInstaller() {

@@ -18,14 +18,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     buildToolsVersion '30.0.2'
     ndkVersion '21.3.6528147'
 
     defaultConfig {
         applicationId 'io.github.muntashirakon.AppManager'
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 374
         versionName "2.5.20"
     }

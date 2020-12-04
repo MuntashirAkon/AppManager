@@ -18,13 +18,11 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 11
-        versionName "11"
+        targetSdkVersion 30
     }
 
     buildTypes {

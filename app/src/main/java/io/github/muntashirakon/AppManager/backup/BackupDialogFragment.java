@@ -34,8 +34,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,7 +47,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.StoragePermission;
 
 public class BackupDialogFragment extends DialogFragment {
     public static final String TAG = "BackupDialogFragment";
@@ -75,9 +73,7 @@ public class BackupDialogFragment extends DialogFragment {
     private int baseBackupCount = 0;
     private boolean permsGranted = false;
     private FragmentActivity activity;
-    private final ActivityResultLauncher<String[]> askStoragePerm = registerForActivityResult(
-            new ActivityResultContracts.RequestMultiplePermissions(), result ->
-                    permsGranted =  Utils.getExternalStoragePermissions(activity) == null);
+    private final StoragePermission storagePermission = StoragePermission.init(this);
     private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -114,11 +110,7 @@ public class BackupDialogFragment extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         activity = requireActivity();
-        String[] permissions = Utils.getExternalStoragePermissions(activity);
-        permsGranted = permissions == null;
-        if (!permsGranted) {
-            askStoragePerm.launch(permissions);
-        }
+        storagePermission.request(granted -> permsGranted = granted);
     }
 
     @NonNull

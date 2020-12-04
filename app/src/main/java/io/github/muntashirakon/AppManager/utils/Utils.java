@@ -60,14 +60,11 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
+import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import aosp.libcore.util.HexEncoding;
 
 public class Utils {
     public static final String TERMUX_LOGIN_PATH = OsEnvironment.getDataDataDirectory() + "/com.termux/files/usr/bin/login";
@@ -621,19 +618,6 @@ public class Utils {
 
     public static boolean isAppInstalled() { // or data cleared
         return (long) AppPref.get(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG) == 0;
-    }
-
-    @Nullable
-    public static String[] getExternalStoragePermissions(FragmentActivity activity) {
-        List<String> permissions = new ArrayList<>();
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-        if (permissions.size() == 0) return null;
-        else return permissions.toArray(new String[0]);
     }
 
     /**
