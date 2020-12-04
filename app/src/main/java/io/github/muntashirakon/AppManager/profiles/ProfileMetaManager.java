@@ -39,7 +39,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
@@ -97,8 +96,6 @@ public class ProfileMetaManager {
         }
 
         public static class BackupInfo {
-            @BackupDialogFragment.ActionMode
-            public int mode = BackupDialogFragment.MODE_BACKUP;
             @Nullable
             public String name;
             public int flags = (int) AppPref.get(AppPref.PrefKey.PREF_BACKUP_FLAGS_INT);
@@ -206,7 +203,6 @@ public class ProfileMetaManager {
             profile.backupData = new Profile.BackupInfo();
             profile.backupData.name = JSONUtils.getStringOrNull(backupInfo, "name");
             profile.backupData.flags = backupInfo.getInt("flags");
-            profile.backupData.mode = backupInfo.getInt("mode");
         }
         profile.exportRules = JSONUtils.getIntOrNull(profileObj, "export_rules");
         // Misc
@@ -249,7 +245,6 @@ public class ProfileMetaManager {
             JSONObject backupInfo = new JSONObject();
             backupInfo.put("name", profile.backupData.name);
             backupInfo.put("flags", profile.backupData.flags);
-            backupInfo.put("mode", profile.backupData.mode);
             profileObj.put("backup_data", backupInfo);
         }
         profileObj.put("export_rules", profile.exportRules);

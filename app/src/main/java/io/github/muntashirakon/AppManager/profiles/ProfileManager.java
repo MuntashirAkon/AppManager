@@ -32,7 +32,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -125,11 +124,11 @@ public class ProfileManager {
         ProfileMetaManager.Profile.BackupInfo backupInfo = profile.backupData;
         if (backupInfo != null) {
             Log.d(TAG, "Started backup/restore.");
-            switch (backupInfo.mode) {
-                case BackupDialogFragment.MODE_BACKUP:
+            switch (state) {
+                case ProfileMetaManager.STATE_ON:  // Take backup
                     result = batchOpsManager.performOp(BatchOpsManager.OP_BACKUP, packages);
                     break;
-                case BackupDialogFragment.MODE_RESTORE:
+                case ProfileMetaManager.STATE_OFF:  // Restore backup
                 default:
                     result = batchOpsManager.performOp(BatchOpsManager.OP_RESTORE_BACKUP, packages);
             }

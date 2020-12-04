@@ -38,27 +38,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/mode"
-                android:textAllCaps="true"
-                android:labelFor="@id/type_selector_spinner" />
-
-            <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/type_selector_spinner"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/backup_options"
                 android:textAllCaps="true"
                 android:labelFor="@id/type_selector_spinner" />
@@ -81,8 +60,8 @@
                 style="@style/AppTheme.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:hint="@string/input_backup_name"
-                tools:helperText="@string/input_backup_name_description"
+                android:hint="@string/input_backup_name"
+                app:helperText="@string/input_backup_name_description"
                 app:hintAnimationEnabled="true"
                 app:hintEnabled="true">
 
