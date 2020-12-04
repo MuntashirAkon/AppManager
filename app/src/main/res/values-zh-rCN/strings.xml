@@ -677,4 +677,13 @@
     <string name="comment">注解</string>
     <string name="pref_sign_apk_msg">安装 APK 前先对它们进行签名。</string>
     <string name="pref_sign_apk">对 APK 进行签名</string>
+    <string name="pref_signature_schemes_msg">为了更好的兼容性，至少应选中 v1 和 v2 方案。v4 方案需要选中 v2 或 v3。</string>
+    <string name="v4_scheme">v4 方案 （自 Android 11 起）</string>
+    <string name="v3_scheme">v3 方案（自 Android 9 起）</string>
+    <string name="v2_scheme">v2 方案 （自 Android 7.0 起）</string>
+    <string name="v1_scheme">v1 方案（自 Android 1.0 起）</string>
+    <string name="pref_apk_signing_msg">设置签名方案，自定义签名密钥等。</string>
+    <string name="apk_signing">APK 签名</string>
+    <string name="signing_keys">签名密钥</string>
+    <string name="signature_schemes">签名方案</string>
 </resources>
