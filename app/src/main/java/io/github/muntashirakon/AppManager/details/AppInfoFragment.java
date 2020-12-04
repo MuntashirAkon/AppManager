@@ -70,7 +70,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
@@ -109,15 +108,17 @@ import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
-import static io.github.muntashirakon.AppManager.utils.Utils.TERMUX_PERM_RUN_COMMAND;
+import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
 
 public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private static final String UID_STATS_PATH = "/proc/uid_stat/";
@@ -159,54 +160,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @GuardedBy("mListItems")
     private final List<ListItem> mListItems = new ArrayList<>();
-
-    private final ActivityResultLauncher<String> exportRules = registerForActivityResult(
-            new ActivityResultContracts.CreateDocument(),
-            uri -> {
-                if (uri == null) {
-                    // Back button pressed.
-                    return;
-                }
-                RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
-                Bundle exportArgs = new Bundle();
-                ArrayList<String> packages = new ArrayList<>();
-                packages.add(mPackageName);
-                exportArgs.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
-                exportArgs.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
-                exportArgs.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, packages);
-                exportArgs.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, new int[]{mainModel.getUserHandle()});
-                dialogFragment.setArguments(exportArgs);
-                dialogFragment.show(mActivity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-            });
-    private final ActivityResultLauncher<String> exportIcon = registerForActivityResult(
-            new ActivityResultContracts.CreateDocument(),
-            uri -> {
-                try {
-                    if (uri == null) {
-                        // Back button pressed.
-                        return;
-                    }
-                    try (OutputStream outputStream = mActivity.getContentResolver().openOutputStream(uri)) {
-                        if (outputStream == null)
-                            throw new IOException("Unable to open output stream.");
-                        Bitmap bitmap = IOUtils.getBitmapFromDrawable(mApplicationInfo.loadIcon(mPackageManager));
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-                        outputStream.flush();
-                        Toast.makeText(mActivity, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(mActivity, R.string.saving_failed, Toast.LENGTH_SHORT).show();
-                }
-            });
-    private final ActivityResultLauncher<String> permOpenInTermux = registerForActivityResult(
-            new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) openInTermux();
-            });
-    private final ActivityResultLauncher<String> permRunInTermux = registerForActivityResult(
-            new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) runInTermux();
-            });
+    private final BetterActivityResult<String, Uri> export = BetterActivityResult.registerForActivityResult(this, new ActivityResultContracts.CreateDocument());
+    private final BetterActivityResult<String, Boolean> termux = BetterActivityResult.registerForActivityResult(this, new ActivityResultContracts.RequestPermission());
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -323,18 +278,56 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             startActivity(infoIntent);
         } else if (itemId == R.id.action_export_blocking_rules) {
             @SuppressLint("SimpleDateFormat") final String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
-            exportRules.launch(fileName);
+            export.launch(fileName, uri -> {
+                if (uri == null) {
+                    // Back button pressed.
+                    return;
+                }
+                RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
+                Bundle exportArgs = new Bundle();
+                ArrayList<String> packages = new ArrayList<>();
+                packages.add(mPackageName);
+                exportArgs.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
+                exportArgs.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
+                exportArgs.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, packages);
+                exportArgs.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, new int[]{mainModel.getUserHandle()});
+                dialogFragment.setArguments(exportArgs);
+                dialogFragment.show(mActivity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+            });
         } else if (itemId == R.id.action_open_in_termux) {
-            if (ContextCompat.checkSelfPermission(mActivity, TERMUX_PERM_RUN_COMMAND) == PackageManager.PERMISSION_GRANTED) {
+            if (PermissionUtils.hasTermuxPermission(mActivity)) {
                 openInTermux();
-            } else permOpenInTermux.launch(TERMUX_PERM_RUN_COMMAND);
+            } else termux.launch(TERMUX_PERM_RUN_COMMAND, granted -> {
+                if (granted) openInTermux();
+            });
         } else if (itemId == R.id.action_run_in_termux) {
-            if (ContextCompat.checkSelfPermission(mActivity, TERMUX_PERM_RUN_COMMAND) == PackageManager.PERMISSION_GRANTED) {
+            if (PermissionUtils.hasTermuxPermission(mActivity)) {
                 runInTermux();
-            } else permRunInTermux.launch(TERMUX_PERM_RUN_COMMAND);
+            } else termux.launch(TERMUX_PERM_RUN_COMMAND, granted -> {
+                if (granted) runInTermux();
+            });
         } else if (itemId == R.id.action_extract_icon) {
             String iconName = mPackageLabel + "_icon.png";
-            exportIcon.launch(iconName);
+            export.launch(iconName, uri -> {
+                if (uri == null) {
+                    // Back button pressed.
+                    return;
+                }
+                try {
+                    try (OutputStream outputStream = mActivity.getContentResolver().openOutputStream(uri)) {
+                        if (outputStream == null) {
+                            throw new IOException("Unable to open output stream.");
+                        }
+                        Bitmap bitmap = IOUtils.getBitmapFromDrawable(mApplicationInfo.loadIcon(mPackageManager));
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                        outputStream.flush();
+                        Toast.makeText(mActivity, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(mActivity, R.string.saving_failed, Toast.LENGTH_SHORT).show();
+                }
+            });
         } else return super.onOptionsItemSelected(item);
         return true;
     }

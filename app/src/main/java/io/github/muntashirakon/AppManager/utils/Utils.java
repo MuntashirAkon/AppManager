@@ -68,7 +68,6 @@ import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 
 public class Utils {
     public static final String TERMUX_LOGIN_PATH = OsEnvironment.getDataDataDirectory() + "/com.termux/files/usr/bin/login";
-    public static final String TERMUX_PERM_RUN_COMMAND = "com.termux.permission.RUN_COMMAND";
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean checkUsageStatsPermission(@NonNull Context context) {
