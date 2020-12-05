@@ -58,13 +58,17 @@ public class RulesImporter implements Closeable {
 
     public RulesImporter(@NonNull List<RulesStorageManager.Type> typesToImport, @NonNull int[] userHandles) {
         mContext = AppManager.getContext();
-        //noinspection unchecked
-        mComponentsBlockers = new HashMap[userHandles.length];
-        mTypesToImport = typesToImport;
-        this.userHandles = userHandles;
         if (userHandles.length <= 0) {
             throw new IllegalArgumentException("Input must contain one or more user handles");
         }
+        // Init CBs
+        //noinspection unchecked
+        mComponentsBlockers = new HashMap[userHandles.length];
+        for (int i = 0; i < userHandles.length; ++i) {
+            mComponentsBlockers[i] = new HashMap<>();
+        }
+        mTypesToImport = typesToImport;
+        this.userHandles = userHandles;
     }
 
     public void addRulesFromUri(Uri uri) throws IOException {
@@ -94,14 +98,12 @@ public class RulesImporter implements Closeable {
                     } else throw new IOException("Malformed file.");
                     // Parse complete, now add the row to CB
                     for (int i = 0; i < userHandles.length; ++i) {
-                        if (mComponentsBlockers[i] == null)
-                            mComponentsBlockers[i] = new HashMap<>();
                         if (mComponentsBlockers[i].get(packageName) == null) {
                             // Get a read-only instance, commit will be called manually
                             mComponentsBlockers[i].put(packageName, ComponentsBlocker.getInstance(packageName, userHandles[i]));
                         }
                         if (mTypesToImport.contains(entry.type)) {
-                            // Returned ComponentsBlocker will never be null here
+                            //noinspection ConstantConditions Returned ComponentsBlocker will never be null here
                             mComponentsBlockers[i].get(packageName).addEntry(entry);
                         }
                     }
