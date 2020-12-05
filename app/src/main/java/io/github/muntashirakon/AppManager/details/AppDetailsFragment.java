@@ -29,7 +29,6 @@ import android.content.pm.PathPermission;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
-import android.content.pm.Signature;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
@@ -54,6 +53,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -73,6 +73,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -717,7 +720,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     break;
                 case SIGNATURES:
                 case SHARED_LIBRARIES:
-                    view = new TextView(mActivity);
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_view, parent, false);
                     break;
             }
             return new ViewHolder(view);
@@ -1307,14 +1310,24 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
 
         private void getSignatureView(@NonNull ViewHolder holder, int index) {
             TextView textView = (TextView) holder.itemView;
-            final Signature signature = (Signature) mAdapterList.get(index).vanillaItem;
-            textView.setText(PackageUtils.getSigningCertificateInfo(signature));
+            AppDetailsItem item = mAdapterList.get(index);
+            final X509Certificate signature = (X509Certificate) mAdapterList.get(index).vanillaItem;
+            final SpannableStringBuilder builder = new SpannableStringBuilder();
+            if (index == 0) {
+                // Display verifier info
+                builder.append(PackageUtils.getApkVerifierInfo(mainModel.getApkVerifierResult(), mActivity));
+            }
+            if (!TextUtils.isEmpty(item.name)) {
+                builder.append(UIUtils.getTitleText(mActivity, item.name)).append("\n");
+            }
+            builder.append(PackageUtils.getSigningCertificateInfo(mActivity, signature));
+            textView.setText(builder);
             textView.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             textView.setTextIsSelectable(true);
             int medium_size = mActivity.getResources().getDimensionPixelSize(R.dimen.padding_medium);
             int small_size = mActivity.getResources().getDimensionPixelSize(R.dimen.padding_small);
             textView.setTextSize(12);
-            textView.setPadding(medium_size, 0, medium_size, small_size);
+            textView.setPadding(medium_size, small_size, medium_size, small_size);
         }
     }
 }

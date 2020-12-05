@@ -15,11 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager.details;
+package io.github.muntashirakon.AppManager.details.struct;
 
 import android.content.pm.ComponentInfo;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 
 /**
  * Stores individual app details component item

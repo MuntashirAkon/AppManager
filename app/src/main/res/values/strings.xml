@@ -57,7 +57,7 @@
     <string name="shared_user_id">Shared User ID</string>
     <string name="sort_by_sha">Signature</string>
     <string name="signatures">Signatures</string>
-    <string name="no_signatures">No signatures</string>
+    <string name="no_signatures">No valid signatures</string>
     <string name="configurations">Configurations</string>
     <string name="no_configurations">No configurations</string>
     <string name="input_features">Input features</string>
@@ -503,6 +503,14 @@
         <item quantity="one">%1$d signature missing</item>
         <item quantity="other">%1$d signatures missing</item>
     </plurals>
+    <plurals name="signature_schemes">
+        <item quantity="one">Signature scheme</item>
+        <item quantity="other">Signature schemes</item>
+    </plurals>
+    <plurals name="verified_with_warning">
+        <item quantity="one">Verified with %d warning</item>
+        <item quantity="other">Verified with %d warnings</item>
+    </plurals>
     <string name="apply_to_system_apps">Apply to system apps</string>
     <string name="apply_to_system_apps_question">Apply to system apps too? Select \"No\" if unsure.</string>
     <string name="no">No</string>
@@ -757,4 +765,7 @@
     <string name="v3_scheme">v3 scheme (since Android 9)</string>
     <string name="v4_scheme">v4 scheme (since Android 11)</string>
     <string name="pref_signature_schemes_msg">At least v1 and v2 schemes should be selected for a greater compatibility. v4 scheme requires v2 or v3.</string>
+    <string name="verified">Verified</string>
+    <string name="not_verified">Not verified</string>
+    <string name="source_stamp_verified">SourceStamp verified.</string>
 </resources>

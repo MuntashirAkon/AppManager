@@ -16,9 +16,10 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<TextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/padding_medium"
-    android:layout_marginEnd="@dimen/padding_medium"/>
+    android:paddingStart="@dimen/padding_medium"
+    android:paddingEnd="@dimen/padding_medium"
+    tools:text="@tools:sample/lorem/random" />

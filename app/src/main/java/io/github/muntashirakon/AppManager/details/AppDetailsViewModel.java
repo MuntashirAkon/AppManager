@@ -31,13 +31,18 @@ import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
-import android.content.pm.Signature;
 import android.net.Uri;
 import android.os.Build;
 import android.os.DeadSystemException;
 import android.text.TextUtils;
 
+import com.android.apksig.ApkVerifier;
+import com.android.apksig.apk.ApkFormatException;
+
+import java.io.File;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -59,6 +64,9 @@ import androidx.lifecycle.MutableLiveData;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
@@ -1123,6 +1131,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     MutableLiveData<List<AppDetailsItem>> signatures;
+    private ApkVerifier.Result apkVerifierResult;
 
     private LiveData<List<AppDetailsItem>> getSignatures() {
         if (signatures == null) {
@@ -1132,16 +1141,46 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return signatures;
     }
 
+    public ApkVerifier.Result getApkVerifierResult() {
+        return apkVerifierResult;
+    }
+
     @WorkerThread
     private void loadSignatures() {
-        if (getPackageInfo() == null || signatures == null) return;
-        Signature[] signatureArray = PackageUtils.getSigningInfo(packageInfo, isExternalApk);
+        if (apkFile == null || signatures == null) return;
         List<AppDetailsItem> appDetailsItems = new ArrayList<>();
-        if (signatureArray != null) {
-            for (Signature signature : signatureArray) {
-                AppDetailsItem appDetailsItem = new AppDetailsItem(signature);
-                appDetailsItems.add(appDetailsItem);
+        try {
+            File idsigFile = apkFile.getIdsigFile();
+            ApkVerifier.Builder builder = new ApkVerifier.Builder(apkFile.getBaseEntry().getRealCachedFile());
+            if (idsigFile != null) {
+                builder.setV4SignatureFile(idsigFile);
             }
+            ApkVerifier apkVerifier = builder.build();
+            apkVerifierResult = apkVerifier.verify();
+            // Get signer certificates
+            List<X509Certificate> certificates = apkVerifierResult.getSignerCertificates();
+            if (certificates != null && certificates.size() > 0) {
+                for (X509Certificate certificate : certificates) {
+                    AppDetailsItem item = new AppDetailsItem(certificate);
+                    item.name = "Signer Certificate";
+                    appDetailsItems.add(item);
+                }
+            } else {
+                //noinspection ConstantConditions Null is deliberately set here to get at least one row
+                appDetailsItems.add(new AppDetailsItem(null));
+            }
+            // Get source stamp certificate
+            if (apkVerifierResult.isSourceStampVerified()) {
+                ApkVerifier.Result.SourceStampInfo sourceStampInfo = apkVerifierResult.getSourceStampInfo();
+                X509Certificate certificate = sourceStampInfo.getCertificate();
+                if (certificate != null) {
+                    AppDetailsItem item = new AppDetailsItem(certificate);
+                    item.name = "SourceStamp Certificate";
+                    appDetailsItems.add(item);
+                }
+            }
+        } catch (IOException | ApkFormatException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
         signatures.postValue(appDetailsItems);
     }

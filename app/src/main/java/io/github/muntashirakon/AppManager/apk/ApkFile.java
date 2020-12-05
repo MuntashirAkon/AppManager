@@ -77,6 +77,7 @@ public final class ApkFile implements AutoCloseable {
     public static final String TAG = "ApkFile";
 
     private static final String MANIFEST_FILE = "AndroidManifest.xml";
+    private static final String IDSIG_FILE = "Signature.idsig";
     private static final String ANDROID_XML_NAMESPACE = "http://schemas.android.com/apk/res/android";
     private static final String ATTR_IS_FEATURE_SPLIT = ANDROID_XML_NAMESPACE + ":isFeatureSplit";
     private static final String ATTR_IS_SPLIT_REQUIRED = ANDROID_XML_NAMESPACE + ":isSplitRequired";
@@ -152,6 +153,8 @@ public final class ApkFile implements AutoCloseable {
     @NonNull
     private final List<Entry> entries = new ArrayList<>();
     private Entry baseEntry;
+    @Nullable
+    private File idsigFile;
     @NonNull
     private final String packageName;
     private boolean hasObb = false;
@@ -300,6 +303,12 @@ public final class ApkFile implements AutoCloseable {
                 } else if (fileName.endsWith(".obb")) {
                     hasObb = true;
                     obbFiles.add(zipEntry);
+                } else if (fileName.endsWith(".idsig")) {
+                    try {
+                        idsigFile = IOUtils.saveZipFile(zipFile.getInputStream(zipEntry), getCachePath(), IDSIG_FILE);
+                    } catch (IOException e) {
+                        throw new ApkFileException(e);
+                    }
                 }
             }
             if (baseEntry == null) throw new ApkFileException("No base apk found.");
@@ -374,6 +383,11 @@ public final class ApkFile implements AutoCloseable {
     @NonNull
     public List<Entry> getEntries() {
         return entries;
+    }
+
+    @Nullable
+    public File getIdsigFile() {
+        return idsigFile;
     }
 
     @NonNull
@@ -493,6 +507,7 @@ public final class ApkFile implements AutoCloseable {
         }
         IOUtils.closeQuietly(zipFile);
         IOUtils.closeQuietly(fd);
+        IOUtils.deleteSilently(idsigFile);
         if (!cacheFilePath.getAbsolutePath().startsWith("/data/app")) {
             IOUtils.deleteSilently(cacheFilePath);
         }
@@ -562,6 +577,16 @@ public final class ApkFile implements AutoCloseable {
         }
         if (!seenManifestElement) throw new ApkFileException("No manifest found.");
         return manifestAttrs;
+    }
+
+    @NonNull
+    private File getCachePath() {
+        File destDir = AppManager.getContext().getExternalFilesDir("apks");
+        if (destDir == null || !Environment.getExternalStorageState(destDir).equals(Environment.MEDIA_MOUNTED))
+            throw new RuntimeException("External media not present");
+        if (!destDir.exists()) //noinspection ResultOfMethodCallIgnored
+            destDir.mkdirs();
+        return destDir;
     }
 
     public class Entry implements AutoCloseable {
@@ -772,12 +797,9 @@ public final class ApkFile implements AutoCloseable {
                 if (cachedFile.canRead()) return cachedFile;
                 else IOUtils.deleteSilently(cachedFile);
             }
-            File destDir = AppManager.getContext().getExternalFilesDir("apks");
-            if (destDir == null || !Environment.getExternalStorageState(destDir).equals(Environment.MEDIA_MOUNTED))
-                throw new RuntimeException("External media not present");
-            if (!destDir.exists()) //noinspection ResultOfMethodCallIgnored
-                destDir.mkdirs();
-            return cachedFile = IOUtils.saveZipFile(getRealInputStream(), destDir, name);
+            try (InputStream is = getRealInputStream()) {
+                return cachedFile = IOUtils.saveZipFile(is, getCachePath(), name);
+            }
         }
 
         public boolean isSelected() {

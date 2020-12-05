@@ -22,7 +22,9 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.text.util.Linkify;
@@ -58,29 +60,44 @@ public class UIUtils {
     }
 
     @NonNull
-    public static Spannable getBiggerText(@NonNull Spannable spannable) {
-        spannable.setSpan(new RelativeSizeSpan(1.2f), 0, spannable.length(),
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    public static Spannable getColoredText(@NonNull CharSequence text, int color) {
+        Spannable spannable = charSequenceToSpannable(text);
+        spannable.setSpan(new ForegroundColorSpan(color), 0, spannable.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannable;
     }
 
     @NonNull
-    public static Spannable getUnderlinedString(@NonNull Spannable spannable) {
+    public static Spannable getPrimaryBoldText(@NonNull Context context, @NonNull CharSequence text) {
+        return getColoredText(text, getTextColorPrimary(context));
+    }
+
+    @NonNull
+    public static Spannable getTitleText(Context context, @NonNull CharSequence text) {
+        Spannable spannable = charSequenceToSpannable(text);
+        spannable.setSpan(new AbsoluteSizeSpan(getTitleSize(context)), 0, spannable.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return getColoredText(spannable, getTextColorPrimary(context));
+    }
+
+    @NonNull
+    public static Spannable getUnderlinedString(@NonNull CharSequence text) {
+        Spannable spannable = charSequenceToSpannable(text);
         spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, spannable.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannable;
     }
 
     @NonNull
-    public static Spannable getBoldString(@NonNull String text) {
-        Spannable ss = sSpannableFactory.newSpannable(text);
-        ss.setSpan(new StyleSpan(Typeface.BOLD), 0, ss.length(),
+    public static Spannable getBoldString(@NonNull CharSequence text) {
+        Spannable spannable = charSequenceToSpannable(text);
+        spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, spannable.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return ss;
+        return spannable;
     }
 
     @NonNull
-    public static Spannable getItalicString(@NonNull String text) {
+    public static Spannable getItalicString(@NonNull CharSequence text) {
         Spannable ss = sSpannableFactory.newSpannable(text);
         ss.setSpan(new StyleSpan(Typeface.ITALIC), 0, ss.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -112,9 +129,25 @@ public class UIUtils {
         return ContextCompat.getColor(context, R.color.colorPrimary);
     }
 
+    public static int getTextColorPrimary(@NonNull Context context) {
+        return ContextCompat.getColor(context, R.color.textColorPrimary);
+    }
+
+    public static int getTitleSize(@NonNull Context context) {
+        return context.getResources().getDimensionPixelSize(R.dimen.title_font);
+    }
+
     public static int dpToPx(@NonNull Context context, int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 context.getResources().getDisplayMetrics());
+    }
+
+    public static int dpToPx(@NonNull Context context, float dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
+    }
+
+    public static int spToPx(@NonNull Context context, float sp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
     }
 
     @NonNull
@@ -142,5 +175,12 @@ public class UIUtils {
                 .setCancelable(false)
                 .setView(view)
                 .create();
+    }
+
+    @NonNull
+    private static Spannable charSequenceToSpannable(@NonNull CharSequence text) {
+        if (text instanceof Spannable) {
+            return (Spannable) text;
+        } else return sSpannableFactory.newSpannable(text);
     }
 }

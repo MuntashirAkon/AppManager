@@ -31,15 +31,14 @@ import android.content.pm.SigningInfo;
 import android.os.Build;
 import android.os.DeadObjectException;
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 
-import java.io.ByteArrayInputStream;
+import com.android.apksig.ApkVerifier;
+import com.android.internal.util.TextUtils;
+
 import java.io.File;
 import java.security.PublicKey;
-import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateFactory;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.ECPublicKey;
@@ -48,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -56,6 +56,7 @@ import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
@@ -70,8 +71,10 @@ import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getBiggerText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryBoldText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 
 public final class PackageUtils {
     public static final File PACKAGE_STAGING_DIRECTORY = new File("/data/local/tmp");
@@ -459,112 +462,147 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static Spannable getSigningCertificateInfo(@NonNull Signature sign) {
-        return getSigningCertificateInfo(sign.toByteArray());
+    public static Spannable getSigningCertificateInfo(@NonNull Context ctx, @Nullable X509Certificate certificate) {
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        if (certificate == null) return builder;
+        byte[] certBytes = certificate.getSignature();
+        builder.append(getPrimaryBoldText(ctx, ctx.getString(R.string.subject) + ": "))
+                .append(certificate.getSubjectX500Principal().getName()).append("\n")
+                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.issuer) + ": "))
+                .append(certificate.getIssuerX500Principal().getName()).append("\n")
+                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.issued_date) + ": "))
+                .append(certificate.getNotBefore().toString()).append("\n")
+                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.expiry_date) + ": "))
+                .append(certificate.getNotAfter().toString()).append("\n")
+                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.type) + ": "))
+                .append(certificate.getType()).append(", ")
+                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.version) + ": "))
+                .append(String.valueOf(certificate.getVersion())).append(", ")
+                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.validity) + ": "));
+        try {
+            certificate.checkValidity();
+            builder.append(ctx.getString(R.string.valid));
+        } catch (CertificateExpiredException e) {
+            builder.append(ctx.getString(R.string.expired));
+        } catch (CertificateNotYetValidException e) {
+            builder.append(ctx.getString(R.string.not_yet_valid));
+        }
+        builder.append("\n")
+                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.serial_no) + ": "))
+                .append(Utils.bytesToHex(certificate.getSerialNumber().toByteArray())).append("\n");
+        // Checksums
+        builder.append(getTitleText(ctx, ctx.getString(R.string.checksums))).append("\n")
+                .append(getPrimaryBoldText(ctx, DigestUtils.MD5 + ": "))
+                .append(DigestUtils.getHexDigest(DigestUtils.MD5, certBytes)).append("\n")
+                .append(getPrimaryBoldText(ctx, DigestUtils.SHA_1 + ": "))
+                .append(DigestUtils.getHexDigest(DigestUtils.SHA_1, certBytes)).append("\n")
+                .append(getPrimaryBoldText(ctx, DigestUtils.SHA_256 + ": "))
+                .append(DigestUtils.getHexDigest(DigestUtils.SHA_256, certBytes)).append("\n")
+                .append(getPrimaryBoldText(ctx, DigestUtils.SHA_384 + ": "))
+                .append(DigestUtils.getHexDigest(DigestUtils.SHA_384, certBytes)).append("\n")
+                .append(getPrimaryBoldText(ctx, DigestUtils.SHA_512 + ": "))
+                .append(DigestUtils.getHexDigest(DigestUtils.SHA_512, certBytes)).append("\n");
+        // Signature
+        builder.append(getTitleText(ctx, ctx.getString(R.string.signature)))
+                .append("\n")
+                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.algorithm) + ": "))
+                .append(certificate.getSigAlgName()).append("\n")
+                .append(getPrimaryBoldText(ctx, "OID: "))
+                .append(certificate.getSigAlgOID()).append("\n")
+                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.signature) + ": "))
+                .append(Utils.bytesToHex(certificate.getSignature())).append("\n");
+        // Public key used by Google: https://github.com/google/conscrypt
+        // 1. X509PublicKey (PublicKey)
+        // 2. OpenSSLRSAPublicKey (RSAPublicKey)
+        // 3. OpenSSLECPublicKey (ECPublicKey)
+        PublicKey publicKey = certificate.getPublicKey();
+        builder.append(getTitleText(ctx, ctx.getString(R.string.public_key)))
+                .append("\n")
+                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.algorithm) + ": "))
+                .append(publicKey.getAlgorithm()).append("\n")
+                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.format) + ": "))
+                .append(publicKey.getFormat());
+        if (publicKey instanceof RSAPublicKey) {
+            RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
+            builder.append("\n")
+                    .append(getPrimaryBoldText(ctx, ctx.getString(R.string.rsa_exponent) + ": "))
+                    .append(rsaPublicKey.getPublicExponent().toString()).append("\n")
+                    .append(getPrimaryBoldText(ctx, ctx.getString(R.string.rsa_modulus) + ": "))
+                    .append(Utils.bytesToHex(rsaPublicKey.getModulus().toByteArray()));
+        } else if (publicKey instanceof ECPublicKey) {
+            ECPublicKey ecPublicKey = (ECPublicKey) publicKey;
+            builder.append("\n")
+                    .append(getPrimaryBoldText(ctx, ctx.getString(R.string.dsa_affine_x) + ": "))
+                    .append(ecPublicKey.getW().getAffineX().toString()).append("\n")
+                    .append(getPrimaryBoldText(ctx, ctx.getString(R.string.dsa_affine_y) + ": "))
+                    .append(ecPublicKey.getW().getAffineY().toString());
+        }
+        // TODO(5/10/20): Add description for each extensions
+        Set<String> critSet = certificate.getCriticalExtensionOIDs();
+        if (critSet != null && !critSet.isEmpty()) {
+            builder.append("\n").append(getTitleText(ctx, ctx.getString(R.string.critical_exts)));
+            for (String oid : critSet) {
+                builder.append("\n- ")
+                        .append(getPrimaryBoldText(ctx, oid + ": "))
+                        .append(Utils.bytesToHex(certificate.getExtensionValue(oid)));
+            }
+        }
+        Set<String> nonCritSet = certificate.getNonCriticalExtensionOIDs();
+        if (nonCritSet != null && !nonCritSet.isEmpty()) {
+            builder.append("\n").append(getTitleText(ctx, ctx.getString(R.string.non_critical_exts)));
+            for (String oid : nonCritSet) {
+                builder.append("\n- ")
+                        .append(getPrimaryBoldText(ctx,oid + ": "))
+                        .append(Utils.bytesToHex(certificate.getExtensionValue(oid)));
+            }
+        }
+        return builder;
     }
 
     @NonNull
-    public static Spannable getSigningCertificateInfo(@NonNull byte[] certBytes) {
-        Context ctx = AppManager.getContext();
-        try {
-            X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X.509")
-                    .generateCertificate(new ByteArrayInputStream(certBytes));
-            SpannableStringBuilder builder = new SpannableStringBuilder()
-                    .append(getBoldString(ctx.getString(R.string.subject) + ": "))
-                    .append(cert.getSubjectX500Principal().getName()).append("\n")
-                    .append(getBoldString(ctx.getString(R.string.issuer) + ": "))
-                    .append(cert.getIssuerX500Principal().getName()).append("\n")
-                    .append(getBoldString(ctx.getString(R.string.issued_date) + ": "))
-                    .append(cert.getNotBefore().toString()).append("\n")
-                    .append(getBoldString(ctx.getString(R.string.expiry_date) + ": "))
-                    .append(cert.getNotAfter().toString()).append("\n")
-                    .append(getBoldString(ctx.getString(R.string.type) + ": "))
-                    .append(cert.getType())
-                    .append(getBoldString(", " + ctx.getString(R.string.version) + ": "))
-                    .append(String.valueOf(cert.getVersion()))
-                    .append(getBoldString(", " + ctx.getString(R.string.validity) + ": "));
-            try {
-                cert.checkValidity();
-                builder.append(ctx.getString(R.string.valid));
-            } catch (CertificateExpiredException e) {
-                builder.append(ctx.getString(R.string.expired));
-            } catch (CertificateNotYetValidException e) {
-                builder.append(ctx.getString(R.string.not_yet_valid));
-            }
-            builder.append("\n")
-                    .append(getBoldString(ctx.getString(R.string.serial_no) + ": "))
-                    .append(Utils.bytesToHex(cert.getSerialNumber().toByteArray())).append("\n");
-            // Checksums
-            builder.append(getBiggerText(getBoldString("\u27a4 " + ctx.getString(R.string.checksums)))).append("\n")
-                    .append(getBoldString(DigestUtils.MD5 + ": "))
-                    .append(DigestUtils.getHexDigest(DigestUtils.MD5, certBytes)).append("\n")
-                    .append(getBoldString(DigestUtils.SHA_1 + ": "))
-                    .append(DigestUtils.getHexDigest(DigestUtils.SHA_1, certBytes)).append("\n")
-                    .append(getBoldString(DigestUtils.SHA_256 + ": "))
-                    .append(DigestUtils.getHexDigest(DigestUtils.SHA_256, certBytes)).append("\n")
-                    .append(getBoldString(DigestUtils.SHA_384 + ": "))
-                    .append(DigestUtils.getHexDigest(DigestUtils.SHA_384, certBytes)).append("\n")
-                    .append(getBoldString(DigestUtils.SHA_512 + ": "))
-                    .append(DigestUtils.getHexDigest(DigestUtils.SHA_512, certBytes)).append("\n");
-            // Signature
-            builder.append(getBiggerText(getBoldString("\u27a4 " + ctx.getString(R.string.signature))))
-                    .append("\n")
-                    .append(getBoldString(ctx.getString(R.string.algorithm) + ": "))
-                    .append(cert.getSigAlgName()).append("\n")
-                    .append(getBoldString("OID: "))
-                    .append(cert.getSigAlgOID()).append("\n")
-                    .append(getBoldString(ctx.getString(R.string.signature) + ": "))
-                    .append(Utils.bytesToHex(cert.getSignature())).append("\n");
-            // Public key used by Google: https://github.com/google/conscrypt
-            // 1. X509PublicKey (PublicKey)
-            // 2. OpenSSLRSAPublicKey (RSAPublicKey)
-            // 3. OpenSSLECPublicKey (ECPublicKey)
-            PublicKey publicKey = cert.getPublicKey();
-            builder.append(getBiggerText(getBoldString("\u27a4 " + ctx.getString(R.string.public_key))))
-                    .append("\n")
-                    .append(getBoldString(ctx.getString(R.string.algorithm) + ": "))
-                    .append(publicKey.getAlgorithm()).append("\n")
-                    .append(getBoldString(ctx.getString(R.string.format) + ": "))
-                    .append(publicKey.getFormat());
-            if (publicKey instanceof RSAPublicKey) {
-                RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
-                builder.append("\n")
-                        .append(getBoldString(ctx.getString(R.string.rsa_exponent) + ": "))
-                        .append(rsaPublicKey.getPublicExponent().toString()).append("\n")
-                        .append(getBoldString(ctx.getString(R.string.rsa_modulus) + ": "))
-                        .append(Utils.bytesToHex(rsaPublicKey.getModulus().toByteArray()));
-            } else if (publicKey instanceof ECPublicKey) {
-                ECPublicKey ecPublicKey = (ECPublicKey) publicKey;
-                builder.append("\n")
-                        .append(getBoldString(ctx.getString(R.string.dsa_affine_x) + ": "))
-                        .append(ecPublicKey.getW().getAffineX().toString()).append("\n")
-                        .append(getBoldString(ctx.getString(R.string.dsa_affine_y) + ": "))
-                        .append(ecPublicKey.getW().getAffineY().toString());
-            }
-            // TODO(5/10/20): Add description for each extensions
-            Set<String> critSet = cert.getCriticalExtensionOIDs();
-            if (critSet != null && !critSet.isEmpty()) {
-                builder.append("\n").append(getBiggerText(getBoldString("\u27a4 "
-                        + ctx.getString(R.string.critical_exts))));
-                for (String oid : critSet) {
-                    builder.append("\n- ")
-                            .append(getBoldString(oid + ": "))
-                            .append(Utils.bytesToHex(cert.getExtensionValue(oid)));
-                }
-            }
-            Set<String> nonCritSet = cert.getNonCriticalExtensionOIDs();
-            if (nonCritSet != null && !nonCritSet.isEmpty()) {
-                builder.append("\n").append(getBiggerText(getBoldString("\u27a4 "
-                        + ctx.getString(R.string.non_critical_exts))));
-                for (String oid : nonCritSet) {
-                    builder.append("\n- ")
-                            .append(getBoldString(oid + ": "))
-                            .append(Utils.bytesToHex(cert.getExtensionValue(oid)));
-                }
-            }
-            return builder;
-        } catch (CertificateException e) {
-            return new SpannableString("");
+    public static Spannable getApkVerifierInfo(@Nullable ApkVerifier.Result result, Context ctx) {
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        if (result == null) return builder;
+        int colorRed = ContextCompat.getColor(ctx, R.color.red);
+        int colorGreen = ContextCompat.getColor(ctx, R.color.stopped);
+        int warnCount = 0;
+        List<CharSequence> errors = new ArrayList<>();
+        for (ApkVerifier.IssueWithParams err : result.getErrors()) {
+            errors.add(getColoredText(err.toString(), colorRed));
         }
+        warnCount += result.getWarnings().size();
+        for (ApkVerifier.Result.V1SchemeSignerInfo signer : result.getV1SchemeIgnoredSigners()) {
+            String name = signer.getName();
+            for (ApkVerifier.IssueWithParams err : signer.getErrors()) {
+                errors.add(getColoredText(new SpannableStringBuilder(getBoldString(name + ": ")).append(err.toString()), colorRed));
+            }
+            warnCount += signer.getWarnings().size();
+        }
+        if (result.isVerified()) {
+            if (warnCount == 0) {
+                builder.append(getColoredText(getTitleText(ctx, "\u2714 " +
+                        ctx.getString(R.string.verified)), colorGreen));
+            } else {
+                builder.append(getColoredText(getTitleText(ctx, "\u2714 " + ctx.getResources()
+                        .getQuantityString(R.plurals.verified_with_warning, warnCount, warnCount)), colorGreen));
+            }
+            if (result.isSourceStampVerified()) {
+                builder.append("\n\u2714 ").append(ctx.getString(R.string.source_stamp_verified));
+            }
+            List<CharSequence> sigSchemes = new LinkedList<>();
+            if (result.isVerifiedUsingV1Scheme()) sigSchemes.add("v1");
+            if (result.isVerifiedUsingV2Scheme()) sigSchemes.add("v2");
+            if (result.isVerifiedUsingV3Scheme()) sigSchemes.add("v3");
+            if (result.isVerifiedUsingV4Scheme()) sigSchemes.add("v4");
+            builder.append("\n").append(getPrimaryBoldText(ctx, ctx.getResources()
+                    .getQuantityString(R.plurals.signature_schemes, sigSchemes.size()) + ": "));
+            builder.append(TextUtils.joinSpannable(", ", sigSchemes));
+        } else {
+            builder.append(getColoredText(getTitleText(ctx, "\u2718 " + ctx.getString(R.string.not_verified)), colorRed));
+        }
+        builder.append("\n");
+        // If there are errors, no certificate info will be loaded
+        builder.append(TextUtils.joinSpannable("\n", errors)).append("\n");
+        return builder;
     }
 }
