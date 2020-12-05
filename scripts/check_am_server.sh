@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if ! [[ -f ./app/src/main/assets/am.jar ]]; then
+    echo "M"
+    exit 0
+fi
+
 checksum=
 os=`uname -s`
 if [[ "${os}" == "Darwin" ]]; then
