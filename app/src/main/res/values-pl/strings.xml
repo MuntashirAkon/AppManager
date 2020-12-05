@@ -481,4 +481,16 @@
     <string name="install_location">Miejsce instalacji</string>
     <string name="installer">Instalator</string>
     <string name="comment">Komentarz</string>
+    <string name="signing_keys">Klucze do podpisywania</string>
+    <string name="signature_schemes">Schematy podpisów</string>
+    <string name="pref_sign_apk_msg">Podpisz pliki APK przed ich zainstalowaniem.</string>
+    <string name="pref_sign_apk">Podpisz plik APK</string>
+    <string name="pref_signature_schemes_msg">Aby zapewnić większą kompatybilność, należy wybrać co najmniej schematy v1 i v2. Schemat v4 wymaga wersji v2 lub v3.</string>
+    <string name="v4_scheme">schemat v4 (od Android 11)</string>
+    <string name="v3_scheme">schemat v3 (od Android 9)</string>
+    <string name="v2_scheme">schemat v2 (od Android 7.0)</string>
+    <string name="v1_scheme">schemat v1 (od Android 1.0)</string>
+    <string name="pref_apk_signing_msg">Ustaw schematy podpisywania, niestandardowy klucz, itp.</string>
+    <string name="apk_signing">Podpisywanie APK</string>
+    <string name="app_size">Aplikacja</string>
 </resources>
