@@ -44,6 +44,7 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
+import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -228,7 +229,7 @@ public final class MetadataManager {
             // Unknown tar type, set default
             metadata.tarType = TarUtils.TAR_GZIP;
         }
-        metadata.keyStore = BackupUtils.hasKeyStore(applicationInfo.uid);
+        metadata.keyStore = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
         metadata.label = applicationInfo.loadLabel(pm).toString();
         metadata.packageName = packageInfo.packageName;
         metadata.versionName = packageInfo.versionName;
@@ -250,7 +251,7 @@ public final class MetadataManager {
                 metadata.isSplitApk = splitCount > 0;
                 metadata.splitConfigs = new String[splitCount];
                 for (int i = 0; i < splitCount; ++i) {
-                    metadata.splitConfigs[i] = apkEntries.get(i+1).getFileName();
+                    metadata.splitConfigs[i] = apkEntries.get(i + 1).getFileName();
                 }
             }
         } catch (ApkFile.ApkFileException e) {

@@ -391,7 +391,17 @@ public final class IOUtils {
         if (!extDir.exists() && !extDir.mkdirs()) {
             throw new IOException("Cannot create cache directory in the external storage.");
         }
-        return File.createTempFile("file_" + System.currentTimeMillis(), ".cached", AppManager.getContext().getExternalFilesDir("cache"));
+        return File.createTempFile("file_" + System.currentTimeMillis(), ".cached", extDir);
+    }
+
+    @NonNull
+    public static File getCachePath() throws IOException {
+        File extDir = AppManager.getContext().getExternalFilesDir("cache");
+        if (extDir == null) throw new FileNotFoundException("External storage not available.");
+        if (!extDir.exists() && !extDir.mkdirs()) {
+            throw new IOException("Cannot create cache directory in the external storage.");
+        }
+        return extDir;
     }
 
     @NonNull

@@ -380,24 +380,6 @@ public final class PackageUtils {
         return new File(defaultPath).getParent();
     }
 
-    public static boolean hasKeyStore(int uid) {
-        // For any app, the key path is as follows:
-        // /data/misc/keystore/user_{user_handle}/{uid}_{KEY_NAME}_{alias}
-        PrivilegedFile keyStorePath = new PrivilegedFile("/data/misc/keystore", "user_" + Users.getUserHandle(uid));
-        String[] fileNames = keyStorePath.list();
-        if (fileNames != null) {
-            String uidStr = uid + "_";
-            for (String fileName : fileNames) {
-                if (fileName.startsWith(uidStr)) return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean hasMasterKey(int uid) {
-        return new PrivilegedFile(new File("/data/misc/keystore/", "user_" + Users.getUserHandle(uid)), ".masterkey").exists();
-    }
-
     @SuppressWarnings("deprecation")
     public static int getProtectionLevel(PermissionInfo info) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {

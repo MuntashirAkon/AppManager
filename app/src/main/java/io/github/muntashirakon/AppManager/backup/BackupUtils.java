@@ -28,7 +28,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public final class BackupUtils {
     @Nullable
@@ -77,11 +76,6 @@ public final class BackupUtils {
         } catch (Exception e) {
             return defaultUidGid;
         }
-    }
-
-    static boolean hasKeyStore(int uid) {
-        // FIXME(10/7/20): Check for /data/misc/keystore/.masterkey as well?
-        return PackageUtils.hasKeyStore(uid);
     }
 
     @Nullable

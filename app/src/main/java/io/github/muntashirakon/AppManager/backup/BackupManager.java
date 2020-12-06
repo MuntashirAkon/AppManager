@@ -66,6 +66,7 @@ import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -78,11 +79,14 @@ public class BackupManager {
     private static final String[] CACHE_DIRS = new String[]{"cache", "code_cache"};
     private static final String SOURCE_PREFIX = "source";
     private static final String DATA_PREFIX = "data";
+    private static final String KEYSTORE_PREFIX = "keystore";
+    private static final int KEYSTORE_PLACEHOLDER = -1000;
 
     static final String RULES_TSV = "rules.am.tsv";
     static final String PERMS_TSV = "perms.am.tsv";
     static final String CHECKSUMS_TXT = "checksums.txt";
     static final String CERT_PREFIX = "cert_";
+    static final String MASTER_KEY = ".masterkey";
 
     @NonNull
     private static String getExt(@TarUtils.TarType String tarType) {
@@ -248,6 +252,11 @@ public class BackupManager {
     }
 
     @Nullable
+    private File[] getKeyStoreFiles(@NonNull File backupPath) {
+        return backupPath.listFiles((dir, name) -> name.startsWith(KEYSTORE_PREFIX));
+    }
+
+    @Nullable
     private File[] getDataFiles(@NonNull File backupPath, int index) {
         final String dataPrefix = DATA_PREFIX + index;
         return backupPath.listFiles((dir, name) -> name.startsWith(dataPrefix));
@@ -327,16 +336,18 @@ public class BackupManager {
 
         boolean runBackup() {
             // Fail backup if the app has items in Android KeyStore
-            // TODO(#82): Implement a clever mechanism to retrieve keys from Android keystore
             if (backupFlags.backupData() && metadata.keyStore) {
-                Log.e(TAG, "Cannot backup app as it has keystore items.");
-                return backupFile.cleanup();
+                Log.w(TAG, "The app has keystore items.");
             }
             try {
                 // Backup source
                 if (backupFlags.backupSource()) backupSource();
                 // Backup data
-                if (backupFlags.backupData()) backupData();
+                if (backupFlags.backupData()) {
+                    backupData();
+                    // Backup KeyStore
+                    if (metadata.keyStore) backupKeyStore();
+                }
                 // Backup permissions
                 if (backupFlags.backupPermissions()) backupPermissions();
                 // Export rules
@@ -414,6 +425,51 @@ public class BackupManager {
                 for (File file : dataFiles) {
                     checksum.add(file.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, file));
                 }
+            }
+        }
+
+        private void backupKeyStore() throws BackupException {  // Called only when the app has an keystore item
+            PrivilegedFile keyStorePath = KeyStoreUtils.getKeyStorePath(userHandle);
+            PrivilegedFile masterKeyFile = KeyStoreUtils.getMasterKey(userHandle);
+            if (masterKeyFile.exists()) {
+                // Master key exists, so take it's checksum to verify it during the restore
+                checksum.add(MASTER_KEY, DigestUtils.getHexDigest(metadata.checksumAlgo,
+                        IOUtils.getFileContent(masterKeyFile).getBytes()));
+            }
+            // Store the KeyStore files
+            File cachePath;
+            try {
+                cachePath = IOUtils.getCachePath();
+            } catch (IOException e) {
+                throw new BackupException("Could not get cache path", e);
+            }
+            List<String> cachedKeyStoreFileNames = new ArrayList<>();
+            for (String keyStoreFileName : KeyStoreUtils.getKeyStoreFiles(applicationInfo.uid, userHandle)) {
+                String newFileName = Utils.replaceOnce(keyStoreFileName,
+                        String.valueOf(applicationInfo.uid), String.valueOf(KEYSTORE_PLACEHOLDER));
+                if (!RunnerUtils.cp(new File(keyStorePath, keyStoreFileName), new File(cachePath, newFileName))) {
+                    throw new BackupException("Could not cache " + keyStoreFileName);
+                }
+                cachedKeyStoreFileNames.add(newFileName);
+            }
+            File keyStoreSavePath = new File(tmpBackupPath, KEYSTORE_PREFIX + getExt(metadata.tarType) + ".");
+            File[] backedUpKeyStoreFiles = TarUtils.create(metadata.tarType, cachePath,
+                    keyStoreSavePath, cachedKeyStoreFileNames.toArray(new String[0]), null, null);
+            // Remove cache
+            for (String name : cachedKeyStoreFileNames) {
+                //noinspection ResultOfMethodCallIgnored
+                new File(cachePath, name).delete();
+            }
+            if (backedUpKeyStoreFiles.length == 0) {
+                throw new BackupException("Could not backup KeyStore item.");
+            }
+            if (!crypto.encrypt(backedUpKeyStoreFiles)) {
+                throw new BackupException("Failed to encrypt " + Arrays.toString(backedUpKeyStoreFiles));
+            }
+            // Overwrite with the new files
+            backedUpKeyStoreFiles = crypto.getNewFiles();
+            for (File file : backedUpKeyStoreFiles) {
+                checksum.add(file.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, file));
             }
         }
 
@@ -584,8 +640,15 @@ public class BackupManager {
 
         boolean runRestore() {
             try {
+                if (requestedFlags.backupData() && metadata.keyStore && !requestedFlags.skipSignatureCheck()) {
+                    // Check checksum of master key first
+                    checkMasterKey();
+                }
                 if (requestedFlags.backupSource()) restoreSource();
-                if (requestedFlags.backupData()) restoreData();
+                if (requestedFlags.backupData()) {
+                    restoreData();
+                    if (metadata.keyStore) restoreKeyStore();
+                }
                 if (requestedFlags.backupPermissions()) restorePermissions();
                 if (requestedFlags.backupRules()) restoreRules();
             } catch (BackupException e) {
@@ -595,12 +658,29 @@ public class BackupManager {
             return true;
         }
 
+        private void checkMasterKey() throws BackupException {
+            String oldChecksum = checksum.get(MASTER_KEY);
+            PrivilegedFile masterKey = KeyStoreUtils.getMasterKey(userHandle);
+            if (!masterKey.exists()) {
+                if (oldChecksum == null) return;
+                else throw new BackupException("Master key existed when the checksum was made but now it doesn't.");
+            }
+            if (oldChecksum == null) {
+                throw new BackupException("Master key exists but it didn't exist when the backup was made.");
+            }
+            String newChecksum = DigestUtils.getHexDigest(metadata.checksumAlgo,
+                    IOUtils.getFileContent(masterKey).getBytes());
+            if (!newChecksum.equals(oldChecksum)) {
+                throw new BackupException("Checksums for master key did not match.");
+            }
+        }
+
         private void restoreSource() throws BackupException {
             if (!backupFlags.backupSource()) {
                 throw new BackupException("Source restore is requested but backup doesn't contain any source files.");
             }
             File[] backupSourceFiles = getSourceFiles(backupPath);
-            if (backupSourceFiles == null) {
+            if (backupSourceFiles == null || backupSourceFiles.length == 0) {
                 // No source backup found
                 throw new BackupException("Source restore is requested but there are no source files.");
             }
@@ -712,6 +792,42 @@ public class BackupManager {
             }
         }
 
+        private void restoreKeyStore() throws BackupException {
+            if (packageInfo == null) {
+                throw new BackupException("KeyStore restore is requested but the app isn't installed.");
+            }
+            File[] keyStoreFiles = getKeyStoreFiles(backupPath);
+            if (keyStoreFiles == null || keyStoreFiles.length == 0) {
+                throw new BackupException("KeyStore files should've existed but they didn't");
+            }
+            // Decrypt sources
+            if (!crypto.decrypt(keyStoreFiles)) {
+                throw new BackupException("Failed to decrypt " + Arrays.toString(keyStoreFiles));
+            }
+            // Get decrypted file
+            if (crypto.getNewFiles().length > 0) {
+                keyStoreFiles = crypto.getNewFiles();
+                decryptedFiles.addAll(Arrays.asList(keyStoreFiles));
+            }
+            // Restore KeyStore files
+            PrivilegedFile keyStorePath = KeyStoreUtils.getKeyStorePath(userHandle);
+            if (!TarUtils.extract(metadata.tarType, keyStoreFiles, keyStorePath, null, null)) {
+                throw new BackupException("Failed to restore the KeyStore files.");
+            }
+            // Rename files
+            int uid = packageInfo.applicationInfo.uid;
+            List<String> keyStoreFileNames = KeyStoreUtils.getKeyStoreFiles(KEYSTORE_PLACEHOLDER, userHandle);
+            for (String keyStoreFileName : keyStoreFileNames) {
+                if (!RunnerUtils.mv(new File(keyStorePath, keyStoreFileName), new File(keyStorePath,
+                        Utils.replaceOnce(keyStoreFileName, String.valueOf(KEYSTORE_PLACEHOLDER),
+                                String.valueOf(uid))))) {
+                    throw new BackupException("Failed to rename KeyStore files");
+                }
+            }
+            // TODO Restore permissions
+            Runner.runCommand(new String[]{"restorecon", "-R", keyStorePath.getAbsolutePath()});
+        }
+
         @SuppressLint("SdCardPath")
         private void restoreData() throws BackupException {
             // Data restore is requested: Data restore is only possible if the app is actually
@@ -725,7 +841,7 @@ public class BackupManager {
                 String checksum;
                 for (int i = 0; i < metadata.dataDirs.length; ++i) {
                     dataFiles = getDataFiles(backupPath, i);
-                    if (dataFiles == null) {
+                    if (dataFiles == null || dataFiles.length == 0) {
                         throw new BackupException("Data restore is requested but there are no data files for index " + i + ".");
                     }
                     for (File file : dataFiles) {
@@ -753,7 +869,7 @@ public class BackupManager {
                 if (RunnerUtils.fileExists(dataSource)) {
                     uidAndGid = BackupUtils.getUidAndGid(dataSource, packageInfo.applicationInfo.uid);
                 }
-                if (dataFiles == null) {
+                if (dataFiles == null || dataFiles.length == 0) {
                     throw new BackupException("Data restore is requested but there are no data files for index " + i + ".");
                 }
                 // External storage checks
