@@ -32,6 +32,7 @@ import java.util.Objects;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 /**
@@ -108,6 +109,7 @@ public class AppOpsManager {
             "deny",         // MODE_ERRORED
             "default",      // MODE_DEFAULT
             "foreground",   // MODE_FOREGROUND
+            "ask",          // MODE_ASK (MIUI)
     };
 
     // when adding one of these:
@@ -222,26 +224,39 @@ public class AppOpsManager {
     public static final int _NUM_OP;  // fetched using reflection
 
     // Xiaomi custom App Ops from com.lbe.security.miui.apk version
-    public static final int OP_WIFI_CONNECTIVITY = 10001;
-    public static final int OP_BT_CONNECTIVITY = 10002;
+    public static final int OP_WIFI_CHANGE = 10001;
+    public static final int OP_BLUETOOTH_CHANGE = 10002;
+    public static final int OP_DATA_CONNECT_CHANGE = 10003;
     public static final int OP_SEND_MMS = 10004;
     public static final int OP_READ_MMS = 10005;
+    public static final int OP_WRITE_MMS = 10006;
+    public static final int OP_BOOT_COMPLETED = 10007;
     public static final int OP_AUTO_START = 10008;
+    public static final int OP_NFC_CHANGE = 10009;
+    public static final int OP_DELETE_SMS = 10010;
+    public static final int OP_DELETE_MMS = 10011;
+    public static final int OP_DELETE_CONTACTS = 10012;
+    public static final int OP_DELETE_CALL_LOG = 10013;
+    public static final int OP_EXACT_ALARM = 10014;
+    public static final int OP_ACCESS_XIAOMI_ACCOUNT = 10015;
     public static final int OP_NFC = 10016;
     public static final int OP_INSTALL_SHORTCUT = 10017;
     public static final int OP_READ_NOTIFICATION_SMS = 10018;
-    public static final int OP_GET_TASK = 10019;
-    public static final int OP_SHOW_WHEN_LOCK = 10020;
+    public static final int OP_GET_TASKS = 10019;
+    public static final int OP_SHOW_WHEN_LOCKED = 10020;
     public static final int OP_BACKGROUND_START_ACTIVITY = 10021;
     public static final int OP_GET_INSTALLED_APPS = 10022;
     public static final int OP_SERVICE_FOREGROUND = 10023;
+    public static final int OP_GET_ANONYMOUS_ID = 10024;
+    public static final int OP_GET_UDEVICE_ID = 10025;
     public static final int OP_DEAMON_NOTIFICATION = 10026;
-    public static final int OP_REAL_READ_SMS = 10028;
-    public static final int OP_REAL_READ_CONTACTS = 10029;
-    public static final int OP_REAL_READ_CALENDAR = 10030;
-    public static final int OP_REAL_READ_CALL_LOG = 10031;
-    public static final int OP_REAL_READ_PHONE_STATE = 10032;
-    public static final int _NUM_CUSTOM_OP = 19;
+    public static final int OP_BACKGROUND_LOCATION = 10027;
+    public static final int OP_READ_SMS_REAL = 10028;
+    public static final int OP_READ_CONTACTS_REAL = 10029;
+    public static final int OP_READ_CALENDAR_REAL = 10030;
+    public static final int OP_READ_CALL_LOG_REAL = 10031;
+    public static final int OP_READ_PHONE_STATE_REAL = 10032;
+    public static final int _NUM_CUSTOM_OP = 32;
 
     public static final String OPSTR_COARSE_LOCATION = "android:coarse_location";
     public static final String OPSTR_FINE_LOCATION = "android:fine_location";
@@ -1279,50 +1294,76 @@ public class AppOpsManager {
      * Use to map xiaomi custom app ops code to it name.
      */
     public static final int[] custom_ops_num = new int[]{
-            OP_WIFI_CONNECTIVITY,
-            OP_BT_CONNECTIVITY,
+            OP_WIFI_CHANGE,
+            OP_BLUETOOTH_CHANGE,
+            OP_DATA_CONNECT_CHANGE,
             OP_SEND_MMS,
             OP_READ_MMS,
+            OP_WRITE_MMS,
+            OP_BOOT_COMPLETED,
             OP_AUTO_START,
+            OP_NFC_CHANGE,
+            OP_DELETE_SMS,
+            OP_DELETE_MMS,
+            OP_DELETE_CONTACTS,
+            OP_DELETE_CALL_LOG,
+            OP_EXACT_ALARM,
+            OP_ACCESS_XIAOMI_ACCOUNT,
             OP_NFC,
             OP_INSTALL_SHORTCUT,
             OP_READ_NOTIFICATION_SMS,
-            OP_GET_TASK,
-            OP_SHOW_WHEN_LOCK,
+            OP_GET_TASKS,
+            OP_SHOW_WHEN_LOCKED,
             OP_BACKGROUND_START_ACTIVITY,
             OP_GET_INSTALLED_APPS,
             OP_SERVICE_FOREGROUND,
+            OP_GET_ANONYMOUS_ID,
+            OP_GET_UDEVICE_ID,
             OP_DEAMON_NOTIFICATION,
-            OP_REAL_READ_SMS,
-            OP_REAL_READ_CONTACTS,
-            OP_REAL_READ_CALENDAR,
-            OP_REAL_READ_CALL_LOG,
-            OP_REAL_READ_PHONE_STATE
+            OP_BACKGROUND_LOCATION,
+            OP_READ_SMS_REAL,
+            OP_READ_CONTACTS_REAL,
+            OP_READ_CALENDAR_REAL,
+            OP_READ_CALL_LOG_REAL,
+            OP_READ_PHONE_STATE_REAL
     };
 
     /**
      * Use to map with xiaomi custom app ops code
      */
     public static final String[] custom_ops_string = new String[]{
-            "WIFI_CONNECTIVITY",
-            "BT_CONNECTIVITY",
+            "WIFI_CHANGE",
+            "BLUETOOTH_CHANGE",
+            "DATA_CONNECT_CHANGE",
             "SEND_MMS",
             "READ_MMS",
+            "WRITE_MMS",
+            "BOOT_COMPLETED",
             "AUTO_START",
+            "NFC_CHANGE",
+            "DELETE_SMS",
+            "DELETE_MMS",
+            "DELETE_CONTACTS",
+            "DELETE_CALL_LOG",
+            "EXACT_ALARM",
+            "ACCESS_XIAOMI_ACCOUNT",
             "NFC",
             "INSTALL_SHORTCUT",
             "READ_NOTIFICATION_SMS",
-            "GET_TASK",
-            "SHOW_WHEN_LOCK",
+            "GET_TASKS",
+            "SHOW_WHEN_LOCKED",
             "BACKGROUND_START_ACTIVITY",
             "GET_INSTALLED_APPS",
             "SERVICE_FOREGROUND",
+            "GET_ANONYMOUS_ID",
+            "GET_UDEVICE_ID",
             "DEAMON_NOTIFICATION",
-            "REAL_READ_SMS",
-            "REAL_READ_CONTACTS",
-            "REAL_READ_CALENDAR",
-            "REAL_READ_CALL_LOG",
-            "REAL_READ_PHONE_STATE"
+            "BACKGROUND_LOCATION",
+            "READ_SMS_REAL",
+            "READ_CONTACTS_REAL",
+            "READ_CALENDAR_REAL",
+            "READ_CALL_LOG_REAL",
+            "READ_PHONE_STATE_REAL"
     };
 
     /**
@@ -1399,7 +1440,7 @@ public class AppOpsManager {
      */
     public static String opToName(int op) {
         if (op == OP_NONE) return "NONE";
-        else if (op >= 10000) {
+        else if (op >= 10000 && op <= 10033) {
             return custom_ops.get(op);
         }
         return op < sOpNames.length ? sOpNames[op] : ("Unknown(" + op + ")");
