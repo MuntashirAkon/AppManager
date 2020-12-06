@@ -315,6 +315,12 @@ public class PackageInstallerActivity extends BaseActivity {
         runOnUiThread(() -> dialogFragment.show(fm, WhatsNewDialogFragment.TAG));
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.clear();
+        super.onSaveInstanceState(outState);
+    }
+
     private void install() {
         if (apkFile.hasObb() && !AppPref.isRootOrAdbEnabled()) {
             // Need to request permissions if not given
