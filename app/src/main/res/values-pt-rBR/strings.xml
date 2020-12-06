@@ -114,14 +114,14 @@
 \nDuração de <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iterações).</string>
     <string name="found_trackers">Rastreadores Encontrados:</string>
     <string name="tracker_details">Detalhes do reastreador</string>
-    <string name="tracker_classes">Classes do rastreador</string>
+    <string name="tracker_classes">Classes rastreadoras</string>
     <string name="all_classes">Todas as classes</string>
     <plurals name="main_list_date_days">
         <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dia</item>
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dias</item>
     </plurals>
     <string name="no_shared_libs">Sem bibliotecas compartilhadas</string>
-    <string name="no_tracker_class">Sem classe de rastreador</string>
+    <string name="no_tracker_class">Nenhuma classe rastreadora</string>
     <string name="app_usage">Uso de Aplicativos</string>
     <string name="usage_weekly">Semanal</string>
     <string name="usage_today">Hoje</string>
@@ -198,7 +198,7 @@
     <string name="failed_to_disable_op">A operação de aplicativo solicitada não pôde ser desativada</string>
     <string name="pref_root_mode_enabled">Modo root</string>
     <string name="pref_root_mode_enabled_msg">Ativa todas as funções root deste aplicativo, o modo ADB é detectado automaticamente quando isto está desligado.</string>
-    <string name="pref_global_blocking_enabled">Bloquear componentes globalmente</string>
+    <string name="pref_global_blocking_enabled">Bloqueio global de componentes</string>
     <string name="pref_global_blocking_enabled_msg">Permite bloquear qualquer componente de qualquer aplicativo sem ligar explicitamente o bloqueio para o aplicativo.</string>
     <string name="pref_usage_access_enabled">Acesso ao uso</string>
     <string name="pref_usage_access_enabled_msg">Permite ver as estatísticas de uso do aplicativo e suas informações de dados.</string>
