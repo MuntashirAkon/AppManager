@@ -768,4 +768,5 @@
     <string name="verified">Verified</string>
     <string name="not_verified">Not verified</string>
     <string name="source_stamp_verified">SourceStamp verified.</string>
+    <string name="splits">Splits</string>
 </resources>

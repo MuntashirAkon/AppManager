@@ -469,8 +469,23 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     addChip(R.string.updated_app);
             } else if (!mainModel.getIsExternalApk()) addChip(R.string.user_app);
             int countSplits = mainModel.getSplitCount();
-            if (countSplits > 0)
-                addChip(getResources().getQuantityString(R.plurals.no_of_splits, countSplits, countSplits));
+            if (countSplits > 0) {
+                addChip(getResources().getQuantityString(R.plurals.no_of_splits, countSplits,
+                        countSplits)).setOnClickListener(v -> {
+                    ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey());
+                    // Display a list of apks
+                    List<ApkFile.Entry> apkEntries = apkFile.getEntries();
+                    String[] entryNames = new String[countSplits];
+                    for (int i = 0; i < countSplits; ++i) {
+                        entryNames[i] = apkEntries.get(i+1).toLocalizedString(mActivity);
+                    }
+                    new MaterialAlertDialogBuilder(mActivity)
+                            .setTitle(R.string.splits)
+                            .setItems(entryNames, null)
+                            .setNegativeButton(R.string.close, null)
+                            .show();
+                });
+            }
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
                 addChip(R.string.debuggable);
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
@@ -1040,10 +1055,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return chip;
     }
 
-    private void addChip(CharSequence text) {
+    @NonNull
+    private Chip addChip(CharSequence text) {
         Chip chip = new Chip(mActivity);
         chip.setText(text);
         mTagCloud.addView(chip);
+        return chip;
     }
 
     @NonNull
