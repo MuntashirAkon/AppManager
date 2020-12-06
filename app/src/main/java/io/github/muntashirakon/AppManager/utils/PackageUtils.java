@@ -73,7 +73,7 @@ import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryBoldText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 
 public final class PackageUtils {
@@ -448,19 +448,19 @@ public final class PackageUtils {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         if (certificate == null) return builder;
         byte[] certBytes = certificate.getSignature();
-        builder.append(getPrimaryBoldText(ctx, ctx.getString(R.string.subject) + ": "))
+        builder.append(getPrimaryText(ctx, ctx.getString(R.string.subject) + ": "))
                 .append(certificate.getSubjectX500Principal().getName()).append("\n")
-                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.issuer) + ": "))
+                .append(getPrimaryText(ctx, ctx.getString(R.string.issuer) + ": "))
                 .append(certificate.getIssuerX500Principal().getName()).append("\n")
-                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.issued_date) + ": "))
+                .append(getPrimaryText(ctx, ctx.getString(R.string.issued_date) + ": "))
                 .append(certificate.getNotBefore().toString()).append("\n")
-                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.expiry_date) + ": "))
+                .append(getPrimaryText(ctx, ctx.getString(R.string.expiry_date) + ": "))
                 .append(certificate.getNotAfter().toString()).append("\n")
-                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.type) + ": "))
+                .append(getPrimaryText(ctx, ctx.getString(R.string.type) + ": "))
                 .append(certificate.getType()).append(", ")
-                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.version) + ": "))
+                .append(getPrimaryText(ctx, ctx.getString(R.string.version) + ": "))
                 .append(String.valueOf(certificate.getVersion())).append(", ")
-                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.validity) + ": "));
+                .append(getPrimaryText(ctx, ctx.getString(R.string.validity) + ": "));
         try {
             certificate.checkValidity();
             builder.append(ctx.getString(R.string.valid));
@@ -470,28 +470,28 @@ public final class PackageUtils {
             builder.append(ctx.getString(R.string.not_yet_valid));
         }
         builder.append("\n")
-                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.serial_no) + ": "))
+                .append(getPrimaryText(ctx, ctx.getString(R.string.serial_no) + ": "))
                 .append(Utils.bytesToHex(certificate.getSerialNumber().toByteArray())).append("\n");
         // Checksums
         builder.append(getTitleText(ctx, ctx.getString(R.string.checksums))).append("\n")
-                .append(getPrimaryBoldText(ctx, DigestUtils.MD5 + ": "))
+                .append(getPrimaryText(ctx, DigestUtils.MD5 + ": "))
                 .append(DigestUtils.getHexDigest(DigestUtils.MD5, certBytes)).append("\n")
-                .append(getPrimaryBoldText(ctx, DigestUtils.SHA_1 + ": "))
+                .append(getPrimaryText(ctx, DigestUtils.SHA_1 + ": "))
                 .append(DigestUtils.getHexDigest(DigestUtils.SHA_1, certBytes)).append("\n")
-                .append(getPrimaryBoldText(ctx, DigestUtils.SHA_256 + ": "))
+                .append(getPrimaryText(ctx, DigestUtils.SHA_256 + ": "))
                 .append(DigestUtils.getHexDigest(DigestUtils.SHA_256, certBytes)).append("\n")
-                .append(getPrimaryBoldText(ctx, DigestUtils.SHA_384 + ": "))
+                .append(getPrimaryText(ctx, DigestUtils.SHA_384 + ": "))
                 .append(DigestUtils.getHexDigest(DigestUtils.SHA_384, certBytes)).append("\n")
-                .append(getPrimaryBoldText(ctx, DigestUtils.SHA_512 + ": "))
+                .append(getPrimaryText(ctx, DigestUtils.SHA_512 + ": "))
                 .append(DigestUtils.getHexDigest(DigestUtils.SHA_512, certBytes)).append("\n");
         // Signature
         builder.append(getTitleText(ctx, ctx.getString(R.string.signature)))
                 .append("\n")
-                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.algorithm) + ": "))
+                .append(getPrimaryText(ctx, ctx.getString(R.string.algorithm) + ": "))
                 .append(certificate.getSigAlgName()).append("\n")
-                .append(getPrimaryBoldText(ctx, "OID: "))
+                .append(getPrimaryText(ctx, "OID: "))
                 .append(certificate.getSigAlgOID()).append("\n")
-                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.signature) + ": "))
+                .append(getPrimaryText(ctx, ctx.getString(R.string.signature) + ": "))
                 .append(Utils.bytesToHex(certificate.getSignature())).append("\n");
         // Public key used by Google: https://github.com/google/conscrypt
         // 1. X509PublicKey (PublicKey)
@@ -500,23 +500,23 @@ public final class PackageUtils {
         PublicKey publicKey = certificate.getPublicKey();
         builder.append(getTitleText(ctx, ctx.getString(R.string.public_key)))
                 .append("\n")
-                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.algorithm) + ": "))
+                .append(getPrimaryText(ctx, ctx.getString(R.string.algorithm) + ": "))
                 .append(publicKey.getAlgorithm()).append("\n")
-                .append(getPrimaryBoldText(ctx, ctx.getString(R.string.format) + ": "))
+                .append(getPrimaryText(ctx, ctx.getString(R.string.format) + ": "))
                 .append(publicKey.getFormat());
         if (publicKey instanceof RSAPublicKey) {
             RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
             builder.append("\n")
-                    .append(getPrimaryBoldText(ctx, ctx.getString(R.string.rsa_exponent) + ": "))
+                    .append(getPrimaryText(ctx, ctx.getString(R.string.rsa_exponent) + ": "))
                     .append(rsaPublicKey.getPublicExponent().toString()).append("\n")
-                    .append(getPrimaryBoldText(ctx, ctx.getString(R.string.rsa_modulus) + ": "))
+                    .append(getPrimaryText(ctx, ctx.getString(R.string.rsa_modulus) + ": "))
                     .append(Utils.bytesToHex(rsaPublicKey.getModulus().toByteArray()));
         } else if (publicKey instanceof ECPublicKey) {
             ECPublicKey ecPublicKey = (ECPublicKey) publicKey;
             builder.append("\n")
-                    .append(getPrimaryBoldText(ctx, ctx.getString(R.string.dsa_affine_x) + ": "))
+                    .append(getPrimaryText(ctx, ctx.getString(R.string.dsa_affine_x) + ": "))
                     .append(ecPublicKey.getW().getAffineX().toString()).append("\n")
-                    .append(getPrimaryBoldText(ctx, ctx.getString(R.string.dsa_affine_y) + ": "))
+                    .append(getPrimaryText(ctx, ctx.getString(R.string.dsa_affine_y) + ": "))
                     .append(ecPublicKey.getW().getAffineY().toString());
         }
         // TODO(5/10/20): Add description for each extensions
@@ -525,7 +525,7 @@ public final class PackageUtils {
             builder.append("\n").append(getTitleText(ctx, ctx.getString(R.string.critical_exts)));
             for (String oid : critSet) {
                 builder.append("\n- ")
-                        .append(getPrimaryBoldText(ctx, oid + ": "))
+                        .append(getPrimaryText(ctx, oid + ": "))
                         .append(Utils.bytesToHex(certificate.getExtensionValue(oid)));
             }
         }
@@ -534,7 +534,7 @@ public final class PackageUtils {
             builder.append("\n").append(getTitleText(ctx, ctx.getString(R.string.non_critical_exts)));
             for (String oid : nonCritSet) {
                 builder.append("\n- ")
-                        .append(getPrimaryBoldText(ctx,oid + ": "))
+                        .append(getPrimaryText(ctx,oid + ": "))
                         .append(Utils.bytesToHex(certificate.getExtensionValue(oid)));
             }
         }
@@ -576,7 +576,7 @@ public final class PackageUtils {
             if (result.isVerifiedUsingV2Scheme()) sigSchemes.add("v2");
             if (result.isVerifiedUsingV3Scheme()) sigSchemes.add("v3");
             if (result.isVerifiedUsingV4Scheme()) sigSchemes.add("v4");
-            builder.append("\n").append(getPrimaryBoldText(ctx, ctx.getResources()
+            builder.append("\n").append(getPrimaryText(ctx, ctx.getResources()
                     .getQuantityString(R.plurals.signature_schemes, sigSchemes.size()) + ": "));
             builder.append(TextUtils.joinSpannable(", ", sigSchemes));
         } else {

@@ -27,6 +27,7 @@ import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.text.util.Linkify;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
@@ -68,7 +69,7 @@ public class UIUtils {
     }
 
     @NonNull
-    public static Spannable getPrimaryBoldText(@NonNull Context context, @NonNull CharSequence text) {
+    public static Spannable getPrimaryText(@NonNull Context context, @NonNull CharSequence text) {
         return getColoredText(text, getTextColorPrimary(context));
     }
 
@@ -81,9 +82,17 @@ public class UIUtils {
     }
 
     @NonNull
+    public static Spannable getSmallerText(@NonNull CharSequence text) {
+        Spannable spannable = charSequenceToSpannable(text);
+        spannable.setSpan(new RelativeSizeSpan(.8f), 0, spannable.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
+    }
+
+    @NonNull
     public static Spannable getUnderlinedString(@NonNull CharSequence text) {
         Spannable spannable = charSequenceToSpannable(text);
-        spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, spannable.length(),
+        spannable.setSpan(new UnderlineSpan(), 0, spannable.length(),
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return spannable;
     }
@@ -135,6 +144,10 @@ public class UIUtils {
 
     public static int getTitleSize(@NonNull Context context) {
         return context.getResources().getDimensionPixelSize(R.dimen.title_font);
+    }
+
+    public static int getSubtitleSize(@NonNull Context context) {
+        return context.getResources().getDimensionPixelSize(R.dimen.subtitle_font);
     }
 
     public static int dpToPx(@NonNull Context context, int dp) {

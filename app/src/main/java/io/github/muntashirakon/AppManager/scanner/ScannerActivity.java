@@ -30,12 +30,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.internal.util.TextUtils;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.io.ByteArrayInputStream;
@@ -47,22 +50,29 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.collection.ArrayMap;
+import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.types.EmptySpan;
+import io.github.muntashirakon.AppManager.types.NumericSpan;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getUnderlinedString;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class ScannerActivity extends BaseActivity {
     private static final String APP_DEX = "app_dex";
@@ -161,16 +171,16 @@ public class ScannerActivity extends BaseActivity {
                     try {
                         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
                         SpannableStringBuilder sb = new SpannableStringBuilder(apkUri.toString()).append("\n");
-                        sb.append(getBoldString(getString(R.string.checksums))).append("\n")
-                                .append(getBoldString(DigestUtils.MD5 + ": "))
+                        sb.append(getPrimaryText(this, getString(R.string.checksums))).append("\n")
+                                .append(getPrimaryText(this, DigestUtils.MD5 + ": "))
                                 .append(DigestUtils.getHexDigest(DigestUtils.MD5, apkFile)).append("\n")
-                                .append(getBoldString(DigestUtils.SHA_1 + ": "))
+                                .append(getPrimaryText(this, DigestUtils.SHA_1 + ": "))
                                 .append(DigestUtils.getHexDigest(DigestUtils.SHA_1, apkFile)).append("\n")
-                                .append(getBoldString(DigestUtils.SHA_256 + ": "))
+                                .append(getPrimaryText(this, DigestUtils.SHA_256 + ": "))
                                 .append(DigestUtils.getHexDigest(DigestUtils.SHA_256, apkFile)).append("\n")
-                                .append(getBoldString(DigestUtils.SHA_384 + ": "))
+                                .append(getPrimaryText(this, DigestUtils.SHA_384 + ": "))
                                 .append(DigestUtils.getHexDigest(DigestUtils.SHA_384, apkFile)).append("\n")
-                                .append(getBoldString(DigestUtils.SHA_512 + ": "))
+                                .append(getPrimaryText(this, DigestUtils.SHA_512 + ": "))
                                 .append(DigestUtils.getHexDigest(DigestUtils.SHA_512, apkFile));
                         runOnUiThread(() -> {
                             ((TextView) findViewById(R.id.apk_title)).setText(R.string.source_dir);
@@ -267,26 +277,22 @@ public class ScannerActivity extends BaseActivity {
         String[] trackerNames = StaticDataset.getTrackerNames();
         String[] trackerSignatures = StaticDataset.getTrackerCodeSignatures();
         int[] signatureCount = new int[trackerSignatures.length];
-        SpannableStringBuilder found = new SpannableStringBuilder();
         boolean[] signaturesFound = new boolean[trackerSignatures.length];
         int totalIteration = 0;
         int totalTrackersFound = 0;
         long t_start, t_end;
         t_start = System.currentTimeMillis();
+        // Iterate over all classes
         for (String className : classListAll) {
             if (className.length() > 8 && className.contains(".")) {
+                // Iterate over all signatures to match the class name
+                // This is a greedy algorithm, only matches the first item
                 for (int i = 0; i < trackerSignatures.length; i++) {
                     totalIteration++;
                     if (className.contains(trackerSignatures[i])) {
                         trackerClassList.add(className);
                         signatureCount[i]++;
                         signaturesFound[i] = true;
-                        if (found.toString().contains(trackerNames[i])) break;
-                        else {
-                            ++totalTrackersFound;
-                            if (found.length() > 0) found.append(", ");
-                            found.append(trackerNames[i]);
-                        }
                         break;
                     }
                 }
@@ -294,18 +300,27 @@ public class ScannerActivity extends BaseActivity {
         }
         t_end = System.currentTimeMillis();
         long totalTimeTaken = t_end - t_start;
+        Map<String, SpannableStringBuilder> foundTrackerInfoMap = new ArrayMap<>();
+        // Iterate over signatures again but this time list only the found ones.
+        for (int i = 0; i < trackerSignatures.length; i++) {
+            if (signaturesFound[i]) {
+                if (foundTrackerInfoMap.get(trackerNames[i]) == null) {
+                    ++totalTrackersFound;
+                    foundTrackerInfoMap.put(trackerNames[i], new SpannableStringBuilder()
+                            .append(getPrimaryText(this, trackerNames[i])));
+                }
+                //noinspection ConstantConditions Never null here
+                foundTrackerInfoMap.get(trackerNames[i]).append("\n").append(trackerSignatures[i])
+                        .append(getSmallerText(" (" + signatureCount[i] + ")"));
+            }
+        }
+        Set<String> foundTrackerNames = foundTrackerInfoMap.keySet();
+        List<Spannable> foundTrackerInfo = new ArrayList<>(foundTrackerInfoMap.values());
+        Collections.sort(foundTrackerInfo, (o1, o2) -> o1.toString().compareToIgnoreCase(o2.toString()));
         SpannableStringBuilder foundTrackerList = new SpannableStringBuilder();
         if (totalTrackersFound > 0) {
-            foundTrackerList.append(getString(R.string.found_trackers)).append(" ").append(found);
-        }
-        SpannableStringBuilder foundTrackersInfo = new SpannableStringBuilder();
-        for (int i = 0, j = 0; i < trackerSignatures.length; i++) {
-            if (signaturesFound[i]) {
-                if (!foundTrackersInfo.toString().contains(trackerNames[i])) {
-                    foundTrackersInfo.append(getUnderlinedString(getBoldString((++j) + ". " + trackerNames[i]))).append("\n");
-                }
-                foundTrackersInfo.append("    ").append(trackerSignatures[i]).append(" (").append(String.valueOf(signatureCount[i])).append(")\n");
-            }
+            foundTrackerList.append(getString(R.string.found_trackers)).append(" ").append(
+                    TextUtils.joinSpannable("\n", foundTrackerNames));
         }
         SpannableStringBuilder builder = new SpannableStringBuilder(
                 getString(R.string.tested_signatures_on_classes_and_time_taken,
@@ -314,7 +329,7 @@ public class ScannerActivity extends BaseActivity {
             builder.append("\n").append(foundTrackerList);
         }
 
-        String summary;
+        CharSequence summary;
         if (totalTrackersFound == 0) {
             summary = getString(R.string.no_tracker_found);
         } else if (totalTrackersFound == 1) {
@@ -324,19 +339,26 @@ public class ScannerActivity extends BaseActivity {
         } else {
             summary = getResources().getQuantityString(R.plurals.other_trackers_and_classes, totalTrackersFound, totalTrackersFound, trackerClassList.size());
         }
+        // Add colours
+        CharSequence coloredSummary;
+        if (totalTrackersFound == 0) {
+            coloredSummary = UIUtils.getColoredText(summary, ContextCompat.getColor(this, R.color.stopped));
+        } else {
+            coloredSummary = UIUtils.getColoredText(summary, ContextCompat.getColor(this, R.color.electric_red));
+        }
 
         int finalTotalTrackersFound = totalTrackersFound;
         runOnUiThread(() -> {
-            ((TextView) findViewById(R.id.tracker_title)).setText(summary);
+            ((TextView) findViewById(R.id.tracker_title)).setText(coloredSummary);
             ((TextView) findViewById(R.id.tracker_description)).setText(builder);
             if (finalTotalTrackersFound == 0) return;
             findViewById(R.id.tracker).setOnClickListener(v ->
-                    UIUtils.getDialogWithScrollableTextView(this, foundTrackersInfo, false)
+                    UIUtils.getDialogWithScrollableTextView(this, getOrderedList(foundTrackerInfo), false)
                             .setTitle(R.string.tracker_details)
                             .setPositiveButton(R.string.ok, null)
                             .setNegativeButton(R.string.copy, (dialog, which) -> {
                                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                ClipData clip = ClipData.newPlainText(getString(R.string.signatures), foundTrackersInfo);
+                                ClipData clip = ClipData.newPlainText(getString(R.string.signatures), TextUtils.join("\n", foundTrackerInfo));
                                 clipboard.setPrimaryClip(clip);
                             })
                             .setNeutralButton(R.string.exodus_link, (dialog, which) -> {
@@ -355,44 +377,54 @@ public class ScannerActivity extends BaseActivity {
         String[] libNames = getResources().getStringArray(R.array.lib_names);
         String[] libSignatures = getResources().getStringArray(R.array.lib_signatures);
         String[] libTypes = getResources().getStringArray(R.array.lib_types);
+        // The following two arrays are directly mapped to the arrays above
         int[] signatureCount = new int[libSignatures.length];
-        SpannableStringBuilder found = new SpannableStringBuilder();
         boolean[] signaturesFound = new boolean[libSignatures.length];
         @IntRange(from = 0)
         int totalLibsFound = 0;
+        // Iterate over all classes
         for (String className : classListAll) {
             if (className.length() > 8 && className.contains(".")) {
                 boolean matched = false;
+                // Iterate over all signatures to match the class name
+                // This is a greedy algorithm, only matches the first item
                 for (int i = 0; i < libSignatures.length; i++) {
                     if (className.contains(libSignatures[i])) {
                         matched = true;
+                        // Add to found classes
                         libClassList.add(className);
+                        // Increment this signature match count
                         signatureCount[i]++;
+                        // Set this signature as matched
                         signaturesFound[i] = true;
-                        if (found.toString().contains(libNames[i])) break;
-                        else {
-                            ++totalLibsFound;
-                            if (found.length() > 0) found.append(", ");
-                            found.append(libNames[i]);
-                        }
                         break;
                     }
                 }
+                // Add the class to the missing libs list if it doesn't match the filters
                 if (!matched && !className.startsWith(mPackageName) && !className.matches(SIG_TO_IGNORE)) {
                     missingLibs.add(className);
                 }
             }
         }
-        SpannableStringBuilder foundLibsInfo = new SpannableStringBuilder();
-        for (int i = 0, j = 0; i < libSignatures.length; i++) {
+        Map<String, SpannableStringBuilder> foundLibInfoMap = new ArrayMap<>();
+        // Iterate over signatures again but this time list only the found ones.
+        for (int i = 0; i < libSignatures.length; i++) {
             if (signaturesFound[i]) {
-                if (!foundLibsInfo.toString().contains(libNames[i])) {
-                    foundLibsInfo.append(getUnderlinedString(getBoldString((++j) + ". " + libNames[i])));
-                    foundLibsInfo.append(" (").append(libTypes[i]).append(")\n");
+                if (foundLibInfoMap.get(libNames[i]) == null) {
+                    // Add the lib info since it isn't added already
+                    ++totalLibsFound;
+                    foundLibInfoMap.put(libNames[i], new SpannableStringBuilder()
+                            .append(getPrimaryText(this, libNames[i]))
+                            .append(getSmallerText(" (" + libTypes[i] + ")")));
                 }
-                foundLibsInfo.append("    ").append(libSignatures[i]).append(" (").append(String.valueOf(signatureCount[i])).append(")\n");
+                //noinspection ConstantConditions Never null here
+                foundLibInfoMap.get(libNames[i]).append("\n").append(libSignatures[i])
+                        .append(getSmallerText(" (" + signatureCount[i] + ")"));
             }
         }
+        Set<String> foundLibNames = foundLibInfoMap.keySet();
+        List<Spannable> foundLibInfo = new ArrayList<>(foundLibInfoMap.values());
+        Collections.sort(foundLibInfo, (o1, o2) -> o1.toString().compareToIgnoreCase(o2.toString()));
         String summary;
         if (totalLibsFound == 0) {
             summary = getString(R.string.no_libs);
@@ -403,15 +435,15 @@ public class ScannerActivity extends BaseActivity {
         int finalTotalLibsFound = totalLibsFound;
         runOnUiThread(() -> {
             ((TextView) findViewById(R.id.libs_title)).setText(summary);
-            ((TextView) findViewById(R.id.libs_description)).setText(found);
+            ((TextView) findViewById(R.id.libs_description)).setText(TextUtils.join(", ", foundLibNames));
             if (finalTotalLibsFound == 0) return;
             findViewById(R.id.libs).setOnClickListener(v ->
-                    UIUtils.getDialogWithScrollableTextView(this, foundLibsInfo, false)
+                    UIUtils.getDialogWithScrollableTextView(this, getOrderedList(foundLibInfo), false)
                             .setTitle(R.string.lib_details)
                             .setNegativeButton(R.string.ok, null)
                             .setNeutralButton(R.string.copy, (dialog, which) -> {
                                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                ClipData clip = ClipData.newPlainText(getString(R.string.signatures), foundLibsInfo);
+                                ClipData clip = ClipData.newPlainText(getString(R.string.signatures), TextUtils.join("\n", foundLibInfo));
                                 clipboard.setPrimaryClip(clip);
                             })
                             .show());
@@ -449,26 +481,45 @@ public class ScannerActivity extends BaseActivity {
                 cert = (X509Certificate) CertificateFactory.getInstance("X.509")
                         .generateCertificate(new ByteArrayInputStream(certBytes));
                 if (builder.length() > 0) builder.append("\n\n");
-                builder.append(getBoldString(getString(R.string.issuer) + ": "))
+                builder.append(getPrimaryText(this, getString(R.string.issuer) + ": "))
                         .append(cert.getIssuerX500Principal().getName()).append("\n")
-                        .append(getBoldString(getString(R.string.algorithm) + ": "))
+                        .append(getPrimaryText(this, getString(R.string.algorithm) + ": "))
                         .append(cert.getSigAlgName()).append("\n");
                 // Checksums
-                builder.append(getBoldString(getString(R.string.checksums)))
+                builder.append(getPrimaryText(this, getString(R.string.checksums)))
                         .append("\n")
-                        .append(getBoldString(DigestUtils.MD5 + ": "))
+                        .append(getPrimaryText(this, DigestUtils.MD5 + ": "))
                         .append(DigestUtils.getHexDigest(DigestUtils.MD5, certBytes)).append("\n")
-                        .append(getBoldString(DigestUtils.SHA_1 + ": "))
+                        .append(getPrimaryText(this, DigestUtils.SHA_1 + ": "))
                         .append(DigestUtils.getHexDigest(DigestUtils.SHA_1, certBytes)).append("\n")
-                        .append(getBoldString(DigestUtils.SHA_256 + ": "))
+                        .append(getPrimaryText(this, DigestUtils.SHA_256 + ": "))
                         .append(DigestUtils.getHexDigest(DigestUtils.SHA_256, certBytes)).append("\n")
-                        .append(getBoldString(DigestUtils.SHA_384 + ": "))
+                        .append(getPrimaryText(this, DigestUtils.SHA_384 + ": "))
                         .append(DigestUtils.getHexDigest(DigestUtils.SHA_384, certBytes)).append("\n")
-                        .append(getBoldString(DigestUtils.SHA_512 + ": "))
+                        .append(getPrimaryText(this, DigestUtils.SHA_512 + ": "))
                         .append(DigestUtils.getHexDigest(DigestUtils.SHA_512, certBytes));
             }
         } catch (CertificateException ignored) {
         }
         return builder;
+    }
+
+    @NonNull
+    public Spanned getOrderedList(@NonNull final Iterable<Spannable> spannableList) {
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
+        Spannable tmpSpannable;
+        int j = 0;
+        for (Spannable spannable : spannableList) {
+            tmpSpannable = new SpannableString(spannable);
+            int finish = tmpSpannable.toString().indexOf("\n");
+            tmpSpannable.setSpan(new NumericSpan(40, 30, ++j), 0,
+                    (finish == -1 ? tmpSpannable.length() : finish), 0);
+            if (finish != -1) {
+                tmpSpannable.setSpan(new EmptySpan(40, 30), finish + 1,
+                        tmpSpannable.length(), 0);
+            }
+            spannableStringBuilder.append(tmpSpannable).append("\n");
+        }
+        return spannableStringBuilder;
     }
 }
