@@ -32,8 +32,6 @@ import java.util.Objects;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 /**
@@ -223,7 +221,7 @@ public class AppOpsManager {
     public static final int OP_NO_ISOLATED_STORAGE = 99;
     public static final int _NUM_OP;  // fetched using reflection
 
-  //  Xiaomi custom App Ops from com.lbe.security.miui.apk version
+    // Xiaomi custom App Ops from com.lbe.security.miui.apk version
     public static final int OP_WIFI_CONNECTIVITY = 10001;
     public static final int OP_BT_CONNECTIVITY = 10002;
     public static final int OP_SEND_MMS = 10004;
@@ -1279,9 +1277,8 @@ public class AppOpsManager {
 
     /**
      * Use to map xiaomi custom app ops code to it name.
-     *
      */
-    public static final int[] custom_ops_num=new int[]{
+    public static final int[] custom_ops_num = new int[]{
             OP_WIFI_CONNECTIVITY,
             OP_BT_CONNECTIVITY,
             OP_SEND_MMS,
@@ -1306,7 +1303,7 @@ public class AppOpsManager {
     /**
      * Use to map with xiaomi custom app ops code
      */
-    public static final String[] custom_ops_string=new String[]{
+    public static final String[] custom_ops_string = new String[]{
             "WIFI_CONNECTIVITY",
             "BT_CONNECTIVITY",
             "SEND_MMS",
@@ -1341,7 +1338,7 @@ public class AppOpsManager {
     /**
      * Mapping from xiaomi custom app op to corresponding op name
      */
-    public static HashMap<Integer, String> custom_ops=new HashMap<>();
+    public static HashMap<Integer, String> custom_ops = new HashMap<>();
 
     /**
      * Some ops doesn't have any permissions associated with them and are enabled by default.
@@ -1376,9 +1373,9 @@ public class AppOpsManager {
             }
         }
         //Map xiaomi custom app op code with corresponding name
-            for(int i=0;i<_NUM_CUSTOM_OP;i++){
-                custom_ops.put(custom_ops_num[i], custom_ops_string[i]);
-            }
+        for (int i = 0; i < _NUM_CUSTOM_OP; i++) {
+            custom_ops.put(custom_ops_num[i], custom_ops_string[i]);
+        }
     }
 
     public static final String KEY_HISTORICAL_OPS = "historical_ops";
@@ -1402,7 +1399,7 @@ public class AppOpsManager {
      */
     public static String opToName(int op) {
         if (op == OP_NONE) return "NONE";
-        else if(op>=10000){
+        else if (op >= 10000) {
             return custom_ops.get(op);
         }
         return op < sOpNames.length ? sOpNames[op] : ("Unknown(" + op + ")");
