@@ -111,6 +111,7 @@ import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -423,8 +424,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (!isExternalApk && isRootEnabled) {
             isSystemlessPath = MagiskUtils.isSystemlessPath(PackageUtils
                     .getHiddenCodePathOrDefault(mPackageName, mApplicationInfo.publicSourceDir));
-            hasMasterkey = PackageUtils.hasMasterKey(mApplicationInfo.uid);
-            hasKeystore = PackageUtils.hasKeyStore(mApplicationInfo.uid);
+            hasMasterkey = KeyStoreUtils.hasMasterKey(mApplicationInfo.uid);
+            hasKeystore = KeyStoreUtils.hasKeyStore(mApplicationInfo.uid);
         } else {
             isSystemlessPath = false;
             hasMasterkey = false;
@@ -486,8 +487,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 addChip(R.string.stopped, R.color.stopped);
             if (!mApplicationInfo.enabled) addChip(R.string.disabled_app, R.color.disabled_user);
             if (hasKeystore) {
-                if (hasMasterkey) addChip(R.string.keystore, R.color.tracker);
-                else addChip(R.string.keystore);
+                Chip chip;
+                if (hasMasterkey) chip = addChip(R.string.keystore, R.color.tracker);
+                else chip = addChip(R.string.keystore);
+                chip.setOnClickListener(view -> new MaterialAlertDialogBuilder(mActivity)
+                        .setTitle(R.string.keystore)
+                        .setItems(KeyStoreUtils.getKeyStoreFiles(mApplicationInfo.uid,
+                                mainModel.getUserHandle()).toArray(new String[0]), null)
+                        .setNegativeButton(R.string.close, null)
+                        .show());
             }
         });
     }
@@ -1024,10 +1032,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return chip;
     }
 
-    private void addChip(@StringRes int resId) {
+    @NonNull
+    private Chip addChip(@StringRes int resId) {
         Chip chip = new Chip(mActivity);
         chip.setText(resId);
         mTagCloud.addView(chip);
+        return chip;
     }
 
     private void addChip(CharSequence text) {
