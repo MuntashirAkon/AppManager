@@ -44,7 +44,7 @@
     <string name="no_feature">Nenhuma função</string>
     <string name="sort_by_sha">Assinatura</string>
     <string name="signatures">Assinaturas</string>
-    <string name="no_signatures">Nenhuma assinatura</string>
+    <string name="no_signatures">Nenhuma assinatura válida</string>
     <string name="configurations">Configurações</string>
     <string name="no_configurations">Nenhuma configuração</string>
     <string name="error">Erro</string>
@@ -723,4 +723,12 @@
     <string name="apk_signing">Assinatura do APK</string>
     <string name="signing_keys">Chaves de assinatura</string>
     <string name="signature_schemes">Esquemas de assinatura</string>
+    <string name="source_stamp_verified">SourceStamp verificado.</string>
+    <string name="splits">Divididos</string>
+    <string name="not_verified">Não verificado</string>
+    <string name="verified">Verificado</string>
+    <plurals name="verified_with_warning">
+        <item quantity="one">Verificado com %d aviso</item>
+        <item quantity="other">Verificado com %d avisos</item>
+    </plurals>
 </resources>
