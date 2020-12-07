@@ -53,7 +53,7 @@
     <string name="shared_user_id">Geteilte Nutzer-ID</string>
     <string name="sort_by_sha">Signatur</string>
     <string name="signatures">Signaturen</string>
-    <string name="no_signatures">Keine Signaturen</string>
+    <string name="no_signatures">Keine gültigen Signaturen</string>
     <string name="configurations">Konfigurationen</string>
     <string name="no_configurations">Keine Konfigurationen</string>
     <string name="input_features">Eingabe-Funktionalitäten</string>
@@ -181,9 +181,9 @@
     <string name="deletion_failed">Löschen fehlgeschlagen</string>
     <string name="saved_successfully">Gespeichert</string>
     <string name="saving_failed">Speichern fehlgeschlagen, versuche es bitte erneut.</string>
-    <string name="string_value">String-Wert</string>
+    <string name="string_value">Zeichenkette</string>
     <string name="long_integer_value">Wert der Ganzzahl (long)</string>
-    <string name="integer_value">Wert der Ganzzahl</string>
+    <string name="integer_value">Wert der Ganzzahl (int)</string>
     <string name="decimal_value">Wert der Dezimalzahl</string>
     <string name="boolean_value">Wahrheitswert</string>
     <string name="key_name">Schlüssel-Name</string>
@@ -724,4 +724,12 @@
     <string name="apk_signing">APK-Signierung</string>
     <string name="signing_keys">Signierschlüssel</string>
     <string name="signature_schemes">Signaturschemata</string>
+    <string name="splits">Spaltet</string>
+    <string name="source_stamp_verified">Quellenstempel verifiziert.</string>
+    <string name="not_verified">Nicht überprüft</string>
+    <string name="verified">Überprüft</string>
+    <plurals name="verified_with_warning">
+        <item quantity="one">Verifiziert mit %d Warnung</item>
+        <item quantity="other">Verifiziert mit %d Warnungen</item>
+    </plurals>
 </resources>
