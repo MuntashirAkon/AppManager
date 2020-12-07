@@ -47,7 +47,8 @@ public class AppOpsManager {
             MODE_IGNORED,
             MODE_ERRORED,
             MODE_DEFAULT,
-            MODE_FOREGROUND
+            MODE_FOREGROUND,
+            MODE_ASK
     })
     public @interface Mode {
     }
@@ -101,6 +102,10 @@ public class AppOpsManager {
      * the actual check for access to the op.</p>
      */
     public static final int MODE_FOREGROUND = 1 << 2;
+    /**
+     * MIUI customized mode.
+     */
+    public static final int MODE_ASK = 5;
 
     public static final String[] MODE_NAMES = new String[]{
             "allow",        // MODE_ALLOWED
