@@ -52,7 +52,7 @@
     <string name="shared_user_id">Paylaşılan kullanıcı kimliği</string>
     <string name="sort_by_sha">İmza</string>
     <string name="signatures">İmzalar</string>
-    <string name="no_signatures">İmza yok</string>
+    <string name="no_signatures">Geçerli imza yok</string>
     <string name="configurations">Yapılandırmalar</string>
     <string name="no_configurations">Yapılandırma yok</string>
     <string name="input_features">Giriş özellikleri</string>
@@ -721,4 +721,12 @@
     <string name="apk_signing">APK imzalama</string>
     <string name="signing_keys">İmzalama anahtarları</string>
     <string name="signature_schemes">İmza şemaları</string>
+    <string name="splits">Bölümler</string>
+    <string name="source_stamp_verified">SourceStamp doğrulandı.</string>
+    <string name="not_verified">Doğrulanmadı</string>
+    <string name="verified">Doğrulandı</string>
+    <plurals name="verified_with_warning">
+        <item quantity="one">%d uyarıyla doğrulandı</item>
+        <item quantity="other">%d uyarıyla doğrulandı</item>
+    </plurals>
 </resources>
