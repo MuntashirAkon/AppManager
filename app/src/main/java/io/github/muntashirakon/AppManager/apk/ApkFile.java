@@ -258,11 +258,7 @@ public final class ApkFile implements AutoCloseable {
             }
         } else {
             boolean foundBaseApk = false;
-            File destDir = context.getExternalFilesDir("apks");
-            if (destDir == null || !Environment.getExternalStorageState(destDir).equals(Environment.MEDIA_MOUNTED))
-                throw new RuntimeException("External media not present");
-            if (!destDir.exists()) //noinspection ResultOfMethodCallIgnored
-                destDir.mkdirs();
+            getCachePath();
             try {
                 zipFile = new ZipFile(cacheFilePath);
             } catch (IOException e) {
@@ -546,7 +542,7 @@ public final class ApkFile implements AutoCloseable {
                 return ByteBuffer.wrap(buffer.toByteArray());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error getting the manifest file.", e);
         }
         return null;
     }

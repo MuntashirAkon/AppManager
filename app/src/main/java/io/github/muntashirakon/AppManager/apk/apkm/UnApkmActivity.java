@@ -33,6 +33,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
@@ -75,7 +76,7 @@ public class UnApkmActivity extends AppCompatActivity {
             if (inputStream == null) finish();
             exportManifest.launch(fileName != null ? IOUtils.trimExtension(fileName) + ".apks" : null);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("UnAPKM", "Invalid file/content", e);
             Toast.makeText(this, R.string.conversion_failed, Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -111,7 +112,7 @@ public class UnApkmActivity extends AppCompatActivity {
                     finish();
                 });
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("UnAPKM", "Invalid file/content", e);
                 runOnUiThread(() -> {
                     Toast.makeText(UnApkmActivity.this, R.string.conversion_failed, Toast.LENGTH_SHORT).show();
                     finish();

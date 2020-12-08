@@ -35,6 +35,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.logs.Log;
 
 public class UnApkm {
     public static final long MEM_LIMIT = 0x20000000;
@@ -140,12 +141,9 @@ public class UnApkm {
                                             final LazySodiumAndroid lazySodium)
             throws IOException {
         final PipedInputStream pipedInputStream = new PipedInputStream();
-        final PipedOutputStream pipedOutputStream = new PipedOutputStream();
-
-        pipedInputStream.connect(pipedOutputStream);
-
-        Thread pipeWriter = new Thread() {
-            public void run() {
+        try (PipedOutputStream pipedOutputStream = new PipedOutputStream()) {
+            pipedInputStream.connect(pipedOutputStream);
+            new Thread(() -> {
                 try {
                     SecretStream.State state = new SecretStream.State();
                     lazySodium.cryptoSecretStreamInitPull(state, header.pwHashBytes, header.outputHash);
@@ -171,7 +169,7 @@ public class UnApkm {
                     }
                 } catch (IOException e) {
                     if (!"Pipe closed".equals(e.getMessage())) {
-                        e.printStackTrace();
+                        Log.e("UnAPKM", "Invalid file/content", e);
                     }
                 } finally {
                     try {
@@ -179,21 +177,16 @@ public class UnApkm {
                     } catch (IOException ignored) {
                     }
                 }
-            }
-        };
-
-        pipeWriter.start();
+            }).start();
+        }
         return pipedInputStream;
     }
 
     public static void decryptFile(@NonNull InputStream is, @NonNull OutputStream os) {
-        try {
-            InputStream toOut = decryptStream(is);
-
-            // fix zip format if missing end signature
-            ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(os));
-            ZipInputStream zipIn = new ZipInputStream(toOut);
-
+        try (InputStream toOut = decryptStream(is);
+             // fix zip format if missing end signature
+             ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(os));
+             ZipInputStream zipIn = new ZipInputStream(toOut)) {
             ZipEntry entry = zipIn.getNextEntry();
 
             while (entry != null) {
@@ -208,10 +201,8 @@ public class UnApkm {
                 zipIn.closeEntry();
                 entry = zipIn.getNextEntry();
             }
-            zipIn.close();
-            zos.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("UnAPKM", "Could not convert the stream to APKS", e);
         }
     }
 }

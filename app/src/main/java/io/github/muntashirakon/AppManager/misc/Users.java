@@ -26,11 +26,14 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 public final class Users {
+    public static final String TAG = "Users";
+
     public static final boolean MU_ENABLED;
     public static final int PER_USER_RANGE;
 
@@ -44,10 +47,14 @@ public final class Users {
             // https://github.com/android/platform_frameworks_base/blob/master/core/java/android/os/UserHandle.java#L123
             //noinspection JavaReflectionMemberAccess
             muEnabled = UserHandle.class.getField("MU_ENABLED").getBoolean(null);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            Log.e(TAG, "Could not get UserHandle#MU_ENABLED", e);
+        }
+        try {
             //noinspection JavaReflectionMemberAccess
             perUserRange = UserHandle.class.getField("PER_USER_RANGE").getInt(null);
         } catch (IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Could not get UserHandle#PER_USER_RANGE", e);
         }
         MU_ENABLED = muEnabled;
         PER_USER_RANGE = perUserRange;
@@ -60,7 +67,7 @@ public final class Users {
             try {
                 userInfoList = ApiSupporter.getInstance(LocalServer.getInstance()).getUsers();
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "Could not get list of users", e);
             }
         }
         return userInfoList;

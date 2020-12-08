@@ -64,6 +64,7 @@ import androidx.annotation.StringRes;
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 
 public class Utils {
@@ -565,7 +566,7 @@ public class Utils {
 
             return stringWriter.toString();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("Utils", "Could not get proper XML.", e);
             return dirtyXml;
         }
     }
