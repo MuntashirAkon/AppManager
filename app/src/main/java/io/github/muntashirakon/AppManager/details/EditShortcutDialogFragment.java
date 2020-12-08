@@ -25,7 +25,6 @@ package io.github.muntashirakon.AppManager.details;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -64,7 +63,7 @@ public class EditShortcutDialogFragment extends DialogFragment {
         final FragmentActivity activity = requireActivity();
         mActivityInfo = requireArguments().getParcelable(ARG_ACTIVITY_INFO);
         mPackageManager = activity.getPackageManager();
-        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(activity);
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.dialog_shortcut, null);

@@ -19,7 +19,6 @@ package io.github.muntashirakon.AppManager.apk.whatsnew;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -72,9 +71,8 @@ public class WhatsNewDialogFragment extends DialogFragment {
         newPkgInfo = (PackageInfo) requireArguments().get(ARG_NEW_PKG_INFO);
         oldPkgInfo = (PackageInfo) requireArguments().get(ARG_OLD_PKG_INFO);
         final String installName = requireArguments().getString(ARG_INSTALL_NAME);
-        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(activity);
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
-        @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.dialog_whats_new, null);
         RecyclerView recyclerView = (RecyclerView) view;
         recyclerView.setHasFixedSize(true);

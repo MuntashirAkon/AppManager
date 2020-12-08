@@ -67,7 +67,7 @@ public class IconPickerDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        LayoutInflater inflater = (LayoutInflater) requireActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(requireActivity());
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
         GridView grid = (GridView) inflater.inflate(R.layout.dialog_icon_picker, null);
         grid.setAdapter(adapter);

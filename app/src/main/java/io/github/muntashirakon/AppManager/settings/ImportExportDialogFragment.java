@@ -19,7 +19,6 @@ package io.github.muntashirakon.AppManager.settings;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -114,7 +113,7 @@ public class ImportExportDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         activity = (SettingsActivity) requireActivity();
-        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(activity);
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.dialog_settings_import_export, null);
