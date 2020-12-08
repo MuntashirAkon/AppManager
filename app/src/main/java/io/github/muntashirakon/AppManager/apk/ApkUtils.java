@@ -21,12 +21,23 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import com.android.apksig.internal.apk.AndroidBinXmlParser;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
@@ -38,6 +49,8 @@ import static io.github.muntashirakon.AppManager.utils.IOUtils.copy;
 public final class ApkUtils {
     public static final String EXT_APK = ".apk";
     public static final String EXT_APKS = ".apks";
+
+    private static final String MANIFEST_FILE = "AndroidManifest.xml";
 
     @NonNull
     public static File getSharableApkFile(@NonNull PackageInfo packageInfo) throws Exception {
@@ -100,5 +113,70 @@ public final class ApkUtils {
 
     public static boolean isSplitApk(@NonNull ApplicationInfo info) {
         return info.splitPublicSourceDirs != null && info.splitPublicSourceDirs.length > 0;
+    }
+
+    @NonNull
+    public static ByteBuffer getManifestFromApk(File apkFile) throws IOException {
+        try (FileInputStream apkInputStream = new FileInputStream(apkFile)) {
+            return getManifestFromApk(apkInputStream);
+        }
+    }
+
+    @NonNull
+    public static ByteBuffer getManifestFromApk(InputStream apkInputStream) throws IOException {
+        try (ZipInputStream zipInputStream = new ZipInputStream(apkInputStream)) {
+            ZipEntry zipEntry;
+            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+                if (!zipEntry.getName().equals(MANIFEST_FILE)) {
+                    zipInputStream.closeEntry();
+                    continue;
+                }
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                byte[] buf = new byte[1024 * 4];
+                int n;
+                while (-1 != (n = zipInputStream.read(buf))) {
+                    buffer.write(buf, 0, n);
+                }
+                zipInputStream.closeEntry();
+                return ByteBuffer.wrap(buffer.toByteArray());
+            }
+        }
+        throw new IOException("Error getting the manifest file.");
+    }
+
+    @NonNull
+    public static HashMap<String, String> getManifestAttributes(@NonNull ByteBuffer manifestBytes)
+            throws ApkFile.ApkFileException, AndroidBinXmlParser.XmlParserException {
+        HashMap<String, String> manifestAttrs = new HashMap<>();
+        AndroidBinXmlParser parser = new AndroidBinXmlParser(manifestBytes);
+        int eventType = parser.getEventType();
+        boolean seenManifestElement = false;
+        while (eventType != AndroidBinXmlParser.EVENT_END_DOCUMENT) {
+            if (eventType == AndroidBinXmlParser.EVENT_START_ELEMENT) {
+                if (parser.getName().equals("manifest") && parser.getDepth() == 1 && parser.getNamespace().isEmpty()) {
+                    if (seenManifestElement) {
+                        throw new ApkFile.ApkFileException("Duplicate manifest found.");
+                    }
+                    seenManifestElement = true;
+                    for (int i = 0; i < parser.getAttributeCount(); i++) {
+                        if (parser.getAttributeName(i).isEmpty())
+                            continue;
+                        String namespace = "" + (parser.getAttributeNamespace(i).isEmpty() ? "" : (parser.getAttributeNamespace(i) + ":"));
+                        manifestAttrs.put(namespace + parser.getAttributeName(i), parser.getAttributeStringValue(i));
+                    }
+                }
+            }
+            eventType = parser.next();
+        }
+        if (!seenManifestElement) throw new ApkFile.ApkFileException("No manifest found.");
+        return manifestAttrs;
+    }
+
+    public static int getDensityFromName(@Nullable String densityName) {
+        Integer density = StaticDataset.DENSITY_NAME_TO_DENSITY.get(densityName);
+        if (density == null) {
+            throw new IllegalArgumentException("Unknown density " + densityName);
+        }
+        return density;
     }
 }
