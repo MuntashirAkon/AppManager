@@ -15,34 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-apply plugin: 'com.android.library'
-
-android {
-    compileSdkVersion 30
-    buildToolsVersion '30.0.2'
-
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 30
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-        preRelease {
-            minifyEnabled false
-            versionNameSuffix '-PRE'
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-}
+apply from: "$gradle.ext.appManagerRoot/common.gradle"
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
     compileOnly project(path: ':HiddenApi')
-    implementation 'androidx.annotation:annotation:1.1.0'
 }
 
 static def toPath(String s) {
@@ -197,7 +173,7 @@ def jar2dex() {
 }
 
 task cleanupJar() {
-    file("${rootProject.projectDir.absolutePath}/app/src/main/assets/am.jar").delete();
+    file("${rootProject.projectDir.absolutePath}/app/src/main/assets/am.jar").delete()
 }
 
 clean.dependsOn cleanupJar

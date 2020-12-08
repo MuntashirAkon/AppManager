@@ -6,3 +6,4 @@ include ':HiddenApi'
 include ':AppManagerServer'
 include ':app'
 rootProject.name = "AppManager"
+gradle.ext.appManagerRoot = settingsDir

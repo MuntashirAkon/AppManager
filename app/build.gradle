@@ -18,14 +18,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion '30.0.2'
-    ndkVersion '21.3.6528147'
+    compileSdkVersion rootProject.ext.compileSdk
+    buildToolsVersion rootProject.ext.buildTools
+    ndkVersion rootProject.ext.ndk
 
     defaultConfig {
         applicationId 'io.github.muntashirakon.AppManager'
-        minSdkVersion 21
-        targetSdkVersion 30
+        minSdkVersion rootProject.ext.minSdk
+        targetSdkVersion rootProject.ext.targetSdk
         versionCode 374
         versionName "2.5.20"
     }
@@ -62,8 +62,9 @@ android {
         abortOnError false
     }
     compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+        encoding "UTF-8"
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     splits {
         abi {
@@ -104,8 +105,7 @@ dependencies {
 
     implementation 'net.java.dev.jna:jna:5.6.0@aar'
 
-    def libsuVersion = '3.0.2'
-    implementation "com.github.topjohnwu.libsu:core:${libsuVersion}"
+    implementation "com.github.topjohnwu.libsu:core:${libsu}"
     implementation 'com.tananaev:adblib:1.2'
 
     implementation 'me.weishu:free_reflection:3.0.1'
