@@ -53,7 +53,7 @@
     <string name="shared_user_id">共享的用户ID</string>
     <string name="sort_by_sha">签名</string>
     <string name="signatures">签名</string>
-    <string name="no_signatures">无签名</string>
+    <string name="no_signatures">无有效签名</string>
     <string name="configurations">配置</string>
     <string name="no_configurations">无配置</string>
     <string name="input_features">输入特性</string>
@@ -686,4 +686,11 @@
     <string name="apk_signing">APK 签名</string>
     <string name="signing_keys">签名密钥</string>
     <string name="signature_schemes">签名方案</string>
+    <string name="source_stamp_verified">SourceStamp 已验证。</string>
+    <string name="verified">已验证</string>
+    <string name="splits">分割</string>
+    <string name="not_verified">未验证</string>
+    <plurals name="verified_with_warning">
+        <item quantity="other">已验证，但有 %d 个警告</item>
+    </plurals>
 </resources>
