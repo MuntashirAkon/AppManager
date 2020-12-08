@@ -20,7 +20,7 @@ package io.github.muntashirakon.AppManager.apk.signing;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Pair;
 
 import com.android.apksig.ApkSigner;
