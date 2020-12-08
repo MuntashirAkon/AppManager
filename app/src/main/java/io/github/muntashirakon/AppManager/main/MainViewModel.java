@@ -43,6 +43,7 @@ import java.util.Objects;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.pm.PackageInfoCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -58,7 +59,6 @@ import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
@@ -250,7 +250,7 @@ public class MainViewModel extends AndroidViewModel {
                         item.label = applicationInfo.loadLabel(mPackageManager).toString();
                         item.sdk = applicationInfo.targetSdkVersion;
                         item.versionName = packageInfo.versionName;
-                        item.versionCode = PackageUtils.getVersionCode(packageInfo);
+                        item.versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
                         item.sharedUserId = packageInfo.sharedUserId;
                         item.sha = Utils.getIssuerAndAlg(packageInfo);
                         item.firstInstallTime = packageInfo.firstInstallTime;
@@ -523,7 +523,7 @@ public class MainViewModel extends AndroidViewModel {
                     continue;
                 }
                 item.versionName = packageInfo.versionName;
-                item.versionCode = PackageUtils.getVersionCode(packageInfo);
+                item.versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
                 item.metadata = BackupUtils.getBackupInfo(packageName);
                 item.flags = applicationInfo.flags;
                 item.uid = applicationInfo.uid;

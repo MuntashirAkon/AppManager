@@ -20,6 +20,8 @@ package io.github.muntashirakon.AppManager.apk.splitapk;
 import android.content.pm.PackageInfo;
 import android.os.Build;
 
+import androidx.core.content.pm.PackageInfoCompat;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +29,6 @@ import org.json.JSONObject;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class ApksMetadata {
     public static final String META_V1_FILE = "meta.sai_v1.json";
@@ -64,7 +65,7 @@ public class ApksMetadata {
         packageName = packageInfo.packageName;
         label = packageInfo.applicationInfo.loadLabel(AppManager.getContext().getPackageManager()).toString();
         versionName = packageInfo.versionName;
-        versionCode = PackageUtils.getVersionCode(packageInfo);
+        versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
         exportTimestamp = 946684800000L;  // Fake time
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
             minSdk = packageInfo.applicationInfo.minSdkVersion;

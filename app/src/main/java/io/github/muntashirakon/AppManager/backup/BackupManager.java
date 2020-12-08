@@ -43,6 +43,8 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.pm.PackageInfoCompat;
+
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerShell;
@@ -703,7 +705,7 @@ public class BackupManager {
                     // Signature verification failed but still here because signature check is disabled.
                     // The only way to restore is to reinstall the app
                     reinstallNeeded = true;
-                } else if (PackageUtils.getVersionCode(packageInfo) > metadata.versionCode) {
+                } else if (PackageInfoCompat.getLongVersionCode(packageInfo) > metadata.versionCode) {
                     // Installed package has higher version code. The only way to downgrade is to
                     // reinstall the package.
                     reinstallNeeded = true;
