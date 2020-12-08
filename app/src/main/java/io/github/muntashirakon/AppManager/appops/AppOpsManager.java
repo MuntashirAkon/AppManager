@@ -1180,7 +1180,7 @@ public class AppOpsManager {
 
 
     private static int getSystemAlertWindowDefault() {
-        if (Build.VERSION.SDK_INT >= 29) return MODE_IGNORED;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) return MODE_IGNORED;
         return MODE_DEFAULT;
     }
 

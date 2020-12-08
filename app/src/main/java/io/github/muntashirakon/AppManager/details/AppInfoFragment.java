@@ -893,7 +893,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // SDK
             final StringBuilder sdk = new StringBuilder();
             sdk.append(getString(R.string.sdk_max)).append(": ").append(mApplicationInfo.targetSdkVersion);
-            if (Build.VERSION.SDK_INT > 23)
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
                 sdk.append(", ").append(getString(R.string.sdk_min)).append(": ").append(mApplicationInfo.minSdkVersion);
             mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.sdk), sdk.toString()));
 

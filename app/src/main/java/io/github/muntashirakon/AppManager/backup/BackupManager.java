@@ -885,7 +885,7 @@ public class BackupManager {
                             || dataSource.contains(EXT_OBB))) continue;
                 } else isExternal = false;
                 // Fix problem accessing external directory in Android API < 23
-                if (Build.VERSION.SDK_INT < 23) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                     if (dataSource.contains("/storage/emulated/")) {
                         dataSource = dataSource.replace("/storage/emulated/", "/mnt/shell/emulated/");
                     }

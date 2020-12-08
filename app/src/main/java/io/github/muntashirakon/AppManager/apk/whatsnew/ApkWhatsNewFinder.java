@@ -178,7 +178,7 @@ public class ApkWhatsNewFinder {
         // SDK
         final StringBuilder newSdk = new StringBuilder(context.getString(R.string.sdk_max)).append(": ").append(newAppInfo.targetSdkVersion);
         final StringBuilder oldSdk = new StringBuilder(context.getString(R.string.sdk_max)).append(": ").append(oldAppInfo.targetSdkVersion);
-        if (Build.VERSION.SDK_INT > 23) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             newSdk.append(", ").append(context.getString(R.string.sdk_min)).append(": ").append(newAppInfo.minSdkVersion);
             oldSdk.append(", ").append(context.getString(R.string.sdk_min)).append(": ").append(oldAppInfo.minSdkVersion);
         }

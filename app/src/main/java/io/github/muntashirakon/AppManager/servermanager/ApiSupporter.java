@@ -159,7 +159,7 @@ public class ApiSupporter {
         callerResult.getReplyObj();
         if (callerResult.getThrowable() != null) {
             // Try new API
-            if (Build.VERSION.SDK_INT >= 29) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 args.putInt(UserHandler.ARG_ACTION, UserHandler.ACTION_GET_ALL_USER_INFO_NEW_API);
                 classCaller = new ClassCaller(this.packageName, UserHandler.class.getName(), args);
                 callerResult = localServer.exec(classCaller);

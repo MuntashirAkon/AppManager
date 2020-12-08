@@ -43,6 +43,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.core.text.util.LinkifyCompat;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
 
@@ -168,7 +169,7 @@ public class UIUtils {
         View view = activity.getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
         MaterialTextView textView = view.findViewById(R.id.content);
         textView.setText(text);
-        if (linkify) Linkify.addLinks(textView, Linkify.ALL);
+        if (linkify) LinkifyCompat.addLinks(textView, Linkify.ALL);
         return new MaterialAlertDialogBuilder(activity).setView(view);
     }
 

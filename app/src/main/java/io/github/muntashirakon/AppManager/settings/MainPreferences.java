@@ -39,6 +39,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.collection.ArrayMap;
+import androidx.core.app.ActivityCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -114,7 +115,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR, currentLang);
                         Lingver.getInstance().setLocale(activity, LangUtils.getLocaleByLanguage(activity));
-                        activity.recreate();
+                        ActivityCompat.recreate(activity);
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();

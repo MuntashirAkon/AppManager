@@ -55,9 +55,9 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 public final class RunnerUtils {
     public static final int USER_ALL = -1;
 
-    public static final String CMD_PM = Build.VERSION.SDK_INT >= 28 ? "cmd package" : "pm";
-    public static final String CMD_AM = Build.VERSION.SDK_INT >= 28 ? "cmd activity" : "am";
-    public static final String CMD_APP_OPS = Build.VERSION.SDK_INT >= 28 ? "cmd appops" : "appops";
+    public static final String CMD_PM = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? "cmd package" : "pm";
+    public static final String CMD_AM = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? "cmd activity" : "am";
+    public static final String CMD_APP_OPS = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? "cmd appops" : "appops";
 
     public static final String CMD_CLEAR_CACHE_PREFIX = "rm -rf";
     public static final String CMD_CLEAR_CACHE_DIR_SUFFIX = " %s/cache %s/code_cache";

@@ -271,7 +271,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         if ((item.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0) version = "~" + version;
         holder.version.setText(version);
         // Set version color to dark cyan if the app is inactive
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             UsageStatsManager mUsageStats;
             mUsageStats = mActivity.getSystemService(UsageStatsManager.class);
             if (mUsageStats != null && mUsageStats.isAppInactive(item.packageName))
