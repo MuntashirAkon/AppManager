@@ -577,7 +577,7 @@ public final class PackageUtils {
             if (result.isVerifiedUsingV3Scheme()) sigSchemes.add("v3");
             if (result.isVerifiedUsingV4Scheme()) sigSchemes.add("v4");
             builder.append("\n").append(getPrimaryText(ctx, ctx.getResources()
-                    .getQuantityString(R.plurals.signature_schemes, sigSchemes.size()) + ": "));
+                    .getQuantityString(R.plurals.signature_schemes_pl, sigSchemes.size()) + ": "));
             builder.append(TextUtils.joinSpannable(", ", sigSchemes));
         } else {
             builder.append(getColoredText(getTitleText(ctx, "\u2718 " + ctx.getString(R.string.not_verified)), colorRed));

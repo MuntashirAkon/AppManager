@@ -503,7 +503,7 @@
         <item quantity="one">%1$d signature missing</item>
         <item quantity="other">%1$d signatures missing</item>
     </plurals>
-    <plurals name="signature_schemes">
+    <plurals name="signature_schemes_pl">
         <item quantity="one">Signature scheme</item>
         <item quantity="other">Signature schemes</item>
     </plurals>
