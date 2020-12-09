@@ -527,4 +527,8 @@
     <string name="failed_to_get_data_usage_information">Kunne ikke hente databruksinfo</string>
     <string name="manifest_viewer">Manifest-viser</string>
     <string name="rules_not_applied">Regler ikke tillagt</string>
+    <string name="not_verified">Ikke bekreftet</string>
+    <string name="verified">Bekreftet</string>
+    <string name="compression_method">Kompresjonsmetode: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"compression_method\" example=\"GZip\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="pref_compression_method">Kompresjonsmetode</string>
 </resources>
