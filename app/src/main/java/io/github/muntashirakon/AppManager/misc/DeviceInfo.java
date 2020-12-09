@@ -25,8 +25,9 @@ import android.os.Build;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
+import androidx.core.content.pm.PackageInfoCompat;
+
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -75,7 +76,7 @@ public class DeviceInfo {
             packageInfo = null;
         }
         if (packageInfo != null) {
-            versionCode = PackageUtils.getVersionCode(packageInfo);
+            versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
             versionName = packageInfo.versionName;
         } else {
             versionCode = -1;

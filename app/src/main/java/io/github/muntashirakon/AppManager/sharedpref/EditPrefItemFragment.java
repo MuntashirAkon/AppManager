@@ -19,7 +19,6 @@ package io.github.muntashirakon.AppManager.sharedpref;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -122,7 +121,7 @@ public class EditPrefItemFragment extends DialogFragment {
         PrefItem prefItem = args.getParcelable(ARG_PREF_ITEM);
         @Mode int mode = args.getInt(ARG_MODE);
 
-        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(activity);
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.dialog_edit_pref_item, null);

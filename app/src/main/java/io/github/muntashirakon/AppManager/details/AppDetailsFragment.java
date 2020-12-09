@@ -64,6 +64,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -832,7 +833,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         startActivity(intent);
                     } catch (Exception e) {
                         if (getActivity() != null)
-                            getActivity().recreate();
+                            ActivityCompat.recreate(getActivity());
                         Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
                     }
                 });
@@ -1283,7 +1284,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             // Flags
             holder.textView2.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.flags), getString(Utils.getFeatureFlags(featureInfo.flags))
-                            + (Build.VERSION.SDK_INT >= 24 && featureInfo.version != 0 ? " | minV%:" + featureInfo.version : "")));
+                            + (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && featureInfo.version != 0 ? " | minV%:" + featureInfo.version : "")));
             // GLES ver
             holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.gles_ver), (mainModel.isbFi() && !featureInfo.name.equals("OpenGL ES") ? "_"

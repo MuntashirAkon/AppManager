@@ -22,27 +22,25 @@
 
 package io.github.muntashirakon.AppManager.details;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageItemInfo;
-import android.content.pm.ShortcutInfo;
-import android.content.pm.ShortcutManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.util.Objects;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.pm.ShortcutInfoCompat;
+import androidx.core.content.pm.ShortcutManagerCompat;
+import androidx.core.graphics.drawable.IconCompat;
+
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 
@@ -76,7 +74,7 @@ public class LauncherIconCreator {
             }
         }
         if (activityIconResourceName == null) Log.d("Launcher", "Empty resource");
-        if (Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             doCreateShortcut(context, activityName, activityIcon, activityIntent);
         } else {
             doCreateShortcut(context, activityName, activityIntent, activityIconResourceName);
@@ -103,7 +101,7 @@ public class LauncherIconCreator {
             }
         }
         if (activityIconResourceName == null) Log.d("Launcher", "Empty resource");
-        if (Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             doCreateShortcut(context, activityName, activityIcon, activityIntent);
         } else {
             doCreateShortcut(context, activityName, activityIntent, activityIconResourceName);
@@ -156,22 +154,19 @@ public class LauncherIconCreator {
         context.sendBroadcast(shortcutIntent);
     }
 
-    @TargetApi(26)
     private static void doCreateShortcut(@NonNull Context context, String appName, Drawable draw, Intent intent) {
-        ShortcutManager shortcutManager = Objects.requireNonNull(context.getSystemService(ShortcutManager.class));
-
-        if (shortcutManager.isRequestPinShortcutSupported()) {
+        if (ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
             Bitmap bitmap = getBitmapFromDrawable(draw);
             intent.setAction(Intent.ACTION_CREATE_SHORTCUT);
 
-            ShortcutInfo shortcutInfo = new ShortcutInfo.Builder(context, appName)
+            ShortcutInfoCompat shortcutInfo = new ShortcutInfoCompat.Builder(context, appName)
                     .setShortLabel(appName)
                     .setLongLabel(appName)
-                    .setIcon(Icon.createWithBitmap(bitmap))
+                    .setIcon(IconCompat.createWithBitmap(bitmap))
                     .setIntent(intent)
                     .build();
 
-            shortcutManager.requestPinShortcut(shortcutInfo, null);
+            ShortcutManagerCompat.requestPinShortcut(context, shortcutInfo, null);
         } else {
             new MaterialAlertDialogBuilder(context)
                     .setTitle(context.getString(R.string.error_creating_shortcut))

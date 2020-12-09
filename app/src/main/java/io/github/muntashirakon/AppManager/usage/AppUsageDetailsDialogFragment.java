@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.usage;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -56,9 +55,8 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         FragmentActivity activity = requireActivity();
         AppUsageStatsManager.PackageUS packageUS = requireArguments().getParcelable(ARG_PACKAGE_US);
-        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(activity);
         if (packageUS == null || inflater == null) return super.onCreateDialog(savedInstanceState);
-        @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.dialog_app_usage_details, null);
         ListView listView = view.findViewById(android.R.id.list);
         listView.setDividerHeight(0);

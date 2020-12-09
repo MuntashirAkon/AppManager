@@ -44,6 +44,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.pm.PackageInfoCompat;
 import androidx.fragment.app.FragmentManager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -161,8 +162,8 @@ public class PackageInstallerActivity extends BaseActivity {
                     }
                 } else {
                     // App is installed
-                    long installedVersionCode = PackageUtils.getVersionCode(installedPackageInfo);
-                    long thisVersionCode = PackageUtils.getVersionCode(packageInfo);
+                    long installedVersionCode = PackageInfoCompat.getLongVersionCode(installedPackageInfo);
+                    long thisVersionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
                     isSignatureDifferent = PackageUtils.isSignatureDifferent(packageInfo, installedPackageInfo);
                     if (installedVersionCode < thisVersionCode) {
                         // Needs update
@@ -209,7 +210,7 @@ public class PackageInstallerActivity extends BaseActivity {
 
 //    @NonNull
 //    private String getVersionInfoWithTrackers() {
-//        long newVersionCode = PackageUtils.getVersionCode(packageInfo);
+//        long newVersionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
 //        String newVersionName = packageInfo.versionName;
 //        int trackers = ComponentUtils.getTrackerComponentsForPackageInfo(packageInfo).size();
 //        StringBuilder sb = new StringBuilder(getString(R.string.version_name_with_code, newVersionName, newVersionCode));

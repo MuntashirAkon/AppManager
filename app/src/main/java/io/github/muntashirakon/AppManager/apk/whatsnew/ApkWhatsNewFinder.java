@@ -36,6 +36,8 @@ import java.util.Set;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.core.content.pm.PackageInfoCompat;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
@@ -98,8 +100,8 @@ public class ApkWhatsNewFinder {
         Change[][] changes = new Change[INFO_COUNT][];
         String[] componentInfo = context.getResources().getStringArray(R.array.whats_new_titles);
         // Version info
-        long newVersionCode = PackageUtils.getVersionCode(newPkgInfo);
-        long oldVersionCode = PackageUtils.getVersionCode(oldPkgInfo);
+        long newVersionCode = PackageInfoCompat.getLongVersionCode(newPkgInfo);
+        long oldVersionCode = PackageInfoCompat.getLongVersionCode(oldPkgInfo);
         if (newVersionCode != oldVersionCode) {
             String newVersionInfo = newPkgInfo.versionName + " (" + newVersionCode + ')';
             String oldVersionInfo = oldPkgInfo.versionName + " (" + oldVersionCode + ')';
@@ -176,7 +178,7 @@ public class ApkWhatsNewFinder {
         // SDK
         final StringBuilder newSdk = new StringBuilder(context.getString(R.string.sdk_max)).append(": ").append(newAppInfo.targetSdkVersion);
         final StringBuilder oldSdk = new StringBuilder(context.getString(R.string.sdk_max)).append(": ").append(oldAppInfo.targetSdkVersion);
-        if (Build.VERSION.SDK_INT > 23) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             newSdk.append(", ").append(context.getString(R.string.sdk_min)).append(": ").append(newAppInfo.minSdkVersion);
             oldSdk.append(", ").append(context.getString(R.string.sdk_min)).append(": ").append(oldAppInfo.minSdkVersion);
         }

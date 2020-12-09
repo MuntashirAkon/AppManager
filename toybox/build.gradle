@@ -1,17 +1,7 @@
-apply plugin: "com.android.library"
-
-android {
-    compileSdkVersion 30
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 30
-    }
-}
+apply from: "$gradle.ext.appManagerRoot/common.gradle"
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    def libsuVersion = '3.0.2'
-    implementation "com.github.topjohnwu.libsu:core:${libsuVersion}"
+    implementation "com.github.topjohnwu.libsu:core:${libsu}"
 }
 
 task toybox {

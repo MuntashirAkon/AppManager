@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.pm.PackageInfoCompat;
+
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
@@ -233,7 +235,7 @@ public final class MetadataManager {
         metadata.label = applicationInfo.loadLabel(pm).toString();
         metadata.packageName = packageInfo.packageName;
         metadata.versionName = packageInfo.versionName;
-        metadata.versionCode = PackageUtils.getVersionCode(packageInfo);
+        metadata.versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
         metadata.apkName = new File(applicationInfo.sourceDir).getName();
         if (requestedFlags.backupData()) {
             // FIXME(10/7/20): External data directory is not respecting userHandle

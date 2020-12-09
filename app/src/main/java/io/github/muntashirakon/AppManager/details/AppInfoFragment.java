@@ -83,6 +83,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.content.pm.PackageInfoCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -410,7 +411,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         runOnUiThread(() -> iconView.setImageDrawable(appIcon));
 
         // Set App Version
-        runOnUiThread(() -> versionView.setText(getString(R.string.version_name_with_code, mPackageInfo.versionName, PackageUtils.getVersionCode(mPackageInfo))));
+        runOnUiThread(() -> versionView.setText(getString(R.string.version_name_with_code, mPackageInfo.versionName, PackageInfoCompat.getLongVersionCode(mPackageInfo))));
 
         // Tag cloud //
         HashMap<String, RulesStorageManager.Type> trackerComponents;
@@ -624,8 +625,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setOnClickListener(v -> install());
             } else {
                 // App is installed
-                long installedVersionCode = PackageUtils.getVersionCode(mInstalledPackageInfo);
-                long thisVersionCode = PackageUtils.getVersionCode(mPackageInfo);
+                long installedVersionCode = PackageInfoCompat.getLongVersionCode(mInstalledPackageInfo);
+                long thisVersionCode = PackageInfoCompat.getLongVersionCode(mPackageInfo);
                 if (installedVersionCode < thisVersionCode) {  // FIXME: Check for signature
                     // Needs update
                     addToHorizontalLayout(R.string.whats_new, R.drawable.ic_info_outline_black_24dp)
@@ -880,7 +881,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (isExternalApk && mInstalledPackageInfo != null) {
                 ListItem listItem = ListItem.getSelectableRegularItem(getString(R.string.installed_version),
                         getString(R.string.version_name_with_code, mInstalledPackageInfo.versionName,
-                                PackageUtils.getVersionCode(mInstalledPackageInfo)), v -> {
+                                PackageInfoCompat.getLongVersionCode(mInstalledPackageInfo)), v -> {
                             Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
                             appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, mPackageName);
                             mActivity.startActivity(appDetailsIntent);
@@ -892,7 +893,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // SDK
             final StringBuilder sdk = new StringBuilder();
             sdk.append(getString(R.string.sdk_max)).append(": ").append(mApplicationInfo.targetSdkVersion);
-            if (Build.VERSION.SDK_INT > 23)
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M)
                 sdk.append(", ").append(getString(R.string.sdk_min)).append(": ").append(mApplicationInfo.minSdkVersion);
             mListItems.add(ListItem.getSelectableRegularItem(getString(R.string.sdk), sdk.toString()));
 

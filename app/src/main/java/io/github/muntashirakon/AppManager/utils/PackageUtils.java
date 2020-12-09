@@ -320,11 +320,6 @@ public final class PackageUtils {
         return 0;
     }
 
-    public static long getVersionCode(PackageInfo packageInfo) {
-        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? packageInfo.getLongVersionCode()
-                : packageInfo.versionCode);
-    }
-
     @NonNull
     public static String getSourceDir(@NonNull ApplicationInfo applicationInfo) {
         String sourceDir = new File(applicationInfo.publicSourceDir).getParent(); // or applicationInfo.sourceDir

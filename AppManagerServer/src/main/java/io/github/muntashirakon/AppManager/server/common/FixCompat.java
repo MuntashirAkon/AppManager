@@ -600,7 +600,7 @@ public final class FixCompat {
 
 
     public static int[] sOpToSwitch() {
-        if (Build.VERSION.SDK_INT >= 28) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             return _sOpToSwitch;
         } else {
             if (ref_sOpToSwitch == null) {
@@ -611,7 +611,7 @@ public final class FixCompat {
     }
 
     public static String[] sOpNames() {
-        if (Build.VERSION.SDK_INT >= 28) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             return _sOpNames;
         } else {
             if (ref_sOpNames == null) {
@@ -622,7 +622,7 @@ public final class FixCompat {
     }
 
     public static String[] sOpPerms() {
-        if (Build.VERSION.SDK_INT >= 28) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             return _sOpPerms;
         } else {
             if (ref_sOpPerms == null) {
