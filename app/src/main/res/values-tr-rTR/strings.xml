@@ -729,4 +729,8 @@
         <item quantity="one">%d uyarıyla doğrulandı</item>
         <item quantity="other">%d uyarıyla doğrulandı</item>
     </plurals>
+    <plurals name="signature_schemes_pl">
+        <item quantity="one">İmza şeması</item>
+        <item quantity="other">İmza şemaları</item>
+    </plurals>
 </resources>
