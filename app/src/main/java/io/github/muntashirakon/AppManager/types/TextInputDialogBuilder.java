@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.types;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.text.Editable;
 import android.view.View;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
@@ -46,7 +47,7 @@ public class TextInputDialogBuilder {
     private final MaterialAlertDialogBuilder builder;
 
     public interface OnClickListener {
-        void onClick(DialogInterface dialog, int which, @Nullable CharSequence inputText, boolean isChecked);
+        void onClick(DialogInterface dialog, int which, @Nullable Editable inputText, boolean isChecked);
     }
 
     @SuppressLint("InflateParams")
