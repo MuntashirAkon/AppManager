@@ -587,7 +587,7 @@
         <item quantity="many">Не удалось включить %s приложений</item>
         <item quantity="other">Не удалось включить %s приложений</item>
     </plurals>
-    <string name="routine_ops">Обычные операции</string>
+    <string name="routine_ops">Повторяющиеся операции</string>
     <string name="no_profiles">Нет профилей</string>
     <string name="presets">Предустановки</string>
     <string name="open_pgp_provider">Поставщик OpenPGP</string>
@@ -764,4 +764,29 @@
     <string name="current_mode">Текущий режим: %s</string>
     <string name="adb_over_tcp">ADB через TCP</string>
     <string name="pref_mode_of_operations">Режим работы</string>
+    <string name="allow_routine_ops_msg">Разрешить использовать профиль в повторяющихся операциях</string>
+    <string name="allow_routine_ops">Разрешить повторяющиеся операции</string>
+    <string name="splits">Сплит</string>
+    <string name="source_stamp_verified">SourceStamp подтвержден.</string>
+    <string name="verified">Подтверждённый</string>
+    <string name="not_verified">Не подтверждено</string>
+    <string name="pref_signature_schemes_msg">Для большей совместимости следует выбирать схемы как минимум v1 и v2. Схема v4 требует v2 или v3.</string>
+    <string name="v4_scheme">схема v4 (начиная с Android 11)</string>
+    <string name="v3_scheme">Схема v3 (начиная с Android 9)</string>
+    <string name="v2_scheme">схема v2 (начиная с Android 7.0)</string>
+    <string name="v1_scheme">схема v1 (начиная с Android 1.0)</string>
+    <string name="pref_apk_signing_msg">Установка схемы подписания, пользовательские ключи подписи и т.д.</string>
+    <string name="apk_signing">Подписание APK</string>
+    <string name="signing_keys">Ключи подписи</string>
+    <string name="pref_sign_apk_msg">Подписать APK-файлы перед их установкой.</string>
+    <string name="pref_sign_apk">Подписать APK</string>
+    <string name="install_location_prefer_external">Предпочтительно внешняя память</string>
+    <string name="install_location_internal_only">Только внутренняя память</string>
+    <string name="profile_state_msg">Настраиваемое состояние включения/выключения для этого профиля</string>
+    <plurals name="verified_with_warning">
+        <item quantity="one">Проверено с %d предупреждением</item>
+        <item quantity="few">Проверено с %d предупреждениями</item>
+        <item quantity="many">Проверено с %d предупреждениями</item>
+        <item quantity="other">Проверено с %d предупреждениями</item>
+    </plurals>
 </resources>
