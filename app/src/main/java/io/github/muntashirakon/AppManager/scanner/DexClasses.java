@@ -91,6 +91,6 @@ public class DexClasses implements Closeable {
 
     @Override
     public void close() throws IOException {
-        dexFile.close();
+        if (dexFile != null) dexFile.close();
     }
 }
