@@ -53,7 +53,7 @@
     <string name="shared_user_id">Общий идентификатор пользователя</string>
     <string name="sort_by_sha">Подпись</string>
     <string name="signatures">Подписи</string>
-    <string name="no_signatures">Нет подписей</string>
+    <string name="no_signatures">Нет действительных подписей</string>
     <string name="configurations">Конфигурации</string>
     <string name="no_configurations">Нет конфигураций</string>
     <string name="input_features">Функции ввода</string>
@@ -791,4 +791,10 @@
     </plurals>
     <string name="input_permissions">Разрешения на ввод</string>
     <string name="input_permissions_description">Разрешения на ввод с пробелами, например (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) и т.п.</string>
+    <plurals name="signature_schemes_pl">
+        <item quantity="one">Схема подписания</item>
+        <item quantity="few">Схема подписаний</item>
+        <item quantity="many">Схема подписаний</item>
+        <item quantity="other">Схема подписаний</item>
+    </plurals>
 </resources>
