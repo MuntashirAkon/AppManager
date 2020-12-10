@@ -224,6 +224,8 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         final TextView emptyView = view.findViewById(android.R.id.empty);
         emptyView.setText(getNotFoundString(neededProperty));
         recyclerView.setEmptyView(emptyView);
+        mAdapter = new AppDetailsRecyclerAdapter();
+        recyclerView.setAdapter(mAdapter);
         mProgressIndicator = view.findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         showProgressIndicator(true);
@@ -241,8 +243,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 mPackageName = mainModel.getPackageName();
             }
             isExternalApk = mainModel.getIsExternalApk();
-            mAdapter = new AppDetailsRecyclerAdapter();
-            runOnUiThread(() -> recyclerView.setAdapter(mAdapter));
         }).start();
         mainModel.get(neededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (mAdapter != null && mainModel.isPackageExist())
