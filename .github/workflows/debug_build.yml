@@ -20,9 +20,6 @@ on:
       - 'yarn.lock'
       - 'package.json'
 
-env:
-  APP_NAME: AppManager-DEBUG#${{ github.run_number }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -45,6 +42,10 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew assembleDebug
+    - name: Get app version
+      run: echo "APP_VERSION=v$(cat ./app/build.gradle | grep -m1 versionName | awk -F \" '{print $2}')" >> $GITHUB_ENV
+    - name: Get app name
+      run: echo "APP_NAME=AppManager_${{ env.APP_VERSION }}-DEBUG#${{ github.run_number }}" >> $GITHUB_ENV
     - name: Rename the APK file
       run: mv ./app/build/outputs/apk/debug/app-universal-debug.apk ./${{ env.APP_NAME }}.apk
     - name: Store generated APK file
@@ -60,6 +61,6 @@ jobs:
         document: ./${{ env.APP_NAME }}.apk
         format: html
         message: |
-          <strong>AM Debug Run#${{ github.run_number }}</strong>
+          <strong>AM Debug ${{ env.APP_VERSION }} Run#${{ github.run_number }}</strong>
 
           <em>${{ github.event.head_commit.message }}</em>
