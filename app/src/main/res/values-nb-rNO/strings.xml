@@ -529,6 +529,6 @@
     <string name="rules_not_applied">Regler ikke tillagt</string>
     <string name="not_verified">Ikke bekreftet</string>
     <string name="verified">Bekreftet</string>
-    <string name="compression_method">Kompresjonsmetode: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"compression_method\" example=\"GZip\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="compression_method">Kompresjonsmetode: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
     <string name="pref_compression_method">Kompresjonsmetode</string>
 </resources>

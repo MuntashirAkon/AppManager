@@ -131,10 +131,10 @@
     <string name="tracker_classes">Классы трекера</string>
     <string name="all_classes">Все классы</string>
     <plurals name="main_list_date_days">
-        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt;&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; день</item>
-        <item quantity="few">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt;&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; дня</item>
-        <item quantity="many">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt;&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; дней</item>
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt;&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; дней</item>
+        <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g><xliff:g id="day_no" example="5">%2$d</xliff:g> день</item>
+        <item quantity="few"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g><xliff:g id="day_no" example="5">%2$d</xliff:g> дня</item>
+        <item quantity="many"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g><xliff:g id="day_no" example="5">%2$d</xliff:g> дней</item>
+        <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g><xliff:g id="day_no" example="5">%2$d</xliff:g> дней</item>
     </plurals>
     <string name="no_shared_libs">Нет общих библиотек</string>
     <string name="no_tracker_class">Нет классов трекера</string>
@@ -657,7 +657,7 @@
     <string name="signature_mismatch_for_system_apps">Не удалось установить приложение, поскольку системное приложение с другой подписью имеет такое же имя пакета.</string>
     <string name="app_data_will_be_lost">Существующие данные будут потеряны.</string>
     <string name="only_install">Только установить</string>
-    <string name="install_without_data_loss">Если у вас отключена проверка подписи, вы можете использовать параметр &lt;b&gt;«Только установка»&lt;/b&gt;, чтобы установить приложение без потери данных.</string>
+    <string name="install_without_data_loss">Если у вас отключена проверка подписи, вы можете использовать параметр <b>«Только установка»</b>, чтобы установить приложение без потери данных.</string>
     <string name="sort_by_backup">Сначала резервные копии</string>
     <string name="onboard">Доступные</string>
     <string name="packages">пакеты</string>
