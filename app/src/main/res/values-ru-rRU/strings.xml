@@ -789,7 +789,7 @@
         <item quantity="many">Проверено с %d предупреждениями</item>
         <item quantity="other">Проверено с %d предупреждениями</item>
     </plurals>
-    <string name="input_permissions">Разрешения на ввод</string>
+    <string name="input_permissions">Ввод разрешений</string>
     <string name="input_permissions_description">Разрешения на ввод с пробелами, например (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) и т.п.</string>
     <plurals name="signature_schemes_pl">
         <item quantity="one">Схема подписания</item>
