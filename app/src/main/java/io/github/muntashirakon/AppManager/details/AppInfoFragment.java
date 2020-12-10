@@ -400,6 +400,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
      */
     @WorkerThread
     private void setHeaders() {
+        if (isDetached()) return;
         // Set Application Name, aka Label
         runOnUiThread(() -> labelView.setText(mPackageLabel));
 
