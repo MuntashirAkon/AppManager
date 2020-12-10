@@ -39,8 +39,10 @@ import java.util.List;
 import java.util.TreeSet;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
 
 public class IconPickerDialogFragment extends DialogFragment {
@@ -50,9 +52,9 @@ public class IconPickerDialogFragment extends DialogFragment {
     private IconListingAdapter adapter;
 
     @Override
-    public void onAttach(@NonNull Context activity) {
-        super.onAttach(activity);
-        adapter = new IconListingAdapter(activity);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        adapter = new IconListingAdapter(requireActivity());
         new Thread(() -> {
             adapter.resolve();
             requireActivity().runOnUiThread(() -> adapter.notifyDataSetChanged());
@@ -92,11 +94,11 @@ public class IconPickerDialogFragment extends DialogFragment {
     static class IconListingAdapter extends BaseAdapter {
         private String[] icons;
         private final PackageManager pm;
-        private final Context context;
+        private final FragmentActivity activity;
 
-        public IconListingAdapter(@NonNull Context context) {
-            this.context = context;
-            this.pm = context.getPackageManager();
+        public IconListingAdapter(@NonNull FragmentActivity activity) {
+            this.activity = activity;
+            this.pm = activity.getPackageManager();
         }
 
         private Drawable getIcon(String icon_resource_string, PackageManager pm) {
@@ -105,7 +107,7 @@ public class IconPickerDialogFragment extends DialogFragment {
                 String type = icon_resource_string.substring(icon_resource_string.indexOf(':') + 1, icon_resource_string.indexOf('/'));
                 String name = icon_resource_string.substring(icon_resource_string.indexOf('/') + 1);
                 Resources res = pm.getResourcesForApplication(pack);
-                return ResourcesCompat.getDrawable(res, res.getIdentifier(name, type, pack), context.getTheme());
+                return ResourcesCompat.getDrawable(res, res.getIdentifier(name, type, pack), activity.getTheme());
             } catch (Exception e) {
                 return pm.getDefaultActivityIcon();
             }
@@ -145,12 +147,27 @@ public class IconPickerDialogFragment extends DialogFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView view = new ImageView(this.context);
-            int size = context.getResources().getDimensionPixelSize(R.dimen.icon_size);
-            view.setLayoutParams(new AbsListView.LayoutParams(size, size));
+            ImageView view;
+            if (convertView == null) {
+                view = (ImageView) (convertView = new AppCompatImageView(this.activity));
+                int size = activity.getResources().getDimensionPixelSize(R.dimen.icon_size);
+                convertView.setLayoutParams(new AbsListView.LayoutParams(size, size));
+            } else {
+                view = (ImageView) convertView;
+                Thread iconLoader = (Thread) view.getTag();
+                if (iconLoader != null && iconLoader.isAlive()) {
+                    iconLoader.interrupt();
+                }
+                view.setImageDrawable(null);
+            }
             String icon_resource_string = this.icons[position];
-            view.setImageDrawable(getIcon(icon_resource_string, this.pm));
-            return view;
+            Thread iconLoader = new Thread(() -> {
+                Drawable icon = getIcon(icon_resource_string, this.pm);
+                activity.runOnUiThread(() -> view.setImageDrawable(icon));
+            });
+            convertView.setTag(iconLoader);
+            iconLoader.start();
+            return convertView;
         }
     }
 }
