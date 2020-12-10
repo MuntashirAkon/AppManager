@@ -131,10 +131,10 @@
     <string name="tracker_classes">Классы трекера</string>
     <string name="all_classes">Все классы</string>
     <plurals name="main_list_date_days">
-        <item quantity="one">%s %d день</item>
-        <item quantity="few">%s %d дня</item>
-        <item quantity="many">%s %d дней</item>
-        <item quantity="other">%s %d дней</item>
+        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt;&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; день</item>
+        <item quantity="few">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt;&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; дня</item>
+        <item quantity="many">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt;&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; дней</item>
+        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt;&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; дней</item>
     </plurals>
     <string name="no_shared_libs">Нет общих библиотек</string>
     <string name="no_tracker_class">Нет классов трекера</string>
@@ -143,22 +143,22 @@
     <string name="usage_today">Сегодня</string>
     <string name="usage_7_days">Последние 7 дней</string>
     <plurals name="usage_months">
-        <item quantity="one">%d мес.</item>
-        <item quantity="few">%d мес.</item>
-        <item quantity="many">%d мес.</item>
-        <item quantity="other">%d мес.</item>
+        <item quantity="one">%1$d мес.</item>
+        <item quantity="few">%1$d мес.</item>
+        <item quantity="many">%1$d мес.</item>
+        <item quantity="other">%1$d мес.</item>
     </plurals>
     <plurals name="usage_days">
-        <item quantity="one">%d день</item>
-        <item quantity="few">%d дня</item>
-        <item quantity="many">%d дней</item>
-        <item quantity="other">%d дней</item>
+        <item quantity="one">%1$d день</item>
+        <item quantity="few">%1$d дня</item>
+        <item quantity="many">%1$d дней</item>
+        <item quantity="other">%1$d дней</item>
     </plurals>
     <plurals name="usage_hours">
-        <item quantity="one">%d ч.</item>
-        <item quantity="few">%d ч.</item>
-        <item quantity="many">%d ч.</item>
-        <item quantity="other">%d ч.</item>
+        <item quantity="one">%1$d ч.</item>
+        <item quantity="few">%1$d ч.</item>
+        <item quantity="many">%1$d ч.</item>
+        <item quantity="other">%1$d ч.</item>
     </plurals>
     <string name="usage_min">%1$d мин</string>
     <string name="usage_less_than_a_minute">Меньше минуты</string>
@@ -245,10 +245,10 @@
     <string name="external_data_dir">Внешний каталог данных</string>
     <string name="external_multiple_data_dir">Внешний каталог данных <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <plurals name="no_of_times_opened">
-        <item quantity="one">%d раз</item>
-        <item quantity="few">%d раза</item>
-        <item quantity="many">%d раз</item>
-        <item quantity="other">%d раз</item>
+        <item quantity="one">%1$d раз</item>
+        <item quantity="few">%1$d раза</item>
+        <item quantity="many">%1$d раз</item>
+        <item quantity="other">%1$d раз</item>
     </plurals>
     <string name="sort_by_last_used">Последний запуск</string>
     <string name="sort_by_screen_time">Время использования</string>
@@ -261,10 +261,10 @@
     <string name="the_import_was_successful">Импортировано</string>
     <string name="the_export_was_successful">Экспортировано</string>
     <plurals name="failed_to_import_files">
-        <item quantity="one">Ошибка импортирования %d файла.</item>
-        <item quantity="few">Ошибка импортирования %d файлов.</item>
-        <item quantity="many">Ошибка импортирования %d файлов.</item>
-        <item quantity="other">Ошибка импортирования %d файлов.</item>
+        <item quantity="one">Ошибка импортирования %1$d файла.</item>
+        <item quantity="few">Ошибка импортирования %1$d файлов.</item>
+        <item quantity="many">Ошибка импортирования %1$d файлов.</item>
+        <item quantity="other">Ошибка импортирования %1$d файлов.</item>
     </plurals>
     <string name="apk_updater">APK Updater</string>
     <string name="store">Магазин</string>
@@ -281,35 +281,35 @@
     <string name="export_blocking_rules">Экспортировать правила блокировки</string>
     <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> выбрано</string>
     <plurals name="alert_failed_to_clear_data">
-        <item quantity="one">Не удалось очистить данные %d приложения</item>
-        <item quantity="few">Не удалось очистить данные %d приложений</item>
-        <item quantity="many">Не удалось очистить данные %d приложений</item>
-        <item quantity="other">Не удалось очистить данные %d приложений</item>
+        <item quantity="one">Не удалось очистить данные %1$d приложения</item>
+        <item quantity="few">Не удалось очистить данные %1$d приложений</item>
+        <item quantity="many">Не удалось очистить данные %1$d приложений</item>
+        <item quantity="other">Не удалось очистить данные %1$d приложений</item>
     </plurals>
     <plurals name="alert_failed_to_disable">
-        <item quantity="one">Не удалось отключить %d приложение</item>
-        <item quantity="few">Не удалось отключить %d приложения</item>
-        <item quantity="many">Не удалось отключить %d приложений</item>
-        <item quantity="other">Не удалось отключить %d приложений</item>
+        <item quantity="one">Не удалось отключить %1$d приложение</item>
+        <item quantity="few">Не удалось отключить %1$d приложения</item>
+        <item quantity="many">Не удалось отключить %1$d приложений</item>
+        <item quantity="other">Не удалось отключить %1$d приложений</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
-        <item quantity="one">Не удалось удалить %d приложение</item>
-        <item quantity="few">Не удалось удалить %d приложения</item>
-        <item quantity="many">Не удалось удалить %d приложений</item>
-        <item quantity="other">Не удалось удалить %d приложений</item>
+        <item quantity="one">Не удалось удалить %1$d приложение</item>
+        <item quantity="few">Не удалось удалить %1$d приложения</item>
+        <item quantity="many">Не удалось удалить %1$d приложений</item>
+        <item quantity="other">Не удалось удалить %1$d приложений</item>
     </plurals>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">Не удалось отключить работу в фоне для %d приложения</item>
-        <item quantity="few">Не удалось отключить работу в фоне для %d приложений</item>
-        <item quantity="many">Не удалось отключить работу в фоне для %d приложений</item>
-        <item quantity="other">Не удалось отключить работу в фоне для %d приложений</item>
+        <item quantity="one">Не удалось отключить работу в фоне для%1$d приложения</item>
+        <item quantity="few">Не удалось отключить работу в фоне для %1$d приложений</item>
+        <item quantity="many">Не удалось отключить работу в фоне для %1$d приложений</item>
+        <item quantity="other">Не удалось отключить работу в фоне для %1$d приложений</item>
     </plurals>
     <string name="the_operation_was_successful">Готово</string>
     <plurals name="alert_failed_to_force_stop">
-        <item quantity="one">Не удалось принудительно остановить %d приложение</item>
-        <item quantity="few">Не удалось принудительно остановить %d приложения</item>
-        <item quantity="many">Не удалось принудительно остановить %d приложений</item>
-        <item quantity="other">Не удалось принудительно остановить %d приложений</item>
+        <item quantity="one">Не удалось принудительно остановить %1$d приложение</item>
+        <item quantity="few">Не удалось принудительно остановить %1$d приложения</item>
+        <item quantity="many">Не удалось принудительно остановить %1$d приложений</item>
+        <item quantity="other">Не удалось принудительно остановить %1$d приложений</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">Переключение закрытия системных приложений</string>
     <string name="app_op_cannot_be_disabled">Эта операция приложения не может быть отключена, возможно, операция приложения только для чтения зависела от операции другого приложения.</string>
@@ -360,10 +360,10 @@
     <string name="failed_to_disable_trackers">Не удалось отключить трекеры</string>
     <string name="trackers_disabled_successfully">Трекеры теперь отключены</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">Не удалось отключить трекеры %d приложения</item>
-        <item quantity="few">Не удалось отключить трекеры %d приложений</item>
-        <item quantity="many">Не удалось отключить трекеры %d приложений</item>
-        <item quantity="other">Не удалось отключить трекеры %d приложений</item>
+        <item quantity="one">Не удалось отключить трекеры %1$d приложения</item>
+        <item quantity="few">Не удалось отключить трекеры %1$d приложений</item>
+        <item quantity="many">Не удалось отключить трекеры %1$d приложений</item>
+        <item quantity="other">Не удалось отключить трекеры %1$d приложений</item>
     </plurals>
     <string name="failed_to_grant_permission">Не удалось предоставить разрешение</string>
     <string name="failed_to_revoke_permission">Не удалось отозвать разрешение</string>
@@ -377,10 +377,10 @@
     <string name="external_apk_no_app_op">Внешний APK не работает с приложением</string>
     <string name="manifest_viewer">Просмотр манифеста</string>
     <plurals name="no_of_trackers">
-        <item quantity="one">%d трекер</item>
-        <item quantity="few">%d трекера</item>
-        <item quantity="many">%d трекеров</item>
-        <item quantity="other">%d трекеров</item>
+        <item quantity="one">%1$d трекер</item>
+        <item quantity="few">%1$d трекера</item>
+        <item quantity="many">%1$d трекеров</item>
+        <item quantity="other">%1$d трекеров</item>
     </plurals>
     <string name="install">Установить</string>
     <string name="update">Обновить</string>
@@ -412,10 +412,10 @@
     <string name="only_works_in_root_or_adb_mode">Доступно только в режиме root или ADB</string>
     <string name="failed_to_parse_some_numbers">Не удалось разобрать некоторые числа</string>
     <plurals name="no_of_splits">
-        <item quantity="one">%d часть</item>
-        <item quantity="few">%d части</item>
-        <item quantity="many">%d частей</item>
-        <item quantity="other">%d частей</item>
+        <item quantity="one">%1$d часть</item>
+        <item quantity="few">%1$d части</item>
+        <item quantity="many">%1$d частей</item>
+        <item quantity="other">%1$d частей</item>
     </plurals>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">Не удалось получить информацию о пакете, возможно, это разделенный файл APK</string>
     <string name="termux">Termux</string>
@@ -441,46 +441,46 @@
     <string name="delete_backup">Удалить резервную копию</string>
     <string name="backup_options">Параметры резервного копирования</string>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="one">Не удалось создать резервную копию %d файла APK</item>
-        <item quantity="few">Не удалось создать резервную копию %d файлов APK</item>
-        <item quantity="many">Не удалось создать резервную копию %d файлов APK</item>
-        <item quantity="other">Не удалось создать резервную копию %d файлов APK</item>
+        <item quantity="one">Не удалось создать резервную копию %1$d файла APK</item>
+        <item quantity="few">Не удалось создать резервную копию %1$d файлов APK</item>
+        <item quantity="many">Не удалось создать резервную копию %1$d файлов APK</item>
+        <item quantity="other">Не удалось создать резервную копию %1$d файлов APK</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
-        <item quantity="one">Не удалось создать резервную копию %d приложения</item>
-        <item quantity="few">Не удалось создать резервную копию %d приложений</item>
-        <item quantity="many">Не удалось создать резервную копию %d приложений</item>
-        <item quantity="other">Не удалось создать резервную копию %d приложений</item>
+        <item quantity="one">Не удалось создать резервную копию %1$d приложения</item>
+        <item quantity="few">Не удалось создать резервную копию %1$d приложений</item>
+        <item quantity="many">Не удалось создать резервную копию %1$d приложений</item>
+        <item quantity="other">Не удалось создать резервную копию %1$d приложений</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
-        <item quantity="one">Не удалось восстановить резервную копию %d приложения</item>
-        <item quantity="few">Не удалось восстановить резервную копию %d приложений</item>
-        <item quantity="many">Не удалось восстановить резервную копию %d приложений</item>
-        <item quantity="other">Не удалось восстановить резервную копию %d приложений</item>
+        <item quantity="one">Не удалось восстановить резервную копию %1$d приложения</item>
+        <item quantity="few">Не удалось восстановить резервную копию %1$d приложений</item>
+        <item quantity="many">Не удалось восстановить резервную копию %1$d приложений</item>
+        <item quantity="other">Не удалось восстановить резервную копию %1$d приложений</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="one">Не удалось удалить %d резервную копию</item>
-        <item quantity="few">Не удалось удалить %d резервные копии</item>
-        <item quantity="many">Не удалось удалить %d резервных копий</item>
-        <item quantity="other">Не удалось удалить %d резервных копий</item>
+        <item quantity="one">Не удалось удалить %1$d резервную копию</item>
+        <item quantity="few">Не удалось удалить %1$d резервные копии</item>
+        <item quantity="many">Не удалось удалить %1$d резервных копий</item>
+        <item quantity="other">Не удалось удалить %1$d резервных копий</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="one">Не удалось разблокировать трекеры %d приложения</item>
-        <item quantity="few">Не удалось разблокировать трекеры %d приложений</item>
-        <item quantity="many">Не удалось разблокировать трекеры %d приложений</item>
-        <item quantity="other">Не удалось разблокировать трекеры %d приложений</item>
+        <item quantity="one">Не удалось разблокировать трекеры %1$d приложения</item>
+        <item quantity="few">Не удалось разблокировать трекеры %1$d приложений</item>
+        <item quantity="many">Не удалось разблокировать трекеры %1$d приложений</item>
+        <item quantity="other">Не удалось разблокировать трекеры %1$d приложений</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
-        <item quantity="one">Не удалось заблокировать компоненты %d приложения</item>
-        <item quantity="few">Не удалось заблокировать компоненты %d приложений</item>
-        <item quantity="many">Не удалось заблокировать компоненты %d приложений</item>
-        <item quantity="other">Не удалось заблокировать компоненты %d приложений</item>
+        <item quantity="one">Не удалось заблокировать компоненты %1$d приложения</item>
+        <item quantity="few">Не удалось заблокировать компоненты %1$d приложений</item>
+        <item quantity="many">Не удалось заблокировать компоненты %1$d приложений</item>
+        <item quantity="other">Не удалось заблокировать компоненты %1$d приложений</item>
     </plurals>
     <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="one">Не удалось запретить операции приложения для %d приложения</item>
-        <item quantity="few">Не удалось запретить операции приложения для %d приложений</item>
-        <item quantity="many">Не удалось запретить операции приложения для %d приложений</item>
-        <item quantity="other">Не удалось запретить операции приложения для %d приложений</item>
+        <item quantity="one">Не удалось запретить операции приложения для %1$d приложения</item>
+        <item quantity="few">Не удалось запретить операции приложения для %1$d приложений</item>
+        <item quantity="many">Не удалось запретить операции приложения для %1$d приложений</item>
+        <item quantity="other">Не удалось запретить операции приложения для %1$d приложений</item>
     </plurals>
     <string name="apply_to_system_apps">Применить к системным приложениям</string>
     <string name="apply_to_system_apps_question">Применить и к системным приложениям\? Если не уверены, выберите \"Нет\".</string>
@@ -582,10 +582,10 @@
     <string name="split_feature_name">Функции: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <string name="base_apk">Базовый APK</string>
     <plurals name="alert_failed_to_enable">
-        <item quantity="one">Не удалось включить %s приложение</item>
-        <item quantity="few">Не удалось включить %s приложения</item>
-        <item quantity="many">Не удалось включить %s приложений</item>
-        <item quantity="other">Не удалось включить %s приложений</item>
+        <item quantity="one">Не удалось включить%1$d приложение</item>
+        <item quantity="few">Не удалось включить %1$d приложения</item>
+        <item quantity="many">Не удалось включить %1$d приложений</item>
+        <item quantity="other">Не удалось включить %1$d приложений</item>
     </plurals>
     <string name="routine_ops">Повторяющиеся операции</string>
     <string name="no_profiles">Нет профилей</string>
@@ -726,10 +726,10 @@
     <string name="state_waking">Пробуждение</string>
     <string name="state_wake_kill">Отключение пробуждения</string>
     <string name="state_parked">Оформлено</string>
-    <string name="state_device_io">Ввод/вывод устройства</string>
+    <string name="state_device_io">Устройство ввода/вывода</string>
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
-    <string name="un_apkm">UnApkm</string>
+    <string name="un_apkm">Распаковать Apkm</string>
     <string name="keystore">Хранилище ключей</string>
     <string name="ecc">Эллиптическая криптография (ЕСС)</string>
     <string name="none">Никакой</string>
@@ -789,4 +789,6 @@
         <item quantity="many">Проверено с %d предупреждениями</item>
         <item quantity="other">Проверено с %d предупреждениями</item>
     </plurals>
+    <string name="input_permissions">Разрешения на ввод</string>
+    <string name="input_permissions_description">Разрешения на ввод с пробелами, например (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) и т.п.</string>
 </resources>
