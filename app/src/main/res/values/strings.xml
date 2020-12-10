@@ -768,4 +768,9 @@
     <string name="not_verified">Not verified</string>
     <string name="source_stamp_verified">SourceStamp verified.</string>
     <string name="splits">Splits</string>
+    <string name="input_keystore_pass">Input KeyStore password</string>
+    <string name="input_keystore_pass_description">Insert App Manager KeyStore password. If you\'re seeing this for the first time, please use a password generator to generate a password and save it in a secure place before inserting it here.</string>
+    <string name="input_keystore_pass_msg">Tap here to provide KeyStore password</string>
+    <string name="input_keystore_alias_pass">Password for alias <b>%1$s</b></string>
+    <string name="input_keystore_alias_pass_description">Insert password for the alias <b>%1$s</b>. You can leave this empty if the password is the same as the KeyStore password.</string>
 </resources>

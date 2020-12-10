@@ -42,11 +42,14 @@ import org.xml.sax.InputSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -59,6 +62,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import aosp.libcore.util.HexEncoding;
@@ -511,6 +515,32 @@ public class Utils {
             l >>= 8;
         }
         return result;
+    }
+
+    @CheckResult
+    @NonNull
+    public static byte[] charsToBytes(@NonNull char[] chars) {
+        final ByteBuffer byteBuffer = StandardCharsets.UTF_8.encode(CharBuffer.wrap(chars));
+        byte[] bytes = Arrays.copyOf(byteBuffer.array(), byteBuffer.limit());
+        clearBytes(byteBuffer.array());
+        return bytes;
+    }
+
+    @CheckResult
+    @NonNull
+    public static char[] bytesToChars(@NonNull byte[] bytes) {
+        final CharBuffer charBuffer = StandardCharsets.UTF_8.decode(ByteBuffer.wrap(bytes));
+        char[] chars = Arrays.copyOf(charBuffer.array(), charBuffer.limit());
+        clearChars(charBuffer.array());
+        return chars;
+    }
+
+    public static void clearBytes(@NonNull byte[] bytes) {
+        Arrays.fill(bytes, (byte) 0);
+    }
+
+    public static void clearChars(@NonNull char[] chars) {
+        Arrays.fill(chars, '\u0000');
     }
 
     @NonNull

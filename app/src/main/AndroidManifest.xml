@@ -272,6 +272,13 @@
             android:taskAffinity=""
             android:theme="@style/AppTheme.TransparentBackground" />
         <activity
+            android:name=".crypto.ks.KeyStoreActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme.TransparentBackground" />
+        <activity
             android:name=".profiles.ProfilesActivity"
             android:label="@string/profiles"
             android:exported="true" />
