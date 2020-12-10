@@ -127,7 +127,7 @@ public final class ApkUtils {
         try (ZipInputStream zipInputStream = new ZipInputStream(apkInputStream)) {
             ZipEntry zipEntry;
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-                if (!zipEntry.getName().equals(MANIFEST_FILE)) {
+                if (!IOUtils.getLastPathComponent(zipEntry.getName()).equals(MANIFEST_FILE)) {
                     zipInputStream.closeEntry();
                     continue;
                 }
