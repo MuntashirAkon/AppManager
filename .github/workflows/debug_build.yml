@@ -54,6 +54,6 @@ jobs:
         token: ${{ secrets.TELEGRAM_TOKEN }}
         format: markdown
         message: |
-          **AM Debug Run#${{ GITHUB_RUN_NUMBER }}**
+          **AM Debug Run#${{ github.run_number }}**
           _${{ github.event.head_commit.message }}_
         document: ./app/build/outputs/apk/debug/app-universal-debug.apk
