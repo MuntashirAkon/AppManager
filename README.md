@@ -117,5 +117,12 @@ sudo pacman -S base-devel
     ./gradlew assembleDebug
     ```
 
+### Contributing
+You are welcome contribute to App Manager (also known as, AM)! This doesn't mean that you need coding skills. You can help AM by creating helpful issues, attending discussions, improving documentations and translations, adding unrecognised libraries or ad/tracking signatures, reviewing the source code as well as reporting security vulnerabilities. But if you are going to contribute to AM with your coding skills, please read the following:
+- If you're going to implement or work on any specific feature, please inform me before doing so. Due to the complex nature of the project, integrating a new feature could be challenging.
+- You're absolutely welcome to fix issues or mistakes but AM's code base changes a lot in almost every day. Therefore, if you are requested to make changes in your pull request but fail to address them within 2 (two) days, your pull request may be closed depending on the importance of the request. This instruction will be removed once AM's code base becomes stable.
+
+**Note:** Repositories located in sites other than GitHub are currently considered mirrors and PR/MR submitted there will not be accepted. Instead, you can submit patches (as `.patch` files) via email attachment. My email address is muntashirakon [at] riseup [dot] net. But beware that such emails may be publicly accessible in future. 
+
 ### Credits and Libraries
 A list of credits and libraries are available in the **About** section of the app.
