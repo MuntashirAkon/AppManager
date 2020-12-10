@@ -32,6 +32,7 @@ import android.os.Build;
 import android.os.DeadObjectException;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.util.Pair;
 
 import com.android.apksig.ApkVerifier;
 import com.android.internal.util.TextUtils;
@@ -468,17 +469,11 @@ public final class PackageUtils {
                 .append(getPrimaryText(ctx, ctx.getString(R.string.serial_no) + ": "))
                 .append(Utils.bytesToHex(certificate.getSerialNumber().toByteArray())).append("\n");
         // Checksums
-        builder.append(getTitleText(ctx, ctx.getString(R.string.checksums))).append("\n")
-                .append(getPrimaryText(ctx, DigestUtils.MD5 + ": "))
-                .append(DigestUtils.getHexDigest(DigestUtils.MD5, certBytes)).append("\n")
-                .append(getPrimaryText(ctx, DigestUtils.SHA_1 + ": "))
-                .append(DigestUtils.getHexDigest(DigestUtils.SHA_1, certBytes)).append("\n")
-                .append(getPrimaryText(ctx, DigestUtils.SHA_256 + ": "))
-                .append(DigestUtils.getHexDigest(DigestUtils.SHA_256, certBytes)).append("\n")
-                .append(getPrimaryText(ctx, DigestUtils.SHA_384 + ": "))
-                .append(DigestUtils.getHexDigest(DigestUtils.SHA_384, certBytes)).append("\n")
-                .append(getPrimaryText(ctx, DigestUtils.SHA_512 + ": "))
-                .append(DigestUtils.getHexDigest(DigestUtils.SHA_512, certBytes)).append("\n");
+        builder.append(getTitleText(ctx, ctx.getString(R.string.checksums))).append("\n");
+        Pair<String, String>[] digests = DigestUtils.getDigests(certBytes);
+        for (Pair<String, String> digest : digests) {
+            builder.append(getPrimaryText(ctx, digest.first + ": ")).append(digest.second).append("\n");
+        }
         // Signature
         builder.append(getTitleText(ctx, ctx.getString(R.string.signature)))
                 .append("\n")

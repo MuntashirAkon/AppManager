@@ -33,6 +33,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -170,18 +171,12 @@ public class ScannerActivity extends BaseActivity {
                 new Thread(() -> {
                     try {
                         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+                        Pair<String, String>[] digests = DigestUtils.getDigests(apkFile);
                         SpannableStringBuilder sb = new SpannableStringBuilder(apkUri.toString()).append("\n");
-                        sb.append(getPrimaryText(this, getString(R.string.checksums))).append("\n")
-                                .append(getPrimaryText(this, DigestUtils.MD5 + ": "))
-                                .append(DigestUtils.getHexDigest(DigestUtils.MD5, apkFile)).append("\n")
-                                .append(getPrimaryText(this, DigestUtils.SHA_1 + ": "))
-                                .append(DigestUtils.getHexDigest(DigestUtils.SHA_1, apkFile)).append("\n")
-                                .append(getPrimaryText(this, DigestUtils.SHA_256 + ": "))
-                                .append(DigestUtils.getHexDigest(DigestUtils.SHA_256, apkFile)).append("\n")
-                                .append(getPrimaryText(this, DigestUtils.SHA_384 + ": "))
-                                .append(DigestUtils.getHexDigest(DigestUtils.SHA_384, apkFile)).append("\n")
-                                .append(getPrimaryText(this, DigestUtils.SHA_512 + ": "))
-                                .append(DigestUtils.getHexDigest(DigestUtils.SHA_512, apkFile));
+                        sb.append(getPrimaryText(this, getString(R.string.checksums)));
+                        for (Pair<String, String> digest : digests) {
+                            sb.append("\n").append(getPrimaryText(this, digest.first + ": ")).append(digest.second);
+                        }
                         runOnUiThread(() -> {
                             ((TextView) findViewById(R.id.apk_title)).setText(R.string.source_dir);
                             ((TextView) findViewById(R.id.apk_description)).setText(sb);
@@ -486,18 +481,11 @@ public class ScannerActivity extends BaseActivity {
                         .append(getPrimaryText(this, getString(R.string.algorithm) + ": "))
                         .append(cert.getSigAlgName()).append("\n");
                 // Checksums
-                builder.append(getPrimaryText(this, getString(R.string.checksums)))
-                        .append("\n")
-                        .append(getPrimaryText(this, DigestUtils.MD5 + ": "))
-                        .append(DigestUtils.getHexDigest(DigestUtils.MD5, certBytes)).append("\n")
-                        .append(getPrimaryText(this, DigestUtils.SHA_1 + ": "))
-                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_1, certBytes)).append("\n")
-                        .append(getPrimaryText(this, DigestUtils.SHA_256 + ": "))
-                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_256, certBytes)).append("\n")
-                        .append(getPrimaryText(this, DigestUtils.SHA_384 + ": "))
-                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_384, certBytes)).append("\n")
-                        .append(getPrimaryText(this, DigestUtils.SHA_512 + ": "))
-                        .append(DigestUtils.getHexDigest(DigestUtils.SHA_512, certBytes));
+                builder.append(getPrimaryText(this, getString(R.string.checksums)));
+                Pair<String, String>[] digests = DigestUtils.getDigests(certBytes);
+                for (Pair<String, String> digest : digests) {
+                    builder.append("\n").append(getPrimaryText(this, digest.first + ": ")).append(digest.second);
+                }
             }
         } catch (CertificateException ignored) {
         }

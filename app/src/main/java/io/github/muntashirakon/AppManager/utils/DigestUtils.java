@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.annotation.TargetApi;
+import android.util.Pair;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -112,5 +113,29 @@ public class DigestUtils {
             e.printStackTrace();
             return new byte[0];
         }
+    }
+
+    @NonNull
+    public static Pair<String, String>[] getDigests(File file) {
+        @Algorithm String[] algorithms = new String[]{DigestUtils.MD5, DigestUtils.SHA_1, DigestUtils.SHA_256,
+                DigestUtils.SHA_384, DigestUtils.SHA_512};
+        @SuppressWarnings("unchecked")
+        Pair<String, String>[] digests = new Pair[algorithms.length];
+        for (int i = 0; i < algorithms.length; ++i) {
+            digests[i] = new Pair<>(algorithms[i], getHexDigest(algorithms[i], file));
+        }
+        return digests;
+    }
+
+    @NonNull
+    public static Pair<String, String>[] getDigests(byte[] bytes) {
+        @Algorithm String[] algorithms = new String[]{DigestUtils.MD5, DigestUtils.SHA_1, DigestUtils.SHA_256,
+                DigestUtils.SHA_384, DigestUtils.SHA_512};
+        @SuppressWarnings("unchecked")
+        Pair<String, String>[] digests = new Pair[algorithms.length];
+        for (int i = 0; i < algorithms.length; ++i) {
+            digests[i] = new Pair<>(algorithms[i], getHexDigest(algorithms[i], bytes));
+        }
+        return digests;
     }
 }
