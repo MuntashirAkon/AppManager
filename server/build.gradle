@@ -19,6 +19,7 @@ apply from: "$gradle.ext.appManagerRoot/common.gradle"
 
 dependencies {
     compileOnly project(path: ':HiddenApi')
+    implementation project(path: ':libserver')
 }
 
 static def toPath(String s) {
@@ -37,7 +38,6 @@ String.metaClass.toPath = { -> toPath(delegate) }
 
 ext {
     debugClassDir = project.buildDir.absolutePath + '/intermediates/javac/debug/classes'.toPath()
-    commonJar = project.buildDir.absolutePath + '/am-common.jar'.toPath()
     amJar = project.buildDir.absolutePath + '/am.jar'.toPath()
     amOriginalJar = project.buildDir.absolutePath + '/am-orig.jar'.toPath()
 }
@@ -51,9 +51,6 @@ build.doLast {
     // Create am-orig.jar
     def pkgDir = ["io/github/muntashirakon/AppManager/server/"]
     createJarFile(amOriginalJar, pkgDir)
-    // Create am-common.jar, and copy to the main project
-    pkgDir = ["io/github/muntashirakon/AppManager/server/common/"]
-    createJarFile(commonJar, pkgDir)
     // Apply dex optimization
     jar2dex()
 }
@@ -148,22 +145,14 @@ def jar2dex() {
     println("dx binary file: ${dxFile}")
 
     def cmdArgs = ['--dex', "--output=$amJar", amOriginalJar]
-
-    def libsDir = file("${rootProject.projectDir.absolutePath}/app/libs")
     def assetsDir = file("${rootProject.projectDir.absolutePath}/app/src/main/assets")
     // Create directories if not exist
-    libsDir.mkdirs()
     assetsDir.mkdirs()
     // Run jar to dex conversion
     exec {
         workingDir = project.buildDir.absolutePath
         executable = dxFile
         args = cmdArgs
-    }
-    // Copy files
-    copy {
-        from commonJar
-        into libsDir
     }
     copy {
         from amJar

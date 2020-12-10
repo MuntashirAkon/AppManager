@@ -95,7 +95,9 @@ dependencies {
     implementation project(path: ':libOpenPGP')
     implementation project(path: ':sunJava')
     implementation project(path: ':toybox')
+    implementation project(path: ':libserver')
 
+    //noinspection GradleDependency
     implementation 'com.github.MuntashirAkon:apksig-android:178a05e4c9'
     implementation 'com.github.MuntashirAkon:lazysodium-android:4.3.0@aar'
 
