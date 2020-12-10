@@ -339,7 +339,7 @@
     <string name="trackers_disabled_successfully">Verfolger sind nun deaktiviert</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">Konnte Verfolger von %1$d Anwendung nicht deaktivieren</item>
-        <item quantity="other">Konnte Verfolger von %d Anwendungen nicht deaktivieren</item>
+        <item quantity="other">Konnte Verfolger von %1$d Anwendungen nicht deaktivieren</item>
     </plurals>
     <string name="failed_to_grant_permission">Erteilen der Berechtigung nicht möglich</string>
     <string name="failed_to_revoke_permission">Entziehen der Berechtigung nicht möglich</string>
@@ -456,7 +456,7 @@
     <string name="installer_error_aborted">Die Installation ist fehlgeschlagen, weil sie entweder abgebrochen oder die Sitzung unerwartet geschlossen wurde</string>
     <string name="installer_error_blocked_device">Gerät</string>
     <string name="installer_error_blocked">Installation ist von <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> blockiert</string>
-    <string name="installer_error_conflict">Die Anwendung konnte nicht installiert werden, weil das Paket verwendet wird.</string>
+    <string name="installer_error_conflict">Die Anwendung konnte nicht installiert werden, weil das Paket verwendet wird</string>
     <string name="installer_error_incompatible">Anwendung ist nicht mit diesem Gerät kompatibel</string>
     <string name="installer_error_bad_apks">Ungültige APK-Dateien ausgewählt</string>
     <string name="installer_error_storage">Nicht genügend Speicherplatz zur Installation verfügbar</string>
@@ -731,5 +731,14 @@
     <plurals name="verified_with_warning">
         <item quantity="one">Verifiziert mit %d Warnung</item>
         <item quantity="other">Verifiziert mit %d Warnungen</item>
+    </plurals>
+    <string name="input_keystore_alias_pass_description">Geben Sie das Passwort für den Alias &lt;b&gt;%1$s&lt;/b&gt; ein. Sie können dieses Feld leer lassen, wenn das Kennwort mit dem KeyStore-Kennwort übereinstimmt.</string>
+    <string name="input_keystore_alias_pass">Passwort für den Alias &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="input_keystore_pass_msg">Tippen Sie hier, um das KeyStore-Passwort einzugeben</string>
+    <string name="input_keystore_pass_description">Geben Sie das App Manager KeyStore-Kennwort ein. Wenn Sie dies zum ersten Mal sehen, verwenden Sie bitte einen Passwortgenerator, um ein Passwort zu generieren und es an einem sicheren Ort zu speichern, bevor Sie es hier einfügen.</string>
+    <string name="input_keystore_pass">KeyStore-Passwort eingeben</string>
+    <plurals name="signature_schemes_pl">
+        <item quantity="one">Signaturschema</item>
+        <item quantity="other">Signaturschemata</item>
     </plurals>
 </resources>
