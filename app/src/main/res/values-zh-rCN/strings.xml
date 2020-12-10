@@ -693,4 +693,7 @@
     <plurals name="verified_with_warning">
         <item quantity="other">已验证，但有 %d 个警告</item>
     </plurals>
+    <plurals name="signature_schemes_pl">
+        <item quantity="other">签名方案</item>
+    </plurals>
 </resources>
