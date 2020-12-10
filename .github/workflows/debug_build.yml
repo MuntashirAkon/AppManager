@@ -52,8 +52,9 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
+        document: ./app/build/outputs/apk/debug/app-universal-debug.apk
         format: markdown
         message: |
-          **AM Debug Run#${{ github.run_number }}**
-          _${{ github.event.head_commit.message }}_
-        document: ./app/build/outputs/apk/debug/app-universal-debug.apk
+          <strong>AM Debug Run#${{ github.run_number }}</strong>
+
+          <em>${{ github.event.head_commit.message }}</em>
