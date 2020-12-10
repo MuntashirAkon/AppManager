@@ -25,7 +25,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PermissionInfo;
 import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.os.Build;
@@ -374,24 +373,6 @@ public final class PackageUtils {
             }
         }
         return new File(defaultPath).getParent();
-    }
-
-    @SuppressWarnings("deprecation")
-    public static int getProtectionLevel(PermissionInfo info) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            return info.getProtectionFlags();
-        } else {
-            return info.protectionLevel;
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    public static int getBasePermissionType(PermissionInfo info) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            return info.getProtection();
-        } else {
-            return info.protectionLevel & PermissionInfo.PROTECTION_MASK_BASE;
-        }
     }
 
     @Nullable

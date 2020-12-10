@@ -65,6 +65,7 @@ import javax.xml.xpath.XPathFactory;
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.core.content.pm.PermissionInfoCompat;
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -352,8 +353,8 @@ public class Utils {
     // FIXME Add translation support
     @NonNull
     public static String getProtectionLevelString(PermissionInfo permissionInfo) {
-        int basePermissionType = PackageUtils.getBasePermissionType(permissionInfo);
-        int permissionFlags = PackageUtils.getProtectionLevel(permissionInfo);
+        int basePermissionType = PermissionInfoCompat.getProtection(permissionInfo);
+        int permissionFlags = PermissionInfoCompat.getProtectionFlags(permissionInfo);
         String protectionLevel = "????";
         switch (basePermissionType) {
             case PermissionInfo.PROTECTION_DANGEROUS:
@@ -365,12 +366,12 @@ public class Utils {
             case PermissionInfo.PROTECTION_SIGNATURE:
                 protectionLevel = "signature";
                 break;
+            case PermissionInfo.PROTECTION_SIGNATURE_OR_SYSTEM:
+            case PermissionInfo.PROTECTION_SIGNATURE | PermissionInfo.PROTECTION_FLAG_PRIVILEGED:
+                protectionLevel = "signatureOrPrivileged";
+                break;
         }
         if (Build.VERSION.SDK_INT >= 23) {
-            if (basePermissionType == (PermissionInfo.PROTECTION_SIGNATURE
-                    | PermissionInfo.PROTECTION_FLAG_PRIVILEGED)) {
-                protectionLevel = "signatureOrPrivileged";
-            }
             if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_PRIVILEGED) != 0)
                 protectionLevel += "|privileged";
             if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_PRE23) != 0)
@@ -394,9 +395,6 @@ public class Utils {
                     protectionLevel += "|instant";
             }
         } else {
-            if (basePermissionType == PermissionInfo.PROTECTION_SIGNATURE_OR_SYSTEM) {
-                protectionLevel = "signatureOrSystem";
-            }
             if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_SYSTEM) != 0) {
                 protectionLevel += "|system";
             }

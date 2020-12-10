@@ -45,6 +45,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.pm.PackageInfoCompat;
 
+import androidx.core.content.pm.PermissionInfoCompat;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerShell;
@@ -494,8 +495,8 @@ public class BackupManager {
                 for (int i = 0; i < permissions.length; ++i) {
                     try {
                         info = pm.getPermissionInfo(permissions[i], 0);
-                        basePermissionType = PackageUtils.getBasePermissionType(info);
-                        protectionLevels = PackageUtils.getProtectionLevel(info);
+                        basePermissionType = PermissionInfoCompat.getProtection(info);
+                        protectionLevels = PermissionInfoCompat.getProtectionFlags(info);
                         if (basePermissionType != PermissionInfo.PROTECTION_DANGEROUS
                                 && (protectionLevels & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) == 0) {
                             // Don't include permissions that are neither dangerous nor development

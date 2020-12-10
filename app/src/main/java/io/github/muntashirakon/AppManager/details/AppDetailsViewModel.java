@@ -58,6 +58,7 @@ import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+import androidx.core.content.pm.PermissionInfoCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -79,7 +80,6 @@ import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
@@ -456,7 +456,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 permName = AppOpsManager.opToPermission(opEntry.getOp());
                 if (permName != null) {
                     PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(permName, PackageManager.GET_META_DATA);
-                    int basePermissionType = PackageUtils.getBasePermissionType(permissionInfo);
+                    int basePermissionType = PermissionInfoCompat.getProtection(permissionInfo);
                     if (basePermissionType == PermissionInfo.PROTECTION_DANGEROUS) {
                         // Set mode
                         try {
@@ -998,8 +998,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionInfo);
                 appDetailsItem.name = packageInfo.requestedPermissions[i];
                 appDetailsItem.flags = packageInfo.requestedPermissionsFlags[i];
-                int basePermissionType = PackageUtils.getBasePermissionType(permissionInfo);
-                appDetailsItem.isDangerous = basePermissionType == PermissionInfo.PROTECTION_DANGEROUS;
+                appDetailsItem.isDangerous = PermissionInfoCompat.getProtection(permissionInfo) == PermissionInfo.PROTECTION_DANGEROUS;
                 appDetailsItem.isGranted = (appDetailsItem.flags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
                 appDetailsItem.appOp = AppOpsManager.permissionToOpCode(appDetailsItem.name);
                 if (appDetailsItem.appOp != AppOpsManager.OP_NONE) {
