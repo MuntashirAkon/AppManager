@@ -53,7 +53,7 @@ jobs:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
         document: ./app/build/outputs/apk/debug/app-universal-debug.apk
-        format: markdown
+        format: html
         message: |
           <strong>AM Debug Run#${{ github.run_number }}</strong>
 
