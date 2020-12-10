@@ -116,4 +116,4 @@ dependencies {
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 }
 
-preBuild.dependsOn ":AppManagerServer:build"
+preBuild.dependsOn ":server:build"
