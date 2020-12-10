@@ -21,6 +21,7 @@ import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,7 +41,7 @@ class AppOpsService implements IAppOpsService {
             "(?:; rejectTime=(?:\\s*0|([+\\-])(\\d+d)?(\\d{1,2}h)?(\\d{1,2}m)?(\\d{1,2}s)?(\\d{1,3}m))s ago)?" +
             "( \\(running\\))?(?:; duration=(?:\\s*0|([+\\-])(\\d+d)?(\\d{1,2}h)?(\\d{1,2}m)?(\\d{1,2}s)?(\\d{1,3}m))s)?");
 
-    private static final long[] TIME  = new long[]{
+    private static final long[] TIME = new long[]{
             86400000,  // DAY
             3600000,  // HOUR
             60000,  // MINUTE
@@ -62,23 +63,32 @@ class AppOpsService implements IAppOpsService {
 
     /**
      * Get the mode of operation of the given package or uid.
-     *
+     * <p>
      * NOTE: This is different from the original implementation where both uid and package name have
      * to be given. Here you can specify only one of them.
-     * @param op One of the OP_*
-     * @param uid User ID for the package(s)
+     *
+     * @param op          One of the OP_*
+     * @param uid         User ID for the package(s)
      * @param packageName Name of the package
-     * @param userHandle User handle
+     * @param userHandle  User handle
      * @return One of the MODE_*
      * @throws Exception Exception is thrown if neither uid nor package name is supplied or it is
-     * an invalid operation name or mode name or there's an error parsing the output
+     *                   an invalid operation name or mode name or there's an error parsing the output
      */
     @Override
     public int checkOperation(int op, int uid, String packageName, int userHandle)
             throws Exception {
         OpsResult opsResult = appOpsManager.checkOperation(op, packageName, userHandle);
         if (opsResult == null) throw new Exception("OpsResult is null");
-        if (opsResult.getException() != null) throw new Exception(opsResult.getException());
+        Throwable throwable = opsResult.getException();
+        if (throwable != null) {
+            if (throwable instanceof ClassCastException) {
+                // Server needs a reboot
+                LocalServer.restart();
+                return checkOperation(op, uid, packageName, userHandle);
+            }
+            throw new Exception(throwable);
+        }
         return opsResult.getMode();
     }
 
@@ -90,28 +100,32 @@ class AppOpsService implements IAppOpsService {
             AppOpsManager.PackageOps packageOps = getOpsForPackageCmd(uid, packageName, null).get(0);
             List<AppOpsManager.OpEntry> entries = packageOps.getOps();
             // Iterate in backward direction to get only the last value of the duplicate app ops
-            for (int i = entries.size()-1; i>=0; --i) {
+            for (int i = entries.size() - 1; i >= 0; --i) {
                 if (entries.get(i).getOp() == op) return entries.get(i).getMode();
             }
             packageOps = getOpsForPackageCmd(uid, packageName, new int[]{op}).get(0);
             entries = packageOps.getOps();
             if (entries.size() == 1) return entries.get(0).getMode();
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
         throw new Exception("Failed to check operation " + opStr);
     }
 
     @Override
     public List<PackageOps> getOpsForPackage(int uid, String packageName, int[] ops, int userHandle)
             throws Exception {
-        List<PackageOps> packageOpsList = new ArrayList<>();
+        List<PackageOps> packageOpsList;
         OpsResult opsResult = appOpsManager.getOpsForPackage(uid, packageName, ops, userHandle);
         if (opsResult != null) {
-            if (opsResult.getException() == null) {
+            Throwable throwable = opsResult.getException();
+            if (throwable == null) {
                 packageOpsList = opsResult.getList();
-            } else {
-                throw new Exception(opsResult.getException());
-            }
-        }
+            } else if (throwable instanceof ClassCastException) {
+                // Server needs a reboot
+                LocalServer.restart();
+                return getOpsForPackage(uid, packageName, ops, userHandle);
+            } else throw new Exception(throwable);
+        } else return Collections.emptyList();
         return packageOpsList;
     }
 
@@ -123,9 +137,10 @@ class AppOpsService implements IAppOpsService {
         if (ops == null) {
             runCommand(String.format("appops get %s", packageName));
             lines = output;
-            if (!isSuccessful) throw new Exception("Failed to get operations for package " + packageName);
+            if (!isSuccessful)
+                throw new Exception("Failed to get operations for package " + packageName);
         } else {
-            for(int op: ops) {
+            for (int op : ops) {
                 runCommand(String.format("appops get %s %d", packageName, op));
                 if (output.size() == 1) {  // Trivial parser
                     lines.addAll(output);
@@ -138,17 +153,18 @@ class AppOpsService implements IAppOpsService {
                 } else if (output.size() > 2) {
                     // In some cases, due to some bugs, output is more than two lines.
                     // If that's the case, add only the last line.
-                    lines.add(output.get(output.size()-1));
+                    lines.add(output.get(output.size() - 1));
                 }
 //                if (!isSuccessful) throw new Exception("Failed to get operations for package " + packageName);
             }
         }
         List<AppOpsManager.OpEntry> opEntries = new ArrayList<>();
         // Iterate in backward direction to get only the last value of the duplicate app ops
-        for(int i = lines.size()-1; i >= 0; --i) {
+        for (int i = lines.size() - 1; i >= 0; --i) {
             try {
                 opEntries.add(parseOpName(lines.get(i)));
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
         AppOpsManager.PackageOps packageOps = new AppOpsManager.PackageOps(packageName, uid, opEntries);
         packageOpsList.add(packageOps);
@@ -158,7 +174,15 @@ class AppOpsService implements IAppOpsService {
     @Override
     public void setMode(int op, int uid, String packageName, int mode, int userHandle) throws Exception {
         OpsResult opsResult = appOpsManager.setOpsMode(packageName, op, mode, userHandle);
-        if (opsResult.getException() != null) throw new Exception(opsResult.getException());
+        Throwable throwable = opsResult.getException();
+        if (throwable != null) {
+            if (throwable instanceof ClassCastException) {
+                // Server needs a reboot
+                LocalServer.restart();
+                setMode(op, uid, packageName, mode, userHandle);
+            }
+            throw new Exception(throwable);
+        }
     }
 
     public void setModeCmd(int op, int uid, String packageName, int mode) throws Exception {
@@ -168,7 +192,9 @@ class AppOpsService implements IAppOpsService {
         else if (packageName != null)
             runCommand(String.format("appops set %s %d %s", packageName, op, modeStr));
         else throw new Exception("No uid or package name provided");
-        if (isSuccessful) { return; }
+        if (isSuccessful) {
+            return;
+        }
         throw new Exception("Failed to check operation " + op);
     }
 
@@ -187,11 +213,13 @@ class AppOpsService implements IAppOpsService {
             runCommand(String.format("appops reset %s", reqPackageName));
         else
             runCommand(String.format("appops reset --user %d %s", reqUserId, reqPackageName));
-        if (!isSuccessful) throw new Exception("Error resetting all modes for package " + reqPackageName);
+        if (!isSuccessful)
+            throw new Exception("Error resetting all modes for package " + reqPackageName);
     }
 
     /**
      * Run the given command and save results to {@link #isSuccessful} and {@link #output}
+     *
      * @param command The command to run
      */
     private void runCommand(String command) {
@@ -209,10 +237,12 @@ class AppOpsService implements IAppOpsService {
     static private int strOpToOp(String op) throws Exception {
         try {
             return AppOpsManager.strOpToOp(op);
-        } catch (IllegalArgumentException ignored) {}
+        } catch (IllegalArgumentException ignored) {
+        }
         try {
             return Integer.parseInt(op);
-        } catch (NumberFormatException ignored) {}
+        } catch (NumberFormatException ignored) {
+        }
         try {
             return AppOpsManager.strDebugOpToOp(op);
         } catch (IllegalArgumentException e) {
@@ -233,7 +263,8 @@ class AppOpsService implements IAppOpsService {
                 try {
                     int leftBracket = opStr.indexOf('(');
                     opStr = opStr.substring(leftBracket + 1, opStr.length() - 1);
-                } catch (Exception ignore) {}
+                } catch (Exception ignore) {
+                }
             }
             final String finalOpStr = opStr; // Save the op str before modifying it
             if (opStr.startsWith("OP_"))
@@ -245,7 +276,8 @@ class AppOpsService implements IAppOpsService {
             int op = AppOpsManager.OP_NONE;
             try {
                 op = strOpToOp(opStr);
-            } catch (Exception ignore) {}
+            } catch (Exception ignore) {
+            }
             boolean running = matcher.group(15) != null;
             long accessTime = getTime(matcher, 3);
             long rejectTime = getTime(matcher, 9);
@@ -260,8 +292,8 @@ class AppOpsService implements IAppOpsService {
         String sign = matcher.group(start);
         if (sign == null) return 0;
         String tmp;
-        for(int i = 0; i<5; ++i) {
-            tmp = removeLastChar(matcher.group(start+i+1));
+        for (int i = 0; i < 5; ++i) {
+            tmp = removeLastChar(matcher.group(start + i + 1));
             if (!TextUtils.isEmpty(tmp)) {
                 time += Long.parseLong(tmp) * TIME[i];
             }
