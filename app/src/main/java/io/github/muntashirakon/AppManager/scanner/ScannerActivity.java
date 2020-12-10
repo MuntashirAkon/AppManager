@@ -77,7 +77,7 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class ScannerActivity extends BaseActivity {
     private static final String APP_DEX = "app_dex";
-    private static final String SIG_TO_IGNORE = "^(android(|x)|com\\.android|com\\.google\\.android|java(|x)|j\\$\\.(util|time)|\\w(\\.\\w)+)\\..*$";
+    private static final String SIG_TO_IGNORE = "^(android(|x)|com\\.android|com\\.google\\.android|java(|x)|j\\$\\.(util|time)|\\w\\d?(\\.\\w\\d?)+)\\..*$";
 
     /* package */ static List<String> classListAll;
     /* package */ static List<String> trackerClassList = new ArrayList<>();
