@@ -47,3 +47,13 @@ jobs:
       with:
         name: AppManager
         path: ./app/build/outputs/apk/debug/app-universal-debug.apk
+    - name: Upload APK to telegram
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        format: markdown
+        message: |
+          **AM Debug Run#${{ GITHUB_RUN_NUMBER }}**
+          _${{ github.event.head_commit.message }}_
+        document: ./app/build/outputs/apk/debug/app-universal-debug.apk
