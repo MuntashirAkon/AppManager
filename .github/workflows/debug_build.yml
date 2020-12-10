@@ -20,11 +20,12 @@ on:
       - 'yarn.lock'
       - 'package.json'
 
+env:
+  APP_NAME: AppManager-DEBUG#${{ github.run_number }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      APP_NAME: AppManager-DEBUG#${{ github.run_number }}
     steps:
     - name: Clone the repository
       uses: actions/checkout@v2
@@ -49,7 +50,7 @@ jobs:
     - name: Store generated APK file
       uses: actions/upload-artifact@v1
       with:
-        name: ${{ APP_NAME }}
+        name: ${{ env.APP_NAME }}
         path: ./${{ APP_NAME }}.apk
     - name: Upload APK to telegram
       uses: appleboy/telegram-action@master
