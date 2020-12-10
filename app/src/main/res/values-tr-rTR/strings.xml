@@ -733,4 +733,9 @@
         <item quantity="one">İmza şeması</item>
         <item quantity="other">İmza şemaları</item>
     </plurals>
+    <string name="input_keystore_alias_pass_description">&lt;b&gt;%1$s&lt;/b&gt; takma adı için parolayı girin. Parola, KeyStore parolasıyla aynıysa bunu boş bırakabilirsiniz.</string>
+    <string name="input_keystore_alias_pass">&lt;b&gt;%1$s&lt;/b&gt; takma adı için parola</string>
+    <string name="input_keystore_pass_msg">KeyStore parolasını sağlamak için buraya dokunun</string>
+    <string name="input_keystore_pass_description">App Manager KeyStore parolasını girin. Bunu ilk kez görüyorsanız, lütfen bir parola oluşturucu kullanarak bir parola oluşturun ve buraya girmeden önce güvenli bir yere kaydedin.</string>
+    <string name="input_keystore_pass">KeyStore parolasını gir</string>
 </resources>
