@@ -735,4 +735,9 @@
         <item quantity="one">Esquema de assinatura</item>
         <item quantity="other">Esquemas de assinatura</item>
     </plurals>
+    <string name="input_keystore_pass_description">Insira a senha do KeyStore do App Manager. Se você estiver vendo isso pela primeira vez, use um gerador de senhas para gerar uma senha e salve ela em um lugar seguro antes de inseri-la aqui.</string>
+    <string name="input_keystore_alias_pass_description">Insirir senha para o alias &lt;b&gt;%1$s&lt;/b&gt;. Você pode deixar isso vazio se a senha for a mesma da senha do KeyStore.</string>
+    <string name="input_keystore_alias_pass">Senha para alias &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="input_keystore_pass_msg">Clique aqui para fornecer a senha do KeyStore</string>
+    <string name="input_keystore_pass">Inserir senha do KeyStore</string>
 </resources>
