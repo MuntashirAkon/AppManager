@@ -696,4 +696,9 @@
     <plurals name="signature_schemes_pl">
         <item quantity="other">签名方案</item>
     </plurals>
+    <string name="input_keystore_alias_pass_description">插入别名 &lt;b&gt;%1$s&lt;/b&gt; 的密码。如果该密码与密钥存储库密码相同，可以留空。</string>
+    <string name="input_keystore_alias_pass">别名 &lt;b&gt;%1$s&lt;/b&gt; 的密码</string>
+    <string name="input_keystore_pass_msg">点击此处提供密钥库密码</string>
+    <string name="input_keystore_pass_description">插入App Manager密钥库密码。如果您是第一次看到这个，请使用密码生成器生成一个密码，并在插入之前将其保存在一个安全的地方。</string>
+    <string name="input_keystore_pass">输入密钥库密码</string>
 </resources>
