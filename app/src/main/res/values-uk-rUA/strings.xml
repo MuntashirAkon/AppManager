@@ -108,10 +108,10 @@
     <string name="failed_to_uninstall_updates">Не вдалося видалити оновлення <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="update_uninstalled_successfully">Оновлення <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> було видалено.</string>
     <string name="uninstall_updates">Видалити оновлення</string>
-    <string name="allow_open_pgp_operation">Клацніть, щоб дозволити AM використовувати OpenPGP</string>
+    <string name="allow_open_pgp_operation">Натисніть, щоб дозволити AM використовувати OpenPGP</string>
     <string name="confirm_installation">Підтвердьте встановлення</string>
     <string name="compression_method">Метод стиснення: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
-    <string name="pref_backup_flags_msg">Додавання попередньо встановлених параметрів резервного копіювання позбавляє від необхідності вибору пунктів під час кожного резервного копіювання / відновлення.</string>
+    <string name="pref_backup_flags_msg">Додавання попередньо встановлених параметрів резервного копіювання позбавляє від необхідності вибору пунктів під час кожного резервного копіювання/відновлення.</string>
     <string name="pref_compression_method">Метод стиснення</string>
     <string name="rules">Правила</string>
     <string name="other">Інше</string>
@@ -123,7 +123,7 @@
     <string name="filter_apps">Додатки</string>
     <string name="no_apps">Немає додатків</string>
     <string name="apps">Додатки</string>
-    <string name="routine_ops">Звичайні операції</string>
+    <string name="routine_ops">Регулярні операції</string>
     <string name="apply_now">Застосувати зараз…</string>
     <string name="keystore">Сховище ключів</string>
     <string name="no_profiles">Немає профілів</string>
@@ -758,8 +758,8 @@
     <string name="pref_signature_schemes_msg">Для більшої сумісності слід вибрати принаймні схеми v1 та v2. Схема v4 вимагає v2 або v3.</string>
     <string name="v4_scheme">Схема v4 (з Android 11)</string>
     <string name="v3_scheme">Схема v3 (з Android 9)</string>
-    <string name="v2_scheme">v2 схема (з Android 7.0)</string>
-    <string name="v1_scheme">v1 схема (з Android 1.0)</string>
+    <string name="v2_scheme">Схема v2 (з Android 7.0)</string>
+    <string name="v1_scheme">Схема v1 (з Android 1.0)</string>
     <string name="pref_apk_signing_msg">Налаштування схеми підписування, кастомний ключ підписування тощо.</string>
     <string name="apk_signing">Підписування APK</string>
     <string name="signing_keys">Ключі підписування</string>
@@ -768,8 +768,8 @@
     <string name="install_location_prefer_external">Надати перевагу зовнішній пам’яті</string>
     <string name="install_location_internal_only">Тільки внутрішня пам’ять</string>
     <string name="profile_state_msg">Налаштований стан увімкнення/вимкнення для цього профілю</string>
-    <string name="allow_routine_ops_msg">Дозволити використання профілю в запланованих операціях</string>
-    <string name="allow_routine_ops">Дозволити заплановані операції</string>
+    <string name="allow_routine_ops_msg">Дозволити використання профілю в регулярних операціях</string>
+    <string name="allow_routine_ops">Дозволити регулярні операції</string>
     <plurals name="verified_with_warning">
         <item quantity="one">Підтверджено з %d попередженням</item>
         <item quantity="few">Підтверджено з %d попередженнями</item>
