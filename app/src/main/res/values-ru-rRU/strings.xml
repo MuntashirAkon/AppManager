@@ -407,8 +407,8 @@
     <string name="input_signatures">Ввод подписей</string>
     <string name="input_signatures_description">Введите подписи с пробелами, например (com.facebook org.app2 com.app3) и т. д.</string>
     <string name="filtered_packages">Отфильтрованные пакеты</string>
-    <string name="input_app_ops">Операции приложения по вводу</string>
-    <string name="input_app_ops_description">Введите константы операции приложения с пробелами, например (63 72 12) и т.д. Константы операций приложения можно найти на вкладке операций приложения под скобками.</string>
+    <string name="input_app_ops">Ввод операций приложения</string>
+    <string name="input_app_ops_description">Введите константы операции приложения с пробелами, например (63 72 12) и т.д. Константы можно найти в скобках, на вкладке операций приложения.</string>
     <string name="only_works_in_root_or_adb_mode">Доступно только в режиме root или ADB</string>
     <string name="failed_to_parse_some_numbers">Не удалось разобрать некоторые числа</string>
     <plurals name="no_of_splits">
@@ -592,7 +592,7 @@
     <string name="presets">Предустановки</string>
     <string name="open_pgp_provider">Поставщик OpenPGP</string>
     <string name="input_backup_name_description">Имя резервной копии не должно начинаться с цифры и содержать пробелы. Оставьте это поле пустым, если хотите использовать текущую дату и время.</string>
-    <string name="downgrade_not_possible">Понижение версии невозможно без root или ADB</string>
+    <string name="downgrade_not_possible">Понижение версии невозможно без ROOT или ADB</string>
     <string name="downgrade">Понизить</string>
     <string name="process_state_with_extra">Состояние: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="process_state">Состояние: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
@@ -606,7 +606,7 @@
     <string name="profiles">Профили</string>
     <string name="cancel">Отмена</string>
     <string name="ok">ОК</string>
-    <string name="input_backup_name">Название резервной копии</string>
+    <string name="input_backup_name">Имя резервной копии</string>
     <string name="state_foreground">Передний план</string>
     <string name="state_low_priority">Низкий приоритет</string>
     <string name="state_high_priority">Высокий приоритет</string>
@@ -632,8 +632,8 @@
     <string name="confirm_installation">Подтвердить установку</string>
     <string name="allow_open_pgp_operation">Щёлкните, чтобы разрешить AM использовать OpenPGP</string>
     <string name="uninstall_updates">Удалить обновления</string>
-    <string name="update_uninstalled_successfully">Обновления для <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> были удалены.</string>
-    <string name="failed_to_uninstall_updates">Не удалось удалить обновления для <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="update_uninstalled_successfully">"Обновления  &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; были удалены."</string>
+    <string name="failed_to_uninstall_updates">"Не удалось удалить обновления  &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;."</string>
     <string name="filter_apps_with_backups">Приложения с резервными копиями</string>
     <string name="issued_date">Дата выпуска</string>
     <string name="expiry_date">Дата истечения</string>
@@ -715,7 +715,7 @@
     <string name="systemless_app">Внесистемное приложение</string>
     <string name="duplicate">Дубликат</string>
     <string name="new_profile">Новый профиль</string>
-    <string name="input_profile_name_description">Имя профиля не может содержать пробелов.</string>
+    <string name="input_profile_name_description">Название профиля не может содержать пробелов.</string>
     <string name="input_profile_name">Название профиля</string>
     <string name="in_progress">В процессе</string>
     <string name="conversion_failed">Преобразование не удалось.</string>
@@ -732,11 +732,11 @@
     <string name="un_apkm">Распаковать Apkm</string>
     <string name="keystore">Хранилище ключей</string>
     <string name="ecc">Эллиптическая криптография (ЕСС)</string>
-    <string name="none">Никакой</string>
+    <string name="none">Без шифрования</string>
     <string name="pref_encryption_msg">Добавить шифрование для резервных копий.</string>
     <string name="encryption">Шифрование</string>
     <string name="select_user">Выбрать пользователя</string>
-    <string name="pref_show_users_in_installer_msg">Отображение списка пользователей для выбора, перед установкой внешнего приложения. Требуется root-доступ или ADB.</string>
+    <string name="pref_show_users_in_installer_msg">Отображение списка пользователей для выбора, перед установкой внешнего приложения. Требуется ROOT или ADB.</string>
     <string name="pref_show_users_in_installer">Показать пользователей в установщике</string>
     <string name="failed_to_duplicate_profile">Не удалось продублировать профиль</string>
     <string name="send_selected">Отправить выбранный</string>
@@ -766,15 +766,15 @@
     <string name="pref_mode_of_operations">Режим работы</string>
     <string name="allow_routine_ops_msg">Разрешить использовать профиль в повторяющихся операциях</string>
     <string name="allow_routine_ops">Разрешить повторяющиеся операции</string>
-    <string name="splits">Сплит</string>
+    <string name="splits">Сплиты</string>
     <string name="source_stamp_verified">SourceStamp подтвержден.</string>
     <string name="verified">Подтверждённый</string>
     <string name="not_verified">Не подтверждено</string>
     <string name="pref_signature_schemes_msg">Для большей совместимости следует выбирать схемы как минимум v1 и v2. Схема v4 требует v2 или v3.</string>
-    <string name="v4_scheme">схема v4 (начиная с Android 11)</string>
+    <string name="v4_scheme">Схема v4 (начиная с Android 11)</string>
     <string name="v3_scheme">Схема v3 (начиная с Android 9)</string>
-    <string name="v2_scheme">схема v2 (начиная с Android 7.0)</string>
-    <string name="v1_scheme">схема v1 (начиная с Android 1.0)</string>
+    <string name="v2_scheme">Схема v2 (начиная с Android 7.0)</string>
+    <string name="v1_scheme">Схема v1 (начиная с Android 1.0)</string>
     <string name="pref_apk_signing_msg">Установка схемы подписания, пользовательские ключи подписи и т.д.</string>
     <string name="apk_signing">Подписание APK</string>
     <string name="signing_keys">Ключи подписи</string>
@@ -790,11 +790,14 @@
         <item quantity="other">Проверено с %d предупреждениями</item>
     </plurals>
     <string name="input_permissions">Ввод разрешений</string>
-    <string name="input_permissions_description">Разрешения на ввод с пробелами, например (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) и т.п.</string>
+    <string name="input_permissions_description">Ввод разрешений с пробелами, например (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) и т.п.</string>
     <plurals name="signature_schemes_pl">
         <item quantity="one">Схема подписания</item>
         <item quantity="few">Схема подписаний</item>
         <item quantity="many">Схема подписаний</item>
         <item quantity="other">Схема подписаний</item>
     </plurals>
+    <string name="input_keystore_pass_msg">Нажмите здесь, чтобы ввести пароль менеджера ключей</string>
+    <string name="input_keystore_pass_description">Вставьте пароль хранилища ключей App Manager. Если вы видите это впервые, используйте генератор паролей, чтобы сгенерировать пароль и сохранить его в безопасном месте, прежде чем вставлять его здесь.</string>
+    <string name="input_keystore_pass">Введите пароль хранилища ключей</string>
 </resources>
