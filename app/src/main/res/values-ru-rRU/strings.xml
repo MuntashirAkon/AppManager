@@ -775,7 +775,7 @@
     <string name="v3_scheme">Схема v3 (начиная с Android 9)</string>
     <string name="v2_scheme">Схема v2 (начиная с Android 7.0)</string>
     <string name="v1_scheme">Схема v1 (начиная с Android 1.0)</string>
-    <string name="pref_apk_signing_msg">Установка схемы подписания, пользовательские ключи подписи и т.д.</string>
+    <string name="pref_apk_signing_msg">Установка схемы подписи, пользовательские ключи подписи и т.д.</string>
     <string name="apk_signing">Подписание APK</string>
     <string name="signing_keys">Ключи подписи</string>
     <string name="pref_sign_apk_msg">Подписать APK-файлы перед их установкой.</string>
@@ -792,12 +792,14 @@
     <string name="input_permissions">Ввод разрешений</string>
     <string name="input_permissions_description">Ввод разрешений с пробелами, например (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) и т.п.</string>
     <plurals name="signature_schemes_pl">
-        <item quantity="one">Схема подписания</item>
-        <item quantity="few">Схема подписаний</item>
-        <item quantity="many">Схема подписаний</item>
-        <item quantity="other">Схема подписаний</item>
+        <item quantity="one">Схема подписи</item>
+        <item quantity="few">Схемы подписи</item>
+        <item quantity="many">Схемы подписи</item>
+        <item quantity="other">Схемы подписи</item>
     </plurals>
     <string name="input_keystore_pass_msg">Нажмите здесь, чтобы ввести пароль менеджера ключей</string>
     <string name="input_keystore_pass_description">Вставьте пароль хранилища ключей App Manager. Если вы видите это впервые, используйте генератор паролей, чтобы сгенерировать пароль и сохранить его в безопасном месте, прежде чем вставлять его здесь.</string>
     <string name="input_keystore_pass">Введите пароль хранилища ключей</string>
+    <string name="input_keystore_alias_pass_description">Вставьте пароль для псевдонима &lt;b&gt;%1$s&lt;/b&gt;. Вы можете оставить это поле пустым, если пароль совпадает с паролем хранилища ключей.</string>
+    <string name="input_keystore_alias_pass">Пароль для псевдонима &lt;b&gt;%1$s&lt;/b&gt;</string>
 </resources>
