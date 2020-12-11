@@ -23,6 +23,11 @@ import android.content.pm.PackageManager;
 
 import com.android.apksig.internal.apk.AndroidBinXmlParser;
 
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.compress.archivers.zip.ZipFile;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,10 +35,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipInputStream;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,7 +44,6 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
@@ -119,6 +121,25 @@ public final class ApkUtils {
 
     @NonNull
     public static ByteBuffer getManifestFromApk(File apkFile) throws IOException {
+        try (ZipFile zipFile = new ZipFile(apkFile)) {
+            Enumeration<ZipArchiveEntry> archiveEntries = zipFile.getEntries();
+            ZipArchiveEntry zipEntry;
+            while (archiveEntries.hasMoreElements()) {
+                zipEntry = archiveEntries.nextElement();
+                if (!IOUtils.getLastPathComponent(zipEntry.getName()).equals(MANIFEST_FILE)) {
+                    continue;
+                }
+                try (InputStream zipInputStream = zipFile.getInputStream(zipEntry)) {
+                    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                    byte[] buf = new byte[1024 * 4];
+                    int n;
+                    while (-1 != (n = zipInputStream.read(buf))) {
+                        buffer.write(buf, 0, n);
+                    }
+                    return ByteBuffer.wrap(buffer.toByteArray());
+                }
+            }
+        }
         try (FileInputStream apkInputStream = new FileInputStream(apkFile)) {
             return getManifestFromApk(apkInputStream);
         }
@@ -126,18 +147,10 @@ public final class ApkUtils {
 
     @NonNull
     public static ByteBuffer getManifestFromApk(InputStream apkInputStream) throws IOException {
-        try (ZipInputStream zipInputStream = new ZipInputStream(apkInputStream)) {
-            ZipEntry zipEntry;
-            while (true) {
-                try {
-                    zipEntry = zipInputStream.getNextEntry();
-                    if (zipEntry == null) break;
-                } catch (ZipException e) {
-                    Log.e(ApkFile.TAG, "Error reading zip file.", e);
-                    continue;
-                }
+        try (ZipArchiveInputStream zipInputStream = new ZipArchiveInputStream(apkInputStream)) {
+            ArchiveEntry zipEntry;
+            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
                 if (!IOUtils.getLastPathComponent(zipEntry.getName()).equals(MANIFEST_FILE)) {
-                    zipInputStream.closeEntry();
                     continue;
                 }
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -146,7 +159,6 @@ public final class ApkUtils {
                 while (-1 != (n = zipInputStream.read(buf))) {
                     buffer.write(buf, 0, n);
                 }
-                zipInputStream.closeEntry();
                 return ByteBuffer.wrap(buffer.toByteArray());
             }
         }

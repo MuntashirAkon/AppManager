@@ -21,6 +21,9 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
 
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,8 +32,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
@@ -48,7 +49,8 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
 public final class SplitApkExporter {
     public static void saveApks(PackageInfo packageInfo, File apksFile) throws Exception {
         try (OutputStream outputStream = new FileOutputStream(apksFile);
-             ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {
+             ZipArchiveOutputStream zipOutputStream = new ZipArchiveOutputStream(outputStream)) {
+            zipOutputStream.setMethod(ZipArchiveOutputStream.STORED);
 
             List<File> apkFiles = getAllApkFiles(packageInfo);
             Collections.sort(apkFiles);
@@ -64,64 +66,56 @@ public final class SplitApkExporter {
 
             // Add metadata v2
             byte[] metaV2 = apksMetadata.getMetadataV2().getBytes();
-            zipOutputStream.setMethod(ZipOutputStream.STORED);
-            ZipEntry metaV2ZipEntry = new ZipEntry(ApksMetadata.META_V2_FILE);
-            metaV2ZipEntry.setMethod(ZipEntry.STORED);
+            ZipArchiveEntry metaV2ZipEntry = new ZipArchiveEntry(ApksMetadata.META_V2_FILE);
+            metaV2ZipEntry.setMethod(ZipArchiveEntry.STORED);
             metaV2ZipEntry.setCompressedSize(metaV2.length);
             metaV2ZipEntry.setSize(metaV2.length);
             metaV2ZipEntry.setCrc(IOUtils.calculateBytesCrc32(metaV2));
             metaV2ZipEntry.setTime(apksMetadata.exportTimestamp);
-            zipOutputStream.putNextEntry(metaV2ZipEntry);
+            zipOutputStream.putArchiveEntry(metaV2ZipEntry);
             zipOutputStream.write(metaV2);
-            zipOutputStream.closeEntry();
+            zipOutputStream.closeArchiveEntry();
 
             // Add metadata V1
             byte[] metaV1 = apksMetadata.getMetadataV1().getBytes();
-            zipOutputStream.setMethod(ZipOutputStream.STORED);
-            ZipEntry metaV1ZipEntry = new ZipEntry(ApksMetadata.META_V1_FILE);
-            metaV1ZipEntry.setMethod(ZipEntry.STORED);
+            ZipArchiveEntry metaV1ZipEntry = new ZipArchiveEntry(ApksMetadata.META_V1_FILE);
+            metaV1ZipEntry.setMethod(ZipArchiveEntry.STORED);
             metaV1ZipEntry.setCompressedSize(metaV1.length);
             metaV1ZipEntry.setSize(metaV1.length);
             metaV1ZipEntry.setCrc(IOUtils.calculateBytesCrc32(metaV1));
             metaV1ZipEntry.setTime(apksMetadata.exportTimestamp);
-            zipOutputStream.putNextEntry(metaV1ZipEntry);
+            zipOutputStream.putArchiveEntry(metaV1ZipEntry);
             zipOutputStream.write(metaV1);
-            zipOutputStream.closeEntry();
+            zipOutputStream.closeArchiveEntry();
 
             // Add icon
             Bitmap bitmap = IOUtils.getBitmapFromDrawable(packageInfo.applicationInfo.loadIcon(AppManager.getContext().getPackageManager()));
             ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, pngOutputStream);
             byte[] pngIcon = pngOutputStream.toByteArray();
-            zipOutputStream.setMethod(ZipOutputStream.STORED);
-            ZipEntry pngZipEntry = new ZipEntry(ApksMetadata.ICON_FILE);
-            pngZipEntry.setMethod(ZipEntry.STORED);
+            ZipArchiveEntry pngZipEntry = new ZipArchiveEntry(ApksMetadata.ICON_FILE);
+            pngZipEntry.setMethod(ZipArchiveEntry.STORED);
             pngZipEntry.setCompressedSize(pngIcon.length);
             pngZipEntry.setSize(pngIcon.length);
             pngZipEntry.setCrc(IOUtils.calculateBytesCrc32(pngIcon));
             pngZipEntry.setTime(apksMetadata.exportTimestamp);
-            zipOutputStream.putNextEntry(pngZipEntry);
+            zipOutputStream.putArchiveEntry(pngZipEntry);
             zipOutputStream.write(pngIcon);
-            zipOutputStream.closeEntry();
+            zipOutputStream.closeArchiveEntry();
 
             // Add files
             for (File apkFile : apkFiles) {
-                zipOutputStream.setMethod(ZipOutputStream.STORED);
-                ZipEntry zipEntry = new ZipEntry(apkFile.getName());
-                zipEntry.setMethod(ZipEntry.STORED);
+                ZipArchiveEntry zipEntry = new ZipArchiveEntry(apkFile.getName());
+                zipEntry.setMethod(ZipArchiveEntry.STORED);
                 zipEntry.setCompressedSize(apkFile.length());
                 zipEntry.setSize(apkFile.length());
                 zipEntry.setCrc(IOUtils.calculateFileCrc32(apkFile));
                 zipEntry.setTime(apksMetadata.exportTimestamp);
-                zipOutputStream.putNextEntry(zipEntry);
+                zipOutputStream.putArchiveEntry(zipEntry);
                 try (FileInputStream apkInputStream = new FileInputStream(apkFile)) {
-                    byte[] buffer = new byte[1024 * 512];
-                    int read;
-                    while ((read = apkInputStream.read(buffer)) > 0) {
-                        zipOutputStream.write(buffer, 0, read);
-                    }
+                    IOUtils.copy(apkInputStream, zipOutputStream);
                 }
-                zipOutputStream.closeEntry();
+                zipOutputStream.closeArchiveEntry();
             }
         }
     }
