@@ -64,8 +64,8 @@
         <item quantity="many">%1$d сплітів</item>
         <item quantity="other">%1$d сплітів</item>
     </plurals>
-    <string name="input_app_ops_description">Введіть константи дозволу з пробілами, наприклад (63 72 12) та ін. Ви можете знайти константи додатків на вкладці додатків під дужками.</string>
-    <string name="input_app_ops">Програма вводу дозволу</string>
+    <string name="input_app_ops_description">Введіть константи дозволів (app ops) з пробілами, наприклад (63 72 12) та ін. Константи дозволів додатків (app ops) можна знайти у дужках, на вкладці додатків.</string>
+    <string name="input_app_ops">Введення дозволів додатків (app ops)</string>
     <string name="deny_app_ops_dots">Забороняю дозволи…</string>
     <string name="external_apk_no_app_op">Зовнішній файл .apk не має жодних операцій з додатками</string>
     <string name="failed_to_deny_dangerous_app_ops">Не вдалося відкликати всі небезпечні дозволи</string>
@@ -331,8 +331,8 @@
     <string name="failed_to_parse_some_numbers">Не вдалося проаналізувати деякі цифри</string>
     <string name="only_works_in_root_or_adb_mode">Працює лише в режимі ROOT або ADB</string>
     <string name="filtered_packages">Відфільтровані пакети</string>
-    <string name="input_signatures_description">Вхідні підписи з пробілами, наприклад (com.facebook org.app2 com.app3) тощо.</string>
-    <string name="input_signatures">Вхідні підписи</string>
+    <string name="input_signatures_description">Ввести підписи з пробілами, наприклад (com.facebook org.app2 com.app3) тощо.</string>
+    <string name="input_signatures">Введення підписів</string>
     <string name="no_tracker_found">Не знайдено жодного трекера</string>
     <string name="clear_app_cache_description">Очищення кешу всіх додатків</string>
     <string name="clear_app_cache">Очищення кешу додатків</string>
@@ -776,4 +776,17 @@
         <item quantity="many">Підтверджено з %d попередженнями</item>
         <item quantity="other">Підтверджено з %d попередженнями</item>
     </plurals>
+    <string name="input_keystore_alias_pass_description">Вставте пароль для псевдоніма &lt;b&gt;%1$s&lt;/b&gt;. Ви можете залишити це поле порожнім, якщо пароль збігається з паролем KeyStore.</string>
+    <string name="input_keystore_alias_pass">Пароль для псевдоніма &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="input_keystore_pass_msg">Натисніть тут, щоб надати пароль сховища ключів</string>
+    <string name="input_keystore_pass_description">Вставити пароль сховища ключів App Manager. Якщо ви бачите це вперше, будь ласка, використовуйте генератор паролів для створення пароля та збереження його в безпечному місці, перш ніж вставити його тут.</string>
+    <string name="input_keystore_pass">Введіть пароль сховища ключів</string>
+    <plurals name="signature_schemes_pl">
+        <item quantity="one">Схема підпису</item>
+        <item quantity="few">Схема підписів</item>
+        <item quantity="many">Схема підписів</item>
+        <item quantity="other">Схема підписів</item>
+    </plurals>
+    <string name="input_permissions_description">Введення дозволів з пробілами, наприклад (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) тощо.</string>
+    <string name="input_permissions">Введення дозволів</string>
 </resources>
