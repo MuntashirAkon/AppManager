@@ -278,7 +278,7 @@ public final class ApkFile implements AutoCloseable {
                         try {
                             manifestBytes = getManifestFromApk(zipInputStream);
                         } catch (IOException e) {
-                            throw new ApkFileException("Manifest not found.");
+                            throw new ApkFileException("Manifest not found.", e);
                         }
                         // Get manifest attributes
                         HashMap<String, String> manifestAttrs = getManifestAttributes(manifestBytes);
@@ -347,7 +347,7 @@ public final class ApkFile implements AutoCloseable {
                     try {
                         manifestBytes = getManifestFromApk(zipInputStream);
                     } catch (IOException e) {
-                        throw new ApkFileException("Manifest not found.");
+                        throw new ApkFileException("Manifest not found.", e);
                     }
                     // Get manifest attributes
                     HashMap<String, String> manifestAttrs = getManifestAttributes(manifestBytes);
