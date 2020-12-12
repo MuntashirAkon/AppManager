@@ -195,6 +195,8 @@ public final class ApkFile implements AutoCloseable {
         } else {
             if (mimeType.equals("application/xapk-package-archive")) {
                 extension = "xapk";
+            } else if (mimeType.equals("application/vnd.apkm")) {
+                extension = "apkm";
             } else extension = "apk";
         }
         if (extension.equals("apkm")) {
