@@ -23,11 +23,6 @@ import com.goterl.lazycode.lazysodium.interfaces.PwHash;
 import com.goterl.lazycode.lazysodium.interfaces.SecretStream;
 import com.sun.jna.NativeLong;
 
-import org.apache.commons.compress.archivers.ArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
-import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
-
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +30,9 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.Arrays;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -49,7 +47,6 @@ public class UnApkm {
     @NonNull
     private static byte[] getBytes(@NonNull InputStream i, int num) throws IOException {
         byte[] data = new byte[num];
-        //noinspection ResultOfMethodCallIgnored
         i.read(data, 0, data.length);
         return data;
     }
@@ -193,17 +190,21 @@ public class UnApkm {
     public static void decryptFile(@NonNull InputStream is, @NonNull OutputStream os) {
         try (InputStream toOut = decryptStream(is);
              // fix zip format if missing end signature
-             ZipArchiveOutputStream zos = new ZipArchiveOutputStream(new BufferedOutputStream(os));
-             ZipArchiveInputStream zipIn = new ZipArchiveInputStream(toOut)) {
-            ArchiveEntry entry;
-            while ((entry = zipIn.getNextEntry()) != null) {
-                zos.putArchiveEntry(new ZipArchiveEntry(entry.getName()));
+             ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(os));
+             ZipInputStream zipIn = new ZipInputStream(toOut)) {
+            ZipEntry entry = zipIn.getNextEntry();
+
+            while (entry != null) {
+                zos.putNextEntry(new ZipEntry(entry.getName()));
+
                 byte[] bytesIn = new byte[4096];
                 int read;
                 while ((read = zipIn.read(bytesIn)) != -1) {
                     zos.write(bytesIn, 0, read);
                 }
-                zos.closeArchiveEntry();
+                zos.closeEntry();
+                zipIn.closeEntry();
+                entry = zipIn.getNextEntry();
             }
         } catch (IOException e) {
             Log.e("UnAPKM", "Could not convert the stream to APKS", e);

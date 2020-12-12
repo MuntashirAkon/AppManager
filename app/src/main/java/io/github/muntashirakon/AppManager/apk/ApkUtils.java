@@ -23,11 +23,7 @@ import android.content.pm.PackageManager;
 
 import com.android.apksig.internal.apk.AndroidBinXmlParser;
 
-import org.apache.commons.compress.archivers.ArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
-import org.apache.commons.compress.archivers.zip.ZipFile;
-
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,6 +33,9 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -122,8 +121,8 @@ public final class ApkUtils {
     @NonNull
     public static ByteBuffer getManifestFromApk(File apkFile) throws IOException {
         try (ZipFile zipFile = new ZipFile(apkFile)) {
-            Enumeration<ZipArchiveEntry> archiveEntries = zipFile.getEntries();
-            ZipArchiveEntry zipEntry;
+            Enumeration<? extends ZipEntry> archiveEntries = zipFile.entries();
+            ZipEntry zipEntry;
             while (archiveEntries.hasMoreElements()) {
                 zipEntry = archiveEntries.nextElement();
                 if (!IOUtils.getLastPathComponent(zipEntry.getName()).equals(MANIFEST_FILE)) {
@@ -147,8 +146,8 @@ public final class ApkUtils {
 
     @NonNull
     public static ByteBuffer getManifestFromApk(InputStream apkInputStream) throws IOException {
-        try (ZipArchiveInputStream zipInputStream = new ZipArchiveInputStream(apkInputStream)) {
-            ArchiveEntry zipEntry;
+        try (ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(apkInputStream))) {
+            ZipEntry zipEntry;
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
                 if (!IOUtils.getLastPathComponent(zipEntry.getName()).equals(MANIFEST_FILE)) {
                     continue;

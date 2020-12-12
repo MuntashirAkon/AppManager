@@ -29,9 +29,6 @@ import android.util.SparseArray;
 
 import com.android.apksig.internal.apk.AndroidBinXmlParser;
 
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipFile;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -51,6 +48,8 @@ import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -162,7 +161,7 @@ public final class ApkFile implements AutoCloseable {
     private final String packageName;
     private boolean hasObb = false;
     @NonNull
-    private final List<ZipArchiveEntry> obbFiles = new ArrayList<>();
+    private final List<ZipEntry> obbFiles = new ArrayList<>();
     @NonNull
     private File cacheFilePath;
     @Nullable
@@ -269,10 +268,10 @@ public final class ApkFile implements AutoCloseable {
             } catch (IOException e) {
                 throw new ApkFileException(e);
             }
-            Enumeration<ZipArchiveEntry> zipEntries = zipFile.getEntries();
+            Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
             String fileName;
             while (zipEntries.hasMoreElements()) {
-                ZipArchiveEntry zipEntry = zipEntries.nextElement();
+                ZipEntry zipEntry = zipEntries.nextElement();
                 if (zipEntry.isDirectory()) continue;
                 fileName = IOUtils.getFileNameFromZipEntry(zipEntry);
                 if (fileName.endsWith(".apk")) {
@@ -452,7 +451,7 @@ public final class ApkFile implements AutoCloseable {
             }
 
             if (AppPref.isRootOrAdbEnabled()) {
-                for (ZipArchiveEntry obbEntry : obbFiles) {
+                for (ZipEntry obbEntry : obbFiles) {
                     String fileName = IOUtils.getFileNameFromZipEntry(obbEntry);
                     if (cacheFilePath.getAbsolutePath().startsWith("/proc")) {
                         // Normal way won't work for FD
@@ -474,7 +473,7 @@ public final class ApkFile implements AutoCloseable {
                     }
                 }
             } else {
-                for (ZipArchiveEntry obbEntry : obbFiles) {
+                for (ZipEntry obbEntry : obbFiles) {
                     String fileName = IOUtils.getFileNameFromZipEntry(obbEntry);
                     if (fileName.endsWith(".obb")) {
                         // Extract obb file to the destination directory
@@ -553,7 +552,7 @@ public final class ApkFile implements AutoCloseable {
         @Nullable
         private File cachedFile;
         @Nullable
-        private ZipArchiveEntry zipEntry;
+        private ZipEntry zipEntry;
         @Nullable
         private File source;
         @Nullable
@@ -580,7 +579,7 @@ public final class ApkFile implements AutoCloseable {
             this.manifest = null;
         }
 
-        Entry(@NonNull String name, @NonNull ZipArchiveEntry zipEntry, @ApkType int type, @NonNull HashMap<String, String> manifest) {
+        Entry(@NonNull String name, @NonNull ZipEntry zipEntry, @ApkType int type, @NonNull HashMap<String, String> manifest) {
             this(name, type, manifest);
             this.zipEntry = zipEntry;
         }

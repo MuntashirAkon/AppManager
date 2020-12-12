@@ -115,8 +115,6 @@ dependencies {
 
     implementation 'me.weishu:free_reflection:3.0.1'
 
-    implementation 'org.apache.commons:commons-compress:1.20'
-
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 }
 
