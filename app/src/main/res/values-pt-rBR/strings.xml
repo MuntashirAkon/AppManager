@@ -142,8 +142,8 @@
     <string name="usage_less_than_a_minute">Menos de um minuto</string>
     <string name="go_back">Voltar</string>
     <string name="go">Ir</string>
-    <string name="grant_usage_access">Conceder Acesso de Uso</string>
-    <string name="grant_usage_acess_message">Acesso ao uso é obrigatório para exibir informações de uso dos aplicativos.</string>
+    <string name="grant_usage_access">Conceder Acesso ao Uso</string>
+    <string name="grant_usage_acess_message">O acesso ao uso é obrigatório para mostrar as informações de uso dos aplicativos.</string>
     <string name="share_apk">Compartilhar APK</string>
     <string name="failed_to_extract_apk_file">O arquivo APK não pôde ser extraído</string>
     <string name="menu_remove_rules">Remover regras</string>
@@ -590,7 +590,7 @@
     <string name="rsa_modulus">Módulo</string>
     <string name="critical_exts">Extensões Críticas</string>
     <string name="non_critical_exts">Extensões Não-críticas</string>
-    <string name="usage_access_not_supported">Não foi possível solicitar acesso de uso, pois a página de configurações correspondentes não existe.</string>
+    <string name="usage_access_not_supported">Não foi possível solicitar o acesso ao uso, pois a página de configurações correspondente não existe.</string>
     <string name="do_you_want_to_uninstall_and_install">Deseja desinstalar e instalar o aplicativo novamente\?</string>
     <string name="signature_mismatch_for_system_apps">Não foi possível instalar o aplicativo porque um aplicativo do sistema com uma assinatura diferente tem esse nome de pacote.</string>
     <string name="app_data_will_be_lost">Os dados existentes serão perdidos.</string>
@@ -740,4 +740,5 @@
     <string name="input_keystore_alias_pass">Senha para alias &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="input_keystore_pass_msg">Clique aqui para fornecer a senha do KeyStore</string>
     <string name="input_keystore_pass">Inserir senha do KeyStore</string>
+    <string name="no_app_ops_permission">Sem permissão para mostrar as operações de aplicativo</string>
 </resources>
