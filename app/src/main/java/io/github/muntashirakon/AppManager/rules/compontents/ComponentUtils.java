@@ -182,6 +182,7 @@ public final class ComponentUtils {
     }
 
     public static void removeAllRules(@NonNull String packageName, int userHandle) {
+        int uid = PackageUtils.getAppUid(new UserPackagePair(packageName, userHandle));
         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
             // Remove all blocking rules
             for (RulesStorageManager.Entry entry: cb.getAllComponents()) {
@@ -191,11 +192,11 @@ public final class ComponentUtils {
             // Reset configured app ops
             AppOpsService appOpsService = new AppOpsService();
             try {
-                appOpsService.resetAllModes(-1, packageName, userHandle);
+                appOpsService.resetAllModes(uid, packageName, userHandle);
                 for (RulesStorageManager.Entry entry: cb.getAll(RulesStorageManager.Type.APP_OP)) {
                     try {
                         int op = (int) entry.extra;
-                        appOpsService.setMode(op, -1, packageName, AppOpsManager.MODE_DEFAULT, userHandle);
+                        appOpsService.setMode(op, uid, packageName, AppOpsManager.MODE_DEFAULT, userHandle);
                         cb.removeEntry(entry);
                     } catch (Exception e) {
                         e.printStackTrace();

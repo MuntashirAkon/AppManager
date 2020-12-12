@@ -483,7 +483,7 @@ public class BackupManager {
             PackageManager pm = AppManager.getContext().getPackageManager();
             List<OpEntry> opEntries = new ArrayList<>();
             try {
-                List<PackageOps> packageOpsList = new AppOpsService().getOpsForPackage(-1, packageName, null, userHandle);
+                List<PackageOps> packageOpsList = new AppOpsService().getOpsForPackage(packageInfo.applicationInfo.uid, packageName, null, userHandle);
                 if (packageOpsList.size() == 1) opEntries.addAll(packageOpsList.get(0).getOps());
             } catch (Exception ignore) {
             }

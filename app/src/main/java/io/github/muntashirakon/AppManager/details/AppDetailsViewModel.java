@@ -78,8 +78,10 @@ import io.github.muntashirakon.AppManager.server.common.OpEntry;
 import io.github.muntashirakon.AppManager.server.common.PackageOps;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
@@ -311,10 +313,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public boolean setPermission(String permissionName, boolean isGranted) {
         if (isExternalApk) return false;
         int appOp = AppOpsManager.permissionToOpCode(permissionName);
+        int uid = packageInfo.applicationInfo.uid;
         if (isGranted) {
             if (appOp != AppOpsManager.OP_NONE) {
                 try {
-                    mAppOpsService.setMode(appOp, -1, packageName, AppOpsManager.MODE_ALLOWED, userHandle);
+                    mAppOpsService.setMode(appOp, uid, packageName, AppOpsManager.MODE_ALLOWED, userHandle);
                 } catch (Exception e) {
                     return false;
                 }
@@ -324,7 +327,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         } else {
             if (appOp != AppOpsManager.OP_NONE) {
                 try {
-                    mAppOpsService.setMode(appOp, -1, packageName, AppOpsManager.MODE_IGNORED, userHandle);
+                    mAppOpsService.setMode(appOp, uid, packageName, AppOpsManager.MODE_IGNORED, userHandle);
                 } catch (Exception e) {
                     return false;
                 }
@@ -393,7 +396,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (mAppOpsService == null) mAppOpsService = new AppOpsService();
         try {
             // Set mode
-            mAppOpsService.setMode(op, -1, packageName, mode, userHandle);
+            mAppOpsService.setMode(op, packageInfo.applicationInfo.uid, packageName, mode, userHandle);
             new Thread(() -> {
                 synchronized (blockerLocker) {
                     waitForBlockerOrExit();
@@ -417,7 +420,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (isExternalApk) return false;
         if (mAppOpsService != null) {
             try {
-                mAppOpsService.resetAllModes(-1, packageName, userHandle);
+                mAppOpsService.resetAllModes(PackageUtils.getAppUid(new UserPackagePair(packageName, userHandle)), packageName, userHandle);
                 new Thread(this::loadAppOps).start();
                 // Save values to the blocking rules
                 new Thread(() -> {
@@ -461,7 +464,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     if (basePermissionType == PermissionInfo.PROTECTION_DANGEROUS) {
                         // Set mode
                         try {
-                            mAppOpsService.setMode(opEntry.getOp(), -1, packageName, AppOpsManager.MODE_IGNORED, userHandle);
+                            mAppOpsService.setMode(opEntry.getOp(), packageInfo.applicationInfo.uid,
+                                    packageName, AppOpsManager.MODE_IGNORED, userHandle);
                             opItems.add(opEntry.getOp());
                             appDetailsItem.vanillaItem = new OpEntry(opEntry.getOp(),
                                     AppOpsManager.MODE_IGNORED, opEntry.getTime(),
@@ -906,7 +910,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 || PermissionUtils.hasAppOpsPermission(getApplication()))) {
             if (mAppOpsService == null) mAppOpsService = new AppOpsService();
             try {
-                List<PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(-1, packageName, null, userHandle);
+                List<PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(packageInfo.applicationInfo.uid, packageName, null, userHandle);
                 List<OpEntry> opEntries = new ArrayList<>();
                 if (packageOpsList.size() == 1)
                     opEntries.addAll(packageOpsList.get(0).getOps());
@@ -1003,10 +1007,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 appDetailsItem.isDangerous = PermissionInfoCompat.getProtection(permissionInfo) == PermissionInfo.PROTECTION_DANGEROUS;
                 appDetailsItem.isGranted = (appDetailsItem.flags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
                 appDetailsItem.appOp = AppOpsManager.permissionToOpCode(appDetailsItem.name);
-                if (appDetailsItem.appOp != AppOpsManager.OP_NONE) {
-                    // Override isGranted
+                if (!isExternalApk && !appDetailsItem.isGranted && appDetailsItem.appOp != AppOpsManager.OP_NONE) {
+                    // Override isGranted only if the original permission isn't granted
                     try {
-                        appDetailsItem.isGranted = mAppOpsService.checkOperation(appDetailsItem.appOp, -1, packageName, userHandle) == AppOpsManager.MODE_ALLOWED;
+                        appDetailsItem.isGranted = mAppOpsService.checkOperation(appDetailsItem.appOp,
+                                packageInfo.applicationInfo.uid, packageName, userHandle) == AppOpsManager.MODE_ALLOWED;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

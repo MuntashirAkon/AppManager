@@ -40,8 +40,6 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 @SuppressLint("DefaultLocale")
 public
 class AppOpsService implements IAppOpsService {
-    public static final String PERMISSION_GET_APP_OPS_STATS = "android.permission.GET_APP_OPS_STATS";
-
     private static final Pattern OP_MATCHER = Pattern.compile("(?:Uid mode: )?([\\w()]+): ([\\w=]+)" +
             "(?:; time=(?:\\s*0|([+\\-])(\\d+d)?(\\d{1,2}h)?(\\d{1,2}m)?(\\d{1,2}s)?(\\d{1,3}m))s ago)?" +
             "(?:; rejectTime=(?:\\s*0|([+\\-])(\\d+d)?(\\d{1,2}h)?(\\d{1,2}m)?(\\d{1,2}s)?(\\d{1,3}m))s ago)?" +

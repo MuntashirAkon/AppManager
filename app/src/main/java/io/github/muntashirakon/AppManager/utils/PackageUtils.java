@@ -70,6 +70,7 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
@@ -320,6 +321,15 @@ public final class PackageUtils {
         return 0;
     }
 
+    public static int getAppUid(@NonNull UserPackagePair pair) {
+        try {
+            return ApiSupporter.getInstance(LocalServer.getInstance())
+                    .getApplicationInfo(pair.getPackageName(), 0, pair.getUserHandle()).uid;
+        } catch (Exception ignore) {
+        }
+        return -1;
+    }
+
     @NonNull
     public static String getSourceDir(@NonNull ApplicationInfo applicationInfo) {
         String sourceDir = new File(applicationInfo.publicSourceDir).getParent(); // or applicationInfo.sourceDir
@@ -505,7 +515,7 @@ public final class PackageUtils {
             builder.append("\n").append(getTitleText(ctx, ctx.getString(R.string.non_critical_exts)));
             for (String oid : nonCritSet) {
                 builder.append("\n- ")
-                        .append(getPrimaryText(ctx,oid + ": "))
+                        .append(getPrimaryText(ctx, oid + ": "))
                         .append(Utils.bytesToHex(certificate.getExtensionValue(oid)));
             }
         }

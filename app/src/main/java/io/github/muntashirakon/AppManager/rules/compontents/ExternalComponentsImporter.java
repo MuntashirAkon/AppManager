@@ -65,7 +65,9 @@ public class ExternalComponentsImporter {
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
                 for (int appOp : appOpList) {
                     try {
-                        appOpsService.setMode(appOp, -1, pair.getPackageName(), AppOpsManager.MODE_IGNORED, pair.getUserHandle());
+                        appOpsService.setMode(appOp, PackageUtils.getAppUid(pair),
+                                pair.getPackageName(), AppOpsManager.MODE_IGNORED,
+                                pair.getUserHandle());
                         cb.setAppOp(String.valueOf(appOp), AppOpsManager.MODE_IGNORED);
                     } catch (Exception ignore) {
                     }
@@ -89,7 +91,9 @@ public class ExternalComponentsImporter {
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
                 for (int appOp : appOpList) {
                     try {
-                        appOpsService.setMode(appOp, -1, pair.getPackageName(), AppOpsManager.MODE_DEFAULT, pair.getUserHandle());
+                        appOpsService.setMode(appOp, PackageUtils.getAppUid(pair),
+                                pair.getPackageName(), AppOpsManager.MODE_DEFAULT,
+                                pair.getUserHandle());
                         cb.setAppOp(String.valueOf(appOp), AppOpsManager.MODE_DEFAULT);
                     } catch (Exception ignore) {
                     }
