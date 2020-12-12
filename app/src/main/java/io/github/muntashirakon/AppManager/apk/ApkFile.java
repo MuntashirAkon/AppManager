@@ -148,6 +148,7 @@ public final class ApkFile implements AutoCloseable {
         SUPPORTED_EXTENSIONS.add("apks");
         SUPPORTED_EXTENSIONS.add("xapk");
         SUPPORTED_MIMES.add("application/vnd.android.package-archive");
+        SUPPORTED_MIMES.add("application/vnd.apkm");
         SUPPORTED_MIMES.add("application/xapk-package-archive");
     }
 
