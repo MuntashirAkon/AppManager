@@ -27,8 +27,6 @@ import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
-import com.android.apksig.internal.apk.AndroidBinXmlParser;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

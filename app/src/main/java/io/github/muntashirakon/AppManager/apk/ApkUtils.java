@@ -21,8 +21,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-import com.android.apksig.internal.apk.AndroidBinXmlParser;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -139,9 +137,7 @@ public final class ApkUtils {
                 }
             }
         }
-        try (FileInputStream apkInputStream = new FileInputStream(apkFile)) {
-            return getManifestFromApk(apkInputStream);
-        }
+        throw new IOException("Error getting the manifest file.");
     }
 
     @NonNull
@@ -161,7 +157,15 @@ public final class ApkUtils {
                 return ByteBuffer.wrap(buffer.toByteArray());
             }
         }
-        throw new IOException("Error getting the manifest file.");
+        // This could be due to a Zip error, try caching the APK
+        File cachedApk = IOUtils.getCachedFile(apkInputStream);
+        ByteBuffer byteBuffer;
+        try {
+            byteBuffer = getManifestFromApk(cachedApk);
+        } finally {
+            IOUtils.deleteSilently(cachedApk);
+        }
+        return byteBuffer;
     }
 
     @NonNull
