@@ -192,7 +192,7 @@ public final class ComponentUtils {
             // Reset configured app ops
             AppOpsService appOpsService = new AppOpsService();
             try {
-                appOpsService.resetAllModes(uid, packageName, userHandle);
+                appOpsService.resetAllModes(userHandle, packageName);
                 for (RulesStorageManager.Entry entry: cb.getAll(RulesStorageManager.Type.APP_OP)) {
                     try {
                         int op = (int) entry.extra;

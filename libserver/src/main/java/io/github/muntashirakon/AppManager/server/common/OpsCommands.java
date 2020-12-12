@@ -40,6 +40,7 @@ public class OpsCommands {
         private int modeInt;
         private int[] ops;
         private boolean reqNet;
+        private int uidInt;
 
         public String getAction() {
             return action;
@@ -57,6 +58,14 @@ public class OpsCommands {
         public Builder setPackageName(String packageName) {
             this.packageName = packageName;
             return this;
+        }
+
+        public int getUidInt() {
+            return uidInt;
+        }
+
+        public void setUidInt(int uidInt) {
+            this.uidInt = uidInt;
         }
 
         public int getOpInt() {
@@ -128,6 +137,7 @@ public class OpsCommands {
         public void writeToParcel(@NonNull Parcel dest, int flags) {
             dest.writeString(this.action);
             dest.writeString(this.packageName);
+            dest.writeInt(this.uidInt);
             dest.writeInt(this.userHandleId);
             dest.writeInt(this.opInt);
             dest.writeInt(this.modeInt);
@@ -138,6 +148,7 @@ public class OpsCommands {
         protected Builder(@NonNull Parcel in) {
             this.action = in.readString();
             this.packageName = in.readString();
+            this.uidInt = in.readInt();
             this.userHandleId = in.readInt();
             this.opInt = in.readInt();
             this.modeInt = in.readInt();

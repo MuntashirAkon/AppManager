@@ -78,10 +78,8 @@ import io.github.muntashirakon.AppManager.server.common.OpEntry;
 import io.github.muntashirakon.AppManager.server.common.PackageOps;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
@@ -420,7 +418,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (isExternalApk) return false;
         if (mAppOpsService != null) {
             try {
-                mAppOpsService.resetAllModes(PackageUtils.getAppUid(new UserPackagePair(packageName, userHandle)), packageName, userHandle);
+                mAppOpsService.resetAllModes(userHandle, packageName);
                 new Thread(this::loadAppOps).start();
                 // Save values to the blocking rules
                 new Thread(() -> {

@@ -112,7 +112,7 @@ public class AppOpsHandler extends ClassCallerProcessor {
                 ServiceManager.getService(Context.APP_OPS_SERVICE));
         if (appOpsService == null) throw new Exception("AppOpsService is null");
         String packageName = builder.getPackageName();
-        int uid = Helper.getPackageUid(packageName, builder.getUserHandleId());
+        int uid = builder.getUidInt();
         System.out.println(Arrays.toString(builder.getOps()));
         List<Parcelable> opsForPackage = appOpsService.getOpsForPackage(uid, packageName, builder.getOps());
         ArrayList<PackageOps> packageOpsList = new ArrayList<>();
@@ -182,7 +182,7 @@ public class AppOpsHandler extends ClassCallerProcessor {
     }
 
     private void runSet(@NonNull OpsCommands.Builder builder) throws Throwable {
-        final int uid = Helper.getPackageUid(builder.getPackageName(), builder.getUserHandleId());
+        final int uid = builder.getUidInt();
 //        if (OtherOp.isOtherOp(builder.getOpInt())) {
 //            setOther(builder, uid);
 //        } else {
@@ -216,8 +216,7 @@ public class AppOpsHandler extends ClassCallerProcessor {
                 ServiceManager.getService(Context.APP_OPS_SERVICE));
         if (appOpsService == null) throw new Exception("AppOpsService is null");
         String packageName = builder.getPackageName();
-        int uid = Helper.getPackageUid(packageName, builder.getUserHandleId());
-        int mode = appOpsService.checkOperation(builder.getOpInt(), uid, packageName);
+        int mode = appOpsService.checkOperation(builder.getOpInt(), builder.getUidInt(), packageName);
         return new OpsResult(mode, null);
     }
 

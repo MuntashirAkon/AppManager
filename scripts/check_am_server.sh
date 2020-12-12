@@ -6,20 +6,24 @@ if ! [[ -f ./app/src/main/assets/am.jar ]]; then
 fi
 
 checksum=
+checksum2=
 os=`uname -s`
 if [[ "${os}" == "Darwin" ]]; then
     checksum=`ls -alR ./server/src | shasum -a 256 | awk '{print $1}'`
+    checksum2=`ls -alR ./libserver/src | shasum -a 256 | awk '{print $1}'`
 elif [[ "${os}" == "Linux" ]]; then
     checksum=`ls -alR ./server/src | sha256sum | awk '{print $1}'`
+    checksum2=`ls -alR ./libserver/src | sha256sum | awk '{print $1}'`
 else
     echo "M"
     exit 0
 fi
 
-old_checksum=`cat ./server/checksum.txt 2>/dev/null`
+source ./server/checksum.txt
 
-if [[ "${checksum}" != "${old_checksum}" ]]; then
-    echo "${checksum}" > ./server/checksum.txt
+if [[ "${checksum}" != "${old_checksum}" ]] || [[ "${checksum2}" != "${old_checksum2}" ]]; then
+    echo "old_checksum=${checksum}" > ./server/checksum.txt
+    echo "old_checksum2=${checksum2}" >> ./server/checksum.txt
     echo "M"
     exit 0
 fi

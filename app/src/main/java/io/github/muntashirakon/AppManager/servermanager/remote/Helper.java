@@ -17,52 +17,12 @@
 
 package io.github.muntashirakon.AppManager.servermanager.remote;
 
-import android.app.ActivityThread;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.UserHandle;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import io.github.muntashirakon.AppManager.server.common.FixCompat;
-import io.github.muntashirakon.AppManager.server.common.ReflectUtils;
 
 class Helper {
-    static int getPackageUid(String packageName, int userId) {
-        int uid = -1;
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                uid = ActivityThread.getPackageManager().getPackageUid(packageName, PackageManager.MATCH_UNINSTALLED_PACKAGES, userId);
-            } else {
-                uid = ActivityThread.getPackageManager().getPackageUid(packageName, userId);
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-
-        if (uid == -1) {
-            try {
-                ApplicationInfo applicationInfo = ActivityThread.getPackageManager()
-                        .getApplicationInfo(packageName, 0, userId);
-                List<Class> paramsType = new ArrayList<>(2);
-                paramsType.add(int.class);
-                paramsType.add(int.class);
-                List<Object> params = new ArrayList<>(2);
-                params.add(userId);
-                params.add(applicationInfo.uid);
-                uid = (int) ReflectUtils.invokeObjectMethod(UserHandle.class, "getUid", paramsType, params);
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
-        }
-
-        return uid;
-    }
-
     private static Map<String, Integer> sRuntimePermToOp = null;
 
     static int permissionToCode(String permission) {

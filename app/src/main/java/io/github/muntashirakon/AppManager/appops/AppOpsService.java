@@ -223,8 +223,8 @@ class AppOpsService implements IAppOpsService {
     }
 
     @Override
-    public void resetAllModes(int reqUserId, @NonNull String reqPackageName, int userHandle) throws Exception {
-        appOpsManager.resetAllModes(reqPackageName, userHandle);
+    public void resetAllModes(int reqUserId, @NonNull String reqPackageName) throws Exception {
+        appOpsManager.resetAllModes(reqPackageName, reqUserId);
 //        if (reqUserId < 0)
 //            runCommand(String.format("appops reset %s", reqPackageName));
 //        else
