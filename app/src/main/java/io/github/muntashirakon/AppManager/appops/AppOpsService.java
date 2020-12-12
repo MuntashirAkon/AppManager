@@ -28,14 +28,20 @@ import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.server.common.OpsResult;
 import io.github.muntashirakon.AppManager.server.common.PackageOps;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 
 @SuppressLint("DefaultLocale")
 public
 class AppOpsService implements IAppOpsService {
+    public static final String PERMISSION_GET_APP_OPS_STATS = "android.permission.GET_APP_OPS_STATS";
+
     private static final Pattern OP_MATCHER = Pattern.compile("(?:Uid mode: )?([\\w()]+): ([\\w=]+)" +
             "(?:; time=(?:\\s*0|([+\\-])(\\d+d)?(\\d{1,2}h)?(\\d{1,2}m)?(\\d{1,2}s)?(\\d{1,3}m))s ago)?" +
             "(?:; rejectTime=(?:\\s*0|([+\\-])(\\d+d)?(\\d{1,2}h)?(\\d{1,2}m)?(\\d{1,2}s)?(\\d{1,3}m))s ago)?" +
@@ -56,9 +62,23 @@ class AppOpsService implements IAppOpsService {
     private boolean isSuccessful = false;
     private List<String> output = null;
     private final io.github.muntashirakon.AppManager.servermanager.AppOpsManager appOpsManager;
+    @Nullable
+    private final AppOpsServiceLocal appOpsServiceLocal;
+    private final int currentUser;
 
     public AppOpsService() {
         appOpsManager = io.github.muntashirakon.AppManager.servermanager.AppOpsManager.getInstance(LocalServer.getInstance());
+        AppOpsServiceLocal appOpsServiceLocal1 = null;
+        if (!AppPref.isRootOrAdbEnabled()) {
+            // There's no reason to load local app ops service
+            try {
+                appOpsServiceLocal1 = AppOpsServiceLocal.getInstance(AppManager.getContext());
+            } catch (Exception e) {
+                Log.e("AppOpsService", "Couldn't connect to appOpsService locally", e);
+            }
+        }
+        appOpsServiceLocal = appOpsServiceLocal1;
+        currentUser = Users.getCurrentUserHandle();
     }
 
     /**
@@ -78,6 +98,9 @@ class AppOpsService implements IAppOpsService {
     @Override
     public int checkOperation(int op, int uid, String packageName, int userHandle)
             throws Exception {
+        if (appOpsServiceLocal != null && currentUser == userHandle) {
+            return appOpsServiceLocal.checkOperation(op, uid, packageName);
+        }
         OpsResult opsResult = appOpsManager.checkOperation(op, packageName, userHandle);
         if (opsResult == null) throw new Exception("OpsResult is null");
         Throwable throwable = opsResult.getException();
@@ -114,6 +137,9 @@ class AppOpsService implements IAppOpsService {
     @Override
     public List<PackageOps> getOpsForPackage(int uid, String packageName, int[] ops, int userHandle)
             throws Exception {
+        if (appOpsServiceLocal != null && currentUser == userHandle) {
+            return appOpsServiceLocal.getOpsForPackage(uid, packageName, ops);
+        }
         List<PackageOps> packageOpsList;
         OpsResult opsResult = appOpsManager.getOpsForPackage(uid, packageName, ops, userHandle);
         if (opsResult != null) {

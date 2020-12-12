@@ -80,6 +80,7 @@ import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
@@ -901,7 +902,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     private void loadAppOps() {
         if (packageName == null || appOps == null) return;
-        if (!isExternalApk && AppPref.isRootOrAdbEnabled()) {
+        if (!isExternalApk && (AppPref.isRootOrAdbEnabled()
+                || PermissionUtils.hasAppOpsPermission(getApplication()))) {
             if (mAppOpsService == null) mAppOpsService = new AppOpsService();
             try {
                 List<PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(-1, packageName, null, userHandle);

@@ -86,6 +86,7 @@ import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -467,9 +468,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             case PROVIDERS:
                 return R.string.no_providers;
             case APP_OPS:
-                if (isExternalApk) return R.string.external_apk_no_app_op;
-                if (AppPref.isRootOrAdbEnabled()) return R.string.no_app_ops;
-                else return R.string.only_works_in_root_mode;
+                if (isExternalApk) {
+                    return R.string.external_apk_no_app_op;
+                } else if (AppPref.isRootOrAdbEnabled() || PermissionUtils.hasAppOpsPermission(mActivity)) {
+                    return R.string.no_app_ops;
+                } else return R.string.no_app_ops_permission;
             case USES_PERMISSIONS:
             case PERMISSIONS:
                 return R.string.require_no_permission;
@@ -1141,6 +1144,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             if (isDangerousOp)
                 view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
             else view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
+            if (!isRootEnabled && !isADBEnabled) {
+                holder.toggleSwitch.setVisibility(View.GONE);
+                return;
+            }
             // Op Switch
             holder.toggleSwitch.setVisibility(View.VISIBLE);
             // op granted

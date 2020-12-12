@@ -773,4 +773,5 @@
     <string name="input_keystore_pass_msg">Tap here to provide KeyStore password</string>
     <string name="input_keystore_alias_pass">Password for alias <b>%1$s</b></string>
     <string name="input_keystore_alias_pass_description">Insert password for the alias <b>%1$s</b>. You can leave this empty if the password is the same as the KeyStore password.</string>
+    <string name="no_app_ops_permission">No permission to display app ops</string>
 </resources>

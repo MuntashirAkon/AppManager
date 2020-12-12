@@ -32,6 +32,7 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public final class PermissionUtils {
     public static final String TERMUX_PERM_RUN_COMMAND = "com.termux.permission.RUN_COMMAND";
+    public static final String PERMISSION_GET_APP_OPS_STATS = "android.permission.GET_APP_OPS_STATS";
 
     public static boolean hasDumpPermission() {
         Context context = AppManager.getContext();
@@ -52,7 +53,11 @@ public final class PermissionUtils {
         return hasPermission(context, TERMUX_PERM_RUN_COMMAND);
     }
 
-    private static boolean hasPermission(Context context, String permissionName) {
+    public static boolean hasAppOpsPermission(Context context) {
+        return hasPermission(context, PERMISSION_GET_APP_OPS_STATS);
+    }
+
+    public static boolean hasPermission(Context context, String permissionName) {
         return ContextCompat.checkSelfPermission(context, permissionName) == PackageManager.PERMISSION_GRANTED;
     }
 }
