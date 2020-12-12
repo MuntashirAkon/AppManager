@@ -738,4 +738,5 @@
     <string name="input_keystore_pass_msg">KeyStore parolasını sağlamak için buraya dokunun</string>
     <string name="input_keystore_pass_description">App Manager KeyStore parolasını girin. Bunu ilk kez görüyorsanız, lütfen bir parola oluşturucu kullanarak bir parola oluşturun ve buraya girmeden önce güvenli bir yere kaydedin.</string>
     <string name="input_keystore_pass">KeyStore parolasını gir</string>
+    <string name="no_app_ops_permission">Uygulama işlemlerini görüntüleme izni yok</string>
 </resources>
