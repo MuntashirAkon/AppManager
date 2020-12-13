@@ -71,7 +71,7 @@
     <string name="about">关于</string>
     <string name="data_size">数据</string>
     <string name="cache_size">缓存</string>
-    <string name="obb_size">安卓应用通用数据包</string>
+    <string name="obb_size">数据包</string>
     <string name="media_size">媒体</string>
     <string name="app_not_installed">应用未安装</string>
     <string name="system">系统</string>
@@ -158,7 +158,7 @@
     <string name="menu_remove_rules">删除规则</string>
     <string name="menu_apply_rules">应用规则</string>
     <string name="search">搜索</string>
-    <string name="aurora">极光</string>
+    <string name="aurora">Aurora</string>
     <string name="dev_protected_data_dir">受设备保护的数据目录</string>
     <string name="native_library_dir">原生的java本地接口目录</string>
     <string name="process_name">进程名称</string>
@@ -375,7 +375,7 @@
         <item quantity="other">%1$d 个拆分</item>
     </plurals>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">无法获取安装包信息，可能是一个拆分APK</string>
-    <string name="termux">Termux 终端模拟器</string>
+    <string name="termux">Termux</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> 已安装</string>
     <string name="failed_to_install_package_name">无法安装<xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="filter">筛选器</string>
@@ -513,7 +513,7 @@
     <string name="ok">好</string>
     <string name="input_backup_name_description">备份文件名称不应以数字开头，也不应包含任何空格。如果您想使用当前日期时间格式的命名，请将其保留为空。</string>
     <string name="input_backup_name">备份文件名</string>
-    <string name="downgrade_not_possible">没有root权限或通过ADB，应用降级不可能</string>
+    <string name="downgrade_not_possible">没有root或ADB，应用无法降级</string>
     <string name="downgrade">降级</string>
     <string name="process_state_with_extra">状态: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="process_state">状态: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
@@ -526,7 +526,7 @@
     <string name="state_unknown">未知</string>
     <string name="state_waking">苏醒</string>
     <string name="state_idle">空闲</string>
-    <string name="state_zombie">僵尸</string>
+    <string name="state_zombie">废止</string>
     <string name="state_dead">死亡</string>
     <string name="state_device_io">设备输入/输出</string>
     <string name="state_sleeping">沉睡中</string>
@@ -590,7 +590,7 @@
     <string name="app_data_will_be_lost">现有数据将丢失。</string>
     <string name="signature_mismatch_for_system_apps">无法安装应用程序，因为一个具有不同签名的系统应用程序的包名和它一样。</string>
     <string name="do_you_want_to_uninstall_and_install">您想要卸载并重新安装该应用程序吗\?</string>
-    <string name="packages">包</string>
+    <string name="packages">软件包</string>
     <string name="usage_access_not_supported">无法请求使用情况访问权限，因为相应的设置页不存在。</string>
     <string name="onboard">机载</string>
     <string name="navigation_trackball">轨迹球</string>
@@ -701,4 +701,5 @@
     <string name="input_keystore_pass_msg">点击此处提供密钥库密码</string>
     <string name="input_keystore_pass_description">插入App Manager密钥库密码。如果您是第一次看到这个，请使用密码生成器生成一个密码，并在插入之前将其保存在一个安全的地方。</string>
     <string name="input_keystore_pass">输入密钥库密码</string>
+    <string name="no_app_ops_permission">没有显示应用操作的权限</string>
 </resources>
