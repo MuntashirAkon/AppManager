@@ -356,15 +356,15 @@ public final class ApkFile implements AutoCloseable {
                         Entry entry = new Entry(fileName, apk, APK_SPLIT, manifestAttrs);
                         entries.add(entry);
                     } else {
-                        if (foundBaseApk) {
-                            throw new RuntimeException("Duplicate base apk found.");
-                        }
                         // Could be a base entry, check package name
                         if (!manifestAttrs.containsKey(ATTR_PACKAGE)) {
                             throw new IllegalArgumentException("Manifest doesn't contain any package name.");
                         }
                         String newPackageName = manifestAttrs.get(ATTR_PACKAGE);
                         if (packageName.equals(newPackageName)) {
+                            if (foundBaseApk) {
+                                throw new RuntimeException("Duplicate base apk found.");
+                            }
                             baseEntry = new Entry(fileName, apk, APK_BASE, manifestAttrs);
                             entries.add(baseEntry);
                             foundBaseApk = true;
