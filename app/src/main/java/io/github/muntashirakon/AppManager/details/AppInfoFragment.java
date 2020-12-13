@@ -101,12 +101,14 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -540,13 +542,18 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             addToHorizontalLayout(R.string.uninstall, R.drawable.ic_delete_black_24dp).setOnClickListener(v -> {
                 final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
                 if (AppPref.isRootOrAdbEnabled()) {
-                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
+                    ScrollableDialogBuilder builder = new ScrollableDialogBuilder(mActivity,
+                            isSystemApp ? R.string.uninstall_system_app_message : R.string.uninstall_app_message)
+                            .setCheckboxLabel(R.string.keep_data_and_signatures)
                             .setTitle(mPackageLabel)
-                            .setMessage(isSystemApp ?
-                                    R.string.uninstall_system_app_message : R.string.uninstall_app_message)
-                            .setPositiveButton(R.string.uninstall, (dialog, which) -> new Thread(() -> {
-                                // Try without root first then with root
-                                if (RunnerUtils.uninstallPackageWithData(mPackageName, mainModel.getUserHandle()).isSuccessful()) {
+                            .setPositiveButton(R.string.uninstall, (dialog, which, keepData) -> new Thread(() -> {
+                                Runner.Result result;
+                                if (keepData) {
+                                    result = RunnerUtils.uninstallPackageWithoutData(mPackageName, mainModel.getUserHandle());
+                                } else {
+                                    result = RunnerUtils.uninstallPackageWithData(mPackageName, mainModel.getUserHandle());
+                                }
+                                if (result.isSuccessful()) {
                                     runOnUiThread(() -> {
                                         Toast.makeText(mActivity, getString(R.string.uninstalled_successfully, mPackageLabel), Toast.LENGTH_LONG).show();
                                         mActivity.finish();
@@ -555,13 +562,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_uninstall, mPackageLabel), Toast.LENGTH_LONG).show());
                                 }
                             }).start())
-                            .setNegativeButton(R.string.cancel, (dialog, which) -> {
+                            .setNegativeButton(R.string.cancel, (dialog, which, keepData) -> {
                                 if (dialog != null) dialog.cancel();
                             });
                     if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
-                        builder.setNeutralButton(R.string.uninstall_updates, (dialog, which) ->
+                        builder.setNeutralButton(R.string.uninstall_updates, (dialog, which, keepData) ->
                                 new Thread(() -> {
-                                    if (RunnerUtils.uninstallPackageUpdate(mPackageName, mainModel.getUserHandle()).isSuccessful()) {
+                                    Runner.Result result = RunnerUtils.uninstallPackageUpdate(mPackageName, mainModel.getUserHandle(), keepData);
+                                    if (result.isSuccessful()) {
                                         runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.update_uninstalled_successfully, mPackageLabel), Toast.LENGTH_LONG).show());
                                     } else {
                                         runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_uninstall_updates, mPackageLabel), Toast.LENGTH_LONG).show());

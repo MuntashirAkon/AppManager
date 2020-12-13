@@ -775,4 +775,5 @@
     <string name="input_keystore_alias_pass_description">Insert password for the alias <b>%1$s</b>. You can leave this empty if the password is the same as the KeyStore password.</string>
     <string name="no_app_ops_permission">No permission to display app ops</string>
     <string name="this_action_cannot_be_undone">This action cannot be undone.</string>
+    <string name="keep_data_and_signatures">Keep data and signatures</string>
 </resources>

@@ -219,8 +219,8 @@ public final class RunnerUtils {
     }
 
     @NonNull
-    public static Runner.Result uninstallPackageUpdate(String packageName, int userHandle) {
-        String cmd = String.format(CMD_UNINSTALL_PACKAGE_WITH_DATA, userHandleToUser(USER_ALL), packageName) + " && "
+    public static Runner.Result uninstallPackageUpdate(String packageName, int userHandle, boolean keepData) {
+        String cmd = String.format(keepData ? CMD_UNINSTALL_PACKAGE : CMD_UNINSTALL_PACKAGE_WITH_DATA, userHandleToUser(USER_ALL), packageName) + " && "
                 + String.format(CMD_INSTALL_EXISTING_PACKAGE, userHandleToUser(userHandle), packageName);
         return Runner.runCommand(cmd);
     }
