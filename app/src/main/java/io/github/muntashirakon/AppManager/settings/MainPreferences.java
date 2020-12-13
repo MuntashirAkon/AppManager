@@ -55,12 +55,12 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
+import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class MainPreferences extends PreferenceFragmentCompat {
     private static final List<Integer> THEME_CONST = Arrays.asList(
@@ -343,7 +343,8 @@ public class MainPreferences extends PreferenceFragmentCompat {
             new Thread(() -> {
                 final Spanned spannedChangelog = HtmlCompat.fromHtml(IOUtils.getContentFromAssets(activity, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
                 activity.runOnUiThread(() ->
-                        UIUtils.getDialogWithScrollableTextView(activity, spannedChangelog, true)
+                        new ScrollableDialogBuilder(activity, spannedChangelog)
+                                .linkifyAll()
                                 .setTitle(R.string.changelog)
                                 .setNegativeButton(R.string.ok, null)
                                 .show());

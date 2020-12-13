@@ -78,6 +78,7 @@ import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
+import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
@@ -586,10 +587,11 @@ public class MainActivity extends BaseActivity implements
             new Thread(() -> {
                 final Spanned spannedChangelog = HtmlCompat.fromHtml(IOUtils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
                 runOnUiThread(() ->
-                        UIUtils.getDialogWithScrollableTextView(this, spannedChangelog, true)
+                        new ScrollableDialogBuilder(this, spannedChangelog)
+                                .linkifyAll()
                                 .setTitle(R.string.changelog)
                                 .setNegativeButton(R.string.ok, null)
-                                .setNeutralButton(R.string.instructions, (dialog, which) ->
+                                .setNeutralButton(R.string.instructions, (dialog, which, isChecked) ->
                                         new FullscreenDialog(this)
                                                 .setTitle(R.string.instructions)
                                                 .setView(R.layout.dialog_instructions)

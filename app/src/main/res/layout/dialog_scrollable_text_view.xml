@@ -23,14 +23,29 @@
     android:scrollIndicators="top|bottom"
     tools:ignore="UnusedAttribute">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/content"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:paddingTop="@dimen/padding_small"
         android:paddingBottom="@dimen/padding_small"
         android:paddingStart="@dimen/padding_medium"
-        android:paddingEnd="@dimen/padding_medium"
-        android:textIsSelectable="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:paddingEnd="@dimen/padding_medium">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@android:id/content"
+            android:textIsSelectable="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="@tools:sample/lorem/random" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@android:id/checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="@string/disclaimer_agree_forever"
+            android:textColor="?android:attr/textColorSecondary" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </ScrollView>

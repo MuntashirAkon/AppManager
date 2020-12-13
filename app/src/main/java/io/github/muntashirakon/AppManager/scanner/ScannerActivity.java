@@ -66,6 +66,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.types.EmptySpan;
 import io.github.muntashirakon.AppManager.types.NumericSpan;
+import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -348,15 +349,15 @@ public class ScannerActivity extends BaseActivity {
             ((TextView) findViewById(R.id.tracker_description)).setText(builder);
             if (finalTotalTrackersFound == 0) return;
             findViewById(R.id.tracker).setOnClickListener(v ->
-                    UIUtils.getDialogWithScrollableTextView(this, getOrderedList(foundTrackerInfo), false)
+                    new ScrollableDialogBuilder(this, getOrderedList(foundTrackerInfo))
                             .setTitle(R.string.tracker_details)
                             .setPositiveButton(R.string.ok, null)
-                            .setNegativeButton(R.string.copy, (dialog, which) -> {
+                            .setNegativeButton(R.string.copy, (dialog, which, isChecked) -> {
                                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                                 ClipData clip = ClipData.newPlainText(getString(R.string.signatures), TextUtils.join("\n", foundTrackerInfo));
                                 clipboard.setPrimaryClip(clip);
                             })
-                            .setNeutralButton(R.string.exodus_link, (dialog, which) -> {
+                            .setNeutralButton(R.string.exodus_link, (dialog, which, isChecked) -> {
                                 Uri exodus_link = Uri.parse(String.format("https://reports.exodus-privacy.eu.org/en/reports/%s/latest/", mPackageName));
                                 Intent intent = new Intent(Intent.ACTION_VIEW, exodus_link);
                                 if (intent.resolveActivity(getPackageManager()) != null) {
@@ -433,10 +434,10 @@ public class ScannerActivity extends BaseActivity {
             ((TextView) findViewById(R.id.libs_description)).setText(TextUtils.join(", ", foundLibNames));
             if (finalTotalLibsFound == 0) return;
             findViewById(R.id.libs).setOnClickListener(v ->
-                    UIUtils.getDialogWithScrollableTextView(this, getOrderedList(foundLibInfo), false)
+                    new ScrollableDialogBuilder(this, getOrderedList(foundLibInfo))
                             .setTitle(R.string.lib_details)
                             .setNegativeButton(R.string.ok, null)
-                            .setNeutralButton(R.string.copy, (dialog, which) -> {
+                            .setNeutralButton(R.string.copy, (dialog, which, isChecked) -> {
                                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                                 ClipData clip = ClipData.newPlainText(getString(R.string.signatures), TextUtils.join("\n", foundLibInfo));
                                 clipboard.setPrimaryClip(clip);

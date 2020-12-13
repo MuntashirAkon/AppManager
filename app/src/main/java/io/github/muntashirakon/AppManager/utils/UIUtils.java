@@ -28,14 +28,12 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
-import android.text.util.Linkify;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textview.MaterialTextView;
 
 import java.util.Locale;
 
@@ -43,7 +41,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
-import androidx.core.text.util.LinkifyCompat;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
 
@@ -162,15 +159,6 @@ public class UIUtils {
 
     public static int spToPx(@NonNull Context context, float sp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
-    }
-
-    @NonNull
-    public static MaterialAlertDialogBuilder getDialogWithScrollableTextView(@NonNull FragmentActivity activity, CharSequence text, boolean linkify) {
-        View view = activity.getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
-        MaterialTextView textView = view.findViewById(R.id.content);
-        textView.setText(text);
-        if (linkify) LinkifyCompat.addLinks(textView, Linkify.ALL);
-        return new MaterialAlertDialogBuilder(activity).setView(view);
     }
 
     @NonNull
