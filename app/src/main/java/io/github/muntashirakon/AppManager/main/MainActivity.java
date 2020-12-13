@@ -486,20 +486,20 @@ public class MainActivity extends BaseActivity implements
         } else if (id == R.id.action_block_trackers) {
             handleBatchOp(BatchOpsManager.OP_BLOCK_TRACKERS);
         } else if (id == R.id.action_clear_data) {
-            handleBatchOp(BatchOpsManager.OP_CLEAR_DATA);
+            handleBatchOpWithWarning(BatchOpsManager.OP_CLEAR_DATA);
         } else if (id == R.id.action_enable) {
             handleBatchOp(BatchOpsManager.OP_ENABLE);
         } else if (id == R.id.action_disable) {
-            handleBatchOp(BatchOpsManager.OP_DISABLE);
+            handleBatchOpWithWarning(BatchOpsManager.OP_DISABLE);
         } else if (id == R.id.action_disable_background) {
-            handleBatchOp(BatchOpsManager.OP_DISABLE_BACKGROUND);
+            handleBatchOpWithWarning(BatchOpsManager.OP_DISABLE_BACKGROUND);
         } else if (id == R.id.action_export_blocking_rules) {
             @SuppressLint("SimpleDateFormat") final String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
             batchExportRules.launch(fileName);
         } else if (id == R.id.action_force_stop) {
             handleBatchOp(BatchOpsManager.OP_FORCE_STOP);
         } else if (id == R.id.action_uninstall) {
-            handleBatchOp(BatchOpsManager.OP_UNINSTALL);
+            handleBatchOpWithWarning(BatchOpsManager.OP_UNINSTALL);
         } else {
             mAdapter.clearSelection();
             handleSelection();
@@ -615,7 +615,6 @@ public class MainActivity extends BaseActivity implements
     private void handleBatchOp(@BatchOpsManager.OpType int op) {
         showProgressIndicator(true);
         Intent intent = new Intent(this, BatchOpsService.class);
-//        intent.putParcelableArrayListExtra(BatchOpsService.EXTRA_OP_PKG, mModel.getSelectedPackagesWithUsers(true));
         BatchOpsManager.Result input = new BatchOpsManager.Result(mModel.getSelectedPackagesWithUsers(false));
         intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, input.getFailedPackages());
         intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, input.getAssociatedUserHandles());
@@ -625,6 +624,15 @@ public class MainActivity extends BaseActivity implements
             mAdapter.clearSelection();
             runOnUiThread(this::handleSelection);
         }).start();
+    }
+
+    private void handleBatchOpWithWarning(@BatchOpsManager.OpType int op) {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.are_you_sure)
+                .setMessage(R.string.this_action_cannot_be_undone)
+                .setPositiveButton(R.string.yes, (dialog, which) -> handleBatchOp(op))
+                .setNegativeButton(R.string.no, null)
+                .show();
     }
 
     private void showProgressIndicator(boolean show) {
