@@ -425,15 +425,18 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         boolean isSystemlessPath;
         boolean hasMasterkey;
         boolean hasKeystore;
+        boolean isMagiskHideEnabled;
         if (!isExternalApk && isRootEnabled) {
             isSystemlessPath = MagiskUtils.isSystemlessPath(PackageUtils
                     .getHiddenCodePathOrDefault(mPackageName, mApplicationInfo.publicSourceDir));
             hasMasterkey = KeyStoreUtils.hasMasterKey(mApplicationInfo.uid);
             hasKeystore = KeyStoreUtils.hasKeyStore(mApplicationInfo.uid);
+            isMagiskHideEnabled = MagiskUtils.isHidden(mPackageName);
         } else {
             isSystemlessPath = false;
             hasMasterkey = false;
             hasKeystore = false;
+            isMagiskHideEnabled = false;
         }
         runOnUiThread(() -> {
             mTagCloud.removeAllViews();
@@ -505,6 +508,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0)
                 addChip(R.string.stopped, R.color.stopped);
             if (!mApplicationInfo.enabled) addChip(R.string.disabled_app, R.color.disabled_user);
+            if (isMagiskHideEnabled) {
+                addChip(R.string.magisk_hide_enabled);
+            }
             if (hasKeystore) {
                 Chip chip;
                 if (hasMasterkey) chip = addChip(R.string.keystore, R.color.tracker);
