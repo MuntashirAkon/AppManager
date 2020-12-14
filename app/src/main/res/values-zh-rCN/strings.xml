@@ -375,7 +375,7 @@
         <item quantity="other">%1$d 个拆分</item>
     </plurals>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">无法获取安装包信息，可能是一个拆分APK</string>
-    <string name="termux">Termux</string>
+    <string name="termux">Termux 终端模拟器</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> 已安装</string>
     <string name="failed_to_install_package_name">无法安装<xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="filter">筛选器</string>
@@ -702,4 +702,8 @@
     <string name="input_keystore_pass_description">插入App Manager密钥库密码。如果您是第一次看到这个，请使用密码生成器生成一个密码，并在插入之前将其保存在一个安全的地方。</string>
     <string name="input_keystore_pass">输入密钥库密码</string>
     <string name="no_app_ops_permission">没有显示应用操作的权限</string>
+    <string name="pref_backup_android_keystore_msg">并不是所有的应用程序在恢复后都能正常工作。恢复密钥存储库在大多数设备上无法工作。</string>
+    <string name="pref_backup_android_keystore">备份带安卓密钥库的应用程序</string>
+    <string name="keep_data_and_signatures">保留数据和签名</string>
+    <string name="this_action_cannot_be_undone">此操作无法被撤销。</string>
 </resources>
