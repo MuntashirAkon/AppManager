@@ -730,7 +730,7 @@
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
     <string name="un_apkm">Распаковать Apkm</string>
-    <string name="keystore">Хранилище ключей</string>
+    <string name="keystore">KeyStore</string>
     <string name="ecc">Эллиптическая криптография (ЕСС)</string>
     <string name="none">Без шифрования</string>
     <string name="pref_encryption_msg">Добавить шифрование для резервных копий.</string>
@@ -803,4 +803,8 @@
     <string name="input_keystore_alias_pass_description">Вставьте пароль для псевдонима &lt;b&gt;%1$s&lt;/b&gt;. Вы можете оставить это поле пустым, если пароль совпадает с паролем хранилища ключей.</string>
     <string name="input_keystore_alias_pass">Пароль для псевдонима &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="no_app_ops_permission">Нет разрешения на отображение операций приложения</string>
+    <string name="pref_backup_android_keystore_msg">Не все приложения будут работать после восстановления. Восстановление KeyStore не работает на большинстве устройств.</string>
+    <string name="pref_backup_android_keystore">Резервное копирование приложений с Android KeyStore</string>
+    <string name="keep_data_and_signatures">Храните данные и подписи</string>
+    <string name="this_action_cannot_be_undone">Это действие не может быть отменено.</string>
 </resources>
