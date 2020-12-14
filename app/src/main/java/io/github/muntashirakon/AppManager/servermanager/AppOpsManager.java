@@ -39,6 +39,7 @@ public class AppOpsManager {
         OpsCommands.Builder builder = new OpsCommands.Builder();
         builder.setAction(OpsCommands.ACTION_GET);
         builder.setPackageName(packageName);
+        builder.setUidInt(uid);
         builder.setOps(ops);
         builder.setUserHandleId(userHandle);
         return wrapOps(builder);
@@ -63,10 +64,11 @@ public class AppOpsManager {
         return wrapOps(builder);
     }
 
-    public OpsResult setOpsMode(String packageName, int op, int mode, int userHandle) throws Exception {
+    public OpsResult setOpsMode(String packageName, int uid, int op, int mode, int userHandle) throws Exception {
         OpsCommands.Builder builder = new OpsCommands.Builder();
         builder.setAction(OpsCommands.ACTION_SET);
         builder.setPackageName(packageName);
+        builder.setUidInt(uid);
         builder.setOpInt(op);
         builder.setModeInt(mode);
         builder.setUserHandleId(userHandle);
@@ -81,17 +83,18 @@ public class AppOpsManager {
         return wrapOps(builder);
     }
 
-    public OpsResult checkOperation(int op, String packageName, int userHandle) throws Exception {
+    public OpsResult checkOperation(int op, int uid, String packageName, int userHandle) throws Exception {
         OpsCommands.Builder builder = new OpsCommands.Builder();
         builder.setAction(OpsCommands.ACTION_CHECK);
         builder.setPackageName(packageName);
+        builder.setUidInt(uid);
         builder.setOpInt(op);
         builder.setUserHandleId(userHandle);
         return wrapOps(builder);
     }
 
-    public OpsResult disableAllPermission(final String packageName, int userHandle) throws Exception {
-        OpsResult opsForPackage = getOpsForPackage(-1, packageName, null, userHandle);
+    public OpsResult disableAllPermission(final String packageName, int uid, int userHandle) throws Exception {
+        OpsResult opsForPackage = getOpsForPackage(uid, packageName, null, userHandle);
         if (opsForPackage != null) {
             if (opsForPackage.getException() == null) {
                 List<PackageOps> list = opsForPackage.getList();
@@ -101,7 +104,7 @@ public class AppOpsManager {
                         if (ops != null) {
                             for (OpEntry op : ops) {
                                 if (op.getMode() != android.app.AppOpsManager.MODE_IGNORED) {
-                                    setOpsMode(packageName, op.getOp(), android.app.AppOpsManager.MODE_IGNORED, userHandle);
+                                    setOpsMode(packageName, uid, op.getOp(), android.app.AppOpsManager.MODE_IGNORED, userHandle);
                                 }
                             }
                         }

@@ -99,7 +99,7 @@ class AppOpsService implements IAppOpsService {
         if (appOpsServiceLocal != null && currentUser == userHandle) {
             return appOpsServiceLocal.checkOperation(op, uid, packageName);
         }
-        OpsResult opsResult = appOpsManager.checkOperation(op, packageName, userHandle);
+        OpsResult opsResult = appOpsManager.checkOperation(op, uid, packageName, userHandle);
         if (opsResult == null) throw new Exception("OpsResult is null");
         Throwable throwable = opsResult.getException();
         if (throwable != null) {
@@ -197,7 +197,7 @@ class AppOpsService implements IAppOpsService {
 
     @Override
     public void setMode(int op, int uid, String packageName, int mode, int userHandle) throws Exception {
-        OpsResult opsResult = appOpsManager.setOpsMode(packageName, op, mode, userHandle);
+        OpsResult opsResult = appOpsManager.setOpsMode(packageName, uid, op, mode, userHandle);
         Throwable throwable = opsResult.getException();
         if (throwable != null) {
             if (throwable instanceof ClassCastException) {
