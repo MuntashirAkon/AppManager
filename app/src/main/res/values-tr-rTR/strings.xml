@@ -739,4 +739,8 @@
     <string name="input_keystore_pass_description">App Manager KeyStore parolasını girin. Bunu ilk kez görüyorsanız, lütfen bir parola oluşturucu kullanarak bir parola oluşturun ve buraya girmeden önce güvenli bir yere kaydedin.</string>
     <string name="input_keystore_pass">KeyStore parolasını gir</string>
     <string name="no_app_ops_permission">Uygulama işlemlerini görüntüleme izni yok</string>
+    <string name="pref_backup_android_keystore_msg">Geri yüklemeden sonra bazı uygulamalar çalışmayacaktır. KeyStore\'u geri yüklemek çoğu aygıtta çalışmaz.</string>
+    <string name="pref_backup_android_keystore">Android KeyStore ile uygulamaları yedekle</string>
+    <string name="keep_data_and_signatures">Verileri ve imzaları sakla</string>
+    <string name="this_action_cannot_be_undone">Bu eylem geri alınamaz.</string>
 </resources>
