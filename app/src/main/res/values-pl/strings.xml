@@ -524,4 +524,6 @@
     <string name="no_providers">Brak dostawców</string>
     <string name="providers">Dostawcy</string>
     <string name="activities">Aktywności</string>
+    <string name="stopped">Zatrzymane</string>
+    <string name="type_boolean">Prawda/fałsz</string>
 </resources>
