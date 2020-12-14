@@ -741,4 +741,9 @@
         <item quantity="one">Signaturschema</item>
         <item quantity="other">Signaturschemata</item>
     </plurals>
+    <string name="pref_backup_android_keystore">Sichern von Apps mit Android KeyStore</string>
+    <string name="pref_backup_android_keystore_msg">Die Wiederherstellung des KeyStore funktioniert auf den meisten Geräten nicht.</string>
+    <string name="keep_data_and_signatures">Daten und Signaturen aufbewahren</string>
+    <string name="this_action_cannot_be_undone">Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="no_app_ops_permission">Keine Berechtigung zum Anzeigen von App-Ops</string>
 </resources>
