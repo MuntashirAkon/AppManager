@@ -745,4 +745,6 @@
     <string name="pref_backup_android_keystore">Backup de aplicativos com Android KeyStore</string>
     <string name="pref_backup_android_keystore_msg">Nem todos os aplicativos funcionarão após uma restauração. Restaurar o KeyStore não funciona na maioria dos dispositivos.</string>
     <string name="this_action_cannot_be_undone">Esta ação não pode ser desfeita.</string>
+    <string name="set_app_op_mode">Definir o modo da operação de aplicativo</string>
+    <string name="magisk_hide_enabled">MagiskHide</string>
 </resources>
