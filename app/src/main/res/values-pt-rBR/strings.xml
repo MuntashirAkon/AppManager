@@ -741,4 +741,8 @@
     <string name="input_keystore_pass_msg">Clique aqui para fornecer a senha do KeyStore</string>
     <string name="input_keystore_pass">Inserir senha do KeyStore</string>
     <string name="no_app_ops_permission">Sem permissão para mostrar as operações de aplicativo</string>
+    <string name="keep_data_and_signatures">Mantenha os dados e assinaturas</string>
+    <string name="pref_backup_android_keystore">Backup de aplicativos com Android KeyStore</string>
+    <string name="pref_backup_android_keystore_msg">Nem todos os aplicativos funcionarão após uma restauração. Restaurar o KeyStore não funciona na maioria dos dispositivos.</string>
+    <string name="this_action_cannot_be_undone">Esta ação não pode ser desfeita.</string>
 </resources>
