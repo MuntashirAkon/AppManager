@@ -746,4 +746,6 @@
     <string name="keep_data_and_signatures">Daten und Signaturen aufbewahren</string>
     <string name="this_action_cannot_be_undone">Diese Aktion kann nicht rückgängig gemacht werden.</string>
     <string name="no_app_ops_permission">Keine Berechtigung zum Anzeigen von App-Ops</string>
+    <string name="set_app_op_mode">App-Op-Modus einstellen</string>
+    <string name="magisk_hide_enabled">MagiskHide</string>
 </resources>
