@@ -17,6 +17,6 @@
     </string>
     <string name="disclaimer_footer">© 2020 Muntashir Al-Islam</string>
     <string name="disclaimer_agree_forever">Не показывать снова</string>
-    <string name="disclaimer_agree">Принимаю</string>
+    <string name="disclaimer_agree">Принять</string>
     <string name="disclaimer_exit">Выход</string>
 </resources>
