@@ -493,4 +493,35 @@
     <string name="pref_apk_signing_msg">Ustaw schematy podpisywania, niestandardowy klucz, itp.</string>
     <string name="apk_signing">Podpisywanie APK</string>
     <string name="app_size">Aplikacja</string>
+    <string name="failed_to_enable_op">Nie można włączyć pożądanej funkcji App Op</string>
+    <string name="no_app_ops">Brak operacji</string>
+    <string name="app_ops">App Ops</string>
+    <string name="disable">Wyłącz</string>
+    <string name="failed_to_uninstall">Nie można usunąć &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="integer_value">Wartość liczby całkowitej</string>
+    <string name="long_integer_value">Długa wartość liczby całkowitej</string>
+    <string name="string_value">Wartość ciągu</string>
+    <string name="shared_prefs">Udostępnione Prefs</string>
+    <string name="test_only">Tylko test</string>
+    <string name="dev_protected_data_dir">Chroniony Katalog Danych</string>
+    <string name="grant_usage_acess_message">Dostęp do użytkowania jest obowiązkowy do wyświetlania informacji o użytkowaniu appki.</string>
+    <string name="grant_usage_access">Przyznaj Dostęp do Użytkowania</string>
+    <string name="go">Idź</string>
+    <string name="tracker_classes">Klasy elementów śledzących</string>
+    <string name="tracker_details">Szczegóły elementu śledzącego</string>
+    <string name="found_trackers">Znaleziono elementów śledzących:</string>
+    <string name="error_invalid_icon_resource">Nieprawidłowy zasób ikon</string>
+    <string name="package_name">Nazwa Pakietu</string>
+    <string name="error_verbose_pin_shortcut">Obecny launcher nie wspiera PinShortcut. Brak możliwości utworzenia skrótu.</string>
+    <string name="empty_package_name">Pusta nazwa pakietu</string>
+    <string name="main_activity">Aktywność główna</string>
+    <string name="installer_app">Instalator</string>
+    <string name="user">Użytkownik</string>
+    <string name="media_size">Media</string>
+    <string name="sort_by_package_name">Nazwa pakietu</string>
+    <string name="input_features">Funkcje wejściowe</string>
+    <string name="patterns_allowed">Dozwolone wzorce</string>
+    <string name="no_providers">Brak dostawców</string>
+    <string name="providers">Dostawcy</string>
+    <string name="activities">Aktywności</string>
 </resources>
