@@ -69,6 +69,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.ColorRes;
@@ -159,6 +161,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private ImageView iconView;
     private TextView versionView;
 
+    private final ExecutorService executor = Executors.newFixedThreadPool(3);
+
     private boolean isExternalApk;
     private boolean isRootEnabled;
     private boolean isAdbEnabled;
@@ -210,7 +214,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         iconView = view.findViewById(R.id.icon);
         versionView = view.findViewById(R.id.version);
         // Set adapter only after package info is loaded
-        new Thread(() -> {
+        executor.submit(() -> {
             mPackageName = mainModel.getPackageName();
             if (mPackageName == null) {
                 mainModel.setPackageInfo(false);
@@ -219,7 +223,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             isExternalApk = mainModel.getIsExternalApk();
             adapter = new AppInfoRecyclerAdapter();
             recyclerView.setAdapter(adapter);
-        }).start();
+        });
         // Set observer
         mainModel.get(AppDetailsFragment.APP_INFO).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (!appDetailsItems.isEmpty() && mainModel.isPackageExist()) {
@@ -227,7 +231,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 mPackageInfo = (PackageInfo) appDetailsItem.vanillaItem;
                 mPackageName = appDetailsItem.name;
                 showProgressIndicator(true);
-                new Thread(this::getPackageInfo).start();
+                executor.submit(this::getPackageInfo);
             }
         });
     }
@@ -253,7 +257,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (itemId == R.id.action_refresh_detail) {
             refreshDetails();
         } else if (itemId == R.id.action_share_apk) {
-            new Thread(() -> {
+            executor.submit(() -> {
                 try {
                     File tmpApkSource = ApkUtils.getSharableApkFile(mPackageInfo);
                     runOnUiThread(() -> {
@@ -267,7 +271,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     e.printStackTrace();
                     runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_extract_apk_file), Toast.LENGTH_SHORT).show());
                 }
-            }).start();
+            });
         } else if (itemId == R.id.action_backup) {
             BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
             Bundle args = new Bundle();
@@ -353,6 +357,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onResume() {
         super.onResume();
         if (mActivity.searchView != null) mActivity.searchView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDetach() {
+        executor.shutdownNow();
+        super.onDetach();
     }
 
     @Override
@@ -537,11 +547,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // Set disable
             if (isRootEnabled || isAdbEnabled) {
                 if (mApplicationInfo.enabled) {
-                    addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> new Thread(() -> {
+                    addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> executor.submit(() -> {
                         if (!RunnerUtils.disablePackage(mPackageName, mainModel.getUserHandle()).isSuccessful()) {
                             runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_disable, mPackageLabel), Toast.LENGTH_LONG).show());
                         }
-                    }).start());
+                    }));
                 }
             }
             // Set uninstall
@@ -552,7 +562,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             isSystemApp ? R.string.uninstall_system_app_message : R.string.uninstall_app_message)
                             .setCheckboxLabel(R.string.keep_data_and_signatures)
                             .setTitle(mPackageLabel)
-                            .setPositiveButton(R.string.uninstall, (dialog, which, keepData) -> new Thread(() -> {
+                            .setPositiveButton(R.string.uninstall, (dialog, which, keepData) -> executor.submit(() -> {
                                 Runner.Result result;
                                 if (keepData) {
                                     result = RunnerUtils.uninstallPackageWithoutData(mPackageName, mainModel.getUserHandle());
@@ -567,20 +577,20 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 } else {
                                     runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_uninstall, mPackageLabel), Toast.LENGTH_LONG).show());
                                 }
-                            }).start())
+                            }))
                             .setNegativeButton(R.string.cancel, (dialog, which, keepData) -> {
                                 if (dialog != null) dialog.cancel();
                             });
                     if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
                         builder.setNeutralButton(R.string.uninstall_updates, (dialog, which, keepData) ->
-                                new Thread(() -> {
+                                executor.submit(() -> {
                                     Runner.Result result = RunnerUtils.uninstallPackageUpdate(mPackageName, mainModel.getUserHandle(), keepData);
                                     if (result.isSuccessful()) {
                                         runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.update_uninstalled_successfully, mPackageLabel), Toast.LENGTH_LONG).show());
                                     } else {
                                         runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_uninstall_updates, mPackageLabel), Toast.LENGTH_LONG).show());
                                     }
-                                }).start());
+                                }));
                     }
                     builder.show();
                 } else {
@@ -593,22 +603,22 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (isRootEnabled || isAdbEnabled) {
                 if (!mApplicationInfo.enabled) {
                     // Enable app
-                    addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> new Thread(() -> {
+                    addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> executor.submit(() -> {
                         if (!RunnerUtils.enablePackage(mPackageName, mainModel.getUserHandle()).isSuccessful()) {
                             runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_enable, mPackageLabel), Toast.LENGTH_LONG).show());
                         }
-                    }).start());
+                    }));
                 }
                 // Force stop
                 if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
-                    addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> new Thread(() -> {
+                    addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> executor.submit(() -> {
                         if (RunnerUtils.forceStopPackage(mPackageName, mainModel.getUserHandle()).isSuccessful()) {
                             // Refresh
                             runOnUiThread(this::refreshDetails);
                         } else {
                             runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_stop, mPackageLabel), Toast.LENGTH_LONG).show());
                         }
-                    }).start());
+                    }));
                 }
                 // Clear data
                 addToHorizontalLayout(R.string.clear_data, R.drawable.ic_delete_black_24dp)
@@ -616,21 +626,21 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .setTitle(mPackageLabel)
                                 .setMessage(R.string.clear_data_message)
                                 .setPositiveButton(R.string.clear, (dialog, which) ->
-                                        new Thread(() -> {
+                                        executor.submit(() -> {
                                             if (RunnerUtils.clearPackageData(mPackageName, mainModel.getUserHandle()).isSuccessful()) {
                                                 runOnUiThread(this::refreshDetails);
                                             }
-                                        }).start())
+                                        }))
                                 .setNegativeButton(R.string.cancel, null)
                                 .show());
                 // Clear cache
                 if (isRootEnabled) {
                     addToHorizontalLayout(R.string.clear_cache, R.drawable.ic_delete_black_24dp)
-                            .setOnClickListener(v -> new Thread(() -> {
+                            .setOnClickListener(v -> executor.submit(() -> {
                                 if (RunnerUtils.clearPackageCache(mPackageName, mainModel.getUserHandle()).isSuccessful()) {
                                     runOnUiThread(this::refreshDetails);
                                 }
-                            }).start());
+                            }));
                 }
             }  // End root only
         } else {
@@ -681,7 +691,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
                 new MaterialAlertDialogBuilder(mActivity)
                         .setTitle(R.string.select_apk)
-                        .setItems(entryNames, (dialog, which) -> new Thread(() -> {
+                        .setItems(entryNames, (dialog, which) -> executor.submit(() -> {
                             try {
                                 File file = apkEntries.get(which).getRealCachedFile();
                                 intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
@@ -689,7 +699,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                        }).start())
+                        }))
                         .setNegativeButton(R.string.cancel, null)
                         .show();
             } else {
