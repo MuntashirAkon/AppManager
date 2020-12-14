@@ -776,4 +776,6 @@
     <string name="no_app_ops_permission">No permission to display app ops</string>
     <string name="this_action_cannot_be_undone">This action cannot be undone.</string>
     <string name="keep_data_and_signatures">Keep data and signatures</string>
+    <string name="pref_backup_android_keystore">Backup apps with Android KeyStore</string>
+    <string name="pref_backup_android_keystore_msg">Not all apps will work after a restore. Restoring KeyStore doesn\'t work on most devices.</string>
 </resources>

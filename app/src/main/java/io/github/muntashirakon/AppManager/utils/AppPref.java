@@ -61,6 +61,7 @@ public class AppPref {
         PREF_APP_THEME_INT,
         PREF_BACKUP_COMPRESSION_METHOD_STR,
         PREF_BACKUP_FLAGS_INT,
+        PREF_BACKUP_ANDROID_KEYSTORE_BOOL,
         PREF_COMPONENTS_SORT_ORDER_INT,
         PREF_CUSTOM_LOCALE_STR,
         PREF_ENABLE_KILL_FOR_SYSTEM_BOOL,
@@ -312,6 +313,7 @@ public class AppPref {
             case PREF_GLOBAL_BLOCKING_ENABLED_BOOL:
             case PREF_INSTALLER_DISPLAY_USERS_BOOL:
             case PREF_INSTALLER_SIGN_APK_BOOL:
+            case PREF_BACKUP_ANDROID_KEYSTORE_BOOL:
                 return false;
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_USAGE_ACCESS_ENABLED_BOOL:

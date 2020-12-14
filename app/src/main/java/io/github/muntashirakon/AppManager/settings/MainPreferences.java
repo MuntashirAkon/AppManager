@@ -299,6 +299,9 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .show();
             return true;
         });
+        // App usage permission toggle
+        SwitchPreferenceCompat backupKeyStore = Objects.requireNonNull(findPreference("backup_android_keystore"));
+        backupKeyStore.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_BACKUP_ANDROID_KEYSTORE_BOOL));
         // Encryption
         ((Preference) Objects.requireNonNull(findPreference("encryption"))).setOnPreferenceClickListener(preference -> {
             CharSequence[] encryptionNamesText = new CharSequence[encryptionNames.length];

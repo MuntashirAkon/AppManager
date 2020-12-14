@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 
 public final class KeyStoreUtils {
     public static boolean hasKeyStore(int uid) {
-        PrivilegedFile keyStorePath = getMasterKey(Users.getUserHandle(uid));
+        PrivilegedFile keyStorePath = getKeyStorePath(Users.getUserHandle(uid));
         String[] fileNames = keyStorePath.list();
         if (fileNames != null) {
             String uidStr = uid + "_";
@@ -51,7 +50,7 @@ public final class KeyStoreUtils {
     public static List<String> getKeyStoreFiles(int uid, int userHandle) {
         // For any app, the key path is as follows:
         // /data/misc/keystore/user_{user_handle}/{uid}_{KEY_NAME}_{alias}
-        PrivilegedFile keyStorePath = getMasterKey(userHandle);
+        PrivilegedFile keyStorePath = getKeyStorePath(userHandle);
         String[] fileNames = keyStorePath.list();
         List<String> keyStoreFiles = new ArrayList<>();
         if (fileNames != null) {
@@ -67,6 +66,6 @@ public final class KeyStoreUtils {
 
     @NonNull
     public static PrivilegedFile getMasterKey(int userHandle) {
-        return new PrivilegedFile(new File("/data/misc/keystore/", "user_" + userHandle), ".masterkey");
+        return new PrivilegedFile(getKeyStorePath(userHandle), ".masterkey");
     }
 }

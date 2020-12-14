@@ -106,6 +106,11 @@
             app:title="@string/backup_options"
             app:summary="@string/pref_backup_flags_msg" />
 
+        <SwitchPreferenceCompat
+            app:key="backup_android_keystore"
+            app:title="@string/pref_backup_android_keystore"
+            app:summary="@string/pref_backup_android_keystore_msg" />
+
         <Preference
             app:key="encryption"
             app:title="@string/encryption"

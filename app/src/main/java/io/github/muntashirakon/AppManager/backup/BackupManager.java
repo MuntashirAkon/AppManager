@@ -66,6 +66,7 @@ import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.FreshFile;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
@@ -338,9 +339,12 @@ public class BackupManager {
         }
 
         boolean runBackup() {
-            // Fail backup if the app has items in Android KeyStore
+            // Fail backup if the app has items in Android KeyStore and backup isn't enabled
             if (backupFlags.backupData() && metadata.keyStore) {
-                Log.w(TAG, "The app has keystore items.");
+                if (!(boolean) AppPref.get(AppPref.PrefKey.PREF_BACKUP_ANDROID_KEYSTORE_BOOL)) {
+                    Log.e(TAG, "The app has keystore items and KeyStore backup isn't enabled.");
+                    return backupFile.cleanup();
+                }
             }
             try {
                 // Backup source
@@ -454,6 +458,9 @@ public class BackupManager {
                     throw new BackupException("Could not cache " + keyStoreFileName);
                 }
                 cachedKeyStoreFileNames.add(newFileName);
+            }
+            if (cachedKeyStoreFileNames.size() == 0) {
+                throw new BackupException("There were some KeyStore items but they couldn't be cached before taking a backup.");
             }
             File keyStoreSavePath = new File(tmpBackupPath, KEYSTORE_PREFIX + getExt(metadata.tarType) + ".");
             File[] backedUpKeyStoreFiles = TarUtils.create(metadata.tarType, cachePath,
@@ -643,7 +650,8 @@ public class BackupManager {
 
         boolean runRestore() {
             try {
-                if (requestedFlags.backupData() && metadata.keyStore && !requestedFlags.skipSignatureCheck()) {
+                if (requestedFlags.backupData() && metadata.keyStore
+                        && !requestedFlags.skipSignatureCheck()) {
                     // Check checksum of master key first
                     checkMasterKey();
                 }
