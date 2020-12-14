@@ -14,7 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources>
+  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="instructions_header">[Queste istruzioni sono obsolete e non saranno più
         aggiornate. Visita il sito web con la documentazione ufficiale (https://muntashirakon.github.io/AppManager) per
         ottenere informazioni aggiornate]</string>
@@ -87,4 +87,111 @@
     <string name="never_ask">Non chiedere mai</string>
     <string name="install">Installa</string>
     <string name="sort_by_last_update">Ultimo aggiornamento</string>
+    <string name="rules_not_applied">Regole non applicate</string>
+    <string name="failed_to_disable_op">Impossibile disattivare l\'operazione app richiesta</string>
+    <string name="failed_to_enable_op">Impossibile attivare l\'operazione app richiesta</string>
+    <string name="no_app_ops">Nessuna operazione app</string>
+    <string name="app_ops">Operazioni App</string>
+    <string name="total_size">Totale</string>
+    <string name="failed_to_stop">Impossibile fermare &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="failed_to_enable">Impossibile attivare &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="failed_to_disable">Impossibile disattivare &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="stopped">Fermato</string>
+    <string name="uninstall_system_app_message">Questa è un app di sistema. Sei sicuro di volerla disinstallare\?</string>
+    <string name="uninstalled_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; è stato disinstallato.</string>
+    <string name="failed_to_uninstall">Impossibile disinstallare &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="uninstall_app_message">Vuoi disinstallare questa applicazione\?</string>
+    <string name="view_in_settings">Mostra nelle Impostazioni</string>
+    <string name="no_content">Nessun contenuto</string>
+    <string name="key_name_cannot_be_null">Key name non può essere vuoto</string>
+    <string name="error_evaluating_input">Impossibile valutare input</string>
+    <string name="type_int">Intero</string>
+    <string name="type_float">Numero decimale</string>
+    <string name="type_boolean">Vero/Falso</string>
+    <string name="done">Fatto</string>
+    <string name="add_item">Aggiungi elemento</string>
+    <string name="system_odex_not_supported">.odex e alcune app di sistema mancano di supporto!</string>
+    <string name="select_type">Scegli un tipo</string>
+    <string name="boolean_value">Valore Booleano</string>
+    <string name="decimal_value">Valore decimale</string>
+    <string name="integer_value">Valore intero</string>
+    <string name="string_value">Valore stringa</string>
+    <string name="saving_failed">Salvataggio fallito, riprovare.</string>
+    <string name="saved_successfully">Salvato</string>
+    <string name="deletion_failed">Cancellazione fallita</string>
+    <string name="deleted_successfully">Cancellato</string>
+    <string name="delete">Cancella</string>
+    <string name="discard">Scarta</string>
+    <string name="shared_prefs">Preferenze Condivise</string>
+    <string name="test_only">Solo per Test</string>
+    <string name="debuggable">Debuggabile</string>
+    <string name="updated_app">Aggiornato</string>
+    <string name="no_code">Nessun codice</string>
+    <string name="dev_protected_data_dir">Directory protetta</string>
+    <string name="menu_apply_rules">Applica regole</string>
+    <string name="menu_remove_rules">Rimuovi regole</string>
+    <string name="failed_to_extract_apk_file">Impossibile estrarre il file APK</string>
+    <string name="share_apk">Condividi APK</string>
+    <string name="grant_usage_acess_message">L\'accesso di utilizzo è fondamentale per mostare le informazioni sull\'utilizzo dell\'applicazione.</string>
+    <string name="grant_usage_access">Fornisci accesso</string>
+    <string name="go">Vai</string>
+    <string name="go_back">Indietro</string>
+    <string name="usage_less_than_a_minute">Meno di un minuto</string>
+    <string name="usage_min">%1$d minuti</string>
+    <plurals name="usage_hours">
+        <item quantity="one">%1$d ora</item>
+        <item quantity="other">%1$d ore</item>
+    </plurals>
+    <plurals name="usage_days">
+        <item quantity="one">%1$d giorno</item>
+        <item quantity="other">%1$d giorni</item>
+    </plurals>
+    <plurals name="usage_months">
+        <item quantity="one">%1$d Mese</item>
+        <item quantity="other">%1$d Mesi</item>
+    </plurals>
+    <string name="usage_weekly">Settimanale</string>
+    <string name="app_usage">Uso dell\'app</string>
+    <string name="no_tracker_class">Nessuna classe di Tracker</string>
+    <string name="all_classes">Tutte le classi</string>
+    <string name="tracker_classes">Classi Tracker</string>
+    <string name="tracker_details">Dettagli Tracker</string>
+    <string name="found_trackers">Trova Trackers:</string>
+    <string name="no_shared_libs">Nessuna libreria condivisa</string>
+    <string name="third_party">Librerie Terze Parti ed Icone</string>
+    <string name="error_invalid_icon_format">Formato non valido per l\'icona</string>
+    <string name="error_invalid_icon_resource">Risorsa invalida per l\'icona</string>
+    <string name="class_name">Nome Classe</string>
+    <string name="package_name">Nome pacchetto</string>
+    <string name="error_verbose_pin_shortcut">I launcher non supporta PinShortcut. Impossibile creare</string>
+    <string name="shared_user_id">User ID condiviso</string>
+    <string name="sort_by_shared_user_id">User ID condiviso</string>
+    <string name="grant_uri_permission">Fornisci permessi URI</string>
+    <string name="path_permissions">Permesso percorso</string>
+    <string name="task_affinity">Affinità Task</string>
+    <string name="data_dir">Percorso dati</string>
+    <string name="source_dir">Percorso sorgente</string>
+    <string name="paths_and_directories">Percorso e Directory</string>
+    <string name="app_info">Informazioni applicazione</string>
+    <string name="version_name_with_code">Versione</string>
+    <string name="sort">Evidenzia</string>
+    <string name="user">Utente</string>
+    <string name="system">Sistema</string>
+    <string name="app_not_installed">App non installata</string>
+    <string name="media_size">Media</string>
+    <string name="data_size">Dati</string>
+    <string name="data_usage_msg">Uso dati dall\'ultimo avvio</string>
+    <string name="data_transmitted">Dati trasmessi</string>
+    <string name="data_received">Dati ricevuti</string>
+    <string name="sort_by_app_label">Etichetta App</string>
+    <string name="loading">Caricamento…</string>
+    <string name="error">Errore</string>
+    <string name="protection_level">Livello di protezione</string>
+    <string name="shared_libs">Librerie condivise</string>
+    <string name="declared_permission">Permessi</string>
+    <string name="patterns_allowed">Modelli abilitati</string>
+    <string name="write">Scrivi</string>
+    <string name="read">Leggi</string>
+    <string name="launch_mode">Modalità avvio</string>
+    <string name="permissions">Permessi utente</string>
 </resources>
