@@ -160,9 +160,12 @@ public final class PackageUtils {
     public static Collection<Integer> getFilteredAppOps(String packageName, @NonNull int[] appOps) {
         List<Integer> filteredAppOps = new ArrayList<>();
         AppOpsService appOpsService = new AppOpsService();
+        int userHandle = Users.getCurrentUserHandle();
+        int uid = PackageUtils.getAppUid(new UserPackagePair(packageName, userHandle));
         for (int appOp : appOps) {
             try {
-                if (appOpsService.checkOperation(appOp, -1, packageName, Users.getCurrentUserHandle()) != AppOpsManager.MODE_IGNORED) {
+                if (appOpsService.checkOperation(appOp, uid, packageName,
+                        userHandle) != AppOpsManager.MODE_IGNORED) {
                     filteredAppOps.add(appOp);
                 }
             } catch (Exception e) {
