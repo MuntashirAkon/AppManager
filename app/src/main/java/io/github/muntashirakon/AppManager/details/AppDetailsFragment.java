@@ -48,6 +48,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
@@ -85,6 +86,7 @@ import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.MiuiUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -454,6 +456,31 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private void refreshDetails() {
         showProgressIndicator(true);
         mainModel.setIsPackageChanged();
+    }
+
+    @NonNull
+    private List<Integer> getAppOpModes() {
+        List<Integer> appOpModes = new ArrayList<>();
+        appOpModes.add(AppOpsManager.MODE_ALLOWED);
+        appOpModes.add(AppOpsManager.MODE_IGNORED);
+        appOpModes.add(AppOpsManager.MODE_ERRORED);
+        appOpModes.add(AppOpsManager.MODE_DEFAULT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            appOpModes.add(AppOpsManager.MODE_FOREGROUND);
+        }
+        if (MiuiUtils.isMiui()) {
+            appOpModes.add(AppOpsManager.MODE_ASK);
+        }
+        return appOpModes;
+    }
+
+    @NonNull
+    private CharSequence[] getAppOpModeNames(@NonNull List<Integer> appOpModes) {
+        CharSequence[] appOpModeNames = new CharSequence[appOpModes.size()];
+        for (int i = 0; i < appOpModes.size(); ++i) {
+            appOpModeNames[i] = AppOpsManager.modeToName(appOpModes.get(i));
+        }
+        return appOpModeNames;
     }
 
     /**
@@ -1145,6 +1172,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
             else view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             if (!isRootEnabled && !isADBEnabled) {
+                // No root or ADB, hide toggle buttons
                 holder.toggleSwitch.setVisibility(View.GONE);
                 return;
             }
@@ -1171,6 +1199,32 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         }
                     }).start();
                 }
+            });
+            holder.itemView.setOnLongClickListener(v -> {
+                List<Integer> modes = getAppOpModes();
+                new MaterialAlertDialogBuilder(mActivity)
+                        .setTitle(R.string.set_app_op_mode)
+                        .setSingleChoiceItems(getAppOpModeNames(modes), modes.indexOf(opEntry.getMode()), (dialog, which) -> {
+                            int opMode = modes.get(which);
+                            new Thread(() -> {
+                                if (mainModel.setAppOp(opEntry.getOp(), opMode)) {
+                                    OpEntry opEntry1 = new OpEntry(opEntry.getOp(), opMode, opEntry.getTime(),
+                                            opEntry.getRejectTime(), opEntry.getDuration(),
+                                            opEntry.getProxyUid(), opEntry.getProxyPackageName());
+                                    AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry1);
+                                    appDetailsItem.name = item.name;
+                                    runOnUiThread(() -> set(index, appDetailsItem));
+                                } else {
+                                    runOnUiThread(() -> {
+                                        Toast.makeText(mActivity, R.string.failed_to_enable_op, Toast.LENGTH_LONG).show();
+                                        notifyItemChanged(index);
+                                    });
+                                }
+                            }).start();
+                            dialog.dismiss();
+                        })
+                        .show();
+                return true;
             });
         }
 

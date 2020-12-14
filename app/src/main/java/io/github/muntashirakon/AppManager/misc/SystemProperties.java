@@ -17,20 +17,42 @@
 
 package io.github.muntashirakon.AppManager.misc;
 
+import android.annotation.SuppressLint;
+
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
 
 public final class SystemProperties {
+    @SuppressLint("PrivateApi")
     @NonNull
     public static String get(@NonNull String key, @NonNull String defaultVal) {
-        Runner.Result result = Runner.runCommand(new String[]{"getprop", key, defaultVal});
-        if (result.isSuccessful()) return result.getOutput().trim();
-        else return defaultVal;
+        try {
+            String value = (String) Class.forName("android.os.SystemProperties")
+                    .getDeclaredMethod("get", String.class)
+                    .invoke(null, key);
+            if (value == null) return defaultVal;
+            else return value;
+        } catch (Exception e) {
+            Log.w("SystemProperties", "Unable to use SystemProperties.get", e);
+            Runner.Result result = Runner.runCommand(new String[]{"getprop", key, defaultVal});
+            if (result.isSuccessful()) return result.getOutput().trim();
+            else return defaultVal;
+        }
     }
 
     public static boolean getBoolean(@NonNull String key, boolean defaultVal) {
         String val = get(key, String.valueOf(defaultVal));
         if ("1".equals(val)) return true;
         return Boolean.parseBoolean(val);
+    }
+
+    public static int getInt(@NonNull String key, int defaultVal) {
+        String val = get(key, String.valueOf(defaultVal));
+        try {
+            return Integer.parseInt(val);
+        } catch (NumberFormatException e) {
+            return defaultVal;
+        }
     }
 }

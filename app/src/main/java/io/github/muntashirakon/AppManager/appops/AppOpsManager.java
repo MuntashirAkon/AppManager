@@ -32,6 +32,7 @@ import java.util.Objects;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 /**
@@ -101,6 +102,7 @@ public class AppOpsManager {
      * {@link android.app.AppOpsManager#noteOp} or {@link android.app.AppOpsManager#startOp} to do
      * the actual check for access to the op.</p>
      */
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public static final int MODE_FOREGROUND = 1 << 2;
     /**
      * MIUI customized mode.
