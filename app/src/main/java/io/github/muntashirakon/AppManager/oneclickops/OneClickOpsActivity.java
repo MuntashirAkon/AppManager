@@ -34,6 +34,8 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -57,6 +59,7 @@ public class OneClickOpsActivity extends BaseActivity {
             mProgressIndicator.hide();
         }
     };
+    private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,10 +115,11 @@ public class OneClickOpsActivity extends BaseActivity {
             return;
         }
         mProgressIndicator.show();
-        new Thread(() -> {
+        executor.submit(() -> {
             final List<ItemCount> trackerCounts = new ArrayList<>();
             ItemCount trackerCount;
             for (ApplicationInfo applicationInfo : getPackageManager().getInstalledApplications(0)) {
+                if (Thread.currentThread().isInterrupted()) return;
                 if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
                     continue;
                 trackerCount = ComponentUtils.getTrackerCountForApp(applicationInfo);
@@ -125,6 +129,7 @@ public class OneClickOpsActivity extends BaseActivity {
                 final ArrayList<String> selectedPackages = new ArrayList<>();
                 final String[] trackerPackagesWithTrackerCount = new String[trackerCounts.size()];
                 for (int i = 0; i < trackerCounts.size(); ++i) {
+                    if (Thread.currentThread().isInterrupted()) return;
                     trackerCount = trackerCounts.get(i);
                     selectedPackages.add(trackerCount.packageName);
                     trackerPackagesWithTrackerCount[i] = "(" + trackerCount.count + ") " + trackerCount.packageLabel;
@@ -132,6 +137,7 @@ public class OneClickOpsActivity extends BaseActivity {
                 final String[] trackerPackages = selectedPackages.toArray(new String[0]);
                 final boolean[] checkedItems = new boolean[trackerPackages.length];
                 Arrays.fill(checkedItems, true);
+                if (Thread.currentThread().isInterrupted()) return;
                 runOnUiThread(() -> {
                     mProgressIndicator.hide();
                     new MaterialAlertDialogBuilder(this)
@@ -160,12 +166,13 @@ public class OneClickOpsActivity extends BaseActivity {
                             .show();
                 });
             } else {
+                if (Thread.currentThread().isInterrupted()) return;
                 runOnUiThread(() -> {
                     Toast.makeText(this, R.string.no_tracker_found, Toast.LENGTH_SHORT).show();
                     mProgressIndicator.hide();
                 });
             }
-        }).start();
+        });
     }
 
     private void blockComponents() {
@@ -181,11 +188,12 @@ public class OneClickOpsActivity extends BaseActivity {
                     final boolean systemApps = isChecked;
                     if (signatureNames == null) return;
                     mProgressIndicator.show();
-                    new Thread(() -> {
+                    executor.submit(() -> {
                         String[] signatures = signatureNames.toString().split("\\s+");
                         if (signatures.length == 0) return;
                         final List<ItemCount> componentCounts = new ArrayList<>();
                         for (ApplicationInfo applicationInfo : getPackageManager().getInstalledApplications(0)) {
+                            if (Thread.currentThread().isInterrupted()) return;
                             if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
                                 continue;
                             ItemCount componentCount = new ItemCount();
@@ -199,10 +207,12 @@ public class OneClickOpsActivity extends BaseActivity {
                             final ArrayList<String> selectedPackages = new ArrayList<>();
                             List<CharSequence> packageNamesWithComponentCount = new ArrayList<>();
                             for (int i = 0; i < componentCounts.size(); ++i) {
+                                if (Thread.currentThread().isInterrupted()) return;
                                 componentCount = componentCounts.get(i);
                                 selectedPackages.add(componentCount.packageName);
                                 packageNamesWithComponentCount.add("(" + componentCount.count + ") " + componentCount.packageLabel);
                             }
+                            if (Thread.currentThread().isInterrupted()) return;
                             runOnUiThread(() -> {
                                 mProgressIndicator.hide();
                                 new SearchableMultiChoiceDialogBuilder<>(this, selectedPackages, packageNamesWithComponentCount)
@@ -223,12 +233,13 @@ public class OneClickOpsActivity extends BaseActivity {
                                         .show();
                             });
                         } else {
+                            if (Thread.currentThread().isInterrupted()) return;
                             runOnUiThread(() -> {
                                 Toast.makeText(this, R.string.no_matching_package_found, Toast.LENGTH_SHORT).show();
                                 mProgressIndicator.hide();
                             });
                         }
-                    }).start();
+                    });
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
@@ -247,14 +258,17 @@ public class OneClickOpsActivity extends BaseActivity {
                     final boolean systemApps = isChecked;
                     if (appOpNames == null) return;
                     mProgressIndicator.show();
-                    new Thread(() -> {
+                    executor.submit(() -> {
                         String[] appOpsStr = appOpNames.toString().split("\\s+");
                         if (appOpsStr.length == 0) return;
                         int[] appOps = new int[appOpsStr.length];
                         try {
-                            for (int i = 0; i < appOpsStr.length; ++i)
+                            for (int i = 0; i < appOpsStr.length; ++i) {
+                                if (Thread.currentThread().isInterrupted()) return;
                                 appOps[i] = Integer.parseInt(appOpsStr[i]);
+                            }
                         } catch (Exception e) {
+                            if (Thread.currentThread().isInterrupted()) return;
                             runOnUiThread(() -> {
                                 Toast.makeText(this, R.string.failed_to_parse_some_numbers, Toast.LENGTH_SHORT).show();
                                 mProgressIndicator.hide();
@@ -264,6 +278,7 @@ public class OneClickOpsActivity extends BaseActivity {
                         final List<ItemCount> appOpCounts = new ArrayList<>();
                         for (ApplicationInfo applicationInfo :
                                 getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA)) {
+                            if (Thread.currentThread().isInterrupted()) return;
                             if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
                                 continue;
                             ItemCount appOpCount = new ItemCount();
@@ -277,10 +292,12 @@ public class OneClickOpsActivity extends BaseActivity {
                             final ArrayList<String> selectedPackages = new ArrayList<>();
                             List<CharSequence> packagesWithAppOpCount = new ArrayList<>();
                             for (int i = 0; i < appOpCounts.size(); ++i) {
+                                if (Thread.currentThread().isInterrupted()) return;
                                 appOpCount = appOpCounts.get(i);
                                 selectedPackages.add(appOpCount.packageName);
                                 packagesWithAppOpCount.add("(" + appOpCount.count + ") " + appOpCount.packageLabel);
                             }
+                            if (Thread.currentThread().isInterrupted()) return;
                             runOnUiThread(() -> {
                                 mProgressIndicator.hide();
                                 new SearchableMultiChoiceDialogBuilder<>(this, selectedPackages, packagesWithAppOpCount)
@@ -301,12 +318,13 @@ public class OneClickOpsActivity extends BaseActivity {
                                         .show();
                             });
                         } else {
+                            if (Thread.currentThread().isInterrupted()) return;
                             runOnUiThread(() -> {
                                 Toast.makeText(this, R.string.no_matching_package_found, Toast.LENGTH_SHORT).show();
                                 mProgressIndicator.hide();
                             });
                         }
-                    }).start();
+                    });
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
@@ -329,5 +347,11 @@ public class OneClickOpsActivity extends BaseActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        executor.shutdownNow();
+        super.onDestroy();
     }
 }
