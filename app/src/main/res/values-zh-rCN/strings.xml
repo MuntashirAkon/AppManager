@@ -586,7 +586,7 @@
     <string name="uninstall_updates">卸载更新</string>
     <string name="launch_mode_single_top">栈顶</string>
     <string name="only_install">仅安装</string>
-    <string name="install_without_data_loss">如果您已经关闭了签名验证，您可以使用&lt;b&gt;仅安装&lt;/b&gt;选项在不丢失数据情况下安装这个应用程序。</string>
+    <string name="install_without_data_loss">如果您已经关闭了签名验证，您可以使用<b>仅安装</b>选项在不丢失数据情况下安装这个应用程序。</string>
     <string name="app_data_will_be_lost">现有数据将丢失。</string>
     <string name="signature_mismatch_for_system_apps">无法安装应用程序，因为一个具有不同签名的系统应用程序的包名和它一样。</string>
     <string name="do_you_want_to_uninstall_and_install">您想要卸载并重新安装该应用程序吗\?</string>
@@ -696,8 +696,8 @@
     <plurals name="signature_schemes_pl">
         <item quantity="other">签名方案</item>
     </plurals>
-    <string name="input_keystore_alias_pass_description">插入别名 &lt;b&gt;%1$s&lt;/b&gt; 的密码。如果该密码与密钥存储库密码相同，可以留空。</string>
-    <string name="input_keystore_alias_pass">别名 &lt;b&gt;%1$s&lt;/b&gt; 的密码</string>
+    <string name="input_keystore_alias_pass_description">插入别名 <b>%1$s</b> 的密码。如果该密码与密钥存储库密码相同，可以留空。</string>
+    <string name="input_keystore_alias_pass">别名 <b>%1$s</b> 的密码</string>
     <string name="input_keystore_pass_msg">点击此处提供密钥库密码</string>
     <string name="input_keystore_pass_description">插入App Manager密钥库密码。如果您是第一次看到这个，请使用密码生成器生成一个密码，并在插入之前将其保存在一个安全的地方。</string>
     <string name="input_keystore_pass">输入密钥库密码</string>

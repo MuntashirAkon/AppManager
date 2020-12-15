@@ -632,8 +632,8 @@
     <string name="confirm_installation">Подтвердить установку</string>
     <string name="allow_open_pgp_operation">Щёлкните, чтобы разрешить AM использовать OpenPGP</string>
     <string name="uninstall_updates">Удалить обновления</string>
-    <string name="update_uninstalled_successfully">Обновления &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; были удалены.</string>
-    <string name="failed_to_uninstall_updates">Не удалось удалить обновления &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="update_uninstalled_successfully">Обновления <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> были удалены.</string>
+    <string name="failed_to_uninstall_updates">Не удалось удалить обновления <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="filter_apps_with_backups">Приложения с резервными копиями</string>
     <string name="issued_date">Дата выпуска</string>
     <string name="expiry_date">Дата истечения</string>
@@ -800,8 +800,8 @@
     <string name="input_keystore_pass_msg">Нажмите здесь, чтобы ввести пароль менеджера ключей</string>
     <string name="input_keystore_pass_description">Вставьте пароль хранилища ключей App Manager. Если вы видите это впервые, используйте генератор паролей, чтобы сгенерировать пароль и сохранить его в безопасном месте, прежде чем вставлять его здесь.</string>
     <string name="input_keystore_pass">Введите пароль хранилища ключей</string>
-    <string name="input_keystore_alias_pass_description">Вставьте пароль для псевдонима &lt;b&gt;%1$s&lt;/b&gt;. Вы можете оставить это поле пустым, если пароль совпадает с паролем хранилища ключей.</string>
-    <string name="input_keystore_alias_pass">Пароль для псевдонима &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="input_keystore_alias_pass_description">Вставьте пароль для псевдонима <b>%1$s</b>. Вы можете оставить это поле пустым, если пароль совпадает с паролем хранилища ключей.</string>
+    <string name="input_keystore_alias_pass">Пароль для псевдонима <b>%1$s</b></string>
     <string name="no_app_ops_permission">Нет разрешения на отображение операций приложения</string>
     <string name="pref_backup_android_keystore_msg">Не все приложения будут работать после восстановления. Восстановление KeyStore не работает на большинстве устройств.</string>
     <string name="pref_backup_android_keystore">Резервное копирование приложений с Android KeyStore</string>

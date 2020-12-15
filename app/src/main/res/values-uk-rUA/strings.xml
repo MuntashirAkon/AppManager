@@ -776,8 +776,8 @@
         <item quantity="many">Підтверджено з %d попередженнями</item>
         <item quantity="other">Підтверджено з %d попередженнями</item>
     </plurals>
-    <string name="input_keystore_alias_pass_description">Вставте пароль для псевдоніма &lt;b&gt;%1$s&lt;/b&gt;. Ви можете залишити це поле порожнім, якщо пароль збігається з паролем KeyStore.</string>
-    <string name="input_keystore_alias_pass">Пароль для псевдоніма &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="input_keystore_alias_pass_description">Вставте пароль для псевдоніма <b>%1$s</b>. Ви можете залишити це поле порожнім, якщо пароль збігається з паролем KeyStore.</string>
+    <string name="input_keystore_alias_pass">Пароль для псевдоніма <b>%1$s</b></string>
     <string name="input_keystore_pass_msg">Натисніть тут, щоб надати пароль сховища ключів</string>
     <string name="input_keystore_pass_description">Вставити пароль сховища ключів App Manager. Якщо ви бачите це вперше, будь ласка, використовуйте генератор паролів для створення пароля та збереження його в безпечному місці, перш ніж вставити його тут.</string>
     <string name="input_keystore_pass">Введіть пароль сховища ключів</string>

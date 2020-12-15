@@ -497,7 +497,7 @@
     <string name="no_app_ops">Brak operacji</string>
     <string name="app_ops">App Ops</string>
     <string name="disable">Wyłącz</string>
-    <string name="failed_to_uninstall">Nie można usunąć &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="failed_to_uninstall">Nie można usunąć <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="integer_value">Wartość liczby całkowitej</string>
     <string name="long_integer_value">Długa wartość liczby całkowitej</string>
     <string name="string_value">Wartość ciągu</string>

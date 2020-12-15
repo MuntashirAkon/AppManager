@@ -93,13 +93,13 @@
     <string name="no_app_ops">Nessuna operazione app</string>
     <string name="app_ops">Operazioni App</string>
     <string name="total_size">Totale</string>
-    <string name="failed_to_stop">Impossibile fermare &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
-    <string name="failed_to_enable">Impossibile attivare &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
-    <string name="failed_to_disable">Impossibile disattivare &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="failed_to_stop">Impossibile fermare <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_enable">Impossibile attivare <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_disable">Impossibile disattivare <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="stopped">Fermato</string>
     <string name="uninstall_system_app_message">Questa è un app di sistema. Sei sicuro di volerla disinstallare\?</string>
-    <string name="uninstalled_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; è stato disinstallato.</string>
-    <string name="failed_to_uninstall">Impossibile disinstallare &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> è stato disinstallato.</string>
+    <string name="failed_to_uninstall">Impossibile disinstallare <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="uninstall_app_message">Vuoi disinstallare questa applicazione\?</string>
     <string name="view_in_settings">Mostra nelle Impostazioni</string>
     <string name="no_content">Nessun contenuto</string>

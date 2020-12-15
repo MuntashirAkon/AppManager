@@ -732,8 +732,8 @@
         <item quantity="one">Verifiziert mit %d Warnung</item>
         <item quantity="other">Verifiziert mit %d Warnungen</item>
     </plurals>
-    <string name="input_keystore_alias_pass_description">Geben Sie das Passwort für den Alias &lt;b&gt;%1$s&lt;/b&gt; ein. Sie können dieses Feld leer lassen, wenn das Kennwort mit dem KeyStore-Kennwort übereinstimmt.</string>
-    <string name="input_keystore_alias_pass">Passwort für den Alias &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="input_keystore_alias_pass_description">Geben Sie das Passwort für den Alias <b>%1$s</b> ein. Sie können dieses Feld leer lassen, wenn das Kennwort mit dem KeyStore-Kennwort übereinstimmt.</string>
+    <string name="input_keystore_alias_pass">Passwort für den Alias <b>%1$s</b></string>
     <string name="input_keystore_pass_msg">Tippen Sie hier, um das KeyStore-Passwort einzugeben</string>
     <string name="input_keystore_pass_description">Geben Sie das App Manager KeyStore-Kennwort ein. Wenn Sie dies zum ersten Mal sehen, verwenden Sie bitte einen Passwortgenerator, um ein Passwort zu generieren und es an einem sicheren Ort zu speichern, bevor Sie es hier einfügen.</string>
     <string name="input_keystore_pass">KeyStore-Passwort eingeben</string>
