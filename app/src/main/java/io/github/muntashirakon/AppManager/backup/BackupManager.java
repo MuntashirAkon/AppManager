@@ -958,7 +958,7 @@ public class BackupManager {
                 try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()), new int[]{userHandle})) {
                     importer.addRulesFromUri(Uri.fromFile(permsFile));
                     importer.setPackagesToImport(Collections.singletonList(packageName));
-                    importer.applyRules();
+                    importer.applyRules(false);
                 } catch (IOException e) {
                     throw new BackupException("Failed to restore permissions.", e);
                 }
@@ -991,7 +991,7 @@ public class BackupManager {
                 try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()), new int[]{userHandle})) {
                     importer.addRulesFromUri(Uri.fromFile(rulesFile));
                     importer.setPackagesToImport(Collections.singletonList(packageName));
-                    importer.applyRules();
+                    importer.applyRules(true);
                 } catch (IOException e) {
                     throw new BackupException("Failed to restore rules file.", e);
                 }

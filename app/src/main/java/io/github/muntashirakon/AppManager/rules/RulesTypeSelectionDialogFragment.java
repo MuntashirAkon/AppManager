@@ -122,7 +122,7 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
             try (RulesImporter importer = new RulesImporter(new ArrayList<>(mSelectedTypes), userHandles)) {
                 importer.addRulesFromUri(mUri);
                 if (mPackages != null) importer.setPackagesToImport(mPackages);
-                importer.applyRules();
+                importer.applyRules(true);
                 activity.runOnUiThread(() -> Toast.makeText(activity, R.string.the_import_was_successful, Toast.LENGTH_LONG).show());
             } catch (IOException e) {
                 activity.runOnUiThread(() -> Toast.makeText(activity, R.string.import_failed, Toast.LENGTH_LONG).show());

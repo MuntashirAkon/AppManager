@@ -120,7 +120,7 @@ public class RulesImporter implements Closeable {
         mPackagesToImport = packageNames;
     }
 
-    public void applyRules() {
+    public void applyRules(boolean commitChanges) {
         if (mPackagesToImport == null) mPackagesToImport = getPackages();
         // When #setPackagesToImport(List<String>) is used, ComponentBlocker can be null
         @Nullable ComponentsBlocker cb;
@@ -128,13 +128,20 @@ public class RulesImporter implements Closeable {
             for (String packageName : mPackagesToImport) {
                 cb = mComponentsBlockers[i].get(packageName);
                 if (cb == null) continue;
-                cb.readOnly = false;
+                // Set mutable, otherwise changes may not be applied properly
+                cb.setMutable();
                 // Apply component blocking rules
                 cb.applyRules(true);
                 // Apply app op and permissions
                 cb.applyAppOpsAndPerms(true);
-                // Commit changes
-                cb.commit();
+                // Store the changes or discard them
+                if (commitChanges) {
+                    // Commit changes
+                    cb.commit();
+                } else {
+                    // Don't commit changes, discard the rules
+                    cb.setReadOnly();
+                }
             }
         }
     }
