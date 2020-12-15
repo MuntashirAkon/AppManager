@@ -25,6 +25,14 @@ import android.content.pm.ServiceInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.openintents.openpgp.IOpenPgpService2;
@@ -35,14 +43,9 @@ import org.openintents.openpgp.util.OpenPgpUtils;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.IntentSenderRequest;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -56,6 +59,11 @@ public class OpenPgpKeySelectionDialogFragment extends DialogFragment {
     private OpenPgpServiceConnection mServiceConnection;
     private FragmentActivity activity;
     private ActivityResultLauncher<IntentSenderRequest> keyIdResultLauncher;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor(runnable -> {
+        Thread thread = new Thread(runnable);
+        thread.setDaemon(true);
+        return thread;
+    });
 
     @NonNull
     @Override
@@ -113,7 +121,7 @@ public class OpenPgpKeySelectionDialogFragment extends DialogFragment {
         data.setAction(OpenPgpApi.ACTION_GET_KEY_IDS);
         data.putExtra(OpenPgpApi.EXTRA_USER_IDS, new String[]{});
         OpenPgpApi api = new OpenPgpApi(activity, mServiceConnection.getService());
-        api.executeApiAsync(data, null, null, result -> {
+        api.executeApiAsync(executor, data, null, null, result -> {
             switch (result.getIntExtra(OpenPgpApi.RESULT_CODE, OpenPgpApi.RESULT_CODE_ERROR)) {
                 case OpenPgpApi.RESULT_CODE_SUCCESS: {
                     long[] keyIds = result.getLongArrayExtra(OpenPgpApi.EXTRA_KEY_IDS);

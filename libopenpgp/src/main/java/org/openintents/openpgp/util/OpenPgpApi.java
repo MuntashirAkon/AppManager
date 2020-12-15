@@ -17,23 +17,23 @@
 package org.openintents.openpgp.util;
 
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import org.openintents.openpgp.IOpenPgpService2;
 import org.openintents.openpgp.OpenPgpError;
 
-import androidx.annotation.NonNull;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @SuppressWarnings("unused")
 public class OpenPgpApi {
@@ -326,37 +326,13 @@ public class OpenPgpApi {
         void onReturn(final Intent result);
     }
 
-    private class OpenPgpAsyncTask extends AsyncTask<Void, Integer, Intent> {
-        Intent data;
-        InputStream is;
-        OutputStream os;
-        IOpenPgpCallback callback;
-
-        private OpenPgpAsyncTask(Intent data, InputStream is, OutputStream os, IOpenPgpCallback callback) {
-            this.data = data;
-            this.is = is;
-            this.os = os;
-            this.callback = callback;
-        }
-
-        @Override
-        protected Intent doInBackground(Void... unused) {
-            return executeApi(data, is, os);
-        }
-
-        protected void onPostExecute(Intent result) {
-            callback.onReturn(result);
-        }
-
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void executeApiAsync(Intent data, InputStream is, OutputStream os, IOpenPgpCallback callback) {
-        OpenPgpAsyncTask task = new OpenPgpAsyncTask(data, is, os, callback);
-
-        // don't serialize async tasks!
-        // http://commonsware.com/blog/2012/04/20/asynctask-threading-regression-confirmed.html
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void[]) null);
+    public void executeApiAsync(@NonNull Executor executor, Intent data, InputStream is,
+                                OutputStream os, IOpenPgpCallback callback) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
+            Intent result = executeApi(data, is, os);
+            handler.post(() -> callback.onReturn(result));
+        });
     }
 
     public Intent executeApi(Intent data, InputStream is, OutputStream os) {
