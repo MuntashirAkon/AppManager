@@ -334,6 +334,9 @@ public class MainActivity extends BaseActivity implements
             if ((flags & FILTER_APPS_WITH_ACTIVITIES) != 0) {
                 menu.findItem(R.id.action_filter_apps_with_activities).setChecked(true);
             }
+            if ((flags & FILTER_APPS_WITH_SPLITS) != 0) {
+                menu.findItem(R.id.action_filter_apps_with_splits).setChecked(true);
+            }
             if ((flags & FILTER_RUNNING_APPS) != 0) {
                 menu.findItem(R.id.action_filter_running_apps).setChecked(true);
             }
