@@ -710,4 +710,6 @@
     <string name="orientation_sensor_landscape">横向显示</string>
     <string name="orientation_full_sensor">全部传感器</string>
     <string name="orientation_full_user">全部用户</string>
+    <string name="set_app_op_mode">设置应用程序操作模式</string>
+    <string name="magisk_hide_enabled">Magisk 隐藏</string>
 </resources>
