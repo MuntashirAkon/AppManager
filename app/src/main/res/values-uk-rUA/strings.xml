@@ -792,6 +792,6 @@
     <string name="no_app_ops_permission">Немає дозволу на відображення app ops</string>
     <string name="pref_backup_android_keystore_msg">Не всі програми працюватимуть після відновлення. Відновлення KeyStore не працює на більшості пристроїв.</string>
     <string name="pref_backup_android_keystore">Резервне копіювання додатків з Android KeyStore</string>
-    <string name="keep_data_and_signatures">Збереження даних і підписів</string>
+    <string name="keep_data_and_signatures">Зберегти дані і підписи</string>
     <string name="this_action_cannot_be_undone">Цю операцію неможливо відмінити.</string>
 </resources>
