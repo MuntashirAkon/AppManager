@@ -780,4 +780,5 @@
     <string name="pref_backup_android_keystore_msg">Not all apps will work after a restore. Restoring KeyStore doesn\'t work on most devices.</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="set_app_op_mode">Set app op mode</string>
+    <string name="filter_apps_with_splits">Apps with splits</string>
 </resources>

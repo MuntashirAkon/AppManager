@@ -113,6 +113,10 @@ public class ApplicationItem extends PackageItemInfo {
      */
     public boolean hasActivities = false;
     /**
+     * Whether the app has any splits
+     */
+    public boolean hasSplits = false;
+    /**
      * Whether the item is selected
      */
     public boolean isSelected = false;

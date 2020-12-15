@@ -139,6 +139,7 @@ public class MainActivity extends BaseActivity implements
             FILTER_APPS_WITH_ACTIVITIES,
             FILTER_APPS_WITH_BACKUPS,
             FILTER_RUNNING_APPS,
+            FILTER_APPS_WITH_SPLITS
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface Filter {
@@ -152,6 +153,7 @@ public class MainActivity extends BaseActivity implements
     public static final int FILTER_APPS_WITH_ACTIVITIES = 1 << 4;
     public static final int FILTER_APPS_WITH_BACKUPS = 1 << 5;
     public static final int FILTER_RUNNING_APPS = 1 << 6;
+    public static final int FILTER_APPS_WITH_SPLITS = 1 << 7;
 
     MainViewModel mModel;
 
@@ -424,6 +426,10 @@ public class MainActivity extends BaseActivity implements
         } else if (id == R.id.action_filter_running_apps) {
             if (!item.isChecked()) mModel.addFilterFlag(FILTER_RUNNING_APPS);
             else mModel.removeFilterFlag(FILTER_RUNNING_APPS);
+            item.setChecked(!item.isChecked());
+        } else if (id == R.id.action_filter_apps_with_splits) {
+            if (!item.isChecked()) mModel.addFilterFlag(FILTER_APPS_WITH_SPLITS);
+            else mModel.removeFilterFlag(FILTER_APPS_WITH_SPLITS);
             item.setChecked(!item.isChecked());
             // Others
         } else if (id == R.id.action_app_usage) {

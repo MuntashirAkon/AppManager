@@ -110,6 +110,10 @@
                     android:title="@string/filter_apps_with_backups" />
 
                 <item
+                    android:id="@+id/action_filter_apps_with_splits"
+                    android:title="@string/filter_apps_with_splits" />
+
+                <item
                     android:id="@+id/action_filter_running_apps"
                     android:title="@string/filter_running_apps" />
 

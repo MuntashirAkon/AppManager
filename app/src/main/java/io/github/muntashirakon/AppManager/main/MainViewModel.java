@@ -256,6 +256,7 @@ public class MainViewModel extends AndroidViewModel {
                         item.firstInstallTime = packageInfo.firstInstallTime;
                         item.lastUpdateTime = packageInfo.lastUpdateTime;
                         item.hasActivities = packageInfo.activities != null;
+                        item.hasSplits = applicationInfo.splitSourceDirs != null;
                         item.blockedCount = 0;
                         item.userHandles = ArrayUtils.appendInt(item.userHandles, userHandle);
                         applicationItems.add(item);
@@ -330,6 +331,8 @@ public class MainViewModel extends AndroidViewModel {
                     } else if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_ACTIVITIES) != 0 && !item.hasActivities) {
                         continue;
                     } else if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_BACKUPS) != 0 && item.metadata == null) {
+                        continue;
+                    } else if ((mFilterFlags & MainActivity.FILTER_APPS_WITH_SPLITS) != 0 && !item.hasSplits) {
                         continue;
                     } else if ((mFilterFlags & MainActivity.FILTER_RUNNING_APPS) != 0 && !item.isRunning) {
                         continue;
@@ -533,6 +536,7 @@ public class MainViewModel extends AndroidViewModel {
                 item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
                 item.isDisabled = !applicationInfo.enabled;
                 item.hasActivities = packageInfo.activities != null;
+                item.hasSplits = applicationInfo.splitSourceDirs != null;
                 item.firstInstallTime = packageInfo.firstInstallTime;
                 item.lastUpdateTime = packageInfo.lastUpdateTime;
                 item.sha = Utils.getIssuerAndAlg(packageInfo);
