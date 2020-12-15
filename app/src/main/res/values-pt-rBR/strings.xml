@@ -602,7 +602,7 @@
     <string name="tap_to_see_details">Toque para ver detalhes</string>
     <string name="view_missing_signatures">Toque para visualizar ou enviar assinaturas ainda não presentes no banco de dados de bibliotecas do App Manager.</string>
     <string name="copy">Copiar</string>
-    <string name="filter_running_apps">Aplicativos sendo executados</string>
+    <string name="filter_running_apps">Aplicativos em execução</string>
     <string name="profiles">Perfis</string>
     <string name="state_idle">Ocioso</string>
     <string name="state_device_io">I/O do dispositivo</string>
