@@ -1,9 +1,9 @@
 include ':libserver'
 include ':toybox'
-include ':sunJava'
-include ':libOpenPGP'
-include ':libApkParser'
-include ':HiddenApi'
+include ':sun'
+include ':libopenpgp'
+include ':libapkparser'
+include ':hiddenapi'
 include ':server'
 include ':app'
 rootProject.name = "AppManager"

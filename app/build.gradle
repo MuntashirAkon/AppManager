@@ -88,12 +88,12 @@ android {
 }
 
 dependencies {
-    compileOnly project(path: ':HiddenApi')
+    compileOnly project(path: ':hiddenapi')
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(path: ':libApkParser')
-    implementation project(path: ':libOpenPGP')
-    implementation project(path: ':sunJava')
+    implementation project(path: ':libapkparser')
+    implementation project(path: ':libopenpgp')
+    implementation project(path: ':sun')
     implementation project(path: ':toybox')
     implementation project(path: ':libserver')
 

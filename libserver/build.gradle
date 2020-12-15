@@ -18,5 +18,5 @@
 apply from: "$gradle.ext.appManagerRoot/common.gradle"
 
 dependencies {
-    compileOnly project(path: ':HiddenApi')
+    compileOnly project(path: ':hiddenapi')
 }
