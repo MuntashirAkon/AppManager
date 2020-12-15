@@ -80,7 +80,7 @@ public class BackupManager {
     private static final String EXT_DATA = "/Android/data/";
     private static final String EXT_MEDIA = "/Android/media/";
     private static final String EXT_OBB = "/Android/obb/";
-    private static final String[] CACHE_DIRS = new String[]{"cache", "code_cache"};
+    private static final String[] CACHE_DIRS = new String[]{"cache", "code_cache", "no_backup"};
     private static final String SOURCE_PREFIX = "source";
     private static final String DATA_PREFIX = "data";
     private static final String KEYSTORE_PREFIX = "keystore";
