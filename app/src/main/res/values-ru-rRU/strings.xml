@@ -805,7 +805,7 @@
     <string name="no_app_ops_permission">Нет разрешения на отображение операций приложения</string>
     <string name="pref_backup_android_keystore_msg">Не все приложения будут работать после восстановления. Восстановление KeyStore не работает на большинстве устройств.</string>
     <string name="pref_backup_android_keystore">Резервное копирование приложений с Android KeyStore</string>
-    <string name="keep_data_and_signatures">Храните данные и подписи</string>
+    <string name="keep_data_and_signatures">Сохранить данные и подписи</string>
     <string name="this_action_cannot_be_undone">Это действие не может быть отменено.</string>
     <string name="set_app_op_mode">Установить режим работы приложения</string>
 </resources>
