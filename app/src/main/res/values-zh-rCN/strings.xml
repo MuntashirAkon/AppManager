@@ -706,4 +706,8 @@
     <string name="pref_backup_android_keystore">备份带安卓密钥库的应用程序</string>
     <string name="keep_data_and_signatures">保留数据和签名</string>
     <string name="this_action_cannot_be_undone">此操作无法被撤销。</string>
+    <string name="orientation_sensor_portrait">纵向显示</string>
+    <string name="orientation_sensor_landscape">横向显示</string>
+    <string name="orientation_full_sensor">全部传感器</string>
+    <string name="orientation_full_user">全部用户</string>
 </resources>
