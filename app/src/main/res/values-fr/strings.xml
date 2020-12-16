@@ -18,7 +18,7 @@
     <string name="input_features">Fonctionnalités d\'entrée</string>
     <string name="no_configurations">Aucune configuration</string>
     <string name="configurations">Configurations</string>
-    <string name="no_signatures">Aucune signature</string>
+    <string name="no_signatures">Aucune signature valide</string>
     <string name="signatures">Signatures</string>
     <string name="sort_by_sha">Signature</string>
     <string name="shared_user_id">Identifiant utilisateur partagé</string>
