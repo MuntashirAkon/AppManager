@@ -78,6 +78,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
+import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -874,6 +875,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 });
             }
             if (canLaunch && isExported) {
+                launch.setOnLongClickListener(v -> {
+                    // TODO(17/12/20): Add support for root/multiple user
+                    Intent intent = new Intent(mActivity, ActivityInterceptor.class);
+                    intent.putExtra(ActivityInterceptor.EXTRA_PACKAGE_NAME, mPackageName);
+                    intent.putExtra(ActivityInterceptor.EXTRA_CLASS_NAME, activityName);
+                    startActivity(intent);
+                    return true;
+                });
                 holder.createBtn.setOnClickListener(v -> {
                     String iconResourceName = null;
                     try {

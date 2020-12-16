@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.intercept;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -29,8 +30,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Html;
-import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -48,6 +47,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ShareActionProvider;
 import androidx.collection.SparseArrayCompat;
@@ -65,13 +65,18 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class ActivityInterceptor extends AppCompatActivity {
+    public static final String EXTRA_PACKAGE_NAME = BuildConfig.APPLICATION_ID + ".intent.extra.PACKAGE_NAME";
+    public static final String EXTRA_CLASS_NAME = BuildConfig.APPLICATION_ID + ".intent.extra.CLASS_NAME";
+
     private static final String INTENT_EDITED = "intent_edited";
-    private static final String NEWLINE = "\n<br>";
+    private static final String NEWLINE = "\n";
     private static final String BLANK = " ";
 
     private static final SparseArrayCompat<String> INTENT_FLAG_TO_STRING = new SparseArrayCompat<String>() {
@@ -267,6 +272,9 @@ public class ActivityInterceptor extends AppCompatActivity {
 
     private Intent mutableIntent;
 
+    @Nullable
+    private ComponentName requestedComponent;
+
     private Integer lastResultCode = null;
     private Intent lastResultIntent = null;
 
@@ -294,31 +302,57 @@ public class ActivityInterceptor extends AppCompatActivity {
         setContentView(R.layout.activity_interceptor);
         setSupportActionBar(findViewById(R.id.toolbar));
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
-
-        rememberIntent(getIntent());
-
+        // Get Intent
+        Intent intent = getIntent();
+        // Get ComponentName if set
+        String pkgName = null;
+        String className = null;
+        if (intent.hasExtra(EXTRA_PACKAGE_NAME)) {
+            pkgName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
+            intent.removeExtra(EXTRA_PACKAGE_NAME);
+        }
+        if (intent.hasExtra(EXTRA_CLASS_NAME)) {
+            className = intent.getStringExtra(EXTRA_CLASS_NAME);
+            intent.removeExtra(EXTRA_CLASS_NAME);
+        }
+        if (pkgName != null && className != null) {
+            requestedComponent = new ComponentName(pkgName, className);
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                PackageManager pm = getPackageManager();
+                actionBar.setTitle(PackageUtils.getPackageLabel(pm, pkgName));
+                try {
+                    ActivityInfo info = pm.getActivityInfo(requestedComponent, 0);
+                    actionBar.setSubtitle(info.loadLabel(pm));
+                } catch (PackageManager.NameNotFoundException e) {
+                    actionBar.setSubtitle(className);
+                }
+            }
+        }
+        // Store the Intent
+        storeOriginalIntent(intent);
+        // Whether the Intent was edited
         final boolean isVisible = savedInstanceState != null && savedInstanceState.getBoolean(INTENT_EDITED);
+        // Load Intent data
         showInitialIntent(isVisible);
-
-        if (mHistory != null) mHistory.saveHistory();
+        // Save Intent data to history
+        if (mHistory != null && requestedComponent == null) mHistory.saveHistory();
     }
 
-    private void rememberIntent(Intent original) {
-        this.originalIntent = getUri(original);
-
+    private void storeOriginalIntent(Intent intent) {
+        // Store original intent as URI string
+        this.originalIntent = getUri(intent);
+        // Get a new intent from the URI
         Intent copy = cloneIntent(this.originalIntent);
-
-        final Bundle originalExtras = original.getExtras();
-
+        // Store extras that are not available in the URI
+        final Bundle originalExtras = intent.getExtras();
         if (originalExtras != null) {
-            // Collect extras that are lost in the intent to string conversion
             Bundle additionalExtrasBundle = new Bundle(originalExtras);
             for (String key : originalExtras.keySet()) {
                 if (copy.hasExtra(key)) {
                     additionalExtrasBundle.remove(key);
                 }
             }
-
             if (!additionalExtrasBundle.isEmpty()) {
                 additionalExtras = additionalExtrasBundle;
             }
@@ -471,6 +505,10 @@ public class ActivityInterceptor extends AppCompatActivity {
 
         // Setup matching activities
         activitiesHeader = findViewById(R.id.intent_matching_activities_header);
+        if (requestedComponent != null) {
+            // Hide matching activities since specific component requested
+            activitiesHeader.setVisibility(View.GONE);
+        }
         RecyclerView matchingActivitiesRecyclerView = findViewById(R.id.intent_matching_activities);
         matchingActivitiesRecyclerView.setHasFixedSize(true);
         matchingActivitiesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -485,8 +523,14 @@ public class ActivityInterceptor extends AppCompatActivity {
         wm.getDefaultDisplay().getMetrics(metrics);
 
         // Send Intent on clicking the resend intent button
-        resendIntentButton.setOnClickListener(v -> launcher.launch(Intent
-                .createChooser(mutableIntent, resendIntentButton.getText())));
+        resendIntentButton.setOnClickListener(v -> {
+            if (requestedComponent == null) {
+                launcher.launch(Intent.createChooser(mutableIntent, resendIntentButton.getText()));
+            } else {
+                mutableIntent.setComponent(requestedComponent);
+                launcher.launch(mutableIntent);
+            }
+        });
         // Reset Intent data on clicking the reset intent button
         resetIntentButton.setOnClickListener(v -> {
             areTextWatchersActive = false;
@@ -541,7 +585,10 @@ public class ActivityInterceptor extends AppCompatActivity {
     }
 
     private void refreshUI() {
-        checkAndShowMatchingActivities();
+        if (requestedComponent == null) {
+            // Since no explicit component requested, display matching activities
+            checkAndShowMatchingActivities();
+        }
         if (shareActionProvider != null) {
             Intent share = createShareIntent();
             shareActionProvider.setShareIntent(share);
@@ -556,11 +603,10 @@ public class ActivityInterceptor extends AppCompatActivity {
         return share;
     }
 
-    private Spanned getIntentDetailsString() {
+    @NonNull
+    private String getIntentDetailsString() {
         StringBuilder result = new StringBuilder();
 
-        // k3b so intent can be reloaded using
-        // Intent.parseUri("Intent:....", Intent.URI_INTENT_SCHEME)
         result.append(getUri(mutableIntent)).append(NEWSEGMENT);
 
         appendIntentDetails(result, mutableIntent, true).append(NEWSEGMENT);
@@ -568,24 +614,21 @@ public class ActivityInterceptor extends AppCompatActivity {
         PackageManager pm = getPackageManager();
         List<ResolveInfo> resolveInfo = pm.queryIntentActivities(mutableIntent, 0);
 
-        // Remove Intent Intercept from matching activities
-        int numberOfMatchingActivities = resolveInfo.size() - 1;
+        int numberOfMatchingActivities = resolveInfo.size();
 
         appendHeader(result, R.string.matching_activities);
         if (numberOfMatchingActivities < 1) {
             appendHeader(result, R.string.no_content);
         } else {
-            for (int i = 0; i <= numberOfMatchingActivities; i++) {
+            for (int i = 0; i < numberOfMatchingActivities; i++) {
                 ResolveInfo info = resolveInfo.get(i);
                 ActivityInfo activityinfo = info.activityInfo;
-                if (!activityinfo.packageName.equals(getPackageName())) {
-                    result.append(BOLD_START).append(activityinfo.loadLabel(pm))
-                            .append(BOLD_END_BLANK).append(" (")
-                            .append(activityinfo.packageName)
-                            .append(" - ")
-                            .append(activityinfo.name)
-                            .append(")").append(NEWLINE);
-                }
+                result.append("* ").append(activityinfo.loadLabel(pm))
+                        .append(" (")
+                        .append(activityinfo.packageName)
+                        .append(" - ")
+                        .append(activityinfo.name)
+                        .append(")\n");
             }
         }
 
@@ -600,7 +643,7 @@ public class ActivityInterceptor extends AppCompatActivity {
             }
         }
 
-        return Html.fromHtml(result.toString());
+        return result.toString();
     }
 
     private StringBuilder appendIntentDetails(StringBuilder result, Intent intent, boolean detailed) {
@@ -641,7 +684,7 @@ public class ActivityInterceptor extends AppCompatActivity {
                     count++;
                     Object thisObject = intentBundle.get(key);
                     if (thisObject == null) continue;
-                    result.append(BOLD_START).append(count).append(BOLD_END_BLANK);
+                    result.append(count).append(BLANK);
                     String thisClass = thisObject.getClass().getName();
                     result.append(getString(R.string.class_name)).append(BLANK)
                             .append(thisClass).append(NEWLINE);
@@ -665,8 +708,8 @@ public class ActivityInterceptor extends AppCompatActivity {
                 }
             }
         } catch (Exception e) {
-            appendHeader(result, R.string.extras);
-            result.append("<font color='red'>").append(getString(R.string.error)).append("</font>").append(NEWLINE);
+            result.append(getString(R.string.extras)).append(NEWLINE);
+            result.append(getString(R.string.error)).append(NEWLINE);
             e.printStackTrace();
         }
         return result;
@@ -744,12 +787,10 @@ public class ActivityInterceptor extends AppCompatActivity {
         if (intentUri != null) {
             try {
                 Intent clone = Intent.parseUri(intentUri, Intent.URI_INTENT_SCHEME);
-
-                // bugfix #14: restore extras that are lost in the intent <-> string conversion
+                // Restore extras that are lost in the intent to string conversion
                 if (additionalExtras != null) {
                     clone.putExtras(additionalExtras);
                 }
-
                 return clone;
             } catch (URISyntaxException e) {
                 e.printStackTrace();
