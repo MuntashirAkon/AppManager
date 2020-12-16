@@ -49,6 +49,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.ShareActionProvider;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.util.Pair;
@@ -56,6 +57,7 @@ import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.internal.util.TextUtils;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
 import java.net.URISyntaxException;
@@ -66,6 +68,7 @@ import java.util.Set;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
+import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 
 public class ActivityInterceptor extends AppCompatActivity {
     private static final String INTENT_EDITED = "intent_edited";
@@ -132,6 +135,67 @@ public class ActivityInterceptor extends AppCompatActivity {
         }
     };
 
+    private static final List<String> INTENT_CATEGORIES = new ArrayList<String>() {
+        {
+            add(Intent.CATEGORY_DEFAULT);
+            add(Intent.CATEGORY_BROWSABLE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                add(Intent.CATEGORY_VOICE);
+            }
+            add(Intent.CATEGORY_ALTERNATIVE);
+            add(Intent.CATEGORY_SELECTED_ALTERNATIVE);
+            add(Intent.CATEGORY_TAB);
+            add(Intent.CATEGORY_LAUNCHER);
+            add(Intent.CATEGORY_LEANBACK_LAUNCHER);
+            add("android.intent.category.CAR_LAUNCHER");
+            add("android.intent.category.LEANBACK_SETTINGS");
+            add(Intent.CATEGORY_INFO);
+            add(Intent.CATEGORY_HOME);
+            add("android.intent.category.HOME_MAIN");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                add(Intent.CATEGORY_SECONDARY_HOME);
+            }
+            add("android.intent.category.SETUP_WIZARD");
+            add("android.intent.category.LAUNCHER_APP");
+            add(Intent.CATEGORY_PREFERENCE);
+            add(Intent.CATEGORY_DEVELOPMENT_PREFERENCE);
+            add(Intent.CATEGORY_EMBED);
+            add(Intent.CATEGORY_APP_MARKET);
+            add(Intent.CATEGORY_MONKEY);
+            add(Intent.CATEGORY_TEST);
+            add(Intent.CATEGORY_UNIT_TEST);
+            add(Intent.CATEGORY_SAMPLE_CODE);
+            add(Intent.CATEGORY_OPENABLE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                add(Intent.CATEGORY_TYPED_OPENABLE);
+            }
+            add(Intent.CATEGORY_FRAMEWORK_INSTRUMENTATION_TEST);
+            add(Intent.CATEGORY_CAR_DOCK);
+            add(Intent.CATEGORY_DESK_DOCK);
+            add(Intent.CATEGORY_LE_DESK_DOCK);
+            add(Intent.CATEGORY_HE_DESK_DOCK);
+            add(Intent.CATEGORY_CAR_MODE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                add(Intent.CATEGORY_VR_HOME);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                add(Intent.CATEGORY_ACCESSIBILITY_SHORTCUT_TARGET);
+            }
+            add(Intent.CATEGORY_APP_BROWSER);
+            add(Intent.CATEGORY_APP_CALCULATOR);
+            add(Intent.CATEGORY_APP_CALENDAR);
+            add(Intent.CATEGORY_APP_CONTACTS);
+            add(Intent.CATEGORY_APP_EMAIL);
+            add(Intent.CATEGORY_APP_GALLERY);
+            add(Intent.CATEGORY_APP_MAPS);
+            add(Intent.CATEGORY_APP_MESSAGING);
+            add(Intent.CATEGORY_APP_MUSIC);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                add(Intent.CATEGORY_APP_FILES);
+            }
+        }
+    };
+
     private static final String NEWSEGMENT = NEWLINE + "------------" + NEWLINE;
 
     private static final String BOLD_START = "<b><u>";
@@ -186,7 +250,7 @@ public class ActivityInterceptor extends AppCompatActivity {
 
     private TextView categoriesHeader;
     private CategoriesRecyclerViewAdapter categoriesAdapter;
-    private CategoriesRecyclerViewAdapter flagsAdapter;
+    private FlagsRecyclerViewAdapter flagsAdapter;
     private ExtrasRecyclerViewAdapter extrasAdapter;
     private TextView activitiesHeader;
     private MatchingActivitiesRecyclerViewAdapter matchingActivitiesAdapter;
@@ -364,17 +428,31 @@ public class ActivityInterceptor extends AppCompatActivity {
 
         // Setup categories
         categoriesHeader = findViewById(R.id.intent_categories_header);
+        AppCompatImageButton categoriesAddNew = findViewById(R.id.intent_categories_add_btn);
+        categoriesAddNew.setOnClickListener(v ->
+                new TextInputDropdownDialogBuilder(this, R.string.category)
+                        .setTitle(R.string.category)
+                        .setDropdownItems(INTENT_CATEGORIES)
+                        .setNegativeButton(R.string.cancel, null)
+                        .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
+                            if (!TextUtils.isEmpty(inputText)) {
+                                mutableIntent.addCategory(inputText.toString().trim());
+                                categoriesAdapter.setDefaultList(mutableIntent.getCategories());
+                                showTextViewIntentData(null);
+                            }
+                        })
+                        .show());
         RecyclerView categoriesRecyclerView = findViewById(R.id.intent_categories);
         categoriesRecyclerView.setHasFixedSize(true);
         categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        categoriesAdapter = new CategoriesRecyclerViewAdapter();
+        categoriesAdapter = new CategoriesRecyclerViewAdapter(this);
         categoriesRecyclerView.setAdapter(categoriesAdapter);
 
         // Setup flags
         RecyclerView flagsRecyclerView = findViewById(R.id.intent_flags);
         flagsRecyclerView.setHasFixedSize(true);
         flagsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        flagsAdapter = new CategoriesRecyclerViewAdapter();
+        flagsAdapter = new FlagsRecyclerViewAdapter();
         flagsRecyclerView.setAdapter(flagsAdapter);
 
         // Setup extras
@@ -674,6 +752,56 @@ public class ActivityInterceptor extends AppCompatActivity {
     }
 
     private static class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<CategoriesRecyclerViewAdapter.ViewHolder> {
+        private final List<String> categories = new ArrayList<>();
+        private final ActivityInterceptor activity;
+
+        public CategoriesRecyclerViewAdapter(ActivityInterceptor activity) {
+            this.activity = activity;
+        }
+
+        public void setDefaultList(@Nullable Collection<String> categories) {
+            this.categories.clear();
+            if (categories != null) this.categories.addAll(categories);
+            notifyDataSetChanged();
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_title_action, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            String category = categories.get(position);
+            holder.title.setText(category);
+            holder.title.setTextIsSelectable(true);
+            holder.actionIcon.setOnClickListener(v -> {
+                activity.mutableIntent.removeCategory(category);
+                setDefaultList(activity.mutableIntent.getCategories());
+                activity.showTextViewIntentData(null);
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return categories.size();
+        }
+
+        static class ViewHolder extends RecyclerView.ViewHolder {
+            TextView title;
+            ImageView actionIcon;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                title = itemView.findViewById(R.id.item_title);
+                actionIcon = itemView.findViewById(R.id.item_action);
+            }
+        }
+    }
+
+    private static class FlagsRecyclerViewAdapter extends RecyclerView.Adapter<FlagsRecyclerViewAdapter.ViewHolder> {
         private final List<String> categories = new ArrayList<>();
 
         public void setDefaultList(@Nullable Collection<String> categories) {
