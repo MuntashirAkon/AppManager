@@ -79,7 +79,7 @@
     <string name="night">Notte</string>
     <string name="select_theme">Seleziona un tema</string>
     <string name="apply">Applica</string>
-    <string name="current_theme">Tema attuale: %s</string>
+    <string name="current_theme">Tema attuale: %1$s</string>
     <string name="version">Versione</string>
     <string name="block_trackers">Blocca tracker</string>
     <string name="failed_to_disable_trackers">Impossibile disattivare i tracker</string>
@@ -163,7 +163,7 @@
     <string name="error_invalid_icon_resource">Risorsa invalida per l\'icona</string>
     <string name="class_name">Nome Classe</string>
     <string name="package_name">Nome pacchetto</string>
-    <string name="error_verbose_pin_shortcut">I launcher non supporta PinShortcut. Impossibile creare</string>
+    <string name="error_verbose_pin_shortcut">Il launcher non supporta PinShortcut. Impossibile creare una shortcut.</string>
     <string name="shared_user_id">User ID condiviso</string>
     <string name="sort_by_shared_user_id">User ID condiviso</string>
     <string name="grant_uri_permission">Fornisci permessi URI</string>
@@ -173,7 +173,7 @@
     <string name="source_dir">Percorso sorgente</string>
     <string name="paths_and_directories">Percorso e Directory</string>
     <string name="app_info">Informazioni applicazione</string>
-    <string name="version_name_with_code">Versione</string>
+    <string name="version_name_with_code">Versione &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;%1$s&lt;/xliff:g&gt;&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;%2$d&lt;/xliff:g&gt;</string>
     <string name="sort">Evidenzia</string>
     <string name="user">Utente</string>
     <string name="system">Sistema</string>
@@ -194,4 +194,177 @@
     <string name="read">Leggi</string>
     <string name="launch_mode">Modalità avvio</string>
     <string name="permissions">Permessi utente</string>
+    <string name="clear_data_from_uninstalled_apps">Rimuovi dati delle app disinstallate</string>
+    <string name="deny_app_ops_description">Nega le operazioni app identificate dati i valori costanti, Ex 63 significa RUN_IN_BACKGROUND</string>
+    <string name="deny_app_ops_dots">Nega operazioni app…</string>
+    <string name="block_components_description">Blocca tutti i componenti identificati dalla(e) firma(e) indicata(e)</string>
+    <string name="block_components_dots">Blocca componenti…</string>
+    <string name="block_unblock_trackers_description">Blocca o sblocca pubblicità e componenti tracking da tutte applicazioni installe</string>
+    <string name="clear_cache">Svuota Cache</string>
+    <string name="failed_to_get_data_usage_information">Impossibile trovare dati sull\'utilizzo</string>
+    <string name="pref_import_existing_msg">Aggiunge componenti disabilitati dalle altre applicazioni su App Manager. Fai attenzione ad usare questa funzione in quanto possono esserci dei falsi positivi. Scegli solo le app di cui sei sicuro.</string>
+    <string name="pref_import_existing">Importa regole esistenti</string>
+    <string name="community_links">Aggiorna canale: https://t.me/AppManagerChannel
+\nSupporta il Gruppo: https://t.me/AppManagerAndroid
+\nTwitter: https://twitter.com/AMUpdateChannel</string>
+    <string name="community">Community di Telegram</string>
+    <string name="source_code">Codice Sorgente</string>
+    <string name="update">Aggiorna</string>
+    <plurals name="no_of_trackers">
+        <item quantity="one">%1$d tracker</item>
+        <item quantity="other">%1$d tracker</item>
+    </plurals>
+    <string name="manifest_viewer">Visualizzatore Manifest</string>
+    <string name="external_apk_no_app_op">APK esterno non ha nessun operazione app</string>
+    <string name="launch_app">Avvio</string>
+    <string name="failed_to_deny_dangerous_app_ops">Impossibile revocare tutte le operazioni app ritenute pericolose</string>
+    <string name="failed_to_deny_dangerous_perms">Impossibile revocare tutti permessi ritenuti pericolosi</string>
+    <string name="failed_to_reset_app_ops">Impossibile resettare operazioni app</string>
+    <string name="failed_to_revoke_permission">Impossibile revocare permesso</string>
+    <string name="failed_to_grant_permission">Impossibile fornire permesso</string>
+    <plurals name="alert_failed_to_disable_trackers">
+        <item quantity="one">Impossibile disabilitare i tracker dall\'app %1$d</item>
+        <item quantity="other">Impossibile disabilitare i tracker dalle app %1$d</item>
+    </plurals>
+    <string name="sort_by_permission_names">Nome permessi</string>
+    <string name="deny_dangerous_permissions">Nega permessi pericolosi</string>
+    <string name="unknown_op">Operazione sconosciuta</string>
+    <string name="sort_by_app_ops_names">Nome operazioni App</string>
+    <string name="deny_dangerous_app_ops">Nega operazioni di applicazioni pericolose</string>
+    <string name="reset_to_default">Reset ai dati iniziali</string>
+    <string name="sort_by_component_name">Nome componenti</string>
+    <string name="sort_by_wifi_data">Dati Wi-Fi</string>
+    <string name="pref_about_msg">Versione, licenze, crediti ed altro da App Manager.</string>
+    <string name="pref_import_blocker_msg">Importa regole di blocco da Blocker, ogni file contiene regole per un singolo pacchetto.</string>
+    <string name="pref_import_watt_msg">Importa regole di blocco da Watt, ogni file contiene regole per un singolo pacchetto nominato come pacagename.xml etc.</string>
+    <string name="pref_import_msg">Importa regole di blocco precedentemente esportate da App Manager.</string>
+    <string name="pref_export_msg">Esportazione regole di blocco configurata all\'interno di App Manager al disco esterno.</string>
+    <string name="export_options">Esporta Opzioni</string>
+    <string name="import_options">Importa Opzioni</string>
+    <string name="duration">Durata</string>
+    <string name="running">In funzione</string>
+    <string name="mode">Modalità</string>
+    <string name="permission_name">Nome permesso</string>
+    <string name="app_op_cannot_be_disabled">Questa app operativa non può essere disabilitata, probabilmente è di solo lettura o dipende da un\'altra app.</string>
+    <plurals name="alert_failed_to_force_stop">
+        <item quantity="one">Impossibile forzare arresto dell\'app %1$d</item>
+        <item quantity="other">Impossibile forzare arresto delle app %1$d</item>
+    </plurals>
+    <string name="the_operation_was_successful">Fatto</string>
+    <plurals name="alert_failed_to_disable_background">
+        <item quantity="one">Impossibile fermare l\'uso in background dell\'app %1$d</item>
+        <item quantity="other">Impossibile fermare l\'uso in background delle app %1$d</item>
+    </plurals>
+    <plurals name="alert_failed_to_uninstall">
+        <item quantity="one">Impossibile disinstallare l\'app %1$d</item>
+        <item quantity="other">Impossibile disinstallare le app %1$d</item>
+    </plurals>
+    <plurals name="alert_failed_to_disable">
+        <item quantity="one">Impossibile disattivare l\'app %1$d</item>
+        <item quantity="other">Impossibile disattivare le app %1$d</item>
+    </plurals>
+    <plurals name="alert_failed_to_clear_data">
+        <item quantity="one">Impossibile cancellare i dati dall\'app %1$d</item>
+        <item quantity="other">Impossibile cancellare i dati delle app %1$d</item>
+    </plurals>
+    <string name="some_items_selected">Selezionato &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"selection_no\" example=\"20\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="export_blocking_rules">Esporta Regole di Blocco</string>
+    <string name="disable_background">Disabilita in Background</string>
+    <string name="backup_restore">Recupera/Riprendi</string>
+    <string name="backup_apk">Recupero APK</string>
+    <string name="clear_data">Cancella Dati</string>
+    <string name="user_and_uid">Utente: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_name\" example=\"root\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%2$d&lt;/xliff:g&gt;)</string>
+    <string name="memory_virtual_memory">Memoria: %1$s, Memoria Virtuale: %2$s</string>
+    <string name="pid_and_ppid">ID Processo: %1$d, Processo ID Parente: %2$d</string>
+    <string name="disable_background_run">Blocca il caricamento in Background</string>
+    <string name="kill_process">Forza arresto</string>
+    <string name="running_apps">App attive</string>
+    <string name="store">Negozio</string>
+    <string name="apk_updater">Aggiorna APK</string>
+    <plurals name="failed_to_import_files">
+        <item quantity="one">Impossibile importare il file %1$d.</item>
+        <item quantity="other">Impossibile importare i file %1$d.</item>
+    </plurals>
+    <string name="the_export_was_successful">Esportato</string>
+    <string name="the_import_was_successful">Importato</string>
+    <string name="pref_import_blocker">Importa da Blocker</string>
+    <string name="pref_import_watt">Importa da Watt</string>
+    <string name="pref_import_export_blocking_rules_msg">Importa/esporta regole, importa regole esterne per Watt o Blocker.</string>
+    <string name="pref_import_export_blocking_rules">Importa/Esporta regole di blocco</string>
+    <string name="sort_by_mobile_data">Dati cellulare</string>
+    <string name="sort_by_times_opened">Numero di volte aperto</string>
+    <string name="sort_by_screen_time">Tempo sullo schermo</string>
+    <string name="sort_by_last_used">Ultimo utilizzo</string>
+    <plurals name="no_of_times_opened">
+        <item quantity="one">%1$d volta</item>
+        <item quantity="other">%1$d volte</item>
+    </plurals>
+    <string name="external_multiple_data_dir">Cartella dati esterni &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dir_no\" example=\"1\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="external_data_dir">Cartella dati esterni</string>
+    <string name="exodus_link">Link εxodus</string>
+    <string name="usage_yesterday">Ieri</string>
+    <string name="only_works_in_root_mode">Opera solo in modalità root</string>
+    <string name="app_settings">Impostazioni</string>
+    <string name="pref_usage_access_enabled">Informazioni di utilizzo</string>
+    <string name="pref_global_blocking_enabled">Blocco globale componenti</string>
+    <string name="pref_usage_access_enabled_msg">Ti mostara le statistiche di utilizzo dell\'app e le info sui dati.</string>
+    <string name="pref_global_blocking_enabled_msg">Ti permette di bloccare ogni componente di qualsiasi app senza aprire esplicitamente il blocco per le app.</string>
+    <string name="pref_root_mode_enabled_msg">Attiva tutte le caratteristiche di root dell\'app, Il modello ADB è stato trovato automaticamente dopo il riavvio.</string>
+    <string name="app_size">App</string>
+    <string name="no_usage_in_this_time_range">Nessun utilizzo in questo arco di tempo</string>
+    <string name="type_string">Caratteri</string>
+    <string name="type_long">Intero lungo</string>
+    <string name="long_integer_value">Valore intero lungo</string>
+    <string name="native_library_dir">Cartella libreria nativa JNI</string>
+    <plurals name="main_list_date_days">
+        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; giorno</item>
+        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; giorni</item>
+    </plurals>
+    <string name="tested_signatures_on_classes_and_time_taken">Testato&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"signature_no\" example=\"342\"&gt;%1$d&lt;/xliff:g&gt; firme con le classi &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"6000\"&gt;%2$d&lt;/xliff:g&gt;
+\nTempo richiesto&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"time\" example=\"10000\"&gt;%3$d&lt;/xliff:g&gt; ms (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"iteration_no\" example=\"100000\"&gt;%4$d&lt;/xliff:g&gt; iterazioni).</string>
+    <plurals name="other_trackers_and_classes">
+        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt;tracker con la classe &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt;</item>
+        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; tracker con le classi&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt;</item>
+    </plurals>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="one">2 tracker con la classe &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt;</item>
+        <item quantity="other">2 tracker con le classi &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt;</item>
+    </plurals>
+    <plurals name="tracker_and_classes">
+        <item quantity="one">1 tracker con la classe &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt;</item>
+        <item quantity="other">1 tracker con le classi &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt;</item>
+    </plurals>
+    <string name="toggle_class_listing">Scambiare lista classi</string>
+    <string name="class_viewer">Visualizzatore Classi</string>
+    <string name="credits_message">"Agli autori di
+\n- Progetto open source Android
+\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Editor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;AppsMonitor&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;
+\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
+\nLogo: &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "</string>
+    <string name="credits">Crediti</string>
+    <string name="sdk_flags">Flags</string>
+    <string name="sort_by_domain">Utilizzatore app primario</string>
+    <string name="manifest">Manifest</string>
+    <string name="flags">Flags</string>
+    <string name="sort_by_target_sdk">Target SDK</string>
+    <string name="icon_picker">Seleziona Icona</string>
+    <string name="shortcut_name">Nome Collegamento</string>
+    <string name="edit_shortcut">Modificare Collegamento</string>
+    <string name="create_shortcut">Creare collegamento</string>
+    <string name="starting_activity">Inizio Attività: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="empty_package_name">Nome Pacchetto Vuoto</string>
+    <string name="main_activity">Attività Principale</string>
+    <string name="installer_app">Installatore</string>
+    <string name="about">Info App</string>
+    <string name="input_features">Inserisci impostazioni</string>
+    <string name="no_feature">Nessun impostazione</string>
+    <string name="gles_ver">Rich. Versione GL ES</string>
+    <string name="uses_feature">Impostazioni Utente</string>
+    <string name="soft_input">Modalità soft input</string>
+    <string name="authority">Autorità</string>
 </resources>
