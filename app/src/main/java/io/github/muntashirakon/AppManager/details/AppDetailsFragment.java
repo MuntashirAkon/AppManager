@@ -48,6 +48,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -60,19 +73,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.UiThread;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
@@ -81,6 +81,8 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionIte
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.server.common.OpEntry;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
@@ -372,7 +374,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 }
                 runOnUiThread(this::refreshDetails);
             }).start();
-        // Sorting
+            // Sorting
         } else if (id == R.id.action_sort_by_name) {  // All
             setSortBy(SORT_BY_NAME);
             item.setChecked(true);
@@ -853,8 +855,9 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityInfo.name))
                     : activityLabel);
             boolean isExported = activityInfo.exported;
-            launch.setEnabled(isExported && !isDisabled && !appDetailsItem.isBlocked);
-            if (isExported && !isDisabled && !appDetailsItem.isBlocked) {
+            boolean canLaunch = (isRootEnabled || isExported) && !isDisabled && !appDetailsItem.isBlocked;
+            launch.setEnabled(canLaunch);
+            if (canLaunch) {
                 launch.setOnClickListener(v -> {
                     Intent intent = new Intent();
                     intent.setClassName(mPackageName, activityName);
@@ -862,11 +865,15 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     try {
                         startActivity(intent);
                     } catch (Exception e) {
-                        if (getActivity() != null)
-                            ActivityCompat.recreate(getActivity());
-                        Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
+                        if (isRootEnabled) {
+                            Runner.runCommand(Runner.getRootInstance(), RunnerUtils.CMD_AM
+                                    + " start --user " + mainModel.getUserHandle() + " -n "
+                                    + mPackageName + "/" + activityName);
+                        } else Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
                     }
                 });
+            }
+            if (canLaunch && isExported) {
                 holder.createBtn.setOnClickListener(v -> {
                     String iconResourceName = null;
                     try {
