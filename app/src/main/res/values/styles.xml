@@ -123,6 +123,11 @@
         <item name="boxStrokeColor">@drawable/outlined_stroke_color</item>
         <item name="hintTextColor">@color/colorAccent</item>
     </style>
+    <style name="AppTheme.TextInputLayout.ExposedDropdownMenu" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxStrokeColor">@drawable/outlined_stroke_color</item>
+        <item name="hintTextColor">@color/colorAccent</item>
+        <item name="endIconTint">@color/colorAccent</item>
+    </style>
     <style name="AppTheme.FabOverlay">
         <item name="colorSecondary">@color/colorAccent</item>
     </style>

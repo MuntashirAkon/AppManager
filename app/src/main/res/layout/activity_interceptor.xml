@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2020 Muntashir Al-Islam
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".intercept.ActivityInterceptor">
+
+	<include layout="@layout/appbar" />
+
+	<androidx.appcompat.widget.LinearLayoutCompat
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+		<androidx.core.widget.NestedScrollView
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_weight="1">
+
+			<androidx.appcompat.widget.LinearLayoutCompat
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical">
+
+				<com.google.android.material.textfield.TextInputLayout
+					style="@style/AppTheme.TextInputLayout.ExposedDropdownMenu"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/action"
+					android:paddingStart="@dimen/padding_medium"
+					android:paddingEnd="@dimen/padding_medium"
+					app:hintAnimationEnabled="true"
+					app:hintEnabled="true">
+
+					<com.google.android.material.textfield.MaterialAutoCompleteTextView
+						android:id="@+id/action_edit"
+						style="@style/TextAppearance.MaterialComponents.Subtitle1"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:inputType="textNoSuggestions|textMultiLine"
+						tools:text="@tools:sample/full_names" />
+
+				</com.google.android.material.textfield.TextInputLayout>
+
+				<com.google.android.material.textfield.TextInputLayout
+					style="@style/AppTheme.TextInputLayout.ExposedDropdownMenu"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/data"
+					android:paddingStart="@dimen/padding_medium"
+					android:paddingEnd="@dimen/padding_medium"
+					app:hintAnimationEnabled="true"
+					app:hintEnabled="true">
+
+					<com.google.android.material.textfield.MaterialAutoCompleteTextView
+						android:id="@+id/data_edit"
+						style="@style/TextAppearance.MaterialComponents.Subtitle1"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:inputType="textNoSuggestions|textMultiLine"
+						tools:text="@tools:sample/full_names" />
+
+				</com.google.android.material.textfield.TextInputLayout>
+
+				<com.google.android.material.textfield.TextInputLayout
+					style="@style/AppTheme.TextInputLayout.ExposedDropdownMenu"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/mime_type"
+					android:paddingStart="@dimen/padding_medium"
+					android:paddingEnd="@dimen/padding_medium"
+					app:hintAnimationEnabled="true"
+					app:hintEnabled="true">
+
+					<com.google.android.material.textfield.MaterialAutoCompleteTextView
+						android:id="@+id/type_edit"
+						style="@style/TextAppearance.MaterialComponents.Subtitle1"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:inputType="textNoSuggestions|textMultiLine"
+						tools:text="@tools:sample/full_names" />
+
+				</com.google.android.material.textfield.TextInputLayout>
+
+				<com.google.android.material.textfield.TextInputLayout
+					style="@style/AppTheme.TextInputLayout.ExposedDropdownMenu"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/uri"
+					android:paddingStart="@dimen/padding_medium"
+					android:paddingEnd="@dimen/padding_medium"
+					app:hintAnimationEnabled="true"
+					app:hintEnabled="true">
+
+					<com.google.android.material.textfield.MaterialAutoCompleteTextView
+						android:id="@+id/uri_edit"
+						style="@style/TextAppearance.MaterialComponents.Subtitle1"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:inputType="textNoSuggestions|textMultiLine"
+						tools:text="@tools:sample/full_names" />
+
+				</com.google.android.material.textfield.TextInputLayout>
+
+				<com.google.android.material.textview.MaterialTextView
+					android:id="@+id/intent_categories_header"
+					style="@style/TextAppearance.MaterialComponents.Subtitle1"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/padding_small"
+					android:paddingStart="@dimen/padding_medium"
+					android:paddingEnd="@dimen/padding_medium"
+					android:text="@string/category"
+					android:textAllCaps="true"
+					android:textColor="@color/colorAccent" />
+
+				<androidx.recyclerview.widget.RecyclerView
+					android:id="@+id/intent_categories"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:overScrollMode="never"
+					tools:listitem="@layout/item_text_view" />
+
+				<com.google.android.material.textview.MaterialTextView
+					style="@style/TextAppearance.MaterialComponents.Subtitle1"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/padding_small"
+					android:paddingStart="@dimen/padding_medium"
+					android:paddingEnd="@dimen/padding_medium"
+					android:text="@string/flags"
+					android:textAllCaps="true"
+					android:textColor="@color/colorAccent" />
+
+				<androidx.recyclerview.widget.RecyclerView
+					android:id="@+id/intent_flags"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:overScrollMode="never"
+					tools:listitem="@layout/item_text_view" />
+
+				<com.google.android.material.textview.MaterialTextView
+					style="@style/TextAppearance.MaterialComponents.Subtitle1"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/padding_small"
+					android:paddingStart="@dimen/padding_medium"
+					android:paddingEnd="@dimen/padding_medium"
+					android:text="@string/extras"
+					android:textAllCaps="true"
+					android:textColor="@color/colorAccent" />
+
+				<androidx.recyclerview.widget.RecyclerView
+					android:id="@+id/intent_extras"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:overScrollMode="never"
+					tools:listitem="@layout/item_app_details_secondary" />
+
+				<com.google.android.material.textview.MaterialTextView
+					android:id="@+id/intent_matching_activities_header"
+					style="@style/TextAppearance.MaterialComponents.Subtitle1"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/padding_small"
+					android:paddingStart="@dimen/padding_medium"
+					android:paddingEnd="@dimen/padding_medium"
+					android:text="@string/matching_activities"
+					android:textAllCaps="true"
+					android:textColor="@color/colorAccent" />
+
+				<androidx.recyclerview.widget.RecyclerView
+					android:id="@+id/intent_matching_activities"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:overScrollMode="never"
+					tools:listitem="@layout/item_icon_title_subtitle" />
+
+			</androidx.appcompat.widget.LinearLayoutCompat>
+
+		</androidx.core.widget.NestedScrollView>
+
+		<androidx.appcompat.widget.LinearLayoutCompat
+			style="?android:attr/buttonBarStyle"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="0"
+			android:orientation="horizontal">
+
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/reset_intent_button"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:layout_marginStart="@dimen/padding_small"
+				android:layout_marginTop="@dimen/padding_very_small"
+				android:layout_marginEnd="@dimen/padding_small"
+				android:layout_marginBottom="@dimen/padding_very_small"
+				android:layout_weight="1"
+				android:singleLine="true"
+				android:text="@string/reset_to_default"
+				android:visibility="gone" />
+
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/resend_intent_button"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:layout_marginStart="@dimen/padding_small"
+				android:layout_marginTop="@dimen/padding_very_small"
+				android:layout_marginEnd="@dimen/padding_small"
+				android:layout_marginBottom="@dimen/padding_very_small"
+				android:layout_weight="1"
+				android:singleLine="true"
+				android:text="@string/resend_intent" />
+
+		</androidx.appcompat.widget.LinearLayoutCompat>
+
+	</androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -781,4 +781,17 @@
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="set_app_op_mode">Set app op mode</string>
     <string name="filter_apps_with_splits">Apps with splits</string>
+    <string name="value">Value</string>
+    <string name="matching_activities">Matching activities</string>
+    <string name="send_edited_intent">Send edited Intent</string>
+    <string name="activity_result">Activity result</string>
+    <string name="result_code">Result code</string>
+    <string name="action">Action</string>
+    <string name="mime_type">MIME Type</string>
+    <string name="uri">URI</string>
+    <string name="category">Categories</string>
+    <string name="extras">Extras</string>
+    <string name="share">Share</string>
+    <string name="resend_intent">Resend Intent</string>
+    <string name="interceptor">Interceptor</string>
 </resources>
