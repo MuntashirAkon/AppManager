@@ -158,16 +158,33 @@
 					android:overScrollMode="never"
 					tools:listitem="@layout/item_text_view" />
 
-				<com.google.android.material.textview.MaterialTextView
-					style="@style/TextAppearance.MaterialComponents.Subtitle1"
+				<androidx.appcompat.widget.LinearLayoutCompat
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_marginTop="@dimen/padding_small"
+					android:orientation="horizontal"
 					android:paddingStart="@dimen/padding_medium"
-					android:paddingEnd="@dimen/padding_medium"
-					android:text="@string/flags"
-					android:textAllCaps="true"
-					android:textColor="@color/colorAccent" />
+					android:paddingEnd="@dimen/padding_medium">
+
+					<com.google.android.material.textview.MaterialTextView
+						style="@style/TextAppearance.MaterialComponents.Subtitle1"
+						android:layout_width="0dp"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center_vertical"
+						android:layout_weight="1"
+						android:text="@string/flags"
+						android:textAllCaps="true"
+						android:textColor="@color/colorAccent" />
+
+					<androidx.appcompat.widget.AppCompatImageButton
+						android:id="@+id/intent_flags_add_btn"
+						android:layout_width="30dp"
+						android:layout_height="30dp"
+						android:layout_weight="0"
+						android:background="?selectableItemBackgroundBorderless"
+						android:src="@drawable/ic_baseline_add_24" />
+
+				</androidx.appcompat.widget.LinearLayoutCompat>
 
 				<androidx.recyclerview.widget.RecyclerView
 					android:id="@+id/intent_flags"

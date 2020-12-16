@@ -49,7 +49,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.ShareActionProvider;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.util.Pair;
@@ -248,7 +247,6 @@ public class ActivityInterceptor extends AppCompatActivity {
 
     private HistoryEditText mHistory = null;
 
-    private TextView categoriesHeader;
     private CategoriesRecyclerViewAdapter categoriesAdapter;
     private FlagsRecyclerViewAdapter flagsAdapter;
     private ExtrasRecyclerViewAdapter extrasAdapter;
@@ -352,11 +350,6 @@ public class ActivityInterceptor extends AppCompatActivity {
 
         // Display categories
         Set<String> categories = mutableIntent.getCategories();
-        if (categories != null) {
-            categoriesHeader.setVisibility(View.VISIBLE);
-        } else {
-            categoriesHeader.setVisibility(View.GONE);
-        }
         categoriesAdapter.setDefaultList(categories);
 
         // Display flags
@@ -427,9 +420,7 @@ public class ActivityInterceptor extends AppCompatActivity {
         mHistory = new HistoryEditText(this, action, data, type, uri);
 
         // Setup categories
-        categoriesHeader = findViewById(R.id.intent_categories_header);
-        AppCompatImageButton categoriesAddNew = findViewById(R.id.intent_categories_add_btn);
-        categoriesAddNew.setOnClickListener(v ->
+        findViewById(R.id.intent_categories_add_btn).setOnClickListener(v ->
                 new TextInputDropdownDialogBuilder(this, R.string.category)
                         .setTitle(R.string.category)
                         .setDropdownItems(INTENT_CATEGORIES)
@@ -449,10 +440,26 @@ public class ActivityInterceptor extends AppCompatActivity {
         categoriesRecyclerView.setAdapter(categoriesAdapter);
 
         // Setup flags
+        findViewById(R.id.intent_flags_add_btn).setOnClickListener(v ->
+                new TextInputDropdownDialogBuilder(this, R.string.flags)
+                        .setTitle(R.string.flags)
+                        .setDropdownItems(getAllFlags())
+                        .setNegativeButton(R.string.cancel, null)
+                        .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
+                            if (!TextUtils.isEmpty(inputText)) {
+                                int i = getFlagIndex(String.valueOf(inputText).trim());
+                                if (i >= 0) {
+                                    mutableIntent.addFlags(INTENT_FLAG_TO_STRING.keyAt(i));
+                                    flagsAdapter.setDefaultList(getFlags());
+                                    showTextViewIntentData(null);
+                                }
+                            }
+                        })
+                        .show());
         RecyclerView flagsRecyclerView = findViewById(R.id.intent_flags);
         flagsRecyclerView.setHasFixedSize(true);
         flagsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        flagsAdapter = new FlagsRecyclerViewAdapter();
+        flagsAdapter = new FlagsRecyclerViewAdapter(this);
         flagsRecyclerView.setAdapter(flagsAdapter);
 
         // Setup extras
@@ -751,6 +758,22 @@ public class ActivityInterceptor extends AppCompatActivity {
         return null;
     }
 
+    @NonNull
+    private List<String> getAllFlags() {
+        List<String> allFlags = new ArrayList<>();
+        for (int i = 0; i < INTENT_FLAG_TO_STRING.size(); ++i) {
+            allFlags.add(INTENT_FLAG_TO_STRING.valueAt(i));
+        }
+        return allFlags;
+    }
+
+    private int getFlagIndex(String flagStr) {
+        for (int i = 0; i < INTENT_FLAG_TO_STRING.size(); ++i) {
+            if (INTENT_FLAG_TO_STRING.valueAt(i).equals(flagStr)) return i;
+        }
+        return -1;
+    }
+
     private static class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<CategoriesRecyclerViewAdapter.ViewHolder> {
         private final List<String> categories = new ArrayList<>();
         private final ActivityInterceptor activity;
@@ -802,36 +825,61 @@ public class ActivityInterceptor extends AppCompatActivity {
     }
 
     private static class FlagsRecyclerViewAdapter extends RecyclerView.Adapter<FlagsRecyclerViewAdapter.ViewHolder> {
-        private final List<String> categories = new ArrayList<>();
+        private final List<String> flags = new ArrayList<>();
+        private final ActivityInterceptor activity;
 
-        public void setDefaultList(@Nullable Collection<String> categories) {
-            this.categories.clear();
-            if (categories != null) this.categories.addAll(categories);
+        public FlagsRecyclerViewAdapter(ActivityInterceptor activity) {
+            this.activity = activity;
+        }
+
+        public void setDefaultList(@Nullable Collection<String> flags) {
+            this.flags.clear();
+            if (flags != null) this.flags.addAll(flags);
             notifyDataSetChanged();
         }
 
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_view, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_title_action, parent, false);
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            TextView tv = (TextView) holder.itemView;
-            tv.setText(categories.get(position));
-            tv.setTextIsSelectable(true);
+            String flagName = flags.get(position);
+            holder.title.setText(flagName);
+            holder.title.setTextIsSelectable(true);
+            holder.actionIcon.setOnClickListener(v -> {
+                int i = INTENT_FLAG_TO_STRING.indexOfValue(flagName);
+                if (i >= 0) {
+                    int flag = INTENT_FLAG_TO_STRING.keyAt(i);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        activity.mutableIntent.removeFlags(flag);
+                    } else {
+                        int flags = activity.mutableIntent.getFlags();
+                        flags &= ~flag;
+                        activity.mutableIntent.setFlags(flags);
+                    }
+                    setDefaultList(activity.getFlags());
+                    activity.showTextViewIntentData(null);
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
-            return categories.size();
+            return flags.size();
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
+            TextView title;
+            ImageView actionIcon;
+
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
+                title = itemView.findViewById(R.id.item_title);
+                actionIcon = itemView.findViewById(R.id.item_action);
             }
         }
     }
