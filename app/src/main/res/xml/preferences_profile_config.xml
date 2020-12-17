@@ -47,6 +47,7 @@
     <Preference
         app:key="backup_data"
         app:title="@string/backup_restore"
+        app:isPreferenceVisible="false"
         tools:summary="Backup Info" />
 
     <Preference
