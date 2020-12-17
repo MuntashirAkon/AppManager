@@ -1,2 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="disclaimer_header">Descargo de responsabilidad</string>
+    <string name="disclaimer_exit">Salir</string>
+    <string name="disclaimer_agree">Estoy de acuerdo</string>
+    <string name="disclaimer_agree_forever">No mostrar de nuevo</string>
+    <string name="disclaimer_footer">© 2020 Muntashir Al-Islam</string>
+    <string name="disclaimer_body">App Manager ofrece funciones de raíz (root) que podrían dañar el dispositivo si se usan incorrectamente. El App Manager no se hace responsable de los daños causados por el uso de esta aplicación. Si no eres plenamente consciente de cómo funciona la raíz, entonces debes evitar usar las opciones de raíz hasta que seas plenamente consciente de los riesgos.
+\n
+\nCualquier enlace que proporcione a otras aplicaciones y sitios web es para el beneficio de los usuarios. No me hago responsable de ningún contenido que pueda encontrar en los enlaces externos.
+\n
+\nAl utilizar el App Manager, aceptas la plena responsabilidad de tu propio uso y no aceptas ningún daño, reclamación o valor monetario debido al mal uso.
+\n
+\nAl usar esta aplicación, aceptas toda la responsabilidad de su uso y aceptas que no soy responsable de ninguna acción que realices y que tenga un efecto adverso en tu dispositivo.</string>
+</resources>
