@@ -120,7 +120,7 @@
         <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dia</item>
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dias</item>
     </plurals>
-    <string name="no_shared_libs">Sem bibliotecas compartilhadas</string>
+    <string name="no_shared_libs">Nenhuma biblioteca compartilhada</string>
     <string name="no_tracker_class">Nenhuma classe rastreadora</string>
     <string name="app_usage">Uso de Aplicativos</string>
     <string name="usage_weekly">Semanal</string>
@@ -152,7 +152,7 @@
     <string name="aurora">Aurora</string>
     <string name="dev_protected_data_dir">Diretório de dados protegidos pelo dispositivo</string>
     <string name="process_name">Nome do Processo</string>
-    <string name="no_code">Sem código</string>
+    <string name="no_code">Nenhum código</string>
     <string name="updated_app">Atualizado</string>
     <string name="test_only">Apenas teste</string>
     <string name="databases">Bancos de dados</string>
@@ -176,7 +176,7 @@
     <string name="type_string">Caracteres</string>
     <string name="disabled_app">Desativado</string>
     <string name="no_usage_in_this_time_range">Nenhum uso nesse intervalo de tempo</string>
-    <string name="no_content">Sem conteúdo</string>
+    <string name="no_content">Nenhum conteúdo</string>
     <string name="view_in_settings">Ver nas Configurações</string>
     <string name="uninstall_app_message">Você deseja desinstalar este aplicativo\?</string>
     <string name="failed_to_uninstall"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> não pôde ser desinstalado.</string>
@@ -193,7 +193,7 @@
     <string name="total_size">Total</string>
     <string name="app_size">Aplicativo</string>
     <string name="app_ops">Operações de Aplicativo</string>
-    <string name="no_app_ops">Sem operações de aplicativo</string>
+    <string name="no_app_ops">Nenhuma operação de aplicativo</string>
     <string name="failed_to_enable_op">A operação de aplicativo solicitada não pôde ser ativada</string>
     <string name="failed_to_disable_op">A operação de aplicativo solicitada não pôde ser desativada</string>
     <string name="pref_root_mode_enabled">Modo root</string>
@@ -344,7 +344,7 @@
     <string name="clear_data_from_uninstalled_apps_description">Limpar dados dos aplicativos que foram desinstalados com a flag DONT_DELETE_DATA</string>
     <string name="clear_app_cache">Limpar cache do aplicativo</string>
     <string name="clear_app_cache_description">Limpar o cache de todos os aplicativos</string>
-    <string name="no_tracker_found">Sem rastreadores encontrados</string>
+    <string name="no_tracker_found">Nenhum rastreador encontrado</string>
     <string name="failed_packages">Pacotes falhados</string>
     <string name="input_signatures_description">Insira assinaturas com espaços, p. ex. (com.facebook org.app2 com.app3) etc.</string>
     <string name="filtered_packages">Pacotes filtrados</string>
@@ -500,11 +500,11 @@
     <string name="changelog">Histórico de Atualizações</string>
     <string name="one_click_ops">Operações em 1 Clique</string>
     <string name="touchscreen">Touchscreen</string>
-    <string name="no_libs">Sem bibliotecas</string>
-    <string name="no_apps">Sem aplicativos</string>
+    <string name="no_libs">Nenhuma biblioteca</string>
+    <string name="no_apps">Nenhum aplicativo</string>
     <string name="state_unknown">Desconhecido</string>
-    <string name="keyboard_no_keys">Sem keys</string>
-    <string name="orientation_no_sensor">Sem sensor</string>
+    <string name="keyboard_no_keys">Nenhuma tecla</string>
+    <string name="orientation_no_sensor">Nenhum sensor</string>
     <plurals name="other_trackers_and_classes">
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores com <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores com <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
@@ -569,14 +569,14 @@
     <string name="filter_apps">Aplicativos</string>
     <string name="apps">Aplicativos</string>
     <string name="apply_now">Aplicar agora…</string>
-    <string name="no_profiles">Sem perfis</string>
+    <string name="no_profiles">Nenhum perfil</string>
     <string name="open_pgp_provider">Provedor OpenPGP</string>
     <string name="cancel">Cancelar</string>
     <string name="ok">OK</string>
     <string name="input_backup_name_description">O nome do backup não deve começar com um dígito nem deve conter qualquer espaço. Deixe-o vazio se quiser usar a data-hora atual.</string>
     <string name="input_backup_name">Nome do backup</string>
     <string name="downgrade">Downgrade</string>
-    <string name="downgrade_not_possible">Downgrade não é possível sem root ou ADB</string>
+    <string name="downgrade_not_possible">Não é possível fazer o downgrade sem root ou ADB</string>
     <string name="process_state_with_extra">Estado: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="process_state">Estado: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <string name="state_foreground">Primeiro plano</string>
@@ -747,4 +747,18 @@
     <string name="this_action_cannot_be_undone">Esta ação não pode ser desfeita.</string>
     <string name="set_app_op_mode">Definir o modo da operação de aplicativo</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
+    <string name="interceptor">Interceptador</string>
+    <string name="resend_intent">Reenviar Intenção</string>
+    <string name="share">Compartilhar</string>
+    <string name="extras">Extras</string>
+    <string name="category">Categorias</string>
+    <string name="uri">URI</string>
+    <string name="mime_type">Tipo de MIME</string>
+    <string name="action">Ação</string>
+    <string name="result_code">Código resultante</string>
+    <string name="activity_result">Resultado da atividade</string>
+    <string name="send_edited_intent">Enviar intenção editada</string>
+    <string name="matching_activities">Atividades correspondentes</string>
+    <string name="value">Valor</string>
+    <string name="filter_apps_with_splits">Aplicativos com divisões</string>
 </resources>
