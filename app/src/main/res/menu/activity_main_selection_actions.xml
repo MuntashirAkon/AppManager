@@ -59,6 +59,7 @@
     <item
         android:id="@+id/action_backup"
         android:title="@string/backup_restore"
+        android:visible="false"
         android:icon="@drawable/ic_baseline_save_24"
         app:showAsAction="never" />
     <item

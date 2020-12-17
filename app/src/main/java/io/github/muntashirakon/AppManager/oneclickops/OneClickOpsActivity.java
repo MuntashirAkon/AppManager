@@ -40,6 +40,7 @@ import java.util.concurrent.Executors;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.BaseActivity;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
@@ -87,12 +88,14 @@ public class OneClickOpsActivity extends BaseActivity {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.deny_app_ops_dots),
                 getString(R.string.deny_app_ops_description))
                 .setOnClickListener(v -> blockAppOps());
-        mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_data_from_uninstalled_apps),
-                getString(R.string.clear_data_from_uninstalled_apps_description))
-                .setOnClickListener(v -> clearData());
-        mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_app_cache),
-                getString(R.string.clear_app_cache_description))
-                .setOnClickListener(v -> clearAppCache());
+        if (BuildConfig.DEBUG) {
+            mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_data_from_uninstalled_apps),
+                    getString(R.string.clear_data_from_uninstalled_apps_description))
+                    .setOnClickListener(v -> clearData());
+            mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_app_cache),
+                    getString(R.string.clear_app_cache_description))
+                    .setOnClickListener(v -> clearAppCache());
+        }
         mProgressIndicator.hide();
     }
 
