@@ -9,11 +9,54 @@ sidebar: auto
 ![GitHub Repo Size](https://img.shields.io/github/repo-size/MuntashirAkon/AppManager)
 ![GitHub Commit per Week](https://img.shields.io/github/commit-activity/w/MuntashirAkon/AppManager)
 
-Currently supported versions are [v2.5.19](https://github.com/MuntashirAkon/AppManager/releases/tag/pre-v2.5.19), [v2.5.18](https://github.com/MuntashirAkon/AppManager/releases/tag/pre-v2.5.18) and [v2.5.17](#v2-5-17-368). Please update App Manager if you are using a version older than these.
+Currently supported versions are [v2.5.20](#v2-5-20-375), [v2.5.19](https://github.com/MuntashirAkon/AppManager/releases/tag/pre-v2.5.19), [v2.5.18](https://github.com/MuntashirAkon/AppManager/releases/tag/pre-v2.5.18) and [v2.5.17](#v2-5-17-368). Please update App Manager if you are using a version older than these.
 
 ::: details Table of Contents
 [[toc]]
 :::
+
+## v2.5.20 (375)
+### Introducing Profiles
+[Profiles][profile_page] finally closes the [related issue](https://github.com/MuntashirAkon/AppManager/issues/72). Profiles can be used to execute certain tasks repeatedly without doing everything manually. A profile can be applied (or invoked) either from the [Profiles page][profiles_page] or from the home screen by creating shortcuts. There are also some presets which consist of debloating profiles taken from [Universal Android Debloater](https://gitlab.com/W1nst0n/universal-android-debloater).
+
+**Known limitations:**
+- Exporting rules and applying permissions are not currently working.
+- Profiles are applied for all users.
+
+### The Interceptor
+[Intent Intercept](https://github.com/MuntashirAkon/intent-intercept) works as a man-in-the-middle between source and destination, that is, when you open a file or URL with another app, you can see what is being shared by opening it with Interceptor first. You can also add or modify the intents before sending them to the destination. Additionally, you can double click on any exportable activities in the Activities tab in the App Details page to open them in the Interceptor to add more configurations.
+
+**Known limitation:** Editing extras is not currently possible.
+
+### UnAPKM: DeDRM the APKM files
+When I released a small tool called [UnAPKM](https://f-droid.org/en/packages/io.github.muntashirakon.unapkm), I promised that similar feature will be available in App Manager. I am proud to announce that you can open APKM files directly in the App Info page or convert them to APKS or install them directly.
+
+### Multiple user
+App manager now supports multiple users! For now, this requires root or ADB. But no-root support is also being considered. If you have multiple users enabled and click on an app installed in multiple profiles, an alert prompt will be displayed where you can select the user.
+
+### Vive la France!
+Thanks to the contributors, we have one more addition to the language club: French. You can add more languages or improve existing translations at [Weblate](https://hosted.weblate.org/engage/app-manager).
+
+### Report crashes
+If App Manager crashes, you can now easily report the crash from the notifications which opens the share options. Crashes are not reported by App Manager, it only redirects you to your favourite Email client.
+
+### Android 11
+Added support for Android 11. Not all things may not work as expected though.
+
+### App Installer Improvements
+#### Set install locations
+In settings page, you can set install locations such as auto (default), internal only and prefer external.
+#### Set APK installer
+In settings page, you can also set default APK installer (root/ADB only) instead of App Manager.
+#### Multiple users
+In settings page, you can allow App Manager to display multiple users during APK installation.
+#### Signing APK files
+In settings page, you can choose to sign APK files before installing them. You can also select which signature scheme to use in the _APK signing_ option in settings.
+
+**Known limitation:** Currently, only a generic key is used to sign APK files
+
+[profile_page]: ./guide/profile-page.md
+[profiles_page]: ./guide/profiles-page.md
 
 ## v2.5.17 (368)
 ### App Installer

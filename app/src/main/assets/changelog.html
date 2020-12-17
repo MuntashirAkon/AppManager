@@ -15,8 +15,39 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<p>Visit App Manager docs here: https://muntashirakon.github.io/AppManager</p><br />
-<p>Visit https://muntashirakon.github.io/AppManager/changelog.html for a more helpful changelog.</p><br />
+<p>App Manager docs: https://muntashirakon.github.io/AppManager</p>
+<p>Changelog: https://muntashirakon.github.io/AppManager/changelog.html</p><br />
+
+<h5>v2.5.20 (375):</h5>
+All the changes introduced in v2.5.18 and v2.5.19 except backup/restore which is not yet stable.<br />
+&#x2022; <b>New feature:</b> Activity interceptor. Open any files, urls, etc. with Interceptor to intercept the intent. This is similar to what <b>Intent Intercept</b> does.<br />
+&#x2022; <b>New feature:</b> Signing APK files before installing them (disabled by default). Currently only generic signature is allowed. It's also possible to select which signature scheme to use.<br />
+&#x2022; <font color="#09868B">[Feature]</font> Switch to API 30<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added a tag for MagiskHide enabled apps in the App Info tab (root)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added an option to select signature scheme (in settings)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added filter by the availability of splits in the main page<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added missing/non-AOSP app ops and <tt>MODE_ASK</tt> from MIUI<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added missing <tt>application/vnd.apkm</tt> MIME for APKM files<br />
+&#x2022; <font color="#09868B">[Feature]</font> Added multi-user support for app ops<br />
+&#x2022; <font color="#09868B">[Feature]</font> Display extended app op modes when long-clicking on any app op in the app ops tab<br />
+&#x2022; <font color="#09868B">[Feature]</font> Display KeyStore items when clicking on the KeyStore tag<br />
+&#x2022; <font color="#09868B">[Feature]</font> Display split info when clicking on the splits tag<br />
+&#x2022; <font color="#09868B">[Feature]</font> Display warning for disable/uninstall/clear data in batch ops<br />
+&#x2022; <font color="#09868B">[Feature]</font> Improved formatting in the scanner page and signatures tab<br />
+&#x2022; <font color="#09868B">[Feature]</font> Offer to keep data on clicking uninstall in the App Info tab (root/ADB)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Removed backup mode in favour of profile state in the configuration tab of the profiles page<br />
+&#x2022; <font color="#09868B">[Feature]</font> Use <tt>android.permission.GET_APP_OPS_STATS</tt> for non-root users to fetch app ops (automatically granted on root/ADB)<br />
+&#x2022; <font color="#09868B">[Feature]</font> Use <tt>android.permission.DUMP</tt> instead of using privileged shell for fetching running services (automatically granted on root/ADB)<br />
+&#x2022; <font color="red">[Fix]</font> Disable ADB if root enabled<br />
+&#x2022; <font color="red">[Fix]</font> Fixed crash when clicking on the block button in the App Info page<br />
+&#x2022; <font color="red">[Fix]</font> Fixed crash in the App Info page on exiting the page when the progress bar is still visible<br />
+&#x2022; <font color="red">[Fix]</font> Fixed crash if an app directory contain multiple base APK files<br />
+&#x2022; <font color="red">[Fix]</font> Fixed crash on exiting the 1-Click Ops page if a task is running there<br />
+&#x2022; <font color="red">[Fix]</font> Fixed an irregular crash in the scanner page when it is moved to foreground<br />
+&#x2022; <font color="red">[Fix]</font> Forget saved state to fix unexpected crashes in the installer page<br />
+&#x2022; <font color="red">[Fix]</font> Restart server on ClassCastException (otherwise the app ops tab will be empty), this usually happens when both stable and debug builds are used.<br />
+&#x2022; <font color="red">[Fix]</font> Return from the threads if the App Info fragment has been detached<br />
+&#x2022; <font color="red">[Fix]</font> Set component to its default state when unblocked<br /><br />
 
 <h5>v2.5.19 (373):</h5>
 &#x2022; New feature: Profiles. New profiles can be added either by selecting from one of the presets or simply using the plus button (see below)<br />

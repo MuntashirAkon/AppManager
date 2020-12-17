@@ -1,6 +1,0 @@
-F-Droid doesn't support extended changelog. Visit https://muntashirakon.github.io/AppManager/changelog.html or view in-app changelog for a more helpful changelog.
-- Split APK install support
-- AppOpsX like implementation for app ops
-- Option to remove all blocking rules
-- Improved Batch Operations
-- Fixed broken ADB support

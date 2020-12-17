@@ -2,7 +2,7 @@
 home: true
 heroImage: /icon.png
 heroText: App Manager
-tagline: For v2.5.19
+tagline: For v2.5.20
 actionText: Get Started
 actionLink: /guide/
 features:
