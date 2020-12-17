@@ -34,6 +34,7 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.util.Pair;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -64,6 +65,7 @@ import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.types.EmptySpan;
 import io.github.muntashirakon.AppManager.types.NumericSpan;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
@@ -91,6 +93,7 @@ public class ScannerActivity extends BaseActivity {
     private String mPackageName;
     private ParcelFileDescriptor fd;
     private File apkFile;
+    private Uri apkUri;
 
     @Override
     protected void onDestroy() {
@@ -128,7 +131,7 @@ public class ScannerActivity extends BaseActivity {
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         showProgress(true);
 
-        final Uri apkUri = intent.getData();
+        apkUri = intent.getData();
         if (apkUri == null) {
             Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
             finish();
@@ -252,10 +255,21 @@ public class ScannerActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_scanner, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
             finish();
+            return true;
+        } else if (id == R.id.action_install_apk) {
+            Intent openApk = new Intent(getBaseContext(), PackageInstallerActivity.class);
+            openApk.setData(apkUri);
+            startActivity(openApk);
             return true;
         }
         return super.onOptionsItemSelected(item);
