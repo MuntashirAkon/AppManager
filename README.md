@@ -12,25 +12,25 @@ Yet another Android package manager and viewer but...
 
 - Copylefted libre software (GPLv3+)
 - Material design (and a nice UI)
-- No useless permissions
+- No unnecessary permissions
 - Does not connect to the Internet (the permission is required for ADB mode)
 - Displays as much info as possible in the main window
 - Lists activities, broadcast receivers, services, providers, permissions, signatures, shared libraries, etc. of any app
 - Launch (exportable) activities, create (customizable) shortcuts
-- Block any activities, broadcast receivers, services or providers you like with native import/export as well as Watt and Blocker import support (requires root)
+- Block any activities, broadcast receivers, services, or providers you like with native import/export as well as Watt and Blocker import support (requires root)
 - Revoke permissions considered dangerous (requires root/ADB)
 - Disable app ops considered dangerous (requires root/ADB)
 - Scan for trackers in apps and list (all or only) tracking classes (and their code dump)
 - Generate dynamic manifest for any app
 - View/edit/delete shared preferences of any app (requires root)
 - Display running processes/apps (requires root/ADB)
-- Display your app usage, data usage and app storage info (requires “Usage Access” permission)
-- APK files can be shared (hence the use of a provider)
+- Display your app usage, data usage, and app storage info (requires “Usage Access” permission)
+- Share APK files (hence the use of a provider)
 - Clear app data or app cache (requires root/ADB)
 - Batch operations: clear app data, disable run in background, disable/kill/uninstall apps
 - One-click operations: block ads/tracker components, block components by signature, block multiple app ops
 
-…and other minor features such as installing/uninstalling/updating/enabling/disabling apps, displaying app installation info, opening on F-Droid, Aurora Droid or Aurora Store combining the features of 5 or 6 apps any tech-savvy person needs.
+…and other minor features such as installing/uninstalling/updating/enabling/disabling apps, displaying app installation info, opening in F-Droid, Aurora Droid or Aurora Store. This single app combines the features of 5 or 6 apps any tech-savvy person needs!
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
 alt="Get it on F-Droid"
@@ -65,13 +65,13 @@ Translate **App Manager Docs** at _Crowdin_: https://crwd.in/app-manager-docs
 
 ### Screenshots
 
-#### Light
-
-<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/13.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/9.png" height="500dp" />
-
 #### Dark
 
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/14.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/10.png" height="500dp" />
+
+#### Light
+
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/13.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/9.png" height="500dp" />
 
 ### Build Instructions
 * **System Requirements:** Any PC/Mac with 4GB RAM (8GB recommended)
@@ -118,11 +118,11 @@ sudo pacman -S base-devel
     ```
 
 ### Contributing
-You are welcome contribute to App Manager (also known as, AM)! This doesn't mean that you need coding skills. You can help AM by creating helpful issues, attending discussions, improving documentations and translations, adding unrecognised libraries or ad/tracking signatures, reviewing the source code as well as reporting security vulnerabilities. But if you are going to contribute to AM with your coding skills, please read the following:
+You are welcome contribute to App Manager! This doesn't mean that you need coding skills. You can help AM (App Manager) by creating helpful issues, attending discussions, improving documentations and translations, adding unrecognised libraries or ad/tracking signatures, reviewing the source code, as well as reporting security vulnerabilities. If you are going to contribute to AM with your coding skills, please read the following:
 - If you're going to implement or work on any specific feature, please inform me before doing so. Due to the complex nature of the project, integrating a new feature could be challenging.
-- You're absolutely welcome to fix issues or mistakes but AM's code base changes a lot in almost every day. Therefore, if you are requested to make changes in your pull request but fail to address them within 2 (two) days, your pull request may be closed depending on the importance of the request. This instruction will be removed once AM's code base becomes stable.
+- You're absolutely welcome to fix issues or mistakes, but AM's code base changes a lot almost every day. Therefore, if you are requested to make changes in your pull request but can't address them within 2 (two) days, your pull request may be closed depending on the importance of the request. This instruction will be removed once AM's code base becomes stable.
 
-**Note:** Repositories located in sites other than GitHub are currently considered mirrors and PR/MR submitted there will not be accepted. Instead, you can submit patches (as `.patch` files) via email attachment. My email address is muntashirakon [at] riseup [dot] net. But beware that such emails may be publicly accessible in future. 
+**Note:** Repositories located in sites other than GitHub are currently considered mirrors and PR/MR submitted there will not be accepted. Instead, you can submit patches (as `.patch` files) via email attachment. My email address is muntashirakon [at] riseup [dot] net. Beware that such emails may be publicly accessible in future. 
 
 ### Credits and Libraries
 A list of credits and libraries are available in the **About** section of the app.
