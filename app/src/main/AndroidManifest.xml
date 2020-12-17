@@ -496,6 +496,15 @@
                 <data android:scheme="file" />
                 <data android:mimeType="image/*" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.INSTALL_PACKAGE" />
+                <action android:name="android.intent.action.UNINSTALL_PACKAGE" />
+
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:scheme="package" />
+                <data android:mimeType="application/vnd.android.package-archive" />
+            </intent-filter>
         </activity>
 
         <service android:name=".apk.installer.PackageInstallerService" />
