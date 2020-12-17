@@ -263,4 +263,26 @@
         <item quantity="one">%1$d بار</item>
         <item quantity="other">%1$d بار</item>
     </plurals>
+    <string name="toggle_kill_for_system_apps">کشتن برنامه های سیستم را تغییر وضع بده</string>
+    <plurals name="alert_failed_to_force_stop">
+        <item quantity="one">نتوانست %1$d برنامه را اجبارا متوقف کند</item>
+        <item quantity="other">نتوانست %1$d برنامه را اجبارا متوقف کند</item>
+    </plurals>
+    <string name="the_operation_was_successful">انجام شد</string>
+    <plurals name="alert_failed_to_disable_background">
+        <item quantity="one">نتوانست از اجرای %1$d برنامه در پس‌زمینه جلوگیری کند</item>
+        <item quantity="other">نتوانست از اجرای %1$d برنامه در پس‌زمینه جلوگیری کند</item>
+    </plurals>
+    <plurals name="alert_failed_to_uninstall">
+        <item quantity="one">نتوانست %1$d برنامه را پاک کند</item>
+        <item quantity="other">نتوانست %1$d برنامه را پاک کند</item>
+    </plurals>
+    <plurals name="alert_failed_to_disable">
+        <item quantity="one">نتوانست %1$d برنامه را غیر فعال کند</item>
+        <item quantity="other">نتوانست %1$d برنامه را غیر فعال کند</item>
+    </plurals>
+    <plurals name="alert_failed_to_clear_data">
+        <item quantity="one">نتوانست داده های %1$d برنامه را پاک کند</item>
+        <item quantity="other">نتوانست داده های %1$d برنامه را پاک کند</item>
+    </plurals>
 </resources>
