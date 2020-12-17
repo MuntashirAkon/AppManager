@@ -730,7 +730,6 @@
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
     <string name="un_apkm">Распаковать Apkm</string>
-    <string name="keystore"></string>
     <string name="ecc">Эллиптическая криптография (ЕСС)</string>
     <string name="none">Без шифрования</string>
     <string name="pref_encryption_msg">Добавить шифрование для резервных копий.</string>

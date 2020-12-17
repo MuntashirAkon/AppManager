@@ -173,7 +173,7 @@
     <string name="source_dir">Percorso sorgente</string>
     <string name="paths_and_directories">Percorso e Directory</string>
     <string name="app_info">Informazioni applicazione</string>
-    <string name="version_name_with_code">Versione &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;%1$s&lt;/xliff:g&gt;&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;%2$d&lt;/xliff:g&gt;</string>
+    <string name="version_name_with_code">Versione <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g><xliff:g id="version_code" example="365">%2$d</xliff:g></string>
     <string name="sort">Evidenzia</string>
     <string name="user">Utente</string>
     <string name="system">Sistema</string>
@@ -267,13 +267,13 @@
         <item quantity="one">Impossibile cancellare i dati dall\'app %1$d</item>
         <item quantity="other">Impossibile cancellare i dati delle app %1$d</item>
     </plurals>
-    <string name="some_items_selected">Selezionato &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"selection_no\" example=\"20\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="some_items_selected">Selezionato <xliff:g id="selection_no" example="20">%1$d</xliff:g></string>
     <string name="export_blocking_rules">Esporta Regole di Blocco</string>
     <string name="disable_background">Disabilita in Background</string>
     <string name="backup_restore">Recupera/Riprendi</string>
     <string name="backup_apk">Recupero APK</string>
     <string name="clear_data">Cancella Dati</string>
-    <string name="user_and_uid">Utente: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_name\" example=\"root\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%2$d&lt;/xliff:g&gt;)</string>
+    <string name="user_and_uid">Utente: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="memory_virtual_memory">Memoria: %1$s, Memoria Virtuale: %2$s</string>
     <string name="pid_and_ppid">ID Processo: %1$d, Processo ID Parente: %2$d</string>
     <string name="disable_background_run">Blocca il caricamento in Background</string>
@@ -299,7 +299,7 @@
         <item quantity="one">%1$d volta</item>
         <item quantity="other">%1$d volte</item>
     </plurals>
-    <string name="external_multiple_data_dir">Cartella dati esterni &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dir_no\" example=\"1\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="external_multiple_data_dir">Cartella dati esterni <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="external_data_dir">Cartella dati esterni</string>
     <string name="exodus_link">Link εxodus</string>
     <string name="usage_yesterday">Ieri</string>
@@ -317,35 +317,35 @@
     <string name="long_integer_value">Valore intero lungo</string>
     <string name="native_library_dir">Cartella libreria nativa JNI</string>
     <plurals name="main_list_date_days">
-        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; giorno</item>
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; giorni</item>
+        <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> giorno</item>
+        <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> giorni</item>
     </plurals>
-    <string name="tested_signatures_on_classes_and_time_taken">Testato&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"signature_no\" example=\"342\"&gt;%1$d&lt;/xliff:g&gt; firme con le classi &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"6000\"&gt;%2$d&lt;/xliff:g&gt;
-\nTempo richiesto&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"time\" example=\"10000\"&gt;%3$d&lt;/xliff:g&gt; ms (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"iteration_no\" example=\"100000\"&gt;%4$d&lt;/xliff:g&gt; iterazioni).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Testato<xliff:g id="signature_no" example="342">%1$d</xliff:g> firme con le classi <xliff:g id="class_no" example="6000">%2$d</xliff:g>
+\nTempo richiesto<xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iterazioni).</string>
     <plurals name="other_trackers_and_classes">
-        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt;tracker con la classe &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt;</item>
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; tracker con le classi&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt;</item>
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g>tracker con la classe <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> tracker con le classi<xliff:g id="class_no" example="50">%2$d</xliff:g></item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="one">2 tracker con la classe &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt;</item>
-        <item quantity="other">2 tracker con le classi &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt;</item>
+        <item quantity="one">2 tracker con la classe <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
+        <item quantity="other">2 tracker con le classi <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
     </plurals>
     <plurals name="tracker_and_classes">
-        <item quantity="one">1 tracker con la classe &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt;</item>
-        <item quantity="other">1 tracker con le classi &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt;</item>
+        <item quantity="one">1 tracker con la classe <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
+        <item quantity="other">1 tracker con le classi <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
     </plurals>
     <string name="toggle_class_listing">Scambiare lista classi</string>
     <string name="class_viewer">Visualizzatore Classi</string>
     <string name="credits_message">"Agli autori di
 \n- Progetto open source Android
-\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Editor&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;AppsMonitor&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
-\nLogo: &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "</string>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\nLogo: <a href="https://github.com/Atrate">Atrate</a>. "</string>
     <string name="credits">Crediti</string>
     <string name="sdk_flags">Flags</string>
     <string name="sort_by_domain">Utilizzatore app primario</string>
@@ -356,7 +356,7 @@
     <string name="shortcut_name">Nome Collegamento</string>
     <string name="edit_shortcut">Modificare Collegamento</string>
     <string name="create_shortcut">Creare collegamento</string>
-    <string name="starting_activity">Inizio Attività: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="starting_activity">Inizio Attività: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="empty_package_name">Nome Pacchetto Vuoto</string>
     <string name="main_activity">Attività Principale</string>
     <string name="installer_app">Installatore</string>
