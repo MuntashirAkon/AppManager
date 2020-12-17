@@ -794,4 +794,5 @@
     <string name="share">Share</string>
     <string name="resend_intent">Resend Intent</string>
     <string name="interceptor">Interceptor</string>
+    <string name="install_apk">Install APK</string>
 </resources>
