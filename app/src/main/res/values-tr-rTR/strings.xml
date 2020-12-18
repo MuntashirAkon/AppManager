@@ -759,4 +759,5 @@
     <string name="matching_activities">Eşleşen etkinlikler</string>
     <string name="value">Değer</string>
     <string name="filter_apps_with_splits">Bölümlü uygulamalar</string>
+    <string name="set_custom_app_op">Özel uygulama işlemi ayarla</string>
 </resources>
