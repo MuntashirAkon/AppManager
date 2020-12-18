@@ -19,11 +19,11 @@
         actualizadas. Visite el sitio oficial de documentación (https://muntashirakon.github.io/AppManager) para obtener
         información actualizada]</string>
     <string name="uninstall">Desinstalar</string>
-    <string name="permissions">Usar los permisos</string>
+    <string name="permissions">Usos de los permisos</string>
     <string name="require_no_permission">No se requiere ningún permiso</string>
     <string name="activities">Actividades</string>
     <string name="launch">Lanzar</string>
-    <string name="refresh">Actualizar</string>
+    <string name="refresh">Refrescar</string>
     <string name="no_activities">Sin actividades</string>
     <string name="receivers">Receptores</string>
     <string name="no_receivers">Sin receptores</string>
@@ -37,8 +37,8 @@
     <string name="no_service">Sin servicios</string>
     <string name="orientation">Orientación</string>
     <string name="soft_input">Modo de entrada suave</string>
-    <string name="flags">Banderas</string>
-    <string name="grant_uri_permission">Conceder permisos de URI</string>
+    <string name="flags">Flags</string>
+    <string name="grant_uri_permission">Conceder permisos URI</string>
     <string name="path_permissions">Permisos de ruta</string>
     <string name="read">Leer</string>
     <string name="write">Escribir</string>
@@ -47,12 +47,12 @@
     <string name="shared_libs">Bibliotecas compartidas</string>
     <string name="group">Grupo</string>
     <string name="protection_level">Nivel de protección</string>
-    <string name="no_feature">Sin caracteristicas</string>
+    <string name="no_feature">Sin funciones</string>
     <string name="sort_by_shared_user_id">ID de usuario compartido</string>
     <string name="shared_user_id">ID de usuario compartido</string>
     <string name="sort_by_sha">Firma</string>
     <string name="signatures">Firmas</string>
-    <string name="no_signatures">Sin firmas</string>
+    <string name="no_signatures">Sin firmas válidas</string>
     <string name="configurations">Configuraciones</string>
     <string name="no_configurations">Sin configuraciones</string>
     <string name="input_features">Funciones de entrada</string>
@@ -73,7 +73,7 @@
     <string name="word_wrap">Cambiar el formato de las palabras</string>
     <string name="touchscreen">Pantalla táctil</string>
     <string name="navigation">Navegación</string>
-    <string name="export_failed">Exportación falló!</string>
+    <string name="export_failed">La exportación falló!</string>
     <string name="import_failed">La importación falló!</string>
     <string name="export_options">Exportar opciones</string>
     <string name="import_options">Importar opciones</string>
@@ -105,7 +105,7 @@
     <string name="sort_by_disabled_app">Deshabilitado primero</string>
     <string name="exodus_link">εxodus Link</string>
     <string name="usage_yesterday">Ayer</string>
-    <string name="only_works_in_root_mode">Sólo funciona en el modo root</string>
+    <string name="only_works_in_root_mode">Sólo funciona en modo root</string>
     <string name="app_settings">Ajustes</string>
     <string name="pref_usage_access_enabled_msg">Te permite ver las estadísticas de uso de tu aplicación e información de datos de la misma.</string>
     <string name="pref_usage_access_enabled">Acceso al uso</string>
@@ -124,21 +124,21 @@
     <string name="stopped">Detenido</string>
     <string name="uninstall_system_app_message">Esta es una aplicación del sistema. Estás seguro que quieres desinstalar esta app\?</string>
     <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> ha sido instalado.</string>
-    <string name="uninstall_app_message">Tú quieres desinstalar esta app\?</string>
+    <string name="uninstall_app_message">Quieres desinstalar esta app\?</string>
     <string name="no_content">Sin contenido</string>
     <string name="no_usage_in_this_time_range">No hay uso en este rango de tiempo</string>
     <string name="disabled_app">Deshabilitado</string>
     <string name="key_name_cannot_be_null">El nombre de la clave no puede estar vacío</string>
-    <string name="error_evaluating_input">No se puede evaluar la entrada</string>
+    <string name="error_evaluating_input">No se pudo evaluar la entrada</string>
     <string name="type_string">Caracteres</string>
     <string name="type_float">Número decimal</string>
     <string name="type_boolean">Verdadero/Falso</string>
     <string name="done">Hecho</string>
-    <string name="add_item">Añadir item</string>
+    <string name="add_item">Añadir ítem</string>
     <string name="system_odex_not_supported">.odex y algunas aplicaciones de sistema carecen de soporte!</string>
     <string name="select_type">Seleccione un tipo</string>
-    <string name="key_name">Nombre de la Key</string>
-    <string name="string_value">Valor de la cadena (String value)</string>
+    <string name="key_name">Nombre de la clave</string>
+    <string name="string_value">String value</string>
     <string name="saving_failed">Guardado fallido, prueba de nuevo.</string>
     <string name="saved_successfully">Guardado</string>
     <string name="deletion_failed">Borrado fallido</string>
@@ -152,15 +152,15 @@
     <string name="debuggable">Debuggable</string>
     <string name="updated_app">Actualizado</string>
     <string name="requested_large_heap">Gran heap</string>
-    <string name="no_code">No hay código</string>
+    <string name="no_code">Sin código</string>
     <string name="process_name">Nombre del proceso</string>
-    <string name="native_library_dir">Directorio de la biblioteca nativa de JNI</string>
-    <string name="dev_protected_data_dir">Directorio de datos de Dispositivo protegido (Device-Protected)</string>
+    <string name="native_library_dir">Directorio de la biblioteca nativa JNI</string>
+    <string name="dev_protected_data_dir">Directorio de datos de Dispositivo-Protegido (Device-Protected)</string>
     <string name="aurora">Aurora</string>
     <string name="search">Buscar</string>
     <string name="menu_apply_rules">Aplicar reglas</string>
     <string name="menu_remove_rules">Eliminar reglar</string>
-    <string name="failed_to_extract_apk_file">No se puede extraer el archivo APK</string>
+    <string name="failed_to_extract_apk_file">No se pudo extraer el archivo APK</string>
     <string name="share_apk">Compartir APK</string>
     <string name="grant_usage_acess_message">El acceso al uso es obligatorio para mostrar la información de uso de las aplicaciones.</string>
     <string name="grant_usage_access">Conceder acceso al uso</string>
@@ -169,8 +169,8 @@
     <string name="usage_less_than_a_minute">Menos de un minuto</string>
     <string name="usage_min">%1$d min</string>
     <plurals name="usage_hours">
-        <item quantity="one">%1$d hr</item>
-        <item quantity="other">%1$d hrs</item>
+        <item quantity="one">%1$d hora</item>
+        <item quantity="other">%1$d horas</item>
     </plurals>
     <plurals name="usage_days">
         <item quantity="one">%1$d día</item>
@@ -184,29 +184,29 @@
     <string name="usage_today">Hoy</string>
     <string name="usage_weekly">Semanal</string>
     <string name="app_usage">Uso de las Apps</string>
-    <string name="no_tracker_class">No hay clases de rastreador (tracker)</string>
-    <string name="no_shared_libs">No hay bibliotecas compartidas</string>
+    <string name="no_tracker_class">No hay classes de rastreador</string>
+    <string name="no_shared_libs">Sin bibliotecas compartidas</string>
     <plurals name="main_list_date_days">
         <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> día</item>
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> días</item>
     </plurals>
-    <string name="all_classes">Todas las Clases</string>
-    <string name="tracker_classes">Clases del rastreador (tracker)</string>
-    <string name="tracker_details">Detalles del rastreador (tracker)</string>
-    <string name="found_trackers">Rastreadores (trackers) encontrados:</string>
+    <string name="all_classes">Todas las Classes</string>
+    <string name="tracker_classes">Classes del rastreador</string>
+    <string name="tracker_details">Detalles del rastreador</string>
+    <string name="found_trackers">Rastreadores encontrados:</string>
     <plurals name="other_trackers_and_classes">
-        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores (trackers) con <xliff:g id="class_no" example="50">%2$d</xliff:g> clases</item>
-        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores (trackers) con <xliff:g id="class_no" example="50">%2$d</xliff:g> clases</item>
+        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; rastreadores (trackers) con &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; class</item>
+        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; rastreadores (trackers) con &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; classes</item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="one">2 rastreadores (trackers) con <xliff:g id="class_no" example="50">%1$d</xliff:g> clase</item>
-        <item quantity="other">2 rastreadores (trackers) <xliff:g id="class_no" example="50">%1$d</xliff:g> clases</item>
+        <item quantity="one">2 rastreadores (trackers) con &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; classes</item>
+        <item quantity="other">2 rastreadores (trackers) &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; classes</item>
     </plurals>
     <plurals name="tracker_and_classes">
-        <item quantity="one">1 rastreador (tracker) con <xliff:g id="class_no" example="50">%1$d</xliff:g> clase</item>
-        <item quantity="other">1 rastreador (tracker) <xliff:g id="class_no" example="50">%1$d</xliff:g> clases</item>
+        <item quantity="one">1 rastreador (tracker) con &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; class</item>
+        <item quantity="other">1 rastreador (tracker) &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; classes</item>
     </plurals>
-    <string name="toggle_class_listing">Cambiar la lista de Clases</string>
+    <string name="toggle_class_listing">Cambiar la lista de Classes</string>
     <string name="class_viewer">Visor de Clase</string>
     <string name="credits">Créditos</string>
     <string name="third_party">Bibliotecas e iconos de terceros</string>
@@ -224,10 +224,10 @@
     <string name="error_verbose_pin_shortcut">El lanzador (launcher) actual no soporta PinShortcut. No se puede crear un atajo (shortcut).</string>
     <string name="error_creating_shortcut">Error al crear un atajo (shortcut)</string>
     <string name="instructions">Instrucciones</string>
-    <string name="empty_package_name">Nombre de paquete vacío</string>
+    <string name="empty_package_name">Nombre del paquete vacío</string>
     <string name="main_activity">Actividad Principal</string>
     <string name="user_id">ID de usuario</string>
-    <string name="installer_app">Aplicaciones instaladas</string>
+    <string name="installer_app">Apps instaladas</string>
     <string name="date_updated">Fecha de actualización</string>
     <string name="date_installed">Fecha de instalación</string>
     <string name="more_info">Más información</string>
@@ -236,40 +236,40 @@
     <string name="sdk_min">Min</string>
     <string name="data_dir">Directorio de datos</string>
     <string name="source_dir">Directorio fuente</string>
-    <string name="paths_and_directories">Caminos &amp; Directorios</string>
-    <string name="user_app">Aplicaciones de usuario</string>
+    <string name="paths_and_directories">Rutas &amp; Directorios</string>
+    <string name="user_app">Aplicaciones del usuario</string>
     <string name="system_app">Aplicaciones del sistema</string>
-    <string name="app_info">Información de la app</string>
+    <string name="app_info">Información de la App</string>
     <string name="version_name_with_code">Versión <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
-    <string name="sort">Ordenar</string>
+    <string name="sort">Clasificar</string>
     <string name="user">Usuario</string>
     <string name="system">Sistema</string>
     <string name="app_not_installed">App no instalada</string>
-    <string name="media_size">Media</string>
+    <string name="media_size">Medios</string>
     <string name="obb_size">Obb</string>
     <string name="cache_size">Caché</string>
     <string name="data_size">Datos</string>
-    <string name="about">Sobre</string>
-    <string name="data_usage_msg">Datos de uso desde el último arranque</string>
+    <string name="about">Acerca de</string>
+    <string name="data_usage_msg">Uso de datos desde el último inicio</string>
     <string name="data_transmitted">Datos transmitidos</string>
     <string name="data_received">Datos recibidos</string>
-    <string name="sort_by_target_sdk">Objetivo del SDK</string>
+    <string name="sort_by_target_sdk">SDK objetivo</string>
     <string name="sort_by_domain">Aplicaciones de usuario primero</string>
     <string name="sort_by_package_name">Nombre del paquete</string>
-    <string name="sort_by_app_label">Etiqueta de la app</string>
+    <string name="sort_by_app_label">Etiqueta de la App</string>
     <string name="manifest">Manifiesto</string>
     <string name="_undefined">Indefinido</string>
     <string name="required">Requerido</string>
     <string name="orientation_sensor">Sensor</string>
     <string name="orientation_user">Usuario</string>
     <string name="orientation_portrait">Retrato</string>
-    <string name="orientation_no_sensor">No hau sensor</string>
+    <string name="orientation_no_sensor">Sin sensor</string>
     <string name="orientation_locked">Bloqueado</string>
-    <string name="orientation_full_user">Usuar completo</string>
+    <string name="orientation_full_user">Usuario completo</string>
     <string name="orientation_full_sensor">Sensor completo</string>
     <string name="orientation_unspecified">No especificado</string>
-    <string name="launch_mode_single_task">Una tarea</string>
-    <string name="launch_mode_single_instance">Una instancia</string>
+    <string name="launch_mode_single_task">Única tarea</string>
+    <string name="launch_mode_single_instance">Única instancia</string>
     <string name="launch_mode_multiple">Múltiple</string>
     <string name="base_apk">Base APK</string>
     <string name="choose_language">Cambiar idioma</string>
@@ -279,19 +279,19 @@
     <string name="backup_all_users">Todos los usuarios</string>
     <string name="backup_multiple">Backup múltiple</string>
     <string name="source">Fuente</string>
-    <string name="obb_files_extracted_successfully">Archivo OBB extraído</string>
-    <string name="failed_to_extract_obb_files">No se pudo extraer el archivo OBB</string>
+    <string name="obb_files_extracted_successfully">Archivo Obb extraído</string>
+    <string name="failed_to_extract_obb_files">No se pudo extraer el archivo Obb</string>
     <string name="backup_obb_media">OBB y Media</string>
-    <string name="backup_apk_only">APK solo</string>
+    <string name="backup_apk_only">Sólo APK</string>
     <string name="installer_error_session_abandon">No se pudo abandonar la sesión del instalador</string>
     <string name="installer_error_session_create">No se pudo crear una sesión de instalación</string>
-    <string name="installer_error_security">No se puede acceder al archivo APK</string>
+    <string name="installer_error_security">No se pudo acceder al archivo APK</string>
     <string name="install_in_progress">Instalación en progreso</string>
     <string name="package_installer">Instalador de paquetes</string>
-    <string name="unblock_trackers">Desbloquear trackers (rastreadores)</string>
+    <string name="unblock_trackers">Desbloquear rastreadores</string>
     <string name="reinstall">Reinstalar</string>
-    <string name="reinstall_app_message">Tú quieres reinstalar esta app\?</string>
-    <string name="install_app_message">Tú quieres instalar esta app\?</string>
+    <string name="reinstall_app_message">Quieres reinstalar esta app\?</string>
+    <string name="install_app_message">Quieres instalar esta app\?</string>
     <string name="try_again">Prueba de nuevo</string>
     <string name="full_stop_tap_to_see_details">Toca para ver detalles.</string>
     <string name="operation_running">Operación ejecutándose…</string>
@@ -315,7 +315,7 @@
     <string name="open_in_termux">Abrir en Termux</string>
     <string name="export_icon">Extraer icono</string>
     <string name="no_matching_package_found">No se encontró ningún paquete que coincida</string>
-    <string name="block_unblock_trackers">Bloquear/Desbloquear rastreadores (trackers)</string>
+    <string name="block_unblock_trackers">Bloquear/Desbloquear rastreadores</string>
     <string name="unblock">Desbloquear</string>
     <string name="block">Bloquear</string>
     <string name="clear">Limpiar</string>
@@ -331,19 +331,19 @@
     </plurals>
     <plurals name="backup_exists_are_you_sure">
         <item quantity="one">Backup existente. Estás seguro\?</item>
-        <item quantity="other">Backup existente pra mas de una app. Estás seguro\?</item>
+        <item quantity="other">Backup existente para más de una app. Estás seguro\?</item>
     </plurals>
     <string name="backup_options">Opciones de backup</string>
     <string name="delete_backup">Borrar backup</string>
-    <string name="backup">Backup</string>
+    <string name="backup">Respaldo (Backup)</string>
     <string name="data">Datos</string>
     <string name="external_data">Datos externos</string>
     <string name="exclude_cache">Excluir caché</string>
     <string name="blocking_rules">Reglas de bloqueo</string>
     <string name="whats_new">Qué hay nuevo</string>
-    <string name="features">Características</string>
+    <string name="features">Funciones</string>
     <string name="components">Componentes</string>
-    <string name="trackers">Rastreadores (trackers)</string>
+    <string name="trackers">Rastreadores</string>
     <string name="installed_version">Versión instalada</string>
     <string name="filter_disabled_apps">Aplicaciones deshabilitadas</string>
     <string name="select_all">Seleccionar todo</string>
@@ -356,12 +356,12 @@
     <string name="termux">Termux</string>
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">No se pudo obtener información del paquete, posiblemente es un split APK (APK dividido)</string>
     <string name="failed_to_parse_some_numbers">No se pudo analizar algunos números</string>
-    <string name="only_works_in_root_or_adb_mode">Sólo funciona con root o con modo ADB</string>
+    <string name="only_works_in_root_or_adb_mode">Sólo funcionan en modo root o ADB</string>
     <string name="filtered_packages">Paquetes filtrados</string>
     <string name="input_signatures_description">Firmas de entrada con espacios, por ejemplo (com.facebook org.app2 com.app3) etc.</string>
     <string name="input_signatures">Firmas de entrada</string>
     <string name="failed_packages">Paquetes fallidos</string>
-    <string name="no_tracker_found">No hay rastreadores encontrados</string>
+    <string name="no_tracker_found">Sin rastreadores encontrados</string>
     <string name="clear_app_cache_description">Limpiar cahé de todas las apps</string>
     <string name="clear_app_cache">Limpiar caché de la app</string>
     <string name="clear_data_from_uninstalled_apps">Limpiar datos de aplicaciones desinstaladas</string>
@@ -369,11 +369,11 @@
     <string name="deny_app_ops_dots">Denegar app ops…</string>
     <string name="block_components_description">Bloquear todos los componentes identificados por la(s) firma(s) dada(s)</string>
     <string name="block_components_dots">Bloquear componentes…</string>
-    <string name="block_unblock_trackers_description">Bloquear o desbloquear componentes de anuncios o rastreo desde todas las apps instaladas</string>
+    <string name="block_unblock_trackers_description">Bloquear o desbloquear componentes de anuncios o rastreo de todas las apps instaladas</string>
     <string name="clear_cache">Limpiar caché</string>
     <string name="failed_to_get_data_usage_information">No se pudo obtener información sobre el uso de datos</string>
-    <string name="pref_import_existing_msg">Añade componentes deshabilitados de otras apps a App Manager. Ten cuidado al usar esta herramienta ya que puede haber muchos falsos positivos.
-\nElige sólo las apps de las que estés seguro</string>
+    <string name="pref_import_existing_msg">Añadir componentes deshabilitados de otras apps a App Manager. Ten cuidado al usar esta herramienta ya que puede haber muchos falsos positivos.
+\nElige sólo las apps de las que estés seguro.</string>
     <string name="pref_import_existing">Importar reglas existentes</string>
     <string name="community_links">Canal de actualizaciones: https://t.me/AppManagerChannel
 \nGrupo de soporte: https://t.me/AppManagerAndroid
@@ -383,8 +383,8 @@
     <string name="update">Actualizar</string>
     <string name="install">Instalar</string>
     <plurals name="no_of_trackers">
-        <item quantity="one">%1$d rastreador (tracker)</item>
-        <item quantity="other">%1$d rastreadores (trackers)</item>
+        <item quantity="one">%1$d rastreador</item>
+        <item quantity="other">%1$d rastreadores</item>
     </plurals>
     <string name="manifest_viewer">Visor del Manifiesto</string>
     <string name="external_apk_no_app_op">La APK externa no tiene ninguna operación de aplicación</string>
@@ -394,28 +394,28 @@
     <string name="launch_app">Lanzar</string>
     <string name="failed_to_deny_dangerous_app_ops">No se pudieron revocar todas las app ops peligrosas</string>
     <string name="failed_to_deny_dangerous_perms">No se pudieron revocar todos los permisos peligrosos</string>
-    <string name="failed_to_reset_app_ops">No se pudo resetear la app ops</string>
+    <string name="failed_to_reset_app_ops">No se pudo resetear las app ops</string>
     <string name="failed_to_revoke_permission">No se pudo revocar el permiso</string>
     <string name="failed_to_grant_permission">No se pudo conceder el permiso</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">No se pudieron desactivar los rastreadores (trackers) de %1$d app</item>
-        <item quantity="other">No se pudieron desactivar los rastreadores (trackers) de %1$d apps</item>
+        <item quantity="one">No se pudieron deshabilitar los rastreadores de %1$d app</item>
+        <item quantity="other">No se pudieron deshabilitar los rastreadores de %1$d apps</item>
     </plurals>
-    <string name="trackers_disabled_successfully">Los rastreadores (trackers)ahora están desactivados</string>
-    <string name="failed_to_disable_trackers">No se pudieron deshabilitar los rastreadores (trackers)</string>
+    <string name="trackers_disabled_successfully">Los rastreadores ahora están desactivados</string>
+    <string name="failed_to_disable_trackers">No se pudieron deshabilitar los rastreadores</string>
     <string name="unknown_op">Operación desconocida</string>
-    <string name="sort_by_tracker_components">Rastreador (tracker) primero</string>
+    <string name="sort_by_tracker_components">Rastreador primero</string>
     <string name="deny_dangerous_permissions">Denegar permisos peligrosos</string>
     <string name="sort_by_denied_permissions">Denegado primero</string>
     <string name="sort_by_dangerous_permissions">Peligroso primero</string>
     <string name="sort_by_permission_names">Nombre del permiso</string>
-    <string name="sort_by_app_ops_values">Valor de la app ops</string>
+    <string name="sort_by_app_ops_values">Valor de las app ops</string>
     <string name="sort_by_denied_app_ops">Denegado primero</string>
-    <string name="sort_by_app_ops_names">Nombre de la app ops</string>
+    <string name="sort_by_app_ops_names">Nombre de las app ops</string>
     <string name="deny_dangerous_app_ops">Denegar app ops peligrosas</string>
     <string name="reset_to_default">Restablecer el valor por defecto</string>
     <string name="sort_by_component_name">Nombte del componente</string>
-    <string name="block_trackers">Bloquear rastreadores (trackers)</string>
+    <string name="block_trackers">Bloquear rastreadores</string>
     <string name="sort_by_wifi_data">Datos Wi-Fi</string>
     <string name="version">Versión</string>
     <string name="pref_about_msg">App Manager versión, licencia, créditos, etc.</string>
@@ -432,21 +432,335 @@
     <string name="pref_import_msg">Importar reglas de bloqueo previamente exportadas desde el App Manager.</string>
     <string name="pref_export_msg">Exportar reglas de bloqueo configuradas sin App Manager al almacenamiento externo.</string>
     <string name="keyboard_type">Tipo de teclado</string>
-    <string name="app_op_cannot_be_disabled">Esta app op no puede ser deshabilitada, posiblemente porque esta app op de sólo escritura dependía de otra app op</string>
+    <string name="app_op_cannot_be_disabled">Esta app op no puede ser deshabilitada, posiblemente porque esta app op de sólo escritura dependía de otra app op.</string>
     <string name="the_operation_was_successful">Hecho</string>
     <plurals name="alert_failed_to_clear_data">
-        <item quantity="one">No se podrá limpiar datos desde %1$d app</item>
-        <item quantity="other">No se podrá limpiar datos desde %1$d apps</item>
+        <item quantity="one">No se pudo limpiar datos desde %1$d app</item>
+        <item quantity="other">No se pudo limpiar datos desde %1$d apps</item>
     </plurals>
-    <string name="backup_restore">Backup/Restore</string>
-    <string name="backup_apk">Backup APK</string>
+    <string name="backup_restore">Backup/Restore (Respaldar/Restaurar)</string>
+    <string name="backup_apk">Backup (respaldar) APK</string>
     <string name="memory_virtual_memory">Memoria: %1$s, Memoria virtual: %2$s</string>
     <plurals name="failed_to_import_files">
-        <item quantity="one">No podrá importar %1$d archivo</item>
-        <item quantity="other">No podrá importar %1$d archivos</item>
+        <item quantity="one">No se pudo importar %1$d archivo.</item>
+        <item quantity="other">No se pudo importar %1$d archivos.</item>
     </plurals>
     <string name="sort_by_times_opened">Veces abierto</string>
     <string name="no_app_ops">No hay operaciones de app</string>
     <string name="force_stop">Forzar detención</string>
     <string name="view_in_settings">Ver en ajustes</string>
+    <string name="choose">Elegir</string>
+    <string name="profile_backup_apk_msg">Si se habilita, los archivos apk serán respaldados</string>
+    <string name="profile_block_trackers_msg">Si se habilita, los rastreadores se bloquearán de las aplicaciones</string>
+    <string name="profile_clear_data_msg">Si se habilita, los datos se borrarán de las aplicaciones</string>
+    <string name="profile_force_stop_msg">Si está habilitado, las apps forzarán la detención</string>
+    <string name="input_profile_name">Nombre del perfil</string>
+    <string name="input_profile_name_description">El nombre de perfil no puede contener ningún espacio.</string>
+    <string name="tap_to_see_details">Pulsa para ver detalles</string>
+    <string name="no_apps">Sin Apps</string>
+    <string name="touchscreen_no_touch">Sin tocar</string>
+    <string name="navigation_trackball">Bola de desplazamiento</string>
+    <string name="locale_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt;%1$s&lt;/xliff:g&gt; lugar para la función &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
+    <string name="density_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI) recursos para la función &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%3$s&lt;/xliff:g&gt;</string>
+    <string name="split_feature_name">Función: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <plurals name="alert_failed_to_deny_app_ops">
+        <item quantity="one">No se pudo denegar las app ops para %1$d app</item>
+        <item quantity="other">No se pudo denegar las app ops para %1$d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_block_components">
+        <item quantity="one">No se pudo bloquear los componentes para %1$d app</item>
+        <item quantity="other">No se pudo bloquear los componentes para %1$d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_unblock_trackers">
+        <item quantity="one">No se pudo desbloquear los rastreadores desde %1$d app</item>
+        <item quantity="other">No se pudo desbloquear los rastreadores desde %1$d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_delete_backup">
+        <item quantity="one">No se pudo borrar %1$d backup</item>
+        <item quantity="other">No se pudo borrar %1$d backups</item>
+    </plurals>
+    <plurals name="alert_failed_to_restore">
+        <item quantity="one">No se pudo restaurar %1$d app</item>
+        <item quantity="other">No se pudo restaurar %1$d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_backup">
+        <item quantity="one">No se pudo respaldar %1$d app</item>
+        <item quantity="other">No se pudo respaldar %1$d apps</item>
+    </plurals>
+    <plurals name="failed_to_backup_some_apk_files">
+        <item quantity="one">No se pudo respaldar %1$d app</item>
+        <item quantity="other">No se pudo respaldar %1$d apps</item>
+    </plurals>
+    <string name="restore">Restaurar (Restore)</string>
+    <string name="input_app_ops_description">Introducir app ops constantes con espacios, por ejemplo (63 72 12) etc. Puedes encontrar app ops constantes en la pestaña de app ops bajo los paréntesis.</string>
+    <plurals name="alert_failed_to_disable_background">
+        <item quantity="one">No se pudo evitar que la app %1$d se ejecutara en segundo plano</item>
+        <item quantity="other">No se pudo evitar que la apps %1$d se ejecutaran en segundo plano</item>
+    </plurals>
+    <string name="uses_feature">Objetivos de las funciones</string>
+    <plurals name="no_of_splits">
+        <item quantity="one">%1$d split (dividida)</item>
+        <item quantity="other">%1$d splits (divididas)</item>
+    </plurals>
+    <string name="launch_mode_single_top">Parte superior</string>
+    <string name="installer_error_lidl_rom">Tú ROM es incompatible con el instalador rootless.</string>
+    <string name="reject_time">Rechazar la hora</string>
+    <string name="accept_time">Aceptar la hora</string>
+    <string name="toggle_kill_for_system_apps">Cambiar las aplicaciones matadas del sistema</string>
+    <string name="pid_and_ppid">ID del proceso: %1$d, ID del proceso parental: %2$d</string>
+    <plurals name="no_of_times_opened">
+        <item quantity="one">%1$d vez</item>
+        <item quantity="other">%1$d veces</item>
+    </plurals>
+    <string name="input_permissions_description">Permisos de entrada con espacios, por ejemplo, e.g. (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) etc.</string>
+    <string name="input_permissions">Permisos de entrada</string>
+    <string name="profile_clear_cache_msg">Si está habilitado, la caché se borrará de las aplicaciones</string>
+    <string name="profile_disable_msg">Si está habilitado, las apps serán deshabilitadas/habilitadas en función del valor del estado</string>
+    <string name="allow_routine_ops_msg">Permitir que el perfil se utilice en las operaciones de rutinarias</string>
+    <string name="profile_state">Estado del perfil</string>
+    <string name="allow_routine_ops">Permitir ops rutinarias</string>
+    <string name="current_mode">Modo actual: %s</string>
+    <string name="adb_over_tcp">ADB sobre TCP</string>
+    <string name="pref_mode_of_operations">Modo de operación</string>
+    <string name="send_selected">Enviar seleccionado</string>
+    <string name="ecc">Criptografía de curva elíptica</string>
+    <string name="rsa">RSA</string>
+    <string name="aes">AES</string>
+    <string name="none">Ninguno</string>
+    <string name="pref_encryption_msg">Añadir encriptación a los respaldos.</string>
+    <string name="encryption">Encriptación</string>
+    <string name="select_user">Seleccionar usuario</string>
+    <string name="pref_show_users_in_installer_msg">Mostrar una lista de usuarios a seleccionar antes de instalar una aplicación externa. Requiere root o ADB.</string>
+    <string name="pref_show_users_in_installer">Mostrar a los usuarios en el instalador</string>
+    <string name="failed_to_duplicate_profile">No se pudo duplicar el perfil</string>
+    <string name="duplicate">Duplicar</string>
+    <string name="new_profile">Nuevo perfil</string>
+    <string name="un_apkm">UnApkm</string>
+    <string name="in_progress">En progreso</string>
+    <string name="conversion_failed">Conversión fallida.</string>
+    <string name="select_apk">Seleccionar APK</string>
+    <string name="send_crash_report">Enviar reporte de fallo</string>
+    <string name="tap_to_submit_crash_report">Pulsa para enviar un reporte de fallo.</string>
+    <string name="am_crashed">AM acaba de crashear</string>
+    <string name="filter_running_apps">Apps ejecutándose</string>
+    <string name="copy">Copiar</string>
+    <string name="view_missing_signatures">Pulsa para ver o enviar firmas que aún no están presentes en la base de datos de bibliotecas del App Manager.</string>
+    <string name="lib_details">Detalles de la biblioteca</string>
+    <string name="no_libs">Sin bibliotecas</string>
+    <string name="scanner">Escáner</string>
+    <string name="sys_config">Configuración del sistema</string>
+    <string name="only_install">Sólo instalar</string>
+    <string name="install_without_data_loss">Si has desactivado la verificación de firma, puede usar la opción &lt;b&gt;Sólo instalar&lt;/b&gt; para instalar la aplicación sin perder datos.</string>
+    <string name="app_data_will_be_lost">Los datos existentes serán perdidos.</string>
+    <string name="signature_mismatch_for_system_apps">No se pudo instalar la aplicación porque una aplicación del sistema con una firma diferente tiene este nombre de paquete.</string>
+    <string name="do_you_want_to_uninstall_and_install">Quieres desinstalar e instalar la app de nuevo\?</string>
+    <string name="onboard">A bordo</string>
+    <string name="packages">Paquetes</string>
+    <string name="usage_access_not_supported">No se pudo solicitar el acceso al uso, ya que la página de configuración correspondiente no existe.</string>
+    <string name="non_critical_exts">Sin extensiones críticas</string>
+    <string name="critical_exts">Extensiones críticas</string>
+    <string name="dsa_affine_y">Afinar coordenada y</string>
+    <string name="dsa_affine_x">Afinar coordenada x</string>
+    <string name="rsa_modulus">Módulos</string>
+    <string name="rsa_exponent">Exponente</string>
+    <string name="format">Formato</string>
+    <string name="public_key">Clave pública</string>
+    <string name="algorithm">Algoritmo</string>
+    <string name="signature">Firma</string>
+    <string name="checksums">Checksums (verificaciones)</string>
+    <string name="serial_no">Número de serie</string>
+    <string name="not_yet_valid">No es válido aún</string>
+    <string name="expired">Expirado</string>
+    <string name="valid">Válido</string>
+    <string name="validity">Vigencia</string>
+    <string name="type">Tipo</string>
+    <string name="expiry_date">Fecha de expiración</string>
+    <string name="issued_date">Fecha de emisión</string>
+    <string name="issuer">Emisor</string>
+    <string name="subject">Asunto</string>
+    <string name="filter_apps_with_backups">Apps con backups</string>
+    <string name="sort_by_backup">Backup primero</string>
+    <string name="failed_to_uninstall_updates">No se pudo desinstalar actualizaciones para &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="update_uninstalled_successfully">Actualizaciones para &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; han sido desintaladas.</string>
+    <string name="uninstall_updates">Desinstalar actualizaciones</string>
+    <string name="allow_open_pgp_operation">Pulsar para permitir a AM usar OpenPGP</string>
+    <string name="confirm_installation">Confirmar la instalación</string>
+    <string name="compression_method">Método de compresión: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"compression_method\" example=\"GZip\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="pref_backup_flags_msg">Al añadir un preajuste para las opciones de respaldo se elimina la carga de seleccionar flags cada vez que se hace un Backup/Restore.</string>
+    <string name="pref_compression_method">Método de compresión</string>
+    <string name="rules">Reglas</string>
+    <string name="other">Otros</string>
+    <string name="changes_not_saved">Cambios no guardados</string>
+    <string name="sort_by_memory_usage">Uso de la memoria</string>
+    <string name="sort_by_apps_first">Apps primero</string>
+    <string name="sort_by_process_name">Nombre del proceso</string>
+    <string name="sort_by_process_id">ID del proceso</string>
+    <string name="filter_apps">Apps</string>
+    <string name="apps">Apps</string>
+    <string name="routine_ops">Ops rutinarias</string>
+    <string name="apply_now">Aplicar ahora…</string>
+    <string name="keystore">KeyStore</string>
+    <string name="no_profiles">Sin perfiles</string>
+    <string name="presets">Preajustes</string>
+    <string name="profiles">Perfiles</string>
+    <string name="open_pgp_provider">Proveedor de OpenPGP</string>
+    <string name="systemless_app">Systemless App</string>
+    <string name="cancel">Cancelar</string>
+    <string name="ok">OK</string>
+    <string name="input_backup_name_description">El nombre de la copia de seguridad no debe empezar con un dígito ni debe contener ningún espacio. Déjelo vacío si quiere usar la fecha y hora actuales.</string>
+    <string name="input_backup_name">Nombre del respaldo</string>
+    <string name="downgrade_not_possible">Downgrade no es posible sin root o ADB</string>
+    <string name="downgrade">Downgrade</string>
+    <string name="process_state_with_extra">Estado: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"process_state\" example=\"Sleeping\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"state_extra\" example=\"High priority\"&gt;%2$s&lt;/xliff:g&gt;)</string>
+    <string name="process_state">Estado: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"process_state\" example=\"Sleeping\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="state_multithreaded">Multihilo</string>
+    <string name="state_foreground">Primer plano</string>
+    <string name="state_session_leader">Líder de la sesión</string>
+    <string name="state_locked_memory">Memoria bloqueada</string>
+    <string name="state_low_priority">Baja prioridad</string>
+    <string name="state_high_priority">Alta prioridad</string>
+    <string name="state_unknown">Desconocido</string>
+    <string name="state_waking">Despertando</string>
+    <string name="state_wake_kill">Matar el despertar</string>
+    <string name="state_idle">Inactivo</string>
+    <string name="state_parked">Estacionado</string>
+    <string name="state_zombie">Zombie</string>
+    <string name="state_dead">Muerto</string>
+    <string name="state_trace_stop">Parar rastro</string>
+    <string name="state_device_io">Dispositivo I/O</string>
+    <string name="state_sleeping">Durmiendo</string>
+    <string name="touchscreen_finger">Dedo</string>
+    <string name="touchscreen_stylus">Stylus (lápiz óptico)</string>
+    <string name="navigation_wheel">Rueda</string>
+    <string name="navigation_dial_pad">Teclado de marcación</string>
+    <string name="navigation_no_nav">Sin navegación</string>
+    <string name="keyboard_12_keys">12 claves</string>
+    <string name="keyboard_qwerty">QWERTY</string>
+    <string name="keyboard_no_keys">Sin claves</string>
+    <string name="orientation_user_portrait">Retrato del usuario</string>
+    <string name="orientation_user_landscape">Escenario del usuario</string>
+    <string name="orientation_sensor_portrait">Sensor del retrato</string>
+    <string name="orientation_sensor_landscape">Sensor panorámico</string>
+    <string name="orientation_reverse_landscape">Escenario invertido</string>
+    <string name="orientation_reverse_portrait">Retrato invertido</string>
+    <string name="orientation_landscape">Escenario</string>
+    <string name="orientation_behind">Detrás</string>
+    <string name="locale_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"English\"&gt;%1$s&lt;/xliff:g&gt; lugar para la base APK</string>
+    <string name="abi_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; código para la base APK</string>
+    <string name="abi_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"arm64_v8a\"&gt;%1$s&lt;/xliff:g&gt; código para &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
+    <string name="density_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"xxdpi\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dpi_no\" example=\"480\"&gt;%2$d&lt;/xliff:g&gt; DPI) recursos para la base APK</string>
+    <string name="unknown_split_for_base_apk">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt; para base APK</string>
+    <string name="unknown_split_for_feature">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"split_name\" example=\"some_split\"&gt;%1$s&lt;/xliff:g&gt; para característica &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"feature_name\" example=\"Visualizer\"&gt;%2$s&lt;/xliff:g&gt;</string>
+    <string name="installer_error_session_commit">No se pudo confirmar los archivos APK</string>
+    <string name="installer_error_session_write">No se pudo escribir en la sesión del instalador</string>
+    <plurals name="verified_with_warning">
+        <item quantity="one">Verificado con %d advertencia</item>
+        <item quantity="other">Verificado con %d advertencias</item>
+    </plurals>
+    <plurals name="missing_signatures">
+        <item quantity="one">%1$d firma perdida</item>
+        <item quantity="other">%1$d firmas perdidas</item>
+    </plurals>
+    <plurals name="libraries">
+        <item quantity="one">%1$d librería</item>
+        <item quantity="other">%1$d librerías</item>
+    </plurals>
+    <plurals name="classes">
+        <item quantity="one">%1$d class</item>
+        <item quantity="other">%1$d classes</item>
+    </plurals>
+    <plurals name="alert_failed_to_enable">
+        <item quantity="one">No pudo ser habilitado %1$d app</item>
+        <item quantity="other">No pudo ser habilitado %1$d apps</item>
+    </plurals>
+    <string name="input_app_ops">Introducir app ops</string>
+    <string name="clear_data_from_uninstalled_apps_description">Limpiar datos desde apps que son desinstaladas con DONT_DELETE_DATA flag</string>
+    <string name="ago">hace</string>
+    <plurals name="alert_failed_to_force_stop">
+        <item quantity="one">No se pudo forzar la detención %1$d app</item>
+        <item quantity="other">No se pudo forzar la detención %1$d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_uninstall">
+        <item quantity="one">No se pudo desinstalar %1$d app</item>
+        <item quantity="other">No se pudo desinstalar %1$d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_disable">
+        <item quantity="one">No se pudo deshabilitar %1$d app</item>
+        <item quantity="other">No se pudo deshabilitar %1$d apps</item>
+    </plurals>
+    <string name="store">Store</string>
+    <string name="apk_updater">Actualizador APK</string>
+    <string name="external_multiple_data_dir">Directorio de datos externos &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"dir_no\" example=\"1\"&gt;%1$d&lt;/xliff:g&gt;</string>
+    <string name="failed_to_disable_op">No se pudo deshabilitar la app op solicitada</string>
+    <string name="failed_to_enable_op">No se pudo activar la app op solicitada</string>
+    <string name="failed_to_stop">No se pudo parar &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="failed_to_enable">No se pudo habilitar &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="failed_to_disable">No se pudo deshabilitar &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="failed_to_uninstall">No se pudo desinstalar &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;.</string>
+    <string name="type_long">Long integer</string>
+    <string name="type_int">Integer</string>
+    <string name="boolean_value">Boolean value</string>
+    <string name="decimal_value">Decimal value</string>
+    <string name="integer_value">Integer value</string>
+    <string name="long_integer_value">Long integer value</string>
+    <string name="gles_ver">Req. GL ES versión</string>
+    <string name="set_custom_app_op">Configurar app op personalizada</string>
+    <string name="resend_intent">Reenviar Intent</string>
+    <string name="share">Compartir</string>
+    <string name="extras">Extras</string>
+    <string name="category">Categorías</string>
+    <string name="uri">URI</string>
+    <string name="mime_type">Tipo de MIME</string>
+    <string name="action">Acción</string>
+    <string name="result_code">Resultado del código</string>
+    <string name="activity_result">Resultado de la actividad</string>
+    <string name="send_edited_intent">Enviar intent editada</string>
+    <string name="matching_activities">Actividades de emparejamiento</string>
+    <string name="value">Valor</string>
+    <string name="filter_apps_with_splits">Aplicaciones con splits (divisiones)</string>
+    <string name="set_app_op_mode">Configurar el mode de app ops</string>
+    <string name="magisk_hide_enabled">MagiskHide</string>
+    <string name="pref_backup_android_keystore_msg">No todas las aplicaciones funcionarán después de una restauración. La restauración de KeyStore no funciona en la mayoría de los dispositivos.</string>
+    <string name="pref_backup_android_keystore">Respalda las apps con Android KeyStore</string>
+    <string name="keep_data_and_signatures">Mantener datos y firmas</string>
+    <string name="this_action_cannot_be_undone">Esta acción no puede deshacerse.</string>
+    <string name="no_app_ops_permission">No hay permiso para mostrar las app ops</string>
+    <string name="input_keystore_alias_pass_description">Pulse aquí para proporcionar la contraseña de KeyStore. Inserte la contraseña del alias &lt;b&gt;%1$s&lt;/b&gt;. Puede dejarla vacía si la contraseña es la misma que la de KeyStore.</string>
+    <string name="input_keystore_alias_pass">Contraseña pra alias &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="input_keystore_pass_msg">Pulse aquí para proporcionar la contraseña de KeyStore</string>
+    <string name="input_keystore_pass_description">Inserte la contraseña de App Manager KeyStore. Si es la primera vez que ves esto, utiliza un generador de contraseñas para generar una contraseña y guárdala en un lugar seguro antes de insertarla aquí.</string>
+    <string name="input_keystore_pass">Introduce la contraseña de KeyStore</string>
+    <string name="splits">Splits</string>
+    <string name="source_stamp_verified">SourceStamp (Sello de la fuente) verificado.</string>
+    <string name="not_verified">No verificado</string>
+    <string name="verified">Verificado</string>
+    <string name="pref_signature_schemes_msg">Se deben seleccionar al menos los esquemas v1 y v2 para una mayor compatibilidad. El esquema v4 requiere v2 o v3.</string>
+    <string name="v4_scheme">Esquema v4 (desde Android 11)</string>
+    <string name="v3_scheme">Esquema v3 (desde Android 9.0)</string>
+    <string name="v2_scheme">Esquema v2 (desde Android 7.0)</string>
+    <string name="v1_scheme">Esquema v1 (desde Android 1.0)</string>
+    <string name="pref_apk_signing_msg">Establecer esquema de firmas, clave de firma personalizada, etc.</string>
+    <string name="apk_signing">Firma de APK</string>
+    <string name="signing_keys">Llaves de firma</string>
+    <string name="pref_sign_apk_msg">Firme los archivos APK antes de instalarlos.</string>
+    <string name="pref_sign_apk">Firmar APK</string>
+    <string name="install_location_prefer_external">Preferir externa</string>
+    <string name="install_location_internal_only">Sólo interna</string>
+    <string name="install_location">Localización de la instalación</string>
+    <string name="installer">Instalador</string>
+    <string name="comment">Comentario</string>
+    <string name="close">Cerrar</string>
+    <string name="no_root">No root</string>
+    <string name="root">Raíz (root)</string>
+    <string name="user_profile_with_id">Perfil: %1$s (%2$d)</string>
+    <string name="advanced">Avanzado</string>
+    <string name="simple">Simple</string>
+    <string name="enabled">Habilitado</string>
+    <string name="options">Opciones</string>
+    <string name="off">Apagado</string>
+    <string name="on">Encendido</string>
+    <string name="profile_state_msg">Estado personalizado de encendido/apagado para este perfil</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Testeado &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"signature_no\" example=\"342\"&gt;%1$d&lt;/xliff:g&gt; firmas en &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"6000\"&gt;%2$d&lt;/xliff:g&gt; classes.
+\nTiempo tomado &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"time\" example=\"10000\"&gt;%3$d&lt;/xliff:g&gt; ms (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"iteration_no\" example=\"100000\"&gt;%4$d&lt;/xliff:g&gt; iteraciones).</string>
+    <string name="interceptor">Interceptor</string>
 </resources>
