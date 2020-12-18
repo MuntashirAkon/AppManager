@@ -761,4 +761,5 @@
     <string name="matching_activities">Atividades correspondentes</string>
     <string name="value">Valor</string>
     <string name="filter_apps_with_splits">Aplicativos com divisões</string>
+    <string name="set_custom_app_op">Defina a operação de aplicativo personalizada</string>
 </resources>
