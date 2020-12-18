@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.appops;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -43,6 +44,7 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
  */
 @SuppressWarnings("unused")
 public class AppOpsManager {
+    @SuppressLint("NewApi")
     @IntDef(flag = true, value = {
             MODE_ALLOWED,
             MODE_IGNORED,
@@ -227,6 +229,10 @@ public class AppOpsManager {
     public static final int OP_AUTO_REVOKE_PERMISSIONS_IF_UNUSED = 97;
     public static final int OP_AUTO_REVOKE_MANAGED_BY_INSTALLER = 98;
     public static final int OP_NO_ISOLATED_STORAGE = 99;
+    public static final int OP_PHONE_CALL_MICROPHONE = 100;
+    public static final int OP_PHONE_CALL_CAMERA = 101;
+    public static final int OP_RECORD_AUDIO_HOTWORD = 102;
+    public static final int OP_MANAGE_ONGOING_CALLS = 103;
     public static final int _NUM_OP;  // fetched using reflection
 
     // Xiaomi custom App Ops from com.lbe.security.miui.apk version
@@ -363,6 +369,10 @@ public class AppOpsManager {
     public static final String OPSTR_ACTIVATE_PLATFORM_VPN = "android:activate_platform_vpn";
     public static final String OPSTR_LOADER_USAGE_STATS = "android:loader_usage_stats";
     public static final String OPSTR_NO_ISOLATED_STORAGE = "android:no_isolated_storage";
+    public static final String OPSTR_PHONE_CALL_MICROPHONE = "android:phone_call_microphone";
+    public static final String OPSTR_PHONE_CALL_CAMERA = "android:phone_call_camera";
+    public static final String OPSTR_RECORD_AUDIO_HOTWORD = "android:record_audio_hotword";
+    public static final String OPSTR_MANAGE_ONGOING_CALLS = "android:manage_on_going_calls";
 
     private static final int[] RUNTIME_AND_APPOP_PERMISSIONS_OPS = {
             // RUNTIME PERMISSIONS
@@ -426,6 +436,7 @@ public class AppOpsManager {
             OP_MANAGE_EXTERNAL_STORAGE,
             OP_INTERACT_ACROSS_PROFILES,
             OP_LOADER_USAGE_STATS,
+            OP_MANAGE_ONGOING_CALLS,
     };
 
     /**
@@ -436,7 +447,7 @@ public class AppOpsManager {
      * presented to the user as one switch then this can be used to
      * make them all controlled by the same single operation.
      */
-    private static final int[] sOpToSwitch = new int[]{
+    private static final int[] sOpToSwitch = new int[] {
             OP_COARSE_LOCATION,                 // COARSE_LOCATION
             OP_COARSE_LOCATION,                 // FINE_LOCATION
             OP_COARSE_LOCATION,                 // GPS
@@ -537,6 +548,10 @@ public class AppOpsManager {
             OP_AUTO_REVOKE_PERMISSIONS_IF_UNUSED, //AUTO_REVOKE_PERMISSIONS_IF_UNUSED
             OP_AUTO_REVOKE_MANAGED_BY_INSTALLER, //OP_AUTO_REVOKE_MANAGED_BY_INSTALLER
             OP_NO_ISOLATED_STORAGE,             // NO_ISOLATED_STORAGE
+            OP_PHONE_CALL_MICROPHONE,           // OP_PHONE_CALL_MICROPHONE
+            OP_PHONE_CALL_CAMERA,               // OP_PHONE_CALL_CAMERA
+            OP_RECORD_AUDIO_HOTWORD,            // RECORD_AUDIO_HOTWORD
+            OP_MANAGE_ONGOING_CALLS,            // MANAGE_ONGOING_CALLS
     };
 
     /**
@@ -643,13 +658,17 @@ public class AppOpsManager {
             OPSTR_AUTO_REVOKE_PERMISSIONS_IF_UNUSED,
             OPSTR_AUTO_REVOKE_MANAGED_BY_INSTALLER,
             OPSTR_NO_ISOLATED_STORAGE,
+            OPSTR_PHONE_CALL_MICROPHONE,
+            OPSTR_PHONE_CALL_CAMERA,
+            OPSTR_RECORD_AUDIO_HOTWORD,
+            OPSTR_MANAGE_ONGOING_CALLS,
     };
 
     /**
      * This provides a simple name for each operation to be used
      * in debug output.
      */
-    private static final String[] sOpNames = new String[]{
+    private static final String[] sOpNames = new String[] {
             "COARSE_LOCATION",
             "FINE_LOCATION",
             "GPS",
@@ -750,6 +769,10 @@ public class AppOpsManager {
             "AUTO_REVOKE_PERMISSIONS_IF_UNUSED",
             "AUTO_REVOKE_MANAGED_BY_INSTALLER",
             "NO_ISOLATED_STORAGE",
+            "PHONE_CALL_MICROPHONE",
+            "PHONE_CALL_CAMERA",
+            "RECORD_AUDIO_HOTWORD",
+            "MANAGE_ONGOING_CALLS",
     };
 
 
@@ -757,7 +780,7 @@ public class AppOpsManager {
      * This optionally maps a permission to an operation.  If there
      * is no permission associated with an operation, it is null.
      */
-    private static final String[] sOpPerms = new String[]{
+    private static final String[] sOpPerms = new String[] {
             android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.ACCESS_FINE_LOCATION,
             null, // no permission for gps
@@ -775,7 +798,7 @@ public class AppOpsManager {
             android.Manifest.permission.READ_SMS,
             null, // no permission required for writing sms
             android.Manifest.permission.RECEIVE_SMS,
-            "android.Manifest.permission.RECEIVE_EMERGENCY_BROADCAST",
+            "android.permission.RECEIVE_EMERGENCY_BROADCAST",
             android.Manifest.permission.RECEIVE_MMS,
             android.Manifest.permission.RECEIVE_WAP_PUSH,
             android.Manifest.permission.SEND_SMS,
@@ -783,7 +806,7 @@ public class AppOpsManager {
             null, // no permission required for writing icc sms
             android.Manifest.permission.WRITE_SETTINGS,
             android.Manifest.permission.SYSTEM_ALERT_WINDOW,
-            "android.Manifest.permission.ACCESS_NOTIFICATIONS",
+            "android.permission.ACCESS_NOTIFICATIONS",
             android.Manifest.permission.CAMERA,
             android.Manifest.permission.RECORD_AUDIO,
             null, // no permission for playing audio
@@ -791,7 +814,7 @@ public class AppOpsManager {
             null, // no permission for writing clipboard
             null, // no permission for taking media buttons
             null, // no permission for taking audio focus
-            null, // no permission for changing master volume
+            null, // no permission for changing global volume
             null, // no permission for changing voice volume
             null, // no permission for changing ring volume
             null, // no permission for changing media volume
@@ -801,7 +824,7 @@ public class AppOpsManager {
             android.Manifest.permission.WAKE_LOCK,  // Normal
             null, // no permission for generic location monitoring
             null, // no permission for high power location monitoring
-            "android.Manifest.permission.PACKAGE_USAGE_STATS",
+            "android.permission.PACKAGE_USAGE_STATS",
             null, // no permission for muting/unmuting microphone
             null, // no permission for displaying toasts
             null, // no permission for projecting media
@@ -813,9 +836,9 @@ public class AppOpsManager {
             Manifest.permission.ADD_VOICEMAIL,
             Manifest.permission.USE_SIP,
             Manifest.permission.PROCESS_OUTGOING_CALLS,
-            "Manifest.permission.USE_FINGERPRINT",  // Normal
+            "android.permission.USE_FINGERPRINT",  // Normal
             Manifest.permission.BODY_SENSORS,
-            "Manifest.permission.READ_CELL_BROADCASTS",
+            "android.permission.READ_CELL_BROADCASTS",
             null,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -823,22 +846,22 @@ public class AppOpsManager {
             Manifest.permission.GET_ACCOUNTS,
             null, // no permission for running in background
             null, // no permission for changing accessibility volume
-            "Manifest.permission.READ_PHONE_NUMBERS",
-            "Manifest.permission.REQUEST_INSTALL_PACKAGES",
+            "android.permission.READ_PHONE_NUMBERS",
+            "android.permission.REQUEST_INSTALL_PACKAGES",
             null, // no permission for entering picture-in-picture on hide
-            "Manifest.permission.INSTANT_APP_FOREGROUND_SERVICE",
-            "Manifest.permission.ANSWER_PHONE_CALLS",
+            "android.permission.INSTANT_APP_FOREGROUND_SERVICE",
+            "android.permission.ANSWER_PHONE_CALLS",
             null, // no permission for OP_RUN_ANY_IN_BACKGROUND
             Manifest.permission.CHANGE_WIFI_STATE,  // Normal
-            "Manifest.permission.REQUEST_DELETE_PACKAGES",  // Normal
+            "android.permission.REQUEST_DELETE_PACKAGES",  // Normal
             Manifest.permission.BIND_ACCESSIBILITY_SERVICE,
-            "Manifest.permission.ACCEPT_HANDOVER",
-            "Manifest.permission.MANAGE_IPSEC_TUNNELS",
-            "Manifest.permission.FOREGROUND_SERVICE",  // Normal
+            "android.permission.ACCEPT_HANDOVER",
+            "android.permission.MANAGE_IPSEC_TUNNELS",
+            "android.permission.FOREGROUND_SERVICE",  // Normal
             null, // no permission for OP_BLUETOOTH_SCAN
-            "Manifest.permission.USE_BIOMETRIC",  // Normal
-            "Manifest.permission.ACTIVITY_RECOGNITION",
-            "Manifest.permission.SMS_FINANCIAL_TRANSACTIONS",
+            "android.permission.USE_BIOMETRIC",  // Normal
+            "android.permission.ACTIVITY_RECOGNITION",
+            "android.permission.SMS_FINANCIAL_TRANSACTIONS",
             null,
             null, // no permission for OP_WRITE_MEDIA_AUDIO
             null,
@@ -848,16 +871,20 @@ public class AppOpsManager {
             null, // no permission for OP_LEGACY_STORAGE
             null, // no permission for OP_ACCESS_ACCESSIBILITY
             null, // no direct permission for OP_READ_DEVICE_IDENTIFIERS
-            "Manifest.permission.ACCESS_MEDIA_LOCATION",
+            "android.permission.ACCESS_MEDIA_LOCATION",
             null, // no permission for OP_QUERY_ALL_PACKAGES
-            "Manifest.permission.MANAGE_EXTERNAL_STORAGE",
-            "android.Manifest.permission.INTERACT_ACROSS_PROFILES",
+            "android.permission.MANAGE_EXTERNAL_STORAGE",
+            "android.permission.INTERACT_ACROSS_PROFILES",
             null, // no permission for OP_ACTIVATE_PLATFORM_VPN
-            "android.Manifest.permission.LOADER_USAGE_STATS",
+            "android.permission.LOADER_USAGE_STATS",
             null, // deprecated operation
             null, // no permission for OP_AUTO_REVOKE_PERMISSIONS_IF_UNUSED
             null, // no permission for OP_AUTO_REVOKE_MANAGED_BY_INSTALLER
             null, // no permission for OP_NO_ISOLATED_STORAGE
+            null, // no permission for OP_PHONE_CALL_MICROPHONE
+            null, // no permission for OP_PHONE_CALL_CAMERA
+            null, // no permission for OP_RECORD_AUDIO_HOTWORD
+            "android.permission.MANAGE_ONGOING_CALLS",
     };
 
     /**
@@ -865,7 +892,7 @@ public class AppOpsManager {
      * Each Op should be filled with a restriction string from UserManager or
      * null to specify it is not affected by any user restriction.
      */
-    private static final String[] sOpRestrictions = new String[]{
+    private static final String[] sOpRestrictions = new String[] {
             UserManager.DISALLOW_SHARE_LOCATION, //COARSE_LOCATION
             UserManager.DISALLOW_SHARE_LOCATION, //FINE_LOCATION
             UserManager.DISALLOW_SHARE_LOCATION, //GPS
@@ -966,12 +993,16 @@ public class AppOpsManager {
             null, // AUTO_REVOKE_PERMISSIONS_IF_UNUSED
             null, // AUTO_REVOKE_MANAGED_BY_INSTALLER
             null, // NO_ISOLATED_STORAGE
+            null, // PHONE_CALL_MICROPHONE
+            null, // PHONE_CALL_MICROPHONE
+            null, // RECORD_AUDIO_HOTWORD
+            null, // MANAGE_ONGOING_CALLS
     };
 
     /**
      * In which cases should an app be allowed to bypass the user restriction for a certain app-op.
      */
-    private static final RestrictionBypass[] sOpAllowSystemRestrictionBypass = new RestrictionBypass[]{
+    private static final RestrictionBypass[] sOpAllowSystemRestrictionBypass = new RestrictionBypass[] {
             new RestrictionBypass(true, false), //COARSE_LOCATION
             new RestrictionBypass(true, false), //FINE_LOCATION
             null, //GPS
@@ -1072,12 +1103,16 @@ public class AppOpsManager {
             null, // AUTO_REVOKE_PERMISSIONS_IF_UNUSED
             null, // AUTO_REVOKE_MANAGED_BY_INSTALLER
             null, // NO_ISOLATED_STORAGE
+            null, // PHONE_CALL_MICROPHONE
+            null, // PHONE_CALL_CAMERA
+            null, // RECORD_AUDIO_HOTWORD
+            null, // MANAGE_ONGOING_CALLS
     };
 
     /**
      * This specifies the default mode for each operation.
      */
-    private static final int[] sOpDefaultMode = new int[]{
+    private static final int[] sOpDefaultMode = new int[] {
             AppOpsManager.MODE_ALLOWED, // COARSE_LOCATION
             AppOpsManager.MODE_ALLOWED, // FINE_LOCATION
             AppOpsManager.MODE_ALLOWED, // GPS
@@ -1178,6 +1213,10 @@ public class AppOpsManager {
             AppOpsManager.MODE_DEFAULT, // OP_AUTO_REVOKE_PERMISSIONS_IF_UNUSED
             AppOpsManager.MODE_ALLOWED, // OP_AUTO_REVOKE_MANAGED_BY_INSTALLER
             AppOpsManager.MODE_ERRORED, // OP_NO_ISOLATED_STORAGE
+            AppOpsManager.MODE_ALLOWED, // PHONE_CALL_MICROPHONE
+            AppOpsManager.MODE_ALLOWED, // PHONE_CALL_CAMERA
+            AppOpsManager.MODE_ALLOWED, // OP_RECORD_AUDIO_HOTWORD
+            AppOpsManager.MODE_DEFAULT, // MANAGE_ONGOING_CALLS
     };
 
 
@@ -1193,7 +1232,7 @@ public class AppOpsManager {
      * system (such as OP_WRITE_SMS, which should be allowed only
      * for whichever app is selected as the current SMS app).
      */
-    private static final boolean[] sOpDisableReset = new boolean[]{
+    private static final boolean[] sOpDisableReset = new boolean[] {
             false, // COARSE_LOCATION
             false, // FINE_LOCATION
             false, // GPS
@@ -1294,6 +1333,10 @@ public class AppOpsManager {
             false, // AUTO_REVOKE_PERMISSIONS_IF_UNUSED
             false, // AUTO_REVOKE_MANAGED_BY_INSTALLER
             true, // NO_ISOLATED_STORAGE
+            false, // PHONE_CALL_MICROPHONE
+            false, // PHONE_CALL_CAMERA
+            false, // RECORD_AUDIO_HOTWORD
+            true, // MANAGE_ONGOING_CALLS
     };
 
     /**
