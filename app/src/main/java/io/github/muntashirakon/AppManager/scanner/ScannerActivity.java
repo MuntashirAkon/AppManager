@@ -340,7 +340,7 @@ public class ScannerActivity extends BaseActivity {
         SpannableStringBuilder foundTrackerList = new SpannableStringBuilder();
         if (totalTrackersFound > 0) {
             foundTrackerList.append(getString(R.string.found_trackers)).append(" ").append(
-                    TextUtils.joinSpannable("\n", foundTrackerNames));
+                    TextUtils.joinSpannable(", ", foundTrackerNames));
         }
         SpannableStringBuilder builder = new SpannableStringBuilder(
                 getString(R.string.tested_signatures_on_classes_and_time_taken,
