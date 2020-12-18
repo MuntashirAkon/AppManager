@@ -794,4 +794,5 @@
     <string name="pref_backup_android_keystore">Резервне копіювання додатків з Android KeyStore</string>
     <string name="keep_data_and_signatures">Зберегти дані і підписи</string>
     <string name="this_action_cannot_be_undone">Цю операцію неможливо відмінити.</string>
+    <string name="filter_apps_with_splits">Додатки з сплітами</string>
 </resources>
