@@ -457,7 +457,7 @@ public class ActivityInterceptor extends AppCompatActivity {
         findViewById(R.id.intent_categories_add_btn).setOnClickListener(v ->
                 new TextInputDropdownDialogBuilder(this, R.string.category)
                         .setTitle(R.string.category)
-                        .setDropdownItems(INTENT_CATEGORIES)
+                        .setDropdownItems(INTENT_CATEGORIES, true)
                         .setNegativeButton(R.string.cancel, null)
                         .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
                             if (!TextUtils.isEmpty(inputText)) {
@@ -477,7 +477,7 @@ public class ActivityInterceptor extends AppCompatActivity {
         findViewById(R.id.intent_flags_add_btn).setOnClickListener(v ->
                 new TextInputDropdownDialogBuilder(this, R.string.flags)
                         .setTitle(R.string.flags)
-                        .setDropdownItems(getAllFlags())
+                        .setDropdownItems(getAllFlags(), true)
                         .setNegativeButton(R.string.cancel, null)
                         .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
                             if (!TextUtils.isEmpty(inputText)) {

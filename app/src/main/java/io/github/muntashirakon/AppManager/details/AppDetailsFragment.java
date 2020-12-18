@@ -69,6 +69,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -87,6 +88,7 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.server.common.OpEntry;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
+import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.MiuiUtils;
@@ -367,6 +369,56 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             boolean curr = (boolean) AppPref.get(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL);
             AppPref.set(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL, !curr);
             refreshDetails();
+        } else if (id == R.id.action_custom_app_op) {
+            List<Integer> modes = getAppOpModes();
+            List<Integer> appOps = getAppOps();
+            List<CharSequence> modeNames = Arrays.asList(getAppOpModeNames(modes));
+            List<CharSequence> appOpNames = Arrays.asList(getAppOpNames(appOps));
+            TextInputDropdownDialogBuilder builder = new TextInputDropdownDialogBuilder(mActivity, R.string.set_custom_app_op);
+            builder.setTitle(R.string.set_custom_app_op)
+                    .setDropdownItems(appOpNames, true)
+                    .setAuxiliaryInput(R.string.mode, null, null, modeNames, true)
+                    .setPositiveButton(R.string.apply, (dialog, which, inputText, isChecked) -> {
+                        if (inputText == null || builder.getAuxiliaryInput() == null) return;
+                        // Get mode
+                        String modeName = builder.getAuxiliaryInput().toString().trim();
+                        int opModeIndex = modeNames.indexOf(modeName);
+                        int mode;
+                        if (opModeIndex == -1) {
+                            // Could be a numeric value
+                            try {
+                                mode = Integer.parseInt(modeName);
+                            } catch (NumberFormatException e) {
+                                return;
+                            }
+                        } else {
+                            mode = modes.get(opModeIndex);
+                        }
+                        // Get op
+                        String opName = inputText.toString().trim();
+                        int opIndex = appOpNames.indexOf(opName);
+                        int op;
+                        if (opIndex == -1) {
+                            // Could be a numeric value
+                            try {
+                               op = Integer.parseInt(opName);
+                            } catch (NumberFormatException e) {
+                                return;
+                            }
+                        } else {
+                            op = appOps.get(opIndex);
+                        }
+                        new Thread(() -> {
+                            if (mainModel.setAppOp(op, mode)) {
+                                runOnUiThread(this::refreshDetails);
+                            } else {
+                                runOnUiThread(() -> Toast.makeText(mActivity,
+                                        R.string.failed_to_enable_op, Toast.LENGTH_LONG).show());
+                            }
+                        }).start();
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
         } else if (id == R.id.action_deny_dangerous_permissions) {  // permissions
             showProgressIndicator(true);
             new Thread(() -> {
@@ -478,12 +530,35 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     }
 
     @NonNull
+    private List<Integer> getAppOps() {
+        List<Integer> appOps = new ArrayList<>();
+        for (int i = 0; i < AppOpsManager._NUM_OP; ++i) {
+            appOps.add(i);
+        }
+        if (MiuiUtils.isMiui()) {
+            for (int i = 0; i < AppOpsManager._NUM_MIUI_OP; ++i) {
+                appOps.add(AppOpsManager._MIUI_START_OP + i);
+            }
+        }
+        return appOps;
+    }
+
+    @NonNull
     private CharSequence[] getAppOpModeNames(@NonNull List<Integer> appOpModes) {
         CharSequence[] appOpModeNames = new CharSequence[appOpModes.size()];
         for (int i = 0; i < appOpModes.size(); ++i) {
             appOpModeNames[i] = AppOpsManager.modeToName(appOpModes.get(i));
         }
         return appOpModeNames;
+    }
+
+    @NonNull
+    private CharSequence[] getAppOpNames(@NonNull List<Integer> appOps) {
+        CharSequence[] appOpNames = new CharSequence[appOps.size()];
+        for (int i = 0; i < appOps.size(); ++i) {
+            appOpNames[i] = AppOpsManager.opToName(appOps.get(i));
+        }
+        return appOpNames;
     }
 
     /**

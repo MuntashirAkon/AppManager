@@ -237,6 +237,7 @@ public class AppOpsManager {
     public static final int _NUM_OP;  // fetched using reflection
 
     // MIUI app ops taken from com.lbe.security.miui.apk
+    public static final int _MIUI_START_OP = 10001;
     public static final int OP_WIFI_CHANGE = 10001;
     public static final int OP_BLUETOOTH_CHANGE = 10002;
     public static final int OP_DATA_CONNECT_CHANGE = 10003;

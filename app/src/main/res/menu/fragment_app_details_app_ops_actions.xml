@@ -44,6 +44,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_custom_app_op"
+        android:icon="@drawable/ic_outline_plus_one_24"
+        android:title="@string/set_custom_app_op"
+        app:showAsAction="never" />
+
+    <item
         android:icon="@drawable/ic_sort_black_24dp"
         android:title="@string/sort"
         app:showAsAction="never">
