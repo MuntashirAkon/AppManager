@@ -748,4 +748,18 @@
     <string name="no_app_ops_permission">Keine Berechtigung zum Anzeigen von App-Ops</string>
     <string name="set_app_op_mode">App-Op-Modus einstellen</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
+    <string name="set_custom_app_op">Benutzerdefinierte App Op einstellen</string>
+    <string name="interceptor">Lauschangriff</string>
+    <string name="resend_intent">Absicht erneut senden</string>
+    <string name="share">Teilen</string>
+    <string name="extras">Extras</string>
+    <string name="category">Kategorien</string>
+    <string name="uri">URI</string>
+    <string name="mime_type">MIME-Typ</string>
+    <string name="action">Aktivität</string>
+    <string name="result_code">Ergebniscode</string>
+    <string name="activity_result">Ergebnis der Aktivität</string>
+    <string name="send_edited_intent">Bearbeitete Absicht senden</string>
+    <string name="value">Wert</string>
+    <string name="filter_apps_with_splits">Apps mit Splits</string>
 </resources>
