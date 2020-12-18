@@ -166,6 +166,7 @@
         <item>com.tencent.mta</item>
         <item>com.apptentive.</item>
         <item>com.tencent.stat</item>
+        <item>com.tencent.wxop.stat</item>
         <item>com.tencent.weiyun</item>
         <item>com.mixpanel.</item>
         <item>com.umeng.analytics</item>
@@ -409,9 +410,24 @@
         <item>com.huawei.hms.location</item>
         <item>com.huawei.hms.plugin.analytics</item>
         <item>com.akamai.android.sdk.AkaMap</item>
-        <item>cn.jpush.android</item>
         <item>ru.mail.mrgservice.advertising</item>
         <item>ru.mail.mrgservice.analytics</item>
+        <item>com.airpush.</item>
+        <item>com.adsmogo.</item>
+        <item>com.alimama.</item>
+        <item>com.anysdk.framework.AnalyticsWrapper</item>
+        <item>com.anysdk.framework.AdsWrapper</item>
+        <item>com.usebutton.sdk.</item>
+        <item>com.nutiteq</item>
+        <item>com.carto</item>
+        <item>io.didomi.sdk.Didomi</item>
+        <item>cn.jpush.android</item>
+        <item>com.jumio.MobileSDK</item>
+        <item>com.lenddo.mobile</item>
+        <item>com.pokkt.sdk.</item>
+        <item>org.prebid.mobile</item>
+        <item>com.skplanet.tad</item>
+        <item>io.split.android.</item>
         <item>cat.ereza.customactivityoncrash</item>
         <item>org.acra.</item>
         <item>ch.acra.</item>
@@ -444,30 +460,31 @@
         <item>com.bugsense.trace.</item>
         <item>io.palaima.debugdrawer.</item>
         <item>com.bytedance.sdk.openadsdk</item>
+        <item>com.acuant.acuantcamera</item>
         <item>mobi.mclick.ad.</item>
         <item>com.adlocus.</item>
         <item>com.adcenix.</item>
         <item>com.adflake</item>
         <item>ru.tachos.admitadstatisticsdk</item>
         <item>com.adzerk.android.sdk</item>
-        <item>com.airpush.</item>
+        <item>com.alibaba.sdk.android.mns</item>
+        <item>com.alibaba.sdk.android.httpdns</item>
+        <item>com.ta.utdid2</item>
+        <item>com.amap.api</item>
+        <item>anet.channel</item>
         <item>com.anvato.androidsdk.</item>
-        <item>com.anysdk.framework.AnalyticsWrapper</item>
-        <item>com.anysdk.framework.AdsWrapper</item>
         <item>com.beemray.</item>
         <item>com.blesh.sdk.</item>
         <item>com.bluecats.sdk</item>
-        <item>com.usebutton.sdk.</item>
-        <item>com.nutiteq</item>
-        <item>com.carto</item>
         <item>com.cirasoft</item>
         <item>com.cooladata.android.</item>
-        <item>io.didomi.sdk.Didomi</item>
         <item>com.evrythng</item>
         <item>com.hawk</item>
         <item>com.evidon.</item>
         <item>com.fluzo.sdk.</item>
+        <item>com.facebook.flipper</item>
         <item>com.gpshopper</item>
+        <item>com.android.billingclient</item>
         <item>com.timerazor.gravysdk.</item>
         <item>com.groundtruth.sdk</item>
         <item>com.digitalanalytics.</item>
@@ -476,31 +493,40 @@
         <item>com.xtify.mce.sdk.</item>
         <item>com.indooratlas.android.sdk</item>
         <item>com.intrasonics.</item>
-        <item>com.jumio.MobileSDK</item>
-        <item>com.lenddo.mobile</item>
+        <item>com.janrain.android</item>
+        <item>com.janrain.android.engage</item>
+        <item>com.janrain.android.capture</item>
+        <item>com.kakao.kakaolink</item>
         <item>com.marketo</item>
         <item>com.mobiquitynetworks.</item>
         <item>com.innoquant.moca</item>
         <item>com.openback</item>
         <item>net.opentracker.android</item>
-        <item>com.pokkt.sdk.</item>
         <item>com.pinterest.android.pdk.</item>
         <item>com.pointinside</item>
-        <item>org.prebid.mobile</item>
         <item>io.proximi.proximiiolibrary</item>
         <item>com.pubnub.api.</item>
-        <item>com.skplanet.tad</item>
         <item>com.scoreloop.client.android</item>
         <item>com.wirelessregistry.observersdk.</item>
+        <item>com.sina.weibo.sdk</item>
         <item>com.skyhook.context.Accelerator</item>
-        <item>io.split.android.</item>
         <item>com.synerise.sdk</item>
         <item>com.tapad.adserving</item>
         <item>com.tapad.tracking</item>
+        <item>com.tencent.mm.opensdk</item>
         <item>com.trillbit.</item>
         <item>org.lasque.tusdk</item>
+        <item>com.umeng.commonsdk.stateless</item>
+        <item>com.umeng.commonsdk.statistics</item>
+        <item>com.umeng.umsdk</item>
+        <item>com.umeng.message</item>
+        <item>com.taobao.accs</item>
+        <item>com.taobao.agoo</item>
+        <item>org.android.agoo</item>
         <item>net.veloxity.</item>
+        <item>com.sina.deviceidjnisdk</item>
         <item>com.wonderpush</item>
+        <item>com.xiaomi.push</item>
         <item>com.yoc.sdk.</item>
         <item>com.yext.locationsdk.</item>
         <item>net.youmi</item>
@@ -510,6 +536,7 @@
         <item>co.nearbee</item>
         <item>org.cocos2dx</item>
         <item>co.vmob.sdk</item>
+        <item>predic.io</item>
         <item>com.tabtale</item>
 </string-array>
 <string-array name="tracker_names">
@@ -660,6 +687,7 @@
         <item>Tencent MobWin</item>
         <item>Tencent MTA</item>
         <item>Apptentive</item>
+        <item>Tencent Stats</item>
         <item>Tencent Stats</item>
         <item>Tencent Weiyun</item>
         <item>MixPanel</item>
@@ -904,9 +932,24 @@
         <item>Huawei Mobile Services (HMS) Core</item>
         <item>Huawei Mobile Services (HMS) Core</item>
         <item>Akamai MAP</item>
-        <item>Aurora Mobile JPush</item>
         <item>Mail.ru</item>
         <item>Mail.ru</item>
+        <item>Airpush</item>
+        <item>Alimama (formerly AdsMogo)</item>
+        <item>Alimama (formerly AdsMogo)</item>
+        <item>AnySDK</item>
+        <item>AnySDK</item>
+        <item>Button</item>
+        <item>Carto (formerly Nutiteq)</item>
+        <item>Carto (formerly Nutiteq)</item>
+        <item>Didomi</item>
+        <item>JiGuang Aurora Mobile JPush</item>
+        <item>Jumio</item>
+        <item>Lenddo</item>
+        <item>POKKT</item>
+        <item>Prebid Mobile</item>
+        <item>SK planet Tad</item>
+        <item>Split</item>
         <item>µ?Custom Activity On Crash</item>
         <item>µ?ACRA</item>
         <item>µ?ACRA</item>
@@ -939,30 +982,31 @@
         <item>°BugSense</item>
         <item>°?DebugDrawer</item>
         <item>Pangle SDK</item>
+        <item>²Acuant</item>
         <item>²AdFlex</item>
         <item>²AdLocus</item>
         <item>²Adcenix</item>
         <item>²Adflake</item>
         <item>²Admitad</item>
         <item>²Adzerk</item>
-        <item>²Airpush</item>
+        <item>²Alibaba Cloud Messaging</item>
+        <item>²Alibaba HTTPDNS</item>
+        <item>²Alibaba UserTrack Device IDentity (UTDID)</item>
+        <item>²Amap Map Provider</item>
+        <item>²Anet channel library</item>
         <item>²Anvato (A Google Company)</item>
-        <item>²AnySDK</item>
-        <item>²AnySDK</item>
         <item>²Beemray</item>
         <item>²Blesh</item>
         <item>²Bluecats</item>
-        <item>²Button</item>
-        <item>²Carto (formerly Nutiteq)</item>
-        <item>²Carto (formerly Nutiteq)</item>
         <item>²Cifrasoft</item>
         <item>²CoolaData</item>
-        <item>²Didomi</item>
         <item>²EVRYTHNG</item>
         <item>²Ehawk</item>
         <item>²Evidon (now Crownpeak)</item>
         <item>²FLUZO</item>
+        <item>²Facebook Flipper</item>
         <item>²GPShopper</item>
+        <item>²Google Play Billing Library / Service</item>
         <item>²Gravy Analytics</item>
         <item>²GroundTruth</item>
         <item>²IBM Digital Analytics</item>
@@ -971,31 +1015,40 @@
         <item>²IBM Mobile Marketing (Acoustic)</item>
         <item>²IndoorAtlas</item>
         <item>²Intrasonics</item>
-        <item>²Jumio</item>
-        <item>²Lenddo</item>
+        <item>²Janrain</item>
+        <item>²Janrain</item>
+        <item>²Janrain</item>
+        <item>²KakaoTalk Link</item>
         <item>²Marketo (an Adobe Company)</item>
         <item>²Mobiquity Networks</item>
         <item>²Moca</item>
         <item>²OpenBack</item>
         <item>²Opentracker</item>
-        <item>²POKKT</item>
         <item>²Pinterest</item>
         <item>²Point Inside</item>
-        <item>²Prebid Mobile</item>
         <item>²Proximi</item>
         <item>²PubNub</item>
-        <item>²SK planet Tad</item>
         <item>²ScoreLoop</item>
         <item>²Signalframe  (prev Wireless Registry)</item>
+        <item>²Sino Weibo SDK</item>
         <item>²Skyhook</item>
-        <item>²Split</item>
         <item>²Synerise</item>
         <item>²Tapad</item>
         <item>²Tapad</item>
+        <item>²Tencent Wechat SDK</item>
         <item>²Trillbit</item>
         <item>²Tutucloud</item>
+        <item>²Umeng Common SDK logging</item>
+        <item>²Umeng Common SDK logging</item>
+        <item>²Umeng Mobile tracking SDK</item>
+        <item>²Umeng Push SDK</item>
+        <item>²Umeng Push SDK</item>
+        <item>²Umeng Push SDK</item>
+        <item>²Umeng Push SDK</item>
         <item>²Veloxity</item>
+        <item>²Weibo DeviceID</item>
         <item>²WonderPush</item>
+        <item>²Xiaomi Push Service</item>
         <item>²YOC</item>
         <item>²Yext</item>
         <item>²Youmi</item>
@@ -1005,6 +1058,7 @@
         <item>²beaconstac/NearBee (MobStac Inc.)</item>
         <item>²cocos2dx</item>
         <item>²plexure</item>
+        <item>²predic.io</item>
         <item>²tabtale</item>
     </string-array>
 </resources>

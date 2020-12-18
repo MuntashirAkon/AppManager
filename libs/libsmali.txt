@@ -6,7 +6,6 @@
 {"id":"\/com\/xwray\/groupie","path":"\/com\/xwray\/groupie","name":"Groupie","type":"UI Component","perms":"","url":"https:\/\/github.com\/lisawray\/groupie"}
 {"id":"\/org\/h2\/","path":"\/org\/h2\/","name":"H2 Database Engine","type":"Utility","perms":"","url":"https:\/\/github.com\/h2database\/h2database"}
 {"id":"\/com\/hbb20","path":"\/com\/hbb20","name":"Country Code Picker Library","type":"Utility","perms":"","url":"https:\/\/github.com\/hbb20\/CountryCodePickerProject"}
-{"id":"\/io\/michaelrocks\/libphonenumber\/android","path":"\/io\/michaelrocks\/libphonenumber\/android","name":"libphonenumber-android","type":"Utility","perms":"","url":"https:\/\/github.com\/MichaelRocks\/libphonenumber-android"}
 {"id":"\/io\/lbry\/lbrysdk","path":"\/io\/lbry\/lbrysdk","name":"LBRY Android SDK","type":"Utility","perms":"","url":"https:\/\/github.com\/lbryio\/lbry-android-sdk"}
 {"id":"\/joptsimple","path":"\/joptsimple","name":"JOpt Simple","type":"Development Aid","perms":"","url":"http:\/\/jopt-simple.github.io\/jopt-simple\/"}
 {"id":"\/com\/arthenica\/mobileffmpeg","path":"\/com\/arthenica\/mobileffmpeg","name":"MobileFFmpeg","type":"Utility","perms":"","url":"https:\/\/github.com\/tanersener\/mobile-ffmpeg"}
