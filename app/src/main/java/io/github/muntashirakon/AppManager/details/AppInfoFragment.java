@@ -716,6 +716,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Set scanner
         addToHorizontalLayout(R.string.scanner, R.drawable.ic_baseline_security_24).setOnClickListener(v -> {
             Intent intent = new Intent(mActivity, ScannerActivity.class);
+            intent.putExtra(ScannerActivity.EXTRA_IS_EXTERNAL, isExternalApk);
             File file = new File(mApplicationInfo.publicSourceDir);
             intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
             startActivity(intent);

@@ -79,6 +79,8 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class ScannerActivity extends BaseActivity {
+    public static final String EXTRA_IS_EXTERNAL = "is_external";
+
     private static final String APP_DEX = "app_dex";
     private static final String SIG_TO_IGNORE = "^(android(|x)|com\\.android|com\\.google\\.android|java(|x)|j\\$\\.(util|time)|\\w\\d?(\\.\\w\\d?)+)\\..*$";
 
@@ -94,6 +96,7 @@ public class ScannerActivity extends BaseActivity {
     private ParcelFileDescriptor fd;
     private File apkFile;
     private Uri apkUri;
+    private boolean isExternalApk;
 
     @Override
     protected void onDestroy() {
@@ -126,6 +129,7 @@ public class ScannerActivity extends BaseActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         mActionBar = getSupportActionBar();
         Intent intent = getIntent();
+        isExternalApk = intent.getBooleanExtra(EXTRA_IS_EXTERNAL, true);
 
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
@@ -261,12 +265,18 @@ public class ScannerActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
+        menu.findItem(R.id.action_install).setVisible(isExternalApk);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
             finish();
             return true;
-        } else if (id == R.id.action_install_apk) {
+        } else if (id == R.id.action_install) {
             Intent openApk = new Intent(getBaseContext(), PackageInstallerActivity.class);
             openApk.setData(apkUri);
             startActivity(openApk);
