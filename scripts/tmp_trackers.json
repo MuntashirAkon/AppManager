@@ -1,0 +1,310 @@
+{
+  "trackers": {
+    "1": {
+      "id": 1,
+      "name": "µ?Custom Activity On Crash",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "cat.ereza.customactivityoncrash",
+      "network_signature": "",
+      "website": "https://github.com/Ereza/CustomActivityOnCrash"
+    },
+    "2": {
+      "id": 2,
+      "name": "µ?ACRA",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "org.acra.|ch.acra.",
+      "network_signature": "",
+      "website": "https://github.com/ACRA/acra"
+    },
+    "3": {
+      "id": 3,
+      "name": "µ?Acrarium",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.faendir.acra.",
+      "network_signature": "",
+      "website": "https://github.com/F43nd1r/Acrarium"
+    },
+    "4": {
+      "id": 4,
+      "name": "µ?CleanInsights",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "io.cleaninsights.sdk.piwik.",
+      "network_signature": "",
+      "website": "https://github.com/cleaninsights/cleaninsights-android-sdk/blob/master/cleaninsights-piwik-sdk"
+    },
+    "5": {
+      "id": 5,
+      "name": "°BugClipper",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.bugclipper.android.",
+      "network_signature": "",
+      "website": "https://bugclipper.com/sdk-doc/android"
+    },
+    "6": {
+      "id": 6,
+      "name": "°?Buglife",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.buglife.sdk.",
+      "network_signature": "",
+      "website": "https://buglife.com/docs/android"
+    },
+    "7": {
+      "id": 7,
+      "name": "°?Flipper",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.facebook.flipper.",
+      "network_signature": "",
+      "website": "https://github.com/facebook/flipper/android"
+    },
+    "8": {
+      "id": 8,
+      "name": "°?Rollbar",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.rollbar.android.",
+      "network_signature": "",
+      "website": "https://docs.rollbar.com/docs/android"
+    },
+    "9": {
+      "id": 9,
+      "name": "°?Critic",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "io.inventiv.critic.",
+      "network_signature": "",
+      "website": "https://github.com/inventivtools/inventiv-critic-android"
+    },
+    "10": {
+      "id": 10,
+      "name": "°?Raygun",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.mindscapehq.android.raygun4android",
+      "network_signature": "",
+      "website": "https://raygun.com/documentation/language-guides/android/installation"
+    },
+    "11": {
+      "id": 11,
+      "name": "°?Game Sparks",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.gamesparks.sdk.",
+      "network_signature": "",
+      "website": "https://docs.gamesparks.com/sdk-center/android.html"
+    },
+    "12": {
+      "id": 12,
+      "name": "°?PlayFab java",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.playfab.PlayFab",
+      "network_signature": "",
+      "website": "https://api.playfab.com/docs/getting-started/java-getting-started"
+    },
+    "13": {
+      "id": 13,
+      "name": "°Skillz",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.skillz.Skillz",
+      "network_signature": "",
+      "website": "https://skillz.zendesk.com/hc/en-us/articles/208579286-Android-Core-Implementation"
+    },
+    "14": {
+      "id": 14,
+      "name": "°Woopra",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.woopra.tracking.",
+      "network_signature": "",
+      "website": "https://github.com/Woopra/woopra-android-sdk"
+    },
+    "15": {
+      "id": 15,
+      "name": "°Askingpoint",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.askingpoint.",
+      "network_signature": "",
+      "website": "https://www.askingpoint.com/blog/document/add-sdk-to-project"
+    },
+    "16": {
+      "id": 16,
+      "name": "°Databox",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.databox.",
+      "network_signature": "",
+      "website": "https://github.com/databox/databox-java"
+    },
+    "17": {
+      "id": 17,
+      "name": "°Teliver",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.teliver.sdk.",
+      "network_signature": "",
+      "website": "https://www.teliver.io"
+    },
+    "18": {
+      "id": 18,
+      "name": "°AppLink.io",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "io.applink.applinkio.AppLinkIO",
+      "network_signature": "",
+      "website": "https://support.applink.io/hc/en-us/articles/360021172012-Getting-Started-with-the-React-Native-SDK"
+    },
+    "19": {
+      "id": 19,
+      "name": "°mTraction",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.mtraction.mtractioninapptracker.",
+      "network_signature": "",
+      "website": "http://docs.mtraction.com/index.php/docs/integrations/android-unity-integration"
+    },
+    "20": {
+      "id": 20,
+      "name": "°Pulsate",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.pulsatehq.",
+      "network_signature": "",
+      "website": "https://pulsate.readme.io/v2.0/docs/installing-sdk-android-studio"
+    },
+    "21": {
+      "id": 21,
+      "name": "°SAS",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.sas.mkt.mobile.sdk.",
+      "network_signature": "",
+      "website": "https://communities.sas.com/t5/SAS-Communities-Library/Building-a-SAS-CI-enabled-mobile-app-for-Android/ta-p/354922"
+    },
+    "22": {
+      "id": 22,
+      "name": "°Backendless",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.backendless.",
+      "network_signature": "",
+      "website": "https://backendless.com/docs/android/quick_start_guide.html"
+    },
+    "23": {
+      "id": 23,
+      "name": "°froger_mcs",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.frogermcs.activityframemetrics",
+      "network_signature": "",
+      "website": "http://frogermcs.github.io/FrameMetrics-realtime-app-smoothness-tracking"
+    },
+    "24": {
+      "id": 24,
+      "name": "°FlowUp",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "io.flowup",
+      "network_signature": "",
+      "website": "https://github.com/flowupio/FlowUpAndroidSDK"
+    },
+    "25": {
+      "id": 25,
+      "name": "°Parse",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.parse.Parse",
+      "network_signature": "",
+      "website": "https://docs.parseplatform.org/android/guide/#analytics"
+    },
+    "26": {
+      "id": 26,
+      "name": "°RJFUN",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.rjfun.cordova.ad",
+      "network_signature": "",
+      "website": "http://www.rjfun.com/w/index.php/en"
+    },
+    "27": {
+      "id": 27,
+      "name": "°AWS Kinesis",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.amazonaws.metrics.|com.amazonaws.util.AWSRequestMetrics.",
+      "network_signature": "",
+      "website": "https://github.com/aws-amplify/aws-sdk-android"
+    },
+    "28": {
+      "id": 28,
+      "name": "°BugSense",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.bugsense.trace.",
+      "network_signature": "",
+      "website": "https://github.com/bugsense/docs/blob/master/android.md"
+    },
+    "29": {
+      "id": 29,
+      "name": "°?DebugDrawer",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "io.palaima.debugdrawer.",
+      "network_signature": "",
+      "website": "https://github.com/palaima/DebugDrawer"
+    },
+    "30": {
+      "id": 30,
+      "name": "Demdex",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.adobe.mobile.Config.",
+      "network_signature": "demdex\\.net",
+      "website": "https://www.adobe.com/data-analytics-cloud/audience-manager.html"
+    },
+    "31": {
+      "id": 31,
+      "name": "S4M",
+      "description": "",
+      "creation_date": "",
+      "code_signature": ".S4MAnalytic",
+      "network_signature": "s4m\\.io|sam4m\\.com",
+      "website": "http://www.s4m.io"
+    },
+    "32": {
+      "id": 32,
+      "name": "Instabug",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.instabug.library.Instabug",
+      "network_signature": "",
+      "website": "https://instabug.com/crash-reporting"
+    },
+    "33": {
+      "id": 33,
+      "name": "Factual",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.factual.Factual",
+      "network_signature": "",
+      "website": "https://www.factual.com"
+    },
+    "34": {
+      "id": 34,
+      "name": "Pangle SDK",
+      "description": "",
+      "creation_date": "",
+      "code_signature": "com.bytedance.sdk.openadsdk",
+      "network_signature": "",
+      "website": "https://www.pangleglobal.com"
+    }
+  }
+}
