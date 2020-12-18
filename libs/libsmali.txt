@@ -23,3 +23,4 @@
 {"id":"\/com\/googlecode\/javaewah","path":"\/com\/googlecode\/javaewah","name":"JavaEWAH","type":"Utility","perms":"","url":"https:\/\/github.com\/lemire\/javaewah"}
 {"id":"\/com\/hierynomus\/asn1","path":"\/com\/hierynomus\/asn1","name":"ASN.1 library for Java","type":"Development Aid","perms":"","url":"https:\/\/github.com\/hierynomus\/asn-one"}
 {"id":"\/com\/bytedance\/sdk\/openadsdk","path":"\/com\/bytedance\/sdk\/openadsdk","name":"Pangle SDK","type":"Advertisement","perms":"","url":"https:\/\/www.pangleglobal.com"}
+{"id":"\/com\/vungle\/warren\/","path":"\/com\/vungle\/warren\/","name":"Vungle Android SDK","type":"Advertisement","perms":"","url":"https:\/\/vungle.com"}

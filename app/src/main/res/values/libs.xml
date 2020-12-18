@@ -2336,6 +2336,7 @@
         <item>com.googlecode.javaewah</item>
         <item>com.hierynomus.asn1</item>
         <item>com.bytedance.sdk.openadsdk</item>
+        <item>com.vungle.warren.</item>
     </array>
     <array name="lib_names">
         <item>GetJar Billing</item>
@@ -4656,6 +4657,7 @@
         <item>JavaEWAH</item>
         <item>ASN.1 library for Java</item>
         <item>Pangle SDK</item>
+        <item>Vungle Android SDK</item>
     </array>
     <array name="lib_types">
         <item>Payment</item>
@@ -6975,6 +6977,7 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Development Aid</item>
+        <item>Advertisement</item>
         <item>Advertisement</item>
     </array>
     <array name="lib_website">
@@ -9296,5 +9299,6 @@
         <item>https://github.com/lemire/javaewah</item>
         <item>https://github.com/hierynomus/asn-one</item>
         <item>https://www.pangleglobal.com</item>
+        <item>https://vungle.com</item>
     </array>
 </resources>

@@ -224,6 +224,7 @@
         <item>io.branch.</item>
         <item>com.cmcm.</item>
         <item>com.vungle.publisher.</item>
+        <item>com.vungle.warren.</item>
         <item>com.criteo.</item>
         <item>com.mapbox.mapboxsdk.</item>
         <item>com.optimizely.</item>
@@ -750,6 +751,7 @@
         <item>Persona.ly</item>
         <item>Branch</item>
         <item>Cheetah Ads</item>
+        <item>Vungle</item>
         <item>Vungle</item>
         <item>Criteo</item>
         <item>Mapbox</item>

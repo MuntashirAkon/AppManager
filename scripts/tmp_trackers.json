@@ -314,6 +314,15 @@
       "code_signature": "com.google.android.gms.ads.|com.google.unity.ads.",
       "network_signature": "",
       "website": "https://admob.google.com"
+    },
+    "36": {
+      "id": 36,
+      "name": "Vungle",
+      "description": "Addition to Exodus list",
+      "creation_date": "2020-12-18",
+      "code_signature": "com.vungle.warren.",
+      "network_signature": "",
+      "website": "https://vungle.com"
     }
   }
 }
