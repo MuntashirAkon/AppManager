@@ -83,11 +83,11 @@
     <string name="running">Ejecutándose</string>
     <string name="mode">Modo</string>
     <string name="permission_name">Nombre del permiso</string>
-    <string name="some_items_selected">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"selection_no\" example=\"20\"&gt;%1$d&lt;/xliff:g&gt; seleccionado</string>
+    <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> seleccionado</string>
     <string name="export_blocking_rules">Exportar reglas de bloqueo</string>
     <string name="disable_background">Deshabilitar segundo plano</string>
     <string name="clear_data">Limpiar datos</string>
-    <string name="user_and_uid">Usuario: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_name\" example=\"root\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"user_id\" example=\"0\"&gt;%2$d&lt;/xliff:g&gt;)</string>
+    <string name="user_and_uid">Usuario: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="disable_background_run">Deshabilitar la ejecución en segundo plano</string>
     <string name="kill_process">Matar</string>
     <string name="running_apps">Aplicaciones ejecutándose</string>
@@ -123,7 +123,7 @@
     <string name="disable">Deshabilitar</string>
     <string name="stopped">Detenido</string>
     <string name="uninstall_system_app_message">Esta es una aplicación del sistema. Estás seguro que quieres desinstalar esta app\?</string>
-    <string name="uninstalled_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; ha sido instalado.</string>
+    <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> ha sido instalado.</string>
     <string name="uninstall_app_message">Tú quieres desinstalar esta app\?</string>
     <string name="no_content">Sin contenido</string>
     <string name="no_usage_in_this_time_range">No hay uso en este rango de tiempo</string>
@@ -187,24 +187,24 @@
     <string name="no_tracker_class">No hay clases de rastreador (tracker)</string>
     <string name="no_shared_libs">No hay bibliotecas compartidas</string>
     <plurals name="main_list_date_days">
-        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; día</item>
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"last_update_date\" example=\"20/10/2020\"&gt;%1$s&lt;/xliff:g&gt; &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"day_no\" example=\"5\"&gt;%2$d&lt;/xliff:g&gt; días</item>
+        <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> día</item>
+        <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> días</item>
     </plurals>
     <string name="all_classes">Todas las Clases</string>
     <string name="tracker_classes">Clases del rastreador (tracker)</string>
     <string name="tracker_details">Detalles del rastreador (tracker)</string>
     <string name="found_trackers">Rastreadores (trackers) encontrados:</string>
     <plurals name="other_trackers_and_classes">
-        <item quantity="one">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; rastreadores (trackers) con &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; clases</item>
-        <item quantity="other">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"tracker_no\" example=\"8\"&gt;%1$d&lt;/xliff:g&gt; rastreadores (trackers) con &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%2$d&lt;/xliff:g&gt; clases</item>
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores (trackers) con <xliff:g id="class_no" example="50">%2$d</xliff:g> clases</item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores (trackers) con <xliff:g id="class_no" example="50">%2$d</xliff:g> clases</item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="one">2 rastreadores (trackers) con &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; clase</item>
-        <item quantity="other">2 rastreadores (trackers) &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; clases</item>
+        <item quantity="one">2 rastreadores (trackers) con <xliff:g id="class_no" example="50">%1$d</xliff:g> clase</item>
+        <item quantity="other">2 rastreadores (trackers) <xliff:g id="class_no" example="50">%1$d</xliff:g> clases</item>
     </plurals>
     <plurals name="tracker_and_classes">
-        <item quantity="one">1 rastreador (tracker) con &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; clase</item>
-        <item quantity="other">1 rastreador (tracker) &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; clases</item>
+        <item quantity="one">1 rastreador (tracker) con <xliff:g id="class_no" example="50">%1$d</xliff:g> clase</item>
+        <item quantity="other">1 rastreador (tracker) <xliff:g id="class_no" example="50">%1$d</xliff:g> clases</item>
     </plurals>
     <string name="toggle_class_listing">Cambiar la lista de Clases</string>
     <string name="class_viewer">Visor de Clase</string>
@@ -220,7 +220,7 @@
     <string name="shortcut_name">Nombre del atajo (shortcut)</string>
     <string name="edit_shortcut">Editar atajo (shortcut)</string>
     <string name="create_shortcut">Crear un atajo (shortcut)</string>
-    <string name="starting_activity">Inicio de la actividad: &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"activity_name\" example=\".main.MainActivity\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="starting_activity">Inicio de la actividad: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_verbose_pin_shortcut">El lanzador (launcher) actual no soporta PinShortcut. No se puede crear un atajo (shortcut).</string>
     <string name="error_creating_shortcut">Error al crear un atajo (shortcut)</string>
     <string name="instructions">Instrucciones</string>
@@ -240,7 +240,7 @@
     <string name="user_app">Aplicaciones de usuario</string>
     <string name="system_app">Aplicaciones del sistema</string>
     <string name="app_info">Información de la app</string>
-    <string name="version_name_with_code">Versión &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_name\" example=\"2.5.17\"&gt;%1$s&lt;/xliff:g&gt; (&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"version_code\" example=\"365\"&gt;%2$d&lt;/xliff:g&gt;)</string>
+    <string name="version_name_with_code">Versión <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="sort">Ordenar</string>
     <string name="user">Usuario</string>
     <string name="system">Sistema</string>
