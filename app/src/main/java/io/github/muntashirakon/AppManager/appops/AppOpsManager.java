@@ -34,6 +34,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 /**
@@ -107,7 +108,7 @@ public class AppOpsManager {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     public static final int MODE_FOREGROUND = 1 << 2;
     /**
-     * MIUI customized mode.
+     * Special mode for MIUI
      */
     public static final int MODE_ASK = 5;
 
@@ -235,7 +236,7 @@ public class AppOpsManager {
     public static final int OP_MANAGE_ONGOING_CALLS = 103;
     public static final int _NUM_OP;  // fetched using reflection
 
-    // Xiaomi custom App Ops from com.lbe.security.miui.apk version
+    // MIUI app ops taken from com.lbe.security.miui.apk
     public static final int OP_WIFI_CHANGE = 10001;
     public static final int OP_BLUETOOTH_CHANGE = 10002;
     public static final int OP_DATA_CONNECT_CHANGE = 10003;
@@ -268,7 +269,7 @@ public class AppOpsManager {
     public static final int OP_READ_CALENDAR_REAL = 10030;
     public static final int OP_READ_CALL_LOG_REAL = 10031;
     public static final int OP_READ_PHONE_STATE_REAL = 10032;
-    public static final int _NUM_CUSTOM_OP = 32;
+    public static final int _NUM_MIUI_OP = 32;
 
     public static final String OPSTR_COARSE_LOCATION = "android:coarse_location";
     public static final String OPSTR_FINE_LOCATION = "android:fine_location";
@@ -447,7 +448,7 @@ public class AppOpsManager {
      * presented to the user as one switch then this can be used to
      * make them all controlled by the same single operation.
      */
-    private static final int[] sOpToSwitch = new int[] {
+    private static final int[] sOpToSwitch = new int[]{
             OP_COARSE_LOCATION,                 // COARSE_LOCATION
             OP_COARSE_LOCATION,                 // FINE_LOCATION
             OP_COARSE_LOCATION,                 // GPS
@@ -552,6 +553,44 @@ public class AppOpsManager {
             OP_PHONE_CALL_CAMERA,               // OP_PHONE_CALL_CAMERA
             OP_RECORD_AUDIO_HOTWORD,            // RECORD_AUDIO_HOTWORD
             OP_MANAGE_ONGOING_CALLS,            // MANAGE_ONGOING_CALLS
+    };
+
+    /**
+     * Map MIUI app operations. This is a 1:1 mapping.
+     */
+    public static final int[] sMiuiOpToSwitch = new int[]{
+            OP_WIFI_CHANGE,
+            OP_BLUETOOTH_CHANGE,
+            OP_DATA_CONNECT_CHANGE,
+            OP_SEND_MMS,
+            OP_READ_MMS,
+            OP_WRITE_MMS,
+            OP_BOOT_COMPLETED,
+            OP_AUTO_START,
+            OP_NFC_CHANGE,
+            OP_DELETE_SMS,
+            OP_DELETE_MMS,
+            OP_DELETE_CONTACTS,
+            OP_DELETE_CALL_LOG,
+            OP_EXACT_ALARM,
+            OP_ACCESS_XIAOMI_ACCOUNT,
+            OP_NFC,
+            OP_INSTALL_SHORTCUT,
+            OP_READ_NOTIFICATION_SMS,
+            OP_GET_TASKS,
+            OP_SHOW_WHEN_LOCKED,
+            OP_BACKGROUND_START_ACTIVITY,
+            OP_GET_INSTALLED_APPS,
+            OP_SERVICE_FOREGROUND,
+            OP_GET_ANONYMOUS_ID,
+            OP_GET_UDEVICE_ID,
+            OP_DEAMON_NOTIFICATION,
+            OP_BACKGROUND_LOCATION,
+            OP_READ_SMS_REAL,
+            OP_READ_CONTACTS_REAL,
+            OP_READ_CALENDAR_REAL,
+            OP_READ_CALL_LOG_REAL,
+            OP_READ_PHONE_STATE_REAL
     };
 
     /**
@@ -668,7 +707,7 @@ public class AppOpsManager {
      * This provides a simple name for each operation to be used
      * in debug output.
      */
-    private static final String[] sOpNames = new String[] {
+    private static final String[] sOpNames = new String[]{
             "COARSE_LOCATION",
             "FINE_LOCATION",
             "GPS",
@@ -775,12 +814,50 @@ public class AppOpsManager {
             "MANAGE_ONGOING_CALLS",
     };
 
+    /**
+     * This provides a simple name for each MIUI app operation to be used
+     * in debug output.
+     */
+    public static final String[] sMiuiOpNames = new String[]{
+            "WIFI_CHANGE",
+            "BLUETOOTH_CHANGE",
+            "DATA_CONNECT_CHANGE",
+            "SEND_MMS",
+            "READ_MMS",
+            "WRITE_MMS",
+            "BOOT_COMPLETED",
+            "AUTO_START",
+            "NFC_CHANGE",
+            "DELETE_SMS",
+            "DELETE_MMS",
+            "DELETE_CONTACTS",
+            "DELETE_CALL_LOG",
+            "EXACT_ALARM",
+            "ACCESS_XIAOMI_ACCOUNT",
+            "NFC",
+            "INSTALL_SHORTCUT",
+            "READ_NOTIFICATION_SMS",
+            "GET_TASKS",
+            "SHOW_WHEN_LOCKED",
+            "BACKGROUND_START_ACTIVITY",
+            "GET_INSTALLED_APPS",
+            "SERVICE_FOREGROUND",
+            "GET_ANONYMOUS_ID",
+            "GET_UDEVICE_ID",
+            "DEAMON_NOTIFICATION",
+            "BACKGROUND_LOCATION",
+            "READ_SMS_REAL",
+            "READ_CONTACTS_REAL",
+            "READ_CALENDAR_REAL",
+            "READ_CALL_LOG_REAL",
+            "READ_PHONE_STATE_REAL"
+    };
 
     /**
      * This optionally maps a permission to an operation.  If there
      * is no permission associated with an operation, it is null.
      */
-    private static final String[] sOpPerms = new String[] {
+    private static final String[] sOpPerms = new String[]{
             android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.ACCESS_FINE_LOCATION,
             null, // no permission for gps
@@ -892,7 +969,7 @@ public class AppOpsManager {
      * Each Op should be filled with a restriction string from UserManager or
      * null to specify it is not affected by any user restriction.
      */
-    private static final String[] sOpRestrictions = new String[] {
+    private static final String[] sOpRestrictions = new String[]{
             UserManager.DISALLOW_SHARE_LOCATION, //COARSE_LOCATION
             UserManager.DISALLOW_SHARE_LOCATION, //FINE_LOCATION
             UserManager.DISALLOW_SHARE_LOCATION, //GPS
@@ -1002,7 +1079,7 @@ public class AppOpsManager {
     /**
      * In which cases should an app be allowed to bypass the user restriction for a certain app-op.
      */
-    private static final RestrictionBypass[] sOpAllowSystemRestrictionBypass = new RestrictionBypass[] {
+    private static final RestrictionBypass[] sOpAllowSystemRestrictionBypass = new RestrictionBypass[]{
             new RestrictionBypass(true, false), //COARSE_LOCATION
             new RestrictionBypass(true, false), //FINE_LOCATION
             null, //GPS
@@ -1112,7 +1189,7 @@ public class AppOpsManager {
     /**
      * This specifies the default mode for each operation.
      */
-    private static final int[] sOpDefaultMode = new int[] {
+    private static final int[] sOpDefaultMode = new int[]{
             AppOpsManager.MODE_ALLOWED, // COARSE_LOCATION
             AppOpsManager.MODE_ALLOWED, // FINE_LOCATION
             AppOpsManager.MODE_ALLOWED, // GPS
@@ -1232,7 +1309,7 @@ public class AppOpsManager {
      * system (such as OP_WRITE_SMS, which should be allowed only
      * for whichever app is selected as the current SMS app).
      */
-    private static final boolean[] sOpDisableReset = new boolean[] {
+    private static final boolean[] sOpDisableReset = new boolean[]{
             false, // COARSE_LOCATION
             false, // FINE_LOCATION
             false, // GPS
@@ -1340,82 +1417,6 @@ public class AppOpsManager {
     };
 
     /**
-     * Use to map xiaomi custom app ops code to it name.
-     */
-    public static final int[] custom_ops_num = new int[]{
-            OP_WIFI_CHANGE,
-            OP_BLUETOOTH_CHANGE,
-            OP_DATA_CONNECT_CHANGE,
-            OP_SEND_MMS,
-            OP_READ_MMS,
-            OP_WRITE_MMS,
-            OP_BOOT_COMPLETED,
-            OP_AUTO_START,
-            OP_NFC_CHANGE,
-            OP_DELETE_SMS,
-            OP_DELETE_MMS,
-            OP_DELETE_CONTACTS,
-            OP_DELETE_CALL_LOG,
-            OP_EXACT_ALARM,
-            OP_ACCESS_XIAOMI_ACCOUNT,
-            OP_NFC,
-            OP_INSTALL_SHORTCUT,
-            OP_READ_NOTIFICATION_SMS,
-            OP_GET_TASKS,
-            OP_SHOW_WHEN_LOCKED,
-            OP_BACKGROUND_START_ACTIVITY,
-            OP_GET_INSTALLED_APPS,
-            OP_SERVICE_FOREGROUND,
-            OP_GET_ANONYMOUS_ID,
-            OP_GET_UDEVICE_ID,
-            OP_DEAMON_NOTIFICATION,
-            OP_BACKGROUND_LOCATION,
-            OP_READ_SMS_REAL,
-            OP_READ_CONTACTS_REAL,
-            OP_READ_CALENDAR_REAL,
-            OP_READ_CALL_LOG_REAL,
-            OP_READ_PHONE_STATE_REAL
-    };
-
-    /**
-     * Use to map with xiaomi custom app ops code
-     */
-    public static final String[] custom_ops_string = new String[]{
-            "WIFI_CHANGE",
-            "BLUETOOTH_CHANGE",
-            "DATA_CONNECT_CHANGE",
-            "SEND_MMS",
-            "READ_MMS",
-            "WRITE_MMS",
-            "BOOT_COMPLETED",
-            "AUTO_START",
-            "NFC_CHANGE",
-            "DELETE_SMS",
-            "DELETE_MMS",
-            "DELETE_CONTACTS",
-            "DELETE_CALL_LOG",
-            "EXACT_ALARM",
-            "ACCESS_XIAOMI_ACCOUNT",
-            "NFC",
-            "INSTALL_SHORTCUT",
-            "READ_NOTIFICATION_SMS",
-            "GET_TASKS",
-            "SHOW_WHEN_LOCKED",
-            "BACKGROUND_START_ACTIVITY",
-            "GET_INSTALLED_APPS",
-            "SERVICE_FOREGROUND",
-            "GET_ANONYMOUS_ID",
-            "GET_UDEVICE_ID",
-            "DEAMON_NOTIFICATION",
-            "BACKGROUND_LOCATION",
-            "READ_SMS_REAL",
-            "READ_CONTACTS_REAL",
-            "READ_CALENDAR_REAL",
-            "READ_CALL_LOG_REAL",
-            "READ_PHONE_STATE_REAL"
-    };
-
-    /**
      * Mapping from an app op name to the app op code.
      */
     private static final HashMap<String, Integer> sOpStrToOp = new HashMap<>();
@@ -1424,11 +1425,6 @@ public class AppOpsManager {
      * Mapping from a permission to the corresponding app op.
      */
     private static final HashMap<String, Integer> sPermToOp = new HashMap<>();
-
-    /**
-     * Mapping from xiaomi custom app op to corresponding op name
-     */
-    public static HashMap<Integer, String> custom_ops = new HashMap<>();
 
     /**
      * Some ops doesn't have any permissions associated with them and are enabled by default.
@@ -1462,25 +1458,16 @@ public class AppOpsManager {
                 sPermToOp.put(sOpPerms[op], op);
             }
         }
-        //Map xiaomi custom app op code with corresponding name
-        for (int i = 0; i < _NUM_CUSTOM_OP; i++) {
-            custom_ops.put(custom_ops_num[i], custom_ops_string[i]);
-        }
     }
-
-    public static final String KEY_HISTORICAL_OPS = "historical_ops";
-    /**
-     * System properties for debug logging of noteOp call sites
-     */
-    private static final String DEBUG_LOGGING_ENABLE_PROP = "appops.logging_enabled";
-    private static final String DEBUG_LOGGING_PACKAGES_PROP = "appops.logging_packages";
-    private static final String DEBUG_LOGGING_OPS_PROP = "appops.logging_ops";
-    private static final String DEBUG_LOGGING_TAG = "AppOpsManager";
 
     /**
      * Retrieve the op switch that controls the given operation.
      */
     public static int opToSwitch(int op) {
+        if (op > 10000 && op < 10033) {
+            // MIUI app operations
+            return sMiuiOpToSwitch[op - 10000];
+        }
         return sOpToSwitch[op];
     }
 
@@ -1489,8 +1476,9 @@ public class AppOpsManager {
      */
     public static String opToName(int op) {
         if (op == OP_NONE) return "NONE";
-        else if (op >= 10000 && op <= 10033) {
-            return custom_ops.get(op);
+        else if (op > 10000 && op < 10033) {
+            // MIUI app operations
+            return sMiuiOpNames[op - 10000];
         }
         return op < sOpNames.length ? sOpNames[op] : ("Unknown(" + op + ")");
     }
