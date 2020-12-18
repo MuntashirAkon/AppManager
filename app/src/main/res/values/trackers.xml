@@ -386,6 +386,11 @@
         <item>com.mediba.jp</item>
         <item>mediba.ad.sdk.android.openx</item>
         <item>com.google.ads.</item>
+        <item>com.google.android.gms.ads.AdView</item>
+        <item>com.google.android.gms.ads.AdRequest</item>
+        <item>com.google.android.gms.ads.mediation</item>
+        <item>com.google.android.gms.ads.doubleclick</item>
+        <item>com.google.android.gms.ads.AdActivity</item>
         <item>com.google.android.gms.ads.</item>
         <item>com.google.unity.ads.</item>
         <item>com.pure.internal.</item>
@@ -428,38 +433,6 @@
         <item>org.prebid.mobile</item>
         <item>com.skplanet.tad</item>
         <item>io.split.android.</item>
-        <item>cat.ereza.customactivityoncrash</item>
-        <item>org.acra.</item>
-        <item>ch.acra.</item>
-        <item>com.faendir.acra.</item>
-        <item>io.cleaninsights.sdk.piwik.</item>
-        <item>com.bugclipper.android.</item>
-        <item>com.buglife.sdk.</item>
-        <item>com.facebook.flipper.</item>
-        <item>com.rollbar.android.</item>
-        <item>io.inventiv.critic.</item>
-        <item>com.mindscapehq.android.raygun4android</item>
-        <item>com.gamesparks.sdk.</item>
-        <item>com.playfab.PlayFab</item>
-        <item>com.skillz.Skillz</item>
-        <item>com.woopra.tracking.</item>
-        <item>com.askingpoint.</item>
-        <item>com.databox.</item>
-        <item>com.teliver.sdk.</item>
-        <item>io.applink.applinkio.AppLinkIO</item>
-        <item>com.mtraction.mtractioninapptracker.</item>
-        <item>com.pulsatehq.</item>
-        <item>com.sas.mkt.mobile.sdk.</item>
-        <item>com.backendless.</item>
-        <item>com.frogermcs.activityframemetrics</item>
-        <item>io.flowup</item>
-        <item>com.parse.Parse</item>
-        <item>com.rjfun.cordova.ad</item>
-        <item>com.amazonaws.metrics.</item>
-        <item>com.amazonaws.util.AWSRequestMetrics.</item>
-        <item>com.bugsense.trace.</item>
-        <item>io.palaima.debugdrawer.</item>
-        <item>com.bytedance.sdk.openadsdk</item>
         <item>com.acuant.acuantcamera</item>
         <item>mobi.mclick.ad.</item>
         <item>com.adlocus.</item>
@@ -538,6 +511,38 @@
         <item>co.vmob.sdk</item>
         <item>predic.io</item>
         <item>com.tabtale</item>
+        <item>cat.ereza.customactivityoncrash</item>
+        <item>org.acra.</item>
+        <item>ch.acra.</item>
+        <item>com.faendir.acra.</item>
+        <item>io.cleaninsights.sdk.piwik.</item>
+        <item>com.bugclipper.android.</item>
+        <item>com.buglife.sdk.</item>
+        <item>com.facebook.flipper.</item>
+        <item>com.rollbar.android.</item>
+        <item>io.inventiv.critic.</item>
+        <item>com.mindscapehq.android.raygun4android</item>
+        <item>com.gamesparks.sdk.</item>
+        <item>com.playfab.PlayFab</item>
+        <item>com.skillz.Skillz</item>
+        <item>com.woopra.tracking.</item>
+        <item>com.askingpoint.</item>
+        <item>com.databox.</item>
+        <item>com.teliver.sdk.</item>
+        <item>io.applink.applinkio.AppLinkIO</item>
+        <item>com.mtraction.mtractioninapptracker.</item>
+        <item>com.pulsatehq.</item>
+        <item>com.sas.mkt.mobile.sdk.</item>
+        <item>com.backendless.</item>
+        <item>com.frogermcs.activityframemetrics</item>
+        <item>io.flowup</item>
+        <item>com.parse.Parse</item>
+        <item>com.rjfun.cordova.ad</item>
+        <item>com.amazonaws.metrics.</item>
+        <item>com.amazonaws.util.AWSRequestMetrics.</item>
+        <item>com.bugsense.trace.</item>
+        <item>io.palaima.debugdrawer.</item>
+        <item>com.bytedance.sdk.openadsdk</item>
 </string-array>
 <string-array name="tracker_names">
         <item>Teemo</item>
@@ -910,6 +915,11 @@
         <item>Google AdMob</item>
         <item>Google AdMob</item>
         <item>Google AdMob</item>
+        <item>Google AdMob</item>
+        <item>Google AdMob</item>
+        <item>Google AdMob</item>
+        <item>Google AdMob</item>
+        <item>Google AdMob</item>
         <item>Unacast Pure</item>
         <item>Unacast Pure</item>
         <item>Factual</item>
@@ -950,38 +960,6 @@
         <item>Prebid Mobile</item>
         <item>SK planet Tad</item>
         <item>Split</item>
-        <item>µ?Custom Activity On Crash</item>
-        <item>µ?ACRA</item>
-        <item>µ?ACRA</item>
-        <item>µ?Acrarium</item>
-        <item>µ?CleanInsights</item>
-        <item>°BugClipper</item>
-        <item>°?Buglife</item>
-        <item>°?Flipper</item>
-        <item>°?Rollbar</item>
-        <item>°?Critic</item>
-        <item>°?Raygun</item>
-        <item>°?Game Sparks</item>
-        <item>°?PlayFab java</item>
-        <item>°Skillz</item>
-        <item>°Woopra</item>
-        <item>°Askingpoint</item>
-        <item>°Databox</item>
-        <item>°Teliver</item>
-        <item>°AppLink.io</item>
-        <item>°mTraction</item>
-        <item>°Pulsate</item>
-        <item>°SAS</item>
-        <item>°Backendless</item>
-        <item>°froger_mcs</item>
-        <item>°FlowUp</item>
-        <item>°Parse</item>
-        <item>°RJFUN</item>
-        <item>°AWS Kinesis</item>
-        <item>°AWS Kinesis</item>
-        <item>°BugSense</item>
-        <item>°?DebugDrawer</item>
-        <item>Pangle SDK</item>
         <item>²Acuant</item>
         <item>²AdFlex</item>
         <item>²AdLocus</item>
@@ -1060,5 +1038,37 @@
         <item>²plexure</item>
         <item>²predic.io</item>
         <item>²tabtale</item>
+        <item>µ?Custom Activity On Crash</item>
+        <item>µ?ACRA</item>
+        <item>µ?ACRA</item>
+        <item>µ?Acrarium</item>
+        <item>µ?CleanInsights</item>
+        <item>°BugClipper</item>
+        <item>°?Buglife</item>
+        <item>°?Flipper</item>
+        <item>°?Rollbar</item>
+        <item>°?Critic</item>
+        <item>°?Raygun</item>
+        <item>°?Game Sparks</item>
+        <item>°?PlayFab java</item>
+        <item>°Skillz</item>
+        <item>°Woopra</item>
+        <item>°Askingpoint</item>
+        <item>°Databox</item>
+        <item>°Teliver</item>
+        <item>°AppLink.io</item>
+        <item>°mTraction</item>
+        <item>°Pulsate</item>
+        <item>°SAS</item>
+        <item>°Backendless</item>
+        <item>°froger_mcs</item>
+        <item>°FlowUp</item>
+        <item>°Parse</item>
+        <item>°RJFUN</item>
+        <item>°AWS Kinesis</item>
+        <item>°AWS Kinesis</item>
+        <item>°BugSense</item>
+        <item>°?DebugDrawer</item>
+        <item>Pangle SDK</item>
     </string-array>
 </resources>

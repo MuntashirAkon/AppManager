@@ -305,6 +305,15 @@
       "code_signature": "com.bytedance.sdk.openadsdk",
       "network_signature": "",
       "website": "https://www.pangleglobal.com"
+    },
+    "35": {
+      "id": 35,
+      "name": "Google AdMob",
+      "description": "Addition to Exodus list",
+      "creation_date": "",
+      "code_signature": "com.google.android.gms.ads.|com.google.unity.ads.",
+      "network_signature": "",
+      "website": "https://admob.google.com"
     }
   }
 }

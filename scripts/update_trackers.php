@@ -22,11 +22,8 @@
 $tracker_info = array();
 $j = 1;
 
+// Add from Reports
 $file = file_get_contents('https://reports.exodus-privacy.eu.org/api/trackers');
-$trackers_json = json_decode($file, true);
-addToTrackerInfo($trackers_json['trackers']);
-
-$file = file_get_contents('./scripts/tmp_trackers.json');
 $trackers_json = json_decode($file, true);
 addToTrackerInfo($trackers_json['trackers']);
 
@@ -34,6 +31,11 @@ addToTrackerInfo($trackers_json['trackers']);
 $file = file_get_contents('https://etip.exodus-privacy.eu.org/trackers/export');
 $trackers_json = json_decode($file, true);
 addToTrackerInfo($trackers_json['trackers'], '²');
+
+// Add from custom list (lowest priority)
+$file = file_get_contents('./scripts/tmp_trackers.json');
+$trackers_json = json_decode($file, true);
+addToTrackerInfo($trackers_json['trackers']);
 
 // printf_oF2pks();
 printf_AM();
