@@ -726,7 +726,7 @@
     <string name="state_waking">Пробуждение</string>
     <string name="state_wake_kill">Отключение пробуждения</string>
     <string name="state_parked">Оформлено</string>
-    <string name="state_device_io">Устройство ввода/вывода</string>
+    <string name="state_device_io"></string>
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
     <string name="un_apkm">Распаковать Apkm</string>
@@ -807,4 +807,17 @@
     <string name="keep_data_and_signatures">Сохранить данные и подписи</string>
     <string name="this_action_cannot_be_undone">Это действие не может быть отменено.</string>
     <string name="set_app_op_mode">Установить режим работы приложения</string>
+    <string name="value">Значение</string>
+    <string name="interceptor">Перехватчик</string>
+    <string name="resend_intent">Повторная отправка цели</string>
+    <string name="share">Поделиться</string>
+    <string name="extras">Дополнительно</string>
+    <string name="category">Категории</string>
+    <string name="mime_type">Тип MIME</string>
+    <string name="action">Действие</string>
+    <string name="result_code">Результат кода</string>
+    <string name="activity_result">Результат активити</string>
+    <string name="send_edited_intent">Отправить редактированную цель</string>
+    <string name="matching_activities">Соответствующие активити</string>
+    <string name="filter_apps_with_splits">Приложения из частей</string>
 </resources>
