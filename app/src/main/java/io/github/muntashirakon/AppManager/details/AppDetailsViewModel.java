@@ -1090,14 +1090,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
             features.postValue(appDetailsItems);
             return;
         }
-        try {
-            Arrays.sort(packageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
-        } catch (NullPointerException e) {
-            for (FeatureInfo fi : packageInfo.reqFeatures) {
-                if (fi.name == null) fi.name = OPEN_GL_ES;
-            }
-            Arrays.sort(packageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
+        for (FeatureInfo fi : packageInfo.reqFeatures) {
+            if (fi.name == null) fi.name = OPEN_GL_ES;
         }
+        Arrays.sort(packageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
         for (FeatureInfo featureInfo : packageInfo.reqFeatures) {
             AppDetailsItem appDetailsItem = new AppDetailsItem(featureInfo);
             appDetailsItem.name = featureInfo.name;
