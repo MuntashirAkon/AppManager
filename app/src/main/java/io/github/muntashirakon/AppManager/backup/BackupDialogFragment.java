@@ -66,25 +66,6 @@ public class BackupDialogFragment extends DialogFragment {
     public static final int MODE_RESTORE = 169;
     public static final int MODE_DELETE = 642;
 
-    private final BackupFlags flags = BackupFlags.fromPref();
-    @ActionMode
-    private int mode = MODE_BACKUP;
-    private List<String> packageNames;
-    private int baseBackupCount = 0;
-    private boolean permsGranted = false;
-    private FragmentActivity activity;
-    private final StoragePermission storagePermission = StoragePermission.init(this);
-    private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (actionCompleteInterface != null) {
-                BatchOpsManager.Result result = BatchOpsManager.getLastResult();
-                actionCompleteInterface.onActionComplete(mode, result != null ? result.getFailedPackages().toArray(new String[0]) : new String[0]);
-            }
-            activity.unregisterReceiver(mBatchOpsBroadCastReceiver);
-        }
-    };
-
     public interface ActionCompleteInterface {
         void onActionComplete(@ActionMode int mode, @NonNull String[] failedPackages);
     }
@@ -97,6 +78,25 @@ public class BackupDialogFragment extends DialogFragment {
     private ActionCompleteInterface actionCompleteInterface;
     @Nullable
     private ActionBeginInterface actionBeginInterface;
+    @ActionMode
+    private int mode = MODE_BACKUP;
+    private List<String> packageNames;
+    private int baseBackupCount = 0;
+    private boolean permsGranted = false;
+    private FragmentActivity activity;
+
+    private final BackupFlags flags = BackupFlags.fromPref();
+    private final StoragePermission storagePermission = StoragePermission.init(this);
+    private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (actionCompleteInterface != null) {
+                BatchOpsManager.Result result = BatchOpsManager.getLastResult();
+                actionCompleteInterface.onActionComplete(mode, result != null ? result.getFailedPackages().toArray(new String[0]) : new String[0]);
+            }
+            activity.unregisterReceiver(mBatchOpsBroadCastReceiver);
+        }
+    };
 
     public void setOnActionCompleteListener(@NonNull ActionCompleteInterface actionCompleteInterface) {
         this.actionCompleteInterface = actionCompleteInterface;
@@ -120,6 +120,7 @@ public class BackupDialogFragment extends DialogFragment {
         Bundle args = requireArguments();
         packageNames = args.getStringArrayList(ARG_PACKAGES);
         if (packageNames == null) return super.onCreateDialog(savedInstanceState);
+
         if (packageNames.size() == 1) {
             // Check for all meta, not just the base since we are going to display every backups
             if (MetadataManager.hasAnyMetadata(packageNames.get(0))) {
@@ -133,6 +134,7 @@ public class BackupDialogFragment extends DialogFragment {
                 }
             }
         }
+
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
                 .setTitle(packageNames.size() == 1 ? PackageUtils.getPackageLabel(activity
                         .getPackageManager(), packageNames.get(0)) : getString(R.string.backup_options))
@@ -163,140 +165,152 @@ public class BackupDialogFragment extends DialogFragment {
     }
 
     public void handleMode() {
-        @BatchOpsManager.OpType int op;
         // FIXME(19/9/20): Add multiple user checks
         switch (mode) {
             case MODE_DELETE:
-                op = BatchOpsManager.OP_DELETE_BACKUP;
-                if (packageNames.size() == 1) {
-                    // Only a single package is requested, display a list of existing backups to
-                    // choose which of them are to be deleted
-                    // TODO(21/9/20): Replace with a custom alert dialog to display more info.
-                    MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(packageNames.get(0));
-                    String[] backupNames = new String[metadata.length];
-                    String[] readableBackupNames = new String[metadata.length];
-                    boolean[] choices = new boolean[metadata.length];
-                    Arrays.fill(choices, false);
-                    String backupName;
-                    String userHandle;
-                    for (int i = 0; i < backupNames.length; ++i) {
-                        backupNames[i] = metadata[i].backupName;
-                        backupName = BackupUtils.getShortBackupName(backupNames[i]);
-                        userHandle = String.valueOf(metadata[i].userHandle);
-                        readableBackupNames[i] = backupName == null ? "Base backup for user " + userHandle : backupName + " for user " + userHandle;
-                    }
-                    new MaterialAlertDialogBuilder(activity)
-                            .setTitle(PackageUtils.getPackageLabel(activity.getPackageManager(), packageNames.get(0)))
-                            .setMultiChoiceItems(readableBackupNames, choices,
-                                    (dialog, which, isChecked) -> choices[which] = isChecked)
-                            .setNegativeButton(R.string.cancel, null)
-                            .setPositiveButton(R.string.delete_backup, (dialog, which) -> {
-                                List<String> newBackupNames = new ArrayList<>(backupNames.length);
-                                for (int i = 0; i < backupNames.length; ++i) {
-                                    if (choices[i] && backupNames[i] != null) {
-                                        newBackupNames.add(backupNames[i]);
-                                    }
-                                }
-                                // backupNames arguments must not be null!!
-                                startOperation(op, newBackupNames.toArray(new String[0]));
-                            })
-                            .show();
-                } else if (baseBackupCount == packageNames.size()) {
-                    // We shouldn't even check this since the restore option will only be visible
-                    // if backup of all the packages exist
-                    new MaterialAlertDialogBuilder(activity)
-                            .setTitle(R.string.delete_backup)
-                            .setMessage(R.string.are_you_sure)
-                            .setPositiveButton(R.string.yes, (dialog, which) -> startOperation(op, null))
-                            .setNegativeButton(R.string.no, null)
-                            .show();
-                } else {
-                    Log.e(TAG, "Delete: Why are we even here? Backup count " + baseBackupCount);
-                }
+                handleDelete();
                 break;
             case MODE_RESTORE:
-                op = BatchOpsManager.OP_RESTORE_BACKUP;
-                if (packageNames.size() == 1) {
-                    // Only a single package is requested, display a list of existing backups to
-                    // choose which one to restore
-                    // TODO(21/9/20): Replace with a custom alert dialog to display more info.
-                    MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(packageNames.get(0));
-                    String[] backupNames = new String[metadata.length];
-                    AtomicInteger selectedItem = new AtomicInteger(-1);
-                    String[] readableBackupNames = new String[metadata.length];
-                    String backupName;
-                    int userHandle;
-                    int choice = -1;
-                    int currentUserHandle = Users.getCurrentUserHandle();
-                    for (int i = 0; i < backupNames.length; ++i) {
-                        backupNames[i] = metadata[i].backupName;
-                        backupName = BackupUtils.getShortBackupName(backupNames[i]);
-                        userHandle = metadata[i].userHandle;
-                        if (backupName == null && userHandle == currentUserHandle) {
-                            choice = i;
-                            selectedItem.set(i);
-                        }
-                        readableBackupNames[i] = backupName == null ? "Base backup for user " + userHandle : backupName + " for user " + userHandle;
-                    }
-                    new MaterialAlertDialogBuilder(activity)
-                            .setTitle(PackageUtils.getPackageLabel(activity.getPackageManager(), packageNames.get(0)))
-                            .setSingleChoiceItems(readableBackupNames, choice, (dialog, which) -> selectedItem.set(which))
-                            .setNegativeButton(R.string.cancel, null)
-                            .setPositiveButton(R.string.restore, (dialog, which) -> {
-                                if (selectedItem.get() != -1) {
-                                    // Do operation only if something is selected
-                                    // Send a singleton array consisting of the chosen backup name.
-                                    // Here, the backup name is the full name of the folder itself,
-                                    // not just the “short” ie. the user handle is not stripped and
-                                    // the argument must not be null.
-                                    startOperation(op, new String[]{backupNames[selectedItem.get()]});
-                                }
-                            })
-                            .show();
-                } else if (baseBackupCount == packageNames.size()) {
-                    // We shouldn't even check this since the restore option will only be visible
-                    // if backup of all the packages exist
-                    new MaterialAlertDialogBuilder(activity)
-                            .setTitle(R.string.restore)
-                            .setMessage(R.string.are_you_sure)
-                            .setPositiveButton(R.string.yes, (dialog, which) -> startOperation(op, null))
-                            .setNegativeButton(R.string.no, null)
-                            .show();
-                } else {
-                    Log.e(TAG, "Restore: Why are we even here? Backup count " + baseBackupCount);
-                }
+                handleRestore();
                 break;
             case MODE_BACKUP:
             default:
-                op = BatchOpsManager.OP_BACKUP;
-                if (flags.backupMultiple()) {
-                    // Multiple backup is requested, no need to warn users about backups since the
-                    // user has a choice between overwriting the existing backup or create a new one
-                    // TODO(18/9/20): Add overwrite option
-                    new TextInputDialogBuilder(activity, R.string.input_backup_name)
-                            .setTitle(R.string.backup)
-                            .setHelperText(R.string.input_backup_name_description)
-                            .setPositiveButton(R.string.ok, (dialog, which, backupName, isChecked) -> {
-                                if (!TextUtils.isEmpty(backupName)) {
-                                    startOperation(op, new String[]{backupName.toString()});
-                                } else startOperation(op, null);
-                            })
-                            .show();
-                } else {
-                    // Base backup requested
-                    if (baseBackupCount > 0) {
-                        // One or more app has backups, warn users
-                        new MaterialAlertDialogBuilder(activity)
-                                .setTitle(R.string.backup)
-                                .setMessage(getResources().getQuantityString(R.plurals.backup_exists_are_you_sure, baseBackupCount))
-                                .setPositiveButton(R.string.yes, (dialog, which) -> startOperation(op, null))
-                                .setNegativeButton(R.string.no, null)
-                                .show();
-                    } else {
-                        // No need to warn users, proceed to backup
-                        startOperation(op, null);
-                    }
+                handleBackup();
+        }
+    }
+
+    private void handleDelete() {
+        @BatchOpsManager.OpType int op = BatchOpsManager.OP_DELETE_BACKUP;
+        if (packageNames.size() == 1) {
+            // Only a single package is requested, display a list of existing backups to
+            // choose which of them are to be deleted
+            // TODO(21/9/20): Replace with a custom alert dialog to display more info.
+            MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(packageNames.get(0));
+            String[] backupNames = new String[metadata.length];
+            String[] readableBackupNames = new String[metadata.length];
+            boolean[] choices = new boolean[metadata.length];
+            Arrays.fill(choices, false);
+            String backupName;
+            String userHandle;
+            for (int i = 0; i < backupNames.length; ++i) {
+                backupNames[i] = metadata[i].backupName;
+                backupName = BackupUtils.getShortBackupName(backupNames[i]);
+                userHandle = String.valueOf(metadata[i].userHandle);
+                readableBackupNames[i] = backupName == null ? "Base backup for user " + userHandle : backupName + " for user " + userHandle;
+            }
+            new MaterialAlertDialogBuilder(activity)
+                    .setTitle(PackageUtils.getPackageLabel(activity.getPackageManager(), packageNames.get(0)))
+                    .setMultiChoiceItems(readableBackupNames, choices,
+                            (dialog, which, isChecked) -> choices[which] = isChecked)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.delete_backup, (dialog, which) -> {
+                        List<String> newBackupNames = new ArrayList<>(backupNames.length);
+                        for (int i = 0; i < backupNames.length; ++i) {
+                            if (choices[i] && backupNames[i] != null) {
+                                newBackupNames.add(backupNames[i]);
+                            }
+                        }
+                        // backupNames arguments must not be null!!
+                        startOperation(op, newBackupNames.toArray(new String[0]));
+                    })
+                    .show();
+        } else if (baseBackupCount == packageNames.size()) {
+            // We shouldn't even check this since the restore option will only be visible
+            // if backup of all the packages exist
+            new MaterialAlertDialogBuilder(activity)
+                    .setTitle(R.string.delete_backup)
+                    .setMessage(R.string.are_you_sure)
+                    .setPositiveButton(R.string.yes, (dialog, which) -> startOperation(op, null))
+                    .setNegativeButton(R.string.no, null)
+                    .show();
+        } else {
+            Log.e(TAG, "Delete: Why are we even here? Backup count " + baseBackupCount);
+        }
+    }
+
+    private void handleRestore() {
+        @BatchOpsManager.OpType int op = BatchOpsManager.OP_RESTORE_BACKUP;
+        if (packageNames.size() == 1) {
+            // Only a single package is requested, display a list of existing backups to
+            // choose which one to restore
+            // TODO(21/9/20): Replace with a custom alert dialog to display more info.
+            MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(packageNames.get(0));
+            String[] backupNames = new String[metadata.length];
+            AtomicInteger selectedItem = new AtomicInteger(-1);
+            String[] readableBackupNames = new String[metadata.length];
+            String backupName;
+            int userHandle;
+            int choice = -1;
+            int currentUserHandle = Users.getCurrentUserHandle();
+            for (int i = 0; i < backupNames.length; ++i) {
+                backupNames[i] = metadata[i].backupName;
+                backupName = BackupUtils.getShortBackupName(backupNames[i]);
+                userHandle = metadata[i].userHandle;
+                if (backupName == null && userHandle == currentUserHandle) {
+                    choice = i;
+                    selectedItem.set(i);
                 }
+                readableBackupNames[i] = backupName == null ? "Base backup for user " + userHandle : backupName + " for user " + userHandle;
+            }
+            new MaterialAlertDialogBuilder(activity)
+                    .setTitle(PackageUtils.getPackageLabel(activity.getPackageManager(), packageNames.get(0)))
+                    .setSingleChoiceItems(readableBackupNames, choice, (dialog, which) -> selectedItem.set(which))
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.restore, (dialog, which) -> {
+                        if (selectedItem.get() != -1) {
+                            // Do operation only if something is selected
+                            // Send a singleton array consisting of the chosen backup name.
+                            // Here, the backup name is the full name of the folder itself,
+                            // not just the “short” ie. the user handle is not stripped and
+                            // the argument must not be null.
+                            startOperation(op, new String[]{backupNames[selectedItem.get()]});
+                        }
+                    })
+                    .show();
+        } else if (baseBackupCount == packageNames.size()) {
+            // We shouldn't even check this since the restore option will only be visible
+            // if backup of all the packages exist
+            new MaterialAlertDialogBuilder(activity)
+                    .setTitle(R.string.restore)
+                    .setMessage(R.string.are_you_sure)
+                    .setPositiveButton(R.string.yes, (dialog, which) -> startOperation(op, null))
+                    .setNegativeButton(R.string.no, null)
+                    .show();
+        } else {
+            Log.e(TAG, "Restore: Why are we even here? Backup count " + baseBackupCount);
+        }
+    }
+
+    private void handleBackup() {
+        @BatchOpsManager.OpType int op = BatchOpsManager.OP_BACKUP;
+        if (flags.backupMultiple()) {
+            // Multiple backup is requested, no need to warn users about backups since the
+            // user has a choice between overwriting the existing backup or create a new one
+            // TODO(18/9/20): Add overwrite option
+            new TextInputDialogBuilder(activity, R.string.input_backup_name)
+                    .setTitle(R.string.backup)
+                    .setHelperText(R.string.input_backup_name_description)
+                    .setPositiveButton(R.string.ok, (dialog, which, backupName, isChecked) -> {
+                        if (!TextUtils.isEmpty(backupName)) {
+                            //noinspection ConstantConditions
+                            startOperation(op, new String[]{backupName.toString()});
+                        } else startOperation(op, null);
+                    })
+                    .show();
+        } else {
+            // Base backup requested
+            if (baseBackupCount > 0) {
+                // One or more app has backups, warn users
+                new MaterialAlertDialogBuilder(activity)
+                        .setTitle(R.string.backup)
+                        .setMessage(getResources().getQuantityString(R.plurals.backup_exists_are_you_sure, baseBackupCount))
+                        .setPositiveButton(R.string.yes, (dialog, which) -> startOperation(op, null))
+                        .setNegativeButton(R.string.no, null)
+                        .show();
+            } else {
+                // No need to warn users, proceed to backup
+                startOperation(op, null);
+            }
         }
     }
 
