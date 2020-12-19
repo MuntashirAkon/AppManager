@@ -38,7 +38,7 @@ TMP_PATH=tmp
 AAB_PATH=${RELEASE_PATH}/${default_name}.aab
 APKS_PATH=${RELEASE_PATH}/${default_name}.apks
 
-SUPPORTED_LANGUAGES=(bn de en fr hi nb pl pt ru tr uk zh)
+SUPPORTED_LANGUAGES=(bn de en es fr hi nb pl pt ru tr uk zh)
 SUPPORTED_DPIS=(ldpi mdpi tvdpi hdpi xhdpi xxhdpi xxxhdpi)
 SUPPORTED_ARCHS=(armeabi_v7a arm64_v8a x86 x86_64)
 
