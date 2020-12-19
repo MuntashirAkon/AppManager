@@ -726,4 +726,5 @@
     <string name="activity_result">活动结果</string>
     <string name="send_edited_intent">发送编辑过的意图</string>
     <string name="matching_activities">匹配活动</string>
+    <string name="set_custom_app_op">设置自定义应用操作</string>
 </resources>
