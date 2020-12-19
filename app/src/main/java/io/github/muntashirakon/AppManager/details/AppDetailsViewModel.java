@@ -1079,11 +1079,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return features;
     }
 
-    private boolean bFi = false;
-
-    public boolean isbFi() {
-        return bFi;
-    }
+    public static final String OPEN_GL_ES = "OpenGL ES";
 
     @WorkerThread
     private void loadFeatures() {
@@ -1098,8 +1094,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             Arrays.sort(packageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
         } catch (NullPointerException e) {
             for (FeatureInfo fi : packageInfo.reqFeatures) {
-                if (fi.name == null) fi.name = "OpenGL ES";
-                bFi = true;
+                if (fi.name == null) fi.name = OPEN_GL_ES;
             }
             Arrays.sort(packageInfo.reqFeatures, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
         }

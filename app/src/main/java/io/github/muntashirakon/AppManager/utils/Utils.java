@@ -478,10 +478,11 @@ public class Utils {
     }
 
     @NonNull
-    public static String getOpenGL(int reqGL) {
-        if (reqGL != 0) {
-            return (short) (reqGL >> 16) + "." + (short) reqGL; // Integer.toString((reqGL & 0xffff0000) >> 16);
-        } else return "1"; // Lack of property means OpenGL ES version 1
+    public static String getGlEsVersion(int reqGlEsVersion) {
+        if (reqGlEsVersion == 0) return "1";
+        int major = ((reqGlEsVersion & 0xffff0000) >> 16);
+        int minor = reqGlEsVersion & 0x0000ffff;
+        return major + "." + minor;
     }
 
     @NonNull

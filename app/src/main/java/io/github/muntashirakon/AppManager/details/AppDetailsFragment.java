@@ -97,6 +97,8 @@ import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
+import static io.github.muntashirakon.AppManager.details.AppDetailsViewModel.OPEN_GL_ES;
+
 public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener {
     @IntDef(value = {
@@ -1427,20 +1429,42 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                 view.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.red));
         }
 
+        @SuppressLint("SetTextI18n")
         private void getFeaturesView(@NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
             final FeatureInfo featureInfo = (FeatureInfo) mAdapterList.get(index).vanillaItem;
             view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
-            // Name
-            holder.textView1.setText(featureInfo.name);
+            if (!featureInfo.name.equals(OPEN_GL_ES)) {
+                boolean isAvailable;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    isAvailable = mPackageManager.hasSystemFeature(featureInfo.name, featureInfo.version);
+                } else {
+                    isAvailable = mPackageManager.hasSystemFeature(featureInfo.name);
+                }
+                // Feature name
+                holder.textView1.setText(new SpannableStringBuilder(featureInfo.name)
+                        .append(UIUtils.getSmallerText(" (" + (isAvailable ?
+                                getText(R.string.available) :
+                                getText(R.string.unavailable)) + ")")));
+                // Feature version
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    holder.textView3.setVisibility(View.VISIBLE);
+                    holder.textView3.setText(getString(R.string.version) + ": " + featureInfo.version);
+                } else holder.textView3.setVisibility(View.GONE);
+            } else {
+                // OpenGL ES
+                holder.textView1.setText(featureInfo.name);
+                holder.textView3.setVisibility(View.VISIBLE);
+                // GL ES version
+                holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
+                        getString(R.string.gles_ver),
+                        Utils.getGlEsVersion(featureInfo.reqGlEsVersion)));
+
+            }
             // Flags
             holder.textView2.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.flags), getString(Utils.getFeatureFlags(featureInfo.flags))
                             + (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && featureInfo.version != 0 ? " | minV%:" + featureInfo.version : "")));
-            // GLES ver
-            holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.gles_ver), (mainModel.isbFi() && !featureInfo.name.equals("OpenGL ES") ? "_"
-                            : Utils.getOpenGL(featureInfo.reqGlEsVersion))));
         }
 
         private void getConfigurationView(@NonNull ViewHolder holder, int index) {
@@ -1449,7 +1473,7 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // GL ES ver
             holder.textView1.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.gles_ver), Utils.getOpenGL(configurationInfo.reqGlEsVersion)));
+                    getString(R.string.gles_ver), Utils.getGlEsVersion(configurationInfo.reqGlEsVersion)));
             // Flag & others
             holder.textView2.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.input_features),
                     Utils.getInputFeaturesString(configurationInfo.reqInputFeatures)));

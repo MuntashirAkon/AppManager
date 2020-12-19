@@ -166,11 +166,11 @@ public class ApkWhatsNewFinder {
         if (newPkgInfo.reqFeatures != null)
             for (FeatureInfo featureInfo : newPkgInfo.reqFeatures)
                 if (featureInfo.name != null) newFeatures.add(featureInfo.name);
-                else newFeatures.add("OpenGL ES v" + Utils.getOpenGL(featureInfo.reqGlEsVersion));
+                else newFeatures.add("OpenGL ES v" + Utils.getGlEsVersion(featureInfo.reqGlEsVersion));
         if (oldPkgInfo.reqFeatures != null)
             for (FeatureInfo featureInfo : oldPkgInfo.reqFeatures)
                 if (featureInfo.name != null) oldFeatures.add(featureInfo.name);
-                else oldFeatures.add("OpenGL ES v" + Utils.getOpenGL(featureInfo.reqGlEsVersion));
+                else oldFeatures.add("OpenGL ES v" + Utils.getGlEsVersion(featureInfo.reqGlEsVersion));
         List<Change> featureChanges = new ArrayList<>();
         featureChanges.add(new Change(CHANGE_INFO, componentInfo[FEATURE_INFO]));
         featureChanges.addAll(findChanges(newFeatures, oldFeatures));
