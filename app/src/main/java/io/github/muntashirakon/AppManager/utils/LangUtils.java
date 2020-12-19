@@ -20,8 +20,6 @@ package io.github.muntashirakon.AppManager.utils;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
-import android.os.LocaleList;
 
 import java.util.IllformedLocaleException;
 import java.util.Locale;
@@ -29,6 +27,7 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.collection.ArrayMap;
 import androidx.core.os.ConfigurationCompat;
+import androidx.core.os.LocaleListCompat;
 import io.github.muntashirakon.AppManager.R;
 
 public final class LangUtils {
@@ -36,13 +35,7 @@ public final class LangUtils {
     public static final String LANG_DEFAULT = "en";
 
     private static ArrayMap<String, Locale> sLocaleMap;
-    private static final Locale sDefaultLocale;
-
-    static {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            sDefaultLocale = LocaleList.getDefault().get(0);
-        } else sDefaultLocale = Locale.getDefault();
-    }
+    private static final Locale sDefaultLocale = LocaleListCompat.getDefault().get(0);
 
     public static void setAppLanguages(@NonNull Context context) {
         if (sLocaleMap == null) sLocaleMap = new ArrayMap<>();

@@ -80,7 +80,7 @@ public class Utils {
         AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
         assert appOpsManager != null;
         final int mode;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             mode = appOpsManager.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
                     android.os.Process.myUid(), context.getPackageName());
         } else {
@@ -88,7 +88,7 @@ public class Utils {
                     android.os.Process.myUid(), context.getPackageName());
         }
         if (mode == AppOpsManager.MODE_DEFAULT
-                && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return context.checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS)
                     == PackageManager.PERMISSION_GRANTED;
         }
@@ -295,11 +295,11 @@ public class Utils {
         if ((flag & ServiceInfo.FLAG_SINGLE_USER) != 0)
             builder.append("Single user, ");
 
-        if (Build.VERSION.SDK_INT >= 24) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             if ((flag & ServiceInfo.FLAG_EXTERNAL_SERVICE) != 0)
                 builder.append("External service, ");
 
-            if (Build.VERSION.SDK_INT >= 29) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 if ((flag & ServiceInfo.FLAG_USE_APP_ZYGOTE) != 0)
                     builder.append("Use app zygote, ");
             }
@@ -371,7 +371,7 @@ public class Utils {
                 protectionLevel = "signatureOrPrivileged";
                 break;
         }
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_PRIVILEGED) != 0)
                 protectionLevel += "|privileged";
             if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_PRE23) != 0)
@@ -382,15 +382,15 @@ public class Utils {
                 protectionLevel += "|verifier";
             if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_PREINSTALLED) != 0)
                 protectionLevel += "|preinstalled";
-            if (Build.VERSION.SDK_INT >= 24) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_SETUP) != 0)
                     protectionLevel += "|setup";
             }
-            if (Build.VERSION.SDK_INT >= 26) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_RUNTIME_ONLY) != 0)
                     protectionLevel += "|runtime";
             }
-            if (Build.VERSION.SDK_INT >= 27) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
                 if ((permissionFlags & PermissionInfo.PROTECTION_FLAG_INSTANT) != 0)
                     protectionLevel += "|instant";
             }
