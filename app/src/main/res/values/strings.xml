@@ -795,4 +795,6 @@
     <string name="resend_intent">Resend Intent</string>
     <string name="interceptor">Interceptor</string>
     <string name="set_custom_app_op">Set custom app op</string>
+    <string name="available">Available</string>
+    <string name="unavailable">Unavailable</string>
 </resources>
