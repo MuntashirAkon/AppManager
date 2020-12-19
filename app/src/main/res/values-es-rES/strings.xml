@@ -336,7 +336,7 @@
     </plurals>
     <string name="backup_options">Opciones de backup</string>
     <string name="delete_backup">Borrar backup</string>
-    <string name="backup">Respaldo (Backup)</string>
+    <string name="backup">Backup</string>
     <string name="data">Datos</string>
     <string name="external_data">Datos externos</string>
     <string name="exclude_cache">Excluir caché</string>
@@ -439,8 +439,8 @@
         <item quantity="one">No se pudo limpiar datos desde %1$d app</item>
         <item quantity="other">No se pudo limpiar datos desde %1$d apps</item>
     </plurals>
-    <string name="backup_restore">Backup/Restore (Respaldar/Restaurar)</string>
-    <string name="backup_apk">Backup (respaldar) APK</string>
+    <string name="backup_restore">Backup/Restore</string>
+    <string name="backup_apk">Backup APK</string>
     <string name="memory_virtual_memory">Memoria: %1$s, Memoria virtual: %2$s</string>
     <plurals name="failed_to_import_files">
         <item quantity="one">No se pudo importar %1$d archivo.</item>
@@ -451,7 +451,7 @@
     <string name="force_stop">Forzar detención</string>
     <string name="view_in_settings">Ver en ajustes</string>
     <string name="choose">Elegir</string>
-    <string name="profile_backup_apk_msg">Si se habilita, los archivos apk serán respaldados</string>
+    <string name="profile_backup_apk_msg">Si se habilita, a los archivos apk se les hará un backup</string>
     <string name="profile_block_trackers_msg">Si se habilita, los rastreadores se bloquearán de las aplicaciones</string>
     <string name="profile_clear_data_msg">Si se habilita, los datos se borrarán de las aplicaciones</string>
     <string name="profile_force_stop_msg">Si está habilitado, las apps forzarán la detención</string>
@@ -485,12 +485,12 @@
         <item quantity="other">No se pudo restaurar %1$d apps</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
-        <item quantity="one">No se pudo respaldar %1$d app</item>
-        <item quantity="other">No se pudo respaldar %1$d apps</item>
+        <item quantity="one">No se pudo hacer el backup %1$d app</item>
+        <item quantity="other">No se pudo hacer el backup %1$d apps</item>
     </plurals>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="one">No se pudo respaldar %1$d app</item>
-        <item quantity="other">No se pudo respaldar %1$d apps</item>
+        <item quantity="one">No se pudo hacer el backup %1$d app</item>
+        <item quantity="other">No se pudo hacer el backup %1$d apps</item>
     </plurals>
     <string name="restore">Restaurar (Restore)</string>
     <string name="input_app_ops_description">Introducir app ops constantes con espacios, por ejemplo (63 72 12) etc. Puedes encontrar app ops constantes en la pestaña de app ops bajo los paréntesis.</string>
@@ -500,8 +500,8 @@
     </plurals>
     <string name="uses_feature">Objetivos de las funciones</string>
     <plurals name="no_of_splits">
-        <item quantity="one">%1$d split (dividida)</item>
-        <item quantity="other">%1$d splits (divididas)</item>
+        <item quantity="one">%1$d split</item>
+        <item quantity="other">%1$d splits</item>
     </plurals>
     <string name="launch_mode_single_top">Parte superior</string>
     <string name="installer_error_lidl_rom">Tú ROM es incompatible con el instalador rootless.</string>
@@ -528,7 +528,7 @@
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
     <string name="none">Ninguno</string>
-    <string name="pref_encryption_msg">Añadir encriptación a los respaldos.</string>
+    <string name="pref_encryption_msg">Añadir encriptación a los backups.</string>
     <string name="encryption">Encriptación</string>
     <string name="select_user">Seleccionar usuario</string>
     <string name="pref_show_users_in_installer_msg">Mostrar una lista de usuarios a seleccionar antes de instalar una aplicación externa. Requiere root o ADB.</string>
@@ -587,7 +587,7 @@
     <string name="allow_open_pgp_operation">Pulsar para permitir a AM usar OpenPGP</string>
     <string name="confirm_installation">Confirmar la instalación</string>
     <string name="compression_method">Método de compresión: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
-    <string name="pref_backup_flags_msg">Al añadir un preajuste para las opciones de respaldo se elimina la carga de seleccionar flags cada vez que se hace un Backup/Restore.</string>
+    <string name="pref_backup_flags_msg">Al añadir un preajuste para las opciones del backup se elimina la carga de seleccionar flags cada vez que se hace un Backup/Restore.</string>
     <string name="pref_compression_method">Método de compresión</string>
     <string name="rules">Reglas</string>
     <string name="other">Otros</string>
@@ -608,8 +608,8 @@
     <string name="systemless_app">Systemless App</string>
     <string name="cancel">Cancelar</string>
     <string name="ok">OK</string>
-    <string name="input_backup_name_description">El nombre de la copia de seguridad no debe empezar con un dígito ni debe contener ningún espacio. Déjelo vacío si quiere usar la fecha y hora actuales.</string>
-    <string name="input_backup_name">Nombre del respaldo</string>
+    <string name="input_backup_name_description">El nombre del backup no debe empezar con un dígito ni debe contener ningún espacio. Déjelo vacío si quiere usar la fecha y hora actuales.</string>
+    <string name="input_backup_name">Nombre del backup</string>
     <string name="downgrade_not_possible">Downgrade no es posible sin root o ADB</string>
     <string name="downgrade">Downgrade</string>
     <string name="process_state_with_extra">Estado: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
@@ -718,11 +718,11 @@
     <string name="send_edited_intent">Enviar intent editada</string>
     <string name="matching_activities">Actividades de emparejamiento</string>
     <string name="value">Valor</string>
-    <string name="filter_apps_with_splits">Aplicaciones con splits (divisiones)</string>
+    <string name="filter_apps_with_splits">Aplicaciones con splits</string>
     <string name="set_app_op_mode">Configurar el mode de app ops</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="pref_backup_android_keystore_msg">No todas las aplicaciones funcionarán después de una restauración. La restauración de KeyStore no funciona en la mayoría de los dispositivos.</string>
-    <string name="pref_backup_android_keystore">Respalda las apps con Android KeyStore</string>
+    <string name="pref_backup_android_keystore">Haz un backup a las apps con Android KeyStore</string>
     <string name="keep_data_and_signatures">Mantener datos y firmas</string>
     <string name="this_action_cannot_be_undone">Esta acción no puede deshacerse.</string>
     <string name="no_app_ops_permission">No hay permiso para mostrar las app ops</string>
