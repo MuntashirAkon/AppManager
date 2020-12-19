@@ -795,6 +795,25 @@
     <string name="resend_intent">Resend Intent</string>
     <string name="interceptor">Interceptor</string>
     <string name="set_custom_app_op">Set custom app op</string>
+    <string name="about_device">About device</string>
+    <string name="pref_about_device_msg">Basic device info including Android system, CPU, GPU, RAM, Battery, etc.</string>
+    <string name="brand_name">Brand</string>
+    <string name="model">Model</string>
+    <string name="board_name">Board</string>
+    <string name="manufacturer">Manufacturer</string>
+    <string name="kernel">Kernel</string>
+    <string name="security_providers">Security providers</string>
+    <string name="support_architectures">Supported architectures</string>
+    <string name="no_of_cores">Cores</string>
+    <string name="gles_version">GL ES version</string>
+    <string name="vendor">Vendor</string>
+    <string name="memory">Memory</string>
+    <string name="battery_capacity">Capacity</string>
     <string name="available">Available</string>
     <string name="unavailable">Unavailable</string>
+    <string name="languages">Languages</string>
+    <string name="users">Users</string>
+    <string name="cpu">CPU</string>
+    <string name="graphics">Graphics</string>
+    <string name="battery">Battery</string>
 </resources>

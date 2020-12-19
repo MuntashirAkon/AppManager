@@ -18,17 +18,27 @@
 package io.github.muntashirakon.AppManager.settings;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.UserInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.format.Formatter;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.internal.util.TextUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.yariksoffice.lingver.Lingver;
 
+import java.security.Provider;
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +50,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
+import androidx.core.os.LocaleListCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -61,6 +72,10 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
+
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 
 public class MainPreferences extends PreferenceFragmentCompat {
     private static final List<Integer> THEME_CONST = Arrays.asList(
@@ -332,6 +347,17 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .show();
             return true;
         });
+
+        // About device
+        ((Preference) Objects.requireNonNull(findPreference("about_device"))).setOnPreferenceClickListener(preference -> {
+            @SuppressLint("InflateParams")
+            View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
+            ((TextView) view.findViewById(android.R.id.content)).setText(getDeviceInfo());
+            view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
+            new FullscreenDialog(activity).setTitle(R.string.about_device).setView(view).show();
+            return true;
+        });
+
         // About
         ((Preference) Objects.requireNonNull(findPreference("about"))).setOnPreferenceClickListener(preference -> {
             @SuppressLint("InflateParams")
@@ -400,5 +426,136 @@ public class MainPreferences extends PreferenceFragmentCompat {
             } else localesL[i] = locale.getDisplayName(locale);
         }
         return localesL;
+    }
+
+    @NonNull
+    private CharSequence getDeviceInfo() {
+        ActivityManager activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
+        PackageManager pm = activity.getPackageManager();
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        // Android platform info
+        builder.append(getPrimaryText(activity, getString(R.string.version) + ": "))
+                .append(Build.VERSION.RELEASE).append(", ")
+                .append(getPrimaryText(activity, getString(R.string.sdk) + ": "))
+                .append(String.valueOf(Build.VERSION.SDK_INT)).append("\n")
+                .append(getPrimaryText(activity, "Bootloader: "))
+                .append(Build.BOOTLOADER).append(", ")
+                .append(getPrimaryText(activity, "VM: "))
+                .append(getVmVersion()).append("\n")
+                .append(getPrimaryText(activity, getString(R.string.kernel) + ": "))
+                .append(getKernel()).append("\n")
+                .append(getPrimaryText(activity, getString(R.string.brand_name) + ": "))
+                .append(Build.BRAND).append(", ")
+                .append(getPrimaryText(activity, getString(R.string.model) + ": "))
+                .append(Build.MODEL).append("\n")
+                .append(getPrimaryText(activity, getString(R.string.board_name) + ": "))
+                .append(Build.BOARD).append(", ")
+                .append(getPrimaryText(activity, getString(R.string.manufacturer) + ": "))
+                .append(Build.MANUFACTURER).append("\n");
+        // Security providers
+        List<CharSequence> securityProviders = new ArrayList<>();
+        builder.append("\n").append(getTitleText(activity, getString(R.string.security_providers))).append("\n");
+        for (Provider provider : Security.getProviders()) {
+            securityProviders.add(provider.getName() + " (" + provider.getVersion() + ")");
+        }
+        builder.append(TextUtils.joinSpannable(", ", securityProviders)).append("\n");
+        // CPU info
+        builder.append("\n").append(getTitleText(activity, getString(R.string.cpu))).append("\n");
+        // TODO(18/12/20): Get SoC
+        builder.append(getPrimaryText(activity, getString(R.string.support_architectures) + ": "))
+                .append(TextUtils.join(", ", Build.SUPPORTED_ABIS)).append("\n")
+                .append(getPrimaryText(activity, getString(R.string.no_of_cores) + ": "))
+                .append(String.valueOf(Runtime.getRuntime().availableProcessors())).append("\n");
+        // GPU info
+        builder.append("\n").append(getTitleText(activity, getString(R.string.graphics))).append("\n");
+        builder.append(getPrimaryText(activity, getString(R.string.gles_version) + ": "))
+                .append(Utils.getGlEsVersion(activityManager.getDeviceConfigurationInfo().reqGlEsVersion)).append("\n")
+                .append(getPrimaryText(activity, getString(R.string.vendor) + ": "))
+                .append("\n");
+        // TODO(19/12/20): Get vendor name
+        // RAM info
+        ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+        activityManager.getMemoryInfo(memoryInfo);
+        long memorySize = memoryInfo.totalMem;
+        builder.append("\n").append(getTitleText(activity, getString(R.string.memory))).append("\n")
+                .append(Formatter.formatFileSize(activity, memorySize)).append("\n");
+        // Battery info
+        builder.append("\n").append(getTitleText(activity, getString(R.string.battery))).append("\n");
+        builder.append(getPrimaryText(activity, getString(R.string.battery_capacity) + ": "))
+                .append(String.valueOf(getBatteryCapacity())).append("mAh").append("\n");
+        // TODO(19/12/20): Get more battery info
+        // List available hardware/features
+        builder.append("\n").append(getTitleText(activity, getString(R.string.features))).append("\n");
+        FeatureInfo[] features = pm.getSystemAvailableFeatures();
+        List<CharSequence> featureStrings = new ArrayList<>(features.length);
+        for (FeatureInfo info : features) {
+            if (info.name != null) {
+                // It's a feature
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    featureStrings.add(info.name + " (" + info.version + ")");
+                } else featureStrings.add(info.name);
+            }
+        }
+        builder.append(TextUtils.joinSpannable("\n", featureStrings)).append("\n");
+        // Screen resolution
+        // TODO(19/12/20): Get screen resolution
+        // List system locales
+        LocaleListCompat locales = LocaleListCompat.getDefault();
+        List<String> localeStrings = new ArrayList<>(locales.size());
+        for (int i = 0; i < locales.size(); ++i) {
+            localeStrings.add(locales.get(i).getDisplayName());
+        }
+        builder.append("\n").append(getTitleText(activity, getString(R.string.languages)))
+                .append("\n").append(TextUtils.joinSpannable(", ", localeStrings))
+                .append("\n");
+        // Users
+        List<UserInfo> users = Users.getUsers();
+        if (users != null) {
+            builder.append("\n").append(getTitleText(activity, getString(R.string.users)))
+                    .append("\n");
+            List<String> userNames = new ArrayList<>();
+            for (UserInfo user : users) {
+                userNames.add(user.name);
+            }
+            builder.append(String.valueOf(users.size())).append(" (")
+                    .append(TextUtils.joinSpannable(", ", userNames))
+                    .append(")\n");
+        }
+        // App stats per user
+        // TODO(19/12/20): Display app stats per user
+        return builder;
+    }
+
+    @NonNull
+    private String getVmVersion() {
+        String vm = "Dalvik";
+        String vmVersion = System.getProperty("java.vm.version");
+        if (vmVersion != null && vmVersion.startsWith("2")) {
+            vm = "ART";
+        }
+        return vm;
+    }
+
+    @NonNull
+    private String getKernel() {
+        String kernel = System.getProperty("os.version");
+        if (kernel == null) return "";
+        else return kernel;
+    }
+
+    @SuppressLint("PrivateApi")
+    private double getBatteryCapacity() {
+        double capacity = -1.0;
+        try {
+            Object powerProfile = Class.forName("com.android.internal.os.PowerProfile")
+                    .getConstructor(Context.class).newInstance(activity.getApplication());
+            //noinspection ConstantConditions
+            capacity = (double) Class.forName("com.android.internal.os.PowerProfile")
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(powerProfile, "battery.capacity");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return capacity;
     }
 }

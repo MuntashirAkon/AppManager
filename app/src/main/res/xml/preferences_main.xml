@@ -123,6 +123,11 @@
         app:title="@string/other">
 
         <Preference
+            app:key="about_device"
+            app:title="@string/about_device"
+            app:summary="@string/pref_about_device_msg" />
+
+        <Preference
             app:key="about"
             app:title="@string/about"
             app:summary="@string/pref_about_msg" />
