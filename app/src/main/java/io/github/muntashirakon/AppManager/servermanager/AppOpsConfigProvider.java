@@ -67,7 +67,7 @@ public class AppOpsConfigProvider extends ContentProvider {
                 break;
             case TYPE_PORT:
                 cursor = new MatrixCursor(new String[]{"port"}, 1);
-                cursor.addRow(new String[]{String.valueOf(ServerConfig.getPort())});
+                cursor.addRow(new String[]{String.valueOf(ServerConfig.getLocalServerPort())});
                 break;
             case TYPE_CLASS_PATH:
                 cursor = new MatrixCursor(new String[]{"classpath"}, 1);

@@ -73,6 +73,7 @@ public final class ServerRunner {
                 }
             }
             // Make it main looper
+            //noinspection deprecation
             Looper.prepareMainLooper();
             //noinspection ResultOfMethodCallIgnored
             ActivityThread.systemMain();
@@ -97,14 +98,11 @@ public final class ServerRunner {
                 SystemClock.sleep(1000);
             }
             // Start server
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    new ServerRunner().runServer(params);
-                    // Exit current thread, regardless of whether the server started or not
-                    FLog.close();
-                    killSelfProcess();
-                }
+            Thread thread = new Thread(() -> {
+                new ServerRunner().runServer(params);
+                // Exit current thread, regardless of whether the server started or not
+                FLog.close();
+                killSelfProcess();
             });
             thread.setName("AM-IPC");
             thread.start();

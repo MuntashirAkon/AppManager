@@ -332,7 +332,7 @@ public final class RunnerUtils {
     }
 
     private static boolean isAdbAvailable(Context context) {
-        try (AdbConnection connection = AdbConnectionManager.connect(context, ServerConfig.getHost(), ServerConfig.getAdbPort())) {
+        try (AdbConnection connection = AdbConnectionManager.connect(context, ServerConfig.getAdbHost(), ServerConfig.getAdbPort())) {
             return true;
         } catch (IOException | NoSuchAlgorithmException | InterruptedException e) {
             return false;

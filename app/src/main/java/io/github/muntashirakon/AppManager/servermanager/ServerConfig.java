@@ -12,7 +12,9 @@ import io.github.muntashirakon.AppManager.AppManager;
 public class ServerConfig {
     static String SOCKET_PATH = "am_socket";
     private static final String DEFAULT_ADB_HOST = "127.0.0.1";
-    private static int DEFAULT_ADB_PORT = 60001;
+    private static final String DEFAULT_LOCAL_SERVER_HOST = "127.0.0.1";
+    private static final int DEFAULT_ADB_PORT = 5555;
+    private static int DEFAULT_LOCAL_SERVER_PORT = 60001;
     private static final String LOCAL_TOKEN = "l_token";
 
     static final String JAR_NAME = "am.jar";
@@ -32,7 +34,7 @@ public class ServerConfig {
         destExecFile = new File(context.getExternalFilesDir(null), EXECUTABLE_FILE_NAME);
         if (userHandleId != 0) {
             SOCKET_PATH += userHandleId;
-            DEFAULT_ADB_PORT += userHandleId;
+            DEFAULT_LOCAL_SERVER_PORT += userHandleId;
         }
         sInitialised = true;
     }
@@ -71,24 +73,18 @@ public class ServerConfig {
     }
 
     public static int getAdbPort() {
-        return sPreferences.getInt("adb_port", 5555);
+        return sPreferences.getInt("adb_port", DEFAULT_ADB_PORT);
     }
 
-    /**
-     * Get ADB port for client session
-     *
-     * @return ADB port
-     */
-    static int getPort() {
-        return DEFAULT_ADB_PORT;
+    static int getLocalServerPort() {
+        return DEFAULT_LOCAL_SERVER_PORT;
     }
 
-    /**
-     * Get ADB host for client session
-     *
-     * @return ADB host (localhost)
-     */
-    public static String getHost() {
+    public static String getAdbHost() {
         return DEFAULT_ADB_HOST;
+    }
+
+    public static String getLocalServerHost() {
+        return DEFAULT_LOCAL_SERVER_HOST;
     }
 }

@@ -166,8 +166,8 @@ public class LocalServer {
     public static class Config {
         public boolean allowBgRunning = false;
         public boolean printLog = false;
-        public String adbHost = ServerConfig.getHost();
-        public int adbPort = 5555;
+        public String adbHost = ServerConfig.getAdbHost();
+        public int adbPort = ServerConfig.getAdbPort();
         Context context;
     }
 }
