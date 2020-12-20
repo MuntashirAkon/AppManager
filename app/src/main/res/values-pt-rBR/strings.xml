@@ -762,4 +762,25 @@
     <string name="value">Valor</string>
     <string name="filter_apps_with_splits">Aplicativos com divisões</string>
     <string name="set_custom_app_op">Defina a operação de aplicativo personalizada</string>
+    <string name="battery">Bateria</string>
+    <string name="graphics">Gráficos</string>
+    <string name="cpu">CPU</string>
+    <string name="users">Usuários</string>
+    <string name="languages">Idiomas</string>
+    <string name="unavailable">Não disponível</string>
+    <string name="available">Disponível</string>
+    <string name="battery_capacity">Capacidade</string>
+    <string name="memory">Memória RAM</string>
+    <string name="vendor">Fornecedor</string>
+    <string name="gles_version">Versão do GL ES</string>
+    <string name="no_of_cores">Núcleos</string>
+    <string name="support_architectures">Arquiteturas suportadas</string>
+    <string name="security_providers">Provedores de segurança</string>
+    <string name="kernel">Kernel</string>
+    <string name="manufacturer">Fabricante</string>
+    <string name="board_name">Placa</string>
+    <string name="model">Modelo</string>
+    <string name="brand_name">Marca</string>
+    <string name="pref_about_device_msg">Informações básicas do dispositivo, incluindo Sistema Android, CPU, GPU, RAM, Bateria, etc.</string>
+    <string name="about_device">Sobre o dispositivo</string>
 </resources>
