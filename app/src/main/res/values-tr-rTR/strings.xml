@@ -760,4 +760,25 @@
     <string name="value">Değer</string>
     <string name="filter_apps_with_splits">Bölümlü uygulamalar</string>
     <string name="set_custom_app_op">Özel uygulama işlemi ayarla</string>
+    <string name="battery">Pil</string>
+    <string name="graphics">Grafikler</string>
+    <string name="cpu">CPU</string>
+    <string name="users">Kullanıcılar</string>
+    <string name="languages">Diller</string>
+    <string name="unavailable">Kullanılabilir değil</string>
+    <string name="available">Kullanılabilir</string>
+    <string name="battery_capacity">Kapasite</string>
+    <string name="memory">Bellek</string>
+    <string name="vendor">Satıcı</string>
+    <string name="gles_version">GL ES sürümü</string>
+    <string name="no_of_cores">Çekirdekler (CPU)</string>
+    <string name="support_architectures">Desteklenen mimariler</string>
+    <string name="security_providers">Güvenlik sağlayıcıları</string>
+    <string name="kernel">Çekirdek (kernel)</string>
+    <string name="manufacturer">Üretici</string>
+    <string name="board_name">Ana kart</string>
+    <string name="model">Model</string>
+    <string name="brand_name">Marka</string>
+    <string name="pref_about_device_msg">Android sistemi, CPU, GPU, RAM, pil vb.içeren temel aygıt bilgileri.</string>
+    <string name="about_device">Aygıt hakkında</string>
 </resources>
