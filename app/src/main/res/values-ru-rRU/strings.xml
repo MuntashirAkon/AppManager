@@ -822,13 +822,13 @@
     <string name="filter_apps_with_splits">Разделенные приложения</string>
     <string name="set_custom_app_op">Задание приложения</string>
     <string name="cpu">Процессор</string>
-    <string name="battery">Батарея</string>
+    <string name="battery">Аккумулятор</string>
     <string name="graphics">Графика</string>
     <string name="users">Пользователи</string>
     <string name="languages">Языки</string>
     <string name="unavailable">Недоступно</string>
     <string name="available">Доступно</string>
-    <string name="battery_capacity">Мощность</string>
+    <string name="battery_capacity">Ёмкость</string>
     <string name="memory">Память</string>
     <string name="vendor">Поставщик</string>
     <string name="gles_version">Версия GL ES</string>
@@ -837,9 +837,9 @@
     <string name="security_providers">Провайдер безопасности</string>
     <string name="kernel">Ядро</string>
     <string name="manufacturer">Производитель</string>
-    <string name="board_name">Плата</string>
+    <string name="board_name">Системная плата</string>
     <string name="model">Модель</string>
     <string name="brand_name">Марка</string>
-    <string name="pref_about_device_msg">Основная информация об устройстве, включая Android, CPU, GPU, RAM, батарею и т. д.</string>
+    <string name="pref_about_device_msg">Основная информация об устройстве, включая версию Android, ЦП, ГП, ОЗУ, аккумулятор и т. д.</string>
     <string name="about_device">Об устройстве</string>
 </resources>
