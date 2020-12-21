@@ -727,4 +727,25 @@
     <string name="send_edited_intent">发送编辑过的意图</string>
     <string name="matching_activities">匹配活动</string>
     <string name="set_custom_app_op">设置自定义应用操作</string>
+    <string name="pref_about_device_msg">基本设备信息包括Android系统、CPU、GPU、RAM，电池等。</string>
+    <string name="battery">电池</string>
+    <string name="graphics">显卡</string>
+    <string name="cpu">中央处理器</string>
+    <string name="users">用户</string>
+    <string name="languages">语言</string>
+    <string name="unavailable">不可用</string>
+    <string name="available">可用</string>
+    <string name="battery_capacity">容量</string>
+    <string name="memory">内存</string>
+    <string name="vendor">厂商</string>
+    <string name="gles_version">GL ES 版本</string>
+    <string name="no_of_cores">核心</string>
+    <string name="support_architectures">支持的架构</string>
+    <string name="security_providers">安全供应商</string>
+    <string name="kernel">内核</string>
+    <string name="manufacturer">制造商</string>
+    <string name="board_name">主板</string>
+    <string name="model">型号</string>
+    <string name="brand_name">品牌</string>
+    <string name="about_device">关于设备</string>
 </resources>
