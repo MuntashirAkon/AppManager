@@ -39,7 +39,7 @@ String.metaClass.toPath = { -> toPath(delegate) }
 ext {
     debugClassDir = project.rootDir.absolutePath + '/server/build/intermediates/javac/debug/classes'.toPath()
     libserverClassDir = project.rootDir.absolutePath + '/libserver/build/intermediates/javac/debug/classes'.toPath()
-    hiddenApiClassDir = project.rootDir.absolutePath + '/HiddenApi/build/intermediates/javac/debug/classes'.toPath()
+    hiddenApiClassDir = project.rootDir.absolutePath + '/hiddenapi/build/intermediates/javac/debug/classes'.toPath()
     amJar = project.rootDir.absolutePath + '/app/src/main/assets/am.jar'.toPath()
 }
 

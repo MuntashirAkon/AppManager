@@ -22,9 +22,10 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.IInterface;
 import android.os.RemoteException;
 
-public interface IPackageManager {
+public interface IPackageManager extends IInterface {
     PackageInfo getPackageInfo(String packageName, int flags, int userId);
 
     PermissionInfo getPermissionInfo(String name, int flags);

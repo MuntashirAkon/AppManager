@@ -10,6 +10,7 @@ app/debug/
 app/libs/am-common.jar
 toybox/src/main/jniLibs
 app/src/main/assets/am.jar
+app/src/main/assets/main.jar
 pids
 logs
 node_modules

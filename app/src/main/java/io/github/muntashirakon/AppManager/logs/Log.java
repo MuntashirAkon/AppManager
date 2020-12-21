@@ -132,6 +132,11 @@ public class Log {
         if (BuildConfig.DEBUG) android.util.Log.e(tag, msg);
     }
 
+    public static void e(@Nullable String tag, @NonNull Throwable e) {
+        println(ERROR, tag, null, e);
+        if (BuildConfig.DEBUG) android.util.Log.e(tag, null, e);
+    }
+
     public static void e(@Nullable String tag, @Nullable String msg, @Nullable Throwable tr) {
         println(ERROR, tag, msg, tr);
         if (BuildConfig.DEBUG) android.util.Log.e(tag, msg, tr);

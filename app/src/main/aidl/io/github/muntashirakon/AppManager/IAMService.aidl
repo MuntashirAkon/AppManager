@@ -15,13 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package android.os;
+package io.github.muntashirakon.AppManager;
 
-public class ServiceManager {
-    public static IBinder getService(String name) {
-        throw new UnsupportedOperationException();
-    }
+import io.github.muntashirakon.AppManager.IRemoteProcess;
 
-    public static void addService(String name, IBinder service) {
-    }
+interface IAMService {
+    IBinder getService(String name);  // ServiceManager#getService(String)
+
+    IRemoteProcess newProcess(in String[] cmd, in String[] env, in String dir);
 }

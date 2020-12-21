@@ -20,35 +20,29 @@ package android.app;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
 
-/**
- * Created by zl on 2016/11/5.
- */
-
 public class ActivityThread {
-
     public static IPackageManager getPackageManager() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public static ActivityThread systemMain() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public static ActivityThread currentActivityThread() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
-
     public static Application currentApplication() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public static String currentProcessName() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public ContextImpl getSystemContext() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public void installSystemApplicationInfo(ApplicationInfo info, ClassLoader classLoader) {}
