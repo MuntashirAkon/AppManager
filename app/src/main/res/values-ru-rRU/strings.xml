@@ -837,7 +837,7 @@
     <string name="security_providers">Провайдер безопасности</string>
     <string name="kernel">Ядро</string>
     <string name="manufacturer">Производитель</string>
-    <string name="board_name">Панель</string>
+    <string name="board_name">Плата</string>
     <string name="model">Модель</string>
     <string name="brand_name">Марка</string>
     <string name="pref_about_device_msg">Основная информация об устройстве, включая Android, CPU, GPU, RAM, батарею и т. д.</string>
