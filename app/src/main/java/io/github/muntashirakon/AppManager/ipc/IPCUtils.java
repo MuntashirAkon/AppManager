@@ -21,12 +21,16 @@ public final class IPCUtils {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             Log.e(TAG, "service onServiceConnected");
-            amService = IAMService.Stub.asInterface(service);
+            synchronized (IPCUtils.class) {
+                amService = IAMService.Stub.asInterface(service);
+                IPCUtils.class.notifyAll();
+            }
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             Log.e(TAG, "service onServiceDisconnected");
+            amService = null;
         }
 
         @Override
@@ -46,19 +50,20 @@ public final class IPCUtils {
             Intent intent = new Intent(context, AMService.class);
             RootService.bind(intent, conn);
             // Wait for service to be bound
-            int i = 0;
-            while (amService == null) {  // No workaround for spin-lock
-                try {
-                    if (i % 20 == 0) {
-                        Log.i(TAG, "Waiting for AMService to be bound");
+            synchronized (IPCUtils.class) {
+                int i = 0;
+                while (amService == null) {
+                    try {
+                        if (i % 20 == 0) {
+                            Log.i(TAG, "Waiting for AMService to be bound");
+                        }
+                        IPCUtils.class.wait(100);
+                        if (i > 1000) break;
+                        ++i;
+                    } catch (InterruptedException e) {
+                        Log.e(TAG, "startDaemon: interrupted", e);
+                        Thread.currentThread().interrupt();
                     }
-                    Thread.sleep(100);
-                    if (i > 1000)
-                        break;
-                    ++i;
-                } catch (InterruptedException e) {
-                    Log.e(TAG, "startDaemon: interrupted", e);
-                    Thread.currentThread().interrupt();
                 }
             }
         }
