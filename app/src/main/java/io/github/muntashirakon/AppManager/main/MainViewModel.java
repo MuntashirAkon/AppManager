@@ -223,8 +223,7 @@ public class MainViewModel extends AndroidViewModel {
                                 | PackageManager.GET_ACTIVITIES | flagDisabledComponents,
                                 userHandle);
                     } catch (Exception e) {
-                        Log.e("MVM", "Could not retrieve package info list for user " + userHandle);
-                        e.printStackTrace();
+                        Log.e("MVM", "Could not retrieve package info list for user " + userHandle, e);
                         continue;
                     }
                     ApplicationInfo applicationInfo;

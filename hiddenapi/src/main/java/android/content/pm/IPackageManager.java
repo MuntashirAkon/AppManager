@@ -26,46 +26,45 @@ import android.os.IInterface;
 import android.os.RemoteException;
 
 public interface IPackageManager extends IInterface {
-    PackageInfo getPackageInfo(String packageName, int flags, int userId);
+    PackageInfo getPackageInfo(String packageName, int flags, int userId) throws RemoteException;
 
-    PermissionInfo getPermissionInfo(String name, int flags);
+    PermissionInfo getPermissionInfo(String name, int flags) throws RemoteException;
 
-    PermissionGroupInfo getPermissionGroupInfo(String name, int flags);
+    PermissionGroupInfo getPermissionGroupInfo(String name, int flags) throws RemoteException;
 
-    void grantRuntimePermission(String packageName, String permissionName, int userId);
+    void grantRuntimePermission(String packageName, String permissionName, int userId) throws RemoteException;
 
-    void revokeRuntimePermission(String packageName, String permissionName, int userId);
+    void revokeRuntimePermission(String packageName, String permissionName, int userId) throws RemoteException;
 
-    void resetRuntimePermissions();
+    void resetRuntimePermissions() throws RemoteException;
 
-    int getPermissionFlags(String permissionName, String packageName, int userId);
+    int getPermissionFlags(String permissionName, String packageName, int userId) throws RemoteException;
 
-    String[] getAppOpPermissionPackages(String permissionName);
+    String[] getAppOpPermissionPackages(String permissionName) throws RemoteException;
 
-    ResolveInfo resolveIntent(Intent intent, String resolvedType, int flags, int userId);
+    ResolveInfo resolveIntent(Intent intent, String resolvedType, int flags, int userId) throws RemoteException;
 
-    ApplicationInfo getApplicationInfo(String packageName, int flags, int userId);
+    ApplicationInfo getApplicationInfo(String packageName, int flags, int userId) throws RemoteException;
 
-    int getPackageUid(String packageName, int flags, int userId);
+    int getPackageUid(String packageName, int flags, int userId) throws RemoteException;
 
     @TargetApi(23)
-    int getPackageUid(String packageName, int userId);
+    int getPackageUid(String packageName, int userId) throws RemoteException;
 
-    IPackageInstaller getPackageInstaller();
+    IPackageInstaller getPackageInstaller() throws RemoteException;
 
-    ParceledListSlice<PackageInfo> getInstalledPackages(int flags, int userId);
+    ParceledListSlice<PackageInfo> getInstalledPackages(int flags, int userId) throws RemoteException;
 
-    void setComponentEnabledSetting(ComponentName componentName, int newState, int flags, int userId);
+    void setComponentEnabledSetting(ComponentName componentName, int newState, int flags, int userId) throws RemoteException;
 
-    int getComponentEnabledSetting(ComponentName componentName, int userId);
+    int getComponentEnabledSetting(ComponentName componentName, int userId) throws RemoteException;
 
-    void setApplicationEnabledSetting(String packageName, int newState, int flags, int userId);
+    void setApplicationEnabledSetting(String packageName, int newState, int flags, int userId) throws RemoteException;
 
-    int getApplicationEnabledSetting(String packageName, int userId);
+    int getApplicationEnabledSetting(String packageName, int userId) throws RemoteException;
 
     abstract class Stub extends Binder implements IPackageManager {
-
-        public static IPackageManager asInterface(IBinder obj) {
+        public static IPackageManager asInterface(IBinder binder) {
             throw new UnsupportedOperationException();
         }
     }

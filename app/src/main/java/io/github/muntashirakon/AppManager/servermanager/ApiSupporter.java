@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.servermanager;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
+import android.os.RemoteException;
 
 import java.util.List;
 
@@ -34,24 +35,23 @@ import io.github.muntashirakon.AppManager.servermanager.remote.RestartHandler;
 import io.github.muntashirakon.AppManager.servermanager.remote.ShellCommandHandler;
 import io.github.muntashirakon.toybox.ToyboxInitializer;
 
-@SuppressWarnings("RedundantThrows")  // Unfortunately, throws are not redundant here
 public final class ApiSupporter {
     private static final String TAG = "ApiSupporter";
 
     private ApiSupporter() {
     }
 
-    public static List<PackageInfo> getInstalledPackages(int flags, int userHandle) throws Exception {
+    public static List<PackageInfo> getInstalledPackages(int flags, int userHandle) throws RemoteException {
         return AppManager.getIPackageManager().getInstalledPackages(flags, userHandle).getList();
     }
 
     @NonNull
-    public static PackageInfo getPackageInfo(String packageName, int flags, int userHandle) throws Exception {
+    public static PackageInfo getPackageInfo(String packageName, int flags, int userHandle) throws RemoteException {
         return AppManager.getIPackageManager().getPackageInfo(packageName, flags, userHandle);
     }
 
     @NonNull
-    public static ApplicationInfo getApplicationInfo(String packageName, int flags, int userHandle) throws Exception {
+    public static ApplicationInfo getApplicationInfo(String packageName, int flags, int userHandle) throws RemoteException {
         return AppManager.getIPackageManager().getApplicationInfo(packageName, flags, userHandle);
     }
 
