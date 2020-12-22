@@ -47,25 +47,25 @@ public class LocalServer {
 
     @GuardedBy("lockObject")
     public static LocalServer getInstance() {
-        synchronized (lockObject) {
-            if (localServer == null) {
+        if (localServer == null) {
+            synchronized (lockObject) {
                 try {
                     Log.e("IPC", "Init: Local server");
                     localServer = new LocalServer();
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }
+                lockObject.notifyAll();
             }
-            lockObject.notifyAll();
-            return localServer;
         }
+        return localServer;
     }
 
     @GuardedBy("lockObject")
     @Nullable
     public static IAMService getAmService() {
-        synchronized (lockObject) {
-            if (amService == null) {
+        if (amService == null) {
+            synchronized (lockObject) {
                 while (localServer == null && AppPref.isRootOrAdbEnabled()) {
                     Log.d("IPC", "Waiting for local server");
                     try {
@@ -81,8 +81,8 @@ public class LocalServer {
                 }
                 lockObject.notifyAll();
             }
-            return amService;
         }
+        return amService;
     }
 
     private final LocalServerManager mLocalServerManager;
