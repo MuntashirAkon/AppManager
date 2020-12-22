@@ -34,7 +34,6 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 @WorkerThread
@@ -106,8 +105,8 @@ final class ProcessParser {
         List<PackageInfo> packageInfoList = new ArrayList<>();
         for (int userHandle : Users.getUsersHandles()) {
             try {
-                packageInfoList.addAll(ApiSupporter.getInstance(LocalServer.getInstance())
-                        .getInstalledPackages(0, userHandle));
+                packageInfoList.addAll(ApiSupporter.getInstance().getInstalledPackages(0,
+                        userHandle));
             } catch (Exception e) {
                 e.printStackTrace();
             }

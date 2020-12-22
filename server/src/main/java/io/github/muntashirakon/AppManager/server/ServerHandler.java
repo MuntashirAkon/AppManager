@@ -23,26 +23,21 @@ import android.content.pm.ParceledListSlice;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.IBinder;
 import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.ServiceManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.LruCache;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.server.common.BaseCaller;
-import io.github.muntashirakon.AppManager.server.common.Caller;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.ClassCaller;
 import io.github.muntashirakon.AppManager.server.common.ClassCallerProcessor;
@@ -50,7 +45,6 @@ import io.github.muntashirakon.AppManager.server.common.DataTransmission;
 import io.github.muntashirakon.AppManager.server.common.FLog;
 import io.github.muntashirakon.AppManager.server.common.MethodUtils;
 import io.github.muntashirakon.AppManager.server.common.ParcelableUtil;
-import io.github.muntashirakon.AppManager.server.common.SystemServiceCaller;
 
 import static io.github.muntashirakon.AppManager.server.common.ConfigParam.PARAM_DEBUG;
 import static io.github.muntashirakon.AppManager.server.common.ConfigParam.PARAM_PATH;
@@ -163,11 +157,6 @@ class ServerHandler implements DataTransmission.OnReceiveCallback, AutoCloseable
                     case BaseCaller.TYPE_CLOSE:
                         close();
                         return;
-                    case BaseCaller.TYPE_SYSTEM_SERVICE:
-                        SystemServiceCaller callerMethod = ParcelableUtil.unmarshall(baseCaller.getRawBytes(), SystemServiceCaller.CREATOR);
-                        callerMethod.unwrapParams();
-                        result = callServiceMethod(callerMethod);
-                        break;
                     case BaseCaller.TYPE_CLASS:
                         ClassCaller callerMethod1 = ParcelableUtil.unmarshall(baseCaller.getRawBytes(), ClassCaller.CREATOR);
                         callerMethod1.unwrapParams();
@@ -186,85 +175,6 @@ class ServerHandler implements DataTransmission.OnReceiveCallback, AutoCloseable
                 }
                 sendOpResult(result);
             }
-        }
-    }
-
-    private static class FindValue {
-        private Object receiver;
-        private Method method;
-
-        void put(Object receiver, Method method) {
-            this.method = method;
-            this.receiver = receiver;
-        }
-
-        boolean founded() {
-            return method != null && receiver != null;
-        }
-
-        void recycle() {
-            receiver = null;
-            method = null;
-        }
-    }
-
-    private static final FindValue sFindValue = new FindValue();
-
-    private void findFromService(SystemServiceCaller caller) {
-        try {
-            IBinder service = ServiceManager.getService(caller.getServiceName());
-            if (service == null)
-                throw new RuntimeException("Service " + caller.getServiceName() + " doesn't exist.");
-            String aidl = service.getInterfaceDescriptor();
-            Class clazz = sClassCache.get(aidl);
-            if (clazz == null) {
-                clazz = Class.forName(aidl + "$Stub", false, null);
-                sClassCache.put(aidl, clazz);
-            }
-            Object asInterface = MethodUtils.invokeStaticMethod(clazz, "asInterface", new Object[]{service}, new Class[]{IBinder.class});
-            Method method = MethodUtils.getAccessibleMethod(clazz, caller.getMethodName(), caller.getParamsType());
-            if (method != null && asInterface != null) {
-                sFindValue.recycle();
-                sFindValue.put(asInterface, method);
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
-            FLog.log(e);
-        }
-    }
-
-    @NonNull
-    private CallerResult callServiceMethod(SystemServiceCaller caller) {
-        CallerResult callerResult = new CallerResult();
-        try {
-            sFindValue.recycle();
-            findFromService(caller);
-            if (sFindValue.founded()) {
-                callMethod(sFindValue.receiver, sFindValue.method, caller, callerResult);
-                sFindValue.recycle();
-            } else {
-                throw new NoSuchMethodException("not found service " + caller.getServiceName() + "  method " + caller.getMethodName() + " params: " + Arrays
-                        .toString(caller.getParamsType()));
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
-            FLog.log(e);
-            if (callerResult.getThrowable() != null) {
-                callerResult.setThrowable(e);
-            }
-        }
-        return callerResult;
-    }
-
-    private void callMethod(Object obj, Method method, Caller caller, CallerResult result) {
-        try {
-            result.setReturnType(method.getReturnType());
-            Object ret = method.invoke(obj, caller.getParams());
-            writeResult(result, ret);
-        } catch (Throwable e) {
-            e.printStackTrace();
-            FLog.log("callMethod --> " + Log.getStackTraceString(e));
-            result.setThrowable(e);
         }
     }
 

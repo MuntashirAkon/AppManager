@@ -118,25 +118,4 @@ dependencies {
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 }
 
-static def isWin() {
-    return org.gradle.internal.os.OperatingSystem.current().isWindows()
-}
-
-task buildMainJar {
-    doLast {
-        def classFile = buildDir.path + '/intermediates/javac/debug/classes/io/github/muntashirakon/AppManager/ipc/IPCMain.class'.toPath()
-        def mainJar = project.rootDir.absolutePath + '/app/src/main/assets/main.jar'.toPath()
-
-        def buildArgs = ['--release', '--output', mainJar]
-        buildArgs.add(classFile)
-        buildArgs.addAll(['--lib', "${android.sdkDirectory.path}/platforms/android-${rootProject.ext.targetSdk}/android.jar"])
-        exec {
-            workingDir = project.rootDir
-            executable = file("${android.sdkDirectory.path}/build-tools/${android.buildToolsVersion}/d8${isWin() ? '.bat' : ''}".toPath())
-            args = buildArgs
-        }
-    }
-}
-
 preBuild.dependsOn ":server:build"
-build.dependsOn buildMainJar

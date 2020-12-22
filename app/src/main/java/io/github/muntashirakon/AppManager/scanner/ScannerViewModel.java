@@ -15,10 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager;
+package io.github.muntashirakon.AppManager.scanner;
 
-import io.github.muntashirakon.AppManager.IRemoteProcess;
+import android.app.Application;
 
-interface IAMService {
-    IRemoteProcess newProcess(in String[] cmd, in String[] env, in String dir);
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+
+public class ScannerViewModel extends AndroidViewModel {
+
+    public ScannerViewModel(@NonNull Application application) {
+        super(application);
+    }
 }

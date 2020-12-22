@@ -18,7 +18,9 @@
 package io.github.muntashirakon.AppManager.ipc;
 
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
+import android.os.Parcel;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.util.Log;
@@ -29,14 +31,10 @@ import java.io.IOException;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.IRemoteProcess;
+import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 
 public class AMService extends RootService {
     static class IAMServiceImpl extends IAMService.Stub {
-        @Override
-        public IBinder getService(String name) {
-            return ServiceManager.getService(name);
-        }
-
         /**
          * To get {@link Process}, wrap it using {@link RemoteProcess}. Since the streams are piped,
          * I/O operations may have to be done in different threads.
@@ -50,6 +48,42 @@ public class AMService extends RootService {
                 throw new RemoteException(e.getMessage());
             }
             return new RemoteProcessHolder(process);
+        }
+
+        @Override
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == IBinder.FIRST_CALL_TRANSACTION) {
+                data.enforceInterface(IRootIPC.class.getName());
+                transactRemote(data, reply, flags);
+                return true;
+            }
+            return super.onTransact(code, data, reply, flags);
+        }
+
+        /**
+         * Call target Binder received through {@link ProxyBinder}.
+         *
+         * @author Rikka
+         */
+        private void transactRemote(Parcel data, Parcel reply, int flags) throws RemoteException {
+            IBinder targetBinder = data.readStrongBinder();
+            int targetCode = data.readInt();
+
+            Log.d(TAG, String.format("transact: uid=%d, descriptor=%s, code=%d", Binder.getCallingUid(), targetBinder.getInterfaceDescriptor(), targetCode));
+            Parcel newData = Parcel.obtain();
+            try {
+                newData.appendFrom(data, data.dataPosition(), data.dataAvail());
+            } catch (Throwable tr) {
+                Log.e(TAG, tr.getMessage(), tr);
+                return;
+            }
+            try {
+                long id = Binder.clearCallingIdentity();
+                targetBinder.transact(targetCode, newData, reply, flags);
+                Binder.restoreCallingIdentity(id);
+            } finally {
+                newData.recycle();
+            }
         }
     }
 

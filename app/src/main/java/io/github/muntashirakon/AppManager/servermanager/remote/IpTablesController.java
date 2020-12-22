@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.servermanager.remote;
 
-import java.io.IOException;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
@@ -77,28 +76,24 @@ class IpTablesController {
         };
     }
 
-    private Shell shell;
+    private final Shell shell;
 
     IpTablesController(Shell shell) {
         this.shell = shell;
 
-        try {
-            Shell.Result result = runIptablesCmd("-C INPUT -j " + BW_CHAIN);
-            if (result.getStatusCode() != 0) {
-                //
-                for (String chainName : CHAIN_NAMES) {
-                    runIptablesCmd(chainName);
-                }
-
-                for (String s : INIT_CHAIN) {
-                    //first delete
-                    runIptablesCmd("-D " + s);
-                    //second add
-                    runIptablesCmd("-A " + s);
-                }
+        Shell.Result result = runIptablesCmd("-C INPUT -j " + BW_CHAIN);
+        if (result.getStatusCode() != 0) {
+            //
+            for (String chainName : CHAIN_NAMES) {
+                runIptablesCmd(chainName);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            for (String s : INIT_CHAIN) {
+                //first delete
+                runIptablesCmd("-D " + s);
+                //second add
+                runIptablesCmd("-A " + s);
+            }
         }
 
         try {
@@ -110,19 +105,14 @@ class IpTablesController {
     }
 
     private boolean check(String rejectList, int uid) {
-        try {
-            Shell.Result result = runIptablesCmd(
-                    " -C " + String.format(Locale.ENGLISH, rejectList + RULE_REJECT, uid));
-            System.out.println("check  " + result.getMessage() + "   " + result.getStatusCode());
-            return result.getStatusCode() == 0;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
+        Shell.Result result = runIptablesCmd(
+                " -C " + String.format(Locale.ENGLISH, rejectList + RULE_REJECT, uid));
+        System.out.println("check  " + result.getMessage() + "   " + result.getStatusCode());
+        return result.getStatusCode() == 0;
     }
 
     @NonNull
-    private Shell.Result runIptablesCmd(String cmd) throws IOException {
+    private Shell.Result runIptablesCmd(String cmd) {
         return shell.exec("iptables " + cmd);
     }
 
@@ -146,19 +136,11 @@ class IpTablesController {
     private void change(String list, int uid, boolean enable) {
         if (enable) {
             //启用，直接删除
-            try {
-                runIptablesCmd("-D " + String.format(Locale.ENGLISH, list + RULE_REJECT, uid));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            runIptablesCmd("-D " + String.format(Locale.ENGLISH, list + RULE_REJECT, uid));
         } else {
             //关闭
             if (!check(list, uid)) {
-                try {
-                    runIptablesCmd("-A " + String.format(Locale.ENGLISH, list + RULE_REJECT, uid));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                runIptablesCmd("-A " + String.format(Locale.ENGLISH, list + RULE_REJECT, uid));
             }
 
         }
@@ -166,15 +148,10 @@ class IpTablesController {
 
 
     private void saveIptables() {
-        try {
-            System.out.println("saveIptables  -->>> ");
-            Shell.Result result = shell.exec("iptables-save");
-            if (result.getStatusCode() == 0) {
-                //System.out.println(result.getMessage());
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        System.out.println("saveIptables  -->>> ");
+        Shell.Result result = shell.exec("iptables-save");
+        if (result.getStatusCode() == 0) {
+            //System.out.println(result.getMessage());
         }
     }
 

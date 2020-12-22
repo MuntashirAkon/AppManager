@@ -77,7 +77,6 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.server.common.OpEntry;
 import io.github.muntashirakon.AppManager.server.common.PackageOps;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -666,7 +665,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 packageInfo.applicationInfo.publicSourceDir = apkPath;
                 setPackageName(packageInfo.packageName);
             } else {
-                packageInfo = ApiSupporter.getInstance(LocalServer.getInstance())
+                packageInfo = ApiSupporter.getInstance()
                         .getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
                                 | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
                                 | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES

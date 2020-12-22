@@ -48,8 +48,8 @@ import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
-import static io.github.muntashirakon.AppManager.ipc.IPCMain.CMDLINE_STOP_SERVER;
 import static io.github.muntashirakon.AppManager.ipc.RootService.serialExecutor;
+import static io.github.muntashirakon.AppManager.server.common.ServerUtils.CMDLINE_STOP_SERVER;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.PACKAGE_STAGING_DIRECTORY;
 
 class IPCClient implements IBinder.DeathRecipient, Closeable {
@@ -59,7 +59,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
     static final String LOGGING_ENV = "LIBSU_VERBOSE_LOGGING";
 
     private static final String BROADCAST_ACTION = "com.topjohnwu.superuser.BROADCAST_IPC";
-    private static final String IPCMAIN_CLASSNAME = IPCMain.class.getName();
+    private static final String IPCMAIN_CLASSNAME = "io.github.muntashirakon.AppManager.server.IPCMain";
 
     private final ComponentName name;
     private final Map<ServiceConnection, Executor> connections = new HashMap<>();
@@ -95,7 +95,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
         // Execute main.jar through root shell
         String cmd = String.format(Locale.ROOT,
                 "cp %s %s; (CLASSPATH=%s%s /system/bin/app_process /system/bin %s %s %s)&",
-                 mainJar, PACKAGE_STAGING_DIRECTORY, PACKAGE_STAGING_DIRECTORY, "/main.jar",
+                mainJar, PACKAGE_STAGING_DIRECTORY, PACKAGE_STAGING_DIRECTORY, "/main.jar",
                 IPCMAIN_CLASSNAME, name.flattenToString(), CMDLINE_STOP_SERVER /* command args */);
         // Make sure cmd is properly formatted in shell
         cmd = cmd.replace("$", "\\$");

@@ -31,7 +31,6 @@ import android.os.Bundle;
  * {@link ClassCaller#ClassCaller(String, String, Bundle)} and the associated class must be called
  * via this method (where the second parameter is the class name in string).
  */
-@SuppressWarnings("unused")
 public abstract class ClassCallerProcessor {
     private final Context mPackageContext;
     private final Context mSystemContext;

@@ -32,7 +32,6 @@ import androidx.annotation.Nullable;
 /**
  * <code>DataTransmission</code> class handles the data sent and received by server or client.
  */
-@SuppressWarnings("unused")
 public final class DataTransmission {
     /**
      * Protocol version. Specification: <code>protocol-version,token</code>
@@ -246,14 +245,6 @@ public final class DataTransmission {
     public static class ProtocolVersionException extends IOException {
         public ProtocolVersionException(String message) {
             super(message);
-        }
-
-        public ProtocolVersionException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-        public ProtocolVersionException(Throwable cause) {
-            super(cause);
         }
     }
 }

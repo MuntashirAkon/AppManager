@@ -41,6 +41,7 @@ ext {
     libserverClassDir = project.rootDir.absolutePath + '/libserver/build/intermediates/javac/debug/classes'.toPath()
     hiddenApiClassDir = project.rootDir.absolutePath + '/hiddenapi/build/intermediates/javac/debug/classes'.toPath()
     amJar = project.rootDir.absolutePath + '/app/src/main/assets/am.jar'.toPath()
+    mainJar = project.rootDir.absolutePath + '/app/src/main/assets/main.jar'.toPath()
 }
 
 build.doLast {
@@ -48,7 +49,7 @@ build.doLast {
         println("Files aren't modified, skip creating jar files.")
         return
     }
-    println("Build success, creating jar files...")
+    println("Build success, creating am.jar...")
     def buildArgs = ['--release', '--output', amJar]
     buildArgs.addAll(get_args(libserverClassDir, ["io/github/muntashirakon/AppManager/server/common/"]))
     buildArgs.addAll(get_args(debugClassDir,  ["io/github/muntashirakon/AppManager/server/"]))
@@ -60,6 +61,17 @@ build.doLast {
         args = buildArgs
     }
     println("Created ${amJar}")
+    println("Creating main.jar...")
+    buildArgs = ['--release', '--output', mainJar]
+    buildArgs.add("${debugClassDir}/io/github/muntashirakon/AppManager/server/IPCMain.class")
+    buildArgs.add("${libserverClassDir}/io/github/muntashirakon/AppManager/server/common/ServerUtils.class")
+    buildArgs.addAll(['--lib', "${android.sdkDirectory.path}/platforms/android-${rootProject.ext.targetSdk}/android.jar"])
+    exec {
+        workingDir = project.rootDir
+        executable = file("${android.sdkDirectory.path}/build-tools/${android.buildToolsVersion}/d8${isWin() ? '.bat' : ''}".toPath())
+        args = buildArgs
+    }
+    println("Created ${mainJar}")
 }
 
 def isModified() {
@@ -88,7 +100,7 @@ def loadClsFiles(File f, List paths) {
         files.each {
             file ->
                 if (file.file) {
-                    if (file.name.endsWith(".class")) {
+                    if (file.name.endsWith(".class") && !file.name.startsWith("IPCMain")) {
                         paths.add(file.path)
                     }
                 } else {
@@ -101,6 +113,7 @@ def loadClsFiles(File f, List paths) {
 task cleanupJar() {
     doLast {
         file("${rootProject.projectDir.absolutePath}/app/src/main/assets/am.jar").delete()
+        file("${rootProject.projectDir.absolutePath}/app/src/main/assets/main.jar").delete()
     }
 }
 

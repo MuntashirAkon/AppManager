@@ -33,9 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.NonNull;
 
-@SuppressWarnings("unused")
 public final class Shell {
-    private final static String TAG = "Shell";
     private static final String TOKEN = "ZL@LOVE^TYS"; //U+1F430 U+2764 U+1F431
 
     private final Process proc;
@@ -96,27 +94,20 @@ public final class Shell {
             }
         }
 
-        Runnable shellRunnable = new Runnable() {
-            @Override
-            public void run() {
-                while (!close) {
-                    try {
-                        Command command = commandQueue.take();
-                        if (command != null && !close) {
-                            Shell.this.writeCommand(command);
-                            Shell.this.readCommand(command);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        Runnable shellRunnable = () -> {
+            while (!close) {
+                try {
+                    Command command = commandQueue.take();
+                    if (command != null && !close) {
+                        Shell.this.writeCommand(command);
+                        Shell.this.readCommand(command);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                if (close) {
-                    try {
-                        Shell.this.destroyShell();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+            }
+            if (close) {
+                Shell.this.destroyShell();
             }
         };
 
@@ -167,7 +158,7 @@ public final class Shell {
         }
     }
 
-    public void destroyShell() throws InterruptedException {
+    public void destroyShell() {
         //proc.waitFor();
         try {
             writeCommand(new Command("exit 33\n") {
@@ -223,7 +214,7 @@ public final class Shell {
      * Whether all commands are executed (ie. queue is cleared)
      */
     public boolean allCommandsOver() {
-        return null == commandQueue || commandQueue.isEmpty();
+        return commandQueue.isEmpty();
     }
 
 
@@ -247,7 +238,7 @@ public final class Shell {
     }
 
     @NonNull
-    public Result exec(String cmd) throws IOException {
+    public Result exec(String cmd) {
         Result result = new Result();
         FLog.log("Command:  " + cmd);
         final StringBuilder outLine = new StringBuilder();

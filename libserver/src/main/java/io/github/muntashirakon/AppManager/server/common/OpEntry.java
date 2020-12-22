@@ -24,7 +24,6 @@ import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 
-@SuppressWarnings("unused")
 public class OpEntry implements Parcelable {
     private final int mOp;
     private final int mMode;

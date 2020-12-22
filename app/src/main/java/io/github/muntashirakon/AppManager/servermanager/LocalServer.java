@@ -28,25 +28,56 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.IAMService;
+import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.server.common.Caller;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class LocalServer {
+    @GuardedBy("lockObject")
+    private static final Object lockObject = new Object();
 
     @SuppressLint("StaticFieldLeak")
     private static LocalServer INSTANCE;
+    private static IAMService amService;
 
+    @GuardedBy("lockObject")
     public static LocalServer getInstance() {
-        if (INSTANCE == null) {
-            synchronized (LocalServer.class) {
-                if (INSTANCE == null) {
+        synchronized (lockObject) {
+            if (INSTANCE == null) {
+                try {
                     INSTANCE = new LocalServer();
+                } catch (Throwable e) {
+                    e.printStackTrace();
                 }
             }
+            lockObject.notifyAll();
+            return INSTANCE;
         }
-        return INSTANCE;
+    }
+
+    @GuardedBy("lockObject")
+    public static IAMService getAmService() {
+        synchronized (lockObject) {
+            if (amService == null) {
+                while (INSTANCE == null) {
+                    try {
+                        lockObject.wait(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    amService = IPCUtils.getAmService(AppManager.getContext());
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+                lockObject.notifyAll();
+            }
+            return amService;
+        }
     }
 
     private final LocalServerManager mLocalServerManager;
@@ -94,7 +125,9 @@ public class LocalServer {
             }
             connectStarted = true;
             try {
-                if (AppPref.isRootOrAdbEnabled()) mLocalServerManager.start();
+                if (AppPref.isRootOrAdbEnabled()) {
+                    mLocalServerManager.start();
+                }
             } catch (IOException e) {
                 connectStarted = false;
                 connectLock.notify();

@@ -22,10 +22,6 @@ import android.annotation.SuppressLint;
 import android.app.AppOpsManager;
 import android.util.SparseArray;
 
-/**
- * Created by zl on 2017/2/24.
- */
-
 public final class OtherOp {
 
     public static final int OP_ACCESS_PHONE_DATA = 51001;

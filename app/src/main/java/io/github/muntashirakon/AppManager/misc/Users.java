@@ -17,7 +17,11 @@
 
 package io.github.muntashirakon.AppManager.misc;
 
+import android.content.Context;
 import android.content.pm.UserInfo;
+import android.os.Build;
+import android.os.IUserManager;
+import android.os.RemoteException;
 import android.os.UserHandle;
 
 import java.util.ArrayList;
@@ -26,9 +30,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 public final class Users {
@@ -65,8 +68,15 @@ public final class Users {
     public static List<UserInfo> getUsers() {
         if (userInfoList == null) {
             try {
-                userInfoList = ApiSupporter.getInstance(LocalServer.getInstance()).getUsers();
-            } catch (Exception e) {
+                IUserManager userManager = IUserManager.Stub.asInterface(ProxyBinder.getService(Context.USER_SERVICE));
+                try {
+                    return userInfoList = userManager.getUsers(true);
+                } catch (NoSuchMethodError e) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        return userInfoList = userManager.getUsers(true, true, true);
+                    } else throw new RemoteException(e.getMessage());
+                }
+            } catch (RemoteException e) {
                 Log.e(TAG, "Could not get list of users", e);
             }
         }

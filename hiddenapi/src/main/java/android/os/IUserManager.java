@@ -21,18 +21,22 @@ import android.content.pm.UserInfo;
 
 import java.util.List;
 
-public interface IUserManager {
+import androidx.annotation.RequiresApi;
+
+public interface IUserManager extends IInterface {
     UserInfo getPrimaryUser();
 
     List<UserInfo> getUsers(boolean excludeDying);
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+        // Changed in 10.0.0_r30
     List<UserInfo> getUsers(boolean excludePartial, boolean excludeDying, boolean excludePreCreated);
 
     int getManagedProfileBadge(int userId);
 
     abstract class Stub {
         public static IUserManager asInterface(android.os.IBinder obj) {
-            return null;
+            throw new UnsupportedOperationException();
         }
     }
 }

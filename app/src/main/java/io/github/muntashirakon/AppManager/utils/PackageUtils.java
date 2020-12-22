@@ -286,7 +286,8 @@ public final class PackageUtils {
     @NonNull
     public static CharSequence getPackageLabel(@NonNull PackageManager pm, String packageName, int userHandle) {
         try {
-            ApplicationInfo applicationInfo = ApiSupporter.getInstance(LocalServer.getInstance()).getApplicationInfo(packageName, 0, userHandle);
+            ApplicationInfo applicationInfo = ApiSupporter.getInstance().getApplicationInfo(
+                    packageName, 0, userHandle);
             return applicationInfo.loadLabel(pm);
         } catch (Exception ignore) {
         }
@@ -326,8 +327,8 @@ public final class PackageUtils {
 
     public static int getAppUid(@NonNull UserPackagePair pair) {
         try {
-            return ApiSupporter.getInstance(LocalServer.getInstance())
-                    .getApplicationInfo(pair.getPackageName(), 0, pair.getUserHandle()).uid;
+            return ApiSupporter.getInstance().getApplicationInfo(pair.getPackageName(), 0,
+                    pair.getUserHandle()).uid;
         } catch (Exception ignore) {
         }
         return -1;

@@ -39,8 +39,8 @@ import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 import static io.github.muntashirakon.AppManager.ipc.IPCClient.BUNDLE_BINDER_KEY;
 import static io.github.muntashirakon.AppManager.ipc.IPCClient.INTENT_DEBUG_KEY;
 import static io.github.muntashirakon.AppManager.ipc.IPCClient.INTENT_EXTRA_KEY;
-import static io.github.muntashirakon.AppManager.ipc.IPCMain.getServiceName;
 import static io.github.muntashirakon.AppManager.ipc.RootService.TAG;
+import static io.github.muntashirakon.AppManager.server.common.ServerUtils.getServiceName;
 
 class IPCServer extends IRootIPC.Stub implements IBinder.DeathRecipient {
 

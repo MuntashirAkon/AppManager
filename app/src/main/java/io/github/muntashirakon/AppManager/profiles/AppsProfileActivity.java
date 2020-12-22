@@ -55,7 +55,6 @@ import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 
@@ -161,7 +160,7 @@ public class AppsProfileActivity extends BaseActivity
                 // List apps
                 PackageManager pm = getPackageManager();
                 try {
-                    List<PackageInfo> packageInfoList = ApiSupporter.getInstance(LocalServer.getInstance()).getInstalledPackages(flagSigningInfo | PackageManager.GET_ACTIVITIES | flagDisabledComponents, Users.getCurrentUserHandle());
+                    List<PackageInfo> packageInfoList = ApiSupporter.getInstance().getInstalledPackages(flagSigningInfo | PackageManager.GET_ACTIVITIES | flagDisabledComponents, Users.getCurrentUserHandle());
                     ArrayList<String> items = new ArrayList<>(packageInfoList.size());
                     ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
                     for (PackageInfo info : packageInfoList) {

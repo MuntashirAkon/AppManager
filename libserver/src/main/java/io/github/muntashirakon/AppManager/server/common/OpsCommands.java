@@ -22,7 +22,6 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-@SuppressWarnings("unused")
 public class OpsCommands {
     public static final String ACTION_GET = "get";
     public static final String ACTION_SET = "set";

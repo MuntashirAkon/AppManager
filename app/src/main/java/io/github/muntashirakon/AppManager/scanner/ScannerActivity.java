@@ -62,6 +62,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.collection.ArrayMap;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
@@ -97,6 +98,7 @@ public class ScannerActivity extends BaseActivity {
     private File apkFile;
     private Uri apkUri;
     private boolean isExternalApk;
+    private ScannerViewModel model;
 
     @Override
     protected void onDestroy() {
@@ -127,6 +129,7 @@ public class ScannerActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
         setSupportActionBar(findViewById(R.id.toolbar));
+        model = new ViewModelProvider(this).get(ScannerViewModel.class);
         mActionBar = getSupportActionBar();
         Intent intent = getIntent();
         isExternalApk = intent.getBooleanExtra(EXTRA_IS_EXTERNAL, true);

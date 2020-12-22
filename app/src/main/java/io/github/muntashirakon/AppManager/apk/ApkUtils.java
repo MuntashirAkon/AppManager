@@ -42,7 +42,6 @@ import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 import static io.github.muntashirakon.AppManager.utils.IOUtils.copy;
@@ -88,7 +87,7 @@ public final class ApkUtils {
         // Fetch package info
         try {
             PackageManager pm = AppManager.getContext().getPackageManager();
-            PackageInfo packageInfo = ApiSupporter.getInstance(LocalServer.getInstance())
+            PackageInfo packageInfo = ApiSupporter.getInstance()
                     .getPackageInfo(packageName, 0, userHandle);
             ApplicationInfo info = packageInfo.applicationInfo;
             String outputName = info.loadLabel(pm).toString() + "_" + packageInfo.versionName;

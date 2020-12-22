@@ -30,7 +30,6 @@ import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.server.common.Shell;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 
 public class AdbShell {
     @SuppressLint("StaticFieldLeak")
@@ -57,7 +56,7 @@ public class AdbShell {
     @NonNull
     synchronized public static CommandResult run(String command) throws IOException {
         if (apiSupporter == null) {
-            apiSupporter = ApiSupporter.getInstance(LocalServer.getInstance());
+            apiSupporter = ApiSupporter.getInstance();
         }
         Shell.Result result;
         try {

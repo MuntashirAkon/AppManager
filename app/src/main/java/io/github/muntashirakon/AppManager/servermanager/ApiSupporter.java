@@ -17,164 +17,62 @@
 
 package io.github.muntashirakon.AppManager.servermanager;
 
+import android.content.ComponentName;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.IPackageManager;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.UserInfo;
-import android.os.Build;
 import android.os.Bundle;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.misc.Users;
-import io.github.muntashirakon.AppManager.server.common.Shell;
-import io.github.muntashirakon.AppManager.servermanager.remote.PackageHandler;
-import io.github.muntashirakon.AppManager.servermanager.remote.RestartHandler;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.ClassCaller;
-import io.github.muntashirakon.AppManager.server.common.SystemServiceCaller;
+import io.github.muntashirakon.AppManager.server.common.Shell;
+import io.github.muntashirakon.AppManager.servermanager.remote.RestartHandler;
 import io.github.muntashirakon.AppManager.servermanager.remote.ShellCommandHandler;
-import io.github.muntashirakon.AppManager.servermanager.remote.UserHandler;
 import io.github.muntashirakon.toybox.ToyboxInitializer;
 
 public class ApiSupporter {
     private static ApiSupporter INSTANCE;
 
-    public static ApiSupporter getInstance(LocalServer localServer) {
-        if (INSTANCE == null) INSTANCE = new ApiSupporter(localServer);
+    public static ApiSupporter getInstance() {
+        if (INSTANCE == null) INSTANCE = new ApiSupporter();
         return INSTANCE;
     }
 
     private static final String TAG = "ApiSupporter";
     private final LocalServer localServer;
     private final String packageName;
-    private final int userHandle;
 
-    ApiSupporter(@NonNull LocalServer localServer) {
-        this.localServer = localServer;
+    private ApiSupporter() {
+        this.localServer = LocalServer.getInstance();
         this.packageName = BuildConfig.APPLICATION_ID;
-        this.userHandle = Users.getCurrentUserHandle();
     }
 
     public List<PackageInfo> getInstalledPackages(int flags, int userHandle) throws Exception {
-        if (this.userHandle == userHandle) {
-            // Get using PackageManager if the handler are the same
-            return localServer.getContext().getPackageManager().getInstalledPackages(flags);
-        }
-        SystemServiceCaller caller = new SystemServiceCaller("package",
-                "getInstalledPackages", new Class[]{int.class, int.class}, new Object[]{flags, userHandle});
-        CallerResult callerResult = localServer.exec(caller);
-        callerResult.getReplyObj();
-        if (callerResult.getThrowable() != null) {
-            throw new Exception(callerResult.getThrowable());
-        } else {
-            Object replyObj = callerResult.getReplyObj();
-            if (replyObj instanceof List) {
-                try {
-                    //noinspection unchecked
-                    return ((List<PackageInfo>) replyObj);
-                } catch (ClassCastException ignore) {
-                }
-            }
-        }
-        return null;
+        IPackageManager pm = IPackageManager.Stub.asInterface(ProxyBinder.getService("package"));
+        return pm.getInstalledPackages(flags, userHandle).getList();
     }
 
     public void setComponentEnabledSetting(String packageName, String componentName, int newState, int flags, int userHandle) throws Exception {
-        Bundle args = new Bundle();
-        args.putInt(PackageHandler.ARG_ACTION, PackageHandler.ACTION_COMPONENT_SETTING);
-        args.putString(PackageHandler.ARG_PACKAGE_NAME, packageName);
-        args.putString(PackageHandler.ARG_COMPONENT_NAME, componentName);
-        args.putInt(PackageHandler.ARG_COMPONENT_STATE, newState);
-        args.putInt(PackageHandler.ARG_FLAGS, flags);
-        args.putInt(PackageHandler.ARG_USER_HANDLE, userHandle);
-        ClassCaller classCaller = new ClassCaller(this.packageName, PackageHandler.class.getName(), args);
-        CallerResult result = localServer.exec(classCaller);
-        result.getReplyObj();
-        if (result.getThrowable() != null) {
-            throw new Exception(result.getThrowable());
-        }
+        IPackageManager pm = IPackageManager.Stub.asInterface(ProxyBinder.getService("package"));
+        pm.setComponentEnabledSetting(new ComponentName(packageName, componentName), newState, flags, userHandle);
     }
 
     @NonNull
     public PackageInfo getPackageInfo(String packageName, int flags, int userHandle) throws Exception {
-        if (this.userHandle == userHandle) {
-            // Get using PackageManager if the handler are the same
-            return localServer.getContext().getPackageManager().getPackageInfo(packageName, flags);
-        }
-        Bundle args = new Bundle();
-        args.putInt(PackageHandler.ARG_ACTION, PackageHandler.ACTION_PACKAGE_INFO);
-        args.putString(PackageHandler.ARG_PACKAGE_NAME, packageName);
-        args.putInt(PackageHandler.ARG_FLAGS, flags);
-        args.putInt(PackageHandler.ARG_USER_HANDLE, userHandle);
-        ClassCaller classCaller = new ClassCaller(this.packageName, PackageHandler.class.getName(), args);
-        CallerResult result = localServer.exec(classCaller);
-        result.getReplyObj();
-        if (result.getThrowable() != null) {
-            throw new Exception(result.getThrowable());
-        } else {
-            Bundle reply = result.getReplyBundle();
-            PackageInfo packageInfo = reply.getParcelable("return");
-            if (packageInfo == null) {
-                throw new PackageManager.NameNotFoundException("Package doesn't exist.");
-            }
-            return packageInfo;
-        }
+        IPackageManager pm = IPackageManager.Stub.asInterface(ProxyBinder.getService("package"));
+        return pm.getPackageInfo(packageName, flags, userHandle);
     }
 
     @NonNull
     public ApplicationInfo getApplicationInfo(String packageName, int flags, int userHandle) throws Exception {
-        if (this.userHandle == userHandle) {
-            // Get using PackageManager if the handler are the same
-            return localServer.getContext().getPackageManager().getApplicationInfo(packageName, flags);
-        }
-        Bundle args = new Bundle();
-        args.putInt(PackageHandler.ARG_ACTION, PackageHandler.ACTION_APPLICATION_INFO);
-        args.putString(PackageHandler.ARG_PACKAGE_NAME, packageName);
-        args.putInt(PackageHandler.ARG_FLAGS, flags);
-        args.putInt(PackageHandler.ARG_USER_HANDLE, userHandle);
-        ClassCaller classCaller = new ClassCaller(this.packageName, PackageHandler.class.getName(), args);
-        CallerResult result = localServer.exec(classCaller);
-        result.getReplyObj();
-        if (result.getThrowable() != null) {
-            throw new Exception(result.getThrowable());
-        } else {
-            Bundle reply = result.getReplyBundle();
-            ApplicationInfo applicationInfo = reply.getParcelable("return");
-            if (applicationInfo == null) {
-                throw new PackageManager.NameNotFoundException("Package doesn't exist.");
-            }
-            return applicationInfo;
-        }
-    }
-
-    public List<UserInfo> getUsers() throws Exception {
-        Bundle args = new Bundle();
-        args.putInt(UserHandler.ARG_ACTION, UserHandler.ACTION_GET_ALL_USER_INFO);
-        ClassCaller classCaller = new ClassCaller(this.packageName, UserHandler.class.getName(), args);
-        CallerResult callerResult = localServer.exec(classCaller);
-        callerResult.getReplyObj();
-        if (callerResult.getThrowable() != null) {
-            // Try new API
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                args.putInt(UserHandler.ARG_ACTION, UserHandler.ACTION_GET_ALL_USER_INFO_NEW_API);
-                classCaller = new ClassCaller(this.packageName, UserHandler.class.getName(), args);
-                callerResult = localServer.exec(classCaller);
-                callerResult.getReplyObj();
-                if (callerResult.getThrowable() != null) {
-                    throw new Exception(callerResult.getThrowable());
-                } else {
-                    Bundle bundle = callerResult.getReplyBundle();
-                    return bundle.getParcelableArrayList("return");
-                }
-            } else throw new Exception(callerResult.getThrowable());
-        } else {
-            Bundle bundle = callerResult.getReplyBundle();
-            return bundle.getParcelableArrayList("return");
-        }
+        IPackageManager pm = IPackageManager.Stub.asInterface(ProxyBinder.getService("package"));
+        return pm.getApplicationInfo(packageName, flags, userHandle);
     }
 
     public Shell.Result runCommand(String command) throws Exception {

@@ -44,9 +44,7 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.pm.PackageInfoCompat;
-
 import androidx.core.content.pm.PermissionInfoCompat;
-import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerShell;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
@@ -55,6 +53,7 @@ import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -63,7 +62,6 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.server.common.OpEntry;
 import io.github.muntashirakon.AppManager.server.common.PackageOps;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.FreshFile;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -301,8 +299,8 @@ public class BackupManager {
             this.backupFlags = BackupManager.this.requestedFlags;
             this.tmpBackupPath = this.backupFile.getBackupPath();
             try {
-                packageInfo = ApiSupporter.getInstance(LocalServer.getInstance()).getPackageInfo(
-                        packageName, PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo
+                packageInfo = ApiSupporter.getInstance().getPackageInfo(packageName,
+                        PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo
                                 | PackageManager.GET_PERMISSIONS, userHandle);
                 this.applicationInfo = packageInfo.applicationInfo;
                 // Override existing metadata
@@ -583,7 +581,7 @@ public class BackupManager {
             this.backupFile = backupFile;
             this.backupPath = this.backupFile.getBackupPath();
             this.userHandle = userHandle;
-            this.apiSupporter = ApiSupporter.getInstance(LocalServer.getInstance());
+            this.apiSupporter = ApiSupporter.getInstance();
             try {
                 metadataManager.readMetadata(this.backupFile);
                 metadata = metadataManager.getMetadata();

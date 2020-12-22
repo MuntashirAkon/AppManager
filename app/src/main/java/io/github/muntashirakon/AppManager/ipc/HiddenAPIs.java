@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.ipc;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 
 import java.lang.reflect.Field;
@@ -31,16 +30,6 @@ import java.lang.reflect.Method;
  * accessing these internal APIs through reflection will be blocked.
  */
 class HiddenAPIs {
-
-    @SuppressLint("StaticFieldLeak")
-    private static Context systemContext;
-
-    static synchronized Context getSystemContext() {
-        if (systemContext == null)
-            systemContext = IPCMain.getSystemContext();
-        return systemContext;
-    }
-
     // Set this flag to silence AMS's complaints
     @SuppressWarnings("JavaReflectionMemberAccess")
     static int FLAG_RECEIVER_FROM_SHELL() {

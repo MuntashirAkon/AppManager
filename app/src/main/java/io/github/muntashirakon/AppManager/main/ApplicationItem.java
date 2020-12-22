@@ -26,10 +26,9 @@ import android.util.Pair;
 import java.util.Objects;
 
 import androidx.annotation.Nullable;
+import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-import aosp.libcore.util.EmptyArray;
 
 /**
  * Stores an application info
@@ -135,7 +134,7 @@ public class ApplicationItem extends PackageItemInfo {
     public Drawable loadIcon(PackageManager pm) {
         if (userHandles.length > 0) {
             try {
-                ApplicationInfo info = ApiSupporter.getInstance(LocalServer.getInstance()).getApplicationInfo(packageName, 0, userHandles[0]);
+                ApplicationInfo info = ApiSupporter.getInstance().getApplicationInfo(packageName, 0, userHandles[0]);
                 return info.loadIcon(pm);
             } catch (Exception ignore) {
             }

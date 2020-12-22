@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package io.github.muntashirakon.AppManager.ipc;
+package io.github.muntashirakon.AppManager.server;
 
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
@@ -30,6 +30,8 @@ import java.lang.reflect.Method;
 
 import static android.os.IBinder.LAST_CALL_TRANSACTION;
 
+import io.github.muntashirakon.AppManager.server.common.ServerUtils;
+
 /**
  * Trampoline to start a root service.
  * <p>
@@ -42,12 +44,9 @@ import static android.os.IBinder.LAST_CALL_TRANSACTION;
  * <p>
  * Expected command-line args:
  * args[0]: client service component name
- * args[1]: {@link #CMDLINE_STOP_SERVER} or class name of IPCServer
+ * args[1]: {@link ServerUtils#CMDLINE_STOP_SERVER} or class name of IPCServer
  */
 public class IPCMain {
-
-    public static final String CMDLINE_STOP_SERVER = "stopServer";
-
     public static Context getSystemContext() {
         try {
             synchronized (Looper.class) {
@@ -98,7 +97,7 @@ public class IPCMain {
         try {
             ComponentName component = ComponentName.unflattenFromString(args[0]);
 
-            if (args[1].equals(CMDLINE_STOP_SERVER))
+            if (args[1].equals(ServerUtils.CMDLINE_STOP_SERVER))
                 stopRemoteService(component);
 
             Context systemContext = getSystemContext();
