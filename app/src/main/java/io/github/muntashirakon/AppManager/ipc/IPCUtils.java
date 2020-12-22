@@ -6,11 +6,10 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
-import java.io.File;
-
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public final class IPCUtils {
     private static final String TAG = "IPCUtils";
@@ -41,7 +40,7 @@ public final class IPCUtils {
         }
     }
 
-    public static void startDaemon(Context context) {
+    private static void startDaemon(Context context) {
         if (amService == null) {
             Log.e(TAG, "Launching service...");
             Intent intent = new Intent(context, AMService.class);
@@ -65,8 +64,9 @@ public final class IPCUtils {
         }
     }
 
+    @Nullable
     public static IAMService getAmService(Context context) {
-        if (amService == null) {
+        if (amService == null && AppPref.isRootOrAdbEnabled()) {
             startDaemon(context);
         }
         return amService;

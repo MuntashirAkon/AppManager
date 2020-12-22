@@ -25,6 +25,7 @@ import java.net.SocketTimeoutException;
 
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -41,31 +42,32 @@ public class LocalServer {
     private static final Object lockObject = new Object();
 
     @SuppressLint("StaticFieldLeak")
-    private static LocalServer INSTANCE;
+    private static LocalServer localServer;
     private static IAMService amService;
 
     @GuardedBy("lockObject")
     public static LocalServer getInstance() {
         synchronized (lockObject) {
-            if (INSTANCE == null) {
+            if (localServer == null) {
                 try {
                     Log.e("IPC", "Init: Local server");
-                    INSTANCE = new LocalServer();
+                    localServer = new LocalServer();
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }
             }
             lockObject.notifyAll();
-            return INSTANCE;
+            return localServer;
         }
     }
 
     @GuardedBy("lockObject")
+    @Nullable
     public static IAMService getAmService() {
         synchronized (lockObject) {
             if (amService == null) {
-                while (INSTANCE == null) {
-                    Log.e("IPC", "Waiting for local server");
+                while (localServer == null && AppPref.isRootOrAdbEnabled()) {
+                    Log.d("IPC", "Waiting for local server");
                     try {
                         lockObject.wait(1000);
                     } catch (InterruptedException e) {
@@ -185,8 +187,8 @@ public class LocalServer {
     }
 
     public static void updateConfig() {
-        if (INSTANCE != null) {
-            Config config = INSTANCE.getConfig();
+        if (localServer != null) {
+            Config config = localServer.getConfig();
             if (config != null) {
                 updateConfig(config);
             }
@@ -196,7 +198,7 @@ public class LocalServer {
     private static void updateConfig(@NonNull Config config) {
         config.allowBgRunning = ServerConfig.getAllowBgRunning();
         config.adbPort = ServerConfig.getAdbPort();
-        if (INSTANCE != null) INSTANCE.mLocalServerManager.updateConfig(config);
+        if (localServer != null) localServer.mLocalServerManager.updateConfig(config);
     }
 
     public static class Config {
