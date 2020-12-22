@@ -68,7 +68,6 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 
@@ -160,12 +159,10 @@ public final class PackageUtils {
     public static Collection<Integer> getFilteredAppOps(String packageName, @NonNull int[] appOps) {
         List<Integer> filteredAppOps = new ArrayList<>();
         AppOpsService appOpsService = new AppOpsService();
-        int userHandle = Users.getCurrentUserHandle();
-        int uid = PackageUtils.getAppUid(new UserPackagePair(packageName, userHandle));
+        int uid = PackageUtils.getAppUid(new UserPackagePair(packageName, Users.getCurrentUserHandle()));
         for (int appOp : appOps) {
             try {
-                if (appOpsService.checkOperation(appOp, uid, packageName,
-                        userHandle) != AppOpsManager.MODE_IGNORED) {
+                if (appOpsService.checkOperation(appOp, uid, packageName) != AppOpsManager.MODE_IGNORED) {
                     filteredAppOps.add(appOp);
                 }
             } catch (Exception e) {

@@ -65,8 +65,8 @@ public class ExternalComponentsImporter {
                 for (int appOp : appOpList) {
                     try {
                         appOpsService.setMode(appOp, PackageUtils.getAppUid(pair),
-                                pair.getPackageName(), AppOpsManager.MODE_IGNORED,
-                                pair.getUserHandle());
+                                pair.getPackageName(), AppOpsManager.MODE_IGNORED
+                        );
                         cb.setAppOp(String.valueOf(appOp), AppOpsManager.MODE_IGNORED);
                     } catch (Exception ignore) {
                     }
@@ -91,8 +91,8 @@ public class ExternalComponentsImporter {
                 for (int appOp : appOpList) {
                     try {
                         appOpsService.setMode(appOp, PackageUtils.getAppUid(pair),
-                                pair.getPackageName(), AppOpsManager.MODE_DEFAULT,
-                                pair.getUserHandle());
+                                pair.getPackageName(), AppOpsManager.MODE_DEFAULT
+                        );
                         cb.setAppOp(String.valueOf(appOp), AppOpsManager.MODE_DEFAULT);
                     } catch (Exception ignore) {
                     }

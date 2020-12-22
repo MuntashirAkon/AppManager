@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager.server.common;
+package io.github.muntashirakon.AppManager.appops;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

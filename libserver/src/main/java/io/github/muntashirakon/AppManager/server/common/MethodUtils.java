@@ -47,7 +47,6 @@ import androidx.annotation.NonNull;
  *
  * @version $Id$
  */
-@SuppressWarnings("unused")
 public class MethodUtils {
 
     // --------------------------------------------------------- Private Methods

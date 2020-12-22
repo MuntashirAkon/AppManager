@@ -65,6 +65,8 @@ import androidx.lifecycle.MutableLiveData;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.appops.OpEntry;
+import io.github.muntashirakon.AppManager.appops.PackageOps;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
@@ -74,8 +76,6 @@ import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
-import io.github.muntashirakon.AppManager.server.common.OpEntry;
-import io.github.muntashirakon.AppManager.server.common.PackageOps;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
@@ -314,7 +314,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (isGranted) {
             if (appOp != AppOpsManager.OP_NONE) {
                 try {
-                    mAppOpsService.setMode(appOp, uid, packageName, AppOpsManager.MODE_ALLOWED, userHandle);
+                    mAppOpsService.setMode(appOp, uid, packageName, AppOpsManager.MODE_ALLOWED);
                 } catch (Exception e) {
                     return false;
                 }
@@ -324,7 +324,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         } else {
             if (appOp != AppOpsManager.OP_NONE) {
                 try {
-                    mAppOpsService.setMode(appOp, uid, packageName, AppOpsManager.MODE_IGNORED, userHandle);
+                    mAppOpsService.setMode(appOp, uid, packageName, AppOpsManager.MODE_IGNORED);
                 } catch (Exception e) {
                     return false;
                 }
@@ -393,7 +393,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (mAppOpsService == null) mAppOpsService = new AppOpsService();
         try {
             // Set mode
-            mAppOpsService.setMode(op, packageInfo.applicationInfo.uid, packageName, mode, userHandle);
+            mAppOpsService.setMode(op, packageInfo.applicationInfo.uid, packageName, mode);
             new Thread(() -> {
                 synchronized (blockerLocker) {
                     waitForBlockerOrExit();
@@ -462,7 +462,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         // Set mode
                         try {
                             mAppOpsService.setMode(opEntry.getOp(), packageInfo.applicationInfo.uid,
-                                    packageName, AppOpsManager.MODE_IGNORED, userHandle);
+                                    packageName, AppOpsManager.MODE_IGNORED);
                             opItems.add(opEntry.getOp());
                             appDetailsItem.vanillaItem = new OpEntry(opEntry.getOp(),
                                     AppOpsManager.MODE_IGNORED, opEntry.getTime(),
@@ -907,7 +907,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 || PermissionUtils.hasAppOpsPermission(getApplication()))) {
             if (mAppOpsService == null) mAppOpsService = new AppOpsService();
             try {
-                List<PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(packageInfo.applicationInfo.uid, packageName, null, userHandle);
+                List<PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(packageInfo.applicationInfo.uid, packageName, null);
                 List<OpEntry> opEntries = new ArrayList<>();
                 if (packageOpsList.size() == 1)
                     opEntries.addAll(packageOpsList.get(0).getOps());
@@ -1008,7 +1008,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     // Override isGranted only if the original permission isn't granted
                     try {
                         appDetailsItem.isGranted = mAppOpsService.checkOperation(appDetailsItem.appOp,
-                                packageInfo.applicationInfo.uid, packageName, userHandle) == AppOpsManager.MODE_ALLOWED;
+                                packageInfo.applicationInfo.uid, packageName) == AppOpsManager.MODE_ALLOWED;
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

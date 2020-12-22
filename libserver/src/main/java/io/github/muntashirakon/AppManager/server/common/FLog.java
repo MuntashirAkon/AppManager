@@ -29,9 +29,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Created by zl on 2017/2/26.
- */
 public class FLog {
 
     public static boolean writeLog = false;
@@ -86,7 +83,7 @@ public class FLog {
         if (writeLog) {
             System.out.println(log);
         } else {
-            Log.e("appopsx", "Flog --> " + log);
+            Log.e("am", "Flog --> " + log);
         }
 
         try {

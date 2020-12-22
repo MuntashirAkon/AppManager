@@ -196,7 +196,7 @@ public final class ComponentUtils {
                 for (RulesStorageManager.Entry entry: cb.getAll(RulesStorageManager.Type.APP_OP)) {
                     try {
                         int op = (int) entry.extra;
-                        appOpsService.setMode(op, uid, packageName, AppOpsManager.MODE_DEFAULT, userHandle);
+                        appOpsService.setMode(op, uid, packageName, AppOpsManager.MODE_DEFAULT);
                         cb.removeEntry(entry);
                     } catch (Exception e) {
                         e.printStackTrace();

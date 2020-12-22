@@ -29,6 +29,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import static android.os.IBinder.LAST_CALL_TRANSACTION;
+import static io.github.muntashirakon.AppManager.server.common.ServerUtils.getServiceName;
+import static io.github.muntashirakon.AppManager.server.common.ServerUtils.getSystemContext;
 
 import io.github.muntashirakon.AppManager.server.common.ServerUtils;
 
@@ -47,29 +49,6 @@ import io.github.muntashirakon.AppManager.server.common.ServerUtils;
  * args[1]: {@link ServerUtils#CMDLINE_STOP_SERVER} or class name of IPCServer
  */
 public class IPCMain {
-    public static Context getSystemContext() {
-        try {
-            synchronized (Looper.class) {
-                if (Looper.getMainLooper() == null)
-                    Looper.prepareMainLooper();
-            }
-
-            Class<?> atClazz = Class.forName("android.app.ActivityThread");
-            Method systemMain = atClazz.getMethod("systemMain");
-            Object activityThread = systemMain.invoke(null);
-            Method getSystemContext = atClazz.getMethod("getSystemContext");
-            return (Context) getSystemContext.invoke(activityThread);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    // Convert to a valid service name
-    public static String getServiceName(ComponentName name) {
-        //noinspection RegExpRedundantEscape
-        return name.flattenToString().replace("$", ".").replaceAll("[^a-zA-Z0-9\\/._\\-]", "_");
-    }
-
     private static void stopRemoteService(ComponentName name) throws Exception {
         @SuppressLint("PrivateApi")
         Class<?> sm = Class.forName("android.os.ServiceManager");

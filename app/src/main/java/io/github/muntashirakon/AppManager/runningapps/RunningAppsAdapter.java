@@ -154,7 +154,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
                     final AtomicInteger mode = new AtomicInteger(AppOpsManager.MODE_DEFAULT);
                     final int userHandle = Users.getUserHandle(applicationInfo.uid);
                     try {
-                        mode.set(new AppOpsService().checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName, userHandle));
+                        mode.set(new AppOpsService().checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName));
                     } catch (Exception ignore) {
                     }
                     mActivity.runOnUiThread(() -> {
@@ -163,7 +163,7 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
                                 new Thread(() -> {
                                     try {
                                         new AppOpsService().setMode(AppOpsManager.OP_RUN_IN_BACKGROUND,
-                                                applicationInfo.uid, applicationInfo.packageName, AppOpsManager.MODE_IGNORED, userHandle);
+                                                applicationInfo.uid, applicationInfo.packageName, AppOpsManager.MODE_IGNORED);
                                         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(applicationInfo.packageName, userHandle)) {
                                             cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
                                         }

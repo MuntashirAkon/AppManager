@@ -30,6 +30,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.server.common.Caller;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
@@ -48,6 +49,7 @@ public class LocalServer {
         synchronized (lockObject) {
             if (INSTANCE == null) {
                 try {
+                    Log.e("IPC", "Init: Local server");
                     INSTANCE = new LocalServer();
                 } catch (Throwable e) {
                     e.printStackTrace();
@@ -63,6 +65,7 @@ public class LocalServer {
         synchronized (lockObject) {
             if (amService == null) {
                 while (INSTANCE == null) {
+                    Log.e("IPC", "Waiting for local server");
                     try {
                         lockObject.wait(1000);
                     } catch (InterruptedException e) {

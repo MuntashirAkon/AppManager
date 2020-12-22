@@ -48,6 +48,8 @@ import androidx.core.content.pm.PermissionInfoCompat;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerShell;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.appops.OpEntry;
+import io.github.muntashirakon.AppManager.appops.PackageOps;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -59,8 +61,6 @@ import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
-import io.github.muntashirakon.AppManager.server.common.OpEntry;
-import io.github.muntashirakon.AppManager.server.common.PackageOps;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 import io.github.muntashirakon.AppManager.types.FreshFile;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
@@ -488,7 +488,7 @@ public class BackupManager {
             PackageManager pm = AppManager.getContext().getPackageManager();
             List<OpEntry> opEntries = new ArrayList<>();
             try {
-                List<PackageOps> packageOpsList = new AppOpsService().getOpsForPackage(packageInfo.applicationInfo.uid, packageName, null, userHandle);
+                List<PackageOps> packageOpsList = new AppOpsService().getOpsForPackage(packageInfo.applicationInfo.uid, packageName, null);
                 if (packageOpsList.size() == 1) opEntries.addAll(packageOpsList.get(0).getOps());
             } catch (Exception ignore) {
             }

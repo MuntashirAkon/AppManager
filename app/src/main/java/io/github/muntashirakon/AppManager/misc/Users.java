@@ -76,7 +76,7 @@ public final class Users {
                         return userInfoList = userManager.getUsers(true, true, true);
                     } else throw new RemoteException(e.getMessage());
                 }
-            } catch (RemoteException e) {
+            } catch (RemoteException | SecurityException e) {
                 Log.e(TAG, "Could not get list of users", e);
             }
         }

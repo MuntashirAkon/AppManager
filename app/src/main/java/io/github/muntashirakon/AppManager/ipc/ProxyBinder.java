@@ -44,7 +44,7 @@ public class ProxyBinder implements IBinder {
             binder = ServiceManager.getService(serviceName);
             sServiceCache.put(serviceName, binder);
         }
-        return binder;
+        return new ProxyBinder(binder);
     }
 
     private final IBinder original;
