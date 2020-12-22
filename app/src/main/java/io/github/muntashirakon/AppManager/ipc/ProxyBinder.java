@@ -23,8 +23,10 @@ import android.os.IInterface;
 import android.os.Parcel;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.util.ArrayMap;
 
 import java.io.FileDescriptor;
+import java.util.Map;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -33,9 +35,16 @@ import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 
 public class ProxyBinder implements IBinder {
+    private static final Map<String, IBinder> sServiceCache = new ArrayMap<>();
+
     @NonNull
     public static IBinder getService(String serviceName) {
-        return new ProxyBinder(ServiceManager.getService(serviceName));
+        IBinder binder = sServiceCache.get(serviceName);
+        if (binder == null) {
+            binder = ServiceManager.getService(serviceName);
+            sServiceCache.put(serviceName, binder);
+        }
+        return binder;
     }
 
     private final IBinder original;
