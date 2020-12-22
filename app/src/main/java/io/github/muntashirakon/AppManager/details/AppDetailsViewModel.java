@@ -665,10 +665,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 packageInfo.applicationInfo.publicSourceDir = apkPath;
                 setPackageName(packageInfo.packageName);
             } else {
-                packageInfo = ApiSupporter.getInstance()
-                        .getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
-                                | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
-                                | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES
+                packageInfo = ApiSupporter.getPackageInfo(packageName,
+                        PackageManager.GET_PERMISSIONS | PackageManager.GET_ACTIVITIES
+                                | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
+                                | PackageManager.GET_SERVICES
                                 | PackageManager.GET_URI_PERMISSION_PATTERNS
                                 | flagDisabledComponents | flagSigningInfo
                                 | PackageManager.GET_CONFIGURATIONS

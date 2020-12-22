@@ -105,8 +105,7 @@ final class ProcessParser {
         List<PackageInfo> packageInfoList = new ArrayList<>();
         for (int userHandle : Users.getUsersHandles()) {
             try {
-                packageInfoList.addAll(ApiSupporter.getInstance().getInstalledPackages(0,
-                        userHandle));
+                packageInfoList.addAll(ApiSupporter.getInstalledPackages(0, userHandle));
             } catch (Exception e) {
                 e.printStackTrace();
             }

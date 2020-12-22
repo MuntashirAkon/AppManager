@@ -299,7 +299,7 @@ public class BackupManager {
             this.backupFlags = BackupManager.this.requestedFlags;
             this.tmpBackupPath = this.backupFile.getBackupPath();
             try {
-                packageInfo = ApiSupporter.getInstance().getPackageInfo(packageName,
+                packageInfo = ApiSupporter.getPackageInfo(packageName,
                         PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo
                                 | PackageManager.GET_PERMISSIONS, userHandle);
                 this.applicationInfo = packageInfo.applicationInfo;
@@ -564,8 +564,6 @@ public class BackupManager {
         private final PrivilegedFile backupPath;
         @NonNull
         private final BackupFiles.BackupFile backupFile;
-        @NonNull
-        private final ApiSupporter apiSupporter;
         @Nullable
         private PackageInfo packageInfo;
         @NonNull
@@ -581,7 +579,6 @@ public class BackupManager {
             this.backupFile = backupFile;
             this.backupPath = this.backupFile.getBackupPath();
             this.userHandle = userHandle;
-            this.apiSupporter = ApiSupporter.getInstance();
             try {
                 metadataManager.readMetadata(this.backupFile);
                 metadata = metadataManager.getMetadata();
@@ -630,7 +627,7 @@ public class BackupManager {
             // Get package info
             packageInfo = null;
             try {
-                packageInfo = apiSupporter.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
+                packageInfo = ApiSupporter.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
             } catch (Exception ignore) {
             }
             isInstalled = packageInfo != null;
@@ -775,7 +772,7 @@ public class BackupManager {
             deleteFiles(allApks);  // Clean up apk files
             // Get package info, again
             try {
-                packageInfo = apiSupporter.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
+                packageInfo = ApiSupporter.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
                 isInstalled = true;
             } catch (Exception e) {
                 throw new BackupException("Apparently the install wasn't complete in the previous section.", e);

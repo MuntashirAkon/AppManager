@@ -1177,7 +1177,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
         if (isExternalApk) {
             try {
-                mInstalledPackageInfo = ApiSupporter.getInstance().getPackageInfo(mPackageName,
+                mInstalledPackageInfo = ApiSupporter.getPackageInfo(mPackageName,
                         PackageManager.GET_PERMISSIONS | PackageManager.GET_ACTIVITIES
                                 | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                                 | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS

@@ -19,11 +19,13 @@ package io.github.muntashirakon.AppManager;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.IPackageManager;
 
 import com.topjohnwu.superuser.Shell;
 import com.yariksoffice.lingver.Lingver;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.toybox.ToyboxInitializer;
 import me.weishu.reflection.Reflection;
@@ -47,6 +49,10 @@ public class AppManager extends Application {
     @NonNull
     public static Context getContext() {
         return instance.getBaseContext();
+    }
+
+    public static IPackageManager getIPackageManager() {
+        return IPackageManager.Stub.asInterface(ProxyBinder.getService("package"));
     }
 
     @Override

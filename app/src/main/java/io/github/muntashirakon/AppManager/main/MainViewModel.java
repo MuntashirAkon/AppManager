@@ -219,9 +219,9 @@ public class MainViewModel extends AndroidViewModel {
                     @SuppressLint("WrongConstant")
                     List<PackageInfo> packageInfoList;
                     try {
-                        packageInfoList = ApiSupporter.getInstance().getInstalledPackages(
-                                flagSigningInfo | PackageManager.GET_ACTIVITIES
-                                        | flagDisabledComponents, userHandle);
+                        packageInfoList = ApiSupporter.getInstalledPackages(flagSigningInfo
+                                | PackageManager.GET_ACTIVITIES | flagDisabledComponents,
+                                userHandle);
                     } catch (Exception e) {
                         Log.e("MVM", "Could not retrieve package info list for user " + userHandle);
                         e.printStackTrace();
@@ -516,7 +516,7 @@ public class MainViewModel extends AndroidViewModel {
         for (int userHandle : userHandles) {
             try {
                 @SuppressLint("WrongConstant")
-                PackageInfo packageInfo = ApiSupporter.getInstance().getPackageInfo(packageName,
+                PackageInfo packageInfo = ApiSupporter.getPackageInfo(packageName,
                         PackageManager.GET_META_DATA | flagSigningInfo
                                 | PackageManager.GET_ACTIVITIES | flagDisabledComponents,
                         userHandle);

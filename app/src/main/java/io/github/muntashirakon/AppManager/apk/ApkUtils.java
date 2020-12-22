@@ -87,8 +87,7 @@ public final class ApkUtils {
         // Fetch package info
         try {
             PackageManager pm = AppManager.getContext().getPackageManager();
-            PackageInfo packageInfo = ApiSupporter.getInstance()
-                    .getPackageInfo(packageName, 0, userHandle);
+            PackageInfo packageInfo = ApiSupporter.getPackageInfo(packageName, 0, userHandle);
             ApplicationInfo info = packageInfo.applicationInfo;
             String outputName = info.loadLabel(pm).toString() + "_" + packageInfo.versionName;
             File tmpPublicSource;

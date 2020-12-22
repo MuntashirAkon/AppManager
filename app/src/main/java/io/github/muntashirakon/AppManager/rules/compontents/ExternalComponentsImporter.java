@@ -211,8 +211,7 @@ public class ExternalComponentsImporter {
                 JSONObject component = (JSONObject) components.get(i);
                 String packageName = component.getString("packageName");
                 if (!packageInfoList.containsKey(packageName)) {
-                    packageInfoList.put(packageName, ApiSupporter.getInstance().getPackageInfo(
-                            packageName,
+                    packageInfoList.put(packageName, ApiSupporter.getPackageInfo(packageName,
                             PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
                                     | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES
                                     | flagDisabledComponents, userHandle));

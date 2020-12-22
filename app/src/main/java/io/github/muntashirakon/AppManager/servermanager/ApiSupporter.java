@@ -17,17 +17,15 @@
 
 package io.github.muntashirakon.AppManager.servermanager;
 
-import android.content.ComponentName;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.IPackageManager;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.ClassCaller;
@@ -36,57 +34,41 @@ import io.github.muntashirakon.AppManager.servermanager.remote.RestartHandler;
 import io.github.muntashirakon.AppManager.servermanager.remote.ShellCommandHandler;
 import io.github.muntashirakon.toybox.ToyboxInitializer;
 
-public class ApiSupporter {
-    private static ApiSupporter INSTANCE;
-
-    public static ApiSupporter getInstance() {
-        if (INSTANCE == null) INSTANCE = new ApiSupporter();
-        return INSTANCE;
-    }
-
+@SuppressWarnings("RedundantThrows")  // Unfortunately, throws are not redundant here
+public final class ApiSupporter {
     private static final String TAG = "ApiSupporter";
-    private final LocalServer localServer;
-    private final String packageName;
 
     private ApiSupporter() {
-        this.localServer = LocalServer.getInstance();
-        this.packageName = BuildConfig.APPLICATION_ID;
     }
 
-    public List<PackageInfo> getInstalledPackages(int flags, int userHandle) throws Exception {
-        IPackageManager pm = IPackageManager.Stub.asInterface(ProxyBinder.getService("package"));
-        return pm.getInstalledPackages(flags, userHandle).getList();
-    }
-
-    public void setComponentEnabledSetting(String packageName, String componentName, int newState, int flags, int userHandle) throws Exception {
-        IPackageManager pm = IPackageManager.Stub.asInterface(ProxyBinder.getService("package"));
-        pm.setComponentEnabledSetting(new ComponentName(packageName, componentName), newState, flags, userHandle);
+    public static List<PackageInfo> getInstalledPackages(int flags, int userHandle) throws Exception {
+        return AppManager.getIPackageManager().getInstalledPackages(flags, userHandle).getList();
     }
 
     @NonNull
-    public PackageInfo getPackageInfo(String packageName, int flags, int userHandle) throws Exception {
-        IPackageManager pm = IPackageManager.Stub.asInterface(ProxyBinder.getService("package"));
-        return pm.getPackageInfo(packageName, flags, userHandle);
+    public static PackageInfo getPackageInfo(String packageName, int flags, int userHandle) throws Exception {
+        return AppManager.getIPackageManager().getPackageInfo(packageName, flags, userHandle);
     }
 
     @NonNull
-    public ApplicationInfo getApplicationInfo(String packageName, int flags, int userHandle) throws Exception {
-        IPackageManager pm = IPackageManager.Stub.asInterface(ProxyBinder.getService("package"));
-        return pm.getApplicationInfo(packageName, flags, userHandle);
+    public static ApplicationInfo getApplicationInfo(String packageName, int flags, int userHandle) throws Exception {
+        return AppManager.getIPackageManager().getApplicationInfo(packageName, flags, userHandle);
     }
 
-    public Shell.Result runCommand(String command) throws Exception {
+    public static Shell.Result runCommand(String command) throws Exception {
+        LocalServer localServer = LocalServer.getInstance();
         Bundle args = new Bundle();
         args.putString("command", command);
         args.putString("path", ToyboxInitializer.getToyboxLib(localServer.getContext()).getParent());
-        ClassCaller classCaller = new ClassCaller(packageName, ShellCommandHandler.class.getName(), args);
+        ClassCaller classCaller = new ClassCaller(BuildConfig.APPLICATION_ID, ShellCommandHandler.class.getName(), args);
         CallerResult result = localServer.exec(classCaller);
         Bundle replyBundle = result.getReplyBundle();
         return replyBundle.getParcelable("return");
     }
 
-    public void restartServer() throws Exception {
-        ClassCaller classCaller = new ClassCaller(packageName, RestartHandler.class.getName(), new Bundle());
+    public static void restartServer() throws Exception {
+        LocalServer localServer = LocalServer.getInstance();
+        ClassCaller classCaller = new ClassCaller(BuildConfig.APPLICATION_ID, RestartHandler.class.getName(), new Bundle());
         CallerResult result = localServer.exec(classCaller);
         Log.e(TAG, "restartServer --> " + result);
     }

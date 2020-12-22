@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.adb;
 
-import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
 import java.io.BufferedReader;
@@ -32,9 +31,6 @@ import io.github.muntashirakon.AppManager.server.common.Shell;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 
 public class AdbShell {
-    @SuppressLint("StaticFieldLeak")
-    private static ApiSupporter apiSupporter;
-
     public static class CommandResult {
         public int returnCode;
         public @NonNull List<String> stdout;
@@ -55,12 +51,9 @@ public class AdbShell {
 
     @NonNull
     synchronized public static CommandResult run(String command) throws IOException {
-        if (apiSupporter == null) {
-            apiSupporter = ApiSupporter.getInstance();
-        }
         Shell.Result result;
         try {
-            result = apiSupporter.runCommand(command);
+            result = ApiSupporter.runCommand(command);
         } catch (Exception e) {
             throw new IOException(e);
         }

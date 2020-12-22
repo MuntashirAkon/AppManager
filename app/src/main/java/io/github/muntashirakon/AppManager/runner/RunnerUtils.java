@@ -147,7 +147,7 @@ public final class RunnerUtils {
     @NonNull
     public static Runner.Result clearPackageCache(String packageName, int userHandle) {
         try {
-            ApplicationInfo applicationInfo = ApiSupporter.getInstance().getApplicationInfo(packageName, 0, userHandle);
+            ApplicationInfo applicationInfo = ApiSupporter.getApplicationInfo(packageName, 0, userHandle);
             StringBuilder command = new StringBuilder(CMD_CLEAR_CACHE_PREFIX);
             command.append(String.format(CMD_CLEAR_CACHE_DIR_SUFFIX, applicationInfo.dataDir, applicationInfo.dataDir));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !applicationInfo.dataDir.equals(applicationInfo.deviceProtectedDataDir)) {

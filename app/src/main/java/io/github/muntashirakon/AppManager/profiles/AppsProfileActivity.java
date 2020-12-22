@@ -160,7 +160,9 @@ public class AppsProfileActivity extends BaseActivity
                 // List apps
                 PackageManager pm = getPackageManager();
                 try {
-                    List<PackageInfo> packageInfoList = ApiSupporter.getInstance().getInstalledPackages(flagSigningInfo | PackageManager.GET_ACTIVITIES | flagDisabledComponents, Users.getCurrentUserHandle());
+                    List<PackageInfo> packageInfoList = ApiSupporter.getInstalledPackages(
+                            flagSigningInfo | PackageManager.GET_ACTIVITIES
+                                    | flagDisabledComponents, Users.getCurrentUserHandle());
                     ArrayList<String> items = new ArrayList<>(packageInfoList.size());
                     ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
                     for (PackageInfo info : packageInfoList) {
