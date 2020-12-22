@@ -20,8 +20,6 @@ package io.github.muntashirakon.AppManager.ipc;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.os.IBinder;
-import android.os.ServiceManager;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -64,13 +62,5 @@ class HiddenAPIs {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    static IBinder getService(String name) {
-        return ServiceManager.getService(name);
-    }
-
-    static void addService(String name, IBinder service) {
-        ServiceManager.addService(name, service);
     }
 }

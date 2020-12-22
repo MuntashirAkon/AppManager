@@ -98,6 +98,7 @@ public abstract class RootService extends ContextWrapper {
             if (!AppPref.isRootOrAdbEnabled())
                 return;
 
+            Log.d(TAG, "Total bound services: " + bound.size());
             for (IPCClient client : bound) {
                 if (client.isSameService(intent)) {
                     client.newConnection(conn, executor);
@@ -105,6 +106,7 @@ public abstract class RootService extends ContextWrapper {
                 }
             }
 
+            Log.d(TAG, "Need to start a new connection.");
             try {
                 IPCClient client = new IPCClient(intent);
                 client.newConnection(conn, executor);

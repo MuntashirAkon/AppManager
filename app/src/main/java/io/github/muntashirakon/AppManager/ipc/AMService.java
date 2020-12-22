@@ -60,7 +60,12 @@ public class AMService extends RootService {
     }
 
     @Override
+    public void onRebind(@NonNull Intent intent) {
+        super.onRebind(intent);
+    }
+
+    @Override
     public boolean onUnbind(@NonNull Intent intent) {
-        return false;
+        return true;
     }
 }

@@ -23,13 +23,10 @@ import android.content.Context;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Parcel;
-import android.os.ServiceManager;
 import android.util.Log;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-
-import androidx.annotation.RestrictTo;
 
 import static android.os.IBinder.LAST_CALL_TRANSACTION;
 
@@ -47,12 +44,10 @@ import static android.os.IBinder.LAST_CALL_TRANSACTION;
  * args[0]: client service component name
  * args[1]: {@link #CMDLINE_STOP_SERVER} or class name of IPCServer
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY)
 public class IPCMain {
 
     public static final String CMDLINE_STOP_SERVER = "stopServer";
 
-    @SuppressLint("PrivateApi")
     public static Context getSystemContext() {
         try {
             synchronized (Looper.class) {
@@ -77,7 +72,10 @@ public class IPCMain {
     }
 
     private static void stopRemoteService(ComponentName name) throws Exception {
-        IBinder binder = ServiceManager.getService(getServiceName(name));
+        @SuppressLint("PrivateApi")
+        Class<?> sm = Class.forName("android.os.ServiceManager");
+        Method getService = sm.getDeclaredMethod("getService", String.class);
+        IBinder binder = (IBinder) getService.invoke(null, getServiceName(name));
         if (binder != null) {
             Parcel p = Parcel.obtain();
             try {

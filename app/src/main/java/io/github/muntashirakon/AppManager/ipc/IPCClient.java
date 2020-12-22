@@ -31,8 +31,6 @@ import android.os.Debug;
 import android.os.IBinder;
 import android.os.RemoteException;
 
-import com.topjohnwu.superuser.Shell;
-
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,7 +43,7 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.AppManager.adb.AdbShell;
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
@@ -101,8 +99,8 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
                 IPCMAIN_CLASSNAME, name.flattenToString(), CMDLINE_STOP_SERVER /* command args */);
         // Make sure cmd is properly formatted in shell
         cmd = cmd.replace("$", "\\$");
-        if (AppPref.isRootEnabled()) Shell.su(cmd).exec();
-        else if (AppPref.isAdbEnabled()) AdbShell.run(cmd);
+        if (AppPref.isRootEnabled()) Runner.runCommand(Runner.getRootInstance(), cmd);
+        else if (AppPref.isAdbEnabled()) Runner.runCommand(Runner.getAdbInstance(), cmd);
     }
 
     private static String getBroadcastAction(ComponentName name) {
@@ -151,8 +149,8 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
 
         synchronized (this) {
             cmd = "(" + cmd + ")&";
-            if (AppPref.isRootEnabled()) Shell.su(cmd).exec();
-            else if (AppPref.isAdbEnabled()) AdbShell.run(cmd);
+            if (AppPref.isRootEnabled()) Runner.runCommand(Runner.getRootInstance(), cmd);
+            else if (AppPref.isAdbEnabled()) Runner.runCommand(Runner.getAdbInstance(), cmd);
             // Wait for broadcast receiver
             wait();
         }

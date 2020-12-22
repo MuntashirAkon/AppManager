@@ -27,6 +27,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Parcel;
 import android.os.RemoteException;
+import android.os.ServiceManager;
 import android.util.Log;
 
 import java.io.File;
@@ -55,7 +56,7 @@ class IPCServer extends IRootIPC.Stub implements IBinder.DeathRecipient {
     @SuppressWarnings("unchecked")
     IPCServer(Context context, ComponentName name) throws Exception {
         Utils.context = context;
-        IBinder binder = HiddenAPIs.getService(getServiceName(name));
+        IBinder binder = ServiceManager.getService(getServiceName(name));
         if (binder != null) {
             // There was already a root service running
             IRootIPC ipc = IRootIPC.Stub.asInterface(binder);
@@ -87,7 +88,6 @@ class IPCServer extends IRootIPC.Stub implements IBinder.DeathRecipient {
     }
 
     class AppObserver extends FileObserver {
-
         private final String name;
 
         AppObserver(File path) {
@@ -98,8 +98,10 @@ class IPCServer extends IRootIPC.Stub implements IBinder.DeathRecipient {
 
         @Override
         public void onEvent(int event, @Nullable String path) {
-            if (event == DELETE_SELF || name.equals(path))
+            if (event == DELETE_SELF || name.equals(path)) {
+                Log.d(TAG, "Stopping server due to change in code path");
                 UiThreadHandler.run(IPCServer.this::stop);
+            }
         }
     }
 
@@ -172,7 +174,7 @@ class IPCServer extends IRootIPC.Stub implements IBinder.DeathRecipient {
                 System.exit(0);
             } else {
                 // Register ourselves as system service
-                HiddenAPIs.addService(getServiceName(mName), this);
+                ServiceManager.addService(getServiceName(mName), this);
             }
         });
     }
