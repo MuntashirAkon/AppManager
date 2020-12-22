@@ -35,6 +35,8 @@ import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 
 public class ProxyBinder implements IBinder {
+    public static final int PROXY_BINDER_TRANSACT_CODE = 2;
+
     private static final Map<String, IBinder> sServiceCache = new ArrayMap<>();
 
     @NonNull
@@ -63,7 +65,7 @@ public class ProxyBinder implements IBinder {
                 newData.writeInt(code);
                 newData.appendFrom(data, 0, data.dataSize());
                 // Transact via AMService instead of AM
-                LocalServer.getAmService().asBinder().transact(IBinder.FIRST_CALL_TRANSACTION, newData, reply, flags);
+                LocalServer.getAmService().asBinder().transact(PROXY_BINDER_TRANSACT_CODE, newData, reply, flags);
             } finally {
                 newData.recycle();
             }

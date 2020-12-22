@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager;
 
 import io.github.muntashirakon.AppManager.IRemoteProcess;
 
+// Transact code starts from 3
 interface IAMService {
-    IRemoteProcess newProcess(in String[] cmd, in String[] env, in String dir);
+    IRemoteProcess newProcess(in String[] cmd, in String[] env, in String dir) = 3;
 }

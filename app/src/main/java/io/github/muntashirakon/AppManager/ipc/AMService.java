@@ -22,7 +22,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.Parcel;
 import android.os.RemoteException;
-import android.os.ServiceManager;
 import android.util.Log;
 
 import java.io.File;
@@ -41,10 +40,10 @@ public class AMService extends RootService {
          */
         @Override
         public IRemoteProcess newProcess(String[] cmd, String[] env, String dir) throws RemoteException {
-            java.lang.Process process;
+            Process process;
             try {
                 process = Runtime.getRuntime().exec(cmd, env, dir != null ? new File(dir) : null);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 throw new RemoteException(e.getMessage());
             }
             return new RemoteProcessHolder(process);
@@ -52,11 +51,12 @@ public class AMService extends RootService {
 
         @Override
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code == IBinder.FIRST_CALL_TRANSACTION) {
+            if (code == ProxyBinder.PROXY_BINDER_TRANSACT_CODE) {
                 data.enforceInterface(IRootIPC.class.getName());
                 transactRemote(data, reply, flags);
                 return true;
             }
+            Log.d(TAG, String.format("transact: uid=%d, code=%d", Binder.getCallingUid(), code));
             return super.onTransact(code, data, reply, flags);
         }
 

@@ -34,7 +34,7 @@ public class RemoteProcess extends Process implements Parcelable {
     private OutputStream os;
     private InputStream is;
 
-    RemoteProcess(IRemoteProcess remote) {
+    public RemoteProcess(IRemoteProcess remote) {
         mRemote = remote;
     }
 
