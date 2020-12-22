@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.os.Debug;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 
 import java.io.Closeable;
 import java.io.File;
@@ -38,16 +39,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
+import static io.github.muntashirakon.AppManager.ipc.RootService.TAG;
 import static io.github.muntashirakon.AppManager.ipc.RootService.serialExecutor;
 import static io.github.muntashirakon.AppManager.server.common.ServerUtils.CMDLINE_STOP_SERVER;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.PACKAGE_STAGING_DIRECTORY;
@@ -56,7 +56,6 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
     static final String INTENT_DEBUG_KEY = "debug";
     static final String INTENT_EXTRA_KEY = "binder_bundle";
     static final String BUNDLE_BINDER_KEY = "binder";
-    static final String LOGGING_ENV = "LIBSU_VERBOSE_LOGGING";
 
     private static final String BROADCAST_ACTION = "com.topjohnwu.superuser.BROADCAST_IPC";
     private static final String IPCMAIN_CLASSNAME = "io.github.muntashirakon.AppManager.server.IPCMain";
@@ -89,16 +88,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
     }
 
     static void stopRootServer(ComponentName name) throws IOException {
-        // Dump main.jar as trampoline
-        File mainJar = dumpMainJar(Utils.getContext());
-
-        // Execute main.jar through root shell
-        String cmd = String.format(Locale.ROOT,
-                "cp %s %s; (CLASSPATH=%s%s /system/bin/app_process /system/bin %s %s %s)&",
-                mainJar, PACKAGE_STAGING_DIRECTORY, PACKAGE_STAGING_DIRECTORY, "/main.jar",
-                IPCMAIN_CLASSNAME, name.flattenToString(), CMDLINE_STOP_SERVER /* command args */);
-        // Make sure cmd is properly formatted in shell
-        cmd = cmd.replace("$", "\\$");
+        String cmd = getRunnerScript(Utils.getContext(), name, CMDLINE_STOP_SERVER, "");
         if (AppPref.isRootEnabled()) Runner.runCommand(Runner.getRootInstance(), cmd);
         else if (AppPref.isAdbEnabled()) Runner.runCommand(Runner.getAdbInstance(), cmd);
     }
@@ -115,7 +105,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
 
         // Strip extra and add our own data
         intent = intent.cloneFilter();
-        String debugParams = "";
+        String debugParams;
         if (Debug.isDebuggerConnected()) {
             // Also debug the remote root server
             // Reference of the params to start jdwp:
@@ -128,27 +118,15 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
             } else {
                 debugParams = "-XjdwpProvider:adbconnection";
             }
-        }
+        } else debugParams = "";
+
         Bundle bundle = new Bundle();
         bundle.putBinder(BUNDLE_BINDER_KEY, new Binder());
         intent.putExtra(INTENT_EXTRA_KEY, bundle);
 
-        // Dump main.jar as trampoline
-        File mainJar = dumpMainJar(context);
-
-        // Execute main.jar through root shell
-        String cmd = String.format(Locale.ROOT,
-                "cp %s %s; CLASSPATH=%s%s /system/bin/app_process %s /system/bin --nice-name=%s:root %s %s %s",
-                mainJar, PACKAGE_STAGING_DIRECTORY, PACKAGE_STAGING_DIRECTORY, "/main.jar",
-                debugParams, context.getPackageName(), IPCMAIN_CLASSNAME, /* main class */
-                name.flattenToString(), IPCServer.class.getName() /* command args */);
-        // Make sure cmd is properly formatted in shell
-        cmd = cmd.replace("$", "\\$");
-        if (BuildConfig.DEBUG)
-            cmd = LOGGING_ENV + "=1 " + cmd;
-
         synchronized (this) {
-            cmd = "(" + cmd + ")&";
+            Log.e(TAG, "Running service starter script...");
+            String cmd = getRunnerScript(Utils.getContext(), name, IPCServer.class.getName(), debugParams);
             if (AppPref.isRootEnabled()) Runner.runCommand(Runner.getRootInstance(), cmd);
             else if (AppPref.isAdbEnabled()) Runner.runCommand(Runner.getAdbInstance(), cmd);
             // Wait for broadcast receiver
@@ -212,6 +190,16 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
     public void binderDied() {
         serialExecutor.execute(() -> RootService.bound.remove(this));
         close();
+    }
+
+    private static String getRunnerScript(Context context, ComponentName serviceName, String serverClassName, String debugParams) throws IOException {
+        File mainJar = dumpMainJar(context);
+        File stagingJar = new File(PACKAGE_STAGING_DIRECTORY, "main.jar");
+        return (String.format("cp %s %s; ", mainJar, PACKAGE_STAGING_DIRECTORY) +
+                String.format("chmod 755 %s; chown shell:shell %s; ", stagingJar, mainJar) +
+                String.format("(CLASSPATH=%s /system/bin/app_process %s /system/bin %s %s %s)&",
+                        stagingJar, debugParams, IPCMAIN_CLASSNAME, serviceName.flattenToString(),
+                        serverClassName)).replace("$", "\\$");
     }
 
     static Intent getBroadcastIntent(ComponentName name, IRootIPC.Stub ipc) {
