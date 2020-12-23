@@ -30,7 +30,6 @@ import android.os.Bundle;
 import android.os.Debug;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.util.Log;
 
 import java.io.Closeable;
 import java.io.File;
@@ -43,6 +42,7 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 
 import io.github.muntashirakon.AppManager.adb.AdbShell;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 import io.github.muntashirakon.AppManager.utils.AppPref;

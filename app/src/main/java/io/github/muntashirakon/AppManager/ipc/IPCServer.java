@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.ipc;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.FileObserver;
@@ -34,6 +35,7 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 
 import static io.github.muntashirakon.AppManager.ipc.IPCClient.BUNDLE_BINDER_KEY;
@@ -59,7 +61,7 @@ class IPCServer extends IRootIPC.Stub implements IBinder.DeathRecipient {
         IBinder binder = ServiceManager.getService(getServiceName(name));
         if (binder != null) {
             // There was already a root service running
-            IRootIPC ipc = IRootIPC.Stub.asInterface(binder);
+            IRootIPC ipc = Stub.asInterface(binder);
             try {
                 // Trigger re-broadcast
                 ipc.broadcast();
@@ -78,7 +80,10 @@ class IPCServer extends IRootIPC.Stub implements IBinder.DeathRecipient {
         service = constructor.newInstance();
         service.attach(context, this);
         service.onCreate();
-        observer = new AppObserver(new File(context.getPackageCodePath()));
+        String packagePath = new File(context.getPackageCodePath()).getParent();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            observer = new AppObserver(new File(packagePath));
+        } else observer = new AppObserver(packagePath);
         observer.startWatching();
 
         broadcast();
@@ -90,9 +95,18 @@ class IPCServer extends IRootIPC.Stub implements IBinder.DeathRecipient {
     class AppObserver extends FileObserver {
         private final String name;
 
+        // Android 9 or earlier
+        @SuppressWarnings("deprecation")
+        AppObserver(String path) {
+            super(path, CREATE | DELETE | DELETE_SELF | MOVED_TO | MOVED_FROM);
+            Log.d(TAG, "Start monitoring: " + path);
+            name = new File(path).getName();
+        }
+
+        @RequiresApi(Build.VERSION_CODES.Q)
         AppObserver(File path) {
-            super(path.getParentFile(), CREATE | DELETE | DELETE_SELF | MOVED_TO | MOVED_FROM);
-            Log.d(TAG, "Start monitoring: " + path.getParent());
+            super(path, CREATE | DELETE | DELETE_SELF | MOVED_TO | MOVED_FROM);
+            Log.d(TAG, "Start monitoring: " + path);
             name = path.getName();
         }
 
