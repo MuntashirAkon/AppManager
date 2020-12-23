@@ -719,7 +719,7 @@
     <string name="v3_scheme">Esquema v3 (desde o Android 9)</string>
     <string name="v1_scheme">Esquema v1 (desde o Android 1.0)</string>
     <string name="v2_scheme">Esquema v2 (desde o Android 7.0)</string>
-    <string name="pref_apk_signing_msg">Defina os esquemas de assinatura, chave de assinatura personalizada, etc.</string>
+    <string name="pref_apk_signing_msg">Definir esquemas de assinatura, chave de assinatura personalizada, etc.</string>
     <string name="apk_signing">Assinatura do APK</string>
     <string name="signing_keys">Chaves de assinatura</string>
     <string name="signature_schemes">Esquemas de assinatura</string>
@@ -761,7 +761,7 @@
     <string name="matching_activities">Atividades correspondentes</string>
     <string name="value">Valor</string>
     <string name="filter_apps_with_splits">Aplicativos com divisões</string>
-    <string name="set_custom_app_op">Defina a operação de aplicativo personalizada</string>
+    <string name="set_custom_app_op">Definir a operação de aplicativo personalizada</string>
     <string name="battery">Bateria</string>
     <string name="graphics">Gráficos</string>
     <string name="cpu">CPU</string>
