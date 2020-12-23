@@ -17,11 +17,10 @@
 
 package io.github.muntashirakon.AppManager;
 
-import io.github.muntashirakon.AppManager.IRemoteProcess;
-import io.github.muntashirakon.AppManager.IRemoteShell;
+import io.github.muntashirakon.AppManager.IShellResult;
 
-// Transact code starts from 3
-interface IAMService {
-    IRemoteProcess newProcess(in String[] cmd, in String[] env, in String dir) = 3;
-    IRemoteShell getShell(in String[] cmd) = 4;
+interface IRemoteShell {
+    void addCommand(in String[] commands);
+    void addInputStream(in ParcelFileDescriptor inputStream);
+    IShellResult exec();
 }

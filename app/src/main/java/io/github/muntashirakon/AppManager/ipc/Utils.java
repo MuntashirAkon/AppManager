@@ -28,7 +28,7 @@ public final class Utils {
 
     @SuppressLint("StaticFieldLeak")
     public static Context context;
-    private static final String TAG = "LIBSU";
+    private static final String TAG = "IPC";
 
     @SuppressLint("PrivateApi")
     public static synchronized Context getContext() {

@@ -17,11 +17,9 @@
 
 package io.github.muntashirakon.AppManager;
 
-import io.github.muntashirakon.AppManager.IRemoteProcess;
-import io.github.muntashirakon.AppManager.IRemoteShell;
-
-// Transact code starts from 3
-interface IAMService {
-    IRemoteProcess newProcess(in String[] cmd, in String[] env, in String dir) = 3;
-    IRemoteShell getShell(in String[] cmd) = 4;
+interface IShellResult {
+    List<String> getStdout();
+    List<String> getStderr();
+    int getExitCode();
+    boolean isSuccessful();
 }

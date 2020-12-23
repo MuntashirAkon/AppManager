@@ -25,11 +25,11 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import java.io.File;
-import java.io.IOException;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.IRemoteProcess;
+import io.github.muntashirakon.AppManager.IRemoteShell;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 
 public class AMService extends RootService {
@@ -46,7 +46,12 @@ public class AMService extends RootService {
             } catch (Exception e) {
                 throw new RemoteException(e.getMessage());
             }
-            return new RemoteProcessHolder(process);
+            return new RemoteProcessImpl(process);
+        }
+
+        @Override
+        public IRemoteShell getShell(String[] cmd) {
+            return new RemoteShellImpl(cmd);
         }
 
         @Override

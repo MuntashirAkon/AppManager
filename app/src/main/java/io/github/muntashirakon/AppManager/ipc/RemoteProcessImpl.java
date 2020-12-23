@@ -26,12 +26,12 @@ import java.util.concurrent.TimeUnit;
 import io.github.muntashirakon.AppManager.IRemoteProcess;
 import io.github.muntashirakon.AppManager.utils.ParcelFileDescriptorUtil;
 
-public class RemoteProcessHolder extends IRemoteProcess.Stub {
+class RemoteProcessImpl extends IRemoteProcess.Stub {
     private final Process process;
     private ParcelFileDescriptor in;
     private ParcelFileDescriptor out;
 
-    public RemoteProcessHolder(Process process) {
+    public RemoteProcessImpl(Process process) {
         this.process = process;
     }
 
