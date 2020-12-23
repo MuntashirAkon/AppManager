@@ -20,21 +20,15 @@ package io.github.muntashirakon.AppManager.appops;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.os.Build;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.os.UserManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 /**
@@ -913,7 +907,7 @@ public class AppOpsManager {
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.ADD_VOICEMAIL,
             Manifest.permission.USE_SIP,
-            Manifest.permission.PROCESS_OUTGOING_CALLS,
+            "android.permission.PROCESS_OUTGOING_CALLS",
             "android.permission.USE_FINGERPRINT",  // Normal
             Manifest.permission.BODY_SENSORS,
             "android.permission.READ_CELL_BROADCASTS",
@@ -1477,9 +1471,9 @@ public class AppOpsManager {
      */
     public static String opToName(int op) {
         if (op == OP_NONE) return "NONE";
-        else if (op > 10000 && op < 10033) {
+        else if (op >= _MIUI_START_OP && op < (_MIUI_START_OP + _NUM_MIUI_OP)) {
             // MIUI app operations
-            return sMiuiOpNames[op - 10000];
+            return sMiuiOpNames[op - _MIUI_START_OP];
         }
         return op < sOpNames.length ? sOpNames[op] : ("Unknown(" + op + ")");
     }
@@ -1626,261 +1620,5 @@ public class AppOpsManager {
         }
 
         public static RestrictionBypass UNRESTRICTED = new RestrictionBypass(true, true);
-    }
-
-    /**
-     * Class holding all of the operation information associated with an app.
-     */
-    public static final class PackageOps implements Parcelable {
-        @NonNull
-        private final String mPackageName;
-        private final int mUid;
-        private final List<OpEntry> mEntries;
-
-        public PackageOps(@NonNull String packageName, int uid, List<OpEntry> entries) {
-            mPackageName = packageName;
-            mUid = uid;
-            mEntries = entries;
-        }
-
-        /**
-         * @return The name of the package.
-         */
-        @NonNull
-        public String getPackageName() {
-            return mPackageName;
-        }
-
-        /**
-         * @return The uid of the package.
-         */
-        public int getUid() {
-            return mUid;
-        }
-
-        /**
-         * @return The ops of the package.
-         */
-        @NonNull
-        public List<OpEntry> getOps() {
-            return mEntries;
-        }
-
-        @Override
-        public String toString() {
-            return "PackageOps{" +
-                    "mPackageName='" + mPackageName + '\'' +
-                    ", mUid=" + mUid +
-                    ", mEntries=" + mEntries +
-                    '}';
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(@NonNull Parcel dest, int flags) {
-            dest.writeString(mPackageName);
-            dest.writeInt(mUid);
-            dest.writeInt(mEntries.size());
-            for (int i = 0; i < mEntries.size(); i++) {
-                mEntries.get(i).writeToParcel(dest, flags);
-            }
-        }
-
-        PackageOps(@NonNull Parcel source) {
-            mPackageName = Objects.requireNonNull(source.readString());
-            mUid = source.readInt();
-            mEntries = new ArrayList<>();
-            final int N = source.readInt();
-            for (int i = 0; i < N; i++) {
-                mEntries.add(OpEntry.CREATOR.createFromParcel(source));
-            }
-        }
-
-        @NonNull
-        public static final Creator<PackageOps> CREATOR = new Creator<PackageOps>() {
-            @NonNull
-            @Override
-            public PackageOps createFromParcel(Parcel source) {
-                return new PackageOps(source);
-            }
-
-            @NonNull
-            @Override
-            public PackageOps[] newArray(int size) {
-                return new PackageOps[size];
-            }
-        };
-    }
-
-    /**
-     * Class holding the information about one unique operation of an application.
-     * <p>
-     * NOTE: This class is different than the original
-     */
-    public static final class OpEntry implements Parcelable {
-        private final int mOp;
-        private final String mOpStr;
-        private final Boolean mRunning;
-        @NonNull
-        private final String mMode;
-        private final long mAccessTime;
-        private final long mRejectTime;
-        private final long mDuration;
-        @Nullable
-        private final String mProxyUid;
-        @Nullable
-        private final String mProxyPackageName;
-
-        public OpEntry(int op, @NonNull String opStr, boolean running, @NonNull String mode,
-                       long accessTime, long rejectTime,
-                       long duration, @Nullable String proxyUid,
-                       @Nullable String proxyPackageName) {
-            mOp = op;
-            mOpStr = opStr;
-            mRunning = running;
-            mMode = mode;
-            mAccessTime = accessTime;
-            mRejectTime = rejectTime;
-            mDuration = duration;
-            mProxyUid = proxyUid;
-            mProxyPackageName = proxyPackageName;
-        }
-
-        public OpEntry(int op, @NonNull String mode) {
-            mOp = op;
-            mOpStr = "";
-            mMode = mode;
-            mRunning = false;
-            mAccessTime = 0;
-            mRejectTime = 0;
-            mDuration = 0;
-            mProxyUid = null;
-            mProxyPackageName = null;
-        }
-
-        public int getOp() {
-            return mOp;
-        }
-
-        /**
-         * @return This entry's op string name, such as {@link #OPSTR_COARSE_LOCATION}.
-         */
-        @NonNull
-        public String getOpStr() {
-            return mOpStr;
-        }
-
-        /**
-         * @return this entry's current mode string value, such as allow and ignore.
-         */
-        public String getMode() {
-            return mMode;
-        }
-
-        public long getTime() {
-            return mAccessTime;
-        }
-
-        public long getRejectTime() {
-            return mRejectTime;
-        }
-
-        /**
-         * @return Whether the operation is running.
-         */
-        public boolean isRunning() {
-            return mRunning;
-        }
-
-        /**
-         * @return The duration of the operation in milliseconds. The duration is in wall time.
-         */
-        public long getDuration() {
-            return mDuration;
-        }
-
-        /**
-         * Gets the UID of the app that performed the op on behalf of this app and
-         * as a result blamed the op on this app or Process#INVALID_UID if
-         * there is no proxy.
-         *
-         * @return The proxy UID.
-         */
-        public String getProxyUid() {
-            return mProxyUid;
-        }
-
-        /**
-         * Gets the package name of the app that performed the op on behalf of this
-         * app and as a result blamed the op on this app or {@code null}
-         * if there is no proxy.
-         *
-         * @return The proxy package name.
-         */
-        public @Nullable
-        String getProxyPackageName() {
-            return mProxyPackageName;
-        }
-
-        @NonNull
-        @Override
-        public String toString() {
-            return "OpEntry{" +
-                    "mOp=" + mOp +
-                    ", mOpStr=" + mOpStr +
-                    ", mRunning=" + mRunning +
-                    ", mMode=" + mMode +
-                    ", mAccessTime=" + mAccessTime +
-                    ", mRejectTime=" + mRejectTime +
-                    ", mDuration=" + mDuration +
-                    '}';
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(@NonNull Parcel dest, int flags) {
-            dest.writeInt(mOp);
-            dest.writeString(mOpStr);
-            dest.writeString(mMode);
-            dest.writeValue(mRunning);
-            dest.writeLong(mAccessTime);
-            dest.writeLong(mRejectTime);
-            dest.writeLong(mDuration);
-            dest.writeString(mProxyUid);
-            dest.writeString(mProxyPackageName);
-        }
-
-        OpEntry(@NonNull Parcel source) {
-            mOp = source.readInt();
-            mOpStr = source.readString();
-            mMode = Objects.requireNonNull(source.readString());
-            mRunning = (Boolean) source.readValue(getClass().getClassLoader());
-            mAccessTime = source.readLong();
-            mRejectTime = source.readLong();
-            mDuration = source.readLong();
-            mProxyUid = source.readString();
-            mProxyPackageName = source.readString();
-        }
-
-        @NonNull
-        public static final Creator<OpEntry> CREATOR = new Creator<OpEntry>() {
-            @Override
-            public OpEntry createFromParcel(Parcel source) {
-                return new OpEntry(source);
-            }
-
-            @Override
-            public OpEntry[] newArray(int size) {
-                return new OpEntry[size];
-            }
-        };
     }
 }
