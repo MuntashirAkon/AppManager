@@ -64,7 +64,7 @@ public class LocalServer {
     @GuardedBy("lockObject")
     @Nullable
     public static IAMService getAmService() {
-        if (amService == null) {
+        if (amService == null || !amService.asBinder().pingBinder()) {
             synchronized (lockObject) {
                 while (localServer == null && AppPref.isRootOrAdbEnabled()) {
                     Log.d("IPC", "Waiting for local server");
