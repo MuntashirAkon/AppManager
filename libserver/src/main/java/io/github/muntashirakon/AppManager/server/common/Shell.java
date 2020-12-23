@@ -21,13 +21,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -44,14 +40,13 @@ public final class Shell {
     private volatile boolean close = false;
 
     private static Shell sShell;
-    private static Shell sRootShell;
 
     @NonNull
     public static Shell getShell(String path) throws IOException {
         if (sShell == null) {
             synchronized (Shell.class) {
                 if (sShell == null) {
-                    sShell = new Shell("sh", false);
+                    sShell = new Shell("sh");
                     sShell.exec("export PATH=" + path + ":$PATH");
                 }
             }
@@ -59,40 +54,10 @@ public final class Shell {
         return sShell;
     }
 
-    @NonNull
-    public static Shell getRootShell(String path) throws IOException {
-        if (sRootShell == null) {
-            synchronized (Shell.class) {
-                if (sRootShell == null) {
-                    sRootShell = new Shell("su", true);
-                    sShell.exec("export PATH=" + path + ":$PATH");
-                }
-            }
-        }
-        return sRootShell;
-    }
-
-    private Shell(String cmd, boolean checkRoot) throws IOException {
+    private Shell(String cmd) throws IOException {
         proc = new ProcessBuilder(cmd).redirectErrorStream(true).start();
         in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
         out = proc.getOutputStream();
-
-        if (checkRoot) {
-            try {
-                RootChecker checker = new RootChecker(proc);
-                checker.start();
-                checker.join(20000);
-                if (checker.exit == -1) {
-                    throw new RuntimeException("grant root timeout");
-                }
-                if (checker.exit != 1) {
-                    throw new RuntimeException(checker.errorMsg);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
-        }
 
         Runnable shellRunnable = () -> {
             while (!close) {
@@ -206,7 +171,7 @@ public final class Shell {
         return close;
     }
 
-    public void close() throws IOException {
+    public void close() {
         this.close = true;
     }
 
@@ -326,12 +291,8 @@ public final class Shell {
         }
 
         public void terminate(String reason) {
-            try {
-                close();
-                setExitCode(-1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            close();
+            setExitCode(-1);
         }
 
         public int waitForFinish(long timeout) throws InterruptedException {
@@ -418,53 +379,4 @@ public final class Shell {
             dest.writeInt(statusCode);
         }
     }
-
-
-    private static class RootChecker extends Thread {
-        int exit = -1;
-        String errorMsg = null;
-        Process process;
-
-        private RootChecker(Process process) {
-            this.process = process;
-        }
-
-        @Override
-        public void run() {
-            try {
-                BufferedReader inputStream = new BufferedReader(
-                        new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
-                BufferedWriter outputStream = new BufferedWriter(
-                        new OutputStreamWriter(this.process.getOutputStream(), StandardCharsets.UTF_8));
-
-                outputStream.write("echo Started");
-                outputStream.newLine();
-                outputStream.flush();
-
-                while (true) {
-                    String line = inputStream.readLine();
-                    if (line == null) {
-                        throw new EOFException();
-                    }
-                    if ("".equals(line)) {
-                        continue;
-                    }
-                    if ("Started".equals(line)) {
-                        this.exit = 1;
-                        break;
-                    }
-                    errorMsg = "unkown error occured.";
-                }
-            } catch (IOException e) {
-                exit = -42;
-                if (e.getMessage() != null) {
-                    errorMsg = e.getMessage();
-                } else {
-                    errorMsg = "RootAccess denied?.";
-                }
-            }
-
-        }
-    }
-
 }

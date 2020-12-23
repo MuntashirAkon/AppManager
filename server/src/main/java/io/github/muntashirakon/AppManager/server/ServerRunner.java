@@ -75,7 +75,6 @@ public final class ServerRunner {
             // Make it main looper
             //noinspection deprecation
             Looper.prepareMainLooper();
-            //noinspection ResultOfMethodCallIgnored
             ActivityThread.systemMain();
             // Parse arguments
             String[] split = paramsStr.split(",");

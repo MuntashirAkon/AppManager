@@ -21,18 +21,17 @@ import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.Parcel;
 import android.util.Log;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
+import io.github.muntashirakon.AppManager.server.common.ServerUtils;
+
 import static android.os.IBinder.LAST_CALL_TRANSACTION;
 import static io.github.muntashirakon.AppManager.server.common.ServerUtils.getServiceName;
 import static io.github.muntashirakon.AppManager.server.common.ServerUtils.getSystemContext;
-
-import io.github.muntashirakon.AppManager.server.common.ServerUtils;
 
 /**
  * Trampoline to start a root service.

@@ -25,7 +25,7 @@ import androidx.annotation.NonNull;
 public class BaseCaller implements Parcelable {
 
     public static final int TYPE_CLOSE = -10;
-    public static final int TYPE_CLASS = 3;
+    public static final int TYPE_SHELL = 5;
 
     private final int type;
     private byte[] rawBytes;

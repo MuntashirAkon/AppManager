@@ -19,24 +19,18 @@ package io.github.muntashirakon.AppManager.servermanager;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
-import android.os.Bundle;
 import android.os.RemoteException;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
-import io.github.muntashirakon.AppManager.server.common.ClassCaller;
+import io.github.muntashirakon.AppManager.server.common.ParcelableUtil;
 import io.github.muntashirakon.AppManager.server.common.Shell;
-import io.github.muntashirakon.AppManager.servermanager.remote.RestartHandler;
-import io.github.muntashirakon.AppManager.servermanager.remote.ShellCommandHandler;
-import io.github.muntashirakon.toybox.ToyboxInitializer;
+import io.github.muntashirakon.AppManager.server.common.ShellCaller;
 
 public final class ApiSupporter {
-    private static final String TAG = "ApiSupporter";
 
     private ApiSupporter() {
     }
@@ -57,19 +51,8 @@ public final class ApiSupporter {
 
     public static Shell.Result runCommand(String command) throws Exception {
         LocalServer localServer = LocalServer.getInstance();
-        Bundle args = new Bundle();
-        args.putString("command", command);
-        args.putString("path", ToyboxInitializer.getToyboxLib(localServer.getContext()).getParent());
-        ClassCaller classCaller = new ClassCaller(BuildConfig.APPLICATION_ID, ShellCommandHandler.class.getName(), args);
-        CallerResult result = localServer.exec(classCaller);
-        Bundle replyBundle = result.getReplyBundle();
-        return replyBundle.getParcelable("return");
-    }
-
-    public static void restartServer() throws Exception {
-        LocalServer localServer = LocalServer.getInstance();
-        ClassCaller classCaller = new ClassCaller(BuildConfig.APPLICATION_ID, RestartHandler.class.getName(), new Bundle());
-        CallerResult result = localServer.exec(classCaller);
-        Log.e(TAG, "restartServer --> " + result);
+        ShellCaller shellCaller = new ShellCaller(command);
+        CallerResult callerResult = localServer.exec(shellCaller);
+        return ParcelableUtil.unmarshall(callerResult.getReply(), Shell.Result.CREATOR);
     }
 }

@@ -17,17 +17,14 @@
 
 package io.github.muntashirakon.AppManager.server.common;
 
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-@SuppressWarnings("rawtypes")
 public class CallerResult implements Parcelable {
     private byte[] reply;
     private Throwable throwable;
-    private Class returnType;
     private Object replyObj;
 
     public byte[] getReply() {
@@ -38,23 +35,11 @@ public class CallerResult implements Parcelable {
         return throwable;
     }
 
-    public Class getReturnType() {
-        return returnType;
-    }
-
     public Object getReplyObj() {
         if (replyObj == null && reply != null) {
             replyObj = ParcelableUtil.readValue(reply);
         }
         return replyObj;
-    }
-
-    public Bundle getReplyBundle() {
-        Object replyObj = getReplyObj();
-        if (replyObj instanceof Bundle) {
-            return ((Bundle) replyObj);
-        }
-        return null;
     }
 
     public void setReply(byte[] reply) {
@@ -63,10 +48,6 @@ public class CallerResult implements Parcelable {
 
     public void setThrowable(Throwable throwable) {
         this.throwable = throwable;
-    }
-
-    public void setReturnType(Class returnType) {
-        this.returnType = returnType;
     }
 
     @Override
@@ -78,7 +59,6 @@ public class CallerResult implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeByteArray(this.reply);
         dest.writeSerializable(this.throwable);
-        dest.writeSerializable(this.returnType);
     }
 
     public CallerResult() {}
@@ -86,7 +66,6 @@ public class CallerResult implements Parcelable {
     protected CallerResult(@NonNull Parcel in) {
         this.reply = in.createByteArray();
         this.throwable = (Throwable) in.readSerializable();
-        this.returnType = (Class) in.readSerializable();
     }
 
     public static final Creator<CallerResult> CREATOR = new Creator<CallerResult>() {
@@ -109,7 +88,6 @@ public class CallerResult implements Parcelable {
         return "CallerResult{" +
                 "reply=" + getReplyObj() +
                 ", throwable=" + throwable +
-                ", returnType=" + returnType +
                 '}';
     }
 }

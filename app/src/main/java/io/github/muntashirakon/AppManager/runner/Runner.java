@@ -74,6 +74,10 @@ public abstract class Runner {
             return exitCode == 0;
         }
 
+        public int getExitCode() {
+            return exitCode;
+        }
+
         @NonNull
         public List<String> getOutputAsList() {
             return stdout;
@@ -82,11 +86,6 @@ public abstract class Runner {
         @NonNull
         public List<String> getOutputAsList(int first_index) {
             return stdout.subList(first_index, stdout.size());
-        }
-
-        @NonNull
-        public List<String> getOutputAsList(int first_index, int length) {
-            return stdout.subList(first_index, length);
         }
 
         @NonNull
