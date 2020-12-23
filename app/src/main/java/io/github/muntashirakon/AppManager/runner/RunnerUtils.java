@@ -32,11 +32,9 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.security.InvalidParameterException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
@@ -165,36 +163,7 @@ public final class RunnerUtils {
             return Runner.runCommand(command.toString());
         } catch (Exception e) {
             e.printStackTrace();
-            return new Runner.Result() {
-                @Override
-                public boolean isSuccessful() {
-                    return false;
-                }
-
-                @NonNull
-                @Override
-                public List<String> getOutputAsList() {
-                    return new ArrayList<>();
-                }
-
-                @NonNull
-                @Override
-                public List<String> getOutputAsList(int first_index) {
-                    return new ArrayList<>();
-                }
-
-                @NonNull
-                @Override
-                public List<String> getOutputAsList(int first_index, int length) {
-                    return new ArrayList<>();
-                }
-
-                @NonNull
-                @Override
-                public String getOutput() {
-                    return "";
-                }
-            };
+            return new Runner.Result();
         }
     }
 

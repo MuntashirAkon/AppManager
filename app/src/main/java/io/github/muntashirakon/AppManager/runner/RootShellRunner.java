@@ -17,15 +17,10 @@
 
 package io.github.muntashirakon.AppManager.runner;
 
-import android.text.TextUtils;
-
 import com.topjohnwu.superuser.Shell;
-
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
-import io.github.muntashirakon.AppManager.logs.Log;
 
 class RootShellRunner extends Runner {
     @WorkerThread
@@ -33,40 +28,8 @@ class RootShellRunner extends Runner {
     @Override
     synchronized public Result runCommand() {
         Shell.Result result = Shell.su(commands.toArray(new String[0])).exec();
-        List<String> stdout = result.getOut();
-        List<String> stderr = result.getErr();
-        if (stderr.size() > 0) Log.e("RootShellRunner", TextUtils.join("\n", stderr));
         clear();
-        return lastResult = new Result() {
-            @Override
-            public boolean isSuccessful() {
-                return result.isSuccess();
-            }
-
-            @NonNull
-            @Override
-            public List<String> getOutputAsList() {
-                return stdout;
-            }
-
-            @NonNull
-            @Override
-            public List<String> getOutputAsList(int first_index) {
-                return stdout.subList(first_index, stdout.size());
-            }
-
-            @NonNull
-            @Override
-            public List<String> getOutputAsList(int first_index, int length) {
-                return stdout.subList(first_index, first_index + length);
-            }
-
-            @NonNull
-            @Override
-            public String getOutput() {
-                return TextUtils.join("\n", stdout);
-            }
-        };
+        return lastResult = new Result(result.getOut(), result.getErr(), result.getCode());
     }
 
     @NonNull

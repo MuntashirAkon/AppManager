@@ -20,8 +20,7 @@ package io.github.muntashirakon.AppManager.runner;
 import android.text.TextUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
@@ -35,68 +34,10 @@ class AdbShellRunner extends Runner {
         try {
             AdbShell.CommandResult result = AdbShell.run(TextUtils.join("; ", commands));
             clear();
-            return lastResult = new Result() {
-                @Override
-                public boolean isSuccessful() {
-                    return result.isSuccessful();
-                }
-
-                @NonNull
-                @Override
-                public List<String> getOutputAsList() {
-                    return result.stdout;
-                }
-
-                @NonNull
-                @Override
-                public List<String> getOutputAsList(int first_index) {
-                    return result.stdout.subList(first_index, result.stdout.size());
-                }
-
-                @NonNull
-                @Override
-                public List<String> getOutputAsList(int first_index, int length) {
-                    return result.stdout.subList(first_index, first_index + length);
-                }
-
-                @NonNull
-                @Override
-                public String getOutput() {
-                    return result.getStdout();
-                }
-            };
+            return lastResult = new Result(result.stdout, Collections.emptyList(), result.returnCode);
         } catch (IOException e) {
             e.printStackTrace();
-            return lastResult = new Result() {
-                @Override
-                public boolean isSuccessful() {
-                    return false;
-                }
-
-                @NonNull
-                @Override
-                public List<String> getOutputAsList() {
-                    return new ArrayList<>();
-                }
-
-                @NonNull
-                @Override
-                public List<String> getOutputAsList(int first_index) {
-                    return new ArrayList<>();
-                }
-
-                @NonNull
-                @Override
-                public List<String> getOutputAsList(int first_index, int length) {
-                    return new ArrayList<>();
-                }
-
-                @NonNull
-                @Override
-                public String getOutput() {
-                    return "";
-                }
-            };
+            return lastResult = new Result();
         }
     }
 

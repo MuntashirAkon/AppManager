@@ -17,9 +17,12 @@
 
 package io.github.muntashirakon.AppManager.runner;
 
+import com.android.internal.util.TextUtils;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -44,20 +47,54 @@ public abstract class Runner {
     public static final String MODE_ADB = "adb";
     public static final String MODE_NO_ROOT = "no-root";
 
-    public interface Result {
-        boolean isSuccessful();
+    public static class Result {
+        private final List<String> stdout;
+        private final List<String> stderr;
+        private final int exitCode;
+
+        public Result(@NonNull List<String> stdout, @NonNull List<String> stderr, int exitCode) {
+            this.stdout = stdout;
+            this.stderr = stderr;
+            this.exitCode = exitCode;
+            // Print stderr
+            if (stderr.size() > 0) Log.e("Runner", android.text.TextUtils.join("\n", stderr));
+        }
+
+        public Result(int exitCode) {
+            this(Collections.emptyList(), Collections.emptyList(), exitCode);
+        }
+
+        public Result() {
+            this(1);
+        }
+
+        public boolean isSuccessful() {
+            return exitCode == 0;
+        }
 
         @NonNull
-        List<String> getOutputAsList();
+        public List<String> getOutputAsList() {
+            return stdout;
+        }
 
         @NonNull
-        List<String> getOutputAsList(int first_index);
+        public List<String> getOutputAsList(int first_index) {
+            return stdout.subList(first_index, stdout.size());
+        }
 
         @NonNull
-        List<String> getOutputAsList(int first_index, int length);
+        public List<String> getOutputAsList(int first_index, int length) {
+            return stdout.subList(first_index, length);
+        }
 
         @NonNull
-        String getOutput();
+        public String getOutput() {
+            return TextUtils.join("\n", stdout);
+        }
+
+        public List<String> getStderr() {
+            return stderr;
+        }
     }
 
     private static RootShellRunner rootShellRunner;
