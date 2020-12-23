@@ -24,7 +24,7 @@ import android.os.Build;
 
 import io.github.muntashirakon.AppManager.logs.Log;
 
-public final class Utils {
+final class Utils {
 
     @SuppressLint("StaticFieldLeak")
     public static Context context;

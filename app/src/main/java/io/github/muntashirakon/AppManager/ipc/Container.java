@@ -17,6 +17,6 @@
 
 package io.github.muntashirakon.AppManager.ipc;
 
-public class Container<T> {
+class Container<T> {
     public T obj;
 }

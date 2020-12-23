@@ -19,7 +19,7 @@ package io.github.muntashirakon.AppManager.ipc;
 
 import androidx.annotation.NonNull;
 
-public final class WaitRunnable implements Runnable {
+final class WaitRunnable implements Runnable {
 
     private Runnable r;
 

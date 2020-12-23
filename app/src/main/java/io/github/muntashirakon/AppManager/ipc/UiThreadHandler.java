@@ -24,7 +24,7 @@ import com.topjohnwu.superuser.ShellUtils;
 
 import java.util.concurrent.Executor;
 
-public class UiThreadHandler {
+final class UiThreadHandler {
     public static final Handler handler = new Handler(Looper.getMainLooper());
     public static final Executor executor = UiThreadHandler::run;
 
