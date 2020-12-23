@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.runner;
 
 import com.android.internal.util.TextUtils;
 
+import java.io.InputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
 import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
@@ -140,17 +142,27 @@ public abstract class Runner {
 
     @NonNull
     synchronized public static Result runCommand(@NonNull String command) {
-        return runCommand(getInstance(), command);
+        return runCommand(getInstance(), command, null);
     }
 
     @NonNull
     synchronized public static Result runCommand(@NonNull String[] command) {
-        return runCommand(getInstance(), command);
+        return runCommand(getInstance(), command, null);
+    }
+
+    @NonNull
+    synchronized public static Result runCommand(@NonNull String command, @Nullable InputStream inputStream) {
+        return runCommand(getInstance(), command, inputStream);
+    }
+
+    @NonNull
+    synchronized public static Result runCommand(@NonNull String[] command, @Nullable InputStream inputStream) {
+        return runCommand(getInstance(), command, inputStream);
     }
 
     @NonNull
     synchronized public static Result runCommand(@NonNull Runner runner, @NonNull String command) {
-        return runner.run(command);
+        return runner.run(command, null);
     }
 
     @NonNull
@@ -159,33 +171,53 @@ public abstract class Runner {
         for (String part : command) {
             cmd.append(RunnerUtils.escape(part)).append(" ");
         }
-        return runCommand(runner, cmd.toString());
+        return runCommand(runner, cmd.toString(), null);
     }
 
-    protected List<String> commands;
+    @NonNull
+    synchronized public static Result runCommand(@NonNull Runner runner, @NonNull String command, @Nullable InputStream inputStream) {
+        return runner.run(command, inputStream);
+    }
 
-    public void addCommand(String command) {
+    @NonNull
+    synchronized public static Result runCommand(@NonNull Runner runner, @NonNull String[] command, @Nullable InputStream inputStream) {
+        StringBuilder cmd = new StringBuilder();
+        for (String part : command) {
+            cmd.append(RunnerUtils.escape(part)).append(" ");
+        }
+        return runCommand(runner, cmd.toString(), inputStream);
+    }
+
+    protected final List<String> commands;
+    protected final List<InputStream> inputStreams;
+
+    protected Runner() {
+        this.commands = new ArrayList<>();
+        this.inputStreams = new ArrayList<>();
+    }
+
+    public void addCommand(@NonNull String command) {
         commands.add(command);
+    }
+
+    public void add(@NonNull InputStream inputStream) {
+        inputStreams.add(inputStream);
     }
 
     public void clear() {
         commands.clear();
+        inputStreams.clear();
     }
 
     @WorkerThread
     @NonNull
     public abstract Result runCommand();
 
-    protected static Result lastResult;
-
-    public static Result getLastResult() {
-        return lastResult;
-    }
-
-    protected Runner() {
-        this.commands = new ArrayList<>();
-    }
-
     @NonNull
-    protected abstract Result run(@NonNull String command);
+    private Result run(@NonNull String command, @Nullable InputStream inputStream) {
+        clear();
+        addCommand(command);
+        if (inputStream != null) add(inputStream);
+        return runCommand();
+    }
 }

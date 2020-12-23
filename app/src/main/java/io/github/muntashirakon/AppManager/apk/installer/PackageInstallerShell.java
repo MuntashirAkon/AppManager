@@ -18,11 +18,9 @@
 package io.github.muntashirakon.AppManager.apk.installer;
 
 import android.annotation.SuppressLint;
-import android.text.TextUtils;
-
-import com.topjohnwu.superuser.Shell;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -57,8 +55,8 @@ public final class PackageInstallerShell extends AMPackageInstaller {
 
     @Override
     public boolean install(@NonNull ApkFile apkFile) {
-        if (AppPref.isAdbEnabled() || apkFile.needSigning()) {
-            // TODO(18/9/20): Find a way to pipe the stream directly like root users
+        if (apkFile.needSigning()) {
+            // TODO(23/12/20): Find a way to pipe the streams directly instead of staging first
             File[] apkFiles;
             try {
                 apkFiles = getStagingApkFiles(apkFile.getSelectedEntries());
@@ -71,16 +69,16 @@ public final class PackageInstallerShell extends AMPackageInstaller {
             this.packageName = apkFile.getPackageName();
             if (!openSession()) return false;
             String cmd;
-            Shell.Result result;
+            Runner.Result result;
             String buf;
             // Write apk files
             for (ApkFile.Entry entry : apkFile.getSelectedEntries()) {
                 try (InputStream apkInputStream = entry.getSignedInputStream(context)) {
                     cmd = installCmd + " install-write -S " + entry.getFileSize() + " " + sessionId +
                             " " + entry.getFileName() + " -";
-                    result = Shell.su(cmd).add(apkInputStream).exec();
-                    buf = TextUtils.join("\n", result.getOut());
-                    if (!result.isSuccess() || buf == null || !buf.contains("Success")) {
+                    result = Runner.runCommand(cmd, apkInputStream);
+                    buf = result.getOutput();
+                    if (!result.isSuccessful() || !buf.contains("Success")) {
                         sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE, sessionId);
                         Log.e(TAG, String.format("Install: Failed to write %s.", entry.getFileName()));
                         return abandon();
@@ -110,14 +108,23 @@ public final class PackageInstallerShell extends AMPackageInstaller {
         String buf;
         // Write apk files
         for (File apkFile : apkFiles) {
-            cmd = Runner.TOYBOX + " cat \"" + apkFile.getAbsolutePath() + "\" | " +
-                    installCmd + " install-write -S " + apkFile.length() + " " + sessionId + " " +
-                    apkFile.getName() + " -";
-            result = Runner.runCommand(cmd);
-            buf = result.getOutput();
-            if (!result.isSuccessful() || !buf.contains("Success")) {
+            try (InputStream apkInputStream = new FileInputStream(apkFile)) {
+                cmd = installCmd + " install-write -S " + apkFile.length() + " " + sessionId + " " +
+                        apkFile.getName() + " -";
+                result = Runner.runCommand(cmd, apkInputStream);
+                buf = result.getOutput();
+                if (!result.isSuccessful() || !buf.contains("Success")) {
+                    sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE, sessionId);
+                    Log.e(TAG, String.format("Install: Failed to write %s.", apkFile.getName()));
+                    return abandon();
+                }
+            } catch (IOException e) {
                 sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE, sessionId);
-                Log.e(TAG, String.format("Install: Failed to write %s.", apkFile.getName()));
+                Log.e(TAG, "Install: Cannot copy files to session.", e);
+                return abandon();
+            } catch (SecurityException e) {
+                sendCompletedBroadcast(packageName, STATUS_FAILURE_SECURITY, sessionId);
+                Log.e(TAG, "Install: Cannot access apk files.", e);
                 return abandon();
             }
         }

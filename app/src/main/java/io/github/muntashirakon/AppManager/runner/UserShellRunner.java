@@ -19,6 +19,8 @@ package io.github.muntashirakon.AppManager.runner;
 
 import com.topjohnwu.superuser.Shell;
 
+import java.io.InputStream;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
@@ -27,16 +29,12 @@ class UserShellRunner extends Runner {
     @WorkerThread
     @Override
     synchronized public Result runCommand() {
-        Shell.Result result = Shell.sh(commands.toArray(new String[0])).exec();
+        Shell.Job shell = Shell.sh(commands.toArray(new String[0]));
+        for (InputStream is : inputStreams) {
+            shell.add(is);
+        }
+        Shell.Result result = shell.exec();
         clear();
-        return lastResult = new Result(result.getOut(), result.getErr(), result.getCode());
-    }
-
-    @NonNull
-    @Override
-    protected Result run(@NonNull String command) {
-        clear();
-        addCommand(command);
-        return runCommand();
+        return new Result(result.getOut(), result.getErr(), result.getCode());
     }
 }

@@ -17,14 +17,18 @@
 
 package io.github.muntashirakon.AppManager.runner;
 
-import android.text.TextUtils;
+import android.os.RemoteException;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.io.InputStream;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
-import io.github.muntashirakon.AppManager.adb.AdbShell;
+import io.github.muntashirakon.AppManager.IRemoteShell;
+import io.github.muntashirakon.AppManager.IShellResult;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.utils.ParcelFileDescriptorUtil;
 
 class AdbShellRunner extends Runner {
     @WorkerThread
@@ -32,20 +36,17 @@ class AdbShellRunner extends Runner {
     @Override
     synchronized public Result runCommand() {
         try {
-            AdbShell.CommandResult result = AdbShell.run(TextUtils.join("; ", commands));
+            if (LocalServer.getAmService() == null) throw new RemoteException();
+            IRemoteShell shell = LocalServer.getAmService().getShell(commands.toArray(new String[0]));
+            for (InputStream is : inputStreams) {
+                shell.addInputStream(ParcelFileDescriptorUtil.pipeFrom(is));
+            }
+            IShellResult result = shell.exec();
             clear();
-            return lastResult = new Result(result.stdout, Collections.emptyList(), result.returnCode);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return lastResult = new Result();
+            return new Result(result.getStdout(), result.getStderr(), result.getExitCode());
+        } catch (RemoteException | IOException e) {
+            Log.e("AdbShellRunner", e);
+            return new Result();
         }
-    }
-
-    @NonNull
-    @Override
-    protected Result run(@NonNull String command) {
-        clear();
-        addCommand(command);
-        return runCommand();
     }
 }

@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
+import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -90,7 +91,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
     static void stopRootServer(ComponentName name) throws IOException {
         String cmd = getRunnerScript(Utils.getContext(), name, CMDLINE_STOP_SERVER, "");
         if (AppPref.isRootEnabled()) Runner.runCommand(Runner.getRootInstance(), cmd);
-        else if (AppPref.isAdbEnabled()) Runner.runCommand(Runner.getAdbInstance(), cmd);
+        else if (AppPref.isAdbEnabled()) AdbShell.run(cmd);
     }
 
     private static String getBroadcastAction(ComponentName name) {
@@ -128,7 +129,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
             Log.e(TAG, "Running service starter script...");
             String cmd = getRunnerScript(Utils.getContext(), name, IPCServer.class.getName(), debugParams);
             if (AppPref.isRootEnabled()) Runner.runCommand(Runner.getRootInstance(), cmd);
-            else if (AppPref.isAdbEnabled()) Runner.runCommand(Runner.getAdbInstance(), cmd);
+            else if (AppPref.isAdbEnabled()) AdbShell.run(cmd);
             // Wait for broadcast receiver
             wait();
         }

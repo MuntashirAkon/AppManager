@@ -16,11 +16,12 @@ class RemoteShellImpl extends IRemoteShell.Stub {
         Shell.enableVerboseLogging = BuildConfig.DEBUG;
         Shell.setDefaultBuilder(Shell.Builder.create()
                 .setInitializers(ToyboxInitializer.class)
-                .setFlags(Shell.FLAG_NON_ROOT_SHELL)
+                .setFlags(Shell.FLAG_MOUNT_MASTER)
                 .setTimeout(10));
     }
 
     private final Shell.Job job;
+
     public RemoteShellImpl(String[] cmd) {
         job = Shell.sh(cmd);
     }
