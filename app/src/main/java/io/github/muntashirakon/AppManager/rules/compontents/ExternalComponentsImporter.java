@@ -55,45 +55,17 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabled
  */
 public class ExternalComponentsImporter {
     @NonNull
-    public static List<UserPackagePair> denyFilteredAppOps(@NonNull Collection<UserPackagePair> userPackagePairs, int[] appOps) {
+    public static List<UserPackagePair> setModeToFilteredAppOps(@NonNull Collection<UserPackagePair> userPackagePairs, int[] appOps, @AppOpsManager.Mode int mode) {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
         Collection<Integer> appOpList;
         AppOpsService appOpsService = new AppOpsService();
         for (UserPackagePair pair : userPackagePairs) {
-            appOpList = PackageUtils.getFilteredAppOps(pair.getPackageName(), appOps);
+            appOpList = PackageUtils.getFilteredAppOps(pair.getPackageName(), appOps, mode);
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
                 for (int appOp : appOpList) {
                     try {
-                        appOpsService.setMode(appOp, PackageUtils.getAppUid(pair),
-                                pair.getPackageName(), AppOpsManager.MODE_IGNORED
-                        );
-                        cb.setAppOp(String.valueOf(appOp), AppOpsManager.MODE_IGNORED);
-                    } catch (Exception ignore) {
-                    }
-                }
-                cb.applyRules(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-                failedPkgList.add(pair);
-            }
-        }
-        return failedPkgList;
-    }
-
-    @NonNull
-    public static List<UserPackagePair> defaultFilteredAppOps(@NonNull Collection<UserPackagePair> userPackagePairs, int[] appOps) {
-        List<UserPackagePair> failedPkgList = new ArrayList<>();
-        Collection<Integer> appOpList;
-        AppOpsService appOpsService = new AppOpsService();
-        for (UserPackagePair pair : userPackagePairs) {
-            appOpList = PackageUtils.getFilteredAppOps(pair.getPackageName(), appOps);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
-                for (int appOp : appOpList) {
-                    try {
-                        appOpsService.setMode(appOp, PackageUtils.getAppUid(pair),
-                                pair.getPackageName(), AppOpsManager.MODE_DEFAULT
-                        );
-                        cb.setAppOp(String.valueOf(appOp), AppOpsManager.MODE_DEFAULT);
+                        appOpsService.setMode(appOp, PackageUtils.getAppUid(pair), pair.getPackageName(), mode);
+                        cb.setAppOp(String.valueOf(appOp), mode);
                     } catch (Exception ignore) {
                     }
                 }

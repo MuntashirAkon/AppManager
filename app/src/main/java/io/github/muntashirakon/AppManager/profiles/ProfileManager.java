@@ -32,6 +32,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -46,7 +47,7 @@ public class ProfileManager {
         HashMap<String, String> profiles = new HashMap<>(profilesFiles.length);
         Context context = AppManager.getContext();
         String summary;
-        for (String profile: profilesFiles) {
+        for (String profile : profilesFiles) {
             int index = profile.indexOf(ProfileMetaManager.PROFILE_EXT);
             profile = profile.substring(0, index);
             summary = TextUtils.join(", ", new ProfileMetaManager(profile).getLocalisedSummaryOrComment(context));
@@ -62,7 +63,8 @@ public class ProfileManager {
     private final ProfileMetaManager.Profile profile;
 
     public ProfileManager(@NonNull ProfileMetaManager metaManager) throws FileNotFoundException {
-        if (metaManager.profile == null) throw new FileNotFoundException("Profile cannot be empty.");
+        if (metaManager.profile == null)
+            throw new FileNotFoundException("Profile cannot be empty.");
         this.profile = metaManager.profile;
     }
 
@@ -101,15 +103,16 @@ public class ProfileManager {
             Log.d(TAG, "Started ignore/default components. State: " + state);
             Bundle args = new Bundle();
             args.putIntArray(BatchOpsManager.ARG_APP_OPS, appOps);
-            batchOpsManager.setArgs(args);
             switch (state) {
                 case ProfileMetaManager.STATE_ON:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_IGNORE_APP_OPS, packages);
+                    args.putInt(BatchOpsManager.ARG_APP_OP_MODE, AppOpsManager.MODE_IGNORED);
                     break;
                 case ProfileMetaManager.STATE_OFF:
                 default:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_RESET_APP_OPS, packages);
+                    args.putInt(BatchOpsManager.ARG_APP_OP_MODE, AppOpsManager.MODE_DEFAULT);
             }
+            batchOpsManager.setArgs(args);
+            result = batchOpsManager.performOp(BatchOpsManager.OP_SET_APP_OPS, packages);
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: " + result.toString());
             }

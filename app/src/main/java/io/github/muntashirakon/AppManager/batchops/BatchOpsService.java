@@ -35,7 +35,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.misc.AlertDialogActivity;
 import io.github.muntashirakon.AppManager.misc.Users;
@@ -302,8 +301,8 @@ public class BatchOpsService extends IntentService {
                 return getString(R.string.unblock_trackers);
             case BatchOpsManager.OP_BLOCK_COMPONENTS:
                 return getString(R.string.block_components_dots);
-            case BatchOpsManager.OP_IGNORE_APP_OPS:
-                return getString(R.string.deny_app_ops_dots);
+            case BatchOpsManager.OP_SET_APP_OPS:
+                return getString(R.string.set_mode_for_app_ops_dots);
             case BatchOpsManager.OP_NONE:
                 break;
         }
@@ -341,8 +340,8 @@ public class BatchOpsService extends IntentService {
                 return getResources().getQuantityString(R.plurals.alert_failed_to_unblock_trackers, failedCount, failedCount);
             case BatchOpsManager.OP_BLOCK_COMPONENTS:
                 return getResources().getQuantityString(R.plurals.alert_failed_to_block_components, failedCount, failedCount);
-            case BatchOpsManager.OP_IGNORE_APP_OPS:
-                return getResources().getQuantityString(R.plurals.alert_failed_to_deny_app_ops, failedCount, failedCount);
+            case BatchOpsManager.OP_SET_APP_OPS:
+                return getResources().getQuantityString(R.plurals.alert_failed_to_set_app_ops, failedCount, failedCount);
         }
         return getString(R.string.error);
     }

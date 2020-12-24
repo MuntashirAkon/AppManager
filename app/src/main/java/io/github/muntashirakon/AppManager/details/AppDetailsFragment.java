@@ -48,19 +48,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.UiThread;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -74,6 +61,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.OpEntry;
@@ -91,13 +90,16 @@ import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.MiuiUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.details.AppDetailsViewModel.OPEN_GL_ES;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModeNames;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModes;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOps;
 
 public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener {
@@ -381,34 +383,19 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     .setDropdownItems(appOpNames, true)
                     .setAuxiliaryInput(R.string.mode, null, null, modeNames, true)
                     .setPositiveButton(R.string.apply, (dialog, which, inputText, isChecked) -> {
-                        if (inputText == null || builder.getAuxiliaryInput() == null) return;
                         // Get mode
-                        String modeName = builder.getAuxiliaryInput().toString().trim();
-                        int opModeIndex = modeNames.indexOf(modeName);
                         int mode;
-                        if (opModeIndex == -1) {
-                            // Could be a numeric value
-                            try {
-                                mode = Integer.parseInt(modeName);
-                            } catch (NumberFormatException e) {
-                                return;
-                            }
-                        } else {
-                            mode = modes.get(opModeIndex);
+                        try {
+                            mode = Utils.getIntegerFromString(builder.getAuxiliaryInput(), modeNames, modes);
+                        } catch (IllegalArgumentException e) {
+                            return;
                         }
                         // Get op
-                        String opName = inputText.toString().trim();
-                        int opIndex = appOpNames.indexOf(opName);
                         int op;
-                        if (opIndex == -1) {
-                            // Could be a numeric value
-                            try {
-                               op = Integer.parseInt(opName);
-                            } catch (NumberFormatException e) {
-                                return;
-                            }
-                        } else {
-                            op = appOps.get(opIndex);
+                        try {
+                            op = Utils.getIntegerFromString(inputText, appOpNames, appOps);
+                        } catch (IllegalArgumentException e) {
+                            return;
                         }
                         new Thread(() -> {
                             if (mainModel.setAppOp(op, mode)) {
@@ -513,54 +500,6 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
     private void refreshDetails() {
         showProgressIndicator(true);
         mainModel.setIsPackageChanged();
-    }
-
-    @NonNull
-    private List<Integer> getAppOpModes() {
-        List<Integer> appOpModes = new ArrayList<>();
-        appOpModes.add(AppOpsManager.MODE_ALLOWED);
-        appOpModes.add(AppOpsManager.MODE_IGNORED);
-        appOpModes.add(AppOpsManager.MODE_ERRORED);
-        appOpModes.add(AppOpsManager.MODE_DEFAULT);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            appOpModes.add(AppOpsManager.MODE_FOREGROUND);
-        }
-        if (MiuiUtils.isMiui()) {
-            appOpModes.add(AppOpsManager.MODE_ASK);
-        }
-        return appOpModes;
-    }
-
-    @NonNull
-    private List<Integer> getAppOps() {
-        List<Integer> appOps = new ArrayList<>();
-        for (int i = 0; i < AppOpsManager._NUM_OP; ++i) {
-            appOps.add(i);
-        }
-        if (MiuiUtils.isMiui()) {
-            for (int i = 0; i < AppOpsManager._NUM_MIUI_OP; ++i) {
-                appOps.add(AppOpsManager._MIUI_START_OP + i);
-            }
-        }
-        return appOps;
-    }
-
-    @NonNull
-    private CharSequence[] getAppOpModeNames(@NonNull List<Integer> appOpModes) {
-        CharSequence[] appOpModeNames = new CharSequence[appOpModes.size()];
-        for (int i = 0; i < appOpModes.size(); ++i) {
-            appOpModeNames[i] = AppOpsManager.modeToName(appOpModes.get(i));
-        }
-        return appOpModeNames;
-    }
-
-    @NonNull
-    private CharSequence[] getAppOpNames(@NonNull List<Integer> appOps) {
-        CharSequence[] appOpNames = new CharSequence[appOps.size()];
-        for (int i = 0; i < appOps.size(); ++i) {
-            appOpNames[i] = AppOpsManager.opToName(appOps.get(i));
-        }
-        return appOpNames;
     }
 
     /**

@@ -677,6 +677,24 @@ public class Utils {
         return buf.toString();
     }
 
+    public static int getIntegerFromString(CharSequence needle,
+                                           List<CharSequence> stringsToMatch,
+                                           List<Integer> associatedIntegers)
+            throws IllegalArgumentException {
+        if (needle == null) throw new IllegalArgumentException("Needle cannot be null");
+        if (stringsToMatch.size() != associatedIntegers.size()) {
+            throw new IllegalArgumentException("String and integer arrays have different sizes");
+        }
+        CharSequence trimmedNeedle = needle.toString().trim();
+        int index = stringsToMatch.indexOf(trimmedNeedle);
+        if (index == -1) {
+            // Might be a numeric value
+            return Integer.parseInt(trimmedNeedle.toString());
+        } else {
+            return associatedIntegers.get(index);
+        }
+    }
+
     public static void writeBoolean(boolean b, @NonNull Parcel dest) {
         dest.writeInt(b ? 1 : 0);
     }

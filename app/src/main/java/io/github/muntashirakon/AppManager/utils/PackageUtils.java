@@ -156,13 +156,13 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static Collection<Integer> getFilteredAppOps(String packageName, @NonNull int[] appOps) {
+    public static Collection<Integer> getFilteredAppOps(String packageName, @NonNull int[] appOps, int mode) {
         List<Integer> filteredAppOps = new ArrayList<>();
         AppOpsService appOpsService = new AppOpsService();
         int uid = PackageUtils.getAppUid(new UserPackagePair(packageName, Users.getCurrentUserHandle()));
         for (int appOp : appOps) {
             try {
-                if (appOpsService.checkOperation(appOp, uid, packageName) != AppOpsManager.MODE_IGNORED) {
+                if (appOpsService.checkOperation(appOp, uid, packageName) != mode) {
                     filteredAppOps.add(appOp);
                 }
             } catch (Exception e) {
@@ -382,6 +382,54 @@ public final class PackageUtils {
             }
         }
         return new File(defaultPath).getParent();
+    }
+
+    @NonNull
+    public static List<Integer> getAppOpModes() {
+        List<Integer> appOpModes = new ArrayList<>();
+        appOpModes.add(AppOpsManager.MODE_ALLOWED);
+        appOpModes.add(AppOpsManager.MODE_IGNORED);
+        appOpModes.add(AppOpsManager.MODE_ERRORED);
+        appOpModes.add(AppOpsManager.MODE_DEFAULT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            appOpModes.add(AppOpsManager.MODE_FOREGROUND);
+        }
+        if (MiuiUtils.isMiui()) {
+            appOpModes.add(AppOpsManager.MODE_ASK);
+        }
+        return appOpModes;
+    }
+
+    @NonNull
+    public static List<Integer> getAppOps() {
+        List<Integer> appOps = new ArrayList<>();
+        for (int i = 0; i < AppOpsManager._NUM_OP; ++i) {
+            appOps.add(i);
+        }
+        if (MiuiUtils.isMiui()) {
+            for (int i = 0; i < AppOpsManager._NUM_MIUI_OP; ++i) {
+                appOps.add(AppOpsManager._MIUI_START_OP + i);
+            }
+        }
+        return appOps;
+    }
+
+    @NonNull
+    public static CharSequence[] getAppOpModeNames(@NonNull List<Integer> appOpModes) {
+        CharSequence[] appOpModeNames = new CharSequence[appOpModes.size()];
+        for (int i = 0; i < appOpModes.size(); ++i) {
+            appOpModeNames[i] = AppOpsManager.modeToName(appOpModes.get(i));
+        }
+        return appOpModeNames;
+    }
+
+    @NonNull
+    public static CharSequence[] getAppOpNames(@NonNull List<Integer> appOps) {
+        CharSequence[] appOpNames = new CharSequence[appOps.size()];
+        for (int i = 0; i < appOps.size(); ++i) {
+            appOpNames[i] = AppOpsManager.opToName(appOps.get(i));
+        }
+        return appOpNames;
     }
 
     @Nullable

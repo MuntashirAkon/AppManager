@@ -54,10 +54,13 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 public class BatchOpsManager {
     // Bundle args
     /**
-     * {@link Integer[]} value containing app op values to be used with {@link #OP_IGNORE_APP_OPS}
-     * and {@link #OP_RESET_APP_OPS}.
+     * {@link Integer[]} value containing app op values to be used with {@link #OP_SET_APP_OPS}.
      */
     public static final String ARG_APP_OPS = "app_ops";
+    /**
+     * {@link Integer} value containing app op values to be used with {@link #OP_SET_APP_OPS}.
+     */
+    public static final String ARG_APP_OP_MODE = "app_op_mode";
     /**
      * {@link Integer} value containing flags to be used with {@link #OP_BACKUP},
      * {@link #OP_RESTORE_BACKUP} and {@link #OP_DELETE_BACKUP}.
@@ -88,8 +91,7 @@ public class BatchOpsManager {
             OP_ENABLE,
             OP_EXPORT_RULES,
             OP_FORCE_STOP,
-            OP_IGNORE_APP_OPS,
-            OP_RESET_APP_OPS,
+            OP_SET_APP_OPS,
             OP_RESTORE_BACKUP,
             OP_UNBLOCK_COMPONENTS,
             OP_UNBLOCK_TRACKERS,
@@ -113,11 +115,10 @@ public class BatchOpsManager {
     public static final int OP_UNBLOCK_TRACKERS = 10;
     public static final int OP_UNINSTALL = 11;
     public static final int OP_BLOCK_COMPONENTS = 12;
-    public static final int OP_IGNORE_APP_OPS = 13;
+    public static final int OP_SET_APP_OPS = 13;
     public static final int OP_ENABLE = 14;
     public static final int OP_UNBLOCK_COMPONENTS = 15;
-    public static final int OP_RESET_APP_OPS = 16;
-    public static final int OP_CLEAR_CACHE = 17;
+    public static final int OP_CLEAR_CACHE = 16;
 
     private final Runner runner;
     private final Handler handler;
@@ -191,12 +192,10 @@ public class BatchOpsManager {
                 return opUnblockTrackers();
             case OP_BLOCK_COMPONENTS:
                 return opBlockComponents();
-            case OP_IGNORE_APP_OPS:
+            case OP_SET_APP_OPS:
                 return opIgnoreAppOps();
             case OP_UNBLOCK_COMPONENTS:
                 return opUnblockComponents();
-            case OP_RESET_APP_OPS:
-                return opResetAppOps();
             case OP_CLEAR_CACHE:
                 return opClearCache();
             case OP_NONE:
@@ -348,12 +347,10 @@ public class BatchOpsManager {
     }
 
     private Result opIgnoreAppOps() {
-        final List<UserPackagePair> failedPkgList = ExternalComponentsImporter.denyFilteredAppOps(Arrays.asList(userPackagePairs), args.getIntArray(ARG_APP_OPS));
-        return lastResult = new Result(failedPkgList);
-    }
-
-    private Result opResetAppOps() {
-        final List<UserPackagePair> failedPkgList = ExternalComponentsImporter.defaultFilteredAppOps(Arrays.asList(userPackagePairs), args.getIntArray(ARG_APP_OPS));
+        final List<UserPackagePair> failedPkgList = ExternalComponentsImporter
+                .setModeToFilteredAppOps(Arrays.asList(userPackagePairs),
+                        args.getIntArray(ARG_APP_OPS),
+                        args.getInt(ARG_APP_OP_MODE, AppOpsManager.MODE_IGNORED));
         return lastResult = new Result(failedPkgList);
     }
 

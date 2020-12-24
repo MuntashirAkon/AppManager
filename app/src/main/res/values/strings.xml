@@ -411,8 +411,7 @@
     <string name="block_unblock_trackers_description">Block or unblock ad and tracking components from all the installed apps</string>
     <string name="block_components_dots">Block components…</string>
     <string name="block_components_description">Block all components identified by the given signature(s)</string>
-    <string name="deny_app_ops_dots">Deny app ops…</string>
-    <string name="deny_app_ops_description">Deny given app operations identified by the constant values, i.e. 63 means RUN_IN_BACKGROUND</string>
+    <string name="deny_app_ops_description">Set a mode for app operations identified by the constant values, i.e. 63 or RUN_IN_BACKGROUND</string>
     <string name="clear_data_from_uninstalled_apps">Clear data from uninstalled apps</string>
     <string name="clear_data_from_uninstalled_apps_description">Clear data from apps that are uninstalled with DONT_DELETE_DATA flag</string>
     <string name="clear_app_cache">Clear app cache</string>
@@ -423,8 +422,7 @@
     <string name="input_signatures_description">Input signatures with spaces, e.g. (com.facebook org.app2 com.app3) etc.</string>
     <string name="filtered_packages">Filtered packages</string>
     <string name="input_app_ops">Input app ops</string>
-    <string name="input_app_ops_description">Input app op constants with spaces, e.g. (63 72 12) etc.
-        You can find app op constants in the app ops tab under the brackets.</string>
+    <string name="input_app_ops_description">Input app op names and/or constants with spaces, e.g. (WAKE_LOCK 63 72 CAMERA) etc.</string>
     <string name="only_works_in_root_or_adb_mode">Only works in root or ADB mode</string>
     <string name="failed_to_parse_some_numbers">Could not parse some numbers</string>
     <plurals name="no_of_splits">
@@ -478,9 +476,9 @@
         <item quantity="one">Could not block components for %1$d app</item>
         <item quantity="other">Could not block components for %1$d apps</item>
     </plurals>
-    <plurals name="alert_failed_to_deny_app_ops">
-        <item quantity="one">Could not deny app ops for %1$d app</item>
-        <item quantity="other">Could not deny app ops for %1$d apps</item>
+    <plurals name="alert_failed_to_set_app_ops">
+        <item quantity="one">Could not set app ops for %1$d app</item>
+        <item quantity="other">Could not set app ops for %1$d apps</item>
     </plurals>
     <plurals name="alert_failed_to_enable">
         <item quantity="one">Could not enable %1$d app</item>
@@ -816,4 +814,6 @@
     <string name="cpu">CPU</string>
     <string name="graphics">Graphics</string>
     <string name="battery">Battery</string>
+    <string name="security">Security</string>
+    <string name="set_mode_for_app_ops_dots">Set mode for app ops…</string>
 </resources>

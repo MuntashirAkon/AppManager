@@ -66,6 +66,7 @@ public class TextInputDropdownDialogBuilder {
         // Main input layout: always visible
         this.mainInputLayout = view.findViewById(android.R.id.text1);
         this.mainInputLayout.setHint(inputTextLabel);
+        this.mainInputLayout.setEndIconMode(TextInputLayout.END_ICON_NONE);
         this.mainInput = view.findViewById(android.R.id.input);
         // Auxiliary input layout: visible on demand
         this.auxiliaryInputLayout = view.findViewById(android.R.id.text2);
@@ -100,6 +101,7 @@ public class TextInputDropdownDialogBuilder {
             adapter = new NoFilterArrayAdapter<>(activity, android.R.layout.simple_spinner_dropdown_item, items);
         }
         mainInput.setAdapter(adapter);
+        mainInputLayout.setEndIconMode(TextInputLayout.END_ICON_DROPDOWN_MENU);
         return this;
     }
 
@@ -115,6 +117,9 @@ public class TextInputDropdownDialogBuilder {
         if (dropdownItems != null) {
             ArrayAdapter<T> adapter = new NoFilterArrayAdapter<>(activity, android.R.layout.simple_spinner_dropdown_item, dropdownItems);
             auxiliaryInput.setAdapter(adapter);
+            auxiliaryInputLayout.setEndIconMode(TextInputLayout.END_ICON_DROPDOWN_MENU);
+        } else {
+            auxiliaryInputLayout.setEndIconMode(TextInputLayout.END_ICON_NONE);
         }
         if (isEnabled) auxiliaryInput.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         else auxiliaryInput.setInputType(InputType.TYPE_NULL);

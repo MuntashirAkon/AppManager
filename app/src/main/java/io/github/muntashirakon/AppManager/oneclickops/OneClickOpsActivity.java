@@ -47,9 +47,16 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
+import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
+
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModeNames;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModes;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOps;
 
 public class OneClickOpsActivity extends BaseActivity {
     private ListItemCreator mItemCreator;
@@ -85,7 +92,7 @@ public class OneClickOpsActivity extends BaseActivity {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_components_dots),
                 getString(R.string.block_components_description))
                 .setOnClickListener(v -> blockComponents());
-        mItemCreator.addItemWithTitleSubtitle(getString(R.string.deny_app_ops_dots),
+        mItemCreator.addItemWithTitleSubtitle(getString(R.string.set_mode_for_app_ops_dots),
                 getString(R.string.deny_app_ops_description))
                 .setOnClickListener(v -> blockAppOps());
         if (BuildConfig.DEBUG) {
@@ -253,24 +260,35 @@ public class OneClickOpsActivity extends BaseActivity {
             Toast.makeText(this, R.string.only_works_in_root_or_adb_mode, Toast.LENGTH_SHORT).show();
             return;
         }
-        new TextInputDialogBuilder(this, R.string.input_app_ops)
-                .setTitle(R.string.deny_app_ops_dots)
+        List<Integer> modes = getAppOpModes();
+        List<Integer> appOps = getAppOps();
+        List<CharSequence> modeNames = Arrays.asList(getAppOpModeNames(modes));
+        List<CharSequence> appOpNames = Arrays.asList(getAppOpNames(appOps));
+        TextInputDropdownDialogBuilder builder = new TextInputDropdownDialogBuilder(this, R.string.input_app_ops);
+        builder.setTitle(R.string.set_mode_for_app_ops_dots)
+                .setAuxiliaryInput(R.string.mode, null, null, modeNames, true)
                 .setCheckboxLabel(R.string.apply_to_system_apps)
                 .setHelperText(R.string.input_app_ops_description)
-                .setPositiveButton(R.string.search, (dialog, which, appOpNames, isChecked) -> {
-                    final boolean systemApps = isChecked;
-                    if (appOpNames == null) return;
+                .setPositiveButton(R.string.search, (dialog, which, appOpNameList, systemApps) -> {
+                    if (appOpNameList == null) return;
                     mProgressIndicator.show();
                     executor.submit(() -> {
-                        String[] appOpsStr = appOpNames.toString().split("\\s+");
+                        // Get mode
+                        int mode;
+                        try {
+                            mode = Utils.getIntegerFromString(builder.getAuxiliaryInput(), modeNames, modes);
+                        } catch (IllegalArgumentException e) {
+                            return;
+                        }
+                        String[] appOpsStr = appOpNameList.toString().split("\\s+");
                         if (appOpsStr.length == 0) return;
-                        int[] appOps = new int[appOpsStr.length];
+                        int[] appOpList = new int[appOpsStr.length];
                         try {
                             for (int i = 0; i < appOpsStr.length; ++i) {
                                 if (Thread.currentThread().isInterrupted()) return;
-                                appOps[i] = Integer.parseInt(appOpsStr[i]);
+                                appOpList[i] = Utils.getIntegerFromString(appOpsStr[i], appOpNames, appOps);
                             }
-                        } catch (Exception e) {
+                        } catch (IllegalArgumentException e) {
                             if (Thread.currentThread().isInterrupted()) return;
                             runOnUiThread(() -> {
                                 Toast.makeText(this, R.string.failed_to_parse_some_numbers, Toast.LENGTH_SHORT).show();
@@ -287,7 +305,7 @@ public class OneClickOpsActivity extends BaseActivity {
                             ItemCount appOpCount = new ItemCount();
                             appOpCount.packageName = applicationInfo.packageName;
                             appOpCount.packageLabel = applicationInfo.loadLabel(getPackageManager()).toString();
-                            appOpCount.count = PackageUtils.getFilteredAppOps(applicationInfo.packageName, appOps).size();
+                            appOpCount.count = PackageUtils.getFilteredAppOps(applicationInfo.packageName, appOpList, mode).size();
                             if (appOpCount.count > 0) appOpCounts.add(appOpCount);
                         }
                         if (!appOpCounts.isEmpty()) {
@@ -310,10 +328,11 @@ public class OneClickOpsActivity extends BaseActivity {
                                             mProgressIndicator.show();
                                             Intent intent = new Intent(this, BatchOpsService.class);
                                             intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedItems);
-                                            intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_IGNORE_APP_OPS);
+                                            intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_SET_APP_OPS);
                                             intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
                                             Bundle args = new Bundle();
-                                            args.putIntArray(BatchOpsManager.ARG_APP_OPS, appOps);
+                                            args.putIntArray(BatchOpsManager.ARG_APP_OPS, appOpList);
+                                            args.putInt(BatchOpsManager.ARG_APP_OP_MODE, mode);
                                             intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
                                             ContextCompat.startForegroundService(this, intent);
                                         })
