@@ -795,4 +795,6 @@
     <string name="keep_data_and_signatures">Зберегти дані і підписи</string>
     <string name="this_action_cannot_be_undone">Цю операцію неможливо відмінити.</string>
     <string name="filter_apps_with_splits">Додатки з сплітами</string>
+    <string name="battery">Акумулятор</string>
+    <string name="value">Значення</string>
 </resources>
