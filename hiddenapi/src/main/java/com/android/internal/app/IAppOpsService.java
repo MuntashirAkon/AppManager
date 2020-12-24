@@ -1,28 +1,46 @@
 package com.android.internal.app;
 
+import android.os.Build;
+import android.os.IInterface;
 import android.os.Parcelable;
+import android.os.RemoteException;
 
 import java.util.List;
 
-public interface IAppOpsService {
-    int checkOperation(int code, int uid, String packageName);
+import androidx.annotation.RequiresApi;
 
-    int noteOperation(int code, int uid, String packageName);
+public interface IAppOpsService extends IInterface {
+    int checkOperation(int code, int uid, String packageName) throws RemoteException;
 
-    int permissionToOpCode(String permission);
+    @RequiresApi(Build.VERSION_CODES.M)
+    int permissionToOpCode(String permission) throws RemoteException;
 
-    // Remaining methods are only used in Java.
-    int checkPackage(int uid, String packageName);
+    int checkPackage(int uid, String packageName) throws RemoteException;
 
-    List<Parcelable> getPackagesForOps(int[] ops);
+    List<Parcelable> getPackagesForOps(int[] ops) throws RemoteException;
 
-    List<Parcelable> getOpsForPackage(int uid, String packageName, int[] ops);
+    List<Parcelable> getOpsForPackage(int uid, String packageName, int[] ops)
+            throws RemoteException;
 
-    void setUidMode(int code, int uid, int mode);
+    @RequiresApi(Build.VERSION_CODES.O)
+    List<Parcelable> getUidOps(int uid, int[] ops) throws RemoteException;
 
-    void setMode(int code, int uid, String packageName, int mode);
+    @RequiresApi(Build.VERSION_CODES.M)
+    void setUidMode(int code, int uid, int mode) throws RemoteException;
 
-    void resetAllModes(int reqUserId, String reqPackageName);
+    void setMode(int code, int uid, String packageName, int mode) throws RemoteException;
+
+    // Removed in 22
+    void resetAllModes() throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+    void resetAllModes(int reqUserId, String reqPackageName) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    boolean isOperationActive(int code, int uid, String packageName) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    int checkOperationRaw(int code, int uid, String packageName) throws RemoteException;
 
     abstract class Stub {
         public static IAppOpsService asInterface(android.os.IBinder obj) {

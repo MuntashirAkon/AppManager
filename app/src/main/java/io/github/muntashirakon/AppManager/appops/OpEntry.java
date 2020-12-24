@@ -21,6 +21,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 
@@ -212,4 +213,17 @@ public class OpEntry implements Parcelable {
             return new OpEntry[size];
         }
     };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OpEntry)) return false;
+        OpEntry opEntry = (OpEntry) o;
+        return mOp == opEntry.mOp;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mOp);
+    }
 }
