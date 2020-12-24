@@ -22,6 +22,8 @@ import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.UserManager;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -40,6 +42,7 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 @SuppressWarnings("unused")
 public class AppOpsManager {
     @SuppressLint("NewApi")
+    @Retention(RetentionPolicy.SOURCE)
     @IntDef(flag = true, value = {
             MODE_ALLOWED,
             MODE_IGNORED,
@@ -114,6 +117,125 @@ public class AppOpsManager {
             "foreground",   // MODE_FOREGROUND
             "ask",          // MODE_ASK (MIUI)
     };
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef(value = {
+            UID_STATE_PERSISTENT,
+            UID_STATE_TOP,
+            UID_STATE_FOREGROUND_SERVICE_LOCATION,
+            UID_STATE_FOREGROUND_SERVICE,
+            UID_STATE_FOREGROUND,
+            UID_STATE_BACKGROUND,
+            UID_STATE_CACHED
+    })
+    public @interface UidState {}
+
+    /**
+     * Uid state: The UID is a foreground persistent app. The lower the UID
+     * state the more important the UID is for the user.
+     */
+    public static final int UID_STATE_PERSISTENT = 100;
+
+    /**
+     * Uid state: The UID is top foreground app. The lower the UID
+     * state the more important the UID is for the user.
+     */
+    public static final int UID_STATE_TOP = 200;
+
+    /**
+     * Uid state: The UID is running a foreground service of location type.
+     * The lower the UID state the more important the UID is for the user.
+     * This uid state is a counterpart to PROCESS_STATE_FOREGROUND_SERVICE_LOCATION which has been
+     * deprecated.
+     * @deprecated
+     */
+    @Deprecated
+    public static final int UID_STATE_FOREGROUND_SERVICE_LOCATION = 300;
+
+    /**
+     * Uid state: The UID is running a foreground service. The lower the UID
+     * state the more important the UID is for the user.
+     */
+    public static final int UID_STATE_FOREGROUND_SERVICE = 400;
+
+    /**
+     * Uid state: The UID is a foreground app. The lower the UID
+     * state the more important the UID is for the user.
+     */
+    public static final int UID_STATE_FOREGROUND = 500;
+
+    /**
+     * The max, which is min priority, UID state for which any app op
+     * would be considered as performed in the foreground.
+     */
+    public static final int UID_STATE_MAX_LAST_NON_RESTRICTED = UID_STATE_FOREGROUND;
+
+    /**
+     * Uid state: The UID is a background app. The lower the UID
+     * state the more important the UID is for the user.
+     */
+    public static final int UID_STATE_BACKGROUND = 600;
+
+    /**
+     * Uid state: The UID is a cached app. The lower the UID
+     * state the more important the UID is for the user.
+     */
+    public static final int UID_STATE_CACHED = 700;
+
+    /**
+     * Uid state: The UID state with the highest priority.
+     */
+    public static final int MAX_PRIORITY_UID_STATE = UID_STATE_PERSISTENT;
+
+    /**
+     * Uid state: The UID state with the lowest priority.
+     */
+    public static final int MIN_PRIORITY_UID_STATE = UID_STATE_CACHED;
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef(flag = true, value = {
+            OP_FLAG_SELF,
+            OP_FLAG_TRUSTED_PROXY,
+            OP_FLAG_UNTRUSTED_PROXY,
+            OP_FLAG_TRUSTED_PROXIED,
+            OP_FLAG_UNTRUSTED_PROXIED
+    })
+    public @interface OpFlags {}
+
+    /**
+     * Flag: non proxy operations. These are operations
+     * performed on behalf of the app itself and not on behalf of
+     * another one.
+     */
+    public static final int OP_FLAG_SELF = 0x1;
+
+    /**
+     * Flag: trusted proxy operations. These are operations
+     * performed on behalf of another app by a trusted app.
+     * Which is work a trusted app blames on another app.
+     */
+    public static final int OP_FLAG_TRUSTED_PROXY = 1 << 1;
+
+    /**
+     * Flag: untrusted proxy operations. These are operations
+     * performed on behalf of another app by an untrusted app.
+     * Which is work an untrusted app blames on another app.
+     */
+    public static final int OP_FLAG_UNTRUSTED_PROXY = 1 << 2;
+
+    /**
+     * Flag: trusted proxied operations. These are operations
+     * performed by a trusted other app on behalf of an app.
+     * Which is work an app was blamed for by a trusted app.
+     */
+    public static final int OP_FLAG_TRUSTED_PROXIED = 1 << 3;
+
+    /**
+     * Flag: untrusted proxied operations. These are operations
+     * performed by an untrusted other app on behalf of an app.
+     * Which is work an app was blamed for by an untrusted app.
+     */
+    public static final int OP_FLAG_UNTRUSTED_PROXIED = 1 << 4;
 
     // when adding one of these:
     //  - increment _NUM_OP
