@@ -78,7 +78,7 @@ public final class PackageInstallerShell extends AMPackageInstaller {
                             " " + entry.getFileName() + " -";
                     result = Runner.runCommand(cmd, apkInputStream);
                     buf = result.getOutput();
-                    if (!result.isSuccessful() || !buf.contains("Success")) {
+                    if (!buf.contains("Success")) {
                         sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE, sessionId);
                         Log.e(TAG, String.format("Install: Failed to write %s.", entry.getFileName()));
                         return abandon();
@@ -113,7 +113,7 @@ public final class PackageInstallerShell extends AMPackageInstaller {
                         apkFile.getName() + " -";
                 result = Runner.runCommand(cmd, apkInputStream);
                 buf = result.getOutput();
-                if (!result.isSuccessful() || !buf.contains("Success")) {
+                if (!buf.contains("Success")) {
                     sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE, sessionId);
                     Log.e(TAG, String.format("Install: Failed to write %s.", apkFile.getName()));
                     return abandon();
@@ -140,7 +140,7 @@ public final class PackageInstallerShell extends AMPackageInstaller {
                 " --install-location " + AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT);
         Runner.Result result = Runner.runCommand(cmd);
         String buf = result.getOutput();
-        if (!result.isSuccessful() || !buf.contains("Success")) {
+        if (!buf.contains("Success")) {
             sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE, sessionId);
             Log.e(TAG, "Install: Failed to create install session. " + buf);
             return false;
@@ -167,7 +167,7 @@ public final class PackageInstallerShell extends AMPackageInstaller {
     boolean abandon() {
         Runner.Result result = Runner.runCommand(installCmd + " install-abandon " + sessionId);
         String buf = result.getOutput();
-        if (!result.isSuccessful() || !buf.contains("Success")) {
+        if (!buf.contains("Success")) {
             sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_ABANDON, sessionId);
             Log.e(TAG, "Abandon: Failed to abandon session.");
         }
@@ -179,7 +179,7 @@ public final class PackageInstallerShell extends AMPackageInstaller {
         // Finalize session
         Runner.Result result = Runner.runCommand(installCmd + " install-commit " + sessionId);
         String buf = result.getOutput();
-        if (!result.isSuccessful() || !buf.contains("Success")) {
+        if (!buf.contains("Success")) {
             int start = buf.indexOf('[');
             int end = buf.indexOf(']');
             try {
