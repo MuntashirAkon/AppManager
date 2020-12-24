@@ -66,6 +66,7 @@ public class LocalServer {
     public static IAMService getAmService() {
         if (amService == null || !amService.asBinder().pingBinder()) {
             synchronized (lockObject) {
+                getInstance();  // In case nobody has called the local server
                 while (localServer == null && AppPref.isRootOrAdbEnabled()) {
                     Log.d("IPC", "Waiting for local server");
                     try {
