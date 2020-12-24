@@ -147,7 +147,6 @@ public final class ApkFile implements AutoCloseable {
         SUPPORTED_MIMES.add("application/vnd.android.package-archive");
         SUPPORTED_MIMES.add("application/vnd.apkm");
         SUPPORTED_MIMES.add("application/xapk-package-archive");
-        SUPPORTED_MIMES.add("application/zip");
     }
 
     private final int sparseArrayKey;
