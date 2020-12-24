@@ -204,10 +204,6 @@ public final class IOUtils {
     }
 
     public static void closeQuietly(@Nullable AutoCloseable closeable) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            FileUtils.closeQuietly(closeable);
-            return;
-        }
         if (closeable == null) return;
         try {
             closeable.close();
