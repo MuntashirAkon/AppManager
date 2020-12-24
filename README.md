@@ -124,5 +124,16 @@ You are welcome contribute to App Manager! This doesn't mean that you need codin
 
 **Note:** Repositories located in sites other than GitHub are currently considered mirrors and PR/MR submitted there will not be accepted. Instead, you can submit patches (as `.patch` files) via email attachment. My email address is muntashirakon [at] riseup [dot] net. Beware that such emails may be publicly accessible in future. GitHub PRs will be merged manually using the corresponding patches. As a result, GitHub may falsely mark them _closed_ instead of _merged_. Make sure to sign-off your commits.
 
+### Donation and Funding
+App Manager doesn't support any donations directly. However, if you like my projects (App Manager being one of them), you can buy me a coffee by sending an anonymous donation to one of the following **Bitcoin** addresses:
+```
+33TDkWVv5EgwfKGJk7YaS2Ev1CBzBP9Sav
+38bzvWDD99dJhXg9tC4yQEnGdnAKPtwSXG
+3FHTxPoYa92dNJK6pkhwyVkMG8Vv3VpGpg
+```
+By sending me BTC, you agree that you will not share the transaction information in public ie. anonymous or use it as a leverage to prioritise your requested features. I accept feature requests without any donations and they are prioritised according to my preferences.
+
+App Manager is open for a fund/grant. If you are an organization interested in funding App Manager, you can contact me directly at muntashirakon [at] riseup [dot] net (FINGERPRINT: 7bad37c2981e41f8f6abea7f58f0b4f26c346fce).
+
 ### Credits and Libraries
 A list of credits and libraries are available in the **About** section of the app.
