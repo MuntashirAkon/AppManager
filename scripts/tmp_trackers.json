@@ -323,6 +323,15 @@
       "code_signature": "com.vungle.warren.",
       "network_signature": "",
       "website": "https://vungle.com"
+    },
+    "37": {
+      "id": 37,
+      "name": "Mapbox",
+      "description": "Addition to Exodus list",
+      "creation_date": "2020-12-25",
+      "code_signature": "com.mapbox.android.telemetry.",
+      "network_signature": "",
+      "website": "https://mapbox.com"
     }
   }
 }

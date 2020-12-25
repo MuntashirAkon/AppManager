@@ -227,6 +227,7 @@
         <item>com.vungle.warren.</item>
         <item>com.criteo.</item>
         <item>com.mapbox.mapboxsdk.</item>
+        <item>com.mapbox.android.telemetry.</item>
         <item>com.optimizely.</item>
         <item>com.taboola.</item>
         <item>com.clevertap.</item>
@@ -754,6 +755,7 @@
         <item>Vungle</item>
         <item>Vungle</item>
         <item>Criteo</item>
+        <item>Mapbox</item>
         <item>Mapbox</item>
         <item>Optimizely</item>
         <item>Taboola</item>
