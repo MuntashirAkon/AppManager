@@ -362,10 +362,19 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
         } else if (id == R.id.action_deny_dangerous_app_ops) {  // App ops
             showProgressIndicator(true);
             new Thread(() -> {
-                if (mainModel == null || !mainModel.ignoreDangerousAppOps()) {
+                boolean isSuccessful = true;
+                try {
+                    if (mainModel == null || !mainModel.ignoreDangerousAppOps()) {
+                        isSuccessful = false;
+                    }
+                } catch (RuntimeException e) {
+                    isSuccessful = false;
+                }
+                if (isSuccessful) {
+                    runOnUiThread(this::refreshDetails);
+                } else {
                     runOnUiThread(() -> Toast.makeText(mActivity, R.string.failed_to_deny_dangerous_app_ops, Toast.LENGTH_SHORT).show());
                 }
-                runOnUiThread(this::refreshDetails);
             }).start();
         } else if (id == R.id.action_toggle_default_app_ops) {  // App ops
             showProgressIndicator(true);
