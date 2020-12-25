@@ -341,7 +341,13 @@ public final class RunnerUtils {
         String mode = (String) AppPref.get(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
         switch (mode) {
             case Runner.MODE_AUTO:
-                RunnerUtils.autoDetectRootOrAdb(context);
+                if (LocalServer.isAMServiceAlive()) {
+                    // Don't bother detecting root/ADB
+                    return;
+                } else {
+                    // AMService isn't running, check for root/ADB
+                    RunnerUtils.autoDetectRootOrAdb(context);
+                }
                 return;
             case Runner.MODE_ROOT:
                 AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
