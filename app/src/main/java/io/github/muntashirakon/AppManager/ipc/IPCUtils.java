@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -16,15 +19,17 @@ public final class IPCUtils {
 
     private static IAMService amService;
     private static final AMServiceConnection conn = new AMServiceConnection();
+    private static CountDownLatch amServiceBoundWatcher;
 
     static class AMServiceConnection implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             Log.e(TAG, "service onServiceConnected");
-            synchronized (IPCUtils.class) {
-                amService = IAMService.Stub.asInterface(service);
-                IPCUtils.class.notifyAll();
-            }
+            amService = IAMService.Stub.asInterface(service);
+            if (amServiceBoundWatcher != null) {
+                // Should never be null
+                amServiceBoundWatcher.countDown();
+            } else throw new RuntimeException("AMService watcher should never be null!");
         }
 
         @Override
@@ -46,25 +51,15 @@ public final class IPCUtils {
 
     private static void startDaemon(Context context) {
         if (amService == null) {
+            amServiceBoundWatcher = new CountDownLatch(1);
             Log.e(TAG, "Launching service...");
             Intent intent = new Intent(context, AMService.class);
             RootService.bind(intent, conn);
             // Wait for service to be bound
-            synchronized (IPCUtils.class) {
-                int i = 0;
-                while (amService == null) {
-                    try {
-                        if (i % 20 == 0) {
-                            Log.i(TAG, "Waiting for AMService to be bound");
-                        }
-                        IPCUtils.class.wait(100);
-                        if (i > 1000) break;
-                        ++i;
-                    } catch (InterruptedException e) {
-                        Log.e(TAG, "startDaemon: interrupted", e);
-                        Thread.currentThread().interrupt();
-                    }
-                }
+            try {
+                amServiceBoundWatcher.await(45, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Log.e(TAG, "AMService watcher interrupted.");
             }
         }
     }
