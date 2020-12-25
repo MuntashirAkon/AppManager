@@ -748,4 +748,10 @@
     <string name="model">型号</string>
     <string name="brand_name">品牌</string>
     <string name="about_device">关于设备</string>
+    <string name="set_mode_for_app_ops_dots">为 app ops 设置模式…</string>
+    <string name="security">安全性</string>
+    <string name="orientation_user_portrait">用户画像</string>
+    <plurals name="alert_failed_to_set_app_ops">
+        <item quantity="other">无法为 %1$d 个应用设置权限</item>
+    </plurals>
 </resources>
