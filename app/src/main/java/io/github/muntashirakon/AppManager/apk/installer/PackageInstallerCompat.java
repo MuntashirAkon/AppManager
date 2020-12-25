@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.apk.installer;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
+import android.content.IIntentReceiver;
 import android.content.IIntentSender;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -27,6 +28,8 @@ import android.content.pm.IPackageInstallerSession;
 import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.IBinder;
 import android.os.RemoteException;
 
 import java.io.File;
@@ -38,7 +41,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -285,11 +289,19 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
     private int sessionId = -1;
     private final int userHandle;
     private final boolean allUsers;
+    private final String installerPackageName;
+    private final boolean isPrivileged;
 
     private PackageInstallerCompat(int userHandle) {
-        this.allUsers = userHandle == RunnerUtils.USER_ALL;
+        this.isPrivileged = LocalServer.isAMServiceAlive();
+        this.allUsers = isPrivileged && userHandle == RunnerUtils.USER_ALL;
         this.userHandle = allUsers ? Users.getCurrentUserHandle() : userHandle;
         Log.d(TAG, "Installing for " + (allUsers ? "all users" : "user " + userHandle));
+        if (isPrivileged) {
+            this.installerPackageName = (String) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
+        } else {
+            this.installerPackageName = context.getPackageName();
+        }
     }
 
     @Override
@@ -348,26 +360,18 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
     boolean commit() {
         Log.d(TAG, "Commit: calling activity to request permission...");
         IntentSender sender;
-        boolean isPrivileged = LocalServer.isAMServiceAlive();
-        final Intent[] result = new Intent[1];
-        CountDownLatch countDownLatch = new CountDownLatch(isPrivileged ? 1 : 0);
+        LocalIntentReceiver intentReceiver;
         if (isPrivileged) {
             try {
-                //noinspection JavaReflectionMemberAccess
-                sender = IntentSender.class.getConstructor(IIntentSender.class)
-                        .newInstance(new IIntentSenderAdaptor() {
-                            @Override
-                            public void send(Intent intent) {
-                                result[0] = intent;
-                                countDownLatch.countDown();
-                            }
-                        });
-            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                intentReceiver = new LocalIntentReceiver();
+                sender = intentReceiver.getIntentSender();
+            } catch (Exception e) {
                 sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_COMMIT, sessionId);
                 Log.e(TAG, "Commit: Could not commit session.", e);
                 return false;
             }
         } else {
+            intentReceiver = null;
             Intent callbackIntent = new Intent(AMPackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, callbackIntent, 0);
             sender = pendingIntent.getIntentSender();
@@ -393,30 +397,16 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
                 return false;
             }
         }
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException e) {
-            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_COMMIT, sessionId);
-            Log.e(TAG, "Commit: Could not commit session.", e);
+        if (!isPrivileged) return true;  // Fallback for no-root
+        Intent resultIntent = intentReceiver.getResult();
+        int status = resultIntent.getIntExtra(PackageInstaller.EXTRA_STATUS, 0);
+        if (status == PackageInstaller.STATUS_SUCCESS) {
+            sendCompletedBroadcast(packageName, STATUS_SUCCESS, sessionId);
+            return true;
+        } else {
+            sendCompletedBroadcast(packageName, status, sessionId);
             return false;
         }
-        if (isPrivileged && result[0] == null) {
-            sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_COMMIT, sessionId);
-            Log.e(TAG, "Commit: Could not commit session. Returned result is null.");
-            return false;
-        }
-        if (result[0] != null) {
-            Intent resultIntent = result[0];
-            int status = resultIntent.getIntExtra(PackageInstaller.EXTRA_STATUS, 0);
-            if (status == PackageInstaller.STATUS_SUCCESS) {
-                sendCompletedBroadcast(packageName, STATUS_SUCCESS, sessionId);
-                return true;
-            } else {
-                sendCompletedBroadcast(packageName, status, sessionId);
-                return false;
-            }
-        }
-        return true;  // Fallback for no-root
     }
 
     @Override
@@ -450,7 +440,7 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
             sessionParams.setInstallReason(PackageManager.INSTALL_REASON_USER);
         }
         try {
-            sessionId = packageInstaller.createSession(sessionParams, context.getPackageName(), userHandle);
+            sessionId = packageInstaller.createSession(sessionParams, installerPackageName, userHandle);
             Log.d(TAG, "OpenSession: session id " + sessionId);
         } catch (RemoteException e) {
             sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE, sessionId);
@@ -470,6 +460,7 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
     }
 
     private void cleanOldSessions() {
+        if (isPrivileged) return;
         List<PackageInstaller.SessionInfo> sessionInfoList;
         try {
             sessionInfoList = packageInstaller.getMySessions(context.getPackageName(), userHandle).getList();
@@ -496,5 +487,51 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
             }
         }
         return false;
+    }
+
+    // https://cs.android.com/android/platform/superproject/+/master:frameworks/base/services/core/java/com/android/server/pm/PackageManagerShellCommand.java;l=3855;drc=d31ee388115d17c2fd337f2806b37390c7d29834
+    private static class LocalIntentReceiver {
+        private final LinkedBlockingQueue<Intent> mResult = new LinkedBlockingQueue<>();
+
+        private final IIntentSender.Stub mLocalSender = new IIntentSender.Stub() {
+            @Override
+            public int send(int code, Intent intent, String resolvedType, IIntentReceiver finishedReceiver, String requiredPermission) {
+                send(intent);
+                return 0;
+            }
+
+            @Override
+            public int send(int code, Intent intent, String resolvedType, IIntentReceiver finishedReceiver, String requiredPermission, Bundle options) {
+                send(intent);
+                return 0;
+            }
+
+            @Override
+            public void send(int code, Intent intent, String resolvedType, IBinder whitelistToken, IIntentReceiver finishedReceiver, String requiredPermission, Bundle options) {
+                send(intent);
+            }
+
+            public void send(Intent intent) {
+                try {
+                    mResult.offer(intent, 5, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+
+        @SuppressWarnings("JavaReflectionMemberAccess")
+        public IntentSender getIntentSender() throws Exception {
+            return IntentSender.class.getConstructor(IIntentSender.class)
+                    .newInstance(mLocalSender);
+        }
+
+        public Intent getResult() {
+            try {
+                return mResult.take();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

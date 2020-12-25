@@ -29,6 +29,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -54,9 +57,8 @@ public class PackageInstallerService extends IntentService {
         super("PackageInstallerService");
     }
 
-    private boolean installComplete = false;
-    private boolean runIndefinitely = false;
-    private int timeCount = 18000000;  // 5 hrs
+    private final CountDownLatch installWatcher = new CountDownLatch(1);
+    private final CountDownLatch interactionWatcher = new CountDownLatch(1);
 
     private boolean closeApkFile = false;
     private String appLabel;
@@ -84,7 +86,6 @@ public class PackageInstallerService extends IntentService {
                     // A install prompt is being shown to the user
                     if (PackageInstallerService.this.sessionId == sessionId) {
                         // Run indefinitely until user finally decided to do something about it
-                        runIndefinitely = true;
                     }
                     break;
                 case AMPackageInstaller.ACTION_INSTALL_INTERACTION_END:
@@ -92,8 +93,7 @@ public class PackageInstallerService extends IntentService {
                     // or just clicking on some place else (latter is our main focus)
                     if (PackageInstallerService.this.sessionId == sessionId) {
                         // The user interaction is done, it doesn't take more than 1 minute now
-                        timeCount = 60000;
-                        runIndefinitely = false;
+                        interactionWatcher.countDown();
                     }
                     break;
                 case AMPackageInstaller.ACTION_INSTALL_COMPLETED:
@@ -107,7 +107,8 @@ public class PackageInstallerService extends IntentService {
                         if (closeApkFile && apkFile != null) {
                             apkFile.close();
                         }
-                        installComplete = true;
+                        interactionWatcher.countDown();
+                        installWatcher.countDown();
                     }
                     break;
             }
@@ -170,7 +171,7 @@ public class PackageInstallerService extends IntentService {
                     new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(this,
                             R.string.obb_files_extracted_successfully, Toast.LENGTH_LONG).show());
                 }
-                if (!installComplete) {
+                if (installWatcher.getCount() != 0) {
                     // Reset close apk file if the install isn't completed
                     closeApkFile = tmpCloseApkFile;
                 } else {
@@ -183,16 +184,13 @@ public class PackageInstallerService extends IntentService {
         // Install package
         PackageInstallerCompat.getInstance(userHandle).install(apkFile);
         // Wait for user interaction (if needed)
-        int interval = 100; // 100 millis
-        while (!installComplete && (runIndefinitely || timeCount != 0)) {
-            try {
-                Thread.sleep(interval);
-                timeCount -= interval;
-            } catch (InterruptedException e) {
-                Log.e("PIS", "Installation interrupted.", e);
-                // Thread interrupted, just exit
-                break;
-            }
+        try {
+            // Wait for user interaction
+            interactionWatcher.await();
+            // Wait for the install to complete
+            installWatcher.await(1, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            Log.e("PIS", "Installation interrupted.", e);
         }
         // Remove session if exist
         try {
