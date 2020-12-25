@@ -138,7 +138,7 @@
         <item quantity="one">%1$d hora</item>
         <item quantity="other">%1$d horas</item>
     </plurals>
-    <string name="usage_min">%1$d minutos</string>
+    <string name="usage_min">%1$d minuto(s)</string>
     <string name="usage_less_than_a_minute">Menos de um minuto</string>
     <string name="go_back">Voltar</string>
     <string name="go">Ir</string>
@@ -496,7 +496,7 @@
     <string name="pref_backup_flags_msg">Adicionar uma predefinição para opções de backup remove o fardo de selecionar flags toda vez que você faz backup/restaura.</string>
     <string name="reject_time">Tempo de Rejeição</string>
     <string name="accept_time">Tempo de Aceitação</string>
-    <string name="deny_app_ops_description">Nega determinadas operações de aplicativo identificadas pelos valores constantes, ou seja, 63 significa RUN_IN_BACKGROUND</string>
+    <string name="deny_app_ops_description">Defina um modo para as operações de aplicativo identificadas pelos valores das constantes, ou seja, 63 ou RUN_IN_BACKGROUND</string>
     <string name="changelog">Histórico de Atualizações</string>
     <string name="one_click_ops">Operações em 1 Clique</string>
     <string name="touchscreen">Touchscreen</string>
@@ -644,7 +644,7 @@
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para a função <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para o APK base</string>
     <string name="routine_ops">Operações de rotina</string>
-    <string name="input_app_ops_description">Insira constantes de operações de aplicativo com espaços, p. ex. (63 72 12) etc. Você pode encontrar constantes de operações de aplicativo na guia operações de aplicativo sob os suportes.</string>
+    <string name="input_app_ops_description">Insira nomes e/ou constantes de operações de aplicativo com espaços, por exemplo (WAKE_LOCK 63 72 CAMERA) etc.</string>
     <string name="input_app_ops">Inserir operações de aplicativo</string>
     <string name="packages">pacotes</string>
     <string name="onboard">Todos os</string>
@@ -783,4 +783,10 @@
     <string name="brand_name">Marca</string>
     <string name="pref_about_device_msg">Informações básicas do dispositivo, incluindo Sistema Android, CPU, GPU, RAM, Bateria, etc.</string>
     <string name="about_device">Sobre o dispositivo</string>
+    <plurals name="alert_failed_to_set_app_ops">
+        <item quantity="one">%1$d aplicativo não pôde ter operações de aplicativo definidas</item>
+        <item quantity="other">%1$d aplicativos não puderam ter operações de aplicativo definidas</item>
+    </plurals>
+    <string name="set_mode_for_app_ops_dots">Definir o modo para operações de aplicativo…</string>
+    <string name="security">Segurança</string>
 </resources>
