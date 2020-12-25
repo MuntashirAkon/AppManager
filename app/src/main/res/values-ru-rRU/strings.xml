@@ -842,4 +842,6 @@
     <string name="brand_name">Марка</string>
     <string name="pref_about_device_msg">Основная информация об устройстве, включая версию Android, ЦП, ГП, ОЗУ, аккумулятор и т. д.</string>
     <string name="about_device">Об устройстве</string>
+    <string name="uri">URI</string>
+    <string name="magisk_hide_enabled">MagiskHide</string>
 </resources>
