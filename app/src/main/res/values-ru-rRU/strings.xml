@@ -726,7 +726,7 @@
     <string name="state_waking">Пробуждение</string>
     <string name="state_wake_kill">Отключение пробуждения</string>
     <string name="state_parked">Оформлено</string>
-    <string name="state_device_io"/>
+    <string name="state_device_io">Device I/O</string>
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
     <string name="un_apkm">Распаковать Apkm</string>
@@ -842,4 +842,7 @@
     <string name="brand_name">Марка</string>
     <string name="pref_about_device_msg">Основная информация об устройстве, включая версию Android, ЦП, ГП, ОЗУ, аккумулятор и т. д.</string>
     <string name="about_device">Об устройстве</string>
+    <string name="uri">URI</string>
+    <string name="magisk_hide_enabled">MagiskHide</string>
+    <string name="keystore">KeyStore</string>
 </resources>
