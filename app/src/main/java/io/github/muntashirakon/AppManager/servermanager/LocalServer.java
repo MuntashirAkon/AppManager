@@ -86,6 +86,11 @@ public class LocalServer {
         return amService;
     }
 
+    public static boolean isAMServiceAlive() {
+        if (amService != null) return amService.asBinder().pingBinder();
+        else return false;
+    }
+
     private final LocalServerManager mLocalServerManager;
     private final Context mContext;
 

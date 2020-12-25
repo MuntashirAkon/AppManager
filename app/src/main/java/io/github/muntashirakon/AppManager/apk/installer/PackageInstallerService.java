@@ -39,7 +39,6 @@ import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.misc.Users;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
@@ -180,13 +179,9 @@ public class PackageInstallerService extends IntentService {
                 }
             }
         }).start();
+        int userHandle = intent.getIntExtra(EXTRA_USER_ID, Users.getCurrentUserHandle());
         // Install package
-        if (AppPref.isRootOrAdbEnabled()) {
-            int userHandle = intent.getIntExtra(EXTRA_USER_ID, Users.getCurrentUserHandle());
-            PackageInstallerShell.getInstance(userHandle).install(apkFile);
-        } else {
-            PackageInstallerNoRoot.getInstance().install(apkFile);
-        }
+        PackageInstallerCompat.getInstance(userHandle).install(apkFile);
         // Wait for user interaction (if needed)
         int interval = 100; // 100 millis
         while (!installComplete && (runIndefinitely || timeCount != 0)) {

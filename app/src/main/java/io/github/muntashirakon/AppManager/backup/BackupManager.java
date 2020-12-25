@@ -46,7 +46,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.pm.PackageInfoCompat;
 import androidx.core.content.pm.PermissionInfoCompat;
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerShell;
+import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.appops.OpEntry;
 import io.github.muntashirakon.AppManager.appops.PackageOps;
@@ -764,7 +764,7 @@ public class BackupManager {
                 throw new BackupException("Failed to extract the apk file(s).");
             }
             // A normal update will do it now
-            PackageInstallerShell packageInstaller = new PackageInstallerShell(userHandle);
+            PackageInstallerCompat packageInstaller = PackageInstallerCompat.getInstance(userHandle);
             if (!packageInstaller.install(allApks, packageName)) {
                 deleteFiles(allApks);
                 throw new BackupException("A (re)install was necessary but couldn't perform it.");
