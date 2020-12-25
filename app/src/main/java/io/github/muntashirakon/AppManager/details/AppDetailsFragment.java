@@ -881,7 +881,11 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityInfo.name))
                     : activityLabel);
             boolean isExported = activityInfo.exported;
-            boolean canLaunch = (isRootEnabled || isExported) && !isDisabled && !appDetailsItem.isBlocked;
+            // An activity is allowed to launch only if it's
+            // 1) Not from an external APK
+            // 2) Root enabled or the activity is exportable
+            // 3) App or the activity is not disabled and/or blocked
+            boolean canLaunch = !isExternalApk && (isRootEnabled || isExported) && !isDisabled && !appDetailsItem.isBlocked;
             launch.setEnabled(canLaunch);
             if (canLaunch) {
                 launch.setOnClickListener(v -> {
