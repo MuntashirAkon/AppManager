@@ -26,7 +26,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
-import io.github.muntashirakon.AppManager.server.common.ParcelableUtil;
 import io.github.muntashirakon.AppManager.server.common.Shell;
 import io.github.muntashirakon.AppManager.server.common.ShellCaller;
 
@@ -53,6 +52,6 @@ public final class ApiSupporter {
         LocalServer localServer = LocalServer.getInstance();
         ShellCaller shellCaller = new ShellCaller(command);
         CallerResult callerResult = localServer.exec(shellCaller);
-        return ParcelableUtil.unmarshall(callerResult.getReply(), Shell.Result.CREATOR);
+        return (Shell.Result) callerResult.getReplyObj();
     }
 }
