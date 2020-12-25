@@ -24,6 +24,7 @@ import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -51,6 +52,7 @@ import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModeNames;
@@ -83,12 +85,18 @@ public class OneClickOpsActivity extends BaseActivity {
     private void setItems() {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_unblock_trackers),
                 getString(R.string.block_unblock_trackers_description))
-                .setOnClickListener(v -> new MaterialAlertDialogBuilder(this)
-                        .setTitle(R.string.block_unblock_trackers)
-                        .setMessage(R.string.apply_to_system_apps_question)
-                        .setPositiveButton(R.string.no, (dialog, which) -> blockTrackers(false))
-                        .setNegativeButton(R.string.yes, ((dialog, which) -> blockTrackers(true)))
-                        .show());
+                .setOnClickListener(v -> {
+                    if (!AppPref.isRootEnabled()) {
+                        Toast.makeText(this, R.string.only_works_in_root_mode, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    new MaterialAlertDialogBuilder(this)
+                            .setTitle(R.string.block_unblock_trackers)
+                            .setMessage(R.string.apply_to_system_apps_question)
+                            .setPositiveButton(R.string.no, (dialog, which) -> blockTrackers(false))
+                            .setNegativeButton(R.string.yes, ((dialog, which) -> blockTrackers(true)))
+                            .show();
+                });
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_components_dots),
                 getString(R.string.block_components_description))
                 .setOnClickListener(v -> blockComponents());
@@ -120,10 +128,6 @@ public class OneClickOpsActivity extends BaseActivity {
     }
 
     private void blockTrackers(final boolean systemApps) {
-        if (!AppPref.isRootEnabled()) {
-            Toast.makeText(this, R.string.only_works_in_root_mode, Toast.LENGTH_SHORT).show();
-            return;
-        }
         mProgressIndicator.show();
         executor.submit(() -> {
             final List<ItemCount> trackerCounts = new ArrayList<>();
@@ -214,13 +218,19 @@ public class OneClickOpsActivity extends BaseActivity {
                         }
                         if (!componentCounts.isEmpty()) {
                             ItemCount componentCount;
+                            SpannableStringBuilder builder;
                             final ArrayList<String> selectedPackages = new ArrayList<>();
                             List<CharSequence> packageNamesWithComponentCount = new ArrayList<>();
                             for (int i = 0; i < componentCounts.size(); ++i) {
                                 if (Thread.currentThread().isInterrupted()) return;
                                 componentCount = componentCounts.get(i);
+                                builder = new SpannableStringBuilder(componentCount.packageLabel)
+                                        .append("\n").append(UIUtils.getSmallerText(getResources()
+                                                .getQuantityString(R.plurals.no_of_trackers,
+                                                        componentCount.count, componentCount.count)));
                                 selectedPackages.add(componentCount.packageName);
-                                packageNamesWithComponentCount.add("(" + componentCount.count + ") " + componentCount.packageLabel);
+                                packageNamesWithComponentCount.add(builder);
+
                             }
                             if (Thread.currentThread().isInterrupted()) return;
                             runOnUiThread(() -> {
@@ -275,15 +285,12 @@ public class OneClickOpsActivity extends BaseActivity {
                     executor.submit(() -> {
                         // Get mode
                         int mode;
+                        int[] appOpList;
                         try {
                             mode = Utils.getIntegerFromString(builder.getAuxiliaryInput(), modeNames, modes);
-                        } catch (IllegalArgumentException e) {
-                            return;
-                        }
-                        String[] appOpsStr = appOpNameList.toString().split("\\s+");
-                        if (appOpsStr.length == 0) return;
-                        int[] appOpList = new int[appOpsStr.length];
-                        try {
+                            String[] appOpsStr = appOpNameList.toString().split("\\s+");
+                            if (appOpsStr.length == 0) return;
+                            appOpList = new int[appOpsStr.length];
                             for (int i = 0; i < appOpsStr.length; ++i) {
                                 if (Thread.currentThread().isInterrupted()) return;
                                 appOpList[i] = Utils.getIntegerFromString(appOpsStr[i], appOpNames, appOps);
