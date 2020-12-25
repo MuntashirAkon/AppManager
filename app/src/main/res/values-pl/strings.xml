@@ -526,4 +526,27 @@
     <string name="activities">Aktywności</string>
     <string name="stopped">Zatrzymane</string>
     <string name="type_boolean">Prawda/fałsz</string>
+    <string name="set_mode_for_app_ops_dots">Ustaw tryb app ops…</string>
+    <string name="security">Zabezpieczenia</string>
+    <string name="battery">Bateria</string>
+    <string name="graphics">Karta graficzna</string>
+    <string name="cpu">Procesor</string>
+    <string name="users">Użytkownicy</string>
+    <string name="languages">Języki</string>
+    <string name="unavailable">Niedostępne</string>
+    <string name="available">Dostępne</string>
+    <string name="battery_capacity">Pojemność</string>
+    <string name="memory">Pamięć</string>
+    <string name="gles_version">Wersja GL ES</string>
+    <string name="no_of_cores">Rdzenie</string>
+    <string name="support_architectures">Obsługiwane architektury</string>
+    <string name="security_providers">Dostawcy zabezpieczeń</string>
+    <string name="kernel">Kernel</string>
+    <string name="manufacturer">Producent</string>
+    <string name="model">Model</string>
+    <string name="brand_name">Marka</string>
+    <string name="pref_about_device_msg">Podstawowe informacje o urządzeniu, w tym o systemie Android, CPU, GPU, RAM, baterii, itp.</string>
+    <string name="about_device">Informacje o urządzeniu</string>
+    <string name="interceptor">Przechwytywanie</string>
+    <string name="share">Udostępnij</string>
 </resources>
