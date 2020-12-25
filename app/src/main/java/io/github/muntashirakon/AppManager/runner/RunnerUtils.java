@@ -49,13 +49,12 @@ import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
-@SuppressWarnings("unused,UnusedReturnValue")
+@SuppressWarnings("UnusedReturnValue")
 public final class RunnerUtils {
     public static final int USER_ALL = -1;
 
     public static final String CMD_PM = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? "cmd package" : "pm";
     public static final String CMD_AM = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? "cmd activity" : "am";
-    public static final String CMD_APP_OPS = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? "cmd appops" : "appops";
 
     public static final String CMD_CLEAR_CACHE_PREFIX = "rm -rf";
     public static final String CMD_CLEAR_CACHE_DIR_SUFFIX = " %s/cache %s/code_cache";
@@ -72,14 +71,6 @@ public final class RunnerUtils {
 
     public static final String CMD_PERMISSION_GRANT = CMD_PM + " grant --user %s %s %s";
     public static final String CMD_PERMISSION_REVOKE = CMD_PM + " revoke --user %s %s %s";
-
-    public static final String CMD_APP_OPS_GET = CMD_APP_OPS + " get %s %d";
-    public static final String CMD_APP_OPS_GET_ALL = CMD_APP_OPS + " get %s";
-    public static final String CMD_APP_OPS_RESET = CMD_APP_OPS + " reset %s";
-    public static final String CMD_APP_OPS_RESET_USER = CMD_APP_OPS + " reset --user %d %s";
-    public static final String CMD_APP_OPS_SET = CMD_APP_OPS + " set --user %d %s %d %s";
-    public static final String CMD_APP_OPS_SET_MODE_INT = CMD_APP_OPS + " set --user %d %s %d %d";
-    public static final String CMD_APP_OPS_SET_UID = CMD_APP_OPS + " set --uid %d %d %s";
 
     public static final String CMD_PID_PACKAGE = "pidof %s";
     public static final String CMD_KILL_SIG9 = "kill -9 %s";
@@ -301,7 +292,7 @@ public final class RunnerUtils {
     }
 
     private static boolean isAdbAvailable(Context context) {
-        try (AdbConnection connection = AdbConnectionManager.connect(context, ServerConfig.getAdbHost(), ServerConfig.getAdbPort())) {
+        try (AdbConnection ignored = AdbConnectionManager.connect(context, ServerConfig.getAdbHost(), ServerConfig.getAdbPort())) {
             return true;
         } catch (IOException | NoSuchAlgorithmException | InterruptedException e) {
             return false;

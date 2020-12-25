@@ -20,9 +20,11 @@ package io.github.muntashirakon.AppManager.batchops;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.RemoteException;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -40,6 +42,7 @@ import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.misc.Users;
@@ -308,22 +311,32 @@ public class BatchOpsManager {
 
     @NonNull
     private Result opDisableBackground() {
+        List<UserPackagePair> failedPackages = new ArrayList<>();
+        List<UserPackagePair> appliedPackages = new ArrayList<>();
+        AppOpsService appOpsService = new AppOpsService();
         for (UserPackagePair pair : userPackagePairs) {
-            addCommand(pair.getPackageName(), pair.getUserHandle(), String.format(Locale.ROOT,
-                    RunnerUtils.CMD_APP_OPS_SET_MODE_INT, pair.getUserHandle(),
-                    pair.getPackageName(), AppOpsManager.OP_RUN_IN_BACKGROUND,
-                    AppOpsManager.MODE_IGNORED));
-        }
-        Result result = runOpAndFetchResults();
-        List<String> failedPackages = result.getFailedPackages();
-        for (UserPackagePair pair : userPackagePairs) {
-            if (!failedPackages.contains(pair.getPackageName())) {
-                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
-                    cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
+            int uid = PackageUtils.getAppUid(pair);
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    appOpsService.setMode(AppOpsManager.OP_RUN_IN_BACKGROUND, uid,
+                            pair.getPackageName(), AppOpsManager.MODE_IGNORED);
                 }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    appOpsService.setMode(AppOpsManager.OP_RUN_ANY_IN_BACKGROUND, uid,
+                            pair.getPackageName(), AppOpsManager.MODE_IGNORED);
+                }
+                appliedPackages.add(pair);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+                failedPackages.add(pair);
             }
         }
-        return result;
+        for (UserPackagePair pair : appliedPackages) {
+            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
+                cb.setAppOp(String.valueOf(AppOpsManager.OP_RUN_IN_BACKGROUND), AppOpsManager.MODE_IGNORED);
+            }
+        }
+        return new Result(failedPackages);
     }
 
     @NonNull

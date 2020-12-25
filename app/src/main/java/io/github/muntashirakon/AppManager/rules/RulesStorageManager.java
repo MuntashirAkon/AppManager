@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.rules;
 
 import android.content.Context;
+import android.os.RemoteException;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -39,8 +40,11 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class RulesStorageManager implements Closeable {
     @StringDef(value = {
@@ -225,13 +229,15 @@ public class RulesStorageManager implements Closeable {
 
     public void applyAppOpsAndPerms(boolean apply) {
         Runner runner = Runner.getInstance();
+        int uid = PackageUtils.getAppUid(new UserPackagePair(packageName, userHandle));
+        AppOpsService appOpsService = new AppOpsService();
         if (apply) {
             // Apply all app ops
             List<Entry> appOps = getAll(Type.APP_OP);
             for (Entry appOp : appOps) {
                 try {
-                    runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_APP_OPS_SET, userHandle, packageName, Integer.parseInt(appOp.name), appOp.extra));
-                } catch (Exception e) {
+                    appOpsService.setMode(Integer.parseInt(appOp.name), uid, packageName, (int) appOp.extra);
+                } catch (RemoteException e) {
                     e.printStackTrace();
                 }
             }
@@ -248,8 +254,8 @@ public class RulesStorageManager implements Closeable {
         } else {
             // Reset all app ops
             try {
-                runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_APP_OPS_RESET_USER, userHandle, packageName));
-            } catch (Exception e) {
+                appOpsService.resetAllModes(userHandle, packageName);
+            } catch (RemoteException e) {
                 e.printStackTrace();
             }
             // Revoke all permissions
