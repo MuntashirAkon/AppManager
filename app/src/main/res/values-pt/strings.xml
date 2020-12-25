@@ -593,7 +593,7 @@
     <string name="reject_time">Tempo de Rejeição</string>
     <string name="accept_time">Aceitar o tempo</string>
     <plurals name="tracker_and_classes">
-        <item quantity="one">1 tracker com &lt;xliff:g xmlns:xliff=\"urn:oasis:nomes:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; class</item>
-        <item quantity="other">1 tracker com &lt;xliff:g xmlns:xliff=\"urn:oasis:nomes:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt;%1$d&lt;/xliff:g&gt; classes</item>
+        <item quantity="one">1 tracker com <xliff:g id="class_no" example="50">%1$d</xliff:g> class</item>
+        <item quantity="other">1 tracker com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
     </plurals>
 </resources>
