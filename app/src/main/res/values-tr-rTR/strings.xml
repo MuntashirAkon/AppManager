@@ -350,7 +350,7 @@
     </plurals>
     <string name="failed_to_parse_some_numbers">Bazı numaralar ayrıştırılamadı</string>
     <string name="only_works_in_root_or_adb_mode">Yalnızca root veya ADB modunda çalışır</string>
-    <string name="input_app_ops_description">Uygulama işlemlerini aralarında boşluk olacak şekilde girin, örn. (63 72 12) gibi. Uygulama işlem sabitlerini, parantezlerin altındaki uygulama işlemleri sekmesinde bulabilirsiniz.</string>
+    <string name="input_app_ops_description">Uygulama işlemi adlarını ve/veya sabitlerini aralarında boşluk olacak şekilde girin, örn. (WAKE_LOCK 63 72 CAMERA) vb.</string>
     <string name="starting_activity">Başlangıç etkinliği: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="input_app_ops">Uygulama işlemlerini gir</string>
     <string name="filtered_packages">Filtrelenmiş paketler</string>
@@ -362,7 +362,7 @@
     <string name="clear_app_cache">Uygulama önbelleğini temizle</string>
     <string name="clear_data_from_uninstalled_apps_description">DONT_DELETE_DATA işaretiyle kaldırılan uygulamaların verilerini temizle</string>
     <string name="clear_data_from_uninstalled_apps">Kaldırılan uygulamaların verilerini temizle</string>
-    <string name="deny_app_ops_description">Sabit değerlerle tanımlanan belirli uygulama işlemlerini reddet, örn. 63, RUN_IN_BACKGROUND anlamına gelir</string>
+    <string name="deny_app_ops_description">Sabit değerlerle tanımlanan uygulama işlemleri için bir mod ayarlayın, örn. 63 veya RUN_IN_BACKGROUND</string>
     <string name="deny_app_ops_dots">Uygulama işlemlerini reddet…</string>
     <string name="block_components_description">Verilen imza(lar)la tanımlanan tüm bileşenleri engelle</string>
     <string name="block_components_dots">Bileşenleri engelle…</string>
@@ -781,4 +781,10 @@
     <string name="brand_name">Marka</string>
     <string name="pref_about_device_msg">Android sistemi, CPU, GPU, RAM, pil vb.içeren temel aygıt bilgileri.</string>
     <string name="about_device">Aygıt hakkında</string>
+    <string name="set_mode_for_app_ops_dots">Uygulama işlemleri için mod ayarla…</string>
+    <string name="security">Güvenlik</string>
+    <plurals name="alert_failed_to_set_app_ops">
+        <item quantity="one">%1$d uygulama için uygulama işlemleri ayarlanamadı</item>
+        <item quantity="other">%1$d uygulama için uygulama işlemleri ayarlanamadı</item>
+    </plurals>
 </resources>
