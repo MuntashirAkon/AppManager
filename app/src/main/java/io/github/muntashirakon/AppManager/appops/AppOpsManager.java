@@ -128,7 +128,8 @@ public class AppOpsManager {
             UID_STATE_BACKGROUND,
             UID_STATE_CACHED
     })
-    public @interface UidState {}
+    public @interface UidState {
+    }
 
     /**
      * Uid state: The UID is a foreground persistent app. The lower the UID
@@ -147,6 +148,7 @@ public class AppOpsManager {
      * The lower the UID state the more important the UID is for the user.
      * This uid state is a counterpart to PROCESS_STATE_FOREGROUND_SERVICE_LOCATION which has been
      * deprecated.
+     *
      * @deprecated
      */
     @Deprecated
@@ -200,7 +202,8 @@ public class AppOpsManager {
             OP_FLAG_TRUSTED_PROXIED,
             OP_FLAG_UNTRUSTED_PROXIED
     })
-    public @interface OpFlags {}
+    public @interface OpFlags {
+    }
 
     /**
      * Flag: non proxy operations. These are operations
@@ -1663,7 +1666,10 @@ public class AppOpsManager {
      */
     @Mode
     public static int opToDefaultMode(int op) {
-        return sOpDefaultMode[op];
+        if (op > OP_NONE && op < _NUM_OP) {
+            return sOpDefaultMode[op];
+        }
+        return op;
     }
 
     /**
