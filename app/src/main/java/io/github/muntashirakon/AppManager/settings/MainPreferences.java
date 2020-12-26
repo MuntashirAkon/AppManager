@@ -303,10 +303,12 @@ public class MainPreferences extends PreferenceFragmentCompat {
         ((Preference) Objects.requireNonNull(findPreference("backup_flags"))).setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.backup_options)
-                    .setMultiChoiceItems(R.array.backup_flags, flags.flagsToCheckedItems(),
-                            (dialog, flag, isChecked) -> {
-                                if (isChecked) flags.addFlag(flag);
-                                else flags.removeFlag(flag);
+                    .setMultiChoiceItems(BackupFlags.getFormattedFlagNames(activity),
+                            flags.flagsToCheckedItems(),
+                            (dialog, index, isChecked) -> {
+                                if (isChecked) {
+                                    flags.addFlag(BackupFlags.backupFlags.get(index));
+                                } else flags.removeFlag(BackupFlags.backupFlags.get(index));
                             })
                     .setPositiveButton(R.string.save, (dialog, which) ->
                             AppPref.set(AppPref.PrefKey.PREF_BACKUP_FLAGS_INT, flags.getFlags()))

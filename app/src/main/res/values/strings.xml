@@ -816,4 +816,16 @@
     <string name="battery">Battery</string>
     <string name="security">Security</string>
     <string name="set_mode_for_app_ops_dots">Set mode for app ops…</string>
+    <string name="backup_source_description">Back up the entire source directory.</string>
+    <string name="backup_apk_only_description">Back up only the APK files from the source directory. <b>Source</b> must be selected for this to work.</string>
+    <string name="backup_data_description">Back up data folders. If selected, internal data folders will be backed up by default.</string>
+    <string name="backup_external_data_description">Back up external data folders. <b>Data</b> must be selected for this to work.</string>
+    <string name="backup_obb_media_description">Back up OBB and media folders.</string>
+    <string name="backup_exclude_cache_description">Do not back up cache, no_cache and no_backup folders.</string>
+    <string name="backup_extras">Extras</string>
+    <string name="backup_extras_description">Back up app permissions, battery saving, data usage options, MagiskHide status, etc.</string>
+    <string name="backup_rules_description">Back up rules configured within App Manager.</string>
+    <string name="backup_multiple_description">Use a separate named back up instead of base backup.</string>
+    <string name="backup_all_users_description">Perform back up for all users, not just the current user.</string>
+    <string name="backup_skip_signature_checks_description">Useful for restoring backups which are failing due to checksum verification failure or has a different APK signature than the backed up one.</string>
 </resources>

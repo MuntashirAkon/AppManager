@@ -138,10 +138,11 @@ public class BackupDialogFragment extends DialogFragment {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
                 .setTitle(packageNames.size() == 1 ? PackageUtils.getPackageLabel(activity
                         .getPackageManager(), packageNames.get(0)) : getString(R.string.backup_options))
-                .setMultiChoiceItems(R.array.backup_flags, flags.flagsToCheckedItems(),
-                        (dialog, flag, isChecked) -> {
-                            if (isChecked) flags.addFlag(flag);
-                            else flags.removeFlag(flag);
+                .setMultiChoiceItems(BackupFlags.getFormattedFlagNames(activity),
+                        flags.flagsToCheckedItems(),
+                        (dialog, index, isChecked) -> {
+                            if (isChecked) flags.addFlag(BackupFlags.backupFlags.get(index));
+                            else flags.removeFlag(BackupFlags.backupFlags.get(index));
                         });
         builder.setPositiveButton(R.string.backup, (dialog, which) -> {
             mode = MODE_BACKUP;

@@ -72,6 +72,11 @@ public class UIUtils {
     }
 
     @NonNull
+    public static Spannable getSecondaryText(@NonNull Context context, @NonNull CharSequence text) {
+        return getColoredText(text, getTextColorSecondary(context));
+    }
+
+    @NonNull
     public static Spannable getTitleText(Context context, @NonNull CharSequence text) {
         Spannable spannable = charSequenceToSpannable(text);
         spannable.setSpan(new AbsoluteSizeSpan(getTitleSize(context)), 0, spannable.length(),
@@ -138,6 +143,10 @@ public class UIUtils {
 
     public static int getTextColorPrimary(@NonNull Context context) {
         return ContextCompat.getColor(context, R.color.textColorPrimary);
+    }
+
+    public static int getTextColorSecondary(@NonNull Context context) {
+        return ContextCompat.getColor(context, R.color.textColorSecondary);
     }
 
     public static int getTitleSize(@NonNull Context context) {

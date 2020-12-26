@@ -173,10 +173,12 @@ public class ConfPreferences extends PreferenceFragmentCompat {
             final AtomicInteger backupFlags = new AtomicInteger(flags.getFlags());
             view.findViewById(R.id.dialog_button).setOnClickListener(v -> new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.backup_options)
-                    .setMultiChoiceItems(R.array.backup_flags, flags.flagsToCheckedItems(),
-                            (dialog, flag, isChecked) -> {
-                                if (isChecked) flags.addFlag(flag);
-                                else flags.removeFlag(flag);
+                    .setMultiChoiceItems(BackupFlags.getFormattedFlagNames(activity),
+                            flags.flagsToCheckedItems(),
+                            (dialog, index, isChecked) -> {
+                                if (isChecked) {
+                                    flags.addFlag(BackupFlags.backupFlags.get(index));
+                                } else flags.removeFlag(BackupFlags.backupFlags.get(index));
                             })
                     .setPositiveButton(R.string.save, (dialog, which) -> backupFlags.set(flags.getFlags()))
                     .setNegativeButton(R.string.cancel, null)

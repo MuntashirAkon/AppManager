@@ -72,20 +72,6 @@
         <item>@string/features</item>
         <item>@string/sdk</item>
     </string-array>
-    <string-array name="backup_flags">
-        <!-- Must be aligned with BackupManager#BackupFlags, starting from 1 -->
-        <item>@string/source</item>
-        <item>@string/data</item>
-        <item>@string/external_data</item>
-        <item>@string/exclude_cache</item>
-        <item>@string/blocking_rules</item>
-        <item>@string/skip_signature_checks</item>
-        <item>@string/backup_apk_only</item>
-        <item>@string/backup_obb_media</item>
-        <item>@string/backup_all_users</item>
-        <item>@string/backup_multiple</item>
-        <item>@string/declared_permission</item>
-    </string-array>
     <string-array name="sys_config_names">
         <!-- Must be aligned with SysConfigType -->
         <item>group</item>
