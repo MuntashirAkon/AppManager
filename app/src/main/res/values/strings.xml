@@ -828,4 +828,5 @@
     <string name="backup_multiple_description">Use a separate named back up instead of base backup.</string>
     <string name="backup_all_users_description">Perform back up for all users, not just the current user.</string>
     <string name="backup_skip_signature_checks_description">Useful for restoring backups which are failing due to checksum verification failure or has a different APK signature than the backed up one.</string>
+    <string name="patch_level">Patch level</string>
 </resources>

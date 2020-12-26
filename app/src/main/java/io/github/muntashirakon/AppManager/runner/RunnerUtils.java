@@ -276,7 +276,7 @@ public final class RunnerUtils {
         return false;
     }
 
-    private static boolean isRootAvailable() {
+    public static boolean isRootAvailable() {
         String pathEnv = System.getenv("PATH");
         if (pathEnv != null) {
             for (String pathDir : pathEnv.split(":")) {

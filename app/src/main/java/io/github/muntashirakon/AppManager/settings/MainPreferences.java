@@ -20,12 +20,15 @@ package io.github.muntashirakon.AppManager.settings;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.FeatureInfo;
+import android.content.pm.IPackageManager;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.format.Formatter;
@@ -52,9 +55,11 @@ import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
 import androidx.core.os.LocaleListCompat;
 import androidx.core.text.HtmlCompat;
+import androidx.core.util.Pair;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
@@ -454,9 +459,17 @@ public class MainPreferences extends PreferenceFragmentCompat {
                 .append(Build.BOARD).append(", ")
                 .append(getPrimaryText(activity, getString(R.string.manufacturer) + ": "))
                 .append(Build.MANUFACTURER).append("\n");
-        // Security providers
+        // Security
+        builder.append("\n").append(getTitleText(activity, getString(R.string.security))).append("\n");
+        builder.append(getPrimaryText(activity, getString(R.string.root) + ": "))
+                .append(String.valueOf(RunnerUtils.isRootAvailable())).append("\n");
+        // TODO(20/12/20): Get SELinux, encryption status
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            builder.append(getPrimaryText(activity, getString(R.string.patch_level) + ": "))
+                    .append(Build.VERSION.SECURITY_PATCH).append("\n");
+        }
         List<CharSequence> securityProviders = new ArrayList<>();
-        builder.append("\n").append(getTitleText(activity, getString(R.string.security_providers))).append("\n");
+        builder.append(getPrimaryText(activity, getString(R.string.security_providers) + ": "));
         for (Provider provider : Security.getProviders()) {
             securityProviders.add(provider.getName() + " (" + provider.getVersion() + ")");
         }
@@ -471,9 +484,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         // GPU info
         builder.append("\n").append(getTitleText(activity, getString(R.string.graphics))).append("\n");
         builder.append(getPrimaryText(activity, getString(R.string.gles_version) + ": "))
-                .append(Utils.getGlEsVersion(activityManager.getDeviceConfigurationInfo().reqGlEsVersion)).append("\n")
-                .append(getPrimaryText(activity, getString(R.string.vendor) + ": "))
-                .append("\n");
+                .append(Utils.getGlEsVersion(activityManager.getDeviceConfigurationInfo().reqGlEsVersion)).append("\n");
         // TODO(19/12/20): Get vendor name
         // RAM info
         ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
@@ -486,6 +497,52 @@ public class MainPreferences extends PreferenceFragmentCompat {
         builder.append(getPrimaryText(activity, getString(R.string.battery_capacity) + ": "))
                 .append(String.valueOf(getBatteryCapacity())).append("mAh").append("\n");
         // TODO(19/12/20): Get more battery info
+        // Screen resolution
+        // TODO(19/12/20): Get screen resolution
+        // List system locales
+        LocaleListCompat locales = LocaleListCompat.getDefault();
+        List<String> localeStrings = new ArrayList<>(locales.size());
+        for (int i = 0; i < locales.size(); ++i) {
+            localeStrings.add(locales.get(i).getDisplayName());
+        }
+        builder.append("\n").append(getTitleText(activity, getString(R.string.languages)))
+                .append("\n").append(TextUtils.joinSpannable(", ", localeStrings))
+                .append("\n");
+        List<UserInfo> users = Users.getUsers();
+        if (users != null) {
+            // Users
+            builder.append("\n").append(getTitleText(activity, getString(R.string.users)))
+                    .append("\n");
+            List<String> userNames = new ArrayList<>();
+            for (UserInfo user : users) {
+                userNames.add(user.name);
+            }
+            builder.append(String.valueOf(users.size())).append(" (")
+                    .append(TextUtils.joinSpannable(", ", userNames))
+                    .append(")\n");
+            // App stats per user
+            builder.append("\n").append(getTitleText(activity, getString(R.string.apps))).append("\n");
+            for (UserInfo user : users) {
+                Pair<Integer, Integer> packageSizes = getPackageStats(user.id);
+                if (packageSizes.first + packageSizes.second == 0) continue;
+                builder.append(getPrimaryText(activity, getString(R.string.user) + ": "))
+                        .append(user.name).append("\n   ")
+                        .append(getPrimaryText(activity, getString(R.string.total_size) + ": "))
+                        .append(String.valueOf(packageSizes.first + packageSizes.second)).append(", ")
+                        .append(getPrimaryText(activity, getString(R.string.user) + ": "))
+                        .append(String.valueOf(packageSizes.first)).append(", ")
+                        .append(getPrimaryText(activity, getString(R.string.system) + ": "))
+                        .append(String.valueOf(packageSizes.second)).append("\n");
+            }
+        } else {
+            Pair<Integer, Integer> packageSizes = getPackageStats(Users.getCurrentUserHandle());
+            builder.append(getPrimaryText(activity, getString(R.string.total_size) + ": "))
+                    .append(String.valueOf(packageSizes.first + packageSizes.second)).append(", ")
+                    .append(getPrimaryText(activity, getString(R.string.user) + ": "))
+                    .append(String.valueOf(packageSizes.first)).append(", ")
+                    .append(getPrimaryText(activity, getString(R.string.system) + ": "))
+                    .append(String.valueOf(packageSizes.second)).append("\n");
+        }
         // List available hardware/features
         builder.append("\n").append(getTitleText(activity, getString(R.string.features))).append("\n");
         FeatureInfo[] features = pm.getSystemAvailableFeatures();
@@ -499,32 +556,6 @@ public class MainPreferences extends PreferenceFragmentCompat {
             }
         }
         builder.append(TextUtils.joinSpannable("\n", featureStrings)).append("\n");
-        // Screen resolution
-        // TODO(19/12/20): Get screen resolution
-        // List system locales
-        LocaleListCompat locales = LocaleListCompat.getDefault();
-        List<String> localeStrings = new ArrayList<>(locales.size());
-        for (int i = 0; i < locales.size(); ++i) {
-            localeStrings.add(locales.get(i).getDisplayName());
-        }
-        builder.append("\n").append(getTitleText(activity, getString(R.string.languages)))
-                .append("\n").append(TextUtils.joinSpannable(", ", localeStrings))
-                .append("\n");
-        // Users
-        List<UserInfo> users = Users.getUsers();
-        if (users != null) {
-            builder.append("\n").append(getTitleText(activity, getString(R.string.users)))
-                    .append("\n");
-            List<String> userNames = new ArrayList<>();
-            for (UserInfo user : users) {
-                userNames.add(user.name);
-            }
-            builder.append(String.valueOf(users.size())).append(" (")
-                    .append(TextUtils.joinSpannable(", ", userNames))
-                    .append(")\n");
-        }
-        // App stats per user
-        // TODO(19/12/20): Display app stats per user
         return builder;
     }
 
@@ -559,5 +590,22 @@ public class MainPreferences extends PreferenceFragmentCompat {
             e.printStackTrace();
         }
         return capacity;
+    }
+
+    private Pair<Integer, Integer> getPackageStats(int userHandle) {
+        IPackageManager pm = AppManager.getIPackageManager();
+        int systemApps = 0;
+        int userApps = 0;
+        try {
+            List<ApplicationInfo> applicationInfoList = pm.getInstalledApplications(0, userHandle).getList();
+            for (ApplicationInfo info : applicationInfoList) {
+                if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+                    ++systemApps;
+                } else ++userApps;
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return new Pair<>(userApps, systemApps);
     }
 }
