@@ -488,7 +488,7 @@
     <string name="uninstall_system_app_message">C\'est une application système. Êtes-vous sûr de vouloir désinstaller cette application \?</string>
     <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> a bien été désinstallé.</string>
     <string name="failed_to_uninstall">Impossible de désinstaller <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
-    <string name="uninstall_app_message">Voulez-vou désinstaller cette application \?</string>
+    <string name="uninstall_app_message">Voulez-vous désinstaller cette application \?</string>
     <string name="view_in_settings">Voir dans les paramètres</string>
     <string name="no_content">Pas de contenu</string>
     <string name="no_usage_in_this_time_range">Aucune uilisation pendant cette periode</string>
@@ -642,4 +642,18 @@
     <string name="sort_by_app_ops_names">Nom de l\'autorisation</string>
     <string name="sort_by_app_ops_values">Valeur de l\'autorisation</string>
     <string name="native_library_dir">Répertoire de bibliothèques natives JNI</string>
+    <string name="orientation_full_sensor">Capteur plein</string>
+    <string name="orientation_behind">Arrière</string>
+    <string name="batch_ops">Opérations par lots</string>
+    <plurals name="verified_with_warning">
+        <item quantity="one">Vérifié avec %d avertissement</item>
+        <item quantity="other">Vérifié avec %d avertissements</item>
+    </plurals>
+    <string name="filter">Filtre</string>
+    <string name="failed_to_fetch_package_info_possibly_a_split_apk">Impossible d\'extraire les informations du paquet, peut-être à cause d\'un APK divisé</string>
+    <string name="failed_to_parse_some_numbers">Ne peut pas analyser certains nombres</string>
+    <string name="failed_packages">Paquets en echec</string>
+    <string name="pref_import_existing_msg">Ajouter des composants désactivés par les autres applis à App Manager. Faites attention en utilisant cet outil car il peut y avoir de nombreux faux positifs. Ne choisissez que les applis dont vous êtes certain.</string>
+    <string name="battery_mode">Mode de batterie</string>
+    <string name="pref_import_export_blocking_rules_msg">Importer/exporter des règles, importer des règles depuis Watt ou Blocker.</string>
 </resources>
