@@ -22,6 +22,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Pair;
@@ -84,6 +85,7 @@ public class BackupManager {
     private static final String KEYSTORE_PREFIX = "keystore";
     private static final int KEYSTORE_PLACEHOLDER = -1000;
 
+    public static final String ICON_FILE = "icon.png";
     static final String RULES_TSV = "rules.am.tsv";
     static final String PERMS_TSV = "perms.am.tsv";
     static final String CHECKSUMS_TXT = "checksums.txt";
@@ -291,6 +293,9 @@ public class BackupManager {
         private final Crypto crypto;
         @NonNull
         private final BackupFiles.Checksum checksum;
+        // TODO(26/12/20): Get IPackageManager instead of PackageManager.
+        @NonNull
+        private final PackageManager pm = AppManager.getContext().getPackageManager();
 
         BackupOp(@NonNull BackupFiles.BackupFile backupFile, int userHandle) throws BackupException {
             this.backupFile = backupFile;
@@ -345,6 +350,8 @@ public class BackupManager {
                 }
             }
             try {
+                // Backup icon
+                backupIcon();
                 // Backup source
                 if (backupFlags.backupSource()) backupSource();
                 // Backup data
@@ -387,6 +394,17 @@ public class BackupManager {
             }
             Log.e(TAG, "Unknown error occurred. This message should never be printed.");
             return backupFile.cleanup();
+        }
+
+        private void backupIcon() {
+            final File iconFile = new File(tmpBackupPath, ICON_FILE);
+            try (OutputStream outputStream = new FileOutputStream(iconFile)) {
+                Bitmap bitmap = IOUtils.getBitmapFromDrawable(applicationInfo.loadIcon(pm));
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                outputStream.flush();
+            } catch (IOException e) {
+                Log.w(TAG, "Could not back up icon.");
+            }
         }
 
         private void backupSource() throws BackupException {
@@ -485,7 +503,6 @@ public class BackupManager {
             File permsFile = backupFile.getPermsFile(CryptoUtils.MODE_NO_ENCRYPTION);
             @NonNull String[] permissions = ArrayUtils.defeatNullable(packageInfo.requestedPermissions);
             int[] permissionFlags = packageInfo.requestedPermissionsFlags;
-            PackageManager pm = AppManager.getContext().getPackageManager();
             List<OpEntry> opEntries = new ArrayList<>();
             try {
                 List<PackageOps> packageOpsList = new AppOpsService().getOpsForPackage(packageInfo.applicationInfo.uid, packageName, null);

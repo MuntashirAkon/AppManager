@@ -58,6 +58,8 @@ public final class MetadataManager {
     // All the attributes must be non-null
     public static class Metadata {
         public String backupName;  // This isn't part of the json file and for internal use only
+        public File backupPath;  // This isn't part of the json file and for internal use only
+
         public String label;  // label
         public String packageName;  // package_name
         public String versionName;  // version_name
@@ -112,9 +114,7 @@ public final class MetadataManager {
             try {
                 MetadataManager metadataManager = MetadataManager.getNewInstance();
                 metadataManager.readMetadata(new BackupFiles.BackupFile((PrivilegedFile) backupFile, false));
-                Metadata metadata = metadataManager.getMetadata();
-                metadata.backupName = backupFile.getName();
-                metadataList.add(metadata);
+                metadataList.add(metadataManager.getMetadata());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -149,6 +149,8 @@ public final class MetadataManager {
         if (TextUtils.isEmpty(metadata)) throw new JSONException("Empty JSON string");
         JSONObject rootObject = new JSONObject(metadata);
         this.metadata = new Metadata();
+        this.metadata.backupPath = backupFile.getBackupPath();
+        this.metadata.backupName = this.metadata.backupPath.getName();
         this.metadata.label = rootObject.getString("label");
         this.metadata.packageName = rootObject.getString("package_name");
         this.metadata.versionName = rootObject.getString("version_name");

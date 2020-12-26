@@ -23,10 +23,12 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.util.Pair;
 
+import java.io.File;
 import java.util.Objects;
 
 import androidx.annotation.Nullable;
 import aosp.libcore.util.EmptyArray;
+import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
 
@@ -137,6 +139,12 @@ public class ApplicationItem extends PackageItemInfo {
                 ApplicationInfo info = ApiSupporter.getApplicationInfo(packageName, 0, userHandles[0]);
                 return info.loadIcon(pm);
             } catch (Exception ignore) {
+            }
+        }
+        if (metadata != null) {
+            File iconFile = new File(metadata.backupPath, BackupManager.ICON_FILE);
+            if (iconFile.exists()) {
+                return Drawable.createFromPath(iconFile.getAbsolutePath());
             }
         }
         return pm.getDefaultActivityIcon();
