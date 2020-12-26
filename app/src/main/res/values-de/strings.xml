@@ -16,7 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">de</string>
-    <string name="instructions_header">Diese Anleitungen sind veraltet und werden nicht mehr aktualisiert. Besuchen Sie die offizielle Dokumentation auf (https://muntashirakon.github.io/AppManager), um die aktuellsten Informationen zu erhalten</string>
+    <string name="instructions_header">Diese Anweisungen sind veraltet und werden nicht mehr aktualisiert. Besuchen Sie die offizielle Dokumentation auf (https://muntashirakon.github.io/AppManager), um die aktuellsten Informationen zu erhalten</string>
     <string name="uninstall">Deinstallieren</string>
     <string name="permissions">Benutzt Berechtigungen</string>
     <string name="require_no_permission">Keine Berechtigungen benötigt</string>
@@ -371,7 +371,7 @@
     <string name="block_components_dots">Komponenten blockieren…</string>
     <string name="block_components_description">Blockieren aller Komponenten, die Signatur(en) entsprechen</string>
     <string name="deny_app_ops_dots">App Ops entziehen…</string>
-    <string name="deny_app_ops_description">Bestimmte App-Operationen anhand ihrer konstanten Werte verweigern (z. B. 63 bedeutet RUN_IN_BACKGROUND)</string>
+    <string name="deny_app_ops_description">Einstellen eines Modus für App-Operationen, die durch konstante Werte identifiziert werden (z. B. 63 bedeutet RUN_IN_BACKGROUND)</string>
     <string name="clear_data_from_uninstalled_apps">Daten deinstallierter Anwendungen löschen</string>
     <string name="clear_data_from_uninstalled_apps_description">Daten von Anwendungen, die mit der DONT_DELETE_DATA-Flagge deinstalliert wurden, löschen</string>
     <string name="clear_app_cache">Cache der Anwendung leeren</string>
@@ -382,7 +382,7 @@
     <string name="input_signatures_description">Gib bitte die gewünschten Signaturen mit einer Leerstelle getrennt ein, z. B. com.facebook org.app2 com.app3 usw.</string>
     <string name="filtered_packages">Gefilterte Pakete</string>
     <string name="input_app_ops">App Ops</string>
-    <string name="input_app_ops_description">Gib bitte die gewünschten App-Ops-Konstanten ein, mit einer Leerstelle getrennt (z.B. 63 72 12 usw.). Die App-Ops-Konstanten finden sich in eckigen Klammern im entsprechenden Reiter.</string>
+    <string name="input_app_ops_description">Geben Sie App-Op-Namen und / oder Konstanten mit Leerzeichen (z.B. WAKE_LOCK 63 72 CAMERA etc.) ein.</string>
     <string name="only_works_in_root_or_adb_mode">Nur im Root- oder ADB-Modus verfügbar</string>
     <string name="failed_to_parse_some_numbers">Einlesen mancher Zahlen nicht möglich</string>
     <plurals name="no_of_splits">
@@ -762,4 +762,32 @@
     <string name="send_edited_intent">Bearbeitete Absicht senden</string>
     <string name="value">Wert</string>
     <string name="filter_apps_with_splits">Apps mit Splits</string>
+    <string name="set_mode_for_app_ops_dots">Modus für App Ops einstellen…</string>
+    <string name="security">Sicherheit</string>
+    <string name="battery">Akku</string>
+    <string name="graphics">Grafik</string>
+    <string name="cpu">CPU</string>
+    <string name="users">Nutzer</string>
+    <string name="languages">Sprachen</string>
+    <string name="unavailable">Nicht vorhanden</string>
+    <string name="available">Verfügbar</string>
+    <string name="battery_capacity">Kapazität</string>
+    <string name="memory">Speicher</string>
+    <string name="vendor">Hersteller</string>
+    <string name="gles_version">GL ES Version</string>
+    <string name="no_of_cores">Kerne</string>
+    <string name="support_architectures">Unterstützte Architekturen</string>
+    <string name="security_providers">Sicherheitsanbieter</string>
+    <string name="kernel">Kernel</string>
+    <string name="manufacturer">Hersteller</string>
+    <string name="board_name">Karte</string>
+    <string name="model">Modell</string>
+    <string name="brand_name">Marke</string>
+    <plurals name="alert_failed_to_set_app_ops">
+        <item quantity="one">Konnte App-Ops für %1$d App nicht setzen</item>
+        <item quantity="other">Konnte App-Ops für %1$d Apps nicht setzen</item>
+    </plurals>
+    <string name="pref_about_device_msg">Grundlegende Geräteinformationen einschließlich Android-System, CPU, GPU, RAM, Akku usw.</string>
+    <string name="about_device">Über das Gerät</string>
+    <string name="matching_activities">Passende Aktivitäten</string>
 </resources>
