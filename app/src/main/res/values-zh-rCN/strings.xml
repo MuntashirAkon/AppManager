@@ -357,7 +357,7 @@
     <string name="block_components_dots">屏蔽组件…</string>
     <string name="block_components_description">阻止给定签名识别的所有组件</string>
     <string name="deny_app_ops_dots">拒绝应用程序…</string>
-    <string name="deny_app_ops_description">拒绝常数值识别给定的应用操作，如63表示RUN_IN_BACKGROUND</string>
+    <string name="deny_app_ops_description">设置由常数值标识的应用操作模式，如63 表示 RUN_IN_BACKGROUND</string>
     <string name="clear_data_from_uninstalled_apps">清除已卸载应用的数据</string>
     <string name="clear_data_from_uninstalled_apps_description">清除使用DONT_DELETE_DATA标志卸载的应用中的数据</string>
     <string name="clear_app_cache">清除缓存</string>
@@ -368,7 +368,7 @@
     <string name="input_signatures_description">用空格隔开输入的签名，如(com.facebook org.app2 com.app3) 等。</string>
     <string name="filtered_packages">已过滤的软件包</string>
     <string name="input_app_ops">输入应用操作</string>
-    <string name="input_app_ops_description">用空格隔开输入的应用操作常数，如. (63 72 12) 等。您可以在括号内下的“应用程序操作”标签中找到应用程序操作常量。</string>
+    <string name="input_app_ops_description">用空格隔开输入的应用操作名称和/或常数，如 (WAKE_LOCK 63 72 CAMERA) 等。</string>
     <string name="only_works_in_root_or_adb_mode">仅在 root 或 ADB 模式下工作</string>
     <string name="failed_to_parse_some_numbers">无法解析某些数字</string>
     <plurals name="no_of_splits">
