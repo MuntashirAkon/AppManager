@@ -197,7 +197,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
         File mainJar = dumpMainJar(context);
         File stagingJar = new File(PACKAGE_STAGING_DIRECTORY, "main.jar");
         return (String.format("cp %s %s; ", mainJar, PACKAGE_STAGING_DIRECTORY) +
-                String.format("chmod 755 %s; chown shell:shell %s; ", stagingJar, mainJar) +
+                String.format("chmod 755 %s; chown shell:shell %s; ", stagingJar, stagingJar) +
                 String.format("(CLASSPATH=%s /system/bin/app_process %s /system/bin %s %s %s)&",
                         stagingJar, debugParams, IPCMAIN_CLASSNAME, serviceName.flattenToString(),
                         serverClassName)).replace("$", "\\$");
