@@ -128,8 +128,18 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
         synchronized (this) {
             Log.e(TAG, "Running service starter script...");
             String cmd = getRunnerScript(Utils.getContext(), name, IPCServer.class.getName(), debugParams);
-            if (AppPref.isRootEnabled()) Runner.runCommand(Runner.getRootInstance(), cmd);
-            else if (AppPref.isAdbEnabled()) AdbShell.run(cmd);
+            if (AppPref.isRootEnabled()) {
+                if (!Runner.runCommand(Runner.getRootInstance(), cmd).isSuccessful()) {
+                    Log.e(TAG, "Couldn't start service.");
+                    return;
+                }
+            }
+            else if (AppPref.isAdbEnabled()) {
+                if (!AdbShell.run(cmd).isSuccessful()) {
+                    Log.e(TAG, "Couldn't start service.");
+                    return;
+                }
+            }
             // Wait for broadcast receiver
             wait();
         }
@@ -196,8 +206,8 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
     private static String getRunnerScript(Context context, ComponentName serviceName, String serverClassName, String debugParams) throws IOException {
         File mainJar = dumpMainJar(context);
         File stagingJar = new File(PACKAGE_STAGING_DIRECTORY, "main.jar");
-        return (String.format("cp %s %s; ", mainJar, PACKAGE_STAGING_DIRECTORY) +
-                String.format("chmod 755 %s; chown shell:shell %s; ", stagingJar, stagingJar) +
+        return (String.format("cp %s %s && ", mainJar, PACKAGE_STAGING_DIRECTORY) +
+                String.format("chmod 755 %s && chown shell:shell %s && ", stagingJar, stagingJar) +
                 String.format("(CLASSPATH=%s /system/bin/app_process %s /system/bin %s %s %s)&",
                         stagingJar, debugParams, IPCMAIN_CLASSNAME, serviceName.flattenToString(),
                         serverClassName)).replace("$", "\\$");
