@@ -79,7 +79,7 @@
     <string name="failed_to_extract_apk_file">نتوانست فایل APK را استخراج کند</string>
     <string name="share_apk">اشتراک گذاری APK</string>
     <string name="grant_usage_acess_message">برای نمایش اطلاعات استفاده از برنامه ، دسترسی به استفاده از آن اجباری است.</string>
-    <string name="grant_usage_access">دسترسی استفاده را اعطا کنید</string>
+    <string name="grant_usage_access">دسترسی استفاده را کسب کنید</string>
     <string name="go">برو</string>
     <string name="go_back">برگرد عقب</string>
     <string name="usage_less_than_a_minute">کمتر از یک دقیقه</string>
@@ -101,7 +101,7 @@
     <string name="usage_weekly">هفتگی</string>
     <string name="app_usage">استفاده از برنامه</string>
     <string name="no_tracker_class">بدون کلاس ردیاب</string>
-    <string name="no_shared_libs">کتابخانه مشترک وجود ندارد</string>
+    <string name="no_shared_libs">بدون کتابخانه مشترک</string>
     <plurals name="main_list_date_days">
         <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020"> %1$s </xliff:g> <xliff:g id="day_no" example="5"> %2$d </xliff:g> روز</item>
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020"> %1$s </xliff:g> <xliff:g id="day_no" example="5"> %2$d </xliff:g> روز‌</item>
@@ -127,23 +127,23 @@
     </plurals>
     <string name="toggle_class_listing">تغییر وضع لیست کردن کلاس</string>
     <string name="class_viewer">بیننده کلاس</string>
-    <string name="word_wrap">تغییر وضع بسته بندی کلمه</string>
-    <string name="credits_message">به نویسندگان
+    <string name="word_wrap">تغییر وضعیت کلمه</string>
+    <string name="credits_message">"به نویسندگان
 \n- پروژه منبع باز اندروید
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info"> اطلاعات Apps_packages </a>
-\n- <a href="https://github.com/butzist/ActivityLauncher"> راه انداز فعالیت </a>
-\n- <a href="https://github.com/billthefarmer/editor"> ویرایشگر </a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor"> AppsMonitor </a>
-\n- <a href="https://github.com/tuyafeng/Watt"> وات </a>
-\n- <a href="https://github.com/8enet/AppOpsX"> AppOpsX </a>
-\n- <a href="https://github.com/Aefyr/SAI"> SAI </a>
-\nاعتبار لوگو: <a href="https://github.com/Atrate"> Atrate </a>.</string>
-    <string name="credits">مشارکت‌کنندگان</string>
-    <string name="third_party">کتابخانه‌ها و نمادهای شخص ثالث</string>
-    <string name="license">پروانه</string>
-    <string name="icon_picker">انتخاب‌گر نماد</string>
-    <string name="error_invalid_icon_format">فرمت نماد نامعتبر</string>
-    <string name="error_invalid_icon_resource">منبع نماد نامعتبر</string>
+\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt; اطلاعات Apps_packages &lt;/a&gt;
+\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt; راه انداز فعالیت &lt;/a&gt;
+\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt; ویرایشگر &lt;/a&gt;
+\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt; AppsMonitor &lt;/a&gt;
+\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt; وات &lt;/a&gt;
+\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt; AppOpsX &lt;/a&gt;
+\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt; SAI &lt;/a&gt;
+\nاعتبار لوگو: &lt;a href=\"https://github.com/Atrate\"&gt; Atrate &lt;/a&gt;. "</string>
+    <string name="credits">اعتبارات</string>
+    <string name="third_party">کتابخانه‌ها و آیکون های شخص سوم</string>
+    <string name="license">لایسنس</string>
+    <string name="icon_picker">انتخاب‌گر آیکون</string>
+    <string name="error_invalid_icon_format">فرمت آیکون نامعتبر</string>
+    <string name="error_invalid_icon_resource">منبع آیکون نامعتبر</string>
     <string name="insert_icon">درج نماد</string>
     <string name="class_name">نام کلاس</string>
     <string name="package_name">نام بسته</string>
@@ -159,16 +159,16 @@
     <string name="user_id">شناسه کاربر</string>
     <string name="installer_app">برنامه نصب کننده</string>
     <string name="date_updated">تاریخ به‌روزرسانی</string>
-    <string name="date_installed">تاریخ نصب</string>
+    <string name="date_installed">تاریخ نصب شده</string>
     <string name="more_info">اطلاعات بیشتر</string>
     <string name="sdk_flags">پرچم‌ها</string>
     <string name="sdk_max">بیشترین</string>
     <string name="sdk_min">کمترین</string>
-    <string name="data_dir">دایرکتوری داده‌ها</string>
-    <string name="source_dir">دایرکتوری منبع</string>
-    <string name="paths_and_directories">مسیرها و راهنماها</string>
+    <string name="data_dir">پوشه دیتا</string>
+    <string name="source_dir">پوشه منبع</string>
+    <string name="paths_and_directories">مسیرها و پوشه ها</string>
     <string name="user_app">برنامه کاربر</string>
-    <string name="system_app">برنامه سیستم</string>
+    <string name="system_app">برنامه سیستمی</string>
     <string name="app_info">اطلاعات برنامه</string>
     <string name="version_name_with_code">نسخه <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="sort">مرتب سازی</string>
@@ -180,7 +180,7 @@
     <string name="cache_size">حافظه پنهان</string>
     <string name="data_size">داده‌ها</string>
     <string name="about">درباره</string>
-    <string name="data_usage_msg">استفاده از داده‌ها از زمان آخرین بوت شدن</string>
+    <string name="data_usage_msg">مصرف دیتا از زمان آخرین بوت شدن</string>
     <string name="data_transmitted">داده‌های منتقل شده</string>
     <string name="data_received">داده دریافت‌شده</string>
     <string name="sort_by_target_sdk">SDK هدف</string>
@@ -193,7 +193,7 @@
     <string name="input_features">ویژگی های ورودی</string>
     <string name="no_configurations">بدون پیکربندی</string>
     <string name="configurations">پیکربندی‌ها</string>
-    <string name="no_signatures">بدون امضا</string>
+    <string name="no_signatures">بدون امضاهای معتبر</string>
     <string name="signatures">امضاها</string>
     <string name="sort_by_sha">امضا</string>
     <string name="shared_user_id">شناسه کاربر مشترک</string>
