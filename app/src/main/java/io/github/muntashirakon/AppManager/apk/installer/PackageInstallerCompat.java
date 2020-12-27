@@ -522,8 +522,8 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
 
         @SuppressWarnings("JavaReflectionMemberAccess")
         public IntentSender getIntentSender() throws Exception {
-            return IntentSender.class.getConstructor(IIntentSender.class)
-                    .newInstance(mLocalSender);
+            return IntentSender.class.getConstructor(IBinder.class)
+                    .newInstance(mLocalSender.asBinder());
         }
 
         public Intent getResult() {
