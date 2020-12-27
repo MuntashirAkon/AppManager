@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="disclaimer_exit">خروج</string>
+    <string name="disclaimer_agree">قبول می‌کنم</string>
+    <string name="disclaimer_agree_forever">دیگر این را نشان نده</string>
+    <string name="disclaimer_footer">کپی رایت 2020 منتشر الاسلام</string>
+    <string name="disclaimer_body">مدیر برنامه امکانات مبتنی بر روت ارائه می‌دهد که اگر اشتباه استفاده شوند ممکن است به دستگاه شما آسیب برساند. مدیر برنامه مسئول هیچ آسیبی که با استفاده از این برنامه وارد شود نیست. اگر شما کاملا از نحوه کار روت آگاه نیستید، تا زمانی که کاملا از ریسک ها آگاه شوید باید از استفاده از گزینه های روت دوری کنید.</string>
+    <string name="disclaimer_header">سلب مسئولیت</string>
+</resources>
