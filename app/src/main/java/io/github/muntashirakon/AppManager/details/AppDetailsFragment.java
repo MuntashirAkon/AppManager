@@ -1164,16 +1164,20 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             holder.textView7.setText(opRunningInfo);
             // Set accept time and/or reject time
             long currentTime = System.currentTimeMillis();
-            if (opEntry.getTime() != 0 || opEntry.getRejectTime() != 0) {
+            boolean hasAcceptTime = opEntry.getTime() != 0 && opEntry.getTime() != -1;
+            boolean hasRejectTime = opEntry.getRejectTime() != 0 && opEntry.getRejectTime() != -1;
+            if (hasAcceptTime || hasRejectTime) {
                 String opTime = "";
-                if (opEntry.getTime() != 0)
+                if (hasAcceptTime) {
                     opTime = mActivity.getString(R.string.accept_time) + ": " +
                             Utils.getFormattedDuration(mActivity, currentTime - opEntry.getTime())
                             + " " + mActivity.getString(R.string.ago);
-                if (opEntry.getRejectTime() != 0)
+                }
+                if (hasRejectTime) {
                     opTime += (opTime.equals("") ? "" : "\n") + mActivity.getString(R.string.reject_time)
                             + ": " + Utils.getFormattedDuration(mActivity, currentTime - opEntry.getRejectTime())
                             + " " + mActivity.getString(R.string.ago);
+                }
                 holder.textView8.setVisibility(View.VISIBLE);
                 holder.textView8.setText(opTime);
             } else holder.textView8.setVisibility(View.GONE);

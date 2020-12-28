@@ -81,6 +81,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
+import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
 
@@ -312,7 +313,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         int appOp = AppOpsManager.permissionToOpCode(permissionName);
         int uid = packageInfo.applicationInfo.uid;
         if (isGranted) {
-            if (appOp != AppOpsManager.OP_NONE) {
+            if (appOp != OP_NONE) {
                 try {
                     mAppOpsService.setMode(appOp, uid, packageName, AppOpsManager.MODE_ALLOWED);
                 } catch (Exception e) {
@@ -322,7 +323,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 return false;
             }
         } else {
-            if (appOp != AppOpsManager.OP_NONE) {
+            if (appOp != OP_NONE) {
                 try {
                     mAppOpsService.setMode(appOp, uid, packageName, AppOpsManager.MODE_IGNORED);
                 } catch (Exception e) {
@@ -336,7 +337,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             synchronized (blockerLocker) {
                 waitForBlockerOrExit();
                 blocker.setMutable();
-                if (appOp != AppOpsManager.OP_NONE) {
+                if (appOp != OP_NONE) {
                     blocker.setAppOp(String.valueOf(appOp), isGranted ? AppOpsManager.MODE_ALLOWED : AppOpsManager.MODE_IGNORED);
                 } else {
                     blocker.setPermission(permissionName, isGranted);
@@ -907,23 +908,38 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 || PermissionUtils.hasAppOpsPermission(getApplication()))) {
             if (mAppOpsService == null) mAppOpsService = new AppOpsService();
             try {
-                List<PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(packageInfo.applicationInfo.uid, packageName, null);
+                int uid = packageInfo.applicationInfo.uid;
+                List<PackageOps> packageOpsList = mAppOpsService.getOpsForPackage(uid, packageName, null);
                 List<OpEntry> opEntries = new ArrayList<>();
-                if (packageOpsList.size() == 1)
+                if (packageOpsList.size() == 1) {
                     opEntries.addAll(packageOpsList.get(0).getOps());
-                // Include defaults
+                }
+                OpEntry opEntry;
+                // Include from permissions
+                List<String> permissions = getRawPermissions();
+                for (String permission : permissions) {
+                    int op = AppOpsManager.permissionToOpCode(permission);
+                    if (op == OP_NONE) continue;
+                    opEntry = new OpEntry(op, mAppOpsService.checkOperation(op, uid, packageName), 0,
+                            0, 0, 0, null);
+                    if (!opEntries.contains(opEntry)) opEntries.add(opEntry);
+                }
+                // Include defaults ie. app ops without any associated permissions if requested
                 if ((boolean) AppPref.get(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL)) {
                     for (int op : AppOpsManager.sOpsWithNoPerm) {
-                        opEntries.add(new OpEntry(op, AppOpsManager.opToDefaultMode(op), 0,
-                                0, 0, 0, null));
+                        opEntry = new OpEntry(op, AppOpsManager.opToDefaultMode(op), 0,
+                                0, 0, 0, null);
+                        if (!opEntries.contains(opEntry)) opEntries.add(opEntry);
                     }
                 }
+                // TODO(24/12/20): App op with MODE_DEFAULT are determined by their associated permissions.
+                //  Therefore, mode for such app ops should be determined from the permission.
                 Set<String> uniqueSet = new HashSet<>();
                 appOpItems = new ArrayList<>(opEntries.size());
-                for (OpEntry opEntry : opEntries) {
-                    String opName = AppOpsManager.opToName(opEntry.getOp());
+                for (OpEntry entry : opEntries) {
+                    String opName = AppOpsManager.opToName(entry.getOp());
                     if (uniqueSet.contains(opName)) continue;
-                    AppDetailsItem appDetailsItem = new AppDetailsItem(opEntry);
+                    AppDetailsItem appDetailsItem = new AppDetailsItem(entry);
                     appDetailsItem.name = opName;
                     uniqueSet.add(opName);
                     appOpItems.add(appDetailsItem);
@@ -1004,7 +1020,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 appDetailsItem.isDangerous = PermissionInfoCompat.getProtection(permissionInfo) == PermissionInfo.PROTECTION_DANGEROUS;
                 appDetailsItem.isGranted = (appDetailsItem.flags & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
                 appDetailsItem.appOp = AppOpsManager.permissionToOpCode(appDetailsItem.name);
-                if (!isExternalApk && !appDetailsItem.isGranted && appDetailsItem.appOp != AppOpsManager.OP_NONE) {
+                if (!isExternalApk && !appDetailsItem.isGranted && appDetailsItem.appOp != OP_NONE) {
                     // Override isGranted only if the original permission isn't granted
                     try {
                         appDetailsItem.isGranted = mAppOpsService.checkOperation(appDetailsItem.appOp,
@@ -1036,6 +1052,15 @@ public class AppDetailsViewModel extends AndroidViewModel {
             return 0;
         });
         usesPermissions.postValue(appDetailsItems);
+    }
+
+    public List<String> getRawPermissions() {
+        List<String> rawPermissions = new ArrayList<>();
+        if (getPackageInfo() != null && packageInfo.requestedPermissions != null) {
+            rawPermissions.addAll(Arrays.asList(packageInfo.requestedPermissions));
+        }
+        // TODO(28/2/20): Get permissions not included in the uses-permission tag
+        return rawPermissions;
     }
 
     MutableLiveData<List<AppDetailsItem>> permissions;
@@ -1234,7 +1259,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 case Intent.ACTION_PACKAGE_ADDED:
                 case Intent.ACTION_PACKAGE_CHANGED:
                     int uid = intent.getIntExtra(Intent.EXTRA_UID, -1);
-                    if (model.packageInfo.applicationInfo.uid == uid || model.isExternalApk) {
+                    if (model.packageInfo == null || model.packageInfo.applicationInfo.uid == uid || model.isExternalApk) {
                         Log.d("ADVM", "Package is changed.");
                         model.setIsPackageChanged();
                     }
