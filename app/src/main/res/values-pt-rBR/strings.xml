@@ -452,7 +452,7 @@
     <string name="backup_apk_only">Apenas APK</string>
     <string name="failed_to_extract_obb_files">Não foi possível extrair arquivos OBB</string>
     <string name="obb_files_extracted_successfully">Arquivos OBB extraídos</string>
-    <string name="source">Fonte</string>
+    <string name="source">Origem</string>
     <string name="backup_multiple">Backup múltiplo</string>
     <string name="backup_all_users">Todos os usuários</string>
     <string name="pref_app_language">Idioma</string>
@@ -789,4 +789,17 @@
     </plurals>
     <string name="set_mode_for_app_ops_dots">Definir o modo para operações de aplicativo…</string>
     <string name="security">Segurança</string>
+    <string name="backup_apk_only_description">Faça o backup apenas dos arquivos APK do diretório de origem. &lt;b&gt;Origem&lt;/b&gt; deve ser selecionado para que isso funcione.</string>
+    <string name="patch_level">Nível do Patch</string>
+    <string name="backup_skip_signature_checks_description">Útil para restaurar backups que estão falhando devido a falha na verificação da soma de verificação ou tem uma assinatura APK diferente do que o backup.</string>
+    <string name="backup_all_users_description">Realizar o backup para todos os usuários, não apenas para o usuário atual.</string>
+    <string name="backup_multiple_description">Use um backup separado nomeado em vez de um backup básico.</string>
+    <string name="backup_rules_description">Faça o backup de regras configuradas dentro do App Manager.</string>
+    <string name="backup_extras_description">Faça o backup das permissões de aplicativos, economia de bateria, opções de uso de dados, status do MagiskHide, etc.</string>
+    <string name="backup_extras">Extras</string>
+    <string name="backup_exclude_cache_description">Não faça backup das pastas cache, no_cache e no_backup.</string>
+    <string name="backup_obb_media_description">Faça o backup das pastas OBB e de mídia.</string>
+    <string name="backup_external_data_description">Faça o backup de pastas de dados externas. &lt;b&gt;Dados&lt;/b&gt; deve ser selecionado para que isso funcione.</string>
+    <string name="backup_data_description">Faça o backup de pastas de dados. Se selecionado, as pastas de dados internas serão copiadas por padrão.</string>
+    <string name="backup_source_description">Faça o backup de todo o diretório de origem.</string>
 </resources>
