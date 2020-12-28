@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 
 import io.github.muntashirakon.AppManager.adb.AdbShell;
@@ -66,6 +67,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
 
     private IRootIPC server = null;
     private IBinder binder = null;
+    private final CountDownLatch broadcastWatcher = new CountDownLatch(1);
 
     IPCClient(Intent intent) throws InterruptedException, RemoteException, IOException {
         name = intent.getComponent();
@@ -98,7 +100,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
         return BROADCAST_ACTION + "/" + name.flattenToString();
     }
 
-    private void startRootServer(Context context, Intent intent)
+    synchronized private void startRootServer(Context context, Intent intent)
             throws IOException, InterruptedException, RemoteException {
         // Register BinderReceiver to receive binder from root process
         IntentFilter filter = new IntentFilter(getBroadcastAction(name));
@@ -125,24 +127,22 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
         bundle.putBinder(BUNDLE_BINDER_KEY, new Binder());
         intent.putExtra(INTENT_EXTRA_KEY, bundle);
 
-        synchronized (this) {
-            Log.e(TAG, "Running service starter script...");
-            String cmd = getRunnerScript(Utils.getContext(), name, IPCServer.class.getName(), debugParams);
-            if (AppPref.isRootEnabled()) {
-                if (!Runner.runCommand(Runner.getRootInstance(), cmd).isSuccessful()) {
-                    Log.e(TAG, "Couldn't start service.");
-                    return;
-                }
+        Log.e(TAG, "Running service starter script...");
+        String cmd = getRunnerScript(Utils.getContext(), name, IPCServer.class.getName(), debugParams);
+        if (AppPref.isRootEnabled()) {
+            if (!Runner.runCommand(Runner.getRootInstance(), cmd).isSuccessful()) {
+                Log.e(TAG, "Couldn't start service.");
+                return;
             }
-            else if (AppPref.isAdbEnabled()) {
-                if (!AdbShell.run(cmd).isSuccessful()) {
-                    Log.e(TAG, "Couldn't start service.");
-                    return;
-                }
+        } else if (AppPref.isAdbEnabled()) {
+            if (!AdbShell.run(cmd).isSuccessful()) {
+                Log.e(TAG, "Couldn't start service.");
+                return;
             }
-            // Wait for broadcast receiver
-            wait();
         }
+        // Wait for broadcast receiver
+        broadcastWatcher.await();
+        // Broadcast is received
         server.asBinder().linkToDeath(this, 0);
         binder = server.bind(intent);
     }
@@ -151,7 +151,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
         return name.equals(intent.getComponent());
     }
 
-    void newConnection(ServiceConnection conn, Executor executor) {
+    synchronized void newConnection(ServiceConnection conn, Executor executor) {
         connections.put(conn, executor);
         if (binder != null)
             executor.execute(() -> conn.onServiceConnected(name, binder));
@@ -228,10 +228,8 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
             context.unregisterReceiver(this);
             Bundle bundle = intent.getBundleExtra(INTENT_EXTRA_KEY);
             IBinder binder = bundle.getBinder(BUNDLE_BINDER_KEY);
-            synchronized (IPCClient.this) {
-                server = IRootIPC.Stub.asInterface(binder);
-                IPCClient.this.notifyAll();
-            }
+            server = IRootIPC.Stub.asInterface(binder);
+            broadcastWatcher.countDown();
         }
     }
 }
