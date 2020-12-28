@@ -220,7 +220,7 @@ public class MainViewModel extends AndroidViewModel {
                     List<PackageInfo> packageInfoList;
                     try {
                         packageInfoList = ApiSupporter.getInstalledPackages(flagSigningInfo
-                                | PackageManager.GET_ACTIVITIES | flagDisabledComponents,
+                                        | PackageManager.GET_ACTIVITIES | flagDisabledComponents,
                                 userHandle);
                     } catch (Exception e) {
                         Log.e("MVM", "Could not retrieve package info list for user " + userHandle, e);
@@ -400,20 +400,23 @@ public class MainViewModel extends AndroidViewModel {
                         // Sort in decreasing order
                         return -o1.lastUpdateTime.compareTo(o2.lastUpdateTime);
                     case MainActivity.SORT_BY_TARGET_SDK:
-                        return -o1.sdk.compareTo(o2.sdk);
+                        // null on top
+                        if (o1.sdk == null) return -1;
+                        else if (o2.sdk == null) return +1;
+                        return o1.sdk.compareTo(o2.sdk);
                     case MainActivity.SORT_BY_SHARED_ID:
                         return o2.uid - o1.uid;
                     case MainActivity.SORT_BY_SHA:
-                        if (o1.sha == null && o2.sha != null) return 0;
-                        else if (o1.sha == null) return -1;
-                        else if (o2.sha == null) return +1;
-                        else {
+                        // null on top
+                        if (o1.sha == null) {
+                            return -1;
+                        } else if (o2.sha == null) {
+                            return +1;
+                        } else {  // Both aren't null
                             int i = o1.sha.first.compareToIgnoreCase(o2.sha.first);
                             if (i == 0) {
                                 return o1.sha.second.compareToIgnoreCase(o2.sha.second);
-                            } else if (i < 0) {
-                                return -1;
-                            } else return +1;
+                            } else return i;
                         }
                     case MainActivity.SORT_BY_BLOCKED_COMPONENTS:
                         if (isRootEnabled)
