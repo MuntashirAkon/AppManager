@@ -397,7 +397,7 @@
     <string name="block_components_dots">Блокировка компонентов…</string>
     <string name="block_components_description">Заблокировать все компоненты, идентифицированные данными подписями</string>
     <string name="deny_app_ops_dots">Отклонить операции приложения…</string>
-    <string name="deny_app_ops_description">Запретить указанные операции приложения, определенные постоянными значениями, к примеру 63 означает RUN_IN_BACKGROUND</string>
+    <string name="deny_app_ops_description">Установите режим для операций приложения, определяемых постоянными значениями, например 63 или RUN_IN_BACKGROUND</string>
     <string name="clear_data_from_uninstalled_apps">Очистить данные удаленных приложений</string>
     <string name="clear_data_from_uninstalled_apps_description">Очистить данные приложений, которые были удалены с помощью флага DONT_DELETE_DATA</string>
     <string name="clear_app_cache">Очистить кэш приложения</string>
@@ -408,7 +408,7 @@
     <string name="input_signatures_description">Введите подписи с пробелами, например (com.facebook org.app2 com.app3) и т. д.</string>
     <string name="filtered_packages">Отфильтрованные пакеты</string>
     <string name="input_app_ops">Ввод операций приложения</string>
-    <string name="input_app_ops_description">Введите константы операции приложения с пробелами, например (63 72 12) и т.д. Константы можно найти в скобках, на вкладке операций приложения.</string>
+    <string name="input_app_ops_description">Введите имена операций приложения и/или константы с пробелами, например (WAKE_LOCK 63 72 CAMERA) и т.д.</string>
     <string name="only_works_in_root_or_adb_mode">Доступно только в режиме root или ADB</string>
     <string name="failed_to_parse_some_numbers">Не удалось разобрать некоторые числа</string>
     <plurals name="no_of_splits">
@@ -845,4 +845,5 @@
     <string name="uri">URI</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="keystore">KeyStore</string>
+    <string name="security">Безопасность</string>
 </resources>
