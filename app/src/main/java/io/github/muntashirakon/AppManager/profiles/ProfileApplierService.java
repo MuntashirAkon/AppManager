@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.app.Activity;
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -31,9 +30,10 @@ import androidx.core.app.NotificationManagerCompat;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
-public class ProfileApplierService extends IntentService {
+public class ProfileApplierService extends ForegroundService {
     public static final String EXTRA_PROFILE_NAME = "prof";
     public static final String EXTRA_PROFILE_STATE = "state";
     /**

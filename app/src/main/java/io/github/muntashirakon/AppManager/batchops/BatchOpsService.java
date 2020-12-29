@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.batchops;
 
 import android.app.Activity;
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -38,9 +37,10 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.misc.AlertDialogActivity;
 import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
-public class BatchOpsService extends IntentService {
+public class BatchOpsService extends ForegroundService {
     /**
      * The {@link String} to be placed in the notification header. Default: "Batch Operations"
      */
