@@ -790,4 +790,17 @@
     <string name="pref_about_device_msg">Grundlegende Geräteinformationen einschließlich Android-System, CPU, GPU, RAM, Akku usw.</string>
     <string name="about_device">Über das Gerät</string>
     <string name="matching_activities">Passende Aktivitäten</string>
+    <string name="patch_level">Patch-Level</string>
+    <string name="backup_skip_signature_checks_description">Nützlich für die Wiederherstellung von Backups, die aufgrund eines Fehlers bei der Prüfsummenüberprüfung fehlschlugen oder eine andere APK-Signatur haben als das gesicherte Backup.</string>
+    <string name="backup_all_users_description">Sicherung für alle Benutzer durchführen, nicht nur für den aktuellen Benutzer.</string>
+    <string name="backup_multiple_description">Verwenden Sie ein separat benanntes Backup anstelle des Basis-Backups.</string>
+    <string name="backup_rules_description">Im App Manager konfigurierte Regeln sichern.</string>
+    <string name="backup_extras_description">Sichern Sie App-Berechtigungen, Batteriesparen, Datennutzungsoptionen, MagiskHide-Status usw.</string>
+    <string name="backup_extras">Zusätze</string>
+    <string name="backup_exclude_cache_description">Die Ordner cache-, no_cache und no_backup werden nicht gesichert.</string>
+    <string name="backup_obb_media_description">Sichern der OBB- und Medienordner.</string>
+    <string name="backup_external_data_description">Sichern Sie die externen Datenordner. &lt;b&gt;Daten&lt;/b&gt; muss ausgewählt sein, damit dies funktioniert.</string>
+    <string name="backup_data_description">Sichern Sie die Datenordner. Wenn diese Option ausgewählt ist, werden die internen Datenordner standardmäßig gesichert.</string>
+    <string name="backup_apk_only_description">Sichern Sie nur die APK-Dateien aus dem Quellverzeichnis. &lt;b&gt;Die Quelle&lt;/b&gt; muss ausgewählt sein, damit dies funktioniert.</string>
+    <string name="backup_source_description">Sichern Sie das gesamte Quellverzeichnis.</string>
 </resources>
