@@ -754,4 +754,17 @@
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="other">无法为 %1$d 个应用设置权限</item>
     </plurals>
+    <string name="patch_level">补丁级别</string>
+    <string name="backup_skip_signature_checks_description">用于解决因校验和验证失败或与备份的 APK 签名不同导致的还原失败。</string>
+    <string name="backup_all_users_description">为所有用户执行备份，而不仅仅是当前用户。</string>
+    <string name="backup_multiple_description">使用一个单独命名的备份，而不是基本备份。</string>
+    <string name="backup_rules_description">备份 App Manager 内配置的规则。</string>
+    <string name="backup_extras_description">备份应用权限、节电、数据使用选项、MagiskHide 状态等。</string>
+    <string name="backup_extras">附加</string>
+    <string name="backup_exclude_cache_description">不备份缓存、 no_cache 和 no_backup 文件夹。</string>
+    <string name="backup_obb_media_description">备份 OBB 和媒体文件夹。</string>
+    <string name="backup_external_data_description">备份外部数据文件夹。要让该选项工作，必须选中&lt;b&gt;Data 文件夹&lt;/b&gt;。</string>
+    <string name="backup_data_description">备份数据文件夹。如果选中，将默认备份内部数据文件夹。</string>
+    <string name="backup_apk_only_description">仅备份来自源目录的 APK 文件。要让该选项工作，必须选中 &lt;b&gt;源目录&lt;/b&gt;。</string>
+    <string name="backup_source_description">备份整个源目录。</string>
 </resources>
