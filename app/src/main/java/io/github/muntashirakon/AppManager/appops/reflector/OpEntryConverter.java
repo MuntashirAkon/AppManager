@@ -177,6 +177,7 @@ class OpEntryConverter {
     public long getDuration() throws ClassCastException {
         Object time = invokeObjectMethod(object, "getDuration", null, null);
         if (time instanceof Long) return (long) time;
+        else if (time instanceof Integer) return (int) time;
         throw new ClassCastException("Invalid method getDuration()");
     }
 
