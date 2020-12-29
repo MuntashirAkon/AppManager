@@ -44,9 +44,9 @@
     <string name="declared_permission">İzinler</string>
     <string name="shared_libs">Paylaşılan kütüphaneler</string>
     <string name="group">Grup</string>
-    <string name="protection_level">Güvenlik Seviyesi</string>
-    <string name="uses_feature">Özellikleri Kullanır</string>
-    <string name="gles_ver">GL ES sürümü gerekiyor</string>
+    <string name="protection_level">Güvenlik seviyesi</string>
+    <string name="uses_feature">Kullanılan özellikler</string>
+    <string name="gles_ver">Gereken GL ES sürümü</string>
     <string name="no_feature">Özellik yok</string>
     <string name="sort_by_shared_user_id">Paylaşılan kullanıcı kimliği</string>
     <string name="shared_user_id">Paylaşılan kullanıcı kimliği</string>
@@ -787,4 +787,17 @@
         <item quantity="one">%1$d uygulama için uygulama işlemleri ayarlanamadı</item>
         <item quantity="other">%1$d uygulama için uygulama işlemleri ayarlanamadı</item>
     </plurals>
+    <string name="patch_level">Yama seviyesi</string>
+    <string name="backup_skip_signature_checks_description">Sağlama toplamı doğrulama hatası nedeniyle başarısız olan veya yedeklenenden farklı bir APK imzasına sahip yedeklemeleri geri yüklemek için faydalıdır.</string>
+    <string name="backup_all_users_description">Yalnızca geçerli kullanıcı için değil, tüm kullanıcılar için yedekleme gerçekleştirin.</string>
+    <string name="backup_multiple_description">Temel yedekleme yerine ayrı bir adlandırılmış yedekleme kullanın.</string>
+    <string name="backup_rules_description">App Manager içinde yapılandırılan kuralları yedekleyin.</string>
+    <string name="backup_extras_description">Uygulama izinlerini, pil tasarrufunu, veri kullanım seçeneklerini, MagiskHide durumunu vs. yedekleyin.</string>
+    <string name="backup_extras">Ekstralar</string>
+    <string name="backup_exclude_cache_description">Önbellek, no_cache ve no_backup klasörlerini yedeklemeyin.</string>
+    <string name="backup_obb_media_description">OBB ve medya klasörlerini yedekleyin.</string>
+    <string name="backup_external_data_description">Harici veri klasörlerini yedekleyin. Bunun çalışması için &lt;b&gt;veri&lt;/b&gt; seçilmelidir.</string>
+    <string name="backup_data_description">Veri klasörlerini yedekleyin. Seçilirse, dahili veri klasörleri öntanımlı olarak yedeklenecektir.</string>
+    <string name="backup_apk_only_description">Kaynak dizinden yalnızca APK dosyalarını yedekleyin. Bunun çalışması için &lt;b&gt;kaynak&lt;/b&gt; seçilmelidir.</string>
+    <string name="backup_source_description">Tüm kaynak dizini yedekleyin.</string>
 </resources>
