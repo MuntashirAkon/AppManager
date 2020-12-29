@@ -30,7 +30,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -40,7 +39,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.core.content.pm.ShortcutManagerCompat;
 import androidx.core.graphics.drawable.IconCompat;
-
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 
@@ -74,11 +72,7 @@ public class LauncherIconCreator {
             }
         }
         if (activityIconResourceName == null) Log.d("Launcher", "Empty resource");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            doCreateShortcut(context, activityName, activityIcon, activityIntent);
-        } else {
-            doCreateShortcut(context, activityName, activityIntent, activityIconResourceName);
-        }
+        doCreateShortcut(context, activityName, activityIcon, activityIntent);
     }
 
     /**
@@ -101,11 +95,7 @@ public class LauncherIconCreator {
             }
         }
         if (activityIconResourceName == null) Log.d("Launcher", "Empty resource");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            doCreateShortcut(context, activityName, activityIcon, activityIntent);
-        } else {
-            doCreateShortcut(context, activityName, activityIntent, activityIconResourceName);
-        }
+        doCreateShortcut(context, activityName, activityIcon, activityIntent);
     }
 
     /**
@@ -134,24 +124,6 @@ public class LauncherIconCreator {
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
         return bmp;
-    }
-
-    private static void doCreateShortcut(Context context, String appName, Intent intent, String iconResourceName) {
-        Intent shortcutIntent = new Intent();
-        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent);
-        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, appName);
-        if (iconResourceName != null) {
-            Intent.ShortcutIconResource iconResource = new Intent.ShortcutIconResource();
-            if (intent.getComponent() == null) {
-                iconResource.packageName = intent.getPackage();
-            } else {
-                iconResource.packageName = intent.getComponent().getPackageName();
-            }
-            iconResource.resourceName = iconResourceName;
-            shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
-        }
-        shortcutIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-        context.sendBroadcast(shortcutIntent);
     }
 
     private static void doCreateShortcut(@NonNull Context context, String appName, Drawable draw, Intent intent) {
