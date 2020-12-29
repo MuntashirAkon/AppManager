@@ -846,4 +846,17 @@
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="keystore">KeyStore</string>
     <string name="security">Безопасность</string>
+    <string name="patch_level">Обновление системы безопасности Андроид</string>
+    <string name="backup_skip_signature_checks_description">Полезно для восстановления резервных копий, которые не работают из-за ошибки проверки контрольной суммы или имеют подпись APK, отличную от подписи для резервной копии.</string>
+    <string name="backup_all_users_description">Выполнить резервное копирование для всех пользователей, а не только для текущего пользователя.</string>
+    <string name="backup_multiple_description">Использовать особое название резервной копии, вместо базовой.</string>
+    <string name="backup_rules_description">Резервное копирование правил, настроенных в App Manager.</string>
+    <string name="backup_extras_description">Резервное копирование разрешений приложения, экономия батареи, параметры использования данных, статус MagiskHide и т.д.</string>
+    <string name="backup_extras">Дополнительно</string>
+    <string name="backup_exclude_cache_description">Не создавать резервные копии кеша, папок no_cache и no_backup.</string>
+    <string name="backup_obb_media_description">Резервное копирование OBB и папок с медиафайлами.</string>
+    <string name="backup_external_data_description">Резервное копирование внешних папок данных. Для этого необходимо выбрать &lt;b&gt; Данные &lt;/b&gt;.</string>
+    <string name="backup_data_description">Резервное копирование папок с данными. Если выбран этот параметр, по умолчанию будут созданы резервные копии внутренних папок с данными.</string>
+    <string name="backup_apk_only_description">Резервное копирование только файлов APK из исходного каталога. Для этого необходимо выбрать &lt;b&gt;Источник &lt;/b&gt;.</string>
+    <string name="backup_source_description">Резервное копирование всего каталога источника.</string>
 </resources>
