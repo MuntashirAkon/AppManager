@@ -359,4 +359,48 @@
     <string name="mode">حالت</string>
     <string name="permission_name">نام مجوز</string>
     <string name="app_op_cannot_be_disabled">نمی‌توان این عملیات برنامه را غیرفعال کرد، احتمالا عملیات برنامه ی فقط خواندنی است که بر یک عملیات برنامه ی دیگر تکیه می‌کند.</string>
+    <string name="backup_options">گزینه های پشتیبان‌گیری</string>
+    <string name="delete_backup">حذف پشتیبان</string>
+    <string name="restore">بازیابی</string>
+    <string name="backup">پشتیبان</string>
+    <string name="data">داده</string>
+    <string name="external_data">داده خارجی</string>
+    <string name="exclude_cache">حافظه پنهان را مستثنا کن</string>
+    <string name="blocking_rules">قوانین مسدود کردن</string>
+    <string name="whats_new">موارد جدید</string>
+    <string name="features">ویژگی‌ها</string>
+    <string name="components">اجزاء</string>
+    <string name="trackers">ردیاب‌ها</string>
+    <string name="installed_version">نسخه نصب شده</string>
+    <string name="filter_disabled_apps">برنامه‌های غیرفعال شده</string>
+    <string name="select_all">انتخاب همه</string>
+    <string name="filter_apps_with_rules">برنامه‌های دارای قوانین</string>
+    <string name="filter_system_apps">برنامه‌های سیستم</string>
+    <string name="filter_user_apps">برنامه‌های کاربر</string>
+    <string name="filter">صافی</string>
+    <string name="failed_to_install_package_name">نمی تواند &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt; را نصب کند</string>
+    <string name="package_name_is_installed_successfully">&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt; %1$s &lt;/xliff:g&gt; نصب شده</string>
+    <string name="termux">Termux</string>
+    <plurals name="no_of_splits">
+        <item quantity="one">%1$d قسمت</item>
+        <item quantity="other">%1$d قسمت</item>
+    </plurals>
+    <string name="failed_to_parse_some_numbers">تجزیه برخی از اعداد امکان پذیر نیست</string>
+    <string name="only_works_in_root_or_adb_mode">فقط در حالت روت یا ADB کار می‌کند</string>
+    <string name="input_app_ops_description">نام های عملیات برنامه ورودی و/یا ثابت‌ها با فضا، به عنوان مثال (WAKE_LOCK 63 72 دوربین) و غیره</string>
+    <string name="input_app_ops">عملیات برنامه ورودی</string>
+    <string name="filtered_packages">بسته‌های فیلتر شده</string>
+    <string name="input_signatures_description">امضاهای ورودی با فاصله، به عنوان مثال (com.facebook org.app2 com.app3) و غیره</string>
+    <string name="input_signatures">امضاهای ورودی</string>
+    <string name="failed_packages">بسته‌های ناموفق</string>
+    <string name="no_tracker_found">هیچ ردیابی یافت نشد</string>
+    <string name="clear_app_cache_description">حافظه پنهان همه برنامه ها را پاک می کند</string>
+    <string name="clear_app_cache">پاک کردن حافظه پنهان برنامه</string>
+    <string name="clear_data_from_uninstalled_apps">داده برنامه های حذف‌نصب شده را پاک کن</string>
+    <string name="block_components_description">تمام اجزای شناسایی شده با امضا(ها)ی داده شده را مسدود کن</string>
+    <string name="block_components_dots">مسدود کردن اجزا…</string>
+    <string name="block_unblock_trackers_description">مسدود یا نامسدود کردن تبلیغات و اجزای ردیاب از تمام برنامه های نصب شده</string>
+    <string name="clear_cache">پاک کردن حافظه پنهان</string>
+    <string name="failed_to_get_data_usage_information">نتوانست اطلاعات مصرف داده را واکشی کند</string>
+    <string name="pref_import_existing_msg">اجزای غیرفعال شده توسط سایر برنامه ها را به مدیر برنامه اضافه کن. زمانی از این ابزار استفاده می‌کنید مراقب باشید که ممکن است مثبت کاذب های بسیاری موجود باشد. تنها برنامه هایی را انتخاب کنید که از آنها اطمینان دارید.</string>
 </resources>
