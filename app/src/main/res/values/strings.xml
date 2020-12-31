@@ -833,4 +833,10 @@
     <string name="enforcing">Enforcing</string>
     <string name="permissive">Permissive</string>
     <string name="hardware">Hardware</string>
+    <string name="screen">Screen</string>
+    <string name="density">Density</string>
+    <string name="size">Size</string>
+    <string name="scaling_factor">Scaling factor</string>
+    <string name="refresh_rate">Refresh rate</string>
+    <string name="window_size">Window size</string>
 </resources>

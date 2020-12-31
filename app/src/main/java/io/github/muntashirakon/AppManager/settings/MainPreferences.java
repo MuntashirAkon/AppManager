@@ -32,6 +32,8 @@ import android.os.RemoteException;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.format.Formatter;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,6 +68,7 @@ import androidx.preference.SwitchPreferenceCompat;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
@@ -481,7 +484,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         List<CharSequence> securityProviders = new ArrayList<>();
         builder.append(getPrimaryText(activity, getString(R.string.security_providers) + ": "));
         for (Provider provider : Security.getProviders()) {
-            securityProviders.add(provider.getName() + " (" + provider.getVersion() + ")");
+            securityProviders.add(provider.getName() + " (v" + provider.getVersion() + ")");
         }
         builder.append(TextUtils.joinSpannable(", ", securityProviders)).append("\n");
         // CPU info
@@ -512,7 +515,28 @@ public class MainPreferences extends PreferenceFragmentCompat {
                 .append(String.valueOf(getBatteryCapacity())).append("mAh").append("\n");
         // TODO(19/12/20): Get more battery info
         // Screen resolution
-        // TODO(19/12/20): Get screen resolution
+        builder.append("\n").append(getTitleText(activity, getString(R.string.screen))).append("\n")
+                .append(getPrimaryText(activity, getString(R.string.density) + ": "))
+                .append(getDensity()).append(" (")
+                .append(String.valueOf(StaticDataset.DEVICE_DENSITY)).append(" DPI)").append("\n");
+        Display display = activity.getDisplay();
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        // Actual size
+        display.getRealMetrics(displayMetrics);
+        builder.append(getPrimaryText(activity, getString(R.string.scaling_factor) + ": "))
+                .append(String.valueOf(displayMetrics.density)).append("\n")
+                .append(getPrimaryText(activity, getString(R.string.size) + ": "))
+                .append(String.valueOf(displayMetrics.widthPixels)).append("px × ")
+                .append(String.valueOf(displayMetrics.heightPixels)).append("px\n");
+        // Window size
+        display.getMetrics(displayMetrics);
+        builder.append(getPrimaryText(activity, getString(R.string.window_size) + ": "))
+                .append(String.valueOf(displayMetrics.widthPixels)).append("px × ")
+                .append(String.valueOf(displayMetrics.heightPixels)).append("px\n");
+        // Refresh rate
+        builder.append(getPrimaryText(activity, getString(R.string.refresh_rate) + ": "))
+                .append(String.format(Locale.ROOT, "%.1f", display.getRefreshRate()))
+                .append("\n");
         // List system locales
         LocaleListCompat locales = LocaleListCompat.getDefault();
         List<String> localeStrings = new ArrayList<>(locales.size());
@@ -565,7 +589,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
             if (info.name != null) {
                 // It's a feature
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    featureStrings.add(info.name + " (" + info.version + ")");
+                    featureStrings.add(info.name + " (v" + info.version + ")");
                 } else featureStrings.add(info.name);
             }
         }
@@ -649,5 +673,20 @@ public class MainPreferences extends PreferenceFragmentCompat {
             return 0;
         }
         return 2;
+    }
+
+    private String getDensity() {
+        int dpi = StaticDataset.DEVICE_DENSITY;
+        int smallestDiff = Integer.MAX_VALUE;
+        String density = StaticDataset.XXXHDPI;
+        // Find the smallest
+        for (int i = 0; i < StaticDataset.DENSITY_NAME_TO_DENSITY.size(); ++i) {
+            int diff = Math.abs(dpi - StaticDataset.DENSITY_NAME_TO_DENSITY.valueAt(i));
+            if (diff < smallestDiff) {
+                smallestDiff = diff;
+                density = StaticDataset.DENSITY_NAME_TO_DENSITY.keyAt(i);
+            }
+        }
+        return density;
     }
 }

@@ -23,6 +23,7 @@ import android.util.DisplayMetrics;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.collection.ArrayMap;
 import androidx.core.os.ConfigurationCompat;
 import androidx.core.os.LocaleListCompat;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
@@ -45,26 +46,29 @@ public class StaticDataset {
         ALL_ABIS.put(X86_64, VMRuntime.ABI_X86_64);
     }
 
-    private static final String LDPI = "ldpi";
-    private static final String MDPI = "mdpi";
-    private static final String TVDPI = "tvdpi";
-    private static final String HDPI = "hdpi";
-    private static final String XHDPI = "xhdpi";
-    private static final String XXHDPI = "xxhdpi";
-    private static final String XXXHDPI = "xxxhdpi";
+    public static final String LDPI = "ldpi";
+    public static final String MDPI = "mdpi";
+    public static final String TVDPI = "tvdpi";
+    public static final String HDPI = "hdpi";
+    public static final String XHDPI = "xhdpi";
+    public static final String XXHDPI = "xxhdpi";
+    public static final String XXXHDPI = "xxxhdpi";
 
-    public static final Map<String, Integer> DENSITY_NAME_TO_DENSITY = new HashMap<>();
+    public static final ArrayMap<String, Integer> DENSITY_NAME_TO_DENSITY
+            = new ArrayMap<String, Integer>(8) {
+        {
+            put(LDPI, DisplayMetrics.DENSITY_LOW);
+            put(MDPI, DisplayMetrics.DENSITY_MEDIUM);
+            put(TVDPI, DisplayMetrics.DENSITY_TV);
+            put(HDPI, DisplayMetrics.DENSITY_HIGH);
+            put(XHDPI, DisplayMetrics.DENSITY_XHIGH);
+            put(XXHDPI, DisplayMetrics.DENSITY_XXHIGH);
+            put(XXXHDPI, DisplayMetrics.DENSITY_XXXHIGH);
+        }
+    };
     public static final int DEVICE_DENSITY;
 
     static {
-        DENSITY_NAME_TO_DENSITY.put(LDPI, DisplayMetrics.DENSITY_LOW);
-        DENSITY_NAME_TO_DENSITY.put(MDPI, DisplayMetrics.DENSITY_MEDIUM);
-        DENSITY_NAME_TO_DENSITY.put(TVDPI, DisplayMetrics.DENSITY_TV);
-        DENSITY_NAME_TO_DENSITY.put(HDPI, DisplayMetrics.DENSITY_HIGH);
-        DENSITY_NAME_TO_DENSITY.put(XHDPI, DisplayMetrics.DENSITY_XHIGH);
-        DENSITY_NAME_TO_DENSITY.put(XXHDPI, DisplayMetrics.DENSITY_XXHIGH);
-        DENSITY_NAME_TO_DENSITY.put(XXXHDPI, DisplayMetrics.DENSITY_XXXHIGH);
-
         DEVICE_DENSITY = AppManager.getContext().getResources().getDisplayMetrics().densityDpi;
     }
 
