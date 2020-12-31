@@ -829,4 +829,8 @@
     <string name="backup_all_users_description">Perform back up for all users, not just the current user.</string>
     <string name="backup_skip_signature_checks_description">Useful for restoring backups which are failing due to checksum verification failure or has a different APK signature than the backed up one.</string>
     <string name="patch_level">Patch level</string>
+    <string name="selinux">SELinux</string>
+    <string name="enforcing">Enforcing</string>
+    <string name="permissive">Permissive</string>
+    <string name="hardware">Hardware</string>
 </resources>

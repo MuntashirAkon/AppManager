@@ -40,6 +40,9 @@ import com.android.internal.util.TextUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.yariksoffice.lingver.Lingver;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.security.Provider;
 import java.security.Security;
 import java.util.ArrayList;
@@ -49,6 +52,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.collection.ArrayMap;
@@ -463,7 +467,13 @@ public class MainPreferences extends PreferenceFragmentCompat {
         builder.append("\n").append(getTitleText(activity, getString(R.string.security))).append("\n");
         builder.append(getPrimaryText(activity, getString(R.string.root) + ": "))
                 .append(String.valueOf(RunnerUtils.isRootAvailable())).append("\n");
-        // TODO(20/12/20): Get SELinux, encryption status
+        int selinux = getSelinuxStatus();
+        if (selinux != 2) {
+            builder.append(getPrimaryText(activity, getString(R.string.selinux) + ": "))
+                    .append(getString(selinux == 1 ? R.string.enforcing : R.string.permissive))
+                    .append("\n");
+        }
+        // TODO(31/12/20): Get encryption status
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             builder.append(getPrimaryText(activity, getString(R.string.patch_level) + ": "))
                     .append(Build.VERSION.SECURITY_PATCH).append("\n");
@@ -476,7 +486,11 @@ public class MainPreferences extends PreferenceFragmentCompat {
         builder.append(TextUtils.joinSpannable(", ", securityProviders)).append("\n");
         // CPU info
         builder.append("\n").append(getTitleText(activity, getString(R.string.cpu))).append("\n");
-        // TODO(18/12/20): Get SoC
+        String cpuHardware = getCpuHardware();
+        if (cpuHardware != null) {
+            builder.append(getPrimaryText(activity, getString(R.string.hardware) + ": "))
+                    .append(cpuHardware).append("\n");
+        }
         builder.append(getPrimaryText(activity, getString(R.string.support_architectures) + ": "))
                 .append(TextUtils.join(", ", Build.SUPPORTED_ABIS)).append("\n")
                 .append(getPrimaryText(activity, getString(R.string.no_of_cores) + ": "))
@@ -592,6 +606,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         return capacity;
     }
 
+    @NonNull
     private Pair<Integer, Integer> getPackageStats(int userHandle) {
         IPackageManager pm = AppManager.getIPackageManager();
         int systemApps = 0;
@@ -607,5 +622,32 @@ public class MainPreferences extends PreferenceFragmentCompat {
             e.printStackTrace();
         }
         return new Pair<>(userApps, systemApps);
+    }
+
+    @Nullable
+    private String getCpuHardware() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("/proc/cpuinfo"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().startsWith("Hardware")) {
+                    int colonLoc = line.indexOf(':');
+                    if (colonLoc == -1) continue;
+                    colonLoc += 2;
+                    return line.substring(colonLoc).trim();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private int getSelinuxStatus() {
+        Runner.Result result = Runner.runCommand("getenforce");
+        if (result.isSuccessful()) {
+            if (result.getOutput().trim().equals("Enforcing")) return 1;
+            return 0;
+        }
+        return 2;
     }
 }
