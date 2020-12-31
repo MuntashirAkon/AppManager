@@ -29,9 +29,9 @@ import android.os.Process;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
 public class AppOpsConfigProvider extends ContentProvider {
-
     private static final UriMatcher uriMatcher;
     private static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".provider.local";
 
@@ -58,7 +58,7 @@ public class AppOpsConfigProvider extends ContentProvider {
                         String sortOrder) {
         checkCalling();
 
-        ServerConfig.init(getContext(), Users.getCurrentUserHandle());
+        ServerConfig.init(ContextUtils.getDeContext(getContext()), Users.getCurrentUserHandle());
         MatrixCursor cursor = null;
         switch (uriMatcher.match(uri)) {
             case TYPE_TOKEN:
@@ -100,7 +100,6 @@ public class AppOpsConfigProvider extends ContentProvider {
     public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return 0;
     }
-
 
     private void checkCalling() {
         int callingUid = Binder.getCallingUid();

@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.ipc;
 
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -47,6 +46,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 import static io.github.muntashirakon.AppManager.ipc.RootService.TAG;
@@ -71,27 +71,25 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
 
     IPCClient(Intent intent) throws InterruptedException, RemoteException, IOException {
         name = intent.getComponent();
-        startRootServer(Utils.getContext(), intent);
+        startRootServer(ContextUtils.getContext(), intent);
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    @SuppressLint("SetWorldReadable")
     static File dumpMainJar(Context context) throws IOException {
-        File mainJar = new File(context.getExternalFilesDir(null), "main.jar");
-        if (!mainJar.exists()) {
-            mainJar.createNewFile();
-            mainJar.setReadable(true, false);
-            mainJar.setExecutable(true, false);
-        }
+        Context contextDe = ContextUtils.getDeContext(context);
+        File internalStorage = contextDe.getFilesDir().getParentFile();
+        assert internalStorage != null;
+        IOUtils.chmod711(internalStorage);
+        File mainJar = new File(internalStorage, "main.jar");
         try (InputStream in = context.getResources().getAssets().open("main.jar");
              OutputStream out = new FileOutputStream(mainJar)) {
             IOUtils.copy(in, out);
         }
+        IOUtils.chmod644(mainJar);
         return mainJar;
     }
 
     static void stopRootServer(ComponentName name) throws IOException {
-        String cmd = getRunnerScript(Utils.getContext(), name, CMDLINE_STOP_SERVER, "");
+        String cmd = getRunnerScript(ContextUtils.getContext(), name, CMDLINE_STOP_SERVER, "");
         if (AppPref.isRootEnabled()) Runner.runCommand(Runner.getRootInstance(), cmd);
         else if (AppPref.isAdbEnabled()) AdbShell.run(cmd);
     }
@@ -128,7 +126,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
         intent.putExtra(INTENT_EXTRA_KEY, bundle);
 
         Log.e(TAG, "Running service starter script...");
-        String cmd = getRunnerScript(Utils.getContext(), name, IPCServer.class.getName(), debugParams);
+        String cmd = getRunnerScript(ContextUtils.getContext(), name, IPCServer.class.getName(), debugParams);
         if (AppPref.isRootEnabled()) {
             if (!Runner.runCommand(Runner.getRootInstance(), cmd).isSuccessful()) {
                 Log.e(TAG, "Couldn't start service.");

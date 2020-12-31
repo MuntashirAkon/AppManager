@@ -15,16 +15,18 @@
  * limitations under the License.
  */
 
-package io.github.muntashirakon.AppManager.ipc;
+package io.github.muntashirakon.AppManager.utils;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityThread;
 import android.content.Context;
 import android.os.Build;
 
+import com.topjohnwu.superuser.internal.UiThreadHandler;
+
 import io.github.muntashirakon.AppManager.logs.Log;
 
-final class Utils {
+public final class ContextUtils {
 
     @SuppressLint("StaticFieldLeak")
     public static Context context;
@@ -46,6 +48,7 @@ final class Utils {
     }
 
     public static Context getDeContext(Context context) {
-        return Build.VERSION.SDK_INT >= 24 ? context.createDeviceProtectedStorageContext() : context;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
+                context.createDeviceProtectedStorageContext() : context;
     }
 }

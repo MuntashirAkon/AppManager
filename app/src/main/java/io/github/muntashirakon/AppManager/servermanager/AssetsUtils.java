@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.servermanager;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 
@@ -35,11 +34,11 @@ import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.server.common.ConfigParam;
 import io.github.muntashirakon.AppManager.server.common.Constants;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 class AssetsUtils {
-    @SuppressLint("SetWorldReadable")
     public static void copyFile(@NonNull Context context, String fileName, File destFile, boolean force) {
         try (AssetFileDescriptor openFd = context.getAssets().openFd(fileName)) {
             if (force) {
@@ -54,12 +53,6 @@ class AssetsUtils {
                 }
             }
 
-            if (!destFile.exists()) {
-                destFile.createNewFile();
-                destFile.setReadable(true, false);
-                destFile.setExecutable(true, false);
-            }
-
             try (FileInputStream open = openFd.createInputStream();
                  FileOutputStream fos = new FileOutputStream(destFile)) {
                 byte[] buff = new byte[1024 * 16];
@@ -70,6 +63,7 @@ class AssetsUtils {
                 fos.flush();
                 fos.getFD().sync();
             }
+            IOUtils.chmod644(destFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -80,7 +74,7 @@ class AssetsUtils {
              FileInputStream fdInputStream = openFd.createInputStream();
              InputStreamReader inputStreamReader = new InputStreamReader(fdInputStream);
              BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
-            File destFile = new File(config.context.getExternalFilesDir(null), ServerConfig.EXECUTABLE_FILE_NAME);
+            File destFile = ServerConfig.getExecPath();
             if (destFile.exists()) {
                 destFile.delete();
             }
@@ -114,6 +108,7 @@ class AssetsUtils {
                 }
                 bw.flush();
             }
+            IOUtils.chmod644(destFile);
         } catch (IOException e) {
             e.printStackTrace();
         }

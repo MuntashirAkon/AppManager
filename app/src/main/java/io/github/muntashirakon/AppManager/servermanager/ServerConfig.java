@@ -5,9 +5,11 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 public class ServerConfig {
     static String SOCKET_PATH = "am_socket";
@@ -30,8 +32,16 @@ public class ServerConfig {
         if (sInitialised) {
             return;
         }
-        destJarFile = new File(context.getExternalFilesDir(null), JAR_NAME);
-        destExecFile = new File(context.getExternalFilesDir(null), EXECUTABLE_FILE_NAME);
+
+        File internalStorage = context.getFilesDir().getParentFile();
+        assert internalStorage != null;
+        try {
+            IOUtils.chmod711(internalStorage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        destJarFile = new File(internalStorage, JAR_NAME);
+        destExecFile = new File(internalStorage, EXECUTABLE_FILE_NAME);
         if (userHandleId != 0) {
             SOCKET_PATH += userHandleId;
             DEFAULT_LOCAL_SERVER_PORT += userHandleId;
@@ -50,8 +60,8 @@ public class ServerConfig {
     }
 
     @NonNull
-    public static String getExecPath() {
-        return destExecFile.getAbsolutePath();
+    public static File getExecPath() {
+        return destExecFile;
     }
 
     /**

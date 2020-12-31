@@ -36,6 +36,7 @@ import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.server.common.Caller;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
 public class LocalServer {
     @GuardedBy("lockObject")
@@ -95,7 +96,7 @@ public class LocalServer {
     private final Context mContext;
 
     private LocalServer() {
-        mContext = AppManager.getContext();
+        mContext = ContextUtils.getDeContext(AppManager.getContext());
         Config config = new Config();
         config.context = mContext;
         updateConfig(config);

@@ -37,6 +37,7 @@ import java.lang.reflect.Constructor;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
 import static io.github.muntashirakon.AppManager.ipc.IPCClient.BUNDLE_BINDER_KEY;
 import static io.github.muntashirakon.AppManager.ipc.IPCClient.INTENT_DEBUG_KEY;
@@ -57,7 +58,7 @@ class IPCServer extends IRootIPC.Stub implements IBinder.DeathRecipient {
 
     @SuppressWarnings("unchecked")
     IPCServer(Context context, ComponentName name) throws Exception {
-        Utils.context = context;
+        ContextUtils.context = context;
         IBinder binder = ServiceManager.getService(getServiceName(name));
         if (binder != null) {
             // There was already a root service running

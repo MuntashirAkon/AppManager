@@ -30,6 +30,7 @@ import android.os.FileUtils;
 import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
 import android.system.ErrnoException;
+import android.system.Os;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -428,6 +429,24 @@ public final class IOUtils {
                 crc32.update(buffer, 0, read);
 
             return crc32.getValue();
+        }
+    }
+
+    public static void chmod711(@NonNull File file) throws IOException {
+        try {
+            Os.chmod(file.getAbsolutePath(), 457);
+        } catch (ErrnoException e) {
+            Log.e("IOUtils", "Failed to apply mode 711 to " + file);
+            throw new IOException(e);
+        }
+    }
+
+    public static void chmod644(@NonNull File file) throws IOException {
+        try {
+            Os.chmod(file.getAbsolutePath(), 420);
+        } catch (ErrnoException e) {
+            Log.e("IOUtils", "Failed to apply mode 644 to " + file);
+            throw new IOException(e);
         }
     }
 }
