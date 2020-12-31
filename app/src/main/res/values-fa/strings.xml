@@ -130,14 +130,14 @@
     <string name="word_wrap">تغییر وضعیت کلمه</string>
     <string name="credits_message">"به نویسندگان
 \n- پروژه منبع باز اندروید
-\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt; اطلاعات Apps_packages &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt; راه انداز فعالیت &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt; ویرایشگر &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt; AppsMonitor &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt; وات &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt; AppOpsX &lt;/a&gt;
-\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt; SAI &lt;/a&gt;
-\nاعتبار لوگو: &lt;a href=\"https://github.com/Atrate\"&gt; Atrate &lt;/a&gt;. "</string>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info"> اطلاعات Apps_packages </a>
+\n- <a href="https://github.com/butzist/ActivityLauncher"> راه انداز فعالیت </a>
+\n- <a href="https://github.com/billthefarmer/editor"> ویرایشگر </a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor"> AppsMonitor </a>
+\n- <a href="https://github.com/tuyafeng/Watt"> وات </a>
+\n- <a href="https://github.com/8enet/AppOpsX"> AppOpsX </a>
+\n- <a href="https://github.com/Aefyr/SAI"> SAI </a>
+\nاعتبار لوگو: <a href="https://github.com/Atrate"> Atrate </a>. "</string>
     <string name="credits">اعتبارات</string>
     <string name="third_party">کتابخانه‌ها و آیکون های شخص سوم</string>
     <string name="license">لایسنس</string>

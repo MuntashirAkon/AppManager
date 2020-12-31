@@ -799,8 +799,8 @@
     <string name="backup_extras">Zusätze</string>
     <string name="backup_exclude_cache_description">Die Ordner cache-, no_cache und no_backup werden nicht gesichert.</string>
     <string name="backup_obb_media_description">Sichern der OBB- und Medienordner.</string>
-    <string name="backup_external_data_description">Sichern Sie die externen Datenordner. &lt;b&gt;Daten&lt;/b&gt; muss ausgewählt sein, damit dies funktioniert.</string>
+    <string name="backup_external_data_description">Sichern Sie die externen Datenordner. <b>Daten</b> muss ausgewählt sein, damit dies funktioniert.</string>
     <string name="backup_data_description">Sichern Sie die Datenordner. Wenn diese Option ausgewählt ist, werden die internen Datenordner standardmäßig gesichert.</string>
-    <string name="backup_apk_only_description">Sichern Sie nur die APK-Dateien aus dem Quellverzeichnis. &lt;b&gt;Die Quelle&lt;/b&gt; muss ausgewählt sein, damit dies funktioniert.</string>
+    <string name="backup_apk_only_description">Sichern Sie nur die APK-Dateien aus dem Quellverzeichnis. <b>Die Quelle</b> muss ausgewählt sein, damit dies funktioniert.</string>
     <string name="backup_source_description">Sichern Sie das gesamte Quellverzeichnis.</string>
 </resources>
