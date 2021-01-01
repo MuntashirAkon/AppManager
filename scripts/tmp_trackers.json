@@ -54,15 +54,6 @@
       "network_signature": "",
       "website": "https://buglife.com/docs/android"
     },
-    "7": {
-      "id": 7,
-      "name": "°?Flipper",
-      "description": "",
-      "creation_date": "",
-      "code_signature": "com.facebook.flipper.",
-      "network_signature": "",
-      "website": "https://github.com/facebook/flipper/android"
-    },
     "8": {
       "id": 8,
       "name": "°?Rollbar",
@@ -332,6 +323,150 @@
       "code_signature": "com.mapbox.android.telemetry.",
       "network_signature": "",
       "website": "https://mapbox.com"
+    },
+    "38": {
+      "id": 38,
+      "name": "LeadBolt",
+      "description": "LeadBolt is an ad network that provides different forms of in-app advertising (banner-ads, push-ads, etc.) on various platforms, including Android.",
+      "creation_date": "2021-01-01",
+      "code_signature": "com.apptracker.android.|com.pad.android.xappad.|com.Leadbolt.",
+      "network_signature": "",
+      "website": "https://www.leadbolt.com"
+    },
+    "39": {
+      "id": 39,
+      "name": "Appenda",
+      "description": "Display Ads in the notification bar.",
+      "creation_date": "2021-01-01",
+      "code_signature": "com.appenda.",
+      "network_signature": "",
+      "website": "http://www.appenda.com"
+    },
+    "40": {
+      "id": 40,
+      "name": "IAC",
+      "description": "Display Ads in the notification bar.",
+      "creation_date": "2021-01-01",
+      "code_signature": "com.iac.notification.",
+      "network_signature": "",
+      "website": "https://iac.com"
+    },
+    "41": {
+      "id": 41,
+      "name": "TapIt",
+      "description": "Ad network offering banner ads, interstitials and video ads.",
+      "creation_date": "2021-01-01",
+      "code_signature": "com.tapit.",
+      "network_signature": "",
+      "website": "http://www.phunware.com/advertising"
+    },
+    "42": {
+      "id": 42,
+      "name": "Phunware Advertising",
+      "description": "Ad network offering banner ads, interstitials and video ads.",
+      "creation_date": "2021-01-01",
+      "code_signature": "com.phunware.advertising.",
+      "network_signature": "",
+      "website": "http://www.phunware.com/advertising"
+    },
+    "43": {
+      "id": 43,
+      "name": "Startapp",
+      "description": "Addition to Exodus",
+      "creation_date": "2021-01-01",
+      "code_signature": "com.startapp.android.",
+      "network_signature": "",
+      "website": "http://startapp.com"
+    },
+    "44": {
+      "id": 44,
+      "name": "Apperhand",
+      "description": "Display Ads in the notification bar, add new advertisers shortcuts and add bookmarks to in the browser.",
+      "creation_date": "2021-01-01",
+      "code_signature": "com.apperhand.device.",
+      "network_signature": "",
+      "website": ""
+    },
+    "45": {
+      "id": 45,
+      "name": "Byyd (Adfonic)",
+      "description": "Offers banner and rich-media ad formats and targets a global audience.",
+      "creation_date": "2021-01-01",
+      "code_signature": "com.adfonic.",
+      "network_signature": "",
+      "website": "https://byyd.me"
+    },
+    "46": {
+      "id": 46,
+      "name": "Flatiron Media",
+      "description": "Ad network that provides sign-up ads.",
+      "creation_date": "2021-01-01",
+      "code_signature": "com.pontiflex.mobile.",
+      "network_signature": "",
+      "website": "http://flatironmedia.com"
+    },
+    "47": {
+      "id": 47,
+      "name": "AdWhirl (AdMob)",
+      "description": "AdWhirl is an advertising mediation platform that allow developers to switch between ad networks on-the-fly.",
+      "creation_date": "2021-01-01",
+      "code_signature": "com.adwhirl.",
+      "network_signature": "",
+      "website": "http://www.adwhirl.com"
+    },
+    "48": {
+      "id": 48,
+      "name": "Komli Mobile (ZestAdz)",
+      "description": "Komli Mobile is a global mobile advertising network and is a part of Komli Media.",
+      "creation_date": "2021-01-01",
+      "code_signature": "com.zestadz.android.",
+      "network_signature": "",
+      "website": "https://www.komli.com/"
+    },
+    "49": {
+      "id": 49,
+      "name": "Conversant (Greystripe)",
+      "description": "Addition to Exodus",
+      "creation_date": "2021-01-01",
+      "code_signature": "com.greystripe.android.",
+      "network_signature": "",
+      "website": "http://greystripe.com"
+    },
+    "50": {
+      "id": 50,
+      "name": "JumpTap (Millennial Media)",
+      "description": "Jumptap provides targeted mobile advertising.",
+      "creation_date": "2021-01-01",
+      "code_signature": "com.jumptap.adtag.",
+      "network_signature": "",
+      "website": "http://www.millennialmedia.com"
+    },
+    "51": {
+      "id": 51,
+      "name": "VDopia",
+      "description": "Ad network that offers banner and interstitial ads.",
+      "creation_date": "2021-01-01",
+      "code_signature": "com.vdopia.client.android.",
+      "network_signature": "",
+      "website": "http://www.vdopia.com"
+    },
+    "52": {
+      "id": 52,
+      "name": "VServ",
+      "description": "Offers banner and full-screen ads. Launch and exit full-screen ads can be added without changing the apps sourcecode.",
+      "creation_date": "2021-01-01",
+      "code_signature": "mobi.vserv.android.adengine.",
+      "network_signature": "",
+      "website": "http://www.vserv.com"
+    },
+    "7": {
+      "id": 7,
+      "name": "MobFox",
+      "description": "Addition to Exodus",
+      "creation_date": "2021-01-01",
+      "code_signature": "com.adsdk.sdk.",
+      "network_signature": "",
+      "website": ""
     }
   }
 }

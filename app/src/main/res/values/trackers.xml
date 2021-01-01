@@ -243,6 +243,7 @@
         <item>net.pubnative</item>
         <item>com.appnext.</item>
         <item>com.mobfox.</item>
+        <item>com.adsdk.sdk.</item>
         <item>com.jm.co.shallwead.sdk.</item>
         <item>com.co.shallwead.sdk.</item>
         <item>com.deltadna</item>
@@ -254,6 +255,7 @@
         <item>com.onesignal.</item>
         <item>com.appdynamics.</item>
         <item>com.startapp.android.publish</item>
+        <item>com.startapp.android.</item>
         <item>com.aerserv.sdk.</item>
         <item>de.infonline.</item>
         <item>com.my.target.</item>
@@ -520,7 +522,6 @@
         <item>io.cleaninsights.sdk.piwik.</item>
         <item>com.bugclipper.android.</item>
         <item>com.buglife.sdk.</item>
-        <item>com.facebook.flipper.</item>
         <item>com.rollbar.android.</item>
         <item>io.inventiv.critic.</item>
         <item>com.mindscapehq.android.raygun4android</item>
@@ -545,6 +546,22 @@
         <item>com.bugsense.trace.</item>
         <item>io.palaima.debugdrawer.</item>
         <item>com.bytedance.sdk.openadsdk</item>
+        <item>com.apptracker.android.</item>
+        <item>com.pad.android.xappad.</item>
+        <item>com.Leadbolt.</item>
+        <item>com.appenda.</item>
+        <item>com.iac.notification.</item>
+        <item>com.tapit.</item>
+        <item>com.phunware.advertising.</item>
+        <item>com.apperhand.device.</item>
+        <item>com.adfonic.</item>
+        <item>com.pontiflex.mobile.</item>
+        <item>com.adwhirl.</item>
+        <item>com.zestadz.android.</item>
+        <item>com.greystripe.android.</item>
+        <item>com.jumptap.adtag.</item>
+        <item>com.vdopia.client.android.</item>
+        <item>mobi.vserv.android.adengine.</item>
 </string-array>
 <string-array name="tracker_names">
         <item>Teemo</item>
@@ -772,6 +789,7 @@
         <item>PubNative</item>
         <item>Appnext</item>
         <item>MobFox</item>
+        <item>MobFox</item>
         <item>ShallWeAD</item>
         <item>ShallWeAD</item>
         <item>deltaDNA</item>
@@ -782,6 +800,7 @@
         <item>Swrve</item>
         <item>OneSignal</item>
         <item>Appdynamics</item>
+        <item>Startapp</item>
         <item>Startapp</item>
         <item>AerServ</item>
         <item>INFOnline</item>
@@ -1049,7 +1068,6 @@
         <item>µ?CleanInsights</item>
         <item>°BugClipper</item>
         <item>°?Buglife</item>
-        <item>°?Flipper</item>
         <item>°?Rollbar</item>
         <item>°?Critic</item>
         <item>°?Raygun</item>
@@ -1074,5 +1092,21 @@
         <item>°BugSense</item>
         <item>°?DebugDrawer</item>
         <item>Pangle SDK</item>
+        <item>LeadBolt</item>
+        <item>LeadBolt</item>
+        <item>LeadBolt</item>
+        <item>Appenda</item>
+        <item>IAC</item>
+        <item>TapIt</item>
+        <item>Phunware Advertising</item>
+        <item>Apperhand</item>
+        <item>Byyd (Adfonic)</item>
+        <item>Flatiron Media</item>
+        <item>AdWhirl (AdMob)</item>
+        <item>Komli Mobile (ZestAdz)</item>
+        <item>Conversant (Greystripe)</item>
+        <item>JumpTap (Millennial Media)</item>
+        <item>VDopia</item>
+        <item>VServ</item>
     </string-array>
 </resources>
