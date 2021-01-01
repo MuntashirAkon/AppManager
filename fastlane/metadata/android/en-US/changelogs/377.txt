@@ -1,0 +1,24 @@
+F-Droid doesn't support extended changelog. View in-app changelog for a more helpful changelog.
+- New language: Farsi
+- [Feature] Added about device in the settings page
+- [Feature] Added an install button in the scanner page for the external APK files
+- [Feature] Added the option to set custom app ops and modes in the three-dots menu
+- [Feature] Added shortcut support for Android N_MR1 or less
+- [Feature] Display app ops associated with the declared permissions in the app ops tab
+- [Feature] Display feature availability and version number in the uses features tab
+- [Feature] Display icon for uninstalled but backed up apps in the main page
+- [Feature] Display tracker count in a new line instead of under brackets in the 1-click ops page
+- [Feature] Improved app install time for ADB users
+- [Feature] Migrate to Binder (incomplete)
+- [Feature] Renamed “deny app ops” to “set mode for app ops”, added the option to specify modes in 1-click ops page
+- [Feature] Reordered backup options along with description for each items
+- [Feature] Updated ADBLib
+- [Feature] Updated trackers and libraries
+- [Fix] Fixed crashes of the app ops tab in Android 11
+- [Fix] Fixed crashes of the app ops tab in MIUI
+- [Fix] Fixed prompting users for ADB permission repeatedly when auto is the mode of operation
+- [Fix] Hide launch and shortcut buttons from the activities tab for external APK
+- [Fix] Use both package mode and UID mode for app ops from Android 6
+- [Fix] Use data folder to store server/IPC related files
+
+App data backup is still a experimental feature, please don't rely on it.

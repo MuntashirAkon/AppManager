@@ -26,6 +26,11 @@ android {
         targetSdkVersion rootProject.ext.targetSdk
     }
 
+    buildTypes {
+        preRelease {
+        }
+    }
+
     compileOptions {
         encoding "UTF-8"
         sourceCompatibility JavaVersion.VERSION_1_8
