@@ -228,14 +228,6 @@ public class RulesStorageManager implements Closeable {
         addEntry(entry);
     }
 
-        Entry entry = new Entry();
-        addEntry(entry);
-    }
-
-        Entry entry = new Entry();
-        addEntry(entry);
-    }
-
     @GuardedBy("entries")
     public void addEntry(@NonNull Entry entry) {
         synchronized (entries) {
