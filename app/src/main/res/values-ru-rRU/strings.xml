@@ -864,4 +864,15 @@
     <string name="window_size">Размер окна</string>
     <string name="size">Размер</string>
     <string name="hardware">Оборудование</string>
+    <plurals name="alert_failed_to_set_app_ops">
+        <item quantity="one">Не удалось настроить операции приложений для %1$d приложения</item>
+        <item quantity="few">Не удалось настроить операции приложений для %1$d приложений</item>
+        <item quantity="many">Не удалось настроить операции приложений для %1$d приложений</item>
+        <item quantity="other">Не удалось настроить операции приложений для %1$d приложений</item>
+    </plurals>
+    <string name="refresh_rate">Частота обновления</string>
+    <string name="scaling_factor">Коэффициент масштабирования</string>
+    <string name="density">Плотность пикселей</string>
+    <string name="screen">Экран</string>
+    <string name="set_mode_for_app_ops_dots">Установить режим для операций приложения…</string>
 </resources>
