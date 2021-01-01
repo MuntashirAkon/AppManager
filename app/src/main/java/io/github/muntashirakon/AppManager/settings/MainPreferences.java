@@ -519,7 +519,12 @@ public class MainPreferences extends PreferenceFragmentCompat {
                 .append(getPrimaryText(activity, getString(R.string.density) + ": "))
                 .append(getDensity()).append(" (")
                 .append(String.valueOf(StaticDataset.DEVICE_DENSITY)).append(" DPI)").append("\n");
-        Display display = activity.getDisplay();
+        Display display;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            display = activity.getDisplay();
+        } else {
+            display = activity.getWindowManager().getDefaultDisplay();
+        }
         DisplayMetrics displayMetrics = new DisplayMetrics();
         // Actual size
         display.getRealMetrics(displayMetrics);
