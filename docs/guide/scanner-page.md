@@ -11,12 +11,16 @@ tags:
 # Scanner Page
 **Scanner page** appears after clicking on the _scanner_ button in the [App Info tab][app_info]. External APK files can also be opened for scanning from file managers, web browsers, etc.
 
-It scans for trackers & libraries and display the number of trackers & libraries as a summary. It also displays checksums of the apk file as well as the signing certificate(s).
+It scans for trackers and libraries, and display the number of trackers and libraries as a summary. It also displays checksums of the APK file as well as the signing certificate(s).
+
+::: danger Disclaimer
+AM only scans an app statically. An app may provide the options for opting out, or in some cases, certain features of the tracker may not be used at all by the app (such as F-Droid), or some apps may simply use them as placeholders to prevent breaking certain features (such as Fennec F-Droid). The intention of the scanner is to give you an idea about what the APK might contain. It should be taken as an initial step for further investigations.
+:::
 
 Clicking on the first item (i.e. number of classes) opens a new page containing a list of tracker classes for the app. All classes can also be viewed by clicking on the _Toggle Class Listing_ menu. A sneak-peek of each class can be viewed by simply clicking on any class item.
 
 ::: warning Notice
-Due to various limitations, it is not possible to scan all the components of an apk file. This is especially true if an apk is highly obfuscated. The scanner also does not check strings (or website signatures).
+Due to various limitations, it is not possible to scan all the components of an APK file. This is especially true if an APK is highly obfuscated. The scanner also does not check strings (or website signatures).
 :::
 
 The second item lists the number of trackers along with their names. Clicking on the item displays a dialog containing the name of trackers, matched signatures and the number of classes against each signature. The tracker names may have some prefixes such as:

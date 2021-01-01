@@ -13,16 +13,16 @@ Main page lists all the installed apps (or a list of apps supplied by any third-
 
 ## Batch Operations
 Batch operations or operation on multiple apps are also available within this page (most these operations require root or [ADB over TCP][1]). To enable multiple selection mode, click on any app icon or long click on any app. After that you can use the regular click to select apps instead of opening the [App Details][4] page. These operations include:
-- Backup apk file (no root)
+- Backup APK file (no root)
 - Backup/restore/delete app data (apk, dex, app data, etc.)
 - Clear data from apps
 - Disable/uninstall/kill apps
 - Disable run in background, ads and tracker components
 - Export blocking rules
 
-## Color Codes
-Here's a list of colors used in this page and their meaning:
-- <code style="background-color: #FCEED1; color: #000">Light grayish orange (day)</code> or <code style="background-color: #091F36; color: #FFF">dark blue (night)</code> - App selected for batch operation
+## Colour Codes
+Here's a list of colours used in this page and their meaning:
+- <code style="background-color: #FCEED1; color: #000">Light greyish orange (day)</code> or <code style="background-color: #091F36; color: #FFF">dark blue (night)</code> - App selected for batch operation
 - <code style="background-color: #FF8A80; color: #000">Light red (day)</code> or <code style="background-color: #4F1C14; color: #FFF">very dark red (night)</code> - Disabled app
 - <code style="background-color: yellow; color: #000">Yellow Star</code> - App is in debug mode
 - <code style="color: #E05915">Orange _Date_</code> - App can read logs (permission granted)
@@ -57,7 +57,7 @@ Apps listed on the main page can be sorted in different ways. The sorting prefer
 - _Package name_ - Sort in ascending order based on package names
 - _Last update_ - Sort in descending order based on the package update date (or install date if it is a newly installed package)
 - _Shared user ID_ - Sort in descending order based on kernel user id
-- _App size/sdk_ - Sort in ascending order based on app sdk (sorting by app size in not currently available)
+- _Target SDK_ - Sort in ascending order based on the target SDK
 - _Signature_ - Sort in ascending order based on app's signing info
 - _Disabled first_ - List disabled apps first
 - _Blocked first_ - Sort in descending order based on the number of blocked components

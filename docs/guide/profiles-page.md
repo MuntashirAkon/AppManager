@@ -10,7 +10,7 @@ Profiles page can be accessed from the options menu in the main page. It display
 
 ## Options Menu
 There are two options menu in this page. The three dots menu at the top-right offers two options such as _presets_ and _import_.
-- **Presets.** Presets option lists a number of built-in profiles that can be used as an starting point. The profiles are generated from the project [Universal Android Debloater][uad].
+- **Presets.** Presets option lists a number of built-in profiles that can be used as a starting point. The profiles are generated from the project [Universal Android Debloater][uad].
 
   _See also: [What are bloatware and how to remove them?][faq_bloatware]_
 - **Import.** This option can be used to import an existing profile.

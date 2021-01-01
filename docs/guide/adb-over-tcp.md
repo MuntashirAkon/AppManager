@@ -6,7 +6,7 @@ sidebarDepth: 2
 Many root-only features can still be used by enabling ADB over TCP. To do that, a PC or Mac is required with Android platform-tools installed, and an Android phone with developer options & USB debugging enabled.
 
 ::: tip Root users
-If superuser permission has been granted to App Manager, it can already execute privileged code without any problem. **Threfore, root users don't need to enable ADB over TCP.** If you still want to use ADB over TCP, you must revoke superuser permission for App Manager and restart your device. You may see _working on ADB mode_ message without restarting but this isn't entirely true. The server (used as an interface between system and App Manager) is still running in root mode. This is a known issue and will be fixed in a future version of App Manager.
+If superuser permission has been granted to App Manager, it can already execute privileged code without any problem. **Therefore, root users don't need to enable ADB over TCP.** If you still want to use ADB over TCP, you must revoke superuser permission for App Manager and restart your device. You may see _working on ADB mode_ message without restarting but this isn't entirely true. The server (used as an interface between system and App Manager) is still running in root mode. This is a known issue and will be fixed in a future version of App Manager.
 :::
 
 _See also: [FAQ: ADB over TCP][faq_aot]_
@@ -40,7 +40,7 @@ Often the **USB debugging** mode could be disabled automatically by the system. 
 Make sure you have **USB tethering** enabled.
 
 ### 2.4. Troubleshooting
-In case **USB Debugging** is grayed out, you can do the following:
+In case **USB Debugging** is greyed out, you can do the following:
 1. Make sure you enabled USB debugging before connecting your phone to the PC or Mac via USB cable
 2. Enable USB tethering after connecting to PC or Mac via USB cable
 3. (For Samsung) If you're device is running KNOX, you may have to follow some additional steps. See official documentations or consult support for further assistant 

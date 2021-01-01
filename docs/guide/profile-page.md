@@ -39,7 +39,7 @@ Denotes how certain configured options will behave. For instance, if _disable_ o
 ### Components
 This behaves the same way as the [Block Components…][block_components] option does in the 1-Click Ops page. However, this only applies for the selected packages. If the [state](#state) is _on_, the components will be blocked, and if the [state](#state) is _off_, the components will be unblocked. The option can be disabled (regardless of the inserted values) by clicking on the _disabled_ button on the input dialog.
 
-_See also: [What are the app components?][what_are_compoents]_
+_See also: [What are the app components?][what_are_components]_
 
 ### App Ops
 This behaves the same way as the [Deny App Ops…][deny_app_ops] option does in the 1-Click Ops page. However, this only applies for the selected packages. If the [state](#state) is _on_, the app ops will be denied, and if the [state](#state) is _off_, the app ops will be allowed. The option can be disabled (regardless of the inserted values) by clicking on the _disabled_ button on the input dialog.
@@ -78,7 +78,7 @@ Enabling this option will enable APK backup for the selected packages. This is n
 
 [profiles]: ./profiles-page.md
 [block_components]: ./one-click-ops-page.md#block-components
-[what_are_compoents]: ../faq/app-components.md#what-are-the-app-components
+[what_are_components]: ../faq/app-components.md#what-are-the-app-components
 [deny_app_ops]: ./one-click-ops-page.md##deny-app-ops
 [backup_options]: ./backup-restore.md#backup-options
 [backup_restore]: ./backup-restore.md
