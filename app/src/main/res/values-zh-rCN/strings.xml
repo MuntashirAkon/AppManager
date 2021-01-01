@@ -767,4 +767,14 @@
     <string name="backup_data_description">备份数据文件夹。如果选中，将默认备份内部数据文件夹。</string>
     <string name="backup_apk_only_description">仅备份来自源目录的 APK 文件。要让该选项工作，必须选中 <b>源目录</b>。</string>
     <string name="backup_source_description">备份整个源目录。</string>
+    <string name="selinux">SELinux 状态</string>
+    <string name="window_size">窗口尺寸</string>
+    <string name="refresh_rate">刷新率</string>
+    <string name="scaling_factor">比例因子</string>
+    <string name="size">尺寸</string>
+    <string name="density">密度</string>
+    <string name="screen">屏幕</string>
+    <string name="hardware">硬件</string>
+    <string name="permissive">被动</string>
+    <string name="enforcing">强制</string>
 </resources>
