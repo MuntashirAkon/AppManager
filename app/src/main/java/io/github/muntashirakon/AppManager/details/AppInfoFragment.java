@@ -103,6 +103,7 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
@@ -244,9 +245,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         if (isExternalApk) return;
         menu.findItem(R.id.action_open_in_termux).setVisible(isRootEnabled);
+        menu.findItem(R.id.action_enable_magisk_hide).setVisible(isRootEnabled);
         boolean isDebuggable = false;
-        if (mApplicationInfo != null)
+        if (mApplicationInfo != null) {
             isDebuggable = (mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+        }
         menu.findItem(R.id.action_run_in_termux).setVisible(isDebuggable);
     }
 
@@ -314,6 +317,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             } else termux.launch(TERMUX_PERM_RUN_COMMAND, granted -> {
                 if (granted) runInTermux();
             });
+        } else if (itemId == R.id.action_enable_magisk_hide) {
+            if (MagiskUtils.hide(mPackageName)) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mainModel.getUserHandle())) {
+                    cb.setMagiskHide(true);
+                    refreshDetails();
+                }
+            } else {
+                Toast.makeText(mActivity, R.string.failed_to_enable_magisk_hide, Toast.LENGTH_SHORT).show();
+            }
         } else if (itemId == R.id.action_extract_icon) {
             String iconName = mPackageLabel + "_icon.png";
             export.launch(iconName, uri -> {
@@ -423,7 +435,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         runOnUiThread(() -> iconView.setImageDrawable(appIcon));
 
         // Set App Version
-        runOnUiThread(() -> versionView.setText(getString(R.string.version_name_with_code, mPackageInfo.versionName, PackageInfoCompat.getLongVersionCode(mPackageInfo))));
+        CharSequence version = getString(R.string.version_name_with_code, mPackageInfo.versionName, PackageInfoCompat.getLongVersionCode(mPackageInfo));
+        runOnUiThread(() -> versionView.setText(version));
 
         // Tag cloud //
         HashMap<String, RulesStorageManager.Type> trackerComponents;
@@ -448,6 +461,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             isMagiskHideEnabled = false;
         }
         runOnUiThread(() -> {
+            if (isDetached()) return;
             mTagCloud.removeAllViews();
             // Add tracker chip
             if (!trackerComponents.isEmpty()) {
@@ -518,7 +532,22 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 addChip(R.string.stopped, R.color.stopped);
             if (!mApplicationInfo.enabled) addChip(R.string.disabled_app, R.color.disabled_user);
             if (isMagiskHideEnabled) {
-                addChip(R.string.magisk_hide_enabled);
+                addChip(R.string.magisk_hide_enabled).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
+                        .setTitle(R.string.magisk_hide_enabled)
+                        .setMessage(R.string.disable_magisk_hide)
+                        .setPositiveButton(R.string.disable, (dialog, which) -> {
+                            if (MagiskUtils.unhide(mPackageName)) {
+                                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mainModel.getUserHandle())) {
+                                    cb.setMagiskHide(false);
+                                    refreshDetails();
+                                }
+                            } else {
+                                Toast.makeText(mActivity, R.string.failed_to_disable_magisk_hide,
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show());
             }
             if (hasKeystore) {
                 Chip chip;

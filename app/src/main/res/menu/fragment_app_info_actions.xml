@@ -62,6 +62,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_enable_magisk_hide"
+        android:icon="@drawable/ic_baseline_security_24"
+        android:title="@string/enable_magisk_hide"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_extract_icon"
         android:icon="@drawable/ic_open_in_new_black_24dp"
         android:title="@string/export_icon"

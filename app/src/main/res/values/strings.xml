@@ -839,4 +839,8 @@
     <string name="scaling_factor">Scaling factor</string>
     <string name="refresh_rate">Refresh rate</string>
     <string name="window_size">Window size</string>
+    <string name="disable_magisk_hide">Disable MagiskHide?</string>
+    <string name="failed_to_disable_magisk_hide">Could not disable MagiskHide</string>
+    <string name="enable_magisk_hide">Enable MagiskHide</string>
+    <string name="failed_to_enable_magisk_hide">Could not enable MagiskHide</string>
 </resources>

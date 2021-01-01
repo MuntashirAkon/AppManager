@@ -65,8 +65,9 @@ public class RulesStorageManager implements Closeable {
         PROVIDER,
         RECEIVER,
         SERVICE,
-        APP_OP,
-        PERMISSION,
+        APP_OP,  // int
+        PERMISSION,  // boolean
+        MAGISK_HIDE,  // boolean
         UNKNOWN;
 
         public static final String[] names = new String[values().length];
@@ -78,9 +79,22 @@ public class RulesStorageManager implements Closeable {
     }
 
     public static class Entry {
+        private static final String STUB = "STUB";
+
+        @NonNull
         public String name; // pk
         public Type type;
         public Object extra; // mode, is_applied, is_granted
+
+        public Entry() {
+            this.name = STUB;
+        }
+
+        public Entry(@NonNull String name, Type type, Object extra) {
+            this.name = name;
+            this.type = type;
+            this.extra = extra;
+        }
 
         @NonNull
         @Override
@@ -196,26 +210,29 @@ public class RulesStorageManager implements Closeable {
     }
 
     protected void setComponent(String name, Type componentType, @ComponentStatus String componentStatus) {
-        Entry entry = new Entry();
-        entry.name = name;
-        entry.type = componentType;
-        entry.extra = componentStatus;
-        addEntry(entry);
+        addEntry(new Entry(name, componentType, componentStatus));
     }
 
     public void setAppOp(String name, @AppOpsManager.Mode int mode) {
-        Entry entry = new Entry();
-        entry.name = name;
-        entry.type = Type.APP_OP;
-        entry.extra = mode;
-        addEntry(entry);
+        addEntry(new Entry(name, Type.APP_OP, mode));
     }
 
     public void setPermission(String name, Boolean isGranted) {
+        addEntry(new Entry(name, Type.PERMISSION, isGranted));
+    }
+
+    public void setMagiskHide(Boolean isHide) {
         Entry entry = new Entry();
-        entry.name = name;
-        entry.type = Type.PERMISSION;
-        entry.extra = isGranted;
+        entry.type = Type.MAGISK_HIDE;
+        entry.extra = isHide;
+        addEntry(entry);
+    }
+
+        Entry entry = new Entry();
+        addEntry(entry);
+    }
+
+        Entry entry = new Entry();
         addEntry(entry);
     }
 
