@@ -800,4 +800,14 @@
     <string name="backup_data_description">Veri klasörlerini yedekleyin. Seçilirse, dahili veri klasörleri öntanımlı olarak yedeklenecektir.</string>
     <string name="backup_apk_only_description">Kaynak dizinden yalnızca APK dosyalarını yedekleyin. Bunun çalışması için <b>kaynak</b> seçilmelidir.</string>
     <string name="backup_source_description">Tüm kaynak dizini yedekleyin.</string>
+    <string name="window_size">Pencere boyutu</string>
+    <string name="refresh_rate">Yenileme hızı</string>
+    <string name="scaling_factor">Ölçekleme katsayısı</string>
+    <string name="size">Boyut</string>
+    <string name="density">Yoğunluk</string>
+    <string name="screen">Ekran</string>
+    <string name="hardware">Donanım</string>
+    <string name="permissive">İzin veren</string>
+    <string name="enforcing">Zorunlu</string>
+    <string name="selinux">SELinux</string>
 </resources>
