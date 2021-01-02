@@ -1,6 +1,5 @@
 package android.content.pm;
 
-import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.nio.charset.StandardCharsets;
@@ -31,13 +30,6 @@ public class VerifierDeviceIdentity implements Parcelable {
      * @param identity device identity in a 64-bit integer.
      */
     public VerifierDeviceIdentity(long identity) {
-        mIdentity = identity;
-        mIdentityString = encodeBase32(identity);
-    }
-
-    private VerifierDeviceIdentity(Parcel source) {
-        final long identity = source.readLong();
-
         mIdentity = identity;
         mIdentityString = encodeBase32(identity);
     }
@@ -179,25 +171,4 @@ public class VerifierDeviceIdentity implements Parcelable {
         input = deviceIdentity.getBytes(StandardCharsets.US_ASCII);
         return new VerifierDeviceIdentity(decodeBase32(input));
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(mIdentity);
-    }
-
-    public static final Parcelable.Creator<VerifierDeviceIdentity> CREATOR
-            = new Parcelable.Creator<VerifierDeviceIdentity>() {
-        public VerifierDeviceIdentity createFromParcel(Parcel source) {
-            return new VerifierDeviceIdentity(source);
-        }
-
-        public VerifierDeviceIdentity[] newArray(int size) {
-            return new VerifierDeviceIdentity[size];
-        }
-    };
 }

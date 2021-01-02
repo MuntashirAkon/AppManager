@@ -33,36 +33,4 @@ public class KeySet implements Parcelable {
     public IBinder getToken() {
         throw new UnsupportedOperationException();
     }
-
-    public static final Parcelable.Creator<KeySet> CREATOR = new Parcelable.Creator<KeySet>() {
-        /**
-         * Create a KeySet from a Parcel
-         *
-         * @param in The parcel containing the KeySet
-         */
-        public KeySet createFromParcel(Parcel in) {
-            return readFromParcel(in);
-        }
-
-        /**
-         * Create an array of null KeySets
-         */
-        public KeySet[] newArray(int size) {
-            return new KeySet[size];
-        }
-    };
-
-    private static KeySet readFromParcel(Parcel in) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void writeToParcel(Parcel out, int flags) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 }

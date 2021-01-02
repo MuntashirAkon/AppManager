@@ -86,27 +86,4 @@ public class SplitPermissionInfoParcelable implements Parcelable {
     int getTargetSdk() {
         throw new UnsupportedOperationException();
     }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final @NonNull Parcelable.Creator<SplitPermissionInfoParcelable> CREATOR
-            = new Parcelable.Creator<SplitPermissionInfoParcelable>() {
-        @Override
-        public SplitPermissionInfoParcelable[] newArray(int size) {
-            return new SplitPermissionInfoParcelable[size];
-        }
-
-        @Override
-        public SplitPermissionInfoParcelable createFromParcel(Parcel in) {
-            throw new UnsupportedOperationException();
-        }
-    };
 }

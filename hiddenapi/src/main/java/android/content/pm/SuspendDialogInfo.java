@@ -1,12 +1,6 @@
 package android.content.pm;
 
-import android.os.Parcel;
 import android.os.Parcelable;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlSerializer;
-
-import java.io.IOException;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -55,43 +49,9 @@ public final class SuspendDialogInfo implements Parcelable {
         throw new UnsupportedOperationException();
     }
 
-    public void saveToXml(XmlSerializer out) throws IOException {
-        throw new UnsupportedOperationException();
-    }
-
-    public static SuspendDialogInfo restoreFromXml(XmlPullParser in) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int parcelableFlags) {
-        throw new UnsupportedOperationException();
-    }
-
-    private SuspendDialogInfo(Parcel source) {
-        throw new UnsupportedOperationException();
-    }
-
     SuspendDialogInfo(Builder b) {
         throw new UnsupportedOperationException();
     }
-
-    public static final @NonNull Creator<SuspendDialogInfo> CREATOR = new Creator<SuspendDialogInfo>() {
-        @Override
-        public SuspendDialogInfo createFromParcel(Parcel source) {
-            return new SuspendDialogInfo(source);
-        }
-
-        @Override
-        public SuspendDialogInfo[] newArray(int size) {
-            return new SuspendDialogInfo[size];
-        }
-    };
 
     /**
      * Builder to build a {@link SuspendDialogInfo} object.
