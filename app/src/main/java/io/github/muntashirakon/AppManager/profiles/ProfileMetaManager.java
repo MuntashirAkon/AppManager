@@ -166,7 +166,8 @@ public class ProfileMetaManager {
 
     public void readProfile(@Nullable String profileStr) throws JSONException {
         if (TextUtils.isEmpty(profileStr)) throw new JSONException("Empty JSON string");
-        JSONObject profileObj = new JSONObject(profileStr);
+        @SuppressWarnings("ConstantConditions")  // Never null here
+                JSONObject profileObj = new JSONObject(profileStr);
         String profileName = profileObj.getString("name");
         String[] packageNames = JSONUtils.getArray(String.class, profileObj.getJSONArray("packages"));
         profile = new Profile(profileName, packageNames);
@@ -270,7 +271,8 @@ public class ProfileMetaManager {
 
     @NonNull
     public List<String> getLocalisedSummaryOrComment(Context context) {
-        if (profile.comment != null) return Collections.singletonList(profile.comment);
+        if (profile != null && profile.comment != null)
+            return Collections.singletonList(profile.comment);
 
         List<String> arrayList = new ArrayList<>();
         if (profile == null) return arrayList;
