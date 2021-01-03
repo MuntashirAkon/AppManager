@@ -230,11 +230,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
     public int componentCount() {
         int count = 0;
         for (Entry entry : getAll()) {
-            if ((entry.type.equals(Type.ACTIVITY)
-                    || entry.type.equals(Type.PROVIDER)
-                    || entry.type.equals(Type.RECEIVER)
-                    || entry.type.equals(Type.SERVICE))
-                    && entry.extra != COMPONENT_TO_BE_UNBLOCKED)
+            if (isComponent(entry) && entry.extra != COMPONENT_TO_BE_UNBLOCKED)
                 ++count;
         }
         return count;
@@ -365,25 +361,23 @@ public final class ComponentsBlocker extends RulesStorageManager {
             if (localRulesFile.exists()) //noinspection ResultOfMethodCallIgnored
                 localRulesFile.delete();
             // Enable/disable components
+            List<RulesStorageManager.Entry> allEntries = getAllComponents();
+            Log.d(TAG, "All: " + allEntries.toString());
             if (apply) {
-                // Enable the components that need removal and disable requested providers
-                List<RulesStorageManager.Entry> allEntries = getAllComponents();
-                Log.d(TAG, "All: " + allEntries.toString());
+                // Enable the components that need removal and disable requested components
                 for (RulesStorageManager.Entry entry : allEntries) {
                     if (entry.extra == COMPONENT_TO_BE_UNBLOCKED) {
                         // Enable components that are removed
                         RunnerUtils.enableComponent(packageName, entry.name, userHandle);
                         removeEntry(entry);
-                    } else if (entry.type == Type.PROVIDER) {
-                        // Disable providers
+                    } else if (isComponent(entry)) {
+                        // Disable components
                         RunnerUtils.disableComponent(packageName, entry.name, userHandle);
                         setComponent(entry.name, entry.type, COMPONENT_BLOCKED);
                     }
                 }
             } else {
                 // Enable all, remove to be removed components and set others to be blocked
-                List<RulesStorageManager.Entry> allEntries = getAllComponents();
-                Log.d(TAG, "All: " + allEntries.toString());
                 for (RulesStorageManager.Entry entry : allEntries) {
                     // Enable components if they're disabled by other methods.
                     // IFW rules are already removed above.
@@ -395,6 +389,13 @@ public final class ComponentsBlocker extends RulesStorageManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static boolean isComponent(@NonNull Entry entry) {
+        return entry.type.equals(Type.ACTIVITY)
+                || entry.type.equals(Type.PROVIDER)
+                || entry.type.equals(Type.RECEIVER)
+                || entry.type.equals(Type.SERVICE);
     }
 
     /**
