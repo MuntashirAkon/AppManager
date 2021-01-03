@@ -467,6 +467,15 @@
       "code_signature": "com.adsdk.sdk.",
       "network_signature": "",
       "website": ""
+    },
+    "53": {
+      "id": 53,
+      "name": "AppBrain",
+      "description": "Addition to Exodus",
+      "creation_date": "2021-01-03",
+      "code_signature": "com.hf.appliftsdk.",
+      "network_signature": "",
+      "website": ""
     }
   }
 }

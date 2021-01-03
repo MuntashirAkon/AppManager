@@ -188,6 +188,7 @@
         <item>com.quantcast.measurement.service.</item>
         <item>com.apptimize.</item>
         <item>com.appbrain.</item>
+        <item>com.hf.appliftsdk.</item>
         <item>com.dynatrace.android.app</item>
         <item>com.dynatrace.agent</item>
         <item>com.dynatrace.tools</item>
@@ -733,6 +734,7 @@
         <item>Applause</item>
         <item>Quantcast</item>
         <item>Apptimize</item>
+        <item>AppBrain</item>
         <item>AppBrain</item>
         <item>Dynatrace</item>
         <item>Dynatrace</item>
