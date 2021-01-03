@@ -66,9 +66,6 @@ public final class RunnerUtils {
     public static final String CMD_UNINSTALL_PACKAGE = CMD_PM + " uninstall -k --user %s %s";
     public static final String CMD_UNINSTALL_PACKAGE_WITH_DATA = CMD_PM + " uninstall --user %s %s";
 
-    public static final String CMD_COMPONENT_ENABLE = CMD_PM + " default-state --user %s %s/%s";  // default-state is more safe than enable
-    public static final String CMD_COMPONENT_DISABLE = CMD_PM + " disable --user %s %s/%s";
-
     public static final String CMD_PERMISSION_GRANT = CMD_PM + " grant --user %s %s %s";
     public static final String CMD_PERMISSION_REVOKE = CMD_PM + " revoke --user %s %s %s";
 
@@ -193,16 +190,6 @@ public final class RunnerUtils {
     @NonNull
     public static Runner.Result uninstallPackageWithData(String packageName, int userHandle) {
         return Runner.runCommand(String.format(CMD_UNINSTALL_PACKAGE_WITH_DATA, userHandleToUser(userHandle), packageName));
-    }
-
-    @NonNull
-    public static Runner.Result disableComponent(String packageName, String componentName, int userHandle) {
-        return Runner.runCommand(String.format(CMD_COMPONENT_DISABLE, userHandleToUser(userHandle), packageName, componentName));
-    }
-
-    @NonNull
-    public static Runner.Result enableComponent(String packageName, String componentName, int userHandle) {
-        return Runner.runCommand(String.format(CMD_COMPONENT_ENABLE, userHandleToUser(userHandle), packageName, componentName));
     }
 
     @NonNull

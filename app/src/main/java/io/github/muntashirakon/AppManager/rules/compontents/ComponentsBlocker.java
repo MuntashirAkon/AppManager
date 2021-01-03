@@ -18,8 +18,11 @@
 package io.github.muntashirakon.AppManager.rules.compontents;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.RemoteException;
 import android.text.TextUtils;
 
 import java.io.ByteArrayInputStream;
@@ -37,6 +40,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
@@ -368,12 +372,20 @@ public final class ComponentsBlocker extends RulesStorageManager {
                 for (RulesStorageManager.Entry entry : allEntries) {
                     if (entry.extra == COMPONENT_TO_BE_UNBLOCKED) {
                         // Enable components that are removed
-                        RunnerUtils.enableComponent(packageName, entry.name, userHandle);
-                        removeEntry(entry);
+                        try {
+                            PackageManagerCompat.setComponentEnabledSetting(new ComponentName(packageName, entry.name), PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, 0, userHandle);
+                            removeEntry(entry);
+                        } catch (RemoteException e) {
+                            Log.e(TAG, "Could not enable component: " + packageName + "/" + entry.name);
+                        }
                     } else if (isComponent(entry)) {
                         // Disable components
-                        RunnerUtils.disableComponent(packageName, entry.name, userHandle);
-                        setComponent(entry.name, entry.type, COMPONENT_BLOCKED);
+                        try {
+                            PackageManagerCompat.setComponentEnabledSetting(new ComponentName(packageName, entry.name), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 0, userHandle);
+                            setComponent(entry.name, entry.type, COMPONENT_BLOCKED);
+                        } catch (RemoteException e) {
+                            Log.e(TAG, "Could not disable component: " + packageName + "/" + entry.name);
+                        }
                     }
                 }
             } else {
@@ -381,9 +393,13 @@ public final class ComponentsBlocker extends RulesStorageManager {
                 for (RulesStorageManager.Entry entry : allEntries) {
                     // Enable components if they're disabled by other methods.
                     // IFW rules are already removed above.
-                    RunnerUtils.enableComponent(packageName, entry.name, userHandle);
-                    if (entry.extra == COMPONENT_TO_BE_UNBLOCKED) removeEntry(entry);
-                    else setComponent(entry.name, entry.type, COMPONENT_TO_BE_BLOCKED);
+                    try {
+                        PackageManagerCompat.setComponentEnabledSetting(new ComponentName(packageName, entry.name), PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, 0, userHandle);
+                        if (entry.extra == COMPONENT_TO_BE_UNBLOCKED) removeEntry(entry);
+                        else setComponent(entry.name, entry.type, COMPONENT_TO_BE_BLOCKED);
+                    } catch (RemoteException e) {
+                        Log.e(TAG, "Could not enable component: " + packageName + "/" + entry.name);
+                    }
                 }
             }
         } catch (IOException e) {
