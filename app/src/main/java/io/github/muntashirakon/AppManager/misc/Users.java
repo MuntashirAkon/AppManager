@@ -85,6 +85,7 @@ public final class Users {
 
     @WorkerThread
     @NonNull
+    @UserIdInt
     public static int[] getUsersHandles() {
         getUsers();
         if (userInfoList != null) {
@@ -101,8 +102,10 @@ public final class Users {
         }
     }
 
+    @UserIdInt
     private static Integer currentUserHandle = null;
 
+    @UserIdInt
     public static int getCurrentUserHandle() {
         if (currentUserHandle == null) {
             if (MU_ENABLED) currentUserHandle = android.os.Binder.getCallingUid() / PER_USER_RANGE;
@@ -119,6 +122,7 @@ public final class Users {
         return currentUserHandle;
     }
 
+    @UserIdInt
     public static int getUserHandle(int uid) {
         if (MU_ENABLED && uid >= (PER_USER_RANGE / 10)) return uid / PER_USER_RANGE;
         return uid;

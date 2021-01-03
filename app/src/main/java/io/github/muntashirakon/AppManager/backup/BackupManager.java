@@ -55,6 +55,7 @@ import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.misc.UserIdInt;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
@@ -114,6 +115,7 @@ public class BackupManager {
     @NonNull
     private final BackupFlags requestedFlags;
     @NonNull
+    @UserIdInt
     private final int[] userHandles;
 
     protected BackupManager(@NonNull String packageName, int flags) {

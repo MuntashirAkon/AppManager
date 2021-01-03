@@ -45,6 +45,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
+import io.github.muntashirakon.AppManager.misc.UserIdInt;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -149,7 +150,7 @@ public class BatchOpsManager {
 
     @CheckResult
     @NonNull
-    public Result performOp(@OpType int op, @NonNull List<String> packageNames, int userHandle) {
+    public Result performOp(@OpType int op, @NonNull List<String> packageNames, @UserIdInt int userHandle) {
         List<Integer> userHandles = new ArrayList<>(packageNames.size());
         for (String ignore : packageNames) userHandles.add(userHandle);
         return performOp(op, packageNames, userHandles);
@@ -157,7 +158,7 @@ public class BatchOpsManager {
 
     @CheckResult
     @NonNull
-    public Result performOp(@OpType int op, @NonNull List<String> packageNames, @NonNull List<Integer> userHandles) {
+    public Result performOp(@OpType int op, @NonNull List<String> packageNames, @NonNull @UserIdInt List<Integer> userHandles) {
         this.runner.clear();
         if (packageNames.size() != userHandles.size()) {
             throw new IllegalArgumentException("Package names and user handles do not have the same size");
@@ -450,6 +451,7 @@ public class BatchOpsManager {
         }
 
         @NonNull
+        @UserIdInt
         public ArrayList<Integer> getAssociatedUserHandles() {
             return associatedUserHandles;
         }

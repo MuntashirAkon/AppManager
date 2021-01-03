@@ -22,9 +22,10 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
+import io.github.muntashirakon.AppManager.misc.UserIdInt;
 
 public final class UserPackagePair extends Pair<String, Integer> implements Parcelable {
-    public UserPackagePair(String packageName, int userHandle) {
+    public UserPackagePair(String packageName, @UserIdInt int userHandle) {
         super(packageName, userHandle);
     }
 
@@ -32,6 +33,7 @@ public final class UserPackagePair extends Pair<String, Integer> implements Parc
         return super.first;
     }
 
+    @UserIdInt
     public int getUserHandle() {
         return super.second;
     }

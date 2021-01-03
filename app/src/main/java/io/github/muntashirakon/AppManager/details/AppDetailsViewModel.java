@@ -71,6 +71,7 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.UserIdInt;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -156,7 +157,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         apkFile = ApkFile.getInstance(apkFileKey);
     }
 
-    public void setUserHandle(int userHandle) {
+    public void setUserHandle(@UserIdInt int userHandle) {
         this.userHandle = userHandle;
     }
 
