@@ -59,8 +59,6 @@ public final class RunnerUtils {
     public static final String CMD_CLEAR_CACHE_PREFIX = "rm -rf";
     public static final String CMD_CLEAR_CACHE_DIR_SUFFIX = " %s/cache %s/code_cache";
     public static final String CMD_CLEAR_PACKAGE_DATA = CMD_PM + " clear --user %s %s";
-    public static final String CMD_ENABLE_PACKAGE = CMD_PM + " enable --user %s %s";
-    public static final String CMD_DISABLE_PACKAGE = CMD_PM + " disable-user --user %s %s";
     public static final String CMD_FORCE_STOP_PACKAGE = CMD_AM + " force-stop --user %s %s";
     public static final String CMD_INSTALL_EXISTING_PACKAGE = CMD_PM + " install-existing --user %s %s";
     public static final String CMD_UNINSTALL_PACKAGE = CMD_PM + " uninstall -k --user %s %s";
@@ -158,16 +156,6 @@ public final class RunnerUtils {
     @NonNull
     public static Runner.Result clearPackageData(String packageName, int userHandle) {
         return Runner.runCommand(String.format(CMD_CLEAR_PACKAGE_DATA, userHandleToUser(userHandle), packageName));
-    }
-
-    @NonNull
-    public static Runner.Result enablePackage(String packageName, int userHandle) {
-        return Runner.runCommand(String.format(CMD_ENABLE_PACKAGE, userHandleToUser(userHandle), packageName));
-    }
-
-    @NonNull
-    public static Runner.Result disablePackage(String packageName, int userHandle) {
-        return Runner.runCommand(String.format(CMD_DISABLE_PACKAGE, userHandleToUser(userHandle), packageName));
     }
 
     @NonNull

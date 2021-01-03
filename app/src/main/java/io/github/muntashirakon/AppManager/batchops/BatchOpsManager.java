@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.batchops;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,6 +46,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.UserIdInt;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -52,10 +54,13 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class BatchOpsManager {
+    public static final String TAG = "BatchOpsManager";
+
     // Bundle args
     /**
      * {@link Integer[]} value containing app op values to be used with {@link #OP_SET_APP_OPS}.
@@ -179,11 +184,11 @@ public class BatchOpsManager {
             case OP_DELETE_BACKUP:
                 return opBackupRestore(BackupDialogFragment.MODE_DELETE);
             case OP_DISABLE:
-                return opDisable();
+                return opAppEnabledSetting(PackageManager.COMPONENT_ENABLED_STATE_DISABLED);
             case OP_DISABLE_BACKGROUND:
                 return opDisableBackground();
             case OP_ENABLE:
-                return opEnable();
+                return opAppEnabledSetting(PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
             case OP_EXPORT_RULES:
                 break;  // Done in the main activity
             case OP_FORCE_STOP:
@@ -301,13 +306,18 @@ public class BatchOpsManager {
     }
 
     @NonNull
-    private Result opDisable() {
+    private Result opAppEnabledSetting(@PackageManagerCompat.EnabledState int newState) {
+        List<UserPackagePair> failedPackages = new ArrayList<>();
+        IPackageManager pm = AppManager.getIPackageManager();
         for (UserPackagePair pair : userPackagePairs) {
-            addCommand(pair.getPackageName(), pair.getUserHandle(), String.format(Locale.ROOT,
-                    RunnerUtils.CMD_DISABLE_PACKAGE, RunnerUtils.userHandleToUser(
-                            pair.getUserHandle()), pair.getPackageName()));
+            try {
+                pm.setApplicationEnabledSetting(pair.getPackageName(), newState, 0, pair.getUserHandle(), null);
+            } catch (RemoteException e) {
+                Log.e(TAG, e);
+                failedPackages.add(pair);
+            }
         }
-        return runOpAndFetchResults();
+        return new Result(failedPackages);
     }
 
     @NonNull
@@ -338,16 +348,6 @@ public class BatchOpsManager {
             }
         }
         return new Result(failedPackages);
-    }
-
-    @NonNull
-    private Result opEnable() {
-        for (UserPackagePair pair : userPackagePairs) {
-            addCommand(pair.getPackageName(), pair.getUserHandle(), String.format(Locale.ROOT,
-                    RunnerUtils.CMD_ENABLE_PACKAGE, RunnerUtils.userHandleToUser(pair.getUserHandle()),
-                    pair.getPackageName()));
-        }
-        return runOpAndFetchResults();
     }
 
     @NonNull
@@ -426,11 +426,11 @@ public class BatchOpsManager {
         @NonNull
         private final List<UserPackagePair> userPackagePairs;
 
-        public Result(@NonNull List<UserPackagePair> userPackagePairs) {
-            this.userPackagePairs = userPackagePairs;
+        public Result(@NonNull List<UserPackagePair> failedUserPackagePairs) {
+            this.userPackagePairs = failedUserPackagePairs;
             failedPackages = new ArrayList<>();
             associatedUserHandles = new ArrayList<>();
-            for (UserPackagePair userPackagePair : userPackagePairs) {
+            for (UserPackagePair userPackagePair : failedUserPackagePairs) {
                 failedPackages.add(userPackagePair.getPackageName());
                 associatedUserHandles.add(userPackagePair.getUserHandle());
             }

@@ -35,6 +35,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
+import android.os.RemoteException;
 import android.provider.Settings;
 import android.text.format.Formatter;
 import android.util.Pair;
@@ -100,6 +101,7 @@ import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -108,6 +110,7 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
@@ -507,7 +510,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     List<ApkFile.Entry> apkEntries = apkFile.getEntries();
                     String[] entryNames = new String[countSplits];
                     for (int i = 0; i < countSplits; ++i) {
-                        entryNames[i] = apkEntries.get(i+1).toLocalizedString(mActivity);
+                        entryNames[i] = apkEntries.get(i + 1).toLocalizedString(mActivity);
                     }
                     new MaterialAlertDialogBuilder(mActivity)
                             .setTitle(R.string.splits)
@@ -575,11 +578,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // Set disable
             if (isRootEnabled || isAdbEnabled) {
                 if (mApplicationInfo.enabled) {
-                    addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> executor.submit(() -> {
-                        if (!RunnerUtils.disablePackage(mPackageName, mainModel.getUserHandle()).isSuccessful()) {
-                            runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_disable, mPackageLabel), Toast.LENGTH_LONG).show());
+                    addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> {
+                        try {
+                            PackageManagerCompat.setApplicationEnabledSetting(mPackageName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 0, mainModel.getUserHandle());
+                        } catch (RemoteException e) {
+                            Log.e("AppInfo", e);
+                            Toast.makeText(mActivity, getString(R.string.failed_to_disable, mPackageLabel), Toast.LENGTH_LONG).show();
                         }
-                    }));
+                    });
                 }
             }
             // Set uninstall
@@ -631,11 +637,16 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (isRootEnabled || isAdbEnabled) {
                 if (!mApplicationInfo.enabled) {
                     // Enable app
-                    addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> executor.submit(() -> {
-                        if (!RunnerUtils.enablePackage(mPackageName, mainModel.getUserHandle()).isSuccessful()) {
-                            runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_enable, mPackageLabel), Toast.LENGTH_LONG).show());
+                    addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> {
+                        try {
+                            PackageManagerCompat.setApplicationEnabledSetting(mPackageName,
+                                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, 0,
+                                    mainModel.getUserHandle());
+                        } catch (RemoteException e) {
+                            Log.e("AppInfo", e);
+                            Toast.makeText(mActivity, getString(R.string.failed_to_enable, mPackageLabel), Toast.LENGTH_LONG).show();
                         }
-                    }));
+                    });
                 }
                 // Force stop
                 if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {

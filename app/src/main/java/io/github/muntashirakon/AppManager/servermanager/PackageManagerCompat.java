@@ -39,7 +39,14 @@ public class PackageManagerCompat {
     public static void setComponentEnabledSetting(ComponentName componentName,
                                                   @EnabledState int newState,
                                                   @EnabledFlags int flags,
-                                                  @UserIdInt int userId) throws RemoteException {
+                                                  @UserIdInt int userId)
+            throws RemoteException {
         AppManager.getIPackageManager().setComponentEnabledSetting(componentName, newState, flags, userId);
+    }
+
+    public static void setApplicationEnabledSetting(String packageName, @EnabledState int newState,
+                                                    @EnabledFlags int flags, @UserIdInt int userId)
+            throws RemoteException {
+        AppManager.getIPackageManager().setApplicationEnabledSetting(packageName, newState, flags, userId, null);
     }
 }
