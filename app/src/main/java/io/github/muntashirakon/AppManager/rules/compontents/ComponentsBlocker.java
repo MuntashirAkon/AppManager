@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.rules.compontents;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
 import android.text.TextUtils;
 
 import java.io.ByteArrayInputStream;
@@ -59,7 +60,15 @@ public final class ComponentsBlocker extends RulesStorageManager {
     public static final String TAG = "ComponentBlocker";
 
     private static String LOCAL_RULES_PATH;
-    static final String SYSTEM_RULES_PATH = "/data/system/ifw/";
+    static final String SYSTEM_RULES_PATH;
+
+    static {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+            SYSTEM_RULES_PATH = "/data/secure/system/ifw";
+        } else {
+            SYSTEM_RULES_PATH = "/data/system/ifw/";
+        }
+    }
 
     @SuppressLint("StaticFieldLeak")
     private static ComponentsBlocker INSTANCE;
