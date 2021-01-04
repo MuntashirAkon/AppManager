@@ -498,7 +498,13 @@ public class MainActivity extends BaseActivity implements
         } else if (id == R.id.action_disable) {
             handleBatchOpWithWarning(BatchOpsManager.OP_DISABLE);
         } else if (id == R.id.action_disable_background) {
-            handleBatchOpWithWarning(BatchOpsManager.OP_DISABLE_BACKGROUND);
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.are_you_sure)
+                    .setMessage(R.string.disable_background_run_description)
+                    .setPositiveButton(R.string.yes, (dialog, which) ->
+                            handleBatchOp(BatchOpsManager.OP_DISABLE_BACKGROUND))
+                    .setNegativeButton(R.string.no, null)
+                    .show();
         } else if (id == R.id.action_export_blocking_rules) {
             @SuppressLint("SimpleDateFormat") final String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
             batchExportRules.launch(fileName);

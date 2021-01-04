@@ -840,4 +840,5 @@
     <string name="failed_to_disable_magisk_hide">Could not disable MagiskHide</string>
     <string name="enable_magisk_hide">Enable MagiskHide</string>
     <string name="failed_to_enable_magisk_hide">Could not enable MagiskHide</string>
+    <string name="disable_background_run_description">It sets the mode <i>ignore</i> to the following app ops: <tt>RUN_IN_BACKGROUND</tt> (from Android 7.0) and <tt>RUN_ANY_IN_BACKGROUND</tt> (from Android 9).</string>
 </resources>
