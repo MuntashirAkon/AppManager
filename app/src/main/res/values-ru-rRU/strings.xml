@@ -843,7 +843,7 @@
     <string name="pref_about_device_msg">Основная информация об устройстве, включая версию Android, ЦП, ГП, ОЗУ, аккумулятор и т. д.</string>
     <string name="about_device">Об устройстве</string>
     <string name="uri">URI</string>
-    <string name="magisk_hide_enabled">Скрытие Magisk</string>
+    <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="keystore"/>
     <string name="security">Безопасность</string>
     <string name="patch_level">Обновление системы безопасности Андроид</string>
@@ -875,4 +875,8 @@
     <string name="density">Плотность пикселей</string>
     <string name="screen">Экран</string>
     <string name="set_mode_for_app_ops_dots">Установить режим для операций приложения…</string>
+    <string name="failed_to_enable_magisk_hide">Не удалось включить MagiskHide</string>
+    <string name="enable_magisk_hide">Включить MagiskHide</string>
+    <string name="failed_to_disable_magisk_hide">Не удалось отключить MagiskHide</string>
+    <string name="disable_magisk_hide">Отключить MagiskHide\?</string>
 </resources>
