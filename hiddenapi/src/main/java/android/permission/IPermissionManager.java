@@ -35,7 +35,7 @@ import androidx.annotation.RequiresApi;
  * @see PermissionManager
  */
 @RequiresApi(Build.VERSION_CODES.R)
-interface IPermissionManager extends IInterface {
+public interface IPermissionManager extends IInterface {
     String[] getAppOpPermissionPackages(String permName) throws RemoteException;
 
     ParceledListSlice<PermissionGroupInfo> getAllPermissionGroups(int flags) throws RemoteException;

@@ -34,6 +34,7 @@ import android.content.pm.ServiceInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.DeadSystemException;
+import android.os.RemoteException;
 import android.text.TextUtils;
 
 import com.android.apksig.ApkVerifier;
@@ -72,12 +73,11 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.UserIdInt;
-import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -320,8 +320,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 } catch (Exception e) {
                     return false;
                 }
-            } else if (!RunnerUtils.grantPermission(packageName, permissionName, Users.getCurrentUserHandle()).isSuccessful()) {
-                return false;
+            } else {
+                try {
+                    PackageManagerCompat.grantPermission(packageName, permissionName, userHandle);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                    return false;
+                }
             }
         } else {
             if (appOp != OP_NONE) {
@@ -330,8 +335,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 } catch (Exception e) {
                     return false;
                 }
-            } else if (!RunnerUtils.revokePermission(packageName, permissionName, Users.getCurrentUserHandle()).isSuccessful()) {
-                return false;
+            } else {
+                try {
+                    PackageManagerCompat.revokePermission(packageName, permissionName, userHandle);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                    return false;
+                }
             }
         }
         new Thread(() -> {
@@ -361,11 +371,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
         for (int i = 0; i < usesPermissionItems.size(); ++i) {
             permissionItem = usesPermissionItems.get(i);
             if (permissionItem.isDangerous && permissionItem.isGranted) {
-                if (RunnerUtils.revokePermission(packageName, permissionItem.name, Users.getCurrentUserHandle()).isSuccessful()) {
+                try {
+                    PackageManagerCompat.revokePermission(packageName, permissionItem.name, userHandle);
                     permissionItem.isGranted = false;
                     usesPermissionItems.set(i, permissionItem);
                     revokedPermissions.add(permissionItem.name);
-                } else {
+                } catch (RemoteException e) {
+                    e.printStackTrace();
                     isSuccessful = false;
                     break;
                 }

@@ -35,8 +35,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.reflector.ReflectUtils;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.misc.Users;
-import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 @SuppressLint("DefaultLocale")
@@ -46,10 +45,10 @@ public class AppOpsService {
     public AppOpsService() {
         Context context = AppManager.getContext();
         if (!PermissionUtils.hasAppOpsPermission(context)) {
-            Runner.Result result = RunnerUtils.grantPermission(context.getPackageName(),
-                    PermissionUtils.PERMISSION_GET_APP_OPS_STATS, Users.getCurrentUserHandle());
-            if (!result.isSuccessful()) {
-                throw new RuntimeException("Couldn't connect to appOpsService locally");
+            try {
+                PackageManagerCompat.grantPermission(context.getPackageName(), PermissionUtils.PERMISSION_GET_APP_OPS_STATS, Users.getCurrentUserHandle());
+            } catch (RemoteException e) {
+                throw new RuntimeException("Couldn't connect to appOpsService locally", e);
             }
         }
         // Local/remote services are handled automatically

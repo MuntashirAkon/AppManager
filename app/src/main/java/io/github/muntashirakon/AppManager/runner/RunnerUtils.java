@@ -64,9 +64,6 @@ public final class RunnerUtils {
     public static final String CMD_UNINSTALL_PACKAGE = CMD_PM + " uninstall -k --user %s %s";
     public static final String CMD_UNINSTALL_PACKAGE_WITH_DATA = CMD_PM + " uninstall --user %s %s";
 
-    public static final String CMD_PERMISSION_GRANT = CMD_PM + " grant --user %s %s %s";
-    public static final String CMD_PERMISSION_REVOKE = CMD_PM + " revoke --user %s %s %s";
-
     public static final String CMD_PID_PACKAGE = "pidof %s";
     public static final String CMD_KILL_SIG9 = "kill -9 %s";
 
@@ -178,16 +175,6 @@ public final class RunnerUtils {
     @NonNull
     public static Runner.Result uninstallPackageWithData(String packageName, int userHandle) {
         return Runner.runCommand(String.format(CMD_UNINSTALL_PACKAGE_WITH_DATA, userHandleToUser(userHandle), packageName));
-    }
-
-    @NonNull
-    public static Runner.Result grantPermission(String packageName, String permissionName, int userHandle) {
-        return Runner.runCommand(String.format(CMD_PERMISSION_GRANT, userHandleToUser(userHandle), packageName, permissionName));
-    }
-
-    @NonNull
-    public static Runner.Result revokePermission(String packageName, String permissionName, int userHandle) {
-        return Runner.runCommand(String.format(CMD_PERMISSION_REVOKE, userHandleToUser(userHandle), packageName, permissionName));
     }
 
     public static boolean fileExists(@NonNull String fileName) {

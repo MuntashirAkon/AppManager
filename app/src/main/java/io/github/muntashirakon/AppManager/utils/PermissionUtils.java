@@ -22,12 +22,12 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
+import android.os.RemoteException;
 
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.misc.Users;
-import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public final class PermissionUtils {
@@ -36,9 +36,14 @@ public final class PermissionUtils {
 
     public static boolean hasDumpPermission() {
         Context context = AppManager.getContext();
-        if (hasPermission(context, Manifest.permission.DUMP)) {
-            Runner.Result result = RunnerUtils.grantPermission(context.getPackageName(), Manifest.permission.DUMP, Users.getCurrentUserHandle());
-            return result.isSuccessful();
+        if (!hasPermission(context, Manifest.permission.DUMP)) {
+            try {
+                PackageManagerCompat.grantPermission(context.getPackageName(), Manifest.permission.DUMP, Users.getCurrentUserHandle());
+                return true;
+            } catch (RemoteException e) {
+                e.printStackTrace();
+                return false;
+            }
         } else return false;
     }
 

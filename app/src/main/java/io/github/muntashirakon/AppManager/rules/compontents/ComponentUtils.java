@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.rules.compontents;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.RemoteException;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -41,18 +42,17 @@ import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public final class ComponentUtils {
     public static boolean isTracker(String componentName) {
-        for(String signature: StaticDataset.getTrackerCodeSignatures()) {
+        for (String signature : StaticDataset.getTrackerCodeSignatures()) {
             if (componentName.startsWith(signature) || componentName.contains(signature)) {
                 return true;
             }
@@ -64,7 +64,7 @@ public final class ComponentUtils {
     public static HashMap<String, RulesStorageManager.Type> getTrackerComponentsForPackage(String packageName) {
         HashMap<String, RulesStorageManager.Type> trackers = new HashMap<>();
         HashMap<String, RulesStorageManager.Type> components = PackageUtils.collectComponentClassNames(packageName);
-        for (String componentName: components.keySet()) {
+        for (String componentName : components.keySet()) {
             if (isTracker(componentName))
                 trackers.put(componentName, components.get(componentName));
         }
@@ -75,7 +75,7 @@ public final class ComponentUtils {
     public static HashMap<String, RulesStorageManager.Type> getTrackerComponentsForPackageInfo(PackageInfo packageInfo) {
         HashMap<String, RulesStorageManager.Type> trackers = new HashMap<>();
         HashMap<String, RulesStorageManager.Type> components = PackageUtils.collectComponentClassNames(packageInfo);
-        for (String componentName: components.keySet()) {
+        for (String componentName : components.keySet()) {
             if (isTracker(componentName))
                 trackers.put(componentName, components.get(componentName));
         }
@@ -86,10 +86,10 @@ public final class ComponentUtils {
     public static List<UserPackagePair> blockTrackingComponents(@NonNull Collection<UserPackagePair> userPackagePairs) {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
-        for (UserPackagePair pair: userPackagePairs) {
+        for (UserPackagePair pair : userPackagePairs) {
             components = ComponentUtils.getTrackerComponentsForPackage(pair.getPackageName());
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
-                for (String componentName: components.keySet()) {
+                for (String componentName : components.keySet()) {
                     cb.addComponent(componentName, components.get(componentName));
                 }
                 cb.applyRules(true);
@@ -105,10 +105,10 @@ public final class ComponentUtils {
     public static List<UserPackagePair> unblockTrackingComponents(@NonNull Collection<UserPackagePair> userPackagePairs) {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
-        for (UserPackagePair pair: userPackagePairs) {
+        for (UserPackagePair pair : userPackagePairs) {
             components = getTrackerComponentsForPackage(pair.getPackageName());
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
-                for (String componentName: components.keySet()) {
+                for (String componentName : components.keySet()) {
                     cb.removeComponent(componentName);
                 }
                 cb.applyRules(true);
@@ -124,10 +124,10 @@ public final class ComponentUtils {
     public static List<UserPackagePair> blockFilteredComponents(@NonNull Collection<UserPackagePair> userPackagePairs, String[] signatures) {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
-        for (UserPackagePair pair: userPackagePairs) {
+        for (UserPackagePair pair : userPackagePairs) {
             components = PackageUtils.getFilteredComponents(pair.getPackageName(), signatures);
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
-                for (String componentName: components.keySet()) {
+                for (String componentName : components.keySet()) {
                     cb.addComponent(componentName, components.get(componentName));
                 }
                 cb.applyRules(true);
@@ -143,10 +143,10 @@ public final class ComponentUtils {
     public static List<UserPackagePair> unblockFilteredComponents(@NonNull Collection<UserPackagePair> userPackagePairs, String[] signatures) {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
-        for (UserPackagePair pair: userPackagePairs) {
+        for (UserPackagePair pair : userPackagePairs) {
             components = PackageUtils.getFilteredComponents(pair.getPackageName(), signatures);
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
-                for (String componentName: components.keySet()) {
+                for (String componentName : components.keySet()) {
                     cb.removeComponent(componentName);
                 }
                 cb.applyRules(true);
@@ -174,7 +174,7 @@ public final class ComponentUtils {
         File confDir = RulesStorageManager.getConfDir();
         String[] names = confDir.list((dir, name) -> name.endsWith(".tsv"));
         if (names != null) {
-            for (String name: names) {
+            for (String name : names) {
                 packages.add(IOUtils.trimExtension(name));
             }
         }
@@ -185,7 +185,7 @@ public final class ComponentUtils {
         int uid = PackageUtils.getAppUid(new UserPackagePair(packageName, userHandle));
         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
             // Remove all blocking rules
-            for (RulesStorageManager.Entry entry: cb.getAllComponents()) {
+            for (RulesStorageManager.Entry entry : cb.getAllComponents()) {
                 cb.removeComponent(entry.name);
             }
             cb.applyRules(true);
@@ -193,7 +193,7 @@ public final class ComponentUtils {
             AppOpsService appOpsService = new AppOpsService();
             try {
                 appOpsService.resetAllModes(userHandle, packageName);
-                for (RulesStorageManager.Entry entry: cb.getAll(RulesStorageManager.Type.APP_OP)) {
+                for (RulesStorageManager.Entry entry : cb.getAll(RulesStorageManager.Type.APP_OP)) {
                     try {
                         int op = (int) entry.extra;
                         appOpsService.setMode(op, uid, packageName, AppOpsManager.MODE_DEFAULT);
@@ -206,11 +206,12 @@ public final class ComponentUtils {
                 e.printStackTrace();
             }
             // Grant configured permissions
-            for (RulesStorageManager.Entry entry: cb.getAll(RulesStorageManager.Type.PERMISSION)) {
-                if (RunnerUtils.grantPermission(packageName, entry.name, Users.getCurrentUserHandle()).isSuccessful()) {
+            for (RulesStorageManager.Entry entry : cb.getAll(RulesStorageManager.Type.PERMISSION)) {
+                try {
+                    PackageManagerCompat.grantPermission(packageName, entry.name, userHandle);
                     cb.removeEntry(entry);
-                } else {
-                    Log.e("ComponentUtils", "Cannot revoke permission " + entry.name + " for package " + packageName);
+                } catch (RemoteException e) {
+                    Log.e("ComponentUtils", "Cannot revoke permission " + entry.name + " for package " + packageName, e);
                 }
             }
         }
@@ -222,7 +223,7 @@ public final class ComponentUtils {
         Runner.Result result = Runner.runCommand(Runner.getRootInstance(), String.format("ls %s/%s*.xml", ComponentsBlocker.SYSTEM_RULES_PATH, packageName));
         if (result.isSuccessful()) {
             List<String> ifwRulesFiles = result.getOutputAsList();
-            for (String ifwRulesFile: ifwRulesFiles) {
+            for (String ifwRulesFile : ifwRulesFiles) {
                 // Get file contents
                 result = Runner.runCommand(Runner.getRootInstance(), String.format("cat %s", ifwRulesFile));
                 if (result.isSuccessful()) {
@@ -268,7 +269,8 @@ public final class ComponentUtils {
                             int divider = fullKey.indexOf('/');
                             String pkgName = fullKey.substring(0, divider);
                             String componentName = fullKey.substring(divider + 1);
-                            if (componentName.startsWith(".")) componentName = packageName + componentName;
+                            if (componentName.startsWith("."))
+                                componentName = packageName + componentName;
                             if (pkgName.equals(packageName)) {
                                 rules.put(componentName, componentType);
                             }
@@ -276,21 +278,27 @@ public final class ComponentUtils {
                 }
                 event = parser.nextTag();
             }
-        } catch (XmlPullParserException | IOException ignore) {}
+        } catch (XmlPullParserException | IOException ignore) {
+        }
         return rules;
     }
 
     /**
      * Get component type from TAG_* constants
+     *
      * @param componentName Name of the constant: one of the TAG_*
      * @return One of the {@link RulesStorageManager.Type}
      */
     static RulesStorageManager.Type getComponentType(@NonNull String componentName) {
         switch (componentName) {
-            case TAG_ACTIVITY: return RulesStorageManager.Type.ACTIVITY;
-            case TAG_RECEIVER: return RulesStorageManager.Type.RECEIVER;
-            case TAG_SERVICE: return RulesStorageManager.Type.SERVICE;
-            default: return RulesStorageManager.Type.UNKNOWN;
+            case TAG_ACTIVITY:
+                return RulesStorageManager.Type.ACTIVITY;
+            case TAG_RECEIVER:
+                return RulesStorageManager.Type.RECEIVER;
+            case TAG_SERVICE:
+                return RulesStorageManager.Type.SERVICE;
+            default:
+                return RulesStorageManager.Type.UNKNOWN;
         }
     }
 }

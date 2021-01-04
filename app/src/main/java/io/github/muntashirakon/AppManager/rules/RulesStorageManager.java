@@ -31,7 +31,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.StringTokenizer;
 
 import androidx.annotation.GuardedBy;
@@ -42,7 +41,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
@@ -253,11 +252,15 @@ public class RulesStorageManager implements Closeable {
             // Apply all permissions
             List<Entry> permissions = getAll(Type.PERMISSION);
             for (Entry permission : permissions) {
-                if ((Boolean) permission.extra) {
-                    // grant permission
-                    runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_GRANT, userHandle, packageName, permission.name));
-                } else {
-                    runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_REVOKE, userHandle, packageName, permission.name));
+                try {
+                    if ((Boolean) permission.extra) {
+                        // grant permission
+                        PackageManagerCompat.grantPermission(packageName, permission.name, userHandle);
+                    } else {
+                        PackageManagerCompat.revokePermission(packageName, permission.name, userHandle);
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
                 }
             }
         } else {
@@ -270,7 +273,11 @@ public class RulesStorageManager implements Closeable {
             // Revoke all permissions
             List<Entry> permissions = getAll(Type.PERMISSION);
             for (Entry permission : permissions) {
-                runner.addCommand(String.format(Locale.ROOT, RunnerUtils.CMD_PERMISSION_REVOKE, userHandle, packageName, permission.name));
+                try {
+                    PackageManagerCompat.revokePermission(packageName, permission.name, userHandle);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
         // Run all commands
