@@ -184,7 +184,7 @@ public class BatchOpsManager {
             case OP_DELETE_BACKUP:
                 return opBackupRestore(BackupDialogFragment.MODE_DELETE);
             case OP_DISABLE:
-                return opAppEnabledSetting(PackageManager.COMPONENT_ENABLED_STATE_DISABLED);
+                return opAppEnabledSetting(PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER);
             case OP_DISABLE_BACKGROUND:
                 return opDisableBackground();
             case OP_ENABLE:

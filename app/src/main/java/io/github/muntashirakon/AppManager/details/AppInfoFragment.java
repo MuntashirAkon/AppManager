@@ -579,7 +579,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 if (mApplicationInfo.enabled) {
                     addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> {
                         try {
-                            PackageManagerCompat.setApplicationEnabledSetting(mPackageName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 0, mainModel.getUserHandle());
+                            PackageManagerCompat.setApplicationEnabledSetting(mPackageName,
+                                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER,
+                                    0, mainModel.getUserHandle());
                         } catch (RemoteException e) {
                             Log.e("AppInfo", e);
                             Toast.makeText(mActivity, getString(R.string.failed_to_disable, mPackageLabel), Toast.LENGTH_LONG).show();
