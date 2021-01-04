@@ -810,4 +810,8 @@
     <string name="permissive">İzin veren</string>
     <string name="enforcing">Zorunlu</string>
     <string name="selinux">SELinux</string>
+    <string name="failed_to_enable_magisk_hide">MagiskHide etkinleştirilemedi</string>
+    <string name="enable_magisk_hide">MagiskHide\'ı etkinleştir</string>
+    <string name="failed_to_disable_magisk_hide">MagiskHide devre dışı bırakılamadı</string>
+    <string name="disable_magisk_hide">MagiskHide devre dışı bırakılsın mı\?</string>
 </resources>
