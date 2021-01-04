@@ -68,6 +68,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.misc.HelpActivity;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
 import io.github.muntashirakon.AppManager.profiles.ProfilesActivity;
@@ -77,7 +78,6 @@ import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
-import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -227,8 +227,6 @@ public class MainActivity extends BaseActivity implements
             actionBar.setCustomView(mSearchView, layoutParams);
         }
 
-        // Init storage permission
-
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         RecyclerView recyclerView = findViewById(R.id.item_list);
@@ -358,10 +356,8 @@ public class MainActivity extends BaseActivity implements
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_instructions) {
-            new FullscreenDialog(this)
-                    .setTitle(R.string.instructions)
-                    .setView(R.layout.dialog_instructions)
-                    .show();
+            Intent helpIntent = new Intent(this, HelpActivity.class);
+            startActivity(helpIntent);
         } else if (id == R.id.action_refresh) {
             if (mModel != null) {
                 showProgressIndicator(true);
@@ -580,11 +576,7 @@ public class MainActivity extends BaseActivity implements
 
     private void checkFirstRun() {
         if (Utils.isAppInstalled()) {
-            new MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.instructions)
-                    .setView(R.layout.dialog_instructions)
-                    .setNegativeButton(R.string.ok, null)
-                    .show();
+            // TODO(4/1/21): Do something relevant and useful
             AppPref.set(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
         }
     }
@@ -600,12 +592,10 @@ public class MainActivity extends BaseActivity implements
                                 .linkifyAll()
                                 .setTitle(R.string.changelog)
                                 .setNegativeButton(R.string.ok, null)
-                                .setNeutralButton(R.string.instructions, (dialog, which, isChecked) ->
-                                        new FullscreenDialog(this)
-                                                .setTitle(R.string.instructions)
-                                                .setView(R.layout.dialog_instructions)
-                                                .show())
-                                .show());
+                                .setNeutralButton(R.string.instructions, (dialog, which, isChecked) -> {
+                                    Intent helpIntent = new Intent(this, HelpActivity.class);
+                                    startActivity(helpIntent);
+                                }).show());
             }).start();
             AppPref.set(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
         }

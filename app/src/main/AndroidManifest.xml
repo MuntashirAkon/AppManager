@@ -509,6 +509,7 @@
                 <data android:mimeType="application/vnd.android.package-archive" />
             </intent-filter>
         </activity>
+        <activity android:name=".misc.HelpActivity" />
 
         <service android:name=".apk.installer.PackageInstallerService" />
         <service

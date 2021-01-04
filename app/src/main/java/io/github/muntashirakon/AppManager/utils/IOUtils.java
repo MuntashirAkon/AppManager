@@ -323,6 +323,17 @@ public final class IOUtils {
         }
     }
 
+    public static boolean isAssetDirectory(@NonNull Context context, @NonNull String path) {
+        String[] files;
+        try {
+            files = context.getAssets().list(path);
+        } catch (IOException e) {
+            // Doesn't exist
+            return false;
+        }
+        return files != null && files.length > 0;
+    }
+
     /**
      * Delete a directory by recursively deleting its children
      *

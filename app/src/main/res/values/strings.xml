@@ -17,9 +17,6 @@
   -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">en</string>
-    <string name="instructions_header">[These instructions are outdated and will no longer be
-        updated. Visit the official docs site (https://muntashirakon.github.io/AppManager) to get
-        up-to-date info]</string>
     <string name="uninstall">Uninstall</string>
     <string name="permissions">Uses permissions</string>
     <string name="require_no_permission">No permission required</string>
