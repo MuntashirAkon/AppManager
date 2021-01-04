@@ -812,4 +812,8 @@
     <string name="screen">Tela</string>
     <string name="hardware">Hardware</string>
     <string name="selinux">SELinux</string>
+    <string name="failed_to_enable_magisk_hide">O MagiskHide não pôde ser ativado</string>
+    <string name="enable_magisk_hide">Ativar MagiskHide</string>
+    <string name="failed_to_disable_magisk_hide">O MagiskHide não pôde ser desativado</string>
+    <string name="disable_magisk_hide">Desativar MagiskHide\?</string>
 </resources>
