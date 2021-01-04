@@ -17,15 +17,6 @@
 
 package io.github.muntashirakon.AppManager.servermanager;
 
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.os.RemoteException;
-
-import java.util.List;
-
-import androidx.annotation.NonNull;
-import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.misc.UserIdInt;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.Shell;
 import io.github.muntashirakon.AppManager.server.common.ShellCaller;
@@ -33,20 +24,6 @@ import io.github.muntashirakon.AppManager.server.common.ShellCaller;
 public final class ApiSupporter {
 
     private ApiSupporter() {
-    }
-
-    public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userHandle) throws RemoteException {
-        return AppManager.getIPackageManager().getInstalledPackages(flags, userHandle).getList();
-    }
-
-    @NonNull
-    public static PackageInfo getPackageInfo(String packageName, int flags, @UserIdInt int userHandle) throws RemoteException {
-        return AppManager.getIPackageManager().getPackageInfo(packageName, flags, userHandle);
-    }
-
-    @NonNull
-    public static ApplicationInfo getApplicationInfo(String packageName, int flags, @UserIdInt int userHandle) throws RemoteException {
-        return AppManager.getIPackageManager().getApplicationInfo(packageName, flags, userHandle);
     }
 
     public static Shell.Result runCommand(String command) throws Exception {

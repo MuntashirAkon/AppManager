@@ -54,7 +54,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -219,9 +219,9 @@ public class MainViewModel extends AndroidViewModel {
                     @SuppressLint("WrongConstant")
                     List<PackageInfo> packageInfoList;
                     try {
-                        packageInfoList = ApiSupporter.getInstalledPackages(flagSigningInfo
-                                        | PackageManager.GET_ACTIVITIES | flagDisabledComponents,
-                                userHandle);
+                        packageInfoList = PackageManagerCompat.getInstalledPackages(
+                                flagSigningInfo | PackageManager.GET_ACTIVITIES
+                                        | flagDisabledComponents, userHandle);
                     } catch (Exception e) {
                         Log.e("MVM", "Could not retrieve package info list for user " + userHandle, e);
                         continue;
@@ -518,7 +518,7 @@ public class MainViewModel extends AndroidViewModel {
         for (int userHandle : userHandles) {
             try {
                 @SuppressLint("WrongConstant")
-                PackageInfo packageInfo = ApiSupporter.getPackageInfo(packageName,
+                PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName,
                         PackageManager.GET_META_DATA | flagSigningInfo
                                 | PackageManager.GET_ACTIVITIES | flagDisabledComponents,
                         userHandle);

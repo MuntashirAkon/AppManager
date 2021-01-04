@@ -63,7 +63,7 @@ import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
-import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.FreshFile;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -306,7 +306,7 @@ public class BackupManager {
             this.backupFlags = BackupManager.this.requestedFlags;
             this.tmpBackupPath = this.backupFile.getBackupPath();
             try {
-                packageInfo = ApiSupporter.getPackageInfo(packageName,
+                packageInfo = PackageManagerCompat.getPackageInfo(packageName,
                         PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo
                                 | PackageManager.GET_PERMISSIONS, userHandle);
                 this.applicationInfo = packageInfo.applicationInfo;
@@ -646,7 +646,7 @@ public class BackupManager {
             // Get package info
             packageInfo = null;
             try {
-                packageInfo = ApiSupporter.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
+                packageInfo = PackageManagerCompat.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
             } catch (Exception ignore) {
             }
             isInstalled = packageInfo != null;
@@ -791,7 +791,7 @@ public class BackupManager {
             deleteFiles(allApks);  // Clean up apk files
             // Get package info, again
             try {
-                packageInfo = ApiSupporter.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
+                packageInfo = PackageManagerCompat.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
                 isInstalled = true;
             } catch (Exception e) {
                 throw new BackupException("Apparently the install wasn't complete in the previous section.", e);

@@ -43,7 +43,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -183,7 +183,7 @@ public class ExternalComponentsImporter {
                 JSONObject component = (JSONObject) components.get(i);
                 String packageName = component.getString("packageName");
                 if (!packageInfoList.containsKey(packageName)) {
-                    packageInfoList.put(packageName, ApiSupporter.getPackageInfo(packageName,
+                    packageInfoList.put(packageName, PackageManagerCompat.getPackageInfo(packageName,
                             PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
                                     | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES
                                     | flagDisabledComponents, userHandle));

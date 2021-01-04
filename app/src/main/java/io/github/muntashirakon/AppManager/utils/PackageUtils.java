@@ -67,7 +67,7 @@ import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
-import io.github.muntashirakon.AppManager.servermanager.ApiSupporter;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 
@@ -283,7 +283,7 @@ public final class PackageUtils {
     @NonNull
     public static CharSequence getPackageLabel(@NonNull PackageManager pm, String packageName, int userHandle) {
         try {
-            ApplicationInfo applicationInfo = ApiSupporter.getApplicationInfo(packageName, 0, userHandle);
+            ApplicationInfo applicationInfo = PackageManagerCompat.getApplicationInfo(packageName, 0, userHandle);
             return applicationInfo.loadLabel(pm);
         } catch (Exception ignore) {
         }
@@ -323,7 +323,7 @@ public final class PackageUtils {
 
     public static int getAppUid(@NonNull UserPackagePair pair) {
         try {
-            return ApiSupporter.getApplicationInfo(pair.getPackageName(), 0, pair.getUserHandle()).uid;
+            return PackageManagerCompat.getApplicationInfo(pair.getPackageName(), 0, pair.getUserHandle()).uid;
         } catch (Exception ignore) {
         }
         return -1;
