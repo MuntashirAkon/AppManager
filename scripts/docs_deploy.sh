@@ -3,6 +3,11 @@
 # Abort on errors
 set -e
 
+config_js=docs/.vuepress/config.js
+
+# Set base dir
+sed -i "s|  base: '.*',|  base: '/AppManager/',|" "${config_js}"
+
 # Build
 yarn build
 

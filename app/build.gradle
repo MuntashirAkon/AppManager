@@ -71,20 +71,17 @@ android {
     }
     splits {
         abi {
-            enable gradle.startParameter.taskNames.any { it.contains("Debug") || it.contains("PreRelease") }
             reset()
             include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
             universalApk true
         }
     }
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ["src/main/jniLibs"]
         }
     }
     aaptOptions {
         noCompress 'jar', 'sh'
     }
+    dynamicFeatures = [':feat_docs']
 }
 
 dependencies {
