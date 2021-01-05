@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
@@ -44,6 +45,7 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 /**
  * Block application components: activities, broadcasts, services and providers.
@@ -178,10 +180,12 @@ public final class ComponentsBlocker extends RulesStorageManager {
     }
 
     private final File localRulesFile;
+    private final Set<String> components;
 
     protected ComponentsBlocker(Context context, String packageName, int userHandle) {
         super(context, packageName, userHandle);
         this.localRulesFile = new File(LOCAL_RULES_PATH, packageName + ".xml");
+        this.components = PackageUtils.collectComponentClassNames(packageName, userHandle).keySet();
     }
 
     /**
@@ -344,6 +348,14 @@ public final class ComponentsBlocker extends RulesStorageManager {
      */
     public void applyRules(boolean apply) {
         try {
+            // Validate components
+            List<Entry> allEntries = getAllComponents();
+            for (Entry entry : allEntries) {
+                if (!components.contains(entry.name)) {
+                    // Remove non-existent components
+                    removeEntry(entry);
+                }
+            }
             // Save blocked IFW components
             if (apply) saveDisabledComponents();
             // Apply/Remove IFW rules
@@ -357,7 +369,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
             } else {
                 // Remove rules if remove is called or applied with no rules
                 Runner.runCommand(String.format(Runner.TOYBOX + " test -e '%s%s.xml' && "
-                                + Runner.TOYBOX + " rm -rf %s%s.xml && "
+                                + Runner.TOYBOX + " rm -f %s%s.xml && "
                                 + RunnerUtils.CMD_FORCE_STOP_PACKAGE,
                         SYSTEM_RULES_PATH, packageName, SYSTEM_RULES_PATH, packageName,
                         RunnerUtils.userHandleToUser(userHandle), packageName));
@@ -365,7 +377,6 @@ public final class ComponentsBlocker extends RulesStorageManager {
             if (localRulesFile.exists()) //noinspection ResultOfMethodCallIgnored
                 localRulesFile.delete();
             // Enable/disable components
-            List<RulesStorageManager.Entry> allEntries = getAllComponents();
             Log.d(TAG, "All: " + allEntries.toString());
             if (apply) {
                 // Enable the components that need removal and disable requested components
@@ -437,7 +448,6 @@ public final class ComponentsBlocker extends RulesStorageManager {
             return;
         }
         try {
-            //noinspection ConstantConditions ruleXmlString is never null here
             try (InputStream rulesStream = new ByteArrayInputStream(ruleXmlString.getBytes())) {
                 HashMap<String, Type> components = ComponentUtils.readIFWRules(rulesStream, packageName);
                 for (String componentName : components.keySet()) {

@@ -60,7 +60,7 @@ public class ExternalComponentsImporter {
         Collection<Integer> appOpList;
         AppOpsService appOpsService = new AppOpsService();
         for (UserPackagePair pair : userPackagePairs) {
-            appOpList = PackageUtils.getFilteredAppOps(pair.getPackageName(), appOps, mode);
+            appOpList = PackageUtils.getFilteredAppOps(pair.getPackageName(), pair.getUserHandle(), appOps, mode);
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
                 for (int appOp : appOpList) {
                     try {
@@ -83,7 +83,7 @@ public class ExternalComponentsImporter {
         List<String> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
         for (String packageName : packageNames) {
-            components = PackageUtils.getUserDisabledComponentsForPackage(packageName);
+            components = PackageUtils.getUserDisabledComponentsForPackage(packageName, userHandle);
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
                 for (String componentName : components.keySet()) {
                     cb.addComponent(componentName, components.get(componentName));

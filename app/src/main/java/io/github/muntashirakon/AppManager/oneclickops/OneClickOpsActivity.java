@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
@@ -45,6 +46,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
@@ -132,11 +134,12 @@ public class OneClickOpsActivity extends BaseActivity {
         executor.submit(() -> {
             final List<ItemCount> trackerCounts = new ArrayList<>();
             ItemCount trackerCount;
-            for (ApplicationInfo applicationInfo : getPackageManager().getInstalledApplications(0)) {
+            for (PackageInfo packageInfo : getPackageManager().getInstalledPackages(0)) {
                 if (Thread.currentThread().isInterrupted()) return;
+                ApplicationInfo applicationInfo = packageInfo.applicationInfo;
                 if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
                     continue;
-                trackerCount = ComponentUtils.getTrackerCountForApp(applicationInfo);
+                trackerCount = ComponentUtils.getTrackerCountForApp(packageInfo);
                 if (trackerCount.count > 0) trackerCounts.add(trackerCount);
             }
             if (!trackerCounts.isEmpty()) {
@@ -213,7 +216,7 @@ public class OneClickOpsActivity extends BaseActivity {
                             ItemCount componentCount = new ItemCount();
                             componentCount.packageName = applicationInfo.packageName;
                             componentCount.packageLabel = applicationInfo.loadLabel(getPackageManager()).toString();
-                            componentCount.count = PackageUtils.getFilteredComponents(applicationInfo.packageName, signatures).size();
+                            componentCount.count = PackageUtils.getFilteredComponents(applicationInfo.packageName, Users.getCurrentUserHandle(), signatures).size();
                             if (componentCount.count > 0) componentCounts.add(componentCount);
                         }
                         if (!componentCounts.isEmpty()) {
@@ -312,7 +315,7 @@ public class OneClickOpsActivity extends BaseActivity {
                             ItemCount appOpCount = new ItemCount();
                             appOpCount.packageName = applicationInfo.packageName;
                             appOpCount.packageLabel = applicationInfo.loadLabel(getPackageManager()).toString();
-                            appOpCount.count = PackageUtils.getFilteredAppOps(applicationInfo.packageName, appOpList, mode).size();
+                            appOpCount.count = PackageUtils.getFilteredAppOps(applicationInfo.packageName, Users.getCurrentUserHandle(), appOpList, mode).size();
                             if (appOpCount.count > 0) appOpCounts.add(appOpCount);
                         }
                         if (!appOpCounts.isEmpty()) {

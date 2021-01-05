@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
-import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -29,6 +28,7 @@ import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.os.Build;
 import android.os.DeadObjectException;
+import android.os.RemoteException;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.util.Pair;
@@ -62,7 +62,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.misc.UserIdInt;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -96,19 +96,17 @@ public final class PackageUtils {
     private static final String SERVICE_NOTHING = "(nothing)";
 
     @NonNull
-    public static HashMap<String, RulesStorageManager.Type> collectComponentClassNames(String packageName) {
+    public static HashMap<String, RulesStorageManager.Type> collectComponentClassNames(String packageName, @UserIdInt int userHandle) {
         try {
-            @SuppressLint("WrongConstant")
-            PackageInfo packageInfo = AppManager.getContext().getPackageManager().getPackageInfo(packageName,
+            PackageInfo packageInfo = AppManager.getIPackageManager().getPackageInfo(packageName,
                     PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
                             | PackageManager.GET_PROVIDERS | flagDisabledComponents
                             | PackageManager.GET_URI_PERMISSION_PATTERNS
-                            | PackageManager.GET_SERVICES);
+                            | PackageManager.GET_SERVICES, userHandle);
             return collectComponentClassNames(packageInfo);
-        } catch (PackageManager.NameNotFoundException ignore) {
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | RemoteException e) {
             if (!(e.getCause() instanceof DeadObjectException)) {
-                throw e;
+                throw new RuntimeException(e);
             }
         }
         return new HashMap<>();
@@ -142,9 +140,9 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static HashMap<String, RulesStorageManager.Type> getFilteredComponents(String packageName, String[] signatures) {
+    public static HashMap<String, RulesStorageManager.Type> getFilteredComponents(String packageName, @UserIdInt int userHandle, String[] signatures) {
         HashMap<String, RulesStorageManager.Type> filteredComponents = new HashMap<>();
-        HashMap<String, RulesStorageManager.Type> components = collectComponentClassNames(packageName);
+        HashMap<String, RulesStorageManager.Type> components = collectComponentClassNames(packageName, userHandle);
         for (String componentName : components.keySet()) {
             for (String signature : signatures) {
                 if (componentName.startsWith(signature) || componentName.contains(signature)) {
@@ -156,10 +154,10 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static Collection<Integer> getFilteredAppOps(String packageName, @NonNull int[] appOps, int mode) {
+    public static Collection<Integer> getFilteredAppOps(String packageName, @UserIdInt int userHandle, @NonNull int[] appOps, int mode) {
         List<Integer> filteredAppOps = new ArrayList<>();
         AppOpsService appOpsService = new AppOpsService();
-        int uid = PackageUtils.getAppUid(new UserPackagePair(packageName, Users.getCurrentUserHandle()));
+        int uid = PackageUtils.getAppUid(new UserPackagePair(packageName, userHandle));
         for (int appOp : appOps) {
             try {
                 if (appOpsService.checkOperation(appOp, uid, packageName) != mode) {
@@ -173,8 +171,8 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static HashMap<String, RulesStorageManager.Type> getUserDisabledComponentsForPackage(String packageName) {
-        HashMap<String, RulesStorageManager.Type> componentClasses = collectComponentClassNames(packageName);
+    public static HashMap<String, RulesStorageManager.Type> getUserDisabledComponentsForPackage(String packageName, @UserIdInt int userHandle) {
+        HashMap<String, RulesStorageManager.Type> componentClasses = collectComponentClassNames(packageName, userHandle);
         HashMap<String, RulesStorageManager.Type> disabledComponents = new HashMap<>();
         PackageManager pm = AppManager.getContext().getPackageManager();
         for (String componentName : componentClasses.keySet()) {

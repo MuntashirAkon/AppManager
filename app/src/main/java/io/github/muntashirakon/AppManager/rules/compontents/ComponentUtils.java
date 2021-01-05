@@ -17,7 +17,6 @@
 
 package io.github.muntashirakon.AppManager.rules.compontents;
 
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.RemoteException;
@@ -42,6 +41,7 @@ import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.UserIdInt;
 import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -61,9 +61,20 @@ public final class ComponentUtils {
     }
 
     @NonNull
-    public static HashMap<String, RulesStorageManager.Type> getTrackerComponentsForPackage(String packageName) {
+    public static HashMap<String, RulesStorageManager.Type> getTrackerComponentsForPackage(PackageInfo packageInfo) {
         HashMap<String, RulesStorageManager.Type> trackers = new HashMap<>();
-        HashMap<String, RulesStorageManager.Type> components = PackageUtils.collectComponentClassNames(packageName);
+        HashMap<String, RulesStorageManager.Type> components = PackageUtils.collectComponentClassNames(packageInfo);
+        for (String componentName : components.keySet()) {
+            if (isTracker(componentName))
+                trackers.put(componentName, components.get(componentName));
+        }
+        return trackers;
+    }
+
+    @NonNull
+    public static HashMap<String, RulesStorageManager.Type> getTrackerComponentsForPackage(String packageName, @UserIdInt int userHandle) {
+        HashMap<String, RulesStorageManager.Type> trackers = new HashMap<>();
+        HashMap<String, RulesStorageManager.Type> components = PackageUtils.collectComponentClassNames(packageName, userHandle);
         for (String componentName : components.keySet()) {
             if (isTracker(componentName))
                 trackers.put(componentName, components.get(componentName));
@@ -87,7 +98,7 @@ public final class ComponentUtils {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
         for (UserPackagePair pair : userPackagePairs) {
-            components = ComponentUtils.getTrackerComponentsForPackage(pair.getPackageName());
+            components = ComponentUtils.getTrackerComponentsForPackage(pair.getPackageName(), pair.getUserHandle());
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
                 for (String componentName : components.keySet()) {
                     cb.addComponent(componentName, components.get(componentName));
@@ -106,7 +117,7 @@ public final class ComponentUtils {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
         for (UserPackagePair pair : userPackagePairs) {
-            components = getTrackerComponentsForPackage(pair.getPackageName());
+            components = getTrackerComponentsForPackage(pair.getPackageName(), pair.getUserHandle());
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
                 for (String componentName : components.keySet()) {
                     cb.removeComponent(componentName);
@@ -125,7 +136,7 @@ public final class ComponentUtils {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
         for (UserPackagePair pair : userPackagePairs) {
-            components = PackageUtils.getFilteredComponents(pair.getPackageName(), signatures);
+            components = PackageUtils.getFilteredComponents(pair.getPackageName(), pair.getUserHandle(), signatures);
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
                 for (String componentName : components.keySet()) {
                     cb.addComponent(componentName, components.get(componentName));
@@ -144,7 +155,7 @@ public final class ComponentUtils {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
         HashMap<String, RulesStorageManager.Type> components;
         for (UserPackagePair pair : userPackagePairs) {
-            components = PackageUtils.getFilteredComponents(pair.getPackageName(), signatures);
+            components = PackageUtils.getFilteredComponents(pair.getPackageName(), pair.getUserHandle(), signatures);
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
                 for (String componentName : components.keySet()) {
                     cb.removeComponent(componentName);
@@ -159,12 +170,12 @@ public final class ComponentUtils {
     }
 
     @NonNull
-    public static ItemCount getTrackerCountForApp(@NonNull ApplicationInfo applicationInfo) {
+    public static ItemCount getTrackerCountForApp(@NonNull PackageInfo packageInfo) {
         PackageManager pm = AppManager.getContext().getPackageManager();
         ItemCount trackerCount = new ItemCount();
-        trackerCount.packageName = applicationInfo.packageName;
-        trackerCount.packageLabel = applicationInfo.loadLabel(pm).toString();
-        trackerCount.count = getTrackerComponentsForPackage(applicationInfo.packageName).size();
+        trackerCount.packageName = packageInfo.packageName;
+        trackerCount.packageLabel = packageInfo.applicationInfo.loadLabel(pm).toString();
+        trackerCount.count = getTrackerComponentsForPackage(packageInfo).size();
         return trackerCount;
     }
 
