@@ -36,7 +36,7 @@ public final class PermissionUtils {
 
     public static boolean hasDumpPermission() {
         Context context = AppManager.getContext();
-        if (!hasPermission(context, Manifest.permission.DUMP)) {
+        if (!hasPermission(context, Manifest.permission.DUMP) && AppPref.isRootOrAdbEnabled()) {
             try {
                 PackageManagerCompat.grantPermission(context.getPackageName(), Manifest.permission.DUMP, Users.getCurrentUserHandle());
                 return true;
