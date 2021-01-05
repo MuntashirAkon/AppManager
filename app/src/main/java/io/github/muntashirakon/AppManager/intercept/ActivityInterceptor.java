@@ -894,14 +894,7 @@ public class ActivityInterceptor extends AppCompatActivity {
             holder.actionIcon.setOnClickListener(v -> {
                 int i = INTENT_FLAG_TO_STRING.indexOfValue(flagName);
                 if (i >= 0) {
-                    int flag = INTENT_FLAG_TO_STRING.keyAt(i);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        activity.mutableIntent.removeFlags(flag);
-                    } else {
-                        int flags = activity.mutableIntent.getFlags();
-                        flags &= ~flag;
-                        activity.mutableIntent.setFlags(flags);
-                    }
+                    IntentCompat.removeFlags(activity.mutableIntent, INTENT_FLAG_TO_STRING.keyAt(i));
                     setDefaultList(activity.getFlags());
                     activity.showTextViewIntentData(null);
                 }
@@ -1013,6 +1006,7 @@ public class ActivityInterceptor extends AppCompatActivity {
             holder.actionIcon.setOnClickListener(v -> {
                 Intent intent = new Intent(activity.mutableIntent);
                 intent.setClassName(info.packageName, activityName);
+                IntentCompat.removeFlags(intent, Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                 activity.launcher.launch(intent);
             });
         }
