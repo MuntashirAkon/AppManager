@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.oneclickops;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -57,6 +58,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModeNames;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModes;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
@@ -129,12 +131,17 @@ public class OneClickOpsActivity extends BaseActivity {
         mProgressIndicator.hide();
     }
 
+    @SuppressLint("WrongConstant")
     private void blockTrackers(final boolean systemApps) {
         mProgressIndicator.show();
         executor.submit(() -> {
             final List<ItemCount> trackerCounts = new ArrayList<>();
             ItemCount trackerCount;
-            for (PackageInfo packageInfo : getPackageManager().getInstalledPackages(0)) {
+            for (PackageInfo packageInfo : getPackageManager().getInstalledPackages(
+                    PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
+                    | PackageManager.GET_PROVIDERS | flagDisabledComponents
+                    | PackageManager.GET_URI_PERMISSION_PATTERNS
+                    | PackageManager.GET_SERVICES)) {
                 if (Thread.currentThread().isInterrupted()) return;
                 ApplicationInfo applicationInfo = packageInfo.applicationInfo;
                 if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
