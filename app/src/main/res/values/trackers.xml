@@ -327,6 +327,7 @@
         <item>com.igaworks.adbrix</item>
         <item>com.fsn.cauly</item>
         <item>com.trid.tridad</item>
+        <item>com.cauly.android.ad.</item>
         <item>com.tapdaq.sdk.</item>
         <item>com.vervewireless.advert.</item>
         <item>com.apsalar.sdk.</item>
@@ -563,6 +564,9 @@
         <item>com.jumptap.adtag.</item>
         <item>com.vdopia.client.android.</item>
         <item>mobi.vserv.android.adengine.</item>
+        <item>com.papaya.offer.</item>
+        <item>com.xtify.android.sdk.</item>
+        <item>ru.wapstart.plus1.sdk.</item>
 </string-array>
 <string-array name="tracker_names">
         <item>Teemo</item>
@@ -874,6 +878,7 @@
         <item>Adbrix</item>
         <item>Cauly</item>
         <item>Cauly</item>
+        <item>Cauly</item>
         <item>Tapdaq</item>
         <item>Verve</item>
         <item>Apsalar</item>
@@ -1110,5 +1115,8 @@
         <item>JumpTap (Millennial Media)</item>
         <item>VDopia</item>
         <item>VServ</item>
+        <item>Papaya</item>
+        <item>IBM Mobile Push Notification</item>
+        <item>WapStart.Plus1</item>
     </string-array>
 </resources>

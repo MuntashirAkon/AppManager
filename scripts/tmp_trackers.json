@@ -476,6 +476,42 @@
       "code_signature": "com.hf.appliftsdk.",
       "network_signature": "",
       "website": ""
+    },
+    "54": {
+      "id": 54,
+      "name": "Papaya",
+      "description": "PapayaMobile is an open mobile social network for Android focused on casual gaming and virtual currency.",
+      "creation_date": "2021-01-05",
+      "code_signature": "com.papaya.offer.",
+      "network_signature": "en\\.papayamobile\\.com",
+      "website": "http://en.papayamobile.com"
+    },
+    "55": {
+      "id": 55,
+      "name": "Cauly",
+      "description": "Addition to Exodus",
+      "creation_date": "2021-01-05",
+      "code_signature": "com.cauly.android.ad.",
+      "network_signature": "",
+      "website": ""
+    },
+    "56": {
+      "id": 56,
+      "name": "IBM Mobile Push Notification",
+      "description": "IBM push notifications for Android",
+      "creation_date": "2021-01-05",
+      "code_signature": "com.xtify.android.sdk.",
+      "network_signature": "",
+      "website": ""
+    },
+    "57": {
+      "id": 57,
+      "name": "WapStart.Plus1",
+      "description": "Plus1 is a Russian ad network.",
+      "creation_date": "2021-01-05",
+      "code_signature": "ru.wapstart.plus1.sdk.",
+      "network_signature": "",
+      "website": "https://wapstart.ru/en/"
     }
   }
 }
