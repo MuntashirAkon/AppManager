@@ -75,7 +75,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                 dialogFragment.setArguments(args);
                 activity.getSupportFragmentManager().popBackStackImmediate();
                 dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-                if (getDialog() != null) getDialog().cancel();
+                requireDialog().cancel();
             });
     private final ActivityResultLauncher<String> importRules = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
         RulesTypeSelectionDialogFragment dialogFragment = new RulesTypeSelectionDialogFragment();
@@ -87,7 +87,7 @@ public class ImportExportDialogFragment extends DialogFragment {
         dialogFragment.setArguments(args);
         activity.getSupportFragmentManager().popBackStackImmediate();
         dialogFragment.show(activity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-        if (getDialog() != null) getDialog().cancel();
+        requireDialog().cancel();
     });
     private final ActivityResultLauncher<String> importFromWatt = registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), uris -> {
         Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromWatt(activity.getApplicationContext(), uris, Users.getUsersHandles());
@@ -96,7 +96,7 @@ public class ImportExportDialogFragment extends DialogFragment {
         } else {
             Toast.makeText(getContext(), getResources().getQuantityString(R.plurals.failed_to_import_files, status.second, status.second), Toast.LENGTH_LONG).show();
         }
-        if (getDialog() != null) getDialog().cancel();
+        requireDialog().cancel();
     });
     private final ActivityResultLauncher<String> importFromBlocker = registerForActivityResult(new ActivityResultContracts.GetMultipleContents(), uris -> {
         Pair<Boolean, Integer> status = ExternalComponentsImporter.applyFromBlocker(activity.getApplicationContext(), uris, Users.getUsersHandles());
@@ -105,7 +105,7 @@ public class ImportExportDialogFragment extends DialogFragment {
         } else {
             Toast.makeText(getContext(), getResources().getQuantityString(R.plurals.failed_to_import_files, status.second, status.second), Toast.LENGTH_LONG).show();
         }
-        if (getDialog() != null) getDialog().cancel();
+        requireDialog().cancel();
     });
 
     @SuppressLint("SimpleDateFormat")
@@ -155,7 +155,7 @@ public class ImportExportDialogFragment extends DialogFragment {
                 trackerCount = new ItemCount();
                 trackerCount.packageName = applicationInfo.packageName;
                 trackerCount.packageLabel = applicationInfo.loadLabel(pm).toString();
-                trackerCount.count = PackageUtils.getUserDisabledComponentsForPackage(applicationInfo.packageName).size();
+                trackerCount.count = PackageUtils.getUserDisabledComponentsForPackage(applicationInfo.packageName, userHandle).size();
                 if (trackerCount.count > 0) itemCounts.add(trackerCount);
             }
             if (!itemCounts.isEmpty()) {
