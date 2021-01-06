@@ -389,6 +389,10 @@
         <item quantity="one">%1$d tracker</item>
         <item quantity="other">%1$d trackers</item>
     </plurals>
+    <plurals name="no_of_components">
+        <item quantity="one">%1$d component</item>
+        <item quantity="other">%1$d components</item>
+    </plurals>
     <string name="install">Install</string>
     <string name="update">Update</string>
     <string name="source_code">Source Code</string>

@@ -37,6 +37,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -55,7 +56,6 @@ import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
@@ -63,6 +63,8 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpMode
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModes;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOps;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class OneClickOpsActivity extends BaseActivity {
     private ListItemCreator mItemCreator;
@@ -151,12 +153,15 @@ public class OneClickOpsActivity extends BaseActivity {
             }
             if (!trackerCounts.isEmpty()) {
                 final ArrayList<String> selectedPackages = new ArrayList<>();
-                final String[] trackerPackagesWithTrackerCount = new String[trackerCounts.size()];
+                final CharSequence[] trackerPackagesWithTrackerCount = new CharSequence[trackerCounts.size()];
                 for (int i = 0; i < trackerCounts.size(); ++i) {
                     if (Thread.currentThread().isInterrupted()) return;
                     trackerCount = trackerCounts.get(i);
                     selectedPackages.add(trackerCount.packageName);
-                    trackerPackagesWithTrackerCount[i] = "(" + trackerCount.count + ") " + trackerCount.packageLabel;
+                    trackerPackagesWithTrackerCount[i] = new SpannableStringBuilder(trackerCount.packageLabel)
+                            .append("\n").append(getSecondaryText(this, getSmallerText(
+                                    getResources().getQuantityString(R.plurals.no_of_trackers,
+                                            trackerCount.count, trackerCount.count))));
                 }
                 final String[] trackerPackages = selectedPackages.toArray(new String[0]);
                 final boolean[] checkedItems = new boolean[trackerPackages.length];
@@ -235,12 +240,12 @@ public class OneClickOpsActivity extends BaseActivity {
                                 if (Thread.currentThread().isInterrupted()) return;
                                 componentCount = componentCounts.get(i);
                                 builder = new SpannableStringBuilder(componentCount.packageLabel)
-                                        .append("\n").append(UIUtils.getSmallerText(getResources()
-                                                .getQuantityString(R.plurals.no_of_trackers,
-                                                        componentCount.count, componentCount.count)));
+                                        .append("\n").append(getSecondaryText(this,
+                                                getSmallerText(getResources().getQuantityString(
+                                                        R.plurals.no_of_components, componentCount.count,
+                                                        componentCount.count))));
                                 selectedPackages.add(componentCount.packageName);
                                 packageNamesWithComponentCount.add(builder);
-
                             }
                             if (Thread.currentThread().isInterrupted()) return;
                             runOnUiThread(() -> {
