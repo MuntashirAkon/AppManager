@@ -7,6 +7,11 @@ module.exports = {
       title: 'App Manager Docs',
       description: description,      
     },
+    '/pt-BR/': {
+      lang: 'pt-BR',
+      title: 'Documentos do App Manager',
+      description: description,      
+    },
     '/ru/': {
       lang: 'ru-RU',
       title: 'Документация App Manager',
@@ -103,6 +108,76 @@ module.exports = {
             children: [
               '/tech/AppOps',
               '/tech/rules-specification',
+            ]
+          },
+        ],
+      },
+      '/pt-BR/': {
+        selectText: 'Idiomas',
+        // text for the language dropdown
+        selectText: 'Idiomas',
+        // label for this locale in the language dropdown
+        label: 'Português (Brasil)',
+        // Aria Label for locale in the dropdown
+        ariaLabel: 'Idiomas',
+        // config for Service Worker
+        serviceWorker: {
+          updatePopup: {
+            message: "Novo conteúdo disponível.",
+            buttonText: "Atualizar"
+          }
+        },
+        nav: [
+          {
+            text: 'Instruções',
+            link: '/pt-BR/guide/',
+          },
+          {
+            text: 'Histórico de Atualizações',
+            link: '/pt-BR/changelog',
+          },
+          {
+            text: 'F-Droid',
+            link: 'https://f-droid.org/packages/io.github.muntashirakon.AppManager'
+          },
+          {
+            text: 'Código Fonte',
+            link: 'https://github.com/MuntashirAkon/AppManager'
+          },
+        ],
+        sidebar: [
+          {
+            title: 'Instruções',
+            collapsable: false,
+            children: [
+              '/pt-BR/guide/',
+              '/pt-BR/guide/adb-over-tcp',
+              '/pt-BR/guide/main-page',
+              '/pt-BR/guide/app-details-page',
+              '/pt-BR/guide/one-click-ops-page',
+              '/pt-BR/guide/scanner-page',
+              '/pt-BR/guide/shared-pref-editor-page',
+              '/pt-BR/guide/settings-page',
+              '/pt-BR/guide/backup-restore',
+            ]
+          },
+          {
+            title: 'Perguntas Frequentes',
+            path: '/pt-BR/faq',
+            collapsable: false,
+            children: [
+              '/pt-BR/faq/app-components',
+              '/pt-BR/faq/adb',
+              '/pt-BR/faq/misc',
+            ]
+          },
+          {
+            title: 'Informações Técnicas',
+            path: '/pt-BR/tech',
+            collapsable: false,
+            children: [
+              '/pt-BR/tech/AppOps',
+              '/pt-BR/tech/rules-specification',
             ]
           },
         ],

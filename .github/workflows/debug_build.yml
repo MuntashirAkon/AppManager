@@ -4,7 +4,6 @@ on:
   push:
     branches: [ master ]
     paths-ignore:
-    - 'docs/**'
     - 'fastlane/**'
     - 'scripts/**'
     - 'README.md'
@@ -13,7 +12,6 @@ on:
   pull_request:
     branches: [ master ]
     paths-ignore:
-      - 'docs/**'
       - 'fastlane/**'
       - 'scripts/**'
       - 'README.md'
