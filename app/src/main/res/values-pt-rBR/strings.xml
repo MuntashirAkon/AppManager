@@ -201,7 +201,7 @@
     <string name="pref_global_blocking_enabled">Bloqueio global de componentes</string>
     <string name="pref_global_blocking_enabled_msg">Permite bloquear qualquer componente de qualquer aplicativo sem ligar explicitamente o bloqueio para o aplicativo.</string>
     <string name="pref_usage_access_enabled">Acesso ao uso</string>
-    <string name="pref_usage_access_enabled_msg">Permite ver as estatísticas de uso do aplicativo e suas informações de dados.</string>
+    <string name="pref_usage_access_enabled_msg">Permite que você veja as estatísticas de uso de seu aplicativo e informações de dados do aplicativo.</string>
     <string name="app_settings">Configurações</string>
     <string name="only_works_in_root_mode">Funciona apenas no modo root</string>
     <string name="usage_yesterday">Ontem</string>
@@ -228,7 +228,7 @@
         <item quantity="one">%1$d arquivo não pôde ser importado.</item>
         <item quantity="other">%1$d arquivos não puderam ser importados.</item>
     </plurals>
-    <string name="apk_updater">Atualizador de APK</string>
+    <string name="apk_updater">APK Updater</string>
     <string name="store">Loja</string>
     <string name="running_apps">Aplicativos em Execução</string>
     <string name="kill_process">Encerrar</string>
@@ -280,7 +280,7 @@
     <string name="navigation">Navegação</string>
     <string name="pref_export_msg">Exportar regras de bloqueio configuradas no App Manager para o armazenamento externo.</string>
     <string name="pref_import_msg">Importar regras de bloqueio exportadas anteriormente do App Manager.</string>
-    <string name="pref_import_watt_msg">Importar regras de bloqueio do Watt, cada arquivo contendo regras para um único pacote nomeado como packagename.xml etc.</string>
+    <string name="pref_import_watt_msg">Importar regras de bloqueio do Watt, cada arquivo contendo regras para um único pacote nomeado como packagename.xml, etc.</string>
     <string name="pref_import_blocker_msg">Importar regras de bloqueio do Blocker. Cada arquivo contém regras para um único pacote.</string>
     <string name="pref_app_theme">Tema do aplicativo</string>
     <string name="follow_system">Seguir o sistema</string>
@@ -290,7 +290,7 @@
     <string name="select_theme">Tema</string>
     <string name="apply">Aplicar</string>
     <string name="current_theme">Tema atual: %1$s</string>
-    <string name="pref_about_msg">Versão, licenças, créditos, etc do App Manager.</string>
+    <string name="pref_about_msg">Versão, licenças, créditos, etc. do App Manager.</string>
     <string name="version">Versão</string>
     <string name="sort_by_wifi_data">Dados Wi-Fi</string>
     <string name="block_trackers">Bloquear rastreadores</string>
@@ -346,7 +346,7 @@
     <string name="clear_app_cache_description">Limpar o cache de todos os aplicativos</string>
     <string name="no_tracker_found">Nenhum rastreador encontrado</string>
     <string name="failed_packages">Pacotes falhados</string>
-    <string name="input_signatures_description">Insira assinaturas com espaços, p. ex. (com.facebook org.app2 com.app3) etc.</string>
+    <string name="input_signatures_description">Insira assinaturas com espaços, p. ex. (com.facebook org.app2 com.app3), etc.</string>
     <string name="filtered_packages">Pacotes filtrados</string>
     <string name="only_works_in_root_or_adb_mode">Funciona apenas no modo Root ou ADB</string>
     <string name="failed_to_parse_some_numbers">Não foi possível analisar alguns números</string>
@@ -357,7 +357,7 @@
     <string name="failed_to_fetch_package_info_possibly_a_split_apk">Não foi possível obter informações do pacote, possivelmente um APK dividido</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> instalado</string>
     <string name="failed_to_install_package_name"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> não pôde ser instalado</string>
-    <string name="filter">Filtro</string>
+    <string name="filter">Filtrar</string>
     <string name="filter_user_apps">Aplicativos do usuário</string>
     <string name="filter_system_apps">Aplicativos do sistema</string>
     <string name="filter_apps_with_rules">Aplicativos com regras</string>
@@ -460,7 +460,7 @@
     <string name="choose_language">Mudar idioma</string>
     <string name="shared_prefs">Preferências Compartilhadas</string>
     <string name="debuggable">Depurável</string>
-    <string name="requested_large_heap">Grande pilha</string>
+    <string name="requested_large_heap">Grande heap</string>
     <string name="native_library_dir">Diretório Nativo da Biblioteca JNI</string>
     <string name="sdk_flags">Flags</string>
     <string name="obb_size">Obb</string>
@@ -644,7 +644,7 @@
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para a função <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> para o APK base</string>
     <string name="routine_ops">Operações de rotina</string>
-    <string name="input_app_ops_description">Insira nomes e/ou constantes de operações de aplicativo com espaços, por exemplo (WAKE_LOCK 63 72 CAMERA) etc.</string>
+    <string name="input_app_ops_description">Insira nomes e/ou constantes de operações de aplicativo com espaços, por exemplo (WAKE_LOCK 63 72 CAMERA), etc.</string>
     <string name="input_app_ops">Inserir operações de aplicativo</string>
     <string name="packages">pacotes</string>
     <string name="onboard">Todos os</string>
@@ -681,7 +681,7 @@
     <string name="failed_to_duplicate_profile">Não foi possível duplicar o perfil</string>
     <string name="pref_show_users_in_installer">Mostrar usuários no instalador</string>
     <string name="send_selected">Enviar selecionado</string>
-    <string name="input_permissions_description">Insira permissões com espaços, p. ex. (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) etc.</string>
+    <string name="input_permissions_description">Insira permissões com espaços, p. ex. (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION), etc.</string>
     <string name="input_permissions">Inserir permissões</string>
     <string name="enabled">Ativado</string>
     <string name="choose">Escolher</string>
