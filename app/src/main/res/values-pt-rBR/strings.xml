@@ -816,4 +816,9 @@
     <string name="enable_magisk_hide">Ativar MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">O MagiskHide não pôde ser desativado</string>
     <string name="disable_magisk_hide">Desativar MagiskHide\?</string>
+    <string name="disable_background_run_description">Isso define o modo &lt;i&gt;ignore&lt;/i&gt; para as seguintes operações de aplicativo: &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt; (do Android 7.0) e &lt;tt&gt;RUN_ANY_IN_BACKGROUND&lt;/tt&gt; (do Android 9).</string>
+    <plurals name="no_of_components">
+        <item quantity="one">%1$d componente</item>
+        <item quantity="other">%1$d componentes</item>
+    </plurals>
 </resources>
