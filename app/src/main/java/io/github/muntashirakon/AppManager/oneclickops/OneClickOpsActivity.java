@@ -31,21 +31,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.internal.util.TextUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import androidx.annotation.NonNull;
+import androidx.collection.ArraySet;
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.misc.Users;
@@ -54,6 +58,7 @@ import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuild
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -305,11 +310,13 @@ public class OneClickOpsActivity extends BaseActivity {
                             mode = Utils.getIntegerFromString(builder.getAuxiliaryInput(), modeNames, modes);
                             String[] appOpsStr = appOpNameList.toString().split("\\s+");
                             if (appOpsStr.length == 0) return;
-                            appOpList = new int[appOpsStr.length];
-                            for (int i = 0; i < appOpsStr.length; ++i) {
+                            // User can unknowingly insert duplicate values for app ops
+                            Set<Integer> appOpSet = new ArraySet<>(appOpsStr.length);
+                            for (String appOp : appOpsStr) {
                                 if (Thread.currentThread().isInterrupted()) return;
-                                appOpList[i] = Utils.getIntegerFromString(appOpsStr[i], appOpNames, appOps);
+                                appOpSet.add(Utils.getIntegerFromString(appOp, appOpNames, appOps));
                             }
+                            appOpList = ArrayUtils.convertToIntArray(appOpSet);
                         } catch (IllegalArgumentException e) {
                             if (Thread.currentThread().isInterrupted()) return;
                             runOnUiThread(() -> {
@@ -318,27 +325,34 @@ public class OneClickOpsActivity extends BaseActivity {
                             });
                             return;
                         }
-                        final List<ItemCount> appOpCounts = new ArrayList<>();
+                        final List<AppOpCount> appOpCounts = new ArrayList<>();
                         for (ApplicationInfo applicationInfo :
                                 getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA)) {
                             if (Thread.currentThread().isInterrupted()) return;
                             if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
                                 continue;
-                            ItemCount appOpCount = new ItemCount();
+                            AppOpCount appOpCount = new AppOpCount();
                             appOpCount.packageName = applicationInfo.packageName;
                             appOpCount.packageLabel = applicationInfo.loadLabel(getPackageManager()).toString();
-                            appOpCount.count = PackageUtils.getFilteredAppOps(applicationInfo.packageName, Users.getCurrentUserHandle(), appOpList, mode).size();
+                            appOpCount.appOps = PackageUtils.getFilteredAppOps(applicationInfo.packageName, Users.getCurrentUserHandle(), appOpList, mode);
+                            appOpCount.count = appOpCount.appOps.size();
                             if (appOpCount.count > 0) appOpCounts.add(appOpCount);
                         }
                         if (!appOpCounts.isEmpty()) {
-                            ItemCount appOpCount;
+                            AppOpCount appOpCount;
+                            SpannableStringBuilder builder1;
                             final ArrayList<String> selectedPackages = new ArrayList<>();
                             List<CharSequence> packagesWithAppOpCount = new ArrayList<>();
                             for (int i = 0; i < appOpCounts.size(); ++i) {
                                 if (Thread.currentThread().isInterrupted()) return;
                                 appOpCount = appOpCounts.get(i);
+                                builder1 = new SpannableStringBuilder(appOpCount.packageLabel)
+                                        .append("\n").append(getSecondaryText(this,
+                                                getSmallerText("(" + appOpCount.count + ") "
+                                                        + TextUtils.joinSpannable(", ",
+                                                        appOpToNames(appOpCount.appOps)))));
                                 selectedPackages.add(appOpCount.packageName);
-                                packagesWithAppOpCount.add("(" + appOpCount.count + ") " + appOpCount.packageLabel);
+                                packagesWithAppOpCount.add(builder1);
                             }
                             if (Thread.currentThread().isInterrupted()) return;
                             runOnUiThread(() -> {
@@ -397,5 +411,14 @@ public class OneClickOpsActivity extends BaseActivity {
     protected void onDestroy() {
         executor.shutdownNow();
         super.onDestroy();
+    }
+
+    @NonNull
+    private List<String> appOpToNames(@NonNull Collection<Integer> appOps) {
+        List<String> appOpNames = new ArrayList<>(appOps.size());
+        for (int appOp : appOps) {
+            appOpNames.add(AppOpsManager.opToName(appOp));
+        }
+        return appOpNames;
     }
 }
