@@ -477,8 +477,10 @@ class RestoreOp implements Closeable {
                             MagiskUtils.hide(packageName);
                             break;
                         case NOTIFICATION:
-                            notificationManager.setNotificationListenerAccessGrantedForUser(
-                                    new ComponentName(packageName, entry.name), userHandle, true);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                                notificationManager.setNotificationListenerAccessGrantedForUser(
+                                        new ComponentName(packageName, entry.name), userHandle, true);
+                            }
                     }
                 } catch (RemoteException e) {
                     e.printStackTrace();

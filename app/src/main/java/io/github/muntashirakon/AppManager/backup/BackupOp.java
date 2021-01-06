@@ -332,19 +332,21 @@ class BackupOp implements Closeable {
             rules.setMagiskHide(true);
         }
         // Backup allowed notification listeners aka BIND_NOTIFICATION_LISTENER_SERVICE
-        INotificationManager notificationManager = INotificationManager.Stub.asInterface(ProxyBinder.getService(Context.NOTIFICATION_SERVICE));
-        try {
-            List<ComponentName> notificationComponents = notificationManager.getEnabledNotificationListeners(userHandle);
-            List<String> componentsForThisPkg = new ArrayList<>();
-            for (ComponentName componentName : notificationComponents) {
-                if (packageName.equals(componentName.getPackageName())) {
-                    componentsForThisPkg.add(componentName.getClassName());
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
+            INotificationManager notificationManager = INotificationManager.Stub.asInterface(ProxyBinder.getService(Context.NOTIFICATION_SERVICE));
+            try {
+                List<ComponentName> notificationComponents = notificationManager.getEnabledNotificationListeners(userHandle);
+                List<String> componentsForThisPkg = new ArrayList<>();
+                for (ComponentName componentName : notificationComponents) {
+                    if (packageName.equals(componentName.getPackageName())) {
+                        componentsForThisPkg.add(componentName.getClassName());
+                    }
                 }
+                for (String component : componentsForThisPkg) {
+                    rules.setNotificationListener(component, true);
+                }
+            } catch (RemoteException ignore) {
             }
-            for (String component : componentsForThisPkg) {
-                rules.setNotificationListener(component, true);
-            }
-        } catch (RemoteException ignore) {
         }
         // Backup battery optimization
         String targetString = "user," + packageName + "," + applicationInfo.uid;
