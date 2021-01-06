@@ -101,9 +101,15 @@ public class BackupFiles {
             return new PrivilegedFile(getBackupPath(), BackupManager.CHECKSUMS_TXT + CryptoUtils.getExtension(mode));
         }
 
+        @Deprecated
         @NonNull
         public PrivilegedFile getPermsFile(@CryptoUtils.Mode String mode) {
             return new PrivilegedFile(getBackupPath(), BackupManager.PERMS_TSV + CryptoUtils.getExtension(mode));
+        }
+
+        @NonNull
+        public PrivilegedFile getMiscFile(@CryptoUtils.Mode String mode) {
+            return new PrivilegedFile(getBackupPath(), BackupManager.MISC_TSV + CryptoUtils.getExtension(mode));
         }
 
         @NonNull

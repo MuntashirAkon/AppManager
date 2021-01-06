@@ -67,7 +67,7 @@ public final class BackupFlags {
     public static final int BACKUP_EXT_OBB_MEDIA = 1 << 7;
     public static final int BACKUP_ALL_USERS = 1 << 8;
     public static final int BACKUP_MULTIPLE = 1 << 9;
-    public static final int BACKUP_PERMISSIONS = 1 << 10;
+    public static final int BACKUP_EXTRAS = 1 << 10;
 
     public static final int BACKUP_TOTAL = 11;
 
@@ -88,8 +88,8 @@ public final class BackupFlags {
                     put(BACKUP_EXT_OBB_MEDIA, new Pair<>(R.string.backup_obb_media, R.string.backup_obb_media_description));
                     backupFlags.add(BACKUP_EXCLUDE_CACHE);
                     put(BACKUP_EXCLUDE_CACHE, new Pair<>(R.string.exclude_cache, R.string.backup_exclude_cache_description));
-                    backupFlags.add(BACKUP_PERMISSIONS);
-                    put(BACKUP_PERMISSIONS, new Pair<>(R.string.backup_extras, R.string.backup_extras_description));
+                    backupFlags.add(BACKUP_EXTRAS);
+                    put(BACKUP_EXTRAS, new Pair<>(R.string.backup_extras, R.string.backup_extras_description));
                     backupFlags.add(BACKUP_RULES);
                     put(BACKUP_RULES, new Pair<>(R.string.rules, R.string.backup_rules_description));
                     backupFlags.add(BACKUP_MULTIPLE);
@@ -175,8 +175,8 @@ public final class BackupFlags {
         return (flags & BACKUP_RULES) != 0;
     }
 
-    public boolean backupPermissions() {
-        return (flags & BACKUP_PERMISSIONS) != 0;
+    public boolean backupExtras() {
+        return (flags & BACKUP_EXTRAS) != 0;
     }
 
     public boolean excludeCache() {

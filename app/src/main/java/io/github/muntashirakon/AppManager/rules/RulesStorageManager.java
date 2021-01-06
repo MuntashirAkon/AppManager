@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.rules;
 
 import android.content.Context;
+import android.net.NetworkPolicyManager;
 import android.os.RemoteException;
 
 import java.io.BufferedReader;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import androidx.annotation.GuardedBy;
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
@@ -59,6 +61,14 @@ public class RulesStorageManager implements Closeable {
     public static final String COMPONENT_TO_BE_BLOCKED = "false";  // To preserve compatibility
     public static final String COMPONENT_TO_BE_UNBLOCKED = "unblocked";
 
+    @IntDef(flag = true, value = {
+            NetworkPolicyManager.POLICY_NONE,
+            NetworkPolicyManager.POLICY_REJECT_METERED_BACKGROUND,
+            NetworkPolicyManager.POLICY_ALLOW_METERED_BACKGROUND
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface NetPolicy {}
+
     public enum Type {
         ACTIVITY,
         PROVIDER,
@@ -67,6 +77,9 @@ public class RulesStorageManager implements Closeable {
         APP_OP,  // int
         PERMISSION,  // boolean
         MAGISK_HIDE,  // boolean
+        BATTERY_OPT,  // boolean (battery optimization)
+        NET_POLICY,  // whitelist|blacklist|none
+        NOTIFICATION,  // string (component name)
         UNKNOWN;
 
         public static final String[] names = new String[values().length];
@@ -78,7 +91,7 @@ public class RulesStorageManager implements Closeable {
     }
 
     public static class Entry {
-        private static final String STUB = "STUB";
+        public static final String STUB = "STUB";
 
         @NonNull
         public String name; // pk
@@ -122,7 +135,11 @@ public class RulesStorageManager implements Closeable {
         this.packageName = packageName;
         this.userHandle = userHandle;
         this.entries = new ArrayList<>();
-        loadEntries();
+        try {
+            loadEntries(getDesiredFile(), false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setReadOnly() {
@@ -220,10 +237,28 @@ public class RulesStorageManager implements Closeable {
         addEntry(new Entry(name, Type.PERMISSION, isGranted));
     }
 
+    public void setNotificationListener(String name, Boolean isGranted) {
+        addEntry(new Entry(name, Type.NOTIFICATION, isGranted));
+    }
+
     public void setMagiskHide(Boolean isHide) {
         Entry entry = new Entry();
         entry.type = Type.MAGISK_HIDE;
         entry.extra = isHide;
+        addEntry(entry);
+    }
+
+    public void setBatteryOptimization(Boolean willOptimize) {
+        Entry entry = new Entry();
+        entry.type = Type.BATTERY_OPT;
+        entry.extra = willOptimize;
+        addEntry(entry);
+    }
+
+    public void setNetPolicy(@NetPolicy int netPolicy) {
+        Entry entry = new Entry();
+        entry.type = Type.BATTERY_OPT;
+        entry.extra = netPolicy;
         addEntry(entry);
     }
 
@@ -285,13 +320,22 @@ public class RulesStorageManager implements Closeable {
     }
 
     @GuardedBy("entries")
-    private void loadEntries() {
+    protected void loadEntries(File file, boolean isExternal) throws IOException {
         StringTokenizer tokenizer;
         String dataRow;
-        try (BufferedReader TSVFile = new BufferedReader(new FileReader(getDesiredFile()))) {
+        String packageName;
+        try (BufferedReader TSVFile = new BufferedReader(new FileReader(file))) {
             while ((dataRow = TSVFile.readLine()) != null) {
                 tokenizer = new StringTokenizer(dataRow, "\t");
                 Entry entry = new Entry();
+                if (isExternal) {
+                    // Match package name
+                    packageName = tokenizer.nextElement().toString();
+                    if (!this.packageName.equals(packageName)) {
+                        // Skip this line and load the next one
+                        continue;
+                    }
+                }
                 if (tokenizer.hasMoreElements()) entry.name = tokenizer.nextElement().toString();
                 if (tokenizer.hasMoreElements()) {
                     try {
@@ -306,23 +350,30 @@ public class RulesStorageManager implements Closeable {
                     entries.add(entry);
                 }
             }
-        } catch (IOException ignore) {
         }
     }
 
     @GuardedBy("entries")
     public void commit() {
         try {
-            saveEntries();
+            saveEntries(getDesiredFile(), false);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
     @GuardedBy("entries")
-    private void saveEntries() throws IOException {
+    public void commitExternal(File tsvRulesFile) {
+        try {
+            saveEntries(tsvRulesFile, true);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @GuardedBy("entries")
+    protected void saveEntries(File tsvRulesFile, boolean isExternal) throws IOException {
         synchronized (entries) {
-            File tsvRulesFile = getDesiredFile();
             if (entries.size() == 0) {
                 //noinspection ResultOfMethodCallIgnored
                 tsvRulesFile.delete();
@@ -330,6 +381,7 @@ public class RulesStorageManager implements Closeable {
             }
             StringBuilder stringBuilder = new StringBuilder();
             for (Entry entry : entries) {
+                if (isExternal) stringBuilder.append(packageName).append("\t");
                 stringBuilder.append(entry.name).append("\t").append(entry.type.name()).append("\t").
                         append(entry.extra).append("\n");
             }

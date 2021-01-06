@@ -1,10 +1,15 @@
 package io.github.muntashirakon.AppManager.backup;
 
+import android.app.INotificationManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.graphics.Bitmap;
+import android.net.INetworkPolicyManager;
+import android.os.RemoteException;
 
 import com.android.internal.util.ArrayUtils;
 
@@ -27,10 +32,13 @@ import io.github.muntashirakon.AppManager.appops.OpEntry;
 import io.github.muntashirakon.AppManager.appops.PackageOps;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
+import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.rules.PseudoRules;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
@@ -38,6 +46,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
+import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -75,7 +84,7 @@ class BackupOp implements Closeable {
     private final Crypto crypto;
     @NonNull
     private final BackupFiles.Checksum checksum;
-    // TODO(26/12/20): Get IPackageManager instead of PackageManager.
+    // We don't need privileged package manager here
     @NonNull
     private final PackageManager pm = AppManager.getContext().getPackageManager();
 
@@ -146,7 +155,7 @@ class BackupOp implements Closeable {
                 if (metadata.keyStore) backupKeyStore();
             }
             // Backup permissions
-            if (backupFlags.backupPermissions()) backupPermissions();
+            if (backupFlags.backupExtras()) backupExtras();
             // Export rules
             if (metadata.hasRules) backupRules();
         } catch (BackupException e) {
@@ -284,8 +293,10 @@ class BackupOp implements Closeable {
         }
     }
 
-    private void backupPermissions() throws BackupException {
-        File permsFile = backupFile.getPermsFile(CryptoUtils.MODE_NO_ENCRYPTION);
+    private void backupExtras() throws BackupException {
+        PseudoRules rules = new PseudoRules(AppManager.getContext(), packageName, userHandle);
+        File miscFile = backupFile.getMiscFile(CryptoUtils.MODE_NO_ENCRYPTION);
+        // Backup permissions
         @NonNull String[] permissions = ArrayUtils.defeatNullable(packageInfo.requestedPermissions);
         int[] permissionFlags = packageInfo.requestedPermissionsFlags;
         List<OpEntry> opEntries = new ArrayList<>();
@@ -297,38 +308,68 @@ class BackupOp implements Closeable {
         PermissionInfo info;
         int basePermissionType;
         int protectionLevels;
-        try (OutputStream outputStream = new FileOutputStream(permsFile)) {
-            // Backup permissions
-            for (int i = 0; i < permissions.length; ++i) {
-                try {
-                    info = pm.getPermissionInfo(permissions[i], 0);
-                    basePermissionType = PermissionInfoCompat.getProtection(info);
-                    protectionLevels = PermissionInfoCompat.getProtectionFlags(info);
-                    if (basePermissionType != PermissionInfo.PROTECTION_DANGEROUS
-                            && (protectionLevels & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) == 0) {
-                        // Don't include permissions that are neither dangerous nor development
-                        continue;
-                    }
-                    outputStream.write(String.format("%s\t%s\t%s\t%s\n", packageName, permissions[i],
-                            RulesStorageManager.Type.PERMISSION, (permissionFlags[i]
-                                    & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0).getBytes());
-                } catch (PackageManager.NameNotFoundException ignore) {
+        for (int i = 0; i < permissions.length; ++i) {
+            try {
+                info = pm.getPermissionInfo(permissions[i], 0);
+                basePermissionType = PermissionInfoCompat.getProtection(info);
+                protectionLevels = PermissionInfoCompat.getProtectionFlags(info);
+                if (basePermissionType != PermissionInfo.PROTECTION_DANGEROUS
+                        && (protectionLevels & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) == 0) {
+                    // Don't include permissions that are neither dangerous nor development
+                    continue;
+                }
+                rules.setPermission(permissions[i], (permissionFlags[i]
+                        & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0);
+            } catch (PackageManager.NameNotFoundException ignore) {
+            }
+        }
+        // Backup app ops
+        for (OpEntry entry : opEntries) {
+            rules.setAppOp(String.valueOf(entry.getOp()), entry.getMode());
+        }
+        // Backup Magisk status
+        if (MagiskUtils.isHidden(packageName)) {
+            rules.setMagiskHide(true);
+        }
+        // Backup allowed notification listeners aka BIND_NOTIFICATION_LISTENER_SERVICE
+        INotificationManager notificationManager = INotificationManager.Stub.asInterface(ProxyBinder.getService(Context.NOTIFICATION_SERVICE));
+        try {
+            List<ComponentName> notificationComponents = notificationManager.getEnabledNotificationListeners(userHandle);
+            List<String> componentsForThisPkg = new ArrayList<>();
+            for (ComponentName componentName : notificationComponents) {
+                if (packageName.equals(componentName.getPackageName())) {
+                    componentsForThisPkg.add(componentName.getClassName());
                 }
             }
-            // Backup app ops
-            for (OpEntry entry : opEntries) {
-                outputStream.write(String.format("%s\t%s\t%s\t%s\n", packageName, entry.getOp(), RulesStorageManager.Type.APP_OP, entry.getMode()).getBytes());
+            for (String component : componentsForThisPkg) {
+                rules.setNotificationListener(component, true);
             }
-        } catch (IOException e) {
-            throw new BackupException("Error during creating permission file.", e);
+        } catch (RemoteException ignore) {
         }
-        if (!crypto.encrypt(new File[]{permsFile})) {
-            throw new BackupException("Failed to encrypt " + permsFile.getName());
+        // Backup battery optimization
+        String targetString = "user," + packageName + "," + applicationInfo.uid;
+        Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist"});
+        if (result.isSuccessful() && result.getOutput().contains(targetString)) {
+            rules.setBatteryOptimization(false);
+        }
+        // Backup net policy
+        INetworkPolicyManager netPolicy = INetworkPolicyManager.Stub.asInterface(ProxyBinder.getService("netpolicy"));
+        try {
+            int policies = netPolicy.getUidPolicy(applicationInfo.uid);
+            if (policies > 0) {
+                // Store only if there is a policy
+                rules.setNetPolicy(policies);
+            }
+        } catch (RemoteException ignore) {
+        }
+        rules.commitExternal(miscFile);
+        if (!crypto.encrypt(new File[]{miscFile})) {
+            throw new BackupException("Failed to encrypt " + miscFile.getName());
         }
         // Overwrite with the new file
-        permsFile = backupFile.getPermsFile(metadata.crypto);
+        miscFile = backupFile.getMiscFile(metadata.crypto);
         // Store checksum
-        checksum.add(permsFile.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, permsFile));
+        checksum.add(miscFile.getName(), DigestUtils.getHexDigest(metadata.checksumAlgo, miscFile));
     }
 
     private void backupRules() throws BackupException {

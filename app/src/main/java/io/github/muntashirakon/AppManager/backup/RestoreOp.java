@@ -1,9 +1,14 @@
 package io.github.muntashirakon.AppManager.backup;
 
 import android.annotation.SuppressLint;
+import android.app.INotificationManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.pm.PackageInfo;
+import android.net.INetworkPolicyManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.RemoteException;
 import android.util.Pair;
 
 import org.json.JSONException;
@@ -19,12 +24,16 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.pm.PackageInfoCompat;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
+import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
+import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
+import io.github.muntashirakon.AppManager.rules.PseudoRules;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -35,6 +44,7 @@ import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
+import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -157,7 +167,7 @@ class RestoreOp implements Closeable {
                     restoreData();
                     if (metadata.keyStore) restoreKeyStore();
                 }
-                if (requestedFlags.backupPermissions()) restorePermissions();
+                if (requestedFlags.backupExtras()) restoreExtras();
                 if (requestedFlags.backupRules()) restoreRules();
             } catch (BackupException e) {
                 Log.e(TAG, e.getMessage(), e);
@@ -429,11 +439,85 @@ class RestoreOp implements Closeable {
             }
         }
 
-        private void restorePermissions() throws BackupException {
-            // Apply rules
+        private void restoreExtras() throws BackupException {
             if (!isInstalled) {
-                throw new BackupException("Permission restore is requested but the app isn't installed.");
+                throw new BackupException("Misc restore is requested but the app isn't installed.");
             }
+            PseudoRules rules = new PseudoRules(AppManager.getContext(), packageName, userHandle);
+            // Backward compatibility for restoring permissions
+            loadPermissionsFromLegacyFile(rules);
+            loadMiscRules(rules);
+            // Apply rules
+            List<RulesStorageManager.Entry> entries = rules.getAll();
+            AppOpsService appOpsService = new AppOpsService();
+            INotificationManager notificationManager = INotificationManager.Stub.asInterface(ProxyBinder.getService(Context.NOTIFICATION_SERVICE));
+            INetworkPolicyManager netPolicy = INetworkPolicyManager.Stub.asInterface(ProxyBinder.getService("netpolicy"));
+            for (RulesStorageManager.Entry entry : entries) {
+                try {
+                    switch (entry.type) {
+                        case APP_OP:
+                            appOpsService.setMode(Integer.parseInt(entry.name),
+                                    packageInfo.applicationInfo.uid, packageName,
+                                    (int) entry.extra);
+                            break;
+                        case NET_POLICY:
+                            netPolicy.setUidPolicy(packageInfo.applicationInfo.uid, (int) entry.extra);
+                            break;
+                        case PERMISSION:
+                            if ((boolean) entry.extra /* isGranted */) {
+                                PackageManagerCompat.grantPermission(packageName, entry.name, userHandle);
+                            } else {
+                                PackageManagerCompat.revokePermission(packageName, entry.name, userHandle);
+                            }
+                            break;
+                        case BATTERY_OPT:
+                            Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist", "+" + packageName});
+                            break;
+                        case MAGISK_HIDE:
+                            MagiskUtils.hide(packageName);
+                            break;
+                        case NOTIFICATION:
+                            notificationManager.setNotificationListenerAccessGrantedForUser(
+                                    new ComponentName(packageName, entry.name), userHandle, true);
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        private void loadMiscRules(final PseudoRules rules) throws BackupException {
+            File miscFile = backupFile.getMiscFile(metadata.crypto);
+            if (miscFile.exists()) {
+                if (!requestedFlags.skipSignatureCheck()) {
+                    String checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, miscFile);
+                    if (!checksum.equals(this.checksum.get(miscFile.getName()))) {
+                        throw new BackupException("Couldn't verify misc file." +
+                                "\nFile: " + miscFile +
+                                "\nFound: " + checksum +
+                                "\nRequired: " + this.checksum.get(miscFile.getName()));
+                    }
+                }
+                // Decrypt permission file
+                if (!crypto.decrypt(new File[]{miscFile})) {
+                    throw new BackupException("Failed to decrypt " + miscFile.getName());
+                }
+                // Get decrypted file
+                miscFile = backupFile.getMiscFile(CryptoUtils.MODE_NO_ENCRYPTION);
+                decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
+                try {
+                    rules.loadExternalEntries(miscFile);
+                } catch (IOException e) {
+                    throw new BackupException("Failed to load rules from misc.", e);
+                }
+            } // else there are no permissions, just skip
+        }
+
+    /**
+     * @deprecated since v2.5.22
+     */
+    @Deprecated
+        private void loadPermissionsFromLegacyFile(final PseudoRules rules) throws BackupException {
             File permsFile = backupFile.getPermsFile(metadata.crypto);
             if (permsFile.exists()) {
                 if (!requestedFlags.skipSignatureCheck()) {
@@ -452,12 +536,10 @@ class RestoreOp implements Closeable {
                 // Get decrypted file
                 permsFile = backupFile.getPermsFile(CryptoUtils.MODE_NO_ENCRYPTION);
                 decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
-                try (RulesImporter importer = new RulesImporter(Arrays.asList(RulesStorageManager.Type.values()), new int[]{userHandle})) {
-                    importer.addRulesFromUri(Uri.fromFile(permsFile));
-                    importer.setPackagesToImport(Collections.singletonList(packageName));
-                    importer.applyRules(false);
+                try {
+                    rules.loadExternalEntries(permsFile);
                 } catch (IOException e) {
-                    throw new BackupException("Failed to restore permissions.", e);
+                    throw new BackupException("Failed to load permissions.", e);
                 }
             } // else there are no permissions, just skip
         }
