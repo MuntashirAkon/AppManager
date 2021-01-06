@@ -21,6 +21,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.RemoteException;
 import android.text.TextUtils;
 
 import org.json.JSONException;
@@ -40,6 +41,7 @@ import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -84,6 +86,7 @@ public final class MetadataManager {
         @TarUtils.TarType
         public String tarType;  // tar_type
         public boolean keyStore;  // key_store
+        public String installer;  // installer
     }
 
     @NonNull
@@ -171,6 +174,12 @@ public final class MetadataManager {
         this.metadata.userHandle = rootObject.getInt("user_handle");
         this.metadata.tarType = rootObject.getString("tar_type");
         this.metadata.keyStore = rootObject.getBoolean("key_store");
+        try {
+            this.metadata.installer = rootObject.getString("installer");
+        } catch (JSONException ignore) {
+            // Backward compatibility
+            this.metadata.installer = AppManager.getContext().getPackageName();
+        }
     }
 
     private void readCrypto(JSONObject rootObj) throws JSONException {
@@ -214,6 +223,7 @@ public final class MetadataManager {
             rootObject.put("user_handle", metadata.userHandle);
             rootObject.put("tar_type", metadata.tarType);
             rootObject.put("key_store", metadata.keyStore);
+            rootObject.put("installer", metadata.installer);
             fileOutputStream.write(rootObject.toString(4).getBytes());
         }
     }
@@ -269,6 +279,11 @@ public final class MetadataManager {
             }
         }
         metadata.backupTime = 0;
+        try {
+            metadata.installer = PackageManagerCompat.getInstallerPackage(packageInfo.packageName);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         return metadata;
     }
 }

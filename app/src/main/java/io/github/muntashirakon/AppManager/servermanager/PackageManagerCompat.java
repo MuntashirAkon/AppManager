@@ -90,11 +90,11 @@ public final class PackageManagerCompat {
     }
 
     @SuppressWarnings("deprecation")
-    public static void grantPermission(String packageName, String permissionName, int userId)
+    public static void grantPermission(String packageName, String permissionName, @UserIdInt int userId)
             throws RemoteException {
         IPackageManager pm = AppManager.getIPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            IPermissionManager permissionManager = IPermissionManager.Stub.asInterface(ProxyBinder.getService("permissionmgr"));
+            IPermissionManager permissionManager = getPermissionManager();
             permissionManager.grantRuntimePermission(packageName, permissionName, userId);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             pm.grantRuntimePermission(packageName, permissionName, userId);
@@ -104,11 +104,11 @@ public final class PackageManagerCompat {
     }
 
     @SuppressWarnings("deprecation")
-    public static void revokePermission(String packageName, String permissionName, int userId)
+    public static void revokePermission(String packageName, String permissionName, @UserIdInt int userId)
             throws RemoteException {
         IPackageManager pm = AppManager.getIPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            IPermissionManager permissionManager = IPermissionManager.Stub.asInterface(ProxyBinder.getService("permissionmgr"));
+            IPermissionManager permissionManager = getPermissionManager();
             permissionManager.revokeRuntimePermission(packageName, permissionName, userId, null);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             pm.revokeRuntimePermission(packageName, permissionName, userId);
@@ -117,5 +117,37 @@ public final class PackageManagerCompat {
         }
     }
 
+    public static int getPermissionFlags(String permissionName, String packageName, @UserIdInt int userId) throws RemoteException {
+        IPackageManager pm = AppManager.getIPackageManager();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            IPermissionManager permissionManager = getPermissionManager();
+            return permissionManager.getPermissionFlags(packageName, permissionName, userId);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return pm.getPermissionFlags(permissionName, packageName, userId);
+        } else return 0;
+    }
 
+    public static void updatePermissionFlags(String permissionName, String packageName,
+                                             int flagMask, int flagValues,
+                                             boolean checkAdjustPolicyFlagPermission,
+                                             @UserIdInt int userId)
+            throws RemoteException {
+        IPackageManager pm = AppManager.getIPackageManager();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            IPermissionManager permissionManager = getPermissionManager();
+            permissionManager.updatePermissionFlags(permissionName, packageName, flagMask, flagValues, checkAdjustPolicyFlagPermission, userId);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            pm.updatePermissionFlags(permissionName, packageName, flagMask, flagValues, checkAdjustPolicyFlagPermission, userId);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pm.updatePermissionFlags(permissionName, packageName, flagMask, flagValues, userId);
+        }
+    }
+
+    public static String getInstallerPackage(String packageName) throws RemoteException {
+        return AppManager.getIPackageManager().getInstallerPackageName(packageName);
+    }
+
+    private static IPermissionManager getPermissionManager() {
+        return IPermissionManager.Stub.asInterface(ProxyBinder.getService("permissionmgr"));
+    }
 }

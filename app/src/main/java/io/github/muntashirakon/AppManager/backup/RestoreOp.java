@@ -266,7 +266,7 @@ class RestoreOp implements Closeable {
                 throw new BackupException("Failed to extract the apk file(s).");
             }
             // A normal update will do it now
-            PackageInstallerCompat packageInstaller = PackageInstallerCompat.getInstance(userHandle);
+            PackageInstallerCompat packageInstaller = PackageInstallerCompat.getNewInstance(userHandle, metadata.installer);
             if (!packageInstaller.install(allApks, packageName)) {
                 deleteFiles(allApks);
                 throw new BackupException("A (re)install was necessary but couldn't perform it.");

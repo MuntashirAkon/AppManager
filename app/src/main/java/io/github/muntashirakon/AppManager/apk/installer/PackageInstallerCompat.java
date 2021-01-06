@@ -59,7 +59,7 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
 
 @SuppressLint("ShiftFlags")
 public final class PackageInstallerCompat extends AMPackageInstaller {
-    public static final String TAG = "PINR";
+    public static final String TAG = "Installer";
 
     @SuppressLint({"NewApi", "UniqueConstants"})
     @IntDef(flag = true, value = {
@@ -278,9 +278,17 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
     @SuppressLint("StaticFieldLeak")
     private static PackageInstallerCompat INSTANCE;
 
+    @NonNull
     public static PackageInstallerCompat getInstance(int userHandle) {
         if (INSTANCE == null) INSTANCE = new PackageInstallerCompat(userHandle);
         return INSTANCE;
+    }
+
+    @NonNull
+    public static PackageInstallerCompat getNewInstance(int userHandle, @NonNull String installerPackageName) {
+        PackageInstallerCompat packageInstaller = new PackageInstallerCompat(userHandle);
+        packageInstaller.installerPackageName = installerPackageName;
+        return packageInstaller;
     }
 
     private IPackageInstaller packageInstaller;
@@ -289,7 +297,7 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
     private int sessionId = -1;
     private final int userHandle;
     private final boolean allUsers;
-    private final String installerPackageName;
+    private String installerPackageName;
     private final boolean isPrivileged;
 
     private PackageInstallerCompat(int userHandle) {
@@ -302,6 +310,7 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
         } else {
             this.installerPackageName = context.getPackageName();
         }
+        Log.d(TAG, "Installer app: " + installerPackageName);
     }
 
     @Override
