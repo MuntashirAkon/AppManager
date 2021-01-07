@@ -14,8 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">en</string>
     <string name="uninstall">Uninstall</string>
     <string name="permissions">Uses permissions</string>
@@ -86,7 +85,7 @@
     <string name="source_dir">Source Directory</string>
     <string name="data_dir">Data Directory</string>
     <string name="sdk_min">Min</string>
-    <string name="sdk_max">Max</string>
+    <string name="sdk_max">Target</string>
     <string name="sdk_flags">Flags</string>
     <string name="more_info">More Info</string>
     <string name="date_installed">Date Installed</string>
