@@ -816,9 +816,9 @@
     <string name="backup_extras">Додатково</string>
     <string name="backup_exclude_cache_description">Не створювати резервні копії кеш, папок no_cache та no_backup.</string>
     <string name="backup_obb_media_description">Резервне копіювання файлів OBB та папок медіа.</string>
-    <string name="backup_external_data_description">Резервне копіювання зовнішніх папок даних. Для цього потрібно вибрати &lt;b&gt;Дані&lt;/b&gt;.</string>
+    <string name="backup_external_data_description">Резервне копіювання зовнішніх папок даних. Для цього потрібно вибрати <b>Дані</b>.</string>
     <string name="backup_data_description">Резервне копіювання папок даних. Якщо вибрати цей параметр, за замовчуванням буде створено резервні копії внутрішніх папок даних.</string>
-    <string name="backup_apk_only_description">Резервне копіювання лише файлів apk з вихідного каталогу. Для цього слід вибрати &lt;b&gt;Джерело&lt;/b&gt;.</string>
+    <string name="backup_apk_only_description">Резервне копіювання лише файлів apk з вихідного каталогу. Для цього слід вибрати <b>Джерело</b>.</string>
     <string name="backup_source_description">Резервне копіювання всього вихідного каталогу.</string>
     <string name="security">Безпека</string>
     <string name="graphics">Графіка</string>

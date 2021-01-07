@@ -52,7 +52,7 @@ if (file_exists($res_dir)) {
 $patterns = [
   '/\&lt\;xliff\:g xmlns\:xliff\=\\\"urn\:oasis\:names\:tc\:xliff\:document\:1\.2\\\" id\=\\\"([^\"]+)\\\" example\=\\\"([^\"]+)\\\"\&gt\;([^\&]+)\&lt\;\/xliff\:g\&gt\;/',
   '/\&lt\;a href\=\\\"([^\"]+)\\\"\&gt\;([^\&]+)\&lt\;\/a\&gt\;/',
-  '/\&lt\;(\w+)\&gt\;(.*)\&lt\;\/(\w+)\&gt\;/'
+  '/\&lt\;(\w+)\&gt\;([^\&]+)\&lt\;\/(\w+)\&gt\;/',
 ];
 $replacements = [
   '<xliff:g id="$1" example="$2">$3</xliff:g>',

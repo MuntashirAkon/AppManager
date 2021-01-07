@@ -646,7 +646,7 @@
     <string name="in_progress">प्रगति पर है</string>
     <string name="conversion_failed">बदलाव करने में त्रुटि हुई।</string>
     <string name="select_apk">Apk चुनें</string>
-    <string name="backup_apk_only_description">डेटा डायरेक्टरी से केवल एपीके फ़ाइलों का बैकअप करें। इसके काम करने के लिए &lt;b&gt; स्रोत &lt;/b&gt; चुना जाना चाहिए।</string>
+    <string name="backup_apk_only_description">डेटा डायरेक्टरी से केवल एपीके फ़ाइलों का बैकअप करें। इसके काम करने के लिए <b> स्रोत </b> चुना जाना चाहिए।</string>
     <string name="backup_source_description">सोर्स डायरेक्टरी का बैकअप लें।</string>
     <string name="set_mode_for_app_ops_dots">ऐप ऑप्स के लिए मोड सेट करें …</string>
     <string name="security">सिक्योरिटी</string>
@@ -692,8 +692,8 @@
     <string name="keep_data_and_signatures">डेटा और हस्ताक्षर रखें</string>
     <string name="this_action_cannot_be_undone">इस कार्रवाई को पूर्ववत नहीं किया जा सकता ।</string>
     <string name="no_app_ops_permission">ऐप ऑप्स प्रदर्शित करने की अनुमति नहीं</string>
-    <string name="input_keystore_alias_pass_description">उपनाम &lt;b&gt; %1$s &lt;/b&gt; के लिए पासवर्ड डालें। यदि आपका पासवर्ड कीस्टोर पासवर्ड के समान है, तो आप इसे खाली छोड़ सकते हैं।</string>
-    <string name="input_keystore_alias_pass">उपनाम के लिए पासवर्ड &lt;b&gt;%1$s&lt;/b&gt;</string>
+    <string name="input_keystore_alias_pass_description">उपनाम <b> %1$s </b> के लिए पासवर्ड डालें। यदि आपका पासवर्ड कीस्टोर पासवर्ड के समान है, तो आप इसे खाली छोड़ सकते हैं।</string>
+    <string name="input_keystore_alias_pass">उपनाम के लिए पासवर्ड <b>%1$s</b></string>
     <string name="input_keystore_pass_msg">कीस्टोर पासवर्ड प्रदान करने के लिए यहां टैप करें</string>
     <string name="input_keystore_pass_description">ऐप मैनेजर कीस्टोर पासवर्ड डालें। यदि आप इसे पहली बार देख रहे हैं, तो कृपया पासवर्ड उत्पन्न करने के लिए पासवर्ड जनरेटर का उपयोग करें और इसे यहां डालने से पहले सुरक्षित स्थान पर सहेजें।</string>
     <string name="input_keystore_pass">कीस्टोर पासवर्ड डालें</string>
