@@ -19,7 +19,7 @@
     <string name="instructions_header">[这些说明已过时且不再更新 ，访问官方文档站点（https://muntashirakon.github.io/AppManager）以获取最新信息]</string>
     <string name="uninstall">卸载</string>
     <string name="permissions">使用权限</string>
-    <string name="require_no_permission">无需任何权限</string>
+    <string name="require_no_permission">无需权限</string>
     <string name="activities">活动</string>
     <string name="launch">打开</string>
     <string name="refresh">刷新</string>
@@ -84,8 +84,8 @@
     <string name="paths_and_directories">路径 &amp; 目录</string>
     <string name="source_dir">资源目录</string>
     <string name="data_dir">数据目录</string>
-    <string name="sdk_min">最小值</string>
-    <string name="sdk_max">最大值</string>
+    <string name="sdk_min">Min</string>
+    <string name="sdk_max">Target</string>
     <string name="sdk_flags">标识模版</string>
     <string name="more_info">更多信息</string>
     <string name="date_installed">安装时间</string>
