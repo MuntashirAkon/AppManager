@@ -17,8 +17,6 @@
 
 package io.github.muntashirakon.AppManager.appops.reflector;
 
-import com.android.internal.util.ArrayUtils;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -29,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.appops.OpEntry;
 import io.github.muntashirakon.AppManager.appops.PackageOps;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 @SuppressWarnings("rawtypes")
 public class ReflectUtils {

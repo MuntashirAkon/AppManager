@@ -11,8 +11,6 @@ import android.graphics.Bitmap;
 import android.net.INetworkPolicyManager;
 import android.os.RemoteException;
 
-import com.android.internal.util.ArrayUtils;
-
 import org.json.JSONException;
 
 import java.io.Closeable;
@@ -43,6 +41,7 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
