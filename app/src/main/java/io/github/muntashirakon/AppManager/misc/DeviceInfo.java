@@ -83,6 +83,7 @@ public class DeviceInfo {
                 + "ABIs (32bit): " + Arrays.toString(abis32Bits) + "\n"
                 + "ABIs (64bit): " + Arrays.toString(abis64Bits) + "\n"
                 + "System language: " + Locale.getDefault().toLanguageTag() + "\n"
-                + "In-App Language: " + AppPref.get(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR);
+                + "In-App Language: " + AppPref.get(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR) + "\n"
+                + "Mode: " + AppPref.get(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
     }
 }
