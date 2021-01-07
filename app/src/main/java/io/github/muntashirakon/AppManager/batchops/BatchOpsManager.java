@@ -312,7 +312,7 @@ public class BatchOpsManager {
         for (UserPackagePair pair : userPackagePairs) {
             try {
                 pm.setApplicationEnabledSetting(pair.getPackageName(), newState, 0, pair.getUserHandle(), null);
-            } catch (RemoteException e) {
+            } catch (RemoteException|SecurityException e) {
                 Log.e(TAG, e);
                 failedPackages.add(pair);
             }
@@ -337,8 +337,8 @@ public class BatchOpsManager {
                             pair.getPackageName(), AppOpsManager.MODE_IGNORED);
                 }
                 appliedPackages.add(pair);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+            } catch (RemoteException|SecurityException e) {
+                Log.e(TAG, e);
                 failedPackages.add(pair);
             }
         }

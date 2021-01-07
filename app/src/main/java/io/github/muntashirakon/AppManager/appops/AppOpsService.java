@@ -36,6 +36,7 @@ import io.github.muntashirakon.AppManager.appops.reflector.ReflectUtils;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 @SuppressLint("DefaultLocale")
@@ -44,7 +45,7 @@ public class AppOpsService {
 
     public AppOpsService() {
         Context context = AppManager.getContext();
-        if (!PermissionUtils.hasAppOpsPermission(context)) {
+        if (!PermissionUtils.hasAppOpsPermission(context) || AppPref.isRootOrAdbEnabled()) {
             try {
                 PackageManagerCompat.grantPermission(context.getPackageName(), PermissionUtils.PERMISSION_GET_APP_OPS_STATS, Users.getCurrentUserHandle());
             } catch (RemoteException e) {
