@@ -81,7 +81,7 @@
     <string name="source_dir">Kaynak Dizin</string>
     <string name="data_dir">Veri Dizini</string>
     <string name="sdk_min">En az</string>
-    <string name="sdk_max">En çok</string>
+    <string name="sdk_max">Hedef</string>
     <string name="sdk_flags">İşaretler</string>
     <string name="more_info">Daha Fazla Bilgi</string>
     <string name="date_installed">Kurulum Tarihi</string>
