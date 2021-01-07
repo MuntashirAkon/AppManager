@@ -72,7 +72,7 @@
     <string name="source_dir">Diretório de Origem</string>
     <string name="data_dir">Diretório de Dados</string>
     <string name="sdk_min">Mín</string>
-    <string name="sdk_max">Máx</string>
+    <string name="sdk_max">Alvo</string>
     <string name="more_info">Mais Informações</string>
     <string name="date_installed">Data de Instalação</string>
     <string name="date_updated">Data de Atualização</string>
@@ -464,7 +464,7 @@
     <string name="native_library_dir">Diretório Nativo da Biblioteca JNI</string>
     <string name="sdk_flags">Flags</string>
     <string name="obb_size">Obb</string>
-    <string name="sort_by_target_sdk">SDK de destino</string>
+    <string name="sort_by_target_sdk">SDK alvo</string>
     <string name="manifest">Manifest</string>
     <string name="input_features">Inserir funções</string>
     <string name="shared_user_id">ID de Usuário Compartilhado</string>
