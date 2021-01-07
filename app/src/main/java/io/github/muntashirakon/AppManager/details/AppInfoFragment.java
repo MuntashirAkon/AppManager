@@ -667,7 +667,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .setMessage(R.string.clear_data_message)
                                 .setPositiveButton(R.string.clear, (dialog, which) ->
                                         executor.submit(() -> {
-                                            if (RunnerUtils.clearPackageData(mPackageName, mainModel.getUserHandle()).isSuccessful()) {
+                                            if (PackageManagerCompat.clearApplicationUserData(mPackageName, mainModel.getUserHandle())) {
                                                 runOnUiThread(this::refreshDetails);
                                             }
                                         }))
@@ -677,7 +677,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 if (isRootEnabled) {
                     addToHorizontalLayout(R.string.clear_cache, R.drawable.ic_delete_black_24dp)
                             .setOnClickListener(v -> executor.submit(() -> {
-                                if (RunnerUtils.clearPackageCache(mPackageName, mainModel.getUserHandle()).isSuccessful()) {
+                                if (PackageManagerCompat.deleteApplicationCacheFilesAsUser(mPackageName, mainModel.getUserHandle())) {
                                     runOnUiThread(this::refreshDetails);
                                 }
                             }));

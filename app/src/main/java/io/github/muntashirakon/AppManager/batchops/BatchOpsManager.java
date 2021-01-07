@@ -34,7 +34,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.CheckResult;
 import androidx.annotation.IntDef;
@@ -213,6 +212,10 @@ public class BatchOpsManager {
         return lastResult = new Result(Arrays.asList(userPackagePairs));
     }
 
+    /**
+     * @deprecated since v2.5.22
+     */
+    @Deprecated
     @Nullable
     public static Result getLastResult() {
         return lastResult;
@@ -283,12 +286,9 @@ public class BatchOpsManager {
 
     @NonNull
     private Result opClearCache() {
-        AtomicBoolean isSuccessful = new AtomicBoolean(true);
         List<UserPackagePair> failedPackages = new ArrayList<>();
         for (UserPackagePair pair : userPackagePairs) {
-            Runner.Result result = RunnerUtils.clearPackageCache(pair.getPackageName(), pair.getUserHandle());
-            if (!result.isSuccessful()) {
-                isSuccessful.set(false);
+            if (!PackageManagerCompat.deleteApplicationCacheFilesAsUser(pair.getPackageName(), pair.getUserHandle())) {
                 failedPackages.add(pair);
             }
         }
@@ -297,12 +297,13 @@ public class BatchOpsManager {
 
     @NonNull
     private Result opClearData() {
+        List<UserPackagePair> failedPackages = new ArrayList<>();
         for (UserPackagePair pair : userPackagePairs) {
-            addCommand(pair.getPackageName(), pair.getUserHandle(), String.format(Locale.ROOT,
-                    RunnerUtils.CMD_CLEAR_PACKAGE_DATA, RunnerUtils.userHandleToUser(
-                            pair.getUserHandle()), pair.getPackageName()));
+            if (!PackageManagerCompat.clearApplicationUserData(pair.getPackageName(), pair.getUserHandle())) {
+                failedPackages.add(pair);
+            }
         }
-        return runOpAndFetchResults();
+        return lastResult = new Result(failedPackages);
     }
 
     @NonNull

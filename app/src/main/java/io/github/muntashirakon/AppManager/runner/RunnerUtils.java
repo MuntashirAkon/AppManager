@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.runner;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -39,13 +38,9 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
-import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
-import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
@@ -56,9 +51,6 @@ public final class RunnerUtils {
     public static final String CMD_PM = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? "cmd package" : "pm";
     public static final String CMD_AM = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? "cmd activity" : "am";
 
-    public static final String CMD_CLEAR_CACHE_PREFIX = "rm -rf";
-    public static final String CMD_CLEAR_CACHE_DIR_SUFFIX = " %s/cache %s/code_cache";
-    public static final String CMD_CLEAR_PACKAGE_DATA = CMD_PM + " clear --user %s %s";
     public static final String CMD_FORCE_STOP_PACKAGE = CMD_AM + " force-stop --user %s %s";
     public static final String CMD_INSTALL_EXISTING_PACKAGE = CMD_PM + " install-existing --user %s %s";
     public static final String CMD_UNINSTALL_PACKAGE = CMD_PM + " uninstall -k --user %s %s";
@@ -123,36 +115,6 @@ public final class RunnerUtils {
      */
     public static String escape(final String input) {
         return ESCAPE_XSI.translate(input);
-    }
-
-    @NonNull
-    public static Runner.Result clearPackageCache(String packageName, int userHandle) {
-        try {
-            ApplicationInfo applicationInfo = PackageManagerCompat.getApplicationInfo(packageName, 0, userHandle);
-            StringBuilder command = new StringBuilder(CMD_CLEAR_CACHE_PREFIX);
-            command.append(String.format(CMD_CLEAR_CACHE_DIR_SUFFIX, applicationInfo.dataDir, applicationInfo.dataDir));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !applicationInfo.dataDir.equals(applicationInfo.deviceProtectedDataDir)) {
-                command.append(String.format(CMD_CLEAR_CACHE_DIR_SUFFIX, applicationInfo.deviceProtectedDataDir, applicationInfo.deviceProtectedDataDir));
-            }
-            File[] cacheDirs = AppManager.getInstance().getExternalCacheDirs();
-            int currentUserHandle = Users.getCurrentUserHandle();
-            for (File cacheDir : cacheDirs) {
-                if (cacheDir != null) {
-                    String extCache = cacheDir.getAbsolutePath().replace(BuildConfig.APPLICATION_ID,
-                            packageName).replace(String.valueOf(currentUserHandle), String.valueOf(userHandle));
-                    command.append(" ").append(extCache);
-                }
-            }
-            return Runner.runCommand(command.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new Runner.Result();
-        }
-    }
-
-    @NonNull
-    public static Runner.Result clearPackageData(String packageName, int userHandle) {
-        return Runner.runCommand(String.format(CMD_CLEAR_PACKAGE_DATA, userHandleToUser(userHandle), packageName));
     }
 
     @NonNull

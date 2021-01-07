@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.servermanager;
 
 import android.content.ComponentName;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageInfo;
 import android.os.Build;
@@ -28,6 +29,8 @@ import android.permission.IPermissionManager;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -145,6 +148,50 @@ public final class PackageManagerCompat {
 
     public static String getInstallerPackage(String packageName) throws RemoteException {
         return AppManager.getIPackageManager().getInstallerPackageName(packageName);
+    }
+
+    public static boolean clearApplicationUserData(String packageName,
+                                                   @UserIdInt int userId) {
+        IPackageManager pm = AppManager.getIPackageManager();
+        CountDownLatch dataClearWatcher = new CountDownLatch(1);
+        AtomicBoolean isSuccess = new AtomicBoolean(false);
+        try {
+            pm.clearApplicationUserData(packageName, new IPackageDataObserver.Stub() {
+                @Override
+                public void onRemoveCompleted(String packageName, boolean succeeded) {
+                    dataClearWatcher.countDown();
+                    isSuccess.set(succeeded);
+                }
+            }, userId);
+            dataClearWatcher.await();
+        } catch (RemoteException|SecurityException|InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return isSuccess.get();
+    }
+
+    public static boolean deleteApplicationCacheFilesAsUser(String packageName, int userId) {
+        IPackageManager pm = AppManager.getIPackageManager();
+        CountDownLatch dataClearWatcher = new CountDownLatch(1);
+        AtomicBoolean isSuccess = new AtomicBoolean(false);
+        try {
+            IPackageDataObserver observer = new IPackageDataObserver.Stub() {
+                @Override
+                public void onRemoveCompleted(String packageName, boolean succeeded) {
+                    dataClearWatcher.countDown();
+                    isSuccess.set(succeeded);
+                }
+            };
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                pm.deleteApplicationCacheFilesAsUser(packageName, userId, observer);
+            } else pm.deleteApplicationCacheFiles(packageName, observer);
+            dataClearWatcher.await();
+        } catch (RemoteException|SecurityException|InterruptedException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return isSuccess.get();
     }
 
     private static IPermissionManager getPermissionManager() {
