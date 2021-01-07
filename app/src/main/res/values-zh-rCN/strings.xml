@@ -23,7 +23,7 @@
     <string name="activities">活动</string>
     <string name="launch">打开</string>
     <string name="refresh">刷新</string>
-    <string name="no_activities">无 activities</string>
+    <string name="no_activities">无活动</string>
     <string name="receivers">接收器</string>
     <string name="no_receivers">无接收器</string>
     <string name="providers">提供器</string>
@@ -43,7 +43,7 @@
     <string name="write">写入</string>
     <string name="patterns_allowed">允许的模式</string>
     <string name="declared_permission">权限</string>
-    <string name="shared_libs">共享的libs</string>
+    <string name="shared_libs">共享库</string>
     <string name="group">群组</string>
     <string name="protection_level">保护等级</string>
     <string name="uses_feature">使用特征</string>
@@ -57,7 +57,7 @@
     <string name="configurations">配置</string>
     <string name="no_configurations">无配置</string>
     <string name="input_features">输入特性</string>
-    <string name="manifest">Manifest清单</string>
+    <string name="manifest">Manifest</string>
     <string name="error">错误</string>
     <string name="loading">加载中…</string>
     <!-- &#8230; = ... -->
@@ -770,7 +770,7 @@
     <string name="selinux">SELinux 状态</string>
     <string name="window_size">窗口尺寸</string>
     <string name="refresh_rate">刷新率</string>
-    <string name="scaling_factor">比例因子</string>
+    <string name="scaling_factor">缩放系数</string>
     <string name="size">尺寸</string>
     <string name="density">密度</string>
     <string name="screen">屏幕</string>
