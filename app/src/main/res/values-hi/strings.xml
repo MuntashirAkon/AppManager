@@ -776,4 +776,27 @@
         <item quantity="one">%1$d कंपोनेंट</item>
         <item quantity="other">%1$d</item>
     </plurals>
+    <string name="failed_to_enable_magisk_hide">MagiskHide चालू नहीं हो सका</string>
+    <string name="enable_magisk_hide">MagiskHide चालू</string>
+    <string name="failed_to_disable_magisk_hide">MagiskHide बंद नहीं हो</string>
+    <string name="disable_magisk_hide">MagiskHide बंद करें \?</string>
+    <string name="window_size">विंडो साइज</string>
+    <string name="refresh_rate">रिफ्रेश रेट</string>
+    <string name="scaling_factor">स्केलिंग फैक्टर</string>
+    <string name="density">डेंसिटी</string>
+    <string name="hardware">हार्डवेयर</string>
+    <string name="permissive">पर्मिसिव</string>
+    <string name="enforcing">इंफ़ोरसिंग</string>
+    <string name="selinux">SELinux</string>
+    <string name="patch_level">पैच स्तर</string>
+    <string name="backup_skip_signature_checks_description">बैकअप रिस्टोर करने के लिए उपयोगी है जो चेकसम सत्यापन विफलता के कारण विफल हो रहे हैं या पहले से बने बैकअप की तुलना में एक अलग एपीके हस्ताक्षर है।</string>
+    <string name="backup_all_users_description">सभी यूज़र्स के लिए बैकअप करें, न कि केवल वर्तमान ।</string>
+    <string name="backup_multiple_description">बेस बैकअप के बजाय बैक अप नाम से अलग नाम का इस्तेमाल करें।</string>
+    <string name="backup_rules_description">ऐप मैनेजर के भीतर कॉन्फ़िगर किए गए नियमों का बैकअप करें।</string>
+    <string name="backup_extras_description">ऐप अनुमतियां, बैटरी की बचत, डेटा उपयोग विकल्प, मैजिस्कहाइड स्थिति आदि बैकअप करें।</string>
+    <string name="backup_extras">एक्स्ट्रास</string>
+    <string name="backup_exclude_cache_description">, no_cache और no_backup फ़ोल्डर का बैकअप न करें।</string>
+    <string name="backup_obb_media_description">ओबीबी और मीडिया फ़ोल्डर्स बैकअप करें।</string>
+    <string name="backup_external_data_description">बाहरी डेटा फ़ोल्डर्स का बैकअप करें। इसको काम करने के लिए &lt;b&gt; डेटा &lt;/b&gt; चयनित होना अनिवार्य है।</string>
+    <string name="backup_data_description">डेटा फ़ोल्डर्स बैकअप करें। अगर चयनित किया तो इंटरनल डेटा फ़ोल्डर्स को भी बैकअप किया जाएगा।</string>
 </resources>
