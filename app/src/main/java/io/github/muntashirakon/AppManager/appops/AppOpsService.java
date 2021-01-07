@@ -46,7 +46,7 @@ public class AppOpsService {
 
     public AppOpsService() {
         Context context = AppManager.getContext();
-        if (!PermissionUtils.hasAppOpsPermission(context) || AppPref.isRootOrAdbEnabled()) {
+        if (!PermissionUtils.hasAppOpsPermission(context) && AppPref.isRootOrAdbEnabled()) {
             try {
                 PackageManagerCompat.grantPermission(context.getPackageName(), PermissionUtils.PERMISSION_GET_APP_OPS_STATS, Users.getCurrentUserHandle());
             } catch (RemoteException e) {
