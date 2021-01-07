@@ -730,7 +730,7 @@
     <string name="pref_about_device_msg">基本设备信息包括Android系统、CPU、GPU、RAM，电池等。</string>
     <string name="battery">电池</string>
     <string name="graphics">图形处理器</string>
-    <string name="cpu">处理器</string>
+    <string name="cpu">CPU</string>
     <string name="users">用户</string>
     <string name="languages">语言</string>
     <string name="unavailable">不可用</string>
