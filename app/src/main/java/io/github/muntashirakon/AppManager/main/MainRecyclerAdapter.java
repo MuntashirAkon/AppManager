@@ -18,7 +18,6 @@
 package io.github.muntashirakon.AppManager.main;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.usage.UsageStatsManager;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -40,10 +39,7 @@ import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -56,13 +52,12 @@ import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder>
         implements SectionIndexer {
     static final String sections = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    @SuppressLint("SimpleDateFormat")
-    static final DateFormat sSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy"); // hh:mm:ss");
 
     private final MainActivity mActivity;
     private final PackageManager mPackageManager;
@@ -202,15 +197,15 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         // Set version name
         holder.version.setText(item.versionName);
         // Set date and (if available,) days between first install and last update
-        String lastUpdateDate = sSimpleDateFormat.format(new Date(item.lastUpdateTime));
+        String lastUpdateDate = DateUtils.formatDate(item.lastUpdateTime);
         if (item.firstInstallTime == item.lastUpdateTime)
             holder.date.setText(lastUpdateDate);
         else {
             long days = TimeUnit.DAYS.convert(item.lastUpdateTime - item.firstInstallTime, TimeUnit.MILLISECONDS);
             SpannableString ssDate = new SpannableString(mActivity.getResources()
                     .getQuantityString(R.plurals.main_list_date_days, (int) days, lastUpdateDate, days));
-            ssDate.setSpan(new RelativeSizeSpan(.8f), 10, ssDate.length(),
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ssDate.setSpan(new RelativeSizeSpan(.8f), lastUpdateDate.length(),
+                    ssDate.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.date.setText(ssDate);
         }
         // Set date color to orange if app can read logs (and accepted)

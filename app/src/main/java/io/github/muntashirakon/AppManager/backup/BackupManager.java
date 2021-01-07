@@ -17,10 +17,7 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +25,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.UserIdInt;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
 
 public class BackupManager {
     public static final String TAG = "BackupManager";
@@ -116,8 +114,7 @@ public class BackupManager {
             // Multiple backups requested
             if (backupNames == null) {
                 // Create a singleton backupNames array with current time
-                backupNames = new String[]{new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss",
-                        Locale.ROOT).format(Calendar.getInstance().getTime())};
+                backupNames = new String[]{DateUtils.formatDateTime(System.currentTimeMillis())};
             }
             for (int i = 0; i < backupNames.length; ++i) {
                 // Replace illegal characters

@@ -33,8 +33,6 @@ import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,6 +42,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class AppUsageDetailsDialogFragment extends DialogFragment {
@@ -83,8 +82,6 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
     }
 
     static class AppUsageDetailsAdapter extends BaseAdapter {
-        static DateFormat sSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
-
         private final LayoutInflater mLayoutInflater;
         private List<AppUsageStatsManager.USEntry> mDefaultList;
         private List<AppUsageStatsManager.USEntry> mAdapterList;
@@ -137,7 +134,7 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
                 convertView.setTag(holder);
             } else holder = (ViewHolder) convertView.getTag();
             AppUsageStatsManager.USEntry usEntry = mAdapterList.get(position);
-            holder.title.setText(String.format(Locale.ROOT, "%s - %s", sSimpleDateFormat.format(usEntry.startTime), sSimpleDateFormat.format(usEntry.endTime)));
+            holder.title.setText(String.format(Locale.ROOT, "%s - %s", DateUtils.formatDateTime(usEntry.startTime), DateUtils.formatDateTime(usEntry.endTime)));
             holder.subtitle.setText(Utils.getFormattedDuration(context, usEntry.getDuration()));
             convertView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
             return convertView;

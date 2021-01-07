@@ -32,17 +32,15 @@ import android.os.Parcelable;
 import android.os.RemoteException;
 import android.util.Pair;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class AppUsageStatsManager {
@@ -398,8 +396,8 @@ public class AppUsageStatsManager {
         @Override
         public String toString() {
             return "USEntry{" +
-                    "startTime=" + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(new Date(startTime)) +
-                    ", endTime=" + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(new Date(endTime)) +
+                    "startTime=" + DateUtils.formatDateTime(startTime) +
+                    ", endTime=" + DateUtils.formatDateTime(endTime) +
                     '}';
         }
     }

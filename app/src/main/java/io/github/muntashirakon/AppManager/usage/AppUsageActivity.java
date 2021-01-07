@@ -47,10 +47,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.text.Collator;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -63,6 +60,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.usage.UsageUtils.IntervalType;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -331,8 +329,6 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
     }
 
     static class AppUsageAdapter extends BaseAdapter {
-        static DateFormat sSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
-
         private final LayoutInflater mLayoutInflater;
         private List<AppUsageStatsManager.PackageUS> mAdapterList;
         private final Activity mActivity;
@@ -414,7 +410,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
             // Set usage
             long lastTimeUsed = packageUS.lastUsageTime;
             if (lastTimeUsed > 1) {
-                holder.lastUsageDate.setText(sSimpleDateFormat.format(new Date(lastTimeUsed)));
+                holder.lastUsageDate.setText(DateUtils.formatDateTime(lastTimeUsed));
             }
             String screenTimesWithTimesOpened;
             // Set times opened

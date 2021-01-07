@@ -61,12 +61,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -117,6 +114,7 @@ import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.MagiskUtils;
@@ -149,8 +147,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private ApplicationInfo mApplicationInfo;
     private LinearLayout mHorizontalLayout;
     private ChipGroup mTagCloud;
-    @SuppressLint("SimpleDateFormat")
-    private final SimpleDateFormat mDateFormatter = new SimpleDateFormat("EE LLL dd yyyy kk:mm:ss");
     private SwipeRefreshLayout mSwipeRefresh;
     private int mAccentColor;
     private CharSequence mPackageLabel;
@@ -290,7 +286,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             infoIntent.setData(Uri.parse("package:" + mPackageName));
             startActivity(infoIntent);
         } else if (itemId == R.id.action_export_blocking_rules) {
-            @SuppressLint("SimpleDateFormat") final String fileName = "app_manager_rules_export-" + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime())) + ".am.tsv";
+            final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(System.currentTimeMillis()) + ".am.tsv";
             export.launch(fileName, uri -> {
                 if (uri == null) {
                     // Back button pressed.
@@ -1245,8 +1241,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
      */
     @NonNull
     private String getTime(long time) {
-        Date date = new Date(time);
-        return mDateFormatter.format(date);
+        return DateUtils.formatWeekMediumDateTime(time);
     }
 
     /**
