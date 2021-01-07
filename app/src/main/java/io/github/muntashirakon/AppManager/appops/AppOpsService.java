@@ -34,6 +34,7 @@ import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.reflector.ReflectUtils;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -73,7 +74,11 @@ public class AppOpsService {
         // Check using uid mode and package mode, override ops in package mode from uid mode
         List<OpEntry> opEntries = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            addAllRelevantOpEntriesWithNoOverride(opEntries, appOpsService.getUidOps(uid, ops));
+            try {
+                addAllRelevantOpEntriesWithNoOverride(opEntries, appOpsService.getUidOps(uid, ops));
+            } catch (NullPointerException e) {
+                Log.e("AppOpsService", "Could not get app ops for UID " + uid, e);
+            }
         }
         addAllRelevantOpEntriesWithNoOverride(opEntries, appOpsService.getOpsForPackage(uid, packageName, ops));
         return Collections.singletonList(new PackageOps(packageName, uid, opEntries));
