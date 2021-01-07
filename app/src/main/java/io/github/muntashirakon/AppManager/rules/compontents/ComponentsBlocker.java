@@ -40,7 +40,6 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -362,17 +361,14 @@ public final class ComponentsBlocker extends RulesStorageManager {
             if (apply && localRulesFile.exists()) {
                 // Apply rules
                 Runner.runCommand(String.format(Runner.TOYBOX + " cp \"%s\" %s && "
-                                + Runner.TOYBOX + " chmod 0666 %s%s.xml && "
-                                + RunnerUtils.CMD_FORCE_STOP_PACKAGE,
-                        localRulesFile.getAbsolutePath(), SYSTEM_RULES_PATH, SYSTEM_RULES_PATH,
-                        packageName, RunnerUtils.userHandleToUser(userHandle), packageName));
+                                + Runner.TOYBOX + " chmod 0666 %s%s.xml", localRulesFile
+                                .getAbsolutePath(), SYSTEM_RULES_PATH, SYSTEM_RULES_PATH,
+                        packageName));
             } else {
                 // Remove rules if remove is called or applied with no rules
                 Runner.runCommand(String.format(Runner.TOYBOX + " test -e '%s%s.xml' && "
-                                + Runner.TOYBOX + " rm -f %s%s.xml && "
-                                + RunnerUtils.CMD_FORCE_STOP_PACKAGE,
-                        SYSTEM_RULES_PATH, packageName, SYSTEM_RULES_PATH, packageName,
-                        RunnerUtils.userHandleToUser(userHandle), packageName));
+                                + Runner.TOYBOX + " rm -f %s%s.xml", SYSTEM_RULES_PATH, packageName,
+                        SYSTEM_RULES_PATH, packageName));
             }
             if (localRulesFile.exists()) //noinspection ResultOfMethodCallIgnored
                 localRulesFile.delete();

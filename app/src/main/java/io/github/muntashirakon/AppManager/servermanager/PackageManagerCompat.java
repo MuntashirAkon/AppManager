@@ -17,7 +17,9 @@
 
 package io.github.muntashirakon.AppManager.servermanager;
 
+import android.app.IActivityManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageManager;
@@ -192,6 +194,12 @@ public final class PackageManagerCompat {
             return false;
         }
         return isSuccess.get();
+    }
+
+    public static void forceStopPackage(String packageName, int userId) throws RemoteException {
+        // Stub may not be in use before Android 8
+        IActivityManager am = IActivityManager.Stub.asInterface(ProxyBinder.getService(Context.ACTIVITY_SERVICE));
+        am.forceStopPackage(packageName, userId);
     }
 
     private static IPermissionManager getPermissionManager() {

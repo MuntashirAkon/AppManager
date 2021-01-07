@@ -353,12 +353,16 @@ public class BatchOpsManager {
 
     @NonNull
     private Result opForceStop() {
+        List<UserPackagePair> failedPackages = new ArrayList<>();
         for (UserPackagePair pair : userPackagePairs) {
-            addCommand(pair.getPackageName(), pair.getUserHandle(), String.format(Locale.ROOT,
-                    RunnerUtils.CMD_FORCE_STOP_PACKAGE, RunnerUtils.userHandleToUser(
-                            pair.getUserHandle()), pair.getPackageName()), false);
+            try {
+                PackageManagerCompat.forceStopPackage(pair.getPackageName(), pair.getUserHandle());
+            } catch (RemoteException|SecurityException e) {
+                e.printStackTrace();
+                failedPackages.add(pair);
+            }
         }
-        return runOpAndFetchResults();
+        return lastResult = new Result(failedPackages);
     }
 
     private Result opIgnoreAppOps() {
@@ -398,11 +402,7 @@ public class BatchOpsManager {
     }
 
     private void addCommand(String packageName, int userHandle, String command) {
-        addCommand(packageName, userHandle, command, true);
-    }
-
-    private void addCommand(String packageName, int userHandle, String command, boolean isDevNull) {
-        runner.addCommand(String.format(Locale.ROOT, "%s %s || echo %s %d", command, isDevNull ? "> /dev/null 2>&1" : "", packageName, userHandle));
+        runner.addCommand(String.format(Locale.ROOT, "%s %s || echo %s %d", command, "> /dev/null 2>&1", packageName, userHandle));
     }
 
     @NonNull

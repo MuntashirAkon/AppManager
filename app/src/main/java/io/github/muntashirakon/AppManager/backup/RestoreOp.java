@@ -373,9 +373,7 @@ class RestoreOp implements Closeable {
                     }
                 }
             }
-            // Force stop app
-            RunnerUtils.forceStopPackage(packageName, RunnerUtils.USER_ALL);
-            // Clear app data
+            // Force-stop and clear app data
             PackageManagerCompat.clearApplicationUserData(packageName, userHandle);
             // Restore backups
             String dataSource;

@@ -652,10 +652,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 // Force stop
                 if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
                     addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24).setOnClickListener(v -> executor.submit(() -> {
-                        if (RunnerUtils.forceStopPackage(mPackageName, mainModel.getUserHandle()).isSuccessful()) {
-                            // Refresh
+                        try {
+                            PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
                             runOnUiThread(this::refreshDetails);
-                        } else {
+                        } catch (RemoteException|SecurityException e) {
                             runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_stop, mPackageLabel), Toast.LENGTH_LONG).show());
                         }
                     }));

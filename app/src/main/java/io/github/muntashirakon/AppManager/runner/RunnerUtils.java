@@ -51,7 +51,6 @@ public final class RunnerUtils {
     public static final String CMD_PM = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? "cmd package" : "pm";
     public static final String CMD_AM = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? "cmd activity" : "am";
 
-    public static final String CMD_FORCE_STOP_PACKAGE = CMD_AM + " force-stop --user %s %s";
     public static final String CMD_INSTALL_EXISTING_PACKAGE = CMD_PM + " install-existing --user %s %s";
     public static final String CMD_UNINSTALL_PACKAGE = CMD_PM + " uninstall -k --user %s %s";
     public static final String CMD_UNINSTALL_PACKAGE_WITH_DATA = CMD_PM + " uninstall --user %s %s";
@@ -115,11 +114,6 @@ public final class RunnerUtils {
      */
     public static String escape(final String input) {
         return ESCAPE_XSI.translate(input);
-    }
-
-    @NonNull
-    public static Runner.Result forceStopPackage(String packageName, int userHandle) {
-        return Runner.runCommand(String.format(CMD_FORCE_STOP_PACKAGE, userHandleToUser(userHandle), packageName));
     }
 
     @NonNull

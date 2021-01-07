@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.runningapps;
 
 import android.content.pm.ApplicationInfo;
 import android.graphics.Color;
+import android.os.RemoteException;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
@@ -43,7 +44,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -142,9 +143,11 @@ public class RunningAppsAdapter extends RecyclerView.Adapter<RunningAppsAdapter.
             if (applicationInfo != null) {
                 forceStopItem.setVisible(true).setOnMenuItemClickListener(item -> {
                     new Thread(() -> {
-                        if (RunnerUtils.forceStopPackage(applicationInfo.packageName, Users.getUserHandle(applicationInfo.uid)).isSuccessful()) {
+                        try {
+                            PackageManagerCompat.forceStopPackage(applicationInfo.packageName, Users.getUserHandle(applicationInfo.uid));
                             mActivity.runOnUiThread(mActivity::refresh);
-                        } else {
+                        } catch (RemoteException|SecurityException e) {
+                            e.printStackTrace();
                             mActivity.runOnUiThread(() -> Toast.makeText(mActivity, mActivity.getString(R.string.failed_to_stop, processName), Toast.LENGTH_LONG).show());
                         }
                     }).start();

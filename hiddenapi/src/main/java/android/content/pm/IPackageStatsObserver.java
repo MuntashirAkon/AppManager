@@ -1,5 +1,5 @@
 package android.content.pm;
 
-interface IPackageStatsObserver {
+public interface IPackageStatsObserver {
     void onGetStatsCompleted(PackageStats pStats, boolean succeeded);
 }
