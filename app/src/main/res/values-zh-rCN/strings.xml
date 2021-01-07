@@ -781,4 +781,8 @@
     <string name="enable_magisk_hide">启用 MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">无法禁用 MagiskHide</string>
     <string name="disable_magisk_hide">禁用 MagiskHide？</string>
+    <string name="disable_background_run_description">它将&lt;i&gt;忽略&lt;/i&gt;模式设置到下列应用操作：&lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt;（从安卓 7.0 起）和 &lt;tt&gt;RUN_ANY_IN_BACKGROUND&lt;/tt&gt;（从安卓 9 起）。</string>
+    <plurals name="no_of_components">
+        <item quantity="other">%1$d 个组件</item>
+    </plurals>
 </resources>
