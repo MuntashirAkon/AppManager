@@ -150,7 +150,7 @@
     <string name="usage_min">%1$d 分钟</string>
     <string name="usage_less_than_a_minute">不足一分钟</string>
     <string name="go_back">返回</string>
-    <string name="go">前进</string>
+    <string name="go">前往</string>
     <string name="grant_usage_access">授予查看使用情况权限</string>
     <string name="grant_usage_acess_message">要显示应用程序的使用信息，必须要有使用情况访问权限。</string>
     <string name="share_apk">apk分享</string>
@@ -302,8 +302,8 @@
     <string name="pref_app_theme">应用主题</string>
     <string name="follow_system">跟随系统</string>
     <string name="battery_mode">电量模式</string>
-    <string name="day">日期</string>
-    <string name="night">夜间模式</string>
+    <string name="day">白天</string>
+    <string name="night">夜间</string>
     <string name="select_theme">主题</string>
     <string name="apply">应用</string>
     <string name="current_theme">当前主题: %1$s</string>
@@ -729,8 +729,8 @@
     <string name="set_custom_app_op">设置自定义应用操作</string>
     <string name="pref_about_device_msg">基本设备信息包括Android系统、CPU、GPU、RAM，电池等。</string>
     <string name="battery">电池</string>
-    <string name="graphics">显卡</string>
-    <string name="cpu">中央处理器</string>
+    <string name="graphics">图形处理器</string>
+    <string name="cpu">处理器</string>
     <string name="users">用户</string>
     <string name="languages">语言</string>
     <string name="unavailable">不可用</string>
@@ -739,7 +739,7 @@
     <string name="memory">内存</string>
     <string name="vendor">厂商</string>
     <string name="gles_version">GL ES 版本</string>
-    <string name="no_of_cores">核心</string>
+    <string name="no_of_cores">核心数量</string>
     <string name="support_architectures">支持的架构</string>
     <string name="security_providers">安全供应商</string>
     <string name="kernel">内核</string>
@@ -750,7 +750,7 @@
     <string name="about_device">关于设备</string>
     <string name="set_mode_for_app_ops_dots">为 app ops 设置模式…</string>
     <string name="security">安全性</string>
-    <string name="orientation_user_portrait">用户画像</string>
+    <string name="orientation_user_portrait">用户纵向</string>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="other">无法为 %1$d 个应用设置权限</item>
     </plurals>
@@ -785,4 +785,7 @@
     <plurals name="no_of_components">
         <item quantity="other">%1$d 个组件</item>
     </plurals>
+    <string name="state_parked">已放置</string>
+    <string name="state_trace_stop">跟踪停止</string>
+    <string name="orientation_user_landscape">用户横向</string>
 </resources>
