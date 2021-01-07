@@ -703,7 +703,7 @@
     <string name="input_keystore_pass">输入密钥库密码</string>
     <string name="no_app_ops_permission">没有显示应用操作的权限</string>
     <string name="pref_backup_android_keystore_msg">并不是所有的应用程序在恢复后都能正常工作。恢复密钥存储库在大多数设备上无法工作。</string>
-    <string name="pref_backup_android_keystore">备份带安卓密钥库的应用程序</string>
+    <string name="pref_backup_android_keystore">备份带 Android 密钥库的应用程序</string>
     <string name="keep_data_and_signatures">保留数据和签名</string>
     <string name="this_action_cannot_be_undone">此操作无法被撤销。</string>
     <string name="orientation_sensor_portrait">纵向显示</string>
@@ -754,7 +754,7 @@
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="other">无法为 %1$d 个应用设置权限</item>
     </plurals>
-    <string name="patch_level">补丁级别</string>
+    <string name="patch_level">安全补丁级别</string>
     <string name="backup_skip_signature_checks_description">用于解决因校验和验证失败或与备份的 APK 签名不同导致的还原失败。</string>
     <string name="backup_all_users_description">为所有用户执行备份，而不仅仅是当前用户。</string>
     <string name="backup_multiple_description">使用一个单独命名的备份，而不是基本备份。</string>
@@ -776,12 +776,12 @@
     <string name="screen">屏幕</string>
     <string name="hardware">硬件</string>
     <string name="permissive">被动</string>
-    <string name="enforcing">强制</string>
+    <string name="enforcing">Enforcing</string>
     <string name="failed_to_enable_magisk_hide">无法启用 MagiskHide</string>
     <string name="enable_magisk_hide">启用 MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">无法禁用 MagiskHide</string>
     <string name="disable_magisk_hide">禁用 MagiskHide？</string>
-    <string name="disable_background_run_description">它将<i>忽略</i>模式设置到下列应用操作：<tt>RUN_IN_BACKGROUND</tt>（从安卓 7.0 起）和 <tt>RUN_ANY_IN_BACKGROUND</tt>（从安卓 9 起）。</string>
+    <string name="disable_background_run_description">它将&lt;i&gt;忽略&lt;/i&gt;模式设置到下列应用操作：&lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt;（从 Android 7.0 起）和 &lt;tt&gt;RUN_ANY_IN_BACKGROUND&lt;/tt&gt;（从 Android 9 起）。</string>
     <plurals name="no_of_components">
         <item quantity="other">%1$d 个组件</item>
     </plurals>
