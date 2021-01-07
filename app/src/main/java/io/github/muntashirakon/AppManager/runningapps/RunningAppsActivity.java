@@ -113,7 +113,7 @@ public class RunningAppsActivity extends BaseActivity implements
             layoutParams.gravity = Gravity.END;
             actionBar.setCustomView(searchView, layoutParams);
         }
-        mModel = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()).create(RunningAppsViewModel.class);
+        mModel = new ViewModelProvider(this).get(RunningAppsViewModel.class);
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         mCounterView = findViewById(R.id.bottom_appbar_counter);
