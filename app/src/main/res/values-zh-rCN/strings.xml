@@ -48,7 +48,7 @@
     <string name="protection_level">保护等级</string>
     <string name="uses_feature">要求的设备特性</string>
     <string name="gles_ver">请求GL ES版本</string>
-    <string name="no_feature">无特征</string>
+    <string name="no_feature">无</string>
     <string name="sort_by_shared_user_id">共享的用户ID</string>
     <string name="shared_user_id">共享的用户ID</string>
     <string name="sort_by_sha">签名</string>
@@ -125,10 +125,10 @@
     <string name="toggle_class_listing">切换类列表</string>
     <string name="tested_signatures_on_classes_and_time_taken">测试了 <xliff:g id="signature_no" example="342">%1$d</xliff:g> 个签名在 <xliff:g id="class_no" example="6000">%2$d</xliff:g> 个 classes 上.
 \n所花时间 <xliff:g id="time" example="10000">%3$d</xliff:g> 毫秒(<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> 迭代器).</string>
-    <string name="found_trackers">已找到跟踪器数目:</string>
-    <string name="tracker_details">Tracker 详细信息</string>
-    <string name="tracker_classes">Tracker 类</string>
-    <string name="all_classes">全部类</string>
+    <string name="found_trackers">已找到追踪器:</string>
+    <string name="tracker_details">追踪器详细信息</string>
+    <string name="tracker_classes">追踪器类</string>
+    <string name="all_classes">全部类型</string>
     <plurals name="main_list_date_days">
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> 天</item>
     </plurals>
