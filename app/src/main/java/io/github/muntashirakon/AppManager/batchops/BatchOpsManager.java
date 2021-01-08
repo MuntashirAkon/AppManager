@@ -25,7 +25,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.RemoteException;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -313,7 +312,7 @@ public class BatchOpsManager {
         for (UserPackagePair pair : userPackagePairs) {
             try {
                 pm.setApplicationEnabledSetting(pair.getPackageName(), newState, 0, pair.getUserHandle(), null);
-            } catch (RemoteException|SecurityException e) {
+            } catch (Throwable e) {
                 Log.e(TAG, e);
                 failedPackages.add(pair);
             }
@@ -338,7 +337,7 @@ public class BatchOpsManager {
                             pair.getPackageName(), AppOpsManager.MODE_IGNORED);
                 }
                 appliedPackages.add(pair);
-            } catch (RemoteException|SecurityException e) {
+            } catch (Throwable e) {
                 Log.e(TAG, e);
                 failedPackages.add(pair);
             }
@@ -357,7 +356,7 @@ public class BatchOpsManager {
         for (UserPackagePair pair : userPackagePairs) {
             try {
                 PackageManagerCompat.forceStopPackage(pair.getPackageName(), pair.getUserHandle());
-            } catch (RemoteException|SecurityException e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
                 failedPackages.add(pair);
             }
