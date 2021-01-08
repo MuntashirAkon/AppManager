@@ -12,6 +12,7 @@ import io.github.muntashirakon.AppManager.misc.UserIdInt;
 
 public final class ActivityManagerCompat {
     public static final String SHELL_PACKAGE_NAME = "com.android.shell";
+
     public static int startActivity(Context context, Intent intent, @UserIdInt int userHandle)
             throws RemoteException {
         IActivityManager am = getActivityManager();
@@ -27,6 +28,20 @@ public final class ActivityManagerCompat {
                     null, userHandle);
         }
         return result;
+    }
+
+    @SuppressWarnings("deprecation")
+    public static void startService(Context context, Intent intent, @UserIdInt int userHandle,
+                                    boolean asForeground) throws RemoteException {
+        IActivityManager am = getActivityManager();
+        String callingPackage = LocalServer.isAMServiceAlive() ? SHELL_PACKAGE_NAME : context.getPackageName();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            am.startService(null, intent, intent.getType(), asForeground, callingPackage, null, userHandle);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            am.startService(null, intent, intent.getType(), asForeground, callingPackage, userHandle);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            am.startService(null, intent, intent.getType(), callingPackage, userHandle);
+        } else am.startService(null, intent, intent.getType(), userHandle);
     }
 
     public static IActivityManager getActivityManager() {

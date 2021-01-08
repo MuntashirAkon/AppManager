@@ -72,6 +72,27 @@ public interface IActivityManager extends IInterface {
 
     java.util.List<ActivityManager.RunningTaskInfo> getTasks(int maxNum) throws RemoteException;
 
+    /**
+     * @deprecated Removed in Android M
+     */
+    @Deprecated
+    ComponentName startService(IApplicationThread caller, Intent service, String resolvedType, int userId) throws RemoteException;
+
+    /**
+     * @deprecated Removed in Android O
+     */
+    @Deprecated
+    @RequiresApi(Build.VERSION_CODES.M)
+    ComponentName startService(IApplicationThread caller, Intent service, String resolvedType, String callingPackage, int userId) throws RemoteException;
+
+    /**
+     * @deprecated Removed in Android R
+     */
+    @Deprecated
+    @RequiresApi(Build.VERSION_CODES.O)
+    ComponentName startService(IApplicationThread caller, Intent service, String resolvedType, boolean requireForeground, String callingPackage, int userId) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.R)
     ComponentName startService(IApplicationThread caller, Intent service, String resolvedType, boolean requireForeground, String callingPackage, String callingFeatureId, int userId) throws RemoteException;
 
     int stopService(IApplicationThread caller, Intent service, String resolvedType, int userId) throws RemoteException;

@@ -659,14 +659,14 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         break;
                     case SERVICES:
                         imageView = itemView.findViewById(R.id.icon);
-                        textView1 = itemView.findViewById(R.id.label);
                         textView2 = itemView.findViewById(R.id.name);
                         textView3 = itemView.findViewById(R.id.orientation);
+                        launchBtn = itemView.findViewById(R.id.launch);
                         blockBtn = itemView.findViewById(R.id.block_component);
                         itemView.findViewById(R.id.taskAffinity).setVisibility(View.GONE);
                         itemView.findViewById(R.id.launchMode).setVisibility(View.GONE);
                         itemView.findViewById(R.id.softInput).setVisibility(View.GONE);
-                        itemView.findViewById(R.id.launch).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.label).setVisibility(View.GONE);
                         itemView.findViewById(R.id.create_shortcut_btn).setVisibility(View.GONE);
                         itemView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
                         break;
@@ -956,16 +956,16 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             View view = holder.itemView;
             final AppDetailsComponentItem appDetailsItem = (AppDetailsComponentItem) mAdapterList.get(index);
             final ServiceInfo serviceInfo = (ServiceInfo) appDetailsItem.vanillaItem;
+            final boolean isDisabled = !isExternalApk && isComponentDisabled(mPackageManager, serviceInfo);
             // Background color: regular < tracker < disabled < blocked < running
             if (runningServices != null && runningServices.contains(serviceInfo.name))
                 view.setBackgroundColor(mColorRunning);
             else if (!isExternalApk && appDetailsItem.isBlocked) view.setBackgroundColor(mColorRed);
-            else if (!isExternalApk && isComponentDisabled(mPackageManager, serviceInfo))
-                view.setBackgroundColor(mColorDisabled);
+            else if (isDisabled) view.setBackgroundColor(mColorDisabled);
             else if (appDetailsItem.isTracker) view.setBackgroundColor(mColorTracker);
             else view.setBackgroundColor(index % 2 == 0 ? mColorGrey1 : mColorGrey2);
             // Label
-            holder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(serviceInfo.name)));
+            holder.launchBtn.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(serviceInfo.name)));
             // Name
             if (mConstraint != null && serviceInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
@@ -982,6 +982,24 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
             holder.textView3.setText(String.format(Locale.ROOT, "%s\n%s",
                     Utils.getServiceFlagsString(serviceInfo.flags),
                     (serviceInfo.permission != null ? serviceInfo.permission : "")));
+            // A service is allowed to launch only if it's
+            // 1) Not from an external APK
+            // 2) Root enabled or the service is exportable without any permission
+            // 3) App or the service is not disabled and/or blocked
+            boolean canLaunch = !isExternalApk && (isRootEnabled || (serviceInfo.exported && serviceInfo.permission == null)) && !isDisabled && !appDetailsItem.isBlocked;
+            holder.launchBtn.setEnabled(canLaunch);
+            if (canLaunch) {
+                holder.launchBtn.setOnClickListener(v -> {
+                    Intent intent = new Intent();
+                    intent.setClassName(mPackageName, serviceInfo.name);
+                    try {
+                        ActivityManagerCompat.startService(mActivity, intent, mainModel.getUserHandle(), true);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                        Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
             // Blocking
             if (isRootEnabled && !isExternalApk) {
                 if (appDetailsItem.isBlocked) {
