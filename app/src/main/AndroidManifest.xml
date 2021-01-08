@@ -306,6 +306,7 @@
         <activity
             android:name=".intercept.ActivityInterceptor"
             android:label="@string/interceptor"
+            android:enabled="true"
             android:exported="true"
             android:taskAffinity=""
             android:windowSoftInputMode="stateUnchanged" >

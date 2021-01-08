@@ -39,6 +39,11 @@
         app:title="@string/pref_usage_access_enabled"
         app:summary="@string/pref_usage_access_enabled_msg" />
 
+    <SwitchPreferenceCompat
+        app:key="interceptor_enabled"
+        app:title="@string/interceptor"
+        app:summary="@string/pref_interceptor_enabled_msg" />
+
     <Preference
         app:key="apk_signing_prefs"
         app:title="@string/apk_signing"

@@ -19,6 +19,7 @@ package io.github.muntashirakon.AppManager.settings;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.FeatureInfo;
@@ -72,6 +73,7 @@ import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -122,12 +124,14 @@ public class MainPreferences extends PreferenceFragmentCompat {
     private String currentMode;
     private int currentCompression;
     private String installerApp;
+    private PackageManager pm;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_main, rootKey);
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
         activity = (SettingsActivity) requireActivity();
+        pm = activity.getPackageManager();
         // Custom locale
         currentLang = (String) AppPref.get(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR);
         ArrayMap<String, Locale> locales = LangUtils.getAppLanguages(activity);
@@ -188,6 +192,19 @@ public class MainPreferences extends PreferenceFragmentCompat {
         // App usage permission toggle
         SwitchPreferenceCompat usageEnabled = Objects.requireNonNull(findPreference("usage_access_enabled"));
         usageEnabled.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_USAGE_ACCESS_ENABLED_BOOL));
+        // Interceptor
+        SwitchPreferenceCompat interceptorEnabled = Objects.requireNonNull(findPreference("interceptor_enabled"));
+        ComponentName interceptorComponent = new ComponentName(activity.getPackageName(), ActivityInterceptor.class.getName());
+        interceptorEnabled.setChecked(isComponentEnabled(interceptorComponent));
+        interceptorEnabled.setOnPreferenceChangeListener((preference, isEnabled) -> {
+            if ((boolean) isEnabled) {
+                pm.setComponentEnabledSetting(interceptorComponent, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+            } else {
+                pm.setComponentEnabledSetting(interceptorComponent, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+            }
+            interceptorEnabled.setChecked(isComponentEnabled(interceptorComponent));
+            return true;
+        });
         // Global blocking enabled
         SwitchPreferenceCompat gcb = Objects.requireNonNull(findPreference("global_blocking_enabled"));
         gcb.setChecked(AppPref.isGlobalBlockingEnabled());
@@ -257,7 +274,6 @@ public class MainPreferences extends PreferenceFragmentCompat {
         });
         // Set installer app
         Preference installerAppPref = Objects.requireNonNull(findPreference("installer_installer_app"));
-        PackageManager pm = activity.getPackageManager();
         installerApp = (String) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
         installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
         installerAppPref.setOnPreferenceClickListener(preference -> {
@@ -693,5 +709,10 @@ public class MainPreferences extends PreferenceFragmentCompat {
             }
         }
         return density;
+    }
+
+    private boolean isComponentEnabled(ComponentName componentName) {
+        int status = pm.getComponentEnabledSetting(componentName);
+        return status == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT || status == PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
     }
 }

@@ -71,6 +71,7 @@ public class AppPref {
         PREF_INSTALLER_INSTALL_LOCATION_INT,
         PREF_INSTALLER_INSTALLER_APP_STR,
         PREF_INSTALLER_SIGN_APK_BOOL,
+        PREF_INTERCEPTOR_ENABLED_BOOL,
         PREF_LAST_VERSION_CODE_LONG,
         PREF_MAIN_WINDOW_FILTER_FLAGS_INT,
         PREF_MAIN_WINDOW_SORT_ORDER_INT,
@@ -318,6 +319,7 @@ public class AppPref {
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_USAGE_ACCESS_ENABLED_BOOL:
             case PREF_SHOW_DISCLAIMER_BOOL:
+            case PREF_INTERCEPTOR_ENABLED_BOOL:
                 return true;
             case PREF_LAST_VERSION_CODE_LONG:
                 return 0L;
