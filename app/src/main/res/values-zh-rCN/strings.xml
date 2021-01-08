@@ -57,7 +57,7 @@
     <string name="configurations">配置</string>
     <string name="no_configurations">无配置</string>
     <string name="input_features">输入特性</string>
-    <string name="manifest">Manifest</string>
+    <string name="manifest">应用清单（Manifest）</string>
     <string name="error">错误</string>
     <string name="loading">加载中…</string>
     <!-- &#8230; = ... -->
