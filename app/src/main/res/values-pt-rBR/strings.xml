@@ -821,4 +821,5 @@
         <item quantity="one">%1$d componente</item>
         <item quantity="other">%1$d componentes</item>
     </plurals>
+    <string name="pref_interceptor_enabled_msg">Intercepta a comunicação entre aplicativos via Intenção</string>
 </resources>
