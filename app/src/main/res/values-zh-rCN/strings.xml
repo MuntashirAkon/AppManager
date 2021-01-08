@@ -26,7 +26,7 @@
     <string name="no_activities">无活动</string>
     <string name="receivers">广播接收器</string>
     <string name="no_receivers">无广播接收器</string>
-    <string name="providers">提供器</string>
+    <string name="providers">内容提供器</string>
     <string name="no_providers">无提供器</string>
     <string name="launch_mode">启动模式</string>
     <string name="task_affinity">任务关联</string>
@@ -42,11 +42,11 @@
     <string name="read">读取</string>
     <string name="write">写入</string>
     <string name="patterns_allowed">允许的模式</string>
-    <string name="declared_permission">权限</string>
+    <string name="declared_permission">应用自定义权限</string>
     <string name="shared_libs">共享程序库</string>
     <string name="group">群组</string>
     <string name="protection_level">保护等级</string>
-    <string name="uses_feature">使用特征</string>
+    <string name="uses_feature">要求的设备特性</string>
     <string name="gles_ver">请求GL ES版本</string>
     <string name="no_feature">无特征</string>
     <string name="sort_by_shared_user_id">共享的用户ID</string>
@@ -227,8 +227,8 @@
     <string name="only_works_in_root_mode">仅在 root 或 ADB 模式下工作</string>
     <string name="usage_yesterday">昨天</string>
     <string name="exodus_link">\u03b5xodus 链接</string>
-    <string name="sort_by_disabled_app">首次禁用</string>
-    <string name="sort_by_blocked_components">首次屏蔽</string>
+    <string name="sort_by_disabled_app">已禁用</string>
+    <string name="sort_by_blocked_components">已拦截组件</string>
     <string name="external_data_dir">外部资料目录</string>
     <string name="external_multiple_data_dir">外部数据目录 <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <plurals name="no_of_times_opened">
@@ -580,7 +580,7 @@
     <string name="issuer">发行商</string>
     <string name="subject">名称</string>
     <string name="filter_apps_with_backups">有备份的应用程序</string>
-    <string name="sort_by_backup">先备份</string>
+    <string name="sort_by_backup">已备份</string>
     <string name="failed_to_uninstall_updates">无法卸载更新,它属于 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="update_uninstalled_successfully">用于 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>更新已被卸载.</string>
     <string name="uninstall_updates">卸载更新</string>
