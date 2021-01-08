@@ -819,4 +819,5 @@
         <item quantity="one">%1$d bileşen</item>
         <item quantity="other">%1$d bileşen</item>
     </plurals>
+    <string name="pref_interceptor_enabled_msg">Intent aracılığıyla uygulamalar arasındaki iletişimi keser</string>
 </resources>
