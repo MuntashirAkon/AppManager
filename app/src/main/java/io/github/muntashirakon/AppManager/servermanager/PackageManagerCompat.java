@@ -17,10 +17,7 @@
 
 package io.github.muntashirakon.AppManager.servermanager;
 
-import android.app.ActivityManagerNative;
-import android.app.IActivityManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageManager;
@@ -197,15 +194,8 @@ public final class PackageManagerCompat {
         return isSuccess.get();
     }
 
-    @SuppressWarnings("deprecation")
     public static void forceStopPackage(String packageName, int userId) throws RemoteException {
-        IActivityManager am;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            am = IActivityManager.Stub.asInterface(ProxyBinder.getService(Context.ACTIVITY_SERVICE));
-        } else {
-            am = ActivityManagerNative.asInterface(ProxyBinder.getService(Context.ACTIVITY_SERVICE));
-        }
-        am.forceStopPackage(packageName, userId);
+        ActivityManagerCompat.getActivityManager().forceStopPackage(packageName, userId);
     }
 
     private static IPermissionManager getPermissionManager() {

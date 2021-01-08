@@ -34,6 +34,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PatternMatcher;
+import android.os.RemoteException;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -83,8 +84,7 @@ import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
-import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
 import io.github.muntashirakon.AppManager.types.RecyclerViewWithEmptyView;
 import io.github.muntashirakon.AppManager.types.TextInputDropdownDialogBuilder;
@@ -893,13 +893,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                     intent.setClassName(mPackageName, activityName);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     try {
-                        startActivity(intent);
-                    } catch (Exception e) {
-                        if (isRootEnabled) {
-                            Runner.runCommand(Runner.getRootInstance(), RunnerUtils.CMD_AM
-                                    + " start --user " + mainModel.getUserHandle() + " -n "
-                                    + mPackageName + "/" + activityName);
-                        } else Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
+                        ActivityManagerCompat.startActivity(mActivity, intent, mainModel.getUserHandle());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                        Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
                     }
                 });
             }

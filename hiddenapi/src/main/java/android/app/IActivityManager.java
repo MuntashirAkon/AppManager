@@ -219,10 +219,11 @@ public interface IActivityManager extends IInterface {
     boolean isIntentSenderABroadcast(IIntentSender sender) throws RemoteException;
 
     /**
-     * @deprecated Use {@link startActivityAsUserWithFeature} instead
+     * @deprecated Since Android 11. Use {@link #startActivityAsUserWithFeature} instead
      */
     int startActivityAsUser(IApplicationThread caller, String callingPackage, Intent intent, String resolvedType, IBinder resultTo, String resultWho, int requestCode, int flags, ProfilerInfo profilerInfo, Bundle options, int userId) throws RemoteException;
 
+    @RequiresApi(Build.VERSION_CODES.R)
     int startActivityAsUserWithFeature(IApplicationThread caller, String callingPackage, String callingFeatureId, Intent intent, String resolvedType, IBinder resultTo, String resultWho, int requestCode, int flags, ProfilerInfo profilerInfo, Bundle options, int userId) throws RemoteException;
 
     int[] getRunningUserIds() throws RemoteException;
