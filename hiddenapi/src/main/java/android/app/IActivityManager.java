@@ -57,12 +57,32 @@ public interface IActivityManager extends IInterface {
 
     void unregisterReceiver(IIntentReceiver receiver) throws RemoteException;
 
-    /**
-     * @deprecated Use {@link #broadcastIntentWithFeature} instead
-     */
-    int broadcastIntent(IApplicationThread caller, Intent intent, String resolvedType, IIntentReceiver resultTo, int resultCode, String resultData, Bundle map, String[] requiredPermissions, int appOp, Bundle options, boolean serialized, boolean sticky, int userId) throws RemoteException;
 
-    int broadcastIntentWithFeature(IApplicationThread caller, String callingFeatureId, Intent intent, String resolvedType, IIntentReceiver resultTo, int resultCode, String resultData, Bundle map, String[] requiredPermissions, int appOp, Bundle options, boolean serialized, boolean sticky, int userId) throws RemoteException;
+    /**
+     * @deprecated Removed in Android M.
+     */
+    @Deprecated
+    int broadcastIntent(IApplicationThread caller, Intent intent, String resolvedType,
+                        IIntentReceiver resultTo, int resultCode, String resultData, Bundle map,
+                        String requiredPermission, int appOp, boolean serialized, boolean sticky,
+                        int userId) throws RemoteException;
+    /**
+     * @deprecated Deprecated in Android 11. Use {@link #broadcastIntentWithFeature} instead
+     */
+    @Deprecated
+    @RequiresApi(Build.VERSION_CODES.M)
+    int broadcastIntent(IApplicationThread caller, Intent intent, String resolvedType,
+                        IIntentReceiver resultTo, int resultCode, String resultData, Bundle map,
+                        String[] requiredPermissions, int appOp, Bundle options, boolean serialized,
+                        boolean sticky, int userId) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    int broadcastIntentWithFeature(IApplicationThread caller, String callingFeatureId,
+                                   Intent intent, String resolvedType, IIntentReceiver resultTo,
+                                   int resultCode, String resultData, Bundle map,
+                                   String[] requiredPermissions, int appOp, Bundle options,
+                                   boolean serialized, boolean sticky, int userId)
+            throws RemoteException;
 
     void unbroadcastIntent(IApplicationThread caller, Intent intent, int userId) throws RemoteException;
 
@@ -70,7 +90,7 @@ public interface IActivityManager extends IInterface {
 
     void attachApplication(IApplicationThread app, long startSeq) throws RemoteException;
 
-    java.util.List<ActivityManager.RunningTaskInfo> getTasks(int maxNum) throws RemoteException;
+    List<ActivityManager.RunningTaskInfo> getTasks(int maxNum) throws RemoteException;
 
     /**
      * @deprecated Removed in Android M
