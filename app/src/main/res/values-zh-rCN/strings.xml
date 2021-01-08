@@ -788,5 +788,5 @@
     <string name="state_parked">已放置</string>
     <string name="state_trace_stop">追踪停止</string>
     <string name="orientation_user_landscape">水平视图</string>
-    <string name="pref_interceptor_enabled_msg">通过意图拦截应用程序间的通信</string>
+    <string name="pref_interceptor_enabled_msg">优先使用 Intent Firewall 拦截组件</string>
 </resources>
