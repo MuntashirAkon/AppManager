@@ -435,7 +435,7 @@
     <string name="website">网址</string>
     <string name="website_message">https://muntashirakon.github.io/AppManager</string>
     <string name="pref_remove_all_rules">删除所有规则</string>
-    <string name="pref_remove_all_rules_msg">所有已配置的被阻止的组件将被启用，app ops权限将被设置为默认值，权限将被授予</string>
+    <string name="pref_remove_all_rules_msg">权限已被授予，应用操作和组件将回到默认值。</string>
     <string name="are_you_sure">您确定吗？</string>
     <string name="filter_apps_with_activities">有活动的应用程序</string>
     <string name="toggle_default_app_ops">切换默认应用</string>
