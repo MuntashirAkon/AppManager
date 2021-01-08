@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.servermanager;
 
+import android.app.ActivityManagerNative;
 import android.app.IActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -196,9 +197,14 @@ public final class PackageManagerCompat {
         return isSuccess.get();
     }
 
+    @SuppressWarnings("deprecation")
     public static void forceStopPackage(String packageName, int userId) throws RemoteException {
-        // Stub may not be in use before Android 8
-        IActivityManager am = IActivityManager.Stub.asInterface(ProxyBinder.getService(Context.ACTIVITY_SERVICE));
+        IActivityManager am;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            am = IActivityManager.Stub.asInterface(ProxyBinder.getService(Context.ACTIVITY_SERVICE));
+        } else {
+            am = ActivityManagerNative.asInterface(ProxyBinder.getService(Context.ACTIVITY_SERVICE));
+        }
         am.forceStopPackage(packageName, userId);
     }
 

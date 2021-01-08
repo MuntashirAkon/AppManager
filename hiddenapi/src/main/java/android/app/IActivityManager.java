@@ -10,6 +10,7 @@ import android.content.pm.IPackageDataObserver;
 import android.content.pm.ParceledListSlice;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
@@ -17,6 +18,8 @@ import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 
 import java.util.List;
+
+import androidx.annotation.RequiresApi;
 
 /**
  * System private API for talking with the activity manager service.  This
@@ -474,6 +477,7 @@ public interface IActivityManager extends IInterface {
      */
     boolean enableAppFreezer(boolean enable) throws RemoteException;
 
+    @RequiresApi(Build.VERSION_CODES.O)
     abstract class Stub extends Binder implements IActivityManager {
         public static IActivityManager asInterface(IBinder obj) {
             throw new UnsupportedOperationException();
