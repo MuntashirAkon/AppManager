@@ -32,15 +32,15 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
-class AMPackageInstallerBroadcastReceiver extends BroadcastReceiver {
-    public static final String TAG = "AM_PI_BR";
+class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
+    public static final String TAG = "PIReceiver";
     public static final String ACTION_PI_RECEIVER = BuildConfig.APPLICATION_ID + ".action.PI_RECEIVER";
 
     private String packageName;
-    private String appLabel;
+    private CharSequence appLabel;
     private final Context mContext;
 
-    public AMPackageInstallerBroadcastReceiver() {
+    public PackageInstallerBroadcastReceiver() {
         mContext = AppManager.getContext();
     }
 
@@ -48,7 +48,7 @@ class AMPackageInstallerBroadcastReceiver extends BroadcastReceiver {
         this.packageName = packageName;
     }
 
-    public void setAppLabel(String appLabel) {
+    public void setAppLabel(CharSequence appLabel) {
         this.appLabel = appLabel;
     }
 

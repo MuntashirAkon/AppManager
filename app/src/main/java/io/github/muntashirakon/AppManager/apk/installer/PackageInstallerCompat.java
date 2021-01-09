@@ -32,8 +32,11 @@ import android.content.pm.PackageManager;
 import android.content.pm.VersionedPackage;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.RemoteException;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,7 +53,9 @@ import java.util.concurrent.TimeUnit;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -328,13 +333,9 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
     @RequiresApi(Build.VERSION_CODES.P)
     public static final int DELETE_CHATTY = 0x80000000;
 
-    @SuppressLint("StaticFieldLeak")
-    private static PackageInstallerCompat INSTANCE;
-
     @NonNull
-    public static PackageInstallerCompat getInstance(int userHandle) {
-        if (INSTANCE == null) INSTANCE = new PackageInstallerCompat(userHandle);
-        return INSTANCE;
+    public static PackageInstallerCompat getNewInstance(int userHandle) {
+        return new PackageInstallerCompat(userHandle);
     }
 
     @NonNull
@@ -346,9 +347,6 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
 
     private IPackageInstaller packageInstaller;
     private PackageInstaller.Session session;
-    private String packageName;
-    private int sessionId = -1;
-    private final int userHandle;
     private final boolean allUsers;
     private String installerPackageName;
     private final boolean isPrivileged;
@@ -366,60 +364,76 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
         Log.d(TAG, "Installer app: " + installerPackageName);
     }
 
+    public void setAppLabel(CharSequence appLabel) {
+        this.appLabel = appLabel;
+    }
+
+    public void setCloseApkFile(boolean closeApkFile) {
+        this.closeApkFile = closeApkFile;
+    }
+
     @Override
     public boolean install(@NonNull ApkFile apkFile) {
-        packageName = apkFile.getPackageName();
-        Log.d(TAG, "Install: opening session...");
-        if (!openSession()) return false;
-        List<ApkFile.Entry> selectedEntries = apkFile.getSelectedEntries();
-        Log.d(TAG, "Install: selected entries: " + selectedEntries.size());
-        // Write apk files
-        for (ApkFile.Entry entry : selectedEntries) {
-            try (InputStream apkInputStream = entry.getSignedInputStream(context);
-                 OutputStream apkOutputStream = session.openWrite(entry.getFileName(), 0, entry.getFileSize())) {
-                IOUtils.copy(apkInputStream, apkOutputStream);
-                session.fsync(apkOutputStream);
-                Log.d(TAG, "Install: copied entry " + entry.name);
-            } catch (IOException e) {
-                sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE, sessionId);
-                Log.e(TAG, "Install: Cannot copy files to session.", e);
-                return abandon();
-            } catch (SecurityException e) {
-                sendCompletedBroadcast(packageName, STATUS_FAILURE_SECURITY, sessionId);
-                Log.e(TAG, "Install: Cannot access apk files.", e);
-                return abandon();
+        try {
+            super.install(apkFile);
+            Log.d(TAG, "Install: opening session...");
+            if (!openSession()) return false;
+            List<ApkFile.Entry> selectedEntries = apkFile.getSelectedEntries();
+            Log.d(TAG, "Install: selected entries: " + selectedEntries.size());
+            // Write apk files
+            for (ApkFile.Entry entry : selectedEntries) {
+                try (InputStream apkInputStream = entry.getSignedInputStream(context);
+                     OutputStream apkOutputStream = session.openWrite(entry.getFileName(), 0, entry.getFileSize())) {
+                    IOUtils.copy(apkInputStream, apkOutputStream);
+                    session.fsync(apkOutputStream);
+                    Log.d(TAG, "Install: copied entry " + entry.name);
+                } catch (IOException e) {
+                    sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE, sessionId);
+                    Log.e(TAG, "Install: Cannot copy files to session.", e);
+                    return abandon();
+                } catch (SecurityException e) {
+                    sendCompletedBroadcast(packageName, STATUS_FAILURE_SECURITY, sessionId);
+                    Log.e(TAG, "Install: Cannot access apk files.", e);
+                    return abandon();
+                }
             }
+            Log.d(TAG, "Install: Running installation...");
+            return commit();
+        } finally {
+            unregisterReceiver();
         }
-        Log.d(TAG, "Install: Running installation...");
-        return commit();
     }
 
     @Override
     public boolean install(@NonNull File[] apkFiles, String packageName) {
-        this.packageName = packageName;
-        if (!openSession()) return false;
-        // Write apk files
-        for (File apkFile : apkFiles) {
-            try (InputStream apkInputStream = new FileInputStream(apkFile);
-                 OutputStream apkOutputStream = session.openWrite(apkFile.getName(), 0, apkFile.length())) {
-                IOUtils.copy(apkInputStream, apkOutputStream);
-                session.fsync(apkOutputStream);
-            } catch (IOException e) {
-                sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE, sessionId);
-                Log.e(TAG, "Install: Cannot copy files to session.", e);
-                return abandon();
-            } catch (SecurityException e) {
-                sendCompletedBroadcast(packageName, STATUS_FAILURE_SECURITY, sessionId);
-                Log.e(TAG, "Install: Cannot access apk files.", e);
-                return abandon();
+        try {
+            super.install(apkFiles, packageName);
+            if (!openSession()) return false;
+            // Write apk files
+            for (File apkFile : apkFiles) {
+                try (InputStream apkInputStream = new FileInputStream(apkFile);
+                     OutputStream apkOutputStream = session.openWrite(apkFile.getName(), 0, apkFile.length())) {
+                    IOUtils.copy(apkInputStream, apkOutputStream);
+                    session.fsync(apkOutputStream);
+                } catch (IOException e) {
+                    sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_WRITE, sessionId);
+                    Log.e(TAG, "Install: Cannot copy files to session.", e);
+                    return abandon();
+                } catch (SecurityException e) {
+                    sendCompletedBroadcast(packageName, STATUS_FAILURE_SECURITY, sessionId);
+                    Log.e(TAG, "Install: Cannot access apk files.", e);
+                    return abandon();
+                }
             }
+            // Commit
+            return commit();
+        } finally {
+            unregisterReceiver();
         }
-        // Commit
-        return commit();
     }
 
     @Override
-    boolean commit() {
+    protected boolean commit() {
         Log.d(TAG, "Commit: calling activity to request permission...");
         IntentSender sender;
         LocalIntentReceiver intentReceiver;
@@ -434,7 +448,7 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
             }
         } else {
             intentReceiver = null;
-            Intent callbackIntent = new Intent(AMPackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER);
+            Intent callbackIntent = new Intent(PackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, callbackIntent, 0);
             sender = pendingIntent.getIntentSender();
         }
@@ -459,20 +473,31 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
                 return false;
             }
         }
-        if (!isPrivileged) return true;  // Fallback for no-root
-        Intent resultIntent = intentReceiver.getResult();
-        int status = resultIntent.getIntExtra(PackageInstaller.EXTRA_STATUS, 0);
-        if (status == PackageInstaller.STATUS_SUCCESS) {
+        if (!isPrivileged) {
+            // Wait for user interaction (if needed)
+            try {
+                // Wait for user interaction
+                interactionWatcher.await();
+                // Wait for the install to complete
+                installWatcher.await(1, TimeUnit.MINUTES);
+            } catch (InterruptedException e) {
+                Log.e("PIS", "Installation interrupted.", e);
+            }
+        } else {
+            Intent resultIntent = intentReceiver.getResult();
+            finalStatus = resultIntent.getIntExtra(PackageInstaller.EXTRA_STATUS, 0);
+        }
+        if (finalStatus == PackageInstaller.STATUS_SUCCESS) {
             sendCompletedBroadcast(packageName, STATUS_SUCCESS, sessionId);
             return true;
         } else {
-            sendCompletedBroadcast(packageName, status, sessionId);
+            sendCompletedBroadcast(packageName, finalStatus, sessionId);
             return false;
         }
     }
 
     @Override
-    boolean openSession() {
+    protected boolean openSession() {
         try {
             packageInstaller = PackageManagerCompat.getPackageInstaller(AppManager.getIPackageManager());
         } catch (RemoteException e) {
@@ -521,6 +546,30 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
         return true;
     }
 
+    @WorkerThread
+    @Override
+    protected void copyObb(@NonNull ApkFile apkFile) {
+        if (apkFile.hasObb()) {
+            boolean tmpCloseApkFile = closeApkFile;
+            // Disable closing apk file in case the install is finished already.
+            closeApkFile = false;
+            if (!apkFile.extractObb()) {  // FIXME: Extract OBB for user handle
+                new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context,
+                        R.string.failed_to_extract_obb_files, Toast.LENGTH_LONG).show());
+            } else {
+                new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context,
+                        R.string.obb_files_extracted_successfully, Toast.LENGTH_LONG).show());
+            }
+            if (installWatcher.getCount() != 0) {
+                // Reset close apk file if the install isn't completed
+                closeApkFile = tmpCloseApkFile;
+            } else {
+                // Install completed, close apk file if requested
+                if (tmpCloseApkFile) apkFile.close();
+            }
+        }
+    }
+
     private void cleanOldSessions() {
         if (isPrivileged) return;
         List<PackageInstaller.SessionInfo> sessionInfoList;
@@ -540,7 +589,7 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
     }
 
     @Override
-    boolean abandon() {
+    protected boolean abandon() {
         if (session != null) {
             try {
                 session.close();
