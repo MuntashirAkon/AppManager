@@ -23,10 +23,13 @@ import android.content.IIntentReceiver;
 import android.content.IIntentSender;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageInstaller;
 import android.content.pm.IPackageInstallerSession;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
+import android.content.pm.VersionedPackage;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -51,9 +54,11 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.UserIdInt;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 
@@ -88,7 +93,8 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
             INSTALL_DRY_RUN,
     })
     @Retention(RetentionPolicy.SOURCE)
-    public @interface InstallFlags {}
+    public @interface InstallFlags {
+    }
 
     /**
      * Flag parameter for {@code #installPackage} to indicate that you want to replace an already
@@ -275,6 +281,54 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
     @Deprecated
     public static final int INSTALL_ALLOW_DOWNGRADE = 0x00000080;
 
+    @SuppressLint("NewApi")
+    @IntDef(flag = true, value = {
+            DELETE_KEEP_DATA,
+            DELETE_ALL_USERS,
+            DELETE_SYSTEM_APP,
+            DELETE_DONT_KILL_APP,
+            DELETE_CHATTY,
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface DeleteFlags {
+    }
+
+    /**
+     * Flag parameter for {@code #deletePackage} to indicate that you don't want to delete the
+     * package's data directory.
+     */
+    public static final int DELETE_KEEP_DATA = 0x00000001;
+
+    /**
+     * Flag parameter for {@code #deletePackage} to indicate that you want the
+     * package deleted for all users.
+     */
+    public static final int DELETE_ALL_USERS = 0x00000002;
+
+    /**
+     * Flag parameter for {@code #deletePackage} to indicate that, if you are calling
+     * uninstall on a system that has been updated, then don't do the normal process
+     * of uninstalling the update and rolling back to the older system version (which
+     * needs to happen for all users); instead, just mark the app as uninstalled for
+     * the current user.
+     */
+    public static final int DELETE_SYSTEM_APP = 0x00000004;
+
+    /**
+     * Flag parameter for {@code #deletePackage} to indicate that, if you are calling
+     * uninstall on a package that is replaced to provide new feature splits, the
+     * existing application should not be killed during the removal process.
+     */
+    @RequiresApi(Build.VERSION_CODES.N)
+    public static final int DELETE_DONT_KILL_APP = 0x00000008;
+
+    /**
+     * Flag parameter for {@code #deletePackage} to indicate that package deletion
+     * should be chatty.
+     */
+    @RequiresApi(Build.VERSION_CODES.P)
+    public static final int DELETE_CHATTY = 0x80000000;
+
     @SuppressLint("StaticFieldLeak")
     private static PackageInstallerCompat INSTANCE;
 
@@ -421,7 +475,7 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
     @Override
     boolean openSession() {
         try {
-            packageInstaller = IPackageInstaller.Stub.asInterface(new ProxyBinder(AppManager.getIPackageManager().getPackageInstaller().asBinder()));
+            packageInstaller = PackageManagerCompat.getPackageInstaller(AppManager.getIPackageManager());
         } catch (RemoteException e) {
             sendCompletedBroadcast(packageName, STATUS_FAILURE_SESSION_CREATE, sessionId);
             Log.e(TAG, "OpenSession: Could not get PackageInstaller.", e);
@@ -496,6 +550,47 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
             }
         }
         return false;
+    }
+
+    public static void uninstall(String packageName, @UserIdInt int userHandle, boolean keepData) throws Exception {
+        IPackageInstaller pi = PackageManagerCompat.getPackageInstaller(AppManager.getIPackageManager());
+        LocalIntentReceiver receiver = new LocalIntentReceiver();
+        IntentSender sender = receiver.getIntentSender();
+        boolean isPrivileged = LocalServer.isAMServiceAlive();
+        int flags = 0;
+        if (isPrivileged && userHandle == RunnerUtils.USER_ALL) {
+            flags |= DELETE_ALL_USERS;
+        }
+        if (isPrivileged && keepData) {
+            flags |= DELETE_KEEP_DATA;
+        }
+        if (!isPrivileged || userHandle != RunnerUtils.USER_ALL) {
+            PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, 0, userHandle);
+            if (info == null) {
+                throw new PackageManager.NameNotFoundException("Package " + packageName
+                        + " no installed for user " + userHandle);
+            }
+            final boolean isSystem =
+                    (info.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+            // If we are being asked to delete a system app for just one
+            // user set flag so it disables rather than reverting to system
+            // version of the app.
+            if (isSystem) {
+                flags |= DELETE_SYSTEM_APP;
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            pi.uninstall(new VersionedPackage(packageName, PackageManager.VERSION_CODE_HIGHEST),
+                    null, flags, sender, userHandle);
+        } else {
+            pi.uninstall(packageName, null, flags, sender, userHandle);
+        }
+        final Intent result = receiver.getResult();
+        final int status = result.getIntExtra(PackageInstaller.EXTRA_STATUS,
+                PackageInstaller.STATUS_FAILURE);
+        if (status != PackageInstaller.STATUS_SUCCESS) {
+            throw new Exception(result.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE));
+        }
     }
 
     // https://cs.android.com/android/platform/superproject/+/master:frameworks/base/services/core/java/com/android/server/pm/PackageManagerShellCommand.java;l=3855;drc=d31ee388115d17c2fd337f2806b37390c7d29834

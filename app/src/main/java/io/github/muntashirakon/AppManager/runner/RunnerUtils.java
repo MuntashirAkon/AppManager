@@ -122,16 +122,6 @@ public final class RunnerUtils {
         return Runner.runCommand(cmd);
     }
 
-    @NonNull
-    public static Runner.Result uninstallPackageWithoutData(String packageName, int userHandle) {
-        return Runner.runCommand(String.format(CMD_UNINSTALL_PACKAGE, userHandleToUser(userHandle), packageName));
-    }
-
-    @NonNull
-    public static Runner.Result uninstallPackageWithData(String packageName, int userHandle) {
-        return Runner.runCommand(String.format(CMD_UNINSTALL_PACKAGE_WITH_DATA, userHandleToUser(userHandle), packageName));
-    }
-
     public static boolean fileExists(@NonNull String fileName) {
         return Runner.runCommand(new String[]{Runner.TOYBOX, "test", "-e", fileName}).isSuccessful();
     }

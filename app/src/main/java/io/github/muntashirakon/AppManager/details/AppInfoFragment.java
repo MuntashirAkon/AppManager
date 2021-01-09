@@ -93,6 +93,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
+import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
@@ -594,18 +595,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             .setCheckboxLabel(R.string.keep_data_and_signatures)
                             .setTitle(mPackageLabel)
                             .setPositiveButton(R.string.uninstall, (dialog, which, keepData) -> executor.submit(() -> {
-                                Runner.Result result;
-                                if (keepData) {
-                                    result = RunnerUtils.uninstallPackageWithoutData(mPackageName, mainModel.getUserHandle());
-                                } else {
-                                    result = RunnerUtils.uninstallPackageWithData(mPackageName, mainModel.getUserHandle());
-                                }
-                                if (result.isSuccessful()) {
+                                try {
+                                    PackageInstallerCompat.uninstall(mPackageName, mainModel.getUserHandle(), keepData);
                                     runOnUiThread(() -> {
                                         Toast.makeText(mActivity, getString(R.string.uninstalled_successfully, mPackageLabel), Toast.LENGTH_LONG).show();
                                         mActivity.finish();
                                     });
-                                } else {
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                     runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_uninstall, mPackageLabel), Toast.LENGTH_LONG).show());
                                 }
                             }))

@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.servermanager;
 import android.content.ComponentName;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageDataObserver;
+import android.content.pm.IPackageInstaller;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageInfo;
 import android.os.Build;
@@ -198,7 +199,12 @@ public final class PackageManagerCompat {
         ActivityManagerCompat.getActivityManager().forceStopPackage(packageName, userId);
     }
 
-    private static IPermissionManager getPermissionManager() {
+    @NonNull
+    public static IPackageInstaller getPackageInstaller(@NonNull IPackageManager pm) throws RemoteException {
+        return IPackageInstaller.Stub.asInterface(new ProxyBinder(pm.getPackageInstaller().asBinder()));
+    }
+
+    public static IPermissionManager getPermissionManager() {
         return IPermissionManager.Stub.asInterface(ProxyBinder.getService("permissionmgr"));
     }
 }

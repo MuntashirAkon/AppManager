@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 
 import androidx.annotation.CheckResult;
 import androidx.annotation.IntDef;
@@ -40,6 +39,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
+import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
@@ -51,7 +51,6 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -384,12 +383,16 @@ public class BatchOpsManager {
 
     @NonNull
     private Result opUninstall() {
+        List<UserPackagePair> failedPackages = new ArrayList<>();
         for (UserPackagePair pair : userPackagePairs) {
-            addCommand(pair.getPackageName(), pair.getUserHandle(), String.format(Locale.ROOT,
-                    RunnerUtils.CMD_UNINSTALL_PACKAGE_WITH_DATA, RunnerUtils.userHandleToUser(
-                            pair.getUserHandle()), pair.getPackageName()));
+            try {
+                PackageInstallerCompat.uninstall(pair.getPackageName(), pair.getUserHandle(), false);
+            } catch (Exception e) {
+                e.printStackTrace();
+                failedPackages.add(pair);
+            }
         }
-        return runOpAndFetchResults();
+        return lastResult = new Result(failedPackages);
     }
 
     private void sendProgress(@NonNull Context context, String message, int max, int current) {
@@ -398,24 +401,6 @@ public class BatchOpsManager {
         broadcastIntent.putExtra(BatchOpsService.EXTRA_PROGRESS_MAX, max);
         broadcastIntent.putExtra(BatchOpsService.EXTRA_PROGRESS_CURRENT, current);
         handler.post(() -> context.sendBroadcast(broadcastIntent));
-    }
-
-    private void addCommand(String packageName, int userHandle, String command) {
-        runner.addCommand(String.format(Locale.ROOT, "%s %s || echo %s %d", command, "> /dev/null 2>&1", packageName, userHandle));
-    }
-
-    @NonNull
-    private Result runOpAndFetchResults() {
-        Runner.Result result = runner.runCommand();
-        List<UserPackagePair> userPackagePairs = new ArrayList<>();
-        String[] packageAndUser;
-        for (String line : result.getOutputAsList()) {
-            packageAndUser = line.split(" ");
-            if (packageAndUser.length == 2) {
-                userPackagePairs.add(new UserPackagePair(packageAndUser[0], Integer.parseInt(packageAndUser[1])));
-            }
-        }
-        return lastResult = new Result(userPackagePairs);
     }
 
     public static class Result {

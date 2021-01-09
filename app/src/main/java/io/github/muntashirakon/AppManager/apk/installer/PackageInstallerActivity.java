@@ -290,8 +290,16 @@ public class PackageInstallerActivity extends BaseActivity {
                                 // Uninstall and then install again
                                 if (AppPref.isRootOrAdbEnabled()) {
                                     // User must be all
-                                    RunnerUtils.uninstallPackageWithData(packageName, RunnerUtils.USER_ALL);
-                                    install();
+                                    try {
+                                        PackageInstallerCompat.uninstall(packageName,
+                                                RunnerUtils.USER_ALL, false);
+                                        install();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Toast.makeText(PackageInstallerActivity.this,
+                                                getString(R.string.failed_to_uninstall, appLabel),
+                                                Toast.LENGTH_LONG).show();
+                                    }
                                 } else {
                                     // Uninstall using service, not guaranteed to work
                                     // since it only uninstalls for the current user

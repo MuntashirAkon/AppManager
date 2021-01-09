@@ -242,8 +242,10 @@ class RestoreOp implements Closeable {
             if (reinstallNeeded) {
                 // A complete reinstall needed, first uninstall the package with -k and then install
                 // the package again with -r
-                if (!RunnerUtils.uninstallPackageWithoutData(packageName, userHandle).isSuccessful()) {
-                    throw new BackupException("An uninstall was necessary but couldn't perform it.");
+                try {
+                    PackageInstallerCompat.uninstall(packageName, userHandle, true);
+                } catch (Exception e) {
+                    throw new BackupException("An uninstall was necessary but couldn't perform it.", e);
                 }
             }
             // Setup package staging directory
