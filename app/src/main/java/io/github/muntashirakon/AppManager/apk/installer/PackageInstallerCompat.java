@@ -56,7 +56,6 @@ import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.UserIdInt;
 import io.github.muntashirakon.AppManager.misc.Users;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -356,7 +355,7 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
 
     private PackageInstallerCompat(int userHandle) {
         this.isPrivileged = LocalServer.isAMServiceAlive();
-        this.allUsers = isPrivileged && userHandle == RunnerUtils.USER_ALL;
+        this.allUsers = isPrivileged && userHandle == Users.USER_ALL;
         this.userHandle = allUsers ? Users.getCurrentUserHandle() : userHandle;
         Log.d(TAG, "Installing for " + (allUsers ? "all users" : "user " + userHandle));
         if (isPrivileged) {
@@ -558,13 +557,13 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
         IntentSender sender = receiver.getIntentSender();
         boolean isPrivileged = LocalServer.isAMServiceAlive();
         int flags = 0;
-        if (isPrivileged && userHandle == RunnerUtils.USER_ALL) {
+        if (isPrivileged && userHandle == Users.USER_ALL) {
             flags |= DELETE_ALL_USERS;
         }
         if (isPrivileged && keepData) {
             flags |= DELETE_KEEP_DATA;
         }
-        if (!isPrivileged || userHandle != RunnerUtils.USER_ALL) {
+        if (!isPrivileged || userHandle != Users.USER_ALL) {
             PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, 0, userHandle);
             if (info == null) {
                 throw new PackageManager.NameNotFoundException("Package " + packageName

@@ -55,7 +55,6 @@ import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -292,7 +291,7 @@ public class PackageInstallerActivity extends BaseActivity {
                                     // User must be all
                                     try {
                                         PackageInstallerCompat.uninstall(packageName,
-                                                RunnerUtils.USER_ALL, false);
+                                                Users.USER_ALL, false);
                                         install();
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -381,14 +380,14 @@ public class PackageInstallerActivity extends BaseActivity {
                     String[] userNames = new String[users.size() + 1];
                     int[] userHandles = new int[users.size() + 1];
                     userNames[0] = getString(R.string.backup_all_users);
-                    userHandles[0] = RunnerUtils.USER_ALL;
+                    userHandles[0] = Users.USER_ALL;
                     int i = 1;
                     for (UserInfo info : users) {
                         userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
                         userHandles[i] = info.id;
                         ++i;
                     }
-                    AtomicInteger userHandle = new AtomicInteger(RunnerUtils.USER_ALL);
+                    AtomicInteger userHandle = new AtomicInteger(Users.USER_ALL);
                     runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
                             .setCancelable(false)
                             .setTitle(R.string.select_user)

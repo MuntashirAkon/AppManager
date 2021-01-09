@@ -40,22 +40,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 @SuppressWarnings("UnusedReturnValue")
 public final class RunnerUtils {
-    public static final int USER_ALL = -1;
-
     public static final String CMD_PM = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? "cmd package" : "pm";
 
     public static final String CMD_INSTALL_EXISTING_PACKAGE = CMD_PM + " install-existing --user %s %s";
     public static final String CMD_UNINSTALL_PACKAGE = CMD_PM + " uninstall -k --user %s %s";
     public static final String CMD_UNINSTALL_PACKAGE_WITH_DATA = CMD_PM + " uninstall --user %s %s";
-
-    public static final String CMD_PID_PACKAGE = "pidof %s";
-    public static final String CMD_KILL_SIG9 = "kill -9 %s";
 
     private static final String EMPTY = "";
 
@@ -117,7 +113,7 @@ public final class RunnerUtils {
 
     @NonNull
     public static Runner.Result uninstallPackageUpdate(String packageName, int userHandle, boolean keepData) {
-        String cmd = String.format(keepData ? CMD_UNINSTALL_PACKAGE : CMD_UNINSTALL_PACKAGE_WITH_DATA, userHandleToUser(USER_ALL), packageName) + " && "
+        String cmd = String.format(keepData ? CMD_UNINSTALL_PACKAGE : CMD_UNINSTALL_PACKAGE_WITH_DATA, userHandleToUser(Users.USER_ALL), packageName) + " && "
                 + String.format(CMD_INSTALL_EXISTING_PACKAGE, userHandleToUser(userHandle), packageName);
         return Runner.runCommand(cmd);
     }
@@ -170,7 +166,7 @@ public final class RunnerUtils {
 
     @NonNull
     public static String userHandleToUser(int userHandle) {
-        if (userHandle == USER_ALL) return "all";
+        if (userHandle == Users.USER_ALL) return "all";
         else return String.valueOf(userHandle);
     }
 
