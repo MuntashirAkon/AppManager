@@ -846,4 +846,7 @@
     <string name="disable_background_run_description">It sets the mode <i>ignore</i> to the following app ops: <tt>RUN_IN_BACKGROUND</tt> (from Android 7.0) and <tt>RUN_ANY_IN_BACKGROUND</tt> (from Android 9).</string>
     <string name="pref_interceptor_enabled_msg">Intercepts communication among apps via Intent</string>
     <string name="pref_backup_restore_msg">Customise backup/restore.</string>
+    <string name="backup_volume">Backup Volume</string>
+    <string name="pref_backup_volume_msg">Select the volume or disk where the backups will be stored.</string>
+    <string name="no_volumes_found">Could not find any volumes with write permission.</string>
 </resources>

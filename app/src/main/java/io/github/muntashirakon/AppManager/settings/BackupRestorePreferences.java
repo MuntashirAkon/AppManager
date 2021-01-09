@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,8 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
@@ -31,6 +34,7 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
 
     SettingsActivity activity;
     private int currentCompression;
+    private String backupVolume;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -107,6 +111,33 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
                     .show();
             return true;
         });
+        // Backup volume
+        this.backupVolume = (String) AppPref.get(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR);
+        ((Preference) Objects.requireNonNull(findPreference("backup_volume")))
+                .setOnPreferenceClickListener(preference -> {
+                    PrivilegedFile[] backupVolumes = OsEnvironment.buildExternalStoragePublicDirs();
+                    if (backupVolumes.length == 0) {
+                        new MaterialAlertDialogBuilder(activity)
+                                .setTitle(R.string.backup_volume)
+                                .setMessage(R.string.no_volumes_found)
+                                .setNegativeButton(R.string.ok, null)
+                                .show();
+                    } else {
+                        String[] backupVolumesStr = new String[backupVolumes.length];
+                        for (int i = 0; i < backupVolumesStr.length; ++i) {
+                            backupVolumesStr[i] = backupVolumes[i].getAbsolutePath();
+                        }
+                        new MaterialAlertDialogBuilder(activity)
+                                .setTitle(R.string.backup_volume)
+                                .setSingleChoiceItems(backupVolumesStr, Arrays.asList(backupVolumesStr).indexOf(this.backupVolume), (dialog, which) ->
+                                        this.backupVolume = backupVolumesStr[which])
+                                .setNegativeButton(R.string.cancel, null)
+                                .setPositiveButton(R.string.save, (dialog, which) ->
+                                        AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, this.backupVolume))
+                                .show();
+                    }
+                    return true;
+                });
     }
 
     @CryptoUtils.Mode

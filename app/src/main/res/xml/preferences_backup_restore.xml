@@ -16,8 +16,7 @@
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     app:title="@string/backup_restore">
 
@@ -40,5 +39,10 @@
         app:key="encryption"
         app:title="@string/encryption"
         app:summary="@string/pref_encryption_msg" />
+
+    <Preference
+        app:key="backup_volume"
+        app:title="@string/backup_volume"
+        app:summary="@string/pref_backup_volume_msg" />
 
 </PreferenceScreen>

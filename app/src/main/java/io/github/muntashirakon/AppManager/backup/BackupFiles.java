@@ -17,8 +17,6 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
-import android.os.Environment;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.Closeable;
@@ -34,16 +32,15 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class BackupFiles {
     static final String APK_SAVING_DIRECTORY = "apks";
     static final String TEMPORARY_DIRECTORY = "tmp";
 
-    private static final PrivilegedFile DEFAULT_BACKUP_PATH = new PrivilegedFile(Environment.getExternalStorageDirectory(), "AppManager");
-
     @NonNull
     public static PrivilegedFile getBackupDirectory() {
-        return DEFAULT_BACKUP_PATH;
+        return new PrivilegedFile((String) AppPref.get(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR), "AppManager");
     }
 
     @NonNull

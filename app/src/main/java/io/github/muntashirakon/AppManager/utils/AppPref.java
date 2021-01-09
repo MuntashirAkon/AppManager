@@ -21,6 +21,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.os.Environment;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -60,6 +61,7 @@ public class AppPref {
         PREF_APP_OP_SORT_ORDER_INT,
         PREF_APP_THEME_INT,
         PREF_BACKUP_COMPRESSION_METHOD_STR,
+        PREF_BACKUP_VOLUME_STR,
         PREF_BACKUP_FLAGS_INT,
         PREF_BACKUP_ANDROID_KEYSTORE_BOOL,
         PREF_COMPONENTS_SORT_ORDER_INT,
@@ -352,6 +354,8 @@ public class AppPref {
                 return AppManager.getContext().getPackageName();
             case PREF_SIGNATURE_SCHEMES_INT:
                 return SigSchemes.SIG_SCHEME_V1 | SigSchemes.SIG_SCHEME_V2;
+            case PREF_BACKUP_VOLUME_STR:
+                return Environment.getExternalStorageDirectory().getAbsolutePath();
         }
         throw new IllegalArgumentException("Pref key not found.");
     }
