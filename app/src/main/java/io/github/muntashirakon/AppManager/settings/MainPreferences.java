@@ -348,10 +348,8 @@ public class MainPreferences extends PreferenceFragmentCompat {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         // Android platform info
         builder.append(getPrimaryText(activity, getString(R.string.version) + ": "))
-                .append(Build.VERSION.RELEASE).append(", ")
-                .append(getPrimaryText(activity, getString(R.string.sdk) + ": "))
-                .append(String.valueOf(Build.VERSION.SDK_INT)).append("\n")
-                .append(getPrimaryText(activity, "Bootloader: "))
+                .append(Build.VERSION.RELEASE).append("\n")
+                .append(getPrimaryText(activity, getString(R.string.bootloader) + ": "))
                 .append(Build.BOOTLOADER).append(", ")
                 .append(getPrimaryText(activity, "VM: "))
                 .append(getVmVersion()).append("\n")
@@ -365,6 +363,16 @@ public class MainPreferences extends PreferenceFragmentCompat {
                 .append(Build.BOARD).append(", ")
                 .append(getPrimaryText(activity, getString(R.string.manufacturer) + ": "))
                 .append(Build.MANUFACTURER).append("\n");
+        // SDK
+        builder.append("\n").append(getTitleText(activity, getString(R.string.sdk))).append("\n")
+                .append(getPrimaryText(activity, getString(R.string.sdk_max) + ": "))
+                .append(String.valueOf(Build.VERSION.SDK_INT));
+        String minSdk = SystemProperties.get("ro.build.version.min_supported_target_sdk", "");
+        if (!TextUtils.isEmpty(minSdk)){
+            builder.append(", ").append(getPrimaryText(activity,
+                    getString(R.string.sdk_min) + ": ")).append(minSdk);
+        }
+        builder.append("\n");
         // Security
         builder.append("\n").append(getTitleText(activity, getString(R.string.security))).append("\n");
         builder.append(getPrimaryText(activity, getString(R.string.root) + ": "))

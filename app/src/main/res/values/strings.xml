@@ -851,4 +851,5 @@
     <string name="no_volumes_found">Could not find any volumes with write permission.</string>
     <string name="unencrypted">Unencrypted</string>
     <string name="encrypted">Encrypted</string>
+    <string name="bootloader">Bootloader</string>
 </resources>
