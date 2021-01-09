@@ -1,2 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="uses_feature">사용한 기능</string>
+    <string name="protection_level">보호 수준</string>
+    <string name="group">그룹</string>
+    <string name="shared_libs">공유된 라이브러리</string>
+    <string name="declared_permission">권한</string>
+    <string name="patterns_allowed">패턴 허용됨</string>
+    <string name="write">쓰기</string>
+    <string name="read">읽기</string>
+    <string name="path_permissions">경로 권한</string>
+    <string name="grant_uri_permission">허용된 URI 권한</string>
+    <string name="flags">깃발</string>
+    <string name="soft_input">소프트 입력 모드</string>
+    <string name="orientation">방향</string>
+    <string name="no_service">서비스가 없습니다</string>
+    <string name="service">서비스</string>
+    <string name="sort_by_last_update">마지막 업데이트</string>
+    <string name="launch_mode">실행 모드</string>
+    <string name="no_providers">공급자가 없습니다</string>
+    <string name="providers">공급자</string>
+    <string name="no_receivers">리시버가 없습니다</string>
+    <string name="receivers">리시버</string>
+    <string name="no_activities">활동이 없습니다</string>
+    <string name="refresh">새롭게 하기</string>
+    <string name="launch">실행</string>
+    <string name="activities">활동</string>
+    <string name="require_no_permission">아무 권한이 필요하지 없습니다</string>
+    <string name="permissions">사용한 권한</string>
+    <string name="uninstall">제서</string>
+</resources>
