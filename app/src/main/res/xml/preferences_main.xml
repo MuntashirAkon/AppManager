@@ -50,6 +50,12 @@
         app:summary="@string/pref_apk_signing_msg"
         android:fragment="io.github.muntashirakon.AppManager.settings.ApkSigningPreferences" />
 
+    <Preference
+        app:key="backup_restore_prefs"
+        app:title="@string/backup_restore"
+        app:summary="@string/pref_backup_restore_msg"
+        android:fragment="io.github.muntashirakon.AppManager.settings.BackupRestorePreferences" />
+
     <PreferenceCategory
         app:key="rules"
         app:title="@string/rules">
@@ -94,32 +100,6 @@
             app:key="installer_installer_app"
             app:title="@string/installer_app"
             tools:summary="App Manager" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        app:key="backup_restore"
-        app:title="@string/backup_restore">
-
-        <Preference
-            app:key="backup_compression_method"
-            app:title="@string/pref_compression_method"
-            tools:summary="Current method: GZip" />
-
-        <Preference
-            app:key="backup_flags"
-            app:title="@string/backup_options"
-            app:summary="@string/pref_backup_flags_msg" />
-
-        <SwitchPreferenceCompat
-            app:key="backup_android_keystore"
-            app:title="@string/pref_backup_android_keystore"
-            app:summary="@string/pref_backup_android_keystore_msg" />
-
-        <Preference
-            app:key="encryption"
-            app:title="@string/encryption"
-            app:summary="@string/pref_encryption_msg" />
 
     </PreferenceCategory>
 
