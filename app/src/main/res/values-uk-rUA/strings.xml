@@ -50,8 +50,8 @@
     <string name="license">Ліцензія</string>
     <string name="third_party">Сторонні бібліотеки та іконки</string>
     <string name="credits">Автори</string>
-    <string name="toggle_default_app_ops">Перемкнути дозволи за замовчуванням</string>
-    <string name="pref_remove_all_rules_msg">Дозволи надано, керування дозволами (app ops) та компоненти повернуться до значень за замовчуванням.</string>
+    <string name="toggle_default_app_ops">Перемкнути app ops за замовчуванням</string>
+    <string name="pref_remove_all_rules_msg">Дозволи надано, app ops та компоненти повернуться до значень за замовчуванням.</string>
     <plurals name="alert_failed_to_deny_app_ops">
         <item quantity="one">Не вдалося заборонити дозвіл додатку %1$d</item>
         <item quantity="few">Не вдалося заборонити дозвіл додатків %1$d</item>
@@ -64,19 +64,19 @@
         <item quantity="many">%1$d сплітів</item>
         <item quantity="other">%1$d сплітів</item>
     </plurals>
-    <string name="input_app_ops_description">Введіть імена та/або константи додатків із пробілами, наприклад (WAKE_LOCK 63 72 КАМЕРА) тощо.</string>
-    <string name="input_app_ops">Введення дозволів додатків (app ops)</string>
+    <string name="input_app_ops_description">Введіть імена та/або константи app op із пробілами, наприклад (WAKE_LOCK 63 72 КАМЕРА) тощо.</string>
+    <string name="input_app_ops">Введення app ops</string>
     <string name="deny_app_ops_dots">Забороняю дозволи…</string>
     <string name="external_apk_no_app_op">Зовнішній файл .apk не має жодних операцій з додатками</string>
-    <string name="failed_to_deny_dangerous_app_ops">Не вдалося відкликати всі небезпечні дозволи</string>
-    <string name="failed_to_reset_app_ops">Не вдалося провести скидання дозволів</string>
-    <string name="sort_by_app_ops_values">Значення дозволу</string>
-    <string name="sort_by_app_ops_names">Назва дозволу</string>
-    <string name="deny_dangerous_app_ops">Заборонити небезпечні дозволи</string>
+    <string name="failed_to_deny_dangerous_app_ops">Не вдалося відкликати всі небезпечні app ops</string>
+    <string name="failed_to_reset_app_ops">Не вдалося провести скидання app ops</string>
+    <string name="sort_by_app_ops_values">Значення app ops</string>
+    <string name="sort_by_app_ops_names">Назва app ops</string>
+    <string name="deny_dangerous_app_ops">Заборонити небезпечні app ops</string>
     <string name="app_op_cannot_be_disabled">Цей дозвіл неможливо заборонити, можливо він лише для читання, або залежить від іншого дозволу.</string>
     <string name="failed_to_enable_op">Сталася помилка під час спроби надати дозвіл</string>
     <string name="no_app_ops">Немає операцій з дозволами</string>
-    <string name="app_ops">Керування дозволами</string>
+    <string name="app_ops">App Ops</string>
     <string name="sys_config">Конфігурація системи</string>
     <string name="only_install">Лише встановити</string>
     <string name="install_without_data_loss">Якщо ви вимкнули перевірку підпису, ви можете використовувати опцію <b> Лише встановити </b>, для установки додатка без втрати даних.</string>
@@ -230,7 +230,7 @@
     <string name="block">Блокувати</string>
     <string name="clear">Очистити</string>
     <string name="failed_packages">Збійні пакети</string>
-    <string name="deny_app_ops_description">Встановити вказані операції програми, визначені константами, наприклад 63 або RUN_IN_BACKGROUND</string>
+    <string name="deny_app_ops_description">Встановити режим операцій програм, визначені константами, наприклад 63 або RUN_IN_BACKGROUND</string>
     <string name="manifest_viewer">Переглядач маніфесту</string>
     <string name="never_ask">Не запитувати</string>
     <string name="unknown_op">Невідома операція</string>
@@ -253,7 +253,7 @@
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> днів</item>
     </plurals>
     <string name="main_activity">Головне аctivity</string>
-    <string name="sdk_max">Макс.</string>
+    <string name="sdk_max">Цільова</string>
     <string name="sdk_min">Мін.</string>
     <string name="path_permissions">Шляхи дозволів</string>
     <string name="authority">Права</string>
@@ -849,4 +849,22 @@
     <string name="activity_result">Результат activity</string>
     <string name="send_edited_intent">Надіслати відредагований intent</string>
     <string name="matching_activities">Відповідні activities</string>
+    <string name="pref_interceptor_enabled_msg">Перехоплює спілкування між програмами через Intent</string>
+    <string name="window_size">Розмір вікна</string>
+    <string name="security_providers">Постачальники безпеки</string>
+    <string name="un_apkm">Розпакування Apkm</string>
+    <plurals name="no_of_components">
+        <item quantity="one">%1$d компонент</item>
+        <item quantity="few">%1$d компоненти</item>
+        <item quantity="many">%1$d компонентів</item>
+        <item quantity="other">%1$d компонентів</item>
+    </plurals>
+    <string name="disable_background_run_description">Буде встановлено режим &lt;i&gt;ignore&lt;/i&gt; для app ops: &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt; (з Android7.0) і &lt;tt&gt;RUN_ANY_IN_BACKGROUND&lt;/tt&gt; (з Android 9).</string>
+    <string name="set_mode_for_app_ops_dots">Встановити режим для app ops…</string>
+    <plurals name="alert_failed_to_set_app_ops">
+        <item quantity="one">Не вдалося встановити app ops для %1$d програми</item>
+        <item quantity="few">Не вдалося встановити app ops для %1$d програм</item>
+        <item quantity="many">Не вдалося встановити app ops для %1$d програм</item>
+        <item quantity="other">Не вдалося встановити app ops для %1$d програм</item>
+    </plurals>
 </resources>
