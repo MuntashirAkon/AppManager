@@ -70,6 +70,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
+import io.github.muntashirakon.AppManager.misc.SystemProperties;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -374,7 +375,8 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .append(getString(selinux == 1 ? R.string.enforcing : R.string.permissive))
                     .append("\n");
         }
-        // TODO(31/12/20): Get encryption status
+        builder.append(getPrimaryText(activity, getString(R.string.encryption) + ": "))
+                .append(getEncryptionStatus()).append("\n");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             builder.append(getPrimaryText(activity, getString(R.string.patch_level) + ": "))
                     .append(Build.VERSION.SECURITY_PATCH).append("\n");
@@ -576,6 +578,20 @@ public class MainPreferences extends PreferenceFragmentCompat {
             return 0;
         }
         return 2;
+    }
+
+    @NonNull
+    private String getEncryptionStatus() {
+        String state = SystemProperties.get("ro.crypto.state", "");
+        if ("encrypted".equals(state)) {
+            String encryptedMsg = getString(R.string.encrypted);
+            String type = SystemProperties.get("ro.crypto.type", "");
+            if ("file".equals(type)) return encryptedMsg + " (FBE)";
+            else if ("block".equals(type)) return encryptedMsg + " (FDE)";
+            else return encryptedMsg;
+        } else if ("unencrypted".equals(state)) {
+            return getString(R.string.unencrypted);
+        } else return getString(R.string.state_unknown);
     }
 
     private String getDensity() {

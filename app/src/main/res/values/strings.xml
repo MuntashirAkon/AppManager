@@ -849,4 +849,6 @@
     <string name="backup_volume">Backup Volume</string>
     <string name="pref_backup_volume_msg">Select the volume or disk where the backups will be stored.</string>
     <string name="no_volumes_found">Could not find any volumes with write permission.</string>
+    <string name="unencrypted">Unencrypted</string>
+    <string name="encrypted">Encrypted</string>
 </resources>
