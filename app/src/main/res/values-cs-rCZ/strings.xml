@@ -14,8 +14,7 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-<resources>
+  --><resources>
     <string name="uninstall">Odinstalovat</string>
     <string name="require_no_permission">Nejsou vyžadována žádná oprávnění</string>
     <string name="activities">Aktivity</string>
@@ -27,4 +26,5 @@
     <string name="usage_weekly">Za týden</string>
     <string name="usage_today">Dnes</string>
     <string name="usage_7_days">Posledních 7 dní</string>
+    <string name="service">Služby</string>
 </resources>
