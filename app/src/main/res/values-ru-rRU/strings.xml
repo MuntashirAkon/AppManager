@@ -85,7 +85,7 @@
     <string name="source_dir">Исходный каталог</string>
     <string name="data_dir">Каталог данных</string>
     <string name="sdk_min">мин. версия</string>
-    <string name="sdk_max">Макс. версия</string>
+    <string name="sdk_max">Объект</string>
     <string name="sdk_flags">Флаги</string>
     <string name="more_info">Подробнее</string>
     <string name="date_installed">Дата установки</string>
@@ -843,7 +843,7 @@
     <string name="pref_about_device_msg">Основная информация об устройстве, включая версию Android, ЦП, ГП, ОЗУ, аккумулятор и т. д.</string>
     <string name="about_device">Об устройстве</string>
     <string name="uri">URI</string>
-    <string name="magisk_hide_enabled">MagiskHide</string>
+    <string name="magisk_hide_enabled"></string>
     <string name="keystore"/>
     <string name="security">Безопасность</string>
     <string name="patch_level">Обновление системы безопасности Андроид</string>
@@ -859,8 +859,8 @@
     <string name="backup_data_description">Резервное копирование папок с данными. Если выбран этот параметр, по умолчанию будут созданы резервные копии внутренних папок с данными.</string>
     <string name="backup_apk_only_description">Резервное копирование только файлов APK из исходного каталога. Для этого необходимо выбрать <b>Источник </b>.</string>
     <string name="backup_source_description">Резервное копирование всего каталога источника.</string>
-    <string name="permissive">Permissive</string>
-    <string name="enforcing">Enforcing</string>
+    <string name="permissive"></string>
+    <string name="enforcing"></string>
     <string name="window_size">Размер окна</string>
     <string name="size">Размер</string>
     <string name="hardware">Модель</string>
@@ -886,4 +886,5 @@
         <item quantity="many">%1$d компонентов</item>
         <item quantity="other">%1$d компонентов</item>
     </plurals>
+    <string name="pref_interceptor_enabled_msg">Перехватывает связь между приложениями через цель</string>
 </resources>
