@@ -45,6 +45,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class RulesStorageManager implements Closeable {
@@ -80,6 +81,7 @@ public class RulesStorageManager implements Closeable {
         BATTERY_OPT,  // boolean (battery optimization)
         NET_POLICY,  // whitelist|blacklist|none
         NOTIFICATION,  // string (component name)
+        URI_GRANT,  // string (flattened by UriGrant)
         UNKNOWN;
 
         public static final String[] names = new String[values().length];
@@ -259,6 +261,13 @@ public class RulesStorageManager implements Closeable {
         Entry entry = new Entry();
         entry.type = Type.BATTERY_OPT;
         entry.extra = netPolicy;
+        addEntry(entry);
+    }
+
+    public void setUriGrant(@NonNull UriManager.UriGrant uriGrant) {
+        Entry entry = new Entry();
+        entry.type = Type.URI_GRANT;
+        entry.extra = uriGrant.flattenToString();
         addEntry(entry);
     }
 

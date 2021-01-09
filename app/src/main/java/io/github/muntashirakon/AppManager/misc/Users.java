@@ -37,7 +37,11 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 public final class Users {
     public static final String TAG = "Users";
 
+    @UserIdInt
     public static final int USER_ALL = -1;
+    @UserIdInt
+    public static final int USER_NULL = -10000;
+
     public static final boolean MU_ENABLED;
     public static final int PER_USER_RANGE;
 

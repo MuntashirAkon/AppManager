@@ -40,6 +40,7 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -362,6 +363,14 @@ class BackupOp implements Closeable {
                 rules.setNetPolicy(policies);
             }
         } catch (RemoteException ignore) {
+        }
+        // Backup URI grants
+        UriManager uriManager = new UriManager();
+        List<UriManager.UriGrant> uriGrants = uriManager.getGrantedUris(packageName);
+        if (uriGrants != null) {
+            for (UriManager.UriGrant uriGrant : uriGrants) {
+                rules.setUriGrant(uriGrant);
+            }
         }
         rules.commitExternal(miscFile);
         if (!crypto.encrypt(new File[]{miscFile})) {
