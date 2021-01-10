@@ -39,6 +39,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -171,6 +172,7 @@ public class AppsProfileActivity extends BaseActivity
                     for (PackageInfo info : packageInfoList) {
                         itemPairs.add(new Pair<>(pm.getApplicationLabel(info.applicationInfo), info.applicationInfo));
                     }
+                    Collections.sort(itemPairs, (o1, o2) -> o1.first.toString().compareToIgnoreCase(o2.first.toString()));
                     ArrayList<String> items = new ArrayList<>(itemPairs.size());
                     ArrayList<CharSequence> itemNames = new ArrayList<>(itemPairs.size());
                     for (Pair<CharSequence, ApplicationInfo> itemPair : itemPairs) {
