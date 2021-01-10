@@ -18,15 +18,18 @@
 package io.github.muntashirakon.AppManager.backup;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.misc.UserIdInt;
-import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 
+/**
+ * Manage backups for individual package belong to individual user.
+ */
 public class BackupManager {
     public static final String TAG = "BackupManager";
 
@@ -54,55 +57,51 @@ public class BackupManager {
     }
 
     /**
-     * @param packageName Package name of the app
-     * @param flags       One or more of the {@link BackupFlags.BackupFlag}
+     * @param targetPackage Package name with user ID whose backup will be restored. This does not
+     *                      have any influence on backup names that has to be supplied separately.
+     * @param flags         One or more of the {@link BackupFlags.BackupFlag}
      */
     @NonNull
-    public static BackupManager getNewInstance(String packageName, int flags) {
-        return new BackupManager(packageName, flags);
+    public static BackupManager getNewInstance(UserPackagePair targetPackage, int flags) {
+        return new BackupManager(targetPackage, flags);
     }
 
     @NonNull
-    private final String packageName;
+    private final UserPackagePair targetPackage;
     @NonNull
     private final MetadataManager metadataManager;
     @NonNull
     private final BackupFlags requestedFlags;
-    @NonNull
-    @UserIdInt
-    private final int[] userHandles;
 
-    protected BackupManager(@NonNull String packageName, int flags) {
-        this.packageName = packageName;
+    protected BackupManager(@NonNull UserPackagePair targetPackage, int flags) {
+        this.targetPackage = targetPackage;
         metadataManager = MetadataManager.getNewInstance();
         requestedFlags = new BackupFlags(flags);
-        if (requestedFlags.backupAllUsers()) {
-            userHandles = Users.getUsersHandles();
-        } else userHandles = new int[]{Users.getCurrentUserHandle()};
-        Log.e(TAG, "Users: " + Arrays.toString(userHandles));
+        Log.d(TAG, String.format(Locale.ROOT, "Package: %s, user: %d", targetPackage.getPackageName(), targetPackage.getUserHandle()));
     }
 
+    /**
+     * Backup the given package belonging to the given user. If multiple backup names given, iterate
+     * over the backup names and perform the identical backups several times.
+     */
     public boolean backup(@Nullable String[] backupNames) {
         if (requestedFlags.isEmpty()) {
             Log.e(BackupOp.TAG, "Backup is requested without any flags.");
             return false;
         }
         backupNames = getProcessedBackupNames(backupNames);
-        BackupFiles[] backupFilesList = new BackupFiles[userHandles.length];
-        for (int i = 0; i < userHandles.length; ++i) {
-            backupFilesList[i] = new BackupFiles(packageName, userHandles[i], backupNames);
-        }
-        for (int i = 0; i < userHandles.length; ++i) {
-            BackupFiles.BackupFile[] backupFiles = requestedFlags.backupMultiple() ?
-                    backupFilesList[i].getFreshBackupPaths() :
-                    backupFilesList[i].getBackupPaths(true);
-            for (BackupFiles.BackupFile backupFile : backupFiles) {
-                try (BackupOp backupOp = new BackupOp(packageName, metadataManager, requestedFlags, backupFile, userHandles[i])) {
-                    if (!backupOp.runBackup()) return false;
-                } catch (BackupException e) {
-                    Log.e(BackupOp.TAG, e.getMessage(), e);
-                    return false;
-                }
+        // Get backup files based on the number of backupNames
+        BackupFiles backupFiles = new BackupFiles(targetPackage.getPackageName(),
+                targetPackage.getUserHandle(), backupNames);
+        BackupFiles.BackupFile[] backupFileList = requestedFlags.backupMultiple() ?
+                backupFiles.getFreshBackupPaths() : backupFiles.getBackupPaths(true);
+        for (BackupFiles.BackupFile backupFile : backupFileList) {
+            try (BackupOp backupOp = new BackupOp(targetPackage.getPackageName(), metadataManager,
+                    requestedFlags, backupFile, targetPackage.getUserHandle())) {
+                if (!backupOp.runBackup()) return false;
+            } catch (BackupException e) {
+                Log.e(BackupOp.TAG, e.getMessage(), e);
+                return false;
             }
         }
         return true;
@@ -126,7 +125,7 @@ public class BackupManager {
     }
 
     /**
-     * Restore a single backup but could be for all users
+     * Restore a single backup for a given package belonging to the given package
      *
      * @param backupNames Backup names is a singleton array consisting of the full name of a backup.
      *                    Full name means backup name along with the user handle, ie., for user 0,
@@ -143,6 +142,7 @@ public class BackupManager {
             Log.e(RestoreOp.TAG, "Restore is requested from more than one backups!");
             return false;
         }
+        // The user handle with backups, this is different from the target user handle
         int backupUserHandle = -1;
         if (backupNames != null) {
             // Strip userHandle from backup name
@@ -157,27 +157,27 @@ public class BackupManager {
                 backupNames = null;
             }
         }
-        for (int userHandle : userHandles) {
-            // Set backup userHandle to the userHandle we're working with.
-            // This value is only set if backupNames is null or it consisted of only user handle
-            if (backupUserHandle == -1) backupUserHandle = userHandle;
-            BackupFiles backupFiles = new BackupFiles(packageName, backupUserHandle, backupNames);
-            BackupFiles.BackupFile[] backupFileList = backupFiles.getBackupPaths(false);
-            // Only restore from the first backup though we shouldn't have more than one backup.
-            if (backupFileList.length > 0) {
-                if (backupFileList.length > 1) {
-                    Log.w(RestoreOp.TAG, "More than one backups found!");
-                }
-                try (RestoreOp restoreOp = new RestoreOp(packageName, metadataManager, requestedFlags, backupFileList[0], userHandle)) {
-                    if (!restoreOp.runRestore()) return false;
-                } catch (BackupException e) {
-                    e.printStackTrace();
-                    Log.e(RestoreOp.TAG, e.getMessage(), e);
-                    return false;
-                }
-            } else {
-                Log.e(RestoreOp.TAG, "No backups found.");
+        // Set backup userHandle to the userHandle we're working with.
+        // This value is only set if backupNames is null or it consisted of only user handle
+        if (backupUserHandle == -1) backupUserHandle = targetPackage.getUserHandle();
+        BackupFiles backupFiles = new BackupFiles(targetPackage.getPackageName(), backupUserHandle, backupNames);
+        BackupFiles.BackupFile[] backupFileList = backupFiles.getBackupPaths(false);
+        // Only restore from the first backup though we shouldn't have more than one backup.
+        if (backupFileList.length > 0) {
+            if (backupFileList.length > 1) {
+                Log.w(RestoreOp.TAG, "More than one backups found!");
             }
+            try (RestoreOp restoreOp = new RestoreOp(targetPackage.getPackageName(),
+                    metadataManager, requestedFlags, backupFileList[0],
+                    targetPackage.getUserHandle())) {
+                if (!restoreOp.runRestore()) return false;
+            } catch (BackupException e) {
+                e.printStackTrace();
+                Log.e(RestoreOp.TAG, e.getMessage(), e);
+                return false;
+            }
+        } else {
+            Log.e(RestoreOp.TAG, "No backups found.");
         }
         return true;
     }
@@ -185,21 +185,18 @@ public class BackupManager {
     public boolean deleteBackup(@Nullable String[] backupNames) {
         if (backupNames == null) {
             // No backup names supplied, use user handle
-            for (int userHandle : userHandles) {
-                BackupFiles backupFiles = new BackupFiles(packageName, userHandle, null);
-                BackupFiles.BackupFile[] backupFileList = backupFiles.getBackupPaths(false);
-                for (BackupFiles.BackupFile backupFile : backupFileList) {
-                    if (!backupFile.delete()) return false;
-                }
+            BackupFiles backupFiles = new BackupFiles(targetPackage.getPackageName(),
+                    targetPackage.getUserHandle(), null);
+            BackupFiles.BackupFile[] backupFileList = backupFiles.getBackupPaths(false);
+            for (BackupFiles.BackupFile backupFile : backupFileList) {
+                if (!backupFile.delete()) return false;
             }
         } else {
             // backupNames is not null but that doesn't mean that it's not empty,
             // requested for only single backups
             for (String backupName : backupNames) {
-                new BackupFiles.BackupFile(
-                        new PrivilegedFile(BackupFiles.getPackagePath(packageName), backupName),
-                        false
-                ).delete();
+                new BackupFiles.BackupFile(new PrivilegedFile(BackupFiles.getPackagePath(
+                        targetPackage.getPackageName()), backupName), false).delete();
             }
         }
         return true;

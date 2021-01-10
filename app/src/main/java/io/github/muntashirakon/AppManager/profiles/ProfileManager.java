@@ -33,6 +33,7 @@ import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -129,7 +130,7 @@ public class ProfileManager {
             Log.d(TAG, "Started backup/restore.");
             Bundle args = new Bundle();
             args.putInt(BatchOpsManager.ARG_FLAGS, backupInfo.flags);
-            if (backupInfo.name != null) {
+            if ((backupInfo.flags & BackupFlags.BACKUP_MULTIPLE) != 0 && backupInfo.name != null) {
                 args.putStringArray(BatchOpsManager.ARG_BACKUP_NAMES, new String[]{backupInfo.name});
             }
             batchOpsManager.setArgs(args);

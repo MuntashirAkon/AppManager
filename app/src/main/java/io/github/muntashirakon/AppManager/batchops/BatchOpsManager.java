@@ -255,7 +255,7 @@ public class BatchOpsManager {
                     pair.getUserHandle()).toString(), max, i + 1);
             // Do operation
             String[] backupNames = args.getStringArray(ARG_BACKUP_NAMES);
-            BackupManager backupManager = BackupManager.getNewInstance(pair.getPackageName(), args.getInt(ARG_FLAGS));
+            BackupManager backupManager = BackupManager.getNewInstance(pair, args.getInt(ARG_FLAGS));
             switch (mode) {
                 case BackupDialogFragment.MODE_BACKUP:
                     if (!backupManager.backup(backupNames)) failedPackages.add(pair);

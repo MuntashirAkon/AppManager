@@ -111,6 +111,7 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -276,7 +277,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         } else if (itemId == R.id.action_backup) {
             BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
             Bundle args = new Bundle();
-            args.putStringArrayList(BackupDialogFragment.ARG_PACKAGES, new ArrayList<>(Collections.singleton(mPackageName)));
+            args.putParcelableArrayList(BackupDialogFragment.ARG_PACKAGE_PAIRS, new ArrayList<>(
+                    Collections.singleton(new UserPackagePair(mPackageName, mainModel.getUserHandle()))));
             backupDialogFragment.setArguments(args);
             backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
             backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));

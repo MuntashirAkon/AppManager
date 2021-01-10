@@ -195,8 +195,15 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                             backupInfo = new ProfileMetaManager.Profile.BackupInfo();
                         }
                         CharSequence backupName = editText.getText();
-                        backupInfo.flags = backupFlags.get();
-                        backupInfo.name = TextUtils.isEmpty(backupName) ? null : backupName.toString();
+                        BackupFlags backupFlags1 = new BackupFlags(backupFlags.get());
+                        if (!TextUtils.isEmpty(backupName)) {
+                            backupFlags1.addFlag(BackupFlags.BACKUP_MULTIPLE);
+                            backupInfo.name = backupName.toString();
+                        } else {
+                            backupFlags1.removeFlag(BackupFlags.BACKUP_MULTIPLE);
+                            backupInfo.name = null;
+                        }
+                        backupInfo.flags = backupFlags1.getFlags();
                         model.setBackupInfo(backupInfo);
                         backupDataPref.setSummary(R.string.enabled);
                     })

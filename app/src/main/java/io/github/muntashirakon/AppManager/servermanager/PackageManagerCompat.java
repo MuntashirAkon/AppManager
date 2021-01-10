@@ -23,6 +23,7 @@ import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageInstaller;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
 import android.permission.IPermissionManager;
@@ -70,8 +71,13 @@ public final class PackageManagerCompat {
     }
 
     @NonNull
-    public static PackageInfo getPackageInfo(String packageName, int flags, @UserIdInt int userHandle) throws RemoteException {
-        return AppManager.getIPackageManager().getPackageInfo(packageName, flags, userHandle);
+    public static PackageInfo getPackageInfo(String packageName, int flags, @UserIdInt int userHandle)
+            throws RemoteException, PackageManager.NameNotFoundException {
+        PackageInfo info = AppManager.getIPackageManager().getPackageInfo(packageName, flags, userHandle);
+        if (info == null) {
+            throw new PackageManager.NameNotFoundException(packageName + " not found.");
+        }
+        return info;
     }
 
     @NonNull
