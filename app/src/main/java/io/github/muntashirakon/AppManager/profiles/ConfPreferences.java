@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.profiles;
 
+import android.content.pm.UserInfo;
 import android.os.Bundle;
 import android.view.View;
 
@@ -37,9 +38,12 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 public class ConfPreferences extends PreferenceFragmentCompat {
     AppsProfileActivity activity;
@@ -96,6 +100,9 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                     .show();
             return true;
         });
+        // Set users
+        Preference usersPref = Objects.requireNonNull(findPreference("users"));
+        handleUsersPref(usersPref);
         // Set components
         Preference componentsPref = Objects.requireNonNull(findPreference("components"));
         updateComponentsPref(componentsPref);
@@ -303,6 +310,59 @@ public class ConfPreferences extends PreferenceFragmentCompat {
         else {
             pref.setSummary(TextUtils.join(", ", permissions));
         }
+    }
+
+    private List<Integer> selectedUsers;
+    private void handleUsersPref(Preference pref) {
+        // Init local server first
+        LocalServer.getInstance();
+        List<UserInfo> users = Users.getUsers();
+        if (users != null && users.size() > 1) {
+            pref.setVisible(true);
+            CharSequence[] userNames = new String[users.size()];
+            List<Integer> userHandles = new ArrayList<>(users.size());
+            int i = 0;
+            for (UserInfo info : users) {
+                userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
+                userHandles.add(info.id);
+                ++i;
+            }
+            selectedUsers = new ArrayList<>();
+            for (Integer user : model.getUsers()) {
+                selectedUsers.add(user);
+            }
+            activity.runOnUiThread(() -> {
+                pref.setSummary(TextUtils.joinSpannable(", " , getUserInfo(users, selectedUsers)));
+                pref.setOnPreferenceClickListener(v -> {
+                    new SearchableMultiChoiceDialogBuilder<>(activity, userHandles, userNames)
+                            .setTitle(R.string.select_user)
+                            .setSelections(selectedUsers)
+                            .setPositiveButton(R.string.ok, (dialog, which, selectedUserHandles) -> {
+                                if (selectedUserHandles.size() == 0) {
+                                    selectedUsers = userHandles;
+                                } else selectedUsers = selectedUserHandles;
+                                pref.setSummary(TextUtils.joinSpannable(", " , getUserInfo(users, selectedUsers)));
+                                model.setUsers(ArrayUtils.convertToIntArray(selectedUsers));
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .show();
+                    return true;
+                });
+            });
+        } else {
+            activity.runOnUiThread(() -> pref.setVisible(false));
+        }
+    }
+
+    @NonNull
+    private List<CharSequence> getUserInfo(@NonNull List<UserInfo> userInfoList, @NonNull List<Integer> userHandles) {
+        List<CharSequence> userInfoOut = new ArrayList<>();
+        for (UserInfo info : userInfoList) {
+            if (userHandles.contains(info.id)) {
+                userInfoOut.add(info.name);
+            }
+        }
+        return userInfoOut;
     }
 
     public class ConfDataStore extends PreferenceDataStore {

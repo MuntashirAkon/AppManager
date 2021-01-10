@@ -30,6 +30,11 @@
         tools:title="State: On" />
 
     <Preference
+        app:key="users"
+        app:title="@string/users"
+        tools:summary="Users: Main, Work" />
+
+    <Preference
         app:key="components"
         app:title="@string/components"
         tools:summary="Comma separated list of components" />

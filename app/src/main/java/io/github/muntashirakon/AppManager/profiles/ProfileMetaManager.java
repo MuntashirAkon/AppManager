@@ -61,6 +61,8 @@ public class ProfileMetaManager {
         @Nullable
         @ProfileState
         public String state;  // state
+        @Nullable
+        public int[] users;  // users
         @NonNull
         private final String name;  // name (name of the profile)
         @NonNull
@@ -183,6 +185,10 @@ public class ProfileMetaManager {
         }
         profile.state = JSONUtils.getStringOrNull(profileObj, "state");
         try {
+            profile.users = JSONUtils.getIntArray(profileObj.getJSONArray("users"));
+        } catch (JSONException ignore) {
+        }
+        try {
             profile.components = JSONUtils.getArray(String.class, profileObj.getJSONArray("components"));
         } catch (JSONException ignore) {
         }
@@ -237,6 +243,7 @@ public class ProfileMetaManager {
         profileObj.put("name", profile.name);
         profileObj.put("comment", profile.comment);
         profileObj.put("state", profile.state);
+        profileObj.put("users", JSONUtils.getJSONArray(profile.users));
         profileObj.put("packages", JSONUtils.getJSONArray(profile.packages));
         profileObj.put("components", JSONUtils.getJSONArray(profile.components));
         profileObj.put("app_ops", JSONUtils.getJSONArray(profile.appOps));

@@ -35,6 +35,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 public class ProfileViewModel extends AndroidViewModel {
@@ -229,6 +230,16 @@ public class ProfileViewModel extends AndroidViewModel {
     @ProfileMetaManager.ProfileState
     public String getState() {
         return profile.state == null ? ProfileMetaManager.STATE_OFF : profile.state;
+    }
+
+    public void setUsers(@Nullable int[] users) {
+        profile.users = users;
+    }
+
+    @WorkerThread
+    @NonNull
+    public int[] getUsers() {
+        return profile.users == null ? Users.getUsersHandles() : profile.users;
     }
 
     public void setExportRules(@Nullable Integer flags) {

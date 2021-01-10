@@ -24,7 +24,7 @@ import android.text.TextUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,6 +36,8 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 public class ProfileManager {
@@ -76,7 +78,14 @@ public class ProfileManager {
         if (state == null) state = ProfileMetaManager.STATE_OFF;
 
         if (profile.packages.length == 0) return;
-        List<String> packages = Arrays.asList(profile.packages);
+        int[] users = profile.users == null ? Users.getUsersHandles() : profile.users;
+        List<UserPackagePair> userPackagePairs = new ArrayList<>();
+        for (String packageName : profile.packages) {
+            for (int user : users) {
+                userPackagePairs.add(new UserPackagePair(packageName, user));
+            }
+        }
+        BatchOpsManager.Result targetResult = new BatchOpsManager.Result(userPackagePairs);
         BatchOpsManager batchOpsManager = new BatchOpsManager();
         BatchOpsManager.Result result;
         // Apply component blocking
@@ -88,11 +97,11 @@ public class ProfileManager {
             batchOpsManager.setArgs(args);
             switch (state) {
                 case ProfileMetaManager.STATE_ON:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_BLOCK_COMPONENTS, packages);
+                    result = batchOpsManager.performOp(BatchOpsManager.OP_BLOCK_COMPONENTS, targetResult.getFailedPackages(), targetResult.getAssociatedUserHandles());
                     break;
                 case ProfileMetaManager.STATE_OFF:
                 default:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_UNBLOCK_COMPONENTS, packages);
+                    result = batchOpsManager.performOp(BatchOpsManager.OP_UNBLOCK_COMPONENTS, targetResult.getFailedPackages(), targetResult.getAssociatedUserHandles());
             }
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: " + result.toString());
@@ -113,7 +122,7 @@ public class ProfileManager {
                     args.putInt(BatchOpsManager.ARG_APP_OP_MODE, AppOpsManager.MODE_DEFAULT);
             }
             batchOpsManager.setArgs(args);
-            result = batchOpsManager.performOp(BatchOpsManager.OP_SET_APP_OPS, packages);
+            result = batchOpsManager.performOp(BatchOpsManager.OP_SET_APP_OPS, targetResult.getFailedPackages(), targetResult.getAssociatedUserHandles());
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: " + result.toString());
             }
@@ -128,19 +137,26 @@ public class ProfileManager {
         ProfileMetaManager.Profile.BackupInfo backupInfo = profile.backupData;
         if (backupInfo != null) {
             Log.d(TAG, "Started backup/restore.");
+            BackupFlags backupFlags = new BackupFlags(backupInfo.flags);
             Bundle args = new Bundle();
-            args.putInt(BatchOpsManager.ARG_FLAGS, backupInfo.flags);
-            if ((backupInfo.flags & BackupFlags.BACKUP_MULTIPLE) != 0 && backupInfo.name != null) {
-                args.putStringArray(BatchOpsManager.ARG_BACKUP_NAMES, new String[]{backupInfo.name});
+            if (backupFlags.backupMultiple() && backupInfo.name != null) {
+                if (state.equals(ProfileMetaManager.STATE_OFF)) {
+                    args.putStringArray(BatchOpsManager.ARG_BACKUP_NAMES, new String[]{Users.getCurrentUserHandle() + '_' + backupInfo.name});
+                } else {
+                    args.putStringArray(BatchOpsManager.ARG_BACKUP_NAMES, new String[]{backupInfo.name});
+                }
             }
+            // Always add backup custom users
+            backupFlags.addFlag(BackupFlags.BACKUP_CUSTOM_USERS);
+            args.putInt(BatchOpsManager.ARG_FLAGS, backupFlags.getFlags());
             batchOpsManager.setArgs(args);
             switch (state) {
                 case ProfileMetaManager.STATE_ON:  // Take backup
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_BACKUP, packages);
+                    result = batchOpsManager.performOp(BatchOpsManager.OP_BACKUP, targetResult.getFailedPackages(), targetResult.getAssociatedUserHandles());
                     break;
                 case ProfileMetaManager.STATE_OFF:  // Restore backup
                 default:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_RESTORE_BACKUP, packages);
+                    result = batchOpsManager.performOp(BatchOpsManager.OP_RESTORE_BACKUP, targetResult.getFailedPackages(), targetResult.getAssociatedUserHandles());
             }
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: " + result.toString());
@@ -157,11 +173,11 @@ public class ProfileManager {
             Log.d(TAG, "Started disable/enable. State: " + state);
             switch (state) {
                 case ProfileMetaManager.STATE_ON:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_DISABLE, packages);
+                    result = batchOpsManager.performOp(BatchOpsManager.OP_DISABLE, targetResult.getFailedPackages(), targetResult.getAssociatedUserHandles());
                     break;
                 case ProfileMetaManager.STATE_OFF:
                 default:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_ENABLE, packages);
+                    result = batchOpsManager.performOp(BatchOpsManager.OP_ENABLE, targetResult.getFailedPackages(), targetResult.getAssociatedUserHandles());
             }
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: " + result.toString());
@@ -170,7 +186,7 @@ public class ProfileManager {
         // Force-stop
         if (profile.forceStop) {
             Log.d(TAG, "Started force-stop.");
-            result = batchOpsManager.performOp(BatchOpsManager.OP_FORCE_STOP, packages);
+            result = batchOpsManager.performOp(BatchOpsManager.OP_FORCE_STOP, targetResult.getFailedPackages(), targetResult.getAssociatedUserHandles());
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: " + result.toString());
             }
@@ -178,7 +194,7 @@ public class ProfileManager {
         // Clear cache
         if (profile.clearCache) {
             Log.d(TAG, "Started clear cache.");
-            result = batchOpsManager.performOp(BatchOpsManager.OP_CLEAR_CACHE, packages);
+            result = batchOpsManager.performOp(BatchOpsManager.OP_CLEAR_CACHE, targetResult.getFailedPackages(), targetResult.getAssociatedUserHandles());
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: " + result.toString());
             }
@@ -186,7 +202,7 @@ public class ProfileManager {
         // Clear data
         if (profile.clearData) {
             Log.d(TAG, "Started clear data.");
-            result = batchOpsManager.performOp(BatchOpsManager.OP_CLEAR_DATA, packages);
+            result = batchOpsManager.performOp(BatchOpsManager.OP_CLEAR_DATA, targetResult.getFailedPackages(), targetResult.getAssociatedUserHandles());
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: " + result.toString());
             }
@@ -196,11 +212,11 @@ public class ProfileManager {
             Log.d(TAG, "Started block trackers. State: " + state);
             switch (state) {
                 case ProfileMetaManager.STATE_ON:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_BLOCK_TRACKERS, packages);
+                    result = batchOpsManager.performOp(BatchOpsManager.OP_BLOCK_TRACKERS, targetResult.getFailedPackages(), targetResult.getAssociatedUserHandles());
                     break;
                 case ProfileMetaManager.STATE_OFF:
                 default:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_UNBLOCK_TRACKERS, packages);
+                    result = batchOpsManager.performOp(BatchOpsManager.OP_UNBLOCK_TRACKERS, targetResult.getFailedPackages(), targetResult.getAssociatedUserHandles());
             }
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: " + result.toString());
@@ -209,7 +225,7 @@ public class ProfileManager {
         // Backup apk
         if (profile.backupApk) {
             Log.d(TAG, "Started backup apk.");
-            result = batchOpsManager.performOp(BatchOpsManager.OP_BACKUP_APK, packages);
+            result = batchOpsManager.performOp(BatchOpsManager.OP_BACKUP_APK, targetResult.getFailedPackages(), targetResult.getAssociatedUserHandles());
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: " + result.toString());
             }
