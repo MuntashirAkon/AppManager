@@ -22,8 +22,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.UserInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -31,12 +34,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
@@ -45,6 +50,8 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -145,30 +152,79 @@ public class BackupDialogFragment extends DialogFragment {
                         (dialog, index, isChecked) -> {
                             if (isChecked) flags.addFlag(BackupFlags.backupFlags.get(index));
                             else flags.removeFlag(BackupFlags.backupFlags.get(index));
-                        });
-        builder.setPositiveButton(R.string.backup, (dialog, which) -> {
-            mode = MODE_BACKUP;
-            if (permsGranted) handleMode();
-        });
-        if (baseBackupCount == targetPackages.size()) {
-            // Display restore and delete only if backups of all the selected package exist
-            builder.setNegativeButton(R.string.restore, (dialog, which) -> {
-                mode = MODE_RESTORE;
-                if (permsGranted) handleMode();
-            }).setNeutralButton(R.string.delete_backup, (dialog, which) -> {
-                mode = MODE_DELETE;
-                if (permsGranted) handleMode();
+                        })
+                .setPositiveButton(R.string.backup, null)
+                .setNegativeButton(R.string.restore, null)
+                .setNeutralButton(R.string.delete_backup, null);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.setOnShowListener(dialog -> {
+            AlertDialog dialog1 = (AlertDialog) dialog;
+            Button positiveButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
+            Button negativeButton = dialog1.getButton(AlertDialog.BUTTON_NEGATIVE);
+            Button neutralButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
+            positiveButton.setOnClickListener(v -> {
+                mode = MODE_BACKUP;
+                if (permsGranted) handleCustomUsers();
             });
-        } else {
-            if (baseBackupCount == 1) {
-                targetPackages.size();
+            if (baseBackupCount == targetPackages.size()) {
+                // Display restore and delete only if backups of all the selected package exist
+                negativeButton.setOnClickListener(v -> {
+                    mode = MODE_RESTORE;
+                    if (permsGranted) handleCustomUsers();
+                });
+                neutralButton.setOnClickListener(v -> {
+                    mode = MODE_DELETE;
+                    if (permsGranted) handleCustomUsers();
+                });
+            } else {
+                negativeButton.setVisibility(View.GONE);
+                neutralButton.setVisibility(View.GONE);
             }
-        }
-        return builder.create();
+        });
+        return alertDialog;
     }
 
-    public void handleMode() {
-        // FIXME(19/9/20): Add multiple user checks
+    public void handleCustomUsers() {
+        if (flags.backupCustomUsers()) {
+            new Thread(() -> {
+                // Init local server first
+                LocalServer.getInstance();
+                List<UserInfo> users = Users.getUsers();
+                if (users != null && users.size() > 1) {
+                    CharSequence[] userNames = new String[users.size()];
+                    List<Integer> userHandles = new ArrayList<>(users.size());
+                    int i = 0;
+                    for (UserInfo info : users) {
+                        userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
+                        userHandles.add(info.id);
+                        ++i;
+                    }
+                    activity.runOnUiThread(() -> new SearchableMultiChoiceDialogBuilder<>(activity, userHandles, userNames)
+                            .setTitle(R.string.select_user)
+                            .setSelections(Collections.singletonList(Users.getCurrentUserHandle()))
+                            .setPositiveButton(R.string.ok, (dialog, which, selectedUsers) -> {
+                                List<UserPackagePair> newTargetPackages = new ArrayList<>();
+                                List<String> visitedPackages = new ArrayList<>();
+                                for (UserPackagePair pair : targetPackages) {
+                                    if (visitedPackages.contains(pair.getPackageName())) continue;
+                                    for (int user : selectedUsers) {
+                                        newTargetPackages.add(new UserPackagePair(pair.getPackageName(), user));
+                                    }
+                                    visitedPackages.add(pair.getPackageName());
+                                }
+                                targetPackages = newTargetPackages;
+                                handleMode();
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .show());
+                } else {
+                    activity.runOnUiThread(this::handleMode);
+                }
+            }).start();
+        } else handleMode();
+    }
+
+    private void handleMode() {
         switch (mode) {
             case MODE_DELETE:
                 handleDelete();
@@ -331,5 +387,6 @@ public class BackupDialogFragment extends DialogFragment {
         args.putStringArray(BatchOpsManager.ARG_BACKUP_NAMES, backupNames);
         intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
         ContextCompat.startForegroundService(activity, intent);
+        dismiss();
     }
 }

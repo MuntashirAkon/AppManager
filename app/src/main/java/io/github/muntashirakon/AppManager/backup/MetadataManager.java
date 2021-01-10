@@ -242,6 +242,8 @@ public final class MetadataManager {
         PackageManager pm = appManager.getPackageManager();
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         metadata = new Metadata();
+        // We don't need to backup custom users or multiple backup flags
+        requestedFlags.removeFlag(BackupFlags.BACKUP_CUSTOM_USERS | BackupFlags.BACKUP_MULTIPLE);
         metadata.flags = requestedFlags;
         metadata.userHandle = userHandle;
         metadata.tarType = (String) AppPref.get(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR);

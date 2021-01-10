@@ -32,6 +32,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
@@ -40,7 +41,7 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 public final class BackupFlags {
     @IntDef(flag = true, value = {
             BACKUP_NOTHING,
-            BACKUP_ALL_USERS,
+            BACKUP_CUSTOM_USERS,
             BACKUP_SOURCE,
             BACKUP_SOURCE_APK_ONLY,
             BACKUP_DATA,
@@ -65,11 +66,9 @@ public final class BackupFlags {
     public static final int BACKUP_NO_SIGNATURE_CHECK = 1 << 5;
     public static final int BACKUP_SOURCE_APK_ONLY = 1 << 6;
     public static final int BACKUP_EXT_OBB_MEDIA = 1 << 7;
-    public static final int BACKUP_ALL_USERS = 1 << 8;
+    public static final int BACKUP_CUSTOM_USERS = 1 << 8;
     public static final int BACKUP_MULTIPLE = 1 << 9;
     public static final int BACKUP_EXTRAS = 1 << 10;
-
-    public static final int BACKUP_TOTAL = 11;
 
     public static final List<Integer> backupFlags = new ArrayList<>();
 
@@ -88,14 +87,20 @@ public final class BackupFlags {
                     put(BACKUP_EXT_OBB_MEDIA, new Pair<>(R.string.backup_obb_media, R.string.backup_obb_media_description));
                     backupFlags.add(BACKUP_EXCLUDE_CACHE);
                     put(BACKUP_EXCLUDE_CACHE, new Pair<>(R.string.exclude_cache, R.string.backup_exclude_cache_description));
-                    backupFlags.add(BACKUP_EXTRAS);
-                    put(BACKUP_EXTRAS, new Pair<>(R.string.backup_extras, R.string.backup_extras_description));
-                    backupFlags.add(BACKUP_RULES);
-                    put(BACKUP_RULES, new Pair<>(R.string.rules, R.string.backup_rules_description));
+                    if (AppPref.isRootEnabled()) {
+                        // Display extra backups only in root mode
+                        backupFlags.add(BACKUP_EXTRAS);
+                        put(BACKUP_EXTRAS, new Pair<>(R.string.backup_extras, R.string.backup_extras_description));
+                        backupFlags.add(BACKUP_RULES);
+                        put(BACKUP_RULES, new Pair<>(R.string.rules, R.string.backup_rules_description));
+                    }
                     backupFlags.add(BACKUP_MULTIPLE);
                     put(BACKUP_MULTIPLE, new Pair<>(R.string.backup_multiple, R.string.backup_multiple_description));
-                    backupFlags.add(BACKUP_ALL_USERS);
-                    put(BACKUP_ALL_USERS, new Pair<>(R.string.backup_all_users, R.string.backup_all_users_description));
+                    if (Users.getUsersHandles().length > 1) {
+                        // Display custom users only if multiple users present
+                        backupFlags.add(BACKUP_CUSTOM_USERS);
+                        put(BACKUP_CUSTOM_USERS, new Pair<>(R.string.backup_custom_users, R.string.backup_custom_users_description));
+                    }
                     backupFlags.add(BACKUP_NO_SIGNATURE_CHECK);
                     put(BACKUP_NO_SIGNATURE_CHECK, new Pair<>(R.string.skip_signature_checks, R.string.backup_skip_signature_checks_description));
                 }
@@ -103,7 +108,7 @@ public final class BackupFlags {
 
     @NonNull
     public static CharSequence[] getFormattedFlagNames(@NonNull Context context) {
-        CharSequence[] flagNames = new CharSequence[BACKUP_TOTAL];
+        CharSequence[] flagNames = new CharSequence[backupFlags.size()];
         for (int i = 0; i < flagNames.length; ++i) {
             Pair<Integer, Integer> flagNamePair = Objects.requireNonNull(backupFlagsMap.get(backupFlags.get(i)));
             flagNames[i] = new SpannableStringBuilder(context.getText(flagNamePair.first))
@@ -139,9 +144,9 @@ public final class BackupFlags {
 
     @NonNull
     public boolean[] flagsToCheckedItems() {
-        boolean[] checkedItems = new boolean[BackupFlags.BACKUP_TOTAL];
+        boolean[] checkedItems = new boolean[backupFlags.size()];
         Arrays.fill(checkedItems, false);
-        for (int i = 0; i < BackupFlags.BACKUP_TOTAL; ++i) {
+        for (int i = 0; i < checkedItems.length; ++i) {
             if ((flags & backupFlags.get(i)) != 0) checkedItems[i] = true;
         }
         return checkedItems;
@@ -192,7 +197,7 @@ public final class BackupFlags {
         return (flags & BACKUP_MULTIPLE) != 0;
     }
 
-    public boolean backupAllUsers() {
-        return (flags & BACKUP_ALL_USERS) != 0;
+    public boolean backupCustomUsers() {
+        return (flags & BACKUP_CUSTOM_USERS) != 0;
     }
 }
