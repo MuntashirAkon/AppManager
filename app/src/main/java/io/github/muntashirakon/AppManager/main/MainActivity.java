@@ -41,9 +41,7 @@ import com.google.android.material.textview.MaterialTextView;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Locale;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -479,7 +477,7 @@ public class MainActivity extends BaseActivity implements
         } else if (id == R.id.action_backup) {
             BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
             Bundle args = new Bundle();
-            args.putStringArrayList(BackupDialogFragment.ARG_PACKAGES, new ArrayList<>(mModel.getSelectedPackages().keySet()));
+            args.putParcelableArrayList(BackupDialogFragment.ARG_PACKAGE_PAIRS, mModel.getSelectedPackagesWithUsers(false));
             backupDialogFragment.setArguments(args);
             backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
             backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
