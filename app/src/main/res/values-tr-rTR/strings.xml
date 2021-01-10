@@ -820,4 +820,13 @@
         <item quantity="other">%1$d bileşen</item>
     </plurals>
     <string name="pref_interceptor_enabled_msg">Intent aracılığıyla uygulamalar arasındaki iletişimi keser</string>
+    <string name="backup_custom_users_description">Yalnızca belirtilen kullanıcılar için yedekleme gerçekleştirin</string>
+    <string name="backup_custom_users">Özel kullanıcılar</string>
+    <string name="bootloader">Önyükleyici</string>
+    <string name="encrypted">Şifreli</string>
+    <string name="unencrypted">Şifrelenmemiş</string>
+    <string name="no_volumes_found">Yazma iznine sahip herhangi bir birim bulunamadı.</string>
+    <string name="pref_backup_volume_msg">Yedeklemelerin depolanacağı birimi veya diski seçin.</string>
+    <string name="backup_volume">Yedekleme Birimi</string>
+    <string name="pref_backup_restore_msg">Yedeklemeyi/geri yüklemeyi özelleştirin.</string>
 </resources>
