@@ -85,7 +85,7 @@
     <string name="source_dir">Code-Verzeichnis</string>
     <string name="data_dir">Daten-Verzeichnis</string>
     <string name="sdk_min">Min.</string>
-    <string name="sdk_max">Max.</string>
+    <string name="sdk_max">Ziel</string>
     <string name="sdk_flags">Flaggen</string>
     <string name="more_info">Weitere Details</string>
     <string name="date_installed">Installiert am</string>
@@ -803,4 +803,33 @@
     <string name="backup_data_description">Sichern Sie die Datenordner. Wenn diese Option ausgewählt ist, werden die internen Datenordner standardmäßig gesichert.</string>
     <string name="backup_apk_only_description">Sichern Sie nur die APK-Dateien aus dem Quellverzeichnis. <b>Die Quelle</b> muss ausgewählt sein, damit dies funktioniert.</string>
     <string name="backup_source_description">Sichern Sie das gesamte Quellverzeichnis.</string>
+    <string name="backup_custom_users_description">Backups nur für die angegebenen Benutzer durchführen</string>
+    <string name="backup_custom_users">Benutzerdefinierte Nutzung</string>
+    <string name="bootloader">Startprogramm</string>
+    <string name="encrypted">Verschlüsselt</string>
+    <string name="unencrypted">Unverschlüsselt</string>
+    <string name="no_volumes_found">Es konnten keine Datenträger mit Schreibberechtigung gefunden werden.</string>
+    <string name="pref_backup_volume_msg">Wählen Sie den Datenträger oder das Laufwerk aus, auf dem die Sicherungen gespeichert werden sollen.</string>
+    <string name="backup_volume">Datenträger sichern</string>
+    <string name="pref_backup_restore_msg">Anpassen von Sicherung/ Wiederherstellung.</string>
+    <string name="pref_interceptor_enabled_msg">Abfangen der Kommunikation zwischen Apps über Intent</string>
+    <string name="disable_background_run_description">Setzt den Modus &lt;i&gt;ignore&lt;/i&gt; auf die folgenden App-Ops: &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt; (ab Android 7.0) und &lt;tt&gt;RUN_ANY_IN_BACKGROUND&lt;/tt&gt; (ab Android 9).</string>
+    <string name="failed_to_enable_magisk_hide">Konnte MagiskHide nicht aktivieren</string>
+    <string name="enable_magisk_hide">MagiskHide einschalten</string>
+    <string name="failed_to_disable_magisk_hide">Konnte MagiskHide nicht deaktivieren</string>
+    <string name="disable_magisk_hide">MagiskHide deaktivieren\?</string>
+    <string name="window_size">Fenstergröße</string>
+    <string name="refresh_rate">Skalierungsfaktor</string>
+    <string name="scaling_factor">Skalierungsfaktor</string>
+    <string name="size">Größe</string>
+    <string name="density">Dichte</string>
+    <string name="screen">Bildschirm</string>
+    <string name="hardware">Hardware</string>
+    <string name="permissive">Zulässig</string>
+    <string name="enforcing">Erzwingen</string>
+    <string name="selinux">SELinux</string>
+    <plurals name="no_of_components">
+        <item quantity="one">%1$d Bestandteil</item>
+        <item quantity="other">%1$d Bestandteile</item>
+    </plurals>
 </resources>
