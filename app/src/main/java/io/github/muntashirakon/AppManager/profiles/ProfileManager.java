@@ -127,6 +127,12 @@ public class ProfileManager {
         ProfileMetaManager.Profile.BackupInfo backupInfo = profile.backupData;
         if (backupInfo != null) {
             Log.d(TAG, "Started backup/restore.");
+            Bundle args = new Bundle();
+            args.putInt(BatchOpsManager.ARG_FLAGS, backupInfo.flags);
+            if (backupInfo.name != null) {
+                args.putStringArray(BatchOpsManager.ARG_BACKUP_NAMES, new String[]{backupInfo.name});
+            }
+            batchOpsManager.setArgs(args);
             switch (state) {
                 case ProfileMetaManager.STATE_ON:  // Take backup
                     result = batchOpsManager.performOp(BatchOpsManager.OP_BACKUP, packages);
