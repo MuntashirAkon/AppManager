@@ -18,9 +18,11 @@
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,6 +46,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
 import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -57,6 +60,7 @@ import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.TextInputDialogBuilder;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
@@ -163,11 +167,19 @@ public class AppsProfileActivity extends BaseActivity
                     List<PackageInfo> packageInfoList = PackageManagerCompat.getInstalledPackages(
                             flagSigningInfo | PackageManager.GET_ACTIVITIES
                                     | flagDisabledComponents, Users.getCurrentUserHandle());
-                    ArrayList<String> items = new ArrayList<>(packageInfoList.size());
-                    ArrayList<CharSequence> itemNames = new ArrayList<>(packageInfoList.size());
+                    ArrayList<Pair<CharSequence, ApplicationInfo>> itemPairs = new ArrayList<>(packageInfoList.size());
                     for (PackageInfo info : packageInfoList) {
-                        items.add(info.packageName);
-                        itemNames.add(pm.getApplicationLabel(info.applicationInfo));
+                        itemPairs.add(new Pair<>(pm.getApplicationLabel(info.applicationInfo), info.applicationInfo));
+                    }
+                    ArrayList<String> items = new ArrayList<>(itemPairs.size());
+                    ArrayList<CharSequence> itemNames = new ArrayList<>(itemPairs.size());
+                    for (Pair<CharSequence, ApplicationInfo> itemPair : itemPairs) {
+                        items.add(itemPair.second.packageName);
+                        boolean isSystem = (itemPair.second.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+                        itemNames.add(new SpannableStringBuilder(itemPair.first).append("\n")
+                                .append(UIUtils.getSmallerText(UIUtils.getSecondaryText(
+                                        this, getString(isSystem ? R.string.system
+                                                : R.string.user)))));
                     }
                     runOnUiThread(() -> {
                         progressIndicator.hide();
