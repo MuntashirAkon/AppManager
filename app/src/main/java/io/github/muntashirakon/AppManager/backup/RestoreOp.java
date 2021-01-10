@@ -41,6 +41,7 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.FreshFile;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
@@ -481,6 +482,18 @@ class RestoreOp implements Closeable {
                                 notificationManager.setNotificationListenerAccessGrantedForUser(
                                         new ComponentName(packageName, entry.name), userHandle, true);
                             }
+                            break;
+                        case URI_GRANT:
+                            Log.e("UriGrant", entry.toString());
+                            UriManager.UriGrant uriGrant = (UriManager.UriGrant) entry.extra;
+                            UriManager.UriGrant newUriGrant = new UriManager.UriGrant(
+                                    uriGrant.sourceUserId, userHandle, uriGrant.userHandle,
+                                    uriGrant.sourcePkg, uriGrant.targetPkg, uriGrant.uri,
+                                    uriGrant.prefix, uriGrant.modeFlags, uriGrant.createdTime);
+                            UriManager uriManager = new UriManager();
+                            uriManager.grantUri(newUriGrant);
+                            uriManager.writeGrantedUriPermissions();
+                            break;
                     }
                 } catch (RemoteException e) {
                     e.printStackTrace();

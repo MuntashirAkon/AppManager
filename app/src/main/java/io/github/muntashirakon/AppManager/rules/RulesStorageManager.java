@@ -79,7 +79,7 @@ public class RulesStorageManager implements Closeable {
         PERMISSION,  // boolean
         MAGISK_HIDE,  // boolean
         BATTERY_OPT,  // boolean (battery optimization)
-        NET_POLICY,  // whitelist|blacklist|none
+        NET_POLICY,  // int (whitelist|blacklist|none)
         NOTIFICATION,  // string (component name)
         URI_GRANT,  // string (flattened by UriGrant)
         UNKNOWN;
@@ -267,7 +267,7 @@ public class RulesStorageManager implements Closeable {
     public void setUriGrant(@NonNull UriManager.UriGrant uriGrant) {
         Entry entry = new Entry();
         entry.type = Type.URI_GRANT;
-        entry.extra = uriGrant.flattenToString();
+        entry.extra = uriGrant;
         addEntry(entry);
     }
 
@@ -338,23 +338,28 @@ public class RulesStorageManager implements Closeable {
                 tokenizer = new StringTokenizer(dataRow, "\t");
                 Entry entry = new Entry();
                 if (isExternal) {
-                    // Match package name
-                    packageName = tokenizer.nextElement().toString();
-                    if (!this.packageName.equals(packageName)) {
-                        // Skip this line and load the next one
-                        continue;
-                    }
+                    if (tokenizer.hasMoreElements()) {
+                        // Match package name
+                        packageName = tokenizer.nextElement().toString();
+                        if (!this.packageName.equals(packageName)) {
+                            // Skip this line and load the next one
+                            continue;
+                        }
+                    } else throw new IOException("Invalid format: packageName not found");
                 }
-                if (tokenizer.hasMoreElements()) entry.name = tokenizer.nextElement().toString();
+                if (tokenizer.hasMoreElements()) {
+                    entry.name = tokenizer.nextElement().toString();
+                } else throw new IOException("Invalid format: name not found");
                 if (tokenizer.hasMoreElements()) {
                     try {
                         entry.type = Type.valueOf(tokenizer.nextElement().toString());
                     } catch (Exception e) {
                         entry.type = Type.UNKNOWN;
                     }
-                }
-                if (tokenizer.hasMoreElements())
+                } else throw new IOException("Invalid format: entryType not found");
+                if (tokenizer.hasMoreElements()) {
                     entry.extra = getExtra(entry.type, tokenizer.nextElement().toString());
+                } else throw new IOException("Invalid format: extra not found");
                 synchronized (entries) {
                     entries.add(entry);
                 }
@@ -421,11 +426,17 @@ public class RulesStorageManager implements Closeable {
             case PROVIDER:
             case RECEIVER:
             case SERVICE:
+            case NOTIFICATION:
                 return strExtra;
             case PERMISSION:
+            case MAGISK_HIDE:
+            case BATTERY_OPT:
                 return Boolean.valueOf(strExtra);
             case APP_OP:
+            case NET_POLICY:
                 return Integer.valueOf(strExtra);
+            case URI_GRANT:
+                return UriManager.UriGrant.unflattenFromString(strExtra);
             default:
                 return null;
         }
