@@ -46,7 +46,6 @@ import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.UserIdInt;
-import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
@@ -67,6 +66,11 @@ public class BatchOpsManager {
      * {@link Integer} value containing app op values to be used with {@link #OP_SET_APP_OPS}.
      */
     public static final String ARG_APP_OP_MODE = "app_op_mode";
+    /**
+     * {@link String[]} value containing permissions to be used with {@link #OP_GRANT_PERMISSIONS}
+     * and {@link #OP_REVOKE_PERMISSIONS}.
+     */
+    public static final String ARG_PERMISSIONS = "perms";
     /**
      * {@link Integer} value containing flags to be used with {@link #OP_BACKUP},
      * {@link #OP_RESTORE_BACKUP} and {@link #OP_DELETE_BACKUP}.
@@ -98,7 +102,9 @@ public class BatchOpsManager {
             OP_EXPORT_RULES,
             OP_FORCE_STOP,
             OP_SET_APP_OPS,
+            OP_GRANT_PERMISSIONS,
             OP_RESTORE_BACKUP,
+            OP_REVOKE_PERMISSIONS,
             OP_UNBLOCK_COMPONENTS,
             OP_UNBLOCK_TRACKERS,
             OP_UNINSTALL,
@@ -125,6 +131,8 @@ public class BatchOpsManager {
     public static final int OP_ENABLE = 14;
     public static final int OP_UNBLOCK_COMPONENTS = 15;
     public static final int OP_CLEAR_CACHE = 16;
+    public static final int OP_GRANT_PERMISSIONS = 17;
+    public static final int OP_REVOKE_PERMISSIONS = 18;
 
     private final Runner runner;
     private final Handler handler;
@@ -145,23 +153,7 @@ public class BatchOpsManager {
 
     @CheckResult
     @NonNull
-    public Result performOp(@OpType int op, @NonNull Collection<String> packageNames) {
-        int userHandle = Users.getCurrentUserHandle();
-        return performOp(op, new ArrayList<>(packageNames), userHandle);
-    }
-
-    @CheckResult
-    @NonNull
-    public Result performOp(@OpType int op, @NonNull List<String> packageNames, @UserIdInt int userHandle) {
-        List<Integer> userHandles = new ArrayList<>(packageNames.size());
-        for (String ignore : packageNames) userHandles.add(userHandle);
-        return performOp(op, packageNames, userHandles);
-    }
-
-    @CheckResult
-    @NonNull
     public Result performOp(@OpType int op, @NonNull List<String> packageNames, @NonNull @UserIdInt List<Integer> userHandles) {
-        this.runner.clear();
         if (packageNames.size() != userHandles.size()) {
             throw new IllegalArgumentException("Package names and user handles do not have the same size");
         }
@@ -169,6 +161,20 @@ public class BatchOpsManager {
         for (int i = 0; i < packageNames.size(); ++i) {
             userPackagePairs[i] = new UserPackagePair(packageNames.get(i), userHandles.get(i));
         }
+        return performOp(op);
+    }
+
+    @CheckResult
+    @NonNull
+    public Result performOp(@OpType int op, @NonNull Collection<UserPackagePair> userPackagePairs) {
+        this.userPackagePairs = userPackagePairs.toArray(new UserPackagePair[0]);
+        return performOp(op);
+    }
+
+    @CheckResult
+    @NonNull
+    private Result performOp(@OpType int op) {
+        this.runner.clear();
         switch (op) {
             case OP_BACKUP_APK:
                 return opBackupApk();
@@ -199,11 +205,15 @@ public class BatchOpsManager {
             case OP_BLOCK_COMPONENTS:
                 return opBlockComponents();
             case OP_SET_APP_OPS:
-                return opIgnoreAppOps();
+                return opSetAppOps();
             case OP_UNBLOCK_COMPONENTS:
                 return opUnblockComponents();
             case OP_CLEAR_CACHE:
                 return opClearCache();
+            case OP_GRANT_PERMISSIONS:
+                return opGrantPermissions();
+            case OP_REVOKE_PERMISSIONS:
+                return opRevokePermissions();
             case OP_NONE:
                 break;
         }
@@ -349,6 +359,22 @@ public class BatchOpsManager {
         return new Result(failedPackages);
     }
 
+    private Result opGrantPermissions() {
+        String[] permissions = args.getStringArray(ARG_PERMISSIONS);
+        List<UserPackagePair> failedPackages = new ArrayList<>();
+        for (UserPackagePair pair : userPackagePairs) {
+            for (String permission : permissions) {
+                try {
+                    PackageManagerCompat.grantPermission(pair.getPackageName(), permission, pair.getUserHandle());
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    failedPackages.add(pair);
+                }
+            }
+        }
+        return lastResult = new Result(failedPackages);
+    }
+
     @NonNull
     private Result opForceStop() {
         List<UserPackagePair> failedPackages = new ArrayList<>();
@@ -363,7 +389,23 @@ public class BatchOpsManager {
         return lastResult = new Result(failedPackages);
     }
 
-    private Result opIgnoreAppOps() {
+    private Result opRevokePermissions() {
+        String[] permissions = args.getStringArray(ARG_PERMISSIONS);
+        List<UserPackagePair> failedPackages = new ArrayList<>();
+        for (UserPackagePair pair : userPackagePairs) {
+            for (String permission : permissions) {
+                try {
+                    PackageManagerCompat.revokePermission(pair.getPackageName(), permission, pair.getUserHandle());
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    failedPackages.add(pair);
+                }
+            }
+        }
+        return lastResult = new Result(failedPackages);
+    }
+
+    private Result opSetAppOps() {
         final List<UserPackagePair> failedPkgList = ExternalComponentsImporter
                 .setModeToFilteredAppOps(Arrays.asList(userPackagePairs),
                         args.getIntArray(ARG_APP_OPS),
