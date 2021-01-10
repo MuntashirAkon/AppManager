@@ -58,11 +58,6 @@ public class BatchOpsService extends ForegroundService {
      */
     public static final String EXTRA_OP_USERS = "EXTRA_OP_USERS";
     /**
-     * Use this instead of {@link #EXTRA_OP_USERS} if all packages are associated with a single
-     * user. It is a single user handle of {@link Integer} type.
-     */
-    public static final String EXTRA_OP_USER = "EXTRA_OP_USER";
-    /**
      * A {@link Bundle} containing additional arguments, these arguments are unwrapped by
      * {@link BatchOpsManager} based on necessity.
      */
@@ -134,7 +129,6 @@ public class BatchOpsService extends ForegroundService {
     private int op = BatchOpsManager.OP_NONE;
     @Nullable
     private ArrayList<String> packages;
-    private ArrayList<Integer> userHandles;
     Bundle args;
     private String header;
     private NotificationCompat.Builder builder;
@@ -193,12 +187,12 @@ public class BatchOpsService extends ForegroundService {
         }
         op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
         packages = intent.getStringArrayListExtra(EXTRA_OP_PKG);
+        if (packages == null) return;
         args = intent.getBundleExtra(EXTRA_OP_EXTRA_ARGS);
-        userHandles = intent.getIntegerArrayListExtra(EXTRA_OP_USERS);
-        int userHandle = intent.getIntExtra(EXTRA_OP_USER, Users.getCurrentUserHandle());
+        ArrayList<Integer> userHandles = intent.getIntegerArrayListExtra(EXTRA_OP_USERS);
         if (userHandles == null) {
             userHandles = new ArrayList<>(packages.size());
-            for (String ignore : packages) userHandles.add(userHandle);
+            for (String ignore : packages) userHandles.add(Users.getCurrentUserHandle());
         }
         if (op == BatchOpsManager.OP_NONE || packages == null) {
             sendResults(Activity.RESULT_CANCELED, null);
@@ -255,19 +249,17 @@ public class BatchOpsService extends ForegroundService {
                 break;
             case Activity.RESULT_FIRST_USER:  // Failed
                 String detailsMessage = getString(R.string.full_stop_tap_to_see_details);
-                if (opResult.getFailedPackages() != null) {
-                    String message = getDesiredErrorString(opResult.getFailedPackages().size());
-                    Intent intent = new Intent(this, AlertDialogActivity.class);
-                    intent.putExtra(EXTRA_OP, op);
-                    intent.putExtra(EXTRA_OP_EXTRA_ARGS, args);
-                    intent.putExtra(EXTRA_FAILURE_MESSAGE, message);
-                    intent.putStringArrayListExtra(EXTRA_FAILED_PKG, opResult.getFailedPackages());
-                    intent.putIntegerArrayListExtra(EXTRA_OP_USERS, opResult.getAssociatedUserHandles());
-                    PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                            0, intent, PendingIntent.FLAG_ONE_SHOT);
-                    builder.setContentIntent(pendingIntent);
-                    builder.setContentText(message + detailsMessage);
-                } else builder.setContentText(getString(R.string.error) + detailsMessage);
+                String message = getDesiredErrorString(opResult.getFailedPackages().size());
+                Intent intent = new Intent(this, AlertDialogActivity.class);
+                intent.putExtra(EXTRA_OP, op);
+                intent.putExtra(EXTRA_OP_EXTRA_ARGS, args);
+                intent.putExtra(EXTRA_FAILURE_MESSAGE, message);
+                intent.putStringArrayListExtra(EXTRA_FAILED_PKG, opResult.getFailedPackages());
+                intent.putIntegerArrayListExtra(EXTRA_OP_USERS, opResult.getAssociatedUserHandles());
+                PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                        0, intent, PendingIntent.FLAG_ONE_SHOT);
+                builder.setContentIntent(pendingIntent);
+                builder.setContentText(message + detailsMessage);
         }
         NotificationUtils.displayHighPriorityNotification(this, builder.build());
     }
