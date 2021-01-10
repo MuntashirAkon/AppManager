@@ -822,4 +822,13 @@
         <item quantity="other">%1$d componentes</item>
     </plurals>
     <string name="pref_interceptor_enabled_msg">Intercepta a comunicação entre aplicativos via Intenção</string>
+    <string name="backup_custom_users_description">Realizar backups apenas para os usuários especificados</string>
+    <string name="backup_custom_users">Usuários personalizados</string>
+    <string name="bootloader">Bootloader</string>
+    <string name="unencrypted">Não criptografado</string>
+    <string name="encrypted">Criptografado</string>
+    <string name="no_volumes_found">Não foi possível encontrar nenhum volume com permissão de gravação.</string>
+    <string name="pref_backup_volume_msg">Selecione o volume ou o disco onde os backups serão armazenados.</string>
+    <string name="backup_volume">Volume do Backup</string>
+    <string name="pref_backup_restore_msg">Personalizar backup/restauração.</string>
 </resources>
