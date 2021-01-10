@@ -530,7 +530,7 @@
     <string name="debuggable">Налагоджується</string>
     <string name="error_invalid_icon_format">Пошкоджений формат іконки</string>
     <string name="error_invalid_icon_resource">Пошкоджений ресурс іконки</string>
-    <string name="installer_app">Інсталятор додатку</string>
+    <string name="installer_app">Встановник додатків</string>
     <string name="sort_by_package_name">Ім’я пакету</string>
     <string name="require_no_permission">Не вимагає дозволів</string>
     <string name="required">Вимагається</string>
