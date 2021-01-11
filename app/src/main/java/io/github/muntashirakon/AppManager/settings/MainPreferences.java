@@ -152,6 +152,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_APP_THEME_INT, currentTheme);
                         AppCompatDelegate.setDefaultNightMode(currentTheme);
+                        appTheme.setSummary(getString(R.string.current_theme, themes[THEME_CONST.indexOf(currentTheme)]));
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
