@@ -789,4 +789,9 @@
     <string name="state_trace_stop">追踪停止</string>
     <string name="orientation_user_landscape">水平视图</string>
     <string name="pref_interceptor_enabled_msg">优先使用 Intent Firewall 拦截组件</string>
+    <string name="backup_custom_users">自定义用户</string>
+    <string name="no_volumes_found">找不到任何具有写入权限的卷。</string>
+    <string name="pref_backup_volume_msg">选择存储备份的卷或磁盘。</string>
+    <string name="backup_volume">备份卷</string>
+    <string name="pref_backup_restore_msg">定制备份/还原。</string>
 </resources>
