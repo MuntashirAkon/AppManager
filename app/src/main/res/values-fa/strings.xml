@@ -404,4 +404,5 @@
     <string name="clear_cache">پاک کردن حافظه پنهان</string>
     <string name="failed_to_get_data_usage_information">نتوانست اطلاعات مصرف داده را واکشی کند</string>
     <string name="pref_import_existing_msg">اجزای غیرفعال شده توسط سایر برنامه ها را به مدیر برنامه اضافه کن. زمانی از این ابزار استفاده می‌کنید مراقب باشید که ممکن است مثبت کاذب های بسیاری موجود باشد. تنها برنامه هایی را انتخاب کنید که از آنها اطمینان دارید.</string>
+    <string name="deny_app_ops_description">Set a mode for app operations identified by the constant values, i.e. 63 or RUN_IN_BACKGROUND</string>
 </resources>
