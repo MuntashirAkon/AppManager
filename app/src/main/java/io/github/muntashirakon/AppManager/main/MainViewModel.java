@@ -48,6 +48,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
+import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -74,7 +75,7 @@ public class MainViewModel extends AndroidViewModel {
     @MainActivity.Filter
     private int mFilterFlags;
     private String searchQuery;
-    private List<String> backupApplications;
+    private HashMap<String, MetadataManager.Metadata> backupMetadata;
     private final Map<String, int[]> selectedPackages = new HashMap<>();
     private final List<ApplicationItem> selectedApplicationItems = new LinkedList<>();
 
@@ -212,8 +213,8 @@ public class MainViewModel extends AndroidViewModel {
         new Thread(() -> {
             synchronized (applicationItems) {
                 applicationItems.clear();
-                backupApplications = BackupUtils.getBackupApplications();
-                Log.d("backupApplications", backupApplications.toString());
+                backupMetadata = BackupUtils.getBackupMetadata();
+                Log.d("backupApplications", backupMetadata.toString());
                 int[] userHandles = Users.getUsersHandles();
                 for (int userHandle : userHandles) {
                     @SuppressLint("WrongConstant")
@@ -227,6 +228,7 @@ public class MainViewModel extends AndroidViewModel {
                         continue;
                     }
                     ApplicationInfo applicationInfo;
+                    MetadataManager.Metadata metadata;
 
                     for (PackageInfo packageInfo : packageInfoList) {
                         applicationInfo = packageInfo.applicationInfo;
@@ -238,9 +240,10 @@ public class MainViewModel extends AndroidViewModel {
                             oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, userHandle);
                             continue;
                         }
-                        if (backupApplications.contains(applicationInfo.packageName)) {
-                            item.metadata = BackupUtils.getBackupInfo(applicationInfo.packageName);
-                            backupApplications.remove(applicationInfo.packageName);
+                        metadata = backupMetadata.get(applicationInfo.packageName);
+                        if (metadata != null) {
+                            item.metadata = metadata;
+                            backupMetadata.remove(applicationInfo.packageName);
                         }
                         item.flags = applicationInfo.flags;
                         item.uid = applicationInfo.uid;
@@ -263,10 +266,10 @@ public class MainViewModel extends AndroidViewModel {
                     }
                 }
                 // Add rest of the backup items, i.e., items that aren't installed
-                for (String packageName : backupApplications) {
+                for (MetadataManager.Metadata metadata : backupMetadata.values()) {
                     ApplicationItem item = new ApplicationItem();
-                    item.packageName = packageName;
-                    item.metadata = BackupUtils.getBackupInfo(packageName);
+                    item.packageName = metadata.packageName;
+                    item.metadata = BackupUtils.getBackupInfo(metadata.packageName);
                     if (item.metadata == null) continue;
                     item.versionName = item.metadata.versionName;
                     item.versionCode = item.metadata.versionCode;

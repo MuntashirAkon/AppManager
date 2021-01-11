@@ -22,6 +22,7 @@ import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -46,7 +47,7 @@ public final class BackupUtils {
     }
 
     @NonNull
-    public static List<String> getBackupApplications() {
+    private static List<String> getBackupPackages() {
         PrivilegedFile backupPath = BackupFiles.getBackupDirectory();
         List<String> packages;
         String[] files = backupPath.list((dir, name) -> new PrivilegedFile(dir, name).isDirectory());
@@ -57,6 +58,25 @@ public final class BackupUtils {
         // We don't need to check the contents of the packages at this stage.
         // It's the caller's job to check contents if needed.
         return packages;
+    }
+
+    @NonNull
+    public static HashMap<String, MetadataManager.Metadata> getBackupMetadata() {
+        HashMap<String, MetadataManager.Metadata> backupMetadata = new HashMap<>();
+        List<String> backupPackages = getBackupPackages();
+        for (String dartyPackageName : backupPackages) {
+            MetadataManager.Metadata metadata = getBackupInfo(dartyPackageName);
+            if (metadata == null) continue;
+            MetadataManager.Metadata metadata1 = backupMetadata.get(metadata.packageName);
+            if (metadata1 == null) {
+                backupMetadata.put(metadata.packageName, metadata);
+            } else if (metadata.backupTime > metadata1.backupTime) {
+                backupMetadata.put(metadata.packageName, metadata);
+            } else {
+                backupMetadata.put(metadata1.packageName, metadata1);
+            }
+        }
+        return backupMetadata;
     }
 
     @NonNull
