@@ -1,5 +1,20 @@
 package android.content.pm;
 
-public interface IPackageStatsObserver {
+import android.os.Binder;
+import android.os.IBinder;
+import android.os.IInterface;
+
+public interface IPackageStatsObserver extends IInterface {
     void onGetStatsCompleted(PackageStats pStats, boolean succeeded);
+
+    abstract class Stub extends Binder implements IPackageStatsObserver {
+        public static IPackageDataObserver asInterface(IBinder binder) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public IBinder asBinder() {
+            return this;
+        }
+    }
 }
