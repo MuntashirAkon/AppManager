@@ -152,10 +152,15 @@ public class MainViewModel extends AndroidViewModel {
         int currentUserHandle = Users.getCurrentUserHandle();
         for (String packageName : selectedPackages.keySet()) {
             int[] userHandles = selectedPackages.get(packageName);
-            if (userHandles == null) continue;
-            for (int userHandle : userHandles) {
-                if (onlyForCurrentUser && currentUserHandle != userHandle) continue;
-                userPackagePairs.add(new UserPackagePair(packageName, userHandle));
+            if (userHandles == null || userHandles.length == 0) {
+                // Could be a backup only item
+                // Assign current user in it
+                userPackagePairs.add(new UserPackagePair(packageName, currentUserHandle));
+            } else {
+                for (int userHandle : userHandles) {
+                    if (onlyForCurrentUser && currentUserHandle != userHandle) continue;
+                    userPackagePairs.add(new UserPackagePair(packageName, userHandle));
+                }
             }
         }
         return userPackagePairs;

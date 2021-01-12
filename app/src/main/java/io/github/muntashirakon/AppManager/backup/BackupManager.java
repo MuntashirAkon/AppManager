@@ -165,7 +165,7 @@ public class BackupManager {
         // Only restore from the first backup though we shouldn't have more than one backup.
         if (backupFileList.length > 0) {
             if (backupFileList.length > 1) {
-                Log.w(RestoreOp.TAG, "More than one backups found!");
+                Log.w(RestoreOp.TAG, "More than one backups found! Restoring only the first backup.");
             }
             try (RestoreOp restoreOp = new RestoreOp(targetPackage.getPackageName(),
                     metadataManager, requestedFlags, backupFileList[0],

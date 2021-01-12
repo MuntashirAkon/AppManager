@@ -38,6 +38,12 @@ public final class UserPackagePair extends Pair<String, Integer> implements Parc
         return super.second;
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        return "(" + first + ", " + second + ")";
+    }
+
     protected UserPackagePair(@NonNull Parcel in) {
         super(in.readString(), in.readInt());
     }
