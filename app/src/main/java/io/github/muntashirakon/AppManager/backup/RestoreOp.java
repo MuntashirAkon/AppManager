@@ -8,7 +8,6 @@ import android.content.pm.PackageInfo;
 import android.net.INetworkPolicyManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.RemoteException;
 import android.util.Pair;
 
 import org.json.JSONException;
@@ -484,7 +483,6 @@ class RestoreOp implements Closeable {
                             }
                             break;
                         case URI_GRANT:
-                            Log.e("UriGrant", entry.toString());
                             UriManager.UriGrant uriGrant = (UriManager.UriGrant) entry.extra;
                             UriManager.UriGrant newUriGrant = new UriManager.UriGrant(
                                     uriGrant.sourceUserId, userHandle, uriGrant.userHandle,
@@ -495,7 +493,10 @@ class RestoreOp implements Closeable {
                             uriManager.writeGrantedUriPermissions();
                             break;
                     }
-                } catch (RemoteException e) {
+                } catch (Throwable e) {
+                    // There are several reason restoring these things go wrong, especially when
+                    // downgrading from an Android to another. It's better to simply suppress these
+                    // exceptions instead of causing a failure or worse, a crash
                     e.printStackTrace();
                 }
             }
