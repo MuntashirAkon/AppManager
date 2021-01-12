@@ -19,7 +19,7 @@ package io.github.muntashirakon.AppManager.intercept;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;

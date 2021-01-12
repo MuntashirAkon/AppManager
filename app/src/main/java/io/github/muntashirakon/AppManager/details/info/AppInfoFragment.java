@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github.muntashirakon.AppManager.details;
+package io.github.muntashirakon.AppManager.details.info;
 
 import android.annotation.SuppressLint;
 import android.app.usage.StorageStats;
@@ -29,7 +29,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -74,12 +73,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.GuardedBy;
-import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.annotation.WorkerThread;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -98,6 +95,10 @@ import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
+import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
+import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
+import io.github.muntashirakon.AppManager.details.ManifestViewerActivity;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
@@ -125,6 +126,7 @@ import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
+import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_FLAG_MONOSPACE;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
@@ -221,7 +223,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 mPackageName = mainModel.getPackageName();
             }
             isExternalApk = mainModel.getIsExternalApk();
-            adapter = new AppInfoRecyclerAdapter();
+            adapter = new AppInfoRecyclerAdapter(mActivity);
             recyclerView.setAdapter(adapter);
         });
         // Set observer
@@ -1283,231 +1285,5 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void runOnUiThread(Runnable runnable) {
         mActivity.runOnUiThread(runnable);
-    }
-
-    @IntDef(value = {
-            LIST_ITEM_GROUP_BEGIN,
-            LIST_ITEM_GROUP_END,
-            LIST_ITEM_REGULAR,
-            LIST_ITEM_INLINE
-    })
-    private @interface ListItemType {
-    }
-
-    private static final int LIST_ITEM_GROUP_BEGIN = 0;  // Group header
-    private static final int LIST_ITEM_GROUP_END = 1;  // Group divider
-    private static final int LIST_ITEM_REGULAR = 2;
-    private static final int LIST_ITEM_INLINE = 3;
-
-    @IntDef(flag = true, value = {
-            LIST_ITEM_FLAG_SELECTABLE,
-            LIST_ITEM_FLAG_MONOSPACE
-    })
-    private @interface ListItemFlag {
-    }
-
-    private static final int LIST_ITEM_FLAG_SELECTABLE = 1;
-    private static final int LIST_ITEM_FLAG_MONOSPACE = 1 << 1;
-
-    static class ListItem {
-        @ListItemType
-        int type;
-        @ListItemFlag
-        int flags = 0;
-        String title;
-        String subtitle;
-        @DrawableRes
-        int icon = 0;
-        @DrawableRes
-        int actionIcon = 0;
-        View.OnClickListener actionListener;
-
-        @NonNull
-        static ListItem getGroupHeader(String title) {
-            ListItem listItem = new ListItem();
-            listItem.type = LIST_ITEM_GROUP_BEGIN;
-            listItem.title = title;
-            return listItem;
-        }
-
-        @NonNull
-        static ListItem getGroupDivider() {
-            ListItem listItem = new ListItem();
-            listItem.type = LIST_ITEM_GROUP_END;
-            return listItem;
-        }
-
-        @NonNull
-        static ListItem getInlineItem(String title, String subtitle) {
-            ListItem listItem = new ListItem();
-            listItem.type = LIST_ITEM_INLINE;
-            listItem.title = title;
-            listItem.subtitle = subtitle;
-            return listItem;
-        }
-
-        @NonNull
-        static ListItem getRegularItem(String title, String subtitle) {
-            ListItem listItem = new ListItem();
-            listItem.type = LIST_ITEM_REGULAR;
-            listItem.title = title;
-            listItem.subtitle = subtitle;
-            return listItem;
-        }
-
-        @NonNull
-        static ListItem getSelectableRegularItem(String title, String subtitle) {
-            ListItem listItem = new ListItem();
-            listItem.type = LIST_ITEM_REGULAR;
-            listItem.flags |= LIST_ITEM_FLAG_SELECTABLE;
-            listItem.title = title;
-            listItem.subtitle = subtitle;
-            return listItem;
-        }
-
-        @NonNull
-        static ListItem getSelectableRegularItem(String title, String subtitle, View.OnClickListener actionListener) {
-            ListItem listItem = new ListItem();
-            listItem.type = LIST_ITEM_REGULAR;
-            listItem.flags |= LIST_ITEM_FLAG_SELECTABLE;
-            listItem.title = title;
-            listItem.subtitle = subtitle;
-            listItem.actionListener = actionListener;
-            return listItem;
-        }
-
-        @NonNull
-        @Override
-        public String toString() {
-            return "ListItem{" +
-                    "type=" + type +
-                    ", flags=" + flags +
-                    ", title='" + title + '\'' +
-                    ", subtitle='" + subtitle + '\'' +
-                    '}';
-        }
-    }
-
-    class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter.ViewHolder> {
-        private List<ListItem> mAdapterList;
-
-        AppInfoRecyclerAdapter() {
-            mAdapterList = new ArrayList<>();
-        }
-
-        void setAdapterList(@NonNull List<ListItem> list) {
-            mAdapterList = list;
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public @ListItemType
-        int getItemViewType(int position) {
-            return mAdapterList.get(position).type;
-        }
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, @ListItemType int viewType) {
-            final View view;
-            switch (viewType) {
-                case AppInfoFragment.LIST_ITEM_GROUP_BEGIN:
-                case AppInfoFragment.LIST_ITEM_REGULAR:
-                default:
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_icon_title_subtitle, parent, false);
-                    break;
-                case AppInfoFragment.LIST_ITEM_GROUP_END:
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_divider_horizontal, parent, false);
-                    break;
-                case AppInfoFragment.LIST_ITEM_INLINE:
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_title_subtitle_inline, parent, false);
-                    break;
-            }
-            return new ViewHolder(view, viewType);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            ListItem listItem = mAdapterList.get(position);
-            holder.itemView.setClickable(false);
-            holder.itemView.setFocusable(false);
-            switch (listItem.type) {
-                case AppInfoFragment.LIST_ITEM_GROUP_BEGIN:
-                    holder.title.setText(listItem.title);
-                    holder.title.setAllCaps(true);
-                    holder.title.setTextSize(12f);
-                    holder.title.setTextColor(mAccentColor);
-                    int padding_small = mActivity.getResources().getDimensionPixelOffset(R.dimen.padding_small);
-                    int padding_very_small = mActivity.getResources().getDimensionPixelOffset(R.dimen.padding_very_small);
-                    int padding_medium = mActivity.getResources().getDimensionPixelOffset(R.dimen.padding_medium);
-                    LinearLayoutCompat item_layout = holder.itemView.findViewById(R.id.item_layout);
-                    item_layout.setPadding(padding_medium, padding_small, padding_medium, padding_very_small);
-                    break;
-                case AppInfoFragment.LIST_ITEM_GROUP_END:
-                    break;
-                case AppInfoFragment.LIST_ITEM_INLINE:
-                    holder.title.setText(listItem.title);
-                    holder.subtitle.setText(listItem.subtitle);
-                    holder.subtitle.setTextIsSelectable((listItem.flags & AppInfoFragment.LIST_ITEM_FLAG_SELECTABLE) != 0);
-                    if ((listItem.flags & AppInfoFragment.LIST_ITEM_FLAG_MONOSPACE) != 0)
-                        holder.subtitle.setTypeface(Typeface.MONOSPACE);
-                    else holder.subtitle.setTypeface(Typeface.DEFAULT);
-                    break;
-                case AppInfoFragment.LIST_ITEM_REGULAR:
-                    holder.title.setText(listItem.title);
-                    holder.subtitle.setText(listItem.subtitle);
-                    holder.subtitle.setTextIsSelectable((listItem.flags & AppInfoFragment.LIST_ITEM_FLAG_SELECTABLE) != 0);
-                    if ((listItem.flags & AppInfoFragment.LIST_ITEM_FLAG_MONOSPACE) != 0)
-                        holder.subtitle.setTypeface(Typeface.MONOSPACE);
-                    else holder.subtitle.setTypeface(Typeface.DEFAULT);
-                    // FIXME: Load icon in background
-                    if (listItem.icon != 0) holder.icon.setImageResource(listItem.icon);
-                    // FIXME: Load action icon in background
-                    if (listItem.actionIcon != 0)
-                        holder.actionIcon.setImageResource(listItem.actionIcon);
-                    if (listItem.actionListener != null) {
-                        holder.actionIcon.setVisibility(View.VISIBLE);
-                        holder.actionIcon.setOnClickListener(listItem.actionListener);
-                    } else holder.actionIcon.setVisibility(View.GONE);
-                    break;
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return mAdapterList.size();
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-            TextView title;
-            TextView subtitle;
-            ImageView icon;
-            ImageView actionIcon;
-
-            public ViewHolder(@NonNull View itemView, @ListItemType int viewType) {
-                super(itemView);
-                switch (viewType) {
-                    case AppInfoFragment.LIST_ITEM_GROUP_BEGIN:
-                        title = itemView.findViewById(R.id.item_title);
-                        itemView.findViewById(R.id.item_subtitle).setVisibility(View.GONE);
-                        itemView.findViewById(R.id.item_open).setVisibility(View.GONE);
-                        itemView.findViewById(R.id.item_icon).setVisibility(View.INVISIBLE);
-                        break;
-                    case AppInfoFragment.LIST_ITEM_REGULAR:
-                        title = itemView.findViewById(R.id.item_title);
-                        subtitle = itemView.findViewById(R.id.item_subtitle);
-                        actionIcon = itemView.findViewById(R.id.item_open);
-                        icon = itemView.findViewById(R.id.item_icon);
-                        break;
-                    case AppInfoFragment.LIST_ITEM_GROUP_END:
-                    default:
-                        break;
-                    case AppInfoFragment.LIST_ITEM_INLINE:
-                        title = itemView.findViewById(R.id.item_title);
-                        subtitle = itemView.findViewById(R.id.item_subtitle);
-                        break;
-                }
-            }
-        }
     }
 }

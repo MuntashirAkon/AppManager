@@ -47,6 +47,7 @@ import androidx.viewpager.widget.ViewPager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.details.info.AppInfoFragment;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -58,8 +59,8 @@ public class AppDetailsActivity extends BaseActivity {
 
     public AppDetailsViewModel model;
     public SearchView searchView;
+    public ViewPager viewPager;
 
-    ViewPager viewPager;
     private TypedArray mTabTitleIds;
     private Fragment[] fragments;
 
