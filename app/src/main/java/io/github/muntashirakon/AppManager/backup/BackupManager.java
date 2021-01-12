@@ -47,6 +47,7 @@ public class BackupManager {
     static final String PERMS_TSV = "perms.am.tsv";
     static final String MISC_TSV = "misc.am.tsv";
     static final String CHECKSUMS_TXT = "checksums.txt";
+    static final String FREEZE = ".freeze";
     static final String CERT_PREFIX = "cert_";
     static final String MASTER_KEY = ".masterkey";
 
@@ -189,14 +190,15 @@ public class BackupManager {
                     targetPackage.getUserHandle(), null);
             BackupFiles.BackupFile[] backupFileList = backupFiles.getBackupPaths(false);
             for (BackupFiles.BackupFile backupFile : backupFileList) {
-                if (!backupFile.delete()) return false;
+                if (!backupFile.isFrozen() && !backupFile.delete()) return false;
             }
         } else {
             // backupNames is not null but that doesn't mean that it's not empty,
             // requested for only single backups
             for (String backupName : backupNames) {
-                new BackupFiles.BackupFile(new PrivilegedFile(BackupFiles.getPackagePath(
-                        targetPackage.getPackageName()), backupName), false).delete();
+                BackupFiles.BackupFile backupFile = new BackupFiles.BackupFile(new PrivilegedFile(BackupFiles.getPackagePath(
+                        targetPackage.getPackageName()), backupName), false);
+                if (!backupFile.isFrozen() && !backupFile.delete()) return false;
             }
         }
         return true;

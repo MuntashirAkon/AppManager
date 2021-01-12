@@ -31,6 +31,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
@@ -114,6 +115,18 @@ public class BackupFiles {
             return new PrivilegedFile(getBackupPath(), BackupManager.RULES_TSV + CryptoUtils.getExtension(mode));
         }
 
+        public void freeze() {
+            Runner.runCommand(new String[]{"touch", getFreezeFile().getAbsolutePath()});
+        }
+
+        public void unfreeze() {
+            getFreezeFile().delete();
+        }
+
+        public boolean isFrozen() {
+            return getFreezeFile().exists();
+        }
+
         public boolean commit() {
             if (isTemporary) {
                 return delete() && tmpBackupPath.renameTo(backupPath);
@@ -134,6 +147,11 @@ public class BackupFiles {
                 return backupPath.forceDelete();
             }
             return true;  // The backup path doesn't exist anyway
+        }
+
+        @NonNull
+        private PrivilegedFile getFreezeFile() {
+            return new PrivilegedFile(getBackupPath(), BackupManager.FREEZE);
         }
     }
 
