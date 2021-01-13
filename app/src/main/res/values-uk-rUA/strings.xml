@@ -867,4 +867,12 @@
         <item quantity="many">Не вдалося встановити app ops для %1$d програм</item>
         <item quantity="other">Не вдалося встановити app ops для %1$d програм</item>
     </plurals>
+    <string name="backup_custom_users_description">Виконувати резервне копіювання лише для вказаних користувачів</string>
+    <string name="encrypted">Зашифровано</string>
+    <string name="unencrypted">Незашифрований</string>
+    <string name="no_volumes_found">Не вдалося знайти томи з дозволом на запис.</string>
+    <string name="pref_backup_volume_msg">Виберіть том або диск, на якому будуть зберігатися резервні копії.</string>
+    <string name="backup_volume">Том резервного копіювання</string>
+    <string name="pref_backup_restore_msg">Налаштування резервного копіювання/відновлення.</string>
+    <string name="set_app_op_mode">Встановити режим роботи додатка</string>
 </resources>
