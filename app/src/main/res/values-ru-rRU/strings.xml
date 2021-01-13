@@ -891,4 +891,7 @@
     <string name="encrypted">Зашифрованный</string>
     <string name="unencrypted">Незашифрованный</string>
     <string name="pref_backup_restore_msg">Настройка резервного копирования/восстановления.</string>
+    <string name="no_volumes_found">Не удалось найти тома с разрешением на запись.</string>
+    <string name="pref_backup_volume_msg">Выберите том или диск, на котором будут храниться резервные копии.</string>
+    <string name="backup_volume">Том резервных копий</string>
 </resources>
