@@ -46,7 +46,7 @@
     <string name="shared_libs">共享程序库</string>
     <string name="group">群组</string>
     <string name="protection_level">保护等级</string>
-    <string name="uses_feature">要求的设备特性</string>
+    <string name="uses_feature">属性</string>
     <string name="gles_ver">请求GL ES版本</string>
     <string name="no_feature">无</string>
     <string name="sort_by_shared_user_id">共享的用户ID</string>
@@ -590,9 +590,9 @@
     <string name="app_data_will_be_lost">现有数据将丢失。</string>
     <string name="signature_mismatch_for_system_apps">无法安装应用程序，因为一个具有不同签名的系统应用程序的包名和它一样。</string>
     <string name="do_you_want_to_uninstall_and_install">您想要卸载并重新安装该应用程序吗\?</string>
-    <string name="packages">软件包</string>
+    <string name="packages">Manager</string>
     <string name="usage_access_not_supported">无法请求使用情况访问权限，因为相应的设置页不存在。</string>
-    <string name="onboard">机载</string>
+    <string name="onboard">App</string>
     <string name="navigation_trackball">轨迹球</string>
     <string name="sys_config">系统配置</string>
     <string name="tap_to_see_details">点击查看详情</string>
@@ -664,7 +664,7 @@
     <string name="current_mode">当前模式：%s</string>
     <string name="adb_over_tcp">ADB over TCP</string>
     <string name="pref_mode_of_operations">操作模式</string>
-    <string name="user_profile_with_id">配置文件：%1$s (%2$d)</string>
+    <string name="user_profile_with_id">用户：%1$s (%2$d)</string>
     <string name="advanced">高级</string>
     <string name="simple">简单</string>
     <string name="close">关闭</string>
@@ -792,7 +792,7 @@
     <string name="backup_custom_users">自定义用户</string>
     <string name="no_volumes_found">找不到任何具有写入权限的卷。</string>
     <string name="pref_backup_volume_msg">选择存储备份的卷或磁盘。</string>
-    <string name="backup_volume">备份卷</string>
+    <string name="backup_volume">备份位置</string>
     <string name="pref_backup_restore_msg">定制备份/还原。</string>
     <string name="backup_custom_users_description">仅对指定用户执行备份</string>
     <string name="unencrypted">未加密</string>
