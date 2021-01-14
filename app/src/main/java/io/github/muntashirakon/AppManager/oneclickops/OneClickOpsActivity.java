@@ -72,8 +72,9 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class OneClickOpsActivity extends BaseActivity {
+    LinearProgressIndicator mProgressIndicator;
+
     private ListItemCreator mItemCreator;
-    private LinearProgressIndicator mProgressIndicator;
     private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -115,6 +116,14 @@ public class OneClickOpsActivity extends BaseActivity {
                 getString(R.string.deny_app_ops_description))
                 .setOnClickListener(v -> blockAppOps());
         if (BuildConfig.DEBUG) {
+            mItemCreator.addItemWithTitleSubtitle(getText(R.string.backup),
+                    getText(R.string.backup_msg)).setOnClickListener(v ->
+                    new BackupTasksDialogFragment().show(getSupportFragmentManager(),
+                            BackupTasksDialogFragment.TAG));
+            mItemCreator.addItemWithTitleSubtitle(getText(R.string.restore),
+                    getText(R.string.restore_msg)).setOnClickListener(v ->
+                    new RestoreTasksDialogFragment().show(getSupportFragmentManager(),
+                            RestoreTasksDialogFragment.TAG));
             mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_data_from_uninstalled_apps),
                     getString(R.string.clear_data_from_uninstalled_apps_description))
                     .setOnClickListener(v -> clearData());

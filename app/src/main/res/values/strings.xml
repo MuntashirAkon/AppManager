@@ -853,4 +853,22 @@
     <string name="bootloader">Bootloader</string>
     <string name="backup_custom_users">Custom users</string>
     <string name="backup_custom_users_description">Perform backups only for the specified users</string>
+    <string name="backup_all_apps">Backup all apps</string>
+    <string name="backup_all_apps_msg">Back all the installed apps.</string>
+    <string name="backup_apps_without_backups">Backup apps without backups</string>
+    <string name="backup_apps_without_backups_msg">Backup apps without any previous backups.</string>
+    <string name="verify_and_redo_backups">Verify and redo backups</string>
+    <string name="verify_and_redo_backups_msg">Check integrity of the previous backups and redo backups for which the integrity checkup fails.</string>
+    <string name="redo_existing_backups">Redo existing backups</string>
+    <string name="redo_existing_backups_msg">Redo backup for installed apps with previous backups.</string>
+    <string name="backup_apps_with_changes">Backup apps with changes</string>
+    <string name="backup_apps_with_changes_msg">Redo backups for apps with changes since the last backup. They include changes in size, version, last launch time.</string>
+    <string name="restore_all">Restore all apps</string>
+    <string name="restore_all_msg">Restore base backup from all backed up apps.</string>
+    <string name="restore_not_installed">Restore not installed apps</string>
+    <string name="restore_not_installed_msg">Restore base backup for apps that are not currently installed.</string>
+    <string name="restore_latest">Restore latest backups</string>
+    <string name="restore_latest_msg">Restore already installed apps whose version codes are higher than the installed version code.</string>
+    <string name="backup_msg">Back up apps with data</string>
+    <string name="restore_msg">Restore apps with data</string>
 </resources>

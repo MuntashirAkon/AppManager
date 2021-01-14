@@ -60,8 +60,9 @@ import io.github.muntashirakon.AppManager.utils.StoragePermission;
 public class BackupDialogFragment extends DialogFragment {
     public static final String TAG = "BackupDialogFragment";
     public static final String ARG_PACKAGE_PAIRS = "ARG_PACKAGE_PAIRS";
+    public static final String ARG_CUSTOM_MODE = "ARG_CUSTOM_MODE";
 
-    @IntDef(value = {
+    @IntDef(flag = true, value = {
             MODE_BACKUP,
             MODE_RESTORE,
             MODE_DELETE
@@ -70,9 +71,9 @@ public class BackupDialogFragment extends DialogFragment {
     public @interface ActionMode {
     }
 
-    public static final int MODE_BACKUP = 864;
-    public static final int MODE_RESTORE = 169;
-    public static final int MODE_DELETE = 642;
+    public static final int MODE_BACKUP = 1;
+    public static final int MODE_RESTORE = 1 << 1;
+    public static final int MODE_DELETE = 1 << 2;
 
     public interface ActionCompleteInterface {
         void onActionComplete(@ActionMode int mode, @NonNull String[] failedPackages);
@@ -127,6 +128,7 @@ public class BackupDialogFragment extends DialogFragment {
         activity = requireActivity();
         Bundle args = requireArguments();
         targetPackages = args.getParcelableArrayList(ARG_PACKAGE_PAIRS);
+        int customModes = args.getInt(ARG_CUSTOM_MODE, MODE_BACKUP | MODE_RESTORE | MODE_DELETE);
         if (targetPackages == null) return super.onCreateDialog(savedInstanceState);
 
         if (targetPackages.size() == 1) {
@@ -162,22 +164,29 @@ public class BackupDialogFragment extends DialogFragment {
             Button positiveButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
             Button negativeButton = dialog1.getButton(AlertDialog.BUTTON_NEGATIVE);
             Button neutralButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
-            positiveButton.setOnClickListener(v -> {
-                mode = MODE_BACKUP;
-                if (permsGranted) handleCustomUsers();
-            });
-            if (baseBackupCount == targetPackages.size()) {
-                // Display restore and delete only if backups of all the selected package exist
+            if ((customModes & MODE_BACKUP) != 0) {
+                positiveButton.setOnClickListener(v -> {
+                    mode = MODE_BACKUP;
+                    if (permsGranted) handleCustomUsers();
+                });
+            } else {
+                positiveButton.setVisibility(View.GONE);
+            }
+            // Display restore and delete only if backups of all the selected package exist
+            if ((customModes & MODE_RESTORE) != 0 && baseBackupCount == targetPackages.size()) {
                 negativeButton.setOnClickListener(v -> {
                     mode = MODE_RESTORE;
                     if (permsGranted) handleCustomUsers();
                 });
+            } else {
+                negativeButton.setVisibility(View.GONE);
+            }
+            if ((customModes & MODE_DELETE) != 0 && baseBackupCount == targetPackages.size()) {
                 neutralButton.setOnClickListener(v -> {
                     mode = MODE_DELETE;
                     if (permsGranted) handleCustomUsers();
                 });
             } else {
-                negativeButton.setVisibility(View.GONE);
                 neutralButton.setVisibility(View.GONE);
             }
         });

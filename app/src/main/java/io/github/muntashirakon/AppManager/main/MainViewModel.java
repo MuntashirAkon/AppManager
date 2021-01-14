@@ -59,6 +59,7 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
@@ -218,75 +219,9 @@ public class MainViewModel extends AndroidViewModel {
         new Thread(() -> {
             synchronized (applicationItems) {
                 applicationItems.clear();
-                backupMetadata = BackupUtils.getBackupMetadata();
+                backupMetadata = BackupUtils.getAllBackupMetadata();
                 Log.d("backupApplications", backupMetadata.toString());
-                int[] userHandles = Users.getUsersHandles();
-                for (int userHandle : userHandles) {
-                    @SuppressLint("WrongConstant")
-                    List<PackageInfo> packageInfoList;
-                    try {
-                        packageInfoList = PackageManagerCompat.getInstalledPackages(
-                                flagSigningInfo | PackageManager.GET_ACTIVITIES
-                                        | flagDisabledComponents, userHandle);
-                    } catch (Exception e) {
-                        Log.e("MVM", "Could not retrieve package info list for user " + userHandle, e);
-                        continue;
-                    }
-                    ApplicationInfo applicationInfo;
-                    MetadataManager.Metadata metadata;
-
-                    for (PackageInfo packageInfo : packageInfoList) {
-                        applicationInfo = packageInfo.applicationInfo;
-                        ApplicationItem item = new ApplicationItem(applicationInfo);
-                        int i;
-                        if ((i = applicationItems.indexOf(item)) != -1) {
-                            // Add user handle and continue
-                            ApplicationItem oldItem = applicationItems.get(i);
-                            oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, userHandle);
-                            continue;
-                        }
-                        metadata = backupMetadata.get(applicationInfo.packageName);
-                        if (metadata != null) {
-                            item.metadata = metadata;
-                            backupMetadata.remove(applicationInfo.packageName);
-                        }
-                        item.flags = applicationInfo.flags;
-                        item.uid = applicationInfo.uid;
-                        item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-                        item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
-                        item.isDisabled = !applicationInfo.enabled;
-                        item.label = applicationInfo.loadLabel(mPackageManager).toString();
-                        item.sdk = applicationInfo.targetSdkVersion;
-                        item.versionName = packageInfo.versionName;
-                        item.versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
-                        item.sharedUserId = packageInfo.sharedUserId;
-                        item.sha = Utils.getIssuerAndAlg(packageInfo);
-                        item.firstInstallTime = packageInfo.firstInstallTime;
-                        item.lastUpdateTime = packageInfo.lastUpdateTime;
-                        item.hasActivities = packageInfo.activities != null;
-                        item.hasSplits = applicationInfo.splitSourceDirs != null;
-                        item.blockedCount = 0;
-                        item.userHandles = ArrayUtils.appendInt(item.userHandles, userHandle);
-                        applicationItems.add(item);
-                    }
-                }
-                // Add rest of the backup items, i.e., items that aren't installed
-                for (MetadataManager.Metadata metadata : backupMetadata.values()) {
-                    ApplicationItem item = new ApplicationItem();
-                    item.packageName = metadata.packageName;
-                    item.metadata = BackupUtils.getBackupInfo(metadata.packageName);
-                    if (item.metadata == null) continue;
-                    item.versionName = item.metadata.versionName;
-                    item.versionCode = item.metadata.versionCode;
-                    item.label = item.metadata.label;
-                    Log.e("MVM", item.label);
-                    item.firstInstallTime = item.metadata.backupTime;
-                    item.lastUpdateTime = item.metadata.backupTime;
-                    item.isUser = !item.metadata.isSystem;
-                    item.isDisabled = false;
-                    item.isInstalled = false;
-                    applicationItems.add(item);
-                }
+                applicationItems.addAll(PackageUtils.getInstalledOrBackedUpApplications(getApplication(), backupMetadata));
                 sortApplicationList(mSortBy);
                 filterItemsByFlags();
             }

@@ -61,11 +61,11 @@ public final class BackupUtils {
     }
 
     @NonNull
-    public static HashMap<String, MetadataManager.Metadata> getBackupMetadata() {
+    public static HashMap<String, MetadataManager.Metadata> getAllBackupMetadata() {
         HashMap<String, MetadataManager.Metadata> backupMetadata = new HashMap<>();
         List<String> backupPackages = getBackupPackages();
-        for (String dartyPackageName : backupPackages) {
-            MetadataManager.Metadata metadata = getBackupInfo(dartyPackageName);
+        for (String dirtyPackageName : backupPackages) {
+            MetadataManager.Metadata metadata = getBackupInfo(dirtyPackageName);
             if (metadata == null) continue;
             MetadataManager.Metadata metadata1 = backupMetadata.get(metadata.packageName);
             if (metadata1 == null) {

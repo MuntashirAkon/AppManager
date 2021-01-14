@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -57,12 +58,18 @@ import java.util.regex.Pattern;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.pm.PackageInfoCompat;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.backup.BackupUtils;
+import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.misc.UserIdInt;
+import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -94,6 +101,100 @@ public final class PackageUtils {
     @SuppressWarnings("RegExpRedundantEscape")
     private static final Pattern SERVICE_REGEX = Pattern.compile("ServiceRecord\\{.*/([^\\}]+)\\}");
     private static final String SERVICE_NOTHING = "(nothing)";
+
+    @NonNull
+    public static ArrayList<UserPackagePair> getUserPackagePairs(@NonNull List<ApplicationItem> applicationItems) {
+        ArrayList<UserPackagePair> userPackagePairList = new ArrayList<>();
+        int currentUser = Users.getCurrentUserHandle();
+        for (ApplicationItem item : applicationItems) {
+            if (item.userHandles != null) {
+                for (int userHandle : item.userHandles)
+                    userPackagePairList.add(new UserPackagePair(item.packageName, userHandle));
+            } else {
+                userPackagePairList.add(new UserPackagePair(item.packageName, currentUser));
+            }
+        }
+        return userPackagePairList;
+    }
+
+    @NonNull
+    public static List<ApplicationItem> getInstalledOrBackedUpApplications(@NonNull Context context,
+                                                                           @Nullable HashMap<String, MetadataManager.Metadata> backupMetadata) {
+        List<ApplicationItem> applicationItems = new ArrayList<>();
+        PackageManager pm = context.getPackageManager();
+        int[] userHandles = Users.getUsersHandles();
+        for (int userHandle : userHandles) {
+            @SuppressLint("WrongConstant")
+            List<PackageInfo> packageInfoList;
+            try {
+                packageInfoList = PackageManagerCompat.getInstalledPackages(
+                        flagSigningInfo | PackageManager.GET_ACTIVITIES
+                                | flagDisabledComponents, userHandle);
+            } catch (Exception e) {
+                Log.e("MVM", "Could not retrieve package info list for user " + userHandle, e);
+                continue;
+            }
+            ApplicationInfo applicationInfo;
+            MetadataManager.Metadata metadata;
+
+            for (PackageInfo packageInfo : packageInfoList) {
+                applicationInfo = packageInfo.applicationInfo;
+                ApplicationItem item = new ApplicationItem(applicationInfo);
+                int i;
+                if ((i = applicationItems.indexOf(item)) != -1) {
+                    // Add user handle and continue
+                    ApplicationItem oldItem = applicationItems.get(i);
+                    oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, userHandle);
+                    continue;
+                }
+                if (backupMetadata != null) {
+                    metadata = backupMetadata.get(applicationInfo.packageName);
+                    if (metadata != null) {
+                        item.metadata = metadata;
+                        backupMetadata.remove(applicationInfo.packageName);
+                    }
+                }
+                item.flags = applicationInfo.flags;
+                item.uid = applicationInfo.uid;
+                item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+                item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
+                item.isDisabled = !applicationInfo.enabled;
+                item.label = applicationInfo.loadLabel(pm).toString();
+                item.sdk = applicationInfo.targetSdkVersion;
+                item.versionName = packageInfo.versionName;
+                item.versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
+                item.sharedUserId = packageInfo.sharedUserId;
+                item.sha = Utils.getIssuerAndAlg(packageInfo);
+                item.firstInstallTime = packageInfo.firstInstallTime;
+                item.lastUpdateTime = packageInfo.lastUpdateTime;
+                item.hasActivities = packageInfo.activities != null;
+                item.hasSplits = applicationInfo.splitSourceDirs != null;
+                item.blockedCount = 0;
+                item.userHandles = ArrayUtils.appendInt(item.userHandles, userHandle);
+                applicationItems.add(item);
+            }
+        }
+        if (backupMetadata != null) {
+            // Add rest of the backup items, i.e., items that aren't installed
+            for (MetadataManager.Metadata metadata : backupMetadata.values()) {
+                ApplicationItem item = new ApplicationItem();
+                item.packageName = metadata.packageName;
+                item.metadata = BackupUtils.getBackupInfo(metadata.packageName);
+                if (item.metadata == null) continue;
+                item.versionName = item.metadata.versionName;
+                item.versionCode = item.metadata.versionCode;
+                item.label = item.metadata.label;
+                Log.e("MVM", item.label);
+                item.firstInstallTime = item.metadata.backupTime;
+                item.lastUpdateTime = item.metadata.backupTime;
+                item.isUser = !item.metadata.isSystem;
+                item.isDisabled = false;
+                item.isInstalled = false;
+                applicationItems.add(item);
+            }
+        }
+        return applicationItems;
+    }
 
     @NonNull
     public static HashMap<String, RulesStorageManager.Type> collectComponentClassNames(String packageName, @UserIdInt int userHandle) {
