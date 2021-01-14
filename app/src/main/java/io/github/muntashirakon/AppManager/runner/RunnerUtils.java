@@ -165,6 +165,11 @@ public final class RunnerUtils {
     }
 
     @NonNull
+    public static Runner.Result touch(@NonNull File file) {
+        return Runner.runCommand(new String[]{"touch", file.getAbsolutePath()});
+    }
+
+    @NonNull
     public static String userHandleToUser(int userHandle) {
         if (userHandle == Users.USER_ALL) return "all";
         else return String.valueOf(userHandle);

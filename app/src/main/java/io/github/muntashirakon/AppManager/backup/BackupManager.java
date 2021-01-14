@@ -43,11 +43,6 @@ public class BackupManager {
     static final int KEYSTORE_PLACEHOLDER = -1000;
 
     public static final String ICON_FILE = "icon.png";
-    static final String RULES_TSV = "rules.am.tsv";
-    static final String PERMS_TSV = "perms.am.tsv";
-    static final String MISC_TSV = "misc.am.tsv";
-    static final String CHECKSUMS_TXT = "checksums.txt";
-    static final String FREEZE = ".freeze";
     static final String CERT_PREFIX = "cert_";
     static final String MASTER_KEY = ".masterkey";
 
@@ -78,6 +73,7 @@ public class BackupManager {
         this.targetPackage = targetPackage;
         metadataManager = MetadataManager.getNewInstance();
         requestedFlags = new BackupFlags(flags);
+        BackupFiles.createNoMediaIfNotExists();
         Log.d(TAG, String.format(Locale.ROOT, "Package: %s, user: %d", targetPackage.getPackageName(), targetPackage.getUserHandle()));
     }
 

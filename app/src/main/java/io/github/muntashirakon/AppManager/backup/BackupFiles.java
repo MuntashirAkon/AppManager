@@ -31,13 +31,20 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class BackupFiles {
     static final String APK_SAVING_DIRECTORY = "apks";
     static final String TEMPORARY_DIRECTORY = "tmp";
+
+    static final String RULES_TSV = "rules.am.tsv";
+    static final String PERMS_TSV = "perms.am.tsv";
+    static final String MISC_TSV = "misc.am.tsv";
+    static final String CHECKSUMS_TXT = "checksums.txt";
+    static final String FREEZE = ".freeze";
+    static final String NO_MEDIA = ".nomedia";
 
     @NonNull
     public static PrivilegedFile getBackupDirectory() {
@@ -65,6 +72,16 @@ public class BackupFiles {
     @NonNull
     public static PrivilegedFile getApkBackupDirectory() {
         return new PrivilegedFile(getBackupDirectory(), APK_SAVING_DIRECTORY);
+    }
+
+    public static void createNoMediaIfNotExists() {
+        File backupDirectory = getBackupDirectory();
+        File noMediaFile = new File(backupDirectory, NO_MEDIA);
+        if (noMediaFile.exists()) return;
+        if (!backupDirectory.exists()) {
+            backupDirectory.mkdirs();
+        }
+        RunnerUtils.touch(noMediaFile);
     }
 
     public static class BackupFile {
@@ -96,33 +113,34 @@ public class BackupFiles {
 
         @NonNull
         public PrivilegedFile getChecksumFile(@CryptoUtils.Mode String mode) {
-            return new PrivilegedFile(getBackupPath(), BackupManager.CHECKSUMS_TXT + CryptoUtils.getExtension(mode));
+            return new PrivilegedFile(getBackupPath(), CHECKSUMS_TXT + CryptoUtils.getExtension(mode));
         }
 
         @Deprecated
         @NonNull
         public PrivilegedFile getPermsFile(@CryptoUtils.Mode String mode) {
-            return new PrivilegedFile(getBackupPath(), BackupManager.PERMS_TSV + CryptoUtils.getExtension(mode));
+            return new PrivilegedFile(getBackupPath(), PERMS_TSV + CryptoUtils.getExtension(mode));
         }
 
         @NonNull
         public PrivilegedFile getMiscFile(@CryptoUtils.Mode String mode) {
-            return new PrivilegedFile(getBackupPath(), BackupManager.MISC_TSV + CryptoUtils.getExtension(mode));
+            return new PrivilegedFile(getBackupPath(), MISC_TSV + CryptoUtils.getExtension(mode));
         }
 
         @NonNull
         public PrivilegedFile getRulesFile(@CryptoUtils.Mode String mode) {
-            return new PrivilegedFile(getBackupPath(), BackupManager.RULES_TSV + CryptoUtils.getExtension(mode));
+            return new PrivilegedFile(getBackupPath(), RULES_TSV + CryptoUtils.getExtension(mode));
         }
 
         public void freeze() {
-            Runner.runCommand(new String[]{"touch", getFreezeFile().getAbsolutePath()});
+            RunnerUtils.touch(getFreezeFile());
         }
 
         public void unfreeze() {
             getFreezeFile().delete();
         }
 
+        @SuppressWarnings("BooleanMethodIsAlwaysInverted")
         public boolean isFrozen() {
             return getFreezeFile().exists();
         }
@@ -151,7 +169,7 @@ public class BackupFiles {
 
         @NonNull
         private PrivilegedFile getFreezeFile() {
-            return new PrivilegedFile(getBackupPath(), BackupManager.FREEZE);
+            return new PrivilegedFile(getBackupPath(), FREEZE);
         }
     }
 
