@@ -93,6 +93,8 @@ import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
+import io.github.muntashirakon.AppManager.backup.BackupUtils;
+import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
@@ -442,6 +444,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Tag cloud //
         HashMap<String, RulesStorageManager.Type> trackerComponents;
         trackerComponents = ComponentUtils.getTrackerComponentsForPackageInfo(mPackageInfo);
+        MetadataManager.Metadata[] metadata = MetadataManager.getMetadata(mPackageName);
+        String[] readableBackupNames = new String[metadata.length];
+        for (int i = 0; i < metadata.length; ++i) {
+            String backupName = BackupUtils.getShortBackupName(metadata[i].backupName);
+            int userHandle = metadata[i].userHandle;
+            readableBackupNames[i] = backupName == null ? "Base backup for user " + userHandle : backupName + " for user " + userHandle;
+        }
         boolean isRunning;
         if (isExternalApk) isRunning = false;
         else isRunning = PackageUtils.hasRunningServices(mPackageName);
@@ -492,6 +501,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             builder.show();
                         });
             }
+            if (isDetached()) return;
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
                 if (isSystemlessPath) {
                     addChip(R.string.systemless_app);
@@ -499,6 +509,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0)
                     addChip(R.string.updated_app);
             } else if (!mainModel.getIsExternalApk()) addChip(R.string.user_app);
+            if (isDetached()) return;
             int countSplits = mainModel.getSplitCount();
             if (countSplits > 0) {
                 addChip(getResources().getQuantityString(R.plurals.no_of_splits, countSplits,
@@ -517,21 +528,29 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             .show();
                 });
             }
+            if (isDetached()) return;
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0)
                 addChip(R.string.debuggable);
+            if (isDetached()) return;
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0)
                 addChip(R.string.test_only);
+            if (isDetached()) return;
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) == 0)
                 addChip(R.string.no_code);
+            if (isDetached()) return;
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0)
                 addChip(R.string.requested_large_heap, R.color.tracker);
+            if (isDetached()) return;
             if (isRunning) {
                 addChip(R.string.running, R.color.running).setOnClickListener(v ->
                         mActivity.viewPager.setCurrentItem(AppDetailsFragment.SERVICES));
             }
+            if (isDetached()) return;
             if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0)
                 addChip(R.string.stopped, R.color.stopped);
+            if (isDetached()) return;
             if (!mApplicationInfo.enabled) addChip(R.string.disabled_app, R.color.disabled_user);
+            if (isDetached()) return;
             if (isMagiskHideEnabled) {
                 addChip(R.string.magisk_hide_enabled).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                         .setTitle(R.string.magisk_hide_enabled)
@@ -550,6 +569,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setNegativeButton(R.string.cancel, null)
                         .show());
             }
+            if (isDetached()) return;
             if (hasKeystore) {
                 Chip chip;
                 if (hasMasterkey) chip = addChip(R.string.keystore, R.color.tracker);
@@ -558,6 +578,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setTitle(R.string.keystore)
                         .setItems(KeyStoreUtils.getKeyStoreFiles(mApplicationInfo.uid,
                                 mainModel.getUserHandle()).toArray(new String[0]), null)
+                        .setNegativeButton(R.string.close, null)
+                        .show());
+            }
+            if (isDetached()) return;
+            if (metadata.length > 0) {
+                addChip(R.string.backup).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
+                        .setTitle(R.string.backup)
+                        .setItems(readableBackupNames, null)
                         .setNegativeButton(R.string.close, null)
                         .show());
             }

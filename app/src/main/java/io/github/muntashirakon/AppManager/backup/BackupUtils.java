@@ -99,7 +99,7 @@ public final class BackupUtils {
     }
 
     @Nullable
-    static String getShortBackupName(@NonNull String backupFileName) {
+    public static String getShortBackupName(@NonNull String backupFileName) {
         if (TextUtils.isDigitsOnly(backupFileName)) {
             // It's already a user handle
             return null;
