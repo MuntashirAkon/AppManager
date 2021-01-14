@@ -683,8 +683,8 @@
     <string name="critical_exts">Critical Extensions</string>
     <string name="non_critical_exts">Non-critical Extensions</string>
     <string name="usage_access_not_supported">Could not request usage access, as the corresponding settings page does not exist.</string>
-    <string name="packages">packages</string>
-    <string name="onboard">Onboard</string>
+    <string name="packages">Manager</string>
+    <string name="onboard">App</string>
     <string name="do_you_want_to_uninstall_and_install">Do you want to uninstall and install the app again?</string>
     <string name="signature_mismatch_for_system_apps">Could not install app because a system app with a different signature has this package name.</string>
     <string name="app_data_will_be_lost">The existing data will be lost.</string>
