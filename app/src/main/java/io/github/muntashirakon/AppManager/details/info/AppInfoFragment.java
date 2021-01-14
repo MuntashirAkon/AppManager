@@ -127,8 +127,6 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_FLAG_MONOSPACE;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
 
 public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -652,7 +650,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         try {
                             PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
                             runOnUiThread(this::refreshDetails);
-                        } catch (RemoteException|SecurityException e) {
+                        } catch (RemoteException | SecurityException e) {
                             runOnUiThread(() -> Toast.makeText(mActivity, getString(R.string.failed_to_stop, mPackageLabel), Toast.LENGTH_LONG).show());
                         }
                     }));
@@ -1214,16 +1212,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             return;
         }
         if (isExternalApk) {
-            try {
-                mInstalledPackageInfo = PackageManagerCompat.getPackageInfo(mPackageName,
-                        PackageManager.GET_PERMISSIONS | PackageManager.GET_ACTIVITIES
-                                | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                                | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
-                                | flagDisabledComponents | flagSigningInfo | PackageManager.GET_CONFIGURATIONS
-                                | PackageManager.GET_SHARED_LIBRARY_FILES, mainModel.getUserHandle());
-            } catch (Exception e) {
-                mInstalledPackageInfo = null;
-            }
+            mInstalledPackageInfo = mainModel.getInstalledPackageInfo();
         }
         mApplicationInfo = mPackageInfo.applicationInfo;
         mPackageLabel = mApplicationInfo.loadLabel(mPackageManager);

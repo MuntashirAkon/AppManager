@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2021 Muntashir Al-Islam
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package io.github.muntashirakon.AppManager.details.info;
 
 import android.content.Context;
@@ -24,13 +41,12 @@ import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_INLINE;
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_REGULAR;
 
-public class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter.ViewHolder> {
+class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter.ViewHolder> {
     private final List<ListItem> adapterList;
     private final int accentColor;
     private final int paddingMedium;
     private final int paddingSmall;
     private final int paddingVerySmall;
-
 
     AppInfoRecyclerAdapter(Context context) {
         adapterList = new ArrayList<>();
@@ -103,11 +119,10 @@ public class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecycler
                 if ((listItem.flags & LIST_ITEM_FLAG_MONOSPACE) != 0)
                     holder.subtitle.setTypeface(Typeface.MONOSPACE);
                 else holder.subtitle.setTypeface(Typeface.DEFAULT);
-                // FIXME: Load icon in background
                 if (listItem.icon != 0) holder.icon.setImageResource(listItem.icon);
-                // FIXME: Load action icon in background
-                if (listItem.actionIcon != 0)
+                if (listItem.actionIcon != 0) {
                     holder.actionIcon.setImageResource(listItem.actionIcon);
+                }
                 if (listItem.actionListener != null) {
                     holder.actionIcon.setVisibility(View.VISIBLE);
                     holder.actionIcon.setOnClickListener(listItem.actionListener);
@@ -121,7 +136,7 @@ public class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecycler
         return adapterList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView subtitle;
         ImageView icon;

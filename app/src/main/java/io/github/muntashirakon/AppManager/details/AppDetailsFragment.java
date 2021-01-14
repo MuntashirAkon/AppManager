@@ -1332,9 +1332,10 @@ public class AppDetailsFragment extends Fragment implements SearchView.OnQueryTe
                         mActivity.getString(R.string.group), permissionInfo.group));
             } else holder.textView5.setVisibility(View.GONE);
             // Permission Switch
-            int sdkVersion = mainModel.getPackageInfo().applicationInfo.targetSdkVersion;
+            int sdkVersion = mainModel.getPackageInfoSafe() != null ? mainModel.getPackageInfoSafe()
+                    .applicationInfo.targetSdkVersion : 23;
             if ((isRootEnabled || isADBEnabled) && !isExternalApk && ((permissionItem.isDangerous
-                    && sdkVersion > 23) || protectionLevel.contains("development")
+                    && sdkVersion >= 23) || protectionLevel.contains("development")
                     || permissionItem.appOp != AppOpsManager.OP_NONE)) {
                 holder.toggleSwitch.setVisibility(View.VISIBLE);
                 holder.toggleSwitch.setChecked(permissionItem.isGranted);

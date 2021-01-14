@@ -19,10 +19,6 @@ package io.github.muntashirakon.AppManager.details;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
@@ -36,6 +32,7 @@ import android.os.Build;
 import android.os.DeadSystemException;
 import android.os.RemoteException;
 import android.text.TextUtils;
+import android.util.AndroidException;
 
 import com.android.apksig.ApkVerifier;
 import com.android.apksig.apk.ApkFormatException;
@@ -50,11 +47,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -77,6 +74,7 @@ import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -88,6 +86,7 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningI
 public class AppDetailsViewModel extends AndroidViewModel {
     private final PackageManager mPackageManager;
     private PackageInfo packageInfo;
+    private PackageInfo installedPackageInfo;
     private String packageName;
     private final Object blockerLocker = new Object();
     @GuardedBy("blockerLocker")
@@ -666,19 +665,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
         if (!reload && packageInfo != null) return;
         try {
-            if (isExternalApk) {
-                packageInfo = mPackageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS
-                        | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                        | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
-                        | flagDisabledComponents | PackageManager.GET_SIGNATURES | PackageManager.GET_CONFIGURATIONS
-                        | PackageManager.GET_SHARED_LIBRARY_FILES);
-                if (packageInfo == null)
-                    throw new PackageManager.NameNotFoundException("Package cannot be parsed");
-                packageInfo.applicationInfo.sourceDir = apkPath;
-                packageInfo.applicationInfo.publicSourceDir = apkPath;
-                setPackageName(packageInfo.packageName);
-            } else {
-                packageInfo = PackageManagerCompat.getPackageInfo(packageName,
+            try {
+                installedPackageInfo = PackageManagerCompat.getPackageInfo(packageName,
                         PackageManager.GET_PERMISSIONS | PackageManager.GET_ACTIVITIES
                                 | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                                 | PackageManager.GET_SERVICES
@@ -686,6 +674,28 @@ public class AppDetailsViewModel extends AndroidViewModel {
                                 | flagDisabledComponents | flagSigningInfo
                                 | PackageManager.GET_CONFIGURATIONS
                                 | PackageManager.GET_SHARED_LIBRARY_FILES, userHandle);
+            } catch (AndroidException e) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && e instanceof DeadSystemException) {
+                    throw e;
+                }
+            }
+            if (isExternalApk) {
+                packageInfo = mPackageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS
+                        | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
+                        | PackageManager.GET_SERVICES | PackageManager.GET_URI_PERMISSION_PATTERNS
+                        | flagDisabledComponents | PackageManager.GET_SIGNATURES | PackageManager.GET_CONFIGURATIONS
+                        | PackageManager.GET_SHARED_LIBRARY_FILES);
+                if (packageInfo == null) {
+                    throw new PackageManager.NameNotFoundException("Package cannot be parsed");
+                }
+                packageInfo.applicationInfo.sourceDir = apkPath;
+                packageInfo.applicationInfo.publicSourceDir = apkPath;
+                setPackageName(packageInfo.packageName);
+            } else {
+                packageInfo = installedPackageInfo;
+                if (packageInfo == null) {
+                    throw new PackageManager.NameNotFoundException("Package not installed");
+                }
             }
             isPackageExistLiveData.postValue(isPackageExist = true);
         } catch (PackageManager.NameNotFoundException e) {
@@ -705,6 +715,18 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public PackageInfo getPackageInfo() {
         if (packageInfo == null) setPackageInfo(false);
         return packageInfo;
+    }
+
+    @AnyThread
+    @Nullable
+    public PackageInfo getPackageInfoSafe() {
+        return packageInfo;
+    }
+
+    @AnyThread
+    @Nullable
+    public PackageInfo getInstalledPackageInfo() {
+        return installedPackageInfo;
     }
 
     private MutableLiveData<List<AppDetailsItem>> appInfo;
@@ -1244,53 +1266,29 @@ public class AppDetailsViewModel extends AndroidViewModel {
      * Helper class to look for interesting changes to the installed apps
      * so that the loader can be updated.
      */
-    public static class PackageIntentReceiver extends BroadcastReceiver {
-
+    public static class PackageIntentReceiver extends PackageChangeReceiver {
         final AppDetailsViewModel model;
 
-        public PackageIntentReceiver(AppDetailsViewModel model) {
+        public PackageIntentReceiver(@NonNull AppDetailsViewModel model) {
+            super(model.getApplication());
             this.model = model;
-            IntentFilter filter = new IntentFilter(Intent.ACTION_PACKAGE_ADDED);
-            filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
-            filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
-            filter.addDataScheme("package");
-            this.model.getApplication().registerReceiver(this, filter);
-            // Register for events related to sdcard installation.
-            IntentFilter sdFilter = new IntentFilter();
-            sdFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
-            sdFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
-            filter.addAction(Intent.ACTION_LOCALE_CHANGED);
-            this.model.getApplication().registerReceiver(this, sdFilter);
         }
 
         @Override
-        public void onReceive(Context context, @NonNull Intent intent) {
-            switch (Objects.requireNonNull(intent.getAction())) {
-                case Intent.ACTION_PACKAGE_REMOVED:
-                    if (intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) break;
-                case Intent.ACTION_PACKAGE_ADDED:
-                case Intent.ACTION_PACKAGE_CHANGED:
-                    int uid = intent.getIntExtra(Intent.EXTRA_UID, -1);
-                    if (model.packageInfo == null || model.packageInfo.applicationInfo.uid == uid || model.isExternalApk) {
-                        Log.d("ADVM", "Package is changed.");
+        protected void onPackageChanged(@Nullable Integer uid, @Nullable String[] packages) {
+            if (uid != null && (model.packageInfo == null || model.packageInfo.applicationInfo.uid == uid || model.isExternalApk)) {
+                Log.d("ADVM", "Package is changed.");
+                model.setIsPackageChanged();
+            } else if (packages != null) {
+                for (String packageName : packages) {
+                    if (packageName.equals(model.packageName)) {
+                        Log.d("ADVM", "Package availability changed.");
                         model.setIsPackageChanged();
                     }
-                    break;
-                case Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE:
-                case Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE:
-                    String[] packages = intent.getStringArrayExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST);
-                    if (packages != null) {
-                        for (String packageName : packages) {
-                            if (packageName.equals(model.packageName)) {
-                                Log.d("ADVM", "Package availability changed.");
-                                model.setIsPackageChanged();
-                            }
-                        }
-                    }
-                    break;
-                case Intent.ACTION_LOCALE_CHANGED:
-                    Log.d("ADVM", "Locale changed.");
-                    model.setIsPackageChanged();
+                }
+            } else {
+                Log.d("ADVM", "Locale changed.");
+                model.setIsPackageChanged();
             }
         }
     }
