@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.NoFilterArrayAdapter;
 
 public class HistoryEditText {
@@ -59,7 +60,8 @@ public class HistoryEditText {
 
         protected void showHistory() {
             List<String> items = getHistoryItems();
-            ArrayAdapter<String> adapter = new NoFilterArrayAdapter<>(mContext, android.R.layout.simple_spinner_dropdown_item, items);
+            ArrayAdapter<String> adapter = new NoFilterArrayAdapter<>(mContext,
+                    R.layout.item_checked_text_view, items);
             mEditor.setAdapter(adapter);
         }
 

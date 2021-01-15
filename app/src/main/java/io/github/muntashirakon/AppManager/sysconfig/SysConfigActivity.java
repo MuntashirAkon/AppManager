@@ -71,7 +71,7 @@ public class SysConfigActivity extends BaseActivity {
 
         String[] sysConfigTypes = getResources().getStringArray(R.array.sys_config_names);
         SpinnerAdapter intervalSpinnerAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, sysConfigTypes);
+                R.layout.item_checked_text_view, android.R.id.text1, sysConfigTypes);
         spinner.setAdapter(intervalSpinnerAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

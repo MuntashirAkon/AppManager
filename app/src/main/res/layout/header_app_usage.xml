@@ -26,7 +26,7 @@
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/spinner_interval"
         android:layout_width="130dp"
-        android:layout_height="30dp"
+        android:layout_height="35sp"
         android:layout_gravity="center"
         android:layout_margin="@dimen/padding_large"
         style="@style/AppTheme.Spinner" />

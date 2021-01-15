@@ -33,7 +33,7 @@
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="35sp"
             android:layout_gravity="center"
             android:layout_margin="@dimen/padding_large"
             style="@style/AppTheme.Spinner" />

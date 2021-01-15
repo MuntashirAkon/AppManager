@@ -139,7 +139,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
 
         Spinner intervalSpinner = findViewById(R.id.spinner_interval);
         SpinnerAdapter intervalSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.usage_interval_dropdown_list, android.R.layout.simple_spinner_dropdown_item);
+                R.array.usage_interval_dropdown_list, R.layout.item_checked_text_view);
         intervalSpinner.setAdapter(intervalSpinnerAdapter);
         intervalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

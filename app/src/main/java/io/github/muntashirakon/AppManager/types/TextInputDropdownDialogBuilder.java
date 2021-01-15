@@ -96,9 +96,9 @@ public class TextInputDropdownDialogBuilder {
     public <T> TextInputDropdownDialogBuilder setDropdownItems(List<T> items, boolean filterable) {
         ArrayAdapter<T> adapter;
         if (filterable) {
-            adapter = new AnyFilterArrayAdapter<>(activity, android.R.layout.simple_spinner_dropdown_item, items);
+            adapter = new AnyFilterArrayAdapter<>(activity, R.layout.item_checked_text_view, items);
         } else {
-            adapter = new NoFilterArrayAdapter<>(activity, android.R.layout.simple_spinner_dropdown_item, items);
+            adapter = new NoFilterArrayAdapter<>(activity, R.layout.item_checked_text_view, items);
         }
         mainInput.setAdapter(adapter);
         mainInputLayout.setEndIconMode(TextInputLayout.END_ICON_DROPDOWN_MENU);
@@ -115,7 +115,7 @@ public class TextInputDropdownDialogBuilder {
         auxiliaryInputLayout.setHelperText(helperText);
         auxiliaryInput.setText(inputText);
         if (dropdownItems != null) {
-            ArrayAdapter<T> adapter = new NoFilterArrayAdapter<>(activity, android.R.layout.simple_spinner_dropdown_item, dropdownItems);
+            ArrayAdapter<T> adapter = new NoFilterArrayAdapter<>(activity, R.layout.item_checked_text_view, dropdownItems);
             auxiliaryInput.setAdapter(adapter);
             auxiliaryInputLayout.setEndIconMode(TextInputLayout.END_ICON_DROPDOWN_MENU);
         } else {
