@@ -120,6 +120,7 @@ public abstract class AMPackageInstaller {
     protected int sessionId = -1;
     protected int userHandle;
     protected int finalStatus = STATUS_FAILURE_INVALID;
+    protected boolean showCompletedMessage = true;
     private PackageInstallerBroadcastReceiver piReceiver;
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -150,7 +151,9 @@ public abstract class AMPackageInstaller {
                     AMPackageInstaller.this.finalStatus = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, STATUS_FAILURE_INVALID);
                     // No need to check package name since it's been checked before
                     if (finalStatus == STATUS_FAILURE_SESSION_CREATE || (sessionId != -1 && AMPackageInstaller.this.sessionId == sessionId)) {
-                        sendNotification(finalStatus, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
+                        if (showCompletedMessage) {
+                            sendNotification(finalStatus, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
+                        }
                         if (closeApkFile && apkFile != null) {
                             apkFile.close();
                         }
@@ -161,6 +164,19 @@ public abstract class AMPackageInstaller {
             }
         }
     };
+
+
+    public void setAppLabel(CharSequence appLabel) {
+        this.appLabel = appLabel;
+    }
+
+    public void setCloseApkFile(boolean closeApkFile) {
+        this.closeApkFile = closeApkFile;
+    }
+
+    public void setShowCompletedMessage(boolean showCompletedMessage) {
+        this.showCompletedMessage = showCompletedMessage;
+    }
 
     @CallSuper
     public boolean install(@NonNull ApkFile apkFile) {

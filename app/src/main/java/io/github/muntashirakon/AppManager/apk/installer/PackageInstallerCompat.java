@@ -364,14 +364,6 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
         Log.d(TAG, "Installer app: " + installerPackageName);
     }
 
-    public void setAppLabel(CharSequence appLabel) {
-        this.appLabel = appLabel;
-    }
-
-    public void setCloseApkFile(boolean closeApkFile) {
-        this.closeApkFile = closeApkFile;
-    }
-
     @Override
     public boolean install(@NonNull ApkFile apkFile) {
         try {

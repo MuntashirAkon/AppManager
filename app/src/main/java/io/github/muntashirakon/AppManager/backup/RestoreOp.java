@@ -22,7 +22,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.pm.PackageInfoCompat;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
@@ -202,12 +201,11 @@ class RestoreOp implements Closeable {
                 // No source backup found
                 throw new BackupException("Source restore is requested but there are no source files.");
             }
-            boolean reinstallNeeded = false;
+            boolean isVerified = true;
             if (packageInfo != null) {
                 // Check signature of the installed app
                 List<String> certChecksumList = Arrays.asList(PackageUtils.getSigningCertChecksums(metadata.checksumAlgo, packageInfo, false));
                 String[] certChecksums = BackupFiles.Checksum.getCertChecksums(checksum);
-                boolean isVerified = true;
                 for (String checksum : certChecksums) {
                     if (certChecksumList.contains(checksum)) continue;
                     isVerified = false;
@@ -216,15 +214,6 @@ class RestoreOp implements Closeable {
                                 "\nInstalled: " + certChecksumList.toString() +
                                 "\nBackup: " + Arrays.toString(certChecksums));
                     }
-                }
-                if (!isVerified) {
-                    // Signature verification failed but still here because signature check is disabled.
-                    // The only way to restore is to reinstall the app
-                    reinstallNeeded = true;
-                } else if (PackageInfoCompat.getLongVersionCode(packageInfo) > metadata.versionCode) {
-                    // Installed package has higher version code. The only way to downgrade is to
-                    // reinstall the package.
-                    reinstallNeeded = true;
                 }
             }
             if (!requestedFlags.skipSignatureCheck()) {
@@ -239,11 +228,11 @@ class RestoreOp implements Closeable {
                     }
                 }
             }
-            if (reinstallNeeded) {
-                // A complete reinstall needed, first uninstall the package with -k and then install
-                // the package again with -r
+            if (!isVerified) {
+                // Signature verification failed but still here because signature check is disabled.
+                // The only way to restore is to reinstall the app
                 try {
-                    PackageInstallerCompat.uninstall(packageName, userHandle, true);
+                    PackageInstallerCompat.uninstall(packageName, userHandle, false);
                 } catch (Exception e) {
                     throw new BackupException("An uninstall was necessary but couldn't perform it.", e);
                 }
@@ -279,6 +268,8 @@ class RestoreOp implements Closeable {
             }
             // A normal update will do it now
             PackageInstallerCompat packageInstaller = PackageInstallerCompat.getNewInstance(userHandle, metadata.installer);
+            // We don't need to display install completed message
+            packageInstaller.setShowCompletedMessage(false);
             if (!packageInstaller.install(allApks, packageName)) {
                 deleteFiles(allApks);
                 throw new BackupException("A (re)install was necessary but couldn't perform it.");
