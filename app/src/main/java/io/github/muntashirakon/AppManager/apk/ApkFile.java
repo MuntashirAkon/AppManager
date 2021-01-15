@@ -197,7 +197,19 @@ public final class ApkFile implements AutoCloseable {
             } else extension = "apk";
         }
         if (extension.equals("apkm")) {
-            // Convert to apks if the file ends with apkm
+            try {
+                if (IOUtils.isInputFileZip(cr, apkUri)) {
+                    // DRM-free APKM file, mark it as APKS
+                    // FIXME(15/1/21): Give it an special name and verify integrity
+                    extension = "apks";
+                }
+            } catch (IOException e) {
+                throw new ApkFileException(e);
+            }
+        }
+        // Cache the file or use file descriptor for non-APKM files
+        if (extension.equals("apkm")) {
+            // Convert to APKS
             try {
                 this.cacheFilePath = IOUtils.getTempFile();
                 try (InputStream inputStream = cr.openInputStream(apkUri);

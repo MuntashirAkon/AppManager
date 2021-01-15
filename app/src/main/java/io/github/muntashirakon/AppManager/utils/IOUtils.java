@@ -54,6 +54,16 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 
 public final class IOUtils {
+    private static final byte[] ZIP_FILE_HEADER = new byte[]{0x50, 0x4B, 0x03, 0x04};
+
+    public static boolean isInputFileZip(ContentResolver cr, Uri uri) throws IOException {
+        byte[] header = new byte[4];
+        try (InputStream is = cr.openInputStream(uri)) {
+            is.read(header);
+        }
+        return Arrays.equals(ZIP_FILE_HEADER, header);
+    }
+
     public static void bytesToFile(byte[] bytes, File file) throws IOException {
         try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))) {
             bos.write(bytes);

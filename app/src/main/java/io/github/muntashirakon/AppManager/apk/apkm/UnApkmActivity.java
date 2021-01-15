@@ -72,6 +72,15 @@ public class UnApkmActivity extends AppCompatActivity {
         try {
             String fileName = IOUtils.getFileName(getContentResolver(), uri);
             if (fileName != null && !fileName.endsWith(".apkm")) throw new IOException("Invalid file.");
+            try {
+                if (IOUtils.isInputFileZip(getContentResolver(), uri)) {
+                    // DRM-free APKM file
+                    Toast.makeText(this, R.string.drm_free_apkm_msg, Toast.LENGTH_LONG).show();
+                    finish();
+                    return;
+                }
+            } catch (IOException ignore) {
+            }
             inputStream = getContentResolver().openInputStream(uri);
             if (inputStream == null) finish();
             exportManifest.launch(fileName != null ? IOUtils.trimExtension(fileName) + ".apks" : null);

@@ -871,4 +871,5 @@
     <string name="restore_latest_msg">Restore already installed apps whose version codes are higher than the installed version code.</string>
     <string name="backup_msg">Back up apps with data</string>
     <string name="restore_msg">Restore apps with data</string>
+    <string name="drm_free_apkm_msg">The APKM file is DRM-free, no need to convert it to APKS.</string>
 </resources>
