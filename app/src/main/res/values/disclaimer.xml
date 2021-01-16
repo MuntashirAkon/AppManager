@@ -14,7 +14,9 @@
   ~
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  --><resources>
+  -->
+
+<resources>
     <string name="disclaimer_header">DISCLAIMER</string>
     <string name="disclaimer_body">App Manager offers root functions that could possibly harm
         your device if used incorrectly. App Manager is not responsible for any damages made by
