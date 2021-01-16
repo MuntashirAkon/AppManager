@@ -18,7 +18,7 @@
     <string name="_lang_tag" translatable="false">de</string>
     <string name="instructions_header">Diese Anweisungen sind veraltet und werden nicht mehr aktualisiert. Besuchen Sie die offizielle Dokumentation auf (https://muntashirakon.github.io/AppManager), um die aktuellsten Informationen zu erhalten</string>
     <string name="uninstall">Deinstallieren</string>
-    <string name="permissions">Benutzt Berechtigungen</string>
+    <string name="permissions">Verwendet Berechtigungen</string>
     <string name="require_no_permission">Keine Berechtigungen benötigt</string>
     <string name="activities">Aktivitäten</string>
     <string name="launch">Starten</string>
@@ -625,7 +625,7 @@
     <string name="app_data_will_be_lost">Die vorhandenen Daten gehen dabei verloren.</string>
     <string name="signature_mismatch_for_system_apps">Konnte die Anwendung nicht installieren, weil eine Systemanwendung mit einer anderen Signatur diesen Paketnamen hat.</string>
     <string name="do_you_want_to_uninstall_and_install">Möchten Sie die Anwendung deinstallieren und erneut installieren\?</string>
-    <string name="onboard">auf</string>
+    <string name="onboard">An Bord</string>
     <string name="packages">Pakete</string>
     <string name="usage_access_not_supported">Konnte keinen Nutzungszugriff anfordern, da die entsprechende Einstellungsseite nicht existiert.</string>
     <string name="sys_config">Systemkonfiguration</string>
@@ -832,4 +832,24 @@
         <item quantity="one">%1$d Bestandteil</item>
         <item quantity="other">%1$d Bestandteile</item>
     </plurals>
+    <string name="drm_free_apkm_msg">Die APKM-Datei ist DRM-frei, sie muss nicht in APKS konvertiert werden.</string>
+    <string name="restore_msg">Wiederherstellen der Apps mit Daten</string>
+    <string name="back_up">Sicherung</string>
+    <string name="verify_and_redo_backups_msg">Prüfen der Integrität der vorherigen Sicherungen und wiederholen der Sicherungen, bei denen die Integritätsprüfung fehlschlägt.</string>
+    <string name="verify_and_redo_backups">Backups verifizieren und wiederherstellen</string>
+    <string name="backup_msg">Sichern von Apps mit Daten</string>
+    <string name="restore_latest_msg">Bereits installierte Apps wiederherstellen, deren Versionscode höher ist als der installierte Versionscode.</string>
+    <string name="restore_latest">Letzte Backups wiederherstellen</string>
+    <string name="restore_not_installed_msg">Basissicherung für Apps wiederherstellen, die derzeit nicht installiert sind.</string>
+    <string name="restore_not_installed">Nicht installierte Apps wiederherstellen</string>
+    <string name="restore_all_msg">Wiederherstellen des Basis-Backups von allen gesicherten Apps.</string>
+    <string name="restore_all">Alle Apps wiederherstellen</string>
+    <string name="backup_apps_with_changes_msg">Wiederholen der Sicherungen für Apps mit Änderungen seit der letzten Sicherung. Dazu gehören Änderungen in Größe, Version und des letztes Startzeitpunktes.</string>
+    <string name="backup_apps_with_changes">Sichern von Apps mit Änderungen</string>
+    <string name="redo_existing_backups_msg">Wiederholen der Backups für installierte Apps mit vorhergehenden Sicherungen.</string>
+    <string name="redo_existing_backups">Vorhandene Sicherungen wiederherstellen</string>
+    <string name="backup_apps_without_backups_msg">Sichern der Apps ohne vorherige Sicherungen.</string>
+    <string name="backup_apps_without_backups">Sichern der Apps ohne der Sicherungen</string>
+    <string name="backup_all_apps_msg">Sichern aller installierten Apps.</string>
+    <string name="backup_all_apps">Sichern aller Apps</string>
 </resources>
