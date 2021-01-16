@@ -51,6 +51,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -98,6 +99,23 @@ public class Utils {
     @NonNull
     public static String camelCaseToSpaceSeparatedString(@NonNull String str) {
         return TextUtils.join(" ", splitByCharacterType(str, true)).replace(" _", "");
+    }
+
+
+    public static boolean containsOrHasInitials(@NonNull String query, @NonNull String str) {
+        query = query.toLowerCase(Locale.ROOT);
+        if (str.toLowerCase(Locale.ROOT).contains(query)) return true;
+        return getFirstLettersInLowerCase(camelCaseToSpaceSeparatedString(str)).contains(query);
+    }
+
+    @NonNull
+    public static String getFirstLettersInLowerCase(@NonNull String str) {
+        String[] strings = str.split("\\s");
+        StringBuilder builder = new StringBuilder();
+        for (String s : strings) {
+            if (s.length() > 0) builder.append(s.charAt(0));
+        }
+        return builder.toString().toLowerCase(Locale.ROOT);
     }
 
     // https://commons.apache.org/proper/commons-lang/javadocs/api-3.1/src-html/org/apache/commons/lang3/StringUtils.html#line.3164

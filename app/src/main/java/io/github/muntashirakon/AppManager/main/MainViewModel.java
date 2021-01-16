@@ -233,8 +233,9 @@ public class MainViewModel extends AndroidViewModel {
         ApplicationItem item;
         for (int i = 0; i < applicationItems.size(); ++i) {
             item = applicationItems.get(i);
-            if (item.label.toLowerCase(Locale.ROOT).contains(searchQuery)
-                    || item.packageName.toLowerCase(Locale.ROOT).contains(searchQuery))
+            if (item.packageName.toLowerCase(Locale.ROOT).contains(searchQuery)) {
+                filteredApplicationItems.add(item);
+            } else if (Utils.containsOrHasInitials(searchQuery, item.label))
                 filteredApplicationItems.add(item);
         }
         mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
