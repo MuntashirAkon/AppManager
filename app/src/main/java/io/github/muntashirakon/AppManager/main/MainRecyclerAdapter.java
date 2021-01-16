@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,6 +63,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private final MainActivity mActivity;
     private final PackageManager mPackageManager;
     private String mSearchQuery;
+    @GuardedBy("mAdapterList")
     private final List<ApplicationItem> mAdapterList = new ArrayList<>();
 
     private static int mColorTransparent;
@@ -89,6 +91,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         mColorRed = ContextCompat.getColor(mActivity, R.color.red);
     }
 
+    @GuardedBy("mAdapterList")
     void setDefaultList(List<ApplicationItem> list) {
         new Thread(() -> {
             synchronized (mAdapterList) {
@@ -100,24 +103,28 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }).start();
     }
 
+    @GuardedBy("mAdapterList")
     void clearSelection() {
-        synchronized (mAdapterList) {
-            final List<Integer> itemIds = new ArrayList<>();
-            int itemId;
-            for (ApplicationItem applicationItem : mActivity.mModel.getSelectedApplicationItems()) {
-                itemId = mAdapterList.indexOf(applicationItem);
-                if (itemId == -1) continue;
-                applicationItem.isSelected = false;
-                mAdapterList.set(itemId, applicationItem);
-                itemIds.add(itemId);
+        new Thread(() -> {
+            synchronized (mAdapterList) {
+                final List<Integer> itemIds = new ArrayList<>();
+                int itemId;
+                for (ApplicationItem applicationItem : mActivity.mModel.getSelectedApplicationItems()) {
+                    itemId = mAdapterList.indexOf(applicationItem);
+                    if (itemId == -1) continue;
+                    applicationItem.isSelected = false;
+                    mAdapterList.set(itemId, applicationItem);
+                    itemIds.add(itemId);
+                }
+                mActivity.runOnUiThread(() -> {
+                    for (int id : itemIds) notifyItemChanged(id);
+                });
+                mActivity.mModel.clearSelection();
             }
-            mActivity.runOnUiThread(() -> {
-                for (int id : itemIds) notifyItemChanged(id);
-            });
-            mActivity.mModel.clearSelection();
-        }
+        }).start();
     }
 
+    @GuardedBy("mAdapterList")
     void selectAll() {
         synchronized (mAdapterList) {
             for (int i = 0; i < mAdapterList.size(); ++i) {
@@ -135,11 +142,15 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         return new ViewHolder(view);
     }
 
+    @GuardedBy("mAdapterList")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Cancel an existing icon loading operation
         if (holder.iconLoader != null) holder.iconLoader.interrupt();
-        final ApplicationItem item = mAdapterList.get(position);
+        final ApplicationItem item;
+        synchronized (mAdapterList) {
+            item = mAdapterList.get(position);
+        }
         // Add click listeners
         holder.itemView.setOnClickListener(v -> {
             // Click listener: 1) If app not installed, display a toast message saying that it's
@@ -333,11 +344,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
     }
 
+    @GuardedBy("mAdapterList")
     public void toggleSelection(@NonNull ApplicationItem item, int position) {
-        if (mActivity.mModel.getSelectedPackages().containsKey(item.packageName)) {
-            mAdapterList.set(position, mActivity.mModel.deselect(item));
-        } else {
-            mAdapterList.set(position, mActivity.mModel.select(item));
+        synchronized (mAdapterList) {
+            if (mActivity.mModel.getSelectedPackages().containsKey(item.packageName)) {
+                mAdapterList.set(position, mActivity.mModel.deselect(item));
+            } else {
+                mAdapterList.set(position, mActivity.mModel.select(item));
+            }
         }
         notifyItemChanged(position);
         mActivity.handleSelection();
@@ -348,21 +362,27 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         return i;
     }
 
+    @GuardedBy("mAdapterList")
     @Override
     public int getItemCount() {
-        return mAdapterList.size();
+        synchronized (mAdapterList) {
+            return mAdapterList.size();
+        }
     }
 
+    @GuardedBy("mAdapterList")
     @Override
     public int getPositionForSection(int section) {
-        for (int i = 0; i < getItemCount(); i++) {
-            String item = mAdapterList.get(i).label;
-            if (item.length() > 0) {
-                if (item.charAt(0) == sections.charAt(section))
-                    return i;
+        synchronized (mAdapterList) {
+            for (int i = 0; i < getItemCount(); i++) {
+                String item = mAdapterList.get(i).label;
+                if (item.length() > 0) {
+                    if (item.charAt(0) == sections.charAt(section))
+                        return i;
+                }
             }
+            return 0;
         }
-        return 0;
     }
 
     @Override
