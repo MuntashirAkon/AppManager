@@ -622,8 +622,8 @@
     <string name="app_data_will_be_lost">Mevcut veriler kaybolacak.</string>
     <string name="signature_mismatch_for_system_apps">Farklı imzaya sahip bir sistem uygulaması bu paket adına sahip olduğu için uygulama kurulamadı.</string>
     <string name="do_you_want_to_uninstall_and_install">Uygulamayı kaldırıp tekrar kurmak istiyor musunuz\?</string>
-    <string name="onboard">Uygulama</string>
-    <string name="packages">Yönetici</string>
+    <string name="onboard">Yerleşik</string>
+    <string name="packages">paketler</string>
     <string name="usage_access_not_supported">İlgili ayarlar sayfası olmadığı için kullanım erişimi istenemedi.</string>
     <string name="sys_config">Sistem Yapılandırması</string>
     <string name="copy">Kopyala</string>
