@@ -646,8 +646,8 @@
     <string name="routine_ops">Operações de rotina</string>
     <string name="input_app_ops_description">Insira nomes e/ou constantes de operações de aplicativo com espaços, por exemplo (WAKE_LOCK 63 72 CAMERA), etc.</string>
     <string name="input_app_ops">Inserir operações de aplicativo</string>
-    <string name="packages">Aplicativos</string>
-    <string name="onboard">Gerenciador de</string>
+    <string name="packages">pacotes</string>
+    <string name="onboard">Todos os</string>
     <string name="state_waking">Acordando</string>
     <string name="state_parked">Estacionado</string>
     <string name="state_wake_kill">Encerrado ao acordar</string>
