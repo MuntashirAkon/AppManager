@@ -619,6 +619,20 @@ public final class PackageInstallerCompat extends AMPackageInstaller {
                 flags |= DELETE_SYSTEM_APP;
             }
         }
+        // Get correct user handle
+        int[] users = Users.getUsersHandles();
+        for (int user : users) {
+            try {
+                PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, 0, user);
+                if (info == null) {
+                    throw new PackageManager.NameNotFoundException("Package " + packageName
+                            + " no installed for user " + user);
+                }
+                userHandle = user;
+                break;
+            } catch (Throwable ignore) {
+            }
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             pi.uninstall(new VersionedPackage(packageName, PackageManager.VERSION_CODE_HIGHEST),
                     null, flags, sender, userHandle);
