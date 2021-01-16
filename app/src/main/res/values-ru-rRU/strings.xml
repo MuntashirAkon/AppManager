@@ -436,7 +436,7 @@
     <string name="exclude_cache">Исключить кэш</string>
     <string name="external_data">Внешние данные</string>
     <string name="data">Данные</string>
-    <string name="backup">Резервная копия</string>
+    <string name="backup">Бекап</string>
     <string name="restore">Восстановление</string>
     <string name="delete_backup">Удалить резервную копию</string>
     <string name="backup_options">Параметры резервного копирования</string>
@@ -899,4 +899,20 @@
     <string name="backup_apps_without_backups">Резервное копирование приложений без резервных копий</string>
     <string name="backup_all_apps">Резервное копирование всех приложений</string>
     <string name="signature_schemes">Схема подписания</string>
+    <string name="back_up">Резервное копирование</string>
+    <string name="drm_free_apkm_msg">Файл APKM не содержит DRM, конвертировать его в APKS не нужно.</string>
+    <string name="restore_msg">Восстановление приложений с данными</string>
+    <string name="backup_msg">Резервное копирование приложений с данными</string>
+    <string name="restore_latest_msg">Восстановление уже установленных приложений, коды версий которых выше, чем код установленной версии.</string>
+    <string name="restore_latest">Восстановление последних резервных копий</string>
+    <string name="restore_not_installed_msg">Восстановление базовой резервной копии приложений не установленных в настоящее время.</string>
+    <string name="restore_not_installed">Восстановить не установленные приложения</string>
+    <string name="restore_all_msg">Восстановление базовой резервной копии из всех резервных копий приложений.</string>
+    <string name="restore_all">Восстановление всех приложений</string>
+    <string name="backup_apps_with_changes_msg">Повторить резервное копирование для приложений с изменениями с момента последнего резервного копирования. Они включают изменения в размере, версии, времени последнего запуска.</string>
+    <string name="backup_apps_with_changes">Резервное копирование приложений с изменениями</string>
+    <string name="redo_existing_backups_msg">Повторить резервное копирование установленных приложений с предыдущими резервными копиями.</string>
+    <string name="redo_existing_backups">Повторное резервное копирование существующих</string>
+    <string name="verify_and_redo_backups_msg">Проверить целостность предыдущих резервных копий и повторить резервное копирование не прошедших проверку целостности.</string>
+    <string name="backup_all_apps_msg">Резервное копирование всех установленных приложений.</string>
 </resources>
