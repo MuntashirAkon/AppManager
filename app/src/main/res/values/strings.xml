@@ -872,4 +872,5 @@
     <string name="backup_msg">Back up apps with data</string>
     <string name="restore_msg">Restore apps with data</string>
     <string name="drm_free_apkm_msg">The APKM file is DRM-free, no need to convert it to APKS.</string>
+    <string name="back_up">Back up</string>
 </resources>

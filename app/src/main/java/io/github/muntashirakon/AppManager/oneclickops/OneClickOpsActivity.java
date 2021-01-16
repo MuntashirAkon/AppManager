@@ -115,8 +115,7 @@ public class OneClickOpsActivity extends BaseActivity {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.set_mode_for_app_ops_dots),
                 getString(R.string.deny_app_ops_description))
                 .setOnClickListener(v -> blockAppOps());
-        if (BuildConfig.DEBUG) {
-            mItemCreator.addItemWithTitleSubtitle(getText(R.string.backup),
+            mItemCreator.addItemWithTitleSubtitle(getText(R.string.back_up),
                     getText(R.string.backup_msg)).setOnClickListener(v ->
                     new BackupTasksDialogFragment().show(getSupportFragmentManager(),
                             BackupTasksDialogFragment.TAG));
@@ -124,6 +123,7 @@ public class OneClickOpsActivity extends BaseActivity {
                     getText(R.string.restore_msg)).setOnClickListener(v ->
                     new RestoreTasksDialogFragment().show(getSupportFragmentManager(),
                             RestoreTasksDialogFragment.TAG));
+        if (BuildConfig.DEBUG) {
             mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_data_from_uninstalled_apps),
                     getString(R.string.clear_data_from_uninstalled_apps_description))
                     .setOnClickListener(v -> clearData());

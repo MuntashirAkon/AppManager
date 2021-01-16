@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.fragment.app.DialogFragment;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
@@ -97,12 +98,17 @@ public class BackupTasksDialogFragment extends DialogFragment {
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
             }).start();
         });
-        view.findViewById(R.id.verify_and_redo_backups).setOnClickListener(v -> {
-            // TODO(14/1/21): Verify integrity of the backups and back up the apps whose integrity have failed
-        });
-        view.findViewById(R.id.backup_apps_with_changes).setOnClickListener(v -> {
-            // TODO(14/1/21): Backup apps with changes
-        });
+        if (BuildConfig.DEBUG) {
+            view.findViewById(R.id.verify_and_redo_backups).setOnClickListener(v -> {
+                // TODO(14/1/21): Verify integrity of the backups and back up the apps whose integrity have failed
+            });
+            view.findViewById(R.id.backup_apps_with_changes).setOnClickListener(v -> {
+                // TODO(14/1/21): Backup apps with changes
+            });
+        } else {
+            view.findViewById(R.id.verify_and_redo_backups).setVisibility(View.GONE);
+            view.findViewById(R.id.backup_apps_with_changes).setVisibility(View.GONE);
+        }
         return new MaterialAlertDialogBuilder(activity)
                 .setView(view)
                 .setTitle(R.string.backup)
