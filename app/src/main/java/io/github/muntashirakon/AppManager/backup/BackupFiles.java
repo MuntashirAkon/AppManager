@@ -37,7 +37,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class BackupFiles {
     static final String APK_SAVING_DIRECTORY = "apks";
-    static final String TEMPORARY_DIRECTORY = "tmp";
+    static final String TEMPORARY_DIRECTORY = ".tmp";
 
     static final String RULES_TSV = "rules.am.tsv";
     static final String MISC_TSV = "misc.am.tsv";
