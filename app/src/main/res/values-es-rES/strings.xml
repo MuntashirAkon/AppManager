@@ -233,7 +233,7 @@
     <string name="date_installed">Fecha de instalación</string>
     <string name="more_info">Más información</string>
     <string name="sdk_flags">Flags</string>
-    <string name="sdk_max">Máx</string>
+    <string name="sdk_max">Objetivo Máx</string>
     <string name="sdk_min">Min</string>
     <string name="data_dir">Directorio de datos</string>
     <string name="source_dir">Directorio fuente</string>
@@ -278,11 +278,11 @@
     <string name="auto">Auto</string>
     <string name="pref_app_language">Idioma</string>
     <string name="backup_all_users">Todos los usuarios</string>
-    <string name="backup_multiple">Backup múltiple</string>
+    <string name="backup_multiple">Respaldo múltiple</string>
     <string name="source">Fuente</string>
     <string name="obb_files_extracted_successfully">Archivo Obb extraído</string>
     <string name="failed_to_extract_obb_files">No se pudo extraer el archivo Obb</string>
-    <string name="backup_obb_media">OBB y Media</string>
+    <string name="backup_obb_media">OBB y Multimedia</string>
     <string name="backup_apk_only">Sólo APK</string>
     <string name="installer_error_session_abandon">No se pudo abandonar la sesión del instalador</string>
     <string name="installer_error_session_create">No se pudo crear una sesión de instalación</string>
@@ -331,12 +331,12 @@
         <item quantity="other">Esquema de firmas</item>
     </plurals>
     <plurals name="backup_exists_are_you_sure">
-        <item quantity="one">Backup existente. Estás seguro\?</item>
-        <item quantity="other">Backup existente para más de una app. Estás seguro\?</item>
+        <item quantity="one">Respaldo existente. Estás seguro\?</item>
+        <item quantity="other">Respaldo existente para más de una app. Estás seguro\?</item>
     </plurals>
-    <string name="backup_options">Opciones de backup</string>
-    <string name="delete_backup">Borrar backup</string>
-    <string name="backup">Backup</string>
+    <string name="backup_options">Opciones de respaldo</string>
+    <string name="delete_backup">Borrar respaldo</string>
+    <string name="backup">Respaldo</string>
     <string name="data">Datos</string>
     <string name="external_data">Datos externos</string>
     <string name="exclude_cache">Excluir caché</string>
@@ -366,7 +366,7 @@
     <string name="clear_app_cache_description">Limpiar cahé de todas las apps</string>
     <string name="clear_app_cache">Limpiar caché de la app</string>
     <string name="clear_data_from_uninstalled_apps">Limpiar datos de aplicaciones desinstaladas</string>
-    <string name="deny_app_ops_description">Denegar las operaciones de la aplicación identificadas por los valores constantes, es decir, 63 significa RUN_IN_BACKGROUND</string>
+    <string name="deny_app_ops_description">Establecer un modo para las operaciones de las aplicaciones identificadas por los valores constantes, es decir, 63 o RUN_IN_BACKGROUND</string>
     <string name="deny_app_ops_dots">Denegar app ops…</string>
     <string name="block_components_description">Bloquear todos los componentes identificados por la(s) firma(s) dada(s)</string>
     <string name="block_components_dots">Bloquear componentes…</string>
@@ -439,8 +439,8 @@
         <item quantity="one">No se pudo limpiar datos desde %1$d app</item>
         <item quantity="other">No se pudo limpiar datos desde %1$d apps</item>
     </plurals>
-    <string name="backup_restore">Backup/Restore</string>
-    <string name="backup_apk">Backup APK</string>
+    <string name="backup_restore">Respaldar/Restaurar</string>
+    <string name="backup_apk">Respaldar APK</string>
     <string name="memory_virtual_memory">Memoria: %1$s, Memoria virtual: %2$s</string>
     <plurals name="failed_to_import_files">
         <item quantity="one">No se pudo importar %1$d archivo.</item>
@@ -451,7 +451,7 @@
     <string name="force_stop">Forzar detención</string>
     <string name="view_in_settings">Ver en ajustes</string>
     <string name="choose">Elegir</string>
-    <string name="profile_backup_apk_msg">Si se habilita, a los archivos apk se les hará un backup</string>
+    <string name="profile_backup_apk_msg">Si se habilita, a los archivos apk se les hará un respaldo</string>
     <string name="profile_block_trackers_msg">Si se habilita, los rastreadores se bloquearán de las aplicaciones</string>
     <string name="profile_clear_data_msg">Si se habilita, los datos se borrarán de las aplicaciones</string>
     <string name="profile_force_stop_msg">Si está habilitado, las apps forzarán la detención</string>
@@ -477,23 +477,23 @@
         <item quantity="other">No se pudo desbloquear los rastreadores desde %1$d apps</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="one">No se pudo borrar %1$d backup</item>
-        <item quantity="other">No se pudo borrar %1$d backups</item>
+        <item quantity="one">No se pudo borrar %1$d respaldo</item>
+        <item quantity="other">No se pudo borrar %1$d respaldos</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
         <item quantity="one">No se pudo restaurar %1$d app</item>
         <item quantity="other">No se pudo restaurar %1$d apps</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
-        <item quantity="one">No se pudo hacer el backup %1$d app</item>
-        <item quantity="other">No se pudo hacer el backup %1$d apps</item>
+        <item quantity="one">No se pudo respaldar %1$d app</item>
+        <item quantity="other">No se pudo respaldar %1$d apps</item>
     </plurals>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="one">No se pudo hacer el backup %1$d app</item>
-        <item quantity="other">No se pudo hacer el backup %1$d apps</item>
+        <item quantity="one">No se pudo respaldar %1$d app</item>
+        <item quantity="other">No se pudo respaldar %1$d apps</item>
     </plurals>
     <string name="restore">Restaurar (Restore)</string>
-    <string name="input_app_ops_description">Introducir app ops constantes con espacios, por ejemplo (63 72 12) etc. Puedes encontrar app ops constantes en la pestaña de app ops bajo los paréntesis.</string>
+    <string name="input_app_ops_description">Introducir nombre y/o constantes de la app op con espacios, por ejemplo (WAKE_LOCK 63 72 CAMERA) etc.</string>
     <plurals name="alert_failed_to_disable_background">
         <item quantity="one">No se pudo evitar que la app %1$d se ejecutara en segundo plano</item>
         <item quantity="other">No se pudo evitar que la apps %1$d se ejecutaran en segundo plano</item>
@@ -528,7 +528,7 @@
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
     <string name="none">Ninguno</string>
-    <string name="pref_encryption_msg">Añadir encriptación a los backups.</string>
+    <string name="pref_encryption_msg">Añadir encriptación a los respaldos.</string>
     <string name="encryption">Encriptación</string>
     <string name="select_user">Seleccionar usuario</string>
     <string name="pref_show_users_in_installer_msg">Mostrar una lista de usuarios a seleccionar antes de instalar una aplicación externa. Requiere root o ADB.</string>
@@ -579,15 +579,15 @@
     <string name="issued_date">Fecha de emisión</string>
     <string name="issuer">Emisor</string>
     <string name="subject">Asunto</string>
-    <string name="filter_apps_with_backups">Apps con backups</string>
-    <string name="sort_by_backup">Backup primero</string>
+    <string name="filter_apps_with_backups">Apps con respaldos</string>
+    <string name="sort_by_backup">Respaldo primero</string>
     <string name="failed_to_uninstall_updates">No se pudo desinstalar actualizaciones para <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="update_uninstalled_successfully">Actualizaciones para <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> han sido desintaladas.</string>
     <string name="uninstall_updates">Desinstalar actualizaciones</string>
     <string name="allow_open_pgp_operation">Pulsar para permitir a AM usar OpenPGP</string>
     <string name="confirm_installation">Confirmar la instalación</string>
     <string name="compression_method">Método de compresión: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
-    <string name="pref_backup_flags_msg">Al añadir un preajuste para las opciones del backup se elimina la carga de seleccionar flags cada vez que se hace un Backup/Restore.</string>
+    <string name="pref_backup_flags_msg">Al añadir un preajuste para las opciones del respaldo se elimina la carga de seleccionar flags cada vez que se hace un Respaldar/Restaurar.</string>
     <string name="pref_compression_method">Método de compresión</string>
     <string name="rules">Reglas</string>
     <string name="other">Otros</string>
@@ -608,8 +608,8 @@
     <string name="systemless_app">Systemless App</string>
     <string name="cancel">Cancelar</string>
     <string name="ok">OK</string>
-    <string name="input_backup_name_description">El nombre del backup no debe empezar con un dígito ni debe contener ningún espacio. Déjelo vacío si quiere usar la fecha y hora actuales.</string>
-    <string name="input_backup_name">Nombre del backup</string>
+    <string name="input_backup_name_description">El nombre del respaldo no debe empezar con un dígito ni debe contener ningún espacio. Déjelo vacío si quiere usar la fecha y hora actuales.</string>
+    <string name="input_backup_name">Nombre del respaldo</string>
     <string name="downgrade_not_possible">Downgrade no es posible sin root o ADB</string>
     <string name="downgrade">Downgrade</string>
     <string name="process_state_with_extra">Estado: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
@@ -722,7 +722,7 @@
     <string name="set_app_op_mode">Configurar el mode de app ops</string>
     <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="pref_backup_android_keystore_msg">No todas las aplicaciones funcionarán después de una restauración. La restauración de KeyStore no funciona en la mayoría de los dispositivos.</string>
-    <string name="pref_backup_android_keystore">Haz un backup a las apps con Android KeyStore</string>
+    <string name="pref_backup_android_keystore">Respaldar a las apps con Android KeyStore</string>
     <string name="keep_data_and_signatures">Mantener datos y firmas</string>
     <string name="this_action_cannot_be_undone">Esta acción no puede deshacerse.</string>
     <string name="no_app_ops_permission">No hay permiso para mostrar las app ops</string>
@@ -764,4 +764,92 @@
     <string name="tested_signatures_on_classes_and_time_taken">Testeado <xliff:g id="signature_no" example="342">%1$d</xliff:g> firmas en <xliff:g id="class_no" example="6000">%2$d</xliff:g> classes.
 \nTiempo tomado <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iteraciones).</string>
     <string name="interceptor">Interceptor</string>
+    <string name="backup_data_description">Respaldo de las carpetas de datos. Si se selecciona, se hará un respaldo de las carpetas de datos internas por defecto.</string>
+    <string name="backup_apk_only_description">Respaldo sólo de los archivos APK del directorio de origen. &lt;b&gt;Fuente&lt;/b&gt; debe ser seleccionado para que esto funcione.</string>
+    <string name="backup_source_description">Respaldo de todo el directorio fuente.</string>
+    <string name="backup_obb_media_description">Respaldo de OBB y multimedia.</string>
+    <string name="board_name">Tablón</string>
+    <string name="drm_free_apkm_msg">El archivo APKM está libre de DRM, no hay necesidad de convertirlo a APKS.</string>
+    <string name="restore_msg">Restaurar aplicaciones con datos</string>
+    <string name="backup_msg">Respalda aplicaciones con datos</string>
+    <string name="restore_latest_msg">Restaurar las aplicaciones ya instaladas cuyos códigos de versión son más altos que el código de la versión instalada.</string>
+    <string name="restore_latest">Restaurar los últimos backups</string>
+    <string name="restore_not_installed_msg">Restaurar el backup base para las aplicaciones que no están instaladas actualmente.</string>
+    <string name="restore_not_installed">Restaurar aplicaciones no instaladas</string>
+    <string name="restore_all_msg">Restaurar el backup base de todas las aplicaciones respaldadas.</string>
+    <string name="restore_all">Restaurar todas las apps</string>
+    <string name="backup_apps_with_changes_msg">Rehacer los backups de las aplicaciones con los cambios desde la última copia de seguridad. Incluyen cambios en el tamaño, la versión, la última hora de lanzamiento.</string>
+    <string name="backup_apps_with_changes">Backup aplicaciones con cambios</string>
+    <string name="redo_existing_backups_msg">Rehacer backup para aplicaciones instaladas sin previas copias de seguridad.</string>
+    <string name="redo_existing_backups">Rehacer backups existentes</string>
+    <string name="verify_and_redo_backups_msg">Verificar la integridad de los backups anteriores y rehacer las copias de seguridad en las que falle el control de integridad.</string>
+    <string name="verify_and_redo_backups">Verificar y rehacer los backups</string>
+    <string name="backup_apps_without_backups_msg">Backups aplicaciones sin ninguna copia de seguridad previa.</string>
+    <string name="backup_apps_without_backups">Backup aplicaciones sin copias de seguridad</string>
+    <string name="backup_all_apps_msg">Backup de todas las aplicaciones instaladas.</string>
+    <string name="backup_all_apps">Backup de todas las apps</string>
+    <string name="backup_custom_users_description">Realizar backups sólo para los usuarios especificados</string>
+    <string name="backup_custom_users">Usuarios personalizados</string>
+    <string name="bootloader">Bootloader</string>
+    <string name="encrypted">Encriptado</string>
+    <string name="unencrypted">Sin encriptación</string>
+    <string name="no_volumes_found">No pude encontrar ningún volumen con permiso de escritura.</string>
+    <string name="pref_backup_volume_msg">Seleccionar el volumen o el disco donde se almacenarán los backups.</string>
+    <string name="backup_volume">Volumen del Backup</string>
+    <string name="pref_backup_restore_msg">Personalizar Backup/Restore.</string>
+    <string name="pref_interceptor_enabled_msg">Intercepta la comunicación entre aplicaciones a través de Intent</string>
+    <string name="disable_background_run_description">Establece el modo &lt;i&gt;ignorar&lt;/i&gt; para las siguientes aplicaciones: &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt; (del Androide 7.0) y &lt;tt&gt;RUN_ANY_IN_BACKGROUND&lt;/tt&gt; (desde Android 9).</string>
+    <string name="failed_to_enable_magisk_hide">No se pudo habilitar MagiskHide</string>
+    <string name="enable_magisk_hide">Habilitar MagiskHide</string>
+    <string name="failed_to_disable_magisk_hide">No se pudo deshabilitar MagiskHide</string>
+    <string name="disable_magisk_hide">Deshabilitar MagiskHide\?</string>
+    <string name="window_size">Tamaño de la ventana</string>
+    <string name="refresh_rate">Ratio de refresco</string>
+    <string name="scaling_factor">Factor de escalada</string>
+    <string name="size">Tamaño</string>
+    <string name="density">Densidad</string>
+    <string name="screen">Pantalla</string>
+    <string name="hardware">Hardware</string>
+    <string name="permissive">Permissive</string>
+    <string name="enforcing">Enforcing</string>
+    <string name="selinux">SELinux</string>
+    <string name="patch_level">Nivel del parche</string>
+    <string name="backup_skip_signature_checks_description">Útil para restaurar backups que fallan debido a un fallo en la verificación del checksum o tiene una firma APK diferente a la del backup.</string>
+    <string name="backup_multiple_description">Usar un backup con nombre aparte en lugar de un backup de la base.</string>
+    <string name="backup_rules_description">Back up de reglas configuradas en App Manager.</string>
+    <string name="backup_extras_description">Back up de los permisos de las aplicaciones, ahorro de batería, opciones de uso de datos, estado de MagiskHide, etc.</string>
+    <string name="backup_extras">Extras</string>
+    <string name="backup_exclude_cache_description">No hacer backup de las carpetas caché, no_cache y no_backup.</string>
+    <string name="backup_external_data_description">Hacer una copia de seguridad de las carpetas de datos externos. &lt;b&gt;Datos&lt;/b&gt; deben ser seleccionado para que esto funcione.</string>
+    <string name="set_mode_for_app_ops_dots">Establecer modo para las app ops…</string>
+    <string name="security">Seguridad</string>
+    <string name="battery">Batería</string>
+    <string name="graphics">Gráficos</string>
+    <string name="cpu">CPU</string>
+    <string name="users">Usuarios</string>
+    <string name="languages">Idiomas</string>
+    <string name="unavailable">No disponible</string>
+    <string name="available">Disponible</string>
+    <string name="battery_capacity">Capacidad</string>
+    <string name="memory">Memoria</string>
+    <string name="vendor">Vendor</string>
+    <string name="gles_version">Versión GL ES</string>
+    <string name="no_of_cores">Núcleos</string>
+    <string name="support_architectures">Arquitecturas soportadas</string>
+    <string name="security_providers">Proveedores de seguridad</string>
+    <string name="kernel">Kernel</string>
+    <string name="manufacturer">Fabricante</string>
+    <string name="model">Modelo</string>
+    <string name="brand_name">Marca</string>
+    <string name="pref_about_device_msg">Información básica del dispositivo, incluyendo el sistema Android, CPU, GPU, RAM, Batería, etc.</string>
+    <string name="about_device">Sobre el dispositivo</string>
+    <string name="signature_schemes">Esquemas de la firma</string>
+    <plurals name="alert_failed_to_set_app_ops">
+        <item quantity="one">No se pudieron establecer app ops para %1$d aplicación</item>
+        <item quantity="other">No se pudieron establecer app ops para %1$d aplicaciones</item>
+    </plurals>
+    <plurals name="no_of_components">
+        <item quantity="one">%1$d componente</item>
+        <item quantity="other">%1$d componentes</item>
+    </plurals>
 </resources>
