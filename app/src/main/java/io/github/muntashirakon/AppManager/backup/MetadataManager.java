@@ -21,7 +21,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.RemoteException;
 import android.text.TextUtils;
 
 import org.json.JSONException;
@@ -35,11 +34,10 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.pm.PackageInfoCompat;
-
-import io.github.muntashirakon.AppManager.apk.ApkFile;
-import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.PrivilegedFile;
@@ -78,7 +76,7 @@ public final class MetadataManager {
         public String crypto;  // crypto
         public byte[] iv;  // iv
         public String keyIds;  // key_ids
-        public int version = 2;  // version
+        public int version = 3;  // version
         public String apkName;  // apk_name
         public String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);  // instruction_set
         public BackupFlags flags;  // flags
@@ -175,18 +173,8 @@ public final class MetadataManager {
         this.metadata.userHandle = rootObject.getInt("user_handle");
         this.metadata.tarType = rootObject.getString("tar_type");
         this.metadata.keyStore = rootObject.getBoolean("key_store");
-        try {
-            this.metadata.size = rootObject.getLong("size");
-        } catch (JSONException ignore) {
-            // Backward compatibility
-            this.metadata.size = 0;
-        }
-        try {
-            this.metadata.installer = rootObject.getString("installer");
-        } catch (JSONException ignore) {
-            // Backward compatibility
-            this.metadata.installer = AppManager.getContext().getPackageName();
-        }
+        this.metadata.size = rootObject.getLong("size");
+        this.metadata.installer = rootObject.getString("installer");
     }
 
     private void readCrypto(JSONObject rootObj) throws JSONException {
@@ -291,8 +279,11 @@ public final class MetadataManager {
         metadata.backupTime = 0;
         try {
             metadata.installer = PackageManagerCompat.getInstallerPackage(packageInfo.packageName);
-        } catch (RemoteException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
+        }
+        if (metadata.installer == null) {
+            metadata.installer = AppManager.getContext().getPackageName();
         }
         return metadata;
     }

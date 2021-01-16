@@ -436,7 +436,6 @@ class RestoreOp implements Closeable {
             }
             PseudoRules rules = new PseudoRules(AppManager.getContext(), packageName, userHandle);
             // Backward compatibility for restoring permissions
-            loadPermissionsFromLegacyFile(rules);
             loadMiscRules(rules);
             // Apply rules
             List<RulesStorageManager.Entry> entries = rules.getAll();
@@ -520,38 +519,7 @@ class RestoreOp implements Closeable {
             } // else there are no permissions, just skip
         }
 
-    /**
-     * @deprecated since v2.5.22
-     */
-    @Deprecated
-        private void loadPermissionsFromLegacyFile(final PseudoRules rules) throws BackupException {
-            File permsFile = backupFile.getPermsFile(metadata.crypto);
-            if (permsFile.exists()) {
-                if (!requestedFlags.skipSignatureCheck()) {
-                    String checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, permsFile);
-                    if (!checksum.equals(this.checksum.get(permsFile.getName()))) {
-                        throw new BackupException("Couldn't verify permission file." +
-                                "\nFile: " + permsFile +
-                                "\nFound: " + checksum +
-                                "\nRequired: " + this.checksum.get(permsFile.getName()));
-                    }
-                }
-                // Decrypt permission file
-                if (!crypto.decrypt(new File[]{permsFile})) {
-                    throw new BackupException("Failed to decrypt " + permsFile.getName());
-                }
-                // Get decrypted file
-                permsFile = backupFile.getPermsFile(CryptoUtils.MODE_NO_ENCRYPTION);
-                decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
-                try {
-                    rules.loadExternalEntries(permsFile);
-                } catch (IOException e) {
-                    throw new BackupException("Failed to load permissions.", e);
-                }
-            } // else there are no permissions, just skip
-        }
-
-        private void restoreRules() throws BackupException {
+    private void restoreRules() throws BackupException {
             // Apply rules
             if (!isInstalled) {
                 throw new BackupException("Rules restore is requested but the app isn't installed.");

@@ -40,7 +40,6 @@ public class BackupFiles {
     static final String TEMPORARY_DIRECTORY = "tmp";
 
     static final String RULES_TSV = "rules.am.tsv";
-    static final String PERMS_TSV = "perms.am.tsv";
     static final String MISC_TSV = "misc.am.tsv";
     static final String CHECKSUMS_TXT = "checksums.txt";
     static final String FREEZE = ".freeze";
@@ -114,12 +113,6 @@ public class BackupFiles {
         @NonNull
         public PrivilegedFile getChecksumFile(@CryptoUtils.Mode String mode) {
             return new PrivilegedFile(getBackupPath(), CHECKSUMS_TXT + CryptoUtils.getExtension(mode));
-        }
-
-        @Deprecated
-        @NonNull
-        public PrivilegedFile getPermsFile(@CryptoUtils.Mode String mode) {
-            return new PrivilegedFile(getBackupPath(), PERMS_TSV + CryptoUtils.getExtension(mode));
         }
 
         @NonNull
