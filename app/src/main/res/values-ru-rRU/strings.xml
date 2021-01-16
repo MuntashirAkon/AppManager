@@ -879,7 +879,7 @@
     <string name="enable_magisk_hide">Включить MagiskHide</string>
     <string name="failed_to_disable_magisk_hide">Не удалось отключить MagiskHide</string>
     <string name="disable_magisk_hide">Отключить MagiskHide\?</string>
-    <string name="disable_background_run_description">Это устанавливает режим &lt;i&gt;ignore&lt;/i&gt; для следующих операций приложения: &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt; (с Android 7.0) и &lt;tt&gt;RUN_ANY_IN_BACKGROUND&lt;/tt&gt; (с Android 9).</string>
+    <string name="disable_background_run_description">Это устанавливает режим <i>ignore</i> для следующих операций приложения: <tt>RUN_IN_BACKGROUND</tt> (с Android 7.0) и <tt>RUN_ANY_IN_BACKGROUND</tt> (с Android 9).</string>
     <plurals name="no_of_components">
         <item quantity="one">%1$d компонент</item>
         <item quantity="few">%1$d компонента</item>

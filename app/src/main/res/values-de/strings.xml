@@ -813,7 +813,7 @@
     <string name="backup_volume">Datenträger sichern</string>
     <string name="pref_backup_restore_msg">Anpassen von Sicherung/ Wiederherstellung.</string>
     <string name="pref_interceptor_enabled_msg">Abfangen der Kommunikation zwischen Apps über Intent</string>
-    <string name="disable_background_run_description">Setzt den Modus &lt;i&gt;ignore&lt;/i&gt; auf die folgenden App-Ops: &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt; (ab Android 7.0) und &lt;tt&gt;RUN_ANY_IN_BACKGROUND&lt;/tt&gt; (ab Android 9).</string>
+    <string name="disable_background_run_description">Setzt den Modus <i>ignore</i> auf die folgenden App-Ops: <tt>RUN_IN_BACKGROUND</tt> (ab Android 7.0) und <tt>RUN_ANY_IN_BACKGROUND</tt> (ab Android 9).</string>
     <string name="failed_to_enable_magisk_hide">Konnte MagiskHide nicht aktivieren</string>
     <string name="enable_magisk_hide">MagiskHide einschalten</string>
     <string name="failed_to_disable_magisk_hide">Konnte MagiskHide nicht deaktivieren</string>

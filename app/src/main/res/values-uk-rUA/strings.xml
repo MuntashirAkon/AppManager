@@ -859,7 +859,7 @@
         <item quantity="many">%1$d компонентів</item>
         <item quantity="other">%1$d компонентів</item>
     </plurals>
-    <string name="disable_background_run_description">Буде встановлено режим &lt;i&gt;ignore&lt;/i&gt; для app ops: &lt;tt&gt;RUN_IN_BACKGROUND&lt;/tt&gt; (з Android7.0) і &lt;tt&gt;RUN_ANY_IN_BACKGROUND&lt;/tt&gt; (з Android 9).</string>
+    <string name="disable_background_run_description">Буде встановлено режим <i>ignore</i> для app ops: <tt>RUN_IN_BACKGROUND</tt> (з Android7.0) і <tt>RUN_ANY_IN_BACKGROUND</tt> (з Android 9).</string>
     <string name="set_mode_for_app_ops_dots">Встановити режим для app ops…</string>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="one">Не вдалося встановити app ops для %1$d програми</item>
