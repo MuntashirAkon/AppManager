@@ -590,9 +590,9 @@
     <string name="app_data_will_be_lost">现有数据将丢失。</string>
     <string name="signature_mismatch_for_system_apps">无法安装应用程序，因为一个具有不同签名的系统应用程序的包名和它一样。</string>
     <string name="do_you_want_to_uninstall_and_install">您想要卸载并重新安装该应用程序吗\?</string>
-    <string name="packages">Manager</string>
+    <string name="packages">软件包</string>
     <string name="usage_access_not_supported">无法请求使用情况访问权限，因为相应的设置页不存在。</string>
-    <string name="onboard">App</string>
+    <string name="onboard">机载</string>
     <string name="navigation_trackball">轨迹球</string>
     <string name="sys_config">系统配置</string>
     <string name="tap_to_see_details">点击查看详情</string>
@@ -798,4 +798,23 @@
     <string name="unencrypted">未加密</string>
     <string name="bootloader">Bootloader</string>
     <string name="encrypted">已加密</string>
+    <string name="drm_free_apkm_msg">这个 APKM 文件是无 DRM 的，无需转换到 APKS。</string>
+    <string name="restore_msg">还原有数据的应用程序</string>
+    <string name="backup_msg">备份有数据的应用程序</string>
+    <string name="restore_latest_msg">还原已安装的应用程序，它们的版本代码高于已安装的版本代码。</string>
+    <string name="restore_latest">还原最新备份</string>
+    <string name="restore_not_installed_msg">还原当前未安装的应用程序的基础备份。</string>
+    <string name="restore_all_msg">从所有备份的应用程序中恢复基础备份。</string>
+    <string name="backup_apps_with_changes_msg">重做上次备份以来有更改的应用程序的备份。所谓更改包括大小、版本和上次启动时间。</string>
+    <string name="backup_apps_with_changes">备份有更改的应用程序</string>
+    <string name="redo_existing_backups_msg">重做有先前备份的已安装应用程序的备份。</string>
+    <string name="redo_existing_backups">重做现有备份</string>
+    <string name="verify_and_redo_backups_msg">检查先前备份的完整性并重做未通过完整性检查的备份。</string>
+    <string name="verify_and_redo_backups">验证和重做备份</string>
+    <string name="backup_apps_without_backups_msg">备份没有任何先前备份的应用程序。</string>
+    <string name="backup_apps_without_backups">备份没有进行备份的应用程序</string>
+    <string name="restore_not_installed">还原未安装的应用</string>
+    <string name="restore_all">恢复所有应用</string>
+    <string name="backup_all_apps_msg">备份所有已安装的应用程序</string>
+    <string name="backup_all_apps">备份所有应用</string>
 </resources>

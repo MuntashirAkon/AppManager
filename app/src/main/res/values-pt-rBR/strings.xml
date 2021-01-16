@@ -831,4 +831,23 @@
     <string name="pref_backup_volume_msg">Selecione o volume ou o disco onde os backups serão armazenados.</string>
     <string name="backup_volume">Volume do Backup</string>
     <string name="pref_backup_restore_msg">Personalizar backup/restauração.</string>
+    <string name="drm_free_apkm_msg">O arquivo APKM é DRM-free, não há necessidade de convertê-lo em APKS.</string>
+    <string name="restore_msg">Restaurar aplicativos com dados</string>
+    <string name="backup_msg">Fazer backup de aplicativos com dados</string>
+    <string name="restore_latest_msg">Restaure aplicativos já instalados cujos códigos de versão são superiores ao código de versão instalado.</string>
+    <string name="restore_latest">Restaurar backups mais recentes</string>
+    <string name="restore_not_installed_msg">Restaure o backup base para aplicativos que não estão instalados no momento.</string>
+    <string name="restore_not_installed">Restaurar aplicativos não instalados</string>
+    <string name="restore_all_msg">Restaure o backup base de todos os aplicativos com backup.</string>
+    <string name="restore_all">Restaurar todos os aplicativos</string>
+    <string name="backup_apps_with_changes_msg">Refaça backups para aplicativos com mudanças desde o último backup. Elas incluem mudanças de tamanho, versão, última vez que foi iniciado.</string>
+    <string name="backup_apps_with_changes">Backup de aplicativos com mudanças</string>
+    <string name="backup_apps_without_backups">Backup de aplicativos sem backups</string>
+    <string name="redo_existing_backups_msg">Refaça o backup para aplicativos instalados com backups anteriores.</string>
+    <string name="redo_existing_backups">Refazer backups existentes</string>
+    <string name="verify_and_redo_backups_msg">Verifique a integridade dos backups anteriores e refaça os backups para os quais o check-up de integridade falhou.</string>
+    <string name="verify_and_redo_backups">Verificar e refazer backups</string>
+    <string name="backup_apps_without_backups_msg">Faça backup de aplicativos sem nenhum backup anterior.</string>
+    <string name="backup_all_apps">Backup de todos os aplicativos</string>
+    <string name="backup_all_apps_msg">Faça backup de todos os aplicativos instalados.</string>
 </resources>
