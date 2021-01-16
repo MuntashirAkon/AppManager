@@ -841,13 +841,14 @@
     <string name="restore_all_msg">Restaure o backup base de todos os aplicativos com backup.</string>
     <string name="restore_all">Restaurar todos os aplicativos</string>
     <string name="backup_apps_with_changes_msg">Refaça backups para aplicativos com mudanças desde o último backup. Elas incluem mudanças de tamanho, versão, última vez que foi iniciado.</string>
-    <string name="backup_apps_with_changes">Backup de aplicativos com mudanças</string>
-    <string name="backup_apps_without_backups">Backup de aplicativos sem backups</string>
+    <string name="backup_apps_with_changes">Fazer backup de aplicativos com mudanças</string>
+    <string name="backup_apps_without_backups">Fazer backup de aplicativos sem backups</string>
     <string name="redo_existing_backups_msg">Refaça o backup para aplicativos instalados com backups anteriores.</string>
     <string name="redo_existing_backups">Refazer backups existentes</string>
     <string name="verify_and_redo_backups_msg">Verifique a integridade dos backups anteriores e refaça os backups para os quais o check-up de integridade falhou.</string>
     <string name="verify_and_redo_backups">Verificar e refazer backups</string>
-    <string name="backup_apps_without_backups_msg">Faça backup de aplicativos sem nenhum backup anterior.</string>
-    <string name="backup_all_apps">Backup de todos os aplicativos</string>
-    <string name="backup_all_apps_msg">Faça backup de todos os aplicativos instalados.</string>
+    <string name="backup_apps_without_backups_msg">Fazer backup de aplicativos sem nenhum backup anterior.</string>
+    <string name="backup_all_apps">Fazer backup de todos os aplicativos</string>
+    <string name="backup_all_apps_msg">Fazer backup de todos os aplicativos instalados.</string>
+    <string name="back_up">Fazer backup</string>
 </resources>
