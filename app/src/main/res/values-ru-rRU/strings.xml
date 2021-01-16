@@ -894,4 +894,9 @@
     <string name="no_volumes_found">Не удалось найти тома с разрешением на запись.</string>
     <string name="pref_backup_volume_msg">Выберите том или диск, на котором будут храниться резервные копии.</string>
     <string name="backup_volume">Том резервных копий</string>
+    <string name="verify_and_redo_backups">Проверить и повторить резервное копирование</string>
+    <string name="backup_apps_without_backups_msg">Резервное копирование приложений без каких-либо предыдущих резервных копий.</string>
+    <string name="backup_apps_without_backups">Резервное копирование приложений без резервных копий</string>
+    <string name="backup_all_apps">Резервное копирование всех приложений</string>
+    <string name="signature_schemes">Схема подписания</string>
 </resources>
