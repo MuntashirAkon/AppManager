@@ -298,8 +298,8 @@ public class ProfileMetaManager {
     }
 
     @NonNull
-    private static String getCleanedProfileName(String dirtyProfileName) {
-        return TextUtils.replace(dirtyProfileName, new String[]{".", " "}, new String[]{"_", "_"}).toString();
+    private static String getCleanedProfileName(@NonNull String dirtyProfileName) {
+        return dirtyProfileName.trim().replaceAll("[\\\\/?\"<>|\\s]+", "_");  // [\\/:?"<>|\s]
     }
 
     @NonNull
