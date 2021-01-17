@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2020 Muntashir Al-Islam
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="_lang_tag" translatable="false">ja-JP</string>
+    <string name="uninstall">アンインストール</string>
+    <string name="permissions">ユーザー権限</string>
+    <string name="require_no_permission">権限が要求されていません</string>
+    <string name="activities">アクティビティ</string>
+    <string name="launch">起動</string>
+    <string name="refresh">更新</string>
+    <string name="no_activities">アクティビティがありません</string>
+    <string name="receivers">レシーバ</string>
+    <string name="no_receivers">レシーバがありません</string>
+    <string name="providers">プロバイダ</string>
+    <string name="no_providers">プロバイダがありません</string>
+    <string name="launch_mode">起動モード</string>
+    <string name="task_affinity">タスク親和性</string>
+    <string name="sort_by_last_update">最後の更新</string>
+    <string name="authority">認証機関</string>
+    <string name="service">サービス</string>
+    <string name="no_service">サービスがありません</string>
+    <string name="orientation">画面方向</string>
+    <string name="soft_input">ソフトキーボード入力モード</string>
+    <string name="flags">フラグ</string>
+    <string name="grant_uri_permission">URI権限を承認</string>
+    <string name="path_permissions">パス権限</string>
+    <string name="read">読み込み</string>
+    <string name="write">書き込み</string>
+    <string name="patterns_allowed">パターンは許可されました</string>
+    <string name="declared_permission">権限</string>
+    <string name="shared_libs">共有ライブラリ</string>
+    <string name="group">グループ</string>
+    <string name="protection_level">保護レベル</string>
+    <string name="uses_feature">機能</string>
+    <string name="gles_ver">要求されているOpenGL ESバージョン</string>
+    <string name="no_feature">機能は要求されていません</string>
+    <string name="sort_by_shared_user_id">共有UID</string>
+    <string name="shared_user_id">共有UID</string>
+    <string name="sort_by_sha">署名</string>
+    <string name="signatures">署名</string>
+    <string name="no_signatures">有効な署名がありません</string>
+    <string name="configurations">構成</string>
+    <string name="no_configurations">構成は見つかりませんでした</string>
+    <string name="input_features">入力機能</string>
+    <string name="manifest">マニフェスト</string>
+    <string name="error">エラー</string>
+    <string name="loading">読み込み中…</string>
+    <string name="sort_by_app_label">アプリ名</string>
+    <string name="sort_by_package_name">パッケージ名</string>
+    <string name="sort_by_domain">ユーザーアプリを優先</string>
+    <string name="sort_by_target_sdk">ターゲットSDK</string>
+    <string name="sdk" translatable="false">SDK</string>
+    <string name="data_received">受信したデータ</string>
+    <string name="data_transmitted">転送したデータ</string>
+    <string name="data_usage_msg">最後の再起動からのデータ使用量</string>
+    <string name="about">概要</string>
+    <string name="data_size">データ</string>
+    <string name="cache_size">キャッシュ</string>
+    <string name="obb_size">OBB</string>
+    <string name="media_size">メディア</string>
+    <string name="app_not_installed">アプリはインストールされていません</string>
+    <string name="system">システム</string>
+    <string name="user">ユーザー</string>
+    <string name="sort">並び替え</string>
+    <string name="version_name_with_code">バージョン <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
+    <string name="app_info">アプリ情報</string>
+    <string name="fdroid" translatable="false">F-Droid</string>
+    <string name="system_app">システムアプリ</string>
+    <string name="user_app">ユーザーアプリ</string>
+    <string name="paths_and_directories">パスとディレクトリ</string>
+    <string name="source_dir">APKの保存場所</string>
+    <string name="data_dir">データの保存場所</string>
+    <string name="sdk_min">最小</string>
+    <string name="sdk_max">ターゲット</string>
+    <string name="sdk_flags">フラグ</string>
+    <string name="more_info">さらに表示</string>
+    <string name="date_installed">インストール日</string>
+    <string name="date_updated">アップデート日</string>
+    <string name="installer_app">インストーラー</string>
+    <string name="user_id">ユーザーID</string>
+    <string name="main_activity">メインアクティビティ</string>
+    <string name="empty_package_name">空のパッケージ名</string>
+    <string name="instructions">ヘルプ</string>
+    <string name="error_creating_shortcut">ショートカットの作成中にエラーが発生しました</string>
+    <string name="error_verbose_pin_shortcut">現在のホームアプリはショートカットに対応していません。ショートカットが作成できませんでした</string>
+    <string name="starting_activity">次のアクティビティを起動します: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
+    <string name="create_shortcut">ショートカットを作成</string>
+    <string name="edit_shortcut">ショートカットを編集</string>
+    <string name="shortcut_name">ショートカート名</string>
+    <string name="package_name">パッケージ名</string>
+    <string name="class_name">クラス名</string>
+    <string name="insert_icon">アイコンを挿入</string>
+    <string name="error_invalid_icon_resource">アイコンの保存先が無効です</string>
+    <string name="error_invalid_icon_format">アイコンのフォーマットが無効です</string>
+    <string name="icon_picker">アイコンを選択</string>
+    <string name="license">ライセンス</string>
+    <string name="license_message" translatable="false"><a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General
+        Public License v3.0</a></string>
+    <string name="copyright_message" translatable="false">© 2020 <a href="https://github.com/MuntashirAkon">Muntashir Al-Islam</a></string>
+    <string name="third_party">サードパーティのライブラリとアイコン</string>
+    <string name="third_party_message" translatable="false">-
+        <a href="https://github.com/material-components/material-components-android">Material
+        Components</a> (Apache 2.0)
+        \n- <a href="https://github.com/google/material-design-icons">Material Design Icons</a>
+        (Apache 2.0)
+        \n- <a href="https://github.com/dkanada/frost">Frost</a> Icons (GPLv3.0)
+        \n- <a href="https://code.google.com/p/xml-apk-parser">XmlApkParser</a> (Apache 2.0)
+        \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
+        (Apache 2.0)
+        \n- <a href="https://github.com/jaredrummler/AndroidShell">Android Shell</a> (Apache 2.0)
+        \n- <a href="https://github.com/tananaev/adblib">ADB Library</a> (BSD-3-Clause)
+        \n- <a href="https://github.com/MuntashirAkon/toybox">Toybox</a> (0BSD)
+        \n- <a href="https://github.com/MuntashirAkon/apk-parser">APK-parser</a> (BSD-2-Clause)
+        \n- <a href="https://github.com/topjohnwu/libsu">libsu</a> (Apache 2.0)
+        \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a> (MIT)
+        \n- <a href="https://github.com/tiann/FreeReflection">FreeReflection</a> (MIT)
+        \n- <a href="https://github.com/MuntashirAkon/lazysodium-android">Lazysodium for Android</a> (MPL-2.0)
+    </string>
+    <string name="credits">謝辞</string>
+    <string name="credits_message">To the authors of
+        \n- The Android Open Source Project
+        \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+        \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+        \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+        \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+        \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+        \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+        \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+        \nLogo credit: <a href="https://github.com/Atrate">Atrate</a>.
+    </string>
+    <string name="word_wrap">ワードラップを切り替え</string>
+    <string name="class_viewer">クラスビューワ</string>
+    <string name="toggle_class_listing">クラスの表示を切り替え</string>
+    <plurals name="tracker_and_classes">
+        <item quantity="one">1個のトラッカーに<xliff:g id="class_no" example="50">%1$d</xliff:g>個のクラス</item>
+        <item quantity="other">1個のトラッカーに<xliff:g id="class_no" example="50">%1$d</xliff:g>個のクラス</item>
+    </plurals>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="one">2個のトラッカーに<xliff:g id="class_no" example="50">%1$d</xliff:g>個のクラス</item>
+        <item quantity="other">2個のトラッカーに<xliff:g id="class_no" example="50">%1$d</xliff:g>個のクラス</item>
+    </plurals>
+    <plurals name="other_trackers_and_classes">
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g>個のトラッカーに<xliff:g id="class_no" example="50">%2$d</xliff:g>個のクラス</item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g>個のトラッカーに<xliff:g id="class_no" example="50">%2$d</xliff:g>個のクラス</item>
+    </plurals>
+    <string name="tested_signatures_on_classes_and_time_taken"> <xliff:g id="signature_no" example="342">%1$d</xliff:g>件の定義リストで<xliff:g id="class_no" example="6000">%2$d</xliff:g>個のクラスを検証しました.\n計測時間: <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> 反復).</string>
+    <string name="found_trackers">見つかったトラッカー:</string>
+    <string name="tracker_details">トラッカーの詳細</string>
+    <string name="tracker_classes">トラッカーのクラス</string>
+    <string name="all_classes">全てのクラス</string>
+    <plurals name="main_list_date_days">
+        <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g>日</item>
+        <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g>日</item>
+    </plurals>
+    <string name="no_shared_libs">共有ライブラリはありません</string>
+    <string name="no_tracker_class">トラッカーのクラスは見つかりませんでした</string>
+    <string name="app_usage">アプリの使用状況</string>
+    <string name="usage_weekly">週</string>
+    <string name="usage_today">今日</string>
+    <string name="usage_7_days">最終７日間で</string>
+    <plurals name="usage_months">
+        <item quantity="one">%1$d 月</item>
+        <item quantity="other">%1$d 月</item>
+    </plurals>
+    <plurals name="usage_days">
+        <item quantity="one">%1$d 日</item>
+        <item quantity="other">%1$d 日</item>
+    </plurals>
+    <plurals name="usage_hours">
+        <item quantity="one">%1$d 時間</item>
+        <item quantity="other">%1$d 時間</item>
+    </plurals>
+    <string name="usage_min">%1$d 分</string>
+    <string name="usage_less_than_a_minute">１分以下</string>
+    <string name="go_back">戻る</string>
+    <string name="go">移動</string>
+    <string name="grant_usage_access">使用状況へのアクセスを許可</string>
+    <string name="grant_usage_acess_message">アプリの使用状況を表示するために許可する必要があります。</string>
+    <string name="share_apk">APKを共有</string>
+    <string name="failed_to_extract_apk_file">APKファイルを抽出できませんでした。</string>
+    <string name="menu_remove_rules">ルールを除去</string>
+    <string name="menu_apply_rules">ルールを反映</string>
+    <string name="search">検索</string>
+    <string name="aurora">Aurora</string>
+    <string name="dev_protected_data_dir">保護されたデータの保存場所</string>
+    <string name="native_library_dir">ネイティブJNIライブラリの保存場所</string>
+    <string name="process_name">プロセス名</string>
+    <string name="no_code">コードがありません</string>
+    <string name="requested_large_heap">ラージヒープ</string>
+    <string name="updated_app">更新済み</string>
+    <string name="debuggable">デバッグ可能</string>
+    <string name="test_only">テストのみ</string>
+    <string name="shared_prefs">共有設定</string>
+    <string name="databases">データベース</string>
+    <string name="save">保存</string>
+    <string name="discard">破棄</string>
+    <string name="delete">削除</string>
+    <string name="deleted_successfully">削除しました</string>
+    <string name="deletion_failed">削除に失敗しました</string>
+    <string name="saved_successfully">保存しました</string>
+    <string name="saving_failed">保存に失敗しました。再試行します。</string>
+    <string name="string_value">文字列</string>
+    <string name="long_integer_value">長整数値</string>
+    <string name="integer_value">整数値</string>
+    <string name="decimal_value">十進数値</string>
+    <string name="boolean_value">真偽値</string>
+    <string name="key_name">キーの名前</string>
+    <string name="select_type">タイプを選択</string>
+    <string name="system_odex_not_supported">odexといくつかのシステムアプリはサポートされていません!</string>
+    <string name="add_item">アイテムを追加</string>
+    <string name="done">完了</string>
+    <string name="type_boolean">真/偽</string>
+    <string name="type_float">十進数の数字</string>
+    <string name="type_int">整数</string>
+    <string name="type_long">長整数</string>
+    <string name="type_string">文字列</string>
+    <string name="error_evaluating_input">入力されたデータを評価できません</string>
+    <string name="key_name_cannot_be_null">キーの名前は空にできません</string>
+    <string name="disabled_app">無効</string>
+    <string name="no_usage_in_this_time_range">この期間に使用されていません</string>
+    <string name="no_content">コンテンツがありません</string>
+    <string name="view_in_settings">設定のアプリ情報</string>
+    <string name="uninstall_app_message">このアプリをアンインストールしますか？</string>
+    <string name="failed_to_uninstall"> <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>のアプリをアンストールできませんでした。</string>
+    <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>はアンインストールされました。</string>
+    <string name="uninstall_system_app_message">このアプリはシステムアプリです。本当にアンインストールしますか？</string>
+    <string name="stopped">停止済み</string>
+    <string name="disable">無効にする</string>
+    <string name="enable">有効にする</string>
+    <string name="failed_to_disable"> <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>を無効にできませんでした。</string>
+    <string name="failed_to_enable"> <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>を有効にできませんでした</string>
+    <string name="force_stop">強制終了</string>
+    <string name="failed_to_stop"> <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>を停止できませんでした</string>
+    <string name="storage_and_cache">ストレージとキャッシュ</string>
+    <string name="total_size">合計</string>
+    <string name="app_size">アプリ本体</string>
+    <string name="app_ops">AppOps</string>
+    <string name="no_app_ops">AppOpsがありません</string>
+    <string name="failed_to_enable_op">権限を有効化できませんでした</string>
+    <string name="failed_to_disable_op">権限を無効化できませんでした</string>
+    <string name="rules_not_applied">ルールはまだ反映されていません</string>
+    <string name="str_logo">ロゴ</string>
+    <string name="pref_root_mode_enabled">Rootモード</string>
+    <string name="pref_root_mode_enabled_msg">このアプリのRoot機能を有効にします。これがオフになったとき、自動的にADBモードが選択されます。</string>
+    <string name="pref_global_blocking_enabled">グローバルブロックを有効化</string>
+    <string name="pref_global_blocking_enabled_msg">手動でアプリごとにブロックを有効にしなくても自動的に全てのアプリでコンポーネントブロッキングを有効化します。</string>
+    <string name="pref_usage_access_enabled">使用状況アクセス</string>
+    <string name="pref_usage_access_enabled_msg">アプリの使用状況とデーター使用量を確認できるようになります。</string>
+    <string name="app_settings">設定</string>
+    <string name="only_works_in_root_mode">Rootモードのみの機能です。</string>
+    <string name="usage_yesterday">昨日</string>
+    <string name="exodus_link">\u03b5xodusリンク</string>
+    <string name="sort_by_disabled_app">無効のものを優先</string>
+    <string name="sort_by_blocked_components">ブロック済みのものを優先</string>
+    <string name="external_data_dir">外部データディレクトリ</string>
+    <string name="external_multiple_data_dir">外部データの場所 <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
+    <plurals name="no_of_times_opened">
+        <item quantity="one">%1$d 時間</item>
+        <item quantity="other">%1$d 時間</item>
+    </plurals>
+    <string name="sort_by_last_used">最終起動</string>
+    <string name="sort_by_screen_time">使用時間</string>
+    <string name="sort_by_times_opened">起動回数</string>
+    <string name="sort_by_mobile_data">モバイルデータ量</string>
+    <string name="pref_import_export_blocking_rules">ブロッキングルールをインポート/エクスポート</string>
+    <string name="pref_import_export_blocking_rules_msg">WattやBlockerからルールをインポート/エクスポート</string>
+    <string name="pref_import_watt">Wattからインポート</string>
+    <string name="pref_import_blocker">Blockerからインポート</string>
+    <string name="the_import_was_successful">インポートしました</string>
+    <string name="the_export_was_successful">エクスポートしました</string>
+    <plurals name="failed_to_import_files">
+        <item quantity="one">%1$d 個のファイルをインポートできませんでした。</item>
+        <item quantity="other">%1$d 個のファイルをインポートできませんでした。</item>
+    </plurals>
+    <string name="apk_updater">APKアップデータ</string>
+    <string name="store">ストア</string>
+    <string name="running_apps">起動中のアプリ</string>
+    <string name="kill_process">停止</string>
+    <string name="disable_background_run">バックグラウンド実行を無効化</string>
+    <string name="pid_and_ppid">プロセスID: %1$d, 親プロセスID: %2$d</string>
+    <string name="memory_virtual_memory">メモリ: %1$s, 仮想メモリ: %2$s</string>
+    <string name="user_and_uid">ユーザー: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
+    <string name="clear_data">データを消去</string>
+    <string name="backup_apk">APKをバックアップ</string>
+    <string name="backup_restore">バックアップ/復元</string>
+    <string name="disable_background">バックグラウンドを無効化</string>
+    <string name="export_blocking_rules">ブロッキングルールをエクスポート</string>
+    <string name="some_items_selected"><xliff:g id="selection_no" example="20">%1$d</xliff:g> 件を選択済み</string>
+    <plurals name="alert_failed_to_clear_data">
+        <item quantity="one">%1$d 個のアプリからデータを消去できませんでした</item>
+        <item quantity="other">%1$d 個のアプリからデータを消去できませんでした</item>
+    </plurals>
+    <plurals name="alert_failed_to_disable">
+        <item quantity="one">%1$d 個のアプリを無効にできませんでした</item>
+        <item quantity="other">%1$d 個のアプリを無効にできませんでした</item>
+    </plurals>
+    <plurals name="alert_failed_to_uninstall">
+        <item quantity="one">%1$d 個のアプリをアンインストールできませんでした</item>
+        <item quantity="other">%1$d 個のアプリをアンインストールできませんでした</item>
+    </plurals>
+    <plurals name="alert_failed_to_disable_background">
+        <item quantity="one">%1$d 個のアプリのバックグラウンド実行を無効にできませんでした</item>
+        <item quantity="other">%1$d 個のアプリのバックグラウンド実行を無効にできませんでした</item>
+    </plurals>
+    <string name="the_operation_was_successful">完了</string>
+    <plurals name="alert_failed_to_force_stop">
+        <item quantity="one">%1$d 個のアプリを強制終了できませんでした</item>
+        <item quantity="other">%1$d 個のアプリを強制終了できませんでした</item>
+    </plurals>
+    <string name="toggle_kill_for_system_apps">システムアプリを強制終了するか切り替え</string>
+    <string name="app_op_cannot_be_disabled">この権限は無効にできません。恐らく他のアプリに依存する読み取り専用のアプリ権限です</string>
+    <string name="permission_name">パーミッション名</string>
+    <string name="mode">モード</string>
+    <string name="running">実行中</string>
+    <string name="duration">使用時間</string>
+    <string name="accept_time">許可した時間</string>
+    <string name="reject_time">拒否した時間</string>
+    <string name="ago">前</string>
+    <string name="pref_import">インポート</string>
+    <string name="pref_export">エクスポート</string>
+    <string name="import_options">設定をインポート</string>
+    <string name="export_options">設定をエクスポート</string>
+    <string name="import_failed">インポート失敗!</string>
+    <string name="export_failed">エクスポート失敗!</string>
+    <string name="keyboard_type">キーボードタイプ</string>
+    <string name="navigation">ナビゲーション</string>
+    <string name="touchscreen">タッチスクリーン</string>
+    <string name="pref_export_msg">App Managerのブロッキングルールを内部ストレージにエクスポートします。</string>
+    <string name="pref_import_msg">以前エクスポートしたファイルからApp Managerのブロッキングルールをインポートします。</string>
+    <string name="pref_import_watt_msg">Wattからブロッキングルールをインポートします。各アプリごとに"パッケージ名.xml"の形式でルールが保存されています。</string>
+    <string name="pref_import_blocker_msg">Blockerからブロッキングルールをインポートします。アプリごとにルールが保存されています。</string>
+    <string name="pref_app_theme">アプリテーマ</string>
+    <string name="follow_system">システム標準</string>
+    <string name="battery_mode">節電モード</string>
+    <string name="day">ライトテーマ</string>
+    <string name="night">ナイトテーマ</string>
+    <string name="select_theme">テーマ</string>
+    <string name="apply">反映</string>
+    <string name="current_theme">現在のテーマ: %1$s</string>
+    <string name="pref_about_msg">App Managerのバージョン、ライセンス、謝辞など</string>
+    <string name="version">バージョン</string>
+    <string name="sort_by_wifi_data">Wi-Fiデータ</string>
+    <string name="block_trackers">トラッカーをブロック</string>
+    <string name="sort_by_component_name">コンポーネント名</string>
+    <string name="reset_to_default">デフォルトに戻す</string>
+    <string name="deny_dangerous_app_ops">危険なアプリ権限を拒否</string>
+    <string name="sort_by_app_ops_names">権限名順</string>
+    <string name="sort_by_denied_app_ops">拒否したものを優先</string>
+    <string name="sort_by_app_ops_values">アプリ権限の値順</string>
+    <string name="sort_by_permission_names">パーミッション名</string>
+    <string name="sort_by_dangerous_permissions">危険なものを優先</string>
+    <string name="sort_by_denied_permissions">拒否したものを優先</string>
+    <string name="deny_dangerous_permissions">危険な権限を拒否</string>
+    <string name="sort_by_tracker_components">トラッカーを優先</string>
+    <string name="unknown_op">未知の操作</string>
+    <string name="failed_to_disable_trackers">トラッカーを無効化できませんでした</string>
+    <string name="trackers_disabled_successfully">トラッカーは無効になりました</string>
+    <plurals name="alert_failed_to_disable_trackers">
+        <item quantity="one">%1$d 個のアプリからトラッカーを無効化できませんでした</item>
+        <item quantity="other">%1$d 個のアプリからトラッカーを無効化できませんでした</item>
+    </plurals>
+    <string name="failed_to_grant_permission">権限を許可できませんでした</string>
+    <string name="failed_to_revoke_permission">権限を拒否できませんでした</string>
+    <string name="failed_to_reset_app_ops">AppOpsをリセットできませんでした</string>
+    <string name="failed_to_deny_dangerous_perms">全ての危険な権限を拒否することができませんでした</string>
+    <string name="failed_to_deny_dangerous_app_ops">全ての危険なAppOpsを拒否することができませんでした</string>
+    <string name="launch_app">起動</string>
+    <string name="never_ask">二度と表示しない</string>
+    <string name="one_click_ops">ワンタップ一括処理</string>
+    <string name="changelog">変更履歴</string>
+    <string name="external_apk_no_app_op">外部APKにはAppOpsはありません</string>
+    <string name="manifest_viewer">マニフェストビューワ</string>
+    <plurals name="no_of_trackers">
+        <item quantity="one">%1$d 個のトラッカー</item>
+        <item quantity="other">%1$d 個のトラッカー</item>
+    </plurals>
+    <plurals name="no_of_components">
+        <item quantity="one">%1$d 個のコンポーネント</item>
+        <item quantity="other">%1$d 個のコンポーネント</item>
+    </plurals>
+    <string name="install">インストール</string>
+    <string name="update">アップデート</string>
+    <string name="source_code">ソースコード</string>
+    <string name="source_code_links" translatable="false">GitHub: https://github.com/MuntashirAkon/AppManager
+        \nGitLab: https://gitlab.com/muntashir/AppManager
+        \nRiseup: https://0xacab.org/muntashir/AppManager
+        \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="community">Telegramコミュニティ</string>
+    <string name="community_links">更新速報: https://t.me/AppManagerChannel
+        \nサポートグループ: https://t.me/AppManagerAndroid
+        \nTwitter: https://twitter.com/AMUpdateChannel</string>
+    <string name="pref_import_existing">既存のルールをインポート</string>
+    <string name="pref_import_existing_msg">他のアプリによって無効にされたコンポーネントを追加します。
+        多くのご検知が発生する場合があるのでご注意ください。 </string>
+    <string name="failed_to_get_data_usage_information">データ使用状況を取得できませんでした</string>
+    <string name="clear_cache">キャッシュを消去</string>
+    <string name="block_unblock_trackers_description">全てのインストールされたアプリから広告やトラッカーのコンポーネントをブロック/ブロック解除</string>
+    <string name="block_components_dots">コンポーネントをブロック…</string>
+    <string name="block_components_description">与えられた定義によって認識された全てのコンポーネントをブロックします</string>
+    <string name="deny_app_ops_description">「63」や「RUN_IN_BACKGROUND」といった形式で与えられる値からアプリのAppOpsのモードを設定します。</string>
+    <string name="clear_data_from_uninstalled_apps">アンインストール済みアプリのデータを消去</string>
+    <string name="clear_data_from_uninstalled_apps_description">「DONT_DELETE_DATA」フラグのあるアプリのデータを消去します</string>
+    <string name="clear_app_cache">アプリキャッシュを消去</string>
+    <string name="clear_app_cache_description">全てのアプリのキャッシュを消去</string>
+    <string name="no_tracker_found">トラッカーは見つかりませんでした</string>
+    <string name="failed_packages">失敗したパッケージ</string>
+    <string name="input_signatures">定義シグネチャ</string>
+    <string name="input_signatures_description">入力される定義シグネチャは「com.facebook org.app2 com.app3」のように半角スペース区切りで入力してください</string>
+    <string name="filtered_packages">フィルタ済みのパッケージ</string>
+    <string name="input_app_ops">AppOpsを指定</string>
+    <string name="input_app_ops_description">AppOpsの名前かその値を「WAKE_LOCK 63 72 CAMERA」のようにスペース区切りで指定してください</string>
+    <string name="only_works_in_root_or_adb_mode">RootかADBモードでのみ動作します</string>
+    <string name="failed_to_parse_some_numbers">いくつかをパースできませんでした</string>
+    <plurals name="no_of_splits">
+        <item quantity="one">%1$d split</item>
+        <item quantity="other">%1$d splits</item>
+    </plurals>
+    <string name="failed_to_fetch_package_info_possibly_a_split_apk">パッケージ情報を取得できませんでした。恐らく分割APKです。</string>
+    <string name="termux">Termux</string>
+    <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> インストール済み</string>
+    <string name="failed_to_install_package_name"> <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> をインストールできませんでした</string>
+    <string name="filter">フィルタ</string>
+    <string name="filter_user_apps">ユーザーアプリ</string>
+    <string name="filter_system_apps">システムアプリ</string>
+    <string name="filter_apps_with_rules">ルールを適用済み</string>
+    <string name="select_all">全て選択</string>
+    <string name="filter_disabled_apps">無効になっているアプリ</string>
+    <string name="installed_version">インストール済みのバージョン</string>
+    <string name="trackers">トラッカー</string>
+    <string name="components">コンポーネント</string>
+    <string name="features">機能</string>
+    <string name="whats_new">最新情報</string>
+    <string name="blocking_rules">ブロッキングルール</string>
+    <string name="exclude_cache">キャッシュを除外</string>
+    <string name="external_data">外部データ</string>
+    <string name="data">データ</string>
+    <string name="backup">バックアップ</string>
+    <string name="restore">復元</string>
+    <string name="delete_backup">バックアップを削除</string>
+    <string name="backup_options">バックアップオプション</string>
+    <plurals name="failed_to_backup_some_apk_files">
+        <item quantity="one">%1$d 個のアプリをバックアップできませんでした</item>
+        <item quantity="other">%1$d 個のアプリをバックアップできませんでした</item>
+    </plurals>
+    <plurals name="alert_failed_to_backup">
+        <item quantity="one">%1$d 個のアプリをバックアップできませんでした</item>
+        <item quantity="other">%1$d 個のアプリをバックアップできませんでした</item>
+    </plurals>
+    <plurals name="alert_failed_to_restore">
+        <item quantity="one">%1$d 個のアプリを復元できませんでした</item>
+        <item quantity="other">%1$d 個のアプリを復元できませんでした</item>
+    </plurals>
+    <plurals name="alert_failed_to_delete_backup">
+        <item quantity="one">%1$d 個のバックアップを削除できませんでした</item>
+        <item quantity="other">%1$d 個のバックアップを削除できませんでした</item>
+    </plurals>
+    <plurals name="alert_failed_to_unblock_trackers">
+        <item quantity="one">%1$d 個のアプリからトラッカーのブロック解除ができませんでした</item>
+        <item quantity="other">%1$d 個のアプリからトラッカーのブロック解除ができませんでした</item>
+    </plurals>
+    <plurals name="alert_failed_to_block_components">
+        <item quantity="one">%1$d 個のアプリのコンポーネントをブロックできませんでした</item>
+        <item quantity="other">%1$d 個のアプリのコンポーネントをブロックできませんでした</item>
+    </plurals>
+    <plurals name="alert_failed_to_set_app_ops">
+        <item quantity="one">%1$d 個のアプリのAppOpsを設定できませんでした</item>
+        <item quantity="other">%1$d 個のアプリのAppOpsを設定できませんでした</item>
+    </plurals>
+    <plurals name="alert_failed_to_enable">
+        <item quantity="one">%1$d 個のアプリを有効にできませんでした</item>
+        <item quantity="other">%1$d 個のアプリを有効にできませんでした</item>
+    </plurals>
+    <plurals name="backup_exists_are_you_sure">
+        <item quantity="one">既存のバックアップがあります。宜しいですか？</item>
+        <item quantity="other">２つ以上のアプリに既存のバックアップがあります。宜しいですか？</item>
+    </plurals>
+    <plurals name="classes">
+        <item quantity="one">%1$d 個のクラス</item>
+        <item quantity="other">%1$d 個のクラス</item>
+    </plurals>
+    <plurals name="libraries">
+        <item quantity="one">%1$d 個のライブラリ</item>
+        <item quantity="other">%1$d 個のライブラリ</item>
+    </plurals>
+    <plurals name="missing_signatures">
+        <item quantity="one">%1$d 個の署名が欠損</item>
+        <item quantity="other">%1$d 個の署名が欠損</item>
+    </plurals>
+    <plurals name="signature_schemes_pl">
+        <item quantity="one">署名方式</item>
+        <item quantity="other">署名方式</item>
+    </plurals>
+    <plurals name="verified_with_warning">
+        <item quantity="one">検証済み、 %d 個の警告</item>
+        <item quantity="other">検証済み、 %d 個の警告</item>
+    </plurals>
+    <string name="apply_to_system_apps">システムアプリにも反映</string>
+    <string name="apply_to_system_apps_question">システムアプリにも反映しますか？不要な場合 \"いいえ\" を選択してください</string>
+    <string name="no">いいえ</string>
+    <string name="yes">はい</string>
+    <string name="skip_signature_checks">署名チェックをスキップ</string>
+    <string name="clear_data_message">本当にこのアプリのデータを消去して宜しいですか？</string>
+    <string name="clear">消去</string>
+    <string name="block">ブロック</string>
+    <string name="unblock">ブロック解除</string>
+    <string name="block_unblock_trackers">トラッカーをブロック/ブロック解除</string>
+    <string name="no_matching_package_found">一致するパッケージが見つかりませんでした。</string>
+    <string name="export_icon">アイコンを抽出</string>
+    <string name="open_in_termux">Termuxで開く</string>
+    <string name="run_in_termux">Termuxで実行</string>
+    <string name="website">ウェブサイト</string>
+    <string name="website_message" translatable="false">https://muntashirakon.github.io/AppManager</string>
+    <string name="pref_remove_all_rules">全てのルールを消去</string>
+    <string name="pref_remove_all_rules_msg">権限は全て許可され、AppOpsとコンポーネントは標準の値に戻されます。</string>
+    <string name="are_you_sure">本当に宜しいですか？</string>
+    <string name="filter_apps_with_activities">アクティビティが存在するアプリ</string>
+    <string name="toggle_default_app_ops">標準のAppOpsを切り替え</string>
+    <string name="installer_error_aborted">キャンセルされたか、予期せずにセッションが中断されたためインストールに失敗しました</string>
+    <string name="installer_error_blocked_device">端末</string>
+    <string name="installer_error_blocked">インストールは <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> によってブロックされました</string>
+    <string name="installer_error_conflict">このパッケージ名は競合するためアプリをインストールできませんでした</string>
+    <string name="installer_error_incompatible">このアプリはこの端末に互換性がありません</string>
+    <string name="installer_error_bad_apks">無効か、破損したAPKが選択されました</string>
+    <string name="installer_error_storage">このアプリをインストールするのに十分なストレージ容量がありません</string>
+    <string name="installer_error_generic">インストールに失敗しました</string>
+    <string name="installer_error_lidl_rom">あなたの使用しているROMはルートレスインストーラに対応していません</string>
+    <string name="failed_to_fetch_package_info">パッケージ情報を取得できませんでした</string>
+    <string name="batch_ops">バッチ処理</string>
+    <string name="operation_running">処理を実行中…</string>
+    <string name="full_stop_tap_to_see_details">. タップして詳細を表示.</string>
+    <string name="try_again">再試行</string>
+    <string name="install_app_message">このアプリをインストールしますか？</string>
+    <string name="reinstall_app_message">このアプリを再インストールしますか？</string>
+    <string name="reinstall">再インストール</string>
+    <string name="unblock_trackers">トラッカーをブロック解除</string>
+    <string name="package_installer">パッケージインストーラ</string>
+    <string name="install_in_progress">インストール中です</string>
+    <string name="installer_error_security">APKファイルにアクセスできませんでした</string>
+    <string name="installer_error_session_create">インストーラセッションを作成できませんでした</string>
+    <string name="installer_error_session_write">インストーラセッションに書き込みができませんでした</string>
+    <string name="installer_error_session_commit">APKファイルをコミットできませんでした</string>
+    <string name="installer_error_session_abandon">インストーラセッションを中止できませんでした</string>
+    <string name="backup_apk_only">APKのみ</string>
+    <string name="backup_obb_media">OBBとメディア</string>
+    <string name="failed_to_extract_obb_files">OBBファイルを抽出できませんでした</string>
+    <string name="obb_files_extracted_successfully">OBBファイルは抽出されました</string>
+    <string name="source">ソース</string>
+    <string name="backup_multiple">複数バックアップ</string>
+    <string name="backup_all_users">全てのユーザー</string>
+    <string name="pref_app_language">言語</string>
+    <string name="auto">自動</string>
+    <string name="current_language">言語: %1$s</string>
+    <string name="choose_language">言語を変更</string>
+    <string name="base_apk">Base APK</string>
+    <string name="split_feature_name">機能: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
+    <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> for feature <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> for base APK</string>
+    <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) resources for feature <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
+    <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) resources for base APK</string>
+    <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> code for <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> code for base APK</string>
+    <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> locale for feature <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> locale for base APK</string>
+    <string name="empty" translatable="false"/>
+    <string name="_null" translatable="false">null</string>
+    <string name="launch_mode_multiple">複数</string>
+    <string name="launch_mode_single_instance">単一インスタンス</string>
+    <string name="launch_mode_single_task">単一タスク</string>
+    <string name="launch_mode_single_top">スタックトップ</string>
+    <string name="orientation_unspecified">未定義</string>
+    <string name="orientation_behind">Behind</string>
+    <string name="orientation_full_sensor">全センサー</string>
+    <string name="orientation_full_user">全ユーザー</string>
+    <string name="orientation_locked">ロック</string>
+    <string name="orientation_no_sensor">センサーなし</string>
+    <string name="orientation_landscape">横向き</string>
+    <string name="orientation_portrait">通常</string>
+    <string name="orientation_reverse_portrait">横向き(反対）</string>
+    <string name="orientation_reverse_landscape">逆向き</string>
+    <string name="orientation_user">ユーザー</string>
+    <string name="orientation_sensor_landscape">センサー横向き</string>
+    <string name="orientation_sensor_portrait">センサー縦</string>
+    <string name="orientation_sensor">センサー</string>
+    <string name="orientation_user_landscape">ユーザー横向き</string>
+    <string name="orientation_user_portrait">ユーザー縦</string>
+    <string name="required">必須</string>
+    <string name="_undefined">未定義</string>
+    <string name="keyboard_no_keys">キーなし</string>
+    <string name="keyboard_qwerty">QWERTY</string>
+    <string name="keyboard_12_keys">12キー</string>
+    <string name="navigation_no_nav">ナビバーなし</string>
+    <string name="navigation_dial_pad">数字パッド</string>
+    <string name="navigation_trackball">トラックボール</string>
+    <string name="navigation_wheel">ホイール</string>
+    <string name="touchscreen_no_touch">タッチなし</string>
+    <string name="touchscreen_stylus">スタイラス</string>
+    <string name="touchscreen_finger">指</string>
+    <string name="state_sleeping">休止中</string>
+    <string name="state_device_io">デバイス入出力</string>
+    <string name="state_trace_stop">Trace stop</string>
+    <string name="state_dead">停止</string>
+    <string name="state_zombie">Zombie</string>
+    <string name="state_parked">Parked</string>
+    <string name="state_idle">アイドル状態</string>
+    <string name="state_wake_kill">Wake kill</string>
+    <string name="state_waking">起動中</string>
+    <string name="state_unknown">不明</string>
+    <string name="state_high_priority">高優先度</string>
+    <string name="state_low_priority">低優先度</string>
+    <string name="state_locked_memory">Locked memory</string>
+    <string name="state_session_leader">Session leader</string>
+    <string name="state_foreground">フォアグラウンド</string>
+    <string name="state_multithreaded">Multithreaded</string>
+    <string name="process_state">状態: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
+    <string name="process_state_with_extra">状態: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
+    <string name="downgrade">ダウングレード</string>
+    <string name="downgrade_not_possible">ダウングレードはRootまたはADBが必須です</string>
+    <string name="input_backup_name">バックアップ名</string>
+    <string name="input_backup_name_description">バックアップ名は数字や空白文字で始められません。項目を空にすると現在時刻が使用されます。</string>
+    <string name="ok">OK</string>
+    <string name="cancel">キャンセル</string>
+    <string name="systemless_app">システムレスアプリ</string>
+    <string name="open_pgp_provider">OpenPGPプロバイダ</string>
+    <string name="profiles">プロファイル</string>
+    <string name="presets">プリセット</string>
+    <string name="no_profiles">プロファイルがありません</string>
+    <string name="keystore">キーストア</string>
+    <string name="apply_now">今すぐ反映…</string>
+    <string name="routine_ops">規則的操作</string>
+    <string name="apps">アプリ</string>
+    <string name="no_apps">アプリがありません</string>
+    <string name="filter_apps">アプリ</string>
+    <string name="sort_by_process_id">プロセスID</string>
+    <string name="sort_by_process_name">プロセス名</string>
+    <string name="sort_by_apps_first">アプリを優先</string>
+    <string name="sort_by_memory_usage">メモリ使用状況</string>
+    <string name="changes_not_saved">変更は保存されていません</string>
+    <string name="other">その他</string>
+    <string name="rules">ルール</string>
+    <string name="pref_compression_method">圧縮方式</string>
+    <string name="pref_backup_flags_msg">バックアップオプションのプリセットを追加すると、バックアップ/復元するたびにフラグを選択する必要がなくなります。</string>
+    <string name="compression_method">圧縮方式: <xliff:g id="compression_method" example="GZip">%1$s</xliff:g></string>
+    <string name="confirm_installation">インストールを確認</string>
+    <string name="allow_open_pgp_operation">クリックしてAMにOpenPGPの利用を許可する</string>
+    <string name="uninstall_updates">アップデートをアンインストール</string>
+    <string name="update_uninstalled_successfully"> <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> のアップデートは正常に削除されました</string>
+    <string name="failed_to_uninstall_updates"> <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> のアップデートが削除できませんでした</string>
+    <string name="sort_by_backup">バックアップ済みを優先</string>
+    <string name="filter_apps_with_backups">バックアップ済みアプリ</string>
+    <string name="subject">題名</string>
+    <string name="issuer">要求者</string>
+    <string name="issued_date">要求日</string>
+    <string name="expiry_date">失効日</string>
+    <string name="type">タイプ</string>
+    <string name="validity">妥当性</string>
+    <string name="valid">有効</string>
+    <string name="expired">失効済み</string>
+    <string name="not_yet_valid">まだ有効ではありません</string>
+    <string name="serial_no">シリアルナンバー</string>
+    <string name="checksums">チェックサム</string>
+    <string name="signature">シグネチャ</string>
+    <string name="algorithm">アルゴリズム</string>
+    <string name="public_key">公開鍵</string>
+    <string name="format">フォーマット</string>
+    <string name="rsa_exponent">指数</string>
+    <string name="rsa_modulus">モジュール</string>
+    <string name="dsa_affine_x">アフィンX座標</string>
+    <string name="dsa_affine_y">アフィンY座標</string>
+    <string name="critical_exts">重要な拡張</string>
+    <string name="non_critical_exts">非重要な拡張</string>
+    <string name="usage_access_not_supported">該当する設定ページが存在しないため使用状況へのアクセスを要求できませんでした。</string>
+    <string name="packages">パッケージ</string>
+    <string name="onboard">Onboard</string>
+    <string name="do_you_want_to_uninstall_and_install">アンインストール後再度インストールしますか？</string>
+    <string name="signature_mismatch_for_system_apps">異なるアプリ署名のシステムアプリが同じパッケージ名のため、アプリをインストールできませんでした。</string>
+    <string name="app_data_will_be_lost">既存のデータは失われます。</string>
+    <string name="install_without_data_loss">署名認証をオフにしている場合、データを失うこと無く <b>インストール</b> オプションが使用できます。</string>
+    <string name="only_install">インストール</string>
+    <string name="sys_config">システムコンフィグ</string>
+    <string name="scanner">Scanner</string>
+    <string name="no_libs">ライブラリがありません</string>
+    <string name="lib_details">ライブラリ詳細</string>
+    <string name="tap_to_see_details">タップして詳細を見る</string>
+    <string name="view_missing_signatures">タップしてApp Managerのライブラリデータベースに登録されていないシグネチャを確認/送信する</string>
+    <string name="copy">コピー</string>
+    <string name="filter_running_apps">起動中のアプリ</string>
+    <string name="am_crashed">AMはクラッシュしました</string>
+    <string name="tap_to_submit_crash_report">タップしてクラッシュレポートを送信します</string>
+    <string name="send_crash_report">クラッシュレポートを送信</string>
+    <string name="select_apk">APKを選択</string>
+    <string name="conversion_failed">変換失敗</string>
+    <string name="in_progress">処理中</string>
+    <string name="un_apkm">UnApkm</string>
+    <string name="input_profile_name">プロファイル名</string>
+    <string name="input_profile_name_description">プロファイル名に空白文字を含むことはできません</string>
+    <string name="new_profile">新しいプロファイル</string>
+    <string name="duplicate">複製</string>
+    <string name="failed_to_duplicate_profile">プロファイルを複製できませんでした</string>
+    <string name="pref_show_users_in_installer">インストーラにユーザーを表示する</string>
+    <string name="pref_show_users_in_installer_msg">インストーラーでアプリをインストールするユーザーを選択できるようにします。RootかADBが必要です</string>
+    <string name="select_user">ユーザーを選択</string>
+    <string name="encryption">暗号化</string>
+    <string name="pref_encryption_msg">バックアップに暗号化を追加</string>
+    <string name="none">なし</string>
+    <string name="aes">AES</string>
+    <string name="rsa">RSA</string>
+    <string name="ecc">楕円曲線暗号</string>
+    <string name="send_selected">選択したものを送信</string>
+    <string name="pref_mode_of_operations">操作モード</string>
+    <string name="adb_over_tcp">ADB over TCP</string>
+    <string name="current_mode">現在のモード: %s</string>
+    <string name="allow_routine_ops">規則的操作を許可</string>
+    <string name="profile_state">プロファイルの状態</string>
+    <string name="allow_routine_ops_msg">規則的操作をプロファイルで使用することを許可します</string>
+    <string name="profile_disable_msg">有効にした場合、状態の値に基づいて無効化/有効化されます。</string>
+    <string name="profile_force_stop_msg">有効にした場合、アプリは強制終了されます。</string>
+    <string name="profile_clear_cache_msg">有効にした場合、アプリのキャッシュは自動的にクリアされます。</string>
+    <string name="profile_clear_data_msg">有効にした場合、アプリのデータは自動的に消去されます。</string>
+    <string name="profile_block_trackers_msg">有効にした場合、アプリからトラッカーが自動的にブロックされます。</string>
+    <string name="profile_backup_apk_msg">有効にした場合、APKファイルが自動的にバックアップされます。</string>
+    <string name="profile_state_msg">このプロファイルのオンオフ状態を切り替えます。</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="options">オプション</string>
+    <string name="input_permissions">権限を指定</string>
+    <string name="input_permissions_description">「com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION」のようにアプリ権限を半角スペース区切りで指定してください</string>
+    <string name="choose">選択</string>
+    <string name="enabled">有効</string>
+    <string name="simple">シンプル</string>
+    <string name="advanced">高度な設定</string>
+    <string name="user_profile_with_id">プロファイル: %1$s (%2$d)</string>
+    <string name="root">Root</string>
+    <string name="no_root">非Root</string>
+    <string name="close">閉じる</string>
+    <string name="comment">コメント</string>
+    <string name="installer">インストーラ</string>
+    <string name="install_location">インストール場所</string>
+    <string name="install_location_internal_only">内部ストレージのみ</string>
+    <string name="install_location_prefer_external">外部ストレージを優先</string>
+    <string name="pref_sign_apk">APKを署名</string>
+    <string name="pref_sign_apk_msg">インストールする前にAPKを署名します</string>
+    <string name="signature_schemes">署名方式</string>
+    <string name="signing_keys">署名鍵</string>
+    <string name="apk_signing">APK署名</string>
+    <string name="pref_apk_signing_msg">署名方式やカスタム署名鍵を設定します。</string>
+    <string name="v1_scheme">v1 スキーム (Android 1.0〜)</string>
+    <string name="v2_scheme">v2 スキーム (Android 7.0〜)</string>
+    <string name="v3_scheme">v3 スキーム (Android 9〜)</string>
+    <string name="v4_scheme">v4 スキーム (Android 11〜)</string>
+    <string name="pref_signature_schemes_msg">互換性のため最低でもv1とv2のスキームを選択することをお勧めします。 v4スキームはv2とv3が必須です。</string>
+    <string name="verified">検証済み</string>
+    <string name="not_verified">未検証</string>
+    <string name="source_stamp_verified">SourceStampは検証されました</string>
+    <string name="splits">Splits</string>
+    <string name="input_keystore_pass">キーストアのパスワードを入力</string>
+    <string name="input_keystore_pass_description">App Managerのキーストアパスワードを入力してください。これが初めて表示される場合は、パスワードジェネレータを使用してパスワードを生成し、ここに挿入する前に安全な場所に保存してください。</string>
+    <string name="input_keystore_pass_msg">タップしてキーストアのパスワードを入力してください</string>
+    <string name="input_keystore_alias_pass">エイリアス <b>%1$s</b> のパスワード</string>
+    <string name="input_keystore_alias_pass_description">エイリアス <b>%1$s</b>のパスワードを入力してください。キーストアに登録してあるパスワードと共通の場合この項目を空にすることができます。</string>
+    <string name="no_app_ops_permission">AppOpsを表示するための権限がありません</string>
+    <string name="this_action_cannot_be_undone">この操作はやり直しできません</string>
+    <string name="keep_data_and_signatures">データと署名を保持する</string>
+    <string name="pref_backup_android_keystore">Androidキーストアを含めてバックアップ</string>
+    <string name="pref_backup_android_keystore_msg">リストア後、全てのアプリが正常動作するとは限りません。キーストアの復元はほとんどの端末で動作しません。</string>
+    <string name="magisk_hide_enabled">MagiskHide</string>
+    <string name="set_app_op_mode">アプリ操作モードを設定</string>
+    <string name="filter_apps_with_splits">分割データを含むアプリ</string>
+    <string name="value">値</string>
+    <string name="matching_activities">一致するアクティビティ</string>
+    <string name="send_edited_intent">改変済みインテントを送信</string>
+    <string name="activity_result">実行結果</string>
+    <string name="result_code">結果コード</string>
+    <string name="action">動作</string>
+    <string name="mime_type">MIMEタイプ</string>
+    <string name="uri">URI</string>
+    <string name="category">カテゴリ</string>
+    <string name="extras">その他</string>
+    <string name="share">共有</string>
+    <string name="resend_intent">インテントを再送信</string>
+    <string name="interceptor">Interceptor</string>
+    <string name="set_custom_app_op">カスタムAppOpsを適用</string>
+    <string name="about_device">端末情報</string>
+    <string name="pref_about_device_msg">Androidシステム、CPU、GPU、RAM、バッテリーなどのデバイス情報</string>
+    <string name="brand_name">ブランド</string>
+    <string name="model">機種</string>
+    <string name="board_name">ボード名</string>
+    <string name="manufacturer">製造元</string>
+    <string name="kernel">カーネル</string>
+    <string name="security_providers">セキュリティプロバイダー</string>
+    <string name="support_architectures">対応しているアーキテクチャ</string>
+    <string name="no_of_cores">コア数</string>
+    <string name="gles_version">OpenGL ESバージョン</string>
+    <string name="vendor">ベンター</string>
+    <string name="memory">メモリ</string>
+    <string name="battery_capacity">容量</string>
+    <string name="available">利用可能</string>
+    <string name="unavailable">利用不可</string>
+    <string name="languages">言語</string>
+    <string name="users">ユーザー</string>
+    <string name="cpu">CPU</string>
+    <string name="graphics">グラフィック</string>
+    <string name="battery">バッテリー</string>
+    <string name="security">セキュリティ</string>
+    <string name="set_mode_for_app_ops_dots">AppOpsモードをセットします…</string>
+    <string name="backup_source_description">APKの保存ディレクトリ全体をバックアップする.</string>
+    <string name="backup_apk_only_description">APKファイルのみをバックアップします <b>ソース</b> を指定する必要があります。</string>
+    <string name="backup_data_description">データフォルダをバックアップします。選択した場合内部データフォルダのバックアップは標準で有効になります。</string>
+    <string name="backup_external_data_description">外部データフォルダをバックアップします。 <b>データ</b> のバックアップも同時に行う必要があります。</string>
+    <string name="backup_obb_media_description">OBBとmediaフォルダをバックアップします</string>
+    <string name="backup_exclude_cache_description">「no_cache」と「no_backup」フォルダのキャッシュをバックアップしません。</string>
+    <string name="backup_extras">その他</string>
+    <string name="backup_extras_description">アプリ権限、バッテリーセーバー設定、データ使用設定、MagiskHideの状態をバックアップします。</string>
+    <string name="backup_rules_description">App Manager内で構成されたルールをバックアップします。</string>
+    <string name="backup_multiple_description">基本バックアップの代わりに名前付きバックアップを使用する</string>
+    <string name="backup_skip_signature_checks_description">復元するバックアップがチェックサム認証に失敗する場合や インストール済みのものと異なるAPK署名を持つ場合に役立ちます。</string>
+    <string name="patch_level">セキュリティパッチレベル</string>
+    <string name="selinux">SELinux</string>
+    <string name="enforcing">Enforcing</string>
+    <string name="permissive">Permissive</string>
+    <string name="hardware">ハードウェア</string>
+    <string name="screen">画面</string>
+    <string name="density">密度</string>
+    <string name="size">サイズ</string>
+    <string name="scaling_factor">倍率</string>
+    <string name="refresh_rate">リフレッシュレート</string>
+    <string name="window_size">ウィンドウサイズ</string>
+    <string name="disable_magisk_hide">MagiskHideを無効にしますか?</string>
+    <string name="failed_to_disable_magisk_hide">MagiskHideを無効にできませんでした</string>
+    <string name="enable_magisk_hide">MagiskHideを有効化</string>
+    <string name="failed_to_enable_magisk_hide">MagiskHideを有効化できませんでした</string>
+    <string name="disable_background_run_description">これは次のAppOpsに <i>ignore</i> モードを設定します: <tt>RUN_IN_BACKGROUND</tt> (Android 7.0〜) and <tt>RUN_ANY_IN_BACKGROUND</tt> (Android 9〜).</string>
+    <string name="pref_interceptor_enabled_msg">インテントによりアプリ間の通信を傍受します</string>
+    <string name="pref_backup_restore_msg">バックアップ/復元をカスタマイズ</string>
+    <string name="backup_volume">バックアップするボリューム</string>
+    <string name="pref_backup_volume_msg">バックアップを保存するディスクやボリュームを選択します。</string>
+    <string name="no_volumes_found">書き込み権限のあるボリュームを見つけることができませんでした</string>
+    <string name="unencrypted">暗号化されていません</string>
+    <string name="encrypted">暗号化されています</string>
+    <string name="bootloader">ブートローダー</string>
+    <string name="backup_custom_users">カスタムユーザー</string>
+    <string name="backup_custom_users_description">指定したユーザーにのみバックアップを実行します</string>
+    <string name="backup_all_apps">全てのアプリをバックアップ</string>
+    <string name="backup_all_apps_msg">全てのインストール済みアプリをバックアップします。</string>
+    <string name="backup_apps_without_backups">新しくバックアップ</string>
+    <string name="backup_apps_without_backups_msg">以前のバックアップ無しでアプリをバックアップします。</string>
+    <string name="verify_and_redo_backups">検証してバックアップをやり直す。</string>
+    <string name="verify_and_redo_backups_msg">バックアップの完全性をチェックし、完全世チェックに失敗したアプリのバックアップをやり直します。</string>
+    <string name="redo_existing_backups">既存のバックアップをやり直す</string>
+    <string name="redo_existing_backups_msg">以前バックアップしたインストール済みアプリのバックアップをやり直します。</string>
+    <string name="backup_apps_with_changes">変更を含めてアプリをバックアップする</string>
+    <string name="backup_apps_with_changes_msg">以前のバックアップから変更を含めてやり直します。サイズ、バージョン、最後の起動時間なども含まれます。</string>
+    <string name="restore_all">全てのアプリを復元</string>
+    <string name="restore_all_msg">全ての保存されたアプリバックアップを復元します。</string>
+    <string name="restore_not_installed">インストールされていないアプリを復元</string>
+    <string name="restore_not_installed_msg">現在インストールされていないアプリのアプリバックアップを復元します。</string>
+    <string name="restore_latest">最新のアプリバックアップを復元</string>
+    <string name="restore_latest_msg">既にインストールされているアプリよりもバージョンが高いものを復元します。</string>
+    <string name="backup_msg">アプリデータを含めてバックアップする</string>
+    <string name="restore_msg">アプリデータを含めて復元する</string>
+    <string name="drm_free_apkm_msg">このAPKMファイルはDRMフリーです。APKSに変換する必要はありません。</string>
+    <string name="back_up">バックアップ</string>
+</resources>
