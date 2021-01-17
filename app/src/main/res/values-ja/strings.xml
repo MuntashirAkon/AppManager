@@ -30,13 +30,13 @@
     <string name="launch_mode">起動モード</string>
     <string name="task_affinity">タスク親和性</string>
     <string name="sort_by_last_update">最後の更新</string>
-    <string name="authority">認証機関</string>
+    <string name="authority">認証局</string>
     <string name="service">サービス</string>
     <string name="no_service">サービスがありません</string>
     <string name="orientation">画面方向</string>
     <string name="soft_input">ソフトキーボード入力モード</string>
     <string name="flags">フラグ</string>
-    <string name="grant_uri_permission">URI権限を承認</string>
+    <string name="grant_uri_permission">URI権限の許可</string>
     <string name="path_permissions">パス権限</string>
     <string name="read">読み込み</string>
     <string name="write">書き込み</string>
@@ -233,7 +233,7 @@
     <string name="disabled_app">無効</string>
     <string name="no_usage_in_this_time_range">この期間に使用されていません</string>
     <string name="no_content">コンテンツがありません</string>
-    <string name="view_in_settings">設定のアプリ情報</string>
+    <string name="view_in_settings">設定画面で開く</string>
     <string name="uninstall_app_message">このアプリをアンインストールしますか？</string>
     <string name="failed_to_uninstall"> <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>のアプリをアンストールできませんでした。</string>
     <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>はアンインストールされました。</string>
@@ -263,7 +263,7 @@
     <string name="app_settings">設定</string>
     <string name="only_works_in_root_mode">Rootモードのみの機能です。</string>
     <string name="usage_yesterday">昨日</string>
-    <string name="exodus_link">\u03b5xodusリンク</string>
+    <string name="exodus_link">\u03b5xodusのリンク</string>
     <string name="sort_by_disabled_app">無効のものを優先</string>
     <string name="sort_by_blocked_components">ブロック済みのものを優先</string>
     <string name="external_data_dir">外部データディレクトリ</string>
@@ -321,12 +321,12 @@
         <item quantity="one">%1$d 個のアプリを強制終了できませんでした</item>
         <item quantity="other">%1$d 個のアプリを強制終了できませんでした</item>
     </plurals>
-    <string name="toggle_kill_for_system_apps">システムアプリを強制終了するか切り替え</string>
+    <string name="toggle_kill_for_system_apps">システムアプリをキルするか切り替え</string>
     <string name="app_op_cannot_be_disabled">この権限は無効にできません。恐らく他のアプリに依存する読み取り専用のアプリ権限です</string>
     <string name="permission_name">パーミッション名</string>
     <string name="mode">モード</string>
     <string name="running">実行中</string>
-    <string name="duration">使用時間</string>
+    <string name="duration">使用した時間</string>
     <string name="accept_time">許可した時間</string>
     <string name="reject_time">拒否した時間</string>
     <string name="ago">前</string>
@@ -497,8 +497,8 @@
         <item quantity="other">%1$d 個のライブラリ</item>
     </plurals>
     <plurals name="missing_signatures">
-        <item quantity="one">%1$d 個の署名が欠損</item>
-        <item quantity="other">%1$d 個の署名が欠損</item>
+        <item quantity="one">%1$d 個のシグネチャが欠損</item>
+        <item quantity="other">%1$d 個のシグネチャが欠損</item>
     </plurals>
     <plurals name="signature_schemes_pl">
         <item quantity="one">署名方式</item>
@@ -661,7 +661,7 @@
     <string name="failed_to_uninstall_updates"> <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> のアップデートが削除できませんでした</string>
     <string name="sort_by_backup">バックアップ済みを優先</string>
     <string name="filter_apps_with_backups">バックアップ済みアプリ</string>
-    <string name="subject">題名</string>
+    <string name="subject">識別子</string>
     <string name="issuer">要求者</string>
     <string name="issued_date">要求日</string>
     <string name="expiry_date">失効日</string>
@@ -672,7 +672,7 @@
     <string name="not_yet_valid">まだ有効ではありません</string>
     <string name="serial_no">シリアルナンバー</string>
     <string name="checksums">チェックサム</string>
-    <string name="signature">シグネチャ</string>
+    <string name="signature">アプリ署名</string>
     <string name="algorithm">アルゴリズム</string>
     <string name="public_key">公開鍵</string>
     <string name="format">フォーマット</string>
@@ -691,7 +691,7 @@
     <string name="install_without_data_loss">署名認証をオフにしている場合、データを失うこと無く <b>インストール</b> オプションが使用できます。</string>
     <string name="only_install">インストール</string>
     <string name="sys_config">システムコンフィグ</string>
-    <string name="scanner">Scanner</string>
+    <string name="scanner">スキャナー</string>
     <string name="no_libs">ライブラリがありません</string>
     <string name="lib_details">ライブラリ詳細</string>
     <string name="tap_to_see_details">タップして詳細を見る</string>
@@ -843,7 +843,7 @@
     <string name="enable_magisk_hide">MagiskHideを有効化</string>
     <string name="failed_to_enable_magisk_hide">MagiskHideを有効化できませんでした</string>
     <string name="disable_background_run_description">これは次のAppOpsに <i>ignore</i> モードを設定します: <tt>RUN_IN_BACKGROUND</tt> (Android 7.0〜) and <tt>RUN_ANY_IN_BACKGROUND</tt> (Android 9〜).</string>
-    <string name="pref_interceptor_enabled_msg">インテントによりアプリ間の通信を傍受します</string>
+    <string name="pref_interceptor_enabled_msg">インテントによるアプリ間の通信を検証します</string>
     <string name="pref_backup_restore_msg">バックアップ/復元をカスタマイズ</string>
     <string name="backup_volume">バックアップするボリューム</string>
     <string name="pref_backup_volume_msg">バックアップを保存するディスクやボリュームを選択します。</string>
