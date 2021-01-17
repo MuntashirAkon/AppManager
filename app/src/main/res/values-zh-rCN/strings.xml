@@ -812,9 +812,10 @@
     <string name="verify_and_redo_backups_msg">检查先前备份的完整性并重做未通过完整性检查的备份。</string>
     <string name="verify_and_redo_backups">验证和重做备份</string>
     <string name="backup_apps_without_backups_msg">备份没有任何先前备份的应用程序。</string>
-    <string name="backup_apps_without_backups">备份没有进行备份的应用程序</string>
+    <string name="backup_apps_without_backups">备份没有备份的应用程序</string>
     <string name="restore_not_installed">还原未安装的应用</string>
     <string name="restore_all">恢复所有应用</string>
     <string name="backup_all_apps_msg">备份所有已安装的应用程序</string>
     <string name="backup_all_apps">备份所有应用</string>
+    <string name="back_up">备份</string>
 </resources>
