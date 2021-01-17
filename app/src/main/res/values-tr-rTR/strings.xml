@@ -829,4 +829,24 @@
     <string name="pref_backup_volume_msg">Yedeklemelerin depolanacağı birimi veya diski seçin.</string>
     <string name="backup_volume">Yedekleme Birimi</string>
     <string name="pref_backup_restore_msg">Yedeklemeyi/geri yüklemeyi özelleştirin.</string>
+    <string name="back_up">Yedekle</string>
+    <string name="drm_free_apkm_msg">APKM dosyası DRM içermez, onu APKS\'ye dönüştürmeye gerek yoktur.</string>
+    <string name="restore_msg">Verileri olan uygulamaları geri yükleyin</string>
+    <string name="backup_msg">Verileri olan uygulamaları yedekleyin</string>
+    <string name="restore_latest_msg">Sürüm kodları kurulu sürüm kodundan daha yüksek olan önceden kurulan uygulamaları geri yükleyin.</string>
+    <string name="restore_latest">En son yedeklemeleri geri yükle</string>
+    <string name="restore_not_installed_msg">Şu anda kurulu olmayan uygulamalar için temel yedeklemeyi geri yükleyin.</string>
+    <string name="restore_not_installed">Kurulu olmayan uygulamaları geri yükle</string>
+    <string name="restore_all_msg">Yedeklenen tüm uygulamalardan temel yedeklemeyi geri yükleyin.</string>
+    <string name="restore_all">Tüm uygulamaları geri yükle</string>
+    <string name="backup_apps_with_changes_msg">Son yedeklemeden bu yana değişiklik olan uygulamalar için yedeklemeleri yeniden yapın. Boyut, sürüm ve son başlatma zamanındaki değişiklikleri içerir.</string>
+    <string name="backup_apps_with_changes">Değişiklikleri olan uygulamaları yedekle</string>
+    <string name="redo_existing_backups_msg">Önceki yedeklemeleri olan kurulu uygulamalar için yedeklemeyi yeniden yapın.</string>
+    <string name="redo_existing_backups">Var olan yedeklemeleri yeniden yap</string>
+    <string name="verify_and_redo_backups_msg">Önceki yedeklemelerin bütünlüğünü denetleyin ve bütünlük denetiminin başarısız olduğu yedeklemeleri yeniden yapın.</string>
+    <string name="verify_and_redo_backups">Yedeklemeleri doğrula ve yeniden yap</string>
+    <string name="backup_apps_without_backups_msg">Önceki yedeklemesi olmayan uygulamaları yedekleyin.</string>
+    <string name="backup_apps_without_backups">Yedeklemesi olmayan uygulamaları yedekle</string>
+    <string name="backup_all_apps_msg">Kurulu tüm uygulamaları yedekleyin.</string>
+    <string name="backup_all_apps">Tüm uygulamaları yedekle</string>
 </resources>
