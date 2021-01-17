@@ -111,7 +111,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
         }
         return new MaterialAlertDialogBuilder(activity)
                 .setView(view)
-                .setTitle(R.string.backup)
+                .setTitle(R.string.back_up)
                 .setNegativeButton(R.string.cancel, null)
                 .create();
     }
@@ -123,7 +123,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
         new SearchableMultiChoiceDialogBuilder<>(activity, applicationItems, applicationLabels)
                 .setSelections(applicationItems)
                 .setTitle(R.string.filtered_packages)
-                .setPositiveButton(R.string.restore, (dialog, which, selectedItems) -> {
+                .setPositiveButton(R.string.back_up, (dialog, which, selectedItems) -> {
                     if (isDetached()) return;
                     BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
                     Bundle args = new Bundle();
