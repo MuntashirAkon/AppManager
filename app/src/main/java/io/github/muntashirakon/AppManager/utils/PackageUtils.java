@@ -28,8 +28,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.os.Build;
-import android.os.DeadObjectException;
-import android.os.RemoteException;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.util.Pair;
@@ -199,16 +197,14 @@ public final class PackageUtils {
     @NonNull
     public static HashMap<String, RulesStorageManager.Type> collectComponentClassNames(String packageName, @UserIdInt int userHandle) {
         try {
-            PackageInfo packageInfo = AppManager.getIPackageManager().getPackageInfo(packageName,
+            PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName,
                     PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
                             | PackageManager.GET_PROVIDERS | flagDisabledComponents
                             | PackageManager.GET_URI_PERMISSION_PATTERNS
                             | PackageManager.GET_SERVICES, userHandle);
             return collectComponentClassNames(packageInfo);
-        } catch (RuntimeException | RemoteException e) {
-            if (!(e.getCause() instanceof DeadObjectException)) {
-                throw new RuntimeException(e);
-            }
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
         return new HashMap<>();
     }
