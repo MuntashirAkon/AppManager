@@ -843,7 +843,7 @@
     <string name="pref_about_device_msg">Основная информация об устройстве, включая версию Android, ЦП, ГП, ОЗУ, аккумулятор и т. д.</string>
     <string name="about_device">Об устройстве</string>
     <string name="uri">URI</string>
-    <string name="magisk_hide_enabled"/>
+    <string name="magisk_hide_enabled">MagiskHide</string>
     <string name="keystore"/>
     <string name="security">Безопасность</string>
     <string name="patch_level">Обновление системы безопасности Андроид</string>
@@ -915,4 +915,6 @@
     <string name="redo_existing_backups">Повторное резервное копирование существующих</string>
     <string name="verify_and_redo_backups_msg">Проверить целостность предыдущих резервных копий и повторить резервное копирование не прошедших проверку целостности.</string>
     <string name="backup_all_apps_msg">Резервное копирование всех установленных приложений.</string>
+    <string name="bootloader">Загрузчик</string>
+    <string name="selinux">SELinux</string>
 </resources>
