@@ -21,14 +21,15 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.RemoteException;
 import android.text.TextUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,6 @@ import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -49,6 +49,8 @@ import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.ProxyOutputStream;
 
 public final class MetadataManager {
     public static final String META_FILE = "meta_v2.am.json";
@@ -95,7 +97,7 @@ public final class MetadataManager {
 
     public static boolean hasAnyMetadata(String packageName) {
         for (File file : getBackupFiles(packageName)) {
-            if (new PrivilegedFile(file, META_FILE).exists()) {
+            if (new ProxyFile(file, META_FILE).exists()) {
                 return true;
             }
         }
@@ -103,9 +105,9 @@ public final class MetadataManager {
     }
 
     public static boolean hasBaseMetadata(String packageName) {
-        PrivilegedFile backupPath = new PrivilegedFile(BackupFiles.getPackagePath(packageName),
+        File backupPath = new File(BackupFiles.getPackagePath(packageName),
                 String.valueOf(Users.getCurrentUserHandle()));
-        return new PrivilegedFile(backupPath, META_FILE).exists();
+        return new ProxyFile(backupPath, META_FILE).exists();
     }
 
     @NonNull
@@ -115,7 +117,7 @@ public final class MetadataManager {
         for (File backupFile : backupFiles) {
             try {
                 MetadataManager metadataManager = MetadataManager.getNewInstance();
-                metadataManager.readMetadata(new BackupFiles.BackupFile((PrivilegedFile) backupFile, false));
+                metadataManager.readMetadata(new BackupFiles.BackupFile((ProxyFile) backupFile, false));
                 metadataList.add(metadataManager.getMetadata());
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -126,7 +128,7 @@ public final class MetadataManager {
 
     @NonNull
     private static File[] getBackupFiles(String packageName) {
-        PrivilegedFile[] backupFiles = BackupFiles.getPackagePath(packageName).listFiles(pathname -> new PrivilegedFile(pathname).isDirectory());
+        File[] backupFiles = BackupFiles.getPackagePath(packageName).listFiles(pathname -> new ProxyFile(pathname).isDirectory());
         return ArrayUtils.defeatNullable(backupFiles);
     }
 
@@ -192,10 +194,10 @@ public final class MetadataManager {
     }
 
     synchronized public void writeMetadata(@NonNull BackupFiles.BackupFile backupFile)
-            throws IOException, JSONException {
+            throws IOException, JSONException, RemoteException {
         if (metadata == null) throw new RuntimeException("Metadata is not set.");
         File metadataFile = backupFile.getMetadataFile();
-        try (FileOutputStream fileOutputStream = new FileOutputStream(metadataFile)) {
+        try (OutputStream outputStream = new ProxyOutputStream(metadataFile)) {
             JSONObject rootObject = new JSONObject();
             rootObject.put("label", metadata.label);
             rootObject.put("package_name", metadata.packageName);
@@ -220,7 +222,7 @@ public final class MetadataManager {
             rootObject.put("key_store", metadata.keyStore);
             rootObject.put("size", metadata.size);
             rootObject.put("installer", metadata.installer);
-            fileOutputStream.write(rootObject.toString(4).getBytes());
+            outputStream.write(rootObject.toString(4).getBytes());
         }
     }
 

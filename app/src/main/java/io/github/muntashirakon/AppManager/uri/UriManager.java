@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.uri;
 
 import android.net.Uri;
+import android.os.RemoteException;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -27,7 +28,6 @@ import org.xmlpull.v1.XmlSerializer;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -43,8 +43,9 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.ProxyOutputStream;
 
 import static com.android.internal.util.XmlUtils.readBooleanAttribute;
 import static com.android.internal.util.XmlUtils.readIntAttribute;
@@ -58,7 +59,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
 public class UriManager {
     public static final String TAG = "UriManager";
 
-    private final PrivilegedFile mGrantFile;
+    private final ProxyFile mGrantFile;
 
     private final HashMap<String, ArrayList<UriGrant>> uriGrantsHashMap = new HashMap<>();
 
@@ -78,7 +79,7 @@ public class UriManager {
     private static final String ATTR_PREFIX = "prefix";
 
     public UriManager() {
-        mGrantFile = new PrivilegedFile(new File(OsEnvironment.getDataSystemDirectory(), "urigrants.xml"));
+        mGrantFile = new ProxyFile(new File(OsEnvironment.getDataSystemDirectory(), "urigrants.xml"));
         readGrantedUriPermissions();
     }
 
@@ -111,7 +112,7 @@ public class UriManager {
 
         try {
             File tempFile = IOUtils.getTempFile();
-            try (OutputStream fos = new FileOutputStream(tempFile)) {
+            try (OutputStream fos = new ProxyOutputStream(tempFile)) {
                 XmlSerializer out = Xml.newSerializer();
                 out.setOutput(fos, "utf-8");
                 out.startDocument(null, true);
@@ -136,7 +137,7 @@ public class UriManager {
                 Runner.runCommand(new String[]{"restorecon", mGrantFile.getAbsolutePath()});
                 tempFile.delete();
             }
-        } catch (IOException e) {
+        } catch (IOException | RemoteException e) {
             Log.e(TAG, "Failed writing Uri grants", e);
         }
     }

@@ -23,14 +23,11 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
-import android.text.TextUtils;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -41,10 +38,12 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.ProxyInputStream;
+import io.github.muntashirakon.io.ProxyOutputStream;
 
 /**
  * Block application components: activities, broadcasts, services and providers.
@@ -52,8 +51,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
  * Activities, broadcasts and services are blocked via Intent Firewall (which is superior to
  * <code>pm disable <b>component</b></code>). Rules for each package is saved as a separate tsv file
  * named after its package name and saved to {@code /data/data/${applicationId}/files/conf}. In case
- * of activities, broadcasts and services, the rules are finally saved to {@link #SYSTEM_RULES_PATH}
- * via {@link #LOCAL_RULES_PATH}.
+ * of activities, broadcasts and services, the rules are finally saved to {@link #SYSTEM_RULES_PATH}.
  * <p>
  * Providers are blocked via <code>pm disable <b>provider</b></code> since there's no way to block
  * them via Intent Firewall. Blocked providers are only kept in the
@@ -64,14 +62,13 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 public final class ComponentsBlocker extends RulesStorageManager {
     public static final String TAG = "ComponentBlocker";
 
-    private static String LOCAL_RULES_PATH;
-    static final String SYSTEM_RULES_PATH;
+    static final ProxyFile SYSTEM_RULES_PATH;
 
     static {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
-            SYSTEM_RULES_PATH = "/data/secure/system/ifw";
+            SYSTEM_RULES_PATH = new ProxyFile("/data/secure/system/ifw");
         } else {
-            SYSTEM_RULES_PATH = "/data/system/ifw/";
+            SYSTEM_RULES_PATH = new ProxyFile("/data/system/ifw");
         }
     }
 
@@ -137,13 +134,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
     public static ComponentsBlocker getInstance(@NonNull String packageName, int userHandle, boolean noLoadFromDisk) {
         // TODO(3/12/20): Handle multiple users
         if (INSTANCE == null) {
-            try {
-                getLocalIfwRulesPath();
-                INSTANCE = new ComponentsBlocker(AppManager.getContext(), packageName, userHandle);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                throw new AssertionError();
-            }
+            INSTANCE = new ComponentsBlocker(AppManager.getContext(), packageName, userHandle);
         } else if (!INSTANCE.packageName.equals(packageName)) {
             INSTANCE.close();
             INSTANCE = null;
@@ -155,35 +146,12 @@ public final class ComponentsBlocker extends RulesStorageManager {
         return INSTANCE;
     }
 
-    /**
-     * Get locally stored IFW rules path. Currently set to
-     * {@code /sdcard/Android/data/${applicationId}/files/ifw} or
-     * {@code /data/data/${applicationId}/files/ifw} depending on the availability of the external
-     * storage. This path is only used briefly, before writing to the {@link #SYSTEM_RULES_PATH}.
-     *
-     * @throws FileNotFoundException If there's no path available where rules can be stored locally
-     */
-    public static void getLocalIfwRulesPath() throws FileNotFoundException {
-        Context context = AppManager.getContext();
-        // FIXME: Move from getExternalFilesDir to getCacheDir
-        if (LOCAL_RULES_PATH == null) {
-            File file = context.getExternalFilesDir("ifw");
-            if (file == null || (!file.exists() && !file.mkdirs())) {
-                file = new File(context.getFilesDir(), "ifw");
-                if (!file.exists() && !file.mkdirs()) {
-                    throw new FileNotFoundException("Can not get correct path to save ifw rules");
-                }
-            }
-            LOCAL_RULES_PATH = file.getAbsolutePath();
-        }
-    }
-
-    private final File localRulesFile;
+    private final ProxyFile rulesFile;
     private final Set<String> components;
 
     protected ComponentsBlocker(Context context, String packageName, int userHandle) {
         super(context, packageName, userHandle);
-        this.localRulesFile = new File(LOCAL_RULES_PATH, packageName + ".xml");
+        this.rulesFile = new ProxyFile(SYSTEM_RULES_PATH, packageName + ".xml");
         this.components = PackageUtils.collectComponentClassNames(packageName, userHandle).keySet();
     }
 
@@ -272,16 +240,16 @@ public final class ComponentsBlocker extends RulesStorageManager {
     }
 
     /**
-     * Save the disabled components in the {@link #LOCAL_RULES_PATH}.
+     * Save the disabled components in the {@link #SYSTEM_RULES_PATH}.
      *
      * @throws IOException If it fails to write to the destination file
      */
-    private void saveDisabledComponents() throws IOException {
+    private void saveDisabledComponents() throws IOException, RemoteException {
         if (readOnly) throw new IOException("Saving disabled components in read only mode.");
         if (componentCount() == 0) {
             // No components set, delete if already exists
-            if (localRulesFile.exists()) //noinspection ResultOfMethodCallIgnored
-                localRulesFile.delete();
+            if (rulesFile.exists()) //noinspection ResultOfMethodCallIgnored
+                rulesFile.delete();
             return;
         }
         StringBuilder activities = new StringBuilder();
@@ -314,10 +282,11 @@ public final class ComponentsBlocker extends RulesStorageManager {
                 ((receivers.length() == 0) ? "" : "<broadcast block=\"true\" log=\"false\">\n" + receivers + "</broadcast>\n") +
                 "</rules>";
         // Save rules
-        try (FileOutputStream rulesStream = new FileOutputStream(localRulesFile)) {
+        try (OutputStream rulesStream = new ProxyOutputStream(rulesFile)) {
             Log.d(TAG, "Rules: " + rules);
             rulesStream.write(rules.getBytes());
         }
+        Runner.runCommand(String.format(Runner.TOYBOX + " chmod 0666 %s", rulesFile));
     }
 
     /**
@@ -357,21 +326,6 @@ public final class ComponentsBlocker extends RulesStorageManager {
             }
             // Save blocked IFW components
             if (apply) saveDisabledComponents();
-            // Apply/Remove IFW rules
-            if (apply && localRulesFile.exists()) {
-                // Apply rules
-                Runner.runCommand(String.format(Runner.TOYBOX + " cp \"%s\" %s && "
-                                + Runner.TOYBOX + " chmod 0666 %s%s.xml", localRulesFile
-                                .getAbsolutePath(), SYSTEM_RULES_PATH, SYSTEM_RULES_PATH,
-                        packageName));
-            } else {
-                // Remove rules if remove is called or applied with no rules
-                Runner.runCommand(String.format(Runner.TOYBOX + " test -e '%s%s.xml' && "
-                                + Runner.TOYBOX + " rm -f %s%s.xml", SYSTEM_RULES_PATH, packageName,
-                        SYSTEM_RULES_PATH, packageName));
-            }
-            if (localRulesFile.exists()) //noinspection ResultOfMethodCallIgnored
-                localRulesFile.delete();
             // Enable/disable components
             Log.d(TAG, "All: " + allEntries.toString());
             if (apply) {
@@ -409,7 +363,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | RemoteException e) {
             e.printStackTrace();
         }
     }
@@ -428,14 +382,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
     private void retrieveDisabledComponents() {
         if (!AppPref.isRootEnabled()) return;
         Log.d(TAG, "Retrieving disabled components for package " + packageName);
-        PrivilegedFile rulesFile = new PrivilegedFile(SYSTEM_RULES_PATH, packageName + ".xml");
-        String ruleXmlString;
-        if (rulesFile.exists()) {
-            // Read system rules
-            ruleXmlString = IOUtils.getFileContent(rulesFile);
-            Log.d(TAG, "IFW: Retrieved components for package " + packageName + "\n" + ruleXmlString);
-        } else ruleXmlString = null;
-        if (TextUtils.isEmpty(ruleXmlString)) {
+        if (!rulesFile.exists() || rulesFile.length() == 0) {
             // System doesn't have any rules.
             // Load the rules saved inside App Manager
             for (RulesStorageManager.Entry entry : getAllComponents()) {
@@ -444,14 +391,15 @@ public final class ComponentsBlocker extends RulesStorageManager {
             return;
         }
         try {
-            try (InputStream rulesStream = new ByteArrayInputStream(ruleXmlString.getBytes())) {
+            try (InputStream rulesStream = new ProxyInputStream(rulesFile)) {
                 HashMap<String, Type> components = ComponentUtils.readIFWRules(rulesStream, packageName);
                 for (String componentName : components.keySet()) {
                     // Override existing rule for the component if it exists
                     setComponent(componentName, components.get(componentName), COMPONENT_BLOCKED);
                 }
+                Log.d(TAG, "Retrieved components for package " + packageName);
             }
-        } catch (IOException ignored) {
+        } catch (IOException | RemoteException ignored) {
         }
     }
 }

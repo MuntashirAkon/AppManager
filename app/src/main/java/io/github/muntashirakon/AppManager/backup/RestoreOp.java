@@ -38,7 +38,6 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.FreshFile;
-import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
@@ -46,6 +45,7 @@ import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.io.ProxyFile;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.CACHE_DIRS;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
@@ -69,7 +69,7 @@ class RestoreOp implements Closeable {
         @NonNull
         private final MetadataManager.Metadata metadata;
         @NonNull
-        private final PrivilegedFile backupPath;
+        private final ProxyFile backupPath;
         @NonNull
         private final BackupFiles.BackupFile backupFile;
         @Nullable
@@ -150,7 +150,7 @@ class RestoreOp implements Closeable {
             crypto.close();
             for (File file : decryptedFiles) {
                 Log.d(TAG, "Deleting " + file);
-                IOUtils.deleteSilently(new PrivilegedFile(file));
+                IOUtils.deleteSilently(new ProxyFile(file));
             }
         }
 
@@ -177,7 +177,7 @@ class RestoreOp implements Closeable {
 
         private void checkMasterKey() throws BackupException {
             String oldChecksum = checksum.get(MASTER_KEY);
-            PrivilegedFile masterKey = KeyStoreUtils.getMasterKey(userHandle);
+            ProxyFile masterKey = KeyStoreUtils.getMasterKey(userHandle);
             if (!masterKey.exists()) {
                 if (oldChecksum == null) return;
                 else throw new BackupException("Master key existed when the checksum was made but now it doesn't.");
@@ -321,7 +321,7 @@ class RestoreOp implements Closeable {
                 decryptedFiles.addAll(Arrays.asList(keyStoreFiles));
             }
             // Restore KeyStore files
-            PrivilegedFile keyStorePath = KeyStoreUtils.getKeyStorePath(userHandle);
+            ProxyFile keyStorePath = KeyStoreUtils.getKeyStorePath(userHandle);
             if (!TarUtils.extract(metadata.tarType, keyStoreFiles, keyStorePath, null, null)) {
                 throw new BackupException("Failed to restore the KeyStore files.");
             }
@@ -398,7 +398,7 @@ class RestoreOp implements Closeable {
                     }
                 }
                 // Create data folder if not exists
-                PrivilegedFile dataSourceFile = new PrivilegedFile(dataSource);
+                ProxyFile dataSourceFile = new ProxyFile(dataSource);
                 if (!dataSourceFile.exists()) {
                     // FIXME(10/9/20): Check if the media is mounted and readable before running
                     //  mkdir, otherwise it may create a folder to a path that will be gone

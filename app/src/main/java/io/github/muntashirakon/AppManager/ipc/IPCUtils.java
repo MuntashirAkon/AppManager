@@ -51,10 +51,12 @@ public final class IPCUtils {
 
     private static void startDaemon(Context context) {
         if (amService == null) {
-            amServiceBoundWatcher = new CountDownLatch(1);
-            Log.e(TAG, "Launching service...");
-            Intent intent = new Intent(context, AMService.class);
-            RootService.bind(intent, conn);
+            if (amServiceBoundWatcher == null || amServiceBoundWatcher.getCount() == 0) {
+                amServiceBoundWatcher = new CountDownLatch(1);
+                Log.e(TAG, "Launching service...");
+                Intent intent = new Intent(context, AMService.class);
+                RootService.bind(intent, conn);
+            }
             // Wait for service to be bound
             try {
                 amServiceBoundWatcher.await(45, TimeUnit.SECONDS);

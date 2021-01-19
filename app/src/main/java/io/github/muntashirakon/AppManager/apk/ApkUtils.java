@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -43,6 +44,7 @@ import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.io.ProxyOutputStream;
 
 import static io.github.muntashirakon.AppManager.utils.IOUtils.copy;
 
@@ -66,7 +68,7 @@ public final class ApkUtils {
             // Regular apk
             tmpPublicSource = new File(AppManager.getContext().getExternalCacheDir(), outputName + EXT_APK);
             try (FileInputStream apkInputStream = new FileInputStream(packageInfo.applicationInfo.publicSourceDir);
-                 FileOutputStream apkOutputStream = new FileOutputStream(tmpPublicSource)) {
+                 OutputStream apkOutputStream = new ProxyOutputStream(tmpPublicSource)) {
                 copy(apkInputStream, apkOutputStream);
             }
         }
@@ -99,7 +101,7 @@ public final class ApkUtils {
                 // Regular apk
                 tmpPublicSource = new File(backupPath, outputName + EXT_APK);
                 try (FileInputStream apkInputStream = new FileInputStream(info.publicSourceDir);
-                     FileOutputStream apkOutputStream = new FileOutputStream(tmpPublicSource)) {
+                     OutputStream apkOutputStream = new ProxyOutputStream(tmpPublicSource)) {
                     IOUtils.copy(apkInputStream, apkOutputStream);
                 }
             }

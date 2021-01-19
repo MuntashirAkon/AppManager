@@ -22,11 +22,11 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.misc.Users;
-import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.io.ProxyFile;
 
 public final class KeyStoreUtils {
     public static boolean hasKeyStore(int uid) {
-        PrivilegedFile keyStorePath = getKeyStorePath(Users.getUserHandle(uid));
+        ProxyFile keyStorePath = getKeyStorePath(Users.getUserHandle(uid));
         String[] fileNames = keyStorePath.list();
         if (fileNames != null) {
             String uidStr = uid + "_";
@@ -42,15 +42,15 @@ public final class KeyStoreUtils {
     }
 
     @NonNull
-    public static PrivilegedFile getKeyStorePath(int userHandle) {
-        return new PrivilegedFile("/data/misc/keystore", "user_" + userHandle);
+    public static ProxyFile getKeyStorePath(int userHandle) {
+        return new ProxyFile("/data/misc/keystore", "user_" + userHandle);
     }
 
     @NonNull
     public static List<String> getKeyStoreFiles(int uid, int userHandle) {
         // For any app, the key path is as follows:
         // /data/misc/keystore/user_{user_handle}/{uid}_{KEY_NAME}_{alias}
-        PrivilegedFile keyStorePath = getKeyStorePath(userHandle);
+        ProxyFile keyStorePath = getKeyStorePath(userHandle);
         String[] fileNames = keyStorePath.list();
         List<String> keyStoreFiles = new ArrayList<>();
         if (fileNames != null) {
@@ -65,7 +65,7 @@ public final class KeyStoreUtils {
     }
 
     @NonNull
-    public static PrivilegedFile getMasterKey(int userHandle) {
-        return new PrivilegedFile(getKeyStorePath(userHandle), ".masterkey");
+    public static ProxyFile getMasterKey(int userHandle) {
+        return new ProxyFile(getKeyStorePath(userHandle), ".masterkey");
     }
 }

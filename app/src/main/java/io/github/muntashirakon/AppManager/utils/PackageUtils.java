@@ -73,8 +73,8 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.io.ProxyFile;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
@@ -445,18 +445,18 @@ public final class PackageUtils {
             dataDirs.add(applicationInfo.deviceProtectedDataDir);
         }
         if (loadExternal) {
-            List<PrivilegedFile> externalFiles = new ArrayList<>(Arrays.asList(OsEnvironment
+            List<ProxyFile> externalFiles = new ArrayList<>(Arrays.asList(OsEnvironment
                     .buildExternalStorageAppDataDirs(applicationInfo.packageName)));
-            for (PrivilegedFile externalFile : externalFiles) {
+            for (ProxyFile externalFile : externalFiles) {
                 if (externalFile != null && externalFile.exists())
                     dataDirs.add(externalFile.getAbsolutePath());
             }
         }
         if (loadMediaObb) {
-            List<PrivilegedFile> externalFiles = new ArrayList<>();
+            List<ProxyFile> externalFiles = new ArrayList<>();
             externalFiles.addAll(Arrays.asList(OsEnvironment.buildExternalStorageAppMediaDirs(applicationInfo.packageName)));
             externalFiles.addAll(Arrays.asList(OsEnvironment.buildExternalStorageAppObbDirs(applicationInfo.packageName)));
-            for (PrivilegedFile externalFile : externalFiles) {
+            for (ProxyFile externalFile : externalFiles) {
                 if (externalFile != null && externalFile.exists())
                     dataDirs.add(externalFile.getAbsolutePath());
             }

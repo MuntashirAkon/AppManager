@@ -32,8 +32,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
-import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.io.ProxyFile;
 
 public class BackupFiles {
     static final String APK_SAVING_DIRECTORY = "apks";
@@ -46,31 +46,31 @@ public class BackupFiles {
     static final String NO_MEDIA = ".nomedia";
 
     @NonNull
-    public static PrivilegedFile getBackupDirectory() {
-        return new PrivilegedFile((String) AppPref.get(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR), "AppManager");
+    public static ProxyFile getBackupDirectory() {
+        return new ProxyFile((String) AppPref.get(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR), "AppManager");
     }
 
     @NonNull
-    public static PrivilegedFile getTemporaryDirectory() {
-        return new PrivilegedFile(getBackupDirectory(), TEMPORARY_DIRECTORY);
+    public static ProxyFile getTemporaryDirectory() {
+        return new ProxyFile(getBackupDirectory(), TEMPORARY_DIRECTORY);
     }
 
     @NonNull
-    public static PrivilegedFile getPackagePath(@NonNull String packageName) {
-        return new PrivilegedFile(getBackupDirectory(), packageName);
+    public static ProxyFile getPackagePath(@NonNull String packageName) {
+        return new ProxyFile(getBackupDirectory(), packageName);
     }
 
     @NonNull
-    public static PrivilegedFile getTemporaryBackupPath() {
-        PrivilegedFile tmpFile = new PrivilegedFile(getTemporaryDirectory(), String.valueOf(System.currentTimeMillis()));
+    public static ProxyFile getTemporaryBackupPath() {
+        ProxyFile tmpFile = new ProxyFile(getTemporaryDirectory(), String.valueOf(System.currentTimeMillis()));
         //noinspection ResultOfMethodCallIgnored
         tmpFile.mkdirs();
         return tmpFile;
     }
 
     @NonNull
-    public static PrivilegedFile getApkBackupDirectory() {
-        return new PrivilegedFile(getBackupDirectory(), APK_SAVING_DIRECTORY);
+    public static ProxyFile getApkBackupDirectory() {
+        return new ProxyFile(getBackupDirectory(), APK_SAVING_DIRECTORY);
     }
 
     public static void createNoMediaIfNotExists() {
@@ -85,12 +85,12 @@ public class BackupFiles {
 
     public static class BackupFile {
         @NonNull
-        private final PrivilegedFile backupPath;
+        private final ProxyFile backupPath;
         @NonNull
-        private final PrivilegedFile tmpBackupPath;
+        private final ProxyFile tmpBackupPath;
         private final boolean isTemporary;
 
-        public BackupFile(@NonNull PrivilegedFile backupPath, boolean hasTemporary) {
+        public BackupFile(@NonNull ProxyFile backupPath, boolean hasTemporary) {
             this.backupPath = backupPath;
             this.isTemporary = hasTemporary;
             if (hasTemporary) {
@@ -101,28 +101,28 @@ public class BackupFiles {
         }
 
         @NonNull
-        public PrivilegedFile getBackupPath() {
+        public ProxyFile getBackupPath() {
             return isTemporary ? tmpBackupPath : backupPath;
         }
 
         @NonNull
-        public PrivilegedFile getMetadataFile() {
-            return new PrivilegedFile(getBackupPath(), MetadataManager.META_FILE);
+        public ProxyFile getMetadataFile() {
+            return new ProxyFile(getBackupPath(), MetadataManager.META_FILE);
         }
 
         @NonNull
-        public PrivilegedFile getChecksumFile(@CryptoUtils.Mode String mode) {
-            return new PrivilegedFile(getBackupPath(), CHECKSUMS_TXT + CryptoUtils.getExtension(mode));
+        public ProxyFile getChecksumFile(@CryptoUtils.Mode String mode) {
+            return new ProxyFile(getBackupPath(), CHECKSUMS_TXT + CryptoUtils.getExtension(mode));
         }
 
         @NonNull
-        public PrivilegedFile getMiscFile(@CryptoUtils.Mode String mode) {
-            return new PrivilegedFile(getBackupPath(), MISC_TSV + CryptoUtils.getExtension(mode));
+        public ProxyFile getMiscFile(@CryptoUtils.Mode String mode) {
+            return new ProxyFile(getBackupPath(), MISC_TSV + CryptoUtils.getExtension(mode));
         }
 
         @NonNull
-        public PrivilegedFile getRulesFile(@CryptoUtils.Mode String mode) {
-            return new PrivilegedFile(getBackupPath(), RULES_TSV + CryptoUtils.getExtension(mode));
+        public ProxyFile getRulesFile(@CryptoUtils.Mode String mode) {
+            return new ProxyFile(getBackupPath(), RULES_TSV + CryptoUtils.getExtension(mode));
         }
 
         public void freeze() {
@@ -161,8 +161,8 @@ public class BackupFiles {
         }
 
         @NonNull
-        private PrivilegedFile getFreezeFile() {
-            return new PrivilegedFile(getBackupPath(), FREEZE);
+        private ProxyFile getFreezeFile() {
+            return new ProxyFile(getBackupPath(), FREEZE);
         }
     }
 
@@ -172,7 +172,7 @@ public class BackupFiles {
     @NonNull
     private final String[] backupNames;
     @NonNull
-    private final PrivilegedFile packagePath;
+    private final ProxyFile packagePath;
 
     /**
      * Create and handle {@link BackupFile}.
@@ -200,7 +200,7 @@ public class BackupFiles {
     BackupFile[] getBackupPaths(boolean hasTemporary) {
         BackupFile[] backupFiles = new BackupFile[backupNames.length];
         for (int i = 0; i < backupNames.length; ++i) {
-            backupFiles[i] = new BackupFile(new PrivilegedFile(packagePath, backupNames[i]), hasTemporary);
+            backupFiles[i] = new BackupFile(new ProxyFile(packagePath, backupNames[i]), hasTemporary);
         }
         return backupFiles;
     }
@@ -213,11 +213,11 @@ public class BackupFiles {
         return backupFiles;
     }
 
-    private PrivilegedFile getFreshBackupPath(String backupName) {
-        PrivilegedFile file = new PrivilegedFile(packagePath, backupName);
+    private ProxyFile getFreshBackupPath(String backupName) {
+        ProxyFile file = new ProxyFile(packagePath, backupName);
         int i = 0;
         while (file.exists()) {
-            file = new PrivilegedFile(packagePath, backupName + "_" + (++i));
+            file = new ProxyFile(packagePath, backupName + "_" + (++i));
         }
         return file;
     }

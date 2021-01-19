@@ -28,6 +28,7 @@ import java.io.File;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.IAMService;
+import io.github.muntashirakon.AppManager.IRemoteFile;
 import io.github.muntashirakon.AppManager.IRemoteProcess;
 import io.github.muntashirakon.AppManager.IRemoteShell;
 import io.github.muntashirakon.AppManager.server.common.IRootIPC;
@@ -52,6 +53,11 @@ public class AMService extends RootService {
         @Override
         public IRemoteShell getShell(String[] cmd) {
             return new RemoteShellImpl(cmd);
+        }
+
+        @Override
+        public IRemoteFile getFile(String file) {
+            return new RemoteFileImpl(file);
         }
 
         @Override

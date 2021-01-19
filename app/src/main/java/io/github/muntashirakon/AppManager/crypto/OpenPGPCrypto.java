@@ -23,6 +23,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.RemoteException;
 
 import org.openintents.openpgp.IOpenPgpService2;
 import org.openintents.openpgp.OpenPgpError;
@@ -30,9 +31,9 @@ import org.openintents.openpgp.util.OpenPgpApi;
 import org.openintents.openpgp.util.OpenPgpServiceConnection;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +49,8 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
+import io.github.muntashirakon.io.ProxyInputStream;
+import io.github.muntashirakon.io.ProxyOutputStream;
 
 public class OpenPGPCrypto implements Crypto {
     public static final String TAG = "OpenPGPCrypto";
@@ -136,8 +139,8 @@ public class OpenPGPCrypto implements Crypto {
                 } else outputFilename = new File(file.getAbsolutePath() + GPG_EXT);
                 newFiles.add(outputFilename);
                 Log.i(TAG, "Input: " + file + "\nOutput: " + outputFilename);
-                try (FileInputStream is = new FileInputStream(file);
-                     FileOutputStream os = new FileOutputStream(outputFilename)) {
+                try (InputStream is = new ProxyInputStream(file);
+                     OutputStream os = new ProxyOutputStream(outputFilename)) {
                     OpenPgpApi api = new OpenPgpApi(context, service.getService());
                     Intent result = api.executeApi(intent, is, os);
                     handleResult(result);
@@ -147,7 +150,7 @@ public class OpenPGPCrypto implements Crypto {
                         IOUtils.deleteSilently(outputFilename);
                         return false;
                     }
-                } catch (IOException e) {
+                } catch (IOException | RemoteException e) {
                     Log.e(TAG, "Error: " + e.toString(), e);
                     return false;
                 }

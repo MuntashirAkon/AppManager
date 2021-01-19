@@ -41,6 +41,8 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 
+import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.adb.AdbShell;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -69,12 +71,13 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
     private IBinder binder = null;
     private final CountDownLatch broadcastWatcher = new CountDownLatch(1);
 
-    IPCClient(Intent intent) throws InterruptedException, RemoteException, IOException {
+    IPCClient(@NonNull Intent intent) throws InterruptedException, RemoteException, IOException {
         name = intent.getComponent();
-        startRootServer(ContextUtils.getContext(), intent);
+        startRootServer(AppManager.getContext(), intent);
     }
 
-    static File dumpMainJar(Context context) throws IOException {
+    @NonNull
+    static File dumpMainJar(@NonNull Context context) throws IOException {
         Context contextDe = ContextUtils.getDeContext(context);
         File internalStorage = contextDe.getFilesDir().getParentFile();
         assert internalStorage != null;
@@ -89,16 +92,17 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
     }
 
     static void stopRootServer(ComponentName name) throws IOException {
-        String cmd = getRunnerScript(ContextUtils.getContext(), name, CMDLINE_STOP_SERVER, "");
+        String cmd = getRunnerScript(AppManager.getContext(), name, CMDLINE_STOP_SERVER, "");
         if (AppPref.isRootEnabled()) Runner.runCommand(Runner.getRootInstance(), cmd);
         else if (AppPref.isAdbEnabled()) AdbShell.run(cmd);
     }
 
-    private static String getBroadcastAction(ComponentName name) {
+    @NonNull
+    private static String getBroadcastAction(@NonNull ComponentName name) {
         return BROADCAST_ACTION + "/" + name.flattenToString();
     }
 
-    synchronized private void startRootServer(Context context, Intent intent)
+    private void startRootServer(@NonNull Context context, @NonNull Intent intent)
             throws IOException, InterruptedException, RemoteException {
         // Register BinderReceiver to receive binder from root process
         IntentFilter filter = new IntentFilter(getBroadcastAction(name));
@@ -126,7 +130,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
         intent.putExtra(INTENT_EXTRA_KEY, bundle);
 
         Log.e(TAG, "Running service starter script...");
-        String cmd = getRunnerScript(ContextUtils.getContext(), name, IPCServer.class.getName(), debugParams);
+        String cmd = getRunnerScript(context, name, IPCServer.class.getName(), debugParams);
         if (AppPref.isRootEnabled()) {
             if (!Runner.runCommand(Runner.getRootInstance(), cmd).isSuccessful()) {
                 Log.e(TAG, "Couldn't start service.");
@@ -145,11 +149,11 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
         binder = server.bind(intent);
     }
 
-    boolean isSameService(Intent intent) {
+    boolean isSameService(@NonNull Intent intent) {
         return name.equals(intent.getComponent());
     }
 
-    synchronized void newConnection(ServiceConnection conn, Executor executor) {
+    void newConnection(ServiceConnection conn, Executor executor) {
         connections.put(conn, executor);
         if (binder != null)
             executor.execute(() -> conn.onServiceConnected(name, binder));
@@ -201,7 +205,12 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
         close();
     }
 
-    private static String getRunnerScript(Context context, ComponentName serviceName, String serverClassName, String debugParams) throws IOException {
+    @NonNull
+    private static String getRunnerScript(@NonNull Context context,
+                                          @NonNull ComponentName serviceName,
+                                          @NonNull String serverClassName,
+                                          @NonNull String debugParams)
+            throws IOException {
         File mainJar = dumpMainJar(context);
         File stagingJar = new File(PACKAGE_STAGING_DIRECTORY, "main.jar");
         return (String.format("cp %s %s && ", mainJar, PACKAGE_STAGING_DIRECTORY) +
@@ -211,7 +220,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
                         serverClassName)).replace("$", "\\$");
     }
 
-    static Intent getBroadcastIntent(ComponentName name, IRootIPC.Stub ipc) {
+    static Intent getBroadcastIntent(@NonNull ComponentName name, @NonNull IRootIPC.Stub ipc) {
         Bundle bundle = new Bundle();
         bundle.putBinder(BUNDLE_BINDER_KEY, ipc);
         return new Intent()
@@ -222,7 +231,7 @@ class IPCClient implements IBinder.DeathRecipient, Closeable {
 
     class BinderReceiver extends BroadcastReceiver {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(@NonNull Context context, @NonNull Intent intent) {
             context.unregisterReceiver(this);
             Bundle bundle = intent.getBundleExtra(INTENT_EXTRA_KEY);
             IBinder binder = bundle.getBinder(BUNDLE_BINDER_KEY);

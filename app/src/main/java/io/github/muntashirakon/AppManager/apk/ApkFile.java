@@ -63,11 +63,11 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
-import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
+import io.github.muntashirakon.io.ProxyFile;
 
 import static io.github.muntashirakon.AppManager.apk.ApkUtils.getDensityFromName;
 import static io.github.muntashirakon.AppManager.apk.ApkUtils.getManifestAttributes;
@@ -443,9 +443,9 @@ public final class ApkFile implements AutoCloseable {
     public boolean extractObb() {
         if (!hasObb || zipFile == null) return true;
         try {
-            PrivilegedFile[] extDirs = OsEnvironment.buildExternalStoragePublicDirs();
-            PrivilegedFile writableExtDir = null;
-            for (PrivilegedFile extDir : extDirs) {
+            ProxyFile[] extDirs = OsEnvironment.buildExternalStoragePublicDirs();
+            ProxyFile writableExtDir = null;
+            for (ProxyFile extDir : extDirs) {
                 if (!extDir.exists()) {
                     continue;
                 }
@@ -453,12 +453,12 @@ public final class ApkFile implements AutoCloseable {
                 break;
             }
             if (writableExtDir == null) throw new IOException("Couldn't find any writable Obb dir");
-            final PrivilegedFile writableObbDir = new PrivilegedFile(writableExtDir.getAbsolutePath() + "/" + OBB_DIR + "/" + packageName);
+            final ProxyFile writableObbDir = new ProxyFile(writableExtDir.getAbsolutePath() + "/" + OBB_DIR + "/" + packageName);
             if (writableObbDir.exists()) {
-                PrivilegedFile[] oldObbFiles = writableObbDir.listFiles();
+                ProxyFile[] oldObbFiles = writableObbDir.listFiles();
                 // Delete old files
                 if (oldObbFiles != null) {
-                    for (PrivilegedFile oldFile : oldObbFiles) {
+                    for (ProxyFile oldFile : oldObbFiles) {
                         //noinspection ResultOfMethodCallIgnored
                         oldFile.delete();
                     }

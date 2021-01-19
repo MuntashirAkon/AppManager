@@ -15,7 +15,6 @@ import org.json.JSONException;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -39,7 +38,6 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -49,6 +47,8 @@ import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.MagiskUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.ProxyOutputStream;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.CACHE_DIRS;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
@@ -78,7 +78,7 @@ class BackupOp implements Closeable {
     @NonNull
     private final ApplicationInfo applicationInfo;
     @NonNull
-    private final PrivilegedFile tmpBackupPath;
+    private final ProxyFile tmpBackupPath;
     private final int userHandle;
     @NonNull
     private final Crypto crypto;
@@ -168,7 +168,7 @@ class BackupOp implements Closeable {
         metadataManager.setMetadata(metadata);
         try {
             metadataManager.writeMetadata(backupFile);
-        } catch (IOException | JSONException e) {
+        } catch (IOException | JSONException | RemoteException e) {
             Log.e(TAG, "Failed to write metadata.", e);
             return backupFile.cleanup();
         }
@@ -192,11 +192,11 @@ class BackupOp implements Closeable {
 
     private void backupIcon() {
         final File iconFile = new File(tmpBackupPath, ICON_FILE);
-        try (OutputStream outputStream = new FileOutputStream(iconFile)) {
+        try (OutputStream outputStream = new ProxyOutputStream(iconFile)) {
             Bitmap bitmap = IOUtils.getBitmapFromDrawable(applicationInfo.loadIcon(pm));
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
             outputStream.flush();
-        } catch (IOException e) {
+        } catch (IOException | RemoteException e) {
             Log.w(TAG, "Could not back up icon.");
         }
     }
@@ -246,8 +246,8 @@ class BackupOp implements Closeable {
     }
 
     private void backupKeyStore() throws BackupException {  // Called only when the app has an keystore item
-        PrivilegedFile keyStorePath = KeyStoreUtils.getKeyStorePath(userHandle);
-        PrivilegedFile masterKeyFile = KeyStoreUtils.getMasterKey(userHandle);
+        ProxyFile keyStorePath = KeyStoreUtils.getKeyStorePath(userHandle);
+        ProxyFile masterKeyFile = KeyStoreUtils.getMasterKey(userHandle);
         if (masterKeyFile.exists()) {
             // Master key exists, so take it's checksum to verify it during the restore
             checksum.add(MASTER_KEY, DigestUtils.getHexDigest(metadata.checksumAlgo,
@@ -384,14 +384,14 @@ class BackupOp implements Closeable {
 
     private void backupRules() throws BackupException {
         File rulesFile = backupFile.getRulesFile(CryptoUtils.MODE_NO_ENCRYPTION);
-        try (OutputStream outputStream = new FileOutputStream(rulesFile);
+        try (OutputStream outputStream = new ProxyOutputStream(rulesFile);
              ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, userHandle)) {
             for (RulesStorageManager.Entry entry : cb.getAll()) {
                 // TODO: Do it in ComponentUtils
                 outputStream.write(String.format("%s\t%s\t%s\t%s\n", packageName, entry.name,
                         entry.type.name(), entry.extra).getBytes());
             }
-        } catch (IOException e) {
+        } catch (IOException | RemoteException e) {
             throw new BackupException("Rules backup is requested but encountered an error during fetching rules.", e);
         }
         if (!crypto.encrypt(new File[]{rulesFile})) {

@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.profiles;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -113,7 +114,7 @@ public class ProfilesActivity extends BaseActivity {
                     Intent intent = new Intent(this, AppsProfileActivity.class);
                     intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, manager.getProfileName());
                     startActivity(intent);
-                } catch (IOException | JSONException e) {
+                } catch (IOException | JSONException | RemoteException e) {
                     Log.e(TAG, "Error: ", e);
                     Toast.makeText(this, R.string.import_failed, Toast.LENGTH_SHORT).show();
                 }

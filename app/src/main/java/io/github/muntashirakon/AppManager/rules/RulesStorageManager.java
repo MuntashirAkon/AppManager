@@ -25,9 +25,9 @@ import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -47,6 +47,7 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.io.ProxyOutputStream;
 
 public class RulesStorageManager implements Closeable {
     @StringDef(value = {
@@ -371,7 +372,7 @@ public class RulesStorageManager implements Closeable {
     public void commit() {
         try {
             saveEntries(getDesiredFile(), false);
-        } catch (IOException ex) {
+        } catch (IOException | RemoteException ex) {
             ex.printStackTrace();
         }
     }
@@ -380,13 +381,13 @@ public class RulesStorageManager implements Closeable {
     public void commitExternal(File tsvRulesFile) {
         try {
             saveEntries(tsvRulesFile, true);
-        } catch (IOException ex) {
+        } catch (IOException | RemoteException ex) {
             ex.printStackTrace();
         }
     }
 
     @GuardedBy("entries")
-    protected void saveEntries(File tsvRulesFile, boolean isExternal) throws IOException {
+    protected void saveEntries(File tsvRulesFile, boolean isExternal) throws IOException, RemoteException {
         synchronized (entries) {
             if (entries.size() == 0) {
                 //noinspection ResultOfMethodCallIgnored
@@ -399,7 +400,7 @@ public class RulesStorageManager implements Closeable {
                 stringBuilder.append(entry.name).append("\t").append(entry.type.name()).append("\t").
                         append(entry.extra).append("\n");
             }
-            try (FileOutputStream TSVFile = new FileOutputStream(tsvRulesFile)) {
+            try (OutputStream TSVFile = new ProxyOutputStream(tsvRulesFile)) {
                 TSVFile.write(stringBuilder.toString().getBytes());
             }
         }

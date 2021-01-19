@@ -23,9 +23,9 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.io.ProxyFile;
 
 /**
  * Manage backups for individual package belong to individual user.
@@ -192,7 +192,7 @@ public class BackupManager {
             // backupNames is not null but that doesn't mean that it's not empty,
             // requested for only single backups
             for (String backupName : backupNames) {
-                BackupFiles.BackupFile backupFile = new BackupFiles.BackupFile(new PrivilegedFile(BackupFiles.getPackagePath(
+                BackupFiles.BackupFile backupFile = new BackupFiles.BackupFile(new ProxyFile(BackupFiles.getPackagePath(
                         targetPackage.getPackageName()), backupName), false);
                 if (!backupFile.isFrozen() && !backupFile.delete()) return false;
             }

@@ -22,6 +22,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -233,7 +234,7 @@ public class AppsProfileActivity extends BaseActivity
                 try {
                     model.save();
                     runOnUiThread(() -> Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_SHORT).show());
-                } catch (IOException | JSONException e) {
+                } catch (IOException | JSONException | RemoteException e) {
                     Log.e("AppsProfileActivity", "Error: " + e);
                     runOnUiThread(() -> Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_SHORT).show());
                 }

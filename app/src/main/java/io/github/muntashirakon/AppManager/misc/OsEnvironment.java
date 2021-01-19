@@ -31,7 +31,7 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.io.ProxyFile;
 
 // Keep this in sync with https://cs.android.com/android/platform/superproject/+/master:frameworks/base/core/java/android/os/Environment.java
 // Last snapshot https://cs.android.com/android/_/android/platform/frameworks/base/+/bc3d8b9071d4f0b2903d6836770d974e70366290
@@ -60,17 +60,17 @@ public final class OsEnvironment {
     private static final String DIR_FILES = "files";
     private static final String DIR_CACHE = "cache";
 
-    private static final PrivilegedFile DIR_ANDROID_ROOT = getDirectory(ENV_ANDROID_ROOT, "/system");
-    private static final PrivilegedFile DIR_ANDROID_DATA = getDirectory(ENV_ANDROID_DATA, "/data");
-    private static final PrivilegedFile DIR_ANDROID_EXPAND = getDirectory(ENV_ANDROID_EXPAND, "/mnt/expand");
-    private static final PrivilegedFile DIR_ANDROID_STORAGE = getDirectory(ENV_ANDROID_STORAGE, "/storage");
-    private static final PrivilegedFile DIR_DOWNLOAD_CACHE = getDirectory(ENV_DOWNLOAD_CACHE, "/cache");
-    private static final PrivilegedFile DIR_OEM_ROOT = getDirectory(ENV_OEM_ROOT, "/oem");
-    private static final PrivilegedFile DIR_ODM_ROOT = getDirectory(ENV_ODM_ROOT, "/odm");
-    private static final PrivilegedFile DIR_VENDOR_ROOT = getDirectory(ENV_VENDOR_ROOT, "/vendor");
-    private static final PrivilegedFile DIR_PRODUCT_ROOT = getDirectory(ENV_PRODUCT_ROOT, "/product");
-    private static final PrivilegedFile DIR_SYSTEM_EXT_ROOT = getDirectory(ENV_SYSTEM_EXT_ROOT, "/system_ext");
-    private static final PrivilegedFile DIR_APEX_ROOT = getDirectory(ENV_APEX_ROOT, "/apex");
+    private static final ProxyFile DIR_ANDROID_ROOT = getDirectory(ENV_ANDROID_ROOT, "/system");
+    private static final ProxyFile DIR_ANDROID_DATA = getDirectory(ENV_ANDROID_DATA, "/data");
+    private static final ProxyFile DIR_ANDROID_EXPAND = getDirectory(ENV_ANDROID_EXPAND, "/mnt/expand");
+    private static final ProxyFile DIR_ANDROID_STORAGE = getDirectory(ENV_ANDROID_STORAGE, "/storage");
+    private static final ProxyFile DIR_DOWNLOAD_CACHE = getDirectory(ENV_DOWNLOAD_CACHE, "/cache");
+    private static final ProxyFile DIR_OEM_ROOT = getDirectory(ENV_OEM_ROOT, "/oem");
+    private static final ProxyFile DIR_ODM_ROOT = getDirectory(ENV_ODM_ROOT, "/odm");
+    private static final ProxyFile DIR_VENDOR_ROOT = getDirectory(ENV_VENDOR_ROOT, "/vendor");
+    private static final ProxyFile DIR_PRODUCT_ROOT = getDirectory(ENV_PRODUCT_ROOT, "/product");
+    private static final ProxyFile DIR_SYSTEM_EXT_ROOT = getDirectory(ENV_SYSTEM_EXT_ROOT, "/system_ext");
+    private static final ProxyFile DIR_APEX_ROOT = getDirectory(ENV_APEX_ROOT, "/apex");
 
     private static UserEnvironment sCurrentUser;
     private static boolean sUserRequired;
@@ -90,7 +90,7 @@ public final class OsEnvironment {
             mUserHandle = userHandle;
         }
 
-        public PrivilegedFile[] getExternalDirs() {
+        public ProxyFile[] getExternalDirs() {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 // The reflection calls cannot be hidden since they are called internally by the
                 // system. The alternative is to parse the Context.getExternalCacheDirs(). Some
@@ -100,24 +100,24 @@ public final class OsEnvironment {
                     Method getVolumeList = StorageManager.class.getMethod("getVolumeList", int.class, int.class);
                     final @NonNull StorageVolume[] volumes = (StorageVolume[]) Objects.requireNonNull(getVolumeList.invoke(null, mUserHandle, 1 << 8 /* FLAG_FOR_WRITE */));
                     Log.e(TAG, Arrays.toString(volumes));
-                    final List<PrivilegedFile> files = new ArrayList<>();
+                    final List<ProxyFile> files = new ArrayList<>();
                     File tmpFile;
                     for (StorageVolume volume : volumes) {
                         @SuppressWarnings("JavaReflectionMemberAccess")
                         Method getPathFile = StorageVolume.class.getMethod("getPathFile");
                         tmpFile = (File) getPathFile.invoke(volume);
                         if (tmpFile != null) {
-                            files.add(new PrivilegedFile(tmpFile.getAbsolutePath()));
+                            files.add(new ProxyFile(tmpFile.getAbsolutePath()));
                         }
                     }
-                    return files.toArray(new PrivilegedFile[0]);
+                    return files.toArray(new ProxyFile[0]);
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
             }
             String rawExternalStorage = System.getenv(ENV_EXTERNAL_STORAGE);
             String rawEmulatedTarget = System.getenv("EMULATED_STORAGE_TARGET");
-            List<PrivilegedFile> externalForApp = new ArrayList<>();
+            List<ProxyFile> externalForApp = new ArrayList<>();
             if (!TextUtils.isEmpty(rawEmulatedTarget)) {
                 // Device has emulated storage; external storage paths should have
                 // userId burned into them.
@@ -133,50 +133,50 @@ public final class OsEnvironment {
                     rawExternalStorage = "/storage/sdcard0";
                 }
                 // /storage/sdcard0
-                externalForApp.add(new PrivilegedFile(rawExternalStorage));
+                externalForApp.add(new ProxyFile(rawExternalStorage));
             }
-            return externalForApp.toArray(new PrivilegedFile[0]);
+            return externalForApp.toArray(new ProxyFile[0]);
         }
 
         @Deprecated
-        public PrivilegedFile getExternalStorageDirectory() {
+        public ProxyFile getExternalStorageDirectory() {
             return getExternalDirs()[0];
         }
 
         @Deprecated
-        public PrivilegedFile getExternalStoragePublicDirectory(String type) {
+        public ProxyFile getExternalStoragePublicDirectory(String type) {
             return buildExternalStoragePublicDirs(type)[0];
         }
 
-        public PrivilegedFile[] buildExternalStoragePublicDirs(String type) {
+        public ProxyFile[] buildExternalStoragePublicDirs(String type) {
             return buildPaths(getExternalDirs(), type);
         }
 
-        public PrivilegedFile[] buildExternalStorageAndroidDataDirs() {
+        public ProxyFile[] buildExternalStorageAndroidDataDirs() {
             return buildPaths(getExternalDirs(), DIR_ANDROID, DIR_DATA);
         }
 
-        public PrivilegedFile[] buildExternalStorageAndroidObbDirs() {
+        public ProxyFile[] buildExternalStorageAndroidObbDirs() {
             return buildPaths(getExternalDirs(), DIR_ANDROID, DIR_OBB);
         }
 
-        public PrivilegedFile[] buildExternalStorageAppDataDirs(String packageName) {
+        public ProxyFile[] buildExternalStorageAppDataDirs(String packageName) {
             return buildPaths(getExternalDirs(), DIR_ANDROID, DIR_DATA, packageName);
         }
 
-        public PrivilegedFile[] buildExternalStorageAppMediaDirs(String packageName) {
+        public ProxyFile[] buildExternalStorageAppMediaDirs(String packageName) {
             return buildPaths(getExternalDirs(), DIR_ANDROID, DIR_MEDIA, packageName);
         }
 
-        public PrivilegedFile[] buildExternalStorageAppObbDirs(String packageName) {
+        public ProxyFile[] buildExternalStorageAppObbDirs(String packageName) {
             return buildPaths(getExternalDirs(), DIR_ANDROID, DIR_OBB, packageName);
         }
 
-        public PrivilegedFile[] buildExternalStorageAppFilesDirs(String packageName) {
+        public ProxyFile[] buildExternalStorageAppFilesDirs(String packageName) {
             return buildPaths(getExternalDirs(), DIR_ANDROID, DIR_DATA, packageName, DIR_FILES);
         }
 
-        public PrivilegedFile[] buildExternalStorageAppCacheDirs(String packageName) {
+        public ProxyFile[] buildExternalStorageAppCacheDirs(String packageName) {
             return buildPaths(getExternalDirs(), DIR_ANDROID, DIR_DATA, packageName, DIR_CACHE);
         }
     }
@@ -186,7 +186,7 @@ public final class OsEnvironment {
      * Always present and mounted read-only.
      */
     @NonNull
-    public static PrivilegedFile getRootDirectory() {
+    public static ProxyFile getRootDirectory() {
         return DIR_ANDROID_ROOT;
     }
 
@@ -195,7 +195,7 @@ public final class OsEnvironment {
      * if any. If present, the partition is mounted read-only.
      */
     @NonNull
-    public static PrivilegedFile getOemDirectory() {
+    public static ProxyFile getOemDirectory() {
         return DIR_OEM_ROOT;
     }
 
@@ -204,7 +204,7 @@ public final class OsEnvironment {
      * if any. If present, the partition is mounted read-only.
      */
     @NonNull
-    public static PrivilegedFile getOdmDirectory() {
+    public static ProxyFile getOdmDirectory() {
         return DIR_ODM_ROOT;
     }
 
@@ -212,7 +212,7 @@ public final class OsEnvironment {
      * Return root directory of the "vendor" partition that holds vendor-provided
      * software that should persist across simple reflashing of the "system" partition.
      */
-    public static @NonNull PrivilegedFile getVendorDirectory() {
+    public static @NonNull ProxyFile getVendorDirectory() {
         return DIR_VENDOR_ROOT;
     }
 
@@ -220,7 +220,7 @@ public final class OsEnvironment {
      * Return root directory of the "product" partition holding product-specific
      * customizations if any. If present, the partition is mounted read-only.
      */
-    public static @NonNull PrivilegedFile getProductDirectory() {
+    public static @NonNull ProxyFile getProductDirectory() {
         return DIR_PRODUCT_ROOT;
     }
 
@@ -228,35 +228,35 @@ public final class OsEnvironment {
      * Return root directory of the "system_ext" partition holding system partition's extension
      * If present, the partition is mounted read-only.
      */
-    public static @NonNull PrivilegedFile getSystemExtDirectory() {
+    public static @NonNull ProxyFile getSystemExtDirectory() {
         return DIR_SYSTEM_EXT_ROOT;
     }
 
     /**
      * Return the user data directory.
      */
-    public static PrivilegedFile getDataDirectory() {
+    public static ProxyFile getDataDirectory() {
         return DIR_ANDROID_DATA;
     }
 
-    public static PrivilegedFile getDataSystemDirectory() {
-        return new PrivilegedFile(getDataDirectory(), "system");
+    public static ProxyFile getDataSystemDirectory() {
+        return new ProxyFile(getDataDirectory(), "system");
     }
 
     @NonNull
-    public static PrivilegedFile getDataAppDirectory() {
-        return new PrivilegedFile(getDataDirectory(), "app");
+    public static ProxyFile getDataAppDirectory() {
+        return new ProxyFile(getDataDirectory(), "app");
     }
 
     @NonNull
-    public static PrivilegedFile getDataDataDirectory() {
-        return new PrivilegedFile(getDataDirectory(), "data");
+    public static ProxyFile getDataDataDirectory() {
+        return new ProxyFile(getDataDirectory(), "data");
     }
 
     /**
      * Returns the path for android-specific data on the SD card.
      */
-    public static PrivilegedFile[] buildExternalStorageAndroidDataDirs() {
+    public static ProxyFile[] buildExternalStorageAndroidDataDirs() {
         throwIfUserRequired();
         return sCurrentUser.buildExternalStorageAndroidDataDirs();
     }
@@ -264,7 +264,7 @@ public final class OsEnvironment {
     /**
      * Generates the raw path to an application's data
      */
-    public static PrivilegedFile[] buildExternalStorageAppDataDirs(String packageName) {
+    public static ProxyFile[] buildExternalStorageAppDataDirs(String packageName) {
         throwIfUserRequired();
         return sCurrentUser.buildExternalStorageAppDataDirs(packageName);
     }
@@ -272,7 +272,7 @@ public final class OsEnvironment {
     /**
      * Generates the raw path to an application's media
      */
-    public static PrivilegedFile[] buildExternalStorageAppMediaDirs(String packageName) {
+    public static ProxyFile[] buildExternalStorageAppMediaDirs(String packageName) {
         throwIfUserRequired();
         return sCurrentUser.buildExternalStorageAppMediaDirs(packageName);
     }
@@ -280,7 +280,7 @@ public final class OsEnvironment {
     /**
      * Generates the raw path to an application's OBB files
      */
-    public static PrivilegedFile[] buildExternalStorageAppObbDirs(String packageName) {
+    public static ProxyFile[] buildExternalStorageAppObbDirs(String packageName) {
         throwIfUserRequired();
         return sCurrentUser.buildExternalStorageAppObbDirs(packageName);
     }
@@ -288,7 +288,7 @@ public final class OsEnvironment {
     /**
      * Generates the path to an application's files.
      */
-    public static PrivilegedFile[] buildExternalStorageAppFilesDirs(String packageName) {
+    public static ProxyFile[] buildExternalStorageAppFilesDirs(String packageName) {
         throwIfUserRequired();
         return sCurrentUser.buildExternalStorageAppFilesDirs(packageName);
     }
@@ -296,25 +296,25 @@ public final class OsEnvironment {
     /**
      * Generates the path to an application's cache.
      */
-    public static PrivilegedFile[] buildExternalStorageAppCacheDirs(String packageName) {
+    public static ProxyFile[] buildExternalStorageAppCacheDirs(String packageName) {
         throwIfUserRequired();
         return sCurrentUser.buildExternalStorageAppCacheDirs(packageName);
     }
 
-    public static PrivilegedFile[] buildExternalStoragePublicDirs(@NonNull String dirType) {
+    public static ProxyFile[] buildExternalStoragePublicDirs(@NonNull String dirType) {
         throwIfUserRequired();
         return sCurrentUser.buildExternalStoragePublicDirs(dirType);
     }
 
-    public static PrivilegedFile[] buildExternalStoragePublicDirs() {
+    public static ProxyFile[] buildExternalStoragePublicDirs() {
         throwIfUserRequired();
         return sCurrentUser.getExternalDirs();
     }
 
     @NonNull
-    static PrivilegedFile getDirectory(String variableName, String defaultPath) {
+    static ProxyFile getDirectory(String variableName, String defaultPath) {
         String path = System.getenv(variableName);
-        return path == null ? new PrivilegedFile(defaultPath) : new PrivilegedFile(path);
+        return path == null ? new ProxyFile(defaultPath) : new ProxyFile(path);
     }
 
     public static void setUserRequired(boolean userRequired) {
@@ -331,8 +331,8 @@ public final class OsEnvironment {
      * Append path segments to each given base path, returning result.
      */
     @NonNull
-    public static PrivilegedFile[] buildPaths(@NonNull File[] base, String... segments) {
-        PrivilegedFile[] result = new PrivilegedFile[base.length];
+    public static ProxyFile[] buildPaths(@NonNull File[] base, String... segments) {
+        ProxyFile[] result = new ProxyFile[base.length];
         for (int i = 0; i < base.length; i++) {
             result[i] = buildPath(base[i], segments);
         }
@@ -342,13 +342,13 @@ public final class OsEnvironment {
     /**
      * Append path segments to given base path, returning result.
      */
-    public static PrivilegedFile buildPath(@NonNull File base, @NonNull String... segments) {
-        PrivilegedFile cur = new PrivilegedFile(base.getAbsolutePath());
+    public static ProxyFile buildPath(@NonNull File base, @NonNull String... segments) {
+        ProxyFile cur = new ProxyFile(base.getAbsolutePath());
         for (String segment : segments) {
             if (cur == null) {
-                cur = new PrivilegedFile(segment);
+                cur = new ProxyFile(segment);
             } else {
-                cur = new PrivilegedFile(cur, segment);
+                cur = new ProxyFile(cur, segment);
             }
         }
         return cur;

@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.content.Context;
+import android.os.RemoteException;
 import android.text.TextUtils;
 
 import org.json.JSONArray;
@@ -25,7 +26,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Retention;
@@ -42,6 +42,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
+import io.github.muntashirakon.io.ProxyOutputStream;
 
 public class ProfileMetaManager {
     public static final String PROFILE_EXT = ".am.json";
@@ -225,8 +226,8 @@ public class ProfileMetaManager {
         }
     }
 
-    public void writeProfile() throws IOException, JSONException {
-        try (FileOutputStream outputStream = new FileOutputStream(getProfilePath())) {
+    public void writeProfile() throws IOException, JSONException, RemoteException {
+        try (OutputStream outputStream = new ProxyOutputStream(getProfilePath())) {
             writeProfile(outputStream);
         }
     }

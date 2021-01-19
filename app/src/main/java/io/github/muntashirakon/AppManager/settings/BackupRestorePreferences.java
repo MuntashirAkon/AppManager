@@ -18,9 +18,9 @@ import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.io.ProxyFile;
 
 public class BackupRestorePreferences extends PreferenceFragmentCompat {
     @StringRes
@@ -115,7 +115,7 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
         this.backupVolume = (String) AppPref.get(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR);
         ((Preference) Objects.requireNonNull(findPreference("backup_volume")))
                 .setOnPreferenceClickListener(preference -> {
-                    PrivilegedFile[] backupVolumes = OsEnvironment.buildExternalStoragePublicDirs();
+                    ProxyFile[] backupVolumes = OsEnvironment.buildExternalStoragePublicDirs();
                     if (backupVolumes.length == 0) {
                         new MaterialAlertDialogBuilder(activity)
                                 .setTitle(R.string.backup_volume)

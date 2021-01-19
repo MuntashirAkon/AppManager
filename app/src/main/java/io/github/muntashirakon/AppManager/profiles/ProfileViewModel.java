@@ -18,6 +18,7 @@
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.app.Application;
+import android.os.RemoteException;
 
 import org.json.JSONException;
 
@@ -120,7 +121,7 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @WorkerThread
     @GuardedBy("profileLock")
-    public void save() throws IOException, JSONException {
+    public void save() throws IOException, JSONException, RemoteException {
         synchronized (profileLock) {
             profileMetaManager.profile = profile;
             profileMetaManager.writeProfile();

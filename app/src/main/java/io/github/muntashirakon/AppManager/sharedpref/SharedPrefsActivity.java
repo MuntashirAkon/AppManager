@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.sharedpref;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Xml;
 import android.view.Gravity;
@@ -44,9 +45,9 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,6 +63,9 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.ProxyInputStream;
+import io.github.muntashirakon.io.ProxyOutputStream;
 
 public class SharedPrefsActivity extends BaseActivity implements
         SearchView.OnQueryTextListener, EditPrefItemFragment.InterfaceCommunicator {
@@ -78,7 +82,6 @@ public class SharedPrefsActivity extends BaseActivity implements
     public static final int REASONABLE_STR_SIZE = 200;
 
     private String mSharedPrefFile;
-    private File mTempSharedPrefFile;
     private SharedPrefsListingAdapter mAdapter;
     private LinearProgressIndicator mProgressIndicator;
     private HashMap<String, Object> mSharedPrefMap;
@@ -95,13 +98,6 @@ public class SharedPrefsActivity extends BaseActivity implements
             return;
         }
         String fileName =  (new File(mSharedPrefFile)).getName();
-        try {
-            mTempSharedPrefFile = File.createTempFile(fileName, ".xml", getCacheDir());
-        } catch (IOException e) {
-            e.printStackTrace();
-            finish();
-            return;
-        }
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(appLabel != null ? appLabel : "Shared Preferences Viewer");
@@ -179,7 +175,7 @@ public class SharedPrefsActivity extends BaseActivity implements
         int id = item.getItemId();
         if (id == android.R.id.home || id == R.id.action_discard) {
             finish();
-        } else if (id == R.id.action_delete) {// Make sure it's a file and then delete
+        } else if (id == R.id.action_delete) { // Make sure it's a file and then delete
             boolean isSuccess = Runner.runCommand(String.format("[ -f '%s' ] && " + Runner.TOYBOX + " rm -f '%s'",
                     mSharedPrefFile, mSharedPrefFile)).isSuccessful();
             if (isSuccess) {
@@ -189,7 +185,7 @@ public class SharedPrefsActivity extends BaseActivity implements
                 Toast.makeText(this, R.string.deletion_failed, Toast.LENGTH_LONG).show();
             }
         } else if (id == R.id.action_save) {
-            if (writeSharedPref(mTempSharedPrefFile, mSharedPrefMap)) {
+            if (writeSharedPref(new ProxyFile(mSharedPrefFile), mSharedPrefMap)) {
                 Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, R.string.saving_failed, Toast.LENGTH_LONG).show();
@@ -207,15 +203,6 @@ public class SharedPrefsActivity extends BaseActivity implements
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mTempSharedPrefFile != null && mTempSharedPrefFile.exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            mTempSharedPrefFile.delete();
-        }
-    }
-
-    @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
@@ -227,10 +214,10 @@ public class SharedPrefsActivity extends BaseActivity implements
     }
 
     @NonNull
-    private HashMap<String, Object> readSharedPref(File sharedPrefsFile) {
+    private HashMap<String, Object> readSharedPref(ProxyFile sharedPrefsFile) {
         HashMap<String, Object> prefs = new HashMap<>();
         try {
-            FileInputStream rulesStream = new FileInputStream(sharedPrefsFile);
+            InputStream rulesStream = new ProxyInputStream(sharedPrefsFile);
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(rulesStream, null);
@@ -276,19 +263,14 @@ public class SharedPrefsActivity extends BaseActivity implements
                 event = parser.nextTag();
             }
             rulesStream.close();
-        } catch (IOException | XmlPullParserException ignored) {}
+        } catch (IOException | RemoteException | XmlPullParserException ignored) {}
         return prefs;
     }
 
     private class SharedPrefsReaderThread extends Thread {
         @Override
         public void run() {
-            String sharedPrefPath = mTempSharedPrefFile.getAbsolutePath();
-            if(!Runner.runCommand(String.format(Runner.TOYBOX + " cp '%s' '%s' && " + Runner.TOYBOX + " chmod 0666 '%s'", mSharedPrefFile,
-                    sharedPrefPath, sharedPrefPath)).isSuccessful()) {
-                runOnUiThread(SharedPrefsActivity.this::finish);
-            }
-            mSharedPrefMap = readSharedPref(mTempSharedPrefFile);
+            mSharedPrefMap = readSharedPref(new ProxyFile(mSharedPrefFile));
             runOnUiThread(() -> {
                 mAdapter.setDefaultList(mSharedPrefMap);
                 mProgressIndicator.hide();
@@ -296,9 +278,9 @@ public class SharedPrefsActivity extends BaseActivity implements
         }
     }
 
-    private boolean writeSharedPref(File sharedPrefsFile, @NonNull HashMap<String, Object> hashMap) {
+    private boolean writeSharedPref(ProxyFile sharedPrefsFile, @NonNull HashMap<String, Object> hashMap) {
         try {
-            FileOutputStream xmlFile = new FileOutputStream(sharedPrefsFile);
+            OutputStream xmlFile = new ProxyOutputStream(sharedPrefsFile);
             XmlSerializer xmlSerializer = Xml.newSerializer();
             StringWriter stringWriter = new StringWriter();
             xmlSerializer.setOutput(stringWriter);
@@ -339,9 +321,8 @@ public class SharedPrefsActivity extends BaseActivity implements
             xmlSerializer.flush();
             xmlFile.write(stringWriter.toString().getBytes());
             xmlFile.close();
-            return Runner.runCommand(String.format(Runner.TOYBOX + " cp '%s' '%s' && " + Runner.TOYBOX + " chmod 0666 '%s'", sharedPrefsFile,
-                    mSharedPrefFile, mSharedPrefFile)).isSuccessful();
-        } catch (IOException e) {
+            return Runner.runCommand(String.format(Runner.TOYBOX + " chmod 0666 '%s'", sharedPrefsFile)).isSuccessful();
+        } catch (IOException | RemoteException e) {
             e.printStackTrace();
         }
         return false;

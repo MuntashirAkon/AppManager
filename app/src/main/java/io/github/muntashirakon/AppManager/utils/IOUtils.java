@@ -28,6 +28,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.FileUtils;
 import android.os.ParcelFileDescriptor;
+import android.os.RemoteException;
 import android.provider.OpenableColumns;
 import android.system.ErrnoException;
 import android.system.Os;
@@ -52,6 +53,7 @@ import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.io.ProxyInputStream;
 
 public final class IOUtils {
     private static final byte[] ZIP_FILE_HEADER = new byte[]{0x50, 0x4B, 0x03, 0x04};
@@ -295,9 +297,9 @@ public final class IOUtils {
     @NonNull
     public static String getFileContent(@NonNull File file, @NonNull String emptyValue) {
         if (!file.exists() || file.isDirectory()) return emptyValue;
-        try (InputStream inputStream = new FileInputStream(file)) {
+        try (InputStream inputStream = new ProxyInputStream(file)) {
             return getInputStreamContent(inputStream);
-        } catch (IOException e) {
+        } catch (IOException | RemoteException e) {
             if (!(e.getCause() instanceof ErrnoException)) {
                 // This isn't just another EACCESS exception
                 e.printStackTrace();
@@ -432,8 +434,8 @@ public final class IOUtils {
         return tmpPublicSource;
     }
 
-    public static long calculateFileCrc32(File file) throws IOException {
-        return calculateCrc32(new FileInputStream(file));
+    public static long calculateFileCrc32(File file) throws IOException, RemoteException {
+        return calculateCrc32(new ProxyInputStream(file));
     }
 
     public static long calculateBytesCrc32(byte[] bytes) throws IOException {

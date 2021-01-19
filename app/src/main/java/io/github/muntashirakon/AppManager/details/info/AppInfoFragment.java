@@ -112,7 +112,6 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
-import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
@@ -127,6 +126,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.io.ProxyFile;
 
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_FLAG_MONOSPACE;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
@@ -787,8 +787,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Root only features
         if (!mainModel.getIsExternalApk() && isRootEnabled) {
             // Shared prefs (root only)
-            final List<PrivilegedFile> sharedPrefs = new ArrayList<>();
-            PrivilegedFile[] tmpPaths = getSharedPrefs(mApplicationInfo.dataDir);
+            final List<ProxyFile> sharedPrefs = new ArrayList<>();
+            ProxyFile[] tmpPaths = getSharedPrefs(mApplicationInfo.dataDir);
             if (tmpPaths != null) sharedPrefs.addAll(Arrays.asList(tmpPaths));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 tmpPaths = getSharedPrefs(mApplicationInfo.deviceProtectedDataDir);
@@ -812,7 +812,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .show());
             }
             // Databases (root only)
-            final List<PrivilegedFile> databases = new ArrayList<>();
+            final List<ProxyFile> databases = new ArrayList<>();
             tmpPaths = getDatabases(mApplicationInfo.dataDir);
             if (tmpPaths != null) databases.addAll(Arrays.asList(tmpPaths));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -1098,13 +1098,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Nullable
-    private PrivilegedFile[] getSharedPrefs(@NonNull String sourceDir) {
-        PrivilegedFile sharedPath = new PrivilegedFile(sourceDir, "shared_prefs");
+    private ProxyFile[] getSharedPrefs(@NonNull String sourceDir) {
+        ProxyFile sharedPath = new ProxyFile(sourceDir, "shared_prefs");
         return sharedPath.listFiles();
     }
 
-    private PrivilegedFile[] getDatabases(@NonNull String sourceDir) {
-        PrivilegedFile sharedPath = new PrivilegedFile(sourceDir, "databases");
+    private ProxyFile[] getDatabases(@NonNull String sourceDir) {
+        ProxyFile sharedPath = new ProxyFile(sourceDir, "databases");
         return sharedPath.listFiles((dir, name) -> !name.endsWith("-journal"));
     }
 

@@ -26,7 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.ArraySet;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.io.ProxyFile;
 
 public class MagiskUtils {
     // FIXME(20/9/20): This isn't always true, see check_data in util_functions.sh
@@ -53,16 +53,16 @@ public class MagiskUtils {
         if (systemlessPaths == null) {
             systemlessPaths = new ArrayList<>();
             // Get module paths
-            PrivilegedFile[] modulePaths = getDirectories(new PrivilegedFile(getModDir()));
+            ProxyFile[] modulePaths = getDirectories(new ProxyFile(getModDir()));
             if (modulePaths != null) {
                 // Scan module paths
-                PrivilegedFile[] paths;
-                for (PrivilegedFile file : modulePaths) {
+                ProxyFile[] paths;
+                for (ProxyFile file : modulePaths) {
                     // Get system apk files
                     for (String sysPath : SCAN_PATHS) {
-                        paths = getDirectories(new PrivilegedFile(file, sysPath));
+                        paths = getDirectories(new ProxyFile(file, sysPath));
                         if (paths != null) {
-                            for (PrivilegedFile path : paths) {
+                            for (ProxyFile path : paths) {
                                 if (hasApkFile(path)) {
                                     systemlessPaths.add(sysPath + "/" + path.getName());
                                 }
@@ -125,14 +125,14 @@ public class MagiskUtils {
     }
 
     @Nullable
-    private static PrivilegedFile[] getDirectories(@NonNull PrivilegedFile file) {
+    private static ProxyFile[] getDirectories(@NonNull ProxyFile file) {
         if (file.isDirectory()) {
-            return file.listFiles(pathname -> new PrivilegedFile(pathname).isDirectory());
+            return file.listFiles(pathname -> new ProxyFile(pathname).isDirectory());
         }
         return null;
     }
 
-    private static boolean hasApkFile(@NonNull PrivilegedFile file) {
+    private static boolean hasApkFile(@NonNull ProxyFile file) {
         if (file.isDirectory()) {
             File[] files = file.listFiles((dir, name) -> name.endsWith(".apk"));
             return files != null && files.length > 0;

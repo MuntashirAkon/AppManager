@@ -47,9 +47,9 @@ import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.misc.SystemProperties;
-import io.github.muntashirakon.AppManager.types.PrivilegedFile;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.io.ProxyFile;
 
 /**
  * Loads global system configuration info.
@@ -605,7 +605,7 @@ public class SystemConfig {
                 OsEnvironment.getSystemExtDirectory(), "etc", "permissions"), ALLOW_ALL);
     }
 
-    public void readPermissions(@NonNull PrivilegedFile libraryDir, int permissionFlag) {
+    public void readPermissions(@NonNull ProxyFile libraryDir, int permissionFlag) {
         // Read permissions from given directory.
         if (!libraryDir.exists() || !libraryDir.isDirectory()) {
             if (permissionFlag == ALLOW_ALL) {
@@ -615,8 +615,8 @@ public class SystemConfig {
         }
 
         // Iterate over the files in the directory and scan .xml files
-        PrivilegedFile platformFile = null;
-        for (PrivilegedFile f : libraryDir.listFiles()) {
+        ProxyFile platformFile = null;
+        for (ProxyFile f : libraryDir.listFiles()) {
             if (!f.isFile()) {
                 continue;
             }
@@ -645,12 +645,12 @@ public class SystemConfig {
         }
     }
 
-    private void logNotAllowedInPartition(String name, PrivilegedFile permFile, @NonNull XmlPullParser parser) {
+    private void logNotAllowedInPartition(String name, ProxyFile permFile, @NonNull XmlPullParser parser) {
         Log.w(TAG, "<" + name + "> not allowed in partition of "
                 + permFile + " at " + parser.getPositionDescription());
     }
 
-    private void readPermissionsFromXml(PrivilegedFile permFile, int permissionFlag) {
+    private void readPermissionsFromXml(ProxyFile permFile, int permissionFlag) {
         StringReader permReader = new StringReader(IOUtils.getFileContent(permFile));
         Log.i(TAG, "Reading permissions from " + permFile);
 
@@ -1490,7 +1490,7 @@ public class SystemConfig {
         mOemPermissions.put(packageName, permissions);
     }
 
-    private void readSplitPermission(@NonNull XmlPullParser parser, PrivilegedFile permFile)
+    private void readSplitPermission(@NonNull XmlPullParser parser, ProxyFile permFile)
             throws IOException, XmlPullParserException {
         String splitPerm = parser.getAttributeValue(null, "name");
         if (splitPerm == null) {
@@ -1532,7 +1532,7 @@ public class SystemConfig {
         }
     }
 
-    private void readComponentOverrides(@NonNull XmlPullParser parser, PrivilegedFile permFile)
+    private void readComponentOverrides(@NonNull XmlPullParser parser, ProxyFile permFile)
             throws IOException, XmlPullParserException {
         String pkgname = parser.getAttributeValue(null, "package");
         if (pkgname == null) {

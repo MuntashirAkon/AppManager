@@ -20,6 +20,7 @@ package io.github.muntashirakon.AppManager.backup;
 import android.text.TextUtils;
 import android.util.Pair;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.types.PrivilegedFile;
+import io.github.muntashirakon.io.ProxyFile;
 
 public final class BackupUtils {
     @Nullable
@@ -48,9 +49,9 @@ public final class BackupUtils {
 
     @NonNull
     private static List<String> getBackupPackages() {
-        PrivilegedFile backupPath = BackupFiles.getBackupDirectory();
+        File backupPath = BackupFiles.getBackupDirectory();
         List<String> packages;
-        String[] files = backupPath.list((dir, name) -> new PrivilegedFile(dir, name).isDirectory());
+        String[] files = backupPath.list((dir, name) -> new ProxyFile(dir, name).isDirectory());
         if (files != null) packages = new ArrayList<>(Arrays.asList(files));
         else return new ArrayList<>();
         packages.remove(BackupFiles.APK_SAVING_DIRECTORY);

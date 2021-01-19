@@ -18,10 +18,10 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.annotation.TargetApi;
+import android.os.RemoteException;
 import android.util.Pair;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Retention;
@@ -33,6 +33,7 @@ import java.util.zip.CRC32;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
+import io.github.muntashirakon.io.ProxyInputStream;
 
 public class DigestUtils {
     @StringDef({CRC32, MD2, MD5, SHA_1, SHA_224, SHA_256, SHA_384, SHA_512})
@@ -57,9 +58,9 @@ public class DigestUtils {
 
     @NonNull
     public static String getHexDigest(@Algorithm String algo, @NonNull File file) {
-        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+        try (InputStream fileInputStream = new ProxyInputStream(file)) {
             return DigestUtils.getHexDigest(algo, fileInputStream);
-        } catch (IOException e) {
+        } catch (IOException | RemoteException e) {
             e.printStackTrace();
             return Utils.bytesToHex(new byte[0]);
         }

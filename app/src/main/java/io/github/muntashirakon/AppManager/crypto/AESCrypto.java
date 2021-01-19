@@ -17,9 +17,9 @@
 
 package io.github.muntashirakon.AppManager.crypto;
 
+import android.os.RemoteException;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -44,6 +44,8 @@ import javax.security.auth.DestroyFailedException;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.io.ProxyInputStream;
+import io.github.muntashirakon.io.ProxyOutputStream;
 
 public class AESCrypto implements Crypto {
     public static final String TAG = "AESCrypto";
@@ -105,8 +107,8 @@ public class AESCrypto implements Crypto {
                 } else outputFilename = new File(file.getAbsolutePath() + AES_EXT);
                 newFiles.add(outputFilename);
                 Log.i(TAG, "Input: " + file + "\nOutput: " + outputFilename);
-                try (FileInputStream is = new FileInputStream(file);
-                     FileOutputStream os = new FileOutputStream(outputFilename)) {
+                try (InputStream is = new ProxyInputStream(file);
+                     OutputStream os = new ProxyOutputStream(outputFilename)) {
                     if (mode == Cipher.ENCRYPT_MODE) {
                         OutputStream cipherOS = new CipherOutputStream(os, cipher);
                         IOUtils.copy(is, os);
@@ -116,7 +118,7 @@ public class AESCrypto implements Crypto {
                         IOUtils.copy(cipherIS, os);
                         cipherIS.close();
                     }
-                } catch (IOException e) {
+                } catch (IOException | RemoteException e) {
                     Log.e(TAG, "Error: " + e.toString(), e);
                     return false;
                 }

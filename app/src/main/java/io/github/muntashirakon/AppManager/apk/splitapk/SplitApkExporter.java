@@ -24,7 +24,6 @@ import android.graphics.Bitmap;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +34,7 @@ import java.util.zip.ZipOutputStream;
 import androidx.annotation.NonNull;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.IOUtils;
+import io.github.muntashirakon.io.ProxyOutputStream;
 
 /**
  * Used to generate app bundle with .apks extension. This file has all the apks as well as 3 other
@@ -47,7 +47,7 @@ import io.github.muntashirakon.AppManager.utils.IOUtils;
  */
 public final class SplitApkExporter {
     public static void saveApks(PackageInfo packageInfo, File apksFile) throws Exception {
-        try (OutputStream outputStream = new FileOutputStream(apksFile);
+        try (OutputStream outputStream = new ProxyOutputStream(apksFile);
              ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {
             zipOutputStream.setMethod(ZipOutputStream.STORED);
 
