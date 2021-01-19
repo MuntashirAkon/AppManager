@@ -22,7 +22,12 @@ import android.os.RemoteException;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +40,8 @@ import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class ProxyFile extends File {
+    @Nullable
     IRemoteFile file;
-    IAMService amService;
 
     public ProxyFile(@NonNull String pathname) {
         super(pathname);
@@ -62,6 +67,7 @@ public class ProxyFile extends File {
     public long length() {
         if (isRemoteAlive()) {
             try {
+                //noinspection ConstantConditions
                 return file.length();
             } catch (RemoteException ignore) {
             }
@@ -73,6 +79,7 @@ public class ProxyFile extends File {
     public boolean delete() {
         if (isRemoteAlive()) {
             try {
+                //noinspection ConstantConditions
                 return file.delete();
             } catch (RemoteException ignore) {
             }
@@ -97,6 +104,7 @@ public class ProxyFile extends File {
     public boolean exists() {
         if (isRemoteAlive()) {
             try {
+                //noinspection ConstantConditions
                 return file.exists();
             } catch (RemoteException ignore) {
             }
@@ -108,6 +116,7 @@ public class ProxyFile extends File {
     public boolean isDirectory() {
         if (isRemoteAlive()) {
             try {
+                //noinspection ConstantConditions
                 return file.isDirectory();
             } catch (RemoteException ignore) {
             }
@@ -119,6 +128,7 @@ public class ProxyFile extends File {
     public boolean isFile() {
         if (isRemoteAlive()) {
             try {
+                //noinspection ConstantConditions
                 return file.isFile();
             } catch (RemoteException ignore) {
             }
@@ -130,6 +140,7 @@ public class ProxyFile extends File {
     public boolean mkdir() {
         if (isRemoteAlive()) {
             try {
+                //noinspection ConstantConditions
                 return file.mkdir();
             } catch (RemoteException ignore) {
             }
@@ -141,6 +152,7 @@ public class ProxyFile extends File {
     public boolean mkdirs() {
         if (isRemoteAlive()) {
             try {
+                //noinspection ConstantConditions
                 return file.mkdirs();
             } catch (RemoteException ignore) {
             }
@@ -152,6 +164,7 @@ public class ProxyFile extends File {
     public boolean renameTo(@NonNull File dest) {
         if (isRemoteAlive()) {
             try {
+                //noinspection ConstantConditions
                 return file.renameTo(dest.getAbsolutePath());
             } catch (RemoteException ignore) {
             }
@@ -164,6 +177,7 @@ public class ProxyFile extends File {
     public String[] list() {
         if (isRemoteAlive()) {
             try {
+                //noinspection ConstantConditions
                 return file.list();
             } catch (RemoteException ignore) {
             }
@@ -226,17 +240,23 @@ public class ProxyFile extends File {
         return files.toArray(new ProxyFile[0]);
     }
 
-    public ParcelFileDescriptor.AutoCloseInputStream getInputStream() throws RemoteException {
-        return new ParcelFileDescriptor.AutoCloseInputStream(file.getInputStream());
+    public InputStream getInputStream() throws RemoteException, FileNotFoundException {
+        if (isRemoteAlive()) {
+            //noinspection ConstantConditions
+            return new ParcelFileDescriptor.AutoCloseInputStream(file.getInputStream());
+        } else return new FileInputStream(this);
     }
 
-    public ParcelFileDescriptor.AutoCloseOutputStream getOutputStream() throws RemoteException {
-        return new ParcelFileDescriptor.AutoCloseOutputStream(file.getOutputStream());
+    public OutputStream getOutputStream() throws RemoteException, FileNotFoundException {
+        if (isRemoteAlive()) {
+            //noinspection ConstantConditions
+            return new ParcelFileDescriptor.AutoCloseOutputStream(file.getOutputStream());
+        } else return new FileOutputStream(this);
     }
 
     private void getRemoteFile() {
         if (LocalServer.isAMServiceAlive()) {
-            amService = LocalServer.getAmService();
+            IAMService amService = LocalServer.getAmService();
             if (amService != null) {
                 try {
                     file = amService.getFile(getAbsolutePath());
