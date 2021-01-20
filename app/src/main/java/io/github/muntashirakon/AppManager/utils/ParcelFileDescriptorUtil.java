@@ -25,9 +25,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import androidx.annotation.NonNull;
+
 public class ParcelFileDescriptorUtil {
 
-    public static ParcelFileDescriptor pipeFrom(InputStream inputStream)
+    @NonNull
+    public static ParcelFileDescriptor pipeFrom(@NonNull InputStream inputStream)
             throws IOException {
         ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createPipe();
         ParcelFileDescriptor readSide = pipe[0];
@@ -40,13 +43,16 @@ public class ParcelFileDescriptorUtil {
     }
 
 
-    public static TransferThread pipeTo(OutputStream outputStream, ParcelFileDescriptor output) {
+    @NonNull
+    public static TransferThread pipeTo(@NonNull OutputStream outputStream,
+                                        @NonNull ParcelFileDescriptor output) {
         TransferThread t = new TransferThread(new ParcelFileDescriptor.AutoCloseInputStream(output), outputStream);
         t.start();
         return t;
     }
 
-    public static ParcelFileDescriptor pipeTo(OutputStream outputStream)
+    @NonNull
+    public static ParcelFileDescriptor pipeTo(@NonNull OutputStream outputStream)
             throws IOException {
         ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createPipe();
         ParcelFileDescriptor readSide = pipe[0];

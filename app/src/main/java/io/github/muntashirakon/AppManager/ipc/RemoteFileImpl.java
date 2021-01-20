@@ -17,6 +17,7 @@
 
 package io.github.muntashirakon.AppManager.ipc;
 
+import android.annotation.SuppressLint;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import android.util.Log;
@@ -25,7 +26,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.IRemoteFile;
 import io.github.muntashirakon.AppManager.utils.ParcelFileDescriptorUtil;
@@ -40,12 +43,12 @@ class RemoteFileImpl extends IRemoteFile.Stub {
     }
 
     @Override
-    public boolean isAbsolute() throws RemoteException {
+    public boolean isAbsolute() {
         return file.isAbsolute();
     }
 
     @Override
-    public String getAbsolutePath() throws RemoteException {
+    public String getAbsolutePath() {
         return file.getAbsolutePath();
     }
 
@@ -60,47 +63,47 @@ class RemoteFileImpl extends IRemoteFile.Stub {
     }
 
     @Override
-    public boolean canRead() throws RemoteException {
+    public boolean canRead() {
         return file.canRead();
     }
 
     @Override
-    public boolean canWrite() throws RemoteException {
+    public boolean canWrite() {
         return file.canWrite();
     }
 
     @Override
-    public boolean canExecute() throws RemoteException {
+    public boolean canExecute() {
         return file.canExecute();
     }
 
     @Override
-    public boolean exists() throws RemoteException {
+    public boolean exists() {
         return file.exists();
     }
 
     @Override
-    public boolean isDirectory() throws RemoteException {
+    public boolean isDirectory() {
         return file.isDirectory();
     }
 
     @Override
-    public boolean isFile() throws RemoteException {
+    public boolean isFile() {
         return file.isFile();
     }
 
     @Override
-    public boolean isHidden() throws RemoteException {
+    public boolean isHidden() {
         return file.isHidden();
     }
 
     @Override
-    public long lastModified() throws RemoteException {
+    public long lastModified() {
         return file.lastModified();
     }
 
     @Override
-    public long length() throws RemoteException {
+    public long length() {
         return file.length();
     }
 
@@ -115,22 +118,22 @@ class RemoteFileImpl extends IRemoteFile.Stub {
     }
 
     @Override
-    public boolean delete() throws RemoteException {
+    public boolean delete() {
         return file.delete();
     }
 
     @Override
-    public void deleteOnExit() throws RemoteException {
+    public void deleteOnExit() {
         file.deleteOnExit();
     }
 
     @Override
-    public String[] list() throws RemoteException {
+    public String[] list() {
         return file.list();
     }
 
     @Override
-    public String[] listFiles() throws RemoteException {
+    public String[] listFiles() {
         File[] files = file.listFiles();
         if (files != null) {
             String[] strFiles = new String[files.length];
@@ -144,95 +147,98 @@ class RemoteFileImpl extends IRemoteFile.Stub {
     }
 
     @Override
-    public boolean mkdir() throws RemoteException {
+    public boolean mkdir() {
         return file.mkdir();
     }
 
     @Override
-    public boolean mkdirs() throws RemoteException {
+    public boolean mkdirs() {
         return file.mkdirs();
     }
 
     @Override
-    public boolean renameTo(String dest) throws RemoteException {
+    public boolean renameTo(String dest) {
         return file.renameTo(new File(dest));
     }
 
     @Override
-    public boolean setLastModified(long time) throws RemoteException {
+    public boolean setLastModified(long time) {
         return file.setLastModified(time);
     }
 
     @Override
-    public boolean setReadOnly() throws RemoteException {
+    public boolean setReadOnly() {
         return file.setReadOnly();
     }
 
     @Override
-    public long getTotalSpace() throws RemoteException {
+    public long getTotalSpace() {
         return file.getTotalSpace();
     }
 
     @Override
-    public long getFreeSpace() throws RemoteException {
+    public long getFreeSpace() {
         return file.getFreeSpace();
     }
 
+    @SuppressLint("UsableSpace")
     @Override
-    public long getUsableSpace() throws RemoteException {
+    public long getUsableSpace() {
         return file.getUsableSpace();
     }
 
     @Override
-    public boolean setWritable(boolean writable, boolean ownerOnly) throws RemoteException {
+    public boolean setWritable(boolean writable, boolean ownerOnly) {
         return file.setWritable(writable, ownerOnly);
     }
 
     @Override
-    public boolean setWritable1(boolean writable) throws RemoteException {
+    public boolean setWritable1(boolean writable) {
         return file.setWritable(writable);
     }
 
     @Override
-    public boolean setReadable(boolean readable, boolean ownerOnly) throws RemoteException {
+    public boolean setReadable(boolean readable, boolean ownerOnly) {
         return file.setReadable(readable, ownerOnly);
     }
 
     @Override
-    public boolean setReadable1(boolean readable) throws RemoteException {
+    public boolean setReadable1(boolean readable) {
         return file.setReadable(readable);
     }
 
     @Override
-    public boolean setExecutable(boolean executable, boolean ownerOnly) throws RemoteException {
+    public boolean setExecutable(boolean executable, boolean ownerOnly) {
         return file.setExecutable(executable, ownerOnly);
     }
 
     @Override
-    public boolean setExecutable1(boolean executable) throws RemoteException {
+    public boolean setExecutable1(boolean executable) {
         return file.setExecutable(executable);
     }
 
     @Override
-    public int compareTo(String pathname) throws RemoteException {
+    public int compareTo(String pathname) {
         return file.compareTo(new File(pathname));
     }
 
     @Override
+    @NonNull
     public ParcelFileDescriptor getInputStream() throws RemoteException {
         try {
-            return ParcelFileDescriptorUtil.pipeFrom(new FileInputStream(file));
-        } catch (IOException e) {
+            return Objects.requireNonNull(ParcelFileDescriptorUtil.pipeFrom(new FileInputStream(file)));
+        } catch (IOException | NullPointerException e) {
             Log.e(TAG, null, e);
             throw new RemoteException(e.toString());
         }
     }
 
     @Override
+    @NonNull
     public ParcelFileDescriptor getOutputStream() throws RemoteException {
         try {
-            return ParcelFileDescriptorUtil.pipeTo(new FileOutputStream(file));
-        } catch (IOException e) {
+            return Objects.requireNonNull(ParcelFileDescriptorUtil.pipeTo(new FileOutputStream(file)));
+        } catch (IOException | NullPointerException e) {
             Log.e(TAG, null, e);
             throw new RemoteException(e.toString());
         }
