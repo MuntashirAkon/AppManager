@@ -49,12 +49,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PermissionInfoCompat;
 import androidx.lifecycle.AndroidViewModel;
@@ -96,6 +99,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private ApkFile apkFile;
     private int apkFileKey;
     private int userHandle;
+    private final ExecutorService executor = Executors.newFixedThreadPool(4);
 
     @AppDetailsFragment.SortOrder
     private int sortOrderComponents = (int) AppPref.get(AppPref.PrefKey.PREF_COMPONENTS_SORT_ORDER_INT);
@@ -133,6 +137,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (receiver != null) getApplication().unregisterReceiver(receiver);
         receiver = null;
         IOUtils.closeQuietly(apkFile);
+        executor.shutdownNow();
         super.onCleared();
     }
 
@@ -155,22 +160,24 @@ public class AppDetailsViewModel extends AndroidViewModel {
         apkFile = ApkFile.getInstance(apkFileKey);
     }
 
+    @AnyThread
     public void setUserHandle(@UserIdInt int userHandle) {
         this.userHandle = userHandle;
     }
 
+    @AnyThread
     public int getUserHandle() {
         return userHandle;
     }
 
-    @WorkerThread
+    @AnyThread
     @GuardedBy("blockerLocker")
     public void setPackageName(String packageName) {
         if (this.packageName != null) return;
         Log.d("ADVM", "Package name is being set for " + packageName);
         this.packageName = packageName;
         if (isExternalApk) return;
-        new Thread(() -> {
+        executor.submit(() -> {
             synchronized (blockerLocker) {
                 waitForBlocker = true;
                 if (blocker != null) {
@@ -183,17 +190,20 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 waitForBlocker = false;
                 blockerLocker.notifyAll();
             }
-        }).start();
+        });
     }
 
+    @AnyThread
     public String getPackageName() {
         return packageName;
     }
 
+    @AnyThread
     public int getApkFileKey() {
         return apkFileKey;
     }
 
+    @AnyThread
     @SuppressLint("SwitchIntDef")
     public void setSortOrder(@AppDetailsFragment.SortOrder int sortOrder, @AppDetailsFragment.Property int property) {
         switch (property) {
@@ -215,6 +225,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
     }
 
+    @AnyThread
     @SuppressLint("SwitchIntDef")
     @AppDetailsFragment.SortOrder
     public int getSortOrder(@AppDetailsFragment.Property int property) {
@@ -232,23 +243,26 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return AppDetailsFragment.SORT_BY_NAME;
     }
 
+    @AnyThread
     public void setSearchQuery(String searchQuery) {
         this.searchQuery = searchQuery;
     }
 
+    @AnyThread
     public String getSearchQuery() {
         return searchQuery;
     }
 
-    MutableLiveData<Integer> ruleApplicationStatus;
+    private MutableLiveData<Integer> ruleApplicationStatus;
     public static final int RULE_APPLIED = 0;
     public static final int RULE_NOT_APPLIED = 1;
     public static final int RULE_NO_RULE = 2;
 
+    @UiThread
     public LiveData<Integer> getRuleApplicationStatus() {
         if (ruleApplicationStatus == null) {
             ruleApplicationStatus = new MutableLiveData<>();
-            new Thread(this::setRuleApplicationStatus).start();
+            executor.submit(this::setRuleApplicationStatus);
         }
         return ruleApplicationStatus;
     }
@@ -342,7 +356,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 }
             }
         }
-        new Thread(() -> {
+        executor.submit(() -> {
             synchronized (blockerLocker) {
                 waitForBlockerOrExit();
                 blocker.setMutable();
@@ -355,7 +369,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 blocker.setReadOnly();
                 blockerLocker.notifyAll();
             }
-        }).start();
+        });
         return true;
     }
 
@@ -382,7 +396,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             }
         }
         // Save values to the blocking rules
-        new Thread(() -> {
+        executor.submit(() -> {
             synchronized (blockerLocker) {
                 waitForBlockerOrExit();
                 blocker.setMutable();
@@ -392,7 +406,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 blocker.setReadOnly();
                 blockerLocker.notifyAll();
             }
-        }).start();
+        });
         return isSuccessful;
     }
 
@@ -406,7 +420,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         try {
             // Set mode
             mAppOpsService.setMode(op, packageInfo.applicationInfo.uid, packageName, mode);
-            new Thread(() -> {
+            executor.submit(() -> {
                 synchronized (blockerLocker) {
                     waitForBlockerOrExit();
                     blocker.setMutable();
@@ -415,7 +429,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     blocker.setReadOnly();
                     blockerLocker.notifyAll();
                 }
-            }).start();
+            });
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -430,9 +444,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (mAppOpsService != null) {
             try {
                 mAppOpsService.resetAllModes(userHandle, packageName);
-                new Thread(this::loadAppOps).start();
+                executor.submit(this::loadAppOps);
                 // Save values to the blocking rules
-                new Thread(() -> {
+                executor.submit(() -> {
                     synchronized (blockerLocker) {
                         waitForBlockerOrExit();
                         List<RulesStorageManager.Entry> appOpEntries = blocker.getAll(RulesStorageManager.Type.APP_OP);
@@ -443,7 +457,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         blocker.setReadOnly();
                         blockerLocker.notifyAll();
                     }
-                }).start();
+                });
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -492,7 +506,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             }
         }
         // Save values to the blocking rules
-        new Thread(() -> {
+        executor.submit(() -> {
             synchronized (blockerLocker) {
                 waitForBlockerOrExit();
                 blocker.setMutable();
@@ -502,7 +516,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 blocker.setReadOnly();
                 blockerLocker.notifyAll();
             }
-        }).start();
+        });
         return isSuccessful;
     }
 
@@ -523,6 +537,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
     }
 
+    @UiThread
     public LiveData<List<AppDetailsItem>> get(@AppDetailsFragment.Property int property) {
         switch (property) {
             case AppDetailsFragment.ACTIVITIES:
@@ -554,57 +569,62 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return null;
     }
 
+    @AnyThread
     public void load(@AppDetailsFragment.Property int property) {
-        switch (property) {
-            case AppDetailsFragment.ACTIVITIES:
-                new Thread(this::loadActivities).start();
-                break;
-            case AppDetailsFragment.SERVICES:
-                new Thread(this::loadServices).start();
-                break;
-            case AppDetailsFragment.RECEIVERS:
-                new Thread(this::loadReceivers).start();
-                break;
-            case AppDetailsFragment.PROVIDERS:
-                new Thread(this::loadProviders).start();
-                break;
-            case AppDetailsFragment.APP_OPS:
-                new Thread(this::loadAppOps).start();
-                break;
-            case AppDetailsFragment.USES_PERMISSIONS:
-                new Thread(this::loadUsesPermissions).start();
-                break;
-            case AppDetailsFragment.PERMISSIONS:
-                new Thread(this::loadPermissions).start();
-                break;
-            case AppDetailsFragment.FEATURES:
-                new Thread(this::loadFeatures).start();
-                break;
-            case AppDetailsFragment.CONFIGURATIONS:
-                new Thread(this::loadConfigurations).start();
-                break;
-            case AppDetailsFragment.SIGNATURES:
-                new Thread(this::loadSignatures).start();
-                break;
-            case AppDetailsFragment.SHARED_LIBRARIES:
-                new Thread(this::loadSharedLibraries).start();
-                break;
-            case AppDetailsFragment.APP_INFO:
-                new Thread(this::loadAppInfo).start();
-            case AppDetailsFragment.NONE:
-                break;
-        }
+        executor.submit(() -> {
+            switch (property) {
+                case AppDetailsFragment.ACTIVITIES:
+                    loadActivities();
+                    break;
+                case AppDetailsFragment.SERVICES:
+                    loadServices();
+                    break;
+                case AppDetailsFragment.RECEIVERS:
+                    loadReceivers();
+                    break;
+                case AppDetailsFragment.PROVIDERS:
+                    loadProviders();
+                    break;
+                case AppDetailsFragment.APP_OPS:
+                    loadAppOps();
+                    break;
+                case AppDetailsFragment.USES_PERMISSIONS:
+                    loadUsesPermissions();
+                    break;
+                case AppDetailsFragment.PERMISSIONS:
+                    loadPermissions();
+                    break;
+                case AppDetailsFragment.FEATURES:
+                    loadFeatures();
+                    break;
+                case AppDetailsFragment.CONFIGURATIONS:
+                    loadConfigurations();
+                    break;
+                case AppDetailsFragment.SIGNATURES:
+                    loadSignatures();
+                    break;
+                case AppDetailsFragment.SHARED_LIBRARIES:
+                    loadSharedLibraries();
+                    break;
+                case AppDetailsFragment.APP_INFO:
+                    loadAppInfo();
+                case AppDetailsFragment.NONE:
+                    break;
+            }
+        });
     }
 
     private final MutableLiveData<Boolean> isPackageExistLiveData = new MutableLiveData<>();
     private boolean isPackageExist = true;
 
+    @UiThread
     public LiveData<Boolean> getIsPackageExistLiveData() {
         if (isPackageExistLiveData.getValue() == null)
             isPackageExistLiveData.setValue(isPackageExist);
         return isPackageExistLiveData;
     }
 
+    @AnyThread
     public boolean isPackageExist() {
         return isPackageExist;
     }
@@ -612,6 +632,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @NonNull
     private final MutableLiveData<Boolean> isPackageChanged = new MutableLiveData<>();
 
+    @UiThread
     public LiveData<Boolean> getIsPackageChanged() {
         if (isPackageChanged.getValue() == null) {
             isPackageChanged.setValue(false);
@@ -624,10 +645,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
         setPackageInfo(true);
     }
 
+    @AnyThread
     public boolean getIsExternalApk() {
         return isExternalApk;
     }
 
+    @AnyThread
     public int getSplitCount() {
         if (apkFile.isSplit()) return apkFile.getEntries().size() - 1;
         return 0;
@@ -649,10 +672,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void reloadComponents() {
-        new Thread(this::loadActivities).start();
-        new Thread(this::loadServices).start();
-        new Thread(this::loadReceivers).start();
-        new Thread(this::loadProviders).start();
+        executor.submit(this::loadActivities);
+        executor.submit(this::loadServices);
+        executor.submit(this::loadReceivers);
+        executor.submit(this::loadProviders);
     }
 
     @SuppressLint("WrongConstant")
@@ -676,7 +699,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                                 | PackageManager.GET_SHARED_LIBRARY_FILES, userHandle);
             } catch (AndroidException e) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && e instanceof DeadSystemException) {
-                    throw e;
+                    throw (DeadSystemException) e;
                 }
             }
             if (isExternalApk) {
@@ -731,10 +754,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     private MutableLiveData<List<AppDetailsItem>> appInfo;
 
+    @UiThread
     private LiveData<List<AppDetailsItem>> getAppInfo() {
         if (appInfo == null) {
             appInfo = new MutableLiveData<>();
-            new Thread(this::loadAppInfo).start();
+            executor.submit(this::loadAppInfo);
         }
         return appInfo;
     }
@@ -748,12 +772,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
         appInfo.postValue(appDetailsItems);
     }
 
-    MutableLiveData<List<AppDetailsItem>> activities;
+    private MutableLiveData<List<AppDetailsItem>> activities;
 
+    @UiThread
     private LiveData<List<AppDetailsItem>> getActivities() {
         if (activities == null) {
             activities = new MutableLiveData<>();
-            new Thread(this::loadActivities).start();
+            executor.submit(this::loadActivities);
         }
         return activities;
     }
@@ -784,12 +809,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
         activities.postValue(appDetailsItems);
     }
 
-    MutableLiveData<List<AppDetailsItem>> services;
+    private MutableLiveData<List<AppDetailsItem>> services;
 
+    @UiThread
     private LiveData<List<AppDetailsItem>> getServices() {
         if (services == null) {
             services = new MutableLiveData<>();
-            new Thread(this::loadServices).start();
+            executor.submit(this::loadServices);
         }
         return services;
     }
@@ -821,12 +847,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
         services.postValue(appDetailsItems);
     }
 
-    MutableLiveData<List<AppDetailsItem>> receivers;
+    private MutableLiveData<List<AppDetailsItem>> receivers;
 
+    @UiThread
     private LiveData<List<AppDetailsItem>> getReceivers() {
         if (receivers == null) {
             receivers = new MutableLiveData<>();
-            new Thread(this::loadReceivers).start();
+            executor.submit(this::loadReceivers);
         }
         return receivers;
     }
@@ -858,12 +885,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
         receivers.postValue(appDetailsItems);
     }
 
-    MutableLiveData<List<AppDetailsItem>> providers;
+    private MutableLiveData<List<AppDetailsItem>> providers;
 
+    @UiThread
     private LiveData<List<AppDetailsItem>> getProviders() {
         if (providers == null) {
             providers = new MutableLiveData<>();
-            new Thread(this::loadProviders).start();
+            executor.submit(this::loadProviders);
         }
         return providers;
     }
@@ -913,13 +941,14 @@ public class AppDetailsViewModel extends AndroidViewModel {
         });
     }
 
-    MutableLiveData<List<AppDetailsItem>> appOps;
-    List<AppDetailsItem> appOpItems;
+    private MutableLiveData<List<AppDetailsItem>> appOps;
+    private List<AppDetailsItem> appOpItems;
 
+    @UiThread
     private LiveData<List<AppDetailsItem>> getAppOps() {
         if (appOps == null) {
             appOps = new MutableLiveData<>();
-            new Thread(this::loadAppOps).start();
+            executor.submit(this::loadAppOps);
         }
         return appOps;
     }
@@ -1008,13 +1037,14 @@ public class AppDetailsViewModel extends AndroidViewModel {
         appOps.postValue(appDetailsItems);
     }
 
-    MutableLiveData<List<AppDetailsItem>> usesPermissions;
-    CopyOnWriteArrayList<AppDetailsPermissionItem> usesPermissionItems;
+    private MutableLiveData<List<AppDetailsItem>> usesPermissions;
+    private CopyOnWriteArrayList<AppDetailsPermissionItem> usesPermissionItems;
 
+    @UiThread
     private LiveData<List<AppDetailsItem>> getUsesPermissions() {
         if (usesPermissions == null) {
             usesPermissions = new MutableLiveData<>();
-            new Thread(this::loadUsesPermissions).start();
+            executor.submit(this::loadUsesPermissions);
         }
         return usesPermissions;
     }
@@ -1088,6 +1118,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         usesPermissions.postValue(appDetailsItems);
     }
 
+    @AnyThread
     public List<String> getRawPermissions() {
         List<String> rawPermissions = new ArrayList<>();
         if (getPackageInfo() != null && packageInfo.requestedPermissions != null) {
@@ -1097,12 +1128,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return rawPermissions;
     }
 
-    MutableLiveData<List<AppDetailsItem>> permissions;
+    private MutableLiveData<List<AppDetailsItem>> permissions;
 
+    @UiThread
     private LiveData<List<AppDetailsItem>> getPermissions() {
         if (permissions == null) {
             permissions = new MutableLiveData<>();
-            new Thread(this::loadPermissions).start();
+            executor.submit(this::loadPermissions);
         }
         return permissions;
     }
@@ -1127,12 +1159,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
         permissions.postValue(appDetailsItems);
     }
 
-    MutableLiveData<List<AppDetailsItem>> features;
+    private MutableLiveData<List<AppDetailsItem>> features;
 
+    @UiThread
     private LiveData<List<AppDetailsItem>> getFeatures() {
         if (features == null) {
             features = new MutableLiveData<>();
-            new Thread(this::loadFeatures).start();
+            executor.submit(this::loadFeatures);
         }
         return features;
     }
@@ -1160,12 +1193,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
         features.postValue(appDetailsItems);
     }
 
-    MutableLiveData<List<AppDetailsItem>> configurations;
+    private MutableLiveData<List<AppDetailsItem>> configurations;
 
+    @UiThread
     private LiveData<List<AppDetailsItem>> getConfigurations() {
         if (configurations == null) {
             configurations = new MutableLiveData<>();
-            new Thread(this::loadConfigurations).start();
+            executor.submit(this::loadConfigurations);
         }
         return configurations;
     }
@@ -1183,17 +1217,19 @@ public class AppDetailsViewModel extends AndroidViewModel {
         configurations.postValue(appDetailsItems);
     }
 
-    MutableLiveData<List<AppDetailsItem>> signatures;
+    private MutableLiveData<List<AppDetailsItem>> signatures;
     private ApkVerifier.Result apkVerifierResult;
 
+    @UiThread
     private LiveData<List<AppDetailsItem>> getSignatures() {
         if (signatures == null) {
             signatures = new MutableLiveData<>();
-            new Thread(this::loadSignatures).start();
+            executor.submit(this::loadSignatures);
         }
         return signatures;
     }
 
+    @AnyThread
     public ApkVerifier.Result getApkVerifierResult() {
         return apkVerifierResult;
     }
@@ -1238,12 +1274,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
         signatures.postValue(appDetailsItems);
     }
 
-    MutableLiveData<List<AppDetailsItem>> sharedLibraries;
+    private MutableLiveData<List<AppDetailsItem>> sharedLibraries;
 
+    @UiThread
     private LiveData<List<AppDetailsItem>> getSharedLibraries() {
         if (sharedLibraries == null) {
             sharedLibraries = new MutableLiveData<>();
-            new Thread(this::loadSharedLibraries).start();
+            executor.submit(this::loadSharedLibraries);
         }
         return sharedLibraries;
     }
@@ -1276,7 +1313,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
         @Override
         protected void onPackageChanged(@Nullable Integer uid, @Nullable String[] packages) {
-            if (uid != null && (model.packageInfo == null || model.packageInfo.applicationInfo.uid == uid || model.isExternalApk)) {
+            if (uid != null && (model.packageInfo == null || model.packageInfo.applicationInfo.uid == uid)) {
                 Log.d("ADVM", "Package is changed.");
                 model.setIsPackageChanged();
             } else if (packages != null) {

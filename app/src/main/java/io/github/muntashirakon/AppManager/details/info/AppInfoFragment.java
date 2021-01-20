@@ -1239,9 +1239,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             runOnUiThread(() -> showProgressIndicator(false));
             return;
         }
-        if (isExternalApk) {
-            mInstalledPackageInfo = mainModel.getInstalledPackageInfo();
-        }
+        mInstalledPackageInfo = mainModel.getInstalledPackageInfo();
         mApplicationInfo = mPackageInfo.applicationInfo;
         mPackageLabel = mApplicationInfo.loadLabel(mPackageManager);
         // (Re)load views
