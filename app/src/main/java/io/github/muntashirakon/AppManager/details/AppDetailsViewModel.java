@@ -32,7 +32,6 @@ import android.os.Build;
 import android.os.DeadSystemException;
 import android.os.RemoteException;
 import android.text.TextUtils;
-import android.util.AndroidException;
 
 import com.android.apksig.ApkVerifier;
 import com.android.apksig.apk.ApkFormatException;
@@ -147,6 +146,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         isExternalApk = true;
         apkFileKey = ApkFile.createInstance(packageUri, type);
         apkFile = ApkFile.getInstance(apkFileKey);
+        setPackageName(apkFile.getPackageName());
         apkPath = apkFile.getBaseEntry().getRealCachedFile().getAbsolutePath();
     }
 
@@ -681,7 +681,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @SuppressLint("WrongConstant")
     @WorkerThread
     public void setPackageInfo(boolean reload) {
-        if (!isExternalApk && packageName == null) return;
+        // Package name cannot be null
+        if (packageName == null) return;
         // Wait for component blocker to appear
         synchronized (blockerLocker) {
             waitForBlockerOrExit();
@@ -697,7 +698,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                                 | flagDisabledComponents | flagSigningInfo
                                 | PackageManager.GET_CONFIGURATIONS
                                 | PackageManager.GET_SHARED_LIBRARY_FILES, userHandle);
-            } catch (AndroidException e) {
+            } catch (Throwable e) {
+                e.printStackTrace();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && e instanceof DeadSystemException) {
                     throw (DeadSystemException) e;
                 }
@@ -711,9 +713,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 if (packageInfo == null) {
                     throw new PackageManager.NameNotFoundException("Package cannot be parsed");
                 }
+                if (installedPackageInfo == null) {
+                    Log.d("ADVM", packageName + " not installed for user " + userHandle);
+                }
                 packageInfo.applicationInfo.sourceDir = apkPath;
                 packageInfo.applicationInfo.publicSourceDir = apkPath;
-                setPackageName(packageInfo.packageName);
             } else {
                 packageInfo = installedPackageInfo;
                 if (packageInfo == null) {
@@ -723,7 +727,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             isPackageExistLiveData.postValue(isPackageExist = true);
         } catch (PackageManager.NameNotFoundException e) {
             isPackageExistLiveData.postValue(isPackageExist = false);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && e instanceof DeadSystemException) {
                 // For some packages this exception might occur
