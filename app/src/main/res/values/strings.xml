@@ -876,4 +876,7 @@
     <string name="internal_storage">Internal Storage</string>
     <string name="external_storage">External Storage</string>
     <string name="sd_card">SD Card</string>
+    <string name="unlock_app_manager">Unlock App Manager</string>
+    <string name="screen_lock">Screen Lock</string>
+    <string name="screen_lock_msg">Lock App Manager using Android screen lock</string>
 </resources>

@@ -29,6 +29,11 @@
         app:title="@string/pref_app_theme"
         tools:summary="Current theme: Follow system" />
 
+    <SwitchPreferenceCompat
+        app:key="enable_screen_lock"
+        app:title="@string/screen_lock"
+        app:summary="@string/screen_lock_msg" />
+
     <Preference
         app:key="mode_of_operations"
         app:title="@string/pref_mode_of_operations"

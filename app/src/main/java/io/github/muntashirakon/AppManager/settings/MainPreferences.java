@@ -142,6 +142,10 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     .show();
             return true;
         });
+        // Screen lock
+        // App usage permission toggle
+        SwitchPreferenceCompat screenLock = Objects.requireNonNull(findPreference("enable_screen_lock"));
+        screenLock.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_ENABLE_SCREEN_LOCK_BOOL));
         // Mode of operation
         Preference mode = Objects.requireNonNull(findPreference("mode_of_operations"));
         final String[] modes = getResources().getStringArray(R.array.modes);
