@@ -1,26 +1,46 @@
+/*
+ * Copyright (C) 2021 Muntashir Al-Islam
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package io.github.muntashirakon.AppManager.settings;
 
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
 import android.widget.Toast;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
-import java.util.Arrays;
-import java.util.Objects;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.collection.ArrayMap;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
-import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.io.ProxyFile;
+
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class BackupRestorePreferences extends PreferenceFragmentCompat {
     @StringRes
@@ -115,22 +135,31 @@ public class BackupRestorePreferences extends PreferenceFragmentCompat {
         this.backupVolume = (String) AppPref.get(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR);
         ((Preference) Objects.requireNonNull(findPreference("backup_volume")))
                 .setOnPreferenceClickListener(preference -> {
-                    ProxyFile[] backupVolumes = OsEnvironment.buildExternalStoragePublicDirs();
-                    if (backupVolumes.length == 0) {
+                    ArrayMap<String, ProxyFile> storageLocations = StorageUtils.getAllStorageLocations(activity, false);
+                    if (storageLocations.size() == 0) {
                         new MaterialAlertDialogBuilder(activity)
                                 .setTitle(R.string.backup_volume)
                                 .setMessage(R.string.no_volumes_found)
                                 .setNegativeButton(R.string.ok, null)
                                 .show();
                     } else {
-                        String[] backupVolumesStr = new String[backupVolumes.length];
-                        for (int i = 0; i < backupVolumesStr.length; ++i) {
-                            backupVolumesStr[i] = backupVolumes[i].getAbsolutePath();
+                        ProxyFile[] backupVolumes = new ProxyFile[storageLocations.size()];
+                        CharSequence[] backupVolumesStr = new CharSequence[storageLocations.size()];
+                        AtomicInteger selectedIndex = new AtomicInteger(-1);
+                        for (int i = 0; i < storageLocations.size(); ++i) {
+                            backupVolumes[i] = storageLocations.valueAt(i);
+                            backupVolumesStr[i] = new SpannableStringBuilder(storageLocations.keyAt(i)).append("\n")
+                                    .append(getSecondaryText(activity, getSmallerText(backupVolumes[i].getAbsolutePath())));
+                            if (backupVolumes[i].getAbsolutePath().equals(this.backupVolume)) {
+                                selectedIndex.set(i);
+                            }
                         }
                         new MaterialAlertDialogBuilder(activity)
                                 .setTitle(R.string.backup_volume)
-                                .setSingleChoiceItems(backupVolumesStr, Arrays.asList(backupVolumesStr).indexOf(this.backupVolume), (dialog, which) ->
-                                        this.backupVolume = backupVolumesStr[which])
+                                .setSingleChoiceItems(backupVolumesStr, selectedIndex.get(), (dialog, which) -> {
+                                        this.backupVolume = backupVolumes[which].getAbsolutePath();
+                                        selectedIndex.set(which);
+                                })
                                 .setNegativeButton(R.string.cancel, null)
                                 .setPositiveButton(R.string.save, (dialog, which) ->
                                         AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, this.backupVolume))
