@@ -725,11 +725,4 @@ public class Utils {
     public static boolean readBoolean(@NonNull Parcel in) {
         return in.readInt() != 0;
     }
-
-    @NonNull
-    public static Intent getAuthIntent(@Nullable Intent intent, @NonNull ComponentName target) {
-        intent = new Intent();
-        intent.setClass(AppManager.getContext(), AuthenticationActivity.class);
-        return intent;
-    }
 }

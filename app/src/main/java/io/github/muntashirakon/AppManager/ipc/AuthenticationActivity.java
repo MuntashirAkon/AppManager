@@ -12,8 +12,6 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class AuthenticationActivity extends AppCompatActivity {
-    public static final String EXTRA_TARGET_COMPONENT = "EXTRA_TARGET_COMPONENT";
-
     private AlertDialog alertDialog;
 
     @Override
