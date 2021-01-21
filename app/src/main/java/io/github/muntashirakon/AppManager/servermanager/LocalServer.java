@@ -19,13 +19,8 @@ package io.github.muntashirakon.AppManager.servermanager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-
-import java.io.IOException;
-import java.net.SocketTimeoutException;
-
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -37,6 +32,9 @@ import io.github.muntashirakon.AppManager.server.common.Caller;
 import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
+
+import java.io.IOException;
+import java.net.SocketTimeoutException;
 
 public class LocalServer {
     @GuardedBy("lockObject")
@@ -53,38 +51,17 @@ public class LocalServer {
                 try {
                     Log.e("IPC", "Init: Local server");
                     localServer = new LocalServer();
+                    if (amService == null || !amService.asBinder().pingBinder()) {
+                        amService = IPCUtils.getAmService(AppManager.getContext());
+                    }
                 } catch (Throwable e) {
                     e.printStackTrace();
+                } finally {
+                    lockObject.notifyAll();
                 }
-                lockObject.notifyAll();
             }
         }
         return localServer;
-    }
-
-    @GuardedBy("lockObject")
-    @Nullable
-    public static IAMService getAmService() {
-        if (amService == null || !amService.asBinder().pingBinder()) {
-            synchronized (lockObject) {
-                getInstance();  // In case nobody has called the local server
-                while (localServer == null && AppPref.isRootOrAdbEnabled()) {
-                    Log.d("IPC", "Waiting for local server");
-                    try {
-                        lockObject.wait(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                try {
-                    amService = IPCUtils.getAmService(AppManager.getContext());
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                }
-                lockObject.notifyAll();
-            }
-        }
-        return amService;
     }
 
     public static boolean isAMServiceAlive() {
@@ -115,10 +92,6 @@ public class LocalServer {
 
     Config getConfig() {
         return mLocalServerManager.getConfig();
-    }
-
-    Context getContext() {
-        return mContext;
     }
 
     private final Object connectLock = new Object();

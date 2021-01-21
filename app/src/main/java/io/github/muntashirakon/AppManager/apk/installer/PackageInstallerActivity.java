@@ -19,11 +19,7 @@ package io.github.muntashirakon.AppManager.apk.installer;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageInstaller;
-import android.content.pm.PackageManager;
-import android.content.pm.UserInfo;
+import android.content.pm.*;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,13 +27,6 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.widget.Toast;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -47,6 +36,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.pm.PackageInfoCompat;
 import androidx.fragment.app.FragmentManager;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -55,11 +45,14 @@ import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
@@ -75,6 +68,7 @@ public class PackageInstallerActivity extends BaseActivity {
     private String actionName;
     private PackageManager mPackageManager;
     private FragmentManager fm;
+    private AlertDialog progressDialog;
     private String packageName;
     private boolean isSignatureDifferent = false;
     private int sessionId = -1;
@@ -104,8 +98,7 @@ public class PackageInstallerActivity extends BaseActivity {
             });
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         final Intent intent = getIntent();
         if (intent == null) {
             finish();
@@ -122,90 +115,93 @@ public class PackageInstallerActivity extends BaseActivity {
             finish();
             return;
         }
-        final AlertDialog progressDialog = UIUtils.getProgressDialog(this, getText(R.string.loading));
+        progressDialog = UIUtils.getProgressDialog(this, getText(R.string.loading));
         mPackageManager = getPackageManager();
         fm = getSupportFragmentManager();
         progressDialog.show();
-        new Thread(() -> {
-            try {
-                if (apkUri != null) {
-                    apkFileKey = ApkFile.createInstance(apkUri, intent.getType());
-                } else {
-                    closeApkFile = false;  // Internal request, don't close the ApkFile
-                }
-                apkFile = ApkFile.getInstance(apkFileKey);
-                packageInfo = getPackageInfo();
-                packageName = packageInfo.packageName;
-                try {
-                    installedPackageInfo = getInstalledPackageInfo(packageName);
-                } catch (PackageManager.NameNotFoundException ignore) {
-                }
-                appLabel = mPackageManager.getApplicationLabel(packageInfo.applicationInfo).toString();
-                Drawable appIcon = mPackageManager.getApplicationIcon(packageInfo.applicationInfo);
-                runOnUiThread(() -> {
-                    if (!isDestroyed()) progressDialog.dismiss();
-                });
-                if (installedPackageInfo == null) {
-                    // App not installed
-                    actionName = getString(R.string.install);
-                    if (apkFile.isSplit()) {
-                        install();
-                    } else {
-                        runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
-                                .setCancelable(false)
-                                .setTitle(appLabel)
-                                .setIcon(appIcon)
-                                .setMessage(R.string.install_app_message)
-                                .setPositiveButton(R.string.install, (dialog, which) -> install())
-                                .setNegativeButton(R.string.cancel, (dialog, which) -> finish())
-                                .show());
-                    }
-                } else {
-                    // App is installed
-                    long installedVersionCode = PackageInfoCompat.getLongVersionCode(installedPackageInfo);
-                    long thisVersionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
-                    isSignatureDifferent = PackageUtils.isSignatureDifferent(packageInfo, installedPackageInfo);
-                    if (installedVersionCode < thisVersionCode) {
-                        // Needs update
-                        actionName = getString(R.string.update);
-                        displayWhatsNewDialog();
-                    } else if (installedVersionCode == thisVersionCode) {
-                        // Issue reinstall
-                        actionName = getString(R.string.reinstall);
-                        if (isSignatureDifferent) {
-                            // Display what's new dialog
-                            displayWhatsNewDialog();
-                        } else {
-                            if (apkFile.isSplit()) {
-                                install();
-                            } else {
-                                runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
-                                        .setCancelable(false)
-                                        .setTitle(appLabel)
-                                        .setIcon(appIcon)
-                                        .setMessage(R.string.reinstall_app_message)
-                                        .setPositiveButton(R.string.reinstall, (dialog, which) -> install())
-                                        .setNegativeButton(R.string.cancel, (dialog, which) -> finish())
-                                        .show());
-                            }
-                        }
-                    } else {
-                        actionName = getString(R.string.downgrade);
-                        if (AppPref.isRootOrAdbEnabled()) {
-                            displayWhatsNewDialog();
-                        } else {
-                            runOnUiThread(() -> {
-                                Toast.makeText(this, R.string.downgrade_not_possible, Toast.LENGTH_SHORT).show();
-                                finish();
-                            });
-                        }
-                    }
-                }
-            } catch (ApkFile.ApkFileException | PackageManager.NameNotFoundException | IOException e) {
-                Log.e("PIA", "Could not fetch package info.", e);
-                runOnUiThread(this::finish);
+        new Thread(() -> analyze(apkUri, intent)).start();
+    }
+
+    @WorkerThread
+    private void analyze(Uri apkUri, Intent intent) {
+        try {
+            if (apkUri != null) {
+                apkFileKey = ApkFile.createInstance(apkUri, intent.getType());
+            } else {
+                closeApkFile = false;  // Internal request, don't close the ApkFile
             }
-        }).start();
+            apkFile = ApkFile.getInstance(apkFileKey);
+            packageInfo = getPackageInfo();
+            packageName = packageInfo.packageName;
+            try {
+                installedPackageInfo = getInstalledPackageInfo(packageName);
+            } catch (PackageManager.NameNotFoundException ignore) {
+            }
+            appLabel = mPackageManager.getApplicationLabel(packageInfo.applicationInfo).toString();
+            Drawable appIcon = mPackageManager.getApplicationIcon(packageInfo.applicationInfo);
+            runOnUiThread(() -> {
+                if (!isDestroyed()) progressDialog.dismiss();
+            });
+            if (installedPackageInfo == null) {
+                // App not installed
+                actionName = getString(R.string.install);
+                if (apkFile.isSplit()) {
+                    install();
+                } else {
+                    runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
+                            .setCancelable(false)
+                            .setTitle(appLabel)
+                            .setIcon(appIcon)
+                            .setMessage(R.string.install_app_message)
+                            .setPositiveButton(R.string.install, (dialog, which) -> install())
+                            .setNegativeButton(R.string.cancel, (dialog, which) -> finish())
+                            .show());
+                }
+            } else {
+                // App is installed
+                long installedVersionCode = PackageInfoCompat.getLongVersionCode(installedPackageInfo);
+                long thisVersionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
+                isSignatureDifferent = PackageUtils.isSignatureDifferent(packageInfo, installedPackageInfo);
+                if (installedVersionCode < thisVersionCode) {
+                    // Needs update
+                    actionName = getString(R.string.update);
+                    displayWhatsNewDialog();
+                } else if (installedVersionCode == thisVersionCode) {
+                    // Issue reinstall
+                    actionName = getString(R.string.reinstall);
+                    if (isSignatureDifferent) {
+                        // Display what's new dialog
+                        displayWhatsNewDialog();
+                    } else {
+                        if (apkFile.isSplit()) {
+                            install();
+                        } else {
+                            runOnUiThread(() -> new MaterialAlertDialogBuilder(this)
+                                    .setCancelable(false)
+                                    .setTitle(appLabel)
+                                    .setIcon(appIcon)
+                                    .setMessage(R.string.reinstall_app_message)
+                                    .setPositiveButton(R.string.reinstall, (dialog, which) -> install())
+                                    .setNegativeButton(R.string.cancel, (dialog, which) -> finish())
+                                    .show());
+                        }
+                    }
+                } else {
+                    actionName = getString(R.string.downgrade);
+                    if (AppPref.isRootOrAdbEnabled()) {
+                        displayWhatsNewDialog();
+                    } else {
+                        runOnUiThread(() -> {
+                            Toast.makeText(this, R.string.downgrade_not_possible, Toast.LENGTH_SHORT).show();
+                            finish();
+                        });
+                    }
+                }
+            }
+        } catch (ApkFile.ApkFileException | PackageManager.NameNotFoundException | IOException e) {
+            Log.e("PIA", "Could not fetch package info.", e);
+            runOnUiThread(this::finish);
+        }
     }
 
 //    @NonNull
@@ -373,8 +369,6 @@ public class PackageInstallerActivity extends BaseActivity {
         // Select user
         if (AppPref.isRootOrAdbEnabled() && (boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_USERS_BOOL)) {
             new Thread(() -> {
-                // Init local server first
-                LocalServer.getInstance();
                 List<UserInfo> users = Users.getUsers();
                 if (users != null && users.size() > 1) {
                     String[] userNames = new String[users.size() + 1];

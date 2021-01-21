@@ -28,12 +28,6 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import com.google.android.material.tabs.TabLayout;
-
-import java.io.IOException;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -44,6 +38,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
+import com.google.android.material.tabs.TabLayout;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
@@ -52,6 +47,9 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+
+import java.io.IOException;
+import java.util.List;
 
 public class AppDetailsActivity extends BaseActivity {
     public static final String EXTRA_PACKAGE_NAME = "pkg";
@@ -65,12 +63,10 @@ public class AppDetailsActivity extends BaseActivity {
     private Fragment[] fragments;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        model = new ViewModelProvider(this).get(AppDetailsViewModel.class);
-        super.onCreate(savedInstanceState);
+    protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_app_details);
         setSupportActionBar(findViewById(R.id.toolbar));
-        // Get model
+        model = new ViewModelProvider(this).get(AppDetailsViewModel.class);
         Intent intent = getIntent();
         // Check for package name
         final String packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);

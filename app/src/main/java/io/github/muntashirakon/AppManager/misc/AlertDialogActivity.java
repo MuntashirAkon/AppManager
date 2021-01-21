@@ -36,8 +36,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class AlertDialogActivity extends BaseActivity {
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         if (getIntent() == null) {
             finish();
             return;

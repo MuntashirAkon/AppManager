@@ -59,8 +59,7 @@ public class SysConfigActivity extends BaseActivity {
     private String type = SysConfigType.TYPE_GROUP;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_sys_config);
         setSupportActionBar(findViewById(R.id.toolbar));
         AppCompatSpinner spinner = findViewById(R.id.spinner);

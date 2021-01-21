@@ -74,8 +74,7 @@ public class ClassListingActivity extends BaseActivity implements SearchView.OnQ
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_class_listing);
         setSupportActionBar(findViewById(R.id.toolbar));
         mActionBar = getSupportActionBar();

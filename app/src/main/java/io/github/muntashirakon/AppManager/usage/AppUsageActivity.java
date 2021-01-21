@@ -106,8 +106,7 @@ public class AppUsageActivity extends BaseActivity implements ListView.OnItemCli
 
     @SuppressLint("WrongConstant")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_app_usage);
         setSupportActionBar(findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();

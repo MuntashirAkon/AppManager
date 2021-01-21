@@ -105,6 +105,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @GuardedBy("mAdapterList")
     void clearSelection() {
+        if (mActivity.mModel == null) return;
         new Thread(() -> {
             synchronized (mAdapterList) {
                 final List<Integer> itemIds = new ArrayList<>();

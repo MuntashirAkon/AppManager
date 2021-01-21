@@ -19,7 +19,9 @@ package io.github.muntashirakon.AppManager.utils;
 
 import android.Manifest;
 import android.app.AppOpsManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
@@ -35,6 +37,9 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.view.WindowManager;
 
+import androidx.annotation.Nullable;
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.ipc.AuthenticationActivity;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -719,5 +724,12 @@ public class Utils {
 
     public static boolean readBoolean(@NonNull Parcel in) {
         return in.readInt() != 0;
+    }
+
+    @NonNull
+    public static Intent getAuthIntent(@Nullable Intent intent, @NonNull ComponentName target) {
+        intent = new Intent();
+        intent.setClass(AppManager.getContext(), AuthenticationActivity.class);
+        return intent;
     }
 }

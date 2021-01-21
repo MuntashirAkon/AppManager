@@ -26,24 +26,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ImageView;
-
-import com.google.android.material.bottomappbar.BottomAppBar;
-import com.google.android.material.checkbox.MaterialCheckBox;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.android.material.textview.MaterialTextView;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
-import java.util.Locale;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.IntDef;
@@ -60,6 +44,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.textview.MaterialTextView;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -71,19 +60,18 @@ import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
 import io.github.muntashirakon.AppManager.profiles.ProfilesActivity;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
-import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.DateUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.AppManager.utils.StoragePermission;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.*;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
+import java.util.Locale;
 
 import static androidx.appcompat.app.ActionBar.LayoutParams;
 
@@ -201,8 +189,7 @@ public class MainActivity extends BaseActivity implements
 
     @SuppressLint("RestrictedApi")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.toolbar));
         mModel = new ViewModelProvider(this).get(MainViewModel.class);
@@ -475,15 +462,17 @@ public class MainActivity extends BaseActivity implements
         if (id == R.id.action_select_all) {
             mAdapter.selectAll();
         } else if (id == R.id.action_backup) {
-            BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
-            Bundle args = new Bundle();
-            args.putParcelableArrayList(BackupDialogFragment.ARG_PACKAGE_PAIRS, mModel.getSelectedPackagesWithUsers(false));
-            backupDialogFragment.setArguments(args);
-            backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
-            backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
-            backupDialogFragment.show(getSupportFragmentManager(), BackupDialogFragment.TAG);
-            mAdapter.clearSelection();
-            handleSelection();
+            if (mModel != null) {
+                BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
+                Bundle args = new Bundle();
+                args.putParcelableArrayList(BackupDialogFragment.ARG_PACKAGE_PAIRS, mModel.getSelectedPackagesWithUsers(false));
+                backupDialogFragment.setArguments(args);
+                backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
+                backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
+                backupDialogFragment.show(getSupportFragmentManager(), BackupDialogFragment.TAG);
+                mAdapter.clearSelection();
+                handleSelection();
+            }
         } else if (id == R.id.action_backup_apk) {
             storagePermission.request(granted -> {
                 if (granted) handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
@@ -522,17 +511,14 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onRefresh() {
         showProgressIndicator(true);
-        mModel.loadApplicationItems();
+        if (mModel != null) mModel.loadApplicationItems();
         mSwipeRefresh.setRefreshing(false);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        // Set root/ADB
-        new Thread(() -> RunnerUtils.setModeOfOps(this)).start();
-
-        if (mAdapter != null) {
+        if (mAdapter != null && mModel != null) {
             // Set observer
             mModel.getApplicationItems().observe(this, applicationItems -> {
                 mAdapter.setDefaultList(applicationItems);
@@ -569,7 +555,7 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        mModel.onResume();
+        if (mModel != null) mModel.onResume();
         registerReceiver(mBatchOpsBroadCastReceiver, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS_COMPLETED));
     }
 
@@ -607,7 +593,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     void handleSelection() {
-        if (mModel.getSelectedPackages().size() == 0) {
+        if (mModel == null || mModel.getSelectedPackages().size() == 0) {
             mBottomAppBar.setVisibility(View.GONE);
             mMainLayout.setLayoutParams(mLayoutParamsTypical);
             mAdapter.clearSelection();
@@ -619,6 +605,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void handleBatchOp(@BatchOpsManager.OpType int op) {
+        if (mModel == null) return;
         showProgressIndicator(true);
         Intent intent = new Intent(this, BatchOpsService.class);
         BatchOpsManager.Result input = new BatchOpsManager.Result(mModel.getSelectedPackagesWithUsers(false));
@@ -653,12 +640,12 @@ public class MainActivity extends BaseActivity implements
      */
     private void setSortBy(@SortOrder int sortBy) {
         mSortBy = sortBy;
-        mModel.setSortBy(sortBy);
+        if (mModel != null) mModel.setSortBy(sortBy);
     }
 
     @Override
     public boolean onQueryTextChange(String searchQuery) {
-        mModel.setSearchQuery(searchQuery.toLowerCase(Locale.ROOT));
+        if (mModel != null) mModel.setSearchQuery(searchQuery.toLowerCase(Locale.ROOT));
         return true;
     }
 

@@ -92,8 +92,7 @@ public class RunningAppsActivity extends BaseActivity implements
     RunningAppsViewModel mModel;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_running_apps);
         setSupportActionBar(findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();

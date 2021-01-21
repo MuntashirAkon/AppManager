@@ -84,8 +84,7 @@ public class OneClickOpsActivity extends BaseActivity {
     private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_one_click_ops);
         setSupportActionBar(findViewById(R.id.toolbar));
         mItemCreator = new ListItemCreator(this, R.id.container);
@@ -250,9 +249,9 @@ public class OneClickOpsActivity extends BaseActivity {
                             SpannableStringBuilder builder;
                             final ArrayList<String> selectedPackages = new ArrayList<>();
                             List<CharSequence> packageNamesWithComponentCount = new ArrayList<>();
-                            for (int i = 0; i < componentCounts.size(); ++i) {
+                            for (ItemCount count : componentCounts) {
                                 if (Thread.currentThread().isInterrupted()) return;
-                                componentCount = componentCounts.get(i);
+                                componentCount = count;
                                 builder = new SpannableStringBuilder(componentCount.packageLabel)
                                         .append("\n").append(getSecondaryText(this,
                                                 getSmallerText(getResources().getQuantityString(
@@ -352,9 +351,9 @@ public class OneClickOpsActivity extends BaseActivity {
                             SpannableStringBuilder builder1;
                             final ArrayList<String> selectedPackages = new ArrayList<>();
                             List<CharSequence> packagesWithAppOpCount = new ArrayList<>();
-                            for (int i = 0; i < appOpCounts.size(); ++i) {
+                            for (AppOpCount opCount : appOpCounts) {
                                 if (Thread.currentThread().isInterrupted()) return;
-                                appOpCount = appOpCounts.get(i);
+                                appOpCount = opCount;
                                 builder1 = new SpannableStringBuilder(appOpCount.packageLabel)
                                         .append("\n").append(getSecondaryText(this,
                                                 getSmallerText("(" + appOpCount.count + ") "

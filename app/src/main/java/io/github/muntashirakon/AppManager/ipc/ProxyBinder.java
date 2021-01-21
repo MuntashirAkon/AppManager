@@ -57,7 +57,7 @@ public class ProxyBinder implements IBinder {
 
     @Override
     public boolean transact(int code, @NonNull Parcel data, @Nullable Parcel reply, int flags) throws RemoteException {
-        if (LocalServer.getAmService() != null) {
+        if (LocalServer.isAMServiceAlive()) {
             Parcel newData = Parcel.obtain();
             try {
                 newData.writeInterfaceToken(IRootIPC.class.getName());
@@ -65,7 +65,7 @@ public class ProxyBinder implements IBinder {
                 newData.writeInt(code);
                 newData.appendFrom(data, 0, data.dataSize());
                 // Transact via AMService instead of AM
-                LocalServer.getAmService().asBinder().transact(PROXY_BINDER_TRANSACT_CODE, newData, reply, flags);
+                IPCUtils.getServiceSafe().asBinder().transact(PROXY_BINDER_TRANSACT_CODE, newData, reply, flags);
             } finally {
                 newData.recycle();
             }

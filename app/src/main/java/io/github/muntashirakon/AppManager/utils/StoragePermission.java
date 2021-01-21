@@ -54,15 +54,21 @@ public class StoragePermission {
 
     public void request(@Nullable StoragePermissionCallback callback) {
         if (PermissionUtils.hasStoragePermission(AppManager.getContext())) {
-            callback.onResult(true);
+            if (callback != null) callback.onResult(true);
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            storagePermApi30.launch(new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION),
-                    result -> callback.onResult(PermissionUtils.hasStoragePermission(AppManager.getContext())));
+            storagePermApi30.launch(new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION), result -> {
+                if (callback != null) {
+                    callback.onResult(PermissionUtils.hasStoragePermission(AppManager.getContext()));
+                }
+            });
         } else {
-            storagePerm.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    result -> callback.onResult(PermissionUtils.hasStoragePermission(AppManager.getContext())));
+            storagePerm.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE, result -> {
+                if (callback != null) {
+                    callback.onResult(PermissionUtils.hasStoragePermission(AppManager.getContext()));
+                }
+            });
         }
     }
 

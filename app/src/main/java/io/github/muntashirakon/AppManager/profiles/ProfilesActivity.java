@@ -121,8 +121,7 @@ public class ProfilesActivity extends BaseActivity {
             });
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_profiles);
         setSupportActionBar(findViewById(R.id.toolbar));
         model = new ViewModelProvider(this).get(ProfilesViewModel.class);

@@ -18,23 +18,33 @@
 package io.github.muntashirakon.AppManager;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-
+import androidx.activity.result.ActivityResult;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.view.menu.MenuBuilder;
+import io.github.muntashirakon.AppManager.ipc.AuthenticationActivity;
 import io.github.muntashirakon.AppManager.misc.AMExceptionHandler;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
+    private final BetterActivityResult<Intent, ActivityResult> authActivity = BetterActivityResult.registerActivityForResult(this);
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new AMExceptionHandler(this));
         AppCompatDelegate.setDefaultNightMode((int) AppPref.get(AppPref.PrefKey.PREF_APP_THEME_INT));
+        if (!AppManager.isAuthenticated()) {
+            authActivity.launch(new Intent(this, AuthenticationActivity.class), result -> onAuthenticated(savedInstanceState));
+        } else onAuthenticated(savedInstanceState);
     }
+
+    protected abstract void onAuthenticated(@Nullable Bundle savedInstanceState);
 
     @SuppressLint("RestrictedApi")
     @Override

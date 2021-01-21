@@ -17,9 +17,12 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import android.content.Intent;
+import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCaller;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -37,6 +40,12 @@ public class BetterActivityResult<Input, Result> {
             @NonNull ActivityResultCaller caller,
             @NonNull ActivityResultContract<Input, Result> contract) {
         return new BetterActivityResult<>(caller, contract, null);
+    }
+
+    @NonNull
+    public static BetterActivityResult<Intent, ActivityResult> registerActivityForResult(
+            @NonNull ActivityResultCaller caller) {
+        return new BetterActivityResult<>(caller, new ActivityResultContracts.StartActivityForResult(), null);
     }
 
     public interface OnActivityResult<O> {

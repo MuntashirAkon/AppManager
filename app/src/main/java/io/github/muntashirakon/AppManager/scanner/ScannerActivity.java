@@ -125,8 +125,7 @@ public class ScannerActivity extends BaseActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_scanner);
         setSupportActionBar(findViewById(R.id.toolbar));
         model = new ViewModelProvider(this).get(ScannerViewModel.class);

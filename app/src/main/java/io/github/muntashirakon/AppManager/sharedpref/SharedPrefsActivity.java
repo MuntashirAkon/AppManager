@@ -87,8 +87,7 @@ public class SharedPrefsActivity extends BaseActivity implements
     private HashMap<String, Object> mSharedPrefMap;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_shared_prefs);
         setSupportActionBar(findViewById(R.id.toolbar));
         mSharedPrefFile = getIntent().getStringExtra(EXTRA_PREF_LOCATION);

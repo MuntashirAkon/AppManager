@@ -24,8 +24,10 @@ import java.io.InputStream;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
+import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.IRemoteShell;
 import io.github.muntashirakon.AppManager.IShellResult;
+import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.ParcelFileDescriptorUtil;
@@ -36,8 +38,8 @@ class AdbShellRunner extends Runner {
     @Override
     synchronized public Result runCommand() {
         try {
-            if (LocalServer.getAmService() == null) throw new RemoteException();
-            IRemoteShell shell = LocalServer.getAmService().getShell(commands.toArray(new String[0]));
+            IAMService amService = IPCUtils.getServiceSafe();
+            IRemoteShell shell = amService.getShell(commands.toArray(new String[0]));
             for (InputStream is : inputStreams) {
                 shell.addInputStream(ParcelFileDescriptorUtil.pipeFrom(is));
             }

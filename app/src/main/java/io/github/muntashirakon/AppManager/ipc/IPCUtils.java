@@ -9,7 +9,11 @@ import android.os.IBinder;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import android.os.RemoteException;
+import androidx.annotation.AnyThread;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -21,7 +25,7 @@ public final class IPCUtils {
     private static final AMServiceConnection conn = new AMServiceConnection();
     private static CountDownLatch amServiceBoundWatcher;
 
-    static class AMServiceConnection implements ServiceConnection {
+    private static class AMServiceConnection implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             Log.e(TAG, "service onServiceConnected");
@@ -49,13 +53,16 @@ public final class IPCUtils {
         }
     }
 
-    private static void startDaemon(Context context) {
+    @WorkerThread
+    private static void startDaemon(@NonNull Context context) {
         if (amService == null) {
             if (amServiceBoundWatcher == null || amServiceBoundWatcher.getCount() == 0) {
                 amServiceBoundWatcher = new CountDownLatch(1);
                 Log.e(TAG, "Launching service...");
                 Intent intent = new Intent(context, AMService.class);
-                RootService.bind(intent, conn);
+                synchronized (conn) {
+                    RootService.bind(intent, conn);
+                }
             }
             // Wait for service to be bound
             try {
@@ -66,15 +73,34 @@ public final class IPCUtils {
         }
     }
 
+    @WorkerThread
     @Nullable
-    public static IAMService getAmService(Context context) {
-        if (amService == null && AppPref.isRootOrAdbEnabled()) {
-            startDaemon(context);
+    public static IAMService getAmService(@NonNull Context context) {
+        synchronized (conn) {
+            if (amService == null && AppPref.isRootOrAdbEnabled()) {
+                startDaemon(context);
+            }
         }
         return amService;
     }
 
-    public static void stopDaemon(Context context) {
+    @AnyThread
+    @Nullable
+    public static IAMService getService() {
+        return amService;
+    }
+
+    @AnyThread
+    @NonNull
+    public static IAMService getServiceSafe() throws RemoteException {
+        if (amService == null || !amService.asBinder().pingBinder()) {
+            throw new RemoteException("AMService not running.");
+        }
+        return amService;
+    }
+
+    @WorkerThread
+    public static void stopDaemon(@NonNull Context context) {
         Intent intent = new Intent(context, AMService.class);
         // Use stop here instead of unbind because AIDLService is running as a daemon.
         // To verify whether the daemon actually works, kill the app and try testing the

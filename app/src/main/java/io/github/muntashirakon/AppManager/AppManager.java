@@ -55,6 +55,15 @@ public class AppManager extends Application {
         return IPackageManager.Stub.asInterface(ProxyBinder.getService("package"));
     }
 
+    private static boolean isAuthenticated = false;
+    public static boolean isAuthenticated() {
+        return isAuthenticated;
+    }
+
+    public static void setIsAuthenticated(boolean isAuthenticated) {
+        AppManager.isAuthenticated = isAuthenticated;
+    }
+
     @Override
     public void onCreate() {
         instance = this;

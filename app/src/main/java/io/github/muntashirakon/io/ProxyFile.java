@@ -19,25 +19,17 @@ package io.github.muntashirakon.io;
 
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
-
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.IRemoteFile;
+import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProxyFile extends File {
     @Nullable
@@ -255,14 +247,12 @@ public class ProxyFile extends File {
     }
 
     private void getRemoteFile() {
-        if (LocalServer.isAMServiceAlive()) {
-            IAMService amService = LocalServer.getAmService();
-            if (amService != null) {
-                try {
-                    file = amService.getFile(getAbsolutePath());
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+        IAMService amService = IPCUtils.getService();
+        if (amService != null) {
+            try {
+                file = amService.getFile(getAbsolutePath());
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
         }
     }

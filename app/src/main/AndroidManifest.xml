@@ -510,7 +510,12 @@
                 <data android:mimeType="application/vnd.android.package-archive" />
             </intent-filter>
         </activity>
-        <activity android:name=".misc.HelpActivity" />
+        <activity
+            android:name=".misc.HelpActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ipc.AuthenticationActivity"
+            android:exported="false" />
 
         <service android:name=".apk.installer.PackageInstallerService" />
         <service

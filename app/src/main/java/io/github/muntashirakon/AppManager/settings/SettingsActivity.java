@@ -31,8 +31,7 @@ public class SettingsActivity extends BaseActivity {
     public LinearProgressIndicator progressIndicator;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_settings);
         setSupportActionBar(findViewById(R.id.toolbar));
         progressIndicator = findViewById(R.id.progress_linear);

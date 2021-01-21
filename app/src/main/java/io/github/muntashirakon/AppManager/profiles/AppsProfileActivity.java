@@ -92,8 +92,7 @@ public class AppsProfileActivity extends BaseActivity
     LinearProgressIndicator progressIndicator;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_apps_profile);
         setSupportActionBar(findViewById(R.id.toolbar));
         progressIndicator = findViewById(R.id.progress_linear);
