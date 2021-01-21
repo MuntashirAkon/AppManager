@@ -699,6 +699,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                                 | PackageManager.GET_CONFIGURATIONS
                                 | PackageManager.GET_SHARED_LIBRARY_FILES, userHandle);
             } catch (Throwable e) {
+                installedPackageInfo = null;
                 e.printStackTrace();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && e instanceof DeadSystemException) {
                     throw (DeadSystemException) e;
@@ -1122,7 +1123,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         usesPermissions.postValue(appDetailsItems);
     }
 
-    @AnyThread
+    @WorkerThread
     public List<String> getRawPermissions() {
         List<String> rawPermissions = new ArrayList<>();
         if (getPackageInfo() != null && packageInfo.requestedPermissions != null) {
