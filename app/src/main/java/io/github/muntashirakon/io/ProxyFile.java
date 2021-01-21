@@ -235,14 +235,36 @@ public class ProxyFile extends File {
     public InputStream getInputStream() throws RemoteException, FileNotFoundException {
         if (isRemoteAlive()) {
             //noinspection ConstantConditions
-            return new ParcelFileDescriptor.AutoCloseInputStream(file.getInputStream());
-        } else return new FileInputStream(this);
+            ParcelFileDescriptor fd = file.getInputStream();
+            if (fd == null) {
+                // Try to get remote file again
+                getRemoteFile();
+                if (isRemoteAlive()) {
+                    fd = file.getInputStream();
+                }
+            }
+            if (fd == null) {
+                throw new FileNotFoundException("Cannot get input FD from remote. File is " + getAbsolutePath());
+            }
+            return new ParcelFileDescriptor.AutoCloseInputStream(fd);
+        } return new FileInputStream(this);
     }
 
     public OutputStream getOutputStream() throws RemoteException, FileNotFoundException {
         if (isRemoteAlive()) {
             //noinspection ConstantConditions
-            return new ParcelFileDescriptor.AutoCloseOutputStream(file.getOutputStream());
+            ParcelFileDescriptor fd = file.getOutputStream();
+            if (fd == null) {
+                // Try to get remote file again
+                getRemoteFile();
+                if (isRemoteAlive()) {
+                    fd = file.getOutputStream();
+                }
+            }
+            if (fd == null) {
+                throw new FileNotFoundException("Cannot get output FD from remote. File is " + getAbsolutePath());
+            }
+            return new ParcelFileDescriptor.AutoCloseOutputStream(fd);
         } else return new FileOutputStream(this);
     }
 
