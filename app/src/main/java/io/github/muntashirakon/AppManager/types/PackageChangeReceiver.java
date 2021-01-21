@@ -22,11 +22,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+
+import static io.github.muntashirakon.AppManager.batchops.BatchOpsService.ACTION_BATCH_OPS_COMPLETED;
 
 public abstract class PackageChangeReceiver extends BroadcastReceiver {
     public static final String ACTION_PACKAGE_ALTERED = BuildConfig.APPLICATION_ID + ".action.PACKAGE_ALTERED";
@@ -43,10 +50,11 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
         sdFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
         sdFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
         sdFilter.addAction(ACTION_PACKAGE_ALTERED);
+        sdFilter.addAction(ACTION_BATCH_OPS_COMPLETED);
         context.registerReceiver(this, sdFilter);
     }
 
-    protected abstract void onPackageChanged(@Nullable Integer uid, @Nullable String[] packages);
+    protected abstract void onPackageChanged(Context context, Intent intent, @Nullable Integer uid, @Nullable String[] packages);
 
     @Override
     public void onReceive(Context context, @NonNull Intent intent) {
@@ -56,15 +64,36 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
             case Intent.ACTION_PACKAGE_ADDED:
             case Intent.ACTION_PACKAGE_CHANGED:
                 int uid = intent.getIntExtra(Intent.EXTRA_UID, -1);
-                if (uid != -1) onPackageChanged(uid, null);
+                if (uid != -1) onPackageChanged(context, intent, uid, null);
                 return;
             case Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE:
-            case Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE:
+            case Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE: {
                 String[] packages = intent.getStringArrayExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST);
-                onPackageChanged(null, packages);
+                onPackageChanged(context, intent, null, packages);
                 return;
+            }
             case Intent.ACTION_LOCALE_CHANGED:
-                onPackageChanged(null, null);
+                onPackageChanged(context, intent, null, null);
+                return;
+            case ACTION_BATCH_OPS_COMPLETED:
+                // Trigger for all ops except disable, force-stop and uninstall
+                @BatchOpsManager.OpType int op;
+                op = intent.getIntExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_NONE);
+                if (op != BatchOpsManager.OP_NONE && op != BatchOpsManager.OP_DISABLE &&
+                        op != BatchOpsManager.OP_ENABLE && op != BatchOpsManager.OP_UNINSTALL) {
+                    String[] packages = intent.getStringArrayExtra(BatchOpsService.EXTRA_OP_PKG);
+                    String[] failedPackages = intent.getStringArrayExtra(BatchOpsService.EXTRA_FAILED_PKG);
+                    if (packages != null && failedPackages != null) {
+                        List<String> packageList = new ArrayList<>();
+                        List<String> failedPackageList = Arrays.asList(failedPackages);
+                        for (String packageName : packages) {
+                            if (!failedPackageList.contains(packageName)) packageList.add(packageName);
+                        }
+                        if (packageList.size() > 0) {
+                            onPackageChanged(context, intent, null, packageList.toArray(new String[0]));
+                        }
+                    }
+                }
         }
     }
 }

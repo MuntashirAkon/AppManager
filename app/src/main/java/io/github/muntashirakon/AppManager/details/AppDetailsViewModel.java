@@ -19,6 +19,8 @@ package io.github.muntashirakon.AppManager.details;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
@@ -1317,7 +1319,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
 
         @Override
-        protected void onPackageChanged(@Nullable Integer uid, @Nullable String[] packages) {
+        protected void onPackageChanged(Context context, Intent intent, @Nullable Integer uid, @Nullable String[] packages) {
             if (uid != null && (model.packageInfo == null || model.packageInfo.applicationInfo.uid == uid)) {
                 Log.d("ADVM", "Package is changed.");
                 model.setIsPackageChanged();
