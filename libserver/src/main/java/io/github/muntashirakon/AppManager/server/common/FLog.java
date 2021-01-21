@@ -17,15 +17,12 @@
 
 package io.github.muntashirakon.AppManager.server.common;
 
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
+import android.system.ErrnoException;
 import android.system.Os;
-import android.system.OsConstants;
 import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -57,24 +54,16 @@ public class FLog {
 
     private static void chown(String path, int uid, int gid) {
         try {
-            if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-                Os.chown(path, uid, gid);
-            } else {
-                Runtime.getRuntime().exec("chown " + uid + ":" + gid + " " + path).destroy();
-            }
-        } catch (Exception e) {
+            Os.chown(path, uid, gid);
+        } catch (ErrnoException e) {
             e.printStackTrace();
         }
     }
 
     private static void chmod(String path, int mode) {
         try {
-            if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-                Os.chmod(path, mode);
-            } else {
-                Runtime.getRuntime().exec("chmod " + mode + " " + path).destroy();
-            }
-        } catch (Exception e) {
+            Os.chmod(path, mode);
+        } catch (ErrnoException e) {
             e.printStackTrace();
         }
     }
