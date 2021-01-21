@@ -116,7 +116,7 @@ class RestoreOp implements Closeable {
                 checksumFile = this.backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
                 decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
                 this.checksum = new BackupFiles.Checksum(checksumFile, "r");
-            } catch (IOException e) {
+            } catch (Throwable e) {
                 this.backupFile.cleanup();
                 throw new BackupException("Failed to get checksums.", e);
             }
@@ -513,7 +513,7 @@ class RestoreOp implements Closeable {
                 decryptedFiles.addAll(Arrays.asList(crypto.getNewFiles()));
                 try {
                     rules.loadExternalEntries(miscFile);
-                } catch (IOException e) {
+                } catch (Throwable e) {
                     throw new BackupException("Failed to load rules from misc.", e);
                 }
             } // else there are no permissions, just skip

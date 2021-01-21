@@ -124,7 +124,7 @@ class BackupOp implements Closeable {
             for (int i = 0; i < certChecksums.length; ++i) {
                 checksum.add(CERT_PREFIX + i, certChecksums[i]);
             }
-        } catch (IOException e) {
+        } catch (Throwable e) {
             this.backupFile.cleanup();
             throw new BackupException("Failed to create checksum file.", e);
         }
@@ -176,8 +176,8 @@ class BackupOp implements Closeable {
         checksum.add(MetadataManager.META_FILE, DigestUtils.getHexDigest(metadata.checksumAlgo, backupFile.getMetadataFile()));
         checksum.close();
         // Encrypt checksum
-        File checksumFile = backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
-        if (!crypto.encrypt(new File[]{checksumFile})) {
+        ProxyFile checksumFile = backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
+        if (!crypto.encrypt(new ProxyFile[]{checksumFile})) {
             Log.e(TAG, "Failed to encrypt " + checksumFile.getName());
             return backupFile.cleanup();
         }

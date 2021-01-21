@@ -17,23 +17,24 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import android.os.RemoteException;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.ProxyFileReader;
+import io.github.muntashirakon.io.ProxyFileWriter;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.Closeable;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class BackupFiles {
     static final String APK_SAVING_DIRECTORY = "apks";
@@ -74,8 +75,8 @@ public class BackupFiles {
     }
 
     public static void createNoMediaIfNotExists() {
-        File backupDirectory = getBackupDirectory();
-        File noMediaFile = new File(backupDirectory, NO_MEDIA);
+        ProxyFile backupDirectory = getBackupDirectory();
+        ProxyFile noMediaFile = new ProxyFile(backupDirectory, NO_MEDIA);
         if (noMediaFile.exists()) return;
         if (!backupDirectory.exists()) {
             backupDirectory.mkdirs();
@@ -238,12 +239,12 @@ public class BackupFiles {
             return certChecksums.toArray(new String[0]);
         }
 
-        Checksum(@NonNull File checksumFile, String mode) throws IOException {
+        Checksum(@NonNull File checksumFile, String mode) throws IOException, RemoteException {
             this.mode = mode;
             if ("w".equals(mode)) {
-                writer = new PrintWriter(new BufferedWriter(new FileWriter(checksumFile)));
+                writer = new PrintWriter(new BufferedWriter(new ProxyFileWriter(checksumFile)));
             } else if ("r".equals(mode)) {
-                BufferedReader reader = new BufferedReader(new FileReader(checksumFile));
+                BufferedReader reader = new BufferedReader(new ProxyFileReader(checksumFile));
                 // Get checksums
                 String line;
                 String[] lineSplits;

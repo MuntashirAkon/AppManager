@@ -5,6 +5,7 @@ import android.content.Context;
 import java.io.File;
 import java.io.IOException;
 
+import android.os.RemoteException;
 import androidx.annotation.NonNull;
 
 public class PseudoRules extends RulesStorageManager {
@@ -18,7 +19,7 @@ public class PseudoRules extends RulesStorageManager {
         // Do nothing
     }
 
-    public void loadExternalEntries(File file) throws IOException {
+    public void loadExternalEntries(File file) throws IOException, RemoteException {
         super.loadEntries(file, true);
     }
 

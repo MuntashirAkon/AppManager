@@ -21,12 +21,7 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.FeatureInfo;
-import android.content.pm.IPackageManager;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.UserInfo;
+import android.content.pm.*;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -38,22 +33,6 @@ import android.view.Display;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.internal.util.TextUtils;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.yariksoffice.lingver.Lingver;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.security.Provider;
-import java.security.Security;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -65,6 +44,9 @@ import androidx.core.util.Pair;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
+import com.android.internal.util.TextUtils;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.yariksoffice.lingver.Lingver;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -78,11 +60,13 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.types.FullscreenDialog;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
-import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.AppManager.utils.LangUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.*;
+import io.github.muntashirakon.io.ProxyFileReader;
+
+import java.io.BufferedReader;
+import java.security.Provider;
+import java.security.Security;
+import java.util.*;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
@@ -564,7 +548,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
 
     @Nullable
     private String getCpuHardware() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("/proc/cpuinfo"))) {
+        try (BufferedReader reader = new BufferedReader(new ProxyFileReader("/proc/cpuinfo"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.trim().startsWith("Hardware")) {
@@ -574,7 +558,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
                     return line.substring(colonLoc).trim();
                 }
             }
-        } catch (IOException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         return null;

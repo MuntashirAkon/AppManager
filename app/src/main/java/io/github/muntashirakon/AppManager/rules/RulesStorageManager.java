@@ -20,25 +20,7 @@ package io.github.muntashirakon.AppManager.rules;
 import android.content.Context;
 import android.net.NetworkPolicyManager;
 import android.os.RemoteException;
-
-import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
-
-import androidx.annotation.GuardedBy;
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringDef;
+import androidx.annotation.*;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
@@ -47,7 +29,15 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.io.ProxyFileReader;
 import io.github.muntashirakon.io.ProxyOutputStream;
+
+import java.io.*;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class RulesStorageManager implements Closeable {
     @StringDef(value = {
@@ -140,7 +130,7 @@ public class RulesStorageManager implements Closeable {
         this.entries = new ArrayList<>();
         try {
             loadEntries(getDesiredFile(), false);
-        } catch (IOException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
     }
@@ -330,11 +320,11 @@ public class RulesStorageManager implements Closeable {
     }
 
     @GuardedBy("entries")
-    protected void loadEntries(File file, boolean isExternal) throws IOException {
+    protected void loadEntries(File file, boolean isExternal) throws IOException, RemoteException {
         StringTokenizer tokenizer;
         String dataRow;
         String packageName;
-        try (BufferedReader TSVFile = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader TSVFile = new BufferedReader(new ProxyFileReader(file))) {
             while ((dataRow = TSVFile.readLine()) != null) {
                 tokenizer = new StringTokenizer(dataRow, "\t");
                 Entry entry = new Entry();
