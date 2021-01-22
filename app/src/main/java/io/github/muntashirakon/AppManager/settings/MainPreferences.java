@@ -336,7 +336,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         PackageManager pm = activity.getPackageManager();
         SpannableStringBuilder builder = new SpannableStringBuilder();
         // Android platform info
-        builder.append(getPrimaryText(activity, getString(R.string.version) + ": "))
+        builder.append(getPrimaryText(activity, getString(R.string.os_version) + ": "))
                 .append(Build.VERSION.RELEASE).append("\n")
                 .append(getPrimaryText(activity, getString(R.string.bootloader) + ": "))
                 .append(Build.BOOTLOADER).append(", ")
@@ -475,6 +475,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
                         .append(String.valueOf(packageSizes.second)).append("\n");
             }
         } else {
+            builder.append("\n").append(getTitleText(activity, getString(R.string.apps))).append("\n");
             Pair<Integer, Integer> packageSizes = getPackageStats(Users.getCurrentUserHandle());
             builder.append(getPrimaryText(activity, getString(R.string.total_size) + ": "))
                     .append(String.valueOf(packageSizes.first + packageSizes.second)).append(", ")
