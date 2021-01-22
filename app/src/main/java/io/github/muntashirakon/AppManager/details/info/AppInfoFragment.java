@@ -839,7 +839,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             startActivity(intent);
         });
         // Root only features
-        if (!mainModel.getIsExternalApk() && isRootEnabled) {
+        if (!mainModel.getIsExternalApk()) {
             // Shared prefs (root only)
             final List<ProxyFile> sharedPrefs = new ArrayList<>();
             ProxyFile[] tmpPaths = getSharedPrefs(mApplicationInfo.dataDir);
