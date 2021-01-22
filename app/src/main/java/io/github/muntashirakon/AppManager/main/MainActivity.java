@@ -270,6 +270,16 @@ public class MainActivity extends BaseActivity implements
         });
         mBottomAppBar.setOnMenuItemClickListener(this);
         handleSelection();
+        // Set observer
+        mModel.getApplicationItems().observe(this, applicationItems -> {
+            if (mAdapter != null) mAdapter.setDefaultList(applicationItems);
+            showProgressIndicator(false);
+            // Set title and subtitle
+            if (actionBar != null) {
+                actionBar.setTitle(R.string.onboard);
+                actionBar.setSubtitle(R.string.packages);
+            }
+        });
     }
 
     @Override
@@ -518,23 +528,10 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        if (mAdapter != null && mModel != null) {
-            // Set observer
-            mModel.getApplicationItems().observe(this, applicationItems -> {
-                mAdapter.setDefaultList(applicationItems);
-                showProgressIndicator(false);
-                // Set title and subtitle
-                ActionBar actionBar = getSupportActionBar();
-                if (actionBar != null) {
-                    actionBar.setTitle(R.string.onboard);
-                    actionBar.setSubtitle(R.string.packages);
-                }
-            });
-            // Set filter
-            if (mSearchView != null && !TextUtils.isEmpty(mModel.getSearchQuery())) {
-                mSearchView.setIconified(false);
-                mSearchView.setQuery(mModel.getSearchQuery(), false);
-            }
+        // Set filter
+        if (mModel != null && mSearchView != null && !TextUtils.isEmpty(mModel.getSearchQuery())) {
+            mSearchView.setIconified(false);
+            mSearchView.setQuery(mModel.getSearchQuery(), false);
         }
         // Show/hide app usage menu
         if (appUsageMenu != null) {
