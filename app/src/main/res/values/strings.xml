@@ -887,4 +887,5 @@
     <string name="net_policy">Net policy</string>
     <string name="reject_background">Reject background</string>
     <string name="allow_background">Allow background</string>
+    <string name="initializing">Initializing…</string>
 </resources>
