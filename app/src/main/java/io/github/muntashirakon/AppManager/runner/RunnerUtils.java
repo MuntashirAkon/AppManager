@@ -130,25 +130,9 @@ public final class RunnerUtils {
         return Runner.runCommand(new String[]{Runner.TOYBOX, "test", "-d", fileName}).isSuccessful();
     }
 
-    public static boolean isFile(@NonNull String fileName) {
-        return Runner.runCommand(new String[]{Runner.TOYBOX, "test", "-f", fileName}).isSuccessful();
-    }
-
-    public static boolean mkdir(@NonNull String fileName) {
-        return Runner.runCommand(new String[]{Runner.TOYBOX, "mkdir", fileName}).isSuccessful();
-    }
-
-    public static boolean mkdirs(@NonNull String fileName) {
-        return Runner.runCommand(new String[]{Runner.TOYBOX, "mkdir", "-p", fileName}).isSuccessful();
-    }
-
     public static void deleteFile(@NonNull String fileName, boolean isForce) {
         String forceSwitch = isForce ? "-rf" : "-f";
         Runner.runCommand(new String[]{Runner.TOYBOX, "rm", forceSwitch, fileName});
-    }
-
-    public static void deleteFile(@NonNull File fileName, boolean isForce) {
-        deleteFile(fileName.getAbsolutePath(), isForce);
     }
 
     public static boolean mv(@NonNull File source, @NonNull File dest) {
@@ -215,23 +199,21 @@ public final class RunnerUtils {
         if (!RunnerUtils.isRootGiven()) {
             AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, false);
             // Check for adb
-            new Thread(() -> {
-                if (RunnerUtils.isAdbAvailable(context)) {
-                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
+            if (RunnerUtils.isAdbAvailable(context)) {
+                AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, true);
+            }
+            try {
+                AdbShell.CommandResult result = AdbShell.run("echo AMAdbCheck");
+                if (!result.isSuccessful() || !"AMAdbCheck".equals(result.getStdout())) {
+                    throw new IOException("Adb not available");
                 }
-                try {
-                    AdbShell.CommandResult result = AdbShell.run("echo AMAdbCheck");
-                    if (!result.isSuccessful() || !"AMAdbCheck".equals(result.getStdout())) {
-                        throw new IOException("Adb not available");
-                    }
-                    new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, "Working on ADB mode", Toast.LENGTH_SHORT).show());
-                } catch (IOException e) {
-                    AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
-                }
-            }).start();
+                new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, "Working on ADB mode", Toast.LENGTH_SHORT).show());
+            } catch (IOException e) {
+                AppPref.set(AppPref.PrefKey.PREF_ADB_MODE_ENABLED_BOOL, false);
+            }
         } else {
             AppPref.set(AppPref.PrefKey.PREF_ROOT_MODE_ENABLED_BOOL, true);
-            new Thread(LocalServer::getInstance).start();
+            LocalServer.getInstance();
         }
     }
 
