@@ -23,11 +23,7 @@ import android.app.usage.StorageStatsManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.IPackageStatsObserver;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageStats;
+import android.content.pm.*;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -136,11 +132,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private static final String UID_STATS_TX = "tcp_rcv";
     private static final String UID_STATS_RX = "tcp_snd";
 
-    private static final String PACKAGE_NAME_FDROID = "org.fdroid.fdroid";
-    private static final String PACKAGE_NAME_AURORA_DROID = "com.aurora.adroid";
     private static final String PACKAGE_NAME_AURORA_STORE = "com.aurora.store";
-    private static final String ACTIVITY_NAME_FDROID = "org.fdroid.fdroid.views.AppDetailsActivity";
-    private static final String ACTIVITY_NAME_AURORA_DROID = "com.aurora.adroid.ui.details.DetailsActivity";
     private static final String ACTIVITY_NAME_AURORA_STORE = "com.aurora.store.ui.details.DetailsActivity";
 
     private PackageManager mPackageManager;
@@ -843,38 +835,18 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .show());
             }
         }  // End root only features
-        // Set F-Droid or Aurora Droid
-        try {
-            if (!mPackageManager.getApplicationInfo(PACKAGE_NAME_AURORA_DROID, 0).enabled)
-                throw new PackageManager.NameNotFoundException();
-            addToHorizontalLayout(R.string.aurora, R.drawable.ic_frost_auroradroid_black_24dp)
+        // Set F-Droid
+        Intent fdroid_intent = new Intent(Intent.ACTION_VIEW);
+        fdroid_intent.setData(Uri.parse("https://f-droid.org/packages/" + mPackageName));
+        List<ResolveInfo> resolvedActivities = mPackageManager.queryIntentActivities(fdroid_intent, 0);
+        if (resolvedActivities.size() > 0) {
+            addToHorizontalLayout(R.string.fdroid, R.drawable.ic_frost_fdroid_black_24dp)
                     .setOnClickListener(v -> {
-                        Intent intent = new Intent();
-                        intent.setClassName(PACKAGE_NAME_AURORA_DROID, ACTIVITY_NAME_AURORA_DROID);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("INTENT_PACKAGE_NAME", mPackageName);
                         try {
-                            startActivity(intent);
+                            startActivity(fdroid_intent);
                         } catch (Exception ignored) {
                         }
                     });
-        } catch (PackageManager.NameNotFoundException e) {
-            try {
-                if (!mPackageManager.getApplicationInfo(PACKAGE_NAME_FDROID, 0).enabled)
-                    throw new PackageManager.NameNotFoundException();
-                addToHorizontalLayout(R.string.fdroid, R.drawable.ic_frost_fdroid_black_24dp)
-                        .setOnClickListener(v -> {
-                            Intent intent = new Intent();
-                            intent.setClassName(PACKAGE_NAME_FDROID, ACTIVITY_NAME_FDROID);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("appid", mPackageName);
-                            try {
-                                startActivity(intent);
-                            } catch (Exception ignored) {
-                            }
-                        });
-            } catch (PackageManager.NameNotFoundException ignored) {
-            }
         }
         // Set Aurora Store
         try {
