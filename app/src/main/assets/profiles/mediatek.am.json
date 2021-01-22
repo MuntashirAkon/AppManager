@@ -1,0 +1,1 @@
+{"type":0,"version":1,"state":"on","name":"mediatek","packages":["com.mediatek.atmwifimeta","com.mediatek.engineermode","com.mediatek.mdmconfig","com.mediatek.mtklogger","com.mediatek.providers.drm","com.mediatek.wfo.impl"],"misc":["disable"]}
