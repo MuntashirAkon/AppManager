@@ -21,7 +21,6 @@ package io.github.muntashirakon.AppManager.intercept;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -31,30 +30,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ShareActionProvider;
-import androidx.collection.SparseArrayCompat;
-import androidx.core.util.Pair;
-import androidx.core.view.MenuItemCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.internal.util.TextUtils;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
@@ -65,6 +49,19 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.ShareActionProvider;
+import androidx.collection.SparseArrayCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
+import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.types.IconLoaderThread;
@@ -394,8 +391,7 @@ public class ActivityInterceptor extends AppCompatActivity {
         List<Pair<String, Object>> extras = new ArrayList<>();
         Bundle intentBundle = mutableIntent.getExtras();
         if (intentBundle != null) {
-            Set<String> extraKeys = intentBundle.keySet();
-            for (String extraKey : extraKeys) {
+            for (String extraKey : intentBundle.keySet()) {
                 Object extraValue = intentBundle.get(extraKey);
                 if (extraValue == null) continue;
                 extras.add(new Pair<>(extraKey, extraValue));
@@ -497,10 +493,13 @@ public class ActivityInterceptor extends AppCompatActivity {
         flagsRecyclerView.setAdapter(flagsAdapter);
 
         // Setup extras
+        findViewById(R.id.intent_extras_add_btn).setOnClickListener(v -> {
+            // TODO(15/1/21): Add extras
+        });
         RecyclerView extrasRecyclerView = findViewById(R.id.intent_extras);
         extrasRecyclerView.setHasFixedSize(true);
         extrasRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        extrasAdapter = new ExtrasRecyclerViewAdapter();
+        extrasAdapter = new ExtrasRecyclerViewAdapter(this);
         extrasRecyclerView.setAdapter(extrasAdapter);
 
         // Setup matching activities
@@ -517,10 +516,6 @@ public class ActivityInterceptor extends AppCompatActivity {
 
         resendIntentButton = findViewById(R.id.resend_intent_button);
         resetIntentButton = findViewById(R.id.reset_intent_button);
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        wm.getDefaultDisplay().getMetrics(metrics);
 
         // Send Intent on clicking the resend intent button
         resendIntentButton.setOnClickListener(v -> {
@@ -919,11 +914,16 @@ public class ActivityInterceptor extends AppCompatActivity {
     }
 
     private static class ExtrasRecyclerViewAdapter extends RecyclerView.Adapter<ExtrasRecyclerViewAdapter.ViewHolder> {
-        private final List<Pair<String, Object>> matchingActivities = new ArrayList<>();
+        private final List<Pair<String, Object>> extras = new ArrayList<>();
+        private final ActivityInterceptor activity;
+
+        public ExtrasRecyclerViewAdapter(ActivityInterceptor activity) {
+            this.activity = activity;
+        }
 
         public void setDefaultList(@Nullable List<Pair<String, Object>> matchingActivities) {
-            this.matchingActivities.clear();
-            if (matchingActivities != null) this.matchingActivities.addAll(matchingActivities);
+            this.extras.clear();
+            if (matchingActivities != null) this.extras.addAll(matchingActivities);
             notifyDataSetChanged();
         }
 
@@ -937,19 +937,24 @@ public class ActivityInterceptor extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             if (holder.iconLoader != null) holder.iconLoader.interrupt();
-            Pair<String, Object> extraItem = matchingActivities.get(position);
+            Pair<String, Object> extraItem = extras.get(position);
             holder.title.setText(extraItem.first);
             holder.title.setTextIsSelectable(true);
             holder.subtitle.setText(extraItem.second.toString());
             holder.subtitle.setTextIsSelectable(true);
+            holder.actionIcon.setOnClickListener(v -> {
+                activity.mutableIntent.removeExtra(extraItem.first);
+                extras.remove(position);
+                notifyDataSetChanged();
+            });
         }
 
         @Override
         public int getItemCount() {
-            return matchingActivities.size();
+            return extras.size();
         }
 
-        static class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder {
             TextView title;
             TextView subtitle;
             ImageView icon;
@@ -961,8 +966,8 @@ public class ActivityInterceptor extends AppCompatActivity {
                 title = itemView.findViewById(R.id.item_title);
                 subtitle = itemView.findViewById(R.id.item_subtitle);
                 actionIcon = itemView.findViewById(R.id.item_open);
+                actionIcon.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_delete_black_24dp));
                 icon = itemView.findViewById(R.id.item_icon);
-                actionIcon.setVisibility(View.GONE);
                 icon.setVisibility(View.GONE);
             }
         }
