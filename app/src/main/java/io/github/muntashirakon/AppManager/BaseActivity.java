@@ -35,7 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private final BetterActivityResult<Intent, ActivityResult> authActivity = BetterActivityResult.registerActivityForResult(this);
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected final void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Thread.setDefaultUncaughtExceptionHandler(new AMExceptionHandler(this));
         AppCompatDelegate.setDefaultNightMode((int) AppPref.get(AppPref.PrefKey.PREF_APP_THEME_INT));
