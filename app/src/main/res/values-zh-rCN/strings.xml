@@ -248,7 +248,7 @@
         <item quantity="other">无法导入 %1$d 个文件。</item>
     </plurals>
     <string name="apk_updater">APK 更新器</string>
-    <string name="store">商店</string>
+    <string name="store">Aurora Store</string>
     <string name="running_apps">正在运行的应用</string>
     <string name="kill_process">终止</string>
     <string name="disable_background_run">禁用后台运行</string>
