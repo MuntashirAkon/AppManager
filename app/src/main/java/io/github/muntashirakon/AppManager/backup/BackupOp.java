@@ -28,6 +28,7 @@ import android.graphics.Bitmap;
 import android.net.INetworkPolicyManager;
 import android.os.RemoteException;
 
+import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import org.json.JSONException;
 
 import java.io.Closeable;
@@ -372,14 +373,10 @@ class BackupOp implements Closeable {
             rules.setBatteryOptimization(false);
         }
         // Backup net policy
-        INetworkPolicyManager netPolicy = INetworkPolicyManager.Stub.asInterface(ProxyBinder.getService("netpolicy"));
-        try {
-            int policies = netPolicy.getUidPolicy(applicationInfo.uid);
-            if (policies > 0) {
-                // Store only if there is a policy
-                rules.setNetPolicy(policies);
-            }
-        } catch (RemoteException ignore) {
+        int policies = NetworkPolicyManagerCompat.getUidPolicy(applicationInfo.uid);
+        if (policies > 0) {
+            // Store only if there is a policy
+            rules.setNetPolicy(policies);
         }
         // Backup URI grants
         UriManager uriManager = new UriManager();

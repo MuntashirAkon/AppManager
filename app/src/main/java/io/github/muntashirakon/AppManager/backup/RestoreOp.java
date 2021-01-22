@@ -22,21 +22,9 @@ import android.app.INotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageInfo;
-import android.net.INetworkPolicyManager;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Pair;
-
-import org.json.JSONException;
-
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.github.muntashirakon.AppManager.AppManager;
@@ -53,26 +41,23 @@ import io.github.muntashirakon.AppManager.rules.RulesImporter;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.FreshFile;
 import io.github.muntashirakon.AppManager.uri.UriManager;
-import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
-import io.github.muntashirakon.AppManager.utils.MagiskUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.*;
 import io.github.muntashirakon.io.ProxyFile;
+import org.json.JSONException;
 
-import static io.github.muntashirakon.AppManager.backup.BackupManager.CACHE_DIRS;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.EXT_DATA;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.EXT_MEDIA;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.EXT_OBB;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PLACEHOLDER;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.MASTER_KEY;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
+import java.io.Closeable;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static io.github.muntashirakon.AppManager.backup.BackupManager.*;
 
 class RestoreOp implements Closeable {
         static final String TAG = "RestoreOp";
@@ -458,7 +443,6 @@ class RestoreOp implements Closeable {
             List<RulesStorageManager.Entry> entries = rules.getAll();
             AppOpsService appOpsService = new AppOpsService();
             INotificationManager notificationManager = INotificationManager.Stub.asInterface(ProxyBinder.getService(Context.NOTIFICATION_SERVICE));
-            INetworkPolicyManager netPolicy = INetworkPolicyManager.Stub.asInterface(ProxyBinder.getService("netpolicy"));
             for (RulesStorageManager.Entry entry : entries) {
                 try {
                     switch (entry.type) {
@@ -468,7 +452,7 @@ class RestoreOp implements Closeable {
                                     (int) entry.extra);
                             break;
                         case NET_POLICY:
-                            netPolicy.setUidPolicy(packageInfo.applicationInfo.uid, (int) entry.extra);
+                            NetworkPolicyManagerCompat.setUidPolicy(packageInfo.applicationInfo.uid, (int) entry.extra);
                             break;
                         case PERMISSION:
                             if ((boolean) entry.extra /* isGranted */) {

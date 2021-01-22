@@ -18,13 +18,16 @@
 package io.github.muntashirakon.AppManager.rules;
 
 import android.content.Context;
-import android.net.NetworkPolicyManager;
 import android.os.RemoteException;
-import androidx.annotation.*;
+import androidx.annotation.GuardedBy;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringDef;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.uri.UriManager;
@@ -52,14 +55,6 @@ public class RulesStorageManager implements Closeable {
     public static final String COMPONENT_BLOCKED = "true";  // To preserve compatibility
     public static final String COMPONENT_TO_BE_BLOCKED = "false";  // To preserve compatibility
     public static final String COMPONENT_TO_BE_UNBLOCKED = "unblocked";
-
-    @IntDef(flag = true, value = {
-            NetworkPolicyManager.POLICY_NONE,
-            NetworkPolicyManager.POLICY_REJECT_METERED_BACKGROUND,
-            NetworkPolicyManager.POLICY_ALLOW_METERED_BACKGROUND
-    })
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface NetPolicy {}
 
     public enum Type {
         ACTIVITY,
@@ -248,7 +243,7 @@ public class RulesStorageManager implements Closeable {
         addEntry(entry);
     }
 
-    public void setNetPolicy(@NetPolicy int netPolicy) {
+    public void setNetPolicy(@NetworkPolicyManagerCompat.NetPolicy int netPolicy) {
         Entry entry = new Entry();
         entry.type = Type.BATTERY_OPT;
         entry.extra = netPolicy;

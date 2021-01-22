@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.pm.*;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.NetworkPolicyManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,45 +35,15 @@ import android.os.RemoteException;
 import android.provider.Settings;
 import android.text.format.Formatter;
 import android.util.Pair;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.GuardedBy;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.annotation.WorkerThread;
+import androidx.annotation.*;
+import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -81,6 +52,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
@@ -106,23 +81,26 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
-import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
-import io.github.muntashirakon.AppManager.utils.DateUtils;
-import io.github.muntashirakon.AppManager.utils.IOUtils;
-import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
-import io.github.muntashirakon.AppManager.utils.MagiskUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.*;
 import io.github.muntashirakon.io.ProxyFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_FLAG_MONOSPACE;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
@@ -339,6 +317,37 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             } else {
                 Log.e("AppInfo", "No DUMP permission.");
             }
+        } else if (itemId == R.id.action_net_policy) {
+            ArrayMap<Integer, String> netPolicyMap = NetworkPolicyManagerCompat.getAllReadablePolicies(mActivity);
+            int[] polices = new int[netPolicyMap.size()];
+            String[] policyStrings = new String[netPolicyMap.size()];
+            boolean[] choices = new boolean[netPolicyMap.size()];
+            AtomicInteger selectedPolicies = new AtomicInteger(NetworkPolicyManagerCompat.getUidPolicy(mApplicationInfo.uid));
+            for (int i = 0; i < netPolicyMap.size(); ++i) {
+                polices[i] = netPolicyMap.keyAt(i);
+                policyStrings[i] = netPolicyMap.valueAt(i);
+                if (selectedPolicies.get() == 0) {
+                    choices[i] = polices[i] == NetworkPolicyManager.POLICY_NONE;
+                } else {
+                    choices[i] = (selectedPolicies.get() & polices[i]) != 0;
+                }
+            }
+            new MaterialAlertDialogBuilder(mActivity)
+                    .setTitle(R.string.net_policy)
+                    .setMultiChoiceItems(policyStrings, choices, (dialog, which, isChecked) -> {
+                        if (isChecked) selectedPolicies.updateAndGet(v -> v | polices[which]);
+                        else selectedPolicies.updateAndGet(v -> v & ~polices[which]);
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.save, (dialog, which) -> {
+                        try {
+                            NetworkPolicyManagerCompat.setUidPolicy(mApplicationInfo.uid, selectedPolicies.get());
+                            refreshDetails();
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    })
+                    .show();
         } else if (itemId == R.id.action_extract_icon) {
             String iconName = mPackageLabel + "_icon.png";
             export.launch(iconName, uri -> {
@@ -469,6 +478,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         boolean hasKeystore;
         boolean isMagiskHideEnabled;
         boolean isBatteryOptimized;
+        int netPolicies;
         if (!isExternalApk && isRootEnabled) {
             isSystemlessPath = MagiskUtils.isSystemlessPath(PackageUtils
                     .getHiddenCodePathOrDefault(mPackageName, mApplicationInfo.publicSourceDir));
@@ -480,6 +490,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             hasMasterkey = false;
             hasKeystore = false;
             isMagiskHideEnabled = false;
+        }
+        if (!isExternalApk && LocalServer.isAMServiceAlive()) {
+            netPolicies = NetworkPolicyManagerCompat.getUidPolicy(mApplicationInfo.uid);
+        } else {
+            netPolicies = 0;
         }
         if (!isExternalApk && PermissionUtils.hasDumpPermission()) {
             String targetString = "user," + mPackageName + "," + mApplicationInfo.uid;
@@ -617,6 +632,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist", "-" + mPackageName});
                             refreshDetails();
                         })
+                        .show());
+            }
+            if (netPolicies > 0) {
+                String[] readablePolicies = NetworkPolicyManagerCompat.getReadablePolicies(mActivity, netPolicies)
+                        .values().toArray(new String[0]);
+                addChip(R.string.has_net_policy).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
+                        .setTitle(R.string.net_policy)
+                        .setItems(readablePolicies, null)
+                        .setNegativeButton(R.string.ok, null)
                         .show());
             }
         });

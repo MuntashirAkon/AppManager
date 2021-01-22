@@ -74,6 +74,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_net_policy"
+        android:icon="@drawable/ic_assignment_black_24dp"
+        android:title="@string/net_policy"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_extract_icon"
         android:icon="@drawable/ic_open_in_new_black_24dp"
         android:title="@string/export_icon"

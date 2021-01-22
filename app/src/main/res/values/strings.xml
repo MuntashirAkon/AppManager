@@ -883,4 +883,8 @@
     <string name="battery_optimization">Battery optimization</string>
     <string name="enable_battery_optimization">Enable battery optimization?</string>
     <string name="choose_what_to_do">Choose what to do.</string>
+    <string name="has_net_policy">Net policy</string>
+    <string name="net_policy">Net policy</string>
+    <string name="reject_background">Reject background</string>
+    <string name="allow_background">Allow background</string>
 </resources>
