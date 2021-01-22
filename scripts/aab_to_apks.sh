@@ -37,6 +37,8 @@ RELEASE_PATH=./app/${RELEASE_TYPE}
 TMP_PATH=tmp
 AAB_PATH=${RELEASE_PATH}/${default_name}.aab
 APKS_PATH=${RELEASE_PATH}/${default_name}.apks
+APK_PATH=${RELEASE_PATH}/${default_name}-universal.apks
+APK_FILE_PATH=${RELEASE_PATH}/${default_name}.apk
 
 SUPPORTED_LANGUAGES=(bn de en es fa fr hi nb pl pt ru tr uk zh)
 SUPPORTED_DPIS=(ldpi mdpi tvdpi hdpi xhdpi xxhdpi xxxhdpi)
@@ -61,6 +63,7 @@ if [[ "${KEYSTORE}" == "" ]]; then
 fi
 
 if [[ -f ${AAB_PATH} ]]; then
+    bundletool build-apks --overwrite --mode=universal --bundle=${AAB_PATH} --output=${APK_PATH} --ks=${KEYSTORE} --ks-pass=pass:${KEYSTORE_PASS} --ks-key-alias=${KEY_ALIAS} --key-pass=pass:${KEY_ALIAS_PASS}
     bundletool build-apks --overwrite --mode=default --bundle=${AAB_PATH} --output=${APKS_PATH} --ks=${KEYSTORE} --ks-pass=pass:${KEYSTORE_PASS} --ks-key-alias=${KEY_ALIAS} --key-pass=pass:${KEY_ALIAS_PASS}
 else
     echo "$AAB_PATH doesn't exist"
@@ -89,9 +92,23 @@ done
 for arch in ${SUPPORTED_ARCHS[@]}; do
     mv base-${arch}.apk config.${arch}.apk
 done
+# Move feat_docs
+mv feat_docs-master.apk feat_docs.apk
 # Delete rests
 rm ./base-*
+rm ./feat_docs-*
 # Make zip
 cd ${lastPWD}
 zip -j ${RELEASE_PATH}/${default_name}.apks ${RELEASE_PATH}/${TMP_PATH}/splits/*
+rm -rf ${RELEASE_PATH}/${TMP_PATH}
+
+# Unzip universal APKS file
+if [[ -f ${APK_PATH} ]]; then
+    unzip ${APK_PATH} -d ${RELEASE_PATH}/${TMP_PATH}
+    rm ${APK_PATH}
+else
+    echo "$APKS_PATH doesn't exist"
+    exit 1
+fi
+mv ${RELEASE_PATH}/${TMP_PATH}/universal.apk ${APK_FILE_PATH}
 rm -rf ${RELEASE_PATH}/${TMP_PATH}
