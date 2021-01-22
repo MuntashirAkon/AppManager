@@ -69,8 +69,15 @@
             android:label="@string/running_apps" />
         <activity
             android:name=".settings.SettingsActivity"
-            android:exported="false"
-            android:label="@string/app_settings" />
+            android:exported="true"
+            android:label="@string/app_settings"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".sharedpref.SharedPrefsActivity"
             android:exported="false" />
