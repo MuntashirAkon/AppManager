@@ -888,5 +888,7 @@
     <string name="reject_background">Reject background</string>
     <string name="allow_background">Allow background</string>
     <string name="initializing">Initializing…</string>
+    <string name="add_to_profile">Add to profile</string>
+    <string name="add">Add</string>
     <string name="os_version">OS version</string>
 </resources>

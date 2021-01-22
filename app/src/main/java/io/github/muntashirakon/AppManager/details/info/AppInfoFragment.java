@@ -33,6 +33,8 @@ import android.os.Bundle;
 import android.os.Process;
 import android.os.RemoteException;
 import android.provider.Settings;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.format.Formatter;
 import android.util.Pair;
 import android.view.*;
@@ -52,6 +54,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import com.android.internal.util.TextUtils;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -74,6 +77,8 @@ import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
 import io.github.muntashirakon.AppManager.details.ManifestViewerActivity;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.profiles.ProfileManager;
+import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
 import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -86,6 +91,7 @@ import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerComp
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
+import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
@@ -105,6 +111,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_FLAG_MONOSPACE;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.hasDumpPermission;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private static final String UID_STATS_PATH = "/proc/uid_stat/";
@@ -370,6 +378,36 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     Toast.makeText(mActivity, R.string.saving_failed, Toast.LENGTH_SHORT).show();
                 }
             });
+        } else if (itemId == R.id.action_add_to_profile) {
+            HashMap<String, ProfileMetaManager> profilesMap = ProfileManager.getProfileMetadata();
+            List<CharSequence> profileNames = new ArrayList<>(profilesMap.size());
+            List<ProfileMetaManager> profiles = new ArrayList<>(profilesMap.size());
+            ProfileMetaManager profileMetaManager;
+            Spannable summary;
+            for (String profileName : profilesMap.keySet()) {
+                profileMetaManager = profilesMap.get(profileName);
+                //noinspection ConstantConditions
+                summary = TextUtils.joinSpannable(", ", profileMetaManager.getLocalisedSummaryOrComment(mActivity));
+                profiles.add(profileMetaManager);
+                profileNames.add(new SpannableStringBuilder(profileName).append("\n").append(getSecondaryText(mActivity, getSmallerText(summary))));
+            }
+            new SearchableMultiChoiceDialogBuilder<>(mActivity, profiles, profileNames)
+                    .setTitle(R.string.add_to_profile)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.add, (dialog, which, selectedItems) -> {
+                        for (ProfileMetaManager metaManager : selectedItems) {
+                            if (metaManager.profile != null) {
+                                try {
+                                    metaManager.profile.packages = ArrayUtils.appendElement(String.class,
+                                            metaManager.profile.packages, mPackageName);
+                                    metaManager.writeProfile();
+                                } catch (Throwable e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    })
+                    .show();
         } else return super.onOptionsItemSelected(item);
         return true;
     }

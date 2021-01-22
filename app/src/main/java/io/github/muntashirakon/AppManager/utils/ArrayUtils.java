@@ -18,6 +18,7 @@ package io.github.muntashirakon.AppManager.utils;
 
 // Source: https://cs.android.com/android/platform/superproject/+/master:frameworks/base/core/java/com/android/internal/util/ArrayUtils.java
 
+import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -307,8 +308,9 @@ public class ArrayUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static @NonNull
-    <T> T[] concatElements(Class<T> kind, @Nullable T[] a, @Nullable T[] b) {
+    @CheckResult
+    @NonNull
+    public static <T> T[] concatElements(Class<T> kind, @Nullable T[] a, @Nullable T[] b) {
         final int an = (a != null) ? a.length : 0;
         final int bn = (b != null) ? b.length : 0;
         if (an == 0 && bn == 0) {
@@ -328,8 +330,9 @@ public class ArrayUtils {
      * Adds value to given array if not already present, providing set-like
      * behavior.
      */
-    public static @NonNull
-    <T> T[] appendElement(Class<T> kind, @Nullable T[] array, T element) {
+    @CheckResult
+    @NonNull
+    public static <T> T[] appendElement(Class<T> kind, @Nullable T[] array, T element) {
         return appendElement(kind, array, element, false);
     }
 
@@ -337,9 +340,10 @@ public class ArrayUtils {
      * Adds value to given array.
      */
     @SuppressWarnings("unchecked")
-    public static @NonNull
-    <T> T[] appendElement(Class<T> kind, @Nullable T[] array, T element,
-                          boolean allowDuplicates) {
+    @CheckResult
+    @NonNull
+    public static <T> T[] appendElement(Class<T> kind, @Nullable T[] array, T element,
+                                        boolean allowDuplicates) {
         final T[] result;
         final int end;
         if (array != null) {

@@ -85,4 +85,10 @@
         android:title="@string/export_icon"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_add_to_profile"
+        android:icon="@drawable/ic_assignment_black_24dp"
+        android:title="@string/add_to_profile"
+        app:showAsAction="never" />
+
 </menu>

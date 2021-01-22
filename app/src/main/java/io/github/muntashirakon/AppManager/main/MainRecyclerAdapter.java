@@ -37,6 +37,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.WorkerThread;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
@@ -104,25 +105,24 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     @GuardedBy("mAdapterList")
+    @WorkerThread
     void clearSelection() {
         if (mActivity.mModel == null) return;
-        new Thread(() -> {
-            synchronized (mAdapterList) {
-                final List<Integer> itemIds = new ArrayList<>();
-                int itemId;
-                for (ApplicationItem applicationItem : mActivity.mModel.getSelectedApplicationItems()) {
-                    itemId = mAdapterList.indexOf(applicationItem);
-                    if (itemId == -1) continue;
-                    applicationItem.isSelected = false;
-                    mAdapterList.set(itemId, applicationItem);
-                    itemIds.add(itemId);
-                }
-                mActivity.runOnUiThread(() -> {
-                    for (int id : itemIds) notifyItemChanged(id);
-                });
-                mActivity.mModel.clearSelection();
+        synchronized (mAdapterList) {
+            final List<Integer> itemIds = new ArrayList<>();
+            int itemId;
+            for (ApplicationItem applicationItem : mActivity.mModel.getSelectedApplicationItems()) {
+                itemId = mAdapterList.indexOf(applicationItem);
+                if (itemId == -1) continue;
+                applicationItem.isSelected = false;
+                mAdapterList.set(itemId, applicationItem);
+                itemIds.add(itemId);
             }
-        }).start();
+            mActivity.runOnUiThread(() -> {
+                for (int id : itemIds) notifyItemChanged(id);
+            });
+            mActivity.mModel.clearSelection();
+        }
     }
 
     @GuardedBy("mAdapterList")

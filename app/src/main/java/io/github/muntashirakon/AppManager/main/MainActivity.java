@@ -24,14 +24,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.ImageView;
+import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.AnyThread;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -58,6 +63,8 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.misc.HelpActivity;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
+import io.github.muntashirakon.AppManager.profiles.ProfileManager;
+import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
 import io.github.muntashirakon.AppManager.profiles.ProfilesActivity;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
@@ -65,15 +72,20 @@ import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
 import io.github.muntashirakon.AppManager.types.ScrollableDialogBuilder;
+import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
 import io.github.muntashirakon.AppManager.utils.*;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import static androidx.appcompat.app.ActionBar.LayoutParams;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class MainActivity extends BaseActivity implements
         SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener,
@@ -176,8 +188,7 @@ public class MainActivity extends BaseActivity implements
                 args.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, Users.getUsersHandles());
                 dialogFragment.setArguments(args);
                 dialogFragment.show(getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-                mAdapter.clearSelection();
-                handleSelection();
+                clearAndHandleSelection();
             });
 
     private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
@@ -264,10 +275,7 @@ public class MainActivity extends BaseActivity implements
         if (menu instanceof MenuBuilder) {
             ((MenuBuilder) menu).setOptionalIconsVisible(true);
         }
-        mBottomAppBar.setNavigationOnClickListener(v -> {
-            if (mAdapter != null) mAdapter.clearSelection();
-            handleSelection();
-        });
+        mBottomAppBar.setNavigationOnClickListener(v -> clearAndHandleSelection());
         mBottomAppBar.setOnMenuItemClickListener(this);
         handleSelection();
         // Set observer
@@ -480,8 +488,7 @@ public class MainActivity extends BaseActivity implements
                 backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
                 backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
                 backupDialogFragment.show(getSupportFragmentManager(), BackupDialogFragment.TAG);
-                mAdapter.clearSelection();
-                handleSelection();
+                clearAndHandleSelection();
             }
         } else if (id == R.id.action_backup_apk) {
             storagePermission.request(granted -> {
@@ -510,9 +517,41 @@ public class MainActivity extends BaseActivity implements
             handleBatchOp(BatchOpsManager.OP_FORCE_STOP);
         } else if (id == R.id.action_uninstall) {
             handleBatchOpWithWarning(BatchOpsManager.OP_UNINSTALL);
+        } else if (id == R.id.action_add_to_profile) {
+            HashMap<String, ProfileMetaManager> profilesMap = ProfileManager.getProfileMetadata();
+            List<CharSequence> profileNames = new ArrayList<>(profilesMap.size());
+            List<ProfileMetaManager> profiles = new ArrayList<>(profilesMap.size());
+            ProfileMetaManager profileMetaManager;
+            Spannable summary;
+            for (String profileName : profilesMap.keySet()) {
+                profileMetaManager = profilesMap.get(profileName);
+                //noinspection ConstantConditions
+                summary = com.android.internal.util.TextUtils.joinSpannable(", ", profileMetaManager.getLocalisedSummaryOrComment(this));
+                profiles.add(profileMetaManager);
+                profileNames.add(new SpannableStringBuilder(profileName).append("\n").append(getSecondaryText(this, getSmallerText(summary))));
+            }
+            new SearchableMultiChoiceDialogBuilder<>(this, profiles, profileNames)
+                    .setTitle(R.string.add_to_profile)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.add, (dialog, which, selectedItems) -> {
+                        clearAndHandleSelection();
+                        for (ProfileMetaManager metaManager : selectedItems) {
+                            if (metaManager.profile != null) {
+                                try {
+                                    metaManager.profile.packages = ArrayUtils.concatElements(String.class, metaManager
+                                            .profile.packages, mModel.getSelectedPackages().keySet()
+                                            .toArray(new String[0]));
+                                    metaManager.writeProfile();
+                                } catch (Throwable e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                        Toast.makeText(this, R.string.done, Toast.LENGTH_SHORT);
+                    })
+                    .show();
         } else {
-            mAdapter.clearSelection();
-            handleSelection();
+            clearAndHandleSelection();
             return false;
         }
         return true;
@@ -589,11 +628,20 @@ public class MainActivity extends BaseActivity implements
         }
     }
 
+    @AnyThread
+    private void clearAndHandleSelection() {
+        new Thread(() -> {
+            if (mAdapter != null) mAdapter.clearSelection();
+            runOnUiThread(this::handleSelection);
+        }).start();
+    }
+
+    @UiThread
     void handleSelection() {
         if (mModel == null || mModel.getSelectedPackages().size() == 0) {
             mBottomAppBar.setVisibility(View.GONE);
             mMainLayout.setLayoutParams(mLayoutParamsTypical);
-            mAdapter.clearSelection();
+            new Thread(() -> mAdapter.clearSelection()).start();
         } else {
             mBottomAppBar.setVisibility(View.VISIBLE);
             mBottomAppBarCounter.setText(getString(R.string.some_items_selected, mModel.getSelectedPackages().size()));
@@ -610,10 +658,7 @@ public class MainActivity extends BaseActivity implements
         intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, input.getAssociatedUserHandles());
         intent.putExtra(BatchOpsService.EXTRA_OP, op);
         ContextCompat.startForegroundService(this, intent);
-        new Thread(() -> {
-            mAdapter.clearSelection();
-            runOnUiThread(this::handleSelection);
-        }).start();
+        clearAndHandleSelection();
     }
 
     private void handleBatchOpWithWarning(@BatchOpsManager.OpType int op) {

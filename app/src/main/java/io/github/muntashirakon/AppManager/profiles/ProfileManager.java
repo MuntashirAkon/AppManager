@@ -63,6 +63,19 @@ public class ProfileManager {
     }
 
     @NonNull
+    public static HashMap<String, ProfileMetaManager> getProfileMetadata() {
+        File profilesPath = ProfileMetaManager.getProfilesDir();
+        String[] profilesFiles = ArrayUtils.defeatNullable(profilesPath.list((dir, name) -> name.endsWith(ProfileMetaManager.PROFILE_EXT)));
+        HashMap<String, ProfileMetaManager> profiles = new HashMap<>(profilesFiles.length);
+        for (String profile : profilesFiles) {
+            int index = profile.indexOf(ProfileMetaManager.PROFILE_EXT);
+            profile = profile.substring(0, index);
+            profiles.put(profile, new ProfileMetaManager(profile));
+        }
+        return profiles;
+    }
+
+    @NonNull
     private final ProfileMetaManager.Profile profile;
 
     public ProfileManager(@NonNull ProfileMetaManager metaManager) throws FileNotFoundException {
