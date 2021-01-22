@@ -126,6 +126,7 @@ import io.github.muntashirakon.io.ProxyFile;
 
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_FLAG_MONOSPACE;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
+import static io.github.muntashirakon.AppManager.utils.PermissionUtils.hasDumpPermission;
 
 public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private static final String UID_STATS_PATH = "/proc/uid_stat/";
@@ -321,6 +322,23 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             } else {
                 Toast.makeText(mActivity, R.string.failed_to_enable_magisk_hide, Toast.LENGTH_SHORT).show();
             }
+        } else if (itemId == R.id.action_battery_opt) {
+            if (hasDumpPermission()) {
+                new MaterialAlertDialogBuilder(mActivity)
+                        .setTitle(R.string.battery_optimization)
+                        .setMessage(R.string.choose_what_to_do)
+                        .setPositiveButton(R.string.enable, (dialog, which) -> {
+                            Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist", "-" + mPackageName});
+                            refreshDetails();
+                        })
+                        .setNegativeButton(R.string.disable, (dialog, which) -> {
+                            Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist", "+" + mPackageName});
+                            refreshDetails();
+                        })
+                        .show();
+            } else {
+                Log.e("AppInfo", "No DUMP permission.");
+            }
         } else if (itemId == R.id.action_extract_icon) {
             String iconName = mPackageLabel + "_icon.png";
             export.launch(iconName, uri -> {
@@ -450,6 +468,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         boolean hasMasterkey;
         boolean hasKeystore;
         boolean isMagiskHideEnabled;
+        boolean isBatteryOptimized;
         if (!isExternalApk && isRootEnabled) {
             isSystemlessPath = MagiskUtils.isSystemlessPath(PackageUtils
                     .getHiddenCodePathOrDefault(mPackageName, mApplicationInfo.publicSourceDir));
@@ -461,6 +480,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             hasMasterkey = false;
             hasKeystore = false;
             isMagiskHideEnabled = false;
+        }
+        if (!isExternalApk && PermissionUtils.hasDumpPermission()) {
+            String targetString = "user," + mPackageName + "," + mApplicationInfo.uid;
+            Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist"});
+            isBatteryOptimized = !result.isSuccessful() || !result.getOutput().contains(targetString);
+        } else {
+            isBatteryOptimized = true;
         }
         runOnUiThread(() -> {
             if (isDetached()) return;
@@ -579,6 +605,18 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setTitle(R.string.backup)
                         .setItems(readableBackupNames, null)
                         .setNegativeButton(R.string.close, null)
+                        .show());
+            }
+            if (isDetached()) return;
+            if (!isBatteryOptimized) {
+                addChip(R.string.no_battery_optimization, R.color.red_orange).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
+                        .setTitle(R.string.battery_optimization)
+                        .setMessage(R.string.enable_battery_optimization)
+                        .setNegativeButton(R.string.no, null)
+                        .setPositiveButton(R.string.yes, (dialog, which) -> {
+                            Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist", "-" + mPackageName});
+                            refreshDetails();
+                        })
                         .show());
             }
         });

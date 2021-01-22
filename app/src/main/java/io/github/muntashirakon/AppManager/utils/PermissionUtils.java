@@ -27,6 +27,7 @@ import android.os.RemoteException;
 import androidx.core.content.ContextCompat;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -36,15 +37,17 @@ public final class PermissionUtils {
 
     public static boolean hasDumpPermission() {
         Context context = AppManager.getContext();
-        if (!hasPermission(context, Manifest.permission.DUMP) && AppPref.isRootOrAdbEnabled()) {
-            try {
-                PackageManagerCompat.grantPermission(context.getPackageName(), Manifest.permission.DUMP, Users.getCurrentUserHandle());
-                return true;
-            } catch (RemoteException e) {
-                e.printStackTrace();
-                return false;
+        if (!hasPermission(context, Manifest.permission.DUMP)) {
+            if (LocalServer.isAMServiceAlive()) {
+                try {
+                    PackageManagerCompat.grantPermission(context.getPackageName(), Manifest.permission.DUMP, Users.getCurrentUserHandle());
+                    return true;
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
-        } else return false;
+        } else return true;
+        return false;
     }
 
     public static boolean hasStoragePermission(Context context) {

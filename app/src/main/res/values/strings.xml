@@ -879,4 +879,8 @@
     <string name="unlock_app_manager">Unlock App Manager</string>
     <string name="screen_lock">Screen Lock</string>
     <string name="screen_lock_msg">Lock App Manager using Android screen lock</string>
+    <string name="no_battery_optimization">No battery optimization</string>
+    <string name="battery_optimization">Battery optimization</string>
+    <string name="enable_battery_optimization">Enable battery optimization?</string>
+    <string name="choose_what_to_do">Choose what to do.</string>
 </resources>
