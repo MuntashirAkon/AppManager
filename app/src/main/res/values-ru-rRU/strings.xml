@@ -917,4 +917,8 @@
     <string name="backup_all_apps_msg">Резервное копирование всех установленных приложений.</string>
     <string name="bootloader">Загрузчик</string>
     <string name="selinux">SELinux</string>
+    <string name="net_policy">Чистая политика</string>
+    <string name="has_net_policy">Чистая политика</string>
+    <string name="allow_background">Разрешить фон</string>
+    <string name="reject_background">Отклонить фон</string>
 </resources>
