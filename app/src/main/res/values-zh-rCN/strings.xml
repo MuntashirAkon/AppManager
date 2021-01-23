@@ -834,4 +834,8 @@
     <string name="no_battery_optimization">无电池优化</string>
     <string name="screen_lock_msg">用安卓屏幕锁锁定 App Manager</string>
     <string name="screen_lock">屏幕锁</string>
+    <string name="unlock_app_manager">解锁 App Manager</string>
+    <string name="sd_card">SD卡</string>
+    <string name="external_storage">外部存储器</string>
+    <string name="internal_storage">内部存储器</string>
 </resources>
