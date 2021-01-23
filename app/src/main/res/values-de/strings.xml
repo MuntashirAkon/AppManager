@@ -852,4 +852,24 @@
     <string name="backup_apps_without_backups">Sichern der Apps ohne der Sicherungen</string>
     <string name="backup_all_apps_msg">Sichern aller installierten Apps.</string>
     <string name="backup_all_apps">Sichern aller Apps</string>
+    <string name="list_options">Optionen auflisten</string>
+    <string name="reverse">Zurücksetzen</string>
+    <string name="os_version">OS-Version</string>
+    <string name="add">Hinzufügen</string>
+    <string name="add_to_profile">Zum Profil hinzufügen</string>
+    <string name="initializing">Initialisieren…</string>
+    <string name="allow_background">Hintergrund zulassen</string>
+    <string name="reject_background">Hintergrund ablehnen</string>
+    <string name="net_policy">Netz-Richtlinie</string>
+    <string name="has_net_policy">Netz-Richtlinie</string>
+    <string name="choose_what_to_do">Wähle, was Du tun möchtest.</string>
+    <string name="enable_battery_optimization">Akku-Optimierung einschalten\?</string>
+    <string name="battery_optimization">Akku-Optimierung</string>
+    <string name="no_battery_optimization">Keine Akku-Optimierung</string>
+    <string name="screen_lock_msg">App Manager mit Android-Bildschirmsperre sperren</string>
+    <string name="screen_lock">Bildschirm sperren</string>
+    <string name="unlock_app_manager">App-Manager freischalten</string>
+    <string name="sd_card">SD-Karte</string>
+    <string name="external_storage">Externer Speicher</string>
+    <string name="internal_storage">Interner Speicher</string>
 </resources>
