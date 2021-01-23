@@ -21,10 +21,12 @@ import android.app.Application;
 import android.content.Context;
 import android.content.pm.IPackageManager;
 
+import androidx.room.Room;
 import com.topjohnwu.superuser.Shell;
 import com.yariksoffice.lingver.Lingver;
 
 import androidx.annotation.NonNull;
+import io.github.muntashirakon.AppManager.db.AMDatabase;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.toybox.ToyboxInitializer;
@@ -32,6 +34,8 @@ import me.weishu.reflection.Reflection;
 
 public class AppManager extends Application {
     private static AppManager instance;
+    private static AMDatabase db;
+    private static boolean isAuthenticated = false;
 
     static {
         Shell.enableVerboseLogging = BuildConfig.DEBUG;
@@ -55,7 +59,14 @@ public class AppManager extends Application {
         return IPackageManager.Stub.asInterface(ProxyBinder.getService("package"));
     }
 
-    private static boolean isAuthenticated = false;
+    @NonNull
+    public static synchronized AMDatabase getDb() {
+        if (db == null) {
+            db = Room.databaseBuilder(getContext(), AMDatabase.class, "am").build();
+        }
+        return db;
+    }
+
     public static boolean isAuthenticated() {
         return isAuthenticated;
     }

@@ -24,6 +24,7 @@ import android.os.Build;
 import android.os.RemoteException;
 import android.text.TextUtils;
 
+import io.github.muntashirakon.AppManager.logs.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -120,7 +121,7 @@ public final class MetadataManager {
                 metadataManager.readMetadata(new BackupFiles.BackupFile((ProxyFile) backupFile, false));
                 metadataList.add(metadataManager.getMetadata());
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e("MetadataManager", e.getClass().getName() + ": " + e.getMessage());
             }
         }
         return metadataList.toArray(new Metadata[0]);

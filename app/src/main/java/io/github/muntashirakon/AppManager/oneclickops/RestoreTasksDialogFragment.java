@@ -46,7 +46,7 @@ public class RestoreTasksDialogFragment extends DialogFragment {
                 HashMap<String, MetadataManager.Metadata> backupMetadata = BackupUtils.getAllBackupMetadata();
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplications(requireContext(), backupMetadata)) {
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), backupMetadata)) {
                     if (isDetached()) return;
                     if (item.metadata != null) {
                         applicationItems.add(item);
@@ -66,7 +66,7 @@ public class RestoreTasksDialogFragment extends DialogFragment {
                 HashMap<String, MetadataManager.Metadata> backupMetadata = BackupUtils.getAllBackupMetadata();
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplications(requireContext(), backupMetadata)) {
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), backupMetadata)) {
                     if (isDetached()) return;
                     if (!item.isInstalled && item.metadata != null) {
                         applicationItems.add(item);
@@ -86,7 +86,7 @@ public class RestoreTasksDialogFragment extends DialogFragment {
                 HashMap<String, MetadataManager.Metadata> backupMetadata = BackupUtils.getAllBackupMetadata();
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplications(requireContext(), backupMetadata)) {
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), backupMetadata)) {
                     if (isDetached()) return;
                     if (item.isInstalled && item.metadata != null
                             && item.versionCode < item.metadata.versionCode) {

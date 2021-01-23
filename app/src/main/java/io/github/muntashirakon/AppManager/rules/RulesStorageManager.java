@@ -125,8 +125,7 @@ public class RulesStorageManager implements Closeable {
         this.entries = new ArrayList<>();
         try {
             loadEntries(getDesiredFile(), false);
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Throwable ignored) {
         }
     }
 

@@ -17,23 +17,38 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
-import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.ComponentInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
-import android.content.pm.SigningInfo;
+import android.content.pm.*;
 import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.util.Pair;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import com.android.apksig.ApkVerifier;
 import com.android.internal.util.TextUtils;
+import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.backup.BackupUtils;
+import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.db.entity.App;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.main.ApplicationItem;
+import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.misc.UserIdInt;
+import io.github.muntashirakon.AppManager.misc.Users;
+import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.io.ProxyFile;
 
 import java.io.File;
 import java.security.PublicKey;
@@ -42,44 +57,11 @@ import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.pm.PackageInfoCompat;
-import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.backup.BackupUtils;
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.main.ApplicationItem;
-import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.misc.UserIdInt;
-import io.github.muntashirakon.AppManager.misc.Users;
-import io.github.muntashirakon.AppManager.rules.RulesStorageManager;
-import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
-import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.io.ProxyFile;
-
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.*;
 
 public final class PackageUtils {
     public static final File PACKAGE_STAGING_DIRECTORY = new File("/data/local/tmp");
@@ -88,12 +70,18 @@ public final class PackageUtils {
     public static final int flagDisabledComponents;
 
     static {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
-        else flagSigningInfo = PackageManager.GET_SIGNATURES;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+        } else {
+            //noinspection deprecation
+            flagSigningInfo = PackageManager.GET_SIGNATURES;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             flagDisabledComponents = PackageManager.MATCH_DISABLED_COMPONENTS;
-        else flagDisabledComponents = PackageManager.GET_DISABLED_COMPONENTS;
+        } else {
+            //noinspection deprecation
+            flagDisabledComponents = PackageManager.GET_DISABLED_COMPONENTS;
+        }
     }
 
     @SuppressWarnings("RegExpRedundantEscape")
@@ -116,61 +104,56 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static List<ApplicationItem> getInstalledOrBackedUpApplications(@NonNull Context context,
+    public static List<ApplicationItem> getInstalledOrBackedUpApplicationsFromDb(@NonNull Context context,
                                                                            @Nullable HashMap<String, MetadataManager.Metadata> backupMetadata) {
         List<ApplicationItem> applicationItems = new ArrayList<>();
-        PackageManager pm = context.getPackageManager();
-        int[] userHandles = Users.getUsersHandles();
-        for (int userHandle : userHandles) {
-            @SuppressLint("WrongConstant")
-            List<PackageInfo> packageInfoList;
-            try {
-                packageInfoList = PackageManagerCompat.getInstalledPackages(
-                        flagSigningInfo | PackageManager.GET_ACTIVITIES
-                                | flagDisabledComponents, userHandle);
-            } catch (Exception e) {
-                Log.e("MVM", "Could not retrieve package info list for user " + userHandle, e);
+        List<App> apps = AppManager.getDb().appDao().getAll();
+        if (apps.size() == 0) {
+            // Load app list for the first time
+            Log.d("PackageUtils", "Loading apps for the first time.");
+            updateInstalledOrBackedUpApplications(context, backupMetadata);
+            apps = AppManager.getDb().appDao().getAll();
+        } else {
+            // Update list of apps safely in the background
+            new Thread(() -> updateInstalledOrBackedUpApplications(context, backupMetadata)).start();
+        }
+        // Get application items from apps
+        for (App app : apps) {
+            ApplicationItem item = new ApplicationItem();
+            item.packageName = app.packageName;
+            int i;
+            if ((i = applicationItems.indexOf(item)) != -1) {
+                // Add user handle and continue
+                ApplicationItem oldItem = applicationItems.get(i);
+                oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, app.userId);
                 continue;
             }
-            ApplicationInfo applicationInfo;
-            MetadataManager.Metadata metadata;
-
-            for (PackageInfo packageInfo : packageInfoList) {
-                applicationInfo = packageInfo.applicationInfo;
-                ApplicationItem item = new ApplicationItem(applicationInfo);
-                int i;
-                if ((i = applicationItems.indexOf(item)) != -1) {
-                    // Add user handle and continue
-                    ApplicationItem oldItem = applicationItems.get(i);
-                    oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, userHandle);
-                    continue;
+            if (backupMetadata != null) {
+                MetadataManager.Metadata metadata = backupMetadata.get(item.packageName);
+                if (metadata != null) {
+                    item.metadata = metadata;
+                    backupMetadata.remove(item.packageName);
                 }
-                if (backupMetadata != null) {
-                    metadata = backupMetadata.get(applicationInfo.packageName);
-                    if (metadata != null) {
-                        item.metadata = metadata;
-                        backupMetadata.remove(applicationInfo.packageName);
-                    }
-                }
-                item.flags = applicationInfo.flags;
-                item.uid = applicationInfo.uid;
-                item.debuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-                item.isUser = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
-                item.isDisabled = !applicationInfo.enabled;
-                item.label = applicationInfo.loadLabel(pm).toString();
-                item.sdk = applicationInfo.targetSdkVersion;
-                item.versionName = packageInfo.versionName;
-                item.versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
-                item.sharedUserId = packageInfo.sharedUserId;
-                item.sha = Utils.getIssuerAndAlg(packageInfo);
-                item.firstInstallTime = packageInfo.firstInstallTime;
-                item.lastUpdateTime = packageInfo.lastUpdateTime;
-                item.hasActivities = packageInfo.activities != null;
-                item.hasSplits = applicationInfo.splitSourceDirs != null;
-                item.blockedCount = 0;
-                item.userHandles = ArrayUtils.appendInt(item.userHandles, userHandle);
-                applicationItems.add(item);
             }
+            item.flags = app.flags;
+            item.uid = app.uid;
+            item.debuggable = (app.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+            item.isUser = (app.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
+            item.isDisabled = !app.isEnabled;
+            item.label = app.packageLabel;
+            item.sdk = app.sdk;
+            item.versionName = app.versionName;
+            item.versionCode = app.versionCode;
+            item.sharedUserId = app.sharedUserId;
+            item.sha = new Pair<>(app.certName, app.certAlgo);
+            item.firstInstallTime = app.firstInstallTime;
+            item.lastUpdateTime = app.lastUpdateTime;
+            item.hasActivities = app.hasActivities;
+            item.hasSplits = app.hasSplits;
+            item.blockedCount = app.rulesCount;
+            item.userHandles = ArrayUtils.appendInt(item.userHandles, app.userId);
+            item.isInstalled = app.isInstalled;
+            applicationItems.add(item);
         }
         if (backupMetadata != null) {
             // Add rest of the backup items, i.e., items that aren't installed
@@ -182,16 +165,80 @@ public final class PackageUtils {
                 item.versionName = item.metadata.versionName;
                 item.versionCode = item.metadata.versionCode;
                 item.label = item.metadata.label;
-                Log.e("MVM", item.label);
                 item.firstInstallTime = item.metadata.backupTime;
                 item.lastUpdateTime = item.metadata.backupTime;
                 item.isUser = !item.metadata.isSystem;
                 item.isDisabled = false;
                 item.isInstalled = false;
+                item.hasSplits = metadata.isSplitApk;
                 applicationItems.add(item);
             }
         }
         return applicationItems;
+    }
+
+    private static void updateInstalledOrBackedUpApplications(@NonNull Context context,
+                                                             @Nullable HashMap<String, MetadataManager.Metadata> backupMetadata) {
+        List<App> newApps = new ArrayList<>();
+        List<Integer> newAppHashes = new ArrayList<>();
+        int[] userHandles = Users.getUsersHandles();
+        for (int userHandle : userHandles) {
+            List<PackageInfo> packageInfoList;
+            try {
+                packageInfoList = PackageManagerCompat.getInstalledPackages(
+                        flagSigningInfo | PackageManager.GET_ACTIVITIES
+                                | flagDisabledComponents, userHandle);
+            } catch (Exception e) {
+                Log.e("PackageUtils", "Could not retrieve package info list for user " + userHandle, e);
+                continue;
+            }
+            ApplicationInfo applicationInfo;
+            MetadataManager.Metadata metadata;
+
+            for (PackageInfo packageInfo : packageInfoList) {
+                applicationInfo = packageInfo.applicationInfo;
+                App app = App.fromPackageInfo(context, packageInfo);
+                if (backupMetadata != null) {
+                    metadata = backupMetadata.get(applicationInfo.packageName);
+                    if (metadata != null) {
+                        backupMetadata.remove(applicationInfo.packageName);
+                    }
+                }
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, true)) {
+                    app.rulesCount = cb.entryCount();
+                }
+                newApps.add(app);
+                newAppHashes.add(app.getHashCode());
+            }
+        }
+        if (backupMetadata != null) {
+            // Add rest of the backup items, i.e., items that aren't installed
+            for (MetadataManager.Metadata metadata : backupMetadata.values()) {
+                if (metadata == null) continue;
+                App app = App.fromBackupMetadata(metadata);
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, true)) {
+                    app.rulesCount = cb.entryCount();
+                }
+                newApps.add(app);
+                newAppHashes.add(app.getHashCode());
+            }
+        }
+        // Delete old items
+        List<App> oldApps = AppManager.getDb().appDao().getAll();
+        ListIterator<App> iterator = oldApps.listIterator();
+        while (iterator.hasNext()) {
+            App oldApp = iterator.next();
+            if (newApps.contains(oldApp)) {
+                // DB already has this app
+                if (newAppHashes.contains(oldApp.getHashCode())) {
+                    // No change between two versions, the app don't have to be updated or deleted
+                    iterator.remove();
+                    newApps.remove(oldApp);
+                }
+            }
+        }
+        AppManager.getDb().appDao().delete(oldApps);
+        AppManager.getDb().appDao().insert(newApps);
     }
 
     @NonNull
@@ -534,7 +581,10 @@ public final class PackageUtils {
             if (signingInfo == null) return null;
             return signingInfo.hasMultipleSigners() ? signingInfo.getApkContentsSigners()
                     : signingInfo.getSigningCertificateHistory();
-        } else return packageInfo.signatures;
+        } else {
+            //noinspection deprecation
+            return packageInfo.signatures;
+        }
     }
 
     @NonNull

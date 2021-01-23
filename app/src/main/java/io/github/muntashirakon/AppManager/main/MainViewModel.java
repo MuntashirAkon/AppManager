@@ -29,12 +29,16 @@ import android.text.TextUtils;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.collection.ArraySet;
 import androidx.core.content.pm.PackageInfoCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.Users;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -66,7 +70,7 @@ public class MainViewModel extends AndroidViewModel {
     private String searchQuery;
     private HashMap<String, MetadataManager.Metadata> backupMetadata;
     private final Map<String, int[]> selectedPackages = new HashMap<>();
-    private final List<ApplicationItem> selectedApplicationItems = new LinkedList<>();
+    private final ArraySet<ApplicationItem> selectedApplicationItems = new ArraySet<>();
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -157,7 +161,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public List<ApplicationItem> getSelectedApplicationItems() {
-        return selectedApplicationItems;
+        return new ArrayList<>(selectedApplicationItems);
     }
 
     public String getSearchQuery() {
@@ -209,8 +213,11 @@ public class MainViewModel extends AndroidViewModel {
             synchronized (applicationItems) {
                 applicationItems.clear();
                 backupMetadata = BackupUtils.getAllBackupMetadata();
-                Log.d("backupApplications", backupMetadata.toString());
-                applicationItems.addAll(PackageUtils.getInstalledOrBackedUpApplications(getApplication(), backupMetadata));
+                applicationItems.addAll(PackageUtils.getInstalledOrBackedUpApplicationsFromDb(getApplication(), backupMetadata));
+                // select apps again
+                for (ApplicationItem item : selectedApplicationItems) {
+                    select(item);
+                }
                 sortApplicationList(mSortBy);
                 filterItemsByFlags();
             }
@@ -385,12 +392,12 @@ public class MainViewModel extends AndroidViewModel {
             case Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE:
                 for (String packageName : packages) {
                     try {
+                        // This works because these actions are only registered for the current user
                         mPackageManager.getApplicationInfo(packageName, 0);
                     } catch (PackageManager.NameNotFoundException e) {
                         removePackageIfNoBackup(packageName);
                     }
                 }
-                filterItemsByFlags();
                 break;
             case Intent.ACTION_PACKAGE_CHANGED:
                 for (String packageName : packages) {
@@ -398,7 +405,6 @@ public class MainViewModel extends AndroidViewModel {
                     if (item != null) insertApplicationItem(item);
                 }
                 sortApplicationList(mSortBy);
-                filterItemsByFlags();
                 break;
             case Intent.ACTION_PACKAGE_ADDED:
             case Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE:
@@ -407,8 +413,19 @@ public class MainViewModel extends AndroidViewModel {
                     if (item != null) insertOrAddApplicationItem(item);
                 }
                 sortApplicationList(mSortBy);
-                filterItemsByFlags();
+                break;
+            case BatchOpsService.ACTION_BATCH_OPS_COMPLETED:
+                for (String packageName : packages) {
+                    ApplicationItem item = getNewApplicationItem(packageName);
+                    if (item != null) insertOrAddApplicationItem(item);
+                    else removePackageIfNoBackup(packageName);
+                }
+                sortApplicationList(mSortBy);
+                break;
+            default:
+                return;
         }
+        filterItemsByFlags();
     }
 
     @GuardedBy("applicationItems")
@@ -416,7 +433,12 @@ public class MainViewModel extends AndroidViewModel {
         synchronized (applicationItems) {
             ApplicationItem item = getApplicationItemFromApplicationItems(packageName);
             if (item != null) {
-                if (item.metadata == null) applicationItems.remove(item);
+                if (item.metadata == null) {
+                    applicationItems.remove(item);
+                    for (int userHandle : item.userHandles) {
+                        AppManager.getDb().appDao().delete(item.packageName, userHandle);
+                    }
+                }
                 else {
                     ApplicationItem changedItem = getNewApplicationItem(packageName);
                     if (changedItem != null) insertOrAddApplicationItem(changedItem);
@@ -430,6 +452,9 @@ public class MainViewModel extends AndroidViewModel {
         synchronized (applicationItems) {
             if (!insertApplicationItem(item)) {
                 applicationItems.add(item);
+                if (selectedApplicationItems.contains(item)) {
+                    select(item);
+                }
             }
         }
     }
@@ -442,6 +467,9 @@ public class MainViewModel extends AndroidViewModel {
                 if (applicationItems.get(i).equals(item)) {
                     applicationItems.set(i, item);
                     isInserted = true;
+                    if (selectedApplicationItems.contains(item)) {
+                        select(item);
+                    }
                 }
             }
             return isInserted;
@@ -459,6 +487,10 @@ public class MainViewModel extends AndroidViewModel {
                         PackageManager.GET_META_DATA | flagSigningInfo
                                 | PackageManager.GET_ACTIVITIES | flagDisabledComponents,
                         userHandle);
+                App app = App.fromPackageInfo(getApplication(), packageInfo);
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, true)) {
+                    app.rulesCount = cb.entryCount();
+                }
                 ApplicationInfo applicationInfo = packageInfo.applicationInfo;
                 ApplicationItem item = new ApplicationItem(applicationInfo);
                 if (item.equals(oldItem)) {
@@ -482,12 +514,9 @@ public class MainViewModel extends AndroidViewModel {
                 item.sha = Utils.getIssuerAndAlg(packageInfo);
                 item.sdk = applicationInfo.targetSdkVersion;
                 item.userHandles = ArrayUtils.appendInt(item.userHandles, userHandle);
-                if (mSortBy == MainActivity.SORT_BY_BLOCKED_COMPONENTS && AppPref.isRootEnabled()) {
-                    try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, Users.getCurrentUserHandle(), true)) {
-                        item.blockedCount = cb.componentCount();
-                    }
-                }
+                item.blockedCount = app.rulesCount;
                 oldItem = item;
+                AppManager.getDb().appDao().insert(app);
             } catch (Exception ignore) {
             }
         }
