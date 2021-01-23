@@ -921,4 +921,20 @@
     <string name="has_net_policy">Чистая политика</string>
     <string name="allow_background">Разрешить фон</string>
     <string name="reject_background">Отклонить фон</string>
+    <string name="list_options">Параметры списка</string>
+    <string name="reverse">Обратный порядок</string>
+    <string name="os_version">Версия ОС</string>
+    <string name="add">Добавить</string>
+    <string name="add_to_profile">Добавить в профиль</string>
+    <string name="initializing">Инициализация…</string>
+    <string name="choose_what_to_do">Выберите, что делать.</string>
+    <string name="enable_battery_optimization">Включить оптимизацию батареи\?</string>
+    <string name="battery_optimization">Оптимизация батареи</string>
+    <string name="no_battery_optimization">Без оптимизации батареи</string>
+    <string name="screen_lock_msg">Заблокировать App Manager с помощью блокировки экрана Android</string>
+    <string name="screen_lock">Блокировка экрана</string>
+    <string name="unlock_app_manager">Разблокировать App Manager</string>
+    <string name="sd_card">SD-карта</string>
+    <string name="external_storage">Внешнее хранилище</string>
+    <string name="internal_storage">Внутреннее хранилище</string>
 </resources>
