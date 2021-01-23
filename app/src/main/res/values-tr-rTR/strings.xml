@@ -849,4 +849,24 @@
     <string name="backup_apps_without_backups">Yedeklemesi olmayan uygulamaları yedekle</string>
     <string name="backup_all_apps_msg">Kurulu tüm uygulamaları yedekleyin.</string>
     <string name="backup_all_apps">Tüm uygulamaları yedekle</string>
+    <string name="list_options">Seçenekleri listele</string>
+    <string name="reverse">Ters</string>
+    <string name="os_version">İşletim sistemi sürümü</string>
+    <string name="add">Ekle</string>
+    <string name="add_to_profile">Profile ekle</string>
+    <string name="initializing">Başlatılıyor…</string>
+    <string name="allow_background">Arka plana izin ver</string>
+    <string name="reject_background">Arka planı reddet</string>
+    <string name="net_policy">Ağ politikası</string>
+    <string name="has_net_policy">Ağ politikası</string>
+    <string name="choose_what_to_do">Ne yapılacağını seç.</string>
+    <string name="enable_battery_optimization">Pil iyileştirmesi etkinleştirilsin mi\?</string>
+    <string name="battery_optimization">Pil iyileştirmesi</string>
+    <string name="no_battery_optimization">Pil iyileştirmesi yok</string>
+    <string name="screen_lock_msg">Android ekran kilidini kullanarak App Manager\'i kilitleyin</string>
+    <string name="screen_lock">Ekran Kilidi</string>
+    <string name="unlock_app_manager">App Manager\'in kilidini aç</string>
+    <string name="sd_card">SD Kart</string>
+    <string name="external_storage">Harici Depolama</string>
+    <string name="internal_storage">Dahili Depolama</string>
 </resources>
